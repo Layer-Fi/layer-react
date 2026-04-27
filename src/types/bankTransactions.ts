@@ -1,6 +1,9 @@
 import { type Categorization } from '@internal-types/categories'
 import { type Direction, type S3PresignedUrl } from '@internal-types/general'
-import { type CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
+import {
+  type BankTransactionTaxOptionsSchema,
+  type CategorizationStatus,
+} from '@schemas/bankTransactions/bankTransaction'
 import { type UpdateCategorizationRulesSuggestionSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { type MatchDetailsType, type MatchType } from '@schemas/bankTransactions/match'
 import type { CategorizationEncoded } from '@schemas/categorization'
@@ -25,12 +28,7 @@ export interface AccountInstitution {
   logo: string | null
 }
 
-export interface BankTransactionTaxOption {
-  code: string
-  display_name: string
-}
-
-export type BankTransactionTaxOptions = Record<string, BankTransactionTaxOption[]>
+export type BankTransactionTaxOptions = typeof BankTransactionTaxOptionsSchema.Encoded
 
 // This isn't my favorite but BankTransaction contains much
 // more than we're using right now.
@@ -95,7 +93,7 @@ export interface DocumentS3Urls {
 export type Split = {
   amount: number
   category: BankTransactionCategoryComboBoxOption | null
-  taxCode: string | null
+  taxCode?: string | null
   tags: readonly Tag[]
   customerVendor: typeof CustomerVendorSchema.Type | null
 }

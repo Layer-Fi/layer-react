@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
 import { DateFormat } from '@utils/i18n/date/patterns'
+import { translationKey } from '@utils/i18n/translationKey'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { LinkButton } from '@ui/Button/LinkButton'
@@ -18,19 +19,16 @@ import { useCallBookingCountdownLabel } from './useCallBookingCountdownLabel'
 
 const ONBOARDING_CALL_COVERAGE_ITEMS = [
   {
-    key: 'business_and_books',
-    translationKey: 'callBookings:label.cover_business_and_books',
-    defaultLabel: 'Walk through your business and books',
+    key: 'introduce_bookkeeper',
+    ...translationKey('callBookings:label.onboarding_cover_introduce_bookkeeper', 'Introduce your bookkeeper'),
   },
   {
-    key: 'accounts_and_documents',
-    translationKey: 'callBookings:label.cover_accounts_and_documents',
-    defaultLabel: 'Connect your accounts and documents',
+    key: 'bookkeeping_process',
+    ...translationKey('callBookings:label.onboarding_cover_bookkeeping_process', 'Walk through our bookkeeping process'),
   },
   {
-    key: 'first_month_expectations',
-    translationKey: 'callBookings:label.cover_first_month_expectations',
-    defaultLabel: 'Set expectations for our first month',
+    key: 'connect_bank_and_cards',
+    ...translationKey('callBookings:label.onboarding_cover_connect_bank_and_cards', 'Connect your business bank accounts and credit cards'),
   },
 ] as const
 
@@ -72,10 +70,10 @@ const OnboardingCallCoverage = () => {
           pbe='sm'
           className='Layer__CallBooking__CoverageHeading'
         >
-          {t('callBookings:label.what_well_cover', 'What we\'ll cover')}
+          {t('callBookings:label.on_this_call_well', 'On this call, we\'ll')}
         </Span>
         <VStack role='list' gap='xs'>
-          {ONBOARDING_CALL_COVERAGE_ITEMS.map(({ key, translationKey, defaultLabel }) => (
+          {ONBOARDING_CALL_COVERAGE_ITEMS.map(({ key, i18nKey, defaultValue }) => (
             <HStack
               key={key}
               className='Layer__CallBooking__CoverageItem'
@@ -91,7 +89,7 @@ const OnboardingCallCoverage = () => {
                 <Check size={12} strokeWidth={2.5} />
               </HStack>
               <Span size='sm'>
-                {t(translationKey, defaultLabel)}
+                {t(i18nKey, defaultValue)}
               </Span>
             </HStack>
           ))}
