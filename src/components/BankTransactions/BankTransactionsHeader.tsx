@@ -6,7 +6,7 @@ import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'
-import { BankTransactionsDateFilterMode } from '@utils/bankTransactions'
+import { BankTransactionsDateFilterMode } from '@utils/bankTransactions/shared'
 import { translationKey } from '@utils/i18n/translationKey'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useHandleDownloadTransactions } from '@hooks/features/bankTransactions/useHandleBankTransactionsDownload'
