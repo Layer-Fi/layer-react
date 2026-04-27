@@ -22,6 +22,7 @@ type FormNonRecursiveBigDecimalFieldProps = Omit<BaseFormTextFieldProps, 'inputM
   mode?: 'percent' | 'currency' | 'decimal'
   slots?: { badge?: ReactNode }
   placeholder?: string
+  allowEmpty?: boolean
 }
 
 const DEFAULT_MAX_VALUE = BD.fromBigInt(BigInt(10_000_000))
@@ -36,16 +37,20 @@ export function FormNonRecursiveBigDecimalField({
   maxDecimalPlaces = mode === 'currency' ? 2 : DEFAULT_MAX_DECIMAL_PLACES,
   slots,
   placeholder,
+  allowEmpty,
   ...restProps
 }: FormNonRecursiveBigDecimalFieldProps) {
-  const field = useFieldContext<NonRecursiveBigDecimal>()
+  const field = useFieldContext<NonRecursiveBigDecimal | null>()
   const { name, state, handleChange, handleBlur } = field
   const { value: nrbdValue } = state
 
-  const value = useMemo(() => fromNonRecursiveBigDecimal(nrbdValue), [nrbdValue])
+  const value = useMemo(
+    () => (nrbdValue === null ? null : fromNonRecursiveBigDecimal(nrbdValue)),
+    [nrbdValue],
+  )
 
-  const onChange = useCallback((bd: BD.BigDecimal) => {
-    handleChange(toNonRecursiveBigDecimal(bd))
+  const onChange = useCallback((bd: BD.BigDecimal | null) => {
+    handleChange(bd === null ? null : toNonRecursiveBigDecimal(bd))
   }, [handleChange])
 
   const { inputValue, onInputChange, onInputBlur, onBeforeInput, onPaste } = useBigDecimalInput({
@@ -57,6 +62,7 @@ export function FormNonRecursiveBigDecimalField({
     maxDecimalPlaces,
     minDecimalPlaces,
     allowNegative,
+    allowEmpty,
   })
 
   return (

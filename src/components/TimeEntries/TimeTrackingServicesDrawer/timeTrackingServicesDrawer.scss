@@ -27,6 +27,14 @@
   border: 1px solid var(--border-color);
 }
 
+.Layer__TimeTrackingServicesDrawer__EmptyState {
+  box-sizing: border-box;
+  overflow: hidden;
+  inline-size: 100%;
+  border-radius: var(--border-radius-2xs);
+  border: 1px solid var(--border-color);
+}
+
 .Layer__TimeTrackingServicesDrawer__accordion {
   overflow: hidden;
   border-radius: var(--border-radius-2xs);

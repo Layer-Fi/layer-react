@@ -13,14 +13,15 @@ import { getLocaleNumberSeparators } from '@utils/i18n/number/input'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 
 type UseBigDecimalInputOptions = {
-  value: BD.BigDecimal
-  onChange: (bd: BD.BigDecimal) => void
+  value: BD.BigDecimal | null
+  onChange: (bd: BD.BigDecimal | null) => void
   onBlur: () => void
   mode: 'percent' | 'currency' | 'decimal'
   maxValue: BD.BigDecimal
   maxDecimalPlaces: number
   minDecimalPlaces: number
   allowNegative: boolean
+  allowEmpty?: boolean
 }
 
 export function useBigDecimalInput({
@@ -32,6 +33,7 @@ export function useBigDecimalInput({
   maxDecimalPlaces,
   minDecimalPlaces,
   allowNegative,
+  allowEmpty,
 }: UseBigDecimalInputOptions) {
   const intl = useIntl()
   const formatter = useIntlFormatter()
@@ -43,7 +45,9 @@ export function useBigDecimalInput({
     mode,
   }), [maxDecimalPlaces, minDecimalPlaces, mode])
 
-  const [inputValue, setInputValue] = useState<string>(formatBigDecimalToString(formatter, value, formattingProps))
+  const [inputValue, setInputValue] = useState<string>(
+    value === null ? '' : formatBigDecimalToString(formatter, value, formattingProps),
+  )
 
   const onInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value)
@@ -59,6 +63,14 @@ export function useBigDecimalInput({
 
   const onInputBlur = useCallback(() => {
     const sanitizedInput = sanitizeInput(inputValue)
+
+    if (allowEmpty && sanitizedInput === '') {
+      if (value !== null) onChange(null)
+      onBlur()
+      setInputValue('')
+      return
+    }
+
     const maybeDecimal = BD.fromString(sanitizedInput)
 
     const decimal = Option.match(maybeDecimal, {
@@ -75,7 +87,7 @@ export function useBigDecimalInput({
     const normalized = BD.normalize(adjustedForPercent)
     const clamped = BD.min(normalized, maxValue)
 
-    if (!BD.equals(clamped, value)) {
+    if (value === null || !BD.equals(clamped, value)) {
       onChange(clamped)
     }
     onBlur()
@@ -84,6 +96,7 @@ export function useBigDecimalInput({
   }, [
     inputValue,
     sanitizeInput,
+    allowEmpty,
     maxDecimalPlaces,
     mode,
     maxValue,
@@ -118,7 +131,7 @@ export function useBigDecimalInput({
   }, [allowedChars])
 
   useEffect(() => {
-    setInputValue(formatBigDecimalToString(formatter, value, formattingProps))
+    setInputValue(value === null ? '' : formatBigDecimalToString(formatter, value, formattingProps))
   }, [value, formattingProps, formatter])
 
   return {

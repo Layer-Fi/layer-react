@@ -50,6 +50,10 @@ export const AccountSplitEntrySchema = Schema.Struct({
   type: Schema.Literal('AccountSplitEntry'),
   amount: Schema.Number,
   category: AccountCategorizationSchema,
+  taxCode: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('tax_code'),
+  ),
   tags: pipe(
     Schema.propertySignature(Schema.Array(TransactionTagSchema)),
     Schema.fromKey('tags'),
@@ -62,6 +66,10 @@ export const ExclusionSplitEntrySchema = Schema.Struct({
   type: Schema.Literal('ExclusionSplitEntry'),
   amount: Schema.Number,
   category: ExclusionCategorizationSchema,
+  taxCode: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('tax_code'),
+  ),
   tags: pipe(
     Schema.propertySignature(Schema.Array(TransactionTagSchema)),
     Schema.fromKey('tags'),

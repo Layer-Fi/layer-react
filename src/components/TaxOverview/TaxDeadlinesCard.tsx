@@ -18,7 +18,7 @@ const LoadingState = () => {
   return (
     <Card className='Layer__TaxOverview__Card Layer__TaxOverview__Card--deadlines'>
       <VStack gap='lg'>
-        <Heading size={!isDesktop ? 'sm' : 'md'}>{t('taxEstimates:label.your_tax_deadlines', 'Your tax deadlines')}</Heading>
+        <Heading size={isDesktop ? 'md' : 'sm'}>{t('taxEstimates:label.your_tax_deadlines', 'Your tax deadlines')}</Heading>
         <SkeletonLoader height='72px' width='100%' />
         <SkeletonLoader height='72px' width='100%' />
         <SkeletonLoader height='72px' width='100%' />
@@ -35,7 +35,7 @@ const ErrorState = () => {
   return (
     <Card className='Layer__TaxOverview__Card Layer__TaxOverview__Card--deadlines'>
       <VStack gap='lg'>
-        <Heading size={!isDesktop ? 'sm' : 'md'}>{t('taxEstimates:label.your_tax_deadlines', 'Your tax deadlines')}</Heading>
+        <Heading size={isDesktop ? 'md' : 'sm'}>{t('taxEstimates:label.your_tax_deadlines', 'Your tax deadlines')}</Heading>
         <Span size='md'>
           {t('taxEstimates:error.load_tax_deadlines', 'We couldn\'t load your tax deadlines')}
         </Span>
@@ -57,7 +57,7 @@ export const TaxDeadlinesCard = () => {
         return (
           <Card className='Layer__TaxOverview__Card Layer__TaxOverview__Card--deadlines'>
             <VStack gap='lg'>
-              <Heading size={!isDesktop ? 'sm' : 'md'}>{t('taxEstimates:label.your_tax_deadlines', 'Your tax deadlines')}</Heading>
+              <Heading size={isDesktop ? 'md' : 'sm'}>{t('taxEstimates:label.your_tax_deadlines', 'Your tax deadlines')}</Heading>
               <VStack gap='2xs'>
                 {paymentDeadlines.map(deadline => (
                   <TaxEstimatesDeadlineRow

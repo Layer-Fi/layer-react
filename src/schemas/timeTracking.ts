@@ -206,8 +206,15 @@ export const StartTrackerSchema = Schema.Struct({
   metadata: Schema.NullishOr(Schema.Unknown),
 })
 
+export const StopTrackerSchema = Schema.Struct({
+  date: CalendarDateSchema,
+})
+
 export type UpsertTimeEntry = typeof UpsertTimeEntrySchema.Type
 export type UpsertTimeEntryEncoded = typeof UpsertTimeEntrySchema.Encoded
 
 export type StartTracker = typeof StartTrackerSchema.Type
 export type StartTrackerEncoded = typeof StartTrackerSchema.Encoded
+
+export type StopTracker = typeof StopTrackerSchema.Type
+export type StopTrackerEncoded = typeof StopTrackerSchema.Encoded
