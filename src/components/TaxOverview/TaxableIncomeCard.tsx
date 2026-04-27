@@ -1,6 +1,5 @@
 import classNames from 'classnames'
 
-import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
@@ -8,6 +7,7 @@ import { VStack } from '@ui/Stack/Stack'
 import { Card } from '@components/Card/Card'
 import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@components/TaxEstimates/TaxEstimatesHeader'
 import { TaxEstimateMetricRow } from '@components/TaxOverview/TaxEstimateMetricRow'
+import { TAX_OVERVIEW_MOBILE_BREAKPOINT } from '@components/TaxOverview/TaxOverview'
 
 import './taxableIncomeCard.scss'
 
@@ -17,7 +17,7 @@ export const TaxableIncomeCard = () => {
   const [viewportWidth] = useWindowSize()
   const { isDesktop } = useSizeClass()
   const className = classNames({ 'Layer__TaxOverview__Card__MetricRow--mobile': !isDesktop })
-  const isHeaderVisible = viewportWidth >= BREAKPOINTS.DESKTOP
+  const isHeaderVisible = viewportWidth >= TAX_OVERVIEW_MOBILE_BREAKPOINT
 
   const { data: taxOverviewData } = useTaxOverview({
     year,

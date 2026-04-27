@@ -1,4 +1,3 @@
-import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@components/TaxEstimates/TaxEstimatesHeader'
@@ -8,9 +7,11 @@ import { TaxDeadlinesCard } from '@components/TaxOverview/TaxDeadlinesCard'
 
 import '@components/TaxOverview/taxOverview.scss'
 
+export const TAX_OVERVIEW_MOBILE_BREAKPOINT = 1200
+
 export const TaxOverview = () => {
   const [viewportWidth] = useWindowSize()
-  const isMobile = viewportWidth < BREAKPOINTS.DESKTOP
+  const isMobile = viewportWidth < TAX_OVERVIEW_MOBILE_BREAKPOINT
 
   if (isMobile) {
     return (
