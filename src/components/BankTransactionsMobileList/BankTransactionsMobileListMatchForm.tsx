@@ -5,7 +5,7 @@ import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankT
 import {
   getBankTransactionFirstSuggestedMatch,
   getBankTransactionMatchAsSuggestedMatch,
-} from '@utils/bankTransactions'
+} from '@utils/bankTransactions/shared'
 import { useMatchBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useMatchBankTransactionWithCacheUpdate'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import PaperclipIcon from '@icons/Paperclip'
