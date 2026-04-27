@@ -176,9 +176,8 @@ export function useBankTransactionsCategoryActions(): BankTransactionsCategoryAc
   const {
     setTransactionCategorization,
     setOnlyNewTransactionCategorizations,
-    clearTransactionCategorizations,
-    clearAllTransactionCategorizations,
   } = useBankTransactionsCategorizationActions()
+  const { categorizations } = useGetAllBankTransactionsCategorizations()
 
   return useMemo(() => ({
     setTransactionCategory: (id, category) => {
@@ -190,13 +189,20 @@ export function useBankTransactionsCategoryActions(): BankTransactionsCategoryAc
       ))
     },
     clearTransactionCategory: (id) => {
-      clearTransactionCategorizations([id])
+      setTransactionCategorization(id, { category: null })
     },
-    clearMultipleTransactionCategories: clearTransactionCategorizations,
-    clearAllTransactionCategories: clearAllTransactionCategorizations,
+    clearMultipleTransactionCategories: (ids) => {
+      ids.forEach((id) => {
+        setTransactionCategorization(id, { category: null })
+      })
+    },
+    clearAllTransactionCategories: () => {
+      categorizations.forEach((_, id) => {
+        setTransactionCategorization(id, { category: null })
+      })
+    },
   }), [
-    clearTransactionCategorizations,
-    clearAllTransactionCategorizations,
+    categorizations,
     setOnlyNewTransactionCategorizations,
     setTransactionCategorization,
   ])
