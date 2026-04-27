@@ -10,22 +10,22 @@
     "book_call_with_bookkeeper": "Réservez un appel avec votre teneur de livres",
     "google_calendar": "Google Calendar",
     "meet_bookkeeping_team": "Rencontrez notre équipe de tenue de livres",
-    "on_this_call_well": "",
+    "on_this_call_well": "Lors de cet appel, nous allons",
     "onboarding_call": "Appel d’intégration",
-    "onboarding_cover_bookkeeping_process": "",
-    "onboarding_cover_connect_bank_and_cards": "",
-    "onboarding_cover_introduce_bookkeeper": "",
+    "onboarding_cover_bookkeeping_process": "passer en revue notre processus de tenue de livres",
+    "onboarding_cover_connect_bank_and_cards": "connecter vos comptes bancaires d’entreprise et vos cartes de crédit",
+    "onboarding_cover_introduce_bookkeeper": "vous présenter votre teneur de livres",
     "outlook_calendar": "Outlook Calendar",
     "yahoo_calendar": "Yahoo Calendar"
   },
   "prompt": {
-    "ready_to_get_started": ""
+    "ready_to_get_started": "Prêt à commencer?"
   },
   "state": {
-    "call_in_count_days_one": "",
-    "call_in_count_days_other": "",
-    "call_in_count_hours_one": "",
-    "call_in_count_hours_other": "",
-    "starting_soon": ""
+    "call_in_count_days_one": "dans {{displayCount}} jour",
+    "call_in_count_days_other": "dans {{displayCount}} jours",
+    "call_in_count_hours_one": "dans {{displayCount}} heure",
+    "call_in_count_hours_other": "dans {{displayCount}} heures",
+    "starting_soon": "commence bientôt"
   }
 }
