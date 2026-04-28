@@ -8,17 +8,24 @@
   "label": {
     "ad_hoc_call": "Appel ponctuel",
     "book_call_with_bookkeeper": "Réservez un appel avec votre teneur de livres",
-    "date_colon": "Date :",
     "google_calendar": "Google Calendar",
-    "location_colon": "Lieu :",
     "meet_bookkeeping_team": "Rencontrez notre équipe de tenue de livres",
+    "on_this_call_well": "",
     "onboarding_call": "Appel d’intégration",
+    "onboarding_cover_bookkeeping_process": "",
+    "onboarding_cover_connect_bank_and_cards": "",
+    "onboarding_cover_introduce_bookkeeper": "",
     "outlook_calendar": "Outlook Calendar",
-    "purpose_colon": "Objet :",
-    "upcoming_call": "Appel à venir",
     "yahoo_calendar": "Yahoo Calendar"
   },
   "prompt": {
-    "have_questions": "Avez-vous des questions?"
+    "ready_to_get_started": ""
+  },
+  "state": {
+    "call_in_count_days_one": "",
+    "call_in_count_days_other": "",
+    "call_in_count_hours_one": "",
+    "call_in_count_hours_other": "",
+    "starting_soon": ""
   }
 }

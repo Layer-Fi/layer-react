@@ -1,0 +1,25 @@
+.Layer__Breadcrumbs {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.Layer__Breadcrumb {
+  display: flex;
+  align-items: center;
+
+  .Layer__UI__Link {
+    color: var(--color-base-500);
+
+    &[data-current] {
+      color: var(--color-base-1000);
+    }
+
+    &[data-focus-visible] {
+      outline: -webkit-focus-ring-color auto 1px;
+      outline-offset: 2px;
+    }
+  }
+}

@@ -58,12 +58,7 @@
 }
 
 .Layer__tasks-header {
-  display: flex;
-  gap: var(--spacing-md);
-  align-items: center;
-  justify-content: space-between;
   min-height: 36px;
-  padding: var(--spacing-md);
   container-type: inline-size;
 }
 

@@ -1,22 +1,16 @@
 import { useTranslation } from 'react-i18next'
 
 import { useUnifiedReportExcel } from '@hooks/api/businesses/[business-id]/reports/unified/report-name/exports/excel/useUnifiedReportExcel'
-import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import DownloadCloud from '@icons/DownloadCloud'
 import RefreshCcw from '@icons/RefreshCcw'
 import { Button } from '@ui/Button/Button'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
-type UnifiedReportDownloadButtonProps = {
-  dateSelectionMode: DateSelectionMode
-}
-
-export function UnifiedReportDownloadButton({ dateSelectionMode }: UnifiedReportDownloadButtonProps) {
+export function UnifiedReportDownloadButton() {
   const { t } = useTranslation()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
 
   const { trigger, isMutating, isError } = useUnifiedReportExcel({
-    dateSelectionMode,
     onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
   })
 

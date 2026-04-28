@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next'
 
 import { tConditional } from '@utils/i18n/conditional'
 import { DateFormat } from '@utils/i18n/date/patterns'
+import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { HStack, Stack } from '@ui/Stack/Stack'
 import { ResponsiveDetailHeader } from '@components/ResponsiveDetailView/ResponsiveDetailHeader'
@@ -117,11 +118,14 @@ const useTaxEstimatesHeader = ({ type }: TaxEstimatesHeaderProps): TaxEstimatesH
 }
 
 export const TaxEstimatesHeader = ({ type }: TaxEstimatesHeaderProps) => {
-  const { isMobile } = useSizeClass()
+  const [viewportWidth] = useWindowSize()
+  const isMobile = viewportWidth < BREAKPOINTS.MOBILE
+  const isOverview = type === TaxEstimatesHeaderType.Overview
   const { title, description } = useTaxEstimatesHeader({ type })
+  const pie = isOverview || isMobile ? undefined : 'lg' as const
 
   return (
-    <Stack className='Layer__TaxEstimatesHeader' direction={isMobile ? 'column' : 'row'} gap='md' justify='space-between' align='start' fluid pie={isMobile ? undefined : 'lg'}>
+    <Stack className='Layer__TaxEstimatesHeader' direction={isMobile ? 'column' : 'row'} gap='md' justify='space-between' align='start' fluid pie={pie}>
       <ResponsiveDetailHeader title={title} description={description} />
       <HStack justify={isMobile ? 'start' : 'end'} className='Layer__TaxEstimatesHeader__ComboBoxContainer'>
         <FullYearProjectionComboBox />

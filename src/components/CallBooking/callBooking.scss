@@ -1,23 +1,62 @@
-.Layer__call-booking {
-  padding: var(--spacing-lg);
+.Layer__CallBooking {
+  &__HeaderDetails {
+    min-width: 0;
+  }
 
-  .Layer__call-booking-details {
+  &__TitleRow {
+    flex-wrap: wrap;
+  }
+
+  &__DateTimeRow,
+  &__LocationRow,
+  &__CoverageItem {
+    min-width: 0;
+  }
+
+  &__DateTimeRow {
+    align-self: flex-start;
+    color: var(--color-base-800);
+  }
+
+  &__LocationRow {
+    border-radius: var(--border-radius-5xl);
+    background: var(--bg-muted);
+    color: var(--fg-subtle);
+  }
+
+  &__Divider {
+    display: block;
+    height: 1px;
     width: 100%;
+    margin-block: var(--spacing-md);
+    background: var(--bg-muted);
   }
 
-  .Layer__call-booking-actions {
-    position: relative;
-    width: 100%;
+  &__CoverageHeading {
+    display: block;
+    line-height: 1.2;
+    text-transform: uppercase;
   }
 
-  .Layer__call-booking-state {
-    text-align: center;
+  &__CoverageBadge {
+    flex: 0 0 auto;
+    height: var(--spacing-md);
+    width: var(--spacing-md);
+    border-radius: var(--border-radius-5xl);
+    margin-top: var(--spacing-4xs);
+    background: var(--color-info-success-bg);
+    color: var(--color-info-success-fg);
   }
-}
 
-// Responsive design for smaller screens
-@media (width <= 480px) {
-  .Layer__call-booking {
-    padding: var(--spacing-md);
+  @container (width <= 400px) {
+    &__HeaderRow {
+      gap: var(--spacing-lg);
+    }
+  }
+
+  @container (width <= 360px) {
+    &__JoinAction {
+      flex: 1 1 100%;
+    }
   }
 }

@@ -8,17 +8,24 @@
   "label": {
     "ad_hoc_call": "Ad hoc call",
     "book_call_with_bookkeeper": "Book a call with your bookkeeper",
-    "date_colon": "Date:",
     "google_calendar": "Google Calendar",
-    "location_colon": "Location:",
     "meet_bookkeeping_team": "Meet with our bookkeeping team",
+    "on_this_call_well": "On this call, we'll",
     "onboarding_call": "Onboarding call",
+    "onboarding_cover_bookkeeping_process": "Walk through our bookkeeping process",
+    "onboarding_cover_connect_bank_and_cards": "Connect your business bank accounts and credit cards",
+    "onboarding_cover_introduce_bookkeeper": "Introduce your bookkeeper",
     "outlook_calendar": "Outlook Calendar",
-    "purpose_colon": "Purpose:",
-    "upcoming_call": "Upcoming Call",
     "yahoo_calendar": "Yahoo Calendar"
   },
   "prompt": {
-    "have_questions": "Have any questions?"
+    "ready_to_get_started": "Ready to get started?"
+  },
+  "state": {
+    "call_in_count_days_one": "in {{displayCount}} day",
+    "call_in_count_days_other": "in {{displayCount}} days",
+    "call_in_count_hours_one": "in {{displayCount}} hour",
+    "call_in_count_hours_other": "in {{displayCount}} hours",
+    "starting_soon": "starting soon"
   }
 }

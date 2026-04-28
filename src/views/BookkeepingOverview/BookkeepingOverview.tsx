@@ -4,8 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type CallBooking as CallBookingData } from '@schemas/callBooking'
 import { type Variants } from '@utils/styleUtils/sizeVariants'
-import { useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
-import { useCalendly } from '@hooks/features/calendly/useCalendly'
+import { useBookkeepingOnboardingCallBooking } from '@hooks/features/bookkeeping/useBookkeepingOnboardingCallBooking'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { CallBooking } from '@components/CallBooking/CallBooking'
@@ -21,6 +20,59 @@ import { type ProfitAndLossSummariesStringOverrides } from '@components/ProfitAn
 import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
 import { View } from '@components/View/View'
 import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
+
+type BookkeepingOverviewTasksContentProps = {
+  callBooking?: CallBookingData
+  showCallBookingCard: boolean
+  tasksMobile: boolean
+  tasksStringOverrides?: TasksStringOverrides
+  onBookCall: () => void
+  onClickReconnectAccounts?: () => void
+}
+
+const BookkeepingOverviewTasksContent = ({
+  callBooking,
+  showCallBookingCard,
+  tasksMobile,
+  tasksStringOverrides,
+  onBookCall,
+  onClickReconnectAccounts,
+}: BookkeepingOverviewTasksContentProps) => {
+  const callBookingEmptyPromptFirst =
+    showCallBookingCard && callBooking == null
+
+  if (callBookingEmptyPromptFirst) {
+    return (
+      <>
+        <CallBooking
+          callBooking={callBooking}
+          onBookCall={onBookCall}
+        />
+        <Tasks
+          mobile={tasksMobile}
+          stringOverrides={tasksStringOverrides}
+          onClickReconnectAccounts={onClickReconnectAccounts}
+        />
+      </>
+    )
+  }
+
+  return (
+    <>
+      <Tasks
+        mobile={tasksMobile}
+        stringOverrides={tasksStringOverrides}
+        onClickReconnectAccounts={onClickReconnectAccounts}
+      />
+      {showCallBookingCard && (
+        <CallBooking
+          callBooking={callBooking}
+          onBookCall={onBookCall}
+        />
+      )}
+    </>
+  )
+}
 
 export interface BookkeepingOverviewProps {
   showTitle?: boolean
@@ -58,7 +110,6 @@ export const BookkeepingOverview = ({
   const { t } = useTranslation()
   const [width] = useWindowSize()
   const { value: sizeClass } = useSizeClass()
-  const { isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly } = useCalendly()
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
@@ -66,11 +117,15 @@ export const BookkeepingOverview = ({
   const { upperContentRef, targetElementRef, upperElementInFocus } =
     useKeepInMobileViewport()
 
-  const handleBookCall = () => {} // TODO
-
-  const { data: callBookings, isError, isLoading, isValidating } = useCallBookings({ limit: 1 })
-  const callBooking: CallBookingData | null = callBookings?.[0]?.data[0] ?? null
-  const callBookingVisible = callBooking && !isLoading && !isValidating && !isError
+  const {
+    callBooking,
+    showCallBookingCard,
+    handleBookCall,
+    isCalendlyVisible,
+    calendlyLink,
+    calendlyRef,
+    closeCalendly,
+  } = useBookkeepingOnboardingCallBooking()
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -89,11 +144,12 @@ export const BookkeepingOverview = ({
         withSidebar={width > 1100}
         sidebar={(
           <VStack gap='lg'>
-            {callBookingVisible && (
-              <CallBooking callBooking={callBooking} onBookCall={handleBookCall} />
-            )}
-            <Tasks
-              stringOverrides={stringOverrides?.tasks}
+            <BookkeepingOverviewTasksContent
+              callBooking={callBooking}
+              showCallBookingCard={showCallBookingCard}
+              tasksMobile={false}
+              tasksStringOverrides={stringOverrides?.tasks}
+              onBookCall={handleBookCall}
               onClickReconnectAccounts={onClickReconnectAccounts}
             />
           </VStack>
@@ -106,12 +162,12 @@ export const BookkeepingOverview = ({
             onClick={() => (upperElementInFocus.current = true)}
           >
             <VStack gap='lg'>
-              {callBookingVisible && (
-                <CallBooking callBooking={callBooking} onBookCall={handleBookCall} />
-              )}
-              <Tasks
-                mobile
-                stringOverrides={stringOverrides?.tasks}
+              <BookkeepingOverviewTasksContent
+                callBooking={callBooking}
+                showCallBookingCard={showCallBookingCard}
+                tasksMobile
+                tasksStringOverrides={stringOverrides?.tasks}
+                onBookCall={handleBookCall}
                 onClickReconnectAccounts={onClickReconnectAccounts}
               />
             </VStack>
