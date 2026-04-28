@@ -415,8 +415,8 @@ export const ExpandedBankTransactionRow = ({
                       {splitFormError && <HStack pb='sm'><ErrorText>{splitFormError}</ErrorText></HStack>}
                       <div
                         className={classNames(
-                          `${className}__total-and-btns`,
-                          asListItem && `${className}__total-and-btns--list-item`,
+                          'Layer__expanded-bank-transaction-row__total-and-btns',
+                          asListItem && 'Layer__expanded-bank-transaction-row__total-and-btns--ListItem',
                         )}
                       >
                         {effectiveSplits.length > 1 && (
