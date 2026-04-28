@@ -1,10 +1,10 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { VStack } from '@ui/Stack/Stack'
-import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { ActionableList, type ActionableListOption } from '@components/ActionableList/ActionableList'
 import { SearchField } from '@components/SearchField/SearchField'
 
@@ -60,6 +60,15 @@ export const TaxCodeSelectDrawer = ({
     onOpenChange(nextIsOpen)
   }, [onOpenChange])
 
+  const handleSelect = useCallback((item: ActionableListOption<TaxCodeSelectOption | null>) => {
+    if (item.id === NO_TAX_CODE) {
+      onSelect(null)
+    }
+    else {
+      onSelect(item.value)
+    }
+  }, [onSelect])
+
   const Header = useCallback(({ close }: { close: () => void }) => (
     <ModalTitleWithClose
       heading={<ModalHeading size='sm' weight='bold'>{t('bankTransactions:action.select_tax_code', 'Select tax code')}</ModalHeading>}
@@ -83,12 +92,7 @@ export const TaxCodeSelectDrawer = ({
           <ActionableList<TaxCodeSelectOption | null>
             options={filteredListOptions}
             onClick={(item) => {
-              if (item.id === NO_TAX_CODE) {
-                onSelect(null)
-              }
-              else {
-                onSelect(item.value)
-              }
+              handleSelect(item)
               close()
             }}
             selectedId={selectedId}
