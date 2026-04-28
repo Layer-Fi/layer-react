@@ -5,15 +5,18 @@ import { useTranslation } from 'react-i18next'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import {
   hasReceipts,
+  isCategorized,
   isCredit,
-} from '@utils/bankTransactions'
-import { isCategorized } from '@utils/bankTransactions'
+} from '@utils/bankTransactions/shared'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
-import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import {
+  useBankTransactionsCategorizationActions,
+  useGetBankTransactionCategorization,
+} from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import ChevronDownFill from '@icons/ChevronDownFill'
@@ -78,19 +81,21 @@ export const BankTransactionsListItem = ({
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
-  const { setTransactionCategory } = useBankTransactionsCategoryActions()
-  const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
+  const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
+  const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
 
   const save = useCallback(async () => {
     if (openExpandedRow && !isExpandedRowValid) return
-    if (!selectedCategory) return
+    if (!selectedCategorization?.category) return
 
-    await saveBankTransactionRow(selectedCategory, bankTransaction)
+    await saveBankTransactionRow(selectedCategorization, bankTransaction)
 
     // Remove from bulk selection store
     deselect(bankTransaction.id)
     setOpenExpandedRow(false)
-  }, [bankTransaction, deselect, isExpandedRowValid, openExpandedRow, saveBankTransactionRow, selectedCategory])
+  }, [bankTransaction, deselect, isExpandedRowValid, openExpandedRow, saveBankTransactionRow, selectedCategorization])
+
+  const selectedCategory = selectedCategorization?.category
 
   const preventRowExpansion = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -198,7 +203,7 @@ export const BankTransactionsListItem = ({
                 bankTransaction={bankTransaction}
                 selectedValue={selectedCategory ?? null}
                 onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
-                  setTransactionCategory(bankTransaction.id, selectedCategory)
+                  setTransactionCategorization(bankTransaction.id, { category: selectedCategory })
                 }}
                 isDisabled={isProcessing}
               />

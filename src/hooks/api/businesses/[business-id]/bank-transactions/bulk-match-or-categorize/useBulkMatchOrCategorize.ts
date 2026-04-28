@@ -4,14 +4,15 @@ import useSWRMutation from 'swr/mutation'
 
 import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { post } from '@utils/api/authenticatedHttp'
+import { getCategoryPayloadTaxCode } from '@utils/bankTransactions/taxCode'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useGetAllBankTransactionsCategories } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { type BankTransactionCategorization, useGetAllBankTransactionsCategorizations } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
 
@@ -19,12 +20,13 @@ type MatchOrCategorizeTransaction = typeof MatchOrCategorizeTransactionRequestSc
 
 const buildBulkMatchOrCategorizePayload = (
   selectedIds: Iterable<string>,
-  transactionCategories: Map<string, BankTransactionCategoryComboBoxOption | null>,
+  categorizations: Map<string, BankTransactionCategorization>,
 ): Record<string, MatchOrCategorizeTransaction> => {
   const transactions: Record<string, MatchOrCategorizeTransaction> = {}
 
   for (const transactionId of selectedIds) {
-    const transactionCategory = transactionCategories.get(transactionId) ?? null
+    const selectedCategorization = categorizations.get(transactionId)
+    const transactionCategory = selectedCategorization?.category ?? null
 
     if (!transactionCategory || isPlaceholderAsOption(transactionCategory)) {
       continue
@@ -50,6 +52,7 @@ const buildBulkMatchOrCategorizePayload = (
           return {
             amount: split.amount,
             category: classification,
+            taxCode: getCategoryPayloadTaxCode(classification, split.taxCode),
             tags: split.tags,
             customerId: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : undefined,
             vendorId: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : undefined,
@@ -71,11 +74,13 @@ const buildBulkMatchOrCategorizePayload = (
     else if (isCategoryAsOption(transactionCategory) || isApiCategorizationAsOption(transactionCategory)) {
       const classification = transactionCategory.classification
       if (classification) {
+        const selectedTaxCode = selectedCategorization?.taxCode ?? null
         transactions[transactionId] = {
           type: 'categorize',
           categorization: {
             type: 'Category',
             category: classification,
+            taxCode: getCategoryPayloadTaxCode(classification, selectedTaxCode?.value),
           },
         }
       }
@@ -153,15 +158,15 @@ export const useBulkMatchOrCategorize = () => {
   const { data } = useAuth()
   const { businessId, eventCallbacks } = useLayerContext()
   const { selectedIds } = useSelectedIds()
-  const { transactionCategories } = useGetAllBankTransactionsCategories()
+  const { categorizations } = useGetAllBankTransactionsCategorizations()
 
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const buildTransactionsPayload: () => BulkMatchOrCategorizeRequest = useCallback(() => {
-    const transactions = buildBulkMatchOrCategorizePayload(selectedIds, transactionCategories)
+    const transactions = buildBulkMatchOrCategorizePayload(selectedIds, categorizations)
     return { transactions }
-  }, [selectedIds, transactionCategories])
+  }, [selectedIds, categorizations])
 
   const mutationResponse = useSWRMutation(
     () => withLocale(buildKey({
