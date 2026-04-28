@@ -2,6 +2,7 @@ import { forwardRef, type PropsWithChildren, type ReactNode } from 'react'
 import { AlertTriangle, CheckCircle, Info, XCircle } from 'lucide-react'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { Button, type ButtonProps } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
@@ -23,7 +24,7 @@ export type BannerProps = PropsWithChildren<{
   variant?: BannerVariant
   title: string
   description?: string
-  slots?: { Icon?: ReactNode, Button?: ReactNode }
+  slots?: { Icon?: ReactNode | null | undefined, Button?: ReactNode }
   ariaLabel?: string
 }>
 
@@ -113,7 +114,9 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
   const dataProperties = toDataProperties({ variant })
   const ariaProperties = getAriaProperties(variant, ariaLabel)
 
-  const renderedIcon = slots?.Icon ?? getDefaultIcon(variant)
+  const renderedIcon = slots?.Icon === null
+    ? null
+    : slots?.Icon ?? getDefaultIcon(variant)
 
   return (
     <HStack
@@ -125,9 +128,11 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
       {...dataProperties}
       {...ariaProperties}
     >
-      <HStack align='center' justify='center' className={BANNER_CLASS_NAMES.ICON_CONTAINER}>
-        {renderedIcon}
-      </HStack>
+      {renderedIcon && (
+        <HStack align='center' justify='center' className={BANNER_CLASS_NAMES.ICON_CONTAINER}>
+          {renderedIcon}
+        </HStack>
+      )}
       <BannerContent title={title} description={description}>
         {children}
       </BannerContent>
@@ -140,5 +145,13 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
   )
 })
 Banner.displayName = 'Banner'
+
+export type BannerButtonProps = Omit<ButtonProps, 'variant'> & {
+  variant?: ButtonProps['variant']
+}
+
+export const BannerButton = ({ variant = 'outlined-light', ...rest }: BannerButtonProps) => (
+  <Button variant={variant} {...rest} />
+)
 
 export { Banner }

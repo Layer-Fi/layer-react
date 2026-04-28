@@ -11,7 +11,6 @@ import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstima
 import { HStack, Stack } from '@ui/Stack/Stack'
 import { ResponsiveDetailHeader } from '@components/ResponsiveDetailView/ResponsiveDetailHeader'
 import { FullYearProjectionComboBox } from '@components/TaxEstimates/FullYearProjectionComboBox/FullYearProjectionComboBox'
-import { TAX_OVERVIEW_MOBILE_BREAKPOINT } from '@components/TaxOverview/constants'
 
 import './taxEstimatesHeader.scss'
 
@@ -120,12 +119,13 @@ const useTaxEstimatesHeader = ({ type }: TaxEstimatesHeaderProps): TaxEstimatesH
 
 export const TaxEstimatesHeader = ({ type }: TaxEstimatesHeaderProps) => {
   const [viewportWidth] = useWindowSize()
-  const isMobileHeader = viewportWidth < TAX_OVERVIEW_MOBILE_BREAKPOINT
   const isMobile = viewportWidth < BREAKPOINTS.MOBILE
+  const isOverview = type === TaxEstimatesHeaderType.Overview
   const { title, description } = useTaxEstimatesHeader({ type })
+  const pie = isOverview || isMobile ? undefined : 'lg' as const
 
   return (
-    <Stack className='Layer__TaxEstimatesHeader' direction={isMobile ? 'column' : 'row'} gap='md' justify='space-between' align='start' fluid pie={isMobileHeader ? undefined : 'md'}>
+    <Stack className='Layer__TaxEstimatesHeader' direction={isMobile ? 'column' : 'row'} gap='md' justify='space-between' align='start' fluid pie={pie}>
       <ResponsiveDetailHeader title={title} description={description} />
       <HStack justify={isMobile ? 'start' : 'end'} className='Layer__TaxEstimatesHeader__ComboBoxContainer'>
         <FullYearProjectionComboBox />
