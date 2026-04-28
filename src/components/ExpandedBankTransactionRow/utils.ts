@@ -7,6 +7,7 @@ import { type SplitCategorizationEntryEncoded } from '@schemas/categorization'
 import { isSplitCategorizationEncoded } from '@schemas/categorization'
 import { decodeCustomerVendor } from '@schemas/customerVendor'
 import { makeTagFromTransactionTag, TransactionTagSchema } from '@schemas/tag'
+import { isExclusionCategory } from '@utils/bankTransactions/shared'
 import { toLocalizedCents } from '@utils/i18n/number/input'
 import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
@@ -140,7 +141,7 @@ export const getLocalSplitStateForExpandedTransaction = (
       return {
         amount: splitEntry.amount || 0,
         category: splitEntry.category,
-        taxCode: splitEntry.category?.classification?.type === 'Exclusion'
+        taxCode: isExclusionCategory(splitEntry.category)
           ? null
           : splitEntry.taxCode ?? null,
         tags: splitEntry.tags,
@@ -153,7 +154,7 @@ export const getLocalSplitStateForExpandedTransaction = (
     {
       amount: bankTransaction.amount,
       category: coercedSelectedCategory ?? null,
-      taxCode: coercedSelectedCategory?.classification?.type === 'Exclusion'
+      taxCode: isExclusionCategory(coercedSelectedCategory)
         ? null
         : selectedCategorization === undefined
           ? bankTransaction.tax_code ?? null

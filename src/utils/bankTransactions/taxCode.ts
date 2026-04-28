@@ -40,11 +40,23 @@ export const hasBankTransactionTaxCode = (
   return getBankTransactionTaxOptions(bankTransaction).some(taxOption => taxOption.code === taxCode)
 }
 
+export const isExclusionClassification = (
+  classification: Classification | null | undefined,
+): boolean => {
+  return classification?.type === 'Exclusion'
+}
+
+export const isExclusionCategory = (
+  category: { classification?: Classification | null } | null | undefined,
+): boolean => {
+  return isExclusionClassification(category?.classification)
+}
+
 export const getCategoryPayloadTaxCode = (
   classification: Classification | null | undefined,
   taxCode: string | null | undefined,
 ) => {
-  if (classification?.type === 'Exclusion') {
+  if (isExclusionClassification(classification)) {
     return null
   }
 

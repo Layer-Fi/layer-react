@@ -8,6 +8,7 @@ import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/
 import {
   hasReceipts,
   isCategorized,
+  isExclusionCategory,
 } from '@utils/bankTransactions/shared'
 import { getBankTransactionTaxCodeOptions, getCategoryPayloadTaxCode } from '@utils/bankTransactions/taxCode'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
@@ -140,7 +141,7 @@ export const BankTransactionsMobileListBusinessForm = ({
       else {
         setTransactionCategorization(bankTransaction.id, {
           category: option,
-          taxCode: option.classification?.type === 'Exclusion' ? null : selectedCategorization?.taxCode ?? null,
+          taxCode: isExclusionCategory(option) ? null : selectedCategorization?.taxCode ?? null,
         })
       }
     }
@@ -171,7 +172,7 @@ export const BankTransactionsMobileListBusinessForm = ({
     setSessionCategories(prev => new Map(prev).set(category.value, category))
     setTransactionCategorization(bankTransaction.id, {
       category,
-      taxCode: category.classification?.type === 'Exclusion' ? null : selectedCategorization?.taxCode ?? null,
+      taxCode: isExclusionCategory(category) ? null : selectedCategorization?.taxCode ?? null,
     })
   }, [bankTransaction.id, selectedCategorization?.taxCode, setTransactionCategorization])
 
@@ -196,7 +197,7 @@ export const BankTransactionsMobileListBusinessForm = ({
             options={taxCodeOptions}
             value={selectedCategorization?.taxCode ?? null}
             onChange={handleTaxCodeChange}
-            isDisabled={selectedCategory?.classification?.type === 'Exclusion'}
+            isDisabled={isExclusionCategory(selectedCategory)}
             hasSelection={selectedCategorization?.taxCode != null}
             placeholder={t('bankTransactions:action.select_tax_code', 'Select tax code')}
           />

@@ -20,6 +20,7 @@ import {
   getBankTransactionFirstSuggestedMatch,
   getBankTransactionTaxCodeOptions,
   hasMatch,
+  isExclusionCategory,
 } from '@utils/bankTransactions/shared'
 import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
 import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
@@ -324,7 +325,7 @@ export const ExpandedBankTransactionRow = ({
                         {effectiveSplits.map((split, index) => {
                           const isTaxCodeSelectorDisabled = !isCategorizationEnabled
                             || split.category === null
-                            || split.category.classification?.type === 'Exclusion'
+                            || isExclusionCategory(split.category)
 
                           return (
                             <VStack

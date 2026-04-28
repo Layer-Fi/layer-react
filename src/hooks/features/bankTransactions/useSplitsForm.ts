@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl'
 
 import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
 import { SplitAsOption } from '@internal-types/categorizationOption'
+import { isExclusionCategory } from '@utils/bankTransactions/shared'
 import { convertCentsToDecimalString } from '@utils/format'
 import { toLocalizedNumber } from '@utils/i18n/number/input'
 import {
@@ -118,7 +119,7 @@ export const useSplitsForm = ({
 
     const newLocalSplits = [...localSplits]
     newLocalSplits[index].category = newCategory
-    if (newCategory.classification?.type === 'Exclusion') {
+    if (isExclusionCategory(newCategory)) {
       newLocalSplits[index].taxCode = null
     }
     setLocalSplits(newLocalSplits)
