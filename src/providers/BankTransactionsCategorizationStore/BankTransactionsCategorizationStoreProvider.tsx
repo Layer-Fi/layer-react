@@ -29,7 +29,6 @@ type BankTransactionsCategorizationActions = {
     categorizations: Map<string, BankTransactionCategorization>
   ) => void
   clearTransactionCategorizations: (ids: string[]) => void
-  clearAllTransactionTaxCodes: () => void
   clearAllTransactionCategorizations: () => void
 }
 
@@ -107,16 +106,6 @@ function buildStore() {
         set((state) => {
           const newMap = new Map(state.categorizations)
           ids.forEach(id => newMap.delete(id))
-          return { categorizations: newMap }
-        })
-      },
-
-      clearAllTransactionTaxCodes: () => {
-        set((state) => {
-          const newMap = new Map(state.categorizations)
-          newMap.forEach((categorization, id) => {
-            newMap.set(id, { ...categorization, taxCode: null })
-          })
           return { categorizations: newMap }
         })
       },
