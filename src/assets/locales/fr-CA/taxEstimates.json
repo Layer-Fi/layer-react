@@ -4,6 +4,13 @@
     "save_profile": "Enregistrer le profil",
     "update_tax_profile": "Mettre à jour le profil fiscal"
   },
+  "banner": {
+    "categorization_incomplete": {
+      "description_one": "You have {{count}} uncategorized transaction with {{amount}} in potential deductions to review.",
+      "description_other": "You have {{count}} uncategorized transactions with {{amount}} in potential deductions to review.",
+      "title": "Your tax estimates are incomplete"
+    }
+  },
   "disclaimer": {
     "acknowledgment": "En continuant, j’atteste que je comprends ce qui précède.",
     "content": "L’outil Tax Estimates et le contenu connexe sont fournis à titre informatif seulement et ne constituent pas des conseils juridiques, comptables ou fiscaux, ni un substitut à des conseils professionnels. Nous ne sommes ni un planificateur financier ni un conseiller fiscal, et les utilisateurs assument l’entière responsabilité de leurs obligations fiscales, de l’exactitude des données et du respect des lois. Tous les calculs sont des estimations et peuvent contenir des erreurs. Ils sont fondés uniquement sur les renseignements que vous nous fournissez."
