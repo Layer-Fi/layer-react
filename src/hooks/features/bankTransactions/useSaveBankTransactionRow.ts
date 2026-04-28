@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { buildCategorizeBankTransactionPayloadForSplit, getCategoryPayloadTaxCode } from '@utils/bankTransactions/shared'
+import { buildCategorizeBankTransactionPayloadForSplit } from '@utils/bankTransactions/shared'
+import { getCategoryPayloadTaxCode } from '@utils/bankTransactions/taxCode'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useMatchBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useMatchBankTransactionWithCacheUpdate'
 import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'

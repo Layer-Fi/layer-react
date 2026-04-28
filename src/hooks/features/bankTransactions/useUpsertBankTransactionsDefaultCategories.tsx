@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { getBankTransactionTaxCodeOption, isExclusionCategory } from '@utils/bankTransactions/shared'
+import { getBankTransactionTaxCodeOption, isExclusionCategory } from '@utils/bankTransactions/taxCode'
 import { type BankTransactionCategorization, useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { getDefaultSelectedCategoryForBankTransaction } from '@components/BankTransactionCategoryComboBox/utils'
 

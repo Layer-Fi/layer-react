@@ -8,8 +8,8 @@ import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/
 import {
   hasReceipts,
   isCategorized,
-  isExclusionCategory,
 } from '@utils/bankTransactions/shared'
+import { isExclusionCategory } from '@utils/bankTransactions/taxCode'
 import { getBankTransactionTaxCodeOptions, getCategoryPayloadTaxCode } from '@utils/bankTransactions/taxCode'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'

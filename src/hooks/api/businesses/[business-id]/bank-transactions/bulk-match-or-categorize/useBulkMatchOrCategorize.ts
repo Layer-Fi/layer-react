@@ -4,7 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { post } from '@utils/api/authenticatedHttp'
-import { getCategoryPayloadTaxCode } from '@utils/bankTransactions/shared'
+import { getCategoryPayloadTaxCode } from '@utils/bankTransactions/taxCode'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'

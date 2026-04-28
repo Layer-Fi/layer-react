@@ -9,15 +9,6 @@ import { makeTagKeyValueFromTag } from '@schemas/tag'
 import { getCategoryPayloadTaxCode } from '@utils/bankTransactions/taxCode'
 import { CategorizedCategories, ReviewCategories } from '@components/BankTransactions/constants'
 
-export {
-  getBankTransactionTaxCodeOption,
-  getBankTransactionTaxCodeOptions,
-  getCategoryPayloadTaxCode,
-  hasBankTransactionTaxCode,
-  isExclusionCategory,
-  isExclusionClassification,
-} from '@utils/bankTransactions/taxCode'
-
 export const filterVisibility = (
   scope: DisplayState,
   bankTransaction: BankTransaction,

@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl'
 
 import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
 import { SplitAsOption } from '@internal-types/categorizationOption'
-import { isExclusionCategory } from '@utils/bankTransactions/shared'
+import { isExclusionCategory } from '@utils/bankTransactions/taxCode'
 import { convertCentsToDecimalString } from '@utils/format'
 import { toLocalizedNumber } from '@utils/i18n/number/input'
 import {

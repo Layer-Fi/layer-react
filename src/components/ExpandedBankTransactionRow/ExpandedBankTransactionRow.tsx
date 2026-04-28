@@ -18,10 +18,9 @@ import { type CustomerVendorSchema } from '@schemas/customerVendor'
 import { type Tag } from '@schemas/tag'
 import {
   getBankTransactionFirstSuggestedMatch,
-  getBankTransactionTaxCodeOptions,
   hasMatch,
-  isExclusionCategory,
 } from '@utils/bankTransactions/shared'
+import { getBankTransactionTaxCodeOptions, isExclusionCategory } from '@utils/bankTransactions/taxCode'
 import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
 import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
 import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
