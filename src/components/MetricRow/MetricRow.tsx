@@ -62,11 +62,10 @@ export const MetricRow = ({
     direction: showBorder ? 'column' as const : 'row' as const,
     ...(!showBorder && { justify: 'space-between' as const }),
   }
-
+  const metricProps = { amount, slotProps }
   return (
     <Stack {...stackProps} gap='md'>
-      {showBorder && <BorderedMetricRow amount={amount} slotProps={slotProps} />}
-      {!showBorder && <StandardMetricRow amount={amount} slotProps={slotProps} />}
+      {showBorder ? <BorderedMetricRow {...metricProps} /> : <StandardMetricRow {...metricProps} />}
     </Stack>
   )
 }
