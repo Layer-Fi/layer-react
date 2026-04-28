@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import CheckIcon from '@icons/Check'
 import ChevronRight from '@icons/ChevronRight'
 import { VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 import { Text, TextSize } from '@components/Typography/Text'
 
 import './actionableList.scss'
@@ -32,27 +33,27 @@ export const ActionableList = <T,>({
   className,
 }: ActionableListProps<T>) => {
   return (
-    <ul className={classNames('Layer__actionable-list', className)}>
+    <ul className={classNames('Layer__ActionableList', className)}>
       {options.map(x => (
         <li
           role='button'
           onClick={() => onClick(x)}
           key={x.id}
           className={classNames(
-            'Layer__actionable-list__item',
-            x.secondary && 'Layer__actionable-list__item--secondary',
-            x.asLink && 'Layer__actionable-list__item--as-link',
-            selectedId === x.id && 'Layer__actionable-list__item--selected',
+            'Layer__ActionableList__Item',
+            x.secondary && 'Layer__ActionableList__Item--Secondary',
+            x.asLink && 'Layer__ActionableList__Item--AsLink',
+            selectedId === x.id && 'Layer__ActionableList__Item--Selected',
           )}
         >
-          <VStack gap='2xs' align='start' className='Layer__actionable-list__content'>
+          <VStack gap='2xs' align='start' className='Layer__ActionableList__Content'>
             <Text size={TextSize.sm}>{x.label}</Text>
             {
               showDescriptions
               && x.description
               && (
                 <Text
-                  className='Layer__actionable-list__content-description'
+                  className='Layer__ActionableList__ContentDescription'
                   size={TextSize.sm}
                 >
                   {x.description}
@@ -62,16 +63,16 @@ export const ActionableList = <T,>({
           </VStack>
           {!x.asLink && selectedId && selectedId === x.id
             ? (
-              <span className='Layer__actionable-list__select Layer__actionable-list__select--selected'>
+              <Span className='Layer__ActionableList__Select Layer__ActionableList__Select--Selected'>
                 <CheckIcon
                   size={14}
                 />
-              </span>
+              </Span>
             )
             : null}
           {!x.asLink && (!selectedId || selectedId !== x.id)
             ? (
-              <span className='Layer__actionable-list__select' />
+              <Span className='Layer__ActionableList__Select' />
             )
             : null}
           {x.asLink && (

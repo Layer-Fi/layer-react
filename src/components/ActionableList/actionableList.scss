@@ -1,9 +1,9 @@
-.Layer__actionable-list {
+.Layer__ActionableList {
   padding: 0;
   margin: 0;
   list-style: none;
 
-  &__item {
+  &__Item {
     box-sizing: border-box;
     display: flex;
     gap: var(--spacing-2xs);
@@ -16,35 +16,35 @@
     cursor: pointer;
     font-size: 12px;
 
-    &--secondary {
+    &--Secondary {
       color: var(--color-base-500);
 
-      &.Layer__actionable-list__item--as-link:hover {
+      &.Layer__ActionableList__Item--AsLink:hover {
         color: var(--color-base-1000);
       }
     }
 
-    &--selected {
+    &--Selected {
       background-color: var(--color-base-50);
     }
   }
 
-  &__content {
+  &__Content {
     max-width: 36ch;
   }
 
-  &__content-description {
+  &__ContentDescription {
     color: var(--color-base-500);
   }
 
-  &__select {
+  &__Select {
     display: flex;
     height: 18px;
     width: 18px;
     border-radius: 50%;
     border: 1px solid var(--color-base-300);
 
-    &--selected {
+    &--Selected {
       align-items: center;
       justify-content: center;
       border: 1px solid var(--color-info-success);
