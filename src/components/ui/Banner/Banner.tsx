@@ -114,13 +114,9 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
   const dataProperties = toDataProperties({ variant })
   const ariaProperties = getAriaProperties(variant, ariaLabel)
 
-  let renderedIcon
-  if (slots?.Icon !== undefined) {
-    renderedIcon = slots?.Icon ?? getDefaultIcon(variant)
-  }
-  else if (slots?.Icon === null) {
-    renderedIcon = undefined
-  }
+  const renderedIcon = slots?.Icon === null
+    ? null
+    : slots?.Icon ?? getDefaultIcon(variant)
 
   return (
     <HStack
@@ -132,9 +128,11 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
       {...dataProperties}
       {...ariaProperties}
     >
-      <HStack align='center' justify='center' className={BANNER_CLASS_NAMES.ICON_CONTAINER}>
-        {renderedIcon}
-      </HStack>
+      {renderedIcon && (
+        <HStack align='center' justify='center' className={BANNER_CLASS_NAMES.ICON_CONTAINER}>
+          {renderedIcon}
+        </HStack>
+      )}
       <BannerContent title={title} description={description}>
         {children}
       </BannerContent>
