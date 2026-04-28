@@ -24,7 +24,7 @@ export type BannerProps = PropsWithChildren<{
   variant?: BannerVariant
   title: string
   description?: string
-  slots?: { Icon?: ReactNode, Button?: ReactNode }
+  slots?: { Icon: ReactNode | null | undefined, Button?: ReactNode }
   ariaLabel?: string
 }>
 
@@ -114,7 +114,13 @@ const Banner = forwardRef<HTMLDivElement, BannerProps>((
   const dataProperties = toDataProperties({ variant })
   const ariaProperties = getAriaProperties(variant, ariaLabel)
 
-  const renderedIcon = slots?.Icon ?? getDefaultIcon(variant)
+  let renderedIcon
+  if (slots?.Icon !== undefined) {
+    renderedIcon = slots?.Icon ?? getDefaultIcon(variant)
+  }
+  else if (slots?.Icon === null) {
+    renderedIcon = undefined
+  }
 
   return (
     <HStack
