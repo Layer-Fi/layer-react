@@ -405,10 +405,7 @@ const SplitTaxCodeSelect = ({
 }: SplitTaxCodeSelectProps) => {
   return (
     <>
-      <HStack pis='3xs'>
-        <Span>
-        </Span>
-      </HStack>
+      <HStack pis='3xs' aria-hidden='true' />
       <TaxCodeSelectDrawerWithTrigger
         options={taxCodeOptions}
         value={getSelectedTaxCodeOption(split.taxCode ?? null)}
