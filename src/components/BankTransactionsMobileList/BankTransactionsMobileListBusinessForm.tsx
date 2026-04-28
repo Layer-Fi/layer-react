@@ -197,7 +197,7 @@ export const BankTransactionsMobileListBusinessForm = ({
             value={selectedCategorization?.taxCode ?? null}
             onChange={handleTaxCodeChange}
             isDisabled={selectedCategory?.classification?.type === 'Exclusion'}
-            hasSelection={selectedCategorization?.taxCode !== undefined}
+            hasSelection={selectedCategorization?.taxCode != null}
             placeholder={t('bankTransactions:action.select_tax_code', 'Select tax code')}
           />
         )}
