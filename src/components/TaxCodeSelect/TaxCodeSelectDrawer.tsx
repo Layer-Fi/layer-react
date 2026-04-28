@@ -4,15 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { VStack } from '@ui/Stack/Stack'
+import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { ActionableList, type ActionableListOption } from '@components/ActionableList/ActionableList'
 import { SearchField } from '@components/SearchField/SearchField'
 
 import { NO_TAX_CODE } from './constants'
 
-export type TaxCodeSelectOption = {
-  label: string
-  value: string
-}
+export type TaxCodeSelectOption = ComboBoxOption
 
 type TaxCodeSelectDrawerProps = {
   options: TaxCodeSelectOption[]

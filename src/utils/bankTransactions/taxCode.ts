@@ -1,10 +1,6 @@
 import { type BankTransaction, type BankTransactionTaxOption } from '@internal-types/bankTransactions'
 import type { Classification } from '@schemas/categorization'
-
-export type BankTransactionTaxCodeOption = {
-  label: string
-  value: string
-}
+import type { ComboBoxOption } from '@ui/ComboBox/types'
 
 export const getBankTransactionTaxOptions = (bankTransaction?: BankTransaction): BankTransactionTaxOption[] => {
   if (!bankTransaction?.tax_options) {
@@ -14,7 +10,7 @@ export const getBankTransactionTaxOptions = (bankTransaction?: BankTransaction):
   return Object.values(bankTransaction.tax_options).flat()
 }
 
-export const getBankTransactionTaxCodeOptions = (bankTransaction?: BankTransaction): BankTransactionTaxCodeOption[] => {
+export const getBankTransactionTaxCodeOptions = (bankTransaction?: BankTransaction): ComboBoxOption[] => {
   return getBankTransactionTaxOptions(bankTransaction).map(taxOption => ({
     label: taxOption.display_name,
     value: taxOption.code,
@@ -24,7 +20,7 @@ export const getBankTransactionTaxCodeOptions = (bankTransaction?: BankTransacti
 export const getBankTransactionTaxCodeOption = (
   bankTransaction: BankTransaction | undefined,
   taxCode: string | null,
-): BankTransactionTaxCodeOption | null => {
+): ComboBoxOption | null => {
   if (!taxCode) {
     return null
   }

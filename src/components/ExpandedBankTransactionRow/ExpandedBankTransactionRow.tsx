@@ -35,6 +35,7 @@ import Scissors from '@icons/ScissorsFullOpen'
 import Trash from '@icons/Trash'
 import { Button } from '@ui/Button/Button'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
+import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
 import { Span } from '@ui/Typography/Text'
@@ -87,11 +88,6 @@ type ExpandedBankTransactionRowProps = {
 
   variant?: 'list' | 'row'
   onValidityChange?: (isValid: boolean) => void
-}
-
-type TaxCodeOption = {
-  label: string
-  value: string
 }
 
 export const ExpandedBankTransactionRow = ({
@@ -219,7 +215,7 @@ export const ExpandedBankTransactionRow = ({
 
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
-  const taxCodeOptions = useMemo<TaxCodeOption[]>(
+  const taxCodeOptions = useMemo<ComboBoxOption[]>(
     () => getBankTransactionTaxCodeOptions(bankTransaction),
     [bankTransaction],
   )
@@ -227,7 +223,7 @@ export const ExpandedBankTransactionRow = ({
   const showTaxCodeSelector = taxCodeOptions.length > 0
 
   const getSelectedTaxCodeOption = useCallback(
-    (taxCode: string | null): TaxCodeOption | null => {
+    (taxCode: string | null): ComboBoxOption | null => {
       if (!taxCode) {
         return null
       }
@@ -365,7 +361,7 @@ export const ExpandedBankTransactionRow = ({
                                   includeSuggestedMatches={false}
                                 />
                                 {showTaxCodeSelector && (
-                                  <ComboBox<TaxCodeOption>
+                                  <ComboBox<ComboBoxOption>
                                     selectedValue={getSelectedTaxCodeOption(split.taxCode)}
                                     onSelectedValueChange={(option) => {
                                       updateSplitAtIndex(index, currentSplit => ({

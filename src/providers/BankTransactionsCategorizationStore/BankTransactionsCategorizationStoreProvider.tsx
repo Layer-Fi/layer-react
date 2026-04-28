@@ -1,12 +1,10 @@
 import { createContext, type PropsWithChildren, useContext, useState } from 'react'
 import { createStore, useStore } from 'zustand'
 
+import type { ComboBoxOption } from '@ui/ComboBox/types'
 import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
-export type TaxCodeSelectOption = {
-  label: string
-  value: string
-}
+export type TaxCodeSelectOption = ComboBoxOption
 
 export type BankTransactionCategorization = {
   category: BankTransactionCategoryComboBoxOption | null
