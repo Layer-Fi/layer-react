@@ -8,3 +8,9 @@
     padding-inline-end: var(--spacing-md);
   }
 }
+
+.Layer__expanded-bank-transaction-row__table-cell--split-entry__customer {
+  & > &__tax-code__Container {
+    flex: 0 0 12.5rem;
+  }
+}
