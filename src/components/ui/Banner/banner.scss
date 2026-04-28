@@ -18,29 +18,29 @@
   }
 
   &[data-variant='info'] {
-    --banner-bg: color-mix(in srgb, var(--color-info-bg) 35%, --color-base-0);
-    --banner-border-color: color-mix(in srgb, var(--color-info) 30%, --color-base-0);
+    --banner-bg: color-mix(in srgb, var(--color-info-bg) 35%, var(--color-base-0));
+    --banner-border-color: color-mix(in srgb, var(--color-info) 30%, var(--color-base-0));
     --banner-icon-color: var(--color-info-fg);
     --banner-icon-bg: var(--color-info-bg);
   }
 
   &[data-variant='warning'] {
-    --banner-bg: color-mix(in srgb, var(--color-info-warning-bg) 50%, --color-base-0);
-    --banner-border-color: color-mix(in srgb, var(--color-info-warning) 50%, --color-base-0);
+    --banner-bg: color-mix(in srgb, var(--color-info-warning-bg) 50%, var(--color-base-0));
+    --banner-border-color: color-mix(in srgb, var(--color-info-warning) 50%, var(--color-base-0));
     --banner-icon-color: var(--color-info-warning-fg);
     --banner-icon-bg: var(--color-info-warning-bg);
   }
 
   &[data-variant='error'] {
-    --banner-bg: color-mix(in srgb, var(--color-info-error-bg) 25%, --color-base-0);
-    --banner-border-color: color-mix(in srgb, var(--color-info-error) 30%, --color-base-0);
+    --banner-bg: color-mix(in srgb, var(--color-info-error-bg) 25%, var(--color-base-0));
+    --banner-border-color: color-mix(in srgb, var(--color-info-error) 30%, var(--color-base-0));
     --banner-icon-color: var(--color-info-error-fg);
     --banner-icon-bg: var(--color-info-error-bg);
   }
 
   &[data-variant='success'] {
-    --banner-bg: color-mix(in srgb, var(--color-info-success-bg) 35%, --color-base-0);
-    --banner-border-color: color-mix(in srgb, var(--color-info-success) 50%, --color-base-0);
+    --banner-bg: color-mix(in srgb, var(--color-info-success-bg) 35%, var(--color-base-0));
+    --banner-border-color: color-mix(in srgb, var(--color-info-success) 50%, var(--color-base-0));
     --banner-icon-color: var(--color-info-success-fg);
     --banner-icon-bg: var(--color-info-success-bg);
   }
