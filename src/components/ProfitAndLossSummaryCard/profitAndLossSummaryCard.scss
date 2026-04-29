@@ -1,12 +1,7 @@
 .Layer__ProfitAndLossSummaryCard {
   .Layer__chart-wrapper,
   .Layer__chart-container {
-    min-height: 250px;
-  }
-
-  .Layer__DetailedChart__container {
-    height: unset;
-    min-height: 250px;
+    min-block-size: 15.625rem;
   }
 
   div.recharts-responsive-container.Layer__chart-container {
