@@ -17,7 +17,7 @@ import { BankTransactionCategoryComboBox } from '@components/BankTransactionCate
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 import { NO_TAX_CODE } from '@components/TaxCodeSelect/constants'
-import { type TaxCodeSelectOption } from '@components/TaxCodeSelect/TaxCodeSelectDrawer'
+import { type TaxCodeSelectOption } from '@components/TaxCodeSelect/constants'
 import { TaxCodeSelectDrawerWithTrigger } from '@components/TaxCodeSelect/TaxCodeSelectDrawerWithTrigger'
 
 export enum CategorizationMode {

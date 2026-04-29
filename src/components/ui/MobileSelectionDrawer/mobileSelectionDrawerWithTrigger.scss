@@ -1,4 +1,8 @@
-.Layer__MobileSelectionDrawerWithTrigger {
+.Layer__MobileSelectionDrawerWithTrigger__Trigger {
+  width: 100%;
+}
+
+.Layer__MobileSelectionDrawerWithTrigger__Content {
   padding-inline: var(--spacing-sm);
 
   .Layer__SearchField {

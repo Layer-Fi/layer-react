@@ -1,12 +1,8 @@
-import { useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import ChevronDown from '@icons/ChevronDown'
-import { Button } from '@ui/Button/Button'
-import { HStack } from '@ui/Stack/Stack'
-import { Span } from '@ui/Typography/Text'
-import { NO_TAX_CODE } from '@components/TaxCodeSelect/constants'
-import { TaxCodeSelectDrawer, type TaxCodeSelectOption } from '@components/TaxCodeSelect/TaxCodeSelectDrawer'
+import { MobileSelectionDrawerWithTrigger } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
+import { NO_TAX_CODE, type TaxCodeSelectOption } from '@components/TaxCodeSelect/constants'
 
 type Props = {
   options: TaxCodeSelectOption[]
@@ -28,37 +24,37 @@ export const TaxCodeSelectDrawerWithTrigger = ({
   placeholder,
 }: Props) => {
   const { t } = useTranslation()
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  const noTaxCodeOption = useMemo<TaxCodeSelectOption>(() => ({
+    value: NO_TAX_CODE,
+    label: t('bankTransactions:action.no_tax_code', 'No tax code'),
+  }), [t])
+
+  const drawerOptions = useMemo(
+    () => [...options, noTaxCodeOption],
+    [noTaxCodeOption, options],
+  )
+
+  const selectedValue = hasSelection
+    ? (value ?? noTaxCodeOption)
+    : value
+
+  const handleChange = useCallback((newValue: TaxCodeSelectOption | null) => {
+    onChange(newValue?.value === NO_TAX_CODE ? null : newValue)
+  }, [onChange])
 
   return (
-    <HStack fluid className={className}>
-      <Button
-        flex
-        fullWidth
-        aria-label={t('bankTransactions:action.select_tax_code', 'Select tax code')}
-        onClick={() => {
-          setIsDrawerOpen(true)
-        }}
-        variant='outlined'
-        isDisabled={isDisabled}
-      >
-        <HStack fluid align='center' justify='space-between' gap='2xs'>
-          <Span ellipsis variant={hasSelection ? undefined : 'placeholder'}>
-            {!hasSelection
-              ? (placeholder ?? t('bankTransactions:action.select_tax_code', 'Select tax code'))
-              : (value?.label ?? t('bankTransactions:action.no_tax_code', 'No tax code'))}
-          </Span>
-          <ChevronDown size={16} />
-        </HStack>
-      </Button>
-
-      <TaxCodeSelectDrawer
-        options={options}
-        onSelect={onChange}
-        selectedId={value?.value ?? (hasSelection ? NO_TAX_CODE : undefined)}
-        isOpen={isDrawerOpen}
-        onOpenChange={setIsDrawerOpen}
-      />
-    </HStack>
+    <MobileSelectionDrawerWithTrigger<TaxCodeSelectOption>
+      ariaLabel={t('bankTransactions:action.select_tax_code', 'Select tax code')}
+      heading={t('bankTransactions:action.select_tax_code', 'Select tax code')}
+      options={drawerOptions}
+      selectedValue={selectedValue}
+      onSelectedValueChange={handleChange}
+      placeholder={placeholder ?? t('bankTransactions:action.select_tax_code', 'Select tax code')}
+      isDisabled={isDisabled}
+      isSearchable
+      searchPlaceholder={t('bankTransactions:action.search_tax_codes', 'Search tax codes...')}
+      className={className}
+    />
   )
 }

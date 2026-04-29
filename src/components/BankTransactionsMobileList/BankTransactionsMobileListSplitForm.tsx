@@ -24,7 +24,7 @@ import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/Cate
 import { AmountInput } from '@components/Input/AmountInput'
 import { FileInput } from '@components/Input/FileInput'
 import { Input } from '@components/Input/Input'
-import type { TaxCodeSelectOption } from '@components/TaxCodeSelect/TaxCodeSelectDrawer'
+import type { TaxCodeSelectOption } from '@components/TaxCodeSelect/constants'
 import { TaxCodeSelectDrawerWithTrigger } from '@components/TaxCodeSelect/TaxCodeSelectDrawerWithTrigger'
 import { ErrorText } from '@components/Typography/ErrorText'
 

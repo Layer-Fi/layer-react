@@ -42,13 +42,16 @@ export const BusinessFormMobileItem = <T extends BusinessFormOptionValue,>({
           />
         )}
 
-        <Span size='sm'>{label}</Span>
+        <HStack fluid justify={option.asLink ? 'space-between' : 'start'}>
+          <Span size='sm'>{label}</Span>
 
-        {option.asLink && (
-          <ChevronRight
-            size={16}
-          />
-        )}
+          {option.asLink && (
+            <ChevronRight
+              size={16}
+            />
+          )}
+        </HStack>
+
       </HStack>
     </GridListItem>
   )

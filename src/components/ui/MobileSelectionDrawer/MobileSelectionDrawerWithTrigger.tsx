@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import ChevronDown from '@icons/ChevronDown'
+import ChevronRight from '@icons/ChevronRight'
 import { Button } from '@ui/Button/Button'
 import type {
   ComboBoxOption,
@@ -12,7 +12,7 @@ import { filterOptionsOrGroups } from '@ui/MobileSelectionDrawer/filterUtils'
 import { MobileSelectionDrawerList } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerList'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
-import { VStack } from '@ui/Stack/Stack'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { SearchField } from '@components/SearchField/SearchField'
 
@@ -72,11 +72,17 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
 
   return (
     <>
-      <Button onClick={openDrawer} variant='outlined' isDisabled={isDisabled}>
-        <Span size='sm' ellipsis>
-          {selectedValue?.label ?? resolvedPlaceholder}
-        </Span>
-        <ChevronDown size={16} />
+      <Button onClick={openDrawer} variant='outlined' isDisabled={isDisabled} flex fullWidth>
+        <HStack
+          fluid
+          justify='space-between'
+          className='Layer__MobileSelectionDrawerWithTrigger__Trigger'
+        >
+          <Span size='sm' ellipsis>
+            {selectedValue?.label ?? resolvedPlaceholder}
+          </Span>
+          <ChevronRight size={16} />
+        </HStack>
       </Button>
 
       <Drawer
@@ -88,7 +94,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
         isDismissable
       >
         {({ close }) => (
-          <VStack className='Layer__MobileSelectionDrawerWithTrigger' pb='md' gap='md'>
+          <VStack className='Layer__MobileSelectionDrawerWithTrigger__Content' pb='md' gap='md'>
             {isSearchable && (
               <SearchField
                 value={searchQuery}
