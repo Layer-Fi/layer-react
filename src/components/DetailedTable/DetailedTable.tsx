@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
@@ -75,6 +75,12 @@ export const DetailedTable = <T extends SeriesData>({
   const { isMobile, isDesktop } = useSizeClass()
   const hasType = showTypeColumn && rows.length > 0 && rows.map(r => r.item.type).every(type => type !== undefined)
   const isSortable = interactionProps !== NO_OP_INTERACTION_PROPS
+
+  useEffect(() => {
+    if (!hasType && sortParams.sortBy === 'type') {
+      sortFunction({ sortBy: 'value', sortOrder: undefined }, SortOrder.DESC)
+    }
+  }, [hasType, sortParams.sortBy, sortFunction])
 
   return (
     <VStack className='Layer__DetailedTable'>
