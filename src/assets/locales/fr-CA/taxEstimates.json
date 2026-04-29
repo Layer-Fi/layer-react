@@ -133,6 +133,7 @@
     "taxes_by_state_name": "Impôts d’État ({{stateName}})",
     "taxes_by_state_name_projected": "Impôts d’État projetés ({{stateName}})",
     "taxes_due": "Impôts à payer",
+    "taxes_due_at": "Impôts dus le {{date}}",
     "taxes_owed": "Impôts dus",
     "taxes_owed_projected": "Impôts dus projetés",
     "taxes_paid": "Impôts payés",

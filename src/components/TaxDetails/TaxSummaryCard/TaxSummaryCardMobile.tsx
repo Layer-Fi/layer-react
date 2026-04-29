@@ -45,9 +45,9 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
         </VStack>
       </Card>
       <Card className='Layer__TaxSummaryCard__BreakdownCard'>
-        <div className='Layer__TaxSummaryCard__Grid Layer__TaxSummaryCard__Grid--mobile'>
+        <VStack className='Layer__TaxSummaryCard__Grid Layer__TaxSummaryCard__Grid--mobile'>
           {data.sections.map(section => (
-            <div key={section.label} className='Layer__TaxSummaryCard__SectionGroup'>
+            <VStack key={section.label} className='Layer__TaxSummaryCard__SectionGroup'>
               <Span size='sm' variant='subtle'>{section.label}</Span>
               <MoneySpan size='lg' weight='bold' amount={section.taxesOwed} />
               <Span size='sm' variant='subtle'>=</Span>
@@ -59,9 +59,9 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
               <Span size='sm' variant='subtle'>{t('common:label.total', 'Total')}</Span>
               <span />
               <Span size='sm' variant='subtle'>{t('taxEstimates:label.taxes_paid', 'Taxes Paid')}</Span>
-            </div>
+            </VStack>
           ))}
-        </div>
+        </VStack>
       </Card>
     </VStack>
   )

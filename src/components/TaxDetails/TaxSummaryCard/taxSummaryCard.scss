@@ -1,17 +1,70 @@
 .Layer__TaxSummaryCard {
+  display: grid;
+  grid-template-columns: 20% 40% 40%;
   width: 100%;
   border-block-end: 1px solid var(--color-base-200);
 
-  &__Overview {
-    min-width: 200px;
+  &__Cell {
+    position: relative;
     padding: var(--spacing-lg);
-    border-inline-end: 1px solid var(--color-base-200);
+
+    &--header {
+      border-block-end: 1px solid var(--color-base-200);
+    }
+
+    &--bordered {
+      border-inline-start: 1px solid var(--color-base-200);
+    }
   }
 
-  &__Breakdown {
-    flex: 1;
+  &__OperatorIconAnchor {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-base-0);
+    transform: translate(-50%, -50%);
+  }
+
+  &__OperatorCircle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid currentcolor;
+    color: var(--color-base-500);
+  }
+
+  &__OperatorCircle--filled {
+    border: none;
+  }
+
+  &__Equation {
+    flex-wrap: wrap;
+  }
+
+  &__AmountWithLabel {
+    min-width: 0;
+  }
+
+  &__Operator {
+    align-self: flex-start;
+    padding-block-start: var(--spacing-2xs);
+  }
+
+  &--mobile {
+    width: 100%;
+  }
+
+  &__OverviewCard {
     padding: var(--spacing-lg);
-    padding-block-end: var(--spacing-xl);
+  }
+
+  &__BreakdownCard {
+    padding: var(--spacing-lg);
   }
 
   &__Grid {
@@ -46,17 +99,5 @@
       margin-block-start: var(--spacing-3xs);
       border-block-start: 1px solid var(--color-base-100);
     }
-  }
-
-  &--mobile {
-    width: 100%;
-  }
-
-  &__OverviewCard {
-    padding: var(--spacing-lg);
-  }
-
-  &__BreakdownCard {
-    padding: var(--spacing-lg);
   }
 }
