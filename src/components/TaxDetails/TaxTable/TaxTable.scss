@@ -1,3 +1,6 @@
+$row-indents-desktop: (0: 1.5rem, 1: 3rem, 2: 6rem, 3: 9rem);
+$row-indents-mobile: (0: 0.25rem, 1: 1rem, 2: 1.25rem, 3: 1.75rem);
+
 .Layer__TaxTable {
   width: 100%;
   table-layout: fixed;
@@ -14,6 +17,10 @@
 
     &--mobile {
       height: auto;
+
+      .Layer__Span {
+        font-size: var(--text-sm);
+      }
     }
   }
 
@@ -23,23 +30,132 @@
       text-align: right;
     }
   }
+
+  &__RowLabel {
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    width: 100%;
+  }
+
+  @each $level, $indent in $row-indents-desktop {
+    .Layer__UI__Table-Row[data-level='#{$level}'] &__RowLabel {
+      padding-left: $indent;
+    }
+  }
+
+  @each $level, $indent in $row-indents-mobile {
+    .Layer__UI__Table-Row--mobile[data-level='#{$level}'] &__RowLabel {
+      padding-left: $indent;
+    }
+  }
+
+  &__OperatorBox {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    margin-right: var(--spacing-md);
+    font-size: var(--text-lg);
+    line-height: 1;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset-block: var(--spacing-md);
+      right: 0;
+      width: 1px;
+      background-color: var(--color-base-200);
+    }
+  }
+
+  .Layer__UI__Table-Row--mobile &__OperatorBox {
+    margin-right: 0;
+
+    &::after {
+      display: none;
+    }
+  }
+
+  &__RowLabel > .Layer__Span {
+    align-self: center;
+  }
+
+  &__ExpandSlot {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+    height: 1rem;
+    width: 1rem;
+    margin-right: var(--spacing-xs);
+  }
+
+  &__GroupToggle {
+    all: unset;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    height: 1rem;
+    width: 1rem;
+    cursor: pointer;
+    color: var(--color-base-700);
+  }
+
+  &__GroupToggleIcon {
+    transition: transform 0.15s ease;
+
+    &--collapsed {
+      transform: rotate(-90deg);
+    }
+
+    &--expanded {
+      transform: rotate(0deg);
+    }
+  }
 }
 
 .Layer__UI__Table-Row {
-  &.Layer__TaxTable__Row--nested {
-    background-color: var(--color-base-50);
+  &.Layer__TaxTable__Row--nested,
+  &.Layer__TaxTable__Row--section-total {
+    min-height: 3rem;
 
     .Layer__UI__Table-Cell:first-child {
-      padding-left: var(--spacing-lg);
+      padding-block: 0;
+      padding-left: 0;
+    }
+  }
+
+  &[data-clickable='true'] {
+    cursor: pointer;
+  }
+
+  &[data-level='1'] {
+    .Layer__Span,
+    .Layer__TaxTable__OperatorBox {
+      color: var(--color-base-500);
+    }
+  }
+
+  &.Layer__TaxTable__Row--nested {
+    background-color: var(--color-base-50);
+  }
+
+  &.Layer__TaxTable__Row--section-total {
+    background-color: var(--color-base-0);
+
+    .Layer__Span,
+    .Layer__TaxTable__OperatorBox {
+      color: var(--color-base-900);
     }
   }
 
   &.Layer__TaxTable__Row--empty {
     height: var(--spacing-md);
-  }
-
-  &.Layer__TaxTable__Row--section-total {
-    border-bottom: 1px solid var(--color-border);
   }
 
   &.Layer__TaxTable__Row--total {

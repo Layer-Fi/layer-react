@@ -97,10 +97,11 @@ export const TaxDetails = () => {
           const usState = details.taxes.usState
 
           return (
-            <ExpandableCardsWrapper>
+            <ExpandableCardsWrapper className='Layer__TaxDetails__ExpandableCardsWrapper'>
               <ExpandableCard
                 isExpanded={expanded.taxableIncome}
                 onToggleExpanded={() => toggleExpanded('taxableIncome')}
+                expandButtonPosition='left'
                 slots={{
                   Heading: (
                     <TaxDetailsExpandableCardHeading
@@ -125,6 +126,7 @@ export const TaxDetails = () => {
                 <ExpandableCard
                   isExpanded={expanded.federalTaxes}
                   onToggleExpanded={() => toggleExpanded('federalTaxes')}
+                  expandButtonPosition='left'
                   slots={{
                     Heading: (
                       <TaxDetailsExpandableCardHeading
@@ -150,6 +152,7 @@ export const TaxDetails = () => {
                 <ExpandableCard
                   isExpanded={expanded.stateTaxes}
                   onToggleExpanded={() => toggleExpanded('stateTaxes')}
+                  expandButtonPosition='left'
                   slots={{
                     Heading: (
                       <TaxDetailsExpandableCardHeading
