@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import ChevronDown from '@icons/ChevronDown'
+import ChevronRight from '@icons/ChevronRight'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -29,10 +29,10 @@ export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips 
         variant='outlined'
       >
         <HStack fluid align='center' justify='space-between' gap='2xs'>
-          <Span ellipsis variant={value ? undefined : 'placeholder'}>
+          <Span size='sm'ellipsis variant={value ? undefined : 'placeholder'}>
             {value?.label ?? t('common:action.select_label', 'Select...')}
           </Span>
-          <ChevronDown size={16} />
+          <ChevronRight size={16} />
         </HStack>
       </Button>
 
