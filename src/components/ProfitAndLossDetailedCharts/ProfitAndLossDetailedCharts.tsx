@@ -23,12 +23,17 @@ import { usePnlDetailedTableRows } from '@components/ProfitAndLossDetailedCharts
 import { isLineItemUncategorized, mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/utils'
 import type { ProfitAndLossDetailReportProps } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { type SelectedLineItem } from '@components/ProfitAndLossReport/ProfitAndLossReport'
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 export interface DetailedChartStringOverrides {
   expenseChartHeader?: string
   revenueChartHeader?: string
   revenueToggleLabel?: string
   expenseToggleLabel?: string
+}
+
+export interface ProfitAndLossDetailedChartsSlotProps {
+  detailedTable?: {
+    showTypeColumn?: boolean
+  }
 }
 
 export interface ProfitAndLossDetailedChartsStringOverrides {
@@ -67,15 +72,19 @@ const DetailedChartsDatePickerHeader = () => {
 export const ProfitAndLossDetailedCharts = ({
   scope,
   hideClose = false,
+  hideHeader = false,
   showDatePicker = false,
   chartColorsList,
   stringOverrides,
+  slotProps,
 }: {
   scope?: SidebarScope
   hideClose?: boolean
+  hideHeader?: boolean
   showDatePicker?: boolean
   chartColorsList?: string[]
   stringOverrides?: ProfitAndLossDetailedChartsStringOverrides
+  slotProps?: ProfitAndLossDetailedChartsSlotProps
 }) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
@@ -182,39 +191,43 @@ export const ProfitAndLossDetailedCharts = ({
 
   return (
     <div className='Layer__profit-and-loss-detailed-charts'>
-      <header className='Layer__profit-and-loss-detailed-charts__header'>
-        <div className='Layer__profit-and-loss-detailed-charts__head'>
-          <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-            {humanizeTitle(activeScope, stringOverrides?.detailedChartStringOverrides, t)}
-          </Text>
-          <Text size={TextSize.sm} className='date'>
-            {formatDate(dateRange.startDate, DateFormat.MonthYear)}
-          </Text>
-          {showDatePicker && <GlobalMonthPicker />}
-        </div>
-        {!hideClose && (
-          <Button
-            rightIcon={<XIcon />}
-            iconOnly={true}
-            onClick={() => setSidebarScope(undefined)}
-            variant={ButtonVariant.secondary}
-          />
-        )}
-      </header>
+      {!hideHeader && (
+        <header className='Layer__profit-and-loss-detailed-charts__header'>
+          <VStack className='Layer__profit-and-loss-detailed-charts__head'>
+            <Span size='lg' weight='bold' className='title'>
+              {humanizeTitle(activeScope, stringOverrides?.detailedChartStringOverrides, t)}
+            </Span>
+            <Span size='sm' className='date'>
+              {formatDate(dateRange.startDate, DateFormat.MonthYear)}
+            </Span>
+            {showDatePicker && <GlobalMonthPicker />}
+          </VStack>
+          {!hideClose && (
+            <Button
+              rightIcon={<XIcon />}
+              iconOnly={true}
+              onClick={() => setSidebarScope(undefined)}
+              variant={ButtonVariant.secondary}
+            />
+          )}
+        </header>
+      )}
 
-      <header className='Layer__profit-and-loss-detailed-charts__header--tablet'>
-        {!hideClose && (
-          <BackButton onClick={() => setSidebarScope(undefined)} />
-        )}
-        <div className='Layer__profit-and-loss-detailed-charts__head'>
-          <Text size={TextSize.lg} weight={TextWeight.bold} className='title'>
-            {humanizeTitle(activeScope, stringOverrides?.detailedChartStringOverrides, t)}
-          </Text>
-          <Text size={TextSize.sm} className='date'>
-            {formatDate(dateRange.startDate, DateFormat.MonthYear)}
-          </Text>
-        </div>
-      </header>
+      {!hideHeader && (
+        <header className='Layer__profit-and-loss-detailed-charts__header--tablet'>
+          {!hideClose && (
+            <BackButton onClick={() => setSidebarScope(undefined)} />
+          )}
+          <VStack className='Layer__profit-and-loss-detailed-charts__head'>
+            <Span size='lg' weight='bold' className='title'>
+              {humanizeTitle(activeScope, stringOverrides?.detailedChartStringOverrides, t)}
+            </Span>
+            <Span size='sm' className='date'>
+              {formatDate(dateRange.startDate, DateFormat.MonthYear)}
+            </Span>
+          </VStack>
+        </header>
+      )}
 
       <div className='Layer__profit-and-loss-detailed-charts__content'>
         {isEmpty
@@ -239,6 +252,7 @@ export const ProfitAndLossDetailedCharts = ({
                 interactionProps={tableInteractionProps}
                 rows={detailedTableRows}
                 stringOverrides={stringOverrides?.detailedTableStringOverrides}
+                {...slotProps?.detailedTable}
               />
             </>
           )}

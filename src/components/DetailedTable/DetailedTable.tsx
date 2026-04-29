@@ -41,6 +41,7 @@ interface DetailedTableBaseProps<T extends SeriesData> {
     onValueClick?: (item: T) => void
   }
   stringOverrides?: DetailedTableStringOverrides
+  showTypeColumn?: boolean
 }
 
 export interface DetailedTableProps<T extends SeriesData> extends DetailedTableBaseProps<T> {
@@ -58,6 +59,7 @@ export const DetailedTable = <T extends SeriesData>({
   interactionProps,
   rows,
   stringOverrides,
+  showTypeColumn = true,
 }: DetailedTableProps<T>) => {
   const { t } = useTranslation()
 
@@ -70,13 +72,13 @@ export const DetailedTable = <T extends SeriesData>({
     return sortParams.sortBy === column ? undefined : 'subtle'
   }, [sortParams.sortBy])
 
-  const { isMobile } = useSizeClass()
-  const hasType = rows.length > 0 && rows.map(r => r.item.type).every(type => type !== undefined)
+  const { isMobile, isDesktop } = useSizeClass()
+  const hasType = showTypeColumn && rows.length > 0 && rows.map(r => r.item.type).every(type => type !== undefined)
   const isSortable = interactionProps !== NO_OP_INTERACTION_PROPS
 
   return (
     <VStack className='Layer__DetailedTable'>
-      <VStack className='Layer__DetailedTable__container' pi='md' pbs='2xs' pbe='md'>
+      <VStack className='Layer__DetailedTable__container' pi='md' pbs='2xs' pbe={isDesktop ? 'md' : undefined}>
         <VStack className={classNames('Layer__DetailedTable__table', isSortable && 'Layer__DetailedTable__table--sortable')}>
           <table>
             <thead>
