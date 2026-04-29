@@ -24,7 +24,7 @@ export type StackProps = PropsWithChildren<{
 }>
 
 type InternalStackProps = StackProps & {
-  direction: 'row' | 'column'
+  direction: 'row' | 'column' | 'row-reverse' | 'column-reverse'
 }
 
 const CLASS_NAME = 'Layer__Stack'
