@@ -9,9 +9,17 @@
   border: 1px solid var(--border-color);
   background-color: var(--color-base-0);
 
+  cursor: pointer;
+
   &[data-selection-mode='multiple'],
   &[data-selection-mode='single'] {
     grid-template-areas: 'selection content';
     grid-template-columns: auto 1fr;
+  }
+
+  [data-variant='compact'] & {
+    padding-inline: 0;
+    border-radius: 0;
+    border: none;
   }
 }

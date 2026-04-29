@@ -1,0 +1,25 @@
+.Layer__UnifiedReport__AdditionalControls {
+  display: grid;
+  gap: var(--spacing-xs);
+
+  &[data-variant='small'] {
+    grid-template-columns: 1fr;
+  }
+
+  &[data-variant='medium'] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  &[data-variant='large'] {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  &[data-variant='small'],
+  &[data-variant='medium'] {
+    > *,
+    .Layer__DateGroupByComboBox__Container {
+      inline-size: 100%;
+      max-inline-size: none;
+    }
+  }
+}

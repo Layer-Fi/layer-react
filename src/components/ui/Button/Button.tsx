@@ -36,7 +36,7 @@ export type ButtonSize = 'md'
 
 export type ButtonStyleProps = {
   ellipsis?: true
-  icon?: true
+  icon?: boolean
   inset?: true
   size?: ButtonSize
   variant?: ButtonVariant
