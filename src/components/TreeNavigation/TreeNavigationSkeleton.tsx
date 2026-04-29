@@ -16,7 +16,6 @@ export const TreeNavigationSkeleton = ({
     {Array.from({ length: groups }).map((_, groupIndex) => (
       <VStack key={groupIndex}>
         <HStack className='Layer__TreeNavigationSkeleton__Group' align='center' gap='sm'>
-          <SkeletonLoader width='16px' height='16px' />
           <SkeletonLoader width='60%' height='12px' />
         </HStack>
         {Array.from({ length: leavesPerGroup }).map((_, leafIndex) => (
