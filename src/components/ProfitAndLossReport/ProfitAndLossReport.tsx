@@ -1,10 +1,11 @@
 import { type ReactNode, useCallback, useContext, useEffect, useMemo } from 'react'
 
 import { type View as ViewType } from '@internal-types/general'
+import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
-import { HStack } from '@ui/Stack/Stack'
+import { HStack, Stack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 import { type BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
 import { Header } from '@components/Header/Header'
@@ -14,6 +15,7 @@ import { ProfitAndLossCompareOptions } from '@components/ProfitAndLossCompareOpt
 import { ProfitAndLossDetailReport } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { ProfitAndLossDownloadButton } from '@components/ProfitAndLossDownloadButton/ProfitAndLossDownloadButton'
 import { ProfitAndLossTableWithProvider } from '@components/ProfitAndLossTable/ProfitAndLossTableWithProvider'
+import { ReportsMobileSelectionTrigger } from '@components/ReportsNavigation/ReportsMobileSelectionTrigger'
 import { View } from '@components/View/View'
 import { type ReportsStringOverrides } from '@views/Reports/Reports'
 import type { TimeRangePickerConfig } from '@views/Reports/reportTypes'
@@ -42,6 +44,8 @@ export const ProfitAndLossReport = ({
 }: ProfitAndLossReportProps) => {
   const { selectedLineItem, setSelectedLineItem, setDateSelectionMode } = useContext(ProfitAndLossContext)
   const { comparisonConfig } = useContext(ProfitAndLossComparisonContext)
+  const { headerRef, isCompact } = useReportsCompactHeader()
+  const isMobileView = view === 'mobile'
 
   useEffect(() => {
     setDateSelectionMode(dateSelectionMode)
@@ -82,19 +86,30 @@ export const ProfitAndLossReport = ({
     if (hideHeader) return null
 
     return (
-      <Header>
+      <Header ref={headerRef}>
         <HeaderRow>
           <HeaderCol fluid>
-            <HStack pb='sm' align='end' fluid gap='xs' justify='space-between'>
+            <Stack
+              direction={isCompact ? 'column-reverse' : 'row'}
+              align={isCompact ? undefined : 'end'}
+              justify='space-between'
+              gap='xs'
+              pb='sm'
+              fluid
+            >
               <HStack gap='xs'>
-                <CombinedDateRangeSelection mode={dateSelectionMode} />
-                {view === 'desktop' && useComparisonPnl && <ProfitAndLossCompareOptions />}
+                <CombinedDateRangeSelection mode={dateSelectionMode} isCompact={isCompact} />
+                {view === 'desktop' && useComparisonPnl && <ProfitAndLossCompareOptions isCompact={isCompact} />}
               </HStack>
-              <ProfitAndLossDownloadButton
-                stringOverrides={stringOverrides?.downloadButton}
-                moneyFormat={csvMoneyFormat}
-              />
-            </HStack>
+              <HStack gap='xs' justify='end' fluid={isCompact}>
+                {isMobileView && <ReportsMobileSelectionTrigger />}
+                <ProfitAndLossDownloadButton
+                  stringOverrides={stringOverrides?.downloadButton}
+                  moneyFormat={csvMoneyFormat}
+                  iconOnly={isMobileView}
+                />
+              </HStack>
+            </Stack>
           </HeaderCol>
         </HeaderRow>
         {view !== 'desktop' && useComparisonPnl
@@ -102,14 +117,14 @@ export const ProfitAndLossReport = ({
             <HeaderRow>
               <HeaderCol fluid>
                 <HStack pb='sm' fluid>
-                  <ProfitAndLossCompareOptions />
+                  <ProfitAndLossCompareOptions isCompact={isCompact} />
                 </HStack>
               </HeaderCol>
             </HeaderRow>
           )}
       </Header>
     )
-  }, [csvMoneyFormat, dateSelectionMode, hideHeader, stringOverrides?.downloadButton, useComparisonPnl, view])
+  }, [csvMoneyFormat, dateSelectionMode, headerRef, hideHeader, isCompact, isMobileView, stringOverrides?.downloadButton, useComparisonPnl, view])
 
   return (
     <InAppLinkProvider renderInAppLink={renderInAppLink}>
