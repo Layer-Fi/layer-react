@@ -9,8 +9,6 @@
   border: 1px solid var(--border-color);
   background-color: var(--color-base-0);
 
-  cursor: pointer;
-
   &[data-selection-mode='multiple'],
   &[data-selection-mode='single'] {
     grid-template-areas: 'selection content';
