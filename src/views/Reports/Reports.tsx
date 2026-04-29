@@ -91,16 +91,19 @@ export const Reports = ({
 
   const resolvedTitle = stringOverrides?.title || title || defaultTitle
 
+  const reportsHeaderContextValue = useMemo(
+    () => ({
+      enabledReports,
+      options,
+      activeReport: activeTab,
+      selectedReportOption,
+      setActiveReport: setActiveTab,
+    }),
+    [enabledReports, options, activeTab, selectedReportOption],
+  )
+
   return (
-    <ReportsHeaderContextProvider
-      value={{
-        enabledReports,
-        options,
-        activeReport: activeTab,
-        selectedReportOption,
-        setActiveReport: setActiveTab,
-      }}
-    >
+    <ReportsHeaderContextProvider value={reportsHeaderContextValue}>
       <View title={resolvedTitle} showHeader={showTitle}>
         {!isMobileView && <ReportsToggle />}
         <Container name='reports' ref={containerRef}>
