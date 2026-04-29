@@ -1,0 +1,63 @@
+.Layer__ExpensesSummaryCard {
+  .Layer__SummaryCard__Content {
+    overflow: hidden;
+    block-size: 100%;
+  }
+
+  .Layer__profit-and-loss-detailed-charts,
+  .Layer__profit-and-loss-detailed-charts__content {
+    gap: var(--spacing-md);
+    block-size: 100%;
+    min-block-size: 0;
+  }
+
+  .Layer__profit-and-loss-detailed-charts__content {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+
+  .Layer__profit-and-loss-detailed-charts__content > .Layer__DetailedChart {
+    flex: 0 0 auto;
+    inline-size: auto;
+    min-inline-size: 14rem;
+    max-inline-size: 18rem;
+  }
+
+  .Layer__profit-and-loss-detailed-charts__content > .Layer__DetailedTable {
+    flex: 1 1 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-block-size: 0;
+    min-inline-size: 0;
+  }
+
+  .Layer__DetailedTable table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .Layer__DetailedTable thead th {
+    position: sticky;
+    z-index: 1;
+    box-shadow: inset 0 -1px 0 var(--color-base-300);
+    background: var(--color-base-0);
+    inset-block-start: 0;
+    border-block-end: 0;
+  }
+
+  .Layer__profit-and-loss-detailed-charts .Layer__DetailedChart__container {
+    padding-right: var(--spacing-xs);
+    padding-left: var(--spacing-xs);
+  }
+
+  .Layer__DetailedTable {
+    min-inline-size: 10rem;
+  }
+
+  .Layer__DetailedTable__container {
+    padding-inline: 0;
+  }
+}
