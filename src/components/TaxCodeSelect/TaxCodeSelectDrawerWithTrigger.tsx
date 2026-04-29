@@ -31,7 +31,7 @@ export const TaxCodeSelectDrawerWithTrigger = ({
   }), [t])
 
   const drawerOptions = useMemo(
-    () => [...options, noTaxCodeOption],
+    () => [noTaxCodeOption, ...options],
     [noTaxCodeOption, options],
   )
 
