@@ -30,19 +30,17 @@ const UnifiedReportContent = () => {
 
   return (
     <View title={t('reports:label.reports', 'Reports')} viewClassName='Layer__UnifiedReport' header={header}>
-      <ExpandableDataTableProvider>
-        <HStack>
-          {isDesktop && (
-            <VStack className='Layer__UnifiedReport__Sidebar'>
-              <ReportsNavigation />
-            </VStack>
-          )}
-          <VStack fluid className='Layer__UnifiedReport__Content'>
-            <UnifiedReportTableHeader />
-            <UnifiedReportTable />
+      <HStack>
+        {isDesktop && (
+          <VStack className='Layer__UnifiedReport__Sidebar'>
+            <ReportsNavigation />
           </VStack>
-        </HStack>
-      </ExpandableDataTableProvider>
+        )}
+        <VStack fluid className='Layer__UnifiedReport__Content'>
+          <UnifiedReportTableHeader />
+          <UnifiedReportTable />
+        </VStack>
+      </HStack>
     </View>
   )
 }
@@ -50,7 +48,9 @@ const UnifiedReportContent = () => {
 export const UnifiedReport = ({ dateSelectionMode }: UnifiedReportProps) => {
   return (
     <UnifiedReportStoreProvider dateSelectionMode={dateSelectionMode}>
-      <UnifiedReportContent />
+      <ExpandableDataTableProvider>
+        <UnifiedReportContent />
+      </ExpandableDataTableProvider>
     </UnifiedReportStoreProvider>
   )
 }

@@ -82,7 +82,7 @@ export const MobileList = <TData extends { id: string }>({
   }, [EmptyState])
 
   if (isLoading) {
-    return <MobileListSkeleton />
+    return <MobileListSkeleton variant={variant} />
   }
 
   if (isError) {

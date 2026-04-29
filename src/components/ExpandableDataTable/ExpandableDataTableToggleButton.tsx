@@ -29,7 +29,12 @@ export const ExpandableDataTableToggleButton = () => {
   const Icon = shouldCollapse ? CollapseIcon : ExpandIcon
 
   return (
-    <Button icon={!isDesktop} variant='outlined' onClick={onClickExpandOrCollapse}>
+    <Button
+      icon={!isDesktop}
+      variant='outlined'
+      onClick={onClickExpandOrCollapse}
+      aria-label={!isDesktop ? buttonText : undefined}
+    >
       {!isDesktop ? <Icon /> : buttonText}
     </Button>
   )

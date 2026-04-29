@@ -54,7 +54,7 @@ export const UnifiedReportControls = () => {
   return (
     <Stack
       ref={containerRef}
-      direction={size > MEDIUM_BREAKPOINT ? 'row' : 'column'}
+      direction={variant === 'large' ? 'row' : 'column'}
       pb='md'
       pi='lg'
       gap='xs'

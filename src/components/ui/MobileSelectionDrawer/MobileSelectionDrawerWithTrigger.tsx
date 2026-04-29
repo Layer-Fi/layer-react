@@ -40,6 +40,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
   ...optionOrGroups
 }: MobileSelectionDrawerWithTriggerProps<T>) => {
   const { t } = useTranslation()
+  const { options, groups } = optionOrGroups as Partial<OptionsOrGroups<T>>
 
   const [isOpen, setIsOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -54,8 +55,11 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
   const resolvedSearchPlaceholder = searchPlaceholder ?? t('common:action.search_label', 'Search')
 
   const filteredOptionsOrGroups = useMemo<OptionsOrGroups<T>>(
-    () => filterOptionsOrGroups(optionOrGroups as OptionsOrGroups<T>, searchQuery.trim().toLowerCase()),
-    [optionOrGroups, searchQuery],
+    () => filterOptionsOrGroups(
+      (groups ? { groups } : { options: options ?? [] }) as OptionsOrGroups<T>,
+      searchQuery.trim().toLowerCase(),
+    ),
+    [options, groups, searchQuery],
   )
 
   const Header = useCallback(() => (

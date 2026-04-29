@@ -28,6 +28,7 @@ export function UnifiedReportDownloadButton() {
         isPending={isMutating}
         isDisabled={isMutating}
         icon={!isDesktop}
+        aria-label={!isDesktop ? buttonText : undefined}
       >
         {isDesktop && buttonText}
         {isError ? <RefreshCcw size={12} /> : <DownloadCloud size={16} /> }
