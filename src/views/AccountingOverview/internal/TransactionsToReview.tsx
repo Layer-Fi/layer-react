@@ -113,7 +113,7 @@ export function TransactionsToReview({
       break
   }
   return (
-    <div onClick={onClick} className={CLASS_NAME}>
+    <div className={CLASS_NAME}>
       <VStack gap={verticalGap} align='start'>
         <ProfitAndLossSummariesHeading variants={variants}>
           {t('bankTransactions:label.transactions_to_review', 'Transactions to review')}
