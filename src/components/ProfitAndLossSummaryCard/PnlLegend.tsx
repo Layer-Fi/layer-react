@@ -16,7 +16,14 @@ export type PnlLegendProps = {
 export const PnlLegend = ({ direction = 'row' }: PnlLegendProps) => {
   const { t } = useTranslation()
   return (
-    <Stack className='Layer__PnlLegend' direction={direction} gap={direction === 'row' ? 'md' : '2xs'} pis={direction === 'column' ? 'md' : undefined} pbe={direction === 'column' ? 'md' : undefined}>
+    <Stack
+      className='Layer__PnlLegend'
+      direction={direction}
+      align='start'
+      gap={direction === 'row' ? 'md' : '2xs'}
+      pis={direction === 'column' ? 'md' : undefined}
+      pbe={direction === 'column' ? 'md' : undefined}
+    >
       <HStack gap='2xs' align='center'>
         <Swatch className='Layer__PnlLegend__Swatch--income' />
         <Span size='sm'>{t('common:label.revenue', 'Revenue')}</Span>
