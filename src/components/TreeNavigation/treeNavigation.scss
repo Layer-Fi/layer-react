@@ -1,7 +1,7 @@
 .Layer__TreeNavigation .Layer__UI__TreeItem {
   position: relative;
   align-content: center;
-  height: var(--spacing-5xl);
+  padding-block: var(--spacing-sm);
 
   padding-inline-start: calc(var(--spacing-3xs) + var(--spacing-sm) * var(--tree-item-level));
   padding-inline-end: var(--spacing-md);

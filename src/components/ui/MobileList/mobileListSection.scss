@@ -1,0 +1,21 @@
+.Layer__MobileListSection {
+  display: flex;
+  flex-direction: column;
+
+  &__Heading {
+    padding-block-end: var(--spacing-xs);
+    padding-inline: var(--spacing-3xs);
+    outline: none;
+    background-color: transparent;
+    cursor: default;
+  }
+
+  &:not(:last-child) {
+    padding-block-end: var(--spacing-xs);
+  }
+
+  &:not(:first-child) {
+    padding-block-start: var(--spacing-md);
+    border-block-start: 1px solid var(--border-color);
+  }
+}

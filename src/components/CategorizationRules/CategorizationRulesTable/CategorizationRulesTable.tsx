@@ -9,7 +9,6 @@ import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
 import { ResolvedCategoryName } from '@components/CategorizationRules/ResolvedCategoryName'
 import { getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
-import { Container } from '@components/Container/Container'
 import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { PaginatedTable, type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
@@ -90,17 +89,15 @@ export const CategorizationRulesTable = ({
   ], [t, options, onDeleteRule])
 
   return (
-    <Container name='CategorizationRulesTable'>
-      <PaginatedTable
-        ariaLabel={t('categorizationRules:label.categorization_rules', 'Categorization rules')}
-        data={data}
-        isLoading={isLoading}
-        isError={isError}
-        columnConfig={columnConfig}
-        paginationProps={paginationProps}
-        componentName={COMPONENT_NAME}
-        slots={slots}
-      />
-    </Container>
+    <PaginatedTable
+      ariaLabel={t('categorizationRules:label.categorization_rules', 'Categorization rules')}
+      data={data}
+      isLoading={isLoading}
+      isError={isError}
+      columnConfig={columnConfig}
+      paginationProps={paginationProps}
+      componentName={COMPONENT_NAME}
+      slots={slots}
+    />
   )
 }

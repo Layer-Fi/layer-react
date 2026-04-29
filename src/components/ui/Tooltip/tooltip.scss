@@ -11,7 +11,7 @@
   background: var(--color-base-1000);
 }
 
-.Layer__UI__tooltip-content--text {
+.Layer__UI__tooltip-content > .Layer__UI__tooltip-content--text {
   display: block;
   font-size: var(--text-sm);
   text-align: justify;

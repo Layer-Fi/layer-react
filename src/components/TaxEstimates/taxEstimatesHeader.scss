@@ -1,9 +1,4 @@
-@container (max-width: 500px) {
-  .Layer__TaxEstimatesHeader.Layer__TaxEstimatesHeader {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
+@media (width <= 500px) {
   .Layer__TaxEstimatesHeader__ComboBoxContainer {
     width: 100%;
   }
