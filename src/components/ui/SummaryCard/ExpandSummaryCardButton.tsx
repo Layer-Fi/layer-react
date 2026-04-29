@@ -12,6 +12,7 @@ export function ExpandSummaryCardButton({ callback, ariaLabel }: ExpandSummaryCa
   return (
     <Button
       variant='outlined'
+      icon
       onPress={callback}
       aria-label={ariaLabel}
     >

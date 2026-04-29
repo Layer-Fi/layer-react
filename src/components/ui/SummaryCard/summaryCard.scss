@@ -14,8 +14,6 @@
   &__Header {
     box-sizing: border-box;
     height: 5rem;
-    padding-block: var(--spacing-md);
-    padding-inline: var(--spacing-lg);
     border-block-end: 1px solid var(--color-base-300);
   }
 
@@ -35,10 +33,6 @@
   &__HeaderPrimaryAction {
     flex-shrink: 0;
     min-inline-size: 0;
-
-    .Layer__UI__Button {
-      padding-inline: var(--spacing-2xs);
-    }
   }
 
   &__Content {
@@ -53,5 +47,9 @@
 @media (width > 760px) {
   .Layer__SummaryCard {
     block-size: var(--layer-summary-card-desktop-height);
+  }
+
+  .Layer__SummaryCard__Content {
+    overflow: auto;
   }
 }

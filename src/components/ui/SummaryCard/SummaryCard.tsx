@@ -43,6 +43,8 @@ export const SummaryCard = ({
           justify='space-between'
           align='center'
           gap='md'
+          pb='md'
+          pi='lg'
         >
           <VStack className='Layer__SummaryCard__HeaderTitle'>
             {titleNode}
