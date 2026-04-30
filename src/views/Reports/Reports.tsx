@@ -46,7 +46,7 @@ export interface ReportsProps {
 const REPORT_TYPE_CONFIG: { value: ReportType, i18nKey: string, defaultValue: string }[] = [
   { value: 'profitAndLoss', ...translationKey('common:label.profit_loss', 'Profit & Loss') },
   { value: 'balanceSheet', ...translationKey('reports:label.balance_sheet', 'Balance Sheet') },
-  { value: 'statementOfCashFlow', ...translationKey('reports:label.statement_cash_flow', 'Statement of Cash Flow') },
+  { value: 'statementOfCashFlow', ...translationKey('reports:label.cash_flow_statement', 'Cash Flow Statement') },
 ]
 
 export interface ReportsPanelProps {
