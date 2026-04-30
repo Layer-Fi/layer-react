@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import ChevronRight from '@icons/ChevronRight'
 import { MobileSelectionDrawerWithTrigger } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
 import { NO_TAX_CODE, type TaxCodeSelectOption } from '@components/TaxCodeSelect/constants'
 
@@ -54,6 +55,7 @@ export const TaxCodeSelectDrawerWithTrigger = ({
       isDisabled={isDisabled}
       isSearchable
       searchPlaceholder={t('bankTransactions:action.search_tax_codes', 'Search tax codes...')}
+      slotProps={{ Trigger: { icon: <ChevronRight size={16} /> } }}
       className={className}
     />
   )

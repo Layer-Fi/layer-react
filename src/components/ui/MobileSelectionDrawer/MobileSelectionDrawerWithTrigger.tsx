@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import ChevronRight from '@icons/ChevronRight'
 import { Button } from '@ui/Button/Button'
 import type {
   ComboBoxOption,
@@ -24,6 +24,12 @@ export type MobileSelectionDrawerWithTriggerProps<T extends ComboBoxOption> =
     ariaLabel: string
     heading: string
     searchPlaceholder?: string
+    slotProps?: {
+      Trigger?: {
+        label?: string
+        icon?: React.ReactNode
+      }
+    }
   }
 
 export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
@@ -31,12 +37,12 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
   heading,
   selectedValue,
   onSelectedValueChange,
-  placeholder,
   isLoading = false,
   isError = false,
   isDisabled = false,
   isSearchable = false,
   searchPlaceholder,
+  slotProps,
   ...optionOrGroups
 }: MobileSelectionDrawerWithTriggerProps<T>) => {
   const { t } = useTranslation()
@@ -51,7 +57,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
 
   const openDrawer = useCallback(() => setIsOpen(true), [])
 
-  const resolvedPlaceholder = placeholder ?? t('common:action.select_label', 'Select...')
+  const resolvedPlaceholder = slotProps?.Trigger?.label ?? t('common:action.select_label', 'Select...')
   const resolvedSearchPlaceholder = searchPlaceholder ?? t('common:action.search_label', 'Search')
 
   const filteredOptionsOrGroups = useMemo<OptionsOrGroups<T>>(
@@ -81,7 +87,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
           <Span size='sm' ellipsis>
             {selectedValue?.label ?? resolvedPlaceholder}
           </Span>
-          <ChevronRight size={16} />
+          {slotProps?.Trigger?.icon ?? <ChevronDown size={16} />}
         </HStack>
       </Button>
 
