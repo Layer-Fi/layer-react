@@ -49,7 +49,7 @@ export const UnifiedReportTableCellContent = ({ cell, column, breadcrumb }: Unif
         weight={weight}
         variant={variant}
         durationMinutes={cellValue.value}
-        zeroValueDisplay={false}
+        showLessThanOneMinuteForZero
       />
     )
   }
