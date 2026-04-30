@@ -37,7 +37,7 @@ const TimeEntryDateCell = memo(function TimeEntryDateCell({ date }: { date: Time
 })
 
 const TimeEntryDurationCell = memo(function TimeEntryDurationCell({ durationMinutes }: { durationMinutes: TimeEntry['durationMinutes'] }) {
-  return <DurationSpan durationMinutes={durationMinutes} />
+  return <DurationSpan durationMinutes={durationMinutes} zeroValueDisplay={false} />
 })
 
 const TimeEntryActionsCell = memo(function TimeEntryActionsCell({ entry }: { entry: TimeEntry }) {

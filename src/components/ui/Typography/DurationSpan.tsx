@@ -6,16 +6,16 @@ import { Span, type TextStyleProps } from '@ui/Typography/Text'
 
 type DurationSpanProps = {
   durationMinutes: number
-  zeroValueDisplay?: 'lessThanOneMinute' | 'zeroMinutes'
+  zeroValueDisplay?: boolean
 } & TextStyleProps & Pick<ComponentPropsWithoutRef<'span'>, 'slot'>
 
 const DurationSpan = forwardRef<HTMLSpanElement, DurationSpanProps>(
-  ({ durationMinutes, className, zeroValueDisplay = 'lessThanOneMinute', ...restProps }, ref) => {
+  ({ durationMinutes, className, zeroValueDisplay = true, ...restProps }, ref) => {
     const { t } = useTranslation()
     const { formatMinutesAsDuration } = useIntlFormatter()
     const formattedDuration = durationMinutes !== 0
       ? formatMinutesAsDuration(durationMinutes)
-      : zeroValueDisplay === 'zeroMinutes'
+      : zeroValueDisplay
         ? t('timeTracking:label.zero_minutes', '0 min')
         : t('timeTracking:label.less_than_one_minute', '< 1 min')
 

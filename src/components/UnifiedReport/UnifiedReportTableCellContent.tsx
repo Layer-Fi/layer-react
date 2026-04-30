@@ -43,7 +43,15 @@ export const UnifiedReportTableCellContent = ({ cell, column, breadcrumb }: Unif
     content = <Span ellipsis weight={weight} variant={variant}>{formatNumber(cellValue.value)}</Span>
   }
   else if (isDurationCellValue(cellValue)) {
-    content = <DurationSpan ellipsis weight={weight} variant={variant} durationMinutes={cellValue.value} />
+    content = (
+      <DurationSpan
+        ellipsis
+        weight={weight}
+        variant={variant}
+        durationMinutes={cellValue.value}
+        zeroValueDisplay={false}
+      />
+    )
   }
   else if (isEmptyCellValue(cellValue)) {
     return null

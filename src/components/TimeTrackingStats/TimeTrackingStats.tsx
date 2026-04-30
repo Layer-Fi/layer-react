@@ -161,7 +161,6 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
               className='Layer__TimeTrackingStats__SummaryValue'
               weight='bold'
               durationMinutes={summary.totalMinutes}
-              zeroValueDisplay='zeroMinutes'
             />
           </VStack>
         </HStack>
