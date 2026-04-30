@@ -343,15 +343,6 @@
   }
 }
 
-.Layer__expanded-bank-transaction-row__description {
-  padding: 0 var(--spacing-md);
-
-  & textarea {
-    height: 100px;
-    width: 100%;
-  }
-}
-
 .Layer__expanded-bank-transaction-row__file-upload {
   display: flex;
   flex-direction: column;
@@ -875,6 +866,12 @@
     }
 
     .Layer__input {
+      max-width: 100%;
+    }
+  }
+
+  .Layer__expanded-bank-transaction-row__total-and-btns--ListItem {
+    .Layer__input-tooltip {
       max-width: 100%;
     }
   }

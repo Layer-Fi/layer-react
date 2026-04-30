@@ -1,7 +1,7 @@
 # State Management
 
 - **SWR:** Server state (fetching, caching) — `useBankTransactions`, `useProfitAndLossReport`
-- **Zustand:** UI state (selections, filters) — `BankTransactionsCategoryStoreProvider`
+- **Zustand:** UI state (selections, filters) — `BankTransactionsCategorizationStoreProvider`
 - **React Context:** DI (config, auth, business data) — `LayerProvider`, `BankTransactionsProvider`
 
 ## Key Patterns

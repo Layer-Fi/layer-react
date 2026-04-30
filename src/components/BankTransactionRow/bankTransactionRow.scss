@@ -1,12 +1,14 @@
-.Layer__bank-transaction-row__category-hstack {
-  max-width: 100%;
-}
+.Layer__bank-transaction-row {
+  &__category-hstack {
+    max-width: 100%;
+  }
 
-.Layer__bank-transaction-row__category-open {
-  padding-block-start: 0.875rem;
-}
+  &__category-open {
+    padding-block-start: 0.875rem;
+  }
 
-.Layer__bank-transaction-row__category {
-  overflow: hidden;
-  width: 100%;
+  &__category {
+    overflow: hidden;
+    width: 100%;
+  }
 }

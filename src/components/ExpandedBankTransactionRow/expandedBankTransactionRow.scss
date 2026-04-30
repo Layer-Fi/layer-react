@@ -8,3 +8,12 @@
     padding-inline-end: var(--spacing-md);
   }
 }
+
+.Layer__Stack.Layer__expanded-bank-transaction-row__table-cell--split-entry__tax-code__Container {
+  flex: 0 0 12.5rem;
+}
+
+.Layer__expanded-bank-transaction-row__total-and-btns--ListItem {
+  flex-direction: column;
+  align-items: stretch;
+}
