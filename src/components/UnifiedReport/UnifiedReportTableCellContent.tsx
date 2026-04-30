@@ -1,5 +1,12 @@
 import type { ReportConfig } from '@schemas/reports/reportConfig'
-import { isAmountCellValue, isDateCellValue, isEmptyCellValue, type UnifiedReportCell, type UnifiedReportColumn } from '@schemas/reports/unifiedReport'
+import {
+  isCurrencyCellValue,
+  isDateCellValue,
+  isDecimalCellValue,
+  isEmptyCellValue,
+  type UnifiedReportCell,
+  type UnifiedReportColumn,
+} from '@schemas/reports/unifiedReport'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useOpenDetailReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Button } from '@ui/Button/Button'
@@ -13,7 +20,7 @@ type UnifiedReportTableCellContentProps = {
 }
 
 export const UnifiedReportTableCellContent = ({ cell, column, breadcrumb }: UnifiedReportTableCellContentProps) => {
-  const { formatDate } = useIntlFormatter()
+  const { formatDate, formatNumber } = useIntlFormatter()
   const openDetailReport = useOpenDetailReport()
 
   if (!cell) return
@@ -24,11 +31,14 @@ export const UnifiedReportTableCellContent = ({ cell, column, breadcrumb }: Unif
   const variant = isBold ? undefined : 'placeholder'
 
   let content
-  if (isAmountCellValue(cellValue)) {
+  if (isCurrencyCellValue(cellValue)) {
     content = <MoneySpan ellipsis weight={weight} variant={variant} amount={cellValue.value} />
   }
   else if (isDateCellValue(cellValue)) {
     content = <Span ellipsis weight={weight} variant={variant}>{formatDate(cellValue.value)}</Span>
+  }
+  else if (isDecimalCellValue(cellValue)) {
+    content = <Span ellipsis weight={weight} variant={variant}>{formatNumber(cellValue.value)}</Span>
   }
   else if (isEmptyCellValue(cellValue)) {
     return null

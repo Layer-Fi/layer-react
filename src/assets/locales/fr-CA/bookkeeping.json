@@ -13,7 +13,6 @@
     "bookkeeping_tasks": "Tâches de tenue de livres",
     "complete_bookkeeping_onboarding_call": "Une fois votre appel d’intégration à la tenue de livres terminé, vos tâches de tenue de livres s’afficheront ici.",
     "completed_over_total_done_one": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminée",
-    "completed_over_total_done_many": "",
     "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminées",
     "count_open_tasks_one": "{{displayCount}} tâche ouverte en {{displayYear}}",
     "count_open_tasks_other": "{{displayCount}} tâches ouvertes en {{displayYear}}",

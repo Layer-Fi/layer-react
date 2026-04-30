@@ -1,9 +1,8 @@
 {
   "action": {
-    "collapse_all": "Collapse All",
     "collapse_rows": "Collapse all rows",
-    "expand_all": "Expand All",
-    "expand_rows": "Expand all rows"
+    "expand_rows": "Expand all rows",
+    "search_reports": "Search reports"
   },
   "empty": {
     "no_detail_lines_found": "No detail lines found",
@@ -25,6 +24,7 @@
     "balance_sheet": "Balance Sheet",
     "cash_beginning_of_period": "Cash at Beginning of Period",
     "cash_end_of_period": "Cash at End of Period",
+    "cash_flow_statement": "Cash Flow Statement",
     "compare": "Compare by",
     "cost_goods_sold": "Cost of Goods Sold",
     "financing_activities": "Financing Activities",
@@ -43,7 +43,7 @@
     "report_type": "Report type",
     "reports": "Reports",
     "reports_navigation": "Reports navigation",
-    "statement_cash_flow": "Statement of Cash Flow",
+    "select_report": "Select report",
     "total_display_name": "Total of {{displayName}}"
   }
 }
