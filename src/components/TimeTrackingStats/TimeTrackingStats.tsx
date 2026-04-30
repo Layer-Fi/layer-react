@@ -157,13 +157,12 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
           </VStack>
           <VStack className='Layer__TimeTrackingStats__Summary' gap='3xs' pi='md'>
             <Span size='sm' variant='subtle'>{t('common:label.this_period', 'This Period')}</Span>
-            {summary.totalMinutes > 0
-              ? <DurationSpan className='Layer__TimeTrackingStats__SummaryValue' weight='bold' durationMinutes={summary.totalMinutes} />
-              : (
-                <Span className='Layer__TimeTrackingStats__SummaryValue' weight='bold'>
-                  {t('timeTracking:label.zero_minutes', '0 min')}
-                </Span>
-              )}
+            <DurationSpan
+              className='Layer__TimeTrackingStats__SummaryValue'
+              weight='bold'
+              durationMinutes={summary.totalMinutes}
+              zeroValueDisplay='zeroMinutes'
+            />
           </VStack>
         </HStack>
       </HStack>
