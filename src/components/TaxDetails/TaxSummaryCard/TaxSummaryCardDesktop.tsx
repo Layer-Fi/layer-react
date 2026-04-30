@@ -37,9 +37,9 @@ type SectionEquationProps = {
 
 const SectionEquation = ({ section, totalLabel, taxesOwedLabel, taxesPaidLabel }: SectionEquationProps) => (
   <HStack className='Layer__TaxSummaryCard__Equation' gap='md'>
-    <AmountWithLabel amount={section.total} label={totalLabel} emphasis />
+    <AmountWithLabel amount={section.taxesOwed} label={taxesOwedLabel} emphasis />
     <Span className='Layer__TaxSummaryCard__Operator' size='lg' variant='subtle'>=</Span>
-    <AmountWithLabel amount={section.taxesOwed} label={taxesOwedLabel} />
+    <AmountWithLabel amount={section.total} label={totalLabel} />
     <Span className='Layer__TaxSummaryCard__Operator' size='lg' variant='subtle'>-</Span>
     <AmountWithLabel amount={section.taxesPaid} label={taxesPaidLabel} />
   </HStack>
