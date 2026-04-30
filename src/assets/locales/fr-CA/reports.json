@@ -2,7 +2,7 @@
   "action": {
     "collapse_rows": "Réduire toutes les lignes",
     "expand_rows": "Afficher toutes les lignes",
-    "search_reports": ""
+    "search_reports": "Rechercher des rapports"
   },
   "empty": {
     "no_detail_lines_found": "Aucune ligne de détail trouvée",
@@ -12,11 +12,11 @@
   },
   "error": {
     "couldnt_load_report": "Nous n’avons pas pu charger votre rapport",
-    "couldnt_load_reports": "",
+    "couldnt_load_reports": "Impossible de charger les rapports",
     "load_detail_lines": "Erreur lors du chargement des lignes de détail",
     "load_pnl_detail_lines": "Une erreur s’est produite lors du chargement des lignes de détail de l’état des résultats",
     "load_report": "Une erreur s’est produite lors du chargement de votre rapport. Veuillez vérifier votre connexion et réessayer.",
-    "load_reports_navigation": ""
+    "load_reports_navigation": "Une erreur s’est produite lors du chargement de cette navigation. Veuillez réessayer."
   },
   "label": {
     "adjustments_net_income": "Ajustements au bénéfice net",
@@ -24,7 +24,7 @@
     "balance_sheet": "Bilan",
     "cash_beginning_of_period": "Trésorerie au début de la période",
     "cash_end_of_period": "Trésorerie à la fin de la période",
-    "cash_flow_statement": "",
+    "cash_flow_statement": "État des flux de trésorerie",
     "compare": "Comparer par",
     "cost_goods_sold": "Coût des marchandises vendues",
     "financing_activities": "Activités de financement",
@@ -42,8 +42,8 @@
     "report_period": "Période du rapport",
     "report_type": "Type de rapport",
     "reports": "Rapports",
-    "reports_navigation": "",
-    "select_report": "",
+    "reports_navigation": "Navigation des rapports",
+    "select_report": "Sélectionner un rapport",
     "total_display_name": "Total de {{displayName}}"
   }
 }
