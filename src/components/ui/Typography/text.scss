@@ -39,6 +39,10 @@
     white-space: nowrap;
   }
 
+  &[data-numeric='tabular-nums'] {
+    font-variant-numeric: tabular-nums;
+  }
+
   &[data-ellipsis],
   &[data-with-tooltip] {
     overflow: hidden;

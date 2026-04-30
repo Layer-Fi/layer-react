@@ -29,30 +29,21 @@
   }
 }
 
-.Layer__HorizontalBarChart__LegendSwatch {
-  flex-shrink: 0;
-  block-size: 0.625rem;
-  inline-size: 0.625rem;
-}
-
 .Layer__HorizontalBarChart__AlignedLegend {
   display: flex;
   flex-direction: row;
-  gap: var(--spacing-md);
   align-items: flex-start;
   inline-size: 100%;
   min-inline-size: 0;
 }
 
 .Layer__HorizontalBarChart__AlignedLegendItem {
-  display: flex;
-  flex-direction: column;
   gap: var(--spacing-3xs);
   min-inline-size: 0;
+  padding-inline-end: var(--spacing-md);
 }
 
 .Layer__HorizontalBarChart__AlignedLegendValue {
-  font-variant-numeric: tabular-nums;
   line-height: 1.1;
 }
 

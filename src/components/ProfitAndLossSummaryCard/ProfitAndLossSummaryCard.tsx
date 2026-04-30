@@ -6,11 +6,11 @@ import { useGlobalMonthSubtitle } from '@hooks/utils/i18n/useGlobalMonthSubtitle
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { VStack } from '@ui/Stack/Stack'
+import { ExpandSummaryCardButton } from '@ui/SummaryCard/ExpandSummaryCardButton'
+import { SummaryCard } from '@ui/SummaryCard/SummaryCard'
 import { type HeadingSize } from '@ui/Typography/Heading'
 import { ProfitAndLossChart } from '@components/ProfitAndLossChart/ProfitAndLossChart'
 import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
-import { ExpandSummaryCardButton } from '@ui/SummaryCard/ExpandSummaryCardButton'
-import { SummaryCard } from '@ui/SummaryCard/SummaryCard'
 
 import './profitAndLossSummaryCard.scss'
 

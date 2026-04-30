@@ -163,7 +163,7 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
           </VStack>
           <VStack className='Layer__TimeTrackingStats__Summary' gap='3xs' pi='md'>
             <Span size='sm' variant='subtle'>{t('common:label.this_period', 'This Period')}</Span>
-            <Span className='Layer__TimeTrackingStats__SummaryValue' weight='bold'>
+            <Span className='Layer__TimeTrackingStats__SummaryValue' weight='bold' numeric='tabular-nums'>
               {totalDurationDisplay}
             </Span>
           </VStack>

@@ -17,6 +17,7 @@ export type TextStyleProps = {
   align?: 'center' | 'right'
   ellipsis?: true
   noWrap?: true
+  numeric?: 'tabular-nums'
   pb?: Spacing
   pbe?: Spacing
   pbs?: Spacing
@@ -38,6 +39,7 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
     ellipsis,
     nonAria,
     noWrap,
+    numeric,
     pb,
     pbe,
     pbs,
@@ -54,6 +56,7 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
       align,
       ellipsis,
       'no-wrap': noWrap,
+      numeric,
       pb,
       pbe,
       pbs,

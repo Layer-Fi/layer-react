@@ -3,6 +3,7 @@ import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack, Stack, VStack } from '@ui/Stack/Stack'
+import { Swatch } from '@ui/Swatch/Swatch'
 import { Span } from '@ui/Typography/Text'
 import {
   type ColorSelector,
@@ -29,16 +30,6 @@ export type HorizontalBarChartProps<T extends SeriesData> = {
   labelMode?: HorizontalBarChartLabelMode
 }
 
-const Swatch = ({ color }: { color: string }) => (
-  <svg
-    aria-hidden
-    className='Layer__HorizontalBarChart__LegendSwatch'
-    viewBox='0 0 10 10'
-  >
-    <circle cx='5' cy='5' r='5' fill={color} />
-  </svg>
-)
-
 export const HorizontalBarChart = <T extends SeriesData>({
   data,
   stylingProps,
@@ -54,10 +45,7 @@ export const HorizontalBarChart = <T extends SeriesData>({
     [items],
   )
 
-  const positiveTotal = useMemo(
-    () => positiveItems.reduce((sum, item) => sum + item.value, 0),
-    [positiveItems],
-  )
+  const positiveTotal = positiveItems.reduce((sum, item) => sum + item.value, 0)
 
   const chartData = useMemo(() => {
     const stacked = positiveItems.reduce<Record<string, number | string>>(
@@ -119,13 +107,13 @@ export const HorizontalBarChart = <T extends SeriesData>({
           align='start'
         >
           {positiveItems.map((item) => {
-            const { color } = stylingProps.colorSelector(item) ?? DEFAULT_TYPE_COLOR_MAPPING
+            const { color, opacity } = stylingProps.colorSelector(item) ?? DEFAULT_TYPE_COLOR_MAPPING
             const denominator = positiveTotal > 0 ? positiveTotal : total
             const percentage = denominator > 0 ? item.value / denominator : 0
             return (
               <VStack key={item.name} className='Layer__HorizontalBarChart__LegendItem' gap='2xs'>
                 <HStack className='Layer__HorizontalBarChart__LegendLabel' gap='2xs' align='center'>
-                  <Swatch color={color} />
+                  <Swatch color={color} opacity={opacity} />
                   <Span size='md' ellipsis withTooltip>{item.displayName}</Span>
                 </HStack>
                 <HStack className='Layer__HorizontalBarChart__LegendMeta' gap='2xs' align='baseline'>
@@ -147,11 +135,12 @@ export const HorizontalBarChart = <T extends SeriesData>({
             const denominator = positiveTotal > 0 ? positiveTotal : total
             const percentage = denominator > 0 ? item.value / denominator : 0
             const flexGrow = positiveTotal > 0 ? item.value / positiveTotal : 1
+            const intentionalStyleOverrideForDynamicFlexGrow = { display: 'flex', flexDirection: 'column' as const, flexGrow, flexBasis: 0 }
             return (
               <div
                 key={item.name}
                 className='Layer__HorizontalBarChart__AlignedLegendItem'
-                style={{ flexGrow, flexBasis: 0 }}
+                style={intentionalStyleOverrideForDynamicFlexGrow}
               >
                 <Span size='sm' variant='subtle' ellipsis withTooltip>{item.displayName}</Span>
                 <Span size='lg' className='Layer__HorizontalBarChart__AlignedLegendValue' weight='bold'>
