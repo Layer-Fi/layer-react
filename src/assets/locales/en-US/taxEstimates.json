@@ -139,6 +139,7 @@
     "uncategorized_transactions_with_year": "{{count}} uncategorized transactions ({{year}})",
     "uncategorized_transactions_with_year_one": "{{count}} uncategorized transaction ({{year}})",
     "uncategorized_transactions_with_year_other": "{{count}} uncategorized transactions ({{year}})",
+    "total_deductions": "Total Deductions",
     "total_income": "Total income",
     "total_federal_tax_estimate": "Total Federal Tax Estimate",
     "total_paid": "Total Paid",

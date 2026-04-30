@@ -138,6 +138,7 @@
     "uncategorized_transactions_other": "",
     "uncategorized_transactions_with_year_one": "{{count}} transaction non catégorisée ({{year}})",
     "uncategorized_transactions_with_year_other": "{{count}} transactions non catégorisées ({{year}})",
+    "total_deductions": "",
     "total_income": "",
     "total_federal_tax_estimate": "Estimation totale de l’impôt fédéral",
     "total_paid": "Total payé",
