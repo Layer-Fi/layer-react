@@ -45,7 +45,7 @@ const LEVEL_1_VARIANTS = new Set([TaxTableRowVariant.Nested, TaxTableRowVariant.
 export const TaxTableRow = ({ label, value, variant, sign, level, expandable }: TaxTableRowProps) => {
   const rowClickProps = expandable
     ? {
-      onAction: expandable.onToggle,
+      'onAction': expandable.onToggle,
       'data-clickable': true,
     }
     : {}
