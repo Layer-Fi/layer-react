@@ -7,6 +7,7 @@ import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
 import { type TimeTrackingSummaryFilterParams, useTimeTrackingSummary } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { DurationSpan } from '@ui/Typography/DurationSpan'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
@@ -73,7 +74,7 @@ const TimeTrackingStatsLegendSwatch = ({ color }: { color: string }) => (
 )
 
 const TimeTrackingStatsBreakdown = memo(function TimeTrackingStatsBreakdown({ entries }: { entries: TimeTrackingServiceBreakdown[] }) {
-  const { formatMinutesAsDuration, formatPercent } = useIntlFormatter()
+  const { formatPercent } = useIntlFormatter()
   const chartData = useMemo(() => buildStackedChartData(entries), [entries])
   const chartTotalMinutes = useMemo(
     () => entries.reduce((total, entry) => total + entry.totalMinutes, 0),
@@ -126,9 +127,7 @@ const TimeTrackingStatsBreakdown = memo(function TimeTrackingStatsBreakdown({ en
               <Span size='md' ellipsis withTooltip>{serviceName}</Span>
             </HStack>
             <HStack className='Layer__TimeTrackingStats__LegendMeta' gap='2xs' align='baseline'>
-              <Span className='Layer__TimeTrackingStats__LegendDuration' size='sm'>
-                {formatMinutesAsDuration(totalMinutes)}
-              </Span>
+              <DurationSpan className='Layer__TimeTrackingStats__LegendDuration' size='sm' durationMinutes={totalMinutes} />
               <Span className='Layer__TimeTrackingStats__LegendPercentage' size='sm' variant='subtle'>
                 {formatPercent(percentage, { maximumFractionDigits: 0 })}
               </Span>
@@ -142,16 +141,11 @@ const TimeTrackingStatsBreakdown = memo(function TimeTrackingStatsBreakdown({ en
 
 function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
   const { t } = useTranslation()
-  const { formatMinutesAsDuration } = useIntlFormatter()
 
   const serviceBreakdown = useMemo(
     () => buildServiceBreakdown(summary.byService, t('timeTracking:label.other', 'Other')),
     [summary.byService, t],
   )
-
-  const totalDurationDisplay = summary.totalMinutes > 0
-    ? formatMinutesAsDuration(summary.totalMinutes)
-    : t('timeTracking:label.zero_minutes', '0 min')
 
   return (
     <VStack className='Layer__TimeTrackingStats__Content' gap='lg' pb='md' pi='md'>
@@ -163,9 +157,13 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
           </VStack>
           <VStack className='Layer__TimeTrackingStats__Summary' gap='3xs' pi='md'>
             <Span size='sm' variant='subtle'>{t('common:label.this_period', 'This Period')}</Span>
-            <Span className='Layer__TimeTrackingStats__SummaryValue' weight='bold'>
-              {totalDurationDisplay}
-            </Span>
+            {summary.totalMinutes > 0
+              ? <DurationSpan className='Layer__TimeTrackingStats__SummaryValue' weight='bold' durationMinutes={summary.totalMinutes} />
+              : (
+                <Span className='Layer__TimeTrackingStats__SummaryValue' weight='bold'>
+                  {t('timeTracking:label.zero_minutes', '0 min')}
+                </Span>
+              )}
           </VStack>
         </HStack>
       </HStack>
