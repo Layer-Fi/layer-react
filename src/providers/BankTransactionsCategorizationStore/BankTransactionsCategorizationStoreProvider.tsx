@@ -84,16 +84,10 @@ function buildStore() {
               return
             }
 
-            const applyCategory = currCategorization.category === null && newCategorization.category !== null
-            const applyTaxCode = currCategorization.taxCode === null && newCategorization.taxCode !== null
+            const applyCategorization = currCategorization.category === null && newCategorization.category !== null
 
-            if (applyCategory || applyTaxCode) {
-              const nextCategorization = {
-                category: applyCategory ? newCategorization.category : currCategorization.category,
-                taxCode: applyTaxCode ? newCategorization.taxCode : currCategorization.taxCode,
-              }
-
-              newMap.set(id, nextCategorization)
+            if (applyCategorization) {
+              newMap.set(id, normalizeCategorization(undefined, newCategorization))
               hasChanges = true
             }
           })
