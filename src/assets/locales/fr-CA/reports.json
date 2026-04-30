@@ -1,9 +1,8 @@
 {
   "action": {
-    "collapse_all": "Réduire tout",
     "collapse_rows": "Réduire toutes les lignes",
-    "expand_all": "Développer tout",
-    "expand_rows": "Afficher toutes les lignes"
+    "expand_rows": "Afficher toutes les lignes",
+    "search_reports": "Rechercher des rapports"
   },
   "empty": {
     "no_detail_lines_found": "Aucune ligne de détail trouvée",
@@ -17,7 +16,7 @@
     "load_detail_lines": "Erreur lors du chargement des lignes de détail",
     "load_pnl_detail_lines": "Une erreur s’est produite lors du chargement des lignes de détail de l’état des résultats",
     "load_report": "Une erreur s’est produite lors du chargement de votre rapport. Veuillez vérifier votre connexion et réessayer.",
-    "load_reports_navigation": "Un problème est survenu lors du chargement de cette navigation. Veuillez réessayer."
+    "load_reports_navigation": "Une erreur s’est produite lors du chargement de cette navigation. Veuillez réessayer."
   },
   "label": {
     "adjustments_net_income": "Ajustements au bénéfice net",
@@ -25,6 +24,7 @@
     "balance_sheet": "Bilan",
     "cash_beginning_of_period": "Trésorerie au début de la période",
     "cash_end_of_period": "Trésorerie à la fin de la période",
+    "cash_flow_statement": "État des flux de trésorerie",
     "compare": "Comparer par",
     "cost_goods_sold": "Coût des marchandises vendues",
     "financing_activities": "Activités de financement",
@@ -43,7 +43,7 @@
     "report_type": "Type de rapport",
     "reports": "Rapports",
     "reports_navigation": "Navigation des rapports",
-    "statement_cash_flow": "État des flux de trésorerie",
+    "select_report": "Sélectionner un rapport",
     "total_display_name": "Total de {{displayName}}"
   }
 }
