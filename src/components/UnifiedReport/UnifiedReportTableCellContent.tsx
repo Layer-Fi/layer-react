@@ -3,6 +3,7 @@ import {
   isCurrencyCellValue,
   isDateCellValue,
   isDecimalCellValue,
+  isDurationCellValue,
   isEmptyCellValue,
   type UnifiedReportCell,
   type UnifiedReportColumn,
@@ -10,6 +11,7 @@ import {
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useOpenDetailReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Button } from '@ui/Button/Button'
+import { DurationSpan } from '@ui/Typography/DurationSpan'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 
@@ -39,6 +41,17 @@ export const UnifiedReportTableCellContent = ({ cell, column, breadcrumb }: Unif
   }
   else if (isDecimalCellValue(cellValue)) {
     content = <Span ellipsis weight={weight} variant={variant}>{formatNumber(cellValue.value)}</Span>
+  }
+  else if (isDurationCellValue(cellValue)) {
+    content = (
+      <DurationSpan
+        ellipsis
+        weight={weight}
+        variant={variant}
+        durationMinutes={cellValue.value}
+        showLessThanOneMinuteForZero
+      />
+    )
   }
   else if (isEmptyCellValue(cellValue)) {
     return null
