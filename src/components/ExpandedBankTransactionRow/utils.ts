@@ -7,8 +7,10 @@ import { type SplitCategorizationEntryEncoded } from '@schemas/categorization'
 import { isSplitCategorizationEncoded } from '@schemas/categorization'
 import { decodeCustomerVendor } from '@schemas/customerVendor'
 import { makeTagFromTransactionTag, TransactionTagSchema } from '@schemas/tag'
+import { isExclusionCategory } from '@utils/bankTransactions/taxCode'
 import { toLocalizedCents } from '@utils/i18n/number/input'
-import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isApiCategorizationAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { convertApiCategorizationToCategoryOrSplitAsOption, getDefaultSelectedCategoryForBankTransaction } from '@components/BankTransactionCategoryComboBox/utils'
@@ -59,6 +61,7 @@ export const calculateAddSplit = (
   const newSplit = {
     amount: 0,
     category: null,
+    taxCode: null,
     tags: [],
     customerVendor: null,
   }
@@ -115,8 +118,10 @@ export const getCustomerVendorForBankTransaction = (bankTransaction: BankTransac
 
 export const getLocalSplitStateForExpandedTransaction = (
   bankTransaction: BankTransaction,
-  selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
+  selectedCategorization: BankTransactionCategorization | undefined,
 ): Split[] => {
+  const selectedCategory = selectedCategorization?.category
+  const selectedTaxCode = selectedCategorization?.taxCode ?? null
   let coercedSelectedCategory = selectedCategory
   if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
     coercedSelectedCategory = null
@@ -136,6 +141,9 @@ export const getLocalSplitStateForExpandedTransaction = (
       return {
         amount: splitEntry.amount || 0,
         category: splitEntry.category,
+        taxCode: isExclusionCategory(splitEntry.category)
+          ? null
+          : splitEntry.taxCode ?? null,
         tags: splitEntry.tags,
         customerVendor: splitEntry.customerVendor,
       }
@@ -146,6 +154,11 @@ export const getLocalSplitStateForExpandedTransaction = (
     {
       amount: bankTransaction.amount,
       category: coercedSelectedCategory ?? null,
+      taxCode: isExclusionCategory(coercedSelectedCategory)
+        ? null
+        : selectedCategorization === undefined
+          ? bankTransaction.tax_code ?? null
+          : selectedTaxCode === null ? null : selectedTaxCode.value,
       tags: bankTransaction.transaction_tags.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))),
       customerVendor: getCustomerVendorForBankTransaction(bankTransaction),
     },
