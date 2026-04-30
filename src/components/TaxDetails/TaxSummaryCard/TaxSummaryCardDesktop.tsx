@@ -30,20 +30,27 @@ const AmountWithLabel = ({ amount, label, emphasis }: AmountWithLabelProps) => (
 
 type SectionEquationProps = {
   section: TaxSummarySection
-  totalLabel: string
-  taxesOwedLabel: string
-  taxesPaidLabel: string
 }
 
-const SectionEquation = ({ section, totalLabel, taxesOwedLabel, taxesPaidLabel }: SectionEquationProps) => (
-  <HStack className='Layer__TaxSummaryCard__Equation' gap='md'>
-    <AmountWithLabel amount={section.taxesOwed} label={taxesOwedLabel} emphasis />
-    <Span className='Layer__TaxSummaryCard__Operator' size='lg' variant='subtle'>=</Span>
-    <AmountWithLabel amount={section.total} label={totalLabel} />
-    <Span className='Layer__TaxSummaryCard__Operator' size='lg' variant='subtle'>-</Span>
-    <AmountWithLabel amount={section.taxesPaid} label={taxesPaidLabel} />
-  </HStack>
-)
+const SectionEquation = ({ section }: SectionEquationProps) => {
+  const { t } = useTranslation()
+  return (
+    <HStack className='Layer__TaxSummaryCard__Equation' gap='md'>
+      <AmountWithLabel
+        amount={section.taxesOwed}
+        label={t('taxEstimates:label.taxes_owed', 'Taxes Owed')}
+        emphasis
+      />
+      <Span className='Layer__TaxSummaryCard__Operator' size='lg' variant='subtle'>=</Span>
+      <AmountWithLabel amount={section.total} label={t('common:label.total', 'Total')} />
+      <Span className='Layer__TaxSummaryCard__Operator' size='lg' variant='subtle'>-</Span>
+      <AmountWithLabel
+        amount={section.taxesPaid}
+        label={t('taxEstimates:label.taxes_paid', 'Taxes paid')}
+      />
+    </HStack>
+  )
+}
 
 const PlusCircle = () => (
   <span className='Layer__TaxSummaryCard__OperatorCircle' aria-hidden>
@@ -62,10 +69,6 @@ export const TaxSummaryCardDesktop = ({ data }: TaxSummaryCardDesktopProps) => {
   const { formatDate } = useIntlFormatter()
   const { fullYearProjection } = useFullYearProjection()
   const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
-
-  const totalLabel = t('common:label.total', 'Total')
-  const taxesOwedLabel = t('taxEstimates:label.taxes_owed', 'Taxes Owed')
-  const taxesPaidLabel = t('taxEstimates:label.taxes_paid', 'Taxes paid')
 
   return (
     <div className='Layer__TaxSummaryCard'>
@@ -106,12 +109,7 @@ export const TaxSummaryCardDesktop = ({ data }: TaxSummaryCardDesktopProps) => {
           key={`${section.label}-body`}
           className='Layer__TaxSummaryCard__Cell Layer__TaxSummaryCard__Cell--bordered'
         >
-          <SectionEquation
-            section={section}
-            totalLabel={totalLabel}
-            taxesOwedLabel={taxesOwedLabel}
-            taxesPaidLabel={taxesPaidLabel}
-          />
+          <SectionEquation section={section} />
         </VStack>
       ))}
     </div>
