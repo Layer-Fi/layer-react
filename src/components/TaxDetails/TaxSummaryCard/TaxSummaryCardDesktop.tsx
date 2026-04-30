@@ -45,23 +45,15 @@ const SectionEquation = ({ section, totalLabel, taxesOwedLabel, taxesPaidLabel }
   </HStack>
 )
 
-const PlusCircle = ({ size = 24 }: { size?: number }) => (
-  <span
-    className='Layer__TaxSummaryCard__OperatorCircle'
-    style={{ width: size, height: size }}
-    aria-hidden
-  >
-    <Plus size={Math.round(size * 0.55)} />
+const PlusCircle = () => (
+  <span className='Layer__TaxSummaryCard__OperatorCircle' aria-hidden>
+    <Plus size={14} />
   </span>
 )
 
-const ArrowCircle = ({ size = 24 }: { size?: number }) => (
-  <span
-    className='Layer__TaxSummaryCard__OperatorCircle Layer__TaxSummaryCard__OperatorCircle--filled'
-    style={{ width: size, height: size }}
-    aria-hidden
-  >
-    <ArrowRightCircle size={size} />
+const ArrowCircle = () => (
+  <span className='Layer__TaxSummaryCard__OperatorCircle Layer__TaxSummaryCard__OperatorCircle--filled' aria-hidden>
+    <ArrowRightCircle size={24} />
   </span>
 )
 
