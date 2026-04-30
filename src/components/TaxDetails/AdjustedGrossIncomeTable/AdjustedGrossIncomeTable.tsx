@@ -46,12 +46,12 @@ export const AdjustedGrossIncomeTable = ({ data }: AdjustedGrossIncomeTableProps
           }}
         >
           {deductionRows.map(({ key, label, getAmount }) => (
-            <CalcRow key={key} label={label} sign='-' value={getAmount(deductions)} variants={['nested', 'indented']} level={1} />
+            <CalcRow key={key} label={label} sign='-' value={getAmount(deductions)} variants={['nested']} level={1} />
           ))}
           <CalcRow
             label={t('taxEstimates:label.total_deductions', 'Total Deductions')}
             value={deductions.preAdjustedGrossIncomeDeduction}
-            variants={['section-total', 'indented', 'bold']}
+            variants={['section-total', 'bold']}
             level={1}
           />
         </CalcGroup>

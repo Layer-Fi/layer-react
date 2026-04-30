@@ -16,7 +16,6 @@ export type CalculationTableRowVariant =
   | 'total'
   | 'empty'
   | 'bold'
-  | 'indented'
 
 type ExpandableConfig = {
   isExpanded: boolean
@@ -41,7 +40,7 @@ export const CalculationTableRow = ({ label, value, variants, sign, level = 0, e
     : {}
   const { isMobile } = useSizeClass()
   const isEmpty = variants.includes('empty')
-  const isIndented = variants.includes('indented')
+  const isIndented = (level ?? 0) > 0
   const className = classnames('Layer__CalculationTable__Row', isMobile && 'Layer__UI__Table-Row--mobile')
   const operator = sign ?? (variants.includes('section-total') ? '=' : undefined)
 

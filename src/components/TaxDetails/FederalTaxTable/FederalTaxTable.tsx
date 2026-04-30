@@ -28,17 +28,17 @@ export const FederalTaxTable = ({ data, adjustedGrossIncome }: FederalTaxTablePr
             value: adjustedGrossIncome,
           }}
         >
-          <CalcRow label={t('taxEstimates:label.federal_deductions', 'Federal Deductions')} sign='-' value={federalIncomeTax.federalDeductions} variants={['nested', 'indented']} level={1} />
+          <CalcRow label={t('taxEstimates:label.federal_deductions', 'Federal Deductions')} sign='-' value={federalIncomeTax.federalDeductions} variants={['nested']} level={1} />
           <CalcRow
             label={t('taxEstimates:label.business_income_deduction_rate', 'Business Income Deduction ({{rate}})', { rate: federalIncomeTax.qbiEffectiveRate })}
             sign='-'
             value={federalIncomeTax.qualifiedBusinessIncomeDeduction}
-            variants={['nested', 'indented']}
+            variants={['nested']}
             level={1}
           />
-          <CalcRow label={t('taxEstimates:label.taxable_income', 'Taxable Income')} sign='=' value={federalIncomeTax.taxableIncome} variants={['nested', 'indented']} level={1} />
-          <CalcRow label={t('taxEstimates:label.federal_tax_rate', 'Federal Tax Rate')} sign='×' value={federalIncomeTax.effectiveFederalTaxRate} variants={['nested', 'indented']} level={1} />
-          <CalcRow label={t('taxEstimates:label.federal_tax_estimate_owed', 'Federal Tax Estimate (Owed)')} value={federalIncomeTax.federalIncomeTaxOwed} variants={['section-total', 'indented', 'bold']} level={1} />
+          <CalcRow label={t('taxEstimates:label.taxable_income', 'Taxable Income')} sign='=' value={federalIncomeTax.taxableIncome} variants={['nested']} level={1} />
+          <CalcRow label={t('taxEstimates:label.federal_tax_rate', 'Federal Tax Rate')} sign='×' value={federalIncomeTax.effectiveFederalTaxRate} variants={['nested']} level={1} />
+          <CalcRow label={t('taxEstimates:label.federal_tax_estimate_owed', 'Federal Tax Estimate (Owed)')} value={federalIncomeTax.federalIncomeTaxOwed} variants={['section-total', 'bold']} level={1} />
         </CalcGroup>
         <CalcGroup
           parent={{
@@ -46,8 +46,8 @@ export const FederalTaxTable = ({ data, adjustedGrossIncome }: FederalTaxTablePr
             value: socialSecurityTax.socialSecurityIncome,
           }}
         >
-          <CalcRow label={t('taxEstimates:label.social_security_tax_rate', 'Social Security Tax Rate')} sign='×' value={socialSecurityTax.socialSecurityTaxRate} variants={['nested', 'indented']} level={1} />
-          <CalcRow label={t('taxEstimates:label.social_security_tax_estimate_owed', 'Social Security Tax Estimate (Owed)')} value={socialSecurityTax.socialSecurityTaxOwed} variants={['section-total', 'indented', 'bold']} level={1} />
+          <CalcRow label={t('taxEstimates:label.social_security_tax_rate', 'Social Security Tax Rate')} sign='×' value={socialSecurityTax.socialSecurityTaxRate} variants={['nested']} level={1} />
+          <CalcRow label={t('taxEstimates:label.social_security_tax_estimate_owed', 'Social Security Tax Estimate (Owed)')} value={socialSecurityTax.socialSecurityTaxOwed} variants={['section-total', 'bold']} level={1} />
         </CalcGroup>
         <CalcGroup
           parent={{
@@ -55,8 +55,8 @@ export const FederalTaxTable = ({ data, adjustedGrossIncome }: FederalTaxTablePr
             value: medicareTax.medicareIncome,
           }}
         >
-          <CalcRow label={t('taxEstimates:label.medicare_tax_rate', 'Medicare Tax Rate')} sign='×' value={medicareTax.medicareTaxRate} variants={['nested', 'indented']} level={1} />
-          <CalcRow label={t('taxEstimates:label.medicare_tax_estimate_owed', 'Medicare Tax Estimate (Owed)')} value={medicareTax.medicareTaxOwed} variants={['section-total', 'indented', 'bold']} level={1} />
+          <CalcRow label={t('taxEstimates:label.medicare_tax_rate', 'Medicare Tax Rate')} sign='×' value={medicareTax.medicareTaxRate} variants={['nested']} level={1} />
+          <CalcRow label={t('taxEstimates:label.medicare_tax_estimate_owed', 'Medicare Tax Estimate (Owed)')} value={medicareTax.medicareTaxOwed} variants={['section-total', 'bold']} level={1} />
         </CalcGroup>
         {medicareSurtax && (
           <CalcGroup
@@ -65,17 +65,17 @@ export const FederalTaxTable = ({ data, adjustedGrossIncome }: FederalTaxTablePr
               value: medicareSurtax.medicareSurtaxIncome,
             }}
           >
-            <CalcRow label={t('taxEstimates:label.medicare_surtax_rate', 'Medicare Surtax Rate')} sign='×' value={medicareSurtax.medicareSurtaxRate} variants={['nested', 'indented']} level={1} />
-            <CalcRow label={t('taxEstimates:label.medicare_surtax_estimate_owed', 'Medicare Surtax Estimate (Owed)')} value={medicareSurtax.medicareSurtaxOwed} variants={['section-total', 'indented', 'bold']} level={1} />
+            <CalcRow label={t('taxEstimates:label.medicare_surtax_rate', 'Medicare Surtax Rate')} sign='×' value={medicareSurtax.medicareSurtaxRate} variants={['nested']} level={1} />
+            <CalcRow label={t('taxEstimates:label.medicare_surtax_estimate_owed', 'Medicare Surtax Estimate (Owed)')} value={medicareSurtax.medicareSurtaxOwed} variants={['section-total', 'bold']} level={1} />
           </CalcGroup>
         )}
         <CalcRow label={t('taxEstimates:label.federal_tax_estimate_owed', 'Federal Tax Estimate (Owed)')} value={totalFederalTax.federalIncomeTaxOwed} variants={['standard']} />
-        <CalcRow label={t('taxEstimates:label.social_security_tax_estimate_owed', 'Social Security Tax Estimate (Owed)')} sign='+' value={totalFederalTax.socialSecurityTaxOwed} variants={['nested', 'indented']} level={1} />
-        <CalcRow label={t('taxEstimates:label.medicare_tax_estimate_owed', 'Medicare Tax Estimate (Owed)')} sign='+' value={totalFederalTax.medicareTaxOwed} variants={['nested', 'indented']} level={1} />
+        <CalcRow label={t('taxEstimates:label.social_security_tax_estimate_owed', 'Social Security Tax Estimate (Owed)')} sign='+' value={totalFederalTax.socialSecurityTaxOwed} variants={['nested']} level={1} />
+        <CalcRow label={t('taxEstimates:label.medicare_tax_estimate_owed', 'Medicare Tax Estimate (Owed)')} sign='+' value={totalFederalTax.medicareTaxOwed} variants={['nested']} level={1} />
         {medicareSurtax && (
-          <CalcRow label={t('taxEstimates:label.medicare_surtax_estimate_owed', 'Medicare Surtax Estimate (Owed)')} sign='+' value={totalFederalTax.medicareSurtaxOwed} variants={['nested', 'indented']} level={1} />
+          <CalcRow label={t('taxEstimates:label.medicare_surtax_estimate_owed', 'Medicare Surtax Estimate (Owed)')} sign='+' value={totalFederalTax.medicareSurtaxOwed} variants={['nested']} level={1} />
         )}
-        <CalcRow label={t('taxEstimates:label.amount_applied_federal_w2', 'Amount Applied from Federal W-2 Withholding')} sign='-' value={totalFederalTax.w2Withholdings} variants={['nested', 'indented']} level={1} />
+        <CalcRow label={t('taxEstimates:label.amount_applied_federal_w2', 'Amount Applied from Federal W-2 Withholding')} sign='-' value={totalFederalTax.w2Withholdings} variants={['nested']} level={1} />
         <CalcRow label={t('taxEstimates:label.total_federal_tax_estimate', 'Total Federal Tax Estimate')} value={totalFederalTax.totalFederalTaxOwed} variants={['total', 'bold']} />
       </TableBody>
     </Table>

@@ -32,10 +32,10 @@ export const StateTaxTable = ({ data }: StateTaxTableProps) => {
             value: stateIncomeTax.stateAgi,
           }}
         >
-          <CalcRow label={t('taxEstimates:label.state_deductions', 'State Deductions')} sign='-' value={stateIncomeTax.stateDeductions} variants={['nested', 'indented']} level={1} />
-          <CalcRow label={t('taxEstimates:label.state_taxable_income', 'State Taxable Income')} sign='=' value={stateIncomeTax.stateTaxableIncome} variants={['nested', 'indented']} level={1} />
-          <CalcRow label={t('taxEstimates:label.state_tax_rate', 'State Tax Rate')} sign='×' value={stateIncomeTax.effectiveStateTaxRate} variants={['nested', 'indented']} level={1} />
-          <CalcRow label={t('taxEstimates:label.state_income_tax_estimate_owed', 'State Income Tax Estimate (Owed)')} value={stateIncomeTax.stateIncomeTaxOwed} variants={['section-total', 'indented', 'bold']} level={1} />
+          <CalcRow label={t('taxEstimates:label.state_deductions', 'State Deductions')} sign='-' value={stateIncomeTax.stateDeductions} variants={['nested']} level={1} />
+          <CalcRow label={t('taxEstimates:label.state_taxable_income', 'State Taxable Income')} sign='=' value={stateIncomeTax.stateTaxableIncome} variants={['nested']} level={1} />
+          <CalcRow label={t('taxEstimates:label.state_tax_rate', 'State Tax Rate')} sign='×' value={stateIncomeTax.effectiveStateTaxRate} variants={['nested']} level={1} />
+          <CalcRow label={t('taxEstimates:label.state_income_tax_estimate_owed', 'State Income Tax Estimate (Owed)')} value={stateIncomeTax.stateIncomeTaxOwed} variants={['section-total', 'bold']} level={1} />
         </CalcGroup>
         {additionalTaxes.length > 0 && (
           <>
@@ -48,8 +48,8 @@ export const StateTaxTable = ({ data }: StateTaxTableProps) => {
                     value: additionalTax.taxableAmount,
                   }}
                 >
-                  <CalcRow label={t('taxEstimates:label.tax_name_rate', '{{taxName}} Rate', { taxName: additionalTax.taxName })} sign='×' value={additionalTax.taxRate} variants={['nested', 'indented']} level={1} />
-                  <CalcRow label={t('taxEstimates:label.tax_name_estimate_owed', '{{taxName}} Estimate (Owed)', { taxName: additionalTax.taxName })} value={additionalTax.taxOwed} variants={['section-total', 'indented', 'bold']} level={1} />
+                  <CalcRow label={t('taxEstimates:label.tax_name_rate', '{{taxName}} Rate', { taxName: additionalTax.taxName })} sign='×' value={additionalTax.taxRate} variants={['nested']} level={1} />
+                  <CalcRow label={t('taxEstimates:label.tax_name_estimate_owed', '{{taxName}} Estimate (Owed)', { taxName: additionalTax.taxName })} value={additionalTax.taxOwed} variants={['section-total', 'bold']} level={1} />
                 </CalcGroup>
               </React.Fragment>
             ))}
@@ -57,9 +57,9 @@ export const StateTaxTable = ({ data }: StateTaxTableProps) => {
         )}
         <CalcRow label={t('taxEstimates:label.state_income_tax_estimate_owed', 'State Income Tax Estimate (Owed)')} value={totalStateTax.stateIncomeTaxOwed} variants={['standard']} />
         {additionalTaxes.length > 0 && (
-          <CalcRow label={t('taxEstimates:label.additional_state_taxes_estimate_owed', 'Additional State Taxes Estimate (Owed)')} sign='+' value={totalStateTax.additionalTaxesOwed} variants={['nested', 'indented']} level={1} />
+          <CalcRow label={t('taxEstimates:label.additional_state_taxes_estimate_owed', 'Additional State Taxes Estimate (Owed)')} sign='+' value={totalStateTax.additionalTaxesOwed} variants={['nested']} level={1} />
         )}
-        <CalcRow label={t('taxEstimates:label.amount_applied_state_withholding', 'Amount Applied from State Withholding')} sign='-' value={totalStateTax.stateWithholdings} variants={['nested', 'indented']} level={1} />
+        <CalcRow label={t('taxEstimates:label.amount_applied_state_withholding', 'Amount Applied from State Withholding')} sign='-' value={totalStateTax.stateWithholdings} variants={['nested']} level={1} />
         <CalcRow label={t('taxEstimates:label.total_state_tax_estimate', 'Total State Tax Estimate')} value={totalStateTax.totalStateTaxOwed} variants={['total', 'bold']} />
       </TableBody>
     </Table>

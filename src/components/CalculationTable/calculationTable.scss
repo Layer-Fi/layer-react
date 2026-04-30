@@ -141,8 +141,10 @@ $row-indents-mobile: (0: 0.25rem, 1: 1rem, 2: 1.25rem, 3: 1.75rem);
     height: var(--spacing-md);
   }
 
-  // Indented rows: apply min-height, flush first cell, mute text
-  &[data-variant~='indented'] {
+  // Indented rows (level > 0): apply min-height, flush first cell, mute text
+  &[data-level='1'],
+  &[data-level='2'],
+  &[data-level='3'] {
     min-height: 3rem;
 
     .Layer__UI__Table-Cell:first-child {
