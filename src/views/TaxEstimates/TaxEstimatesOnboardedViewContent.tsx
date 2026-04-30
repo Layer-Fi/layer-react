@@ -2,9 +2,11 @@ import { type Key, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { translationKey } from '@utils/i18n/translationKey'
-import { TaxEstimatesRoute, useTaxEstimatesNavigation, useTaxEstimatesRouteState } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
+import { TaxEstimatesRoute, useFullYearProjection, useTaxEstimatesNavigation, useTaxEstimatesRouteState, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
+import { TaxBanner } from '@components/TaxDetails/TaxBanner'
 import { TaxDetails } from '@components/TaxDetails/TaxDetails'
 import { TaxOverview } from '@components/TaxOverview/TaxOverview'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
@@ -20,6 +22,10 @@ export const TaxEstimatesOnboardedViewContent = () => {
   const { t } = useTranslation()
   const { route } = useTaxEstimatesRouteState()
   const navigate = useTaxEstimatesNavigation()
+  const { year } = useTaxEstimatesYear()
+  const { fullYearProjection } = useFullYearProjection()
+  const { data: taxBannerData } = useTaxEstimatesBanner({ year, fullYearProjection })
+  const showBanner = !!taxBannerData && taxBannerData.totalUncategorizedCount > 0
 
   const tabOptions = useMemo(
     () => TAX_ESTIMATES_TAB_CONFIG.map(opt => ({
@@ -58,6 +64,14 @@ export const TaxEstimatesOnboardedViewContent = () => {
         selectedKey={route}
         onSelectionChange={handleTabChange}
       />
+      {showBanner && (
+        <>
+          <TaxBanner
+            uncategorizedCount={taxBannerData.totalUncategorizedCount}
+            uncategorizedAmount={taxBannerData.totalUncategorizedSum}
+          />
+        </>
+      )}
       {route === TaxEstimatesRoute.Overview && <TaxOverview />}
       {route === TaxEstimatesRoute.Estimates && <TaxDetails />}
       {route === TaxEstimatesRoute.Payments && <TaxPayments />}

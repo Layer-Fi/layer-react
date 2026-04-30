@@ -5,12 +5,13 @@ import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPick
 export type CombinedDateSelectionProps = {
   mode: DateSelectionMode
   showLabels?: boolean
+  isCompact?: boolean
 }
 
-export const CombinedDateSelection = ({ mode, showLabels = true }: CombinedDateSelectionProps) => {
+export const CombinedDateSelection = ({ mode, showLabels = true, isCompact = false }: CombinedDateSelectionProps) => {
   if (mode === 'month') {
     return <GlobalMonthPicker showLabel={showLabels} />
   }
 
-  return <GlobalDateSelection showLabels={showLabels} />
+  return <GlobalDateSelection showLabels={showLabels} isCompact={isCompact} />
 }

@@ -41,7 +41,7 @@ const groupConfig: TreeNavigationGroupConfig<ReportGroup, ReportConfig> = {
 const buildLeafConfig = (onSelectLeaf: (report: ReportConfig) => void): TreeNavigationLeafConfig<ReportConfig> => ({
   getId: leaf => leaf.key,
   getTextValue: leaf => leaf.displayName,
-  renderLabel: leaf => <Span ellipsis>{leaf.displayName}</Span>,
+  renderLabel: leaf => <Span>{leaf.displayName}</Span>,
   onSelectLeaf,
 })
 

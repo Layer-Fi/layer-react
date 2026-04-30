@@ -1,13 +1,15 @@
 .Layer__GlobalDateSelection {
   display: grid;
-  grid-template-columns: repeat(2, minmax(10rem, 12rem));
+  grid-template-columns: repeat(2, minmax(10rem, 1fr));
   gap: var(--spacing-xs);
-  min-width: 18.5rem;
 
-  &--mobile {
-    grid-template-columns: repeat(2, minmax(6.75rem, 10rem));
-    gap: var(--spacing-3xs);
-    min-width: 16rem;
+  &--compact {
+    grid-template-columns: minmax(6.75rem, 1fr);
+    width: 100%;
+
+    > :first-child {
+      grid-column: 1 / -1;
+    }
   }
 
   .Layer__tooltip-trigger {
