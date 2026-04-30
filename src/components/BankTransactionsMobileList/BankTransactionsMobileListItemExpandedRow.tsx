@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { hasMatch } from '@utils/bankTransactions'
+import { hasMatch } from '@utils/bankTransactions/shared'
 import { translationKey } from '@utils/i18n/translationKey'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
