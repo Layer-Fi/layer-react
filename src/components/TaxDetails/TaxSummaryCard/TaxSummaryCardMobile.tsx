@@ -8,52 +8,23 @@ import { useFullYearProjection } from '@providers/TaxEstimatesRouteStore/TaxEsti
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { Card } from '@components/Card/Card'
+import { EquationRow } from '@components/TaxDetails/TaxSummaryCard/TaxSummaryCardEquation'
 
 type TaxSummaryCardMobileProps = {
   data: TaxSummary
 }
 
-type AmountWithLabelProps = {
-  amount: number
-  label: string
-  emphasis?: boolean
-}
-
-const AmountWithLabel = ({ amount, label, emphasis }: AmountWithLabelProps) => (
-  <VStack className='Layer__TaxSummaryCard__AmountWithLabel' gap='2xs' align='start'>
-    <MoneySpan size='md' weight={emphasis ? 'bold' : undefined} amount={amount} />
-    <Badge size={BadgeSize.SMALL} variant={BadgeVariant.NEUTRAL}>{label}</Badge>
-  </VStack>
-)
-
 type SectionEquationProps = {
   section: TaxSummarySection
 }
 
-const SectionEquation = ({ section }: SectionEquationProps) => {
-  const { t } = useTranslation()
-  return (
-    <VStack className='Layer__TaxSummaryCard__MobileSection' gap='xs' align='start'>
-      <Span size='sm' variant='subtle'>{section.label}</Span>
-      <HStack className='Layer__TaxSummaryCard__Equation' gap='sm'>
-        <AmountWithLabel
-          amount={section.taxesOwed}
-          label={t('taxEstimates:label.taxes_owed', 'Taxes Owed')}
-          emphasis
-        />
-        <Span className='Layer__TaxSummaryCard__Operator' size='md' variant='subtle'>=</Span>
-        <AmountWithLabel amount={section.total} label={t('common:label.total', 'Total')} />
-        <Span className='Layer__TaxSummaryCard__Operator' size='md' variant='subtle'>-</Span>
-        <AmountWithLabel
-          amount={section.taxesPaid}
-          label={t('taxEstimates:label.taxes_paid', 'Taxes paid')}
-        />
-      </HStack>
-    </VStack>
-  )
-}
+const SectionEquation = ({ section }: SectionEquationProps) => (
+  <VStack className='Layer__TaxSummaryCard__MobileSection' gap='xs' align='start'>
+    <Span size='sm' variant='subtle'>{section.label}</Span>
+    <EquationRow section={section} />
+  </VStack>
+)
 
 export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
   const { t } = useTranslation()
