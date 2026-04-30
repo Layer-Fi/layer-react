@@ -48,7 +48,7 @@
 }
 
 @container horizontal-bar-chart (max-width: 1100px) {
-  .Layer__HorizontalBarChart__Legend {
+  .Layer__HorizontalBarChart__Legend.Layer__Stack[data-direction] {
     flex-direction: column;
     gap: var(--spacing-sm);
     align-items: stretch;
