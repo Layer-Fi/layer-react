@@ -1,6 +1,11 @@
 .Layer__HorizontalBarChart {
   container: horizontal-bar-chart / inline-size;
   inline-size: 100%;
+
+  :focus,
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .Layer__HorizontalBarChart__Bar {
