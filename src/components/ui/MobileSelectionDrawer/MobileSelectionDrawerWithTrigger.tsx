@@ -100,7 +100,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
         isDismissable
       >
         {({ close }) => (
-          <VStack className='Layer__MobileSelectionDrawerWithTrigger__Content' pb='md' gap='md'>
+          <VStack className='Layer__MobileSelectionDrawerWithTrigger__Drawer' pi='sm' pb='xs' gap='md'>
             {isSearchable && (
               <SearchField
                 value={searchQuery}
