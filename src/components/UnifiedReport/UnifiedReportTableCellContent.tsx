@@ -1,8 +1,11 @@
+import { useTranslation } from 'react-i18next'
+
 import type { ReportConfig } from '@schemas/reports/reportConfig'
 import {
   isCurrencyCellValue,
   isDateCellValue,
   isDecimalCellValue,
+  isDurationCellValue,
   isEmptyCellValue,
   type UnifiedReportCell,
   type UnifiedReportColumn,
@@ -20,7 +23,8 @@ type UnifiedReportTableCellContentProps = {
 }
 
 export const UnifiedReportTableCellContent = ({ cell, column, breadcrumb }: UnifiedReportTableCellContentProps) => {
-  const { formatDate, formatNumber } = useIntlFormatter()
+  const { t } = useTranslation()
+  const { formatDate, formatMinutesAsDuration, formatNumber } = useIntlFormatter()
   const openDetailReport = useOpenDetailReport()
 
   if (!cell) return
@@ -39,6 +43,12 @@ export const UnifiedReportTableCellContent = ({ cell, column, breadcrumb }: Unif
   }
   else if (isDecimalCellValue(cellValue)) {
     content = <Span ellipsis weight={weight} variant={variant}>{formatNumber(cellValue.value)}</Span>
+  }
+  else if (isDurationCellValue(cellValue)) {
+    const value = cellValue.value === 0
+      ? t('timeTracking:label.less_than_one_minute', '< 1 min')
+      : formatMinutesAsDuration(cellValue.value)
+    content = <Span ellipsis weight={weight} variant={variant}>{value}</Span>
   }
   else if (isEmptyCellValue(cellValue)) {
     return null

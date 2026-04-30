@@ -112,6 +112,11 @@ const UnifiedCellValueDecimalSchema = Schema.Struct({
   value: Schema.Number,
 })
 
+const UnifiedCellValueDurationSchema = Schema.Struct({
+  type: Schema.Literal('Duration'),
+  value: Schema.Number,
+})
+
 const UnifiedCellValueEmptySchema = Schema.Struct({
   type: Schema.Literal('Empty'),
 })
@@ -125,6 +130,7 @@ const UnifiedCellValueSchema = Schema.Union(
   UnifiedCellValueCurrencySchema,
   UnifiedCellValueDateSchema,
   UnifiedCellValueDecimalSchema,
+  UnifiedCellValueDurationSchema,
   UnifiedCellValueEmptySchema,
   UnifiedCellValueUnknownSchema,
 )
@@ -133,6 +139,7 @@ export type UnifiedCellValue = typeof UnifiedCellValueSchema.Type
 export type UnifiedCellValueCurrency = typeof UnifiedCellValueCurrencySchema.Type
 export type UnifiedCellValueDate = typeof UnifiedCellValueDateSchema.Type
 export type UnifiedCellValueDecimal = typeof UnifiedCellValueDecimalSchema.Type
+export type UnifiedCellValueDuration = typeof UnifiedCellValueDurationSchema.Type
 export type UnifiedCellValueEmpty = typeof UnifiedCellValueEmptySchema.Type
 export type UnifiedCellValueUnknown = typeof UnifiedCellValueUnknownSchema.Type
 
@@ -144,6 +151,9 @@ export const isDateCellValue = (value: UnifiedCellValue): value is UnifiedCellVa
 
 export const isDecimalCellValue = (value: UnifiedCellValue): value is UnifiedCellValueDecimal =>
   value.type === 'Decimal'
+
+export const isDurationCellValue = (value: UnifiedCellValue): value is UnifiedCellValueDuration =>
+  value.type === 'Duration'
 
 export const isEmptyCellValue = (value: UnifiedCellValue): value is UnifiedCellValueEmpty =>
   value.type === 'Empty'
