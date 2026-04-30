@@ -5,11 +5,18 @@ import { useTranslation } from 'react-i18next'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationType } from '@internal-types/categories'
 import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/categorizationOption'
-import { hasReceipts } from '@utils/bankTransactions'
-import { isCategorized } from '@utils/bankTransactions'
+import {
+  hasReceipts,
+  isCategorized,
+} from '@utils/bankTransactions/shared'
+import { isExclusionCategory } from '@utils/bankTransactions/taxCode'
+import { getBankTransactionTaxCodeOptions, getCategoryPayloadTaxCode } from '@utils/bankTransactions/taxCode'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
-import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import {
+  useBankTransactionsCategorizationActions,
+  useGetBankTransactionCategorization,
+} from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -19,20 +26,22 @@ import { BankTransactionFormFields } from '@components/BankTransactionFormFields
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { BusinessFormMobile } from '@components/BusinessForm/BusinessFormMobile'
-import { type BusinessFormMobileItemOption, type BusinessFormOptionValue } from '@components/BusinessForm/BusinessFormMobileItem'
+import { type BusinessFormMobileItemOption } from '@components/BusinessForm/BusinessFormMobileItem'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import { FileInput } from '@components/Input/FileInput'
+import type { TaxCodeSelectOption } from '@components/TaxCodeSelect/constants'
+import { TaxCodeSelectDrawerWithTrigger } from '@components/TaxCodeSelect/TaxCodeSelectDrawerWithTrigger'
 import { ErrorText } from '@components/Typography/ErrorText'
 
 const SELECT_CATEGORY_VALUE = 'SELECT_CATEGORY'
 
 export const isSelectCategoryOption = (
-  value: BusinessFormOptionValue,
+  value: BankTransactionCategoryComboBoxOption,
 ): boolean => {
   return isPlaceholderAsOption(value) && value.value === SELECT_CATEGORY_VALUE
 }
 
-type DisplayOption = BusinessFormMobileItemOption
+type DisplayOption = BusinessFormMobileItemOption<BankTransactionCategoryComboBoxOption>
 
 interface BankTransactionsMobileListBusinessFormProps {
   bankTransaction: BankTransaction
@@ -76,11 +85,19 @@ export const BankTransactionsMobileListBusinessForm = ({
     return initialMap
   })
 
-  const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
-  const { setTransactionCategory } = useBankTransactionsCategoryActions()
+  const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
+  const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
+  const selectedCategory = selectedCategorization?.category
 
   const [showRetry, setShowRetry] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  const taxCodeOptions = useMemo<TaxCodeSelectOption[]>(
+    () => getBankTransactionTaxCodeOptions(bankTransaction),
+    [bankTransaction],
+  )
+
+  const showTaxCodeSelector = taxCodeOptions.length > 0
 
   useEffect(() => {
     if (isErrorCategorizing) {
@@ -119,10 +136,13 @@ export const BankTransactionsMobileListBusinessForm = ({
         selectedCategory
         && option.value === selectedCategory.value
       ) {
-        setTransactionCategory(bankTransaction.id, null)
+        setTransactionCategorization(bankTransaction.id, { category: null, taxCode: null })
       }
       else {
-        setTransactionCategory(bankTransaction.id, option)
+        setTransactionCategorization(bankTransaction.id, {
+          category: option,
+          taxCode: isExclusionCategory(option) ? null : selectedCategorization?.taxCode ?? null,
+        })
       }
     }
   }
@@ -140,6 +160,7 @@ export const BankTransactionsMobileListBusinessForm = ({
       {
         type: 'Category',
         category: payload,
+        taxCode: getCategoryPayloadTaxCode(payload, selectedCategorization?.taxCode?.value),
       },
       true,
     )
@@ -149,8 +170,15 @@ export const BankTransactionsMobileListBusinessForm = ({
     if (!category) return
 
     setSessionCategories(prev => new Map(prev).set(category.value, category))
-    setTransactionCategory(bankTransaction.id, category)
-  }, [bankTransaction.id, setTransactionCategory])
+    setTransactionCategorization(bankTransaction.id, {
+      category,
+      taxCode: isExclusionCategory(category) ? null : selectedCategorization?.taxCode ?? null,
+    })
+  }, [bankTransaction.id, selectedCategorization?.taxCode, setTransactionCategorization])
+
+  const handleTaxCodeChange = useCallback((taxCode: TaxCodeSelectOption | null) => {
+    setTransactionCategorization(bankTransaction.id, { taxCode })
+  }, [bankTransaction.id, setTransactionCategorization])
 
   return (
     <>
@@ -161,8 +189,19 @@ export const BankTransactionsMobileListBusinessForm = ({
               options={options}
               onSelect={onCategorySelect}
               selectedId={selectedCategory?.value}
+              ariaLabel={t('bankTransactions:label.category', 'Category')}
             />
           )}
+        {showCategorization && showTaxCodeSelector && (
+          <TaxCodeSelectDrawerWithTrigger
+            options={taxCodeOptions}
+            value={selectedCategorization?.taxCode ?? null}
+            onChange={handleTaxCodeChange}
+            isDisabled={isExclusionCategory(selectedCategory)}
+            hasSelection={selectedCategorization?.taxCode != null}
+            placeholder={t('bankTransactions:action.select_tax_code', 'Select tax code')}
+          />
+        )}
         <BankTransactionFormFields
           bankTransaction={bankTransaction}
           showDescriptions={showDescriptions}
