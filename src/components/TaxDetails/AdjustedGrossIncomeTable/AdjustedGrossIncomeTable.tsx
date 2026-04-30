@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type AdjustedGrossIncome, type Deductions } from '@schemas/taxEstimates/details'
 import { Column, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
-import { TaxTableGroup, TaxTableRow, TaxTableRowVariant } from '@components/TaxDetails/TaxTable/TaxTable'
+import { CalculationTableGroup as CalcGroup, CalculationTableRow as CalcRow } from '@components/CalculationTable/CalculationTable'
 
 type DeductionRowConfig = {
   key: string
@@ -29,33 +29,33 @@ export const AdjustedGrossIncomeTable = ({ data }: AdjustedGrossIncomeTableProps
   ], [t])
 
   return (
-    <Table className='Layer__TaxTable' aria-label={t('taxEstimates:label.adjusted_gross_income', 'Adjusted Gross Income')}>
-      <TableHeader className='Layer__TaxTable__Header'>
+    <Table className='Layer__CalculationTable' aria-label={t('taxEstimates:label.adjusted_gross_income', 'Adjusted Gross Income')}>
+      <TableHeader className='Layer__CalculationTable__Header'>
         <Row>
           <Column isRowHeader>{t('common:label.description', 'Description')}</Column>
           <Column>{t('common:label.amount', 'Amount')}</Column>
         </Row>
       </TableHeader>
       <TableBody>
-        <TaxTableRow label={t('taxEstimates:label.business_income', 'Business Income')} value={income.businessRevenue} variant={TaxTableRowVariant.Standard} level={0} />
-        <TaxTableRow label={t('taxEstimates:label.w2_income', 'W-2 Income')} value={income.w2Income} variant={TaxTableRowVariant.Standard} level={0} />
-        <TaxTableGroup
+        <CalcRow label={t('taxEstimates:label.business_income', 'Business Income')} value={income.businessRevenue} variants={['standard']} />
+        <CalcRow label={t('taxEstimates:label.w2_income', 'W-2 Income')} value={income.w2Income} variants={['standard']} />
+        <CalcGroup
           parent={{
             label: t('taxEstimates:label.deductions', 'Deductions'),
             value: deductions.preAdjustedGrossIncomeDeduction,
           }}
         >
           {deductionRows.map(({ key, label, getAmount }) => (
-            <TaxTableRow key={key} label={label} sign='-' value={getAmount(deductions)} variant={TaxTableRowVariant.Nested} level={1} />
+            <CalcRow key={key} label={label} sign='-' value={getAmount(deductions)} variants={['nested', 'indented']} level={1} />
           ))}
-          <TaxTableRow
+          <CalcRow
             label={t('taxEstimates:label.total_deductions', 'Total Deductions')}
             value={deductions.preAdjustedGrossIncomeDeduction}
-            variant={TaxTableRowVariant.SectionTotal}
+            variants={['section-total', 'indented', 'bold']}
             level={1}
           />
-        </TaxTableGroup>
-        <TaxTableRow label={t('taxEstimates:label.adjusted_gross_income', 'Adjusted Gross Income')} value={totalAdjustedGrossIncome} variant={TaxTableRowVariant.Total} level={0} />
+        </CalcGroup>
+        <CalcRow label={t('taxEstimates:label.adjusted_gross_income', 'Adjusted Gross Income')} value={totalAdjustedGrossIncome} variants={['total', 'bold']} />
       </TableBody>
     </Table>
   )

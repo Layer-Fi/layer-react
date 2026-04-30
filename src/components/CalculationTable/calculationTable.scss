@@ -1,7 +1,7 @@
 $row-indents-desktop: (0: 1.5rem, 1: 3rem, 2: 6rem, 3: 9rem);
 $row-indents-mobile: (0: 0.25rem, 1: 1rem, 2: 1.25rem, 3: 1.75rem);
 
-.Layer__TaxTable {
+.Layer__CalculationTable {
   width: 100%;
   table-layout: fixed;
 
@@ -120,8 +120,29 @@ $row-indents-mobile: (0: 0.25rem, 1: 1rem, 2: 1.25rem, 3: 1.75rem);
 }
 
 .Layer__UI__Table-Row {
-  &.Layer__TaxTable__Row--nested,
-  &.Layer__TaxTable__Row--section-total {
+  &[data-clickable='true'] {
+    cursor: pointer;
+  }
+
+  // Structural variants
+  &[data-variant~='nested'] {
+    background-color: var(--color-base-50);
+  }
+
+  &[data-variant~='section-total'] {
+    background-color: var(--color-base-0);
+  }
+
+  &[data-variant~='total'] {
+    border-top: 2px solid var(--color-border);
+  }
+
+  &[data-variant~='empty'] {
+    height: var(--spacing-md);
+  }
+
+  // Indented rows: apply min-height, flush first cell, mute text
+  &[data-variant~='indented'] {
     min-height: 3rem;
 
     .Layer__UI__Table-Cell:first-child {
@@ -130,35 +151,12 @@ $row-indents-mobile: (0: 0.25rem, 1: 1rem, 2: 1.25rem, 3: 1.75rem);
     }
   }
 
-  &[data-clickable='true'] {
-    cursor: pointer;
-  }
-
-  &[data-level='1'] {
+  // Bold variant overrides muted color and applies font-weight
+  &[data-variant~='bold'] {
     .Layer__Span,
-    .Layer__TaxTable__OperatorBox {
-      color: var(--color-base-500);
-    }
-  }
-
-  &.Layer__TaxTable__Row--nested {
-    background-color: var(--color-base-50);
-  }
-
-  &.Layer__TaxTable__Row--section-total {
-    background-color: var(--color-base-0);
-
-    .Layer__Span,
-    .Layer__TaxTable__OperatorBox {
+    .Layer__CalculationTable__OperatorBox {
+      font-weight: var(--font-weight-bold);
       color: var(--color-base-900);
     }
-  }
-
-  &.Layer__TaxTable__Row--empty {
-    height: var(--spacing-md);
-  }
-
-  &.Layer__TaxTable__Row--total {
-    border-top: 2px solid var(--color-border);
   }
 }
