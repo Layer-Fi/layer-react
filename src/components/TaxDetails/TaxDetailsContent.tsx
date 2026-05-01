@@ -3,6 +3,7 @@ import { type Row } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 import { useIntl } from 'react-intl'
 
+import { isCurrencyCellValue, isDecimalCellValue, isPercentageCellValue } from '@schemas/reports/unifiedReport'
 import { type TaxDetailsRow } from '@schemas/taxEstimates/details'
 import { asMutable } from '@utils/asMutable'
 import { formatPercent } from '@utils/i18n/number/formatters'
@@ -76,16 +77,21 @@ const TaxDetailsRowAmountCell = (row: Row<TaxDetailsRow>) => {
   const { value } = row.original
   if (value === undefined) return <Span>-</Span>
 
-  switch (value.type) {
-    case 'Percentage':
-      return <Span>{formatPercent(intl, value.value, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</Span>
-    case 'Currency':
-      return <MoneySpan amount={value.value} />
-    case 'Decimal':
-      return <Span>{formatNumber(value.value, { maximumFractionDigits: 2, minimumFractionDigits: 0 })}</Span>
-    default:
-      return <Span>-</Span>
+  if (isPercentageCellValue(value)) {
+    return <Span>{formatPercent(intl, value.value, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</Span>
   }
+  if (isCurrencyCellValue(value)) {
+    return <MoneySpan amount={value.value} />
+  }
+  if (isDecimalCellValue(value)) {
+    return <Span>{formatNumber(value.value, { maximumFractionDigits: 2, minimumFractionDigits: 0 })}</Span>
+  }
+
+  if (typeof value.value !== 'object') {
+    return <Span>String(value.value)</Span>
+  }
+
+  return <Span>-</Span>
 }
 
 const useColumnConfig = (): NestedColumnConfig<TaxDetailsRow> => {

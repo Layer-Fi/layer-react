@@ -4,12 +4,14 @@ import {
   UnifiedCellValueCurrencySchema,
   UnifiedCellValueDecimalSchema,
   UnifiedCellValuePercentageSchema,
+  UnifiedCellValueUnknownSchema,
 } from '@schemas/reports/unifiedReport'
 
 const TaxDetailsValueSchema = Schema.Union(
   UnifiedCellValueCurrencySchema,
   UnifiedCellValueDecimalSchema,
   UnifiedCellValuePercentageSchema,
+  UnifiedCellValueUnknownSchema,
 )
 
 export type TaxDetailsValue = typeof TaxDetailsValueSchema.Type

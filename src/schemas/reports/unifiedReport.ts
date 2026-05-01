@@ -121,7 +121,7 @@ export const UnifiedCellValuePercentageSchema = Schema.Struct({
   value: Schema.Number,
 })
 
-const UnifiedCellValueUnknownSchema = Schema.Struct({
+export const UnifiedCellValueUnknownSchema = Schema.Struct({
   type: Schema.String,
   value: Schema.optional(Schema.Unknown),
 })
