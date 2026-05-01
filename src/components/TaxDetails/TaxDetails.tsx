@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { type TaxDetailsRow } from '@schemas/taxEstimates/details'
 import { asMutable } from '@utils/asMutable'
 import { useTaxDetails } from '@hooks/api/businesses/[business-id]/tax-estimates/details/useTaxDetails'
-import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
@@ -48,7 +47,7 @@ const columnConfig: NestedColumnConfig<TaxDetailsRow> = [
     id: TaxDetailsColumns.Amount,
     header: 'Amount',
     cell: (row: Row<TaxDetailsRow>) => {
-      if (row.original.rate) return (
+      if (row.original.rate !== undefined) return (
         <Span>
           {row.original.rate}
           %
@@ -73,7 +72,6 @@ export const TaxDetails = () => {
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
   const { data, isLoading, isError } = useTaxDetails({ year, fullYearProjection })
-  const { data: summaryData, isLoading: isSummaryLoading } = useTaxSummary({ year, fullYearProjection })
   const { isDesktop } = useSizeClass()
 
   const ExpandableCardsWrapper = isDesktop ? VStack : MobileExpandableCardsWrapper
@@ -84,22 +82,7 @@ export const TaxDetails = () => {
       slots={{ Header: TaxDetailsHeader }}
       mobileProps={{ className: 'Layer__TaxDetails--mobile' }}
     >
-      <ConditionalBlock
-        isLoading={isSummaryLoading}
-        isError={isError}
-        data={summaryData}
-        Loading={<Loader />}
-        Error={(
-          <DataState
-            status={DataStateStatus.failed}
-            title={t('taxEstimates:error.load_tax_estimates_summary', 'We couldn\'t load your tax summary')}
-            description={t('taxEstimates:error.while_loading_tax_summary', 'An error occurred while loading your tax summary. Please check your connection and try again.')}
-            spacing
-          />
-        )}
-      >
-        {({ data: summary }) => <TaxSummaryCard data={summary} />}
-      </ConditionalBlock>
+      <TaxSummaryCard />
       <ConditionalBlock
         isLoading={isLoading}
         isError={isError}
