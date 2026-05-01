@@ -26,7 +26,7 @@ export type MobileSelectionDrawerWithTriggerProps<T extends ComboBoxOption> =
     searchPlaceholder?: string
     slotProps?: {
       Trigger?: {
-        label?: string
+        placeholder?: string
         icon?: React.ReactNode
       }
     }
@@ -57,7 +57,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
 
   const openDrawer = useCallback(() => setIsOpen(true), [])
 
-  const resolvedPlaceholder = slotProps?.Trigger?.label ?? t('common:action.select_label', 'Select...')
+  const resolvedPlaceholder = slotProps?.Trigger?.placeholder ?? t('common:action.select_label', 'Select...')
   const resolvedSearchPlaceholder = searchPlaceholder ?? t('common:action.search_label', 'Search')
 
   const filteredOptionsOrGroups = useMemo<OptionsOrGroups<T>>(
