@@ -6,6 +6,7 @@ export type TaxSummarySectionType = typeof TaxSummarySectionTypeSchema.Type
 
 const TaxSummarySectionSchema = Schema.Struct({
   type: TaxSummarySectionTypeSchema,
+  key: Schema.NullishOr(Schema.String),
   label: Schema.String,
   total: Schema.Number,
   taxesPaid: pipe(

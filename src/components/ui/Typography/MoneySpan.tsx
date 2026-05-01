@@ -3,7 +3,7 @@ import { type ComponentPropsWithoutRef, forwardRef } from 'react'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Span, type TextStyleProps } from '@ui/Typography/Text'
 
-type MoneySpanProps = {
+export type MoneySpanProps = {
   amount: number
   displayPlusSign?: boolean
 } & TextStyleProps & Pick<ComponentPropsWithoutRef<'span'>, 'slot'>

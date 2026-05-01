@@ -4,13 +4,28 @@ import type { TaxSummary } from '@schemas/taxEstimates/summary'
 import { tConditional } from '@utils/i18n/conditional'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useFullYearProjection } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import ArrowRightCircle from '@icons/ArrowRightCircle'
+import PlusIcon from '@icons/PlusIcon'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
+import { EquationRow } from '@components/TaxDetails/TaxSummaryCard/TaxSummaryCardEquation'
 
 type TaxSummaryCardDesktopProps = {
   data: TaxSummary
 }
+
+const PlusCircle = () => (
+  <span className='Layer__TaxSummaryCard__OperatorCircle' aria-hidden>
+    <PlusIcon size={24} />
+  </span>
+)
+
+const ArrowCircle = () => (
+  <span className='Layer__TaxSummaryCard__OperatorCircle' aria-hidden>
+    <ArrowRightCircle size={24} />
+  </span>
+)
 
 export const TaxSummaryCardDesktop = ({ data }: TaxSummaryCardDesktopProps) => {
   const { t } = useTranslation()
@@ -19,47 +34,47 @@ export const TaxSummaryCardDesktop = ({ data }: TaxSummaryCardDesktopProps) => {
   const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
 
   return (
-    <HStack className='Layer__TaxSummaryCard'>
-      <VStack className='Layer__TaxSummaryCard__Overview' gap='xs' justify='center' align='center'>
-        <VStack justify='center' align='center'>
-          <Span size='md' variant='subtle'>
-            {tConditional(t, 'taxEstimates:label.taxes_owed', {
-              condition: projectedCondition,
-              cases: {
-                default: 'Taxes Owed',
-                projected: 'Projected Taxes Owed',
-              },
-              contexts: {
-                projected: 'projected',
-              },
-            })}
-          </Span>
-          <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
-        </VStack>
-        <VStack align='center'>
-          <Span size='sm' variant='subtle'>{t('taxEstimates:label.taxes_due', 'Taxes Due')}</Span>
-          <Span size='md'>{formatDate(data.taxesDueAt)}</Span>
-        </VStack>
+    <div className='Layer__TaxSummaryCard'>
+      <VStack className='Layer__TaxSummaryCard__Cell Layer__TaxSummaryCard__Cell--header'>
+        <Span size='md'>
+          {tConditional(t, 'taxEstimates:label.taxes_owed', {
+            condition: projectedCondition,
+            cases: {
+              default: 'Taxes Owed',
+              projected: 'Projected Taxes Owed',
+            },
+            contexts: {
+              projected: 'projected',
+            },
+          })}
+        </Span>
       </VStack>
-      <VStack className='Layer__TaxSummaryCard__Breakdown'>
-        <div className='Layer__TaxSummaryCard__Grid'>
-          {data.sections.map(section => (
-            <div key={section.label} className='Layer__TaxSummaryCard__SectionGroup'>
-              <Span size='md' variant='subtle'>{section.label}</Span>
-              <MoneySpan size='xl' weight='bold' amount={section.taxesOwed} />
-              <Span size='md' variant='subtle'>=</Span>
-              <MoneySpan size='lg' amount={section.total} />
-              <Span size='md' variant='subtle'>-</Span>
-              <MoneySpan size='lg' amount={section.taxesPaid} />
-              <span />
-              <span />
-              <Span size='sm' variant='subtle'>{t('common:label.total', 'Total')}</Span>
-              <span />
-              <Span size='sm' variant='subtle'>{t('taxEstimates:label.taxes_paid', 'Taxes Paid')}</Span>
-            </div>
-          ))}
-        </div>
+      {data.sections.map((section, index) => (
+        <HStack
+          key={section.key ?? section.label}
+          className='Layer__TaxSummaryCard__Cell Layer__TaxSummaryCard__Cell--header Layer__TaxSummaryCard__Cell--bordered'
+          align='center'
+        >
+          <span className='Layer__TaxSummaryCard__OperatorIconAnchor'>
+            {index === 0 ? <ArrowCircle /> : <PlusCircle />}
+          </span>
+          <Span size='md'>{section.label}</Span>
+        </HStack>
+      ))}
+      <VStack className='Layer__TaxSummaryCard__Cell' gap='2xs' align='start'>
+        <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
+        <Span size='sm' variant='subtle'>
+          {t('taxEstimates:label.taxes_due_at', 'Taxes due on {{date}}', { date: formatDate(data.taxesDueAt) })}
+        </Span>
       </VStack>
-    </HStack>
+      {data.sections.map(section => (
+        <VStack
+          key={section.key ?? section.label}
+          className='Layer__TaxSummaryCard__Cell Layer__TaxSummaryCard__Cell--bordered'
+        >
+          <EquationRow section={section} size='md' />
+        </VStack>
+      ))}
+    </div>
   )
 }
