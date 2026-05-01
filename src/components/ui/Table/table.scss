@@ -101,6 +101,18 @@
   background-color: inherit;
 }
 
+.Layer__UI__Table-ScrollContainer.Layer__UI__Table-ScrollContainer--has-horizontal-overflow {
+  .Layer__UI__Table-Column[data-pinned='left'],
+  .Layer__UI__Table-Cell[data-pinned='left'] {
+    border-right: 1px solid var(--color-base-200);
+  }
+
+  .Layer__UI__Table-Column[data-pinned='right'],
+  .Layer__UI__Table-Cell[data-pinned='right'] {
+    border-left: 1px solid var(--color-base-200);
+  }
+}
+
 .Layer__UI__Table-TableHeader .Layer__UI__Table-Column[data-pinned] {
   z-index: 2;
   background-color: var(--color-base-0);
