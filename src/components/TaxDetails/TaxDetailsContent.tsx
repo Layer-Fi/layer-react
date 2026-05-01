@@ -20,8 +20,6 @@ import { Loader } from '@components/Loader/Loader'
 import { Operator } from '@components/TaxDetails/Operator/Operator'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
-import './taxDetailsContent.scss'
-
 enum TaxDetailsColumns {
   Label = 'Label',
   Amount = 'Amount',
@@ -68,7 +66,7 @@ const useColumnConfig = (): NestedColumnConfig<TaxDetailsRow> => {
         const hasOperator = row.original.operator !== undefined && row.original.operator !== null
         if (hasOperator) {
           return (
-            <HStack className='Layer__TaxDetails__TaxDetailsRow--operator' data-indent-size={row.depth} align='center' gap='md'>
+            <HStack className='Layer__TaxDetails__TaxDetailsRow--operator' align='center' gap='md'>
               <Operator sign={row.original.operator} />
               <Span>{row.original.label}</Span>
             </HStack>

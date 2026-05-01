@@ -26,8 +26,10 @@ const INDENT_SIZE_XS = 10
 const INDENT_SIZE_SM = 20
 const INDENT_SIZE_MD = 40
 
+const CHEVRON_OFFSET_PX = 4
+
 const getRowIndentStyle = ({ depth, canExpand, indentSizePx }: { depth: number, canExpand: boolean, indentSizePx: number }) => ({
-  paddingInlineStart: canExpand ? depth * indentSizePx : 0,
+  paddingInlineStart: depth * indentSizePx + (canExpand ? 0 : CHEVRON_OFFSET_PX),
 })
 
 export type ExpandableDataTableIndentSize = 'xs' | 'sm' | 'md'
