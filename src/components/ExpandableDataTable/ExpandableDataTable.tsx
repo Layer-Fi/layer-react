@@ -17,10 +17,9 @@ import {
   DataTable,
 } from '@components/DataTable/DataTable'
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
+import { expandAwareRenderCell } from '@components/ExpandableDataTable/utils'
 
 import './expandableDataTable.scss'
-
-import { expandAwareRenderCell } from './utils'
 
 export type ExpandableDataTableIndentSize = 'xs' | 'sm' | 'md'
 type ExpandableDataTableProps<TData> = BaseDataTableProps & {
