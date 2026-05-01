@@ -336,7 +336,7 @@ const SplitFormRow = ({
         </Span>
       )}
       <VStack gap='xs'>
-        <div className='Layer__BankTransactionsMobileSplitForm__SplitGridContainer'>
+        <div className='Layer__BankTransactionsMobileListSplitForm__SplitGridContainer'>
           <AmountInput
             name={`split-${splitIndex}`}
             disabled={splitIndex === 0 || !showCategorization}
@@ -344,7 +344,7 @@ const SplitFormRow = ({
             value={getInputValueForSplitAtIndex(splitIndex, split)}
             onBlur={onBlurSplitAmount}
             isInvalid={split.amount < 0}
-            className='Layer__BankTransactionsMobileSplitForm__AmountInput'
+            className='Layer__BankTransactionsMobileListSplitForm__AmountInput'
           />
 
           <HStack
@@ -415,6 +415,7 @@ const SplitTaxCodeSelect = ({
           !showCategorization
           || isExclusionCategory(split.category)
         }
+        className='Layer__BankTransactionsMobileListSplitForm__TaxCodeSelect'
       />
     </>
   )
@@ -443,7 +444,7 @@ const SplitTotalRow = ({
           disabled={true}
           inputMode='numeric'
           value={formatCurrencyFromCents(localSplits.reduce((total, { amount }) => total + amount, 0))}
-          className='Layer__BankTransactionsMobileSplitForm__TotalAmountInput'
+          className='Layer__BankTransactionsMobileListSplitForm__TotalAmountInput'
         />
         <SplitButton onClick={addSplit} />
       </HStack>

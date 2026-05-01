@@ -1,4 +1,4 @@
-.Layer__BankTransactionsMobileSplitForm {
+.Layer__BankTransactionsMobileListSplitForm {
   &__SplitGridContainer {
     display: grid;
     grid-template-columns: 5.5rem 1fr;
@@ -14,5 +14,9 @@
   &__TotalAmountInput {
     width: 5.5rem;
     text-align: right;
+  }
+
+  &__TaxCodeSelect {
+    padding-inline-start: var(--spacing-3xs);
   }
 }
