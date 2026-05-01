@@ -1,6 +1,5 @@
 import { type ReactNode } from 'react'
 import { type Row } from '@tanstack/react-table'
-import { Loader } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type TaxDetailsRow } from '@schemas/taxEstimates/details'
@@ -17,6 +16,7 @@ import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
 import { ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
+import { Loader } from '@components/Loader/Loader'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import { Operator } from './Operator/Operator'
@@ -75,7 +75,11 @@ const useColumnConfig = (): NestedColumnConfig<TaxDetailsRow> => {
           return <Span>{formatPercent(value.value, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</Span>
         }
 
-        return <MoneySpan amount={value?.value ?? 0} />
+        if (value?.value !== undefined && value?.value !== null) {
+          return <MoneySpan amount={value.value} />
+        }
+
+        return <Span>-</Span>
       },
     },
   ]
@@ -105,14 +109,7 @@ export function TaxDetailsContent() {
       isError={isError}
       data={data}
       Loading={<Loader />}
-      Error={(
-        <DataState
-          status={DataStateStatus.failed}
-          title={t('taxEstimates:error.load_tax_estimates', 'We couldn\'t load your tax estimates')}
-          description={t('taxEstimates:error.while_loading_tax_estimates', 'An error occurred while loading your tax estimates. Please check your connection and try again.')}
-          spacing
-        />
-      )}
+      Error={<ErrorState />}
     >
       {({ data: details }) => {
         return (
