@@ -1,9 +1,11 @@
 import { type ReactNode, useMemo } from 'react'
 import { type Row } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
+import { useIntl } from 'react-intl'
 
 import { type TaxDetailsRow } from '@schemas/taxEstimates/details'
 import { asMutable } from '@utils/asMutable'
+import { formatPercent } from '@utils/i18n/number/formatters'
 import { useTaxDetails } from '@hooks/api/businesses/[business-id]/tax-estimates/details/useTaxDetails'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -54,47 +56,54 @@ const ErrorState = () => {
   )
 }
 
+const TaxDetailsRowLabelCell = (row: Row<TaxDetailsRow>) => {
+  const hasOperator = row.original.operator !== undefined && row.original.operator !== null
+  if (hasOperator) {
+    return (
+      <HStack className='Layer__TaxDetails__TaxDetailsRow--operator' align='center' gap='md'>
+        <Operator sign={row.original.operator} />
+        <Span>{row.original.label}</Span>
+      </HStack>
+    )
+  }
+
+  return <Span>{row.original.label}</Span>
+}
+
+const TaxDetailsRowAmountCell = (row: Row<TaxDetailsRow>) => {
+  const intl = useIntl()
+  const { formatNumber } = useIntlFormatter()
+  const { value } = row.original
+  if (value === undefined) return <Span>-</Span>
+
+  switch (value.type) {
+    case 'Percentage':
+      return <Span>{formatPercent(intl, value.value, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</Span>
+    case 'Currency':
+      return <MoneySpan amount={value.value} />
+    case 'Decimal':
+      return <Span>{formatNumber(value.value, { maximumFractionDigits: 2, minimumFractionDigits: 0 })}</Span>
+    default:
+      return <Span>-</Span>
+  }
+}
+
 const useColumnConfig = (): NestedColumnConfig<TaxDetailsRow> => {
   const { t } = useTranslation()
-  const { formatPercent } = useIntlFormatter()
 
   return useMemo(() => [
     {
       id: TaxDetailsColumns.Label,
       header: t('taxEstimates:label.tax_details_label', 'Label'),
-      cell: (row: Row<TaxDetailsRow>) => {
-        const hasOperator = row.original.operator !== undefined && row.original.operator !== null
-        if (hasOperator) {
-          return (
-            <HStack className='Layer__TaxDetails__TaxDetailsRow--operator' align='center' gap='md'>
-              <Operator sign={row.original.operator} />
-              <Span>{row.original.label}</Span>
-            </HStack>
-          )
-        }
-
-        return <Span>{row.original.label}</Span>
-      },
+      cell: TaxDetailsRowLabelCell,
       isRowHeader: true,
     },
     {
       id: TaxDetailsColumns.Amount,
       header: t('taxEstimates:label.tax_details_amount', 'Amount'),
-      cell: (row: Row<TaxDetailsRow>) => {
-        const { value } = row.original
-        if (value === undefined) return <Span>-</Span>
-
-        switch (value.type) {
-          case 'Percentage':
-            return <Span>{formatPercent(value.value, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</Span>
-          case 'Currency':
-            return <MoneySpan amount={value.value} />
-          case 'Decimal':
-            return <Span>{value.value}</Span>
-        }
-      },
+      cell: TaxDetailsRowAmountCell,
     },
-  ], [t, formatPercent])
+  ], [t])
 }
 
 const getSubRows = (row: TaxDetailsRow): TaxDetailsRow[] | undefined => {
