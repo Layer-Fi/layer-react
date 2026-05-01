@@ -51,7 +51,7 @@ export const TaxSummaryCardDesktop = ({ data }: TaxSummaryCardDesktopProps) => {
       </VStack>
       {data.sections.map((section, index) => (
         <HStack
-          key={`${section.label}-header`}
+          key={section.key ?? section.label}
           className='Layer__TaxSummaryCard__Cell Layer__TaxSummaryCard__Cell--header Layer__TaxSummaryCard__Cell--bordered'
           align='center'
         >
@@ -69,7 +69,7 @@ export const TaxSummaryCardDesktop = ({ data }: TaxSummaryCardDesktopProps) => {
       </VStack>
       {data.sections.map(section => (
         <VStack
-          key={`${section.label}-body`}
+          key={section.key ?? section.label}
           className='Layer__TaxSummaryCard__Cell Layer__TaxSummaryCard__Cell--bordered'
         >
           <EquationRow section={section} size='md' />

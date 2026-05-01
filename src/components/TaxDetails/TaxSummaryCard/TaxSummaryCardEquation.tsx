@@ -36,7 +36,7 @@ export const EquationRow = ({ section, size = 'md' }: EquationRowProps) => {
       <Span className='Layer__TaxSummaryCard__Operator' size={size} variant='subtle'>-</Span>
       <AmountWithLabel
         amount={section.taxesPaid}
-        label={t('taxEstimates:label.taxes_paid', 'Taxes paid')}
+        label={t('taxEstimates:label.taxes_paid', 'Taxes Paid')}
         size={size}
       />
       <Span className='Layer__TaxSummaryCard__Operator' size={size} variant='subtle'>=</Span>
