@@ -8,7 +8,7 @@ import { useTaxDetails } from '@hooks/api/businesses/[business-id]/tax-estimates
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
-import { VStack } from '@ui/Stack/Stack'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
@@ -17,9 +17,10 @@ import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
 import { ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { Loader } from '@components/Loader/Loader'
+import { Operator } from '@components/TaxDetails/Operator/Operator'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
-import { Operator } from './Operator/Operator'
+import './taxDetailsContent.scss'
 
 enum TaxDetailsColumns {
   Label = 'Label',
@@ -63,7 +64,19 @@ const useColumnConfig = (): NestedColumnConfig<TaxDetailsRow> => {
     {
       id: TaxDetailsColumns.Label,
       header: t('taxEstimates:label.tax_details_label', 'Label'),
-      cell: (row: Row<TaxDetailsRow>) => <Span>{row.original.label}</Span>,
+      cell: (row: Row<TaxDetailsRow>) => {
+        const hasOperator = row.original.operator !== undefined && row.original.operator !== null
+        if (hasOperator) {
+          return (
+            <HStack className='Layer__TaxDetails__TaxDetailsRow--operator' data-indent-size={row.depth} align='center' gap='md'>
+              <Operator sign={row.original.operator} />
+              <Span>{row.original.label}</Span>
+            </HStack>
+          )
+        }
+
+        return <Span>{row.original.label}</Span>
+      },
       isRowHeader: true,
     },
     {
@@ -130,7 +143,6 @@ export function TaxDetailsContent() {
                 }}
                 getSubRows={getSubRows}
                 getRowId={getRowId}
-                renderFirstCellPrefix={(row: Row<TaxDetailsRow>) => row.original.operator ? <Operator sign={row.original.operator} /> : null}
               />
             </ExpandableDataTableProvider>
           </ExpandableCardsWrapper>
