@@ -1,9 +1,9 @@
-.Layer__ActionableList {
+.Layer__actionable-list {
   padding: 0;
   margin: 0;
   list-style: none;
 
-  &__Item {
+  li {
     box-sizing: border-box;
     display: flex;
     gap: var(--spacing-2xs);
@@ -16,35 +16,39 @@
     cursor: pointer;
     font-size: 12px;
 
-    &--Secondary {
+    .Layer__actionable-list__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-2xs);
+      align-items: flex-start;
+      max-width: 36ch;
+
+      .Layer__actionable-list__content-description {
+        color: var(--color-base-500);
+      }
+    }
+
+    &.Layer__actionable-list-item--secondary {
       color: var(--color-base-500);
 
-      &.Layer__ActionableList__Item--AsLink:hover {
+      &.Layer__actionable-list-item--as-link:hover {
         color: var(--color-base-1000);
       }
     }
 
-    &--Selected {
+    &.Layer__actionable-list__item--selected {
       background-color: var(--color-base-50);
     }
   }
 
-  &__Content {
-    max-width: 36ch;
-  }
-
-  &__ContentDescription {
-    color: var(--color-base-500);
-  }
-
-  &__Select {
+  .Layer__actionable-list__select {
     display: flex;
     height: 18px;
     width: 18px;
     border-radius: 50%;
     border: 1px solid var(--color-base-300);
 
-    &--Selected {
+    &.Layer__actionable-list__select--selected {
       align-items: center;
       justify-content: center;
       border: 1px solid var(--color-info-success);
