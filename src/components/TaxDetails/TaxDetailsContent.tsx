@@ -72,7 +72,7 @@ const useColumnConfig = (): NestedColumnConfig<TaxDetailsRow> => {
       cell: (row: Row<TaxDetailsRow>) => {
         const { value } = row.original
         if (value?.type === 'rate') {
-          return <Span>{formatPercent(value.value)}</Span>
+          return <Span>{formatPercent(value.value, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</Span>
         }
 
         return <MoneySpan amount={value?.value ?? 0} />
