@@ -27,8 +27,8 @@ enum TaxDetailsColumns {
 }
 
 const COMPONENT_NAME = 'TaxDetails'
-const MobileExpandableCardsWrapper = ({ children }: { children: ReactNode }) => (
-  <Card className='Layer__TaxDetails__ExpandableCardsWrapper'>{children}</Card>
+const MobileExpandableCardsWrapper = ({ children, className }: { children: ReactNode, className?: string }) => (
+  <Card className={className}>{children}</Card>
 )
 
 const EmptyState = () => {
