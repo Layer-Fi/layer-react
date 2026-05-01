@@ -1,43 +1,42 @@
 import { pipe, Schema } from 'effect'
 
-const TaxDetailsRowOperatorSchema = Schema.Literal('+', '-', '×')
+const TaxDetailsValueTypeSchema = Schema.Literal('currency', 'rate')
 
-export type TaxDetailsRowOperator = typeof TaxDetailsRowOperatorSchema.Type
+export type TaxDetailsValueType = typeof TaxDetailsValueTypeSchema.Type
 
-export type TaxDetailsRow = {
-  rowKey: string
-  label: string
-  amount?: number
-  rate?: number
-  operator?: TaxDetailsRowOperator
+const TaxDetailsValueSchema = Schema.Struct({
+  value: Schema.Number,
+  type: TaxDetailsValueTypeSchema,
+})
+
+export type TaxDetailsValue = typeof TaxDetailsValueSchema.Type
+
+const taxDetailsRowFields = {
+  rowKey: pipe(
+    Schema.propertySignature(Schema.String),
+    Schema.fromKey('row_key'),
+  ),
+  label: Schema.String,
+  value: Schema.optional(TaxDetailsValueSchema),
+  operator: Schema.optional(Schema.String),
+}
+
+export interface TaxDetailsRow extends Schema.Struct.Type<typeof taxDetailsRowFields> {
   breakdown?: ReadonlyArray<TaxDetailsRow>
 }
 
-type TaxDetailsRowEncoded = {
-  row_key: string
-  label: string
-  amount?: number
-  rate?: number
-  operator?: TaxDetailsRowOperator
-  breakdown?: ReadonlyArray<TaxDetailsRowEncoded>
+interface TaxDetailsRowEncoded extends Schema.Struct.Encoded<typeof taxDetailsRowFields> {
+  readonly breakdown?: ReadonlyArray<TaxDetailsRowEncoded>
 }
 
-const TaxDetailsRowSchema: Schema.Schema<
-  TaxDetailsRow,
-  TaxDetailsRowEncoded
-> = Schema.suspend(() =>
-  Schema.Struct({
-    rowKey: pipe(
-      Schema.propertySignature(Schema.String),
-      Schema.fromKey('row_key'),
+const TaxDetailsRowSchema = Schema.Struct({
+  ...taxDetailsRowFields,
+  breakdown: Schema.optional(
+    Schema.Array(
+      Schema.suspend((): Schema.Schema<TaxDetailsRow, TaxDetailsRowEncoded> => TaxDetailsRowSchema),
     ),
-    label: Schema.String,
-    amount: Schema.optional(Schema.Number),
-    rate: Schema.optional(Schema.Number),
-    operator: Schema.optional(TaxDetailsRowOperatorSchema),
-    breakdown: Schema.optional(Schema.Array(TaxDetailsRowSchema)),
-  }),
-)
+  ),
+})
 
 const TaxDetailsMetaSchema = Schema.Struct({
   year: Schema.Number,

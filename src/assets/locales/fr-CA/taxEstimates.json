@@ -112,6 +112,8 @@
     "tax_name_estimate_owed": "Estimation de {{taxName}} (à payer)",
     "tax_name_rate": "Taux de {{taxName}}",
     "tax_details": "",
+    "tax_details_amount": "",
+    "tax_details_label": "",
     "tax_payments": "Paiements d’impôt",
     "tax_payments_projected": "Paiements d’impôt projetés",
     "tax_profile": "Profil fiscal",
