@@ -4,7 +4,7 @@ import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@ui/Button/Button'
-import { VStack } from '@ui/Stack/Stack'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { P } from '@ui/Typography/Text'
 import { Separator } from '@components/Separator/Separator'
@@ -66,15 +66,19 @@ export const ModalTitleWithClose = forwardRef<
           {description}
         </VStack>
         {!hideCloseButton && (
-          <Button
-            icon
-            variant='outlined'
+          <HStack
             slot='close'
-            onPress={onClose}
-            aria-label={t('ui:action.close_modal', 'Close Modal')}
+            className='Layer__ModalTitleWithClose__CloseButtonWrapper'
           >
-            <X size={16} />
-          </Button>
+            <Button
+              icon
+              variant='outlined'
+              onPress={onClose}
+              aria-label={t('ui:action.close_modal', 'Close Modal')}
+            >
+              <X size={16} />
+            </Button>
+          </HStack>
         )}
       </div>
       <Separator mbe={hideBottomPadding ? undefined : 'md'} />
