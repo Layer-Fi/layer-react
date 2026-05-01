@@ -1,26 +1,26 @@
 import { useCallback } from 'react'
 import { GridList } from 'react-aria-components'
+import { useTranslation } from 'react-i18next'
 
 import './businessFormMobile.scss'
 
-import { BusinessFormMobileItem, type BusinessFormMobileItemOption, type BusinessFormOptionValue } from './BusinessFormMobileItem'
+import { BusinessFormMobileItem, type BusinessFormMobileItemOption } from './BusinessFormMobileItem'
 
-interface BusinessFormMobileProps<T extends BusinessFormOptionValue> {
-  options: BusinessFormMobileItemOption<T>[]
+interface BusinessFormMobileProps {
+  options: BusinessFormMobileItemOption[]
   selectedId?: string
   showDescriptions?: boolean
-  onSelect: (option: BusinessFormMobileItemOption<T>) => void
+  onSelect: (option: BusinessFormMobileItemOption) => void
   readOnly?: boolean
-  ariaLabel: string
 }
 
-export const BusinessFormMobile = <T extends BusinessFormOptionValue,>({
+export const BusinessFormMobile = ({
   options,
   selectedId,
   onSelect,
   readOnly,
-  ariaLabel,
-}: BusinessFormMobileProps<T>) => {
+}: BusinessFormMobileProps) => {
+  const { t } = useTranslation()
   const handleSelectionChange = useCallback((keys: Set<string | number> | 'all') => {
     if (keys === 'all') return
     if (readOnly) return
@@ -34,14 +34,14 @@ export const BusinessFormMobile = <T extends BusinessFormOptionValue,>({
 
   return (
     <GridList
-      aria-label={ariaLabel}
+      aria-label={t('bankTransactions:label.category', 'Category')}
       selectionMode='single'
       selectedKeys={selectedId ? new Set([selectedId]) : new Set()}
       onSelectionChange={handleSelectionChange}
       className='Layer__BusinessFormMobile'
     >
       {options.map(option => (
-        <BusinessFormMobileItem<T>
+        <BusinessFormMobileItem
           key={option.value.value}
           option={option}
         />
