@@ -41,8 +41,6 @@ export const isSelectCategoryOption = (
   return isPlaceholderAsOption(value) && value.value === SELECT_CATEGORY_VALUE
 }
 
-type DisplayOption = BusinessFormMobileItemOption<BankTransactionCategoryComboBoxOption>
-
 interface BankTransactionsMobileListBusinessFormProps {
   bankTransaction: BankTransaction
   showCategorization?: boolean
@@ -105,8 +103,8 @@ export const BankTransactionsMobileListBusinessForm = ({
     }
   }, [isErrorCategorizing])
 
-  const options = useMemo((): DisplayOption[] => {
-    const options: DisplayOption[] = Array.from(sessionCategories.values()).map(category => ({
+  const options = useMemo((): BusinessFormMobileItemOption[] => {
+    const options: BusinessFormMobileItemOption[] = Array.from(sessionCategories.values()).map(category => ({
       value: category,
     }))
 
@@ -121,7 +119,7 @@ export const BankTransactionsMobileListBusinessForm = ({
     return options
   }, [t, sessionCategories])
 
-  const onCategorySelect = (category: DisplayOption) => {
+  const onCategorySelect = (category: BusinessFormMobileItemOption) => {
     if (isSelectCategoryOption(category.value)) {
       setIsDrawerOpen(true)
     }
@@ -189,7 +187,6 @@ export const BankTransactionsMobileListBusinessForm = ({
               options={options}
               onSelect={onCategorySelect}
               selectedId={selectedCategory?.value}
-              ariaLabel={t('bankTransactions:label.category', 'Category')}
             />
           )}
         {showCategorization && showTaxCodeSelector && (
