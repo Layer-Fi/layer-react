@@ -48,10 +48,10 @@ const EMPTY_ARRAY: never[] = []
 export type ExpandAwareRenderCellParams<TData> = {
   indentSize: 'sm' | 'md'
   renderFirstCellPrefix: CellRenderer<TData> | null | undefined
-  firstCell: CellRenderer<TData>
+  cellRenderer: CellRenderer<TData>
 }
 
-function expandAwareRenderCell<TData>({ indentSize, renderFirstCellPrefix, firstCell }: ExpandAwareRenderCellParams<TData>): CellRenderer<TData> {
+function expandAwareRenderCell<TData>({ indentSize, renderFirstCellPrefix, cellRenderer }: ExpandAwareRenderCellParams<TData>): CellRenderer<TData> {
   return function Render(row: Row<TData>): ReactNode {
     const canExpand = row.getCanExpand()
     const indentSizePx = indentSize === 'sm' ? INDENT_SIZE_SM : INDENT_SIZE_MD
@@ -78,7 +78,7 @@ function expandAwareRenderCell<TData>({ indentSize, renderFirstCellPrefix, first
           </div>
         )}
         <div className='Layer__ExpandableDataTable__FirstCell__Content'>
-          {firstCell(row)}
+          {cellRenderer(row)}
         </div>
       </div>
     )
@@ -104,11 +104,11 @@ export function ExpandableDataTable<TData extends object>({
     const [first, ...rest] = columnConfig
     if (!first || !isLeafColumn(first)) return columnConfig
 
-    const originalFirstCell = first.cell
+    const cellRenderer = first.cell
 
     const firstWithChevron = {
       ...first,
-      cell: expandAwareRenderCell({ indentSize, renderFirstCellPrefix, firstCell: originalFirstCell }),
+      cell: expandAwareRenderCell({ indentSize, renderFirstCellPrefix, cellRenderer }),
     }
 
     return [firstWithChevron, ...rest]
