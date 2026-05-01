@@ -1,13 +1,16 @@
 import { pipe, Schema } from 'effect'
 
-const TaxDetailsValueTypeSchema = Schema.Literal('currency', 'rate')
+import {
+  UnifiedCellValueCurrencySchema,
+  UnifiedCellValueDecimalSchema,
+  UnifiedCellValueRateSchema,
+} from '@schemas/reports/unifiedReport'
 
-export type TaxDetailsValueType = typeof TaxDetailsValueTypeSchema.Type
-
-const TaxDetailsValueSchema = Schema.Struct({
-  value: Schema.Number,
-  type: TaxDetailsValueTypeSchema,
-})
+const TaxDetailsValueSchema = Schema.Union(
+  UnifiedCellValueCurrencySchema,
+  UnifiedCellValueDecimalSchema,
+  UnifiedCellValueRateSchema,
+)
 
 export type TaxDetailsValue = typeof TaxDetailsValueSchema.Type
 

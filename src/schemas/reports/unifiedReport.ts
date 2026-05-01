@@ -97,7 +97,7 @@ export const UnifiedReportColumnSchema = Schema.Struct({
   ),
 })
 
-const UnifiedCellValueCurrencySchema = Schema.Struct({
+export const UnifiedCellValueCurrencySchema = Schema.Struct({
   type: Schema.Literal('Currency'),
   value: Schema.Number,
 })
@@ -107,13 +107,18 @@ const UnifiedCellValueDateSchema = Schema.Struct({
   value: Schema.Date,
 })
 
-const UnifiedCellValueDecimalSchema = Schema.Struct({
+export const UnifiedCellValueDecimalSchema = Schema.Struct({
   type: Schema.Literal('Decimal'),
   value: Schema.Number,
 })
 
 const UnifiedCellValueEmptySchema = Schema.Struct({
   type: Schema.Literal('Empty'),
+})
+
+export const UnifiedCellValueRateSchema = Schema.Struct({
+  type: Schema.Literal('Rate'),
+  value: Schema.Number,
 })
 
 const UnifiedCellValueUnknownSchema = Schema.Struct({
@@ -126,6 +131,7 @@ const UnifiedCellValueSchema = Schema.Union(
   UnifiedCellValueDateSchema,
   UnifiedCellValueDecimalSchema,
   UnifiedCellValueEmptySchema,
+  UnifiedCellValueRateSchema,
   UnifiedCellValueUnknownSchema,
 )
 
@@ -134,6 +140,7 @@ export type UnifiedCellValueCurrency = typeof UnifiedCellValueCurrencySchema.Typ
 export type UnifiedCellValueDate = typeof UnifiedCellValueDateSchema.Type
 export type UnifiedCellValueDecimal = typeof UnifiedCellValueDecimalSchema.Type
 export type UnifiedCellValueEmpty = typeof UnifiedCellValueEmptySchema.Type
+export type UnifiedCellValueRate = typeof UnifiedCellValueRateSchema.Type
 export type UnifiedCellValueUnknown = typeof UnifiedCellValueUnknownSchema.Type
 
 export const isCurrencyCellValue = (value: UnifiedCellValue): value is UnifiedCellValueCurrency =>
@@ -147,6 +154,9 @@ export const isDecimalCellValue = (value: UnifiedCellValue): value is UnifiedCel
 
 export const isEmptyCellValue = (value: UnifiedCellValue): value is UnifiedCellValueEmpty =>
   value.type === 'Empty'
+
+export const isRateCellValue = (value: UnifiedCellValue): value is UnifiedCellValueRate =>
+  value.type === 'Rate'
 
 const UnifiedCellFormatSchema = Schema.Struct({
   bold: Schema.optional(Schema.Boolean),

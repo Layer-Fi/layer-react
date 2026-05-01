@@ -71,15 +71,16 @@ const useColumnConfig = (): NestedColumnConfig<TaxDetailsRow> => {
       header: t('taxEstimates:label.tax_details_amount', 'Amount'),
       cell: (row: Row<TaxDetailsRow>) => {
         const { value } = row.original
-        if (value?.type === 'rate') {
-          return <Span>{formatPercent(value.value, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</Span>
-        }
+        if (value === undefined) return <Span>-</Span>
 
-        if (value?.value !== undefined && value?.value !== null) {
-          return <MoneySpan amount={value.value} />
+        switch (value.type) {
+          case 'Rate':
+            return <Span>{formatPercent(value.value, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</Span>
+          case 'Currency':
+            return <MoneySpan amount={value.value} />
+          case 'Decimal':
+            return <Span>{value.value}</Span>
         }
-
-        return <Span>-</Span>
       },
     },
   ]
