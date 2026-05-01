@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react'
+import { type ReactNode, useMemo } from 'react'
 import { type Row } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 
@@ -59,7 +59,7 @@ const useColumnConfig = (): NestedColumnConfig<TaxDetailsRow> => {
   const { t } = useTranslation()
   const { formatPercent } = useIntlFormatter()
 
-  return [
+  return useMemo(() => [
     {
       id: TaxDetailsColumns.Label,
       header: t('taxEstimates:label.tax_details_label', 'Label'),
@@ -74,7 +74,7 @@ const useColumnConfig = (): NestedColumnConfig<TaxDetailsRow> => {
         if (value === undefined) return <Span>-</Span>
 
         switch (value.type) {
-          case 'Rate':
+          case 'Percentage':
             return <Span>{formatPercent(value.value, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</Span>
           case 'Currency':
             return <MoneySpan amount={value.value} />
@@ -83,7 +83,7 @@ const useColumnConfig = (): NestedColumnConfig<TaxDetailsRow> => {
         }
       },
     },
-  ]
+  ], [t, formatPercent])
 }
 
 const getSubRows = (row: TaxDetailsRow): TaxDetailsRow[] | undefined => {
