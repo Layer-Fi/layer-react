@@ -20,7 +20,6 @@ import {
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { ExpandButton } from '@components/ExpandButton/ExpandButton'
 
-import './expandableDataTable.scss'
 
 const INDENT_SIZE_XS = 10
 const INDENT_SIZE_SM = 20

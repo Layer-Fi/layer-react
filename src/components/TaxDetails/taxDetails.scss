@@ -29,19 +29,6 @@
     justify-content: flex-end;
     text-align: right;
   }
-
-  .Layer__ExpandableDataTable__FirstCell {
-    gap: var(--spacing-md);
-
-    @media (width <= 500px) {
-      gap: var(--spacing-2xs);
-    }
-  }
-
-  .Layer__ExpandableDataTable__PrefixSlot {
-    justify-content: center;
-    min-inline-size: 1rem;
-  }
 }
 
 .Layer__TaxDetails {
