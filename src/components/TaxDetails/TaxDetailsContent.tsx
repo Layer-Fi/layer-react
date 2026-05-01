@@ -1,12 +1,10 @@
 import { type ReactNode, useMemo } from 'react'
 import { type Row } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
-import { useIntl } from 'react-intl'
 
 import { isCurrencyCellValue, isDecimalCellValue, isPercentageCellValue } from '@schemas/reports/unifiedReport'
 import { type TaxDetailsRow } from '@schemas/taxEstimates/details'
 import { asMutable } from '@utils/asMutable'
-import { formatPercent } from '@utils/i18n/number/formatters'
 import { useTaxDetails } from '@hooks/api/businesses/[business-id]/tax-estimates/details/useTaxDetails'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -71,31 +69,35 @@ const TaxDetailsRowLabelCell = (row: Row<TaxDetailsRow>) => {
   return <Span>{row.original.label}</Span>
 }
 
-const TaxDetailsRowAmountCell = (row: Row<TaxDetailsRow>) => {
-  const intl = useIntl()
-  const { formatNumber } = useIntlFormatter()
-  const { value } = row.original
-  if (value === undefined) return <Span>-</Span>
+type AmountCellRendererDeps = Pick<ReturnType<typeof useIntlFormatter>, 'formatNumber' | 'formatPercent'>
 
-  if (isPercentageCellValue(value)) {
-    return <Span>{formatPercent(intl, value.value, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</Span>
-  }
-  if (isCurrencyCellValue(value)) {
-    return <MoneySpan amount={value.value} />
-  }
-  if (isDecimalCellValue(value)) {
-    return <Span>{formatNumber(value.value, { maximumFractionDigits: 2, minimumFractionDigits: 0 })}</Span>
-  }
+const makeAmountCellRenderer = ({ formatNumber, formatPercent }: AmountCellRendererDeps) => {
+  return function TaxDetailsAmountCell(row: Row<TaxDetailsRow>) {
+    const { value } = row.original
+    if (value === undefined) return <Span>-</Span>
 
-  if (typeof value.value !== 'object') {
-    return <Span>String(value.value)</Span>
-  }
+    if (isPercentageCellValue(value)) {
+      return <Span>{formatPercent(value.value, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}</Span>
+    }
+    if (isCurrencyCellValue(value)) {
+      return <MoneySpan amount={value.value} />
+    }
+    if (isDecimalCellValue(value)) {
+      return <Span>{formatNumber(value.value, { maximumFractionDigits: 2, minimumFractionDigits: 0 })}</Span>
+    }
 
-  return <Span>-</Span>
+    const raw = value.value
+    if (typeof raw === 'string' || typeof raw === 'number' || typeof raw === 'boolean') {
+      return <Span>{String(raw)}</Span>
+    }
+
+    return <Span>-</Span>
+  }
 }
 
 const useColumnConfig = (): NestedColumnConfig<TaxDetailsRow> => {
   const { t } = useTranslation()
+  const { formatNumber, formatPercent } = useIntlFormatter()
 
   return useMemo(() => [
     {
@@ -107,9 +109,9 @@ const useColumnConfig = (): NestedColumnConfig<TaxDetailsRow> => {
     {
       id: TaxDetailsColumns.Amount,
       header: t('taxEstimates:label.tax_details_amount', 'Amount'),
-      cell: TaxDetailsRowAmountCell,
+      cell: makeAmountCellRenderer({ formatNumber, formatPercent }),
     },
-  ], [t])
+  ], [t, formatNumber, formatPercent])
 }
 
 const getSubRows = (row: TaxDetailsRow): TaxDetailsRow[] | undefined => {
