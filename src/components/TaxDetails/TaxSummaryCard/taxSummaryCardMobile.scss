@@ -6,18 +6,6 @@
   }
 }
 
-@media (width >= 760px) {
-  .Layer__TaxDetails {
-    .Layer__card {
-      border-radius: 0;
-    }
-  }
-
-  .Layer__Stack.Layer__TaxDetails__ExpandableCardsWrapper {
-    border-radius: 0;
-  }
-}
-
 .Layer__TaxSummaryCard__MobileToggleWrapper {
   margin-top: var(--spacing-md);
 }

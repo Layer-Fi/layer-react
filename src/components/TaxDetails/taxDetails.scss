@@ -45,3 +45,15 @@
     }
   }
 }
+
+@media (width >= 760px) {
+  .Layer__TaxDetails {
+    .Layer__card {
+      border-radius: 0;
+    }
+
+    &__ExpandableCardsWrapper {
+      border-radius: 0;
+    }
+  }
+}

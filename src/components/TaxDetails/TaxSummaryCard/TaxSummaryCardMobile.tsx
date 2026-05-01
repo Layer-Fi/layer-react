@@ -60,7 +60,7 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
         {isExpanded && (
           <VStack className='Layer__TaxSummaryCard__MobileSections' gap='md'>
             {data.sections.map(section => (
-              <SectionEquation key={section.label} section={section} />
+              <SectionEquation key={section.key ?? section.label} section={section} />
             ))}
           </VStack>
         )}
