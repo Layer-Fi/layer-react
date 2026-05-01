@@ -4,7 +4,7 @@ import type { TaxSummarySection } from '@schemas/taxEstimates/summary'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan, type MoneySpanProps } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { Badge, BadgeSize, BadgeVariant, type BadgeProps } from '@components/Badge/Badge'
+import { Badge, type BadgeProps, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 
 type EquationSize = 'md' | 'lg'
 
