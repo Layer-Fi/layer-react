@@ -25,12 +25,11 @@ export const ExpandableCard = ({
   return (
     <Card className='Layer__ExpandableCard'>
       <button
-        data-expanded={isExpanded}
         type='button'
         className='Layer__ExpandableCard__Header'
         onClick={onToggleExpanded}
       >
-        <HStack justify='space-between' align='center' gap='sm'>
+        <HStack justify='space-between' align='center'>
           {slots.Heading}
           <ExpandButton isExpanded={isExpanded} />
         </HStack>
