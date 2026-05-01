@@ -1,6 +1,8 @@
 import { pipe, Schema } from 'effect'
 
-export type TaxDetailsRowOperator = '+' | '-' | '×'
+const TaxDetailsRowOperatorSchema = Schema.Literal('+', '-', '×')
+
+export type TaxDetailsRowOperator = typeof TaxDetailsRowOperatorSchema.Type
 
 export type TaxDetailsRow = {
   rowKey: string
@@ -19,8 +21,6 @@ type TaxDetailsRowEncoded = {
   operator?: TaxDetailsRowOperator
   breakdown?: ReadonlyArray<TaxDetailsRowEncoded>
 }
-
-const TaxDetailsRowOperatorSchema = Schema.Literal('+', '-', '×')
 
 const TaxDetailsRowSchema: Schema.Schema<
   TaxDetailsRow,
