@@ -51,12 +51,18 @@ export const TaxCodeSelectDrawerWithTrigger = ({
       options={drawerOptions}
       selectedValue={selectedValue}
       onSelectedValueChange={handleChange}
-      placeholder={placeholder ?? t('bankTransactions:action.select_tax_code', 'Select tax code')}
       isDisabled={isDisabled}
       isSearchable
       searchPlaceholder={t('bankTransactions:action.search_tax_codes', 'Search tax codes...')}
-      slotProps={{ Trigger: { icon: <ChevronRight size={16} /> } }}
       className={className}
+      slotProps={
+        {
+          Trigger: {
+            placeholder: placeholder ?? t('bankTransactions:action.select_tax_code', 'Select tax code'),
+            icon: <ChevronRight size={16} />,
+          },
+        }
+      }
     />
   )
 }
