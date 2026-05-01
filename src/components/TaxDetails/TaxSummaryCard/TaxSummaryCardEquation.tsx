@@ -32,18 +32,18 @@ export const EquationRow = ({ section, size = 'md' }: EquationRowProps) => {
   const operatorGap = size === 'lg' ? 'md' : 'sm'
   return (
     <HStack className='Layer__TaxSummaryCard__Equation' gap={operatorGap}>
-      <AmountWithLabel
-        amount={section.taxesOwed}
-        label={t('taxEstimates:label.taxes_owed', 'Taxes Owed')}
-        emphasis
-        size={size}
-      />
-      <Span className='Layer__TaxSummaryCard__Operator' size={size} variant='subtle'>=</Span>
       <AmountWithLabel amount={section.total} label={t('common:label.total', 'Total')} size={size} />
       <Span className='Layer__TaxSummaryCard__Operator' size={size} variant='subtle'>-</Span>
       <AmountWithLabel
         amount={section.taxesPaid}
         label={t('taxEstimates:label.taxes_paid', 'Taxes paid')}
+        size={size}
+      />
+      <Span className='Layer__TaxSummaryCard__Operator' size={size} variant='subtle'>=</Span>
+      <AmountWithLabel
+        amount={section.taxesOwed}
+        label={t('taxEstimates:label.taxes_owed', 'Taxes Owed')}
+        emphasis
         size={size}
       />
     </HStack>

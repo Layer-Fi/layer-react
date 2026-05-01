@@ -5,7 +5,7 @@ import { tConditional } from '@utils/i18n/conditional'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useFullYearProjection } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import ArrowRightCircle from '@icons/ArrowRightCircle'
-import Plus from '@icons/Plus'
+import PlusIcon from '@icons/PlusIcon'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
@@ -17,12 +17,12 @@ type TaxSummaryCardDesktopProps = {
 
 const PlusCircle = () => (
   <span className='Layer__TaxSummaryCard__OperatorCircle' aria-hidden>
-    <Plus size={14} />
+    <PlusIcon size={24} />
   </span>
 )
 
 const ArrowCircle = () => (
-  <span className='Layer__TaxSummaryCard__OperatorCircle Layer__TaxSummaryCard__OperatorCircle--filled' aria-hidden>
+  <span className='Layer__TaxSummaryCard__OperatorCircle' aria-hidden>
     <ArrowRightCircle size={24} />
   </span>
 )
@@ -72,7 +72,7 @@ export const TaxSummaryCardDesktop = ({ data }: TaxSummaryCardDesktopProps) => {
           key={`${section.label}-body`}
           className='Layer__TaxSummaryCard__Cell Layer__TaxSummaryCard__Cell--bordered'
         >
-          <EquationRow section={section} size='lg' />
+          <EquationRow section={section} size='md' />
         </VStack>
       ))}
     </div>

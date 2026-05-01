@@ -1,15 +1,18 @@
-import { Fragment, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { TaxSummary, TaxSummarySection } from '@schemas/taxEstimates/summary'
 import { tConditional } from '@utils/i18n/conditional'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useFullYearProjection } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
 import { EquationRow } from '@components/TaxDetails/TaxSummaryCard/TaxSummaryCardEquation'
+
+import './taxSummaryCardMobile.scss'
 
 type TaxSummaryCardMobileProps = {
   data: TaxSummary
@@ -34,7 +37,7 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
   const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
 
   return (
-    <Card className='Layer__TaxSummaryCard--mobile'>
+    <Card className='Layer__card--reset Layer__TaxSummaryCard--mobile'>
       <VStack className='Layer__TaxSummaryCard__MobileCard' gap='md'>
         <HStack justify='space-between' align='center'>
           <Span size='sm'>
@@ -57,22 +60,19 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
         {isExpanded && (
           <VStack className='Layer__TaxSummaryCard__MobileSections' gap='md'>
             {data.sections.map(section => (
-              <Fragment key={section.label}>
-                <SectionEquation section={section} />
-              </Fragment>
+              <SectionEquation key={section.label} section={section} />
             ))}
           </VStack>
         )}
-        <HStack justify='center'>
-          <button
-            type='button'
-            className='Layer__TaxSummaryCard__MobileToggle'
+        <HStack className='Layer__TaxSummaryCard__MobileToggleWrapper' justify='center'>
+          <Button
+            variant='text'
             onClick={() => setIsExpanded(prev => !prev)}
           >
             {isExpanded
               ? t('common:label.hide_details', 'Hide details')
               : t('common:label.show_details', 'Show details')}
-          </button>
+          </Button>
         </HStack>
       </VStack>
     </Card>
