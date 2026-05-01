@@ -7,18 +7,14 @@
 }
 
 @media (width >= 760px) {
-  .Layer__card {
-    border-radius: 0;
+  .Layer__TaxDetails {
+    .Layer__card {
+      border-radius: 0;
+    }
   }
 
   .Layer__Stack.Layer__TaxDetails__ExpandableCardsWrapper {
     border-radius: 0;
-  }
-}
-
-@media (width < 1200px) {
-  .Layer__Stack.Layer__TaxDetails__ExpandableCardsWrapper {
-    /* border-block-start: 1px solid var(--color-base-200); */
   }
 }
 
