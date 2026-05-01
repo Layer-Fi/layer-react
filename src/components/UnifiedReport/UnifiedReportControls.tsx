@@ -7,6 +7,7 @@ import { Stack, VStack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 import { CombinedDateSelection } from '@components/DateSelection/CombinedDateSelection'
 import { DateGroupByComboBox } from '@components/DateSelection/DateGroupByComboBox'
+import { GlobalYearPicker } from '@components/GlobalYearPicker/GlobalYearPicker'
 
 import './unifiedReportControls.scss'
 
@@ -60,6 +61,7 @@ export const UnifiedReportControls = () => {
       gap='xs'
     >
       <UnifiedReportDateSelection isCompact={variant === 'small'} />
+      {hasControl(baseReport, ReportControl.Year) && <GlobalYearPicker />}
       {hasGroupBy && (
         <div className='Layer__UnifiedReport__AdditionalControls' data-variant={variant}>
           <DateGroupByComboBox value={groupBy} onValueChange={setGroupBy} />

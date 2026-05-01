@@ -57,6 +57,11 @@ export const DateRangeQueryParamsSchema = Schema.Struct({
 })
 export type DateRangeQueryParams = typeof DateRangeQueryParamsSchema.Type
 
+export const YearQueryParamsSchema = Schema.Struct({
+  year: Schema.Number,
+})
+export type YearQueryParams = typeof YearQueryParamsSchema.Type
+
 export const UnifiedReportDateQueryParamsSchema = Schema.Union(
   DateQueryParamsSchema,
   DateRangeQueryParamsSchema,
