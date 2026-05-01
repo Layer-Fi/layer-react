@@ -2,23 +2,23 @@ import { useTranslation } from 'react-i18next'
 
 import type { TaxSummarySection } from '@schemas/taxEstimates/summary'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { MoneySpan, type MoneySpanProps } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
+import { Badge, BadgeSize, BadgeVariant, type BadgeProps } from '@components/Badge/Badge'
 
 type EquationSize = 'md' | 'lg'
 
 type AmountWithLabelProps = {
-  amount: number
-  label: string
-  emphasis?: boolean
-  size?: EquationSize
+  slotProps: {
+    MoneySpan: MoneySpanProps
+    Badge: BadgeProps
+  }
 }
 
-export const AmountWithLabel = ({ amount, label, emphasis, size = 'md' }: AmountWithLabelProps) => (
+const AmountWithLabel = ({ slotProps }: AmountWithLabelProps) => (
   <VStack className='Layer__TaxSummaryCard__AmountWithLabel' gap='2xs' align='start'>
-    <MoneySpan size={size} weight={emphasis ? 'bold' : undefined} amount={amount} />
-    <Badge size={BadgeSize.SMALL} variant={BadgeVariant.NEUTRAL}>{label}</Badge>
+    <MoneySpan {...slotProps.MoneySpan} />
+    <Badge size={BadgeSize.SMALL} variant={BadgeVariant.NEUTRAL} {...slotProps.Badge} />
   </VStack>
 )
 
@@ -32,19 +32,25 @@ export const EquationRow = ({ section, size = 'md' }: EquationRowProps) => {
   const operatorGap = size === 'lg' ? 'md' : 'sm'
   return (
     <HStack className='Layer__TaxSummaryCard__Equation' gap={operatorGap}>
-      <AmountWithLabel amount={section.total} label={t('common:label.total', 'Total')} size={size} />
+      <AmountWithLabel
+        slotProps={{
+          MoneySpan: { amount: section.total, size },
+          Badge: { children: t('common:label.total', 'Total') },
+        }}
+      />
       <Span className='Layer__TaxSummaryCard__Operator' size={size} variant='subtle'>-</Span>
       <AmountWithLabel
-        amount={section.taxesPaid}
-        label={t('taxEstimates:label.taxes_paid', 'Taxes Paid')}
-        size={size}
+        slotProps={{
+          MoneySpan: { amount: section.taxesPaid, size },
+          Badge: { children: t('taxEstimates:label.taxes_paid', 'Taxes Paid') },
+        }}
       />
       <Span className='Layer__TaxSummaryCard__Operator' size={size} variant='subtle'>=</Span>
       <AmountWithLabel
-        amount={section.taxesOwed}
-        label={t('taxEstimates:label.taxes_owed', 'Taxes Owed')}
-        emphasis
-        size={size}
+        slotProps={{
+          MoneySpan: { amount: section.taxesOwed, size, weight: 'bold' },
+          Badge: { children: t('taxEstimates:label.taxes_owed', 'Taxes Owed') },
+        }}
       />
     </HStack>
   )
