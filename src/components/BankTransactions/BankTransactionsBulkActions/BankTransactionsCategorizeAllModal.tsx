@@ -9,13 +9,13 @@ import { useBulkCategorize } from '@hooks/api/businesses/[business-id]/bank-tran
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { type ComboBoxOption } from '@ui/ComboBox/types'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
-import { type TaxCodeSelectOption } from '@components/TaxCodeSelect/constants'
 import { TaxCodeSelect } from '@components/TaxCodeSelect/TaxCodeSelect'
 
 export enum CategorizationMode {
@@ -53,7 +53,7 @@ export const BankTransactionsCategorizeAllModal = ({
   const { clearSelection } = useBulkSelectionActions()
   const { data: bankTransactions } = useBankTransactionsContext()
   const [selectedCategory, setSelectedCategory] = useState<BankTransactionCategoryComboBoxOption | null>(null)
-  const [selectedTaxCode, setSelectedTaxCode] = useState<TaxCodeSelectOption | null>(null)
+  const [selectedTaxCode, setSelectedTaxCode] = useState<ComboBoxOption | null>(null)
   const { trigger, isMutating } = useBulkCategorize()
 
   const bankTransactionsById = useMemo(

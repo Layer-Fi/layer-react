@@ -3,13 +3,15 @@ import { useTranslation } from 'react-i18next'
 
 import ChevronRight from '@icons/ChevronRight'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { type ComboBoxOption } from '@ui/ComboBox/types'
 import { MobileSelectionDrawerWithTrigger } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
-import { NO_TAX_CODE, type TaxCodeSelectOption } from '@components/TaxCodeSelect/constants'
+
+export const NO_TAX_CODE = '__no_tax_code__'
 
 type Props = {
-  options: TaxCodeSelectOption[]
-  value: TaxCodeSelectOption | null
-  onChange: (value: TaxCodeSelectOption | null) => void
+  options: ComboBoxOption[]
+  value: ComboBoxOption | null
+  onChange: (value: ComboBoxOption | null) => void
   isMobileView?: boolean
   isDisabled?: boolean
   inputId?: string
@@ -29,7 +31,7 @@ export const TaxCodeSelect = ({
 }: Props) => {
   const { t } = useTranslation()
 
-  const noTaxCodeOption = useMemo<TaxCodeSelectOption>(() => ({
+  const noTaxCodeOption = useMemo<ComboBoxOption>(() => ({
     value: NO_TAX_CODE,
     label: t('bankTransactions:action.no_tax_code', 'No tax code'),
   }), [t])
@@ -41,7 +43,7 @@ export const TaxCodeSelect = ({
 
   const selectedValue = value ?? noTaxCodeOption
 
-  const handleChange = useCallback((next: TaxCodeSelectOption | null) => {
+  const handleChange = useCallback((next: ComboBoxOption | null) => {
     onChange(next === null || next.value === NO_TAX_CODE ? null : next)
   }, [onChange])
 
@@ -49,7 +51,7 @@ export const TaxCodeSelect = ({
 
   if (isMobileView) {
     return (
-      <MobileSelectionDrawerWithTrigger<TaxCodeSelectOption>
+      <MobileSelectionDrawerWithTrigger<ComboBoxOption>
         ariaLabel={t('bankTransactions:action.select_tax_code', 'Select tax code')}
         heading={t('bankTransactions:action.select_tax_code', 'Select tax code')}
         options={allOptions}
@@ -70,7 +72,7 @@ export const TaxCodeSelect = ({
   }
 
   return (
-    <ComboBox<TaxCodeSelectOption>
+    <ComboBox<ComboBoxOption>
       inputId={inputId}
       selectedValue={selectedValue}
       onSelectedValueChange={handleChange}

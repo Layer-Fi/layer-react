@@ -4,11 +4,9 @@ import { createStore, useStore } from 'zustand'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
-export type TaxCodeSelectOption = ComboBoxOption
-
 export type BankTransactionCategorization = {
   category: BankTransactionCategoryComboBoxOption | null
-  taxCode: TaxCodeSelectOption | null
+  taxCode: ComboBoxOption | null
 }
 
 type BankTransactionCategorizationUpdate =

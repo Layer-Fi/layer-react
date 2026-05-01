@@ -19,6 +19,7 @@ import {
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
+import { type ComboBoxOption } from '@ui/ComboBox/types'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
@@ -29,7 +30,6 @@ import { BusinessFormMobile } from '@components/BusinessForm/BusinessFormMobile'
 import { type BusinessFormMobileItemOption } from '@components/BusinessForm/BusinessFormMobileItem'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import { FileInput } from '@components/Input/FileInput'
-import type { TaxCodeSelectOption } from '@components/TaxCodeSelect/constants'
 import { TaxCodeSelect } from '@components/TaxCodeSelect/TaxCodeSelect'
 import { ErrorText } from '@components/Typography/ErrorText'
 
@@ -90,7 +90,7 @@ export const BankTransactionsMobileListBusinessForm = ({
   const [showRetry, setShowRetry] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
-  const taxCodeOptions = useMemo<TaxCodeSelectOption[]>(
+  const taxCodeOptions = useMemo<ComboBoxOption[]>(
     () => getBankTransactionTaxCodeOptions(bankTransaction),
     [bankTransaction],
   )
@@ -174,7 +174,7 @@ export const BankTransactionsMobileListBusinessForm = ({
     })
   }, [bankTransaction.id, selectedCategorization?.taxCode, setTransactionCategorization])
 
-  const handleTaxCodeChange = useCallback((taxCode: TaxCodeSelectOption | null) => {
+  const handleTaxCodeChange = useCallback((taxCode: ComboBoxOption | null) => {
     setTransactionCategorization(bankTransaction.id, { taxCode })
   }, [bankTransaction.id, setTransactionCategorization])
 
