@@ -7,8 +7,6 @@ import {
 } from '@ui/Table/Table'
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
-import './dataTableSkeleton.scss'
-
 type DataTableSkeletonProps = {
   nonAria: boolean
   numColumns: number
