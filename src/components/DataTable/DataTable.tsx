@@ -126,7 +126,12 @@ export const DataTable = <TData extends object>({
 
   return (
     <div className='Layer__UI__Table-ScrollContainer'>
-      <Table aria-label={ariaLabel} className={`Layer__UI__Table__${componentName}`} nonAria={nonAria}>
+      <Table
+        key={`${componentName}-cols-${numColumns}`}
+        aria-label={ariaLabel}
+        className={`Layer__UI__Table__${componentName}`}
+        nonAria={nonAria}
+      >
         <TableHeader ref={headerRef} nonAria={nonAria}>
           {headerGroups.map(headerGroup => (
             <Row key={headerGroup.id} nonAria={nonAria}>
