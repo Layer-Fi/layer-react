@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo } from 'react'
+import { type ReactNode, useCallback, useContext, useMemo } from 'react'
 import {
   getCoreRowModel,
   getExpandedRowModel,
@@ -6,8 +6,8 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 
-import { HStack } from '@ui/Stack/Stack'
 import {
+  type CellRenderer,
   getColumnDefs,
   getColumnPinning,
   isLeafColumn,
@@ -20,20 +20,70 @@ import {
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { ExpandButton } from '@components/ExpandButton/ExpandButton'
 
+import './expandableDataTable.scss'
+
+const INDENT_SIZE_SM = 20
+const INDENT_SIZE_MD = 40
+
 type ExpandableDataTableProps<TData> = BaseDataTableProps & {
   data: TData[] | undefined
   columnConfig: NestedColumnConfig<TData>
   getSubRows: (row: TData) => TData[] | undefined
   getRowId: (row: TData) => string
+  indentSize?: 'sm' | 'md'
+  /**
+   * Optional content to render inside the first cell, after the expand
+   * chevron and before the column's own cell content. Useful for
+   * row-level adornments like an operator sign (-, +, ×).
+   */
+  renderFirstCellPrefix?: (row: Row<TData>) => ReactNode
 }
 
-const getRowIndentStyle = (
-  { depth, canExpand }: { depth: number, canExpand: boolean },
-) => ({
-  paddingInlineStart: depth * 20 + (canExpand ? 0 : 4),
+const getRowIndentStyle = ({ depth, indentSizePx }: { depth: number, indentSizePx: number }) => ({
+  paddingInlineStart: depth * indentSizePx,
 })
 
 const EMPTY_ARRAY: never[] = []
+
+export type ExpandAwareRenderCellParams<TData> = {
+  indentSize: 'sm' | 'md'
+  renderFirstCellPrefix: CellRenderer<TData> | null | undefined
+  firstCell: CellRenderer<TData>
+}
+
+function expandAwareRenderCell<TData>({ indentSize, renderFirstCellPrefix, firstCell }: ExpandAwareRenderCellParams<TData>): CellRenderer<TData> {
+  return function Render(row: Row<TData>): ReactNode {
+    const canExpand = row.getCanExpand()
+    const indentSizePx = indentSize === 'sm' ? INDENT_SIZE_SM : INDENT_SIZE_MD
+    const rowIndentStyle = getRowIndentStyle({ depth: row.depth, indentSizePx })
+    const prefix = renderFirstCellPrefix?.(row)
+
+    const hasPrefix = prefix !== null && prefix !== undefined && prefix !== false
+
+    return (
+      <div
+        className='Layer__ExpandableDataTable__FirstCell'
+        data-layer-component-element='edt-cell'
+        data-is-first-cell='true'
+        style={rowIndentStyle}
+      >
+        {!hasPrefix && (
+          <div className='Layer__ExpandableDataTable__ChevronSlot'>
+            {canExpand && <ExpandButton isExpanded={row.getIsExpanded()} />}
+          </div>
+        )}
+        {hasPrefix && (
+          <div className='Layer__ExpandableDataTable__PrefixSlot'>
+            {prefix}
+          </div>
+        )}
+        <div className='Layer__ExpandableDataTable__FirstCell__Content'>
+          {firstCell(row)}
+        </div>
+      </div>
+    )
+  }
+}
 
 export function ExpandableDataTable<TData extends object>({
   data,
@@ -45,6 +95,8 @@ export function ExpandableDataTable<TData extends object>({
   slots,
   getSubRows,
   getRowId,
+  indentSize = 'sm',
+  renderFirstCellPrefix,
 }: ExpandableDataTableProps<TData>) {
   const { expanded, setExpanded } = useContext(ExpandableDataTableContext)
 
@@ -56,25 +108,11 @@ export function ExpandableDataTable<TData extends object>({
 
     const firstWithChevron = {
       ...first,
-      cell: (row: Row<TData>) => {
-        const canExpand = row.getCanExpand()
-        const rowIndentStyle = getRowIndentStyle({ canExpand, depth: row.depth })
-
-        if (!canExpand) return <div style={rowIndentStyle}>{originalFirstCell(row)}</div>
-
-        return (
-          <div style={rowIndentStyle}>
-            <HStack align='center' gap='xs'>
-              <ExpandButton isExpanded={row.getIsExpanded()} />
-              {originalFirstCell(row)}
-            </HStack>
-          </div>
-        )
-      },
+      cell: expandAwareRenderCell({ indentSize, renderFirstCellPrefix, firstCell: originalFirstCell }),
     }
 
     return [firstWithChevron, ...rest]
-  }, [columnConfig])
+  }, [columnConfig, renderFirstCellPrefix, indentSize])
 
   const columnDefs = getColumnDefs<TData>(wrappedColumnConfig)
 
