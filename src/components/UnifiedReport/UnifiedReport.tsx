@@ -30,7 +30,7 @@ const UnifiedReportContent = () => {
 
   return (
     <View title={t('reports:label.reports', 'Reports')} viewClassName='Layer__UnifiedReport' header={header}>
-      <HStack>
+      <HStack className='Layer__UnifiedReport__Body'>
         {isDesktop && (
           <VStack className='Layer__UnifiedReport__Sidebar'>
             <ReportsNavigation />
