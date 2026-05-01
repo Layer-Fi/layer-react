@@ -16,6 +16,8 @@
     "content": "L’outil d’estimation des impôts et le contenu connexe sont fournis à titre informatif seulement et ne constituent pas des conseils juridiques, comptables ou fiscaux, ni un substitut à l’avis d’un professionnel. Nous ne sommes pas un planificateur financier ni un conseiller fiscal, et les utilisateurs assument l’entière responsabilité de leurs obligations fiscales, de l’exactitude des données et du respect des lois. Tous les calculs sont des estimations et peuvent contenir des erreurs. Ils reposent uniquement sur les renseignements que vous nous fournissez."
   },
   "empty": {
+    "no_tax_details": "Aucun détail fiscal",
+    "no_tax_details_description": "Aucun détail fiscal trouvé",
     "no_tax_payments_to_display": "Il n’y a aucun paiement d’impôt à afficher.",
     "tax_payments": "Aucun paiement d’impôt trouvé"
   },
@@ -23,11 +25,13 @@
     "disclaimer_required": "Vous devez reconnaître l’avis de non-responsabilité pour continuer.",
     "feature_not_enabled": "Les estimations d'impôt ne sont pas activées.",
     "load_tax_deadlines": "Impossible de charger vos échéances fiscales",
+    "load_tax_details": "Impossible de charger vos détails fiscaux",
     "load_tax_estimates": "Nous n’avons pas pu charger vos estimations fiscales",
     "load_tax_estimates_summary": "Nous n’avons pas pu charger votre sommaire fiscal",
     "load_tax_information": "Impossible de charger les renseignements fiscaux",
     "load_tax_payments": "Nous n’avons pas pu charger vos paiements d’impôt",
     "retrieve_tax_profile": "Nous n’avons pas pu récupérer votre profil fiscal. Veuillez vérifier votre connexion et réessayer.",
+    "while_loading_tax_details": "Une erreur s’est produite lors du chargement de vos détails fiscaux. Veuillez vérifier votre connexion et réessayer.",
     "while_loading_tax_estimates": "Une erreur s’est produite lors du chargement de vos estimations d’impôt. Veuillez vérifier votre connexion et réessayer.",
     "while_loading_tax_payments": "Une erreur s’est produite lors du chargement de vos paiements d’impôt. Veuillez vérifier votre connexion et réessayer.",
     "while_loading_tax_summary": "Une erreur s’est produite lors du chargement de votre sommaire fiscal. Veuillez vérifier votre connexion et réessayer."
@@ -107,6 +111,9 @@
     "tax_information": "Renseignements sur l'impôt d'État",
     "tax_name_estimate_owed": "Estimation de {{taxName}} (à payer)",
     "tax_name_rate": "Taux de {{taxName}}",
+    "tax_details": "Détails fiscaux",
+    "tax_details_amount": "Montant",
+    "tax_details_label": "Libellé",
     "tax_payments": "Paiements d’impôt",
     "tax_payments_projected": "Paiements d’impôt projetés",
     "tax_profile": "Profil fiscal",
@@ -130,6 +137,7 @@
     "taxes_owed_projected": "Impôts dus projetés",
     "taxes_paid": "Impôts payés",
     "tip_income": "Revenu de pourboires",
+    "total_deductions": "Total des déductions",
     "total_federal_tax_estimate": "Estimation totale de l’impôt fédéral",
     "total_paid": "Total payé",
     "total_state_tax_estimate": "Estimation totale de l’impôt d’État",
