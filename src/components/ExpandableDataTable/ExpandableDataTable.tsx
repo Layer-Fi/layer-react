@@ -20,18 +20,24 @@ import {
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { ExpandButton } from '@components/ExpandButton/ExpandButton'
 
+const INDENT_SIZE_XS = 10
+const INDENT_SIZE_SM = 20
+const INDENT_SIZE_MD = 40
+
+const CHEVRON_OFFSET_PX = 4
+
+const getRowIndentStyle = ({ depth, canExpand, indentSizePx }: { depth: number, canExpand: boolean, indentSizePx: number }) => ({
+  paddingInlineStart: depth * indentSizePx + (canExpand ? 0 : CHEVRON_OFFSET_PX),
+})
+
+export type ExpandableDataTableIndentSize = 'xs' | 'sm' | 'md'
 type ExpandableDataTableProps<TData> = BaseDataTableProps & {
   data: TData[] | undefined
   columnConfig: NestedColumnConfig<TData>
   getSubRows: (row: TData) => TData[] | undefined
   getRowId: (row: TData) => string
+  indentSize?: ExpandableDataTableIndentSize
 }
-
-const getRowIndentStyle = (
-  { depth, canExpand }: { depth: number, canExpand: boolean },
-) => ({
-  paddingInlineStart: depth * 20 + (canExpand ? 0 : 4),
-})
 
 const EMPTY_ARRAY: never[] = []
 
@@ -45,28 +51,30 @@ export function ExpandableDataTable<TData extends object>({
   slots,
   getSubRows,
   getRowId,
+  indentSize = 'sm',
 }: ExpandableDataTableProps<TData>) {
   const { expanded, setExpanded } = useContext(ExpandableDataTableContext)
 
   const wrappedColumnConfig = useMemo(() => {
+    const indentSizePx = indentSize === 'xs' ? INDENT_SIZE_XS : indentSize === 'md' ? INDENT_SIZE_MD : INDENT_SIZE_SM
     const [first, ...rest] = columnConfig
     if (!first || !isLeafColumn(first)) return columnConfig
 
-    const originalFirstCell = first.cell
+    const cellRenderer = first.cell
 
     const firstWithChevron = {
       ...first,
       cell: (row: Row<TData>) => {
         const canExpand = row.getCanExpand()
-        const rowIndentStyle = getRowIndentStyle({ canExpand, depth: row.depth })
+        const rowIndentStyle = getRowIndentStyle({ canExpand, depth: row.depth, indentSizePx })
 
-        if (!canExpand) return <div style={rowIndentStyle}>{originalFirstCell(row)}</div>
+        if (!canExpand) return <div style={rowIndentStyle}>{cellRenderer(row)}</div>
 
         return (
           <div style={rowIndentStyle}>
             <HStack align='center' gap='xs'>
               <ExpandButton isExpanded={row.getIsExpanded()} />
-              {originalFirstCell(row)}
+              {cellRenderer(row)}
             </HStack>
           </div>
         )
@@ -74,7 +82,7 @@ export function ExpandableDataTable<TData extends object>({
     }
 
     return [firstWithChevron, ...rest]
-  }, [columnConfig])
+  }, [columnConfig, indentSize])
 
   const columnDefs = getColumnDefs<TData>(wrappedColumnConfig)
 

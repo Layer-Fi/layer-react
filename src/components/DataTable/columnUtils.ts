@@ -13,8 +13,10 @@ type BaseColumn = {
   isRowHeader?: boolean
 }
 
+export type CellRenderer<TData> = ((row: Row<TData>) => React.ReactNode)
+
 export type LeafColumn<TData> = BaseColumn & {
-  cell: (row: Row<TData>) => React.ReactNode
+  cell: CellRenderer<TData>
   pinning?: ColumnPinningSide
 }
 
