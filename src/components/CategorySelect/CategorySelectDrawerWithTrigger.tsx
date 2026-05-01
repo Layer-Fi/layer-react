@@ -29,7 +29,7 @@ export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips 
         variant='outlined'
       >
         <HStack fluid align='center' justify='space-between' gap='2xs'>
-          <Span size='sm'ellipsis variant={value ? undefined : 'placeholder'}>
+          <Span size='sm' ellipsis variant={value ? undefined : 'placeholder'}>
             {value?.label ?? t('common:action.select_label', 'Select...')}
           </Span>
           <ChevronRight size={16} />
