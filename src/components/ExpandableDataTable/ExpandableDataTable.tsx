@@ -22,12 +22,13 @@ import './expandableDataTable.scss'
 
 import { expandAwareRenderCell } from './utils'
 
+export type ExpandableDataTableIndentSize = 'xs' | 'sm' | 'md'
 type ExpandableDataTableProps<TData> = BaseDataTableProps & {
   data: TData[] | undefined
   columnConfig: NestedColumnConfig<TData>
   getSubRows: (row: TData) => TData[] | undefined
   getRowId: (row: TData) => string
-  indentSize?: 'sm' | 'md'
+  indentSize?: ExpandableDataTableIndentSize
   /**
    * Optional content to render inside the first cell, after the expand
    * chevron and before the column's own cell content. Useful for

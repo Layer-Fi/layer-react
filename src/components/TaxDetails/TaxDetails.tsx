@@ -108,7 +108,7 @@ export const TaxDetails = () => {
                   columnConfig={columnConfig}
                   isLoading={false}
                   isError={false}
-                  indentSize='md'
+                  indentSize={isDesktop ? 'sm' : 'xs'}
                   slots={{
                     EmptyState: () => (
                       <DataState

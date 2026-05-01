@@ -1,6 +1,5 @@
 .Layer__UI__Table__TaxDetails {
   width: 100%;
-  table-layout: fixed;
 
   .Layer__UI__Table-TableHeader {
     display: none;
@@ -9,12 +8,18 @@
   .Layer__UI__Table-Row,
   .Layer__UI__Table-TableHeader > tr {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(8rem, 12rem);
+    grid-template-columns: minmax(0, 1fr) minmax(4rem, 8rem);
 
     &[data-depth='0'] {
       .Layer__Span {
         font-size: var(--text-lg);
         font-weight: var(--font-weight-bold);
+      }
+
+      @media (width <= 500px) {
+        .Layer__Span {
+          font-size: var(--text-md);
+        }
       }
     }
   }
@@ -27,6 +32,10 @@
 
   .Layer__ExpandableDataTable__FirstCell {
     gap: var(--spacing-md);
+
+    @media (width <= 500px) {
+      gap: var(--spacing-2xs);
+    }
   }
 
   .Layer__ExpandableDataTable__PrefixSlot {
