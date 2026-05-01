@@ -7,7 +7,6 @@ import {
 } from '@tanstack/react-table'
 
 import {
-  type CellRenderer,
   getColumnDefs,
   getColumnPinning,
   isLeafColumn,
@@ -18,12 +17,10 @@ import {
   DataTable,
 } from '@components/DataTable/DataTable'
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
-import { ExpandButton } from '@components/ExpandButton/ExpandButton'
 
 import './expandableDataTable.scss'
 
-const INDENT_SIZE_SM = 20
-const INDENT_SIZE_MD = 40
+import { expandAwareRenderCell } from './utils'
 
 type ExpandableDataTableProps<TData> = BaseDataTableProps & {
   data: TData[] | undefined
@@ -39,51 +36,7 @@ type ExpandableDataTableProps<TData> = BaseDataTableProps & {
   renderFirstCellPrefix?: (row: Row<TData>) => ReactNode
 }
 
-const getRowIndentStyle = ({ depth, indentSizePx }: { depth: number, indentSizePx: number }) => ({
-  paddingInlineStart: depth * indentSizePx,
-})
-
 const EMPTY_ARRAY: never[] = []
-
-export type ExpandAwareRenderCellParams<TData> = {
-  indentSize: 'sm' | 'md'
-  renderFirstCellPrefix: CellRenderer<TData> | null | undefined
-  cellRenderer: CellRenderer<TData>
-}
-
-function expandAwareRenderCell<TData>({ indentSize, renderFirstCellPrefix, cellRenderer }: ExpandAwareRenderCellParams<TData>): CellRenderer<TData> {
-  return function Render(row: Row<TData>): ReactNode {
-    const canExpand = row.getCanExpand()
-    const indentSizePx = indentSize === 'sm' ? INDENT_SIZE_SM : INDENT_SIZE_MD
-    const rowIndentStyle = getRowIndentStyle({ depth: row.depth, indentSizePx })
-    const prefix = renderFirstCellPrefix?.(row)
-
-    const hasPrefix = prefix !== null && prefix !== undefined && prefix !== false
-
-    return (
-      <div
-        className='Layer__ExpandableDataTable__FirstCell'
-        data-layer-component-element='edt-cell'
-        data-is-first-cell='true'
-        style={rowIndentStyle}
-      >
-        {!hasPrefix && (
-          <div className='Layer__ExpandableDataTable__ChevronSlot'>
-            {canExpand && <ExpandButton isExpanded={row.getIsExpanded()} />}
-          </div>
-        )}
-        {hasPrefix && (
-          <div className='Layer__ExpandableDataTable__PrefixSlot'>
-            {prefix}
-          </div>
-        )}
-        <div className='Layer__ExpandableDataTable__FirstCell__Content'>
-          {cellRenderer(row)}
-        </div>
-      </div>
-    )
-  }
-}
 
 export function ExpandableDataTable<TData extends object>({
   data,

@@ -1,26 +1,23 @@
-.Layer__ExpandableDataTable__FirstCell {
-  display: flex;
-  gap: var(--spacing-xs);
-  align-items: center;
-  inline-size: 100%;
-  min-inline-size: 0;
-}
+.Layer__ExpandableDataTable {
+  &__FirstCell {
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
 
-.Layer__ExpandableDataTable__ChevronSlot {
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  inline-size: 1rem;
-}
+  &__ChevronSlot {
+    flex: 0 0 auto;
+    inline-size: 1rem;
+  }
 
-.Layer__ExpandableDataTable__PrefixSlot {
-  display: flex;
-  flex: 0 0 auto;
-  align-items: stretch;
-}
+  &__PrefixSlot {
+    flex: 0 0 auto;
+  }
 
-.Layer__ExpandableDataTable__FirstCell__Content {
-  flex: 1 1 auto;
-  min-inline-size: 0;
+  &__FirstCell__Content {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+  }
 }
