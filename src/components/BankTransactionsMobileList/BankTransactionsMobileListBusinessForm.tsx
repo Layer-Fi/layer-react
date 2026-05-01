@@ -30,7 +30,7 @@ import { type BusinessFormMobileItemOption } from '@components/BusinessForm/Busi
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import { FileInput } from '@components/Input/FileInput'
 import type { TaxCodeSelectOption } from '@components/TaxCodeSelect/constants'
-import { TaxCodeSelectDrawerWithTrigger } from '@components/TaxCodeSelect/TaxCodeSelectDrawerWithTrigger'
+import { TaxCodeSelect } from '@components/TaxCodeSelect/TaxCodeSelect'
 import { ErrorText } from '@components/Typography/ErrorText'
 
 const SELECT_CATEGORY_VALUE = 'SELECT_CATEGORY'
@@ -190,13 +190,12 @@ export const BankTransactionsMobileListBusinessForm = ({
             />
           )}
         {showCategorization && showTaxCodeSelector && (
-          <TaxCodeSelectDrawerWithTrigger
+          <TaxCodeSelect
+            isMobileView
             options={taxCodeOptions}
             value={selectedCategorization?.taxCode ?? null}
             onChange={handleTaxCodeChange}
             isDisabled={isExclusionCategory(selectedCategory)}
-            hasSelection={selectedCategorization?.taxCode != null}
-            placeholder={t('bankTransactions:action.select_tax_code', 'Select tax code')}
           />
         )}
         <BankTransactionFormFields

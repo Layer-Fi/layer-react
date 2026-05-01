@@ -34,7 +34,6 @@ import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/Ban
 import Scissors from '@icons/ScissorsFullOpen'
 import Trash from '@icons/Trash'
 import { Button } from '@ui/Button/Button'
-import { ComboBox } from '@ui/ComboBox/ComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
@@ -51,6 +50,7 @@ import { Input } from '@components/Input/Input'
 import { MatchForm } from '@components/MatchForm/MatchForm'
 import { Separator } from '@components/Separator/Separator'
 import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
+import { TaxCodeSelect } from '@components/TaxCodeSelect/TaxCodeSelect'
 import { ErrorText } from '@components/Typography/ErrorText'
 
 import './expandedBankTransactionRow.scss'
@@ -361,19 +361,16 @@ export const ExpandedBankTransactionRow = ({
                                   includeSuggestedMatches={false}
                                 />
                                 {showTaxCodeSelector && (
-                                  <ComboBox<ComboBoxOption>
-                                    selectedValue={getSelectedTaxCodeOption(split.taxCode)}
-                                    onSelectedValueChange={(option) => {
+                                  <TaxCodeSelect
+                                    options={taxCodeOptions}
+                                    value={getSelectedTaxCodeOption(split.taxCode)}
+                                    onChange={(option) => {
                                       updateSplitAtIndex(index, currentSplit => ({
                                         ...currentSplit,
                                         taxCode: option?.value ?? null,
                                       }))
                                     }}
-                                    options={taxCodeOptions}
                                     isDisabled={isTaxCodeSelectorDisabled}
-                                    isSearchable={false}
-                                    isClearable
-                                    placeholder={t('bankTransactions:action.select_tax_code', 'Select tax code')}
                                     className={`${className}__table-cell--split-entry__tax-code`}
                                   />
                                 )}
