@@ -11,7 +11,6 @@ type ExpandableCardProps = {
   children: ReactNode
   isExpanded: boolean
   onToggleExpanded: () => void
-  expandButtonPosition?: 'left' | 'right'
   slots: {
     Heading: ReactNode
   }
@@ -21,7 +20,6 @@ export const ExpandableCard = ({
   children,
   isExpanded,
   onToggleExpanded,
-  expandButtonPosition = 'right',
   slots,
 }: ExpandableCardProps) => {
   return (
@@ -33,9 +31,8 @@ export const ExpandableCard = ({
         onClick={onToggleExpanded}
       >
         <HStack justify='space-between' align='center' gap='sm'>
-          {expandButtonPosition === 'left' && <ExpandButton isExpanded={isExpanded} />}
           {slots.Heading}
-          {expandButtonPosition === 'right' && <ExpandButton isExpanded={isExpanded} />}
+          <ExpandButton isExpanded={isExpanded} />
         </HStack>
       </button>
       <AnimatedPresenceElement
