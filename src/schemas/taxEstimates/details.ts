@@ -3,13 +3,13 @@ import { pipe, Schema } from 'effect'
 import {
   UnifiedCellValueCurrencySchema,
   UnifiedCellValueDecimalSchema,
-  UnifiedCellValueRateSchema,
+  UnifiedCellValuePercentageSchema,
 } from '@schemas/reports/unifiedReport'
 
 const TaxDetailsValueSchema = Schema.Union(
   UnifiedCellValueCurrencySchema,
   UnifiedCellValueDecimalSchema,
-  UnifiedCellValueRateSchema,
+  UnifiedCellValuePercentageSchema,
 )
 
 export type TaxDetailsValue = typeof TaxDetailsValueSchema.Type

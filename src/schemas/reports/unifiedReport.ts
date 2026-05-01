@@ -116,8 +116,8 @@ const UnifiedCellValueEmptySchema = Schema.Struct({
   type: Schema.Literal('Empty'),
 })
 
-export const UnifiedCellValueRateSchema = Schema.Struct({
-  type: Schema.Literal('Rate'),
+export const UnifiedCellValuePercentageSchema = Schema.Struct({
+  type: Schema.Literal('Percentage'),
   value: Schema.Number,
 })
 
@@ -131,7 +131,7 @@ const UnifiedCellValueSchema = Schema.Union(
   UnifiedCellValueDateSchema,
   UnifiedCellValueDecimalSchema,
   UnifiedCellValueEmptySchema,
-  UnifiedCellValueRateSchema,
+  UnifiedCellValuePercentageSchema,
   UnifiedCellValueUnknownSchema,
 )
 
@@ -140,7 +140,7 @@ export type UnifiedCellValueCurrency = typeof UnifiedCellValueCurrencySchema.Typ
 export type UnifiedCellValueDate = typeof UnifiedCellValueDateSchema.Type
 export type UnifiedCellValueDecimal = typeof UnifiedCellValueDecimalSchema.Type
 export type UnifiedCellValueEmpty = typeof UnifiedCellValueEmptySchema.Type
-export type UnifiedCellValueRate = typeof UnifiedCellValueRateSchema.Type
+export type UnifiedCellValuePercentage = typeof UnifiedCellValuePercentageSchema.Type
 export type UnifiedCellValueUnknown = typeof UnifiedCellValueUnknownSchema.Type
 
 export const isCurrencyCellValue = (value: UnifiedCellValue): value is UnifiedCellValueCurrency =>
@@ -155,8 +155,8 @@ export const isDecimalCellValue = (value: UnifiedCellValue): value is UnifiedCel
 export const isEmptyCellValue = (value: UnifiedCellValue): value is UnifiedCellValueEmpty =>
   value.type === 'Empty'
 
-export const isRateCellValue = (value: UnifiedCellValue): value is UnifiedCellValueRate =>
-  value.type === 'Rate'
+export const isPercentageCellValue = (value: UnifiedCellValue): value is UnifiedCellValuePercentage =>
+  value.type === 'Percentage'
 
 const UnifiedCellFormatSchema = Schema.Struct({
   bold: Schema.optional(Schema.Boolean),
