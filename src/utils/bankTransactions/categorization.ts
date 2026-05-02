@@ -1,12 +1,12 @@
 import { type BankTransaction, type BankTransactionTaxOption } from '@internal-types/bankTransactions'
 import type { Classification } from '@schemas/categorization'
 import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import type { ComboBoxOption } from '@ui/ComboBox/types'
 import {
   type BankTransactionCategoryComboBoxOption,
   isSplitAsOption,
   isSuggestedMatchAsOption,
 } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 
 export const applyCategoryChange = (
   prev: BankTransactionCategorization | undefined,
@@ -28,27 +28,21 @@ export const getBankTransactionTaxOptions = (bankTransaction?: BankTransaction):
   return Object.values(bankTransaction.tax_options).flat()
 }
 
-export const getBankTransactionTaxCodeOptions = (bankTransaction?: BankTransaction): ComboBoxOption[] => {
-  return getBankTransactionTaxOptions(bankTransaction).map(taxOption => ({
-    label: taxOption.display_name,
-    value: taxOption.code,
-  }))
+export const getBankTransactionTaxCodeOptions = (bankTransaction?: BankTransaction): TaxCodeComboBoxOption[] => {
+  return getBankTransactionTaxOptions(bankTransaction).map(taxOption => new TaxCodeComboBoxOption(taxOption))
 }
 
 export const getBankTransactionTaxCodeOption = (
   bankTransaction: BankTransaction | undefined,
   taxCode: string | null,
-): ComboBoxOption | null => {
+): TaxCodeComboBoxOption | null => {
   if (!taxCode) {
     return null
   }
 
   const taxOption = getBankTransactionTaxOptions(bankTransaction).find(option => option.code === taxCode)
 
-  return {
-    label: taxOption?.display_name ?? taxCode,
-    value: taxCode,
-  }
+  return taxOption ? new TaxCodeComboBoxOption(taxOption) : null
 }
 
 export const hasBankTransactionTaxCode = (
