@@ -59,7 +59,7 @@ export const isExclusionClassification = (
 }
 
 export const isExclusionCategory = (
-  category: { classification?: Classification | null } | null | undefined,
+  category: BankTransactionCategoryComboBoxOption | null | undefined,
 ): boolean => {
   return isExclusionClassification(category?.classification)
 }
