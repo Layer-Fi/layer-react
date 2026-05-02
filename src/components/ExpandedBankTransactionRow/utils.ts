@@ -7,7 +7,7 @@ import { type SplitCategorizationEntryEncoded } from '@schemas/categorization'
 import { isSplitCategorizationEncoded } from '@schemas/categorization'
 import { decodeCustomerVendor } from '@schemas/customerVendor'
 import { makeTagFromTransactionTag, TransactionTagSchema } from '@schemas/tag'
-import { isExclusionCategory } from '@utils/bankTransactions/taxCode'
+import { isExclusionCategory } from '@utils/bankTransactions/categorization'
 import { toLocalizedCents } from '@utils/i18n/number/input'
 import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
@@ -38,6 +38,12 @@ export const getSplitsErrorMessage = (localSplits: Split[], t: TFunction): strin
   const firstError = uniqBy(validateSplit(localSplits), error => error?.toString()).find((error): error is ValidateSplitError => error !== undefined)
   if (!firstError) return ''
   return getValidateSplitErrorMessage(firstError, t)
+}
+
+export const getSplitsAmountErrorMessage = (localSplits: Split[], t: TFunction): string | undefined => {
+  const hasAmountError = localSplits.some(split => split.amount <= 0)
+  if (!hasAmountError) return undefined
+  return getValidateSplitErrorMessage(ValidateSplitError.AmountsMustBeGreaterThanZero, t)
 }
 
 export const validateSplit = (localSplits: Split[]): (ValidateSplitError | undefined)[] => {
@@ -135,7 +141,6 @@ export const getLocalSplitStateForExpandedTransaction = (
     coercedSelectedCategory = convertApiCategorizationToCategoryOrSplitAsOption(selectedCategory.original)
   }
 
-  // Split Category
   if (coercedSelectedCategory && isSplitAsOption(coercedSelectedCategory)) {
     return coercedSelectedCategory.original.map((splitEntry) => {
       return {
@@ -149,7 +154,7 @@ export const getLocalSplitStateForExpandedTransaction = (
       }
     })
   }
-  // Single category
+
   return [
     {
       amount: bankTransaction.amount,

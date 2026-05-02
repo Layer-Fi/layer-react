@@ -3,13 +3,14 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
+import { applyCategoryChange } from '@utils/bankTransactions/categorization'
 import {
   isCategorized,
   isCredit,
 } from '@utils/bankTransactions/shared'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { useCategorizationSubmit } from '@hooks/features/bankTransactions/useCategorizationSubmit'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
-import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
 import {
@@ -29,6 +30,7 @@ import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { BankTransactionErrorText } from '@components/BankTransactions/BankTransactionErrorText'
 import {
   type BankTransactionCTAStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
@@ -69,7 +71,6 @@ export const BankTransactionRow = ({
   const { formatDate } = useIntlFormatter()
 
   const [open, setOpen] = useState(false)
-  const [isExpandedRowValid, setIsExpandedRowValid] = useState(true)
   const toggleOpen = useCallback(() => {
     setOpen(!open)
   }, [open])
@@ -87,22 +88,26 @@ export const BankTransactionRow = ({
   const isBulkSelectionActive = bulkSelectionCount > 0
   const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
   const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
-  const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
 
   const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction })
 
   const displayAsCategorized = isBeingRemoved ? false : categorized
 
-  const save = useCallback(async () => {
-    if (open && !isExpandedRowValid) return
-    if (!selectedCategorization?.category) return
-
-    await saveBankTransactionRow(selectedCategorization, bankTransaction)
-
-    // Remove from bulk selection store
+  const onSubmitSuccess = useCallback(() => {
     deselect(bankTransaction.id)
     setOpen(false)
-  }, [bankTransaction, deselect, isExpandedRowValid, open, saveBankTransactionRow, selectedCategorization])
+  }, [bankTransaction.id, deselect])
+
+  const {
+    submit,
+    errorMessage: submitErrorMessage,
+    isProcessing,
+    isError,
+  } = useCategorizationSubmit({ bankTransaction, onSuccess: onSubmitSuccess })
+
+  const save = useCallback(async () => {
+    await submit()
+  }, [submit])
 
   const selectedCategory = selectedCategorization?.category
 
@@ -116,7 +121,7 @@ export const BankTransactionRow = ({
       className={isError ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
       processing={isProcessing}
       active={open}
-      disabled={selectedCategory === null || isBulkSelectionActive}
+      disabled={isBulkSelectionActive}
       action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
       withRetry
       error={isError ? t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.') : undefined}
@@ -134,7 +139,6 @@ export const BankTransactionRow = ({
     isProcessing,
     open,
     save,
-    selectedCategory,
     stringOverrides?.approveButtonText,
     stringOverrides?.updateButtonText,
     t,
@@ -252,6 +256,7 @@ export const BankTransactionRow = ({
           {open
             ? (
               <HStack pie='md' gap='md' justify='end' className='Layer__bank-transaction-row__category-open'>
+                <BankTransactionErrorText submitErrorMessage={submitErrorMessage} layout='inline' />
                 {isError
                   && (
                     <Text
@@ -288,8 +293,11 @@ export const BankTransactionRow = ({
                   <BankTransactionCategoryComboBox
                     bankTransaction={bankTransaction}
                     selectedValue={selectedCategory ?? null}
-                    onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
-                      setTransactionCategorization(bankTransaction.id, { category: selectedCategory })
+                    onSelectedValueChange={(nextCategory: BankTransactionCategoryComboBoxOption | null) => {
+                      setTransactionCategorization(
+                        bankTransaction.id,
+                        applyCategoryChange(selectedCategorization, nextCategory),
+                      )
                     }}
                     isDisabled={isProcessing}
                   />
@@ -301,6 +309,7 @@ export const BankTransactionRow = ({
                       className='Layer__bank-transaction-row__category'
                     />
                   )}
+                <BankTransactionErrorText submitErrorMessage={submitErrorMessage} layout='inline' />
                 {!displayAsCategorized && isCategorizationEnabled && !isBeingRemoved && submitButton}
                 {!isCategorizationEnabled && !displayAsCategorized && !isBeingRemoved && (
                   <VStack pis='xs' fluid>
@@ -334,7 +343,6 @@ export const BankTransactionRow = ({
               showDescriptions={showDescriptions}
               showReceiptUploads={showReceiptUploads}
               showTooltips={showTooltips}
-              onValidityChange={setIsExpandedRowValid}
             />
           </AnimatedPresenceElement>
         </td>

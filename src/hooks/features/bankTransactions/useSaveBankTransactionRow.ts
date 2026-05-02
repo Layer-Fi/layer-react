@@ -1,16 +1,21 @@
 import { useCallback, useMemo } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
+import { getCategoryPayloadTaxCode } from '@utils/bankTransactions/categorization'
 import { buildCategorizeBankTransactionPayloadForSplit } from '@utils/bankTransactions/shared'
-import { getCategoryPayloadTaxCode } from '@utils/bankTransactions/taxCode'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useMatchBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useMatchBankTransactionWithCacheUpdate'
-import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type CategorizedBankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+
+export type SaveBankTransactionRowOptions = {
+  notify?: boolean
+}
 
 export type SaveBankTransactionRowFn = (
-  selectedCategorization: BankTransactionCategorization | undefined,
+  selectedCategorization: CategorizedBankTransactionCategorization,
   bankTransaction: BankTransaction,
+  options?: SaveBankTransactionRowOptions,
 ) => Promise<void> | void
 
 export const useSaveBankTransactionRow = () => {
@@ -26,32 +31,34 @@ export const useSaveBankTransactionRow = () => {
     isError: isErrorMatching,
   } = useMatchBankTransactionWithCacheUpdate()
 
-  const saveBankTransactionRow = useCallback(async (
-    selectedCategorization: BankTransactionCategorization | undefined,
-    bankTransaction: BankTransaction,
+  const saveBankTransactionRow: SaveBankTransactionRowFn = useCallback(async (
+    selectedCategorization,
+    bankTransaction,
+    options,
   ) => {
-    const selectedCategory = selectedCategorization?.category
+    const { category, taxCode } = selectedCategorization
+    const notify = options?.notify
 
-    if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
-      return
+    if (isSuggestedMatchAsOption(category)) {
+      return matchBankTransaction(bankTransaction, category.original.id)
     }
 
-    if (isSuggestedMatchAsOption(selectedCategory)) {
-      return matchBankTransaction(bankTransaction, selectedCategory.original.id)
+    if (isSplitAsOption(category)) {
+      const splitCategorizationRequest = buildCategorizeBankTransactionPayloadForSplit(category.original)
+      return categorizeBankTransaction(bankTransaction.id, splitCategorizationRequest, notify)
     }
 
-    if (isSplitAsOption(selectedCategory)) {
-      const splitCategorizationRequest = buildCategorizeBankTransactionPayloadForSplit(selectedCategory.original)
-      return categorizeBankTransaction(bankTransaction.id, splitCategorizationRequest)
-    }
+    const classification = category.classification
 
-    if (!selectedCategory.classification) return
+    if (classification === null) {
+      throw new Error('Selected bank transaction category cannot be submitted')
+    }
 
     return categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
-      category: selectedCategory.classification,
-      taxCode: getCategoryPayloadTaxCode(selectedCategory.classification, selectedCategorization?.taxCode?.value),
-    })
+      category: classification,
+      taxCode: getCategoryPayloadTaxCode(classification, taxCode?.value),
+    }, notify)
   }, [categorizeBankTransaction, matchBankTransaction])
 
   return useMemo(() => ({

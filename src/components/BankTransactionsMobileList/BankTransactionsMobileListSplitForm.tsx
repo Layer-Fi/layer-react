@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { buildCategorizeBankTransactionPayloadForSplit, hasReceipts, isCategorized } from '@utils/bankTransactions/shared'
-import { getBankTransactionTaxCodeOptions, isExclusionCategory } from '@utils/bankTransactions/taxCode'
-import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
+import { canCategoryHaveTaxCode } from '@utils/bankTransactions/categorization'
+import { hasReceipts, isCategorized } from '@utils/bankTransactions/shared'
+import { useCategorizationSubmit } from '@hooks/features/bankTransactions/useCategorizationSubmit'
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
+import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGetBankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
@@ -20,13 +21,13 @@ import { type BankTransactionCategoryComboBoxOption } from '@components/BankTran
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { BankTransactionErrorText } from '@components/BankTransactions/BankTransactionErrorText'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 import { AmountInput } from '@components/Input/AmountInput'
 import { FileInput } from '@components/Input/FileInput'
 import { Input } from '@components/Input/Input'
 import type { TaxCodeSelectOption } from '@components/TaxCodeSelect/constants'
 import { TaxCodeSelect } from '@components/TaxCodeSelect/TaxCodeSelect'
-import { ErrorText } from '@components/Typography/ErrorText'
 
 import './bankTransactionsMobileListSplitForm.scss'
 
@@ -42,10 +43,11 @@ export const BankTransactionsMobileListSplitForm = ({
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const {
-    categorize: categorizeBankTransaction,
-    isMutating: isCategorizing,
+    submit,
+    errorMessage: submitErrorMessage,
+    isProcessing: isCategorizing,
     isError: isErrorCategorizing,
-  } = useCategorizeBankTransactionWithCacheUpdate()
+  } = useCategorizationSubmit({ bankTransaction, notify: true })
 
   const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
   const [showRetry, setShowRetry] = useState(false)
@@ -53,7 +55,6 @@ export const BankTransactionsMobileListSplitForm = ({
   const {
     localSplits,
     splitFormError,
-    isValid,
     addSplit,
     removeSplit,
     updateSplitAmount,
@@ -66,12 +67,7 @@ export const BankTransactionsMobileListSplitForm = ({
     selectedCategorization,
   })
 
-  const taxCodeOptions = useMemo<TaxCodeSelectOption[]>(
-    () => getBankTransactionTaxCodeOptions(bankTransaction),
-    [bankTransaction],
-  )
-
-  const showTaxCodeSelector = taxCodeOptions.length > 0
+  const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(bankTransaction)
 
   useEffect(() => {
     if (isErrorCategorizing) {
@@ -80,30 +76,12 @@ export const BankTransactionsMobileListSplitForm = ({
   }, [isErrorCategorizing])
 
   const save = () => {
-    if (!isValid) return
-
-    const categorizationRequest = buildCategorizeBankTransactionPayloadForSplit(localSplits)
-
-    void categorizeBankTransaction(
-      bankTransaction.id,
-      categorizationRequest,
-    )
+    void submit()
   }
 
   const handleCategoryChange = useCallback((index: number) => (value: BankTransactionCategoryComboBoxOption | null) => {
     changeCategoryForSplitAtIndex(index, value)
   }, [changeCategoryForSplitAtIndex])
-
-  const getSelectedTaxCodeOption = useCallback(
-    (taxCode: string | null): TaxCodeSelectOption | null => {
-      if (!taxCode) {
-        return null
-      }
-
-      return taxCodeOptions.find(option => option.value === taxCode) ?? null
-    },
-    [taxCodeOptions],
-  )
 
   const handleTaxCodeChange = useCallback(
     (index: number) => (option: TaxCodeSelectOption | null) => {
@@ -124,7 +102,7 @@ export const BankTransactionsMobileListSplitForm = ({
             splitFormError={splitFormError}
             showCategorization={showCategorization}
             showTooltips={showTooltips}
-            showTaxCodeSelector={showTaxCodeSelector}
+            showTaxCodeSelector={hasTaxCodeOptions}
             taxCodeOptions={taxCodeOptions}
             formatCurrencyFromCents={formatCurrencyFromCents}
             addSplit={addSplit}
@@ -177,7 +155,7 @@ export const BankTransactionsMobileListSplitForm = ({
           <Button
             fullWidth
             onClick={save}
-            isDisabled={isCategorizing || !isValid}
+            isDisabled={isCategorizing}
           >
             {isCategorizing
               ? (isCategorized(bankTransaction)
@@ -189,12 +167,11 @@ export const BankTransactionsMobileListSplitForm = ({
           </Button>
         )}
       </HStack>
-      {(isErrorCategorizing && showRetry)
-        && (
-          <ErrorText>
-            {t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
-          </ErrorText>
-        )}
+      <BankTransactionErrorText
+        submitErrorMessage={submitErrorMessage}
+        showApprovalError={isErrorCategorizing && showRetry}
+        layout='inline'
+      />
     </VStack>
   )
 }
@@ -281,11 +258,7 @@ const SplitsCategorizationForm = ({
           </HStack>
         )}
 
-      {splitFormError && (
-        <ErrorText>
-          {splitFormError}
-        </ErrorText>
-      )}
+      <BankTransactionErrorText splitFormError={splitFormError} layout='inline' />
     </VStack>
   )
 }
@@ -370,7 +343,7 @@ const SplitFormRow = ({
             )}
           </HStack>
 
-          {showTaxCodeSelector && (
+          {showTaxCodeSelector && canCategoryHaveTaxCode(split.category) && (
             <SplitTaxCodeSelect
               split={split}
               splitIndex={splitIndex}
@@ -411,10 +384,7 @@ const SplitTaxCodeSelect = ({
         options={taxCodeOptions}
         value={getSelectedTaxCodeOption(split.taxCode ?? null)}
         onChange={handleTaxCodeChange(splitIndex)}
-        isDisabled={
-          !showCategorization
-          || isExclusionCategory(split.category)
-        }
+        isDisabled={!showCategorization}
         className='Layer__BankTransactionsMobileListSplitForm__TaxCodeSelect'
       />
     </>

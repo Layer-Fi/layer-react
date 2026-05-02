@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { type Classification } from '@schemas/categorization'
-import { getBankTransactionTaxCodeOptions, getCategoryPayloadTaxCode, hasBankTransactionTaxCode, isExclusionCategory } from '@utils/bankTransactions/taxCode'
+import { canCategoryHaveTaxCode, getBankTransactionTaxCodeOptions, getCategoryPayloadTaxCode, hasBankTransactionTaxCode } from '@utils/bankTransactions/categorization'
 import { tPlural } from '@utils/i18n/plural'
 import { useBulkCategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-categorize/useBulkCategorize'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -100,7 +100,7 @@ export const BankTransactionsCategorizeAllModal = ({
   const handleCategoryChange = useCallback((nextCategory: BankTransactionCategoryComboBoxOption | null) => {
     setSelectedCategory(nextCategory)
 
-    if (isExclusionCategory(nextCategory)) {
+    if (!canCategoryHaveTaxCode(nextCategory)) {
       setSelectedTaxCode(null)
     }
   }, [])
@@ -140,8 +140,8 @@ export const BankTransactionsCategorizeAllModal = ({
 
   const categorySelectId = useId()
   const taxCodeSelectId = useId()
-  const showTaxCodeSelector = taxCodeSelectOptions.length > 0
-  const isTaxCodeDisabled = isMutating || isExclusionCategory(selectedCategory)
+  const showTaxCodeSelector = taxCodeSelectOptions.length > 0 && canCategoryHaveTaxCode(selectedCategory)
+  const isTaxCodeDisabled = isMutating
 
   return (
     <BaseConfirmationModal

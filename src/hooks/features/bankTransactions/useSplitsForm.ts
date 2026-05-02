@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl'
 
 import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
 import { SplitAsOption } from '@internal-types/categorizationOption'
-import { isExclusionCategory } from '@utils/bankTransactions/taxCode'
+import { isExclusionCategory } from '@utils/bankTransactions/categorization'
 import { convertCentsToDecimalString } from '@utils/format'
 import { toLocalizedNumber } from '@utils/i18n/number/input'
 import {
@@ -17,7 +17,7 @@ import {
   calculateRemoveSplit,
   calculateUpdatedAmounts,
   getLocalSplitStateForExpandedTransaction,
-  getSplitsErrorMessage,
+  getSplitsAmountErrorMessage,
   isSplitsValid,
 } from '@components/ExpandedBankTransactionRow/utils'
 
@@ -40,8 +40,6 @@ export interface UseSplitsFormReturn {
   onBlurSplitAmount: () => void
   setSplitFormError: (error: string | undefined) => void
   getInputValueForSplitAtIndex: (index: number, split: Split) => string
-  validateSplitsForm: () => boolean
-  saveLocalSplitsToCategoryStore: (splits: Split[]) => void
 }
 
 export const useSplitsForm = ({
@@ -65,22 +63,15 @@ export const useSplitsForm = ({
     setInputValues({})
   }, [bankTransaction, selectedCategorization, isOpen])
 
-  const saveLocalSplitsToCategoryStore = useCallback((splits: Split[]) => {
-    if (!isSplitsValid(splits)) {
-      setSplitFormError(getSplitsErrorMessage(splits, t))
-      return
-    }
-
+  const persistLocalSplits = useCallback((splits: Split[]) => {
     setTransactionCategorization(bankTransaction.id, { category: new SplitAsOption(splits) })
-    setSplitFormError(undefined)
-  }, [bankTransaction.id, setTransactionCategorization, t])
+  }, [bankTransaction.id, setTransactionCategorization])
 
   const addSplit = useCallback(() => {
     const newSplits = calculateAddSplit(localSplits)
-
     setLocalSplits(newSplits)
-    setSplitFormError(undefined)
-  }, [localSplits])
+    persistLocalSplits(newSplits)
+  }, [localSplits, persistLocalSplits])
 
   const removeSplit = useCallback((index: number) => {
     const newSplits = calculateRemoveSplit(
@@ -92,8 +83,8 @@ export const useSplitsForm = ({
 
     setLocalSplits(newSplits)
     setSplitFormError(undefined)
-    saveLocalSplitsToCategoryStore(newSplits)
-  }, [localSplits, bankTransaction.amount, saveLocalSplitsToCategoryStore])
+    persistLocalSplits(newSplits)
+  }, [localSplits, bankTransaction.amount, persistLocalSplits])
 
   const updateSplitAmount = useCallback((index: number) => (value?: string) => {
     setInputValues(prev => ({ ...prev, [index]: value ?? '' }))
@@ -111,8 +102,8 @@ export const useSplitsForm = ({
 
     setLocalSplits(newLocalSplits)
     setSplitFormError(undefined)
-    saveLocalSplitsToCategoryStore(newLocalSplits)
-  }, [localSplits, bankTransaction.amount, intl.locale, saveLocalSplitsToCategoryStore])
+    persistLocalSplits(newLocalSplits)
+  }, [localSplits, bankTransaction.amount, intl.locale, persistLocalSplits])
 
   const changeCategoryForSplitAtIndex = useCallback((index: number, newCategory: BankTransactionCategoryComboBoxOption | null) => {
     if (newCategory === null) return
@@ -123,41 +114,29 @@ export const useSplitsForm = ({
       newLocalSplits[index].taxCode = null
     }
     setLocalSplits(newLocalSplits)
-    setSplitFormError(undefined)
 
-    saveLocalSplitsToCategoryStore(newLocalSplits)
-  }, [localSplits, saveLocalSplitsToCategoryStore])
+    persistLocalSplits(newLocalSplits)
+  }, [localSplits, persistLocalSplits])
 
   const updateSplitAtIndex = useCallback((index: number, updater: (split: Split) => Split) => {
     const newLocalSplits = [...localSplits]
     newLocalSplits[index] = updater(newLocalSplits[index])
     setLocalSplits(newLocalSplits)
-    setSplitFormError(undefined)
 
-    saveLocalSplitsToCategoryStore(newLocalSplits)
-  }, [localSplits, saveLocalSplitsToCategoryStore])
+    persistLocalSplits(newLocalSplits)
+  }, [localSplits, persistLocalSplits])
 
   const onBlurSplitAmount = useCallback(() => {
-    if (!isSplitsValid(localSplits)) {
-      setSplitFormError(getSplitsErrorMessage(localSplits, t))
-      return
+    const amountError = getSplitsAmountErrorMessage(localSplits, t)
+    setSplitFormError(amountError)
+    if (!amountError) {
+      setInputValues({})
     }
-    setSplitFormError(undefined)
-    setInputValues({})
   }, [localSplits, t])
 
   const getInputValueForSplitAtIndex = useCallback((index: number, split: Split): string => {
     return inputValues[index] ?? convertCentsToDecimalString(split.amount)
   }, [inputValues])
-
-  const validateSplitsForm = useCallback((): boolean => {
-    if (!isSplitsValid(localSplits)) {
-      setSplitFormError(getSplitsErrorMessage(localSplits, t))
-      return false
-    }
-    setSplitFormError(undefined)
-    return true
-  }, [localSplits, t])
 
   return {
     localSplits,
@@ -172,7 +151,5 @@ export const useSplitsForm = ({
     onBlurSplitAmount,
     setSplitFormError,
     getInputValueForSplitAtIndex,
-    validateSplitsForm,
-    saveLocalSplitsToCategoryStore,
   }
 }
