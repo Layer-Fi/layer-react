@@ -1,4 +1,5 @@
-import { useMemo } from 'react'
+import type { TFunction } from 'i18next'
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
@@ -18,61 +19,56 @@ type TaskStatusBadgeProps = {
   tasksCount?: number
 }
 
-const useBadgeConfig = (
+type BadgeColor = 'info' | 'warning' | 'success'
+
+type BadgeConfig = {
+  color: BadgeColor
+  icon: ReactNode
+  label?: string
+  labelShort?: string
+}
+
+const buildLongLabel = (
+  t: TFunction,
+  formatNumber: (n: number) => string,
+  tasksCount: number,
+) =>
+  tPlural(t, 'bookkeeping:label.count_tasks', {
+    count: tasksCount,
+    displayCount: formatNumber(tasksCount),
+    one: '{{displayCount}} task',
+    other: '{{displayCount}} tasks',
+  })
+
+const getBadgeConfig = (
   status: TaskStatusBadgeProps['status'],
   tasksCount: TaskStatusBadgeProps['tasksCount'],
-) => {
-  const { t } = useTranslation()
-  const { formatNumber } = useIntlFormatter()
-  const { isMobile } = useSizeClass()
-
-  const label = useMemo(() => {
-    if (!tasksCount) {
-      return undefined
-    }
-
-    if (isMobile) {
-      return formatNumber(tasksCount)
-    }
-
-    return tPlural(t, 'bookkeeping:label.count_tasks', {
-      count: tasksCount,
-      displayCount: formatNumber(tasksCount),
-      one: '{{displayCount}} task',
-      other: '{{displayCount}} tasks',
-    })
-  }, [tasksCount, t, formatNumber, isMobile])
-
+  t: TFunction,
+  formatNumber: (n: number) => string,
+): BadgeConfig | undefined => {
   switch (status) {
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
     case BookkeepingPeriodStatus.NOT_STARTED:
     case BookkeepingPeriodStatus.CLOSING_IN_REVIEW: {
       return {
-        color: 'info' as const,
+        color: 'info',
         icon: <Clock size={12} />,
-        label,
+        label: tasksCount ? buildLongLabel(t, formatNumber, tasksCount) : undefined,
         labelShort: tasksCount ? formatNumber(tasksCount) : undefined,
       }
     }
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER:
     case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
       return {
-        color: 'warning' as const,
-        label: tasksCount
-          ? tPlural(t, 'bookkeeping:label.count_tasks', {
-            count: tasksCount,
-            displayCount: formatNumber(tasksCount),
-            one: '{{displayCount}} task',
-            other: '{{displayCount}} tasks',
-          })
-          : undefined,
-        labelShort: tasksCount ? formatNumber(tasksCount) : undefined,
+        color: 'warning',
         icon: <AlertCircle size={12} />,
+        label: tasksCount ? buildLongLabel(t, formatNumber, tasksCount) : undefined,
+        labelShort: tasksCount ? formatNumber(tasksCount) : undefined,
       }
     }
     case BookkeepingPeriodStatus.CLOSED_COMPLETE: {
       return {
-        color: 'success' as const,
+        color: 'success',
         icon: <CheckCircle size={12} />,
       }
     }
@@ -89,28 +85,48 @@ const useBadgeConfig = (
   }
 }
 
-export const TaskStatusBadge = ({ status, tasksCount }: TaskStatusBadgeProps) => {
-  const badgeConfig = useBadgeConfig(status, tasksCount)
-  const { isMobile } = useSizeClass()
-  if (!badgeConfig) {
-    return
-  }
-  const dataProperties = toDataProperties({ status: badgeConfig.color, icononly: !badgeConfig.label })
+type BadgeContentProps = {
+  color: BadgeColor
+  icon: ReactNode
+  display?: string
+}
+
+const BadgeContent = ({ color, icon, display }: BadgeContentProps) => {
+  const dataProperties = toDataProperties({ status: color, icononly: !display })
 
   return (
     <HStack className='Layer__TasksBadge' {...dataProperties}>
-      <HStack align='center' justify='center' className='Layer__TasksBadge__Icon' data-status={badgeConfig.color}>
-        {badgeConfig.icon}
+      <HStack align='center' justify='center' className='Layer__TasksBadge__Icon' data-status={color}>
+        {icon}
       </HStack>
-      <Text
-        className='Layer__TasksBadge__Label'
-        size={TextSize.sm}
-        status={badgeConfig.color}
-        invertColor={badgeConfig.color === 'warning'}
-        weight={TextWeight.bold}
-      >
-        {isMobile ? badgeConfig.labelShort : badgeConfig.label}
-      </Text>
+      {display
+        ? (
+          <Text
+            className='Layer__TasksBadge__Label'
+            size={TextSize.sm}
+            status={color}
+            invertColor={color === 'warning'}
+            weight={TextWeight.bold}
+          >
+            {display}
+          </Text>
+        )
+        : null}
     </HStack>
   )
+}
+
+export const TaskStatusBadge = ({ status, tasksCount }: TaskStatusBadgeProps) => {
+  const { t } = useTranslation()
+  const { formatNumber } = useIntlFormatter()
+  const { isMobile } = useSizeClass()
+
+  const badgeConfig = getBadgeConfig(status, tasksCount, t, formatNumber)
+  if (!badgeConfig) {
+    return
+  }
+
+  const display = isMobile ? badgeConfig.labelShort : badgeConfig.label
+
+  return <BadgeContent color={badgeConfig.color} icon={badgeConfig.icon} display={display} />
 }
