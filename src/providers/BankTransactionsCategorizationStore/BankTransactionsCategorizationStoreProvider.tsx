@@ -87,7 +87,7 @@ function buildStore() {
             const applyCategorization = currCategorization.category === null && newCategorization.category !== null
 
             if (applyCategorization) {
-              newMap.set(id, normalizeCategorization(undefined, newCategorization))
+              newMap.set(id, normalizeCategorization(currCategorization, newCategorization))
               hasChanges = true
             }
           })
@@ -129,7 +129,9 @@ export function useBankTransactionsCategorizationActions(): BankTransactionsCate
   return useStore(store, state => state.actions)
 }
 
-export function useGetBankTransactionCategorizationByTransactionId(transactionId: string): { selectedCategorization: BankTransactionCategorization | undefined } {
+export function useGetBankTransactionCategorizationByTransactionId(
+  transactionId: string,
+): { selectedCategorization: BankTransactionCategorization | undefined } {
   const store = useBankTransactionsCategorizationStore()
 
   const selectedCategorization = useStore(store, state => state.categorizations.get(transactionId))
