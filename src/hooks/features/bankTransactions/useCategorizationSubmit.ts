@@ -6,7 +6,7 @@ import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useS
 import {
   type CategorizationSubmitError,
   getTransactionCategorizationSubmitErrorMessage,
-  useGetBankTransactionCategorization,
+  useGetBankTransactionCategorizationByTransactionId,
   validateBankTransactionCategorizationForSubmit,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 
@@ -22,7 +22,7 @@ export const useCategorizationSubmit = ({
   notify,
 }: UseCategorizationSubmitOptions) => {
   const { t } = useTranslation()
-  const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
+  const { selectedCategorization } = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
   const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
   const [submitError, setSubmitError] = useState<CategorizationSubmitError | null>(null)
 

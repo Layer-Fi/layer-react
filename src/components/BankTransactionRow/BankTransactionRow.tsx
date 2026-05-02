@@ -15,7 +15,7 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
 import {
   useBankTransactionsCategorizationActions,
-  useGetBankTransactionCategorization,
+  useGetBankTransactionCategorizationByTransactionId,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
@@ -87,7 +87,7 @@ export const BankTransactionRow = ({
   const { count: bulkSelectionCount } = useCountSelectedIds()
   const isBulkSelectionActive = bulkSelectionCount > 0
   const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
-  const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
+  const { selectedCategorization } = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
 
   const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction })
 

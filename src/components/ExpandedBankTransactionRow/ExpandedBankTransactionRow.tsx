@@ -28,7 +28,7 @@ import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOp
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import {
   useBankTransactionsCategorizationActions,
-  useGetBankTransactionCategorization,
+  useGetBankTransactionCategorizationByTransactionId,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import Scissors from '@icons/ScissorsFullOpen'
@@ -98,7 +98,7 @@ export const ExpandedBankTransactionRow = ({
 }: ExpandedBankTransactionRowProps) => {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
-  const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
+  const { selectedCategorization } = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
   const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
   // Hooks for auto-saving tags and customer/vendor in unsplit state
   const { trigger: tagBankTransaction } = useTagBankTransaction({ bankTransactionId: bankTransaction.id })
