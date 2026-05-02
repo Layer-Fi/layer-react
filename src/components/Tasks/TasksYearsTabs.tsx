@@ -9,7 +9,11 @@ import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/Glo
 import { Tabs } from '@components/Tabs/Tabs'
 import { TaskStatusBadge } from '@components/Tasks/TaskStatusBadge'
 
-export const TasksYearsTabs = () => {
+type TasksYearsTabsProps = {
+  isMobile: boolean
+}
+
+export const TasksYearsTabs = ({ isMobile }: TasksYearsTabsProps) => {
   const { date } = useGlobalDate()
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
   const { formatDate } = useIntlFormatter()
@@ -38,13 +42,14 @@ export const TasksYearsTabs = () => {
               <TaskStatusBadge
                 status={y.unresolvedTasks ? BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER : BookkeepingPeriodStatus.CLOSED_COMPLETE}
                 tasksCount={y.unresolvedTasks}
+                isMobile={isMobile}
               />
             )
             : null,
 
         }
       })
-  }, [formatDate, yearStatuses])
+  }, [formatDate, yearStatuses, isMobile])
 
   return (
     <Tabs

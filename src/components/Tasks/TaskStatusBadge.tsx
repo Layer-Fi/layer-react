@@ -7,7 +7,6 @@ import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import AlertCircle from '@icons/AlertCircle'
 import CheckCircle from '@icons/CheckCircle'
 import Clock from '@icons/Clock'
@@ -17,6 +16,7 @@ import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 type TaskStatusBadgeProps = {
   status: BookkeepingPeriod['status']
   tasksCount?: number
+  isMobile: boolean
 }
 
 type BadgeColor = 'info' | 'warning' | 'success'
@@ -116,10 +116,9 @@ const BadgeContent = ({ color, icon, display }: BadgeContentProps) => {
   )
 }
 
-export const TaskStatusBadge = ({ status, tasksCount }: TaskStatusBadgeProps) => {
+export const TaskStatusBadge = ({ status, tasksCount, isMobile }: TaskStatusBadgeProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
-  const { isMobile } = useSizeClass()
 
   const badgeConfig = getBadgeConfig(status, tasksCount, t, formatNumber)
   if (!badgeConfig) {
