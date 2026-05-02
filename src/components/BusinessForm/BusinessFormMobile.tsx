@@ -34,7 +34,7 @@ export const BusinessFormMobile = ({
 
   return (
     <GridList
-      aria-label={t('bankTransactions:label.category', 'Category')}
+      aria-label={t('bankTransactions:action.select_a_category', 'Select a category')}
       selectionMode='single'
       selectedKeys={selectedId ? new Set([selectedId]) : new Set()}
       onSelectionChange={handleSelectionChange}
