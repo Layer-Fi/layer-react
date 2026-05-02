@@ -37,7 +37,6 @@ export const BusinessFormMobileItem = ({
             variant='round'
           />
         )}
-
         <HStack fluid justify={option.asLink ? 'space-between' : 'start'}>
           <Span size='sm'>{label}</Span>
 
@@ -47,7 +46,6 @@ export const BusinessFormMobileItem = ({
             />
           )}
         </HStack>
-
       </HStack>
     </GridListItem>
   )
