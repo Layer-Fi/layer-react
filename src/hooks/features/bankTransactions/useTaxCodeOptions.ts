@@ -2,24 +2,24 @@ import { useCallback, useMemo } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { getBankTransactionTaxCodeOptions } from '@utils/bankTransactions/categorization'
-import { type ComboBoxOption } from '@ui/ComboBox/types'
+import type { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 
 export type UseTaxCodeOptionsReturn = {
-  taxCodeOptions: ComboBoxOption[]
+  taxCodeOptions: TaxCodeComboBoxOption[]
   hasTaxCodeOptions: boolean
-  getSelectedTaxCodeOption: (taxCode: string | null | undefined) => ComboBoxOption | null
+  getSelectedTaxCodeOption: (taxCode: string | null | undefined) => TaxCodeComboBoxOption | null
 }
 
 export const useTaxCodeOptions = (
   bankTransaction: BankTransaction | undefined,
 ): UseTaxCodeOptionsReturn => {
-  const taxCodeOptions = useMemo<ComboBoxOption[]>(
+  const taxCodeOptions = useMemo<TaxCodeComboBoxOption[]>(
     () => getBankTransactionTaxCodeOptions(bankTransaction),
     [bankTransaction],
   )
 
   const getSelectedTaxCodeOption = useCallback(
-    (taxCode: string | null | undefined): ComboBoxOption | null => {
+    (taxCode: string | null | undefined): TaxCodeComboBoxOption | null => {
       if (!taxCode) return null
       return taxCodeOptions.find(option => option.value === taxCode) ?? null
     },

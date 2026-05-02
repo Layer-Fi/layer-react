@@ -26,7 +26,7 @@ import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/Cate
 import { AmountInput } from '@components/Input/AmountInput'
 import { FileInput } from '@components/Input/FileInput'
 import { Input } from '@components/Input/Input'
-import type { TaxCodeSelectOption } from '@components/TaxCodeSelect/constants'
+import type { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 import { TaxCodeSelect } from '@components/TaxCodeSelect/TaxCodeSelect'
 
 import './bankTransactionsMobileListSplitForm.scss'
@@ -84,7 +84,7 @@ export const BankTransactionsMobileListSplitForm = ({
   }, [changeCategoryForSplitAtIndex])
 
   const handleTaxCodeChange = useCallback(
-    (index: number) => (option: TaxCodeSelectOption | null) => {
+    (index: number) => (option: TaxCodeComboBoxOption | null) => {
       updateSplitAtIndex(index, split => ({
         ...split,
         taxCode: option?.value ?? null,
@@ -193,14 +193,14 @@ interface SplitsCategorizationFormProps {
   showCategorization: boolean
   showTooltips: boolean
   showTaxCodeSelector: boolean
-  taxCodeOptions: TaxCodeSelectOption[]
+  taxCodeOptions: TaxCodeComboBoxOption[]
   formatCurrencyFromCents: (amount: number) => string
   addSplit: SplitsForm['addSplit']
   removeSplit: SplitsForm['removeSplit']
   updateSplitAmount: SplitsForm['updateSplitAmount']
   handleCategoryChange: (index: number) => (value: BankTransactionCategoryComboBoxOption | null) => void
-  handleTaxCodeChange: (index: number) => (option: TaxCodeSelectOption | null) => void
-  getSelectedTaxCodeOption: (taxCode: string | null) => TaxCodeSelectOption | null
+  handleTaxCodeChange: (index: number) => (option: TaxCodeComboBoxOption | null) => void
+  getSelectedTaxCodeOption: (taxCode: string | null) => TaxCodeComboBoxOption | null
   getInputValueForSplitAtIndex: SplitsForm['getInputValueForSplitAtIndex']
   onBlurSplitAmount: SplitsForm['onBlurSplitAmount']
 }
@@ -270,12 +270,12 @@ interface SplitFormRowProps {
   showCategorization: boolean
   showTooltips: boolean
   showTaxCodeSelector: boolean
-  taxCodeOptions: TaxCodeSelectOption[]
+  taxCodeOptions: TaxCodeComboBoxOption[]
   removeSplit: SplitsForm['removeSplit']
   updateSplitAmount: SplitsForm['updateSplitAmount']
   handleCategoryChange: (index: number) => (value: BankTransactionCategoryComboBoxOption | null) => void
-  handleTaxCodeChange: (index: number) => (option: TaxCodeSelectOption | null) => void
-  getSelectedTaxCodeOption: (taxCode: string | null) => TaxCodeSelectOption | null
+  handleTaxCodeChange: (index: number) => (option: TaxCodeComboBoxOption | null) => void
+  getSelectedTaxCodeOption: (taxCode: string | null) => TaxCodeComboBoxOption | null
   getInputValueForSplitAtIndex: SplitsForm['getInputValueForSplitAtIndex']
   onBlurSplitAmount: SplitsForm['onBlurSplitAmount']
 }
@@ -363,9 +363,9 @@ interface SplitTaxCodeSelectProps {
   split: LocalSplit
   splitIndex: number
   showCategorization: boolean
-  taxCodeOptions: TaxCodeSelectOption[]
-  handleTaxCodeChange: (index: number) => (option: TaxCodeSelectOption | null) => void
-  getSelectedTaxCodeOption: (taxCode: string | null) => TaxCodeSelectOption | null
+  taxCodeOptions: TaxCodeComboBoxOption[]
+  handleTaxCodeChange: (index: number) => (option: TaxCodeComboBoxOption | null) => void
+  getSelectedTaxCodeOption: (taxCode: string | null) => TaxCodeComboBoxOption | null
 }
 
 const SplitTaxCodeSelect = ({

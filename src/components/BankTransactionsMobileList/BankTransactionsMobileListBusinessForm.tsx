@@ -31,7 +31,7 @@ import { BusinessFormMobile } from '@components/BusinessForm/BusinessFormMobile'
 import { type BusinessFormMobileItemOption } from '@components/BusinessForm/BusinessFormMobileItem'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import { FileInput } from '@components/Input/FileInput'
-import type { TaxCodeSelectOption } from '@components/TaxCodeSelect/constants'
+import type { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 import { TaxCodeSelect } from '@components/TaxCodeSelect/TaxCodeSelect'
 
 const SELECT_CATEGORY_VALUE = 'SELECT_CATEGORY'
@@ -151,7 +151,7 @@ export const BankTransactionsMobileListBusinessForm = ({
     )
   }, [bankTransaction.id, selectedCategorization, setTransactionCategorization])
 
-  const handleTaxCodeChange = useCallback((taxCode: TaxCodeSelectOption | null) => {
+  const handleTaxCodeChange = useCallback((taxCode: TaxCodeComboBoxOption | null) => {
     setTransactionCategorization(bankTransaction.id, { taxCode })
   }, [bankTransaction.id, setTransactionCategorization])
 

@@ -3,14 +3,12 @@ import type { TFunction } from 'i18next'
 import { createStore, useStore } from 'zustand'
 
 import type { Split } from '@internal-types/bankTransactions'
-import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-
-export type TaxCodeSelectOption = ComboBoxOption
+import type { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 
 export type BankTransactionCategorization = {
   category: BankTransactionCategoryComboBoxOption | null
-  taxCode: TaxCodeSelectOption | null
+  taxCode: TaxCodeComboBoxOption | null
 }
 
 type BankTransactionCategorizationUpdate =

@@ -15,7 +15,7 @@ import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirm
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
-import { type TaxCodeSelectOption } from '@components/TaxCodeSelect/constants'
+import type { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 import { TaxCodeSelect } from '@components/TaxCodeSelect/TaxCodeSelect'
 
 export enum CategorizationMode {
@@ -53,7 +53,7 @@ export const BankTransactionsCategorizeAllModal = ({
   const { clearSelection } = useBulkSelectionActions()
   const { data: bankTransactions } = useBankTransactionsContext()
   const [selectedCategory, setSelectedCategory] = useState<BankTransactionCategoryComboBoxOption | null>(null)
-  const [selectedTaxCode, setSelectedTaxCode] = useState<TaxCodeSelectOption | null>(null)
+  const [selectedTaxCode, setSelectedTaxCode] = useState<TaxCodeComboBoxOption | null>(null)
   const { trigger, isMutating } = useBulkCategorize()
 
   const bankTransactionsById = useMemo(
