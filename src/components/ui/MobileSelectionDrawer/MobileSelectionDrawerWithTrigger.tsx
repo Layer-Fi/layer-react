@@ -24,9 +24,9 @@ export type MobileSelectionDrawerWithTriggerProps<T extends ComboBoxOption> =
     ariaLabel: string
     heading: string
     searchPlaceholder?: string
-    slotProps?: {
-      Trigger?: {
-        placeholder?: string
+    slotProps: {
+      Trigger: {
+        label: string
         icon?: React.ReactNode
       }
     }
@@ -57,7 +57,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
 
   const openDrawer = useCallback(() => setIsOpen(true), [])
 
-  const resolvedPlaceholder = slotProps?.Trigger?.placeholder ?? t('common:action.select_label', 'Select...')
+  const label = slotProps.Trigger.label
   const resolvedSearchPlaceholder = searchPlaceholder ?? t('common:action.search_label', 'Search')
 
   const filteredOptionsOrGroups = useMemo<OptionsOrGroups<T>>(
@@ -85,9 +85,9 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
           className='Layer__MobileSelectionDrawerWithTrigger__Trigger'
         >
           <Span size='sm' ellipsis>
-            {selectedValue?.label ?? resolvedPlaceholder}
+            {selectedValue?.label ?? label}
           </Span>
-          {slotProps?.Trigger?.icon ?? <ChevronDown size={16} />}
+          {slotProps.Trigger?.icon ?? <ChevronDown size={16} />}
         </HStack>
       </Button>
 

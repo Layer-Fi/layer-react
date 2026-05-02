@@ -53,7 +53,7 @@ export const TaxCodeSelect = ({
     onChange(options.find(option => option.value === next.value) ?? null)
   }, [onChange, options])
 
-  const resolvedPlaceholder = placeholder ?? t('bankTransactions:action.select_tax_code', 'Select tax code')
+  const label = placeholder ?? t('bankTransactions:action.select_tax_code', 'Select tax code')
 
   if (isMobileView) {
     return (
@@ -69,7 +69,7 @@ export const TaxCodeSelect = ({
         className={className}
         slotProps={{
           Trigger: {
-            placeholder: resolvedPlaceholder,
+            label,
             icon: <ChevronRight size={16} />,
           },
         }}
@@ -86,7 +86,7 @@ export const TaxCodeSelect = ({
       isDisabled={isDisabled}
       isSearchable={false}
       isClearable
-      placeholder={resolvedPlaceholder}
+      placeholder={label}
       className={className}
     />
   )
