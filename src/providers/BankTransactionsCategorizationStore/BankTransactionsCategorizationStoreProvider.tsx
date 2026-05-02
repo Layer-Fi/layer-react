@@ -129,7 +129,7 @@ export function useBankTransactionsCategorizationActions(): BankTransactionsCate
   return useStore(store, state => state.actions)
 }
 
-export function useGetBankTransactionCategorization(transactionId: string): { selectedCategorization: BankTransactionCategorization | undefined } {
+export function useGetBankTransactionCategorizationByTransactionId(transactionId: string): { selectedCategorization: BankTransactionCategorization | undefined } {
   const store = useBankTransactionsCategorizationStore()
 
   const selectedCategorization = useStore(store, state => state.categorizations.get(transactionId))

@@ -10,7 +10,7 @@ import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useGetBankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { useGetBankTransactionCategorizationByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import PaperclipIcon from '@icons/Paperclip'
 import Scissors from '@icons/Scissors'
 import Trash from '@icons/Trash'
@@ -49,7 +49,7 @@ export const BankTransactionsMobileListSplitForm = ({
     isError: isErrorCategorizing,
   } = useCategorizationSubmit({ bankTransaction, notify: true })
 
-  const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
+  const { selectedCategorization } = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
   const [showRetry, setShowRetry] = useState(false)
 
   const {

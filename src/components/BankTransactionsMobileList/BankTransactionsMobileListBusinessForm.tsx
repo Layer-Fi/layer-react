@@ -16,7 +16,7 @@ import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOp
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import {
   useBankTransactionsCategorizationActions,
-  useGetBankTransactionCategorization,
+  useGetBankTransactionCategorizationByTransactionId,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
@@ -85,7 +85,7 @@ export const BankTransactionsMobileListBusinessForm = ({
     return initialMap
   })
 
-  const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
+  const { selectedCategorization } = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
   const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
   const selectedCategory = selectedCategorization?.category
 

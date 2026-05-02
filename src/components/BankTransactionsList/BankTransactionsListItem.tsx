@@ -16,7 +16,7 @@ import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
 import {
   useBankTransactionsCategorizationActions,
-  useGetBankTransactionCategorization,
+  useGetBankTransactionCategorizationByTransactionId,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
@@ -81,7 +81,7 @@ export const BankTransactionsListItem = ({
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
   const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
-  const { selectedCategorization } = useGetBankTransactionCategorization(bankTransaction.id)
+  const { selectedCategorization } = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
 
   const onSubmitSuccess = useCallback(() => {
     deselect(bankTransaction.id)
