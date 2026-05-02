@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
@@ -5,9 +6,11 @@ import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import AlertCircle from '@icons/AlertCircle'
 import CheckCircle from '@icons/CheckCircle'
 import Clock from '@icons/Clock'
+import { HStack } from '@ui/Stack/Stack'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
 type TaskStatusBadgeProps = {
@@ -21,6 +24,24 @@ const useBadgeConfig = (
 ) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
+  const { isMobile } = useSizeClass()
+
+  const label = useMemo(() => {
+    if (!tasksCount) {
+      return undefined
+    }
+
+    if (isMobile) {
+      return formatNumber(tasksCount)
+    }
+
+    return tPlural(t, 'bookkeeping:label.count_tasks', {
+      count: tasksCount,
+      displayCount: formatNumber(tasksCount),
+      one: '{{displayCount}} task',
+      other: '{{displayCount}} tasks',
+    })
+  }, [tasksCount, t, formatNumber, isMobile])
 
   switch (status) {
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
@@ -29,14 +50,7 @@ const useBadgeConfig = (
       return {
         color: 'info' as const,
         icon: <Clock size={12} />,
-        label: tasksCount
-          ? tPlural(t, 'bookkeeping:label.count_tasks', {
-            count: tasksCount,
-            displayCount: formatNumber(tasksCount),
-            one: '{{displayCount}} task',
-            other: '{{displayCount}} tasks',
-          })
-          : undefined,
+        label,
         labelShort: tasksCount ? formatNumber(tasksCount) : undefined,
       }
     }
@@ -77,45 +91,26 @@ const useBadgeConfig = (
 
 export const TaskStatusBadge = ({ status, tasksCount }: TaskStatusBadgeProps) => {
   const badgeConfig = useBadgeConfig(status, tasksCount)
-
+  const { isMobile } = useSizeClass()
   if (!badgeConfig) {
     return
   }
-
   const dataProperties = toDataProperties({ status: badgeConfig.color, icononly: !badgeConfig.label })
 
   return (
-    <span className='Layer__tasks__badge' {...dataProperties}>
-      <span className='Layer__tasks__badge__icon-wrapper' data-status={badgeConfig.color}>
+    <HStack className='Layer__TasksBadge' {...dataProperties}>
+      <HStack align='center' justify='center' className='Layer__TasksBadge__Icon' data-status={badgeConfig.color}>
         {badgeConfig.icon}
-      </span>
-      {
-        /*
-         * The labels are both rendered, BUT only one is visible at a time (controlled by container query)
-         */
-      }
-      {badgeConfig.label && (
-        <Text
-          className='Layer__tasks__badge__label'
-          size={TextSize.sm}
-          status={badgeConfig.color}
-          invertColor={badgeConfig.color === 'warning'}
-          weight={TextWeight.bold}
-        >
-          {badgeConfig.label}
-        </Text>
-      )}
-      {badgeConfig.labelShort && (
-        <Text
-          className='Layer__tasks__badge__label-short'
-          size={TextSize.sm}
-          status={badgeConfig.color}
-          invertColor={badgeConfig.color === 'warning'}
-          weight={TextWeight.bold}
-        >
-          {badgeConfig.labelShort}
-        </Text>
-      )}
-    </span>
+      </HStack>
+      <Text
+        className='Layer__TasksBadge__Label'
+        size={TextSize.sm}
+        status={badgeConfig.color}
+        invertColor={badgeConfig.color === 'warning'}
+        weight={TextWeight.bold}
+      >
+        {isMobile ? badgeConfig.labelShort : badgeConfig.label}
+      </Text>
+    </HStack>
   )
 }
