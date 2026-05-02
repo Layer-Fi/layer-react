@@ -20,6 +20,11 @@ export const ReportsMobileSelectionTrigger = () => {
       options={options}
       selectedValue={selectedReportOption}
       onSelectedValueChange={value => value && setActiveReport(value.value)}
+      slotProps={{
+        Trigger: {
+          label: t('reports:label.select_report', 'Select report'),
+        },
+      }}
     />
   )
 }

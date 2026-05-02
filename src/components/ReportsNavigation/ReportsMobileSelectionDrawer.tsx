@@ -46,6 +46,11 @@ export function ReportsMobileSelectionDrawer() {
       isError={isError}
       isSearchable
       searchPlaceholder={t('reports:action.search_reports', 'Search reports')}
+      slotProps={{
+        Trigger: {
+          label: t('reports:label.select_report', 'Select report'),
+        },
+      }}
     />
   )
 }
