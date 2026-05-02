@@ -1,6 +1,4 @@
 import {
-  useCallback,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -16,15 +14,17 @@ import { type Split } from '@internal-types/bankTransactions'
 import { SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { type CustomerVendorSchema } from '@schemas/customerVendor'
 import { type Tag } from '@schemas/tag'
+import { applyCategoryChange } from '@utils/bankTransactions/categorization'
+import { canCategoryHaveTaxCode } from '@utils/bankTransactions/categorization'
 import {
   getBankTransactionFirstSuggestedMatch,
   hasMatch,
 } from '@utils/bankTransactions/shared'
-import { getBankTransactionTaxCodeOptions, isExclusionCategory } from '@utils/bankTransactions/taxCode'
 import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
 import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
 import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
+import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import {
   useBankTransactionsCategorizationActions,
@@ -34,7 +34,6 @@ import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/Ban
 import Scissors from '@icons/ScissorsFullOpen'
 import Trash from '@icons/Trash'
 import { Button } from '@ui/Button/Button'
-import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
 import { Span } from '@ui/Typography/Text'
@@ -42,6 +41,7 @@ import { BankTransactionCategoryComboBox } from '@components/BankTransactionCate
 import { useBankTransactionCustomerVendorVisibility } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorVisibilityProvider'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { BankTransactionErrorText } from '@components/BankTransactions/BankTransactionErrorText'
 import { useBankTransactionTagVisibility } from '@components/BankTransactionTagSelector/BankTransactionTagVisibilityProvider'
 import { TextButton } from '@components/Button/TextButton'
 import { CustomerVendorSelector } from '@components/CustomerVendorSelector/CustomerVendorSelector'
@@ -51,7 +51,6 @@ import { MatchForm } from '@components/MatchForm/MatchForm'
 import { Separator } from '@components/Separator/Separator'
 import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
 import { TaxCodeSelect } from '@components/TaxCodeSelect/TaxCodeSelect'
-import { ErrorText } from '@components/Typography/ErrorText'
 
 import './expandedBankTransactionRow.scss'
 
@@ -87,7 +86,6 @@ type ExpandedBankTransactionRowProps = {
   showTooltips: boolean
 
   variant?: 'list' | 'row'
-  onValidityChange?: (isValid: boolean) => void
 }
 
 export const ExpandedBankTransactionRow = ({
@@ -97,7 +95,6 @@ export const ExpandedBankTransactionRow = ({
   showDescriptions,
   showReceiptUploads,
   variant = 'row',
-  onValidityChange,
 }: ExpandedBankTransactionRowProps) => {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
@@ -128,7 +125,6 @@ export const ExpandedBankTransactionRow = ({
   const {
     localSplits,
     splitFormError,
-    isValid: isSplitsValid,
     addSplit,
     removeSplit,
     updateSplitAmount,
@@ -139,14 +135,6 @@ export const ExpandedBankTransactionRow = ({
     setSplitFormError,
   } = useSplitsForm({ bankTransaction, selectedCategorization, isOpen })
 
-  useEffect(() => {
-    const isValid = purpose === Purpose.match
-      ? !!selectedMatch
-      : isSplitsValid
-
-    onValidityChange?.(isValid)
-  }, [isSplitsValid, onValidityChange, purpose, selectedMatch])
-
   const onChangePurpose = (key: React.Key) => {
     const newPurpose = key === 'match'
       ? Purpose.match
@@ -154,17 +142,17 @@ export const ExpandedBankTransactionRow = ({
     setPurpose(newPurpose)
 
     if (newPurpose === Purpose.match) {
-      setTransactionCategorization(bankTransaction.id, {
-        category: selectedMatch ? new SuggestedMatchAsOption(selectedMatch) : null,
-        taxCode: null,
-      })
+      const nextCategory = selectedMatch ? new SuggestedMatchAsOption(selectedMatch) : null
+      setTransactionCategorization(
+        bankTransaction.id,
+        applyCategoryChange(selectedCategorization, nextCategory),
+      )
     }
-
-    else if (newPurpose === Purpose.categorize && isSplitsValid) {
-      setTransactionCategorization(bankTransaction.id, {
-        category: new SplitAsOption(localSplits),
-        taxCode: null,
-      })
+    else if (newPurpose === Purpose.categorize) {
+      setTransactionCategorization(
+        bankTransaction.id,
+        applyCategoryChange(selectedCategorization, new SplitAsOption(localSplits)),
+      )
     }
 
     setSplitFormError(undefined)
@@ -215,23 +203,7 @@ export const ExpandedBankTransactionRow = ({
 
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
-  const taxCodeOptions = useMemo<ComboBoxOption[]>(
-    () => getBankTransactionTaxCodeOptions(bankTransaction),
-    [bankTransaction],
-  )
-
-  const showTaxCodeSelector = taxCodeOptions.length > 0
-
-  const getSelectedTaxCodeOption = useCallback(
-    (taxCode: string | null): ComboBoxOption | null => {
-      if (!taxCode) {
-        return null
-      }
-
-      return taxCodeOptions.find(option => option.value === taxCode) ?? null
-    },
-    [taxCodeOptions],
-  )
+  const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(bankTransaction)
 
   const toggleOptions = useMemo(() => [
     {
@@ -297,12 +269,10 @@ export const ExpandedBankTransactionRow = ({
                         setSelectedMatch={(suggestedMatch) => {
                           setSelectedMatch(suggestedMatch)
                           setMatchFormError(!suggestedMatch ? t('bankTransactions:error.select_option_match_transaction', 'Select an option to match the transaction') : undefined)
+                          const nextCategory = suggestedMatch ? new SuggestedMatchAsOption(suggestedMatch) : null
                           setTransactionCategorization(
                             bankTransaction.id,
-                            {
-                              category: suggestedMatch ? new SuggestedMatchAsOption(suggestedMatch) : null,
-                              taxCode: null,
-                            },
+                            applyCategoryChange(selectedCategorization, nextCategory),
                           )
                         }}
                         matchFormError={matchFormError}
@@ -322,9 +292,7 @@ export const ExpandedBankTransactionRow = ({
                     <div className={`${className}__content-panel-container`}>
                       <div className={`${className}__splits-inputs`}>
                         {effectiveSplits.map((split, index) => {
-                          const isTaxCodeSelectorDisabled = !isCategorizationEnabled
-                            || split.category === null
-                            || isExclusionCategory(split.category)
+                          const showTaxCodeForSplit = hasTaxCodeOptions && canCategoryHaveTaxCode(split.category)
 
                           return (
                             <VStack
@@ -360,7 +328,7 @@ export const ExpandedBankTransactionRow = ({
                                   isDisabled={!isCategorizationEnabled}
                                   includeSuggestedMatches={false}
                                 />
-                                {showTaxCodeSelector && (
+                                {showTaxCodeForSplit && (
                                   <TaxCodeSelect
                                     options={taxCodeOptions}
                                     value={getSelectedTaxCodeOption(split.taxCode)}
@@ -370,7 +338,7 @@ export const ExpandedBankTransactionRow = ({
                                         taxCode: option?.value ?? null,
                                       }))
                                     }}
-                                    isDisabled={isTaxCodeSelectorDisabled}
+                                    isDisabled={!isCategorizationEnabled}
                                     className={`${className}__table-cell--split-entry__tax-code`}
                                   />
                                 )}
@@ -409,7 +377,7 @@ export const ExpandedBankTransactionRow = ({
                           )
                         })}
                       </div>
-                      {splitFormError && <HStack pb='sm'><ErrorText>{splitFormError}</ErrorText></HStack>}
+                      <BankTransactionErrorText splitFormError={splitFormError} layout='inline' />
                       <div
                         className={classNames(
                           'Layer__expanded-bank-transaction-row__total-and-btns',

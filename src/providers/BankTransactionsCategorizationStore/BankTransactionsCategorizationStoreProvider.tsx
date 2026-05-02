@@ -1,8 +1,10 @@
 import { createContext, type PropsWithChildren, useContext, useState } from 'react'
+import type { TFunction } from 'i18next'
 import { createStore, useStore } from 'zustand'
 
+import type { Split } from '@internal-types/bankTransactions'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
-import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export type TaxCodeSelectOption = ComboBoxOption
 
@@ -135,6 +137,89 @@ export function useGetBankTransactionCategorization(transactionId: string): { se
   const selectedCategorization = useStore(store, state => state.categorizations.get(transactionId))
 
   return { selectedCategorization }
+}
+
+export type TransactionCategorizationSubmitError = 'category_required'
+
+export type SplitTransactionCategorizationSubmitError =
+  | 'split_category_required'
+  | 'split_amount_invalid'
+
+export type CategorizationSubmitError =
+  | TransactionCategorizationSubmitError
+  | SplitTransactionCategorizationSubmitError
+
+export type CategorizedBankTransactionCategorization = BankTransactionCategorization & {
+  category: BankTransactionCategoryComboBoxOption
+}
+
+export type CategorizationValidationResult =
+  | { ok: true, value: CategorizedBankTransactionCategorization }
+  | { ok: false, error: TransactionCategorizationSubmitError }
+
+export function validateCategorizationForSubmit(
+  categorization: BankTransactionCategorization | undefined,
+): CategorizationValidationResult {
+  if (!categorization?.category || isPlaceholderAsOption(categorization.category)) {
+    return { ok: false, error: 'category_required' }
+  }
+  return { ok: true, value: { category: categorization.category, taxCode: categorization.taxCode } }
+}
+
+export type SplitCategorizationValidationResult =
+  | { ok: true }
+  | { ok: false, error: SplitTransactionCategorizationSubmitError }
+
+export function validateSplitCategorizationForSubmit(
+  splits: ReadonlyArray<Split>,
+): SplitCategorizationValidationResult {
+  for (const split of splits) {
+    if (split.amount <= 0) {
+      return { ok: false, error: 'split_amount_invalid' }
+    }
+    if (!split.category) {
+      return { ok: false, error: 'split_category_required' }
+    }
+  }
+  return { ok: true }
+}
+
+export type AnyCategorizationValidationResult =
+  | { ok: true, value: CategorizedBankTransactionCategorization }
+  | { ok: false, error: CategorizationSubmitError }
+
+export function validateBankTransactionCategorizationForSubmit(
+  categorization: BankTransactionCategorization | undefined,
+): AnyCategorizationValidationResult {
+  const result = validateCategorizationForSubmit(categorization)
+
+  if (!result.ok) {
+    return result
+  }
+
+  if (isSplitAsOption(result.value.category)) {
+    const splitResult = validateSplitCategorizationForSubmit(result.value.category.original)
+
+    if (!splitResult.ok) {
+      return splitResult
+    }
+  }
+
+  return result
+}
+
+export function getTransactionCategorizationSubmitErrorMessage(
+  t: TFunction,
+  error: CategorizationSubmitError,
+): string {
+  switch (error) {
+    case 'category_required':
+      return t('bankTransactions:error.category_required', 'Select a category before saving')
+    case 'split_category_required':
+      return t('bankTransactions:validation.splits_must_have_category', 'All splits must have a category')
+    case 'split_amount_invalid':
+      return t('bankTransactions:validation.splits_amount_greater_than_zero', 'All splits must have an amount greater than $0.00')
+  }
 }
 
 export function useGetAllBankTransactionsCategorizations(): { categorizations: Map<string, BankTransactionCategorization> } {

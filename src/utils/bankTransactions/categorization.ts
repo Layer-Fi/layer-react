@@ -1,6 +1,24 @@
 import { type BankTransaction, type BankTransactionTaxOption } from '@internal-types/bankTransactions'
 import type { Classification } from '@schemas/categorization'
+import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
+import {
+  type BankTransactionCategoryComboBoxOption,
+  isSplitAsOption,
+  isSuggestedMatchAsOption,
+} from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+
+export const applyCategoryChange = (
+  prev: BankTransactionCategorization | undefined,
+  newCategory: BankTransactionCategoryComboBoxOption | null,
+): BankTransactionCategorization => {
+  return {
+    category: newCategory,
+    taxCode: canCategoryHaveTaxCode(newCategory)
+      ? prev?.taxCode ?? null
+      : null,
+  }
+}
 
 export const getBankTransactionTaxOptions = (bankTransaction?: BankTransaction): BankTransactionTaxOption[] => {
   if (!bankTransaction?.tax_options) {
@@ -61,4 +79,14 @@ export const getCategoryPayloadTaxCode = (
   }
 
   return taxCode ?? null
+}
+
+export const canCategoryHaveTaxCode = (
+  category: BankTransactionCategoryComboBoxOption | null | undefined,
+): boolean => {
+  if (!category) return true
+  if (isExclusionCategory(category)) return false
+  if (isSuggestedMatchAsOption(category)) return false
+  if (isSplitAsOption(category)) return false
+  return true
 }

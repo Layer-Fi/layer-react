@@ -6,7 +6,7 @@ import { Direction } from '@internal-types/general'
 import type { TagFilterInput } from '@internal-types/tags'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { makeTagKeyValueFromTag } from '@schemas/tag'
-import { getCategoryPayloadTaxCode } from '@utils/bankTransactions/taxCode'
+import { getCategoryPayloadTaxCode } from '@utils/bankTransactions/categorization'
 import { CategorizedCategories, ReviewCategories } from '@components/BankTransactions/constants'
 
 export const filterVisibility = (
