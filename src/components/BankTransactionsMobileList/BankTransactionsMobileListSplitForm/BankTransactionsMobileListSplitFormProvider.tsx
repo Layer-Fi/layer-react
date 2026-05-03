@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useEffect, useRef, useState } from 'react'
+import { type PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useCategorizationSubmit } from '@hooks/features/bankTransactions/useCategorizationSubmit'
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
@@ -58,59 +58,79 @@ export const BankTransactionsMobileListSplitFormProvider = ({
     }
   }, [isErrorCategorizing])
 
-  const save = () => {
-    void submit()
-  }
-
-  const handleCategoryChange = (index: number) => (value: BankTransactionCategoryComboBoxOption | null) => {
-    changeCategoryForSplitAtIndex(index, value)
-  }
-
-  const handleTaxCodeChange = (index: number) => (option: TaxCodeComboBoxOption | null) => {
-    updateSplitAtIndex(index, split => ({
-      ...split,
-      taxCode: option?.value ?? null,
-    }))
-  }
+  const contextValue = useMemo(() => ({
+    transaction: {
+      bankTransaction,
+      showTooltips,
+      showCategorization,
+      showReceiptUploads,
+      showDescriptions,
+    },
+    categorization: {
+      submitErrorMessage,
+      isCategorizing,
+      isErrorCategorizing,
+      showRetry,
+      localSplits,
+      splitFormError,
+      addSplit,
+      removeSplit,
+      updateSplitAmount,
+      getInputValueForSplitAtIndex,
+      onBlurSplitAmount,
+      save: () => {
+        void submit()
+      },
+      handleCategoryChange: (index: number) => (value: BankTransactionCategoryComboBoxOption | null) => {
+        changeCategoryForSplitAtIndex(index, value)
+      },
+    },
+    taxCodes: {
+      hasTaxCodeOptions,
+      taxCodeOptions,
+      getSelectedTaxCodeOption,
+      handleTaxCodeChange: (index: number) => (option: TaxCodeComboBoxOption | null) => {
+        updateSplitAtIndex(index, split => ({
+          ...split,
+          taxCode: option?.value ?? null,
+        }))
+      },
+    },
+    receipts: {
+      receiptsRef,
+    },
+    formatting: {
+      formatCurrencyFromCents,
+    },
+  }), [
+    addSplit,
+    bankTransaction,
+    changeCategoryForSplitAtIndex,
+    formatCurrencyFromCents,
+    getInputValueForSplitAtIndex,
+    getSelectedTaxCodeOption,
+    hasTaxCodeOptions,
+    isCategorizing,
+    isErrorCategorizing,
+    localSplits,
+    onBlurSplitAmount,
+    removeSplit,
+    showCategorization,
+    showDescriptions,
+    showReceiptUploads,
+    showRetry,
+    showTooltips,
+    splitFormError,
+    submit,
+    submitErrorMessage,
+    taxCodeOptions,
+    updateSplitAmount,
+    updateSplitAtIndex,
+  ])
 
   return (
     <BankTransactionsMobileListSplitFormContext.Provider
-      value={{
-        transaction: {
-          bankTransaction,
-          showTooltips,
-          showCategorization,
-          showReceiptUploads,
-          showDescriptions,
-        },
-        categorization: {
-          submitErrorMessage,
-          isCategorizing,
-          isErrorCategorizing,
-          showRetry,
-          localSplits,
-          splitFormError,
-          addSplit,
-          removeSplit,
-          updateSplitAmount,
-          getInputValueForSplitAtIndex,
-          onBlurSplitAmount,
-          save,
-          handleCategoryChange,
-        },
-        taxCodes: {
-          hasTaxCodeOptions,
-          taxCodeOptions,
-          getSelectedTaxCodeOption,
-          handleTaxCodeChange,
-        },
-        receipts: {
-          receiptsRef,
-        },
-        formatting: {
-          formatCurrencyFromCents,
-        },
-      }}
+      value={contextValue}
     >
       {children}
     </BankTransactionsMobileListSplitFormContext.Provider>
