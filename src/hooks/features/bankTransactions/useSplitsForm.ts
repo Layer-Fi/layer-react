@@ -7,6 +7,7 @@ import { SplitAsOption } from '@internal-types/categorizationOption'
 import { isExclusionCategory } from '@utils/bankTransactions/categorization'
 import { convertCentsToDecimalString } from '@utils/format'
 import { toLocalizedNumber } from '@utils/i18n/number/input'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import {
   type BankTransactionCategorization,
   useBankTransactionsCategorizationActions,
@@ -49,6 +50,7 @@ export const useSplitsForm = ({
 }: UseSplitsFormOptions): UseSplitsFormReturn => {
   const { t } = useTranslation()
   const intl = useIntl()
+  const { formatCurrencyFromCents } = useIntlFormatter()
 
   const [localSplits, setLocalSplits] = useState<Split[]>(
     getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategorization),
@@ -127,12 +129,12 @@ export const useSplitsForm = ({
   }, [localSplits, persistLocalSplits])
 
   const onBlurSplitAmount = useCallback(() => {
-    const amountError = getSplitsAmountErrorMessage(localSplits, t)
+    const amountError = getSplitsAmountErrorMessage(localSplits, t, formatCurrencyFromCents(0))
     setSplitFormError(amountError)
     if (!amountError) {
       setInputValues({})
     }
-  }, [localSplits, t])
+  }, [formatCurrencyFromCents, localSplits, t])
 
   const getInputValueForSplitAtIndex = useCallback((index: number, split: Split): string => {
     return inputValues[index] ?? convertCentsToDecimalString(split.amount)

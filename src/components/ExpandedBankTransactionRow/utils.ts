@@ -20,10 +20,10 @@ export enum ValidateSplitError {
   CategoryIsRequired = 'CategoryIsRequired',
 }
 
-const getValidateSplitErrorMessage = (splitError: ValidateSplitError, t: TFunction): string => {
+const getValidateSplitErrorMessage = (splitError: ValidateSplitError, t: TFunction, zeroAmount: string): string => {
   switch (splitError) {
     case ValidateSplitError.AmountsMustBeGreaterThanZero:
-      return t('bankTransactions:validation.splits_amount_greater_than_zero', 'All splits must have an amount greater than $0.00')
+      return t('bankTransactions:validation.splits_amount_greater_than_zero', 'All splits must have an amount greater than {{amount}}', { amount: zeroAmount })
     case ValidateSplitError.CategoryIsRequired:
       return t('bankTransactions:validation.splits_must_have_category', 'All splits must have a category')
   }
@@ -34,16 +34,16 @@ export const isSplitsValid = (localSplits: Split[]): boolean => {
     .reduce((acc, splitError) => acc && splitError === undefined, true)
 }
 
-export const getSplitsErrorMessage = (localSplits: Split[], t: TFunction): string => {
+export const getSplitsErrorMessage = (localSplits: Split[], t: TFunction, zeroAmount: string): string => {
   const firstError = uniqBy(validateSplit(localSplits), error => error?.toString()).find((error): error is ValidateSplitError => error !== undefined)
   if (!firstError) return ''
-  return getValidateSplitErrorMessage(firstError, t)
+  return getValidateSplitErrorMessage(firstError, t, zeroAmount)
 }
 
-export const getSplitsAmountErrorMessage = (localSplits: Split[], t: TFunction): string | undefined => {
+export const getSplitsAmountErrorMessage = (localSplits: Split[], t: TFunction, zeroAmount: string): string | undefined => {
   const hasAmountError = localSplits.some(split => split.amount <= 0)
   if (!hasAmountError) return undefined
-  return getValidateSplitErrorMessage(ValidateSplitError.AmountsMustBeGreaterThanZero, t)
+  return getValidateSplitErrorMessage(ValidateSplitError.AmountsMustBeGreaterThanZero, t, zeroAmount)
 }
 
 export const validateSplit = (localSplits: Split[]): (ValidateSplitError | undefined)[] => {

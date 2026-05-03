@@ -211,6 +211,7 @@ export function validateBankTransactionCategorizationForSubmit(
 export function getTransactionCategorizationSubmitErrorMessage(
   t: TFunction,
   error: CategorizationSubmitError,
+  zeroAmount: string,
 ): string {
   switch (error) {
     case 'category_required':
@@ -218,7 +219,7 @@ export function getTransactionCategorizationSubmitErrorMessage(
     case 'split_category_required':
       return t('bankTransactions:validation.splits_must_have_category', 'All splits must have a category')
     case 'split_amount_invalid':
-      return t('bankTransactions:validation.splits_amount_greater_than_zero', 'All splits must have an amount greater than $0.00')
+      return t('bankTransactions:validation.splits_amount_greater_than_zero', 'All splits must have an amount greater than {{amount}}', { amount: zeroAmount })
   }
 }
 
