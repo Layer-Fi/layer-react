@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { hasMatch } from '@utils/bankTransactions'
+import { hasMatch } from '@utils/bankTransactions/shared'
 import { BankTransactionsMobileListMatchForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListMatchForm'
-import { BankTransactionsMobileListSplitForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListSplitForm'
+import { BankTransactionsMobileListSplitForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListSplitForm/BankTransactionsMobileListSplitForm'
 import { TextButton } from '@components/Button/TextButton'
 
 interface BankTransactionsMobileListSplitAndMatchFormProps {

@@ -7,8 +7,10 @@ import { type SplitCategorizationEntryEncoded } from '@schemas/categorization'
 import { isSplitCategorizationEncoded } from '@schemas/categorization'
 import { decodeCustomerVendor } from '@schemas/customerVendor'
 import { makeTagFromTransactionTag, TransactionTagSchema } from '@schemas/tag'
+import { isExclusionCategory } from '@utils/bankTransactions/categorization'
 import { toLocalizedCents } from '@utils/i18n/number/input'
-import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isApiCategorizationAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { convertApiCategorizationToCategoryOrSplitAsOption, getDefaultSelectedCategoryForBankTransaction } from '@components/BankTransactionCategoryComboBox/utils'
@@ -18,10 +20,10 @@ export enum ValidateSplitError {
   CategoryIsRequired = 'CategoryIsRequired',
 }
 
-const getValidateSplitErrorMessage = (splitError: ValidateSplitError, t: TFunction): string => {
+const getValidateSplitErrorMessage = (splitError: ValidateSplitError, t: TFunction, zeroAmount: string): string => {
   switch (splitError) {
     case ValidateSplitError.AmountsMustBeGreaterThanZero:
-      return t('bankTransactions:validation.splits_amount_greater_than_zero', 'All splits must have an amount greater than $0.00')
+      return t('bankTransactions:validation.splits_amount_greater_than_zero', 'All splits must have an amount greater than {{amount}}', { amount: zeroAmount })
     case ValidateSplitError.CategoryIsRequired:
       return t('bankTransactions:validation.splits_must_have_category', 'All splits must have a category')
   }
@@ -32,10 +34,16 @@ export const isSplitsValid = (localSplits: Split[]): boolean => {
     .reduce((acc, splitError) => acc && splitError === undefined, true)
 }
 
-export const getSplitsErrorMessage = (localSplits: Split[], t: TFunction): string => {
+export const getSplitsErrorMessage = (localSplits: Split[], t: TFunction, zeroAmount: string): string => {
   const firstError = uniqBy(validateSplit(localSplits), error => error?.toString()).find((error): error is ValidateSplitError => error !== undefined)
   if (!firstError) return ''
-  return getValidateSplitErrorMessage(firstError, t)
+  return getValidateSplitErrorMessage(firstError, t, zeroAmount)
+}
+
+export const getSplitsAmountErrorMessage = (localSplits: Split[], t: TFunction, zeroAmount: string): string | undefined => {
+  const hasAmountError = localSplits.some(split => split.amount <= 0)
+  if (!hasAmountError) return undefined
+  return getValidateSplitErrorMessage(ValidateSplitError.AmountsMustBeGreaterThanZero, t, zeroAmount)
 }
 
 export const validateSplit = (localSplits: Split[]): (ValidateSplitError | undefined)[] => {
@@ -59,6 +67,7 @@ export const calculateAddSplit = (
   const newSplit = {
     amount: 0,
     category: null,
+    taxCode: null,
     tags: [],
     customerVendor: null,
   }
@@ -115,8 +124,10 @@ export const getCustomerVendorForBankTransaction = (bankTransaction: BankTransac
 
 export const getLocalSplitStateForExpandedTransaction = (
   bankTransaction: BankTransaction,
-  selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
+  selectedCategorization: BankTransactionCategorization | undefined,
 ): Split[] => {
+  const selectedCategory = selectedCategorization?.category
+  const selectedTaxCode = selectedCategorization?.taxCode ?? null
   let coercedSelectedCategory = selectedCategory
   if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
     coercedSelectedCategory = null
@@ -130,22 +141,29 @@ export const getLocalSplitStateForExpandedTransaction = (
     coercedSelectedCategory = convertApiCategorizationToCategoryOrSplitAsOption(selectedCategory.original)
   }
 
-  // Split Category
   if (coercedSelectedCategory && isSplitAsOption(coercedSelectedCategory)) {
     return coercedSelectedCategory.original.map((splitEntry) => {
       return {
         amount: splitEntry.amount || 0,
         category: splitEntry.category,
+        taxCode: isExclusionCategory(splitEntry.category)
+          ? null
+          : splitEntry.taxCode ?? null,
         tags: splitEntry.tags,
         customerVendor: splitEntry.customerVendor,
       }
     })
   }
-  // Single category
+
   return [
     {
       amount: bankTransaction.amount,
       category: coercedSelectedCategory ?? null,
+      taxCode: isExclusionCategory(coercedSelectedCategory)
+        ? null
+        : selectedCategorization === undefined
+          ? bankTransaction.tax_code ?? null
+          : selectedTaxCode === null ? null : selectedTaxCode.value,
       tags: bankTransaction.transaction_tags.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))),
       customerVendor: getCustomerVendorForBankTransaction(bankTransaction),
     },

@@ -5,11 +5,19 @@ import { useTranslation } from 'react-i18next'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationType } from '@internal-types/categories'
 import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/categorizationOption'
-import { hasReceipts } from '@utils/bankTransactions'
-import { isCategorized } from '@utils/bankTransactions'
-import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
+import { applyCategoryChange } from '@utils/bankTransactions/categorization'
+import { canCategoryHaveTaxCode } from '@utils/bankTransactions/categorization'
+import {
+  hasReceipts,
+  isCategorized,
+} from '@utils/bankTransactions/shared'
+import { useCategorizationSubmit } from '@hooks/features/bankTransactions/useCategorizationSubmit'
+import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
-import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import {
+  useBankTransactionsCategorizationActions,
+  useGetBankTransactionCategorizationByTransactionId,
+} from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -18,21 +26,21 @@ import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/B
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
+import { BankTransactionErrorText } from '@components/BankTransactions/BankTransactionErrorText'
 import { BusinessFormMobile } from '@components/BusinessForm/BusinessFormMobile'
-import { type BusinessFormMobileItemOption, type BusinessFormOptionValue } from '@components/BusinessForm/BusinessFormMobileItem'
+import { type BusinessFormMobileItemOption } from '@components/BusinessForm/BusinessFormMobileItem'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import { FileInput } from '@components/Input/FileInput'
-import { ErrorText } from '@components/Typography/ErrorText'
+import type { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
+import { TaxCodeSelect } from '@components/TaxCodeSelect/TaxCodeSelect'
 
 const SELECT_CATEGORY_VALUE = 'SELECT_CATEGORY'
 
 export const isSelectCategoryOption = (
-  value: BusinessFormOptionValue,
+  value: BankTransactionCategoryComboBoxOption,
 ): boolean => {
   return isPlaceholderAsOption(value) && value.value === SELECT_CATEGORY_VALUE
 }
-
-type DisplayOption = BusinessFormMobileItemOption
 
 interface BankTransactionsMobileListBusinessFormProps {
   bankTransaction: BankTransaction
@@ -53,10 +61,11 @@ export const BankTransactionsMobileListBusinessForm = ({
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const {
-    categorize: categorizeBankTransaction,
-    isMutating: isCategorizing,
+    submit,
+    errorMessage: submitErrorMessage,
+    isProcessing: isCategorizing,
     isError: isErrorCategorizing,
-  } = useCategorizeBankTransactionWithCacheUpdate()
+  } = useCategorizationSubmit({ bankTransaction, notify: true })
 
   const [sessionCategories, setSessionCategories] = useState<Map<string, BankTransactionCategoryComboBoxOption>>(() => {
     const initialMap = new Map<string, BankTransactionCategoryComboBoxOption>()
@@ -76,11 +85,14 @@ export const BankTransactionsMobileListBusinessForm = ({
     return initialMap
   })
 
-  const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
-  const { setTransactionCategory } = useBankTransactionsCategoryActions()
+  const { selectedCategorization } = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
+  const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
+  const selectedCategory = selectedCategorization?.category
 
   const [showRetry, setShowRetry] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  const { taxCodeOptions, hasTaxCodeOptions } = useTaxCodeOptions(bankTransaction)
 
   useEffect(() => {
     if (isErrorCategorizing) {
@@ -88,8 +100,8 @@ export const BankTransactionsMobileListBusinessForm = ({
     }
   }, [isErrorCategorizing])
 
-  const options = useMemo((): DisplayOption[] => {
-    const options: DisplayOption[] = Array.from(sessionCategories.values()).map(category => ({
+  const options = useMemo((): BusinessFormMobileItemOption[] => {
+    const options: BusinessFormMobileItemOption[] = Array.from(sessionCategories.values()).map(category => ({
       value: category,
     }))
 
@@ -104,7 +116,7 @@ export const BankTransactionsMobileListBusinessForm = ({
     return options
   }, [t, sessionCategories])
 
-  const onCategorySelect = (category: DisplayOption) => {
+  const onCategorySelect = (category: BusinessFormMobileItemOption) => {
     if (isSelectCategoryOption(category.value)) {
       setIsDrawerOpen(true)
     }
@@ -115,42 +127,33 @@ export const BankTransactionsMobileListBusinessForm = ({
         setSessionCategories(prev => new Map(prev).set(option.value, option))
       }
 
-      if (
-        selectedCategory
-        && option.value === selectedCategory.value
-      ) {
-        setTransactionCategory(bankTransaction.id, null)
-      }
-      else {
-        setTransactionCategory(bankTransaction.id, option)
-      }
+      const nextCategory = (selectedCategory && option.value === selectedCategory.value)
+        ? null
+        : option
+      setTransactionCategorization(
+        bankTransaction.id,
+        applyCategoryChange(selectedCategorization, nextCategory),
+      )
     }
   }
 
   const save = () => {
-    if (!selectedCategory) {
-      return
-    }
-
-    const payload = selectedCategory.classification
-    if (payload === null) return
-
-    void categorizeBankTransaction(
-      bankTransaction.id,
-      {
-        type: 'Category',
-        category: payload,
-      },
-      true,
-    )
+    void submit()
   }
 
   const onDrawerSelect = useCallback((category: BankTransactionCategoryComboBoxOption | null) => {
     if (!category) return
 
     setSessionCategories(prev => new Map(prev).set(category.value, category))
-    setTransactionCategory(bankTransaction.id, category)
-  }, [bankTransaction.id, setTransactionCategory])
+    setTransactionCategorization(
+      bankTransaction.id,
+      applyCategoryChange(selectedCategorization, category),
+    )
+  }, [bankTransaction.id, selectedCategorization, setTransactionCategorization])
+
+  const handleTaxCodeChange = useCallback((taxCode: TaxCodeComboBoxOption | null) => {
+    setTransactionCategorization(bankTransaction.id, { taxCode })
+  }, [bankTransaction.id, setTransactionCategorization])
 
   return (
     <>
@@ -163,6 +166,14 @@ export const BankTransactionsMobileListBusinessForm = ({
               selectedId={selectedCategory?.value}
             />
           )}
+        {showCategorization && hasTaxCodeOptions && canCategoryHaveTaxCode(selectedCategory) && (
+          <TaxCodeSelect
+            isMobileView
+            options={taxCodeOptions}
+            value={selectedCategorization?.taxCode ?? null}
+            onChange={handleTaxCodeChange}
+          />
+        )}
         <BankTransactionFormFields
           bankTransaction={bankTransaction}
           showDescriptions={showDescriptions}
@@ -202,7 +213,7 @@ export const BankTransactionsMobileListBusinessForm = ({
               <Button
                 onClick={save}
                 fullWidth
-                isDisabled={!selectedCategory || isCategorizing}
+                isDisabled={isCategorizing}
               >
                 {isCategorizing
                   ? (isCategorized(bankTransaction)
@@ -214,13 +225,11 @@ export const BankTransactionsMobileListBusinessForm = ({
               </Button>
             )}
         </HStack>
-        {isErrorCategorizing && showRetry
-          ? (
-            <ErrorText>
-              {t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
-            </ErrorText>
-          )
-          : null}
+        <BankTransactionErrorText
+          submitErrorMessage={submitErrorMessage}
+          showApprovalError={isErrorCategorizing && showRetry}
+          layout='inline'
+        />
       </VStack>
       <CategorySelectDrawer
         onSelect={onDrawerSelect}

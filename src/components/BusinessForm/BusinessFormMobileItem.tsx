@@ -8,10 +8,8 @@ import { type BankTransactionCategoryComboBoxOption } from '@components/BankTran
 
 import './businessFormMobileItem.scss'
 
-export type BusinessFormOptionValue = BankTransactionCategoryComboBoxOption
-
 export interface BusinessFormMobileItemOption {
-  value: BusinessFormOptionValue
+  value: BankTransactionCategoryComboBoxOption
   asLink?: boolean
 }
 
@@ -39,15 +37,15 @@ export const BusinessFormMobileItem = ({
             variant='round'
           />
         )}
+        <HStack fluid justify={option.asLink ? 'space-between' : 'start'}>
+          <Span size='sm'>{label}</Span>
 
-        <Span size='sm'>{label}</Span>
-
-        {option.asLink && (
-          <ChevronRight
-            size={16}
-            className='Layer__BusinessFormMobileItem__link-icon'
-          />
-        )}
+          {option.asLink && (
+            <ChevronRight
+              size={16}
+            />
+          )}
+        </HStack>
       </HStack>
     </GridListItem>
   )
