@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import {
   type CategorizationSubmitError,
   getTransactionCategorizationSubmitErrorMessage,
@@ -22,6 +23,7 @@ export const useCategorizationSubmit = ({
   notify,
 }: UseCategorizationSubmitOptions) => {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const { selectedCategorization } = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
   const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
   const [submitError, setSubmitError] = useState<CategorizationSubmitError | null>(null)
@@ -49,7 +51,7 @@ export const useCategorizationSubmit = ({
     : null
 
   const errorMessage = activeSubmitError
-    ? getTransactionCategorizationSubmitErrorMessage(t, activeSubmitError)
+    ? getTransactionCategorizationSubmitErrorMessage(t, activeSubmitError, formatCurrencyFromCents(0))
     : null
 
   return {
