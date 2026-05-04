@@ -64,7 +64,6 @@ export const UnifiedReportControls = () => {
       <UnifiedReportDateSelection isCompact={variant === 'small'} />
       {(hasYear || hasGroupBy) && (
         <div className='Layer__UnifiedReport__AdditionalControls' data-variant={variant}>
-          {/* Year and GroupBy are exclusive by convention — only one is configured per report */}
           {hasYear
             ? <GlobalYearPicker />
             : <DateGroupByComboBox value={groupBy} onValueChange={setGroupBy} />}
