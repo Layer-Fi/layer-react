@@ -11,11 +11,12 @@ import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectD
 type Props = {
   value: BankTransactionCategoryComboBoxOption | null
   onChange: (newValue: BankTransactionCategoryComboBoxOption | null) => void
+  onBlur?: () => void
   disabled?: boolean
   showTooltips: boolean
 }
 
-export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips }: Props) => {
+export const CategorySelectDrawerWithTrigger = ({ value, onChange, onBlur, showTooltips }: Props) => {
   const { t } = useTranslation()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
@@ -26,6 +27,7 @@ export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips 
         fullWidth
         aria-label={t('bankTransactions:action.select_category', 'Select category')}
         onClick={() => { setIsDrawerOpen(true) }}
+        onBlur={onBlur}
         variant='outlined'
       >
         <HStack fluid align='center' justify='space-between' gap='2xs'>

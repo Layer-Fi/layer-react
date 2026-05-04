@@ -3,6 +3,14 @@
     max-width: 100%;
   }
 
+  &__actions-cell--close {
+    vertical-align: top;
+  }
+
+  &__actions-cell--close &__category-hstack {
+    padding-block-start: 0.875rem;
+  }
+
   &__category-open {
     padding-block-start: 0.875rem;
   }
@@ -10,5 +18,10 @@
   &__category {
     overflow: hidden;
     width: 100%;
+  }
+
+  &__category-field {
+    width: 100%;
+    min-width: 0;
   }
 }

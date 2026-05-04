@@ -4,7 +4,10 @@ import { useCategorizationSubmit } from '@hooks/features/bankTransactions/useCat
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useGetBankTransactionCategorizationByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import {
+  isSplitSubmitError,
+  useGetBankTransactionCategorizationByTransactionId,
+} from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import type { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
@@ -27,6 +30,7 @@ export const BankTransactionsMobileListSplitFormProvider = ({
 
   const {
     submit,
+    submitError,
     errorMessage: submitErrorMessage,
     isProcessing: isCategorizing,
     isError: isErrorCategorizing,
@@ -44,7 +48,7 @@ export const BankTransactionsMobileListSplitFormProvider = ({
     changeCategoryForSplitAtIndex,
     updateSplitAtIndex,
     getInputValueForSplitAtIndex,
-    onBlurSplitAmount,
+    onBlurSplitField,
   } = useSplitsForm({
     bankTransaction,
     selectedCategorization,
@@ -67,7 +71,7 @@ export const BankTransactionsMobileListSplitFormProvider = ({
       showDescriptions,
     },
     categorization: {
-      submitErrorMessage,
+      submitErrorMessage: isSplitSubmitError(submitError) ? null : submitErrorMessage,
       isCategorizing,
       isErrorCategorizing,
       showRetry,
@@ -77,7 +81,7 @@ export const BankTransactionsMobileListSplitFormProvider = ({
       removeSplit,
       updateSplitAmount,
       getInputValueForSplitAtIndex,
-      onBlurSplitAmount,
+      onBlurSplitField,
       save: () => {
         void submit()
       },
@@ -113,7 +117,7 @@ export const BankTransactionsMobileListSplitFormProvider = ({
     isCategorizing,
     isErrorCategorizing,
     localSplits,
-    onBlurSplitAmount,
+    onBlurSplitField,
     removeSplit,
     showCategorization,
     showDescriptions,
@@ -122,6 +126,7 @@ export const BankTransactionsMobileListSplitFormProvider = ({
     showTooltips,
     splitFormError,
     submit,
+    submitError,
     submitErrorMessage,
     taxCodeOptions,
     updateSplitAmount,

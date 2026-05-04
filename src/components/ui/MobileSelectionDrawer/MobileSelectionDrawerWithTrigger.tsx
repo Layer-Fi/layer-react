@@ -41,6 +41,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
   isError = false,
   isDisabled = false,
   isSearchable = false,
+  onBlur,
   searchPlaceholder,
   slotProps,
   ...optionOrGroups
@@ -78,7 +79,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
 
   return (
     <>
-      <Button onClick={openDrawer} variant='outlined' isDisabled={isDisabled} flex fullWidth>
+      <Button onClick={openDrawer} onBlur={onBlur} variant='outlined' isDisabled={isDisabled} flex fullWidth>
         <HStack
           fluid
           justify='space-between'

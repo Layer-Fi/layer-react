@@ -18,6 +18,7 @@ type Props = {
   inputId?: string
   className?: string
   placeholder?: string
+  onBlur?: () => void
 }
 
 export const TaxCodeSelect = ({
@@ -29,6 +30,7 @@ export const TaxCodeSelect = ({
   inputId,
   className,
   placeholder,
+  onBlur,
 }: Props) => {
   const { t } = useTranslation()
 
@@ -63,6 +65,7 @@ export const TaxCodeSelect = ({
         options={allOptions}
         selectedValue={selectedValue}
         onSelectedValueChange={handleChange}
+        onBlur={onBlur}
         isDisabled={isDisabled}
         isSearchable
         searchPlaceholder={t('bankTransactions:action.search_tax_codes', 'Search tax codes...')}
@@ -82,6 +85,7 @@ export const TaxCodeSelect = ({
       inputId={inputId}
       selectedValue={selectedValue}
       onSelectedValueChange={handleChange}
+      onBlur={onBlur}
       options={allOptions}
       isDisabled={isDisabled}
       isSearchable={false}

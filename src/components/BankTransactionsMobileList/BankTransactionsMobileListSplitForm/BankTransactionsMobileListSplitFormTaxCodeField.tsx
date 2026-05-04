@@ -16,6 +16,7 @@ export const BankTransactionsMobileListSplitFormTaxCodeField = ({
   splitIndex,
 }: BankTransactionsMobileListSplitFormTaxCodeFieldProps) => {
   const {
+    categorization: { onBlurSplitField },
     transaction: { showCategorization },
     taxCodes: {
       taxCodeOptions,
@@ -32,6 +33,7 @@ export const BankTransactionsMobileListSplitFormTaxCodeField = ({
         options={taxCodeOptions}
         value={getSelectedTaxCodeOption(split.taxCode ?? null)}
         onChange={handleTaxCodeChange(splitIndex)}
+        onBlur={onBlurSplitField}
         isDisabled={!showCategorization}
         className='Layer__BankTransactionsMobileListSplitForm__TaxCodeSelect'
       />

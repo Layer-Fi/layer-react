@@ -11,6 +11,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   options,
   groups,
   onInputValueChange,
+  onBlur,
   inputId,
   placeholder,
   slots,
@@ -31,6 +32,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   | 'options'
   | 'groups'
   | 'onInputValueChange'
+  | 'onBlur'
   | 'inputId'
   | 'placeholder'
   | 'slots'
@@ -84,6 +86,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     className,
     options: options ?? groups,
     onInputChange: onInputValueChange,
+    onBlur,
     placeholder,
     unstyled: true,
     escapeClearsValue: true,
@@ -115,6 +118,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     isMutating,
     isReadOnly,
     isSearchable,
+    onBlur,
     onInputValueChange,
     options,
     placeholder,
