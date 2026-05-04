@@ -65,11 +65,9 @@ const UnifiedReportStoreContext = createContext(
   })),
 )
 
-export function useUnifiedReportDateSelectionMode(): DateSelectionMode {
+export function useUnifiedReportDateSelectionMode() {
   const store = useContext(UnifiedReportStoreContext)
-  const propMode = useStore(store, state => state.dateSelectionMode)
-  const baseReport = useStore(store, state => state.baseReport)
-  return hasControl(baseReport, ReportControl.Year) ? 'year' : propMode
+  return useStore(store, state => state.dateSelectionMode)
 }
 
 export function useActiveUnifiedReport() {

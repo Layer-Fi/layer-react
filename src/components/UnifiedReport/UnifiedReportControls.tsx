@@ -52,6 +52,7 @@ export const UnifiedReportControls = () => {
   const variant = getVariantForWidth(size)
 
   const hasGroupBy = dateSelectionMode === 'full' && hasControl(baseReport, ReportControl.GroupBy)
+  const hasYear = hasControl(baseReport, ReportControl.Year)
   return (
     <Stack
       ref={containerRef}
@@ -61,10 +62,12 @@ export const UnifiedReportControls = () => {
       gap='xs'
     >
       <UnifiedReportDateSelection isCompact={variant === 'small'} />
-      {hasControl(baseReport, ReportControl.Year) && <GlobalYearPicker />}
-      {hasGroupBy && (
+      {(hasYear || hasGroupBy) && (
         <div className='Layer__UnifiedReport__AdditionalControls' data-variant={variant}>
-          <DateGroupByComboBox value={groupBy} onValueChange={setGroupBy} />
+          {/* Year and GroupBy are exclusive by convention — only one is configured per report */}
+          {hasYear
+            ? <GlobalYearPicker />
+            : <DateGroupByComboBox value={groupBy} onValueChange={setGroupBy} />}
         </div>
       )}
     </Stack>
