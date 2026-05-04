@@ -11,6 +11,8 @@ import { Container } from '@components/Container/Container'
 import { LedgerAccount } from '@components/LedgerAccount/LedgerAccountIndex'
 import { type LedgerAccountStringOverrides } from '@components/LedgerAccount/LedgerAccountIndex'
 
+import './chartOfAccounts.scss'
+
 export interface ChartOfAccountsStringOverrides {
   chartOfAccountsTable?: ChartOfAccountsTableStringOverrides
   ledgerAccount?: LedgerAccountStringOverrides
@@ -68,7 +70,6 @@ const ChartOfAccountsContent = ({
             asWidget={asWidget}
             withDateControl={withDateControl}
             withExpandAllButton={withExpandAllButton}
-            view={view}
             containerRef={containerRef}
             showAddAccountButton={showAddAccountButton}
             stringOverrides={stringOverrides?.chartOfAccountsTable}
