@@ -2,6 +2,7 @@ import { compact } from 'lodash-es'
 import { useTranslation } from 'react-i18next'
 
 import { HStack, VStack } from '@ui/Stack/Stack'
+import type { Spacing } from '@ui/sharedUITypes'
 import { ErrorText } from '@components/Typography/ErrorText'
 
 export type BankTransactionErrorTextProps = {
@@ -10,6 +11,7 @@ export type BankTransactionErrorTextProps = {
   matchFormError?: string | null
   showApprovalError?: boolean
   layout?: 'inline' | 'padded'
+  pbe?: Spacing
 }
 
 export const BankTransactionErrorText = ({
@@ -18,6 +20,7 @@ export const BankTransactionErrorText = ({
   matchFormError,
   showApprovalError,
   layout = 'padded',
+  pbe,
 }: BankTransactionErrorTextProps) => {
   const { t } = useTranslation()
 
@@ -32,7 +35,7 @@ export const BankTransactionErrorText = ({
 
   if (layout === 'inline') {
     return (
-      <VStack gap='2xs'>
+      <VStack gap='2xs' pbe={pbe}>
         {messages.map(message => <ErrorText key={message}>{message}</ErrorText>)}
       </VStack>
     )

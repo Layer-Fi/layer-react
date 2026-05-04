@@ -18,6 +18,7 @@ type BankTransactionCategorizationUpdate =
 
 export type BankTransactionsCategorizationState = {
   categorizations: Map<string, BankTransactionCategorization>
+  splitFormErrorTransactionIds: Set<string>
 }
 
 type BankTransactionsCategorizationActions = {
@@ -30,6 +31,7 @@ type BankTransactionsCategorizationActions = {
   ) => void
   clearTransactionCategorizations: (ids: string[]) => void
   clearAllTransactionCategorizations: () => void
+  setTransactionSplitFormErrorVisibility: (id: string, visible: boolean) => void
 }
 
 type BankTransactionsCategorizationStore = BankTransactionsCategorizationState & {
@@ -58,6 +60,7 @@ function normalizeCategorization(
 function buildStore() {
   return createStore<BankTransactionsCategorizationStore>(set => ({
     categorizations: new Map<string, BankTransactionCategorization>(),
+    splitFormErrorTransactionIds: new Set<string>(),
     actions: {
       setTransactionCategorization: (id: string, categorization: BankTransactionCategorizationUpdate): void => {
         set((state) => {
@@ -99,13 +102,40 @@ function buildStore() {
       clearTransactionCategorizations: (ids: string[]): void => {
         set((state) => {
           const newMap = new Map(state.categorizations)
+          const newSplitFormErrorTransactionIds = new Set(state.splitFormErrorTransactionIds)
           ids.forEach(id => newMap.delete(id))
-          return { categorizations: newMap }
+          ids.forEach(id => newSplitFormErrorTransactionIds.delete(id))
+          return {
+            categorizations: newMap,
+            splitFormErrorTransactionIds: newSplitFormErrorTransactionIds,
+          }
         })
       },
 
       clearAllTransactionCategorizations: () => {
-        set({ categorizations: new Map<string, BankTransactionCategorization>() })
+        set({
+          categorizations: new Map<string, BankTransactionCategorization>(),
+          splitFormErrorTransactionIds: new Set<string>(),
+        })
+      },
+
+      setTransactionSplitFormErrorVisibility: (id: string, visible: boolean): void => {
+        set((state) => {
+          if (state.splitFormErrorTransactionIds.has(id) === visible) {
+            return state
+          }
+
+          const newSplitFormErrorTransactionIds = new Set(state.splitFormErrorTransactionIds)
+
+          if (visible) {
+            newSplitFormErrorTransactionIds.add(id)
+          }
+          else {
+            newSplitFormErrorTransactionIds.delete(id)
+          }
+
+          return { splitFormErrorTransactionIds: newSplitFormErrorTransactionIds }
+        })
       },
     },
   }))
@@ -137,6 +167,16 @@ export function useGetBankTransactionCategorizationByTransactionId(
   const selectedCategorization = useStore(store, state => state.categorizations.get(transactionId))
 
   return { selectedCategorization }
+}
+
+export function useGetBankTransactionSplitFormErrorVisibility(
+  transactionId: string,
+): { shouldShowSplitFormError: boolean } {
+  const store = useBankTransactionsCategorizationStore()
+
+  const shouldShowSplitFormError = useStore(store, state => state.splitFormErrorTransactionIds.has(transactionId))
+
+  return { shouldShowSplitFormError }
 }
 
 export type TransactionCategorizationSubmitError = 'category_required'

@@ -18,6 +18,7 @@ import {
   isSplitSubmitError,
   useBankTransactionsCategorizationActions,
   useGetBankTransactionCategorizationByTransactionId,
+  useGetBankTransactionSplitFormErrorVisibility,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
@@ -88,9 +89,9 @@ export const BankTransactionRow = ({
   const isTransactionSelected = isSelected(bankTransaction.id)
   const { count: bulkSelectionCount } = useCountSelectedIds()
   const isBulkSelectionActive = bulkSelectionCount > 0
-  const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
+  const { setTransactionCategorization, setTransactionSplitFormErrorVisibility } = useBankTransactionsCategorizationActions()
   const { selectedCategorization } = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
-  const [showSplitFormError, setShowSplitFormError] = useState(false)
+  const { shouldShowSplitFormError } = useGetBankTransactionSplitFormErrorVisibility(bankTransaction.id)
 
   const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction })
 
@@ -98,7 +99,6 @@ export const BankTransactionRow = ({
 
   const onSubmitSuccess = useCallback(() => {
     deselect(bankTransaction.id)
-    setShowSplitFormError(false)
     setOpen(false)
   }, [bankTransaction.id, deselect])
 
@@ -117,11 +117,11 @@ export const BankTransactionRow = ({
   const selectedCategory = selectedCategorization?.category
   const splitFormError = useSelectedCategorizationSplitFormError(
     selectedCategorization,
-    showSplitFormError || isSplitSubmitError(submitError),
+    shouldShowSplitFormError || isSplitSubmitError(submitError),
   )
   const setVisibleSplitFormError = useCallback((error: string | undefined) => {
-    setShowSplitFormError(Boolean(error))
-  }, [])
+    setTransactionSplitFormErrorVisibility(bankTransaction.id, Boolean(error))
+  }, [bankTransaction.id, setTransactionSplitFormErrorVisibility])
 
   const submitButton = useMemo(() => (
     <SubmitButton
@@ -301,50 +301,52 @@ export const BankTransactionRow = ({
               </HStack>
             )
             : (
-              <HStack pi='md' gap='md' className='Layer__bank-transaction-row__category-hstack'>
-                {isCategorizationEnabled && !displayAsCategorized && (
-                  <VStack gap='2xs' fluid className='Layer__bank-transaction-row__category-field'>
-                    <BankTransactionCategoryComboBox
-                      bankTransaction={bankTransaction}
-                      selectedValue={selectedCategory ?? null}
-                      onSelectedValueChange={(nextCategory: BankTransactionCategoryComboBoxOption | null) => {
-                        setTransactionCategorization(
-                          bankTransaction.id,
-                          applyCategoryChange(selectedCategorization, nextCategory),
-                        )
-                      }}
-                      isDisabled={isProcessing}
-                    />
-                    <BankTransactionErrorText submitErrorMessage={rowSubmitErrorMessage} splitFormError={splitFormError} layout='inline' />
-                  </VStack>
-                )}
-                {displayAsCategorized
-                  && (
-                    <BankTransactionsCategorizedSelectedValue
-                      bankTransaction={bankTransaction}
-                      className='Layer__bank-transaction-row__category'
-                    />
+              <VStack pi='md' gap='2xs'>
+                <HStack gap='md' className='Layer__bank-transaction-row__category-hstack'>
+                  {isCategorizationEnabled && !displayAsCategorized && (
+                    <VStack fluid className='Layer__bank-transaction-row__category-field'>
+                      <BankTransactionCategoryComboBox
+                        bankTransaction={bankTransaction}
+                        selectedValue={selectedCategory ?? null}
+                        onSelectedValueChange={(nextCategory: BankTransactionCategoryComboBoxOption | null) => {
+                          setTransactionCategorization(
+                            bankTransaction.id,
+                            applyCategoryChange(selectedCategorization, nextCategory),
+                          )
+                        }}
+                        isDisabled={isProcessing}
+                      />
+                    </VStack>
                   )}
-                {!displayAsCategorized && isCategorizationEnabled && !isBeingRemoved && submitButton}
-                {!isCategorizationEnabled && !displayAsCategorized && !isBeingRemoved && (
-                  <VStack pis='xs' fluid>
-                    <BankTransactionsProcessingInfo />
-                  </VStack>
-                )}
-                {!isBeingRemoved && (
-                  <IconButton
-                    onClick={toggleOpen}
-                    className='Layer__bank-transaction-row__expand-button'
-                    active={open}
-                    icon={(
-                      <ChevronDownFill
-                        className={`Layer__chevron ${open ? 'Layer__chevron__up' : 'Layer__chevron__down'
-                        }`}
+                  {displayAsCategorized
+                    && (
+                      <BankTransactionsCategorizedSelectedValue
+                        bankTransaction={bankTransaction}
+                        className='Layer__bank-transaction-row__category'
                       />
                     )}
-                  />
-                )}
-              </HStack>
+                  {!displayAsCategorized && isCategorizationEnabled && !isBeingRemoved && submitButton}
+                  {!isCategorizationEnabled && !displayAsCategorized && !isBeingRemoved && (
+                    <VStack pis='xs' fluid>
+                      <BankTransactionsProcessingInfo />
+                    </VStack>
+                  )}
+                  {!isBeingRemoved && (
+                    <IconButton
+                      onClick={toggleOpen}
+                      className='Layer__bank-transaction-row__expand-button'
+                      active={open}
+                      icon={(
+                        <ChevronDownFill
+                          className={`Layer__chevron ${open ? 'Layer__chevron__up' : 'Layer__chevron__down'
+                          }`}
+                        />
+                      )}
+                    />
+                  )}
+                </HStack>
+                <BankTransactionErrorText submitErrorMessage={rowSubmitErrorMessage} splitFormError={splitFormError} layout='inline' pbe='xs' />
+              </VStack>
             )}
         </td>
       </AnimatedPresenceElement>

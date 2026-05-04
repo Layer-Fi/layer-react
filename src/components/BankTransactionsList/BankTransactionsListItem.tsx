@@ -19,6 +19,7 @@ import {
   isSplitSubmitError,
   useBankTransactionsCategorizationActions,
   useGetBankTransactionCategorizationByTransactionId,
+  useGetBankTransactionSplitFormErrorVisibility,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
@@ -82,13 +83,12 @@ export const BankTransactionsListItem = ({
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
-  const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
+  const { setTransactionCategorization, setTransactionSplitFormErrorVisibility } = useBankTransactionsCategorizationActions()
   const { selectedCategorization } = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
-  const [showSplitFormError, setShowSplitFormError] = useState(false)
+  const { shouldShowSplitFormError } = useGetBankTransactionSplitFormErrorVisibility(bankTransaction.id)
 
   const onSubmitSuccess = useCallback(() => {
     deselect(bankTransaction.id)
-    setShowSplitFormError(false)
     setOpenExpandedRow(false)
   }, [bankTransaction.id, deselect])
 
@@ -107,11 +107,11 @@ export const BankTransactionsListItem = ({
   const selectedCategory = selectedCategorization?.category
   const splitFormError = useSelectedCategorizationSplitFormError(
     selectedCategorization,
-    showSplitFormError || isSplitSubmitError(submitError),
+    shouldShowSplitFormError || isSplitSubmitError(submitError),
   )
   const setVisibleSplitFormError = useCallback((error: string | undefined) => {
-    setShowSplitFormError(Boolean(error))
-  }, [])
+    setTransactionSplitFormErrorVisibility(bankTransaction.id, Boolean(error))
+  }, [bankTransaction.id, setTransactionSplitFormErrorVisibility])
 
   const preventRowExpansion = (e: React.MouseEvent) => {
     e.stopPropagation()

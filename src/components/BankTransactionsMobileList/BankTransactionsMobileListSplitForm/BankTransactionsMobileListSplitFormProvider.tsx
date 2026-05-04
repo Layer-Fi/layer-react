@@ -1,12 +1,14 @@
-import { type PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react'
+import { type PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useCategorizationSubmit } from '@hooks/features/bankTransactions/useCategorizationSubmit'
-import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
+import { useSelectedCategorizationSplitFormError, useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import {
   isSplitSubmitError,
+  useBankTransactionsCategorizationActions,
   useGetBankTransactionCategorizationByTransactionId,
+  useGetBankTransactionSplitFormErrorVisibility,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
@@ -37,6 +39,15 @@ export const BankTransactionsMobileListSplitFormProvider = ({
   } = useCategorizationSubmit({ bankTransaction, notify: true })
 
   const { selectedCategorization } = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
+  const { shouldShowSplitFormError } = useGetBankTransactionSplitFormErrorVisibility(bankTransaction.id)
+  const { setTransactionSplitFormErrorVisibility } = useBankTransactionsCategorizationActions()
+  const selectedSplitFormError = useSelectedCategorizationSplitFormError(
+    selectedCategorization,
+    shouldShowSplitFormError || isSplitSubmitError(submitError),
+  )
+  const setVisibleSplitFormError = useCallback((error: string | undefined) => {
+    setTransactionSplitFormErrorVisibility(bankTransaction.id, Boolean(error))
+  }, [bankTransaction.id, setTransactionSplitFormErrorVisibility])
   const [showRetry, setShowRetry] = useState(false)
 
   const {
@@ -52,6 +63,8 @@ export const BankTransactionsMobileListSplitFormProvider = ({
   } = useSplitsForm({
     bankTransaction,
     selectedCategorization,
+    splitFormError: selectedSplitFormError,
+    onSplitFormErrorChange: setVisibleSplitFormError,
   })
 
   const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(bankTransaction)
