@@ -63,6 +63,35 @@ const highlightMatch = ({ text, query, isMatching }: { text: string, query: stri
   )
 }
 
+const ChartOfAccountsEmptyState = () => {
+  const { t } = useTranslation()
+
+  return (
+    <DataState
+      status={DataStateStatus.info}
+      title={t('chartOfAccounts:empty.accounts', 'No accounts found')}
+      description={t('chartOfAccounts:empty.accounts_match_filters', 'No accounts match the current filters. Click "Add Account" to create a new one.')}
+      spacing
+    />
+  )
+}
+
+const ChartOfAccountsErrorState = () => {
+  const { t } = useTranslation()
+  const { refetch, isValidating, isLoading } = useContext(ChartOfAccountsContext)
+
+  return (
+    <DataState
+      status={DataStateStatus.failed}
+      title={t('common:error.something_went_wrong', 'Something went wrong')}
+      description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
+      onRefresh={() => void refetch()}
+      isLoading={isValidating || isLoading}
+      spacing
+    />
+  )
+}
+
 export const ChartOfAccountsTable = ({
   stringOverrides,
   searchQuery,
@@ -76,7 +105,7 @@ export const ChartOfAccountsTable = ({
   const { formatCurrencyFromCents } = useIntlFormatter()
   const { setSelectedAccount } = useContext(LedgerAccountsContext)
   const { setExpanded } = useContext(ExpandableDataTableContext)
-  const { data, isLoading, isError, isValidating, refetch, editAccount, deleteAccount } = useContext(ChartOfAccountsContext)
+  const { data, isLoading, isError, editAccount, deleteAccount } = useContext(ChartOfAccountsContext)
   const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
   const { accountingConfiguration } = useLayerContext()
   const enableAccountNumbers = !!accountingConfiguration?.enableAccountNumbers
@@ -151,26 +180,10 @@ export const ChartOfAccountsTable = ({
     }
     return renderHighlightedValue(row, text)
   }, [renderHighlightedValue])
-
-  const EmptyState = () => (
-    <DataState
-      status={DataStateStatus.info}
-      title={t('chartOfAccounts:empty.accounts', 'No accounts found')}
-      description={t('chartOfAccounts:empty.accounts_match_filters', 'No accounts match the current filters. Click "Add Account" to create a new one.')}
-      spacing
-    />
-  )
-
-  const ErrorState = () => (
-    <DataState
-      status={DataStateStatus.failed}
-      title={t('common:error.something_went_wrong', 'Something went wrong')}
-      description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
-      onRefresh={() => void refetch()}
-      isLoading={isValidating || isLoading}
-      spacing
-    />
-  )
+  const slots = useMemo(() => ({
+    EmptyState: ChartOfAccountsEmptyState,
+    ErrorState: ChartOfAccountsErrorState,
+  }), [])
 
   const columnConfig = useMemo<NestedColumnConfig<AugmentedLedgerAccountBalance>>(() => {
     const accountNumberColumn = {
@@ -283,7 +296,7 @@ export const ChartOfAccountsTable = ({
         data={filteredAccounts ? asMutable(filteredAccounts) : undefined}
         isLoading={isLoading}
         isError={isError}
-        slots={{ EmptyState, ErrorState }}
+        slots={slots}
         getSubRows={getSubRows}
         getRowId={getRowId}
       />
