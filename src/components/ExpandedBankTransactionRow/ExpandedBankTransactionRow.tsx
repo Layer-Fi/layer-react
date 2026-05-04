@@ -84,6 +84,10 @@ type ExpandedBankTransactionRowProps = {
   showDescriptions: boolean
   showReceiptUploads: boolean
   showTooltips: boolean
+  submitErrorMessage?: string | null
+  showApprovalError?: boolean
+  splitFormError?: string
+  onSplitFormErrorChange?: (error: string | undefined) => void
 
   variant?: 'list' | 'row'
 }
@@ -94,6 +98,10 @@ export const ExpandedBankTransactionRow = ({
   asListItem = false,
   showDescriptions,
   showReceiptUploads,
+  submitErrorMessage,
+  showApprovalError,
+  splitFormError: controlledSplitFormError,
+  onSplitFormErrorChange,
   variant = 'row',
 }: ExpandedBankTransactionRowProps) => {
   const { t } = useTranslation()
@@ -130,10 +138,16 @@ export const ExpandedBankTransactionRow = ({
     updateSplitAmount,
     changeCategoryForSplitAtIndex,
     updateSplitAtIndex,
-    onBlurSplitAmount,
+    onBlurSplitField,
     getInputValueForSplitAtIndex,
     setSplitFormError,
-  } = useSplitsForm({ bankTransaction, selectedCategorization, isOpen })
+  } = useSplitsForm({
+    bankTransaction,
+    selectedCategorization,
+    isOpen,
+    splitFormError: controlledSplitFormError,
+    onSplitFormErrorChange,
+  })
 
   const onChangePurpose = (key: React.Key) => {
     const newPurpose = key === 'match'
@@ -315,7 +329,7 @@ export const ExpandedBankTransactionRow = ({
                                   }
                                   onChange={updateSplitAmount(index)}
                                   value={getInputValueForSplitAtIndex(index, split)}
-                                  onBlur={onBlurSplitAmount}
+                                  onBlur={onBlurSplitField}
                                   className={`${className}__table-cell--split-entry__amount`}
                                   isInvalid={split.amount < 0}
                                 />
@@ -325,6 +339,7 @@ export const ExpandedBankTransactionRow = ({
                                   onSelectedValueChange={(value) => {
                                     changeCategoryForSplitAtIndex(index, value)
                                   }}
+                                  onBlur={onBlurSplitField}
                                   isDisabled={!isCategorizationEnabled}
                                   includeSuggestedMatches={false}
                                 />
@@ -338,6 +353,7 @@ export const ExpandedBankTransactionRow = ({
                                         taxCode: option?.value ?? null,
                                       }))
                                     }}
+                                    onBlur={onBlurSplitField}
                                     isDisabled={!isCategorizationEnabled}
                                     className={`${className}__table-cell--split-entry__tax-code`}
                                   />
@@ -377,7 +393,6 @@ export const ExpandedBankTransactionRow = ({
                           )
                         })}
                       </div>
-                      <BankTransactionErrorText splitFormError={splitFormError} layout='inline' />
                       <div
                         className={classNames(
                           'Layer__expanded-bank-transaction-row__total-and-btns',
@@ -418,6 +433,12 @@ export const ExpandedBankTransactionRow = ({
                             <></>
                           )}
                       </div>
+                      <BankTransactionErrorText
+                        splitFormError={splitFormError}
+                        submitErrorMessage={variant === 'list' ? submitErrorMessage : null}
+                        showApprovalError={variant === 'list' ? showApprovalError : false}
+                        layout='inline'
+                      />
                     </div>
                   </div>
                 </div>

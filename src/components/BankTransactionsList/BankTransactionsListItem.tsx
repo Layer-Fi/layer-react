@@ -11,10 +11,12 @@ import {
 } from '@utils/bankTransactions/shared'
 import { useCategorizationSubmit } from '@hooks/features/bankTransactions/useCategorizationSubmit'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
+import { useSelectedCategorizationSplitFormError } from '@hooks/features/bankTransactions/useSplitsForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
 import {
+  isSplitSubmitError,
   useBankTransactionsCategorizationActions,
   useGetBankTransactionCategorizationByTransactionId,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
@@ -82,14 +84,17 @@ export const BankTransactionsListItem = ({
   const isTransactionSelected = isSelected(bankTransaction.id)
   const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
   const { selectedCategorization } = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
+  const [showSplitFormError, setShowSplitFormError] = useState(false)
 
   const onSubmitSuccess = useCallback(() => {
     deselect(bankTransaction.id)
+    setShowSplitFormError(false)
     setOpenExpandedRow(false)
   }, [bankTransaction.id, deselect])
 
   const {
     submit,
+    submitError,
     errorMessage: submitErrorMessage,
     isProcessing,
     isError,
@@ -100,6 +105,13 @@ export const BankTransactionsListItem = ({
   }
 
   const selectedCategory = selectedCategorization?.category
+  const splitFormError = useSelectedCategorizationSplitFormError(
+    selectedCategorization,
+    showSplitFormError || isSplitSubmitError(submitError),
+  )
+  const setVisibleSplitFormError = useCallback((error: string | undefined) => {
+    setShowSplitFormError(Boolean(error))
+  }, [])
 
   const preventRowExpansion = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -111,6 +123,7 @@ export const BankTransactionsListItem = ({
     openExpandedRow ? openClassName : '',
     isVisible ? 'show' : '',
   )
+  const listSubmitErrorMessage = isSplitSubmitError(submitError) ? null : submitErrorMessage
 
   return (
     <AnimatedPresenceElement as='li' variant='fade' isOpen={!isBeingRemoved} motionKey={bankTransaction.id} className={rowClassName} onClick={toggleExpandedRow}>
@@ -193,6 +206,10 @@ export const BankTransactionsListItem = ({
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
             showTooltips={showTooltips}
+            submitErrorMessage={listSubmitErrorMessage}
+            showApprovalError={isError}
+            splitFormError={splitFormError}
+            onSplitFormErrorChange={setVisibleSplitFormError}
 
             variant='list'
           />
@@ -237,10 +254,13 @@ export const BankTransactionsListItem = ({
           bankTransaction={bankTransaction}
         />
       )}
-      <BankTransactionErrorText
-        submitErrorMessage={submitErrorMessage}
-        showApprovalError={isError}
-      />
+      {!openExpandedRow && (
+        <BankTransactionErrorText
+          submitErrorMessage={listSubmitErrorMessage}
+          splitFormError={splitFormError}
+          showApprovalError={isError}
+        />
+      )}
     </AnimatedPresenceElement>
   )
 }

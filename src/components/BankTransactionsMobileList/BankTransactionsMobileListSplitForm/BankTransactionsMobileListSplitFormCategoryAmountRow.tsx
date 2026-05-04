@@ -35,7 +35,7 @@ export const BankTransactionsMobileListSplitFormCategoryAmountRow = ({
       updateSplitAmount,
       handleCategoryChange,
       getInputValueForSplitAtIndex,
-      onBlurSplitAmount,
+      onBlurSplitField,
     },
     taxCodes: { hasTaxCodeOptions },
   } = useBankTransactionsMobileListSplitFormContext()
@@ -57,7 +57,7 @@ export const BankTransactionsMobileListSplitFormCategoryAmountRow = ({
             disabled={splitIndex === 0 || !showCategorization}
             onChange={updateSplitAmount(splitIndex)}
             value={getInputValueForSplitAtIndex(splitIndex, split)}
-            onBlur={onBlurSplitAmount}
+            onBlur={onBlurSplitField}
             isInvalid={split.amount < 0}
             className='Layer__BankTransactionsMobileListSplitForm__AmountInput'
           />
@@ -70,6 +70,7 @@ export const BankTransactionsMobileListSplitFormCategoryAmountRow = ({
             <CategorySelectDrawerWithTrigger
               value={split.category}
               onChange={handleCategoryChange(splitIndex)}
+              onBlur={onBlurSplitField}
               showTooltips={showTooltips}
             />
             {splitIndex > 0 && (

@@ -35,7 +35,7 @@ export interface BankTransactionsMobileListSplitFormContextValue {
     removeSplit: BankTransactionsMobileListSplitFormState['removeSplit']
     updateSplitAmount: BankTransactionsMobileListSplitFormState['updateSplitAmount']
     getInputValueForSplitAtIndex: BankTransactionsMobileListSplitFormState['getInputValueForSplitAtIndex']
-    onBlurSplitAmount: BankTransactionsMobileListSplitFormState['onBlurSplitAmount']
+    onBlurSplitField: BankTransactionsMobileListSplitFormState['onBlurSplitField']
     save: () => void
     handleCategoryChange: (index: number) => (value: BankTransactionCategoryComboBoxOption | null) => void
   }

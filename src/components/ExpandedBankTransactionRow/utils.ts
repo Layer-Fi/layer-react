@@ -40,12 +40,6 @@ export const getSplitsErrorMessage = (localSplits: Split[], t: TFunction, zeroAm
   return getValidateSplitErrorMessage(firstError, t, zeroAmount)
 }
 
-export const getSplitsAmountErrorMessage = (localSplits: Split[], t: TFunction, zeroAmount: string): string | undefined => {
-  const hasAmountError = localSplits.some(split => split.amount <= 0)
-  if (!hasAmountError) return undefined
-  return getValidateSplitErrorMessage(ValidateSplitError.AmountsMustBeGreaterThanZero, t, zeroAmount)
-}
-
 export const validateSplit = (localSplits: Split[]): (ValidateSplitError | undefined)[] => {
   const errors = localSplits.map((split) => {
     if (split.amount <= 0) {

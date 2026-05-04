@@ -83,6 +83,7 @@ type BankTransactionCategoryComboBoxProps = {
   isDisabled?: boolean
   isLoading?: boolean
   inputId?: string
+  onBlur?: () => void
 }
 
 export const BankTransactionCategoryComboBox = ({
@@ -93,6 +94,7 @@ export const BankTransactionCategoryComboBox = ({
   isDisabled = false,
   isLoading = false,
   inputId,
+  onBlur,
 }: BankTransactionCategoryComboBoxProps) => {
   const { t } = useTranslation()
   const { data: categories } = useCategories()
@@ -145,6 +147,7 @@ export const BankTransactionCategoryComboBox = ({
       inputId={inputId}
       groups={groups}
       onSelectedValueChange={onSelectedValueChange}
+      onBlur={onBlur}
       selectedValue={selectedValue}
       placeholder={placeholder}
       slots={{

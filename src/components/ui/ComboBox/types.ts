@@ -32,6 +32,7 @@ export type BaseComboBoxProps<T extends ComboBoxOption> = {
   className?: string
 
   onInputValueChange?: (value: string) => void
+  onBlur?: () => void
 
   placeholder?: string
   slots?: ComboBoxSlots<T>
