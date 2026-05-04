@@ -20,7 +20,7 @@ import { Span } from '@ui/Typography/Text'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { type ChartOfAccountsTableStringOverrides } from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
-import { filterAccounts, getInitialExpandedState, getMatchedTextIndices } from '@components/ChartOfAccountsTable/utils/utils'
+import { filterAccounts, getInitialExpandedState, getMatchedTextIndices, getRowId } from '@components/ChartOfAccountsTable/utils/utils'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
@@ -42,8 +42,6 @@ const COMPONENT_NAME = 'chart-of-accounts'
 const getSubRows = (row: AugmentedLedgerAccountBalance): AugmentedLedgerAccountBalance[] | undefined => {
   return row.subAccounts.length > 0 ? asMutable(row.subAccounts) : undefined
 }
-
-const getRowId = (row: AugmentedLedgerAccountBalance): string => row.accountId
 
 const highlightMatch = ({ text, query, isMatching }: { text: string, query: string, isMatching?: boolean }): ReactNode => {
   const matchedTextIndices = getMatchedTextIndices({ text, query, isMatching })

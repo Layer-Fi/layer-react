@@ -47,7 +47,7 @@ export const filterAccounts = (
   })
 }
 
-const getRowId = (row: AugmentedLedgerAccountBalance): string => row.accountId
+export const getRowId = (row: AugmentedLedgerAccountBalance): string => row.accountId
 
 export const getInitialExpandedState = (
   accounts: readonly AugmentedLedgerAccountBalance[] | undefined,
