@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback, useContext, useMemo, useState } from 'react'
+import { type ReactNode, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react'
 import { type Row } from '@tanstack/react-table'
 import { List, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -20,10 +20,11 @@ import { Span } from '@ui/Typography/Text'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { type ChartOfAccountsTableStringOverrides } from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
-import { filterAccounts, getMatchedTextIndices } from '@components/ChartOfAccountsTable/utils/utils'
+import { filterAccounts, getInitialExpandedState, getMatchedTextIndices } from '@components/ChartOfAccountsTable/utils/utils'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
+import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 
 import './chartOfAccountsTable.scss'
 
@@ -74,6 +75,7 @@ export const ChartOfAccountsTable = ({
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
   const { setSelectedAccount } = useContext(LedgerAccountsContext)
+  const { setExpanded } = useContext(ExpandableDataTableContext)
   const { data, isLoading, isError, isValidating, refetch, editAccount, deleteAccount } = useContext(ChartOfAccountsContext)
   const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
   const { accountingConfiguration } = useLayerContext()
@@ -107,6 +109,10 @@ export const ChartOfAccountsTable = ({
       formatCurrencyFromCents,
     )
   }, [data, formatCurrencyFromCents, searchQuery])
+
+  useLayoutEffect(() => {
+    setExpanded(getInitialExpandedState(filteredAccounts))
+  }, [filteredAccounts, setExpanded])
 
   const getNodeType = (row: Row<AugmentedLedgerAccountBalance>): LedgerAccountNodeType => {
     if (row.depth === 0) return LedgerAccountNodeType.Root
@@ -151,6 +157,7 @@ export const ChartOfAccountsTable = ({
       status={DataStateStatus.info}
       title={t('chartOfAccounts:empty.accounts', 'No accounts found')}
       description={t('chartOfAccounts:empty.accounts_match_filters', 'No accounts match the current filters. Click "Add Account" to create a new one.')}
+      spacing
     />
   )
 
@@ -161,6 +168,7 @@ export const ChartOfAccountsTable = ({
       description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
       onRefresh={() => void refetch()}
       isLoading={isValidating || isLoading}
+      spacing
     />
   )
 
