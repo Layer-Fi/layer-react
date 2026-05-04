@@ -12,7 +12,9 @@ const defaultContextValue: ExpandableDataTableContextType = {
 }
 
 export const ExpandableDataTableContext = createContext<ExpandableDataTableContextType>(defaultContextValue)
-export function ExpandableDataTableProvider({ children }: PropsWithChildren) {
+type ExpandableDataTableProviderProps = PropsWithChildren
+
+export function ExpandableDataTableProvider({ children }: ExpandableDataTableProviderProps) {
   const [expanded, setExpanded] = useState<ExpandedState>({})
 
   const value = useMemo(() => ({ expanded, setExpanded }), [expanded])
