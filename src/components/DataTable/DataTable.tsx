@@ -1,6 +1,8 @@
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { flexRender, type HeaderGroup, type Row as RowType } from '@tanstack/react-table'
+import classNames from 'classnames'
 
+import { useHorizontalOverflow } from '@hooks/utils/size/useHorizontalOverflow'
 import { useColumnPinningStyles } from '@hooks/utils/tables/useColumnPinningStyles'
 import {
   Cell,
@@ -10,7 +12,7 @@ import {
   TableBody,
   TableHeader,
 } from '@ui/Table/Table'
-import { Loader } from '@components/Loader/Loader'
+import { DataTableHeaderSkeleton, DataTableSkeleton, DEFAULT_SKELETON_COLUMNS } from '@components/DataTable/DataTableSkeleton'
 
 import './dataTable.scss'
 
@@ -51,8 +53,11 @@ export const DataTable = <TData extends object>({
   numColumns,
   withClickableRow,
 }: DataTableProps<TData>) => {
-  const nonAria = headerGroups.length > 1
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null)
+  const nonAria = headerGroups.length > 1 || numColumns === 0
   const { EmptyState, ErrorState } = slots
+  const hasHorizontalOverflow = useHorizontalOverflow(scrollContainerRef, { dependencies: [data, numColumns] })
+  const showLoadingFallbackHeaders = isLoading && numColumns === 0
 
   const { headerRef, pinningStyles } = useColumnPinningStyles(headerGroups)
 
@@ -69,13 +74,7 @@ export const DataTable = <TData extends object>({
     }
 
     if (isLoading) {
-      return (
-        <Row className='Layer__DataTable__EmptyState__Row' nonAria={nonAria}>
-          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={numColumns} nonAria={nonAria}>
-            <Loader />
-          </Cell>
-        </Row>
-      )
+      return <DataTableSkeleton numColumns={numColumns} nonAria={nonAria} />
     }
 
     if (isEmptyTable) {
@@ -125,31 +124,39 @@ export const DataTable = <TData extends object>({
   }, [isError, isLoading, isEmptyTable, data, nonAria, numColumns, ErrorState, EmptyState, withClickableRow, componentName, pinningStyles])
 
   return (
-    <div className='Layer__UI__Table-ScrollContainer'>
+    <div
+      ref={scrollContainerRef}
+      className={classNames(
+        'Layer__UI__Table-ScrollContainer',
+        hasHorizontalOverflow && 'Layer__UI__Table-ScrollContainer--has-horizontal-overflow',
+      )}
+    >
       <Table aria-label={ariaLabel} className={`Layer__UI__Table__${componentName}`} nonAria={nonAria}>
         <TableHeader ref={headerRef} nonAria={nonAria}>
-          {headerGroups.map(headerGroup => (
-            <Row key={headerGroup.id} nonAria={nonAria}>
-              {headerGroup.headers.map(header => (
-                <Column
-                  key={header.id}
-                  isRowHeader={header.column.columnDef.meta?.isRowHeader}
-                  className={`Layer__UI__Table-Column__${componentName}--${header.id}`}
-                  alignment={header.column.columnDef.meta?.alignment}
-                  pinned={header.column.getIsPinned()}
-                  style={pinningStyles.get(header.column.id)}
-                  nonAria={nonAria}
-                  colSpan={header.colSpan}
-                >
-                  {header.isPlaceholder
-                    ? null
-                    : (typeof header.column.columnDef.header === 'function'
-                      ? header.column.columnDef.header(header.getContext())
-                      : header.column.columnDef.header)}
-                </Column>
-              ))}
-            </Row>
-          ))}
+          {showLoadingFallbackHeaders
+            ? <DataTableHeaderSkeleton nonAria={nonAria} numColumns={DEFAULT_SKELETON_COLUMNS} />
+            : headerGroups.map(headerGroup => (
+              <Row key={headerGroup.id} nonAria={nonAria}>
+                {headerGroup.headers.map(header => (
+                  <Column
+                    key={header.id}
+                    isRowHeader={header.column.columnDef.meta?.isRowHeader}
+                    className={`Layer__UI__Table-Column__${componentName}--${header.id}`}
+                    alignment={header.column.columnDef.meta?.alignment}
+                    pinned={header.column.getIsPinned()}
+                    style={pinningStyles.get(header.column.id)}
+                    nonAria={nonAria}
+                    colSpan={header.colSpan}
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : (typeof header.column.columnDef.header === 'function'
+                        ? header.column.columnDef.header(header.getContext())
+                        : header.column.columnDef.header)}
+                  </Column>
+                ))}
+              </Row>
+            ))}
         </TableHeader>
         <TableBody dependencies={dependencies} nonAria={nonAria}>
           {renderTableBody}

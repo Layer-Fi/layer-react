@@ -6,7 +6,6 @@ import {
 } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
-import Check from '@icons/Check'
 import ChevronRight from '@icons/ChevronRight'
 import { HStack } from '@ui/Stack/Stack'
 import { Tree, TreeItem, TreeItemContent } from '@ui/Tree/Tree'
@@ -85,10 +84,7 @@ type RenderTreeLeafArgs<TLeaf extends object> = {
 const renderTreeLeaf = <TLeaf extends object>({ leaf, leafConfig }: RenderTreeLeafArgs<TLeaf>): ReactElement => (
   <TreeItem id={leafConfig.getId(leaf)} textValue={leafConfig.getTextValue(leaf)}>
     <TreeItemContent>
-      <HStack align='center' justify='space-between'>
-        {leafConfig.renderLabel(leaf)}
-        <Check className='Layer__TreeNavigation__Check' />
-      </HStack>
+      {leafConfig.renderLabel(leaf)}
     </TreeItemContent>
   </TreeItem>
 )
