@@ -26,7 +26,8 @@ export const TaxBanner = ({ data }: TaxBannerProps) => {
     ? (
       <BannerButton
         onPress={() => onClickReviewTransactions({
-          uncategorizedAmount: data.totalUncategorizedMoneyIn - data.totalUncategorizedMoneyOut,
+          uncategorizedMoneyIn: data.totalUncategorizedMoneyIn,
+          uncategorizedMoneyOut: data.totalUncategorizedMoneyOut,
           uncategorizedTransactionCount: data.totalUncategorizedCount,
         })}
       >

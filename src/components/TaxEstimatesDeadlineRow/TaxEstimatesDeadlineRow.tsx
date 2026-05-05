@@ -81,7 +81,8 @@ export const TaxEstimatesDeadlineRow = ({
             <Button
               variant='outlined'
               onPress={() => onClickReviewTransactions({
-                uncategorizedAmount: data.uncategorizedMoneyIn - data.uncategorizedMoneyOut,
+                uncategorizedMoneyIn: data.uncategorizedMoneyIn,
+                uncategorizedMoneyOut: data.uncategorizedMoneyOut,
                 uncategorizedTransactionCount: data.uncategorizedCount,
               })}
             >
