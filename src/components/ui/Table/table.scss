@@ -18,6 +18,11 @@
 .Layer__UI__Table-Row {
   height: 3.25rem;
 
+  @media (width <= 500px) {
+    height: auto;
+    min-height: 3.25rem;
+  }
+
   &:not(:last-child) .Layer__UI__Table-Cell {
     border-bottom: 1px solid var(--color-base-300);
   }
