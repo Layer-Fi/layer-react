@@ -1,10 +1,6 @@
 .Layer__TaxOverview {
   &__Card--deadlines {
     min-width: 25rem;
-
-    @container (max-width: 960px) {
-      min-width: unset;
-    }
   }
 
   &__Card.Layer__card {
