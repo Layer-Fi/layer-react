@@ -6,7 +6,12 @@ import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
 import { hasReceipts, isCategorized, isCredit } from '@utils/bankTransactions/shared'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
+import { useSelectedCategorizationSplitFormError } from '@hooks/features/bankTransactions/useSplitsForm'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
+import {
+  useGetBankTransactionCategorizationByTransactionId,
+  useGetBankTransactionSplitFormErrorVisibility,
+} from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
@@ -15,6 +20,7 @@ import FileIcon from '@icons/File'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import { BankTransactionErrorText } from '@components/BankTransactions/BankTransactionErrorText'
 import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
@@ -78,6 +84,9 @@ export const BankTransactionsMobileListItem = ({
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
   const isTransactionSelected = isSelected(bankTransaction.id)
+  const { selectedCategorization } = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
+  const { shouldShowSplitFormError } = useGetBankTransactionSplitFormErrorVisibility(bankTransaction.id)
+  const splitFormError = useSelectedCategorizationSplitFormError(selectedCategorization, shouldShowSplitFormError)
 
   const { renderInAppLink } = useInAppLinkContext()
 
@@ -226,6 +235,7 @@ export const BankTransactionsMobileListItem = ({
               }}
             />
           </HStack>
+          {!open && <BankTransactionErrorText splitFormError={splitFormError} pbe='xs' />}
           {!open && (
             !isCategorizationEnabled && !displayAsCategorized
               ? (
