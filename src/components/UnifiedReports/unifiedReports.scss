@@ -1,4 +1,4 @@
-.Layer__view.Layer__UnifiedReport {
+.Layer__view.Layer__UnifiedReports {
   overflow: hidden;
   max-height: 100vh;
   min-width: clamp(23rem, 100%, 1406px);
@@ -12,18 +12,18 @@
   }
 }
 
-.Layer__UnifiedReport__Body {
+.Layer__UnifiedReports__Body {
   max-height: calc(100vh - 76px);
 }
 
-.Layer__UnifiedReport__Sidebar {
+.Layer__UnifiedReports__Sidebar {
   flex-shrink: 0;
   overflow-y: auto;
   width: clamp(14rem, 16vw, 24rem);
   border-right: 1px solid var(--color-base-300);
 }
 
-.Layer__UnifiedReport__Content {
+.Layer__UnifiedReports__Content {
   overflow-y: auto;
   min-width: 0;
 }
