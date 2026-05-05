@@ -17,7 +17,8 @@
   &[data-variant='small'],
   &[data-variant='medium'] {
     > *,
-    .Layer__DateGroupByComboBox__Container {
+    .Layer__DateGroupByComboBox__Container,
+    .Layer__YearPicker {
       inline-size: 100%;
       max-inline-size: none;
     }
