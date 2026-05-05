@@ -37,7 +37,7 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
 
   const actionsStackProps = isDesktop
     ? { direction: 'row', justify: 'end' } as const
-    : { direction: 'column', gap: 'md' } as const
+    : { direction: 'column' } as const
 
   return (
     <Form className='Layer__TaxProfileForm' onSubmit={blockNativeOnSubmit}>
@@ -98,7 +98,7 @@ export const TaxProfileForm = ({ taxProfile, onSuccess, isReadOnly }: TaxProfile
           </form.Field>
         </VStack>
 
-        <Stack {...actionsStackProps}>
+        <Stack gap='md' {...actionsStackProps}>
           <form.Subscribe selector={state => ({ errorMap: state.errorMap, isDirty: state.isDirty })}>
             {({ errorMap, isDirty }) => {
               const validationErrors = flattenValidationErrors(errorMap)
