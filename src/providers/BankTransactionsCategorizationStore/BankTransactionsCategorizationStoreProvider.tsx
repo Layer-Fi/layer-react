@@ -185,6 +185,8 @@ export type SplitTransactionCategorizationSubmitError =
   | 'split_category_required'
   | 'split_amount_invalid'
 
+export type BankTransactionSplitError = 'SplitError'
+
 export type CategorizationSubmitError =
   | TransactionCategorizationSubmitError
   | SplitTransactionCategorizationSubmitError
@@ -193,6 +195,12 @@ export function isSplitSubmitError(
   error: CategorizationSubmitError | null | undefined,
 ): error is SplitTransactionCategorizationSubmitError {
   return error === 'split_category_required' || error === 'split_amount_invalid'
+}
+
+export function isBankTransactionSplitError(
+  error: string | null | undefined,
+): error is BankTransactionSplitError {
+  return error === 'SplitError'
 }
 
 export type CategorizedBankTransactionCategorization = BankTransactionCategorization & {

@@ -253,6 +253,7 @@ export const BankTransactionsMobileListItem = ({
           <BankTransactionsMobileListItemExpandedRow
             bankTransaction={bankTransaction}
             isOpen={open}
+            hasSplitError={shouldShowSplitFormError}
             showCategorization={isCategorizationEnabled}
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}

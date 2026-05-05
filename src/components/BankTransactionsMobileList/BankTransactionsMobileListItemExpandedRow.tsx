@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
@@ -6,6 +6,7 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasMatch } from '@utils/bankTransactions/shared'
 import { translationKey } from '@utils/i18n/translationKey'
+import { isBankTransactionSplitError } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
@@ -22,6 +23,7 @@ const PURPOSE_TOGGLE_CONFIG = [
 export interface BankTransactionsMobileListItemExpandedRowProps {
   bankTransaction: BankTransaction
   isOpen?: boolean
+  hasSplitError?: boolean
   showCategorization?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
@@ -31,6 +33,7 @@ export interface BankTransactionsMobileListItemExpandedRowProps {
 export const BankTransactionsMobileListItemExpandedRow = ({
   bankTransaction,
   isOpen,
+  hasSplitError: hasVisibleSplitError,
   showCategorization,
   showDescriptions,
   showReceiptUploads,
@@ -38,6 +41,13 @@ export const BankTransactionsMobileListItemExpandedRow = ({
 }: BankTransactionsMobileListItemExpandedRowProps) => {
   const { t } = useTranslation()
   const [purpose, setPurpose] = useState<Purpose>(getInitialPurpose(bankTransaction))
+  const hasSplitError = hasVisibleSplitError || isBankTransactionSplitError(bankTransaction.error)
+
+  useEffect(() => {
+    if (isOpen && hasSplitError) {
+      setPurpose(Purpose.more)
+    }
+  }, [hasSplitError, isOpen])
 
   const purposeToggleOptions = useMemo(
     () => PURPOSE_TOGGLE_CONFIG.map(opt => ({
@@ -95,6 +105,10 @@ const isPersonalCategory = (category: BankTransaction['category']): boolean => {
 }
 
 const getInitialPurpose = (bankTransaction: BankTransaction): Purpose => {
+  if (isBankTransactionSplitError(bankTransaction.error)) {
+    return Purpose.more
+  }
+
   if (bankTransaction.category) {
     if (isPersonalCategory(bankTransaction.category)) {
       return Purpose.personal
