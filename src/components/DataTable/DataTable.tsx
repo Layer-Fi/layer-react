@@ -131,7 +131,12 @@ export const DataTable = <TData extends object>({
         hasHorizontalOverflow && 'Layer__UI__Table-ScrollContainer--has-horizontal-overflow',
       )}
     >
-      <Table aria-label={ariaLabel} className={`Layer__UI__Table__${componentName}`} nonAria={nonAria}>
+      <Table
+        key={`${componentName}-cols-${numColumns}`}
+        aria-label={ariaLabel}
+        className={`Layer__UI__Table__${componentName}`}
+        nonAria={nonAria}
+      >
         <TableHeader ref={headerRef} nonAria={nonAria}>
           {showLoadingFallbackHeaders
             ? <DataTableHeaderSkeleton nonAria={nonAria} numColumns={DEFAULT_SKELETON_COLUMNS} />
