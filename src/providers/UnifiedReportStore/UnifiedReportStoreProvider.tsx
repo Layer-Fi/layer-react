@@ -3,7 +3,7 @@ import { getYear } from 'date-fns'
 import { createStore, type StoreApi, useStore } from 'zustand'
 
 import { type ReportConfig, ReportControl, type ReportGroup } from '@schemas/reports/reportConfig'
-import { DateGroupBy, type DateQueryParams, type DateRangeQueryParams, type UnifiedReportColumn, type YearQueryParams } from '@schemas/reports/unifiedReport'
+import { DateGroupBy, type DateQueryParams, type DateRangeQueryParams, type UnifiedReportColumn } from '@schemas/reports/unifiedReport'
 import type { QueryParams } from '@utils/request/toDefinedSearchParameters'
 import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/config/useReportConfig'
 import { type DateSelectionMode, useGlobalDate, useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
