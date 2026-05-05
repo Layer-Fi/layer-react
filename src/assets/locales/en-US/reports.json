@@ -1,7 +1,5 @@
 {
   "action": {
-    "collapse_rows": "Collapse all rows",
-    "expand_rows": "Expand all rows",
     "search_reports": "Search reports"
   },
   "empty": {
