@@ -120,9 +120,10 @@ const useTaxEstimatesHeader = ({ type }: TaxEstimatesHeaderProps): TaxEstimatesH
 export const TaxEstimatesHeader = ({ type }: TaxEstimatesHeaderProps) => {
   const [viewportWidth] = useWindowSize()
   const isMobile = viewportWidth < BREAKPOINTS.MOBILE
+  const isTabletOrMobile = viewportWidth < BREAKPOINTS.TABLET
   const isOverview = type === TaxEstimatesHeaderType.Overview
   const { title, description } = useTaxEstimatesHeader({ type })
-  const pie = isOverview || isMobile ? undefined : 'lg' as const
+  const pie = (isOverview || isTabletOrMobile) ? undefined : 'lg' as const
 
   return (
     <Stack className='Layer__TaxEstimatesHeader' direction={isMobile ? 'column' : 'row'} gap='md' justify='space-between' align='start' fluid pie={pie}>
