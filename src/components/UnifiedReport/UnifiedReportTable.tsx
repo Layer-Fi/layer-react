@@ -36,8 +36,8 @@ export const UnifiedReportTable = () => {
     return (
       <DataState
         status={DataStateStatus.allDone}
-        title={t('reports:empty.no_rows_found', 'No rows found')}
-        description={t('reports:empty.report_has_no_rows', 'This report has no rows.')}
+        title={t('reports:empty.no_rows_found', 'No line items found')}
+        description={t('reports:empty.report_has_no_rows', 'This report has no line items.')}
         spacing
       />
     )

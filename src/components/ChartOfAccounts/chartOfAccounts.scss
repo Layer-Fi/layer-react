@@ -1,0 +1,16 @@
+.Layer__component-container.Layer__chart-of-accounts {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.Layer__chart-of-accounts .Layer__panel {
+  max-width: 100%;
+}
+
+@container (max-width: 760px) {
+  .Layer__chart-of-accounts {
+    overflow: auto;
+  }
+}
