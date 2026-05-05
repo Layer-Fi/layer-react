@@ -18,6 +18,8 @@ import { Select } from '@components/Input/Select'
 import { Heading, HeadingSize } from '@components/Typography/Heading'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
+import './chartOfAccountsForm.scss'
+
 export interface ChartOfAccountsFormStringOverrides {
   editModeHeader?: string
   createModeHeader?: string

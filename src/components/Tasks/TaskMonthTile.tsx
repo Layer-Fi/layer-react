@@ -7,10 +7,11 @@ export type TaskMonthTileProps = {
   data: MonthData
   active?: boolean
   disabled?: boolean
+  isMobile: boolean
   onClick: (date: Date) => void
 }
 
-export const TaskMonthTile = ({ data, onClick, active, disabled }: TaskMonthTileProps) => {
+export const TaskMonthTile = ({ data, onClick, active, disabled, isMobile }: TaskMonthTileProps) => {
   const dataProperties = toDataProperties({ active, disabled })
 
   return (
@@ -23,7 +24,7 @@ export const TaskMonthTile = ({ data, onClick, active, disabled }: TaskMonthTile
         {data.monthStr}
       </Text>
       {data.status && (
-        <TaskStatusBadge status={data.status} tasksCount={data.total - data.completed} />
+        <TaskStatusBadge status={data.status} tasksCount={data.total - data.completed} isMobile={isMobile} />
       )}
     </div>
   )
