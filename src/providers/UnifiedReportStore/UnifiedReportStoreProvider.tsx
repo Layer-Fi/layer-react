@@ -36,7 +36,7 @@ export type ReportControlParams = {
   [ReportControl.Date]: DateQueryParams
   [ReportControl.DateRange]: DateRangeQueryParams
   [ReportControl.GroupBy]: { groupBy: DateGroupBy }
-  [ReportControl.Year]: YearQueryParams
+  [ReportControl.Year]: { year: number }
 }
 
 export type UnifiedReportControlParams = Partial<
