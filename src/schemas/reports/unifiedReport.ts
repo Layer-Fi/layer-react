@@ -9,6 +9,11 @@ export enum DateGroupBy {
   Year = 'YEAR',
 }
 
+export enum AccountingMethod {
+  Accrual = 'accrual',
+  Cash = 'cash',
+}
+
 export enum Alignment {
   Left = 'LEFT',
   Right = 'RIGHT',

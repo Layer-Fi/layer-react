@@ -3,6 +3,7 @@ import { pipe, Schema } from 'effect'
 import { createTransformedEnumSchema } from '@schemas/utils'
 
 export enum ReportControl {
+  AccountingMethod = 'accounting_method',
   Date = 'date',
   DateRange = 'date_range',
   GroupBy = 'group_by',
