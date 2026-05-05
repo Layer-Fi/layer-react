@@ -14,15 +14,15 @@
     cursor: pointer;
     font-size: 12px;
 
-    &--Secondary {
+    &--secondary {
       color: var(--color-base-500);
 
-      &.Layer__ActionableList__Item--AsLink:hover {
+      &.Layer__ActionableList__Item--asLink:hover {
         color: var(--color-base-1000);
       }
     }
 
-    &--Selected {
+    &--selected {
       background-color: var(--color-base-50);
     }
   }
@@ -42,7 +42,7 @@
     border-radius: 50%;
     border: 1px solid var(--color-base-300);
 
-    &--Selected {
+    &--selected {
       align-items: center;
       justify-content: center;
       border: 1px solid var(--color-info-success);

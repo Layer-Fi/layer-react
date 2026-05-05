@@ -41,9 +41,9 @@ export const ActionableList = <T,>({
           key={x.id}
           className={classNames(
             'Layer__ActionableList__Item',
-            x.secondary && 'Layer__ActionableList__Item--Secondary',
-            x.asLink && 'Layer__ActionableList__Item--AsLink',
-            selectedId === x.id && 'Layer__ActionableList__Item--Selected',
+            x.secondary && 'Layer__ActionableList__Item--secondary',
+            x.asLink && 'Layer__ActionableList__Item--asLink',
+            selectedId === x.id && 'Layer__ActionableList__Item--selected',
           )}
         >
           <VStack gap='2xs' align='start' className='Layer__ActionableList__Content'>
@@ -63,7 +63,7 @@ export const ActionableList = <T,>({
           </VStack>
           {!x.asLink && selectedId && selectedId === x.id
             ? (
-              <Span className='Layer__ActionableList__Select Layer__ActionableList__Select--Selected'>
+              <Span className='Layer__ActionableList__Select Layer__ActionableList__Select--selected'>
                 <CheckIcon
                   size={14}
                 />
