@@ -1,7 +1,5 @@
 {
   "action": {
-    "collapse_rows": "Réduire toutes les lignes",
-    "expand_rows": "Afficher toutes les lignes",
     "search_reports": "Rechercher des rapports"
   },
   "empty": {
