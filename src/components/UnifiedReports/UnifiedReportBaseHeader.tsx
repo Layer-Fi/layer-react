@@ -3,8 +3,8 @@ import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedRepor
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
-import { UnifiedReportControls } from '@components/UnifiedReport/UnifiedReportControls'
-import { UnifiedReportHeaderButtons } from '@components/UnifiedReport/UnifiedReportHeaderButtons'
+import { UnifiedReportControls } from '@components/UnifiedReports/UnifiedReportControls'
+import { UnifiedReportHeaderButtons } from '@components/UnifiedReports/UnifiedReportHeaderButtons'
 
 import './unifiedReportBaseHeader.scss'
 
@@ -13,7 +13,7 @@ export const UnifiedReportBaseHeader = () => {
   const { isDesktop } = useSizeClass()
 
   return (
-    <VStack className='Layer__UnifiedReport__BaseHeader'>
+    <VStack className='Layer__UnifiedReports__BaseHeader'>
       {isDesktop && (
         <HStack pi='lg' pbs='lg' align='center' justify='space-between'>
           {baseReport

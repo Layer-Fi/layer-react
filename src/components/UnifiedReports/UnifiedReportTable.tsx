@@ -7,11 +7,11 @@ import { useActiveUnifiedReport } from '@providers/UnifiedReportStore/UnifiedRep
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
-import { buildNestedColumnConfig, getSubRows } from '@components/UnifiedReport/utils'
+import { buildNestedColumnConfig, getSubRows } from '@components/UnifiedReports/utils'
 
 import './unifiedReportTable.scss'
 
-const COMPONENT_NAME = 'UnifiedReport'
+const COMPONENT_NAME = 'UnifiedReports'
 
 export const UnifiedReportTable = () => {
   const { t } = useTranslation()
