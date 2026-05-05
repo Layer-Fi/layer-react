@@ -6,12 +6,14 @@ import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 import { UnifiedReportControls } from '@components/UnifiedReport/UnifiedReportControls'
 import { UnifiedReportHeaderButtons } from '@components/UnifiedReport/UnifiedReportHeaderButtons'
 
+import './unifiedReportBaseHeader.scss'
+
 export const UnifiedReportBaseHeader = () => {
   const { baseReport } = useBaseUnifiedReport()
   const { isDesktop } = useSizeClass()
 
   return (
-    <VStack>
+    <VStack className='Layer__UnifiedReport__BaseHeader'>
       {isDesktop && (
         <HStack pi='lg' pbs='lg' align='center' justify='space-between'>
           {baseReport
