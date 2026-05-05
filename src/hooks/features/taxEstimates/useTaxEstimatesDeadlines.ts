@@ -63,7 +63,10 @@ export const useTaxEstimatesDeadlines = (): TaxEstimatesDeadlines => {
       amountOwed: data.totalTaxesOwed,
       state: TaxOverviewDeadlineStatus.Neutral,
       uncategorizedCount: data.totalUncategorizedCount,
-      uncategorizedSum: data.totalUncategorizedSum,
+      uncategorizedMoneyIn: data.totalUncategorizedMoneyIn,
+      uncategorizedMoneyOut: data.totalUncategorizedMoneyOut,
+      earliestUncategorizedAt: data.earliestUncategorizedAt,
+      latestUncategorizedAt: data.latestUncategorizedAt,
     }
 
     return [...quarters, annual]

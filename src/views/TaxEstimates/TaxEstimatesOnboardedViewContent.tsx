@@ -66,10 +66,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
       />
       {showBanner && (
         <>
-          <TaxBanner
-            uncategorizedCount={taxBannerData.totalUncategorizedCount}
-            uncategorizedAmount={taxBannerData.totalUncategorizedSum}
-          />
+          <TaxBanner data={taxBannerData} />
         </>
       )}
       {route === TaxEstimatesRoute.Overview && <TaxOverview />}
