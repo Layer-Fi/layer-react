@@ -1,0 +1,77 @@
+.Layer__TaxEstimatesSummaryDetailCard {
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  padding-inline-end: var(--spacing-2xl);
+
+  .Layer__card {
+    border: 1px solid var(--color-base-200);
+    box-shadow: none;
+  }
+}
+
+.Layer__TaxEstimatesSummaryDetailCard__Body {
+  width: 100%;
+}
+
+.Layer__TaxEstimatesSummaryDetailCard__Total {
+  margin: 0;
+}
+
+.Layer__TaxEstimatesSummaryDetailCard__Divider {
+  height: 1px;
+  width: 100%;
+  background-color: var(--color-base-200);
+}
+
+.Layer__TaxEstimatesSummaryDetailCard__Sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-xl);
+}
+
+@container (max-width: 720px) {
+  .Layer__TaxEstimatesSummaryDetailCard__Sections {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  .Layer__TaxEstimatesSummaryDetailCard {
+    gap: var(--spacing-md);
+    padding: 0;
+  }
+}
+
+.Layer__TaxEstimatesSummaryDetailCard__Section {
+  min-width: 0;
+}
+
+.Layer__TaxEstimatesSummaryDetailCard__SectionHeader {
+  padding-block-end: var(--spacing-2xs);
+}
+
+.Layer__TaxEstimatesSummaryDetailCard__SectionLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.Layer__TaxEstimatesSummaryDetailCard__SectionDot {
+  display: inline-block;
+  flex-shrink: 0;
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+}
+
+.Layer__TaxEstimatesSummaryDetailCard__LineItem {
+  padding-block: var(--spacing-3xs);
+}
+
+.Layer__TaxEstimatesSummaryDetailCard__LineItem--subtotal {
+  padding-block-start: var(--spacing-2xs);
+  margin-block-start: var(--spacing-3xs);
+  border-block-start: 1px solid var(--color-base-200);
+}
+
+.Layer__TaxEstimatesSummaryDetailCard__LineItemLabel--subtotal {
+  font-weight: var(--font-weight-bold, 600);
+}

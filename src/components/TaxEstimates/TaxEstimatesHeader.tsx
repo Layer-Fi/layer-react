@@ -39,28 +39,18 @@ const createTaxEstimatesHeaderConfig = ({
   formattedYear: string
 }): Record<TaxEstimatesHeaderType, TaxEstimatesHeaderConfig> => ({
   [TaxEstimatesHeaderType.Overview]: {
-    title: tConditional(t, 'taxEstimates:label.taxable_income_for_year', {
+    title: tConditional(t, 'taxEstimates:label.estimated_taxes_for_year', {
       condition: projectedCondition,
       cases: {
-        default: 'Taxable income for {{year}}',
-        projected: 'Projected taxable income for {{year}}',
+        default: 'Estimated Taxes for {{year}}',
+        projected: 'Projected estimated taxes for {{year}}',
       },
       contexts: {
         projected: 'projected',
       },
       year: formattedYear,
     }),
-    description: tConditional(t, 'taxEstimates:label.taxable_income_estimate_to_date_for_year', {
-      condition: projectedCondition,
-      cases: {
-        default: 'Taxable income estimate to date for year {{year}}',
-        projected: 'Taxable income projection for year {{year}}',
-      },
-      contexts: {
-        projected: 'projected',
-      },
-      year: formattedYear,
-    }),
+    description: t('taxEstimates:label.federal_and_state_taxes_owed', 'Federal and State Taxes Owed'),
   },
   [TaxEstimatesHeaderType.Estimates]: {
     title: tConditional(t, 'taxEstimates:label.business_income_taxes', {

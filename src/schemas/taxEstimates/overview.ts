@@ -1,42 +1,44 @@
 import { pipe, Schema } from 'effect'
 
-import { createTransformedEnumSchema } from '@schemas/utils'
-
 import { type TaxSummarySectionType } from './summary'
 
-export enum TaxOverviewMetricType {
-  TotalIncome = 'TOTAL_INCOME',
-  TotalPreAgiDeductions = 'TOTAL_PRE_AGI_DEDUCTIONS',
-  TaxableIncome = 'TAXABLE_INCOME',
-  UnknownType = 'UNKNOWN_TYPE',
-}
+const TaxOverviewSectionTypeSchema = Schema.Literal('federal', 'state')
 
-const TaxOverviewMetricTypeSchema = createTransformedEnumSchema(
-  Schema.Enums(TaxOverviewMetricType),
-  TaxOverviewMetricType,
-  TaxOverviewMetricType.UnknownType,
-)
+export type TaxOverviewSectionType = typeof TaxOverviewSectionTypeSchema.Type
 
-export type TaxOverviewMetricTypeValue = typeof TaxOverviewMetricTypeSchema.Type
+const TaxOverviewLineItemVariantSchema = Schema.Literal('regular', 'subtle', 'subtotal')
 
-const TaxOverviewMetricSchema = Schema.Struct({
-  value: Schema.Number,
-  maxValue: pipe(
-    Schema.propertySignature(Schema.Number),
-    Schema.fromKey('max_value'),
-  ),
+export type TaxOverviewLineItemVariant = typeof TaxOverviewLineItemVariantSchema.Type
+
+const TaxOverviewLineItemSchema = Schema.Struct({
   label: Schema.String,
-  metricType: pipe(
-    Schema.propertySignature(TaxOverviewMetricTypeSchema),
-    Schema.fromKey('metric_type'),
+  amount: Schema.NullishOr(Schema.Number),
+  variant: TaxOverviewLineItemVariantSchema,
+})
+
+export type TaxOverviewLineItem = typeof TaxOverviewLineItemSchema.Type
+
+const TaxOverviewSectionSchema = Schema.Struct({
+  type: TaxOverviewSectionTypeSchema,
+  label: Schema.String,
+  lineItems: pipe(
+    Schema.propertySignature(Schema.Array(TaxOverviewLineItemSchema)),
+    Schema.fromKey('line_items'),
   ),
 })
 
-export type TaxOverviewMetric = typeof TaxOverviewMetricSchema.Type
+export type TaxOverviewSection = typeof TaxOverviewSectionSchema.Type
 
 const TaxOverviewApiDataSchema = Schema.Struct({
   year: Schema.Number,
-  metrics: Schema.Array(TaxOverviewMetricSchema),
+  totalTaxesOwed: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('total_taxes_owed'),
+  ),
+  taxSections: pipe(
+    Schema.propertySignature(Schema.Array(TaxOverviewSectionSchema)),
+    Schema.fromKey('tax_sections'),
+  ),
 })
 
 export type TaxOverviewApiData = typeof TaxOverviewApiDataSchema.Type
