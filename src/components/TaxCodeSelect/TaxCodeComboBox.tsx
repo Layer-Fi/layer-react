@@ -1,41 +1,38 @@
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { type TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
+import { type TaxCodeSelectCommonProps } from '@components/TaxCodeSelect/types'
 import { useTaxCodeSelect } from '@components/TaxCodeSelect/useTaxCodeSelect'
 
-type TaxCodeComboBoxProps = {
-  options: TaxCodeComboBoxOption[]
-  value: TaxCodeComboBoxOption | null
-  onChange: (value: TaxCodeComboBoxOption | null) => void
-  isDisabled?: boolean
+const EMPTY_ARRAY: ReadonlyArray<TaxCodeComboBoxOption> = []
+
+type TaxCodeComboBoxProps = TaxCodeSelectCommonProps & {
   inputId?: string
-  className?: string
 }
 
 export const TaxCodeComboBox = ({
   options,
-  value,
-  onChange,
+  selectedValue,
+  onSelectedValueChange,
   isDisabled = false,
   inputId,
-  className,
 }: TaxCodeComboBoxProps) => {
-  const { allOptions, selectedValue, handleChange, placeholder } = useTaxCodeSelect({
+  const taxCodeSelectProps = useTaxCodeSelect({
     options,
-    value,
-    onChange,
+    selectedValue,
+    onSelectedValueChange,
   })
+  const { options: taxCodeOptions = EMPTY_ARRAY, selectedValue: resolvedSelectedValue, onSelectedValueChange: handleChange, placeholder } = taxCodeSelectProps
 
   return (
     <ComboBox<TaxCodeComboBoxOption>
       inputId={inputId}
-      selectedValue={selectedValue}
+      options={taxCodeOptions}
+      selectedValue={resolvedSelectedValue}
       onSelectedValueChange={handleChange}
-      options={allOptions}
+      placeholder={placeholder}
       isDisabled={isDisabled}
       isSearchable
       isClearable
-      placeholder={placeholder}
-      className={className}
     />
   )
 }
