@@ -8,6 +8,7 @@ type TaxCodeComboBoxProps = TaxCodeSelectCommonProps & {
 }
 
 export const TaxCodeComboBox = ({
+  className,
   options,
   selectedValue,
   onSelectedValueChange,
@@ -22,6 +23,7 @@ export const TaxCodeComboBox = ({
 
   return (
     <ComboBox<TaxCodeComboBoxOption>
+      className={className}
       inputId={inputId}
       {...taxCodeSelectProps}
       isDisabled={isDisabled}

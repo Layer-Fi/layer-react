@@ -3,5 +3,5 @@ import { type TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeCom
 
 export type TaxCodeSelectCommonProps = Pick<
   SingleSelectComboBoxProps<TaxCodeComboBoxOption>,
-  'isDisabled' | 'onSelectedValueChange' | 'selectedValue' | 'options'
+  'className' | 'isDisabled' | 'onSelectedValueChange' | 'selectedValue' | 'options'
 >

@@ -136,6 +136,7 @@ export const getLocalSplitStateForExpandedTransaction = (
       return {
         amount: splitEntry.amount || 0,
         category: splitEntry.category,
+        taxCode: splitEntry.taxCode ?? null,
         tags: splitEntry.tags,
         customerVendor: splitEntry.customerVendor,
       }

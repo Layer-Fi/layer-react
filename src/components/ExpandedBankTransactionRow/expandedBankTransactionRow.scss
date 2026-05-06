@@ -8,3 +8,291 @@
     padding-inline-end: var(--spacing-md);
   }
 }
+
+.Layer__expanded-bank-transaction-row {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background-color: var(--bg-element-focus);
+  transition:
+    background-color var(--transition-speed) ease-in-out,
+    height var(--transition-speed) ease-in-out;
+}
+
+.Layer__expanded-bank-transaction-row .Layer__expanded-bank-transaction-row__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  overflow: hidden;
+  transition: height var(--transition-speed) ease-in-out;
+}
+
+.Layer__expanded-bank-transaction-row__content {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  min-width: 40rem;
+  max-width: 76rem;
+
+  @container (max-width: 768px) {
+    min-width: 30rem;
+  }
+}
+
+.Layer__expanded-bank-transaction-row__content-panels {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+}
+
+.Layer__expanded-bank-transaction-row__content-panel {
+  box-sizing: border-box;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  overflow: hidden;
+  height: 0;
+  max-width: 0;
+  opacity: 0;
+  transition:
+    max-width 150ms ease-out,
+    opacity 300ms ease-out;
+
+  .Layer__expanded-bank-transaction-row__content-panel-container {
+    box-sizing: border-box;
+    padding: 0 var(--spacing-md);
+  }
+
+  &.Layer__expanded-bank-transaction-row__content-panel--active {
+    height: auto;
+    max-width: 100%;
+    opacity: 1;
+  }
+
+  &:not(.Layer__expanded-bank-transaction-row__content-panel--active) {
+    .Layer__select .Layer__select__control {
+      overflow: hidden;
+      max-width: 0;
+    }
+
+    .Layer__expanded-bank-transaction-row__table-cell--split-entry {
+      overflow: hidden;
+      max-width: 0;
+    }
+
+    .Layer__expanded-bank-transaction-row__splits-buttons {
+      overflow: hidden;
+      max-width: 0;
+    }
+  }
+}
+
+@container (min-width: 701px) {
+  .Layer__expanded-bank-transaction-row__content-panel {
+    &.Layer__expanded-bank-transaction-row__content-panel--active {
+      max-width: 100%;
+      opacity: 1;
+    }
+
+    .Layer__expanded-bank-transaction-row__splits-buttons {
+      max-height: 38px;
+      white-space: nowrap;
+    }
+  }
+}
+
+.Layer__expanded-bank-transaction-row__splits {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.Layer__expanded-bank-transaction-row__splits-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding-top: 2px;
+}
+
+.Layer__expanded-bank-transaction-row__splits-buttons {
+  padding-bottom: 2px;
+}
+
+.Layer__expanded-bank-transaction-row__total-and-btns {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) 0;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.Layer__expanded-bank-transaction-row__total-and-btns--ListItem {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.Layer__expanded-bank-transaction-row__file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  align-items: flex-start;
+  padding: 0 var(--spacing-md);
+}
+
+.Layer__expanded-bank-transaction-row__table-cell--split-entry {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: flex-start;
+  min-width: 40rem;
+
+  .Layer__BankTransactionCategoryComboBox__Container {
+    grid-area: category;
+    max-width: 24.5rem;
+  }
+
+  &__customer {
+    grid-area: customer;
+    min-width: 12rem;
+  }
+
+  .Layer__Stack.Layer__expanded-bank-transaction-row__table-cell--split-entry__tax-code__Container {
+    flex: 0 0 12rem;
+    grid-area: tax-code;
+    min-width: 12rem;
+  }
+
+  @container (max-width: 768px) {
+    display: grid;
+    grid-template-areas: 'amount category button';
+    grid-template-columns: 12rem minmax(12rem, 24.5rem) 2.25rem;
+    min-width: 27.5rem;
+    max-width: min(40rem, 100%);
+
+    &:has(> &__customer) {
+      grid-template-areas:
+        'amount category button'
+        'customer . .';
+    }
+
+    &:has(> .Layer__expanded-bank-transaction-row__table-cell--split-entry__tax-code__Container) {
+      grid-template-areas:
+        'amount category button'
+        'tax-code . .';
+    }
+
+    &:has(> &__tags) {
+      grid-template-areas:
+        'amount category button'
+        'tags tags .';
+    }
+
+    &:has(> &__customer):has(> .Layer__expanded-bank-transaction-row__table-cell--split-entry__tax-code__Container) {
+      grid-template-areas:
+        'amount category button'
+        'customer tax-code .';
+    }
+
+    &:has(> &__customer):has(> &__tags) {
+      grid-template-areas:
+        'amount category button'
+        'customer tags .';
+    }
+
+    &:has(> .Layer__expanded-bank-transaction-row__table-cell--split-entry__tax-code__Container):has(> &__tags) {
+      grid-template-areas:
+        'amount category button'
+        'tax-code tags .';
+    }
+
+    &:has(> &__customer):has(> .Layer__expanded-bank-transaction-row__table-cell--split-entry__tax-code__Container):has(> &__tags) {
+      grid-template-areas:
+        'amount category button'
+        'customer tax-code .'
+        'tags tags .';
+    }
+  }
+}
+
+.Layer__expanded-bank-transaction-row__table-cell--split-entry__tags {
+  grid-area: tags;
+}
+
+@container (max-width: 600px) {
+  .Layer__expanded-bank-transaction-row__splits-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    width: 100%;
+  }
+
+  .Layer__expanded-bank-transaction-row__table-cell--split-entry {
+    width: 100%;
+
+    input {
+      width: 100%;
+    }
+
+    .Layer__input-tooltip {
+      position: relative;
+      flex: 1;
+      max-width: 42%;
+    }
+  }
+
+  .Layer__expanded-bank-transaction-row__total-and-btns {
+    box-sizing: border-box;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    .Layer__input-tooltip {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      max-width: 42%;
+    }
+
+    .Layer__input {
+      max-width: 100%;
+    }
+  }
+}
+
+.Layer__expanded-bank-transaction-row__splits-inputs + .Layer__text--error {
+  padding: var(--spacing-2xs) 0;
+  padding-bottom: var(--spacing-md);
+  margin: 0;
+}
+
+.Layer__expanded-bank-transaction-row__splits-inputs .Layer__input {
+  text-align: right;
+}
+
+.Layer__expanded-bank-transaction-row__total-and-btns .Layer__input {
+  max-width: 100%;
+  text-align: right;
+}
+
+@container (min-width: 401px) {
+  .Layer__expanded-bank-transaction-row__total-and-btns .Layer__input-tooltip,
+  .Layer__expanded-bank-transaction-row__table-cell--split-entry .Layer__input-tooltip {
+    flex: 1;
+    max-width: 12rem;
+
+    .Layer__input {
+      width: 100%;
+    }
+  }
+}
+
+@container (max-width: 480px) {
+  .Layer__expanded-bank-transaction-row__total-and-btns {
+    & > .Layer__input-tooltip > .Layer__input-left-text {
+      border-right-color: transparent;
+    }
+  }
+}
