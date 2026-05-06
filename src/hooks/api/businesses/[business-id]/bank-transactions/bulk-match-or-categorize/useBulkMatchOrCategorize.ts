@@ -2,13 +2,14 @@ import { useCallback } from 'react'
 import { pipe, Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
+import { type Split } from '@internal-types/bankTransactions'
 import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useGetAllBankTransactionsCategories } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { type BankTransactionCategorization, DEFAULT_CATEGORIZATION, useGetAllBankTransactionsCategorizations } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
@@ -17,44 +18,50 @@ const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
 
 type MatchOrCategorizeTransaction = typeof MatchOrCategorizeTransactionRequestSchema.Type
 
+const getClassification = (category: BankTransactionCategoryComboBoxOption | null) => {
+  if (!category || !(isCategoryAsOption(category) || isApiCategorizationAsOption(category))) {
+    return null
+  }
+  return category.classification
+}
+
+const toSplitEntry = (split: Split) => {
+  const classification = getClassification(split.category)
+  if (!classification) return null
+  return {
+    amount: split.amount,
+    category: classification,
+    taxCode: split.taxCode,
+    tags: split.tags,
+    customerId: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : undefined,
+    vendorId: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : undefined,
+  }
+}
+
 const buildBulkMatchOrCategorizePayload = (
   selectedIds: Iterable<string>,
-  transactionCategories: Map<string, BankTransactionCategoryComboBoxOption | null>,
+  categorizations: Map<string, BankTransactionCategorization>,
 ): Record<string, MatchOrCategorizeTransaction> => {
   const transactions: Record<string, MatchOrCategorizeTransaction> = {}
 
   for (const transactionId of selectedIds) {
-    const transactionCategory = transactionCategories.get(transactionId) ?? null
+    const { category, taxCode } = categorizations.get(transactionId) ?? DEFAULT_CATEGORIZATION
 
-    if (!transactionCategory || isPlaceholderAsOption(transactionCategory)) {
+    if (!category || isPlaceholderAsOption(category)) {
       continue
     }
 
-    if (isSuggestedMatchAsOption(transactionCategory)) {
+    if (isSuggestedMatchAsOption(category)) {
       transactions[transactionId] = {
         type: 'match',
-        suggestedMatchId: transactionCategory.value,
+        suggestedMatchId: category.value,
       }
+      continue
     }
 
-    else if (isSplitAsOption(transactionCategory)) {
-      const splitEntries = transactionCategory.original
-        .map((split) => {
-          if (!split.category || !(isCategoryAsOption(split.category) || isApiCategorizationAsOption(split.category))) {
-            return null
-          }
-          const classification = split.category.classification
-          if (!classification) {
-            return null
-          }
-          return {
-            amount: split.amount,
-            category: classification,
-            tags: split.tags,
-            customerId: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : undefined,
-            vendorId: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : undefined,
-          }
-        })
+    if (isSplitAsOption(category)) {
+      const splitEntries = category.original
+        .map(toSplitEntry)
         .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
 
       if (splitEntries.length > 0) {
@@ -66,19 +73,19 @@ const buildBulkMatchOrCategorizePayload = (
           },
         }
       }
+      continue
     }
 
-    else if (isCategoryAsOption(transactionCategory) || isApiCategorizationAsOption(transactionCategory)) {
-      const classification = transactionCategory.classification
-      if (classification) {
-        transactions[transactionId] = {
-          type: 'categorize',
-          categorization: {
-            type: 'Category',
-            category: classification,
-          },
-        }
-      }
+    const classification = getClassification(category)
+    if (!classification) continue
+
+    transactions[transactionId] = {
+      type: 'categorize',
+      categorization: {
+        type: 'Category',
+        category: classification,
+        taxCode,
+      },
     }
   }
 
@@ -153,15 +160,15 @@ export const useBulkMatchOrCategorize = () => {
   const { data } = useAuth()
   const { businessId, eventCallbacks } = useLayerContext()
   const { selectedIds } = useSelectedIds()
-  const { transactionCategories } = useGetAllBankTransactionsCategories()
+  const { categorizations } = useGetAllBankTransactionsCategorizations()
 
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const buildTransactionsPayload: () => BulkMatchOrCategorizeRequest = useCallback(() => {
-    const transactions = buildBulkMatchOrCategorizePayload(selectedIds, transactionCategories)
+    const transactions = buildBulkMatchOrCategorizePayload(selectedIds, categorizations)
     return { transactions }
-  }, [selectedIds, transactionCategories])
+  }, [selectedIds, categorizations])
 
   const mutationResponse = useSWRMutation(
     () => withLocale(buildKey({
