@@ -82,7 +82,7 @@ function useBankTransactionsCategoryStore(): ReturnType<typeof buildStore> {
   const store = useContext(BankTransactionsCategoryStoreContext)
 
   if (!store) {
-    throw new Error('useBankTransactionsCategoryStore must be used within BankTransactionsCategoryStoreProvider')
+    throw new Error('useBankTransactionsCategoryStore must be used within BankTransactionsCategorizationStoreProvider')
   }
 
   return store
@@ -110,11 +110,11 @@ export function useGetAllBankTransactionsCategories(): { transactionCategories: 
   return { transactionCategories }
 }
 
-type BankTransactionsCategoryStoreProviderProps = PropsWithChildren
+type BankTransactionsCategorizationStoreProviderProps = PropsWithChildren
 
-export function BankTransactionsCategoryStoreProvider({
+export function BankTransactionsCategorizationStoreProvider({
   children,
-}: BankTransactionsCategoryStoreProviderProps): JSX.Element {
+}: BankTransactionsCategorizationStoreProviderProps): JSX.Element {
   const [store] = useState(() => buildStore())
   return (
     <BankTransactionsCategoryStoreContext.Provider value={store}>
