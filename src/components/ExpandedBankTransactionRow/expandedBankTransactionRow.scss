@@ -175,13 +175,13 @@
     &:has(> &__customer) {
       grid-template-areas:
         'amount category button'
-        'customer . .';
+        '. customer .';
     }
 
     &:has(> .Layer__expanded-bank-transaction-row__table-cell--split-entry__tax-code__Container) {
       grid-template-areas:
         'amount category button'
-        'tax-code . .';
+        '. tax-code .';
     }
 
     &:has(> &__tags) {
