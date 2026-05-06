@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { CallBookingPurpose, useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { P, Span } from '@ui/Typography/Text'
@@ -51,6 +52,7 @@ export function Tasks({
   const { t } = useTranslation()
   const { data, isLoading } = useBookkeepingPeriods()
   const { data: callBookings, isLoading: isLoadingCallBookings } = useCallBookings()
+  const { isMobile } = useSizeClass()
 
   const tasksState: TasksState = useMemo(() => {
     if (isLoading || isLoadingCallBookings) {
@@ -106,8 +108,8 @@ export function Tasks({
           >
             {() => (
               <>
-                <TasksYearsTabs />
-                <TasksMonthSelector />
+                <TasksYearsTabs isMobile={isMobile} />
+                <TasksMonthSelector isMobile={isMobile} />
                 <TasksPending />
                 <TasksList mobile={mobile} />
               </>

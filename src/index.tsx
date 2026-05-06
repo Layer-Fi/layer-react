@@ -50,7 +50,7 @@ export { MileageSummaryCard as unstable_MileageSummaryCard } from './components/
 */
 export { Invoices } from './components/Invoices/Invoices'
 export { ProfitAndLossView } from './components/ProfitAndLossView/ProfitAndLossView'
-export { UnifiedReport as unstable_UnifiedReports } from './components/UnifiedReport/UnifiedReport'
+export { UnifiedReports } from './components/UnifiedReports/UnifiedReports'
 export { AccountingOverview } from './views/AccountingOverview/AccountingOverview'
 export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWithLinkedAccounts/BankTransactionsWithLinkedAccounts'
 export { BookkeepingOverview } from './views/BookkeepingOverview/BookkeepingOverview'
@@ -59,7 +59,7 @@ export { unstable_MileageTracking } from './views/MileageTracking'
 export { ProjectProfitabilityView } from './views/ProjectProfitability/ProjectProfitability'
 export { Reports } from './views/Reports/Reports'
 export { TaxEstimates as unstable_TaxEstimates } from './views/TaxEstimates/TaxEstimates'
-export { TimeTracking as unstable_TimeTracking } from './views/TimeTracking'
+export { TimeTracking } from './views/TimeTracking'
 
 /*
 ======================= Layer Provider & Context =======================

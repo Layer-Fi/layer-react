@@ -310,7 +310,7 @@
   }
 }
 
-.Layer__tasks__badge {
+.Layer__TasksBadge {
   display: flex;
   gap: var(--spacing-3xs);
   align-items: center;
@@ -320,20 +320,6 @@
   font-size: var(--text-xs);
   color: var(--color-info-warning-bg);
   white-space: nowrap;
-
-  .Layer__tasks__badge__label-short {
-    display: none;
-  }
-
-  @container (width <= 130px) {
-    .Layer__tasks__badge__label {
-      display: none;
-    }
-
-    .Layer__tasks__badge__label-short {
-      display: flex;
-    }
-  }
 
   &[data-icononly] {
     gap: 0;
@@ -347,10 +333,7 @@
     line-height: 10px;
   }
 
-  .Layer__tasks__badge__icon-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .Layer__TasksBadge__Icon {
     height: 16px;
     width: 16px;
     border-radius: 50%;
@@ -387,14 +370,6 @@
 
   @container (min-width: 680px) {
     grid-template-columns: repeat(4, 1fr);
-  }
-
-  @container (max-width: 400px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @container (max-width: 340px) {
-    grid-template-columns: repeat(1, 1fr);
   }
 }
 

@@ -1,0 +1,11 @@
+.Layer__chart-of-accounts__actions {
+  .Layer__SearchField {
+    width: 15rem;
+  }
+
+  @container (max-width: 760px) {
+    .Layer__SearchField {
+      width: 12rem;
+    }
+  }
+}

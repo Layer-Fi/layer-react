@@ -35,6 +35,7 @@ export const BankTransactionTaxOptionSchema = Schema.Struct({
     Schema.fromKey('display_name'),
   ),
 })
+export type BankTransactionTaxOption = typeof BankTransactionTaxOptionSchema.Encoded
 
 export const BankTransactionTaxOptionsSchema = Schema.Record({
   key: Schema.String,

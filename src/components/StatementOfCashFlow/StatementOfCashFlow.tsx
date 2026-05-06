@@ -1,15 +1,18 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { type View as ViewType } from '@internal-types/general'
 import { useStatementOfCashFlow } from '@hooks/api/businesses/[business-id]/reports/cashflow-statement/useStatementOfCashFlow'
-import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
+import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
+import { useResolvedReportView } from '@hooks/features/reports/useResolvedReportView'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TableProvider } from '@contexts/TableContext/TableContext'
-import { HStack } from '@ui/Stack/Stack'
+import { HStack, Stack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
+import { ReportsMobileSelectionTrigger } from '@components/ReportsNavigation/ReportsMobileSelectionTrigger'
 import { ReportsTableErrorState } from '@components/ReportsTableState/ReportsTableErrorState'
 import { ReportsTableLoader } from '@components/ReportsTableState/ReportsTableLoader'
 import { STATEMENT_OF_CASH_FLOW_ROWS_CONFIG } from '@components/StatementOfCashFlow/constants'
@@ -25,6 +28,7 @@ export interface StatementOfCashFlowStringOverrides {
 }
 
 export type StatementOfCashFlowProps = TimeRangePickerConfig & {
+  view?: ViewType
   stringOverrides?: StatementOfCashFlowStringOverrides
 }
 
@@ -35,18 +39,20 @@ export const StatementOfCashFlow = (props: StatementOfCashFlowProps) => {
 }
 
 type StatementOfCashFlowViewProps = TimeRangePickerConfig & {
+  view?: ViewType
   stringOverrides?: StatementOfCashFlowStringOverrides
 }
 
 const StatementOfCashFlowView = ({
+  view: propView,
   stringOverrides,
   dateSelectionMode = 'full',
 }: StatementOfCashFlowViewProps) => {
   const { t } = useTranslation()
   const dateRange = useGlobalDateRange({ dateSelectionMode })
   const { data, isLoading, isValidating, isError } = useStatementOfCashFlow(dateRange)
-  const { view, containerRef } = useElementViewSize<HTMLDivElement>()
-  const isMobileView = view === 'mobile'
+  const { containerRef, isMobileView } = useResolvedReportView(propView)
+  const { headerRef, isCompact } = useReportsCompactHeader()
   const tableStringOverrides = stringOverrides?.statementOfCashFlowTable
   const statementOfCashFlowRows = useMemo(
     () => STATEMENT_OF_CASH_FLOW_ROWS_CONFIG.map(row => ({
@@ -62,17 +68,27 @@ const StatementOfCashFlowView = ({
         type='panel'
         ref={containerRef}
         header={(
-          <Header>
+          <Header ref={headerRef}>
             <HeaderRow>
               <HeaderCol fluid>
-                <HStack pb='sm' align='end' fluid gap='xs' justify='space-between'>
-                  <CombinedDateRangeSelection mode={dateSelectionMode} />
-                  <CashflowStatementDownloadButton
-                    startDate={dateRange.startDate}
-                    endDate={dateRange.endDate}
-                    iconOnly={isMobileView}
-                  />
-                </HStack>
+                <Stack
+                  direction={isCompact ? 'column-reverse' : 'row'}
+                  align={isCompact ? undefined : 'end'}
+                  justify='space-between'
+                  gap='xs'
+                  pb='sm'
+                  fluid
+                >
+                  <CombinedDateRangeSelection mode={dateSelectionMode} isCompact={isCompact} />
+                  <HStack gap='xs' justify='end' fluid={isCompact}>
+                    {isMobileView && <ReportsMobileSelectionTrigger />}
+                    <CashflowStatementDownloadButton
+                      startDate={dateRange.startDate}
+                      endDate={dateRange.endDate}
+                      iconOnly={isMobileView}
+                    />
+                  </HStack>
+                </Stack>
               </HeaderCol>
             </HeaderRow>
           </Header>

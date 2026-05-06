@@ -97,8 +97,8 @@ export const UnifiedReportColumnSchema = Schema.Struct({
   ),
 })
 
-const UnifiedCellValueAmountSchema = Schema.Struct({
-  type: Schema.Literal('Amount'),
+export const UnifiedCellValueCurrencySchema = Schema.Struct({
+  type: Schema.Literal('Currency'),
   value: Schema.Number,
 })
 
@@ -107,36 +107,66 @@ const UnifiedCellValueDateSchema = Schema.Struct({
   value: Schema.Date,
 })
 
+export const UnifiedCellValueDecimalSchema = Schema.Struct({
+  type: Schema.Literal('Decimal'),
+  value: Schema.Number,
+})
+
+const UnifiedCellValueDurationSchema = Schema.Struct({
+  type: Schema.Literal('Duration'),
+  value: Schema.Number,
+})
+
 const UnifiedCellValueEmptySchema = Schema.Struct({
   type: Schema.Literal('Empty'),
 })
 
-const UnifiedCellValueUnknownSchema = Schema.Struct({
+export const UnifiedCellValuePercentageSchema = Schema.Struct({
+  type: Schema.Literal('Percentage'),
+  value: Schema.Number,
+})
+
+export const UnifiedCellValueUnknownSchema = Schema.Struct({
   type: Schema.String,
   value: Schema.optional(Schema.Unknown),
 })
 
 const UnifiedCellValueSchema = Schema.Union(
-  UnifiedCellValueAmountSchema,
+  UnifiedCellValueCurrencySchema,
   UnifiedCellValueDateSchema,
+  UnifiedCellValueDecimalSchema,
+  UnifiedCellValueDurationSchema,
   UnifiedCellValueEmptySchema,
+  UnifiedCellValuePercentageSchema,
   UnifiedCellValueUnknownSchema,
 )
 
 export type UnifiedCellValue = typeof UnifiedCellValueSchema.Type
-export type UnifiedCellValueAmount = typeof UnifiedCellValueAmountSchema.Type
+export type UnifiedCellValueCurrency = typeof UnifiedCellValueCurrencySchema.Type
 export type UnifiedCellValueDate = typeof UnifiedCellValueDateSchema.Type
+export type UnifiedCellValueDecimal = typeof UnifiedCellValueDecimalSchema.Type
+export type UnifiedCellValueDuration = typeof UnifiedCellValueDurationSchema.Type
 export type UnifiedCellValueEmpty = typeof UnifiedCellValueEmptySchema.Type
+export type UnifiedCellValuePercentage = typeof UnifiedCellValuePercentageSchema.Type
 export type UnifiedCellValueUnknown = typeof UnifiedCellValueUnknownSchema.Type
 
-export const isAmountCellValue = (value: UnifiedCellValue): value is UnifiedCellValueAmount =>
-  value.type === 'Amount'
+export const isCurrencyCellValue = (value: UnifiedCellValue): value is UnifiedCellValueCurrency =>
+  value.type === 'Currency'
 
 export const isDateCellValue = (value: UnifiedCellValue): value is UnifiedCellValueDate =>
   value.type === 'Date'
 
+export const isDecimalCellValue = (value: UnifiedCellValue): value is UnifiedCellValueDecimal =>
+  value.type === 'Decimal'
+
+export const isDurationCellValue = (value: UnifiedCellValue): value is UnifiedCellValueDuration =>
+  value.type === 'Duration'
+
 export const isEmptyCellValue = (value: UnifiedCellValue): value is UnifiedCellValueEmpty =>
   value.type === 'Empty'
+
+export const isPercentageCellValue = (value: UnifiedCellValue): value is UnifiedCellValuePercentage =>
+  value.type === 'Percentage'
 
 const UnifiedCellFormatSchema = Schema.Struct({
   bold: Schema.optional(Schema.Boolean),

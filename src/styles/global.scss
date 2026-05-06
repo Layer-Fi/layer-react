@@ -1,4 +1,7 @@
-.Layer__component * {
+.Layer__component *,
+.Layer__view * {
+  scrollbar-width: thin;
+
   &::-webkit-scrollbar {
     height: 6px;
     width: 6px;

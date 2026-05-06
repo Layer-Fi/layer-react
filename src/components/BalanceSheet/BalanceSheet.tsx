@@ -1,21 +1,22 @@
 import { type PropsWithChildren, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { type View as ViewType } from '@internal-types/general'
 import { useBalanceSheet } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/useBalanceSheet'
-import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
+import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
+import { useResolvedReportView } from '@hooks/features/reports/useResolvedReportView'
 import { type DateSelectionMode, useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TableProvider } from '@contexts/TableContext/TableContext'
-import { HStack } from '@ui/Stack/Stack'
+import { HStack, Stack } from '@ui/Stack/Stack'
 import { BALANCE_SHEET_ROWS_CONFIG } from '@components/BalanceSheet/constants'
 import { BalanceSheetDownloadButton } from '@components/BalanceSheet/download/BalanceSheetDownloadButton'
-import { BalanceSheetExpandAllButton } from '@components/BalanceSheetExpandAllButton/BalanceSheetExpandAllButton'
 import { BalanceSheetTable } from '@components/BalanceSheetTable/BalanceSheetTable'
 import { type BalanceSheetTableStringOverrides } from '@components/BalanceSheetTable/BalanceSheetTable'
-import { Container } from '@components/Container/Container'
 import { CombinedDateSelection } from '@components/DateSelection/CombinedDateSelection'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
+import { ReportsMobileSelectionTrigger } from '@components/ReportsNavigation/ReportsMobileSelectionTrigger'
 import { ReportsTableErrorState } from '@components/ReportsTableState/ReportsTableErrorState'
 import { ReportsTableLoader } from '@components/ReportsTableState/ReportsTableLoader'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
@@ -26,25 +27,25 @@ export interface BalanceSheetStringOverrides {
 }
 
 export type BalanceSheetViewProps = PropsWithChildren<{
+  /** @deprecated No longer used. Expand all does not exist in Balance Sheet. */
   withExpandAllButton?: boolean
-  asWidget?: boolean
+  view?: ViewType
   stringOverrides?: BalanceSheetStringOverrides
   dateSelectionMode?: DateSelectionMode
 }>
 
 export type BalanceSheetProps = PropsWithChildren<{
   effectiveDate?: Date
-  asWidget?: boolean
+  /** @deprecated No longer used. Expand all does not exist in Balance Sheet. */
+  withExpandAllButton?: boolean
+  view?: ViewType
   stringOverrides?: BalanceSheetStringOverrides
   dateSelectionMode?: DateSelectionMode
 }>
 
-const COMPONENT_NAME = 'balance-sheet'
-
 export const BalanceSheet = (props: BalanceSheetProps) => {
   return (
     <BalanceSheetView
-      asWidget={props.asWidget}
       stringOverrides={props.stringOverrides}
       {...props}
     />
@@ -52,15 +53,16 @@ export const BalanceSheet = (props: BalanceSheetProps) => {
 }
 
 const BalanceSheetView = ({
-  withExpandAllButton = true,
-  asWidget = false,
+  view: propView,
   stringOverrides,
   dateSelectionMode = 'full',
 }: BalanceSheetViewProps) => {
   const { t } = useTranslation()
   const { date: effectiveDate } = useGlobalDate({ dateSelectionMode })
   const { data, isLoading, isValidating, isError } = useBalanceSheet({ effectiveDate })
-  const { view, containerRef } = useElementViewSize<HTMLDivElement>()
+  const { containerRef, isMobileView } = useResolvedReportView(propView)
+  const { headerRef, isCompact } = useReportsCompactHeader()
+
   const balanceSheetRows = useMemo(
     () => BALANCE_SHEET_ROWS_CONFIG.map(row => ({
       ...row,
@@ -96,56 +98,32 @@ const BalanceSheetView = ({
     </ConditionalBlock>
   )
 
-  if (asWidget) {
-    return (
-      <TableProvider>
-        <Container name={COMPONENT_NAME} asWidget={true}>
-          <View
-            type='panel'
-            ref={containerRef}
-            header={(
-              <Header>
-                <HeaderRow>
-                  <HeaderCol fluid>
-                    <HStack pb='sm' align='end' gap='xs' justify='space-between' fluid>
-                      <CombinedDateSelection mode={dateSelectionMode} />
-                      {withExpandAllButton && (
-                        <BalanceSheetExpandAllButton view={view} />
-                      )}
-                    </HStack>
-                  </HeaderCol>
-                </HeaderRow>
-              </Header>
-            )}
-          >
-            {content}
-          </View>
-        </Container>
-      </TableProvider>
-    )
-  }
-
   return (
     <TableProvider>
       <View
         type='panel'
         ref={containerRef}
         header={(
-          <Header>
+          <Header ref={headerRef}>
             <HeaderRow>
               <HeaderCol fluid>
-                <HStack pb='sm' align='end' gap='xs' justify='space-between' fluid>
-                  <CombinedDateSelection mode={dateSelectionMode} />
-                  <HStack gap='xs'>
-                    {withExpandAllButton && (
-                      <BalanceSheetExpandAllButton view={view} />
-                    )}
+                <Stack
+                  direction={isCompact ? 'column-reverse' : 'row'}
+                  align={isCompact ? undefined : 'end'}
+                  justify='space-between'
+                  gap='xs'
+                  pb='sm'
+                  fluid
+                >
+                  <CombinedDateSelection mode={dateSelectionMode} isCompact={isCompact} />
+                  <HStack gap='xs' justify='end' fluid={isCompact}>
+                    {isMobileView && <ReportsMobileSelectionTrigger />}
                     <BalanceSheetDownloadButton
                       effectiveDate={effectiveDate}
-                      iconOnly={view === 'mobile'}
+                      iconOnly={isMobileView}
                     />
                   </HStack>
-                </HStack>
+                </Stack>
               </HeaderCol>
             </HeaderRow>
           </Header>

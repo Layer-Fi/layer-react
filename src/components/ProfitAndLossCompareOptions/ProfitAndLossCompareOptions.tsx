@@ -6,7 +6,9 @@ import { HStack } from '@ui/Stack/Stack'
 import { DateGroupByComboBox } from '@components/DateSelection/DateGroupByComboBox'
 import { CompareTagsMultiSelect } from '@components/ProfitAndLossCompareOptions/CompareTagsMultiSelect'
 
-export const ProfitAndLossCompareOptions = () => {
+import './profitAndLossCompareOptions.scss'
+
+export const ProfitAndLossCompareOptions = ({ isCompact = false }: { isCompact?: boolean }) => {
   const {
     comparisonConfig,
     comparisonPeriodMode,
@@ -27,7 +29,13 @@ export const ProfitAndLossCompareOptions = () => {
   }
 
   return (
-    <HStack align='end' gap='xs'>
+    <HStack
+      className='Layer__ProfitAndLossCompareOptions__Container'
+      align='end'
+      gap='xs'
+      fluid
+      data-compact={isCompact}
+    >
       {showGroupBy && (
         <DateGroupByComboBox value={comparisonPeriodMode} onValueChange={setComparisonPeriodMode} />
       )}
