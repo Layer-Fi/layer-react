@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { getBankTransactionTaxOptions } from '@utils/bankTransactions'
@@ -18,13 +18,13 @@ export const useTaxCodeOptions = (bankTransaction: BankTransaction): UseTaxCodeO
 
   const hasTaxCodeOptions = taxCodeOptions.length > 0
 
-  const getSelectedTaxCodeOption = (taxCode?: string | null): TaxCodeComboBoxOption | null => {
+  const getSelectedTaxCodeOption = useCallback((taxCode?: string | null): TaxCodeComboBoxOption | null => {
     if (!taxCode) {
       return null
     }
 
     return taxCodeOptions.find(option => option.value === taxCode) ?? null
-  }
+  }, [taxCodeOptions])
 
   return { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption }
 }
