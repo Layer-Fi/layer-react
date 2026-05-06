@@ -66,7 +66,7 @@ export const LayerProvider = ({
   }
 
   return (
-    <SWRConfig value={swrConfig}>
+    <SWRConfig value={() => swrConfig}>
       <LayerI18nProvider locale={locale}>
         <StaleLocaleCacheInvalidator />
         <EnvironmentInputProvider environment={environment} environmentConfigOverride={environmentConfigOverride} usePlaidSandbox={usePlaidSandbox}>
