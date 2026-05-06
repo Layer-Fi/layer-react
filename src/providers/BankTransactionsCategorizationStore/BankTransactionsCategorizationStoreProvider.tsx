@@ -1,4 +1,4 @@
-import { createContext, type PropsWithChildren, useContext, useState } from 'react'
+import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { createStore, useStore } from 'zustand'
 
 import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
@@ -15,7 +15,6 @@ export type BankTransactionsCategorizationState = {
 }
 
 type BankTransactionsCategorizationActions = {
-  setTransactionCategory: (id: string, category: BankTransactionCategoryComboBoxOption | null) => void
   setTransactionCategorization: (id: string, update: Partial<BankTransactionCategorization>) => void
   setOnlyNewTransactionCategorizations: (categorizations: Map<string, Partial<BankTransactionCategorization>>) => void
   clearTransactionCategorizations: (ids: string[]) => void
@@ -35,8 +34,8 @@ const mergeCategorization = (
   current: BankTransactionCategorization,
   next: Partial<BankTransactionCategorization>,
 ): BankTransactionCategorization => ({
-  category: next.category ?? current.category,
-  taxCode: next.taxCode ?? current.taxCode,
+  category: next.category === undefined ? current.category : next.category,
+  taxCode: next.taxCode === undefined ? current.taxCode : next.taxCode,
 })
 
 function buildStore() {
@@ -59,7 +58,6 @@ function buildStore() {
     return {
       categorizations: new Map(),
       actions: {
-        setTransactionCategory: (id, category) => setTransactionCategorization(id, { category }),
         setTransactionCategorization,
 
         setOnlyNewTransactionCategorizations: (categorizations) => {
@@ -132,10 +130,11 @@ export function useGetBankTransactionCategoryByTransactionId(
   return { selectedCategory }
 }
 
-export function useGetAllBankTransactionsCategorizations(): { categorizations: Map<string, BankTransactionCategorization> } {
+export function useGetAllBankTransactionsCategorizations(): { categorizations: ReadonlyMap<string, BankTransactionCategorization> } {
   const store = useBankTransactionsCategorizationStore()
   const categorizations = useStore(store, state => state.categorizations)
-  return { categorizations }
+  const categorizationsSnapshot = useMemo(() => new Map(categorizations), [categorizations])
+  return { categorizations: categorizationsSnapshot }
 }
 
 type BankTransactionsCategorizationStoreProviderProps = PropsWithChildren

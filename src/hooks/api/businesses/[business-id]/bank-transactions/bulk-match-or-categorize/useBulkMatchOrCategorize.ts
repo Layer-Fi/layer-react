@@ -40,7 +40,7 @@ const toSplitEntry = (split: Split) => {
 
 const buildBulkMatchOrCategorizePayload = (
   selectedIds: Iterable<string>,
-  categorizations: Map<string, BankTransactionCategorization>,
+  categorizations: ReadonlyMap<string, BankTransactionCategorization>,
 ): Record<string, MatchOrCategorizeTransaction> => {
   const transactions: Record<string, MatchOrCategorizeTransaction> = {}
 
