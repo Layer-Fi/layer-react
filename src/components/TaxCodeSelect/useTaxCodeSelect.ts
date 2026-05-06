@@ -3,12 +3,17 @@ import { useTranslation } from 'react-i18next'
 
 import { NO_TAX_CODE, TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 
-import type { TaxCodeSelectCommonProps } from './types'
-
 type UseTaxCodeSelectParams = {
   options?: ReadonlyArray<TaxCodeComboBoxOption>
   selectedValue: TaxCodeComboBoxOption | null
   onSelectedValueChange: (value: TaxCodeComboBoxOption | null) => void
+}
+
+type UseTaxCodeSelectReturn = {
+  options: ReadonlyArray<TaxCodeComboBoxOption>
+  selectedValue: TaxCodeComboBoxOption
+  onSelectedValueChange: (value: TaxCodeComboBoxOption | null) => void
+  placeholder: string
 }
 
 const EMPTY_ARRAY: ReadonlyArray<TaxCodeComboBoxOption> = []
@@ -17,7 +22,7 @@ export const useTaxCodeSelect = ({
   options = EMPTY_ARRAY,
   selectedValue,
   onSelectedValueChange,
-}: UseTaxCodeSelectParams): TaxCodeSelectCommonProps => {
+}: UseTaxCodeSelectParams): UseTaxCodeSelectReturn => {
   const { t } = useTranslation()
   const noTaxCodeOption = useMemo<TaxCodeComboBoxOption>(
     () => TaxCodeComboBoxOption.noTaxCode(t('bankTransactions:action.no_tax_code', 'No tax code')),
@@ -48,7 +53,7 @@ export const useTaxCodeSelect = ({
     [t],
   )
 
-  return useMemo(() => ({
+  return useMemo<UseTaxCodeSelectReturn>(() => ({
     options: optionsWithNoTaxCode,
     selectedValue: resolvedSelectedValue,
     onSelectedValueChange: handleChange,
