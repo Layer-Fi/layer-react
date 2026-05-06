@@ -40,35 +40,37 @@ const mergeCategorization = (
 
 function buildStore() {
   return createStore<BankTransactionsCategorizationStore>((set) => {
-    const setTransactionCategorization = (id: string, update: Partial<BankTransactionCategorization>) => {
-      set(({ categorizations }) => {
-        const newMap = new Map(categorizations)
-        const current = categorizations.get(id) ?? DEFAULT_CATEGORIZATION
-        const merged = mergeCategorization(current, update)
-        const shouldWrite = !categorizations.has(id)
-          || current.category !== merged.category
-          || current.taxCode !== merged.taxCode
-
-        if (!shouldWrite) return { categorizations }
-        newMap.set(id, merged)
-        return { categorizations: newMap }
-      })
-    }
-
     return {
       categorizations: new Map(),
       actions: {
-        setTransactionCategorization,
+        setTransactionCategorization: (id, update) => {
+          set(({ categorizations }) => {
+            const newMap = new Map(categorizations)
+            const current = categorizations.get(id) ?? DEFAULT_CATEGORIZATION
+            const merged = mergeCategorization(current, update)
 
-        setOnlyNewTransactionCategorizations: (categorizations) => {
+            const shouldWrite = !categorizations.has(id)
+              || current.category !== merged.category
+              || current.taxCode !== merged.taxCode
+
+            if (!shouldWrite) return { categorizations }
+            newMap.set(id, merged)
+            return { categorizations: newMap }
+          })
+        },
+
+        setOnlyNewTransactionCategorizations: (newCategorizations) => {
           set((state) => {
-            const newMap = new Map(state.categorizations)
             let hasChanges = false
+            const categorizations = state.categorizations
+            const newMap = new Map(categorizations)
 
-            categorizations.forEach((next, id) => {
-              const isNewTransaction = !newMap.has(id)
-              const current = newMap.get(id) ?? DEFAULT_CATEGORIZATION
+            newCategorizations.forEach((next, id) => {
+              const isNewTransaction = !categorizations.has(id)
+
+              const current = categorizations.get(id) ?? DEFAULT_CATEGORIZATION
               const merged = mergeCategorization(current, next)
+
               const shouldWrite = isNewTransaction
                 || (current.category === null && merged.category !== null)
                 || (current.taxCode === null && merged.taxCode !== null)
