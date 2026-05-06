@@ -31,6 +31,7 @@ import Trash from '@icons/Trash'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
+import { Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { useBankTransactionCustomerVendorVisibility } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorVisibilityProvider'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
@@ -38,11 +39,13 @@ import { BankTransactionReceiptsWithProvider } from '@components/BankTransaction
 import { useBankTransactionTagVisibility } from '@components/BankTransactionTagSelector/BankTransactionTagVisibilityProvider'
 import { TextButton } from '@components/Button/TextButton'
 import { CustomerVendorSelector } from '@components/CustomerVendorSelector/CustomerVendorSelector'
+import { useTaxCodeOptions } from '@components/ExpandedBankTransactionRow/useTaxCodeOptions'
 import { AmountInput } from '@components/Input/AmountInput'
 import { Input } from '@components/Input/Input'
 import { MatchForm } from '@components/MatchForm/MatchForm'
 import { Separator } from '@components/Separator/Separator'
 import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
+import { TaxCodeComboBox } from '@components/TaxCodeSelect/TaxCodeComboBox'
 import { ErrorText } from '@components/Typography/ErrorText'
 
 import './expandedBankTransactionRow.scss'
@@ -115,7 +118,7 @@ export const ExpandedBankTransactionRow = ({
     getBankTransactionFirstSuggestedMatch(bankTransaction),
   )
   const [matchFormError, setMatchFormError] = useState<string | undefined>()
-  const bodyRef = useRef<HTMLSpanElement>(null)
+  const bodyRef = useRef<HTMLDivElement>(null)
 
   const {
     localSplits,
@@ -200,6 +203,7 @@ export const ExpandedBankTransactionRow = ({
   }
 
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
+  const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(bankTransaction)
 
   const toggleOptions = useMemo(() => [
     {
@@ -218,18 +222,12 @@ export const ExpandedBankTransactionRow = ({
     ? localSplits
     : []
 
-  const className = 'Layer__expanded-bank-transaction-row'
-
   return (
-    <span
-      className={`${className} ${className}--${
-        isOpen ? 'expanded' : 'collapsed'
-      }`}
-    >
+    <div className='Layer__expanded-bank-transaction-row'>
       {isOpen && (
         <>
           <Separator />
-          <span className={`${className}__wrapper`} ref={bodyRef}>
+          <div className='Layer__expanded-bank-transaction-row__wrapper' ref={bodyRef}>
             <VStack pis={variant === 'row' ? 'md' : undefined} pbs='sm' pbe='md'>
               {isCategorizationEnabled
                 && (
@@ -244,20 +242,19 @@ export const ExpandedBankTransactionRow = ({
                   </HStack>
                 )}
               <div
-                className={`${className}__content`}
+                className='Layer__expanded-bank-transaction-row__content'
                 id={`expanded-${bankTransaction.id}`}
               >
-                <div className={`${className}__content-panels`}>
+                <div className='Layer__expanded-bank-transaction-row__content-panels'>
                   <div
                     className={classNames(
-                      `${className}__match`,
-                      `${className}__content-panel`,
-                      purpose === Purpose.match
-                        ? `${className}__content-panel--active`
-                        : '',
+                      'Layer__expanded-bank-transaction-row__content-panel',
+                      {
+                        'Layer__expanded-bank-transaction-row__content-panel--active': purpose === Purpose.match,
+                      },
                     )}
                   >
-                    <div className={`${className}__content-panel-container`}>
+                    <div className='Layer__expanded-bank-transaction-row__content-panel-container'>
                       <MatchForm
                         bankTransaction={bankTransaction}
                         selectedMatchId={selectedMatch?.id}
@@ -276,61 +273,79 @@ export const ExpandedBankTransactionRow = ({
 
                   <div
                     className={classNames(
-                      `${className}__splits`,
-                      `${className}__content-panel`,
-                      purpose === Purpose.categorize
-                        ? `${className}__content-panel--active`
-                        : '',
+                      'Layer__expanded-bank-transaction-row__splits',
+                      'Layer__expanded-bank-transaction-row__content-panel',
+                      {
+                        'Layer__expanded-bank-transaction-row__content-panel--active': purpose === Purpose.categorize,
+                      },
                     )}
                   >
-                    <div className={`${className}__content-panel-container`}>
-                      <div className={`${className}__splits-inputs`}>
+                    <div className='Layer__expanded-bank-transaction-row__content-panel-container'>
+                      <div className='Layer__expanded-bank-transaction-row__splits-inputs'>
                         {effectiveSplits.map((split, index) => (
-                          <div
-                            className={`${className}__table-cell--split-entry`}
+                          <VStack
+                            gap='xs'
+                            pbs={asListItem && effectiveSplits.length === 1 ? 'sm' : undefined}
+                            pbe={asListItem && effectiveSplits.length > 1 ? 'sm' : undefined}
                             key={`split-${index}`}
                           >
-                            <AmountInput
-                              name={`split-${index}${asListItem ? '-li' : ''}`}
-                              disabled={
-                                index === 0 || !isCategorizationEnabled
-                              }
-                              onChange={updateSplitAmount(index)}
-                              value={getInputValueForSplitAtIndex(index, split)}
-                              onBlur={onBlurSplitAmount}
-                              className={`${className}__table-cell--split-entry__amount`}
-                              isInvalid={split.amount < 0}
-                            />
-                            <BankTransactionCategoryComboBox
-                              bankTransaction={bankTransaction}
-                              selectedValue={split.category}
-                              onSelectedValueChange={(value) => {
-                                changeCategoryForSplitAtIndex(index, value)
-                              }}
-                              isDisabled={!isCategorizationEnabled}
-                              includeSuggestedMatches={false}
-                            />
-                            {showTags && (
-                              <TagDimensionsGroup
-                                value={split.tags}
-                                onChange={tags => changeTags(index, tags)}
-                                showLabels={false}
-                                isReadOnly={!isCategorizationEnabled}
-                                className={`${className}__table-cell--split-entry__tags`}
+                            {asListItem && effectiveSplits.length > 1 && (
+                              <Span>{t('bankTransactions:action.split_number_label', 'Split #{{number}}', { number: index + 1 })}</Span>
+                            )}
+                            <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry'>
+                              <AmountInput
+                                name={`split-${index}${asListItem ? '-li' : ''}`}
+                                disabled={
+                                  index === 0 || !isCategorizationEnabled
+                                }
+                                onChange={updateSplitAmount(index)}
+                                value={getInputValueForSplitAtIndex(index, split)}
+                                onBlur={onBlurSplitAmount}
+                                isInvalid={split.amount < 0}
                               />
-                            )}
-                            {showCustomerVendor && (
-                              <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry__customer'>
-                                <CustomerVendorSelector
-                                  selectedCustomerVendor={split.customerVendor}
-                                  onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
-                                  placeholder={t('customerVendor:action.set_customer_vendor', 'Set customer or vendor')}
-                                  isReadOnly={!isCategorizationEnabled}
-                                  showLabel={false}
+                              <BankTransactionCategoryComboBox
+                                bankTransaction={bankTransaction}
+                                selectedValue={split.category}
+                                onSelectedValueChange={(value) => {
+                                  changeCategoryForSplitAtIndex(index, value)
+                                }}
+                                isDisabled={!isCategorizationEnabled}
+                                includeSuggestedMatches={false}
+                              />
+                              {hasTaxCodeOptions && (
+                                <TaxCodeComboBox
+                                  options={taxCodeOptions}
+                                  selectedValue={getSelectedTaxCodeOption(split.taxCode)}
+                                  onSelectedValueChange={(value) => {
+                                    updateSplitAtIndex(index, currentSplit => ({
+                                      ...currentSplit,
+                                      taxCode: value?.value ?? null,
+                                    }))
+                                  }}
+                                  isDisabled={!isCategorizationEnabled}
+                                  className='Layer__expanded-bank-transaction-row__table-cell--split-entry__tax-code'
                                 />
-                              </div>
-                            )}
-                            <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry__button'>
+                              )}
+                              {showTags && (
+                                <TagDimensionsGroup
+                                  value={split.tags}
+                                  onChange={tags => changeTags(index, tags)}
+                                  showLabels={false}
+                                  isReadOnly={!isCategorizationEnabled}
+                                  className='Layer__expanded-bank-transaction-row__table-cell--split-entry__tags'
+                                />
+                              )}
+                              {showCustomerVendor && (
+                                <div className='Layer__expanded-bank-transaction-row__table-cell--split-entry__customer'>
+                                  <CustomerVendorSelector
+                                    selectedCustomerVendor={split.customerVendor}
+                                    onSelectedCustomerVendorChange={customerVendor => changeCustomerVendor(index, customerVendor)}
+                                    placeholder={t('customerVendor:action.set_customer_vendor', 'Set customer or vendor')}
+                                    isReadOnly={!isCategorizationEnabled}
+                                    showLabel={false}
+                                  />
+                                </div>
+                              )}
                               <Button
                                 onPress={() => removeSplit(index)}
                                 variant='outlined'
@@ -340,11 +355,16 @@ export const ExpandedBankTransactionRow = ({
                                 <Trash size={18} />
                               </Button>
                             </div>
-                          </div>
+                          </VStack>
                         ))}
                       </div>
                       {splitFormError && <HStack pb='sm'><ErrorText>{splitFormError}</ErrorText></HStack>}
-                      <div className={`${className}__total-and-btns`}>
+                      <div
+                        className={classNames(
+                          'Layer__expanded-bank-transaction-row__total-and-btns',
+                          asListItem && 'Layer__expanded-bank-transaction-row__total-and-btns--ListItem',
+                        )}
+                      >
                         {effectiveSplits.length > 1 && (
                           <Input
                             disabled={true}
@@ -355,7 +375,7 @@ export const ExpandedBankTransactionRow = ({
                         )}
                         {isCategorizationEnabled
                           ? (
-                            <div className={`${className}__splits-buttons`}>
+                            <div className='Layer__expanded-bank-transaction-row__splits-buttons'>
                               {effectiveSplits.length > 1
                                 ? (
                                   <TextButton
@@ -395,15 +415,15 @@ export const ExpandedBankTransactionRow = ({
                   <BankTransactionReceiptsWithProvider
                     bankTransaction={bankTransaction}
                     isActive={isOpen}
-                    classNamePrefix={className}
+                    classNamePrefix='Layer__expanded-bank-transaction-row'
                     floatingActions={!asListItem}
                   />
                 )}
               </div>
             </VStack>
-          </span>
+          </div>
         </>
       )}
-    </span>
+    </div>
   )
 }
