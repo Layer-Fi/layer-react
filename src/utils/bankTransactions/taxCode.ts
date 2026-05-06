@@ -44,7 +44,7 @@ export const canCategoryHaveTaxCode = (
   return true
 }
 
-export const resolveBulkTaxCode = (
+export const resolveCategoryTaxCode = (
   bankTransaction: BankTransaction | undefined,
   selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
   selectedTaxCode: TaxCodeComboBoxOption | null,

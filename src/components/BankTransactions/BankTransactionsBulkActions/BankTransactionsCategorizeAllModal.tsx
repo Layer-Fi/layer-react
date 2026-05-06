@@ -1,7 +1,7 @@
 import { useCallback, useId, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { canCategoryHaveTaxCode, resolveBulkTaxCode } from '@utils/bankTransactions/taxCode'
+import { canCategoryHaveTaxCode, resolveCategoryTaxCode } from '@utils/bankTransactions/taxCode'
 import { tPlural } from '@utils/i18n/plural'
 import { useBulkCategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-categorize/useBulkCategorize'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
@@ -90,7 +90,7 @@ export const BankTransactionsCategorizeAllModal = ({
         transactionId,
         categorization: {
           ...categorization,
-          taxCode: resolveBulkTaxCode(
+          taxCode: resolveCategoryTaxCode(
             bankTransactionsById.get(transactionId),
             selectedCategory,
             selectedTaxCode,
