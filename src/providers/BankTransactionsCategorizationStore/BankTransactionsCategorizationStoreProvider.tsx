@@ -135,8 +135,8 @@ export function useGetBankTransactionCategoryByTransactionId(
 export function useGetAllBankTransactionsCategorizations(): { categorizations: ReadonlyMap<string, BankTransactionCategorization> } {
   const store = useBankTransactionsCategorizationStore()
   const categorizations = useStore(store, state => state.categorizations)
-  const categorizationsSnapshot = useMemo(() => new Map(categorizations), [categorizations])
-  return { categorizations: categorizationsSnapshot }
+
+  return useMemo(() => ({ categorizations: new Map(categorizations) }), [categorizations])
 }
 
 type BankTransactionsCategorizationStoreProviderProps = PropsWithChildren
