@@ -59,6 +59,7 @@ export const calculateAddSplit = (
   const newSplit = {
     amount: 0,
     category: null,
+    taxCode: null,
     tags: [],
     customerVendor: null,
   }

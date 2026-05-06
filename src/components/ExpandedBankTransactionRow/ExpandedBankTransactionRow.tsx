@@ -118,7 +118,7 @@ export const ExpandedBankTransactionRow = ({
     getBankTransactionFirstSuggestedMatch(bankTransaction),
   )
   const [matchFormError, setMatchFormError] = useState<string | undefined>()
-  const bodyRef = useRef<HTMLSpanElement>(null)
+  const bodyRef = useRef<HTMLDivElement>(null)
 
   const {
     localSplits,
@@ -223,11 +223,11 @@ export const ExpandedBankTransactionRow = ({
     : []
 
   return (
-    <span className='Layer__expanded-bank-transaction-row'>
+    <div className='Layer__expanded-bank-transaction-row'>
       {isOpen && (
         <>
           <Separator />
-          <span className='Layer__expanded-bank-transaction-row__wrapper' ref={bodyRef}>
+          <div className='Layer__expanded-bank-transaction-row__wrapper' ref={bodyRef}>
             <VStack pis={variant === 'row' ? 'md' : undefined} pbs='sm' pbe='md'>
               {isCategorizationEnabled
                 && (
@@ -421,9 +421,9 @@ export const ExpandedBankTransactionRow = ({
                 )}
               </div>
             </VStack>
-          </span>
+          </div>
         </>
       )}
-    </span>
+    </div>
   )
 }
