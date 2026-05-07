@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react'
+import { type PropsWithChildren, type ReactNode } from 'react'
 import classNames from 'classnames'
 
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -8,27 +8,34 @@ import { Card } from '@components/Card/Card'
 
 import './summaryCard.scss'
 
-export type SummaryCardProps = {
-  title: ReactNode
-  subtitle?: ReactNode
-  headerSize?: HeadingSize
-  legend?: ReactNode
-  primaryAction?: ReactNode
-  children: ReactNode
-  className?: string
+type HeadingProps = {
+  size?: HeadingSize
 }
+export type SummaryCardProps = PropsWithChildren<{
+  slots: {
+    title: ReactNode
+    subtitle?: ReactNode
+    legend?: ReactNode
+    primaryAction?: ReactNode
+  }
+  slotProps?: {
+    heading?: HeadingProps
+  }
+  className?: string
+}>
 
 export const SummaryCard = ({
-  title,
-  subtitle,
-  headerSize = 'md',
-  legend,
-  primaryAction,
+  slots,
+  slotProps,
   children,
   className,
 }: SummaryCardProps) => {
+  const { title, subtitle, legend, primaryAction } = slots
+  const { heading: headingProps } = slotProps ?? {}
+  const { size = 'md' } = headingProps ?? {}
+
   const titleNode = typeof title === 'string'
-    ? <Heading size={headerSize}>{title}</Heading>
+    ? <Heading size={size}>{title}</Heading>
     : title
 
   const subtitleNode = typeof subtitle === 'string'
