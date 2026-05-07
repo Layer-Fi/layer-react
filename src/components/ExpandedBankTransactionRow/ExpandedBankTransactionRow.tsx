@@ -9,14 +9,12 @@ import { useTranslation } from 'react-i18next'
 
 import {
   type BankTransaction,
-  type SuggestedMatch,
 } from '@internal-types/bankTransactions'
 import { type Split } from '@internal-types/bankTransactions'
-import { SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
+import { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { type CustomerVendorSchema } from '@schemas/customerVendor'
 import { type Tag } from '@schemas/tag'
 import {
-  getBankTransactionFirstSuggestedMatch,
   hasMatch,
 } from '@utils/bankTransactions/shared'
 import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
@@ -25,7 +23,7 @@ import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useBankTransactionsCategorizationActions, useGetBankTransactionCategoryByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { BankTransactionSelectionVariant, useBankTransactionsCategorizationActions, useGetBankTransactionCategorizationByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import Scissors from '@icons/ScissorsFullOpen'
 import Trash from '@icons/Trash'
@@ -54,11 +52,6 @@ export type ExpandedRowState = {
   splits: Split[]
   description: string
   file: unknown
-}
-
-enum Purpose {
-  categorize = 'categorize',
-  match = 'match',
 }
 
 export interface DocumentWithStatus {
@@ -96,8 +89,10 @@ export const ExpandedBankTransactionRow = ({
 }: ExpandedBankTransactionRowProps) => {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
-  const { selectedCategory } = useGetBankTransactionCategoryByTransactionId(bankTransaction.id)
-  const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
+  const selectedCategorization = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
+  const { match: selectedMatch, variant: purpose } = selectedCategorization ?? {}
+
+  const { setTransactionMatchSelection, setTransactionSelectionVariant } = useBankTransactionsCategorizationActions()
   // Hooks for auto-saving tags and customer/vendor in unsplit state
   const { trigger: tagBankTransaction } = useTagBankTransaction({ bankTransactionId: bankTransaction.id })
   const { trigger: removeTagFromBankTransaction } = useRemoveTagFromBankTransaction({ bankTransactionId: bankTransaction.id })
@@ -107,16 +102,6 @@ export const ExpandedBankTransactionRow = ({
   const { showTags } = useBankTransactionTagVisibility()
   const { showCustomerVendor } = useBankTransactionCustomerVendorVisibility()
 
-  const [purpose, setPurpose] = useState<Purpose>(
-    bankTransaction.category
-      ? Purpose.categorize
-      : hasMatch(bankTransaction)
-        ? Purpose.match
-        : Purpose.categorize,
-  )
-  const [selectedMatch, setSelectedMatch] = useState<SuggestedMatch | undefined>(
-    getBankTransactionFirstSuggestedMatch(bankTransaction),
-  )
   const [matchFormError, setMatchFormError] = useState<string | undefined>()
   const bodyRef = useRef<HTMLDivElement>(null)
 
@@ -132,10 +117,10 @@ export const ExpandedBankTransactionRow = ({
     onBlurSplitAmount,
     getInputValueForSplitAtIndex,
     setSplitFormError,
-  } = useSplitsForm({ bankTransaction, selectedCategory, isOpen })
+  } = useSplitsForm({ bankTransaction, isOpen })
 
   useEffect(() => {
-    const isValid = purpose === Purpose.match
+    const isValid = purpose === BankTransactionSelectionVariant.MATCH
       ? !!selectedMatch
       : isSplitsValid
 
@@ -143,18 +128,11 @@ export const ExpandedBankTransactionRow = ({
   }, [isSplitsValid, onValidityChange, purpose, selectedMatch])
 
   const onChangePurpose = (key: React.Key) => {
-    const newPurpose = key === 'match'
-      ? Purpose.match
-      : Purpose.categorize
-    setPurpose(newPurpose)
+    const newPurpose = key === BankTransactionSelectionVariant.MATCH
+      ? BankTransactionSelectionVariant.MATCH
+      : BankTransactionSelectionVariant.CATEGORY
 
-    if (newPurpose === Purpose.match) {
-      setTransactionCategorization(bankTransaction.id, { category: selectedMatch ? new SuggestedMatchAsOption(selectedMatch) : null })
-    }
-
-    else if (newPurpose === Purpose.categorize && isSplitsValid) {
-      setTransactionCategorization(bankTransaction.id, { category: new SplitAsOption(localSplits) })
-    }
+    setTransactionSelectionVariant(bankTransaction.id, newPurpose)
 
     setSplitFormError(undefined)
     setMatchFormError(undefined)
@@ -207,11 +185,11 @@ export const ExpandedBankTransactionRow = ({
 
   const toggleOptions = useMemo(() => [
     {
-      value: 'categorize',
+      value: BankTransactionSelectionVariant.CATEGORY,
       label: t('common:action.categorize', 'Categorize'),
     },
     {
-      value: 'match',
+      value: BankTransactionSelectionVariant.MATCH,
       label: t('bankTransactions:label.match', 'Match'),
       disabled: !hasMatch(bankTransaction),
       disabledMessage: t('bankTransactions:error.matching_transactions_not_found', 'We could not find matching transactions'),
@@ -250,21 +228,18 @@ export const ExpandedBankTransactionRow = ({
                     className={classNames(
                       'Layer__expanded-bank-transaction-row__content-panel',
                       {
-                        'Layer__expanded-bank-transaction-row__content-panel--active': purpose === Purpose.match,
+                        'Layer__expanded-bank-transaction-row__content-panel--active': purpose === BankTransactionSelectionVariant.MATCH,
                       },
                     )}
                   >
                     <div className='Layer__expanded-bank-transaction-row__content-panel-container'>
                       <MatchForm
                         bankTransaction={bankTransaction}
-                        selectedMatchId={selectedMatch?.id}
+                        selectedMatchId={selectedMatch?.original.id}
                         readOnly={!isCategorizationEnabled}
                         setSelectedMatch={(suggestedMatch) => {
-                          setSelectedMatch(suggestedMatch)
+                          setTransactionMatchSelection(bankTransaction.id, suggestedMatch ? new SuggestedMatchAsOption(suggestedMatch) : null)
                           setMatchFormError(!suggestedMatch ? t('bankTransactions:error.select_option_match_transaction', 'Select an option to match the transaction') : undefined)
-                          setTransactionCategorization(bankTransaction.id, {
-                            category: suggestedMatch ? new SuggestedMatchAsOption(suggestedMatch) : null,
-                          })
                         }}
                         matchFormError={matchFormError}
                       />
@@ -276,7 +251,7 @@ export const ExpandedBankTransactionRow = ({
                       'Layer__expanded-bank-transaction-row__splits',
                       'Layer__expanded-bank-transaction-row__content-panel',
                       {
-                        'Layer__expanded-bank-transaction-row__content-panel--active': purpose === Purpose.categorize,
+                        'Layer__expanded-bank-transaction-row__content-panel--active': purpose === BankTransactionSelectionVariant.CATEGORY,
                       },
                     )}
                   >
@@ -406,8 +381,8 @@ export const ExpandedBankTransactionRow = ({
                   <BankTransactionFormFields
                     bankTransaction={bankTransaction}
                     showDescriptions={showDescriptions}
-                    hideTags={purpose === Purpose.categorize}
-                    hideCustomerVendor={purpose === Purpose.categorize}
+                    hideTags={purpose === BankTransactionSelectionVariant.CATEGORY}
+                    hideCustomerVendor={purpose === BankTransactionSelectionVariant.CATEGORY}
                   />
                 </VStack>
 

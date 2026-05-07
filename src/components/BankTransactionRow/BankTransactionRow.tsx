@@ -9,7 +9,7 @@ import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransaction
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
-import { useBankTransactionsCategorizationActions, useGetBankTransactionCategoryByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { useBankTransactionsCategorizationActions, useGetBankTransactionMatchOrCategoryByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import AlertCircle from '@icons/AlertCircle'
@@ -80,7 +80,7 @@ export const BankTransactionRow = ({
   const { count: bulkSelectionCount } = useCountSelectedIds()
   const isBulkSelectionActive = bulkSelectionCount > 0
   const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
-  const { selectedCategory } = useGetBankTransactionCategoryByTransactionId(bankTransaction.id)
+  const selectedOption = useGetBankTransactionMatchOrCategoryByTransactionId(bankTransaction.id)
   const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
 
   const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction })
@@ -89,14 +89,14 @@ export const BankTransactionRow = ({
 
   const save = useCallback(async () => {
     if (open && !isExpandedRowValid) return
-    if (!selectedCategory) return
+    if (!selectedOption) return
 
-    await saveBankTransactionRow(selectedCategory, bankTransaction)
+    await saveBankTransactionRow(selectedOption, bankTransaction)
 
     // Remove from bulk selection store
     deselect(bankTransaction.id)
     setOpen(false)
-  }, [bankTransaction, deselect, isExpandedRowValid, open, saveBankTransactionRow, selectedCategory])
+  }, [bankTransaction, deselect, selectedOption, isExpandedRowValid, open, saveBankTransactionRow])
 
   const submitButton = useMemo(() => (
     <SubmitButton
@@ -108,7 +108,7 @@ export const BankTransactionRow = ({
       className={isError ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
       processing={isProcessing}
       active={open}
-      disabled={selectedCategory === null || isBulkSelectionActive}
+      disabled={selectedOption === null || isBulkSelectionActive}
       action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
       withRetry
       error={isError ? t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.') : undefined}
@@ -126,7 +126,7 @@ export const BankTransactionRow = ({
     isProcessing,
     open,
     save,
-    selectedCategory,
+    selectedOption,
     stringOverrides?.approveButtonText,
     stringOverrides?.updateButtonText,
     t,
@@ -279,9 +279,9 @@ export const BankTransactionRow = ({
                 {isCategorizationEnabled && !displayAsCategorized && (
                   <BankTransactionCategoryComboBox
                     bankTransaction={bankTransaction}
-                    selectedValue={selectedCategory ?? null}
+                    selectedValue={selectedOption}
                     onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
-                      setTransactionCategorization(bankTransaction.id, { category: selectedCategory })
+                      setTransactionCategorization(bankTransaction.id, selectedCategory)
                     }}
                     isDisabled={isProcessing}
                   />

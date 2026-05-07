@@ -7,13 +7,12 @@ import { buildCategorizeBankTransactionPayloadForSplit, hasReceipts, isCategoriz
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
-import { useGetBankTransactionCategoryByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import PaperclipIcon from '@icons/Paperclip'
 import Scissors from '@icons/Scissors'
 import Trash from '@icons/Trash'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
@@ -49,7 +48,6 @@ export const BankTransactionsMobileListSplitForm = ({
     isError: isErrorCategorizing,
   } = useCategorizeBankTransactionWithCacheUpdate()
 
-  const { selectedCategory } = useGetBankTransactionCategoryByTransactionId(bankTransaction.id)
   const [showRetry, setShowRetry] = useState(false)
 
   const {
@@ -62,10 +60,7 @@ export const BankTransactionsMobileListSplitForm = ({
     changeCategoryForSplitAtIndex,
     getInputValueForSplitAtIndex,
     onBlurSplitAmount,
-  } = useSplitsForm({
-    bankTransaction,
-    selectedCategory,
-  })
+  } = useSplitsForm({ bankTransaction })
 
   const effectiveSplits = showCategorization
     ? localSplits
@@ -92,7 +87,7 @@ export const BankTransactionsMobileListSplitForm = ({
     )
   }
 
-  const handleCategoryChange = useCallback((index: number) => (value: BankTransactionCategoryComboBoxOption | null) => {
+  const handleCategoryChange = useCallback((index: number) => (value: BankTransactionNonSuggestedMatchOption | null) => {
     changeCategoryForSplitAtIndex(index, value)
   }, [changeCategoryForSplitAtIndex])
 

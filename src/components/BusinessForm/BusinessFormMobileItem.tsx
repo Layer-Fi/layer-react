@@ -1,14 +1,14 @@
 import { GridListItem } from 'react-aria-components'
 
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import ChevronRight from '@icons/ChevronRight'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 import './businessFormMobileItem.scss'
 
-export type BusinessFormOptionValue = BankTransactionCategoryComboBoxOption
+export type BusinessFormOptionValue = BankTransactionNonSuggestedMatchOption
 
 export interface BusinessFormMobileItemOption {
   value: BusinessFormOptionValue

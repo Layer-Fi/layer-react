@@ -1,11 +1,16 @@
 import { isWithinInterval, parseISO } from 'date-fns'
 
 import { type BankTransaction, DisplayState, type Split, type SuggestedMatch } from '@internal-types/bankTransactions'
+import { hasSuggestions } from '@internal-types/categories'
+import { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { type DateRange } from '@internal-types/general'
 import { Direction } from '@internal-types/general'
 import type { TagFilterInput } from '@internal-types/tags'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { makeTagKeyValueFromTag } from '@schemas/tag'
+import { BankTransactionSelectionVariant } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
+import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 import { CategorizedCategories, ReviewCategories } from '@components/BankTransactions/constants'
 
 export const filterVisibility = (
@@ -29,6 +34,11 @@ export const filterVisibility = (
 export interface NumericRangeFilter {
   min?: number
   max?: number
+}
+
+export enum BankTransactionsDateFilterMode {
+  MonthlyView = 'MonthlyView',
+  GlobalDateRange = 'GlobalDateRange',
 }
 
 export const hasMatch = (bankTransaction?: BankTransaction) => {
@@ -100,14 +110,38 @@ export const getBankTransactionMatchAsSuggestedMatch = (bankTransaction?: BankTr
   return undefined
 }
 
-export const getBankTransactionFirstSuggestedMatch = (bankTransaction?: BankTransaction): SuggestedMatch | undefined => {
+export const getSuggestedMatchForBankTransaction = (bankTransaction?: BankTransaction): SuggestedMatch | undefined => {
   return getBankTransactionMatchAsSuggestedMatch(bankTransaction) ?? bankTransaction?.suggested_matches?.[0]
 }
 
-export enum BankTransactionsDateFilterMode {
-  MonthlyView = 'MonthlyView',
-  GlobalDateRange = 'GlobalDateRange',
+export const getBankTransactionFirstSuggestedMatch = (bankTransaction?: BankTransaction): SuggestedMatch | undefined => {
+  return getSuggestedMatchForBankTransaction(bankTransaction)
 }
+
+export const getDefaultSuggestedMatchForBankTransaction = (bankTransaction?: BankTransaction): SuggestedMatchAsOption | null => {
+  const suggestedMatch = getSuggestedMatchForBankTransaction(bankTransaction)
+
+  return suggestedMatch ? new SuggestedMatchAsOption(suggestedMatch) : null
+}
+
+export const getDefaultSelectedCategoryForBankTransaction = (
+  bankTransaction: BankTransaction,
+): BankTransactionNonSuggestedMatchOption | null => {
+  if (bankTransaction.category) {
+    return convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.category)
+  }
+
+  if (hasSuggestions(bankTransaction.categorization_flow)) {
+    return convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.categorization_flow.suggestions[0])
+  }
+
+  return null
+}
+
+export const getVariantForBankTransaction = (bankTransaction?: BankTransaction): BankTransactionSelectionVariant => {
+  return getSuggestedMatchForBankTransaction(bankTransaction) ? BankTransactionSelectionVariant.MATCH : BankTransactionSelectionVariant.CATEGORY
+}
+
 export type BankTransactionFilters = {
   amount?: NumericRangeFilter
   account?: string[]

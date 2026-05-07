@@ -1,18 +1,18 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import ChevronDown from '@icons/ChevronDown'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 
 import './categorySelectDrawerWithTrigger.scss'
 
 type Props = {
-  value: BankTransactionCategoryComboBoxOption | null
-  onChange: (newValue: BankTransactionCategoryComboBoxOption | null) => void
+  value: BankTransactionNonSuggestedMatchOption | null
+  onChange: (newValue: BankTransactionNonSuggestedMatchOption | null) => void
   disabled?: boolean
   showTooltips: boolean
 }

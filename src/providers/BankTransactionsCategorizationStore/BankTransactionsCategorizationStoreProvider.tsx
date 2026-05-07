@@ -1,13 +1,23 @@
 import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { createStore, useStore } from 'zustand'
 
-import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import type { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
+import { type BankTransactionCategoryComboBoxOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import type { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 
-export type TaxCodeComboboxOption = string
+export enum BankTransactionSelectionVariant {
+  MATCH = 'MATCH',
+  CATEGORY = 'CATEGORY',
+}
 
 export type BankTransactionCategorization = {
-  category: BankTransactionCategoryComboBoxOption | null
-  taxCode: TaxCodeComboboxOption | null
+  category: BankTransactionNonSuggestedMatchOption | null
+  taxCode: TaxCodeComboBoxOption | null
+
+  match: SuggestedMatchAsOption | null
+
+  variant: BankTransactionSelectionVariant
 }
 
 export type BankTransactionsCategorizationState = {
@@ -15,8 +25,14 @@ export type BankTransactionsCategorizationState = {
 }
 
 type BankTransactionsCategorizationActions = {
-  setTransactionCategorization: (id: string, update: Partial<BankTransactionCategorization>) => void
-  setOnlyNewTransactionCategorizations: (categorizations: Map<string, Partial<BankTransactionCategorization>>) => void
+  setTransactionCategorization: (id: string, update: BankTransactionCategoryComboBoxOption | null) => void
+
+  setTransactionCategorySelection: (id: string, category: BankTransactionNonSuggestedMatchOption | null) => void
+  setTransactionMatchSelection: (id: string, match: SuggestedMatchAsOption | null) => void
+  setTransactionTaxCodeSelection: (id: string, taxCode: TaxCodeComboBoxOption | null) => void
+  setTransactionSelectionVariant: (id: string, variant: BankTransactionSelectionVariant) => void
+
+  setOnlyNewTransactionCategorizations: (categorizations: Map<string, BankTransactionCategorization>) => void
   clearTransactionCategorizations: (ids: string[]) => void
   clearAllTransactionCategorizations: () => void
 }
@@ -28,6 +44,10 @@ type BankTransactionsCategorizationStore = BankTransactionsCategorizationState &
 export const DEFAULT_CATEGORIZATION: BankTransactionCategorization = {
   category: null,
   taxCode: null,
+
+  match: null,
+
+  variant: BankTransactionSelectionVariant.CATEGORY,
 }
 
 const mergeCategorization = (
@@ -36,7 +56,26 @@ const mergeCategorization = (
 ): BankTransactionCategorization => ({
   category: next.category === undefined ? current.category : next.category,
   taxCode: next.taxCode === undefined ? current.taxCode : next.taxCode,
+  match: next.match === undefined ? current.match : next.match,
+  variant: next.variant === undefined ? current.variant : next.variant,
 })
+
+const updateCategorizationProperty = <K extends keyof BankTransactionCategorization>(
+  categorizations: Map<string, BankTransactionCategorization>,
+  id: string,
+  key: K,
+  value: BankTransactionCategorization[K],
+) => {
+  const current = categorizations.get(id) ?? DEFAULT_CATEGORIZATION
+  const merged = { ...current, [key]: value } as BankTransactionCategorization
+  const shouldWrite = current[key] !== merged[key]
+
+  if (!shouldWrite) return { categorizations }
+
+  const newMap = new Map(categorizations)
+  newMap.set(id, merged)
+  return { categorizations: newMap }
+}
 
 function buildStore() {
   return createStore<BankTransactionsCategorizationStore>((set) => {
@@ -45,18 +84,28 @@ function buildStore() {
       actions: {
         setTransactionCategorization: (id, update) => {
           set(({ categorizations }) => {
-            const newMap = new Map(categorizations)
-            const current = categorizations.get(id) ?? DEFAULT_CATEGORIZATION
-            const merged = mergeCategorization(current, update)
+            if (!update) return { categorizations }
 
-            const shouldWrite = !categorizations.has(id)
-              || current.category !== merged.category
-              || current.taxCode !== merged.taxCode
-
-            if (!shouldWrite) return { categorizations }
-            newMap.set(id, merged)
-            return { categorizations: newMap }
+            const isSuggestedMatch = isSuggestedMatchAsOption(update)
+            const { categorizations: updatedCategorizations } = updateCategorizationProperty(categorizations, id, isSuggestedMatch ? 'match' : 'category', update)
+            return updateCategorizationProperty(updatedCategorizations, id, 'variant', isSuggestedMatch ? BankTransactionSelectionVariant.MATCH : BankTransactionSelectionVariant.CATEGORY)
           })
+        },
+
+        setTransactionCategorySelection: (id, category) => {
+          set(({ categorizations }) => updateCategorizationProperty(categorizations, id, 'category', category))
+        },
+
+        setTransactionMatchSelection: (id, match) => {
+          set(({ categorizations }) => updateCategorizationProperty(categorizations, id, 'match', match))
+        },
+
+        setTransactionTaxCodeSelection: (id, taxCode) => {
+          set(({ categorizations }) => updateCategorizationProperty(categorizations, id, 'taxCode', taxCode))
+        },
+
+        setTransactionSelectionVariant: (id, variant) => {
+          set(({ categorizations }) => updateCategorizationProperty(categorizations, id, 'variant', variant))
         },
 
         setOnlyNewTransactionCategorizations: (newCategorizations) => {
@@ -66,19 +115,36 @@ function buildStore() {
             const newMap = new Map(categorizations)
 
             newCategorizations.forEach((next, id) => {
-              const isNewTransaction = !categorizations.has(id)
+              const current = categorizations.get(id)
 
-              const current = categorizations.get(id) ?? DEFAULT_CATEGORIZATION
-              const merged = mergeCategorization(current, next)
+              if (!current) {
+                const merged = mergeCategorization(DEFAULT_CATEGORIZATION, next)
 
-              const shouldWrite = isNewTransaction
-                || (current.category === null && merged.category !== null)
-                || (current.taxCode === null && merged.taxCode !== null)
-
-              if (shouldWrite) {
                 newMap.set(id, merged)
                 hasChanges = true
+
+                return
               }
+
+              const nextUpdates: Partial<BankTransactionCategorization> = {}
+
+              if (current.category === null && next.category) {
+                nextUpdates.category = next.category
+              }
+
+              if (current.match === null && next.match) {
+                nextUpdates.match = next.match
+              }
+
+              if (current.taxCode === null && next.taxCode !== null) {
+                nextUpdates.taxCode = next.taxCode
+              }
+
+              if (Object.keys(nextUpdates).length === 0) return
+
+              const merged = mergeCategorization(current, nextUpdates)
+              newMap.set(id, merged)
+              hasChanges = true
             })
 
             return hasChanges ? { categorizations: newMap } : state
@@ -118,18 +184,24 @@ export function useBankTransactionsCategorizationActions(): BankTransactionsCate
 
 export function useGetBankTransactionCategorizationByTransactionId(
   transactionId: string,
-): { selectedCategorization: BankTransactionCategorization | undefined } {
+): BankTransactionCategorization | undefined {
   const store = useBankTransactionsCategorizationStore()
   const selectedCategorization = useStore(store, state => state.categorizations.get(transactionId))
-  return { selectedCategorization }
+
+  return selectedCategorization
 }
 
-export function useGetBankTransactionCategoryByTransactionId(
+export function useGetBankTransactionMatchOrCategoryByTransactionId(
   transactionId: string,
-): { selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined } {
-  const store = useBankTransactionsCategorizationStore()
-  const selectedCategory = useStore(store, state => state.categorizations.get(transactionId)?.category)
-  return { selectedCategory }
+): BankTransactionCategoryComboBoxOption | null {
+  const selectedCategorization = useGetBankTransactionCategorizationByTransactionId(transactionId)
+  if (!selectedCategorization) return null
+
+  if (selectedCategorization.variant === BankTransactionSelectionVariant.CATEGORY) {
+    return selectedCategorization.category
+  }
+
+  return selectedCategorization.match
 }
 
 export function useGetAllBankTransactionsCategorizations(): { categorizations: ReadonlyMap<string, BankTransactionCategorization> } {
