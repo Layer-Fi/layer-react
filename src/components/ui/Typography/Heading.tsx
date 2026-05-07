@@ -8,11 +8,13 @@ import type { Spacing } from '@ui/sharedUITypes'
 
 import './heading.scss'
 
+export type HeadingSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
+
 type HeadingDataProps = {
   align?: 'center'
   pbe?: Spacing
   pie?: Spacing
-  size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
+  size?: HeadingSize
   variant?: 'subtle'
   weight?: 'normal' | 'bold'
   ellipsis?: true
