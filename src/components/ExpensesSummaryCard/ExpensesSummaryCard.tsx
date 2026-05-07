@@ -10,7 +10,7 @@ import { ProfitAndLossDetailedCharts, type ProfitAndLossDetailedChartsStringOver
 import './expensesSummaryCard.scss'
 
 type InteractionProps = {
-  onExpandClick?: () => void
+  onClickExpand?: () => void
 }
 
 type StylingProps = {
@@ -33,11 +33,11 @@ const useExpensesSummaryCard = ({ stylingProps, interactionProps, stringOverride
   const subtitle = useGlobalMonthSubtitle()
   const { chartColorsList } = stylingProps ?? {}
 
-  const { onExpandClick } = interactionProps ?? {}
+  const { onClickExpand } = interactionProps ?? {}
 
   const resolvedSlots: SummaryCardProps['slots'] = useMemo(() => {
-    const resolvedPrimaryAction = onExpandClick
-      ? <ExpandSummaryCardButton callback={onExpandClick} ariaLabel={t('common:label.view_details', 'View details')} />
+    const resolvedPrimaryAction = onClickExpand
+      ? <ExpandSummaryCardButton callback={onClickExpand} ariaLabel={t('common:label.view_details', 'View details')} />
       : undefined
 
     return {
@@ -46,7 +46,7 @@ const useExpensesSummaryCard = ({ stylingProps, interactionProps, stringOverride
       legend: <></>,
       primaryAction: resolvedPrimaryAction,
     }
-  }, [stringOverrides?.title, subtitle, t, onExpandClick])
+  }, [stringOverrides?.title, subtitle, t, onClickExpand])
 
   const resolvedStringOverrides: ProfitAndLossDetailedChartsStringOverrides = useMemo(() => {
     return {

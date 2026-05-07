@@ -14,7 +14,7 @@ import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
 import './profitAndLossSummaryCard.scss'
 
 type InteractionProps = {
-  onExpandClick?: () => void
+  onClickExpand?: () => void
 }
 
 type StringOverrides = {
@@ -37,7 +37,7 @@ const useProfitAndLossSummaryCard = ({ interactionProps, stringOverrides }: UseP
   const { isDesktop } = useSizeClass()
   const subtitle = useGlobalMonthSubtitle()
 
-  const { onExpandClick } = interactionProps ?? {}
+  const { onClickExpand } = interactionProps ?? {}
 
   const legend = useMemo(
     () => <PnlLegend direction={isDesktop ? 'row' : 'column'} />,
@@ -45,8 +45,8 @@ const useProfitAndLossSummaryCard = ({ interactionProps, stringOverrides }: UseP
   )
 
   const resolvedSlots: SummaryCardProps['slots'] = useMemo(() => {
-    const resolvedPrimaryAction = onExpandClick
-      ? <ExpandSummaryCardButton callback={onExpandClick} ariaLabel={t('common:label.view_details', 'View details')} />
+    const resolvedPrimaryAction = onClickExpand
+      ? <ExpandSummaryCardButton callback={onClickExpand} ariaLabel={t('common:label.view_details', 'View details')} />
       : undefined
 
     return {
@@ -55,7 +55,7 @@ const useProfitAndLossSummaryCard = ({ interactionProps, stringOverrides }: UseP
       legend: isDesktop ? legend : undefined,
       primaryAction: resolvedPrimaryAction,
     }
-  }, [stringOverrides?.title, subtitle, t, onExpandClick, isDesktop, legend])
+  }, [stringOverrides?.title, subtitle, t, onClickExpand, isDesktop, legend])
 
   return {
     resolvedSlots,
