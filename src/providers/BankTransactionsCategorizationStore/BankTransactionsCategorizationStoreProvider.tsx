@@ -34,7 +34,6 @@ type BankTransactionsCategorizationActions = {
 
   setOnlyNewTransactionCategorizations: (categorizations: Map<string, BankTransactionCategorization>) => void
   clearTransactionCategorizations: (ids: string[]) => void
-  clearAllTransactionCategorizations: () => void
 }
 
 type BankTransactionsCategorizationStore = BankTransactionsCategorizationState & {
@@ -163,9 +162,6 @@ function buildStore() {
           })
         },
 
-        clearAllTransactionCategorizations: () => {
-          set({ categorizations: new Map() })
-        },
       },
     }
   })
