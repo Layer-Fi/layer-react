@@ -139,7 +139,10 @@ export const getDefaultSelectedCategoryForBankTransaction = (
   return null
 }
 
-export const getDefaultVariantForBankTransaction = (bankTransaction?: BankTransaction): BankTransactionSelectionVariant => {
+export const getDefaultVariantForBankTransaction = (bankTransaction: BankTransaction): BankTransactionSelectionVariant => {
+  if (bankTransaction.match) return BankTransactionSelectionVariant.MATCH
+  if (bankTransaction.category) return BankTransactionSelectionVariant.CATEGORY
+
   return getSuggestedMatchForBankTransaction(bankTransaction) ? BankTransactionSelectionVariant.MATCH : BankTransactionSelectionVariant.CATEGORY
 }
 

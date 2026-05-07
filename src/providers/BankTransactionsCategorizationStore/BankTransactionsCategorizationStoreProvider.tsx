@@ -84,11 +84,15 @@ function buildStore() {
       actions: {
         setTransactionCategorization: (id, update) => {
           set(({ categorizations }) => {
-            if (!update) return { categorizations }
+            if (!update) {
+              const { categorizations: categorizationsWithoutMatch } = updateCategorizationProperty(categorizations, id, 'match', null)
+              const { categorizations: categorizationsWithoutSelection } = updateCategorizationProperty(categorizationsWithoutMatch, id, 'category', null)
+              return updateCategorizationProperty(categorizationsWithoutSelection, id, 'variant', BankTransactionSelectionVariant.CATEGORY)
+            }
 
             const isSuggestedMatch = isSuggestedMatchAsOption(update)
-            const { categorizations: updatedCategorizations } = updateCategorizationProperty(categorizations, id, isSuggestedMatch ? 'match' : 'category', update)
-            return updateCategorizationProperty(updatedCategorizations, id, 'variant', isSuggestedMatch ? BankTransactionSelectionVariant.MATCH : BankTransactionSelectionVariant.CATEGORY)
+            const { categorizations: nextCategorizations } = updateCategorizationProperty(categorizations, id, isSuggestedMatch ? 'match' : 'category', update)
+            return updateCategorizationProperty(nextCategorizations, id, 'variant', isSuggestedMatch ? BankTransactionSelectionVariant.MATCH : BankTransactionSelectionVariant.CATEGORY)
           })
         },
 
