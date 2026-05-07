@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { getDefaultCategorizationForBankTransaction } from '@utils/bankTransactions/shared'
 import {
@@ -9,8 +11,12 @@ import { type BankTransactionCategoryComboBoxOption } from '@components/BankTran
 
 export const useGetBankTransactionCategorizationWithDefault = (bankTransaction: BankTransaction): BankTransactionCategorization => {
   const selectedCategorization = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
+  const defaultCategorization = useMemo(
+    () => getDefaultCategorizationForBankTransaction(bankTransaction),
+    [bankTransaction],
+  )
 
-  return selectedCategorization ?? getDefaultCategorizationForBankTransaction(bankTransaction)
+  return selectedCategorization ?? defaultCategorization
 }
 
 export const useGetBankTransactionMatchOrCategoryWithDefault = (bankTransaction: BankTransaction): BankTransactionCategoryComboBoxOption | null => {
