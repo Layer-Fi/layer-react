@@ -20,10 +20,14 @@ import {
 import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
 import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
 import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
+import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { BankTransactionSelectionVariant, useBankTransactionsCategorizationActions, useGetBankTransactionCategorizationByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import {
+  BankTransactionSelectionVariant,
+  useBankTransactionsCategorizationActions,
+} from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import Scissors from '@icons/ScissorsFullOpen'
 import Trash from '@icons/Trash'
@@ -89,8 +93,8 @@ export const ExpandedBankTransactionRow = ({
 }: ExpandedBankTransactionRowProps) => {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
-  const selectedCategorization = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
-  const { match: selectedMatch, variant: purpose } = selectedCategorization ?? {}
+  const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
+  const { match: selectedMatch, variant: purpose } = selectedCategorization
 
   const { setTransactionMatchSelection, setTransactionSelectionVariant } = useBankTransactionsCategorizationActions()
   // Hooks for auto-saving tags and customer/vendor in unsplit state
@@ -162,9 +166,7 @@ export const ExpandedBankTransactionRow = ({
       })
 
       removedTags.forEach((tag) => {
-        void removeTagFromBankTransaction({
-          tagId: tag.id,
-        })
+        void removeTagFromBankTransaction({ tagId: tag.id })
       })
     }
   }

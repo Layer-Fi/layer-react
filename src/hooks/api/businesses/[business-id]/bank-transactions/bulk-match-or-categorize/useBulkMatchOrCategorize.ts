@@ -47,10 +47,6 @@ const buildBulkMatchOrCategorizePayload = (
   for (const transactionId of selectedIds) {
     const { category, match, taxCode, variant } = categorizations.get(transactionId) ?? DEFAULT_CATEGORIZATION
 
-    if (!category || isPlaceholderAsOption(category)) {
-      continue
-    }
-
     if (variant === BankTransactionSelectionVariant.MATCH) {
       if (!match) continue
 
@@ -58,6 +54,10 @@ const buildBulkMatchOrCategorizePayload = (
         type: 'match',
         suggestedMatchId: match.original.id,
       }
+      continue
+    }
+
+    if (!category || isPlaceholderAsOption(category)) {
       continue
     }
 

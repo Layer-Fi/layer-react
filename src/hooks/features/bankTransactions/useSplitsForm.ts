@@ -6,7 +6,8 @@ import { type BankTransaction, type Split } from '@internal-types/bankTransactio
 import { SplitAsOption } from '@internal-types/categorizationOption'
 import { convertCentsToDecimalString } from '@utils/format'
 import { toLocalizedNumber } from '@utils/i18n/number/input'
-import { useBankTransactionsCategorizationActions, useGetBankTransactionCategorizationByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
+import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import {
   calculateAddSplit,
@@ -42,8 +43,8 @@ export interface UseSplitsFormReturn {
 export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions): UseSplitsFormReturn => {
   const { t } = useTranslation()
   const intl = useIntl()
-  const selectedCategorization = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
-  const { category: selectedCategory } = selectedCategorization ?? {}
+  const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
+  const { category: selectedCategory } = selectedCategorization
 
   const [localSplits, setLocalSplits] = useState<Split[]>(
     getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory),

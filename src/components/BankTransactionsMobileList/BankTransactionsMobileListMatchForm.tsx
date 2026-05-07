@@ -6,11 +6,11 @@ import { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import {
   getBankTransactionMatchAsSuggestedMatch,
 } from '@utils/bankTransactions/shared'
+import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { useMatchBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useMatchBankTransactionWithCacheUpdate'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import {
   useBankTransactionsCategorizationActions,
-  useGetBankTransactionCategorizationByTransactionId,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
@@ -45,8 +45,8 @@ export const BankTransactionsMobileListMatchForm = ({
     isError: isErrorMatching,
   } = useMatchBankTransactionWithCacheUpdate()
   const { setTransactionMatchSelection } = useBankTransactionsCategorizationActions()
-  const selectedCategorization = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
-  const { match: selectedMatch } = selectedCategorization ?? {}
+  const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
+  const { match: selectedMatch } = selectedCategorization
   const selectedMatchId = selectedMatch?.original.id
 
   const [formError, setFormError] = useState<string | undefined>()

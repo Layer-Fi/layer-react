@@ -7,8 +7,9 @@ import { CategorizationType } from '@internal-types/categories'
 import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/categorizationOption'
 import { hasReceipts, isCategorized } from '@utils/bankTransactions/shared'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
+import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
-import { useBankTransactionsCategorizationActions, useGetBankTransactionCategorizationByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
@@ -76,8 +77,8 @@ export const BankTransactionsMobileListBusinessForm = ({
     return initialMap
   })
 
-  const selectedCategorization = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
-  const { category: selectedCategory } = selectedCategorization ?? {}
+  const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
+  const { category: selectedCategory } = selectedCategorization
 
   const { setTransactionCategorySelection } = useBankTransactionsCategorizationActions()
 

@@ -8,6 +8,7 @@ import { Direction } from '@internal-types/general'
 import type { TagFilterInput } from '@internal-types/tags'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { makeTagKeyValueFromTag } from '@schemas/tag'
+import { getDefaultTaxCodeOptionForBankTransaction } from '@utils/bankTransactions/taxCode'
 import { BankTransactionSelectionVariant } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
@@ -138,7 +139,7 @@ export const getDefaultSelectedCategoryForBankTransaction = (
   return null
 }
 
-export const getVariantForBankTransaction = (bankTransaction?: BankTransaction): BankTransactionSelectionVariant => {
+export const getDefaultVariantForBankTransaction = (bankTransaction?: BankTransaction): BankTransactionSelectionVariant => {
   return getSuggestedMatchForBankTransaction(bankTransaction) ? BankTransactionSelectionVariant.MATCH : BankTransactionSelectionVariant.CATEGORY
 }
 
@@ -170,4 +171,13 @@ export const buildCategorizeBankTransactionPayloadForSplit = (splits: Split[]): 
         vendorId: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : undefined,
       })),
     })
+}
+
+export const getDefaultCategorizationForBankTransaction = (bankTransaction: BankTransaction) => {
+  return {
+    category: getDefaultSelectedCategoryForBankTransaction(bankTransaction),
+    taxCode: getDefaultTaxCodeOptionForBankTransaction(bankTransaction),
+    match: getDefaultSuggestedMatchForBankTransaction(bankTransaction),
+    variant: getDefaultVariantForBankTransaction(bankTransaction),
+  }
 }

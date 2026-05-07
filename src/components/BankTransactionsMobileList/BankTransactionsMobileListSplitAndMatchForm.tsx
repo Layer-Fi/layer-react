@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { hasMatch } from '@utils/bankTransactions/shared'
+import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { BankTransactionSelectionVariant, useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import { useGetBankTransactionCategorizationByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { BankTransactionsMobileListMatchForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListMatchForm'
 import { BankTransactionsMobileListSplitForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListSplitForm'
 import { TextButton } from '@components/Button/TextButton'
@@ -26,8 +26,8 @@ export const BankTransactionsMobileListSplitAndMatchForm = ({
   const { t } = useTranslation()
   const anyMatch = hasMatch(bankTransaction)
 
-  const selectedCategorization = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
-  const { variant } = selectedCategorization ?? {}
+  const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
+  const { variant } = selectedCategorization
   const { setTransactionSelectionVariant } = useBankTransactionsCategorizationActions()
 
   return (

@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { isCategorized } from '@utils/bankTransactions/shared'
-import { useGetBankTransactionMatchOrCategoryByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { useGetBankTransactionMatchOrCategoryWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { BankTransactionsBaseSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
@@ -23,7 +23,7 @@ export const BankTransactionsListItemCategory = ({
     ? 'Layer__bankTransactionsListItemCategory__Mobile'
     : 'Layer__bankTransactionsListItemCategory__List'
   const categorized = isCategorized(bankTransaction)
-  const selectedOption = useGetBankTransactionMatchOrCategoryByTransactionId(bankTransaction.id)
+  const selectedOption = useGetBankTransactionMatchOrCategoryWithDefault(bankTransaction)
 
   if (categorized) {
     return (

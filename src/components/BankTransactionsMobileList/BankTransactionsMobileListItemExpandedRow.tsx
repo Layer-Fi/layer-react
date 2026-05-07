@@ -5,12 +5,11 @@ import { useTranslation } from 'react-i18next'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { hasMatch } from '@utils/bankTransactions/shared'
 import { translationKey } from '@utils/i18n/translationKey'
-import type { BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import {
+  type BankTransactionCategorization,
   BankTransactionSelectionVariant,
-  DEFAULT_CATEGORIZATION,
   useBankTransactionsCategorizationActions,
-  useGetBankTransactionCategorizationByTransactionId,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
@@ -43,7 +42,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
   showTooltips,
 }: BankTransactionsMobileListItemExpandedRowProps) => {
   const { t } = useTranslation()
-  const selectedCategorization = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
+  const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
   const { setTransactionSelectionVariant } = useBankTransactionsCategorizationActions()
 
   const [purpose, setPurpose] = useState(getPurposeFromStore(selectedCategorization))
@@ -95,18 +94,16 @@ export const BankTransactionsMobileListItemExpandedRow = ({
   )
 }
 
-const getPurposeFromStore = (selectedCategorization: BankTransactionCategorization | undefined): Purpose => {
-  const effectiveCategorization = selectedCategorization ?? DEFAULT_CATEGORIZATION
-
-  if (effectiveCategorization.variant === BankTransactionSelectionVariant.MATCH) {
+const getPurposeFromStore = (selectedCategorization: BankTransactionCategorization): Purpose => {
+  if (selectedCategorization.variant === BankTransactionSelectionVariant.MATCH) {
     return Purpose.more
   }
 
-  if (effectiveCategorization.category === null) {
+  if (selectedCategorization.category === null) {
     return Purpose.business
   }
 
-  if (isSplitAsOption(effectiveCategorization.category)) {
+  if (isSplitAsOption(selectedCategorization.category)) {
     return Purpose.more
   }
 

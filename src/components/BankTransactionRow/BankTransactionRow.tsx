@@ -6,10 +6,11 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { isCategorized, isCredit } from '@utils/bankTransactions/shared'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
+import { useGetBankTransactionMatchOrCategoryWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
-import { useBankTransactionsCategorizationActions, useGetBankTransactionMatchOrCategoryByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import AlertCircle from '@icons/AlertCircle'
@@ -80,7 +81,7 @@ export const BankTransactionRow = ({
   const { count: bulkSelectionCount } = useCountSelectedIds()
   const isBulkSelectionActive = bulkSelectionCount > 0
   const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
-  const selectedOption = useGetBankTransactionMatchOrCategoryByTransactionId(bankTransaction.id)
+  const selectedOption = useGetBankTransactionMatchOrCategoryWithDefault(bankTransaction)
   const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
 
   const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction })

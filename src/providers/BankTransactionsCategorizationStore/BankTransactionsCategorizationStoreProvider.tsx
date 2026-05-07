@@ -191,19 +191,6 @@ export function useGetBankTransactionCategorizationByTransactionId(
   return selectedCategorization
 }
 
-export function useGetBankTransactionMatchOrCategoryByTransactionId(
-  transactionId: string,
-): BankTransactionCategoryComboBoxOption | null {
-  const selectedCategorization = useGetBankTransactionCategorizationByTransactionId(transactionId)
-  if (!selectedCategorization) return null
-
-  if (selectedCategorization.variant === BankTransactionSelectionVariant.CATEGORY) {
-    return selectedCategorization.category
-  }
-
-  return selectedCategorization.match
-}
-
 export function useGetAllBankTransactionsCategorizations(): { categorizations: ReadonlyMap<string, BankTransactionCategorization> } {
   const store = useBankTransactionsCategorizationStore()
   const categorizations = useStore(store, state => state.categorizations)

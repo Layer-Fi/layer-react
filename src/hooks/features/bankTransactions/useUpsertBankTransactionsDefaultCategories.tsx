@@ -1,22 +1,8 @@
 import { useEffect } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import {
-  getDefaultSelectedCategoryForBankTransaction,
-  getDefaultSuggestedMatchForBankTransaction,
-  getVariantForBankTransaction,
-} from '@utils/bankTransactions/shared'
-import { getDefaultTaxCodeOptionForBankTransaction } from '@utils/bankTransactions/taxCode'
+import { getDefaultCategorizationForBankTransaction } from '@utils/bankTransactions/shared'
 import { type BankTransactionCategorization, useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-
-const getDefaultCategorizationForBankTransaction = (bankTransaction: BankTransaction) => {
-  return {
-    category: getDefaultSelectedCategoryForBankTransaction(bankTransaction),
-    taxCode: getDefaultTaxCodeOptionForBankTransaction(bankTransaction),
-    match: getDefaultSuggestedMatchForBankTransaction(bankTransaction),
-    variant: getVariantForBankTransaction(bankTransaction),
-  }
-}
 
 export const useUpsertBankTransactionsDefaultCategories = (bankTransactions: BankTransaction[] | undefined) => {
   const { setOnlyNewTransactionCategorizations } = useBankTransactionsCategorizationActions()
