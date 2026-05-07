@@ -1,5 +1,4 @@
 import type { TFunction } from 'i18next'
-import i18next from 'i18next'
 import { Check } from 'lucide-react'
 
 import { type LandingPageConfig, type LandingPagePlatformConfig, type LandingPageValueProposition } from '@components/LandingPage/types'
@@ -13,15 +12,6 @@ import {
 } from '@assets/images'
 
 export class LandingPageHelper {
-  static interpolateTemplate(template: string, platformConfig: LandingPagePlatformConfig): string {
-    const interpolationOptions = i18next.options.interpolation ?? {}
-
-    return i18next.services.interpolator.interpolate(template, {
-      platformName: platformConfig.platformName,
-      industry: platformConfig.industry,
-    }, i18next.language, interpolationOptions)
-  }
-
   static createBaseAccountingOffer(platformConfig: LandingPagePlatformConfig, t: TFunction): LandingPageConfig {
     const { platformName, industry } = platformConfig
     const accountingValueProps: LandingPageValueProposition[] = [

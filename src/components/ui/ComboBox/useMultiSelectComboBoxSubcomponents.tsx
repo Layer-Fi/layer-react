@@ -1,6 +1,5 @@
 import { useMemo, useRef } from 'react'
 import classNames from 'classnames'
-import i18next from 'i18next'
 import { Filter } from 'lucide-react'
 import {
   components,
@@ -9,6 +8,7 @@ import {
   type MultiValueProps,
 } from 'react-select'
 
+import { useLocale } from '@providers/I18nProvider/LayerI18nProvider'
 import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { HStack } from '@ui/Stack/Stack'
@@ -27,7 +27,10 @@ const getSelectedCount = <T extends ComboBoxOption>(selectedValues: T | readonly
   return 1
 }
 
-const getSelectedLabels = <T extends ComboBoxOption>(selectedValues: T | readonly T[] | null | undefined): string => {
+const getSelectedLabels = <T extends ComboBoxOption>(
+  selectedValues: T | readonly T[] | null | undefined,
+  locale: string,
+): string => {
   if (!selectedValues) {
     return ''
   }
@@ -39,7 +42,7 @@ const getSelectedLabels = <T extends ComboBoxOption>(selectedValues: T | readonl
       return ''
     }
 
-    const listFormatter = new Intl.ListFormat(i18next.resolvedLanguage || i18next.language || 'en', {
+    const listFormatter = new Intl.ListFormat(locale, {
       style: 'long',
       type: 'conjunction',
     })
@@ -69,9 +72,10 @@ const buildCustomMultiValue = <T extends ComboBoxOption>() => {
 
 const buildCustomMultiValueLabel = <T extends ComboBoxOption>() => {
   return function CustomMultiValueLabel({ children, innerProps, ...restProps }: MultiValueGenericProps<T, true, GroupBase<T>>) {
+    const locale = useLocale()
     const selectedValues = restProps.selectProps.value
     const selectedCount = getSelectedCount(selectedValues)
-    const selectedLabels = getSelectedLabels(selectedValues)
+    const selectedLabels = getSelectedLabels(selectedValues, locale)
 
     const mergedInnerProps = {
       ...innerProps,

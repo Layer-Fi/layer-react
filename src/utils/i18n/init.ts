@@ -15,12 +15,17 @@ const isPseudoEnabled = () => {
   return params.get(LAYER_TEST_LOCALE_URL_PARAM) === 'pseudo'
 }
 
+// A private i18next instance owned by Layer. We intentionally do not use the default singleton
+// (`import i18next from 'i18next'`) so we can't inadvertently share state or event subscriptions
+// with a customer platform's application's own react-i18next setup.
+const layerI18n = i18next.createInstance()
+
 export const initI18n = (locale: SupportedLocale) => {
-  if (i18next.isInitialized) return
+  if (layerI18n.isInitialized) return
 
   const usePseudo = isPseudoEnabled()
 
-  return void i18next
+  return void layerI18n
     .use(initReactI18next)
     .use(new Pseudo(pseudoOptions({ enabled: usePseudo })))
     .init({
@@ -37,4 +42,4 @@ export const initI18n = (locale: SupportedLocale) => {
     })
 }
 
-export default i18next
+export default layerI18n
