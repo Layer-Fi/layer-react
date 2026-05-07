@@ -3,15 +3,20 @@ import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasMatch } from '@utils/bankTransactions/shared'
 import { translationKey } from '@utils/i18n/translationKey'
+import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
+import {
+  type BankTransactionCategorization,
+  BankTransactionSelectionVariant,
+  useBankTransactionsCategorizationActions,
+} from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
+import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
 
 import { Purpose } from './BankTransactionsMobileListItem'
-import { PersonalStableName } from './constants'
 
 const PURPOSE_TOGGLE_CONFIG = [
   { value: 'business' as const, ...translationKey('common:label.business', 'Business'), style: { minWidth: 84 } },
@@ -37,7 +42,10 @@ export const BankTransactionsMobileListItemExpandedRow = ({
   showTooltips,
 }: BankTransactionsMobileListItemExpandedRowProps) => {
   const { t } = useTranslation()
-  const [purpose, setPurpose] = useState<Purpose>(getInitialPurpose(bankTransaction))
+  const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
+  const { setTransactionSelectionVariant } = useBankTransactionsCategorizationActions()
+
+  const [purpose, setPurpose] = useState(getPurposeFromStore(selectedCategorization))
 
   const purposeToggleOptions = useMemo(
     () => PURPOSE_TOGGLE_CONFIG.map(opt => ({
@@ -47,8 +55,19 @@ export const BankTransactionsMobileListItemExpandedRow = ({
     [t],
   )
 
-  const onChangePurpose = (key: Key) =>
-    setPurpose(key as Purpose)
+  const onChangePurpose = (key: Key) => {
+    const nextPurpose = key as Purpose
+    const isCurrentlySplit = !!selectedCategorization?.category && isSplitAsOption(selectedCategorization.category)
+
+    const nextVariant = nextPurpose === Purpose.more
+      && hasMatch(bankTransaction)
+      && !isCurrentlySplit
+      ? BankTransactionSelectionVariant.MATCH
+      : BankTransactionSelectionVariant.CATEGORY
+
+    setTransactionSelectionVariant(bankTransaction.id, nextVariant)
+    setPurpose(nextPurpose)
+  }
 
   return (
     <VStack pi='md' gap='md' pbe='md'>
@@ -75,35 +94,18 @@ export const BankTransactionsMobileListItemExpandedRow = ({
   )
 }
 
-const isPersonalCategory = (category: BankTransaction['category']): boolean => {
-  if (!category) {
-    return false
+const getPurposeFromStore = (selectedCategorization: BankTransactionCategorization): Purpose => {
+  if (selectedCategorization.variant === BankTransactionSelectionVariant.MATCH) {
+    return Purpose.more
   }
 
-  if (category.type === 'Account' && 'stable_name' in category) {
-    const stableName = category.stable_name
-    if (stableName === PersonalStableName.CREDIT || stableName === PersonalStableName.DEBIT) {
-      return true
-    }
-  }
-
-  if (category.type === 'Exclusion') {
-    return true
-  }
-
-  return false
-}
-
-const getInitialPurpose = (bankTransaction: BankTransaction): Purpose => {
-  if (bankTransaction.category) {
-    if (isPersonalCategory(bankTransaction.category)) {
-      return Purpose.personal
-    }
-    if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {
-      return Purpose.more
-    }
+  if (selectedCategorization.category === null) {
     return Purpose.business
   }
 
-  return hasMatch(bankTransaction) ? Purpose.more : Purpose.business
+  if (isSplitAsOption(selectedCategorization.category)) {
+    return Purpose.more
+  }
+
+  return Purpose.business
 }

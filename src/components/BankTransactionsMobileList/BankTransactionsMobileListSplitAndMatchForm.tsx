@@ -1,8 +1,9 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { hasMatch } from '@utils/bankTransactions/shared'
+import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
+import { BankTransactionSelectionVariant, useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { BankTransactionsMobileListMatchForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListMatchForm'
 import { BankTransactionsMobileListSplitForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListSplitForm'
 import { TextButton } from '@components/Button/TextButton'
@@ -15,11 +16,6 @@ interface BankTransactionsMobileListSplitAndMatchFormProps {
   showDescriptions?: boolean
 }
 
-enum Purpose {
-  categorize = 'categorize',
-  match = 'match',
-}
-
 export const BankTransactionsMobileListSplitAndMatchForm = ({
   bankTransaction,
   showTooltips,
@@ -29,17 +25,14 @@ export const BankTransactionsMobileListSplitAndMatchForm = ({
 }: BankTransactionsMobileListSplitAndMatchFormProps) => {
   const { t } = useTranslation()
   const anyMatch = hasMatch(bankTransaction)
-  const [formType, setFormType] = useState(
-    bankTransaction.category
-      ? Purpose.categorize
-      : anyMatch
-        ? Purpose.match
-        : Purpose.categorize,
-  )
+
+  const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
+  const { variant } = selectedCategorization
+  const { setTransactionSelectionVariant } = useBankTransactionsCategorizationActions()
 
   return (
     <>
-      {formType === Purpose.categorize && (
+      {variant === BankTransactionSelectionVariant.CATEGORY && (
         <BankTransactionsMobileListSplitForm
           bankTransaction={bankTransaction}
           showTooltips={showTooltips}
@@ -48,7 +41,7 @@ export const BankTransactionsMobileListSplitAndMatchForm = ({
           showCategorization={showCategorization}
         />
       )}
-      {formType === Purpose.match && (
+      {variant === BankTransactionSelectionVariant.MATCH && (
         <BankTransactionsMobileListMatchForm
           bankTransaction={bankTransaction}
           showReceiptUploads={showReceiptUploads}
@@ -57,14 +50,14 @@ export const BankTransactionsMobileListSplitAndMatchForm = ({
         />
       )}
       {showCategorization && anyMatch && (
-        formType === Purpose.match
+        variant === BankTransactionSelectionVariant.MATCH
           ? (
-            <TextButton onClick={() => setFormType(Purpose.categorize)}>
+            <TextButton onClick={() => setTransactionSelectionVariant(bankTransaction.id, BankTransactionSelectionVariant.CATEGORY)}>
               {t('bankTransactions:action.or_split_transaction', 'or split transaction')}
             </TextButton>
           )
           : (
-            <TextButton onClick={() => setFormType(Purpose.match)}>
+            <TextButton onClick={() => setTransactionSelectionVariant(bankTransaction.id, BankTransactionSelectionVariant.MATCH)}>
               {t('bankTransactions:action.or_find_match', 'or find match')}
             </TextButton>
           )

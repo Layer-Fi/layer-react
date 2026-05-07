@@ -7,12 +7,14 @@ import { CategorizationType } from '@internal-types/categories'
 import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/categorizationOption'
 import { hasReceipts, isCategorized } from '@utils/bankTransactions/shared'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
+import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
-import { useBankTransactionsCategorizationActions, useGetBankTransactionCategoryByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { isPlaceholderAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
@@ -57,8 +59,8 @@ export const BankTransactionsMobileListBusinessForm = ({
     isError: isErrorCategorizing,
   } = useCategorizeBankTransactionWithCacheUpdate()
 
-  const [sessionCategories, setSessionCategories] = useState<Map<string, BankTransactionCategoryComboBoxOption>>(() => {
-    const initialMap = new Map<string, BankTransactionCategoryComboBoxOption>()
+  const [sessionCategories, setSessionCategories] = useState<Map<string, BankTransactionNonSuggestedMatchOption>>(() => {
+    const initialMap = new Map<string, BankTransactionNonSuggestedMatchOption>()
 
     if (bankTransaction.category) {
       const existingCategory = convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.category)
@@ -75,8 +77,10 @@ export const BankTransactionsMobileListBusinessForm = ({
     return initialMap
   })
 
-  const { selectedCategory } = useGetBankTransactionCategoryByTransactionId(bankTransaction.id)
-  const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
+  const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
+  const { category: selectedCategory } = selectedCategorization
+
+  const { setTransactionCategorySelection } = useBankTransactionsCategorizationActions()
 
   const [showRetry, setShowRetry] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -118,10 +122,10 @@ export const BankTransactionsMobileListBusinessForm = ({
         selectedCategory
         && option.value === selectedCategory.value
       ) {
-        setTransactionCategorization(bankTransaction.id, { category: null })
+        setTransactionCategorySelection(bankTransaction.id, null)
       }
       else {
-        setTransactionCategorization(bankTransaction.id, { category: option })
+        setTransactionCategorySelection(bankTransaction.id, option)
       }
     }
   }
@@ -144,12 +148,12 @@ export const BankTransactionsMobileListBusinessForm = ({
     )
   }
 
-  const onDrawerSelect = useCallback((category: BankTransactionCategoryComboBoxOption | null) => {
+  const onDrawerSelect = useCallback((category: BankTransactionNonSuggestedMatchOption | null) => {
     if (!category) return
 
     setSessionCategories(prev => new Map(prev).set(category.value, category))
-    setTransactionCategorization(bankTransaction.id, { category })
-  }, [bankTransaction.id, setTransactionCategorization])
+    setTransactionCategorySelection(bankTransaction.id, category)
+  }, [bankTransaction.id, setTransactionCategorySelection])
 
   return (
     <>

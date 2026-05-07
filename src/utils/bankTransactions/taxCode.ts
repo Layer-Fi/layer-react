@@ -2,7 +2,7 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { type BankTransactionTaxOption } from '@schemas/bankTransactions/bankTransaction'
 import { isClassificationExclusion } from '@schemas/categorization'
 import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import type { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
+import { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 
 export const getBankTransactionTaxOptions = (bankTransaction?: BankTransaction): BankTransactionTaxOption[] => {
   if (!bankTransaction?.tax_options) {
@@ -10,6 +10,15 @@ export const getBankTransactionTaxOptions = (bankTransaction?: BankTransaction):
   }
 
   return Object.values(bankTransaction.tax_options).flat()
+}
+
+export const getDefaultTaxCodeOptionForBankTransaction = (bankTransaction?: BankTransaction): TaxCodeComboBoxOption | null => {
+  const taxCode = bankTransaction?.tax_code
+  if (!taxCode) return null
+
+  const option = getBankTransactionTaxOptions(bankTransaction).find(option => option.code === taxCode)
+
+  return option ? new TaxCodeComboBoxOption(option) : null
 }
 
 export const hasBankTransactionTaxCode = (

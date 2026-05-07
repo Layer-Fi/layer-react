@@ -2,18 +2,18 @@ import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import ChevronLeft from '@icons/ChevronLeft'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { ActionableList } from '@components/ActionableList/ActionableList'
-import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { buildFilteredCategoryOptions, type CategoryGroup, type CategoryOption, flattenCategories, isGroup } from '@components/CategorySelect/utils'
 import { SearchField } from '@components/SearchField/SearchField'
 
 interface CategorySelectDrawerProps {
-  onSelect: (value: BankTransactionCategoryComboBoxOption | null) => void
+  onSelect: (value: BankTransactionNonSuggestedMatchOption | null) => void
   selectedId?: string
   showTooltips: boolean
   isOpen: boolean
