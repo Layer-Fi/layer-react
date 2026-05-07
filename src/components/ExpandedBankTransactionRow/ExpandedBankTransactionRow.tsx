@@ -16,13 +16,14 @@ import { SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categoriz
 import { type CustomerVendorSchema } from '@schemas/customerVendor'
 import { type Tag } from '@schemas/tag'
 import {
+  getBankTransactionFirstSuggestedMatch,
   hasMatch,
-} from '@utils/bankTransactions'
-import { getBankTransactionFirstSuggestedMatch } from '@utils/bankTransactions'
+} from '@utils/bankTransactions/shared'
 import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
 import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
 import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
+import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankTransactionsCategorizationActions, useGetBankTransactionCategoryByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
@@ -39,7 +40,6 @@ import { BankTransactionReceiptsWithProvider } from '@components/BankTransaction
 import { useBankTransactionTagVisibility } from '@components/BankTransactionTagSelector/BankTransactionTagVisibilityProvider'
 import { TextButton } from '@components/Button/TextButton'
 import { CustomerVendorSelector } from '@components/CustomerVendorSelector/CustomerVendorSelector'
-import { useTaxCodeOptions } from '@components/ExpandedBankTransactionRow/useTaxCodeOptions'
 import { AmountInput } from '@components/Input/AmountInput'
 import { Input } from '@components/Input/Input'
 import { MatchForm } from '@components/MatchForm/MatchForm'

@@ -261,6 +261,7 @@ export const ExclusionSchema = Schema.Struct({
     Schema.fromKey('exclusion_type'),
   ),
 })
+export type Exclusion = typeof ExclusionSchema.Type
 
 export const makeExclusion = (exclusionType: string) =>
   Schema.decodeSync(ExclusionSchema)({ type: 'Exclusion', exclusion_type: exclusionType })
@@ -269,6 +270,10 @@ export const ClassificationSchema = Schema.Union(
   AccountIdentifierSchema,
   ExclusionSchema,
 )
+
+export const isClassificationExclusion = (value: Classification): value is Exclusion => {
+  return value.type === 'Exclusion'
+}
 
 export const isClassificationAccountIdentifier = (value: Classification): value is AccountIdentifier => {
   return value.type === 'StableName' || value.type === 'AccountId'
