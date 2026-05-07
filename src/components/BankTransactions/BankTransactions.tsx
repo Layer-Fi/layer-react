@@ -25,6 +25,7 @@ import {
 } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { BankTransactionsIsCategorizationEnabledProvider } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+import { BankTransactionTagVisibilityProvider } from '@contexts/BankTransactionTagVisibilityContext/BankTransactionTagVisibilityContext'
 import { CategorizationRulesContext, CategorizationRulesProvider } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { MobileListSkeleton } from '@ui/MobileList/MobileListSkeleton'
@@ -41,7 +42,6 @@ import {
   BankTransactionsTable,
   type BankTransactionsTableStringOverrides,
 } from '@components/BankTransactionsTable/BankTransactionsTable'
-import { BankTransactionTagVisibilityProvider } from '@components/BankTransactionTagSelector/BankTransactionTagVisibilityProvider'
 import { ResponsiveCategorizationRulesView } from '@components/CategorizationRules/CategorizationRulesView/ResponsiveCategorizationRulesView'
 import { Container } from '@components/Container/Container'
 import { ErrorBoundary } from '@components/ErrorBoundary/ErrorBoundary'

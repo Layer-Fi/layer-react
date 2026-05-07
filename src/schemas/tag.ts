@@ -1,5 +1,4 @@
 import { pipe, Schema } from 'effect'
-import type { TFunction } from 'i18next'
 
 export const TagDimensionStrictnessSchema = Schema.Literal(
   'BALANCING',
@@ -64,21 +63,6 @@ export const TagDimensionSchema = Schema.Struct({
 })
 export type TagDimension = typeof TagDimensionSchema.Type
 
-const TagValueSchema = Schema.Data(
-  Schema.Struct({
-    dimensionId: Schema.UUID,
-    dimensionKey: Schema.NonEmptyTrimmedString,
-    dimensionDisplayName: Schema.NullishOr(Schema.NonEmptyTrimmedString),
-    valueId: Schema.UUID,
-    value: Schema.NonEmptyTrimmedString,
-    valueDisplayName: Schema.NullishOr(Schema.NonEmptyTrimmedString),
-    isArchived: Schema.Boolean,
-  }),
-)
-export const makeTagValue = Schema.decodeSync(TagValueSchema)
-
-export type TagValue = typeof TagValueSchema.Type
-
 export const TagSchema = Schema.Data(
   Schema.Struct({
     id: Schema.UUID,
@@ -92,36 +76,6 @@ export const TagSchema = Schema.Data(
     }),
   }),
 )
-
-export function getTagDisplayNameForValue(tag: Tag, t: TFunction): string {
-  const valueBaseLabel = tag.valueDisplayName ?? tag.value
-  return tag.archivedAt ? t('tags:label.tag_label_archived', '{{label}} (Archived)', { label: valueBaseLabel }) : valueBaseLabel
-}
-
-export function getTagDisplayNameForDimension(tag: Tag): string {
-  return tag.dimensionDisplayName ?? tag.key
-}
-
-export function getTagValueDisplayNameForValue(tagValue: TagValue, t: TFunction): string {
-  const valueBaseLabel = tagValue.valueDisplayName ?? tagValue.value
-  return tagValue.isArchived ? t('tags:label.tag_label_archived', '{{label}} (Archived)', { label: valueBaseLabel }) : valueBaseLabel
-}
-
-export function getTagValueDisplayNameForDimension(tagValue: TagValue): string {
-  return tagValue.dimensionDisplayName ?? tagValue.dimensionKey
-}
-
-export function getDimensionDisplayName(dimension: TagDimension): string {
-  return dimension.displayName ?? dimension.key
-}
-
-export function getTagValueDisplayName(
-  tag: { value: string, displayName?: string | null, archivedAt?: Date | null },
-  t: TFunction,
-): string {
-  const valueBaseLabel = tag.displayName ?? tag.value
-  return tag.archivedAt ? t('tags:label.tag_label_archived', '{{label}} (Archived)', { label: valueBaseLabel }) : valueBaseLabel
-}
 
 export const makeTag = Schema.decodeSync(TagSchema)
 export type Tag = typeof TagSchema.Type
