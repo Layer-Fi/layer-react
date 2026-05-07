@@ -9,7 +9,7 @@ import { hasReceipts } from '@utils/bankTransactions'
 import { isCategorized } from '@utils/bankTransactions'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
-import { useBankTransactionsCategoryActions, useGetBankTransactionCategory } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useBankTransactionsCategorizationActions, useGetBankTransactionCategoryByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -76,8 +76,8 @@ export const BankTransactionsMobileListBusinessForm = ({
     return initialMap
   })
 
-  const { selectedCategory } = useGetBankTransactionCategory(bankTransaction.id)
-  const { setTransactionCategory } = useBankTransactionsCategoryActions()
+  const { selectedCategory } = useGetBankTransactionCategoryByTransactionId(bankTransaction.id)
+  const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
 
   const [showRetry, setShowRetry] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -119,10 +119,10 @@ export const BankTransactionsMobileListBusinessForm = ({
         selectedCategory
         && option.value === selectedCategory.value
       ) {
-        setTransactionCategory(bankTransaction.id, null)
+        setTransactionCategorization(bankTransaction.id, { category: null })
       }
       else {
-        setTransactionCategory(bankTransaction.id, option)
+        setTransactionCategorization(bankTransaction.id, { category: option })
       }
     }
   }
@@ -149,8 +149,8 @@ export const BankTransactionsMobileListBusinessForm = ({
     if (!category) return
 
     setSessionCategories(prev => new Map(prev).set(category.value, category))
-    setTransactionCategory(bankTransaction.id, category)
-  }, [bankTransaction.id, setTransactionCategory])
+    setTransactionCategorization(bankTransaction.id, { category })
+  }, [bankTransaction.id, setTransactionCategorization])
 
   return (
     <>

@@ -14,4 +14,10 @@
     grid-template-areas: 'selection content';
     grid-template-columns: auto 1fr;
   }
+
+  [data-variant='compact'] & {
+    padding-inline: 0;
+    border-radius: 0;
+    border: none;
+  }
 }

@@ -13,14 +13,14 @@
   "empty": {
     "add_first_entry": "Ajoutez votre première entrée de temps pour commencer le suivi.",
     "no_entries_yet": "Aucune entrée de temps pour le moment",
-    "no_matching_entries": "",
-    "try_adjusting_filters": ""
+    "no_matching_entries": "Aucune entrée de temps trouvée",
+    "try_adjusting_filters": "Essayez de modifier vos filtres."
   },
   "error": {
     "archive_service": "Impossible d'archiver ce service. Veuillez réessayer.",
     "cancel_timer": "Impossible d'annuler le minuteur. Veuillez réessayer.",
     "complete_timer": "Impossible de terminer le minuteur. Veuillez réessayer.",
-    "complete_timer_stale": "",
+    "complete_timer_stale": "Cette minuterie a déjà été terminée ou annulée. Rechargez la page.",
     "create_service": "Impossible de créer le service. Veuillez réessayer.",
     "delete_entry": "Impossible de supprimer l'entrée de temps. Veuillez vérifier votre connexion et réessayer.",
     "load_active_timer": "Impossible de charger le minuteur actif. Veuillez vérifier votre connexion et réessayer.",
@@ -29,7 +29,7 @@
     "load_services": "Impossible de charger les services.",
     "load_summary": "Impossible de charger le sommaire du suivi du temps",
     "start_timer": "Impossible de démarrer le minuteur. Veuillez réessayer.",
-    "start_timer_already_active": "",
+    "start_timer_already_active": "Une minuterie est déjà en cours. Veuillez recharger la page.",
     "unarchive_service": "Impossible de restaurer ce service. Veuillez réessayer.",
     "update_service": "Impossible d'enregistrer ce service. Veuillez réessayer.",
     "update_timer": "Impossible de mettre à jour le minuteur. Veuillez réessayer."
@@ -37,11 +37,11 @@
   "label": {
     "active": "Actif",
     "add_memo": "Ajouter une note",
-    "additional_time_tracking_actions": "",
+    "additional_time_tracking_actions": "Actions supplémentaires de suivi du temps",
     "all_customers": "Tous les clients",
     "all_services": "Tous les services",
     "customer": "Client",
-    "customer_optional": "",
+    "customer_optional": "Client (facultatif)",
     "delete_entry_warning": "Cette entrée de temps sera définitivement supprimée. Cette action ne peut pas être annulée.",
     "discard_timer_warning": "Le minuteur actif sera annulé et aucune entrée de temps ne sera enregistrée.",
     "duration": "Durée",
@@ -50,18 +50,18 @@
     "entry_date": "Date de l'entrée",
     "entry_details": "Détails de l'entrée de temps",
     "invoiced": "Facturé",
-    "less_than_one_minute": "",
+    "less_than_one_minute": "< 1 min",
     "memo": "Note",
-    "no_activity_breakdown": "",
+    "no_activity_breakdown": "Aucune activité pendant cette période",
     "no_services": "Aucun service disponible",
     "other": "Autre",
     "select_customer": "Sélectionner un client (facultatif)",
-    "select_customer_short": "",
+    "select_customer_short": "Sélectionner un client",
     "select_service": "Sélectionner un service",
     "service": "Service",
     "time_entries": "Entrées de temps",
-    "time_tracking": "",
-    "zero_minutes": ""
+    "time_tracking": "Suivi du temps",
+    "zero_minutes": "0 min"
   },
   "prompt": {
     "delete_entry": "Supprimer cette entrée de temps?",
@@ -74,13 +74,13 @@
     "archive_confirm_description": "Ce service sera retiré de votre liste active. Les entrées de temps qui l'utilisaient ne sont pas modifiées.",
     "archive_confirm_title": "Archiver ce service?",
     "archived": "Archivés",
-    "archived_service": "",
+    "archived_service": "{{name}} (archivé)",
     "cancel": "Annuler",
-    "create_service_input_value": "",
+    "create_service_input_value": "Créer le service \"{{inputValue}}\"",
     "hourly_rate_optional": "Taux horaire par défaut (facultatif)",
     "no_active": "Aucun service pour le moment",
     "no_archived": "Aucun service archivé",
-    "rate_per_hour": "",
+    "rate_per_hour": "{{rate}}/h",
     "save": "Enregistrer",
     "service_name": "Nom du service",
     "tab_group_label": "Liste des services",
@@ -90,10 +90,10 @@
     "unarchive_confirm_title": "Restaurer ce service?"
   },
   "validation": {
-    "duration_whole_minutes": "",
+    "duration_whole_minutes": "La durée doit être un nombre entier de minutes supérieur à zéro.",
     "entry_date_not_future": "La date de l'entrée ne peut pas être dans le futur.",
     "entry_date_required": "La date de l'entrée est un champ obligatoire.",
-    "hourly_rate_positive": "",
+    "hourly_rate_positive": "Le taux horaire par défaut doit être supérieur à zéro.",
     "service_name_required": "Le nom du service est un champ obligatoire.",
     "service_required": "Le service est un champ obligatoire."
   }

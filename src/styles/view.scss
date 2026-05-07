@@ -36,12 +36,12 @@
     display: flex;
     align-items: center;
     min-height: 44px;
-    width: 100%;
     padding: var(--spacing-md) 0;
   }
 
   .Layer__view-header__content {
     display: flex;
+    gap: var(--spacing-md);
     align-items: center;
     justify-content: space-between;
     width: 100%;

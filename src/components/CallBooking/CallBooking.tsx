@@ -46,10 +46,10 @@ const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
         {t('callBookings:prompt.ready_to_get_started', 'Ready to get started?')}
       </Heading>
       <Span variant='subtle' align='center'>
-        {t('callBookings:label.book_call_with_bookkeeper', 'Book a call with your bookkeeper')}
+        {t('callBookings:label.book_call_with_bookkeeper', 'Schedule an onboarding call with your bookkeeper')}
       </Span>
       <Button variant='solid' onClick={onBookCall}>
-        {t('callBookings:action.book_call', 'Book a call')}
+        {t('callBookings:action.book_call', 'Schedule Call')}
       </Button>
     </VStack>
   )

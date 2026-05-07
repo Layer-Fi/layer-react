@@ -38,38 +38,19 @@ const BookkeepingOverviewTasksContent = ({
   onBookCall,
   onClickReconnectAccounts,
 }: BookkeepingOverviewTasksContentProps) => {
-  const callBookingEmptyPromptFirst =
-    showCallBookingCard && callBooking == null
-
-  if (callBookingEmptyPromptFirst) {
-    return (
-      <>
-        <CallBooking
-          callBooking={callBooking}
-          onBookCall={onBookCall}
-        />
-        <Tasks
-          mobile={tasksMobile}
-          stringOverrides={tasksStringOverrides}
-          onClickReconnectAccounts={onClickReconnectAccounts}
-        />
-      </>
-    )
-  }
-
   return (
     <>
-      <Tasks
-        mobile={tasksMobile}
-        stringOverrides={tasksStringOverrides}
-        onClickReconnectAccounts={onClickReconnectAccounts}
-      />
       {showCallBookingCard && (
         <CallBooking
           callBooking={callBooking}
           onBookCall={onBookCall}
         />
       )}
+      <Tasks
+        mobile={tasksMobile}
+        stringOverrides={tasksStringOverrides}
+        onClickReconnectAccounts={onClickReconnectAccounts}
+      />
     </>
   )
 }

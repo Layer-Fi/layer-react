@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import tsConfigPaths from 'vite-tsconfig-paths'
 import dts from 'vite-plugin-dts'
 import path from 'node:path'
 import { bundleCss } from './plugins/bundleCss'
@@ -22,13 +21,12 @@ export default defineConfig(({ mode, command }) => {
 
     plugins: [
       react(),
-      tsConfigPaths(),
       isESM && !isWatch
         ? dts({
-          tsconfigPath: './tsconfig.json',
-          rollupTypes: true,
-          outDir: path.resolve(__dirname, `../${OUT_DIR}`),
-        })
+            tsconfigPath: './tsconfig.json',
+            bundleTypes: true,
+            outDirs: path.resolve(__dirname, `../${OUT_DIR}`),
+          })
         : null,
       isESM ? bundleCss() : null,
       (isWatch || isCJS) ? cleanupBuild() : null,
@@ -37,7 +35,7 @@ export default defineConfig(({ mode, command }) => {
     build: {
       minify: false,
       cssMinify: false,
-      cssCodeSplit: false,
+      cssCodeSplit: true,
       lib: isESM
         ? {
           entry: {
@@ -75,6 +73,7 @@ export default defineConfig(({ mode, command }) => {
 
     resolve: {
       extensions: ['.tsx', '.ts'],
+      tsconfigPaths: true,
     },
   }
 })

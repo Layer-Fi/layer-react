@@ -1,0 +1,9 @@
+.Layer__MobileSelectionDrawerList__Check {
+  visibility: hidden;
+  height: 1rem;
+  min-width: 1rem;
+
+  &[data-selected='true'] {
+    visibility: visible;
+  }
+}
