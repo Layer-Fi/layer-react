@@ -37,14 +37,6 @@ header.Layer__profit-and-loss-detailed-charts__header--tablet {
   flex-direction: column;
   gap: var(--spacing-4xs);
 
-  .title {
-    color: var(--color-base-800);
-  }
-
-  .date {
-    color: var(--color-base-500);
-  }
-
   & > .Layer__text {
     margin: 0;
   }
