@@ -46,7 +46,7 @@ const useProfitAndLossSummaryCard = ({ interactionProps, stringOverrides }: UseP
 
   const resolvedSlots: SummaryCardProps['slots'] = useMemo(() => {
     const resolvedPrimaryAction = onClickExpand
-      ? <ExpandSummaryCardButton callback={onClickExpand} ariaLabel={t('common:label.view_details', 'View details')} />
+      ? <ExpandSummaryCardButton callback={onClickExpand} ariaLabel={t('common:label.view_label', 'View')} />
       : undefined
 
     return {

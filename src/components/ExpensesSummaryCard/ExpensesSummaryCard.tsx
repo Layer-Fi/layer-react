@@ -37,13 +37,13 @@ const useExpensesSummaryCard = ({ stylingProps, interactionProps, stringOverride
 
   const resolvedSlots: SummaryCardProps['slots'] = useMemo(() => {
     const resolvedPrimaryAction = onClickExpand
-      ? <ExpandSummaryCardButton callback={onClickExpand} ariaLabel={t('common:label.view_details', 'View details')} />
+      ? <ExpandSummaryCardButton callback={onClickExpand} ariaLabel={t('common:label.view_label', 'View')} />
       : undefined
 
     return {
       title: stringOverrides?.title ?? t('common:label.expenses', 'Expenses'),
       subtitle: subtitle,
-      legend: <></>,
+      legend: undefined,
       primaryAction: resolvedPrimaryAction,
     }
   }, [stringOverrides?.title, subtitle, t, onClickExpand])
