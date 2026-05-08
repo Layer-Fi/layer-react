@@ -6,6 +6,7 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { buildCategorizeBankTransactionPayloadForSplit, hasReceipts, isCategorized } from '@utils/bankTransactions/shared'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
+import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import PaperclipIcon from '@icons/Paperclip'
@@ -19,6 +20,7 @@ import { type BankTransactionReceiptsHandle } from '@components/BankTransactionR
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 import { AmountInput } from '@components/Input/AmountInput'
 import { FileInput } from '@components/Input/FileInput'
+import { TaxCodeMobileDrawer } from '@components/TaxCodeSelect/TaxCodeMobileDrawer'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
@@ -58,9 +60,12 @@ export const BankTransactionsMobileListSplitForm = ({
     removeSplit,
     updateSplitAmount,
     changeCategoryForSplitAtIndex,
+    updateSplitAtIndex,
     getInputValueForSplitAtIndex,
     onBlurSplitAmount,
   } = useSplitsForm({ bankTransaction })
+
+  const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(bankTransaction)
 
   const effectiveSplits = showCategorization
     ? localSplits
@@ -108,11 +113,6 @@ export const BankTransactionsMobileListSplitForm = ({
                   justify='space-between'
                   className='Layer__BankTransactionsMobileSplitForm__SplitRow'
                 >
-                  <CategorySelectDrawerWithTrigger
-                    selectedValue={split.category}
-                    onSelectedValueChange={handleCategoryChange(index)}
-                    showTooltips={showTooltips}
-                  />
                   <AmountInput
                     name={`split-${index}`}
                     disabled={index === 0 || !showCategorization}
@@ -122,6 +122,26 @@ export const BankTransactionsMobileListSplitForm = ({
                     isInvalid={split.amount < 0}
                     className='Layer__BankTransactionsMobileSplitForm__AmountInput'
                   />
+                  <CategorySelectDrawerWithTrigger
+                    selectedValue={split.category}
+                    onSelectedValueChange={handleCategoryChange(index)}
+                    showTooltips={showTooltips}
+                  />
+                  {hasTaxCodeOptions && (
+                    <VStack className='Layer__BankTransactionsMobileSplitForm__TaxCode'>
+                      <TaxCodeMobileDrawer
+                        options={taxCodeOptions}
+                        selectedValue={getSelectedTaxCodeOption(split.taxCode)}
+                        onSelectedValueChange={(value) => {
+                          updateSplitAtIndex(index, currentSplit => ({
+                            ...currentSplit,
+                            taxCode: value?.value ?? null,
+                          }))
+                        }}
+                        isDisabled={!showCategorization}
+                      />
+                    </VStack>
+                  )}
                   <Button
                     onClick={() => removeSplit(index)}
                     variant='outlined'
