@@ -169,7 +169,22 @@ export const LandingPage = ({
         </HStack>
       )}
     </VStack>
-  ), [t, platform, heroConfig, isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly, handleLearnMore, handleMainCta, isMobile, isStackedLayout, interpolateTemplate])
+  ),
+  [
+    t,
+    platform,
+    heroConfig,
+    isCalendlyVisible,
+    calendlyLink,
+    calendlyRef,
+    closeCalendly,
+    handleLearnMore,
+    handleMainCta,
+    isMobile,
+    isStackedLayout,
+    interpolateTemplate,
+  ],
+  )
 
   const RenderOffers = useMemo(() => (
     <VStack gap={isMobile ? 'lg' : '2xl'} className='Layer__LandingPage--offers'>
@@ -200,7 +215,17 @@ export const LandingPage = ({
       </div>
     </VStack>
   ),
-  [hasAccountingEnabled, hasBookkeepingEnabled, offeringSectionTitle, platform, accountingOfferingConfig, bookkeepingOfferingConfig, openCalendly, isMobile, interpolateTemplate],
+  [
+    hasAccountingEnabled,
+    hasBookkeepingEnabled,
+    offeringSectionTitle,
+    platform,
+    accountingOfferingConfig,
+    bookkeepingOfferingConfig,
+    openCalendly,
+    isMobile,
+    interpolateTemplate,
+  ],
   )
 
   return (
