@@ -20,6 +20,7 @@ import { type ProfitAndLossSummariesStringOverrides } from '@components/ProfitAn
 import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
 import { View } from '@components/View/View'
 import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
+import { type TagOption } from '@views/ProjectProfitability/ProjectProfitability'
 
 type BookkeepingOverviewTasksContentProps = {
   callBooking?: CallBookingData
@@ -74,7 +75,9 @@ export interface BookkeepingOverviewProps {
     }
   }
 
+  chartColorsList?: string[]
   onClickReconnectAccounts?: () => void
+  tagFilter?: TagOption
   /**
    * @deprecated Use `stringOverrides.title` instead
    */
@@ -85,8 +88,10 @@ export const BookkeepingOverview = ({
   title,
   showTitle = true,
   onClickReconnectAccounts,
+  chartColorsList,
   stringOverrides,
   slotProps,
+  tagFilter = undefined,
 }: BookkeepingOverviewProps) => {
   const { t } = useTranslation()
   const [width] = useWindowSize()
@@ -109,7 +114,14 @@ export const BookkeepingOverview = ({
   } = useBookkeepingOnboardingCallBooking()
 
   return (
-    <ProfitAndLoss asContainer={false}>
+    <ProfitAndLoss
+      asContainer={false}
+      tagFilter={
+        tagFilter
+          ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
+          : undefined
+      }
+    >
       <View
         viewClassName='Layer__bookkeeping-overview--view'
         title={stringOverrides?.title || title || t('overview:label.bookkeeping_overview', 'Bookkeeping overview')}
@@ -173,15 +185,23 @@ export const BookkeepingOverview = ({
             <VStack pb='md' pi='md' fluid>
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+                chartColorsList={chartColorsList}
                 variants={profitAndLossSummariesVariants}
               />
             </VStack>
-            <ProfitAndLoss.Chart />
+            <ProfitAndLoss.Chart
+              tagFilter={
+                tagFilter
+                  ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
+                  : undefined
+              }
+            />
           </Container>
         </div>
         <ProfitAndLossOverviewDetailedCharts
           variant='bookkeeping'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+          chartColorsList={chartColorsList}
         />
       </View>
       {isCalendlyVisible && (
