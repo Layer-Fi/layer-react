@@ -8,12 +8,11 @@ import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { TaxBanner } from '@components/TaxDetails/TaxBanner'
 import { TaxDetails } from '@components/TaxDetails/TaxDetails'
-import { TaxOverview } from '@components/TaxOverview/TaxOverview'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
 import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 
 const TAX_ESTIMATES_TAB_CONFIG = [
-  { value: TaxEstimatesRoute.Overview, ...translationKey('common:label.overview', 'Overview') },
+  // { value: TaxEstimatesRoute.Overview, ...translationKey('common:label.overview', 'Overview') },
   { value: TaxEstimatesRoute.Estimates, ...translationKey('taxEstimates:label.estimates', 'Estimates') },
   { value: TaxEstimatesRoute.Payments, ...translationKey('taxEstimates:label.payments', 'Payments') },
 ]
@@ -37,9 +36,9 @@ export const TaxEstimatesOnboardedViewContent = () => {
 
   const handleTabChange = useCallback((key: Key) => {
     switch (key) {
-      case TaxEstimatesRoute.Overview:
-        navigate.toOverview()
-        break
+      // case TaxEstimatesRoute.Overview:
+      //   navigate.toOverview()
+      //   break
       case TaxEstimatesRoute.Estimates:
         navigate.toEstimates()
         break
@@ -69,7 +68,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
           <TaxBanner data={taxBannerData} />
         </>
       )}
-      {route === TaxEstimatesRoute.Overview && <TaxOverview />}
+      {/* {route === TaxEstimatesRoute.Overview && <TaxOverview />} */}
       {route === TaxEstimatesRoute.Estimates && <TaxDetails />}
       {route === TaxEstimatesRoute.Payments && <TaxPayments />}
     </VStack>
