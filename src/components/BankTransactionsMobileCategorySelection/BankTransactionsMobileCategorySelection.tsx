@@ -5,24 +5,27 @@ import { useTranslation } from 'react-i18next'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 
-import './businessFormMobile.scss'
+import {
+  BankTransactionsMobileCategorySelectionItem,
+  type BankTransactionsMobileCategorySelectionItemOption,
+} from './BankTransactionsMobileCategorySelectionItem'
 
-import { BusinessFormMobileItem, type BusinessFormMobileItemOption } from './BusinessFormMobileItem'
+import './bankTransactionsMobileCategorySelection.scss'
 
-interface BusinessFormMobileProps {
-  options: BusinessFormMobileItemOption[]
+interface BankTransactionsMobileCategorySelectionProps {
+  options: BankTransactionsMobileCategorySelectionItemOption[]
   selectedId?: string
   showDescriptions?: boolean
-  onSelect: (option: BusinessFormMobileItemOption) => void
+  onSelect: (option: BankTransactionsMobileCategorySelectionItemOption) => void
   readOnly?: boolean
 }
 
-export const BusinessFormMobile = ({
+export const BankTransactionsMobileCategorySelection = ({
   options,
   selectedId,
   onSelect,
   readOnly,
-}: BusinessFormMobileProps) => {
+}: BankTransactionsMobileCategorySelectionProps) => {
   const { t } = useTranslation()
   const handleSelectionChange = useCallback((keys: Set<string | number> | 'all') => {
     if (readOnly) return
@@ -44,10 +47,10 @@ export const BusinessFormMobile = ({
         selectionMode='single'
         selectedKeys={selectedId ? new Set([selectedId]) : new Set()}
         onSelectionChange={handleSelectionChange}
-        className='Layer__BusinessFormMobile'
+        className='Layer__BankTransactionsMobileCategorySelection'
       >
         {options.map(option => (
-          <BusinessFormMobileItem
+          <BankTransactionsMobileCategorySelectionItem
             key={option.value.value}
             option={option}
           />

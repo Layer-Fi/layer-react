@@ -19,8 +19,8 @@ import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/B
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { BusinessFormMobile } from '@components/BusinessForm/BusinessFormMobile'
-import { type BusinessFormMobileItemOption, type BusinessFormOptionValue } from '@components/BusinessForm/BusinessFormMobileItem'
+import { BankTransactionsMobileCategorySelection } from '@components/BankTransactionsMobileCategorySelection/BankTransactionsMobileCategorySelection'
+import { type BankTransactionsMobileCategorySelectionItemOption, type BankTransactionsMobileCategorySelectionOptionValue } from '@components/BankTransactionsMobileCategorySelection/BankTransactionsMobileCategorySelectionItem'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import { FileInput } from '@components/Input/FileInput'
 import { ErrorText } from '@components/Typography/ErrorText'
@@ -28,12 +28,12 @@ import { ErrorText } from '@components/Typography/ErrorText'
 const SELECT_CATEGORY_VALUE = 'SELECT_CATEGORY'
 
 export const isSelectCategoryOption = (
-  value: BusinessFormOptionValue,
+  value: BankTransactionsMobileCategorySelectionOptionValue,
 ): boolean => {
   return isPlaceholderAsOption(value) && value.value === SELECT_CATEGORY_VALUE
 }
 
-type DisplayOption = BusinessFormMobileItemOption
+type DisplayOption = BankTransactionsMobileCategorySelectionItemOption
 
 interface BankTransactionsMobileListBusinessFormProps {
   bankTransaction: BankTransaction
@@ -160,7 +160,7 @@ export const BankTransactionsMobileListBusinessForm = ({
       <VStack gap='sm'>
         {showCategorization
           && (
-            <BusinessFormMobile
+            <BankTransactionsMobileCategorySelection
               options={options}
               onSelect={onCategorySelect}
               selectedId={selectedCategory?.value}
