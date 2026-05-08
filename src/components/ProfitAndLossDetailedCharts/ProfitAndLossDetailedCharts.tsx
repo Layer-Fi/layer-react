@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import { humanizeTitle } from '@utils/profitAndLossUtils'
-import { type Scope, type SidebarScope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
+import { createPnlLineItemComparator, type Scope, type SidebarScope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -111,10 +111,17 @@ export const ProfitAndLossDetailedCharts = ({
   const total =
     (activeScope === 'revenue' ? totalRevenue : totalExpenses) ?? 0
 
-  const sortParams = useMemo(() => ({
-    sortBy: sortByField,
-    sortOrder: sortOrder,
-  }), [sortByField, sortOrder])
+  const showTypeColumn = slotProps?.detailedTable?.showTypeColumn ?? true
+  const tableHasType = showTypeColumn
+    && tableData.length > 0
+    && tableData.every(item => item.type !== undefined)
+
+  const sortParams = useMemo<SortParams<string>>(() => {
+    if (!tableHasType && sortByField === 'type') {
+      return { sortBy: 'value', sortOrder: SortOrder.DESC }
+    }
+    return { sortBy: sortByField, sortOrder: sortOrder }
+  }, [tableHasType, sortByField, sortOrder])
 
   const isEmpty = useMemo(() => {
     if (isLoading) return false
@@ -166,10 +173,17 @@ export const ProfitAndLossDetailedCharts = ({
     fallbackFillSelector,
   }), [colorSelector, fallbackFillSelector])
 
+  const sortedTableData = useMemo(() => {
+    if (sortParams.sortBy === sortByField && sortParams.sortOrder === sortOrder) {
+      return tableData
+    }
+    return [...tableData].sort(createPnlLineItemComparator(sortParams))
+  }, [tableData, sortParams, sortByField, sortOrder])
+
   const tableDataWithTotal = useMemo(() => ({
-    data: tableData,
+    data: sortedTableData,
     total,
-  }), [tableData, total])
+  }), [sortedTableData, total])
 
   const chartDataWithTotal = useMemo(() => ({
     data: chartData,

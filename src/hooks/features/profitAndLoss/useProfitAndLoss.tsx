@@ -34,7 +34,7 @@ export type SortParamsByScope = Record<
   SortParams<string> | undefined
 >
 
-const createPnlLineItemComparator = (filters: SortParams<string> | undefined) => {
+export const createPnlLineItemComparator = (filters: SortParams<string> | undefined) => {
   return (a: PnlChartLineItem, b: PnlChartLineItem) => {
     const isAscending = filters?.sortOrder === SortOrder.ASC || filters?.sortOrder === SortOrder.ASCENDING
     switch (filters?.sortBy) {
