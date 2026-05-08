@@ -39,18 +39,28 @@ const createTaxEstimatesHeaderConfig = ({
   formattedYear: string
 }): Record<TaxEstimatesHeaderType, TaxEstimatesHeaderConfig> => ({
   [TaxEstimatesHeaderType.Overview]: {
-    title: tConditional(t, 'taxEstimates:label.estimated_taxes_for_year', {
+    title: tConditional(t, 'taxEstimates:label.taxable_income_for_year', {
       condition: projectedCondition,
       cases: {
-        default: 'Estimated Taxes for {{year}}',
-        projected: 'Projected estimated taxes for {{year}}',
+        default: 'Taxable income for {{year}}',
+        projected: 'Projected taxable income for {{year}}',
       },
       contexts: {
         projected: 'projected',
       },
       year: formattedYear,
     }),
-    description: t('taxEstimates:label.federal_and_state_taxes_owed', 'Federal and State Taxes Owed'),
+    description: tConditional(t, 'taxEstimates:label.taxable_income_estimate_to_date_for_year', {
+      condition: projectedCondition,
+      cases: {
+        default: 'Taxable income estimate to date for year {{year}}',
+        projected: 'Taxable income projection for year {{year}}',
+      },
+      contexts: {
+        projected: 'projected',
+      },
+      year: formattedYear,
+    }),
   },
   [TaxEstimatesHeaderType.Estimates]: {
     title: tConditional(t, 'taxEstimates:label.business_income_taxes', {
@@ -110,10 +120,9 @@ const useTaxEstimatesHeader = ({ type }: TaxEstimatesHeaderProps): TaxEstimatesH
 export const TaxEstimatesHeader = ({ type }: TaxEstimatesHeaderProps) => {
   const [viewportWidth] = useWindowSize()
   const isMobile = viewportWidth < BREAKPOINTS.MOBILE
-  const isTabletOrMobile = viewportWidth < BREAKPOINTS.TABLET
   const isOverview = type === TaxEstimatesHeaderType.Overview
   const { title, description } = useTaxEstimatesHeader({ type })
-  const pie = (isOverview || isTabletOrMobile) ? undefined : 'lg' as const
+  const pie = isOverview || isMobile ? undefined : 'lg' as const
 
   return (
     <Stack className='Layer__TaxEstimatesHeader' direction={isMobile ? 'column' : 'row'} gap='md' justify='space-between' align='start' fluid pie={pie}>

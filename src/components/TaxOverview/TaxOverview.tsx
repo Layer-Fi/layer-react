@@ -1,10 +1,10 @@
 import { useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@components/TaxEstimates/TaxEstimatesHeader'
+import { TaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
 import { TAX_OVERVIEW_MOBILE_BREAKPOINT } from '@components/TaxOverview/constants'
+import { TaxableIncomeCard } from '@components/TaxOverview/TaxableIncomeCard'
 import { TaxDeadlinesCard } from '@components/TaxOverview/TaxDeadlinesCard'
-import { TaxEstimatesSummaryDetailCard } from '@components/TaxOverview/TaxEstimatesSummaryDetailCard'
-import { TaxEstimatesTaxableIncomeCard } from '@components/TaxOverview/TaxEstimatesTaxableIncomeCard'
 
 import '@components/TaxOverview/taxOverview.scss'
 
@@ -16,8 +16,8 @@ export const TaxOverview = () => {
     return (
       <VStack className='Layer__TaxOverview' gap='md'>
         <TaxEstimatesHeader type={TaxEstimatesHeaderType.Overview} />
-        <TaxEstimatesSummaryDetailCard />
-        <TaxEstimatesTaxableIncomeCard />
+        <TaxableIncomeCard />
+        <TaxEstimatesSummaryCard />
         <TaxDeadlinesCard />
       </VStack>
     )
@@ -26,8 +26,8 @@ export const TaxOverview = () => {
     <VStack className='Layer__TaxOverview' gap='md'>
       <HStack gap='md' align='start'>
         <VStack className='Layer__TaxOverview__PrimaryColumn' gap='md'>
-          <TaxEstimatesSummaryDetailCard />
-          <TaxEstimatesTaxableIncomeCard />
+          <TaxableIncomeCard />
+          <TaxEstimatesSummaryCard />
         </VStack>
         <VStack className='Layer__TaxOverview__SecondaryColumn'>
           <TaxDeadlinesCard />
