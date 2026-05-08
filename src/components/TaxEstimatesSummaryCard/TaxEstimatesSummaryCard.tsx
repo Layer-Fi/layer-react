@@ -7,7 +7,7 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { HorizontalBarChart } from '@ui/HorizontalBarChart/HorizontalBarChart'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { Heading, type HeadingSize } from '@ui/Typography/Heading'
+import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
 import { DetailedChart, type DetailedChartProps } from '@components/DetailedCharts/DetailedChart'
@@ -103,15 +103,13 @@ const PieChartContent = ({ data, commonProps, layout }: Pick<ContentProps, 'data
 export type TaxEstimatesSummaryCardProps = {
   mode?: TaxEstimatesSummaryCardMode
   title?: string
-  headerSize?: HeadingSize
-  addHeaderSeparator?: boolean
+  withHeaderSeparator?: boolean
 }
 
 export const TaxEstimatesSummaryCard = ({
   mode = 'pie_chart',
   title: titleOverride,
-  headerSize,
-  addHeaderSeparator = false,
+  withHeaderSeparator = false,
 }: TaxEstimatesSummaryCardProps = {}) => {
   const { detailData, layout, title: defaultTitle, isLoading, isError } = useTaxEstimatesSummaryCard()
   const { isDesktop } = useSizeClass()
@@ -137,13 +135,13 @@ export const TaxEstimatesSummaryCard = ({
           <HStack
             className={classNames(
               'Layer__TaxEstimatesSummaryCard__Header',
-              (isSummaryCardLayout || addHeaderSeparator) && 'Layer__SummaryCard__ContainerHeader',
+              (isSummaryCardLayout || withHeaderSeparator) && 'Layer__SummaryCard__ContainerHeader',
             )}
             justify='space-between'
             align={isSummaryCardLayout ? 'center' : 'start'}
             gap='md'
           >
-            <Heading size={headerSize ?? (!isDesktop ? 'sm' : 'md')}>{title}</Heading>
+            <Heading size={!isDesktop ? 'sm' : 'md'}>{title}</Heading>
           </HStack>
           <ConditionalBlock data={detailData} isLoading={isLoading} isError={isError} Loading={<LoadingState />} Error={<ErrorState />}>
             {({ data }) => <Content data={data} mode={mode} commonProps={commonProps} layout={layout} />}

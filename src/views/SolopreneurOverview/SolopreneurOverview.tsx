@@ -114,7 +114,7 @@ export const SolopreneurOverview = ({
           />
           <TaxEstimatesSummaryCard
             mode='horizontal_bar_chart'
-            addHeaderSeparator
+            withHeaderSeparator
             title={stringOverrides?.taxEstimatesSummaryCard?.header}
           />
         </div>
