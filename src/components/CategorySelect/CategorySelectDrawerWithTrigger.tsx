@@ -5,7 +5,7 @@ import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTran
 import ChevronDown from '@icons/ChevronDown'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
-import { Span } from '@ui/Typography/Text'
+import { Span, type TextStyleProps } from '@ui/Typography/Text'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 
 import './categorySelectDrawerWithTrigger.scss'
@@ -14,12 +14,16 @@ type CategorySelectDrawerWithTriggerProps = {
   selectedValue: BankTransactionNonSuggestedMatchOption | null
   onSelectedValueChange: (newValue: BankTransactionNonSuggestedMatchOption | null) => void
   showTooltips: boolean
+  slotProps?: {
+    TriggerSpan?: TextStyleProps
+  }
 }
 
 export const CategorySelectDrawerWithTrigger = ({
   selectedValue,
   onSelectedValueChange,
   showTooltips,
+  slotProps,
 }: CategorySelectDrawerWithTriggerProps) => {
   const { t } = useTranslation()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -32,7 +36,7 @@ export const CategorySelectDrawerWithTrigger = ({
         onClick={() => { setIsDrawerOpen(true) }}
         variant='outlined'
       >
-        <Span ellipsis>{selectedValue?.label ?? t('common:action.select_label', 'Select...')}</Span>
+        <Span ellipsis size='md' {...slotProps?.TriggerSpan}>{selectedValue?.label ?? t('common:action.select_label', 'Select...')}</Span>
         <ChevronDown size={16} />
       </Button>
 
