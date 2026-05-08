@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { GridList } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
@@ -38,13 +38,18 @@ export const BankTransactionsMobileCategorySelection = ({
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [sessionCategories, setSessionCategories] = useState(
-    buildInitialSessionCategoriesMap(bankTransaction),
+    () => buildInitialSessionCategoriesMap(bankTransaction),
   )
+  const previousTransactionIdRef = useRef(bankTransaction.id)
 
   const { taxCodeOptions, hasTaxCodeOptions } = useTaxCodeOptions(bankTransaction)
   const { category: selectedCategory, taxCode: selectedTaxCode } = useGetBankTransactionCategorizationWithDefault(bankTransaction)
 
   useEffect(() => {
+    if (previousTransactionIdRef.current === bankTransaction.id) {
+      return
+    }
+    previousTransactionIdRef.current = bankTransaction.id
     setSessionCategories(buildInitialSessionCategoriesMap(bankTransaction))
   }, [bankTransaction])
 
