@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import type { BareFetcher, Middleware, SWRHook } from 'swr'
 
 import { setLocaleHeader } from '@utils/api/authenticatedHttp'
@@ -21,8 +22,8 @@ export const localeKeyMiddleware: Middleware = (useSWRNext: SWRHook) => (key, fe
 export const useLocalizedKey = () => {
   const locale = useLocale()
 
-  return <Key extends Record<string, unknown>>(key: Key | null | undefined) => {
+  return useCallback(<Key extends Record<string, unknown>>(key: Key | null | undefined) => {
     if (!key) return
     return { ...key, _locale: locale as string }
-  }
+  }, [locale])
 }
