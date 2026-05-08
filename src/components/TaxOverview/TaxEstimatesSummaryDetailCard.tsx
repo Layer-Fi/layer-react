@@ -65,6 +65,7 @@ function TaxSectionColumn({ section }: { section: TaxOverviewSection }) {
       <HStack className='Layer__TaxEstimatesSummaryDetailCard__SectionHeader' justify='space-between' align='center'>
         <Span size='sm' variant='subtle' className='Layer__TaxEstimatesSummaryDetailCard__SectionLabel'>{section.label}</Span>
         <span
+          data-section-type={section.type}
           className='Layer__TaxEstimatesSummaryDetailCard__SectionDot'
           style={{ backgroundColor: dotColor }}
           aria-hidden='true'
