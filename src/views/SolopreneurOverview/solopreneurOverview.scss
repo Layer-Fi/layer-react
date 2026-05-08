@@ -1,17 +1,11 @@
-.Layer__SolopreneurOverview__DetailedCharts {
-  max-width: 1406px;
+.Layer__SolopreneurOverview__Grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, auto);
+  gap: var(--spacing-md);
+  max-inline-size: 1406px;
 
-  & > * {
-    flex: 1;
-  }
-
-  .Layer__Expenses .Layer__profit-and-loss-detailed-charts .Layer__profit-and-loss-detailed-charts__content {
-    flex-direction: row;
-  }
-
-  @media (width <= 760px) {
-    .Layer__Expenses .Layer__profit-and-loss-detailed-charts .Layer__profit-and-loss-detailed-charts__content {
-      flex-direction: column;
-    }
+  @container (max-width: 1023px) {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

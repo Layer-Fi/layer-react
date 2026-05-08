@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type OnboardingStep } from '@internal-types/layerContext'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
-import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
-import { Stack } from '@ui/Stack/Stack'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { ExpensesSummaryCard } from '@components/ExpensesSummaryCard/ExpensesSummaryCard'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { Header } from '@components/Header/Header'
@@ -24,8 +23,6 @@ import { View } from '@components/View/View'
 import { type TagOption } from '@views/ProjectProfitability/ProjectProfitability'
 
 import './solopreneurOverview.scss'
-
-const SOLOPRENEUR_OVERVIEW_MOBILE_BREAKPOINT = 1200
 
 interface SolopreneurOverviewStringOverrides {
   title?: string
@@ -67,14 +64,9 @@ export const SolopreneurOverview = ({
 }: SolopreneurOverviewProps) => {
   const { t } = useTranslation()
   const { value: sizeClass } = useSizeClass()
-  const [width] = useWindowSize()
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
-
-  const detailedChartsProps = {
-    direction: width <= SOLOPRENEUR_OVERVIEW_MOBILE_BREAKPOINT ? 'column' as const : 'row' as const,
-  }
 
   return (
     <ProfitAndLoss
@@ -110,11 +102,11 @@ export const SolopreneurOverview = ({
           onTransactionsToReviewClick={onTransactionsToReviewClick}
           variants={profitAndLossSummariesVariants}
         />
-        <Stack className='Layer__SolopreneurOverview__DetailedCharts' gap='md' {...detailedChartsProps}>
+        {middleBanner}
+        <div className='Layer__SolopreneurOverview__Grid'>
           <ProfitAndLossSummaryCard
             stringOverrides={{ title: stringOverrides?.header }}
           />
-          {middleBanner}
           <ExpensesSummaryCard
             stylingProps={{ chartColorsList }}
           />
@@ -122,8 +114,8 @@ export const SolopreneurOverview = ({
             mode='horizontal_bar_chart'
             addHeaderSeparator
           />
-        </Stack>
-        <SolopreneurOverviewDetailedCharts />
+          <SolopreneurOverviewDetailedCharts />
+        </div>
       </View>
     </ProfitAndLoss>
   )
