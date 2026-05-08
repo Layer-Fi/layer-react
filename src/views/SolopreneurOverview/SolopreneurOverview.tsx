@@ -19,6 +19,7 @@ import {
 } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { ProfitAndLossSummaryCard } from '@components/ProfitAndLossSummaryCard/ProfitAndLossSummaryCard'
 import { SolopreneurOverviewDetailedCharts } from '@components/SolopreneurOverviewDetailedCharts/SolopreneurOverviewDetailedCharts'
+import { TaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
 import { View } from '@components/View/View'
 import { type TagOption } from '@views/ProjectProfitability/ProjectProfitability'
 
@@ -116,6 +117,10 @@ export const SolopreneurOverview = ({
           {middleBanner}
           <ExpensesSummaryCard
             stylingProps={{ chartColorsList }}
+          />
+          <TaxEstimatesSummaryCard
+            mode='horizontal_bar_chart'
+            addHeaderSeparator
           />
         </Stack>
         <SolopreneurOverviewDetailedCharts />

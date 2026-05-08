@@ -3,9 +3,11 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type TaxSummarySectionType } from '@schemas/taxEstimates/summary'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { HorizontalBarChart } from '@ui/HorizontalBarChart/HorizontalBarChart'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { Heading } from '@ui/Typography/Heading'
+import { Heading, type HeadingSize } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
 import { DetailedChart, type DetailedChartProps } from '@components/DetailedCharts/DetailedChart'
@@ -40,13 +42,45 @@ const ErrorState = () => {
 }
 
 type CommonProps = Pick<DetailedChartProps<SeriesData>, 'interactionProps' | 'stylingProps'>
+
+export type TaxEstimatesSummaryCardMode = 'pie_chart' | 'horizontal_bar_chart'
+
 type ContentProps = {
   data: DetailData<SeriesData>
+  mode: TaxEstimatesSummaryCardMode
   commonProps: CommonProps
   layout: 'taxOverview' | 'summaryCard'
 }
 
-const Content = ({ data, commonProps, layout }: ContentProps) => {
+const Content = ({ data, mode, commonProps, layout }: ContentProps) => {
+  if (mode === 'horizontal_bar_chart') {
+    return <HorizontalBarChartContent data={data} commonProps={commonProps} />
+  }
+  return <PieChartContent data={data} commonProps={commonProps} layout={layout} />
+}
+
+const HorizontalBarChartContent = ({ data, commonProps }: Pick<ContentProps, 'data' | 'commonProps'>) => {
+  const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
+  return (
+    <VStack className='Layer__TaxEstimatesSummaryCard__Content Layer__TaxEstimatesSummaryCard__Content--horizontal' gap='md'>
+      <HStack className='Layer__TaxEstimatesSummaryCard__TotalRow' justify='space-between' align='baseline' gap='md'>
+        <Span size='md' variant='subtle'>{t('common:label.total', 'Total')}</Span>
+        <Span size='xl' weight='bold' className='Layer__TaxEstimatesSummaryCard__TotalValue'>
+          {formatCurrencyFromCents(data.total)}
+        </Span>
+      </HStack>
+      <HorizontalBarChart<SeriesData>
+        data={data}
+        stylingProps={commonProps.stylingProps}
+        formatValue={formatCurrencyFromCents}
+        labelMode='aligned'
+      />
+    </VStack>
+  )
+}
+
+const PieChartContent = ({ data, commonProps, layout }: Pick<ContentProps, 'data' | 'commonProps' | 'layout'>) => {
   const { isMobile } = useSizeClass()
   const isSummaryCardLayout = layout === 'summaryCard'
   return (
@@ -66,10 +100,23 @@ const Content = ({ data, commonProps, layout }: ContentProps) => {
   )
 }
 
-export const TaxEstimatesSummaryCard = () => {
-  const { detailData, layout, title, isLoading, isError } = useTaxEstimatesSummaryCard()
+export type TaxEstimatesSummaryCardProps = {
+  mode?: TaxEstimatesSummaryCardMode
+  title?: string
+  headerSize?: HeadingSize
+  addHeaderSeparator?: boolean
+}
+
+export const TaxEstimatesSummaryCard = ({
+  mode = 'pie_chart',
+  title: titleOverride,
+  headerSize,
+  addHeaderSeparator = false,
+}: TaxEstimatesSummaryCardProps = {}) => {
+  const { detailData, layout, title: defaultTitle, isLoading, isError } = useTaxEstimatesSummaryCard()
   const { isDesktop } = useSizeClass()
   const isSummaryCardLayout = layout === 'summaryCard'
+  const title = titleOverride ?? defaultTitle
 
   const commonProps: CommonProps = useMemo(() => {
     const colorByKey = detailData?.data?.reduce<Record<string, string>>((acc, item) => {
@@ -88,15 +135,18 @@ export const TaxEstimatesSummaryCard = () => {
       <Card className={classNames('Layer__TaxEstimatesSummaryCard', isSummaryCardLayout && 'Layer__TaxEstimatesSummaryCard--summaryCard')}>
         <VStack gap='md' className='Layer__TaxEstimatesSummaryCard__Body'>
           <HStack
-            className={classNames('Layer__TaxEstimatesSummaryCard__Header', isSummaryCardLayout && 'Layer__SummaryCard__ContainerHeader')}
+            className={classNames(
+              'Layer__TaxEstimatesSummaryCard__Header',
+              (isSummaryCardLayout || addHeaderSeparator) && 'Layer__SummaryCard__ContainerHeader',
+            )}
             justify='space-between'
             align={isSummaryCardLayout ? 'center' : 'start'}
             gap='md'
           >
-            <Heading size={!isDesktop ? 'sm' : 'md'}>{title}</Heading>
+            <Heading size={headerSize ?? (!isDesktop ? 'sm' : 'md')}>{title}</Heading>
           </HStack>
           <ConditionalBlock data={detailData} isLoading={isLoading} isError={isError} Loading={<LoadingState />} Error={<ErrorState />}>
-            {({ data }) => <Content data={data} commonProps={commonProps} layout={layout} />}
+            {({ data }) => <Content data={data} mode={mode} commonProps={commonProps} layout={layout} />}
           </ConditionalBlock>
         </VStack>
       </Card>
