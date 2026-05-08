@@ -126,6 +126,7 @@ export const BankTransactionsMobileListSplitForm = ({
                     selectedValue={split.category}
                     onSelectedValueChange={handleCategoryChange(index)}
                     showTooltips={showTooltips}
+                    slotProps={{ Trigger: { size: 'sm' } }}
                   />
                   {hasTaxCodeOptions && (
                     <VStack className='Layer__BankTransactionsMobileSplitForm__TaxCode'>
