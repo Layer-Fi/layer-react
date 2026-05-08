@@ -94,6 +94,7 @@ export const BankTransactionsMobileListPersonalForm = ({
             ? PersonalStableName.CREDIT
             : PersonalStableName.DEBIT,
         },
+        taxCode: null,
       },
       true,
     )
