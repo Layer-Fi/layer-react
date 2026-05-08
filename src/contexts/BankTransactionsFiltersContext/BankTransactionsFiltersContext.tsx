@@ -1,7 +1,6 @@
 import { createContext, useContext } from 'react'
 
-import { type BankTransactionFilters } from '@utils/bankTransactions'
-import { type BankTransactionsDateFilterMode } from '@utils/bankTransactions'
+import { type BankTransactionFilters, type BankTransactionsDateFilterMode } from '@utils/bankTransactions/shared'
 
 export type BankTransactionsFiltersContextType = {
   filters: BankTransactionFilters

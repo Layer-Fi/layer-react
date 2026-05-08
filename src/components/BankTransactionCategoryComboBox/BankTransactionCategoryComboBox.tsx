@@ -5,6 +5,7 @@ import type { GroupBase } from 'react-select'
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
@@ -75,15 +76,27 @@ const BankTransactionCategoryComboBoxGroupHeading = ({ group, fallback }: BankTr
   )
 }
 
-type BankTransactionCategoryComboBoxProps = {
+type BankTransactionCategoryComboBoxBaseProps = {
   bankTransaction?: BankTransaction
-  selectedValue: BankTransactionCategoryComboBoxOption | null
-  onSelectedValueChange: (value: BankTransactionCategoryComboBoxOption | null) => void
-  includeSuggestedMatches?: boolean
   isDisabled?: boolean
   isLoading?: boolean
   inputId?: string
 }
+
+type BankTransactionCategoryComboBoxWithMatchesProps = {
+  selectedValue: BankTransactionCategoryComboBoxOption | null
+  onSelectedValueChange: (value: BankTransactionCategoryComboBoxOption | null) => void
+  includeSuggestedMatches?: true
+}
+
+type BankTransactionCategoryComboBoxWithoutMatchesProps = {
+  selectedValue: BankTransactionNonSuggestedMatchOption | null
+  onSelectedValueChange: (value: BankTransactionNonSuggestedMatchOption | null) => void
+  includeSuggestedMatches: false
+}
+
+type BankTransactionCategoryComboBoxProps = BankTransactionCategoryComboBoxBaseProps
+  & (BankTransactionCategoryComboBoxWithMatchesProps | BankTransactionCategoryComboBoxWithoutMatchesProps)
 
 export const BankTransactionCategoryComboBox = ({
   bankTransaction,
@@ -139,12 +152,24 @@ export const BankTransactionCategoryComboBox = ({
     return <BankTransactionsUncategorizedSelectedValue selectedValue={selectedValue} />
   }, [selectedValue])
 
+  const handleSelectedValueChange = useCallback((value: BankTransactionCategoryComboBoxOption | null) => {
+    if (!includeSuggestedMatches) {
+      if (value !== null && isSuggestedMatchAsOption(value)) return
+      const onSelectedValueChangeWithoutMatches = onSelectedValueChange as (nextValue: BankTransactionNonSuggestedMatchOption | null) => void
+      onSelectedValueChangeWithoutMatches(value)
+      return
+    }
+
+    const onSelectedValueChangeWithMatches = onSelectedValueChange as (nextValue: BankTransactionCategoryComboBoxOption | null) => void
+    onSelectedValueChangeWithMatches(value)
+  }, [includeSuggestedMatches, onSelectedValueChange])
+
   return (
     <ComboBox<BankTransactionCategoryComboBoxOption>
       className='Layer__BankTransactionCategoryComboBox'
       inputId={inputId}
       groups={groups}
-      onSelectedValueChange={onSelectedValueChange}
+      onSelectedValueChange={handleSelectedValueChange}
       selectedValue={selectedValue}
       placeholder={placeholder}
       slots={{

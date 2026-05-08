@@ -9,12 +9,6 @@
   border-bottom: 1px solid var(--color-base-300);
   cursor: pointer;
 
-  .Layer__TreeNavigation__Check {
-    visibility: hidden;
-    height: 1rem;
-    min-width: 1rem;
-  }
-
   &[aria-level='1'] {
     background-color: var(--color-base-0);
   }
@@ -28,7 +22,7 @@
   }
 
   &[data-selected] {
-    font-weight: var(--font-weight-bold);
+    background-color: var(--color-base-100);
 
     &::after {
       content: '';
@@ -38,10 +32,6 @@
       bottom: 0;
       width: 2px;
       background: black;
-    }
-
-    .Layer__TreeNavigation__Check {
-      visibility: visible;
     }
   }
 }

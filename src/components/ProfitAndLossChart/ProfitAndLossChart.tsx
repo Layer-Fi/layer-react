@@ -39,11 +39,12 @@ export interface ProfitAndLossChartProps {
     key: string
     values: string[]
   }
+  hideLegend?: boolean
 }
 
 const CHART_MARGINS = { left: 12, right: 12, bottom: 12 }
 
-export const ProfitAndLossChart = ({ tagFilter }: ProfitAndLossChartProps) => {
+export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndLossChartProps) => {
   const { formatMonthName } = useIntlFormatter()
   const [compactView, setCompactView] = useState(false)
   const barSize = compactView ? 10 : 20
@@ -160,7 +161,7 @@ export const ProfitAndLossChart = ({ tagFilter }: ProfitAndLossChartProps) => {
             stroke={getColor(200)?.hex ?? '#fff'}
             strokeDasharray='5 5'
           />
-          <ProfitAndLossChartLegend />
+          {!hideLegend && <ProfitAndLossChartLegend />}
           <XAxis dataKey='name' xAxisId='revenue' tickLine={false} />
           <XAxis dataKey='name' xAxisId='expenses' tickLine={false} height={0} hide />
           <ChartYAxis />

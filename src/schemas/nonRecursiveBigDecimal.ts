@@ -7,8 +7,8 @@ export const NonRecursiveBigDecimalSchema = Schema.Struct({
   scale: Schema.Int,
 })
 
-export const NRBD_ZERO: NonRecursiveBigDecimal = { value: 0n, scale: 0 }
-export const NRBD_ONE: NonRecursiveBigDecimal = { value: 1n, scale: 0 }
+export const NRBD_ZERO: NonRecursiveBigDecimal = { value: BigInt(0), scale: 0 }
+export const NRBD_ONE: NonRecursiveBigDecimal = { value: BigInt(1), scale: 0 }
 
 export const toNonRecursiveBigDecimal = (bd: BD.BigDecimal): NonRecursiveBigDecimal => {
   const normalized = BD.normalize(bd)

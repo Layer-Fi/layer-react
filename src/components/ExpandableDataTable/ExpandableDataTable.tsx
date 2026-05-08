@@ -28,6 +28,7 @@ const CHEVRON_OFFSET_PX = 4
 
 const getRowIndentStyle = ({ depth, canExpand, indentSizePx }: { depth: number, canExpand: boolean, indentSizePx: number }) => ({
   paddingInlineStart: depth * indentSizePx + (canExpand ? 0 : CHEVRON_OFFSET_PX),
+  overflow: 'hidden',
 })
 
 export type ExpandableDataTableIndentSize = 'xs' | 'sm' | 'md'

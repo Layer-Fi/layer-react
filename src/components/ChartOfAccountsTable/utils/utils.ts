@@ -1,3 +1,5 @@
+import type { ExpandedState } from '@tanstack/react-table'
+
 import type { AugmentedLedgerAccountBalance } from '@internal-types/chartOfAccounts'
 import { type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 import type { CurrencyFormatFn } from '@utils/i18n/number/formatters'
@@ -43,6 +45,30 @@ export const filterAccounts = (
 
     return []
   })
+}
+
+export const getRowId = (row: AugmentedLedgerAccountBalance): string => row.accountId
+
+export const getInitialExpandedState = (
+  accounts: readonly AugmentedLedgerAccountBalance[] | undefined,
+): ExpandedState => {
+  const expandedState: Record<string, true> = {}
+  if (!accounts) return expandedState
+
+  const collectExpanded = (nestedAccounts: readonly AugmentedLedgerAccountBalance[], depth: number) => {
+    for (const account of nestedAccounts) {
+      const hasSubAccounts = account.subAccounts.length > 0
+      if (!hasSubAccounts) continue
+
+      if (depth === 0 || account.isMatching) {
+        expandedState[getRowId(account)] = true
+      }
+      collectExpanded(account.subAccounts, depth + 1)
+    }
+  }
+
+  collectExpanded(accounts, 0)
+  return expandedState
 }
 
 // TODO (@sraines) - i18nize this function

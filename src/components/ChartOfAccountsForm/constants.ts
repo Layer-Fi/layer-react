@@ -11,14 +11,6 @@ export const LEDGER_ACCOUNT_TYPES_CONFIG: OptionConfig[] = [
   { value: 'EXPENSE', ...translationKey('common:label.expenses', 'Expenses') },
 ]
 
-export const DEFAULT_ACCOUNT_TYPE_DIRECTION: Record<string, Direction> = {
-  ASSET: Direction.DEBIT,
-  LIABILITY: Direction.CREDIT,
-  EQUITY: Direction.CREDIT,
-  REVENUE: Direction.CREDIT,
-  EXPENSE: Direction.DEBIT,
-}
-
 export const NORMALITY_CONFIG: { value: Direction, i18nKey: string, defaultValue: string }[] = [
   { value: Direction.DEBIT, ...translationKey('common:label.debit', 'Debit') },
   { value: Direction.CREDIT, ...translationKey('common:label.credit', 'Credit') },

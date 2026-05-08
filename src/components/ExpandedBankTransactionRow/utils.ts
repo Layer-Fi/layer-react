@@ -8,10 +8,10 @@ import { isSplitCategorizationEncoded } from '@schemas/categorization'
 import { decodeCustomerVendor } from '@schemas/customerVendor'
 import { makeTagFromTransactionTag, TransactionTagSchema } from '@schemas/tag'
 import { toLocalizedCents } from '@utils/i18n/number/input'
-import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
+import { isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isApiCategorizationAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { convertApiCategorizationToCategoryOrSplitAsOption, getDefaultSelectedCategoryForBankTransaction } from '@components/BankTransactionCategoryComboBox/utils'
+import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 
 export enum ValidateSplitError {
   AmountsMustBeGreaterThanZero = 'AmountsMustBeGreaterThanZero',
@@ -59,6 +59,7 @@ export const calculateAddSplit = (
   const newSplit = {
     amount: 0,
     category: null,
+    taxCode: null,
     tags: [],
     customerVendor: null,
   }
@@ -115,15 +116,11 @@ export const getCustomerVendorForBankTransaction = (bankTransaction: BankTransac
 
 export const getLocalSplitStateForExpandedTransaction = (
   bankTransaction: BankTransaction,
-  selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
+  selectedCategory: BankTransactionNonSuggestedMatchOption | null | undefined,
 ): Split[] => {
   let coercedSelectedCategory = selectedCategory
   if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
     coercedSelectedCategory = null
-  }
-
-  else if (isSuggestedMatchAsOption(selectedCategory)) {
-    coercedSelectedCategory = getDefaultSelectedCategoryForBankTransaction(bankTransaction, true)
   }
 
   else if (isApiCategorizationAsOption(selectedCategory) && isSplitCategorizationEncoded(selectedCategory.original)) {
@@ -136,18 +133,17 @@ export const getLocalSplitStateForExpandedTransaction = (
       return {
         amount: splitEntry.amount || 0,
         category: splitEntry.category,
+        taxCode: splitEntry.taxCode ?? null,
         tags: splitEntry.tags,
         customerVendor: splitEntry.customerVendor,
       }
     })
   }
   // Single category
-  return [
-    {
-      amount: bankTransaction.amount,
-      category: coercedSelectedCategory ?? null,
-      tags: bankTransaction.transaction_tags.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))),
-      customerVendor: getCustomerVendorForBankTransaction(bankTransaction),
-    },
-  ]
+  return [{
+    amount: bankTransaction.amount,
+    category: coercedSelectedCategory ?? null,
+    tags: bankTransaction.transaction_tags.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))),
+    customerVendor: getCustomerVendorForBankTransaction(bankTransaction),
+  }]
 }

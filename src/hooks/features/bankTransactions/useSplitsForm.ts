@@ -6,8 +6,9 @@ import { type BankTransaction, type Split } from '@internal-types/bankTransactio
 import { SplitAsOption } from '@internal-types/categorizationOption'
 import { convertCentsToDecimalString } from '@utils/format'
 import { toLocalizedNumber } from '@utils/i18n/number/input'
-import { useBankTransactionsCategoryActions } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
+import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import {
   calculateAddSplit,
   calculateRemoveSplit,
@@ -19,7 +20,6 @@ import {
 
 interface UseSplitsFormOptions {
   bankTransaction: BankTransaction
-  selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined
   isOpen?: boolean
 }
 
@@ -31,7 +31,7 @@ export interface UseSplitsFormReturn {
   addSplit: () => void
   removeSplit: (index: number) => void
   updateSplitAmount: (index: number) => (value?: string) => void
-  changeCategoryForSplitAtIndex: (index: number, category: BankTransactionCategoryComboBoxOption | null) => void
+  changeCategoryForSplitAtIndex: (index: number, category: BankTransactionNonSuggestedMatchOption | null) => void
   updateSplitAtIndex: (index: number, updater: (split: Split) => Split) => void
   onBlurSplitAmount: () => void
   setSplitFormError: (error: string | undefined) => void
@@ -40,20 +40,19 @@ export interface UseSplitsFormReturn {
   saveLocalSplitsToCategoryStore: (splits: Split[]) => void
 }
 
-export const useSplitsForm = ({
-  bankTransaction,
-  selectedCategory,
-  isOpen,
-}: UseSplitsFormOptions): UseSplitsFormReturn => {
+export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions): UseSplitsFormReturn => {
   const { t } = useTranslation()
   const intl = useIntl()
+  const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
+  const { category: selectedCategory } = selectedCategorization
 
   const [localSplits, setLocalSplits] = useState<Split[]>(
     getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory),
   )
+
   const [inputValues, setInputValues] = useState<Record<number, string>>({})
   const [splitFormError, setSplitFormError] = useState<string | undefined>()
-  const { setTransactionCategory } = useBankTransactionsCategoryActions()
+  const { setTransactionCategorySelection } = useBankTransactionsCategorizationActions()
 
   useEffect(() => {
     setLocalSplits(getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory))
@@ -67,9 +66,9 @@ export const useSplitsForm = ({
       return
     }
 
-    setTransactionCategory(bankTransaction.id, new SplitAsOption(splits))
+    setTransactionCategorySelection(bankTransaction.id, new SplitAsOption(splits))
     setSplitFormError(undefined)
-  }, [bankTransaction.id, setTransactionCategory, t])
+  }, [bankTransaction.id, setTransactionCategorySelection, t])
 
   const addSplit = useCallback(() => {
     const newSplits = calculateAddSplit(localSplits)
@@ -110,7 +109,7 @@ export const useSplitsForm = ({
     saveLocalSplitsToCategoryStore(newLocalSplits)
   }, [localSplits, bankTransaction.amount, intl.locale, saveLocalSplitsToCategoryStore])
 
-  const changeCategoryForSplitAtIndex = useCallback((index: number, newCategory: BankTransactionCategoryComboBoxOption | null) => {
+  const changeCategoryForSplitAtIndex = useCallback((index: number, newCategory: BankTransactionNonSuggestedMatchOption | null) => {
     if (newCategory === null) return
 
     const newLocalSplits = [...localSplits]

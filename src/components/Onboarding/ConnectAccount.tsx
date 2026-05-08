@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { type OnboardingStep } from '@internal-types/layerContext'
-import { countTransactionsToReview } from '@utils/bankTransactions'
+import { countTransactionsToReview } from '@utils/bankTransactions/shared'
 import { useAugmentedBankTransactions } from '@hooks/features/bankTransactions/useAugmentedBankTransactions'
 import { useBankTransactionsFilters } from '@contexts/BankTransactionsFiltersContext/useBankTransactionsFilters'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'

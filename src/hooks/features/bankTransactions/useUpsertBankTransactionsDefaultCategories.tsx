@@ -1,19 +1,21 @@
 import { useEffect } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { useBankTransactionsCategoryActions } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
-import { getDefaultSelectedCategoryForBankTransaction } from '@components/BankTransactionCategoryComboBox/utils'
+import { getDefaultCategorizationForBankTransaction } from '@utils/bankTransactions/shared'
+import { type BankTransactionCategorization, useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 
 export const useUpsertBankTransactionsDefaultCategories = (bankTransactions: BankTransaction[] | undefined) => {
-  const { setOnlyNewTransactionCategories } = useBankTransactionsCategoryActions()
+  const { setOnlyNewTransactionCategorizations } = useBankTransactionsCategorizationActions()
   useEffect(() => {
     if (!bankTransactions) return
 
-    const defaultCategories = bankTransactions.map(transaction => ({
-      id: transaction.id,
-      category: getDefaultSelectedCategoryForBankTransaction(transaction),
-    }))
+    const defaultCategories = new Map<string, BankTransactionCategorization>(
+      bankTransactions.map(transaction => [
+        transaction.id,
+        getDefaultCategorizationForBankTransaction(transaction),
+      ]),
+    )
 
-    setOnlyNewTransactionCategories(defaultCategories)
-  }, [bankTransactions, setOnlyNewTransactionCategories])
+    setOnlyNewTransactionCategorizations(defaultCategories)
+  }, [bankTransactions, setOnlyNewTransactionCategorizations])
 }
