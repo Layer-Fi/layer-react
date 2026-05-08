@@ -72,7 +72,7 @@ export const HorizontalBarChart = <T extends SeriesData>({
             barGap={0}
             barSize={CHART_HEIGHT}
           >
-            <XAxis type='number' hide domain={[0, Math.max(positiveTotal, 1)]} allowDataOverflow />
+            <XAxis type='number' hide domain={[0, positiveTotal > 0 ? positiveTotal : 1]} allowDataOverflow />
             <YAxis type='category' dataKey='label' hide width={0} />
             {positiveItems.map((item, index) => {
               const isFirstSegment = index === 0

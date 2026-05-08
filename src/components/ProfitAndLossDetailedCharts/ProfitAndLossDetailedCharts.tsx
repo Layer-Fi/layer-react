@@ -3,22 +3,19 @@ import { Hourglass } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
-import { DateFormat } from '@utils/i18n/date/patterns'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import { humanizeTitle } from '@utils/profitAndLossUtils'
 import { type Scope, type SidebarScope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
-import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
-import XIcon from '@icons/X'
-import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { BackButton } from '@components/Button/BackButton'
 import { DetailedChart } from '@components/DetailedCharts/DetailedChart'
 import { type ColorSelector, type FallbackFillSelector } from '@components/DetailedCharts/types'
 import { DetailedTable, type DetailedTableStringOverrides } from '@components/DetailedTable/DetailedTable'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { DetailReportModal } from '@components/ProfitAndLossDetailedCharts/DetailReportModal'
+import { ProfitAndLossDetailedChartsHeader } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedChartsHeader'
 import { usePnlDetailedTableRows } from '@components/ProfitAndLossDetailedCharts/usePnlDetailedTableRows'
 import { isLineItemUncategorized, mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/utils'
 import type { ProfitAndLossDetailReportProps } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
@@ -87,7 +84,7 @@ export const ProfitAndLossDetailedCharts = ({
   slotProps?: ProfitAndLossDetailedChartsSlotProps
 }) => {
   const { t } = useTranslation()
-  const { formatDate } = useIntlFormatter()
+  const { isTablet } = useSizeClass()
   const {
     chartDataRevenue,
     tableDataRevenue,
@@ -189,42 +186,19 @@ export const ProfitAndLossDetailedCharts = ({
     }
   }, [_oldSortByScope, activeScope])
 
+  const handleClose = useCallback(() => setSidebarScope(undefined), [setSidebarScope])
+
   return (
     <div className='Layer__profit-and-loss-detailed-charts'>
-      {!hideHeader && (
-        <header className='Layer__profit-and-loss-detailed-charts__header'>
-          <VStack className='Layer__profit-and-loss-detailed-charts__head'>
-            <Span size='lg' weight='bold'>
-              {humanizeTitle(activeScope, stringOverrides?.detailedChartStringOverrides, t)}
-            </Span>
-            <Span size='sm' variant='subtle'>
-              {formatDate(dateRange.startDate, DateFormat.MonthYear)}
-            </Span>
-            {showDatePicker && <GlobalMonthPicker />}
-          </VStack>
-          {!hideClose && (
-            <Button icon inset variant='outlined' onPress={() => setSidebarScope(undefined)} aria-label={t('common:action.close', 'Close')}>
-              <XIcon />
-            </Button>
-          )}
-        </header>
-      )}
-
-      {!hideHeader && (
-        <header className='Layer__profit-and-loss-detailed-charts__header--tablet'>
-          {!hideClose && (
-            <BackButton onClick={() => setSidebarScope(undefined)} />
-          )}
-          <VStack className='Layer__profit-and-loss-detailed-charts__head'>
-            <Span size='lg' weight='bold' className='title'>
-              {humanizeTitle(activeScope, stringOverrides?.detailedChartStringOverrides, t)}
-            </Span>
-            <Span size='sm' className='date'>
-              {formatDate(dateRange.startDate, DateFormat.MonthYear)}
-            </Span>
-          </VStack>
-        </header>
-      )}
+      <ProfitAndLossDetailedChartsHeader
+        visible={!hideHeader}
+        mode={isTablet ? 'tablet' : 'desktop'}
+        title={humanizeTitle(activeScope, stringOverrides?.detailedChartStringOverrides, t)}
+        date={dateRange.startDate}
+        showCloseButton={!hideClose}
+        showDatePicker={showDatePicker}
+        onClose={handleClose}
+      />
 
       <div className='Layer__profit-and-loss-detailed-charts__content'>
         {isEmpty

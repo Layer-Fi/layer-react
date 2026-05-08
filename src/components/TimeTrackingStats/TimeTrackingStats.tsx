@@ -160,6 +160,7 @@ function TimeTrackingStatsContent({ summary }: { summary: TimeEntrySummary }) {
             <DurationSpan
               className='Layer__TimeTrackingStats__SummaryValue'
               weight='bold'
+              numeric='tabular-nums'
               durationMinutes={summary.totalMinutes}
             />
           </VStack>

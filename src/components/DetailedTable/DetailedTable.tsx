@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
@@ -68,19 +68,18 @@ export const DetailedTable = <T extends SeriesData>({
     sortFunction({ sortBy: field, sortOrder: sortOrderOverride }, defaultSortOrder)
   }
 
-  const buildHeaderVariant = useCallback((column: string) => {
-    return sortParams.sortBy === column ? undefined : 'subtle'
-  }, [sortParams.sortBy])
-
   const { isMobile, isDesktop } = useSizeClass()
   const hasType = showTypeColumn && rows.length > 0 && rows.map(r => r.item.type).every(type => type !== undefined)
   const isSortable = interactionProps !== NO_OP_INTERACTION_PROPS
 
-  useEffect(() => {
-    if (!hasType && sortParams.sortBy === 'type') {
-      sortFunction({ sortBy: 'value', sortOrder: undefined }, SortOrder.DESC)
-    }
-  }, [hasType, sortParams.sortBy, sortFunction])
+  const isTypeSortInvalid = !hasType && sortParams.sortBy === 'type'
+  const effectiveSortParams: SortParams<string> = isTypeSortInvalid
+    ? { sortBy: 'value', sortOrder: SortOrder.DESC }
+    : sortParams
+
+  const buildHeaderVariant = useCallback((column: string) => {
+    return effectiveSortParams.sortBy === column ? undefined : 'subtle'
+  }, [effectiveSortParams.sortBy])
 
   return (
     <VStack className='Layer__DetailedTable'>
@@ -93,7 +92,7 @@ export const DetailedTable = <T extends SeriesData>({
                 <th
                   className={classNames(
                     'Layer__DetailedTable__SortableColumn',
-                    sortParams.sortBy === 'category' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${sortParams.sortOrder.toLowerCase()}`,
+                    effectiveSortParams.sortBy === 'category' && effectiveSortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${effectiveSortParams.sortOrder.toLowerCase()}`,
                   )}
                   onClick={() => setAndToggleSortDirection({ field: 'category' })}
                 >
@@ -108,7 +107,7 @@ export const DetailedTable = <T extends SeriesData>({
                   <th
                     className={classNames(
                       'Layer__DetailedTable__SortableColumn',
-                      sortParams.sortBy === 'type' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${sortParams.sortOrder.toLowerCase()}`,
+                      effectiveSortParams.sortBy === 'type' && effectiveSortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${effectiveSortParams.sortOrder.toLowerCase()}`,
                     )}
                     onClick={() => setAndToggleSortDirection({ field: 'type' })}
                   >
@@ -124,7 +123,7 @@ export const DetailedTable = <T extends SeriesData>({
                   className={classNames(
                     'Layer__DetailedTable__SortableColumn',
                     'Layer__DetailedTable__SortableColumn--value',
-                    sortParams.sortBy === 'value' && sortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${sortParams.sortOrder.toLowerCase()}`,
+                    effectiveSortParams.sortBy === 'value' && effectiveSortParams.sortOrder && `Layer__DetailedTable__SortableColumn--sort${effectiveSortParams.sortOrder.toLowerCase()}`,
                   )}
                   onClick={() => setAndToggleSortDirection({ field: 'value', defaultSortOrder: SortOrder.DESC })}
                 >

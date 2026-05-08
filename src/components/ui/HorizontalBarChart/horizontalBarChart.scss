@@ -2,8 +2,10 @@
   container: horizontal-bar-chart / inline-size;
   inline-size: 100%;
 
-  :focus,
-  &:focus-visible {
+  .recharts-wrapper:focus,
+  .recharts-wrapper :focus,
+  .recharts-surface:focus,
+  .recharts-bar-rectangle:focus {
     outline: none;
   }
 }
