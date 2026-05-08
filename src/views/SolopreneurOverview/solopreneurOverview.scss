@@ -1,0 +1,17 @@
+.Layer__SolopreneurOverview__DetailedCharts {
+  max-width: 1406px;
+
+  & > * {
+    flex: 1;
+  }
+
+  .Layer__Expenses .Layer__profit-and-loss-detailed-charts .Layer__profit-and-loss-detailed-charts__content {
+    flex-direction: row;
+  }
+
+  @media (width <= 760px) {
+    .Layer__Expenses .Layer__profit-and-loss-detailed-charts .Layer__profit-and-loss-detailed-charts__content {
+      flex-direction: column;
+    }
+  }
+}

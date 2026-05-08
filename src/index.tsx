@@ -58,6 +58,7 @@ export { GeneralLedgerView } from './views/GeneralLedger/GeneralLedger'
 export { unstable_MileageTracking } from './views/MileageTracking'
 export { ProjectProfitabilityView } from './views/ProjectProfitability/ProjectProfitability'
 export { Reports } from './views/Reports/Reports'
+export { SolopreneurOverview as unstable_SolopreneurOverview } from './views/SolopreneurOverview/SolopreneurOverview'
 export { TaxEstimates as unstable_TaxEstimates } from './views/TaxEstimates/TaxEstimates'
 export { TimeTracking } from './views/TimeTracking'
 

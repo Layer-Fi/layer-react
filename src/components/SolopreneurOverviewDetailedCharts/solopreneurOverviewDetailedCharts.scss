@@ -1,0 +1,27 @@
+.Layer__SolopreneurLayout__DetailedCharts {
+  max-width: 1406px;
+
+  &__col {
+    flex: 1;
+    min-width: 0;
+  }
+
+  @media (width <= 760px) {
+    .Layer__TaxEstimatesSummaryCard__Content {
+      box-sizing: border-box;
+      padding-block-end: var(--spacing-md);
+      padding-inline: var(--spacing-md);
+    }
+  }
+}
+
+@media (width <= 1400px) {
+  .Layer__Stack.Layer__SolopreneurLayout__DetailedCharts[data-direction='row'] {
+    flex-direction: column;
+  }
+
+  .Layer__SolopreneurLayout__DetailedCharts__col {
+    flex: none;
+    width: 100%;
+  }
+}
