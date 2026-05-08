@@ -10,10 +10,10 @@ import { type Scope, type SidebarScope } from '@hooks/features/profitAndLoss/use
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import XIcon from '@icons/X'
+import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BackButton } from '@components/Button/BackButton'
-import { Button, ButtonVariant } from '@components/Button/Button'
 import { DetailedChart } from '@components/DetailedCharts/DetailedChart'
 import { type ColorSelector, type FallbackFillSelector } from '@components/DetailedCharts/types'
 import { DetailedTable, type DetailedTableStringOverrides } from '@components/DetailedTable/DetailedTable'
@@ -194,21 +194,18 @@ export const ProfitAndLossDetailedCharts = ({
       {!hideHeader && (
         <header className='Layer__profit-and-loss-detailed-charts__header'>
           <VStack className='Layer__profit-and-loss-detailed-charts__head'>
-            <Span size='lg' weight='bold' className='title'>
+            <Span size='lg' weight='bold'>
               {humanizeTitle(activeScope, stringOverrides?.detailedChartStringOverrides, t)}
             </Span>
-            <Span size='sm' className='date'>
+            <Span size='sm' variant='subtle'>
               {formatDate(dateRange.startDate, DateFormat.MonthYear)}
             </Span>
             {showDatePicker && <GlobalMonthPicker />}
           </VStack>
           {!hideClose && (
-            <Button
-              rightIcon={<XIcon />}
-              iconOnly={true}
-              onClick={() => setSidebarScope(undefined)}
-              variant={ButtonVariant.secondary}
-            />
+            <Button icon inset variant='outlined' onPress={() => setSidebarScope(undefined)} aria-label={t('common:action.close', 'Close')}>
+              <XIcon />
+            </Button>
           )}
         </header>
       )}

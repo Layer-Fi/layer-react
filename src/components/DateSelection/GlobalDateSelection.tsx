@@ -1,23 +1,24 @@
 import classNames from 'classnames'
 
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { HStack } from '@ui/Stack/Stack'
 import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
 import { GlobalDatePicker } from '@components/GlobalDatePicker/GlobalDatePicker'
 
 import './globalDateSelection.scss'
 
-export const GlobalDateSelection = ({ showLabels = false }: { showLabels?: boolean }) => {
-  const { value } = useSizeClass()
+type GlobalDateSelectionProps = {
+  showLabels?: boolean
+  isCompact?: boolean
+}
 
+export const GlobalDateSelection = ({ showLabels = false, isCompact = false }: GlobalDateSelectionProps) => {
   return (
-    <HStack
+    <div
       className={classNames('Layer__GlobalDateSelection', {
-        'Layer__GlobalDateSelection--mobile': value === 'mobile',
+        'Layer__GlobalDateSelection--compact': isCompact,
       })}
     >
       <DateSelectionComboBox showLabel={showLabels} />
       <GlobalDatePicker showLabel={showLabels} />
-    </HStack>
+    </div>
   )
 }

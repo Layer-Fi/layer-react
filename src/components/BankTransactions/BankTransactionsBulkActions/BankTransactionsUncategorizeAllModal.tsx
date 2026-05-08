@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { tPlural } from '@utils/i18n/plural'
 import { useBulkUncategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-uncategorize/useBulkUncategorize'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useBankTransactionsCategoryActions } from '@providers/BankTransactionsCategoryStore/BankTransactionsCategoryStoreProvider'
+import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { Span } from '@ui/Typography/Text'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
@@ -22,15 +22,15 @@ export const BankTransactionsUncategorizeAllModal = ({ isOpen, onOpenChange, isM
   const { selectedIds } = useSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
   const { trigger } = useBulkUncategorize()
-  const { clearMultipleTransactionCategories } = useBankTransactionsCategoryActions()
+  const { clearTransactionCategorizations } = useBankTransactionsCategorizationActions()
 
   const handleConfirm = useCallback(async () => {
     const transactionIds = Array.from(selectedIds)
 
     await trigger({ transactionIds })
-    clearMultipleTransactionCategories(transactionIds)
+    clearTransactionCategorizations(transactionIds)
     clearSelection()
-  }, [selectedIds, trigger, clearSelection, clearMultipleTransactionCategories])
+  }, [selectedIds, trigger, clearSelection, clearTransactionCategorizations])
 
   return (
     <BaseConfirmationModal

@@ -1,0 +1,13 @@
+.Layer__MobileSelectionDrawerWithTrigger {
+  .Layer__SearchField {
+    inline-size: 100%;
+  }
+
+  .Layer__MobileListItem {
+    transition: background-color 120ms ease;
+
+    &[data-hovered] {
+      background-color: var(--bg-element-focus);
+    }
+  }
+}

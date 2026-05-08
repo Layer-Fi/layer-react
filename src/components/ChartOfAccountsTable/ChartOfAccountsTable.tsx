@@ -1,4 +1,5 @@
-import { Fragment, type ReactNode, useContext, useEffect, useMemo, useState } from 'react'
+import { type ReactNode, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react'
+import { type Row } from '@tanstack/react-table'
 import { List, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -6,32 +7,41 @@ import {
   type AugmentedLedgerAccountBalance,
   LedgerAccountNodeType,
 } from '@internal-types/chartOfAccounts'
-import { type View } from '@internal-types/general'
-import { TableCellAlign } from '@internal-types/table'
-import { type LedgerBalancesSchemaType, type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
+import { Alignment } from '@schemas/reports/unifiedReport'
 import { asMutable } from '@utils/asMutable'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
-import { TableProvider } from '@contexts/TableContext/TableContext'
 import Edit2 from '@icons/Edit2'
 import { Button as UIButton } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { Button, ButtonVariant } from '@components/Button/Button'
-import {
-  type ChartOfAccountsTableStringOverrides,
-  type ExpandActionState,
-} from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
-import { filterAccounts, getMatchedTextIndices } from '@components/ChartOfAccountsTable/utils/utils'
+import { type ChartOfAccountsTableStringOverrides } from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
+import { filterAccounts, getInitialExpandedState, getMatchedTextIndices, getRowId } from '@components/ChartOfAccountsTable/utils/utils'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { Table } from '@components/Table/Table'
-import { TableBody } from '@components/TableBody/TableBody'
-import { TableCell } from '@components/TableCell/TableCell'
-import { TableHead } from '@components/TableHead/TableHead'
-import { TableRow } from '@components/TableRow/TableRow'
+import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
+import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
+import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
+
+import './chartOfAccountsTable.scss'
+
+enum ChartOfAccountsColumn {
+  AccountNumber = 'AccountNumber',
+  Name = 'Name',
+  Type = 'Type',
+  Subtype = 'Subtype',
+  Balance = 'Balance',
+  Actions = 'Actions',
+}
+
+const COMPONENT_NAME = 'chart-of-accounts'
+
+const getSubRows = (row: AugmentedLedgerAccountBalance): AugmentedLedgerAccountBalance[] | undefined => {
+  return row.subAccounts.length > 0 ? asMutable(row.subAccounts) : undefined
+}
 
 const highlightMatch = ({ text, query, isMatching }: { text: string, query: string, isMatching?: boolean }): ReactNode => {
   const matchedTextIndices = getMatchedTextIndices({ text, query, isMatching })
@@ -51,90 +61,59 @@ const highlightMatch = ({ text, query, isMatching }: { text: string, query: stri
   )
 }
 
+const ChartOfAccountsEmptyState = () => {
+  const { t } = useTranslation()
+
+  return (
+    <DataState
+      status={DataStateStatus.info}
+      title={t('chartOfAccounts:empty.accounts', 'No accounts found')}
+      description={t('chartOfAccounts:empty.accounts_match_filters', 'No accounts match the current filters. Click "Add Account" to create a new one.')}
+      spacing
+    />
+  )
+}
+
+const ChartOfAccountsErrorState = () => {
+  const { t } = useTranslation()
+  const { refetch, isValidating, isLoading } = useContext(ChartOfAccountsContext)
+
+  return (
+    <DataState
+      status={DataStateStatus.failed}
+      title={t('common:error.something_went_wrong', 'Something went wrong')}
+      description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
+      onRefresh={() => void refetch()}
+      isLoading={isValidating || isLoading}
+      spacing
+    />
+  )
+}
+
 export const ChartOfAccountsTable = ({
-  view,
   stringOverrides,
-  data,
   searchQuery,
-  expandAll,
   templateAccountsEditable = true,
 }: {
-  view: View
-  data: LedgerBalancesSchemaType
   searchQuery: string
   stringOverrides?: ChartOfAccountsTableStringOverrides
-  expandAll?: ExpandActionState
   templateAccountsEditable?: boolean
-}) => (
-  <TableProvider>
-    <ChartOfAccountsTableContent
-      view={view}
-      data={data}
-      searchQuery={searchQuery}
-      stringOverrides={stringOverrides}
-      expandAll={expandAll}
-      templateAccountsEditable={templateAccountsEditable}
-    />
-  </TableProvider>
-)
-
-export const ChartOfAccountsTableContent = ({
-  stringOverrides,
-  data,
-  searchQuery,
-  expandAll,
-  templateAccountsEditable,
-}: {
-  view: View
-  data: LedgerBalancesSchemaType
-  searchQuery: string
-  stringOverrides?: ChartOfAccountsTableStringOverrides
-  expandAll?: ExpandActionState
-  templateAccountsEditable: boolean
 }) => {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
   const { setSelectedAccount } = useContext(LedgerAccountsContext)
-  const { editAccount, deleteAccount, isError } = useContext(ChartOfAccountsContext)
-  const [toggledKeys, setToggledKeys] = useState<Record<string, boolean>>({})
+  const { setExpanded } = useContext(ExpandableDataTableContext)
+  const { data, isLoading, isError, editAccount, deleteAccount } = useContext(ChartOfAccountsContext)
   const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
   const { accountingConfiguration } = useLayerContext()
   const enableAccountNumbers = !!accountingConfiguration?.enableAccountNumbers
-
-  const allRowKeys = useMemo(() => {
-    const keys: string[] = []
-
-    const collect = (accounts: readonly NestedLedgerAccountType[]) => {
-      for (const account of accounts) {
-        const key = `coa-row-${account.accountId}`
-        if (account.subAccounts.length > 0) {
-          keys.push(key)
-          collect(account.subAccounts)
-        }
-      }
-    }
-
-    collect(data.accounts)
-    return keys
-  }, [data.accounts])
-
-  useEffect(() => {
-    if (expandAll === undefined) return
-
-    // Manually toggle all entries expanded/collasped when the user clicks the Expand/Collapse All button
-    setToggledKeys(
-      Object.fromEntries(
-        allRowKeys.map(key => [key, expandAll === 'expanded']),
-      ),
-    )
-  }, [allRowKeys, expandAll])
 
   const onConfirmDelete = async () => {
     if (!accountToDelete) return
     await deleteAccount(accountToDelete.accountId)
   }
 
-  const getDeleteButtonTooltip = (account: AugmentedLedgerAccountBalance) => {
+  const getDeleteButtonTooltip = useCallback((account: AugmentedLedgerAccountBalance) => {
     if (account.isDeletable) {
       return undefined
     }
@@ -145,14 +124,10 @@ export const ChartOfAccountsTableContent = ({
       return t('chartOfAccounts:validation.delete_account_has_ledger_entries', 'This account cannot be deleted because it has ledger entries')
     }
     return t('chartOfAccounts:validation.delete_account_is_required', 'This account cannot be deleted because it is a required account')
-  }
-
-  // Clear all manually toggled expanded/collapsed rows when the search query changes
-  useEffect(() => {
-    setToggledKeys({})
-  }, [searchQuery])
+  }, [t])
 
   const filteredAccounts = useMemo(() => {
+    if (!data) return undefined
     if (!searchQuery) return data.accounts
 
     return filterAccounts(
@@ -160,137 +135,109 @@ export const ChartOfAccountsTableContent = ({
       searchQuery.toLowerCase(),
       formatCurrencyFromCents,
     )
-  }, [data.accounts, formatCurrencyFromCents, searchQuery])
+  }, [data, formatCurrencyFromCents, searchQuery])
 
-  const renderChartOfAccountsDesktopRow = ({ account, index, depth, searchQuery }: {
-    account: AugmentedLedgerAccountBalance
-    index: number
-    depth: number
-    searchQuery: string
-  }) => {
-    const rowKey = `coa-row-${account.accountId}`
-    const hasSubAccounts = !!account.subAccounts && account.subAccounts.length > 0
+  useLayoutEffect(() => {
+    setExpanded(getInitialExpandedState(filteredAccounts))
+  }, [filteredAccounts, setExpanded])
 
-    const nodeType =
-      depth === 0
-        ? LedgerAccountNodeType.Root
-        : hasSubAccounts
-          ? LedgerAccountNodeType.Parent
-          : LedgerAccountNodeType.Leaf
+  const getNodeType = (row: Row<AugmentedLedgerAccountBalance>): LedgerAccountNodeType => {
+    if (row.depth === 0) return LedgerAccountNodeType.Root
+    return row.getCanExpand() ? LedgerAccountNodeType.Parent : LedgerAccountNodeType.Leaf
+  }
 
-    const manuallyToggled = toggledKeys[rowKey]
+  const onClickView = useCallback((row: Row<AugmentedLedgerAccountBalance>, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setSelectedAccount({ ...row.original, nodeType: getNodeType(row) })
+  }, [setSelectedAccount])
 
-    const isExpanded =
-      !hasSubAccounts
-      || manuallyToggled === true
-      || (manuallyToggled !== false && (account.isMatching || depth === 0))
+  const onClickEdit = useCallback((account: AugmentedLedgerAccountBalance, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    editAccount(account.accountId)
+  }, [editAccount])
 
-    const isNonEditable = !templateAccountsEditable && !!account.stableName
-    const isDeleteDisabled = !account.isDeletable
+  const onClickDelete = (account: AugmentedLedgerAccountBalance, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setAccountToDelete(account)
+  }
 
-    const onClickRow = (e: React.MouseEvent) => {
-      e.stopPropagation()
-      if (!hasSubAccounts) return
+  const renderHighlightedValue = useCallback((row: Row<AugmentedLedgerAccountBalance>, text: string) => {
+    return highlightMatch({
+      text,
+      query: searchQuery,
+      isMatching: row.original.isMatching,
+    })
+  }, [searchQuery])
 
-      setToggledKeys(prev => ({
-        ...prev,
-        [rowKey]: !isExpanded,
-      }))
+  const renderHighlightedNonRootValue = useCallback((row: Row<AugmentedLedgerAccountBalance>, text: string) => {
+    if (row.depth === 0) {
+      return null
+    }
+    return renderHighlightedValue(row, text)
+  }, [renderHighlightedValue])
+  const slots = useMemo(() => ({
+    EmptyState: ChartOfAccountsEmptyState,
+    ErrorState: ChartOfAccountsErrorState,
+  }), [])
+
+  const columnConfig = useMemo<NestedColumnConfig<AugmentedLedgerAccountBalance>>(() => {
+    const accountNumberColumn = {
+      id: ChartOfAccountsColumn.AccountNumber,
+      header: stringOverrides?.numberColumnHeader || t('generalLedger:label.account_number', 'Account Number'),
+      cell: (row: Row<AugmentedLedgerAccountBalance>) =>
+        renderHighlightedValue(row, row.original.accountNumber || ''),
     }
 
-    const onClickAccountName = (e: React.MouseEvent) => {
-      e.stopPropagation()
-      setSelectedAccount({ ...account, nodeType })
-    }
+    const columns: NestedColumnConfig<AugmentedLedgerAccountBalance> = [
+      {
+        id: ChartOfAccountsColumn.Name,
+        header: stringOverrides?.nameColumnHeader || t('generalLedger:label.account_name_title_case', 'Account Name'),
+        cell: (row: Row<AugmentedLedgerAccountBalance>) => (
+          <UIButton variant='text' ellipsis onClick={e => onClickView(row, e)}>
+            {renderHighlightedValue(row, row.original.name)}
+          </UIButton>
+        ),
+        isRowHeader: true,
+      },
+      {
+        id: ChartOfAccountsColumn.Type,
+        header: stringOverrides?.typeColumnHeader || t('common:label.type', 'Type'),
+        cell: (row: Row<AugmentedLedgerAccountBalance>) => (
+          renderHighlightedNonRootValue(row, row.original.accountType?.displayName || '')
+        ),
+      },
+      {
+        id: ChartOfAccountsColumn.Subtype,
+        header: stringOverrides?.subtypeColumnHeader || t('chartOfAccounts:label.sub_type', 'Sub-Type'),
+        cell: (row: Row<AugmentedLedgerAccountBalance>) => (
+          renderHighlightedNonRootValue(row, row.original.accountSubtype?.displayName || '')
+        ),
+      },
+      {
+        id: ChartOfAccountsColumn.Balance,
+        header: stringOverrides?.balanceColumnHeader || t('common:label.balance', 'Balance'),
+        cell: (row: Row<AugmentedLedgerAccountBalance>) =>
+          renderHighlightedValue(row, formatCurrencyFromCents(row.original.balance)),
+      },
+      {
+        id: ChartOfAccountsColumn.Actions,
+        header: null,
+        alignment: Alignment.Right,
+        cell: (row: Row<AugmentedLedgerAccountBalance>) => {
+          const account = row.original
+          const isNonEditable = !templateAccountsEditable && !!account.stableName
+          const isDeleteDisabled = !account.isDeletable
 
-    const onClickEdit = (e: React.MouseEvent) => {
-      e.preventDefault()
-      e.stopPropagation()
-      editAccount(account.accountId)
-    }
-
-    const onClickView = (e: React.MouseEvent) => {
-      e.preventDefault()
-      e.stopPropagation()
-      setSelectedAccount({ ...account, nodeType })
-    }
-
-    const onClickDelete = (e: React.MouseEvent) => {
-      e.preventDefault()
-      e.stopPropagation()
-      setAccountToDelete(account)
-    }
-
-    return (
-      <Fragment key={rowKey + '-' + index}>
-        <TableRow
-          rowKey={rowKey + '-' + index}
-          expandable={hasSubAccounts}
-          isExpanded={isExpanded}
-          onClick={onClickRow}
-          depth={depth}
-          variant={depth === 0 ? 'expandable' : 'default'}
-        >
-          {enableAccountNumbers && (
-            <TableCell
-              withExpandIcon={hasSubAccounts}
-            >
-              <HStack {...(!hasSubAccounts && { pis: 'lg' })} overflow='hidden'>
-                {enableAccountNumbers
-                  && highlightMatch({
-                    text: account.accountNumber || '',
-                    query: searchQuery,
-                    isMatching: account.isMatching,
-                  })}
-              </HStack>
-            </TableCell>
-          )}
-          <TableCell
-            withExpandIcon={hasSubAccounts && !enableAccountNumbers}
-          >
-            <HStack {...((!hasSubAccounts && !enableAccountNumbers) ? { pis: 'lg' } : {})} overflow='hidden'>
-              <UIButton variant='text' ellipsis onClick={onClickAccountName}>
-                {
-                  highlightMatch({
-                    text: account.name,
-                    query: searchQuery,
-                    isMatching: account.isMatching,
-                  })
-                }
-              </UIButton>
-            </HStack>
-          </TableCell>
-          <TableCell>
-            {depth != 0
-              && highlightMatch({
-                text: account.accountType?.displayName || '',
-                query: searchQuery,
-                isMatching: account.isMatching,
-              })}
-          </TableCell>
-          <TableCell>
-            {depth != 0
-              && highlightMatch({
-                text: account.accountSubtype?.displayName || '',
-                query: searchQuery,
-                isMatching: account.isMatching,
-              })}
-          </TableCell>
-          <TableCell>
-            {highlightMatch({
-              text: formatCurrencyFromCents(account.balance),
-              query: searchQuery,
-              isMatching: account.isMatching,
-            })}
-          </TableCell>
-          <TableCell align={TableCellAlign.RIGHT}>
+          return (
             <HStack className='Layer__coa__actions' gap='xs'>
-
               <Button
                 variant={ButtonVariant.secondary}
                 rightIcon={<List size={14} />}
                 iconOnly
-                onClick={onClickView}
+                onClick={e => onClickView(row, e)}
               >
                 {t('common:action.view_label', 'View')}
               </Button>
@@ -299,7 +246,7 @@ export const ChartOfAccountsTableContent = ({
                 rightIcon={<Edit2 size={14} />}
                 iconOnly
                 disabled={isNonEditable}
-                onClick={onClickEdit}
+                onClick={e => onClickEdit(account, e)}
                 tooltip={isNonEditable ? t('chartOfAccounts:validation.account_not_modifiable', 'This account cannot be modified') : undefined}
               >
                 {t('common:action.edit_label', 'Edit')}
@@ -308,86 +255,49 @@ export const ChartOfAccountsTableContent = ({
                 variant={ButtonVariant.secondary}
                 rightIcon={<Trash2 size={14} />}
                 iconOnly
-                onClick={onClickDelete}
+                onClick={e => onClickDelete(account, e)}
                 disabled={isDeleteDisabled}
                 tooltip={getDeleteButtonTooltip(account)}
               >
                 {t('common:action.delete_label', 'Delete')}
               </Button>
             </HStack>
-          </TableCell>
-        </TableRow>
-        {hasSubAccounts
-          && isExpanded
-          && account.subAccounts.map((subItem, subIdx) => {
-            return renderChartOfAccountsDesktopRow({
-              account: subItem,
-              index: subIdx,
-              depth: depth + 1,
-              searchQuery,
-            })
-          })}
-      </Fragment>
-    )
-  }
+          )
+        },
+      },
+    ]
 
-  if (filteredAccounts.length === 0) {
-    return (
-      <div className='Layer__table-state-container'>
-        <DataState
-          status={DataStateStatus.info}
-          title={t('chartOfAccounts:empty.accounts', 'No accounts found')}
-          description={t('chartOfAccounts:empty.accounts_match_filters', 'No accounts match the current filters. Click "Add Account" to create a new one.')}
-        />
-      </div>
-    )
-  }
+    if (enableAccountNumbers) {
+      columns.unshift(accountNumberColumn)
+    }
+
+    return columns
+  }, [
+    enableAccountNumbers,
+    formatCurrencyFromCents,
+    getDeleteButtonTooltip,
+    onClickEdit,
+    onClickView,
+    renderHighlightedNonRootValue,
+    renderHighlightedValue,
+    stringOverrides,
+    t,
+    templateAccountsEditable,
+  ])
 
   return (
     <>
-      <Table componentName='chart-of-accounts'>
-        <colgroup>
-          {enableAccountNumbers && <col className='Layer__chart-of-accounts--accountnumber' />}
-          <col className='Layer__chart-of-accounts--name' />
-          <col className='Layer__chart-of-accounts--type' />
-          <col className='Layer__chart-of-accounts--subtype' />
-          <col className='Layer__chart-of-accounts--balance' />
-          <col className='Layer__chart-of-accounts--actions' />
-        </colgroup>
-        <TableHead>
-          <TableRow isHeadRow rowKey='charts-of-accounts-head-row'>
-            {enableAccountNumbers && (
-              <TableCell isHeaderCell>
-                {stringOverrides?.numberColumnHeader || t('generalLedger:label.account_number', 'Account Number')}
-              </TableCell>
-            )}
-            <TableCell isHeaderCell>
-              {stringOverrides?.nameColumnHeader || t('generalLedger:label.account_name_title_case', 'Account Name')}
-            </TableCell>
-            <TableCell isHeaderCell>
-              {stringOverrides?.typeColumnHeader || t('common:label.type', 'Type')}
-            </TableCell>
-            <TableCell isHeaderCell>
-              {stringOverrides?.subtypeColumnHeader || t('chartOfAccounts:label.sub_type', 'Sub-Type')}
-            </TableCell>
-            <TableCell isHeaderCell>
-              {stringOverrides?.balanceColumnHeader || t('common:label.balance', 'Balance')}
-            </TableCell>
-            <TableCell isHeaderCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {!isError
-            && filteredAccounts.map((account, index) =>
-              renderChartOfAccountsDesktopRow({
-                account,
-                index,
-                depth: 0,
-                searchQuery,
-              }),
-            )}
-        </TableBody>
-      </Table>
+      <ExpandableDataTable
+        componentName={COMPONENT_NAME}
+        ariaLabel={t('chartOfAccounts:label.chart_of_accounts', 'Chart of Accounts')}
+        columnConfig={columnConfig}
+        data={filteredAccounts ? asMutable(filteredAccounts) : undefined}
+        isLoading={isLoading}
+        isError={isError}
+        slots={slots}
+        getSubRows={getSubRows}
+        getRowId={getRowId}
+      />
       <BaseConfirmationModal
         isOpen={accountToDelete !== null}
         onOpenChange={(isOpen: boolean) => {
@@ -402,6 +312,5 @@ export const ChartOfAccountsTableContent = ({
         cancelLabel={t('common:action.cancel_label', 'Cancel')}
       />
     </>
-
   )
 }

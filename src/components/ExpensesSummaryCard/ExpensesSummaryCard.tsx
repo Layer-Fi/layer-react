@@ -1,62 +1,92 @@
-import { type ReactNode } from 'react'
+import { useMemo } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { useGlobalMonthSubtitle } from '@hooks/utils/i18n/useGlobalMonthSubtitle'
-import { type HeadingSize } from '@ui/Typography/Heading'
-import { ProfitAndLossDetailedCharts, type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ExpandSummaryCardButton } from '@ui/SummaryCard/ExpandSummaryCardButton'
-import { SummaryCard } from '@ui/SummaryCard/SummaryCard'
+import { SummaryCard, type SummaryCardProps } from '@ui/SummaryCard/SummaryCard'
+import { ProfitAndLossDetailedCharts, type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 
 import './expensesSummaryCard.scss'
 
-export interface ExpensesSummaryCardInteractionProps {
-  onExpandClick?: () => void
+type InteractionProps = {
+  onClickExpand?: () => void
+}
+
+type StylingProps = {
+  chartColorsList?: string[]
+}
+
+type StringOverrides = {
+  title?: string
 }
 
 export type ExpensesSummaryCardProps = {
-  title?: string
-  headerSize?: HeadingSize
-  chartColorsList?: string[]
-  stringOverrides?: ProfitAndLossDetailedChartsStringOverrides
-  legend?: ReactNode
-  interactionProps?: ExpensesSummaryCardInteractionProps
+  stylingProps?: StylingProps
+  interactionProps?: InteractionProps
+  stringOverrides?: StringOverrides
   className?: string
 }
 
-export const ExpensesSummaryCard = ({
-  title,
-  headerSize,
-  chartColorsList,
-  stringOverrides,
-  legend,
-  interactionProps,
-  className,
-}: ExpensesSummaryCardProps) => {
+const useExpensesSummaryCard = ({ stylingProps, interactionProps, stringOverrides }: UseExpensesSummaryCardParams) => {
   const { t } = useTranslation()
   const subtitle = useGlobalMonthSubtitle()
+  const { chartColorsList } = stylingProps ?? {}
 
-  const { onExpandClick } = interactionProps ?? {}
+  const { onClickExpand } = interactionProps ?? {}
 
-  const resolvedPrimaryAction = onExpandClick
-    ? <ExpandSummaryCardButton callback={onExpandClick} ariaLabel={t('common:label.view_details', 'View details')} />
-    : undefined
+  const resolvedSlots: SummaryCardProps['slots'] = useMemo(() => {
+    const resolvedPrimaryAction = onClickExpand
+      ? <ExpandSummaryCardButton callback={onClickExpand} ariaLabel={t('common:label.view_label', 'View')} />
+      : undefined
 
+    return {
+      title: stringOverrides?.title ?? t('common:label.expenses', 'Expenses'),
+      subtitle: subtitle,
+      legend: undefined,
+      primaryAction: resolvedPrimaryAction,
+    }
+  }, [stringOverrides?.title, subtitle, t, onClickExpand])
+
+  const resolvedStringOverrides: ProfitAndLossDetailedChartsStringOverrides = useMemo(() => {
+    return {
+      detailedChartStringOverrides: {
+        expenseChartHeader: stringOverrides?.title ?? t('common:label.expenses', 'Expenses'),
+      },
+    }
+  }, [stringOverrides?.title, t])
+
+  return {
+    resolvedSlots,
+    resolvedStringOverrides,
+    chartColorsList,
+  }
+}
+
+type UseExpensesSummaryCardParams = {
+  stylingProps?: StylingProps
+  interactionProps?: InteractionProps
+  stringOverrides?: StringOverrides
+}
+
+export const ExpensesSummaryCard = ({
+  stylingProps,
+  interactionProps,
+  stringOverrides,
+  className,
+}: ExpensesSummaryCardProps) => {
+  const { resolvedSlots, resolvedStringOverrides, chartColorsList } = useExpensesSummaryCard({ stylingProps, interactionProps, stringOverrides })
   return (
     <SummaryCard
       className={classNames('Layer__ExpensesSummaryCard', className)}
-      title={title ?? t('common:label.expenses', 'Expenses')}
-      subtitle={subtitle}
-      headerSize={headerSize}
-      legend={legend}
-      primaryAction={resolvedPrimaryAction}
+      slots={resolvedSlots}
     >
       <ProfitAndLossDetailedCharts
         scope='expenses'
         hideClose
         hideHeader
         chartColorsList={chartColorsList}
-        stringOverrides={stringOverrides}
+        stringOverrides={resolvedStringOverrides}
         slotProps={{ detailedTable: { showTypeColumn: false } }}
       />
     </SummaryCard>

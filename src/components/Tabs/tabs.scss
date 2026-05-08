@@ -106,15 +106,3 @@
       width 150ms ease;
   }
 }
-
-@container (width <= 400px) {
-  .Layer__tabs-option {
-    .Layer__tasks__badge .Layer__tasks__badge__label {
-      display: none;
-    }
-
-    .Layer__tasks__badge .Layer__tasks__badge__label-short {
-      display: flex;
-    }
-  }
-}

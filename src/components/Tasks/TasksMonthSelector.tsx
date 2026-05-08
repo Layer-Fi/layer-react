@@ -22,7 +22,11 @@ function useActiveYearBookkeepingPeriods() {
   return { periodsInActiveYear }
 }
 
-function TasksMonthSelector() {
+type TasksMonthSelectorProps = {
+  isMobile: boolean
+}
+
+function TasksMonthSelector({ isMobile }: TasksMonthSelectorProps) {
   const { date } = useGlobalDate()
   const { formatDate } = useIntlFormatter()
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
@@ -78,6 +82,7 @@ function TasksMonthSelector() {
             data={monthData}
             active={monthData.month === activeMonthNumber}
             disabled={monthData.disabled}
+            isMobile={isMobile}
           />
         )
       })}

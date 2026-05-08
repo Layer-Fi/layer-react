@@ -1,4 +1,4 @@
-import { type ReactNode, useContext } from 'react'
+import { useContext, useMemo } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
@@ -7,56 +7,79 @@ import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { VStack } from '@ui/Stack/Stack'
 import { ExpandSummaryCardButton } from '@ui/SummaryCard/ExpandSummaryCardButton'
-import { SummaryCard } from '@ui/SummaryCard/SummaryCard'
-import { type HeadingSize } from '@ui/Typography/Heading'
+import { SummaryCard, type SummaryCardProps } from '@ui/SummaryCard/SummaryCard'
 import { ProfitAndLossChart } from '@components/ProfitAndLossChart/ProfitAndLossChart'
 import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
 
 import './profitAndLossSummaryCard.scss'
 
-export interface ProfitAndLossSummaryCardInteractionProps {
-  onExpandClick?: () => void
+type InteractionProps = {
+  onClickExpand?: () => void
+}
+
+type StringOverrides = {
+  title?: string
 }
 
 export type ProfitAndLossSummaryCardProps = {
-  title?: string
-  headerSize?: HeadingSize
+  interactionProps?: InteractionProps
+  stringOverrides?: StringOverrides
   className?: string
-  legend?: ReactNode
-  interactionProps?: ProfitAndLossSummaryCardInteractionProps
 }
 
-export const ProfitAndLossSummaryCard = ({
-  title,
-  headerSize,
-  legend,
-  interactionProps,
-  className,
-}: ProfitAndLossSummaryCardProps) => {
+type UseProfitAndLossSummaryCardParams = {
+  interactionProps?: InteractionProps
+  stringOverrides?: StringOverrides
+}
+
+const useProfitAndLossSummaryCard = ({ interactionProps, stringOverrides }: UseProfitAndLossSummaryCardParams) => {
   const { t } = useTranslation()
   const { isDesktop } = useSizeClass()
   const subtitle = useGlobalMonthSubtitle()
+
+  const { onClickExpand } = interactionProps ?? {}
+
+  const legend = useMemo(
+    () => <PnlLegend direction={isDesktop ? 'row' : 'column'} />,
+    [isDesktop],
+  )
+
+  const resolvedSlots: SummaryCardProps['slots'] = useMemo(() => {
+    const resolvedPrimaryAction = onClickExpand
+      ? <ExpandSummaryCardButton callback={onClickExpand} ariaLabel={t('common:label.view_label', 'View')} />
+      : undefined
+
+    return {
+      title: stringOverrides?.title ?? t('common:label.profit_loss', 'Profit & Loss'),
+      subtitle,
+      legend: isDesktop ? legend : undefined,
+      primaryAction: resolvedPrimaryAction,
+    }
+  }, [stringOverrides?.title, subtitle, t, onClickExpand, isDesktop, legend])
+
+  return {
+    resolvedSlots,
+    legend,
+    isDesktop,
+  }
+}
+
+export const ProfitAndLossSummaryCard = ({
+  interactionProps,
+  stringOverrides,
+  className,
+}: ProfitAndLossSummaryCardProps) => {
   const { tagFilter } = useContext(ProfitAndLossContext)
-
-  const { onExpandClick } = interactionProps ?? {}
-
-  const resolvedLegend = legend ?? <PnlLegend direction={isDesktop ? 'row' : 'column'} />
-  const resolvedPrimaryAction = onExpandClick
-    ? <ExpandSummaryCardButton callback={onExpandClick} ariaLabel={t('common:label.view_details', 'View details')} />
-    : undefined
+  const { resolvedSlots, legend, isDesktop } = useProfitAndLossSummaryCard({ interactionProps, stringOverrides })
 
   return (
     <SummaryCard
       className={classNames('Layer__ProfitAndLossSummaryCard', className)}
-      title={title ?? t('common:label.profit_loss', 'Profit & Loss')}
-      subtitle={subtitle}
-      headerSize={headerSize}
-      legend={isDesktop ? resolvedLegend : undefined}
-      primaryAction={resolvedPrimaryAction}
+      slots={resolvedSlots}
     >
       <VStack gap='sm'>
         <ProfitAndLossChart tagFilter={tagFilter} hideLegend />
-        {!isDesktop && resolvedLegend}
+        {!isDesktop && legend}
       </VStack>
     </SummaryCard>
   )

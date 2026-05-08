@@ -1,68 +1,80 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { TaxSummary } from '@schemas/taxEstimates/summary'
+import type { TaxSummary, TaxSummarySection } from '@schemas/taxEstimates/summary'
 import { tConditional } from '@utils/i18n/conditional'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useFullYearProjection } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
-import { VStack } from '@ui/Stack/Stack'
+import { Button } from '@ui/Button/Button'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
+import { EquationRow } from '@components/TaxDetails/TaxSummaryCard/TaxSummaryCardEquation'
+
+import './taxSummaryCardMobile.scss'
 
 type TaxSummaryCardMobileProps = {
   data: TaxSummary
 }
 
+type SectionEquationProps = {
+  section: TaxSummarySection
+}
+
+const SectionEquation = ({ section }: SectionEquationProps) => (
+  <VStack className='Layer__TaxSummaryCard__MobileSection' gap='xs' align='start'>
+    <Span size='sm' variant='subtle'>{section.label}</Span>
+    <EquationRow section={section} />
+  </VStack>
+)
+
 export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
   const { fullYearProjection } = useFullYearProjection()
+  const [isExpanded, setIsExpanded] = useState(false)
   const projectedCondition: 'default' | 'projected' = fullYearProjection ? 'projected' : 'default'
 
   return (
-    <VStack className='Layer__TaxSummaryCard--mobile' gap='md'>
-      <Card className='Layer__TaxSummaryCard__OverviewCard'>
-        <VStack gap='xs' justify='center' align='center'>
-          <VStack justify='center' align='center'>
-            <Span size='md' variant='subtle'>
-              {tConditional(t, 'taxEstimates:label.taxes_owed', {
-                condition: projectedCondition,
-                cases: {
-                  default: 'Taxes Owed',
-                  projected: 'Projected Taxes Owed',
-                },
-                contexts: {
-                  projected: 'projected',
-                },
-              })}
-            </Span>
-            <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
+    <Card className='Layer__card--reset Layer__TaxSummaryCard--mobile'>
+      <VStack className='Layer__TaxSummaryCard__MobileCard' gap='md'>
+        <HStack justify='space-between' align='center'>
+          <Span size='sm'>
+            {tConditional(t, 'taxEstimates:label.taxes_owed', {
+              condition: projectedCondition,
+              cases: {
+                default: 'Taxes Owed',
+                projected: 'Projected Taxes Owed',
+              },
+              contexts: {
+                projected: 'projected',
+              },
+            })}
+          </Span>
+          <Span size='sm' variant='subtle'>
+            {t('taxEstimates:label.taxes_due_at', 'Taxes due on {{date}}', { date: formatDate(data.taxesDueAt) })}
+          </Span>
+        </HStack>
+        <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
+        {isExpanded && (
+          <VStack className='Layer__TaxSummaryCard__MobileSections' gap='md'>
+            {data.sections.map(section => (
+              <SectionEquation key={section.key ?? section.label} section={section} />
+            ))}
           </VStack>
-          <VStack align='center'>
-            <Span size='sm' variant='subtle'>{t('taxEstimates:label.taxes_due', 'Taxes Due')}</Span>
-            <Span size='md'>{formatDate(data.taxesDueAt)}</Span>
-          </VStack>
-        </VStack>
-      </Card>
-      <Card className='Layer__TaxSummaryCard__BreakdownCard'>
-        <div className='Layer__TaxSummaryCard__Grid Layer__TaxSummaryCard__Grid--mobile'>
-          {data.sections.map(section => (
-            <div key={section.label} className='Layer__TaxSummaryCard__SectionGroup'>
-              <Span size='sm' variant='subtle'>{section.label}</Span>
-              <MoneySpan size='lg' weight='bold' amount={section.taxesOwed} />
-              <Span size='sm' variant='subtle'>=</Span>
-              <MoneySpan size='md' amount={section.total} />
-              <Span size='sm' variant='subtle'>-</Span>
-              <MoneySpan size='md' amount={section.taxesPaid} />
-              <span />
-              <span />
-              <Span size='sm' variant='subtle'>{t('common:label.total', 'Total')}</Span>
-              <span />
-              <Span size='sm' variant='subtle'>{t('taxEstimates:label.taxes_paid', 'Taxes Paid')}</Span>
-            </div>
-          ))}
-        </div>
-      </Card>
-    </VStack>
+        )}
+        <HStack className='Layer__TaxSummaryCard__MobileToggleWrapper' justify='center'>
+          <Button
+            variant='text'
+            onClick={() => setIsExpanded(prev => !prev)}
+          >
+            {isExpanded
+              ? t('common:label.hide_details', 'Hide details')
+              : t('common:label.show_details', 'Show details')}
+          </Button>
+        </HStack>
+      </VStack>
+    </Card>
   )
 }

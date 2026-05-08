@@ -6,6 +6,7 @@ export enum ReportControl {
   Date = 'date',
   DateRange = 'date_range',
   GroupBy = 'group_by',
+  Year = 'year',
   Unknown = 'unknown',
 }
 

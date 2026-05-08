@@ -1,29 +1,12 @@
-import { type RefObject, useContext, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { type RefObject, useContext } from 'react'
 
-import { type View } from '@internal-types/general'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
-import PlusIcon from '@icons/Plus'
-import { HStack } from '@ui/Stack/Stack'
-import { Button, ButtonVariant } from '@components/Button/Button'
-import { ExpandCollapseButton } from '@components/Button/ExpandCollapseButton'
-import { AccountBalancesDownloadButton } from '@components/ChartOfAccounts/download/AccountBalancesDownloadButton'
-import { type ChartOfAccountsFormStringOverrides } from '@components/ChartOfAccountsForm/ChartOfAccountsForm'
-import { ChartOfAccountsSidebar } from '@components/ChartOfAccountsSidebar/ChartOfAccountsSidebar'
+import { ChartOfAccountsForm, type ChartOfAccountsFormStringOverrides } from '@components/ChartOfAccountsForm/ChartOfAccountsForm'
 import { ChartOfAccountsTable } from '@components/ChartOfAccountsTable/ChartOfAccountsTable'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
-import { Header } from '@components/Header/Header'
-import { HeaderCol } from '@components/Header/HeaderCol'
-import { HeaderRow } from '@components/Header/HeaderRow'
-import { Loader } from '@components/Loader/Loader'
+import { ChartOfAccountsTableHeader } from '@components/ChartOfAccountsTable/ChartOfAccountsTableHeader'
+import { ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { Panel } from '@components/Panel/Panel'
-import { SearchField } from '@components/SearchField/SearchField'
-import { Heading, HeadingSize } from '@components/Typography/Heading'
-
-const COMPONENT_NAME = 'chart-of-accounts'
-export type ExpandActionState = undefined | 'expanded' | 'collapsed'
 
 export interface ChartOfAccountsTableStringOverrides {
   headerText?: string
@@ -38,7 +21,6 @@ export interface ChartOfAccountsTableStringOverrides {
 }
 
 export const ChartOfAccountsTableWithPanel = ({
-  view,
   containerRef,
   asWidget = false,
   withDateControl = false,
@@ -47,7 +29,6 @@ export const ChartOfAccountsTableWithPanel = ({
   stringOverrides,
   templateAccountsEditable,
 }: {
-  view: View
   containerRef: RefObject<HTMLDivElement>
   asWidget?: boolean
   withDateControl?: boolean
@@ -56,117 +37,37 @@ export const ChartOfAccountsTableWithPanel = ({
   stringOverrides?: ChartOfAccountsTableStringOverrides
   templateAccountsEditable?: boolean
 }) => {
-  const { t } = useTranslation()
-  const { data, isLoading, addAccount, isError, isValidating, refetch, form } =
-    useContext(ChartOfAccountsContext)
+  const { form } = useContext(ChartOfAccountsContext)
 
-  const [expandAll, setExpandAll] = useState<ExpandActionState>()
   const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: '' })
 
   return (
-    <Panel
-      sidebar={(
-        <ChartOfAccountsSidebar
-          parentRef={containerRef}
-          stringOverrides={stringOverrides?.chartOfAccountsForm}
+    <ExpandableDataTableProvider>
+      <Panel
+        sidebar={(
+          <ChartOfAccountsForm
+            stringOverrides={stringOverrides?.chartOfAccountsForm}
+          />
+        )}
+        sidebarIsOpen={!!form}
+        parentRef={containerRef}
+      >
+        <ChartOfAccountsTableHeader
+          asWidget={asWidget}
+          withDateControl={withDateControl}
+          withExpandAllButton={withExpandAllButton}
+          showAddAccountButton={showAddAccountButton}
+          inputValue={inputValue}
+          onSearchChange={handleInputChange}
+          stringOverrides={stringOverrides}
         />
-      )}
-      sidebarIsOpen={Boolean(form)}
-      parentRef={containerRef}
-    >
-      <Header className={`Layer__${COMPONENT_NAME}__header`} asHeader rounded>
-        <HeaderRow>
-          <HeaderCol>
-            <Heading
-              className={`Layer__${COMPONENT_NAME}__title`}
-              size={asWidget ? HeadingSize.view : HeadingSize.primary}
-            >
-              {stringOverrides?.headerText || t('chartOfAccounts:label.chart_of_accounts', 'Chart of Accounts')}
-            </Heading>
-          </HeaderCol>
-        </HeaderRow>
-      </Header>
-      <Header className={`Layer__${COMPONENT_NAME}__header`} sticky>
-        <HeaderRow>
-          <HeaderCol>
-            <Heading
-              size={HeadingSize.secondary}
-              className={`Layer__${COMPONENT_NAME}__subtitle`}
-            >
-              {withDateControl || withExpandAllButton
-                ? (
-                  <HStack align='center' gap='xs'>
-                    {withDateControl && <GlobalMonthPicker />}
-                    {withExpandAllButton && (
-                      <ExpandCollapseButton
-                        iconOnly={view === 'mobile'}
-                        onClick={() =>
-                          setExpandAll(
-                            !expandAll || expandAll === 'collapsed'
-                              ? 'expanded'
-                              : 'collapsed',
-                          )}
-                        expanded={!(!expandAll || expandAll === 'collapsed')}
-                        variant={ButtonVariant.secondary}
-                      />
-                    )}
-                  </HStack>
-                )
-                : null}
-            </Heading>
-          </HeaderCol>
-          <HeaderCol className='Layer__chart-of-accounts__actions'>
-            <SearchField label={t('chartOfAccounts:label.search_accounts', 'Search accounts')} value={inputValue} onChange={handleInputChange} />
-            <AccountBalancesDownloadButton
-              iconOnly={['mobile', 'tablet'].includes(view)}
-            />
-            {showAddAccountButton && (
-              <Button
-                onClick={() => addAccount()}
-                iconOnly={['mobile', 'tablet'].includes(view)}
-                leftIcon={
-                  ['mobile', 'tablet'].includes(view) && <PlusIcon size={14} />
-                }
-              >
-                {stringOverrides?.addAccountButtonText || t('chartOfAccounts:action.add_account', 'Add Account')}
-              </Button>
-            )}
-          </HeaderCol>
-        </HeaderRow>
-      </Header>
 
-      {data && (
         <ChartOfAccountsTable
-          view={view}
-          data={data}
           searchQuery={searchQuery}
           stringOverrides={stringOverrides}
-          expandAll={expandAll}
           templateAccountsEditable={templateAccountsEditable}
         />
-      )}
-
-      {isError
-        ? (
-          <div className='Layer__table-state-container'>
-            <DataState
-              status={DataStateStatus.failed}
-              title={t('common:error.something_went_wrong', 'Something went wrong')}
-              description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
-              onRefresh={() => void refetch()}
-              isLoading={isValidating || isLoading}
-            />
-          </div>
-        )
-        : null}
-
-      {(!data || isLoading) && !isError
-        ? (
-          <div className={`Layer__${COMPONENT_NAME}__loader-container`}>
-            <Loader />
-          </div>
-        )
-        : null}
-    </Panel>
+      </Panel>
+    </ExpandableDataTableProvider>
   )
 }

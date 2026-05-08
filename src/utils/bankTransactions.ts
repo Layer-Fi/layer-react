@@ -4,6 +4,7 @@ import { type BankTransaction, DisplayState, type Split, type SuggestedMatch } f
 import { type DateRange } from '@internal-types/general'
 import { Direction } from '@internal-types/general'
 import type { TagFilterInput } from '@internal-types/tags'
+import { type BankTransactionTaxOption } from '@schemas/bankTransactions/bankTransaction'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { makeTagKeyValueFromTag } from '@schemas/tag'
 import { CategorizedCategories, ReviewCategories } from '@components/BankTransactions/constants'
@@ -77,6 +78,14 @@ export const countTransactionsToReview = ({
 export const hasReceipts = (bankTransaction?: BankTransaction) =>
   bankTransaction?.document_ids && bankTransaction.document_ids.length > 0
 
+export const getBankTransactionTaxOptions = (bankTransaction?: BankTransaction): BankTransactionTaxOption[] => {
+  if (!bankTransaction?.tax_options) {
+    return []
+  }
+
+  return Object.values(bankTransaction.tax_options).flat()
+}
+
 export const isTransferMatch = (bankTransaction?: BankTransaction) => {
   return bankTransaction?.match?.details.type === 'Transfer_Match'
 }
@@ -123,6 +132,7 @@ export const buildCategorizeBankTransactionPayloadForSplit = (splits: Split[]): 
     ? ({
       type: 'Category',
       category: splits[0].category.classification!,
+      taxCode: splits[0].taxCode ?? null,
     })
     : ({
       type: 'Split',
@@ -130,6 +140,7 @@ export const buildCategorizeBankTransactionPayloadForSplit = (splits: Split[]): 
         // TODO: enforce upstream in the category combobox that split.category is non-null
         category: split.category!.classification!,
         amount: split.amount,
+        taxCode: split.taxCode ?? null,
         tags: split.tags.map(tag => makeTagKeyValueFromTag(tag)),
         customerId: split.customerVendor?.customerVendorType === 'CUSTOMER' ? split.customerVendor.id : undefined,
         vendorId: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : undefined,
