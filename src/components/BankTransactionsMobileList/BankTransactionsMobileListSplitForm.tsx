@@ -14,7 +14,7 @@ import PaperclipIcon from '@icons/Paperclip'
 import Scissors from '@icons/Scissors'
 import Trash from '@icons/Trash'
 import { Button } from '@ui/Button/Button'
-import { HStack, VStack } from '@ui/Stack/Stack'
+import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
@@ -25,7 +25,6 @@ import { FileInput } from '@components/Input/FileInput'
 import { Input } from '@components/Input/Input'
 import { TaxCodeMobileDrawer } from '@components/TaxCodeSelect/TaxCodeMobileDrawer'
 import { ErrorText } from '@components/Typography/ErrorText'
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
 import './bankTransactionsMobileListSplitForm.scss'
 
@@ -71,8 +70,6 @@ export const BankTransactionsMobileListSplitForm = ({
 
   const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(bankTransaction)
 
-  const addSplitButtonText = t('bankTransactions:action.split_label', 'Split')
-
   useEffect(() => {
     if (isErrorCategorizing) {
       setShowRetry(true)
@@ -96,12 +93,12 @@ export const BankTransactionsMobileListSplitForm = ({
 
   return (
     <VStack gap='sm'>
-      {showCategorization
-        && (
-          <VStack gap='sm'>
-            <Text weight={TextWeight.bold} size={TextSize.sm}>
+      {showCategorization && (
+        <VStack gap='sm'>
+          <VStack gap='3xs'>
+            <Span size='sm' weight='bold'>
               {t('bankTransactions:action.split_transaction', 'Split transaction')}
-            </Text>
+            </Span>
             <VStack gap='sm'>
               {localSplits.map((split, index) => (
                 <HStack
@@ -124,7 +121,7 @@ export const BankTransactionsMobileListSplitForm = ({
                     selectedValue={split.category}
                     onSelectedValueChange={handleCategoryChange(index)}
                     showTooltips={showTooltips}
-                    slotProps={{ Trigger: { size: 'sm' } }}
+                    slotProps={{ TriggerSpan: { size: 'sm' } }}
                   />
                   {hasTaxCodeOptions && (
                     <VStack className='Layer__BankTransactionsMobileSplitForm__TaxCode'>
@@ -153,47 +150,32 @@ export const BankTransactionsMobileListSplitForm = ({
                 </HStack>
               ))}
             </VStack>
-            {localSplits.length > 1
-              ? (
-                <VStack pbs='xs' gap='3xs'>
-                  <Span size='sm'>
-                    {t('common:label.total', 'Total')}
-                  </Span>
-                  <HStack justify='space-between'>
-                    <Input
-                      disabled={true}
-                      inputMode='numeric'
-                      value={formatCurrencyFromCents(localSplits.reduce((total, { amount }) => total + amount, 0))}
-                      className='Layer__BankTransactionsMobileSplitForm__TotalAmountInput'
-                    />
-                    <Button
-                      onClick={addSplit}
-                      variant='outlined'
-                    >
-                      <HStack align='center' gap='2xs' pis='2xs' pie='2xs'>
-                        {addSplitButtonText}
-                        <Scissors size={14} />
-                      </HStack>
-                    </Button>
-                  </HStack>
-                </VStack>
-              )
-              : (
-                <HStack justify='end'>
-                  <Button
-                    onClick={addSplit}
-                    variant='outlined'
-                  >
-                    <HStack align='center' gap='2xs' pis='2xs' pie='2xs'>
-                      {addSplitButtonText}
-                      <Scissors size={14} />
-                    </HStack>
-                  </Button>
-                </HStack>
-              )}
-            {splitFormError && <HStack pbe='sm'><ErrorText>{splitFormError}</ErrorText></HStack>}
           </VStack>
-        )}
+          <HStack align='end'>
+            {localSplits.length > 1 && (
+              <VStack pbs='xs' gap='3xs'>
+                <Span size='sm' weight='bold'>
+                  {t('common:label.total', 'Total')}
+                </Span>
+                <Input
+                  disabled={true}
+                  inputMode='numeric'
+                  value={formatCurrencyFromCents(localSplits.reduce((total, { amount }) => total + amount, 0))}
+                  className='Layer__BankTransactionsMobileSplitForm__TotalAmountInput'
+                />
+              </VStack>
+            )}
+            <Spacer />
+            <Button onClick={addSplit} variant='outlined'>
+              <HStack align='center' gap='2xs' pis='2xs' pie='2xs'>
+                {t('bankTransactions:action.split_label', 'Split')}
+                <Scissors size={14} />
+              </HStack>
+            </Button>
+          </HStack>
+          {splitFormError && <ErrorText>{splitFormError}</ErrorText>}
+        </VStack>
+      )}
       <BankTransactionFormFields
         bankTransaction={bankTransaction}
         showDescriptions={showDescriptions}
