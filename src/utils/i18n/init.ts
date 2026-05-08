@@ -1,6 +1,5 @@
 import i18next from 'i18next'
 import Pseudo from 'i18next-pseudo'
-import { initReactI18next } from 'react-i18next'
 
 import { pseudoOptions } from '@utils/i18n/pseudoConfig'
 import { DEFAULT_LOCALE, type SupportedLocale } from '@utils/i18n/supportedLocale'
@@ -26,7 +25,6 @@ export const initI18n = (locale: SupportedLocale) => {
   const usePseudo = isPseudoEnabled()
 
   return void layerI18n
-    .use(initReactI18next)
     .use(new Pseudo(pseudoOptions({ enabled: usePseudo })))
     .init({
       returnEmptyString: false,
