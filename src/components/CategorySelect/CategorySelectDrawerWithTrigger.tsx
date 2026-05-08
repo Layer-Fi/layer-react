@@ -10,14 +10,17 @@ import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectD
 
 import './categorySelectDrawerWithTrigger.scss'
 
-type Props = {
-  value: BankTransactionNonSuggestedMatchOption | null
-  onChange: (newValue: BankTransactionNonSuggestedMatchOption | null) => void
-  disabled?: boolean
+type CategorySelectDrawerWithTriggerProps = {
+  selectedValue: BankTransactionNonSuggestedMatchOption | null
+  onSelectedValueChange: (newValue: BankTransactionNonSuggestedMatchOption | null) => void
   showTooltips: boolean
 }
 
-export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips }: Props) => {
+export const CategorySelectDrawerWithTrigger = ({
+  selectedValue,
+  onSelectedValueChange,
+  showTooltips,
+}: CategorySelectDrawerWithTriggerProps) => {
   const { t } = useTranslation()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
@@ -29,13 +32,13 @@ export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips 
         onClick={() => { setIsDrawerOpen(true) }}
         variant='outlined'
       >
-        <Span ellipsis>{value?.label ?? t('common:action.select_label', 'Select...')}</Span>
+        <Span ellipsis>{selectedValue?.label ?? t('common:action.select_label', 'Select...')}</Span>
         <ChevronDown size={16} />
       </Button>
 
       <CategorySelectDrawer
-        onSelect={onChange}
-        selectedId={value?.value}
+        onSelectedValueChange={onSelectedValueChange}
+        selectedValue={selectedValue}
         showTooltips={showTooltips}
         isOpen={isDrawerOpen}
         onOpenChange={setIsDrawerOpen}

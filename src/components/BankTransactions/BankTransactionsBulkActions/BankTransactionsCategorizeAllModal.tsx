@@ -122,8 +122,8 @@ export const BankTransactionsCategorizeAllModal = ({
               ? (
                 <CategorySelectDrawerWithTrigger
                   aria-labelledby={categorySelectId}
-                  value={selectedCategory}
-                  onChange={setSelectedCategory}
+                  selectedValue={selectedCategory}
+                  onSelectedValueChange={setSelectedCategory}
                   showTooltips={false}
                 />
               )

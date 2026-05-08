@@ -109,8 +109,8 @@ export const BankTransactionsMobileListSplitForm = ({
                   className='Layer__BankTransactionsMobileSplitForm__SplitRow'
                 >
                   <CategorySelectDrawerWithTrigger
-                    value={split.category}
-                    onChange={handleCategoryChange(index)}
+                    selectedValue={split.category}
+                    onSelectedValueChange={handleCategoryChange(index)}
                     showTooltips={showTooltips}
                   />
                   <AmountInput

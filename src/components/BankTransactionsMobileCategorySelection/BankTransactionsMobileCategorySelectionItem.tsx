@@ -6,22 +6,22 @@ import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 
-import './businessFormMobileItem.scss'
+import './bankTransactionsMobileCategorySelectionItem.scss'
 
-export type BusinessFormOptionValue = BankTransactionNonSuggestedMatchOption
+export type BankTransactionsMobileCategorySelectionOptionValue = BankTransactionNonSuggestedMatchOption
 
-export interface BusinessFormMobileItemOption {
-  value: BusinessFormOptionValue
+export interface BankTransactionsMobileCategorySelectionItemOption {
+  value: BankTransactionsMobileCategorySelectionOptionValue
   asLink?: boolean
 }
 
-interface BusinessFormMobileItemProps {
-  option: BusinessFormMobileItemOption
+interface BankTransactionsMobileCategorySelectionItemProps {
+  option: BankTransactionsMobileCategorySelectionItemOption
 }
 
-export const BusinessFormMobileItem = ({
+export const BankTransactionsMobileCategorySelectionItem = ({
   option,
-}: BusinessFormMobileItemProps) => {
+}: BankTransactionsMobileCategorySelectionItemProps) => {
   const value = option.value.value
   const label = option.value.label
 
@@ -30,7 +30,7 @@ export const BusinessFormMobileItem = ({
       id={value}
       key={value}
       textValue={label}
-      className='Layer__BusinessFormMobileItem'
+      className='Layer__BankTransactionsMobileCategorySelectionItem'
     >
       <HStack gap='md' pi='md' pb='sm'>
         {!option.asLink && (
@@ -45,7 +45,7 @@ export const BusinessFormMobileItem = ({
         {option.asLink && (
           <ChevronRight
             size={16}
-            className='Layer__BusinessFormMobileItem__link-icon'
+            className='Layer__BankTransactionsMobileCategorySelectionItem__link-icon'
           />
         )}
       </HStack>
