@@ -9,7 +9,14 @@ import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { ActionableList } from '@components/ActionableList/ActionableList'
-import { buildFilteredCategoryOptions, type CategoryGroup, type CategoryOption, flattenCategories, isGroup } from '@components/CategorySelect/utils'
+import {
+  buildFilteredCategoryOptions,
+  type CategoryGroup,
+  type CategoryOption,
+  flattenCategories,
+  getSelectedCategoryActionableId,
+  isGroup,
+} from '@components/CategorySelect/utils'
 import { SearchField } from '@components/SearchField/SearchField'
 
 interface CategorySelectDrawerProps {
@@ -32,6 +39,7 @@ export const CategorySelectDrawer = ({
   const [query, setQuery] = useState('')
   const [selectedGroup, setSelectedGroup] = useState<CategoryGroup | null>(null)
   const selectedId = selectedValue?.value
+  const selectedActionableId = getSelectedCategoryActionableId(selectedValue)
 
   const clearSelectedGroup = useCallback(() => {
     setSelectedGroup(null)
@@ -101,7 +109,7 @@ export const CategorySelectDrawer = ({
               onSelectedValueChange(item.value)
               close()
             }}
-            selectedId={selectedId}
+            selectedId={selectedActionableId}
             showDescriptions={showTooltips}
             className='Layer__bank-transaction-mobile-list-item__categories_list'
           />
