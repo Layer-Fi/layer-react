@@ -13,6 +13,6 @@ export const useInterpolateTemplate = <TVars extends object = object>() => {
         i18n.options.interpolation ?? {},
       )
     },
-    [i18n],
+    [i18n.language, i18n.options.interpolation, i18n.services.interpolator],
   )
 }
