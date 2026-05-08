@@ -13,16 +13,16 @@ import { buildFilteredCategoryOptions, type CategoryGroup, type CategoryOption, 
 import { SearchField } from '@components/SearchField/SearchField'
 
 interface CategorySelectDrawerProps {
-  onSelect: (value: BankTransactionNonSuggestedMatchOption | null) => void
-  selectedId?: string
+  onSelectedValueChange: (value: BankTransactionNonSuggestedMatchOption | null) => void
+  selectedValue: BankTransactionNonSuggestedMatchOption | null
   showTooltips: boolean
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
 }
 
 export const CategorySelectDrawer = ({
-  onSelect,
-  selectedId,
+  onSelectedValueChange,
+  selectedValue,
   showTooltips,
   isOpen,
   onOpenChange,
@@ -31,6 +31,7 @@ export const CategorySelectDrawer = ({
   const { data: categories } = useCategories()
   const [query, setQuery] = useState('')
   const [selectedGroup, setSelectedGroup] = useState<CategoryGroup | null>(null)
+  const selectedId = selectedValue?.value
 
   const clearSelectedGroup = useCallback(() => {
     setSelectedGroup(null)
@@ -97,7 +98,7 @@ export const CategorySelectDrawer = ({
                 setQuery('')
                 return
               }
-              onSelect(item.value)
+              onSelectedValueChange(item.value)
               close()
             }}
             selectedId={selectedId}
