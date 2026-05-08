@@ -11,26 +11,27 @@ import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
 import { Onboarding } from '@components/Onboarding/Onboarding'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
-import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import {
   ProfitAndLossSummaries,
   type ProfitAndLossSummariesStringOverrides,
 } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { ProfitAndLossSummaryCard } from '@components/ProfitAndLossSummaryCard/ProfitAndLossSummaryCard'
-import { SolopreneurOverviewDetailedCharts } from '@components/SolopreneurOverviewDetailedCharts/SolopreneurOverviewDetailedCharts'
 import { TaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
 import { View } from '@components/View/View'
 import { type TagOption } from '@views/ProjectProfitability/ProjectProfitability'
 
 import './solopreneurOverview.scss'
 
+type CardStringOverrides = {
+  header?: string
+}
+
 interface SolopreneurOverviewStringOverrides {
   title?: string
-  header?: string
-  profitAndLoss?: {
-    detailedCharts?: ProfitAndLossDetailedChartsStringOverrides
-    summaries?: ProfitAndLossSummariesStringOverrides
-  }
+  profitAndLossSummaries?: ProfitAndLossSummariesStringOverrides
+  profitAndLossSummaryCard?: CardStringOverrides
+  expensesSummaryCard?: CardStringOverrides
+  taxEstimatesSummaryCard?: CardStringOverrides
 }
 
 export interface SolopreneurOverviewProps {
@@ -97,7 +98,7 @@ export const SolopreneurOverview = ({
           />
         )}
         <ProfitAndLossSummaries
-          stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+          stringOverrides={stringOverrides?.profitAndLossSummaries}
           chartColorsList={chartColorsList}
           onTransactionsToReviewClick={onTransactionsToReviewClick}
           variants={profitAndLossSummariesVariants}
@@ -105,16 +106,17 @@ export const SolopreneurOverview = ({
         {middleBanner}
         <div className='Layer__SolopreneurOverview__Grid'>
           <ProfitAndLossSummaryCard
-            stringOverrides={{ title: stringOverrides?.header }}
+            stringOverrides={{ title: stringOverrides?.profitAndLossSummaryCard?.header }}
           />
           <ExpensesSummaryCard
             stylingProps={{ chartColorsList }}
+            stringOverrides={{ title: stringOverrides?.expensesSummaryCard?.header }}
           />
           <TaxEstimatesSummaryCard
             mode='horizontal_bar_chart'
             addHeaderSeparator
+            title={stringOverrides?.taxEstimatesSummaryCard?.header}
           />
-          <SolopreneurOverviewDetailedCharts />
         </div>
       </View>
     </ProfitAndLoss>
