@@ -34,10 +34,16 @@ export const useTaxCodeSelect = ({
     [noTaxCodeOption, options],
   )
 
-  const resolvedSelectedValue = useMemo<TaxCodeComboBoxOption>(
-    () => selectedValue ?? noTaxCodeOption,
-    [selectedValue, noTaxCodeOption],
-  )
+  const resolvedSelectedValue = useMemo<TaxCodeComboBoxOption>(() => {
+    if (selectedValue === null) {
+      return noTaxCodeOption
+    }
+
+    const match = options.find(option => option.value === selectedValue.value)
+    if (match) return match
+
+    return selectedValue
+  }, [selectedValue, noTaxCodeOption, options])
 
   const handleChange = useCallback((next: TaxCodeComboBoxOption | null) => {
     if (next === null || next.value === NO_TAX_CODE) {

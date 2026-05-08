@@ -12,6 +12,7 @@ import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTran
 import { isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isApiCategorizationAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
+import type { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 
 export enum ValidateSplitError {
   AmountsMustBeGreaterThanZero = 'AmountsMustBeGreaterThanZero',
@@ -117,6 +118,7 @@ export const getCustomerVendorForBankTransaction = (bankTransaction: BankTransac
 export const getLocalSplitStateForExpandedTransaction = (
   bankTransaction: BankTransaction,
   selectedCategory: BankTransactionNonSuggestedMatchOption | null | undefined,
+  selectedTaxCode: TaxCodeComboBoxOption | null,
 ): Split[] => {
   let coercedSelectedCategory = selectedCategory
   if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
@@ -143,6 +145,7 @@ export const getLocalSplitStateForExpandedTransaction = (
   return [{
     amount: bankTransaction.amount,
     category: coercedSelectedCategory ?? null,
+    taxCode: selectedTaxCode?.value ?? bankTransaction.tax_code ?? null,
     tags: bankTransaction.transaction_tags.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))),
     customerVendor: getCustomerVendorForBankTransaction(bankTransaction),
   }]

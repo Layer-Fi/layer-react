@@ -44,10 +44,10 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
   const { t } = useTranslation()
   const intl = useIntl()
   const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
-  const { category: selectedCategory } = selectedCategorization
+  const { category: selectedCategory, taxCode: selectedTaxCode } = selectedCategorization
 
   const [localSplits, setLocalSplits] = useState<Split[]>(
-    getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory),
+    getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory, selectedTaxCode),
   )
 
   const [inputValues, setInputValues] = useState<Record<number, string>>({})
@@ -55,10 +55,14 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
   const { setTransactionCategorySelection } = useBankTransactionsCategorizationActions()
 
   useEffect(() => {
-    setLocalSplits(getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory))
+    setLocalSplits(getLocalSplitStateForExpandedTransaction(
+      bankTransaction,
+      selectedCategory,
+      selectedTaxCode,
+    ))
     setSplitFormError(undefined)
     setInputValues({})
-  }, [bankTransaction, selectedCategory, isOpen])
+  }, [bankTransaction, selectedCategory, selectedTaxCode, isOpen])
 
   const saveLocalSplitsToCategoryStore = useCallback((splits: Split[]) => {
     if (!isSplitsValid(splits)) {
