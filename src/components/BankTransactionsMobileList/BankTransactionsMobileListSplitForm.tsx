@@ -8,18 +8,21 @@ import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/ban
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import PaperclipIcon from '@icons/Paperclip'
 import Scissors from '@icons/Scissors'
 import Trash from '@icons/Trash'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 import { AmountInput } from '@components/Input/AmountInput'
 import { FileInput } from '@components/Input/FileInput'
+import { Input } from '@components/Input/Input'
 import { TaxCodeMobileDrawer } from '@components/TaxCodeSelect/TaxCodeMobileDrawer'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
@@ -42,6 +45,7 @@ export const BankTransactionsMobileListSplitForm = ({
   showDescriptions,
 }: BankTransactionsMobileListSplitFormProps) => {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const {
@@ -67,13 +71,7 @@ export const BankTransactionsMobileListSplitForm = ({
 
   const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(bankTransaction)
 
-  const effectiveSplits = showCategorization
-    ? localSplits
-    : []
-
-  const addSplitButtonText = effectiveSplits.length > 1
-    ? t('bankTransactions:action.add_new_split', 'Add new split')
-    : t('bankTransactions:action.split_label', 'Split')
+  const addSplitButtonText = t('bankTransactions:action.split_label', 'Split')
 
   useEffect(() => {
     if (isErrorCategorizing) {
@@ -155,15 +153,44 @@ export const BankTransactionsMobileListSplitForm = ({
                 </HStack>
               ))}
             </VStack>
-            <HStack justify='end'>
-              <Button
-                onClick={addSplit}
-                variant='outlined'
-              >
-                <Scissors size={14} />
-                {addSplitButtonText}
-              </Button>
-            </HStack>
+            {localSplits.length > 1
+              ? (
+                <VStack pbs='xs' gap='3xs'>
+                  <Span size='sm'>
+                    {t('common:label.total', 'Total')}
+                  </Span>
+                  <HStack justify='space-between'>
+                    <Input
+                      disabled={true}
+                      inputMode='numeric'
+                      value={formatCurrencyFromCents(localSplits.reduce((total, { amount }) => total + amount, 0))}
+                      className='Layer__BankTransactionsMobileSplitForm__TotalAmountInput'
+                    />
+                    <Button
+                      onClick={addSplit}
+                      variant='outlined'
+                    >
+                      <HStack align='center' gap='2xs' pis='2xs' pie='2xs'>
+                        {addSplitButtonText}
+                        <Scissors size={14} />
+                      </HStack>
+                    </Button>
+                  </HStack>
+                </VStack>
+              )
+              : (
+                <HStack justify='end'>
+                  <Button
+                    onClick={addSplit}
+                    variant='outlined'
+                  >
+                    <HStack align='center' gap='2xs' pis='2xs' pie='2xs'>
+                      {addSplitButtonText}
+                      <Scissors size={14} />
+                    </HStack>
+                  </Button>
+                </HStack>
+              )}
             {splitFormError && <HStack pbe='sm'><ErrorText>{splitFormError}</ErrorText></HStack>}
           </VStack>
         )}
