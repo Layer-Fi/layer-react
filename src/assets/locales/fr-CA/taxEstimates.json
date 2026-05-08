@@ -6,8 +6,12 @@
   },
   "banner": {
     "categorization_incomplete": {
-      "description_one": "Vous avez {{count}} transaction non catégorisée avec {{amount}} en déductions potentielles à examiner.",
-      "description_other": "Vous avez {{count}} transactions non catégorisées avec {{amount}} en déductions potentielles à examiner.",
+      "description_one": "",
+      "description_other": "",
+      "description_short_one": "",
+      "description_short_other": "",
+      "description_with_range_one": "",
+      "description_with_range_other": "",
       "title": "Vos estimations fiscales sont incomplètes"
     }
   },

@@ -1,18 +1,3 @@
 .Layer__TaxBanner {
   max-width: 1406px;
-
-  @media (width <= 500px) {
-    .Layer__UI__Banner {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .Layer__UI__Banner__actions {
-      width: 100%;
-
-      .Layer__UI__Button {
-        width: 100%;
-      }
-    }
-  }
 }

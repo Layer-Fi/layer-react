@@ -6,8 +6,12 @@
   },
   "banner": {
     "categorization_incomplete": {
-      "description_one": "You have {{count}} uncategorized transaction with {{amount}} in potential deductions to review.",
-      "description_other": "You have {{count}} uncategorized transactions with {{amount}} in potential deductions to review.",
+      "description_one": "In tax year {{year}}, you have {{count}} uncategorized transaction with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
+      "description_other": "In tax year {{year}}, you have {{count}} uncategorized transactions with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
+      "description_short_one": "You have {{count}} uncategorized transaction: {{deductions}} in deductions and {{income}} in unrecognized income.",
+      "description_short_other": "You have {{count}} uncategorized transactions: {{deductions}} in deductions and {{income}} in unrecognized income.",
+      "description_with_range_one": "In tax year {{year}}, you have {{count}} uncategorized transaction spanning {{dateRange}} with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
+      "description_with_range_other": "In tax year {{year}}, you have {{count}} uncategorized transactions spanning from {{dateRange}} with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
       "title": "Your tax estimates are incomplete"
     }
   },
