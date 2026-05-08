@@ -39,7 +39,7 @@ export function useTaxBanner(data: TaxEstimatesBanner): UseTaxBannerResult {
     }
   }
 
-  const hasDateRange = Boolean(earliestUncategorizedAt && latestUncategorizedAt)
+  const hasDateRange = !!(earliestUncategorizedAt && latestUncategorizedAt)
   if (hasDateRange && earliestUncategorizedAt && latestUncategorizedAt) {
     const isSameDay = earliestUncategorizedAt.getFullYear() === latestUncategorizedAt.getFullYear()
       && earliestUncategorizedAt.getMonth() === latestUncategorizedAt.getMonth()
