@@ -12,6 +12,57 @@ import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPick
 
 import './profitAndLossDetailedChartsHeader.scss'
 
+type HeaderTitleProps = {
+  title: string
+  dateLabel: string
+  isTablet: boolean
+  showDatePicker: boolean
+}
+
+const HeaderTitle = ({ title, dateLabel, isTablet, showDatePicker }: HeaderTitleProps) => (
+  <VStack className='Layer__ProfitAndLossDetailedChartsHeader__head'>
+    <Span size='lg' weight='bold'>
+      {title}
+    </Span>
+    <Span
+      size='sm'
+      variant={isTablet ? undefined : 'subtle'}
+      className='Layer__ProfitAndLossDetailedChartsHeader__date'
+    >
+      {dateLabel}
+    </Span>
+    {!isTablet && showDatePicker && <GlobalMonthPicker />}
+  </VStack>
+)
+
+enum CloseButtonVariant {
+  OutlinedIconButton = 'OutlinedIconButton',
+  BackButton = 'BackButton',
+}
+
+type CloseButtonProps = {
+  variant: CloseButtonVariant
+  onClose: () => void
+  ariaLabel: string
+}
+const CloseButton = ({ variant, onClose, ariaLabel }: CloseButtonProps) => {
+  if (variant === CloseButtonVariant.BackButton) {
+    return <BackButton onClick={onClose} aria-label={ariaLabel} />
+  }
+
+  return (
+    <Button
+      icon
+      inset
+      variant='outlined'
+      onPress={onClose}
+      aria-label={ariaLabel}
+    >
+      <XIcon />
+    </Button>
+  )
+}
+
 type ProfitAndLossDetailedChartsHeaderProps = {
   title: string
   date: Date
@@ -33,44 +84,17 @@ export const ProfitAndLossDetailedChartsHeader = ({
   const { formatDate } = useIntlFormatter()
   const isTablet = mode === 'tablet'
 
-  const HeaderTitle = () => (
-    <VStack className='Layer__ProfitAndLossDetailedChartsHeader__head'>
-      <Span
-        size='lg'
-        weight='bold'
-        className={isTablet ? 'Layer__ProfitAndLossDetailedChartsHeader__title' : undefined}
-      >
-        {title}
-      </Span>
-      <Span
-        size='sm'
-        variant={isTablet ? undefined : 'subtle'}
-        className='Layer__ProfitAndLossDetailedChartsHeader__date'
-      >
-        {formatDate(date, DateFormat.MonthYear)}
-      </Span>
-      {!isTablet && showDatePicker && <GlobalMonthPicker />}
-    </VStack>
-  )
+  const headerProps: HeaderTitleProps = {
+    title,
+    isTablet,
+    showDatePicker,
+    dateLabel: formatDate(date, DateFormat.MonthYear),
+  }
 
-  const CloseButton = () => {
-    if (!showCloseButton) return null
-
-    if (isTablet) {
-      return <BackButton onClick={onClose} />
-    }
-
-    return (
-      <Button
-        icon
-        inset
-        variant='outlined'
-        onPress={onClose}
-        aria-label={t('common:action.close', 'Close')}
-      >
-        <XIcon />
-      </Button>
-    )
+  const closeButtonProps: CloseButtonProps = {
+    variant: isTablet ? CloseButtonVariant.BackButton : CloseButtonVariant.OutlinedIconButton,
+    onClose,
+    ariaLabel: t('common:action.close', 'Close'),
   }
 
   return (
@@ -80,9 +104,9 @@ export const ProfitAndLossDetailedChartsHeader = ({
         `Layer__ProfitAndLossDetailedChartsHeader--${mode}`,
       )}
     >
-      {isTablet && <CloseButton />}
-      <HeaderTitle />
-      {!isTablet && <CloseButton />}
+      {isTablet && showCloseButton && <CloseButton {...closeButtonProps} />}
+      <HeaderTitle {...headerProps} />
+      {!isTablet && showCloseButton && <CloseButton {...closeButtonProps} />}
     </header>
   )
 }
