@@ -44,12 +44,17 @@ export const canCategoryHaveTaxCode = (
 
   if (isPlaceholderAsOption(category)) return false
   if (isSuggestedMatchAsOption(category)) return false
-  if (isSplitAsOption(category)) return false
+  if (isSplitAsOption(category)) {
+    if (category.original.length === 1) {
+      const classification = category.original[0].category?.classification
+      return !!classification && !isClassificationExclusion(classification)
+    }
 
-  if (!category.classification) return false
-  if (isClassificationExclusion(category.classification)) return false
+    return false
+  }
 
-  return true
+  const classification = category.classification
+  return !!classification && !isClassificationExclusion(classification)
 }
 
 export const resolveCategoryTaxCode = (
