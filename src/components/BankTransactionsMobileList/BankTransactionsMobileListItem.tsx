@@ -6,7 +6,12 @@ import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
 import { hasReceipts, isCategorized, isCredit } from '@utils/bankTransactions/shared'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
+import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
+import {
+  type BankTransactionCategorization,
+  BankTransactionSelectionVariant,
+} from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
@@ -15,6 +20,7 @@ import FileIcon from '@icons/File'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
@@ -71,6 +77,9 @@ export const BankTransactionsMobileListItem = ({
 }: BankTransactionsMobileListItemProps) => {
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
   const { setTransactionIdToOpen, transactionIdToOpen, clearTransactionIdToOpen } = useContext(TransactionToOpenContext)
+
+  const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
+  const [purpose, setPurpose] = useState(() => getPurposeFromStore(selectedCategorization))
 
   const categorized = isCategorized(bankTransaction)
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
@@ -245,6 +254,8 @@ export const BankTransactionsMobileListItem = ({
           <BankTransactionsMobileListItemExpandedRow
             bankTransaction={bankTransaction}
             isOpen={open}
+            purpose={purpose}
+            setPurpose={setPurpose}
             showCategorization={isCategorizationEnabled}
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}
@@ -254,4 +265,20 @@ export const BankTransactionsMobileListItem = ({
       </VStack>
     </AnimatedPresenceElement>
   )
+}
+
+const getPurposeFromStore = (selectedCategorization: BankTransactionCategorization): Purpose => {
+  if (selectedCategorization.variant === BankTransactionSelectionVariant.MATCH) {
+    return Purpose.more
+  }
+
+  if (selectedCategorization.category === null) {
+    return Purpose.business
+  }
+
+  if (isSplitAsOption(selectedCategorization.category)) {
+    return Purpose.more
+  }
+
+  return Purpose.business
 }
