@@ -9,13 +9,16 @@
     gap: var(--spacing-md);
     block-size: 100%;
     min-block-size: 0;
+
+    @container (width > 500px) {
+      flex-direction: row;
+    }
   }
 
   .Layer__profit-and-loss-detailed-charts__content {
     display: flex;
-    flex-direction: row;
     align-items: stretch;
-    justify-content: space-between;
+    justify-content: center;
     overflow: hidden;
   }
 
@@ -27,11 +30,15 @@
   }
 
   .Layer__profit-and-loss-detailed-charts__content > .Layer__DetailedTable {
-    flex: 1 1 0;
+    flex: unset;
     overflow-x: hidden;
     overflow-y: auto;
     min-block-size: 0;
     min-inline-size: 0;
+
+    @media (width <= 767px) {
+      padding-inline: 0;
+    }
   }
 
   .Layer__DetailedTable table {

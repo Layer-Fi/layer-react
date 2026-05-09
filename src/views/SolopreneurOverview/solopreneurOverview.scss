@@ -5,15 +5,7 @@
   gap: var(--spacing-md);
   max-inline-size: 1406px;
 
-  & > :last-child {
-    grid-column: 1 / -1;
-  }
-
   @container (max-width: 1023px) {
     grid-template-columns: minmax(0, 1fr);
-
-    & > :last-child {
-      grid-column: auto;
-    }
   }
 }

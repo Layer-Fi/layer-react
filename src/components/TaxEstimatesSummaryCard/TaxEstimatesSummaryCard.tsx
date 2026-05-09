@@ -93,8 +93,9 @@ const Content = ({ data, mode, commonProps, layout }: ContentProps) => {
 const HorizontalBarChartContent = ({ data, commonProps }: Pick<ContentProps, 'data' | 'commonProps'>) => {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
+  const { isDesktop } = useSizeClass()
   return (
-    <VStack className='Layer__TaxEstimatesSummaryCard__Content Layer__TaxEstimatesSummaryCard__Content--horizontal' gap='md'>
+    <VStack className='Layer__TaxEstimatesSummaryCard__Content Layer__TaxEstimatesSummaryCard__Content--horizontal' gap='md' pi='lg' pbe='lg'>
       <HStack className='Layer__TaxEstimatesSummaryCard__TotalRow' justify='space-between' align='baseline' gap='md'>
         <Span size='md' variant='subtle'>{t('common:label.total', 'Total')}</Span>
         <Span size='xl' weight='bold' numeric='tabular-nums' className='Layer__TaxEstimatesSummaryCard__TotalValue'>
@@ -105,7 +106,7 @@ const HorizontalBarChartContent = ({ data, commonProps }: Pick<ContentProps, 'da
         data={data}
         stylingProps={commonProps.stylingProps}
         formatValue={formatCurrencyFromCents}
-        labelMode={LegendLayout.Aligned}
+        labelMode={isDesktop ? LegendLayout.Aligned : LegendLayout.Table}
       />
     </VStack>
   )
