@@ -10,7 +10,10 @@ import {
 
 import './legend.scss'
 
-export type LegendLayout = 'table' | 'aligned'
+export enum LegendLayout {
+  Table = 'Table',
+  Aligned = 'Aligned',
+}
 
 export type LegendProps<T extends SeriesData> = {
   items: ReadonlyArray<T>
@@ -25,11 +28,11 @@ export const Legend = <T extends SeriesData>({
   total,
   colorSelector,
   formatValue,
-  layout = 'table',
+  layout = LegendLayout.Table,
 }: LegendProps<T>) => {
   const { formatPercent } = useIntlFormatter()
 
-  if (layout === 'aligned') {
+  if (layout === LegendLayout.Aligned) {
     return (
       <div className='Layer__UI__Legend Layer__UI__Legend--aligned'>
         {items.map((item) => {

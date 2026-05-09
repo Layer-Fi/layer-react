@@ -6,6 +6,7 @@ import { type TaxSummarySectionType } from '@schemas/taxEstimates/summary'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { HorizontalBarChart } from '@ui/HorizontalBarChart/HorizontalBarChart'
+import { LegendLayout } from '@ui/Legend/Legend'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
@@ -61,7 +62,10 @@ function TaxEstimatesSummaryCardEmpty() {
 
 type CommonProps = Pick<DetailedChartProps<SeriesData>, 'interactionProps' | 'stylingProps'>
 
-export type TaxEstimatesSummaryCardMode = 'pie_chart' | 'horizontal_bar_chart'
+export enum TaxEstimatesSummaryCardMode {
+  PieChart = 'PieChart',
+  HorizontalBarChart = 'HorizontalBarChart',
+}
 
 type ContentProps = {
   data: DetailData<SeriesData>
@@ -71,7 +75,7 @@ type ContentProps = {
 }
 
 const Content = ({ data, mode, commonProps, layout }: ContentProps) => {
-  if (mode === 'horizontal_bar_chart') {
+  if (mode === TaxEstimatesSummaryCardMode.HorizontalBarChart) {
     return <HorizontalBarChartContent data={data} commonProps={commonProps} />
   }
   return <PieChartContent data={data} commonProps={commonProps} layout={layout} />
@@ -92,7 +96,7 @@ const HorizontalBarChartContent = ({ data, commonProps }: Pick<ContentProps, 'da
         data={data}
         stylingProps={commonProps.stylingProps}
         formatValue={formatCurrencyFromCents}
-        labelMode='aligned'
+        labelMode={LegendLayout.Aligned}
       />
     </VStack>
   )
@@ -125,7 +129,7 @@ export type TaxEstimatesSummaryCardProps = {
 }
 
 export const TaxEstimatesSummaryCard = ({
-  mode = 'pie_chart',
+  mode = TaxEstimatesSummaryCardMode.PieChart,
   title: titleOverride,
   withHeaderSeparator = false,
 }: TaxEstimatesSummaryCardProps = {}) => {
@@ -162,7 +166,9 @@ export const TaxEstimatesSummaryCard = ({
             <Heading size={!isDesktop ? 'sm' : 'md'}>{title}</Heading>
           </HStack>
           <ConditionalBlock data={detailData} isLoading={isLoading} isError={isError} Loading={<LoadingState />} Error={<ErrorState />}>
-            {({ data }) => allTaxSectionsAreEmpty(data) ? <TaxEstimatesSummaryCardEmpty /> : <Content data={data} mode={mode} commonProps={commonProps} layout={layout} />}
+            {({ data }) => allTaxSectionsAreEmpty(data)
+              ? <TaxEstimatesSummaryCardEmpty />
+              : <Content data={data} mode={mode} commonProps={commonProps} layout={layout} />}
           </ConditionalBlock>
         </VStack>
       </Card>

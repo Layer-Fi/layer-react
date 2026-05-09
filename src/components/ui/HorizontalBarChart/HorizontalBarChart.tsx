@@ -1,7 +1,7 @@
 import { type ReactNode, useMemo } from 'react'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
-import { Legend, type LegendLayout } from '@ui/Legend/Legend'
+import { Legend, LegendLayout } from '@ui/Legend/Legend'
 import { VStack } from '@ui/Stack/Stack'
 import {
   type ColorSelector,
@@ -37,7 +37,7 @@ export const HorizontalBarChart = <T extends SeriesData>({
   stylingProps,
   formatValue,
   showLegend = true,
-  labelMode = 'table',
+  labelMode = LegendLayout.Table,
   slots,
 }: HorizontalBarChartProps<T>) => {
   const { data: items, total } = data
