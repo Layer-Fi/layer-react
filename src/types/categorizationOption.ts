@@ -173,6 +173,10 @@ export class SplitAsOption extends BaseCategorizationOption<Split[]> {
     return CategorizationOption.Split
   }
 
+  get isSingleSplit(): boolean {
+    return this.internalValue.length === 1
+  }
+
   get label(): string {
     return this.internalValue
       .map(split => split.category?.label ?? 'Uncategorized')
@@ -180,7 +184,7 @@ export class SplitAsOption extends BaseCategorizationOption<Split[]> {
   }
 
   get value(): string {
-    if (this.internalValue.length == 1) {
+    if (this.isSingleSplit) {
       return this.internalValue[0].category?.value ?? ''
     }
     return 'split'

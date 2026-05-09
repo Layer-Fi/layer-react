@@ -272,12 +272,13 @@ const getPurposeFromStore = (selectedCategorization: BankTransactionCategorizati
     return Purpose.more
   }
 
-  if (selectedCategorization.category === null) {
+  const category = selectedCategorization.category
+  if (category === null) {
     return Purpose.business
   }
 
-  if (isSplitAsOption(selectedCategorization.category)) {
-    return Purpose.more
+  if (isSplitAsOption(category)) {
+    return category.isSingleSplit ? Purpose.business : Purpose.more
   }
 
   return Purpose.business
