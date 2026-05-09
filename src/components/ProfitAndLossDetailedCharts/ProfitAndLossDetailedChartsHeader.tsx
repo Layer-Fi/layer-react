@@ -94,7 +94,7 @@ export const ProfitAndLossDetailedChartsHeader = ({
   const closeButtonProps: CloseButtonProps = {
     variant: isTablet ? CloseButtonVariant.BackButton : CloseButtonVariant.OutlinedIconButton,
     onClose,
-    ariaLabel: t('common:action.close', 'Close'),
+    ariaLabel: t('common:action.close_label', 'Close'),
   }
 
   return (
