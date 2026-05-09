@@ -10,7 +10,7 @@ const EMPTY_MONTHS = Array.from({ length: 12 }, (_, i) => ({
   estimatedDeduction: 0,
 }))
 
-export function useMileageTracking() {
+export function useMileageTrackingYearlySummary() {
   const { data, isLoading, isError } = useMileageSummary()
   const { startDate } = useGlobalDateRange({ dateSelectionMode: 'year' })
   const selectedYear = getYear(startDate)

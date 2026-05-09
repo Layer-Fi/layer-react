@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { useMileageTracking } from '@hooks/features/mileage/useMileageTracking'
+import { useMileageTrackingYearlySummary } from '@hooks/features/mileage/useMileageTrackingYearlySummary'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -61,7 +61,7 @@ export const MileageTrackingStatsCard = ({ title, amount, formatAsMoney, breakdo
 
 export const MileageTrackingStats = () => {
   const { t } = useTranslation()
-  const { data: mileageData, selectedYear, selectedYearData, chartData, isLoading, isError } = useMileageTracking()
+  const { data: mileageData, selectedYear, selectedYearData, chartData, isLoading, isError } = useMileageTrackingYearlySummary()
 
   if (isError) {
     return (
