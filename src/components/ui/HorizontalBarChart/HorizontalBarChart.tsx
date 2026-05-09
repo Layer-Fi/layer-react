@@ -17,6 +17,7 @@ import './horizontalBarChart.scss'
 const CHART_HEIGHT = 24
 const CHART_MARGIN = { top: 0, right: 0, bottom: 0, left: 0 }
 const CHART_BORDER_RADIUS = 8
+const Y_AXIS_CATEGORY_KEY = '__layer_hbar_category'
 
 export type HorizontalBarChartLabelMode = 'table' | 'aligned'
 
@@ -53,7 +54,7 @@ export const HorizontalBarChart = <T extends SeriesData>({
         acc[item.name] = item.value
         return acc
       },
-      { label: 'series' },
+      { [Y_AXIS_CATEGORY_KEY]: 'series' },
     )
     return [stacked]
   }, [positiveItems])
@@ -73,7 +74,7 @@ export const HorizontalBarChart = <T extends SeriesData>({
             barSize={CHART_HEIGHT}
           >
             <XAxis type='number' hide domain={[0, positiveTotal > 0 ? positiveTotal : 1]} allowDataOverflow />
-            <YAxis type='category' dataKey='label' hide width={0} />
+            <YAxis type='category' dataKey={Y_AXIS_CATEGORY_KEY} hide width={0} />
             {positiveItems.map((item, index) => {
               const isFirstSegment = index === 0
               const isLastSegment = index === positiveItems.length - 1
