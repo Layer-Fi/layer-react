@@ -34,7 +34,7 @@ const ActiveTimerDurationDisplay = () => {
 
   return (
     <VStack align='center' gap='2xs' pb='md'>
-      <Span className='Layer__ActiveTimeTracker__DurationValue'>{formatSecondsAsDuration(0)}</Span>
+      <Span className='Layer__ActiveTimeTracker__DurationValue' numeric='tabular-nums'>{formatSecondsAsDuration(0)}</Span>
       <Span className='Layer__ActiveTimeTracker__DurationLabel' size='xs' weight='bold'>
         {t('timeTracking:label.duration', 'Duration')}
       </Span>

@@ -39,7 +39,7 @@ export const ActiveTimeTrackerBanner = ({ activeEntry, timerDisplayValue }: Acti
         <HStack className='Layer__ActiveTimeTracker__Controls' gap='sm' align='center'>
           <HStack className='Layer__ActiveTimeTracker__Timer' gap='sm' align='center'>
             <Span className='Layer__ActiveTimeTracker__TimerDot' />
-            <Span className='Layer__ActiveTimeTracker__TimerValue'>{timerDisplayValue}</Span>
+            <Span className='Layer__ActiveTimeTracker__TimerValue' numeric='tabular-nums'>{timerDisplayValue}</Span>
           </HStack>
 
           <HStack className='Layer__ActiveTimeTracker__InlineFields' gap='sm' align='center'>
