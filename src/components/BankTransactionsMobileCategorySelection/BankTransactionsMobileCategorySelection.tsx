@@ -37,21 +37,22 @@ export const BankTransactionsMobileCategorySelection = ({
   const { setTransactionCategorySelection, setTransactionTaxCodeSelection } = useBankTransactionsCategorizationActions()
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const [sessionCategories, setSessionCategories] = useState(
-    () => buildInitialSessionCategoriesMap(bankTransaction),
-  )
   const previousTransactionIdRef = useRef(bankTransaction.id)
 
   const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(bankTransaction)
   const { category: selectedCategory, taxCode: selectedTaxCode } = useGetBankTransactionCategorizationWithDefault(bankTransaction)
 
+  const [sessionCategories, setSessionCategories] = useState(
+    () => buildInitialSessionCategoriesMap(bankTransaction, selectedCategory),
+  )
+
   useEffect(() => {
-    if (previousTransactionIdRef.current === bankTransaction.id) {
-      return
-    }
+    if (previousTransactionIdRef.current === bankTransaction.id) return
+
+    setSessionCategories(buildInitialSessionCategoriesMap(bankTransaction, selectedCategory))
+
     previousTransactionIdRef.current = bankTransaction.id
-    setSessionCategories(buildInitialSessionCategoriesMap(bankTransaction))
-  }, [bankTransaction])
+  }, [bankTransaction, selectedCategory])
 
   const categoryOptions = useMemo(
     () => buildCategoryOptions(

@@ -2,12 +2,16 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationType } from '@internal-types/categories'
 import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/categorizationOption'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
+import { isPlaceholderAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 import { type BankTransactionsMobileCategorySelectionItemOption } from '@components/BankTransactionsMobileCategorySelection/BankTransactionsMobileCategorySelectionItem'
 
 const SELECT_CATEGORY_VALUE = 'SELECT_CATEGORY'
 
-export const buildInitialSessionCategoriesMap = (bankTransaction: BankTransaction) => {
+export const buildInitialSessionCategoriesMap = (
+  bankTransaction: BankTransaction,
+  selectedCategory: BankTransactionNonSuggestedMatchOption | null,
+) => {
   const categoriesMap = new Map<string, BankTransactionNonSuggestedMatchOption>()
 
   if (bankTransaction.category) {
@@ -20,6 +24,10 @@ export const buildInitialSessionCategoriesMap = (bankTransaction: BankTransactio
       const suggestionOption = new ApiCategorizationAsOption(suggestion)
       categoriesMap.set(suggestionOption.value, suggestionOption)
     })
+  }
+
+  if (selectedCategory && !isPlaceholderAsOption(selectedCategory)) {
+    categoriesMap.set(selectedCategory.value, selectedCategory)
   }
 
   return categoriesMap
