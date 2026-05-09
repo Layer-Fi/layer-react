@@ -3,7 +3,7 @@
   "label": {
     "accounting_overview": "Aperçu comptable",
     "bookkeeping_overview": "Aperçu de la tenue de livres",
-    "solopreneur_overview": "",
+    "overview": "",
     "vs_comparison_month": "c. {{comparisonMonth}}"
   }
 }
