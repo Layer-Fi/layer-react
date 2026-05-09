@@ -44,6 +44,9 @@
 
   &[data-ellipsis],
   &[data-with-tooltip] {
+    display: inline-block;
+    vertical-align: middle;
+
     overflow: hidden;
     max-inline-size: min(80ch, 60rem, 100%);
     white-space: nowrap;
