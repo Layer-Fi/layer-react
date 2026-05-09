@@ -55,7 +55,10 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
 
   const [inputValues, setInputValues] = useState<Record<number, string>>({})
   const [splitFormError, setSplitFormError] = useState<string | undefined>()
-  const { setTransactionCategorySelection } = useBankTransactionsCategorizationActions()
+  const {
+    setTransactionCategorySelection,
+    setTransactionTaxCodeSelection,
+  } = useBankTransactionsCategorizationActions()
 
   const resetLocalSplits = useCallback(() => {
     setLocalSplits(getLocalSplitStateForExpandedTransaction(
@@ -90,8 +93,12 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
     }
 
     setTransactionCategorySelection(bankTransaction.id, new SplitAsOption(splits))
+
+    const nextTaxCode = splits.length === 1 ? splits[0].taxCode : null
+    setTransactionTaxCodeSelection(bankTransaction.id, nextTaxCode ?? null)
+
     setSplitFormError(undefined)
-  }, [bankTransaction.id, setTransactionCategorySelection, t])
+  }, [bankTransaction.id, setTransactionCategorySelection, setTransactionTaxCodeSelection, t])
 
   const addSplit = useCallback(() => {
     const newSplits = calculateAddSplit(localSplits)

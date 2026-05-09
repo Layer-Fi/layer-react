@@ -86,7 +86,7 @@ const buildBulkMatchOrCategorizePayload = (
       categorization: {
         type: 'Category',
         category: classification,
-        taxCode: taxCode?.value ?? null,
+        taxCode: taxCode ?? null,
       },
     }
   }

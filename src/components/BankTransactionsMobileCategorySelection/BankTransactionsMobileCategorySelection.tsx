@@ -42,7 +42,7 @@ export const BankTransactionsMobileCategorySelection = ({
   )
   const previousTransactionIdRef = useRef(bankTransaction.id)
 
-  const { taxCodeOptions, hasTaxCodeOptions } = useTaxCodeOptions(bankTransaction)
+  const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(bankTransaction)
   const { category: selectedCategory, taxCode: selectedTaxCode } = useGetBankTransactionCategorizationWithDefault(bankTransaction)
 
   useEffect(() => {
@@ -94,7 +94,7 @@ export const BankTransactionsMobileCategorySelection = ({
   }, [bankTransaction.id, setTransactionCategorySelection])
 
   const handleTaxCodeSelect = useCallback((taxCode: TaxCodeComboBoxOption | null) => {
-    setTransactionTaxCodeSelection(bankTransaction.id, taxCode)
+    setTransactionTaxCodeSelection(bankTransaction.id, taxCode?.value ?? null)
   }, [bankTransaction.id, setTransactionTaxCodeSelection])
 
   return (
@@ -116,7 +116,7 @@ export const BankTransactionsMobileCategorySelection = ({
       {hasTaxCodeOptions && canCategoryHaveTaxCode(selectedCategory) && (
         <TaxCodeMobileDrawer
           options={taxCodeOptions}
-          selectedValue={selectedTaxCode}
+          selectedValue={getSelectedTaxCodeOption(selectedTaxCode)}
           onSelectedValueChange={handleTaxCodeSelect}
           isDisabled={isSubmitting}
         />

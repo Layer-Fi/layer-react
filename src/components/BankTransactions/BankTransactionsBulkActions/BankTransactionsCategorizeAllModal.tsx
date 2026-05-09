@@ -96,7 +96,7 @@ export const BankTransactionsCategorizeAllModal = ({
           taxCode: resolveCategoryTaxCode(
             bankTransactionsById.get(transactionId),
             selectedCategory,
-            selectedTaxCode,
+            selectedTaxCode?.value ?? null,
           ),
         },
       })),
