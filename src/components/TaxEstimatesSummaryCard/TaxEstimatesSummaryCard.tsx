@@ -23,7 +23,16 @@ import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import './taxEstimatesSummaryCard.scss'
 
-const LoadingState = () => {
+const LoadingState = ({ mode }: { mode: TaxEstimatesSummaryCardMode }) => {
+  if (mode === TaxEstimatesSummaryCardMode.HorizontalBarChart) {
+    return (
+      <VStack gap='md' className='Layer__TaxEstimatesSummaryCard__Content' pb='md' pi='lg'>
+        <SkeletonLoader height='24px' width='40%' />
+        <SkeletonLoader height='24px' width='100%' />
+        <SkeletonLoader height='16px' width='100%' />
+      </VStack>
+    )
+  }
   return (
     <VStack gap='md' className='Layer__TaxEstimatesSummaryCard__Content' pb='md' pi='lg' align='center'>
       <CircleSkeletonLoader height='128px' width='128px' />
@@ -165,7 +174,7 @@ export const TaxEstimatesSummaryCard = ({
           >
             <Heading size={!isDesktop ? 'sm' : 'md'}>{title}</Heading>
           </HStack>
-          <ConditionalBlock data={detailData} isLoading={isLoading} isError={isError} Loading={<LoadingState />} Error={<ErrorState />}>
+          <ConditionalBlock data={detailData} isLoading={isLoading} isError={isError} Loading={<LoadingState mode={mode} />} Error={<ErrorState />}>
             {({ data }) => allTaxSectionsAreEmpty(data)
               ? <TaxEstimatesSummaryCardEmpty />
               : <Content data={data} mode={mode} commonProps={commonProps} layout={layout} />}
