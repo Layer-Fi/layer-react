@@ -5,6 +5,7 @@
   },
   "label": {
     "deduction_colon": "Déduction :",
+    "in_year": "En {{year}}",
     "mileage_tracking": "Suivi du kilométrage",
     "miles_colon": "Kilométrage :",
     "miles_month": "Kilométrage ce mois-ci",
