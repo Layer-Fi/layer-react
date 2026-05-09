@@ -1,10 +1,8 @@
-import { useMemo } from 'react'
+import { type ReactNode, useMemo } from 'react'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
-import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { HStack, Stack, VStack } from '@ui/Stack/Stack'
-import { Swatch } from '@ui/Swatch/Swatch'
-import { Span } from '@ui/Typography/Text'
+import { Legend, type LegendLayout } from '@ui/Legend/Legend'
+import { VStack } from '@ui/Stack/Stack'
 import {
   type ColorSelector,
   DEFAULT_TYPE_COLOR_MAPPING,
@@ -19,7 +17,7 @@ const CHART_MARGIN = { top: 0, right: 0, bottom: 0, left: 0 }
 const CHART_BORDER_RADIUS = 8
 const Y_AXIS_CATEGORY_KEY = '__layer_hbar_category'
 
-export type HorizontalBarChartLabelMode = 'table' | 'aligned'
+export type HorizontalBarChartLabelMode = LegendLayout
 
 export type HorizontalBarChartProps<T extends SeriesData> = {
   data: DetailData<T>
@@ -29,6 +27,9 @@ export type HorizontalBarChartProps<T extends SeriesData> = {
   formatValue: (value: number) => string
   showLegend?: boolean
   labelMode?: HorizontalBarChartLabelMode
+  slots?: {
+    Legend?: ReactNode
+  }
 }
 
 export const HorizontalBarChart = <T extends SeriesData>({
@@ -37,8 +38,8 @@ export const HorizontalBarChart = <T extends SeriesData>({
   formatValue,
   showLegend = true,
   labelMode = 'table',
+  slots,
 }: HorizontalBarChartProps<T>) => {
-  const { formatPercent } = useIntlFormatter()
   const { data: items, total } = data
 
   const positiveItems = useMemo(
@@ -47,6 +48,7 @@ export const HorizontalBarChart = <T extends SeriesData>({
   )
 
   const positiveTotal = positiveItems.reduce((sum, item) => sum + item.value, 0)
+  const legendDenominator = positiveTotal > 0 ? positiveTotal : total
 
   const chartData = useMemo(() => {
     const stacked = positiveItems.reduce<Record<string, number | string>>(
@@ -61,8 +63,20 @@ export const HorizontalBarChart = <T extends SeriesData>({
 
   const chartKey = positiveItems.map(item => item.name).join('|')
 
+  const legendNode = slots?.Legend !== undefined
+    ? slots.Legend
+    : (
+      <Legend<T>
+        items={positiveItems}
+        total={legendDenominator}
+        colorSelector={stylingProps.colorSelector}
+        formatValue={formatValue}
+        layout={labelMode}
+      />
+    )
+
   return (
-    <VStack className='Layer__HorizontalBarChart' gap='md' justify='center'>
+    <VStack className='Layer__HorizontalBarChart Layer__UI__Chart--focusReset' gap='md' justify='center'>
       <div className='Layer__HorizontalBarChart__Bar'>
         <ResponsiveContainer key={chartKey} width='100%' height={CHART_HEIGHT}>
           <BarChart
@@ -100,61 +114,7 @@ export const HorizontalBarChart = <T extends SeriesData>({
           </BarChart>
         </ResponsiveContainer>
       </div>
-      {showLegend && labelMode === 'table' && (
-        <Stack
-          direction='row'
-          className='Layer__HorizontalBarChart__Legend'
-          gap='lg'
-          align='start'
-        >
-          {positiveItems.map((item) => {
-            const { color, opacity } = stylingProps.colorSelector(item) ?? DEFAULT_TYPE_COLOR_MAPPING
-            const denominator = positiveTotal > 0 ? positiveTotal : total
-            const percentage = denominator > 0 ? item.value / denominator : 0
-            return (
-              <VStack key={item.name} className='Layer__HorizontalBarChart__LegendItem' gap='2xs'>
-                <HStack className='Layer__HorizontalBarChart__LegendLabel' gap='2xs' align='center'>
-                  <Swatch color={color} opacity={opacity} />
-                  <Span size='md' ellipsis withTooltip>{item.displayName}</Span>
-                </HStack>
-                <HStack className='Layer__HorizontalBarChart__LegendMeta' gap='2xs' align='baseline'>
-                  <Span className='Layer__HorizontalBarChart__LegendValue' size='sm'>
-                    {formatValue(item.value)}
-                  </Span>
-                  <Span className='Layer__HorizontalBarChart__LegendPercentage' size='sm' variant='subtle'>
-                    {formatPercent(percentage, { maximumFractionDigits: 0 })}
-                  </Span>
-                </HStack>
-              </VStack>
-            )
-          })}
-        </Stack>
-      )}
-      {showLegend && labelMode === 'aligned' && (
-        <div className='Layer__HorizontalBarChart__AlignedLegend'>
-          {positiveItems.map((item) => {
-            const denominator = positiveTotal > 0 ? positiveTotal : total
-            const percentage = denominator > 0 ? item.value / denominator : 0
-            const flexGrow = positiveTotal > 0 ? item.value / positiveTotal : 1
-            const intentionalStyleOverrideForDynamicFlexGrow = { display: 'flex', flexDirection: 'column' as const, flexGrow, flexBasis: 0 }
-            return (
-              <div
-                key={item.name}
-                className='Layer__HorizontalBarChart__AlignedLegendItem'
-                style={intentionalStyleOverrideForDynamicFlexGrow}
-              >
-                <Span size='sm' variant='subtle' ellipsis withTooltip>{item.displayName}</Span>
-                <Span size='lg' className='Layer__HorizontalBarChart__AlignedLegendValue' weight='bold'>
-                  {formatValue(item.value)}
-                </Span>
-                <Span size='sm' variant='subtle'>
-                  {formatPercent(percentage, { maximumFractionDigits: 0 })}
-                </Span>
-              </div>
-            )
-          })}
-        </div>
-      )}
+      {showLegend && legendNode}
     </VStack>
   )
 }
