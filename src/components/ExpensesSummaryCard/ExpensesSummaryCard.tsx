@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next'
 
 import { SummaryCard } from '@ui/SummaryCard/SummaryCard'
 import {
-  useSummaryCardSlots,
   type SummaryCardInteractionProps,
   type SummaryCardStringOverrides,
+  useSummaryCardSlots,
 } from '@ui/SummaryCard/useSummaryCardSlots'
 import { ProfitAndLossDetailedCharts, type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 

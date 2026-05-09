@@ -1,18 +1,18 @@
 import { useContext, useMemo } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { VStack } from '@ui/Stack/Stack'
 import { SummaryCard } from '@ui/SummaryCard/SummaryCard'
 import {
-  useSummaryCardSlots,
   type SummaryCardInteractionProps,
   type SummaryCardStringOverrides,
+  useSummaryCardSlots,
 } from '@ui/SummaryCard/useSummaryCardSlots'
 import { ProfitAndLossChart } from '@components/ProfitAndLossChart/ProfitAndLossChart'
 import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
-import { useTranslation } from 'react-i18next'
 
 import './profitAndLossSummaryCard.scss'
 
