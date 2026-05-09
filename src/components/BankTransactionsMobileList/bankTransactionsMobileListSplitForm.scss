@@ -1,8 +1,36 @@
 .Layer__BankTransactionsMobileSplitForm__SplitRow {
+  display: grid;
+  grid-template-areas: 'amount category button';
+  grid-template-columns: 6rem minmax(0, 1fr) 2.25rem;
   max-inline-size: 100%;
+
+  &:has(> .Layer__BankTransactionsMobileSplitForm__TaxCode) {
+    grid-template-areas:
+      'amount category button'
+      '. tax-code .';
+  }
+
+  .Layer__CategorySelectDrawerWithTrigger {
+    grid-area: category;
+  }
+
+  > .Layer__UI__Button {
+    grid-area: button;
+  }
 }
 
-.Layer__BankTransactionsMobileSplitForm__AmountInput {
+.Layer__BankTransactionsMobileSplitForm__AmountInput.Layer__input {
   flex-shrink: 0;
+  grid-area: amount;
   inline-size: 6rem;
+  font-size: var(--text-md);
+}
+
+.Layer__BankTransactionsMobileSplitForm__TotalAmountInput.Layer__input {
+  inline-size: 6rem;
+  font-size: var(--text-md);
+}
+
+.Layer__BankTransactionsMobileSplitForm__TaxCode {
+  grid-area: tax-code;
 }

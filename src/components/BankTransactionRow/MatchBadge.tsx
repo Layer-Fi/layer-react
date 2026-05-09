@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { isTransferMatch } from '@utils/bankTransactions'
+import { isTransferMatch } from '@utils/bankTransactions/shared'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import MinimizeTwo from '@icons/MinimizeTwo'
 import { Badge } from '@components/Badge/Badge'

@@ -1,8 +1,8 @@
 import { FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { tPlural } from '@utils/i18n/plural'
-import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
+import { useTaxBanner } from '@hooks/features/taxEstimates/useTaxBanner'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesContext } from '@contexts/TaxEstimatesContext/TaxEstimatesContextProvider'
 import { Banner, BannerButton } from '@ui/Banner/Banner'
@@ -11,15 +11,14 @@ import { VStack } from '@ui/Stack/Stack'
 import './taxBanner.scss'
 
 export type TaxBannerProps = {
-  uncategorizedCount: number
-  uncategorizedAmount: number
+  data: TaxEstimatesBanner
 }
 
-export const TaxBanner = ({ uncategorizedCount, uncategorizedAmount }: TaxBannerProps) => {
+export const TaxBanner = ({ data }: TaxBannerProps) => {
   const { isMobile } = useSizeClass()
   const { t } = useTranslation()
-  const { formatCurrencyFromCents } = useIntlFormatter()
   const { onClickReviewTransactions } = useTaxEstimatesContext()
+  const { bannerDescription } = useTaxBanner(data)
 
   const title = t('taxEstimates:banner.categorization_incomplete.title', 'Your tax estimates are incomplete')
 
@@ -27,8 +26,9 @@ export const TaxBanner = ({ uncategorizedCount, uncategorizedAmount }: TaxBanner
     ? (
       <BannerButton
         onPress={() => onClickReviewTransactions({
-          uncategorizedAmount,
-          uncategorizedTransactionCount: uncategorizedCount,
+          uncategorizedMoneyIn: data.totalUncategorizedMoneyIn,
+          uncategorizedMoneyOut: data.totalUncategorizedMoneyOut,
+          uncategorizedTransactionCount: data.totalUncategorizedCount,
         })}
       >
         {t('taxEstimates:action.review_banner', 'Review')}
@@ -42,12 +42,7 @@ export const TaxBanner = ({ uncategorizedCount, uncategorizedAmount }: TaxBanner
         variant='warning'
         ariaLabel={title}
         title={title}
-        description={tPlural(t, 'taxEstimates:banner.categorization_incomplete.description', {
-          count: uncategorizedCount,
-          amount: formatCurrencyFromCents(uncategorizedAmount),
-          one: 'You have {{count}} uncategorized transaction with {{amount}} in potential deductions to review.',
-          other: 'You have {{count}} uncategorized transactions with {{amount}} in potential deductions to review.',
-        })}
+        description={bannerDescription}
         slots={{
           Icon: isMobile ? null : <FileText size={16} />,
           Button: ReviewButton,

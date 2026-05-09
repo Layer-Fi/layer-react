@@ -5,11 +5,11 @@ import { makeTag, type Tag } from '@schemas/tag'
 import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
 import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+import { useBankTransactionTagVisibility } from '@contexts/BankTransactionTagVisibilityContext/BankTransactionTagVisibilityContext'
 import { VStack } from '@ui/Stack/Stack'
 import { BankTransactionCustomerVendorSelector } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorSelector'
 import { useBankTransactionCustomerVendorVisibility } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorVisibilityProvider'
 import { BankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/BankTransactionMemo'
-import { useBankTransactionTagVisibility } from '@components/BankTransactionTagSelector/BankTransactionTagVisibilityProvider'
 import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
 
 type BankTransactionFormFieldProps = {
