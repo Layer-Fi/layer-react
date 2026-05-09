@@ -84,7 +84,7 @@ export const ProfitAndLossDetailedCharts = ({
   slotProps?: ProfitAndLossDetailedChartsSlotProps
 }) => {
   const { t } = useTranslation()
-  const { isTablet } = useSizeClass()
+  const { isDesktop } = useSizeClass()
   const {
     chartDataRevenue,
     tableDataRevenue,
@@ -204,15 +204,16 @@ export const ProfitAndLossDetailedCharts = ({
 
   return (
     <div className='Layer__profit-and-loss-detailed-charts'>
-      <ProfitAndLossDetailedChartsHeader
-        visible={!hideHeader}
-        mode={isTablet ? 'tablet' : 'desktop'}
-        title={humanizeTitle(activeScope, stringOverrides?.detailedChartStringOverrides, t)}
-        date={dateRange.startDate}
-        showCloseButton={!hideClose}
-        showDatePicker={showDatePicker}
-        onClose={handleClose}
-      />
+      {!hideHeader && (
+        <ProfitAndLossDetailedChartsHeader
+          mode={isDesktop ? 'desktop' : 'tablet'}
+          title={humanizeTitle(activeScope, stringOverrides?.detailedChartStringOverrides, t)}
+          date={dateRange.startDate}
+          showCloseButton={!hideClose}
+          showDatePicker={showDatePicker}
+          onClose={handleClose}
+        />
+      )}
 
       <div className='Layer__profit-and-loss-detailed-charts__content'>
         {isEmpty
