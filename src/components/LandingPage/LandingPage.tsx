@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
 
+import { useInterpolateTemplate } from '@utils/i18n/useInterpolateTemplate'
 import { isCalendlyLink, useCalendly } from '@hooks/features/calendly/useCalendly'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
@@ -16,7 +17,6 @@ import {
   buildLandingPageDefaultTextContent,
   LandingPageContentID,
 } from '@components/LandingPage/content'
-import { LandingPageHelper } from '@components/LandingPage/LandingPageHelper'
 import { LandingPageOffer } from '@components/LandingPage/LandingPageOptions'
 import { type DeepPartial, type HeroContentConfig, type LandingPageCardConfig, type LandingPageLink, type LandingPagePlatformConfig as LandingPagePlatformConfig } from '@components/LandingPage/types'
 import { mergeHeroContentConfig, mergeLandingPageConfig } from '@components/LandingPage/utils'
@@ -44,6 +44,7 @@ export const LandingPage = ({
   offeringOverrides,
 }: LandingPageProps) => {
   const { t } = useTranslation()
+  const interpolateTemplate = useInterpolateTemplate<LandingPagePlatformConfig>()
   const { isCalendlyVisible, calendlyLink, calendlyRef, openCalendly, closeCalendly } = useCalendly()
   const { isMobile } = useSizeClass()
   const [width] = useWindowSize()
@@ -108,32 +109,32 @@ export const LandingPage = ({
             {heroConfig.stringOverrides?.title != '' && (
               <>
                 <Heading size={isMobile ? 'xl' : '3xl'}>
-                  {LandingPageHelper.interpolateTemplate(heroConfig.stringOverrides.title, platform)}
+                  {interpolateTemplate(heroConfig.stringOverrides.title, platform)}
                 </Heading>
               </>
             )}
           </VStack>
           <Heading variant='subtle' size={isMobile ? 'sm' : 'md'}>
-            {LandingPageHelper.interpolateTemplate(heroConfig.stringOverrides.subtitle, platform)}
+            {interpolateTemplate(heroConfig.stringOverrides.subtitle, platform)}
           </Heading>
           <VStack>
             <HStack gap='lg' pb={isMobile ? '3xs' : 'xs'}>
               <VStack gap='xs'>
                 <Heading size={isMobile ? 'md' : 'lg'}>
-                  {LandingPageHelper.interpolateTemplate(heroConfig.stringOverrides.heading1, platform)}
+                  {interpolateTemplate(heroConfig.stringOverrides.heading1, platform)}
                 </Heading>
                 <Span size={isMobile ? 'sm' : 'md'} variant='subtle'>
-                  {LandingPageHelper.interpolateTemplate(heroConfig.stringOverrides.heading1Desc, platform)}
+                  {interpolateTemplate(heroConfig.stringOverrides.heading1Desc, platform)}
                 </Span>
               </VStack>
             </HStack>
             <HStack gap='lg' pb='xs'>
               <VStack gap='xs'>
                 <Heading size={isMobile ? 'md' : 'lg'}>
-                  {LandingPageHelper.interpolateTemplate(heroConfig.stringOverrides.heading2, platform)}
+                  {interpolateTemplate(heroConfig.stringOverrides.heading2, platform)}
                 </Heading>
                 <Span size={isMobile ? 'sm' : 'md'} variant='subtle'>
-                  {LandingPageHelper.interpolateTemplate(heroConfig.stringOverrides.heading2Desc, platform)}
+                  {interpolateTemplate(heroConfig.stringOverrides.heading2Desc, platform)}
                 </Span>
               </VStack>
             </HStack>
@@ -168,13 +169,28 @@ export const LandingPage = ({
         </HStack>
       )}
     </VStack>
-  ), [t, platform, heroConfig, isCalendlyVisible, calendlyLink, calendlyRef, closeCalendly, handleLearnMore, handleMainCta, isMobile, isStackedLayout])
+  ),
+  [
+    t,
+    platform,
+    heroConfig,
+    isCalendlyVisible,
+    calendlyLink,
+    calendlyRef,
+    closeCalendly,
+    handleLearnMore,
+    handleMainCta,
+    isMobile,
+    isStackedLayout,
+    interpolateTemplate,
+  ],
+  )
 
   const RenderOffers = useMemo(() => (
     <VStack gap={isMobile ? 'lg' : '2xl'} className='Layer__LandingPage--offers'>
       <HStack align='center'>
         <Heading size='md' align='center' style={{ maxWidth: '480px', margin: '0 auto' }}>
-          {LandingPageHelper.interpolateTemplate(offeringSectionTitle, platform)}
+          {interpolateTemplate(offeringSectionTitle, platform)}
         </Heading>
       </HStack>
       <div className='Layer__LandingPage-options__grid'>
@@ -199,7 +215,17 @@ export const LandingPage = ({
       </div>
     </VStack>
   ),
-  [hasAccountingEnabled, hasBookkeepingEnabled, offeringSectionTitle, platform, accountingOfferingConfig, bookkeepingOfferingConfig, openCalendly, isMobile],
+  [
+    hasAccountingEnabled,
+    hasBookkeepingEnabled,
+    offeringSectionTitle,
+    platform,
+    accountingOfferingConfig,
+    bookkeepingOfferingConfig,
+    openCalendly,
+    isMobile,
+    interpolateTemplate,
+  ],
   )
 
   return (
