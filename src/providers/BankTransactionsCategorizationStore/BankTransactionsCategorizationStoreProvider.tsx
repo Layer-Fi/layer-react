@@ -2,6 +2,7 @@ import { createContext, type PropsWithChildren, useContext, useMemo, useState } 
 import { createStore, useStore } from 'zustand'
 
 import type { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
+import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { type BankTransactionCategoryComboBoxOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
@@ -95,7 +96,13 @@ function buildStore() {
         },
 
         setTransactionCategorySelection: (id, category) => {
-          set(({ categorizations }) => updateCategorizationProperty(categorizations, id, 'category', category))
+          set(({ categorizations }) => {
+            const { categorizations: nextCategorizations } = updateCategorizationProperty(categorizations, id, 'category', category)
+            if (category && !canCategoryHaveTaxCode(category)) {
+              return updateCategorizationProperty(nextCategorizations, id, 'taxCode', null)
+            }
+            return { categorizations: nextCategorizations }
+          })
         },
 
         setTransactionMatchSelection: (id, match) => {

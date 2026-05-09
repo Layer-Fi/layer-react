@@ -93,7 +93,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
           <Span size='sm' ellipsis>
             {resolvedSelectedValue?.label ?? resolvedPlaceholder}
           </Span>
-          {triggerIcon}
+          {!isDisabled && triggerIcon}
         </HStack>
       </Button>
 

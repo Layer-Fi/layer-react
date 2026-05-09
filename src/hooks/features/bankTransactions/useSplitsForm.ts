@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl'
 
 import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
 import { SplitAsOption } from '@internal-types/categorizationOption'
+import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
 import { convertCentsToDecimalString } from '@utils/format'
 import { toLocalizedNumber } from '@utils/i18n/number/input'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
@@ -143,7 +144,11 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
     if (newCategory === null) return
 
     const newLocalSplits = [...localSplits]
-    newLocalSplits[index].category = newCategory
+    newLocalSplits[index] = {
+      ...newLocalSplits[index],
+      category: newCategory,
+      taxCode: canCategoryHaveTaxCode(newCategory) ? newLocalSplits[index].taxCode : null,
+    }
     setLocalSplits(newLocalSplits)
     setSplitFormError(undefined)
 

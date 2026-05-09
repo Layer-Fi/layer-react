@@ -8,6 +8,13 @@ import { type BankTransactionsMobileCategorySelectionItemOption } from '@compone
 
 const SELECT_CATEGORY_VALUE = 'SELECT_CATEGORY'
 
+const isSingleSelectedCategory = (selectedCategory: BankTransactionNonSuggestedMatchOption | null): boolean => {
+  if (!selectedCategory) return false
+  if (isPlaceholderAsOption(selectedCategory)) return false
+  if (isSplitAsOption(selectedCategory) && !selectedCategory.isSingleSplit) return false
+  return true
+}
+
 export const buildInitialSessionCategoriesMap = (
   bankTransaction: BankTransaction,
   selectedCategory: BankTransactionNonSuggestedMatchOption | null,
@@ -16,7 +23,9 @@ export const buildInitialSessionCategoriesMap = (
 
   if (bankTransaction.category) {
     const existingCategory = convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.category)
-    categoriesMap.set(existingCategory.value, existingCategory)
+    if (isSingleSelectedCategory(existingCategory)) {
+      categoriesMap.set(existingCategory.value, existingCategory)
+    }
   }
 
   if (bankTransaction?.categorization_flow?.type === CategorizationType.ASK_FROM_SUGGESTIONS) {
@@ -26,11 +35,9 @@ export const buildInitialSessionCategoriesMap = (
     })
   }
 
-  if (!selectedCategory) return categoriesMap
-  if (isPlaceholderAsOption(selectedCategory)) return categoriesMap
-  if (isSplitAsOption(selectedCategory) && !selectedCategory.isSingleSplit) return categoriesMap
-
-  categoriesMap.set(selectedCategory.value, selectedCategory)
+  if (selectedCategory && isSingleSelectedCategory(selectedCategory)) {
+    categoriesMap.set(selectedCategory.value, selectedCategory)
+  }
 
   return categoriesMap
 }

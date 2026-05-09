@@ -66,6 +66,13 @@ export const BankTransactionsCategorizeAllModal = ({
 
   const { taxCodeOptions } = useTaxCodeOptions(firstSelectedBankTransactionWithTaxOptions)
 
+  const handleSelectedCategoryChange = useCallback((category: BankTransactionNonSuggestedMatchOption | null) => {
+    setSelectedCategory(category)
+    if (category && !canCategoryHaveTaxCode(category)) {
+      setSelectedTaxCode(null)
+    }
+  }, [])
+
   const handleCategorizeModalClose = useCallback((isOpen: boolean) => {
     onOpenChange(isOpen)
     if (!isOpen) {
@@ -123,7 +130,7 @@ export const BankTransactionsCategorizeAllModal = ({
                 <CategorySelectDrawerWithTrigger
                   aria-labelledby={categorySelectId}
                   selectedValue={selectedCategory}
-                  onSelectedValueChange={setSelectedCategory}
+                  onSelectedValueChange={handleSelectedCategoryChange}
                   showTooltips={false}
                 />
               )
@@ -131,7 +138,7 @@ export const BankTransactionsCategorizeAllModal = ({
                 <BankTransactionCategoryComboBox
                   inputId={categorySelectId}
                   selectedValue={selectedCategory}
-                  onSelectedValueChange={setSelectedCategory}
+                  onSelectedValueChange={handleSelectedCategoryChange}
                   includeSuggestedMatches={false}
                   isDisabled={isMutating}
                 />
