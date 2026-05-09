@@ -13,7 +13,7 @@ type UseTaxBannerResult = {
 export function useTaxBanner(data: TaxEstimatesBanner): UseTaxBannerResult {
   const { t } = useTranslation()
   const { formatCurrencyFromCents, formatDate, formatDateRange } = useIntlFormatter()
-  const { isTablet, isMobile } = useSizeClass()
+  const { isDesktop } = useSizeClass()
 
   const {
     year,
@@ -27,7 +27,7 @@ export function useTaxBanner(data: TaxEstimatesBanner): UseTaxBannerResult {
   const deductions = formatCurrencyFromCents(moneyOut)
   const income = formatCurrencyFromCents(moneyIn)
 
-  if (isTablet || isMobile) {
+  if (!isDesktop) {
     return {
       bannerDescription: tPlural(t, 'taxEstimates:banner.categorization_incomplete.description_short', {
         count,
