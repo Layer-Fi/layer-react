@@ -1,39 +1,22 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { CategorizationType } from '@internal-types/categories'
-import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/categorizationOption'
-import { hasReceipts } from '@utils/bankTransactions'
-import { isCategorized } from '@utils/bankTransactions'
+import { hasReceipts, isCategorized } from '@utils/bankTransactions/shared'
+import { resolveCategoryTaxCode } from '@utils/bankTransactions/taxCode'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
+import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
-import { useBankTransactionsCategorizationActions, useGetBankTransactionCategoryByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { BusinessFormMobile } from '@components/BusinessForm/BusinessFormMobile'
-import { type BusinessFormMobileItemOption, type BusinessFormOptionValue } from '@components/BusinessForm/BusinessFormMobileItem'
-import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
+import { BankTransactionsMobileCategorySelection } from '@components/BankTransactionsMobileCategorySelection/BankTransactionsMobileCategorySelection'
 import { FileInput } from '@components/Input/FileInput'
 import { ErrorText } from '@components/Typography/ErrorText'
-
-const SELECT_CATEGORY_VALUE = 'SELECT_CATEGORY'
-
-export const isSelectCategoryOption = (
-  value: BusinessFormOptionValue,
-): boolean => {
-  return isPlaceholderAsOption(value) && value.value === SELECT_CATEGORY_VALUE
-}
-
-type DisplayOption = BusinessFormMobileItemOption
-
 interface BankTransactionsMobileListBusinessFormProps {
   bankTransaction: BankTransaction
   showCategorization?: boolean
@@ -58,74 +41,16 @@ export const BankTransactionsMobileListBusinessForm = ({
     isError: isErrorCategorizing,
   } = useCategorizeBankTransactionWithCacheUpdate()
 
-  const [sessionCategories, setSessionCategories] = useState<Map<string, BankTransactionCategoryComboBoxOption>>(() => {
-    const initialMap = new Map<string, BankTransactionCategoryComboBoxOption>()
-
-    if (bankTransaction.category) {
-      const existingCategory = convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.category)
-      initialMap.set(existingCategory.value, existingCategory)
-    }
-
-    if (bankTransaction?.categorization_flow?.type === CategorizationType.ASK_FROM_SUGGESTIONS) {
-      bankTransaction.categorization_flow.suggestions.forEach((suggestion) => {
-        const opt = new ApiCategorizationAsOption(suggestion)
-        initialMap.set(opt.value, opt)
-      })
-    }
-
-    return initialMap
-  })
-
-  const { selectedCategory } = useGetBankTransactionCategoryByTransactionId(bankTransaction.id)
-  const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
+  const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
+  const { category: selectedCategory, taxCode: selectedTaxCode } = selectedCategorization
 
   const [showRetry, setShowRetry] = useState(false)
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   useEffect(() => {
     if (isErrorCategorizing) {
       setShowRetry(true)
     }
   }, [isErrorCategorizing])
-
-  const options = useMemo((): DisplayOption[] => {
-    const options: DisplayOption[] = Array.from(sessionCategories.values()).map(category => ({
-      value: category,
-    }))
-
-    options.push({
-      value: new PlaceholderAsOption({
-        label: t('bankTransactions:action.show_all_categories', 'Show all categories'),
-        value: 'SELECT_CATEGORY',
-      }),
-      asLink: true,
-    })
-
-    return options
-  }, [t, sessionCategories])
-
-  const onCategorySelect = (category: DisplayOption) => {
-    if (isSelectCategoryOption(category.value)) {
-      setIsDrawerOpen(true)
-    }
-    else {
-      const option = category.value
-
-      if (!isPlaceholderAsOption(option)) {
-        setSessionCategories(prev => new Map(prev).set(option.value, option))
-      }
-
-      if (
-        selectedCategory
-        && option.value === selectedCategory.value
-      ) {
-        setTransactionCategorization(bankTransaction.id, { category: null })
-      }
-      else {
-        setTransactionCategorization(bankTransaction.id, { category: option })
-      }
-    }
-  }
 
   const save = () => {
     if (!selectedCategory) {
@@ -140,29 +65,26 @@ export const BankTransactionsMobileListBusinessForm = ({
       {
         type: 'Category',
         category: payload,
+        taxCode: resolveCategoryTaxCode(
+          bankTransaction,
+          selectedCategory,
+          selectedTaxCode,
+        ),
       },
       true,
     )
   }
 
-  const onDrawerSelect = useCallback((category: BankTransactionCategoryComboBoxOption | null) => {
-    if (!category) return
-
-    setSessionCategories(prev => new Map(prev).set(category.value, category))
-    setTransactionCategorization(bankTransaction.id, { category })
-  }, [bankTransaction.id, setTransactionCategorization])
-
   return (
     <>
       <VStack gap='sm'>
-        {showCategorization
-          && (
-            <BusinessFormMobile
-              options={options}
-              onSelect={onCategorySelect}
-              selectedId={selectedCategory?.value}
-            />
-          )}
+        {showCategorization && (
+          <BankTransactionsMobileCategorySelection
+            bankTransaction={bankTransaction}
+            showTooltips={showTooltips}
+            isSubmitting={isCategorizing}
+          />
+        )}
         <BankTransactionFormFields
           bankTransaction={bankTransaction}
           showDescriptions={showDescriptions}
@@ -197,22 +119,21 @@ export const BankTransactionsMobileListBusinessForm = ({
               accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
             />
           )}
-          {showCategorization && sessionCategories.size > 0
-            && (
-              <Button
-                onClick={save}
-                fullWidth
-                isDisabled={!selectedCategory || isCategorizing}
-              >
-                {isCategorizing
-                  ? (isCategorized(bankTransaction)
-                    ? t('common:state.updating', 'Updating...')
-                    : t('common:state.confirming', 'Confirming...'))
-                  : (isCategorized(bankTransaction)
-                    ? t('common:action.update_label', 'Update')
-                    : t('common:action.confirm_label', 'Confirm'))}
-              </Button>
-            )}
+          {showCategorization && (
+            <Button
+              onClick={save}
+              fullWidth
+              isDisabled={!selectedCategory || isCategorizing}
+            >
+              {isCategorizing
+                ? (isCategorized(bankTransaction)
+                  ? t('common:state.updating', 'Updating...')
+                  : t('common:state.confirming', 'Confirming...'))
+                : (isCategorized(bankTransaction)
+                  ? t('common:action.update_label', 'Update')
+                  : t('common:action.confirm_label', 'Confirm'))}
+            </Button>
+          )}
         </HStack>
         {isErrorCategorizing && showRetry
           ? (
@@ -222,13 +143,6 @@ export const BankTransactionsMobileListBusinessForm = ({
           )
           : null}
       </VStack>
-      <CategorySelectDrawer
-        onSelect={onDrawerSelect}
-        selectedId={selectedCategory?.value}
-        showTooltips={showTooltips}
-        isOpen={isDrawerOpen}
-        onOpenChange={setIsDrawerOpen}
-      />
     </>
 
   )

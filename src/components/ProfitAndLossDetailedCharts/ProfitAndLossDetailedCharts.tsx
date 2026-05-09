@@ -204,6 +204,7 @@ export const ProfitAndLossDetailedCharts = ({
 
   return (
     <div className='Layer__profit-and-loss-detailed-charts'>
+<<<<<<< HEAD
       <ProfitAndLossDetailedChartsHeader
         visible={!hideHeader}
         mode={isDesktop ? 'desktop' : 'tablet'}
@@ -213,6 +214,18 @@ export const ProfitAndLossDetailedCharts = ({
         showDatePicker={showDatePicker}
         onClose={handleClose}
       />
+=======
+      {!hideHeader && (
+        <ProfitAndLossDetailedChartsHeader
+          mode={isDesktop ? 'desktop' : 'tablet'}
+          title={humanizeTitle(activeScope, stringOverrides?.detailedChartStringOverrides, t)}
+          date={dateRange.startDate}
+          showCloseButton={!hideClose}
+          showDatePicker={showDatePicker}
+          onClose={handleClose}
+        />
+      )}
+>>>>>>> main
 
       <div className='Layer__profit-and-loss-detailed-charts__content'>
         {isEmpty

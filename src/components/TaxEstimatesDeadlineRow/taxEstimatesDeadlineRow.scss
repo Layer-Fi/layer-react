@@ -9,6 +9,8 @@
   }
 
   &__DeadlineReviewRow {
+    border-bottom-left-radius: var(--border-radius-xs);
+    border-bottom-right-radius: var(--border-radius-xs);
     background-color: var(--color-base-50);
   }
 

@@ -1,13 +1,17 @@
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
+import { type BankTransaction } from '@internal-types/bankTransactions'
+import { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import {
-  getBankTransactionFirstSuggestedMatch,
   getBankTransactionMatchAsSuggestedMatch,
-} from '@utils/bankTransactions'
+} from '@utils/bankTransactions/shared'
+import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { useMatchBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useMatchBankTransactionWithCacheUpdate'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
+import {
+  useBankTransactionsCategorizationActions,
+} from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -40,40 +44,29 @@ export const BankTransactionsMobileListMatchForm = ({
     isMutating: isMatching,
     isError: isErrorMatching,
   } = useMatchBankTransactionWithCacheUpdate()
+  const { setTransactionMatchSelection } = useBankTransactionsCategorizationActions()
+  const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
+  const { match: selectedMatch } = selectedCategorization
+  const selectedMatchId = selectedMatch?.original.id
 
-  const [selectedMatch, setSelectedMatch] = useState<SuggestedMatch | undefined>(
-    getBankTransactionFirstSuggestedMatch(bankTransaction),
-  )
   const [formError, setFormError] = useState<string | undefined>()
 
-  const onMatchSubmit = async (matchId: string) => {
-    const foundMatch = bankTransaction.suggested_matches?.find(
-      x => x.id === matchId,
-    )
-    if (!foundMatch) {
-      return
-    }
+  const onMatchSubmit = useCallback(async (matchId: string) => {
+    await matchBankTransaction(bankTransaction, matchId, true)
+  }, [matchBankTransaction, bankTransaction])
 
-    await matchBankTransaction(bankTransaction, foundMatch.id, true)
-  }
+  const save = useCallback(() => {
+    if (!showCategorization) return
 
-  const save = () => {
-    if (!showCategorization) {
-      return
-    }
-
-    if (!selectedMatch) {
+    if (!selectedMatchId) {
       setFormError(t('bankTransactions:error.select_option_match_transaction', 'Select an option to match the transaction'))
+      return
     }
 
-    if (
-      selectedMatch
-      && selectedMatch.id !== getBankTransactionMatchAsSuggestedMatch(bankTransaction)?.id
-    ) {
-      void onMatchSubmit(selectedMatch.id)
+    if (selectedMatchId !== getBankTransactionMatchAsSuggestedMatch(bankTransaction)?.id) {
+      void onMatchSubmit(selectedMatchId)
     }
-    return
-  }
+  }, [showCategorization, selectedMatchId, bankTransaction, t, onMatchSubmit])
 
   return (
     <VStack gap='sm'>
@@ -83,10 +76,13 @@ export const BankTransactionsMobileListMatchForm = ({
       <MatchFormMobile
         readOnly={!showCategorization}
         bankTransaction={bankTransaction}
-        selectedMatchId={selectedMatch?.id}
+        selectedMatchId={selectedMatchId}
         setSelectedMatch={(suggestedMatch) => {
           setFormError(undefined)
-          setSelectedMatch(suggestedMatch)
+          setTransactionMatchSelection(
+            bankTransaction.id,
+            suggestedMatch ? new SuggestedMatchAsOption(suggestedMatch) : null,
+          )
         }}
       />
       <BankTransactionFormFields
@@ -118,9 +114,9 @@ export const BankTransactionsMobileListMatchForm = ({
           <Button
             fullWidth
             isDisabled={
-              !selectedMatch
+              !selectedMatchId
               || isMatching
-              || selectedMatch.id === getBankTransactionMatchAsSuggestedMatch(bankTransaction)?.id
+              || selectedMatchId === getBankTransactionMatchAsSuggestedMatch(bankTransaction)?.id
             }
             onClick={save}
           >

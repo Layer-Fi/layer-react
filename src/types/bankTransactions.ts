@@ -11,7 +11,7 @@ import type { CustomerSchema } from '@schemas/customer'
 import type { CustomerVendorSchema } from '@schemas/customerVendor'
 import type { Tag, TransactionTagEncoded } from '@schemas/tag'
 import type { VendorSchema } from '@schemas/vendor'
-import type { BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 
 export enum BankTransactionMatchType {
   CONFIRM_MATCH = 'Confirm_Match',
@@ -92,7 +92,7 @@ export interface DocumentS3Urls {
 
 export type Split = {
   amount: number
-  category: BankTransactionCategoryComboBoxOption | null
+  category: BankTransactionNonSuggestedMatchOption | null
   taxCode?: string | null
   tags: readonly Tag[]
   customerVendor: typeof CustomerVendorSchema.Type | null

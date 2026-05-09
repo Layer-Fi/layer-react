@@ -9,14 +9,6 @@
 
   &__SecondaryColumn {
     flex: 0 0 38%;
-    min-width: 23rem;
     max-width: 32rem;
-  }
-}
-
-@container (max-width: 1140px) {
-  .Layer__TaxOverview__SecondaryColumn {
-    flex-basis: 36%;
-    min-width: 22rem;
   }
 }

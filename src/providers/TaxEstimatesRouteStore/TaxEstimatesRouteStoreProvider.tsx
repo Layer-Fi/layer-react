@@ -5,13 +5,13 @@ import { createStore, useStore } from 'zustand'
 import { type RouteNavigation, type RouteState } from '@utils/routing'
 
 export enum TaxEstimatesRoute {
-  Overview = 'overview',
+  // Overview = 'overview',
   Estimates = 'estimates',
   Payments = 'payments',
   Profile = 'profile',
 }
 
-const DEFAULT_ROUTE = TaxEstimatesRoute.Overview
+const DEFAULT_ROUTE = TaxEstimatesRoute.Estimates
 
 type TaxEstimatesRouteStoreShape = {
   routeState: RouteState<TaxEstimatesRoute>
