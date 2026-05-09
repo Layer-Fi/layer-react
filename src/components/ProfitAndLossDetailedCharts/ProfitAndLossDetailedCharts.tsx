@@ -84,7 +84,7 @@ export const ProfitAndLossDetailedCharts = ({
   slotProps?: ProfitAndLossDetailedChartsSlotProps
 }) => {
   const { t } = useTranslation()
-  const { isTablet } = useSizeClass()
+  const { isDesktop } = useSizeClass()
   const {
     chartDataRevenue,
     tableDataRevenue,
@@ -206,7 +206,7 @@ export const ProfitAndLossDetailedCharts = ({
     <div className='Layer__profit-and-loss-detailed-charts'>
       <ProfitAndLossDetailedChartsHeader
         visible={!hideHeader}
-        mode={isTablet ? 'tablet' : 'desktop'}
+        mode={isDesktop ? 'desktop' : 'tablet'}
         title={humanizeTitle(activeScope, stringOverrides?.detailedChartStringOverrides, t)}
         date={dateRange.startDate}
         showCloseButton={!hideClose}

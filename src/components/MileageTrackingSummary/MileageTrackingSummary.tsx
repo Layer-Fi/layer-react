@@ -19,7 +19,7 @@ export type MileageTrackingSummaryProps = {
 export const MileageTrackingSummary = ({ title: titleOverride }: MileageTrackingSummaryProps = {}) => {
   const { t } = useTranslation()
   const { data, selectedYear, selectedYearData, chartData, isLoading, isError } = useMileageTracking()
-  const { isDesktop } = useSizeClass()
+  const { isDesktop, isMobile } = useSizeClass()
   const inYearLabel = t('mileageTracking:label.in_year', 'In {{year}}', { year: selectedYear })
   const title = titleOverride ?? t('mileageTracking:label.mileage_tracking', 'Mileage Tracking')
 
@@ -45,6 +45,10 @@ export const MileageTrackingSummary = ({ title: titleOverride }: MileageTracking
     )
   }
 
+  const statsProps = isDesktop
+    ? { direction: 'column' as const }
+    : isMobile ? { direction: 'column' as const } : { direction: 'row' as const }
+
   return (
     <Container name='mileage-tracking-summary'>
       <VStack className='Layer__MileageTrackingSummary__Header' gap='md'>
@@ -55,7 +59,7 @@ export const MileageTrackingSummary = ({ title: titleOverride }: MileageTracking
         direction={isDesktop ? 'row' : 'column'}
         gap='lg'
       >
-        <Stack direction={isDesktop ? 'column' : 'row'} className='Layer__MileageTrackingSummary__Cards' gap='md'>
+        <Stack {...statsProps} className='Layer__MileageTrackingSummary__Cards' gap='md'>
           <MileageTrackingStatsCard
             title={t('mileageTracking:label.total_deduction', 'Total Deduction')}
             amount={selectedYearData?.estimatedDeduction ?? 0}
