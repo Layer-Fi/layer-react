@@ -1,7 +1,8 @@
 import { createContext, type PropsWithChildren, useContext, useMemo } from 'react'
 
 export type TaxEstimatesReviewTransactionsPayload = {
-  uncategorizedAmount: number
+  uncategorizedMoneyIn: number
+  uncategorizedMoneyOut: number
   uncategorizedTransactionCount: number
 }
 

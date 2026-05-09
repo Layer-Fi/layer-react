@@ -48,7 +48,7 @@ export const EquationRow = ({ section, size = 'md' }: EquationRowProps) => {
       <Span className='Layer__TaxSummaryCard__Operator' size={size} variant='subtle'>=</Span>
       <AmountWithLabel
         slotProps={{
-          MoneySpan: { amount: section.taxesOwed, size, weight: 'bold' },
+          MoneySpan: { amount: section.taxesOwed, size },
           Badge: { children: t('taxEstimates:label.taxes_owed', 'Taxes Owed') },
         }}
       />
