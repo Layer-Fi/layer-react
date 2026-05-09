@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useIntl } from 'react-intl'
 
@@ -46,6 +46,9 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
   const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
   const { category: selectedCategory, taxCode: selectedTaxCode } = selectedCategorization
 
+  const prevIsOpenRef = useRef<boolean | undefined>(isOpen)
+  const prevBankTransactionRef = useRef<BankTransaction>(bankTransaction)
+
   const [localSplits, setLocalSplits] = useState<Split[]>(
     getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory, selectedTaxCode),
   )
@@ -54,7 +57,7 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
   const [splitFormError, setSplitFormError] = useState<string | undefined>()
   const { setTransactionCategorySelection } = useBankTransactionsCategorizationActions()
 
-  useEffect(() => {
+  const resetLocalSplits = useCallback(() => {
     setLocalSplits(getLocalSplitStateForExpandedTransaction(
       bankTransaction,
       selectedCategory,
@@ -62,7 +65,23 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
     ))
     setSplitFormError(undefined)
     setInputValues({})
-  }, [bankTransaction, selectedCategory, selectedTaxCode, isOpen])
+  }, [bankTransaction, selectedCategory, selectedTaxCode])
+
+  useEffect(() => {
+    if (prevBankTransactionRef.current === bankTransaction) return
+
+    resetLocalSplits()
+
+    prevBankTransactionRef.current = bankTransaction
+  }, [bankTransaction, resetLocalSplits])
+
+  useEffect(() => {
+    if (prevIsOpenRef.current === isOpen) return
+
+    resetLocalSplits()
+
+    prevIsOpenRef.current = isOpen
+  }, [isOpen, resetLocalSplits])
 
   const saveLocalSplitsToCategoryStore = useCallback((splits: Split[]) => {
     if (!isSplitsValid(splits)) {
