@@ -35,10 +35,11 @@ interface MileageDeductionChartProps {
     years: MileageYear[]
   }
   selectedYear: number
+  chartHeight?: number
 }
 
 const CHART_MARGIN = { top: 0, right: 0, bottom: 0, left: 0 }
-const CHART_HEIGHT = 328
+const DEFAULT_CHART_HEIGHT = 328
 const RESIZE_DEBOUNCE_MS = 50
 const CURSOR_WIDTH_MULTIPLE = 2.2
 
@@ -64,6 +65,7 @@ const getBarSize = (width: number | undefined): number => {
 export const MileageDeductionChart = ({
   data,
   selectedYear,
+  chartHeight = DEFAULT_CHART_HEIGHT,
 }: MileageDeductionChartProps) => {
   const { getColor } = useLayerContext()
   const { formatDate, formatCurrencyFromCents } = useIntlFormatter()
@@ -94,7 +96,7 @@ export const MileageDeductionChart = ({
       <ResponsiveContainer
         key='mileage-deduction-chart'
         width='100%'
-        height={CHART_HEIGHT}
+        height={chartHeight}
         debounce={RESIZE_DEBOUNCE_MS}
         onResize={onResize}
       >

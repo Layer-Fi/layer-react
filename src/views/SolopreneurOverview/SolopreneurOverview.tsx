@@ -9,6 +9,7 @@ import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPick
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
+import { MileageTrackingSummary } from '@components/MileageTrackingSummary/MileageTrackingSummary'
 import { Onboarding } from '@components/Onboarding/Onboarding'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import {
@@ -32,6 +33,7 @@ interface SolopreneurOverviewStringOverrides {
   profitAndLossSummaryCard?: CardStringOverrides
   expensesSummaryCard?: CardStringOverrides
   taxEstimatesSummaryCard?: CardStringOverrides
+  mileageTrackingSummaryCard?: CardStringOverrides
 }
 
 export interface SolopreneurOverviewProps {
@@ -79,7 +81,7 @@ export const SolopreneurOverview = ({
       }
     >
       <View
-        title={stringOverrides?.title || t('solopreneurOverview:label.solopreneur_overview', 'Solopreneur overview')}
+        title={stringOverrides?.title || t('solopreneurOverview:label.solopreneur_overview', 'Overview')}
         showHeader={showTitle}
         header={(
           <Header>
@@ -116,6 +118,9 @@ export const SolopreneurOverview = ({
             mode='horizontal_bar_chart'
             withHeaderSeparator
             title={stringOverrides?.taxEstimatesSummaryCard?.header}
+          />
+          <MileageTrackingSummary
+            title={stringOverrides?.mileageTrackingSummaryCard?.header}
           />
         </div>
       </View>
