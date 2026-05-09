@@ -44,6 +44,21 @@
     --banner-icon-color: var(--color-info-success-fg);
     --banner-icon-bg: var(--color-info-success-bg);
   }
+
+  @media (width <= 500px) {
+    &.Layer__Stack {
+      flex-direction: column;
+      align-items: stretch;
+
+      .Layer__UI__Banner__actions {
+        width: 100%;
+
+        .Layer__UI__Button {
+          inline-size: 100%;
+        }
+      }
+    }
+  }
 }
 
 .Layer__UI__Banner__iconContainer {

@@ -1,12 +1,17 @@
 import { isWithinInterval, parseISO } from 'date-fns'
 
 import { type BankTransaction, DisplayState, type Split, type SuggestedMatch } from '@internal-types/bankTransactions'
+import { hasSuggestions } from '@internal-types/categories'
+import { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { type DateRange } from '@internal-types/general'
 import { Direction } from '@internal-types/general'
 import type { TagFilterInput } from '@internal-types/tags'
-import { type BankTransactionTaxOption } from '@schemas/bankTransactions/bankTransaction'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { makeTagKeyValueFromTag } from '@schemas/tag'
+import { getDefaultTaxCodeOptionForBankTransaction } from '@utils/bankTransactions/taxCode'
+import { BankTransactionSelectionVariant } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
+import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 import { CategorizedCategories, ReviewCategories } from '@components/BankTransactions/constants'
 
 export const filterVisibility = (
@@ -30,6 +35,11 @@ export const filterVisibility = (
 export interface NumericRangeFilter {
   min?: number
   max?: number
+}
+
+export enum BankTransactionsDateFilterMode {
+  MonthlyView = 'MonthlyView',
+  GlobalDateRange = 'GlobalDateRange',
 }
 
 export const hasMatch = (bankTransaction?: BankTransaction) => {
@@ -78,14 +88,6 @@ export const countTransactionsToReview = ({
 export const hasReceipts = (bankTransaction?: BankTransaction) =>
   bankTransaction?.document_ids && bankTransaction.document_ids.length > 0
 
-export const getBankTransactionTaxOptions = (bankTransaction?: BankTransaction): BankTransactionTaxOption[] => {
-  if (!bankTransaction?.tax_options) {
-    return []
-  }
-
-  return Object.values(bankTransaction.tax_options).flat()
-}
-
 export const isTransferMatch = (bankTransaction?: BankTransaction) => {
   return bankTransaction?.match?.details.type === 'Transfer_Match'
 }
@@ -109,14 +111,41 @@ export const getBankTransactionMatchAsSuggestedMatch = (bankTransaction?: BankTr
   return undefined
 }
 
-export const getBankTransactionFirstSuggestedMatch = (bankTransaction?: BankTransaction): SuggestedMatch | undefined => {
+export const getSuggestedMatchForBankTransaction = (bankTransaction?: BankTransaction): SuggestedMatch | undefined => {
   return getBankTransactionMatchAsSuggestedMatch(bankTransaction) ?? bankTransaction?.suggested_matches?.[0]
 }
 
-export enum BankTransactionsDateFilterMode {
-  MonthlyView = 'MonthlyView',
-  GlobalDateRange = 'GlobalDateRange',
+export const getBankTransactionFirstSuggestedMatch = (bankTransaction?: BankTransaction): SuggestedMatch | undefined => {
+  return getSuggestedMatchForBankTransaction(bankTransaction)
 }
+
+export const getDefaultSuggestedMatchForBankTransaction = (bankTransaction?: BankTransaction): SuggestedMatchAsOption | null => {
+  const suggestedMatch = getSuggestedMatchForBankTransaction(bankTransaction)
+
+  return suggestedMatch ? new SuggestedMatchAsOption(suggestedMatch) : null
+}
+
+export const getDefaultSelectedCategoryForBankTransaction = (
+  bankTransaction: BankTransaction,
+): BankTransactionNonSuggestedMatchOption | null => {
+  if (bankTransaction.category) {
+    return convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.category)
+  }
+
+  if (hasSuggestions(bankTransaction.categorization_flow)) {
+    return convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.categorization_flow.suggestions[0])
+  }
+
+  return null
+}
+
+export const getDefaultVariantForBankTransaction = (bankTransaction: BankTransaction): BankTransactionSelectionVariant => {
+  if (bankTransaction.match) return BankTransactionSelectionVariant.MATCH
+  if (bankTransaction.category) return BankTransactionSelectionVariant.CATEGORY
+
+  return getSuggestedMatchForBankTransaction(bankTransaction) ? BankTransactionSelectionVariant.MATCH : BankTransactionSelectionVariant.CATEGORY
+}
+
 export type BankTransactionFilters = {
   amount?: NumericRangeFilter
   account?: string[]
@@ -137,7 +166,6 @@ export const buildCategorizeBankTransactionPayloadForSplit = (splits: Split[]): 
     : ({
       type: 'Split',
       entries: splits.map(split => ({
-        // TODO: enforce upstream in the category combobox that split.category is non-null
         category: split.category!.classification!,
         amount: split.amount,
         taxCode: split.taxCode ?? null,
@@ -146,4 +174,13 @@ export const buildCategorizeBankTransactionPayloadForSplit = (splits: Split[]): 
         vendorId: split.customerVendor?.customerVendorType === 'VENDOR' ? split.customerVendor.id : undefined,
       })),
     })
+}
+
+export const getDefaultCategorizationForBankTransaction = (bankTransaction: BankTransaction) => {
+  return {
+    category: getDefaultSelectedCategoryForBankTransaction(bankTransaction),
+    taxCode: getDefaultTaxCodeOptionForBankTransaction(bankTransaction),
+    match: getDefaultSuggestedMatchForBankTransaction(bankTransaction),
+    variant: getDefaultVariantForBankTransaction(bankTransaction),
+  }
 }

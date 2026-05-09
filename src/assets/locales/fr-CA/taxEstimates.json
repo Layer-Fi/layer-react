@@ -6,8 +6,12 @@
   },
   "banner": {
     "categorization_incomplete": {
-      "description_one": "Vous avez {{count}} transaction non catégorisée avec {{amount}} en déductions potentielles à examiner.",
-      "description_other": "Vous avez {{count}} transactions non catégorisées avec {{amount}} en déductions potentielles à examiner.",
+      "description_one": "",
+      "description_other": "",
+      "description_short_one": "",
+      "description_short_other": "",
+      "description_with_range_one": "",
+      "description_with_range_other": "",
       "title": "Vos estimations fiscales sont incomplètes"
     }
   },
@@ -18,6 +22,8 @@
   "empty": {
     "no_tax_details": "Aucun détail fiscal",
     "no_tax_details_description": "Aucun détail fiscal trouvé",
+    "no_tax_estimates_summary": "",
+    "no_tax_estimates_summary_description": "",
     "no_tax_payments_to_display": "Il n’y a aucun paiement d’impôt à afficher.",
     "tax_payments": "Aucun paiement d’impôt trouvé"
   },

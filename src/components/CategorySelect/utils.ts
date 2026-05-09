@@ -101,7 +101,26 @@ const isSelectedCategory = (opt: CategoryOption, selectedId: string): boolean =>
 }
 
 const toActionableListOption = (opt: CategoryOption): ActionableListOption<CategoryOption> => {
+  const baseOption = {
+    label: opt.label,
+    value: opt,
+  }
+
   return isGroup(opt)
-    ? { label: opt.label, id: opt.id, value: opt, asLink: true }
-    : { label: opt.label, id: opt.value, description: opt.original.description ?? undefined, value: opt }
+    ? { ...baseOption, id: getGroupActionableId(opt.id, opt.label), asLink: true }
+    : { ...baseOption, id: getCategoryActionableId(opt.value, opt.label), description: opt.original.description ?? undefined }
+}
+
+export const getSelectedCategoryActionableId = (selectedValue: { value: string, label: string } | null): string | undefined => {
+  if (!selectedValue) return undefined
+
+  return getCategoryActionableId(selectedValue.value, selectedValue.label)
+}
+
+const getGroupActionableId = (id: string, label: string): string => {
+  return `group:${id}|label:${label}`
+}
+
+const getCategoryActionableId = (value: string, label: string): string => {
+  return `category:${value}|label:${label}`
 }

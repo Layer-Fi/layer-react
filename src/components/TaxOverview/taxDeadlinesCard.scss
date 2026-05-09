@@ -1,10 +1,12 @@
 .Layer__TaxOverview {
-  &__Card--deadlines {
-    min-width: 25rem;
-
-    @container (max-width: 960px) {
+  @media (width <= 500px) {
+    &__Card--deadlines {
       min-width: unset;
     }
+  }
+
+  &__Card--deadlines {
+    min-width: 25rem;
   }
 
   &__Card.Layer__card {

@@ -6,6 +6,8 @@
   }
 }
 
-.Layer__TaxSummaryCard__MobileToggleWrapper {
-  margin-top: var(--spacing-md);
+.Layer__TaxSummaryCard__MobileAmountRow {
+  .Layer__UI__Button {
+    text-decoration: underline;
+  }
 }

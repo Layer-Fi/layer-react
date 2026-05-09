@@ -24,6 +24,15 @@
   padding-top: 42px;
 }
 
+.Layer__UI__Chart--focusReset {
+  .recharts-wrapper:focus,
+  .recharts-wrapper :focus,
+  .recharts-surface:focus,
+  .recharts-bar-rectangle:focus {
+    outline: none;
+  }
+}
+
 .Layer__chart-wrapper {
   position: relative;
 }

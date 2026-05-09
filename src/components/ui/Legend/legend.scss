@@ -1,0 +1,34 @@
+.Layer__UI__Legend--table {
+  flex-wrap: wrap;
+}
+
+.Layer__UI__Legend__Item {
+  min-inline-size: 10rem;
+  max-inline-size: 10rem;
+}
+
+.Layer__UI__Legend__Label {
+  min-inline-size: 0;
+
+  > .Layer__Span {
+    min-inline-size: 0;
+  }
+}
+
+.Layer__UI__Legend--aligned {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.Layer__UI__Legend__AlignedItem {
+  gap: var(--spacing-3xs);
+  min-inline-size: 0;
+  padding-inline-end: var(--spacing-md);
+}
+
+.Layer__UI__Legend__AlignedValue {
+  line-height: 1.1;
+}

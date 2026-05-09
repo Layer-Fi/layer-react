@@ -10,7 +10,7 @@ import { decodeCustomerVendor } from '@schemas/customerVendor'
 import { TransactionTagSchema } from '@schemas/tag'
 import { makeTagFromTransactionTag } from '@schemas/tag'
 import { translationKey } from '@utils/i18n/translationKey'
-import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 
 export enum BankTransactionCategoryComboBoxGroup {
   TRANSFER = 'TRANSFER',
@@ -41,7 +41,7 @@ export const getGroupDisplayLabel = (label: string | undefined, t: TFunction): s
 export const isBoldGroupLabel = (label: string | undefined): boolean =>
   label !== undefined && BOLD_GROUP_LABELS.has(label as BankTransactionCategoryComboBoxGroup)
 
-export const convertApiCategorizationToCategoryOrSplitAsOption = (categorization: CategorizationEncoded): BankTransactionCategoryComboBoxOption => {
+export const convertApiCategorizationToCategoryOrSplitAsOption = (categorization: CategorizationEncoded): BankTransactionNonSuggestedMatchOption => {
   if (isSplitCategorizationEncoded(categorization)) {
     const splits = categorization.entries.map(splitEntryEncoded => ({
       amount: splitEntryEncoded.amount || 0,
@@ -116,25 +116,6 @@ export const getSuggestedCategoriesGroup = (bankTransaction: BankTransaction, t:
       label: BankTransactionCategoryComboBoxGroup.SUGGESTIONS,
       options: categorizationFlow.suggestions.map(suggestion => convertApiCategorizationToCategoryOrSplitAsOption(suggestion)),
     }
-  }
-
-  return null
-}
-
-export const getDefaultSelectedCategoryForBankTransaction = (
-  bankTransaction: BankTransaction,
-  ignoreSuggestedMatches = false,
-): BankTransactionCategoryComboBoxOption | null => {
-  if (bankTransaction.category) {
-    return convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.category)
-  }
-
-  if (!ignoreSuggestedMatches && bankTransaction.suggested_matches?.[0]) {
-    return new SuggestedMatchAsOption(bankTransaction.suggested_matches[0])
-  }
-
-  if (hasSuggestions(bankTransaction.categorization_flow)) {
-    return convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.categorization_flow.suggestions[0])
   }
 
   return null

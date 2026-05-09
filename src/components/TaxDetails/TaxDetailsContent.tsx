@@ -9,7 +9,7 @@ import { useTaxDetails } from '@hooks/api/businesses/[business-id]/tax-estimates
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
-import { HStack, VStack } from '@ui/Stack/Stack'
+import { VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
@@ -18,7 +18,6 @@ import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
 import { ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { Loader } from '@components/Loader/Loader'
-import { Operator } from '@components/TaxDetails/Operator/Operator'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 enum TaxDetailsColumns {
@@ -56,17 +55,14 @@ const ErrorState = () => {
 }
 
 const TaxDetailsRowLabelCell = (row: Row<TaxDetailsRow>) => {
-  const hasOperator = row.original.operator !== undefined && row.original.operator !== null
-  if (hasOperator) {
-    return (
-      <HStack className='Layer__TaxDetails__TaxDetailsRow--operator' align='center' gap='md'>
-        <Operator sign={row.original.operator} />
-        <Span>{row.original.label}</Span>
-      </HStack>
-    )
+  const { operator, label } = row.original
+  const isTotal = operator === '='
+
+  if (isTotal) {
+    return <Span className='Layer__TaxDetails__TaxDetailsRow--total'>{label}</Span>
   }
 
-  return <Span>{row.original.label}</Span>
+  return <Span>{label}</Span>
 }
 
 type AmountCellRendererDeps = Pick<ReturnType<typeof useIntlFormatter>, 'formatNumber' | 'formatPercent'>
@@ -74,6 +70,7 @@ type AmountCellRendererDeps = Pick<ReturnType<typeof useIntlFormatter>, 'formatN
 const makeAmountCellRenderer = ({ formatNumber, formatPercent }: AmountCellRendererDeps) => {
   return function TaxDetailsAmountCell(row: Row<TaxDetailsRow>) {
     const { value } = row.original
+    if (row.getCanExpand() && row.getIsExpanded()) return null
     if (value === undefined) return <Span>-</Span>
 
     if (isPercentageCellValue(value)) {

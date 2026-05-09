@@ -10,6 +10,7 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { DetailedChart, type DetailedChartProps } from '@components/DetailedCharts/DetailedChart'
 import { type DetailData, type SeriesData } from '@components/DetailedCharts/types'
 import { NO_OP_INTERACTION_PROPS, NO_SORT_PROPS } from '@components/DetailedCharts/utils'
@@ -38,6 +39,23 @@ const ErrorState = () => {
     <VStack gap='md' className='Layer__TaxEstimatesSummaryCard__Content' pb='md' pi='lg' align='center'>
       <Span size='lg'>{t('taxEstimates:error.load_tax_estimates_summary', 'We couldn\'t load your tax summary')}</Span>
     </VStack>
+  )
+}
+
+function allTaxSectionsAreEmpty(summary: DetailData<SeriesData>) {
+  const isEmpty = summary.data.every(section => section.value === 0)
+  return isEmpty
+}
+
+function TaxEstimatesSummaryCardEmpty() {
+  const { t } = useTranslation()
+  return (
+    <DataState
+      status={DataStateStatus.info}
+      title={t('taxEstimates:empty.no_tax_estimates_summary', 'Get started with your tax estimates')}
+      description={t('taxEstimates:empty.no_tax_estimates_summary_description', 'Start by importing and categorizing your bank transactions')}
+      spacing
+    />
   )
 }
 
@@ -144,7 +162,7 @@ export const TaxEstimatesSummaryCard = ({
             <Heading size={!isDesktop ? 'sm' : 'md'}>{title}</Heading>
           </HStack>
           <ConditionalBlock data={detailData} isLoading={isLoading} isError={isError} Loading={<LoadingState />} Error={<ErrorState />}>
-            {({ data }) => <Content data={data} mode={mode} commonProps={commonProps} layout={layout} />}
+            {({ data }) => allTaxSectionsAreEmpty(data) ? <TaxEstimatesSummaryCardEmpty /> : <Content data={data} mode={mode} commonProps={commonProps} layout={layout} />}
           </ConditionalBlock>
         </VStack>
       </Card>

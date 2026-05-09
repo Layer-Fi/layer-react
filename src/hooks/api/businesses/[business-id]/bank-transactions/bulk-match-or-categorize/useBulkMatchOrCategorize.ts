@@ -9,10 +9,10 @@ import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useAuth } from '@hooks/utils/auth/useAuth'
-import { type BankTransactionCategorization, DEFAULT_CATEGORIZATION, useGetAllBankTransactionsCategorizations } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { type BankTransactionCategorization, BankTransactionSelectionVariant, DEFAULT_CATEGORIZATION, useGetAllBankTransactionsCategorizations } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
 
@@ -45,17 +45,19 @@ const buildBulkMatchOrCategorizePayload = (
   const transactions: Record<string, MatchOrCategorizeTransaction> = {}
 
   for (const transactionId of selectedIds) {
-    const { category, taxCode } = categorizations.get(transactionId) ?? DEFAULT_CATEGORIZATION
+    const { category, match, taxCode, variant } = categorizations.get(transactionId) ?? DEFAULT_CATEGORIZATION
 
-    if (!category || isPlaceholderAsOption(category)) {
+    if (variant === BankTransactionSelectionVariant.MATCH) {
+      if (!match) continue
+
+      transactions[transactionId] = {
+        type: 'match',
+        suggestedMatchId: match.original.id,
+      }
       continue
     }
 
-    if (isSuggestedMatchAsOption(category)) {
-      transactions[transactionId] = {
-        type: 'match',
-        suggestedMatchId: category.value,
-      }
+    if (!category || isPlaceholderAsOption(category)) {
       continue
     }
 
@@ -84,7 +86,7 @@ const buildBulkMatchOrCategorizePayload = (
       categorization: {
         type: 'Category',
         category: classification,
-        taxCode,
+        taxCode: taxCode?.value ?? null,
       },
     }
   }
