@@ -3,7 +3,6 @@
   "label": {
     "accounting_overview": "Aperçu comptable",
     "bookkeeping_overview": "Aperçu de la tenue de livres",
-    "overview": "",
     "vs_comparison_month": "c. {{comparisonMonth}}"
   }
 }
