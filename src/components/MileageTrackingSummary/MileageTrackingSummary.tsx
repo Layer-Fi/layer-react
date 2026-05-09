@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 
+import { DateFormat } from '@utils/i18n/date/patterns'
 import { useMileageTrackingYearlySummary } from '@hooks/features/mileage/useMileageTrackingYearlySummary'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { DateFormat } from '@utils/i18n/date/patterns'
 import { HStack, Stack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Container } from '@components/Container/Container'

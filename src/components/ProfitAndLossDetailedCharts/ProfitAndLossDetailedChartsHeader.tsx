@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 import classNames from 'classnames'
->>>>>>> main
 import { XIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -15,8 +12,6 @@ import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPick
 
 import './profitAndLossDetailedChartsHeader.scss'
 
-<<<<<<< HEAD
-=======
 type HeaderTitleProps = {
   title: string
   dateLabel: string
@@ -68,15 +63,10 @@ const CloseButton = ({ variant, onClose, ariaLabel }: CloseButtonProps) => {
   )
 }
 
->>>>>>> main
 type ProfitAndLossDetailedChartsHeaderProps = {
   title: string
   date: Date
   mode: 'desktop' | 'tablet'
-<<<<<<< HEAD
-  visible?: boolean
-=======
->>>>>>> main
   showCloseButton?: boolean
   showDatePicker?: boolean
   onClose: () => void
@@ -86,49 +76,12 @@ export const ProfitAndLossDetailedChartsHeader = ({
   title,
   date,
   mode,
-<<<<<<< HEAD
-  visible = true,
-=======
->>>>>>> main
   showCloseButton = true,
   showDatePicker = false,
   onClose,
 }: ProfitAndLossDetailedChartsHeaderProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
-<<<<<<< HEAD
-
-  if (!visible) return null
-
-  if (mode === 'tablet') {
-    return (
-      <header className='Layer__ProfitAndLossDetailedChartsHeader Layer__ProfitAndLossDetailedChartsHeader--tablet'>
-        {showCloseButton && <BackButton onClick={onClose} />}
-        <VStack className='Layer__ProfitAndLossDetailedChartsHeader__head'>
-          <Span size='lg' weight='bold' className='Layer__ProfitAndLossDetailedChartsHeader__title'>{title}</Span>
-          <Span size='sm' className='Layer__ProfitAndLossDetailedChartsHeader__date'>
-            {formatDate(date, DateFormat.MonthYear)}
-          </Span>
-        </VStack>
-      </header>
-    )
-  }
-
-  return (
-    <header className='Layer__ProfitAndLossDetailedChartsHeader Layer__ProfitAndLossDetailedChartsHeader--desktop'>
-      <VStack className='Layer__ProfitAndLossDetailedChartsHeader__head'>
-        <Span size='lg' weight='bold'>{title}</Span>
-        <Span size='sm' variant='subtle' className='Layer__ProfitAndLossDetailedChartsHeader__date'>
-          {formatDate(date, DateFormat.MonthYear)}
-        </Span>
-        {showDatePicker && <GlobalMonthPicker />}
-      </VStack>
-      {showCloseButton && (
-        <Button icon inset variant='outlined' onPress={onClose} aria-label={t('common:action.close', 'Close')}>
-          <XIcon />
-        </Button>
-      )}
-=======
   const isTablet = mode === 'tablet'
 
   const headerProps: HeaderTitleProps = {
@@ -154,7 +107,6 @@ export const ProfitAndLossDetailedChartsHeader = ({
       {isTablet && showCloseButton && <CloseButton {...closeButtonProps} />}
       <HeaderTitle {...headerProps} />
       {!isTablet && showCloseButton && <CloseButton {...closeButtonProps} />}
->>>>>>> main
     </header>
   )
 }
