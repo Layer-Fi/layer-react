@@ -6,8 +6,12 @@
   },
   "banner": {
     "categorization_incomplete": {
-      "description_one": "You have {{count}} uncategorized transaction with {{amount}} in potential deductions to review.",
-      "description_other": "You have {{count}} uncategorized transactions with {{amount}} in potential deductions to review.",
+      "description_one": "In tax year {{year}}, you have {{count}} uncategorized transaction with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
+      "description_other": "In tax year {{year}}, you have {{count}} uncategorized transactions with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
+      "description_short_one": "You have {{count}} uncategorized transaction: {{deductions}} in deductions and {{income}} in unrecognized income.",
+      "description_short_other": "You have {{count}} uncategorized transactions: {{deductions}} in deductions and {{income}} in unrecognized income.",
+      "description_with_range_one": "In tax year {{year}}, you have {{count}} uncategorized transaction spanning {{dateRange}} with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
+      "description_with_range_other": "In tax year {{year}}, you have {{count}} uncategorized transactions spanning from {{dateRange}} with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
       "title": "Your tax estimates are incomplete"
     }
   },
@@ -18,6 +22,8 @@
   "empty": {
     "no_tax_details": "No tax details",
     "no_tax_details_description": "No tax details found",
+    "no_tax_estimates_summary": "Get started with your tax estimates",
+    "no_tax_estimates_summary_description": "Start by importing and categorizing your bank transactions",
     "no_tax_payments_to_display": "There are no tax payments to display.",
     "tax_payments": "No tax payments found"
   },
