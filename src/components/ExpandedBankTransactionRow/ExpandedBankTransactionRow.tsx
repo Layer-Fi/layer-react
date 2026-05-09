@@ -17,6 +17,7 @@ import { type Tag } from '@schemas/tag'
 import {
   hasMatch,
 } from '@utils/bankTransactions/shared'
+import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
 import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
 import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
 import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
@@ -299,7 +300,7 @@ export const ExpandedBankTransactionRow = ({
                                       taxCode: value?.value ?? null,
                                     }))
                                   }}
-                                  isDisabled={!isCategorizationEnabled}
+                                  isDisabled={!isCategorizationEnabled || !canCategoryHaveTaxCode(split.category)}
                                   className='Layer__expanded-bank-transaction-row__table-cell--split-entry__tax-code'
                                 />
                               )}

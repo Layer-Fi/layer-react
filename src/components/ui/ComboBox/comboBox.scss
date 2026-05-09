@@ -20,7 +20,9 @@
   }
 
   &--disabled {
+    background-color: var(--color-base-100);
     cursor: not-allowed;
+    color: var(--color-base-800);
   }
 
   &--readonly {

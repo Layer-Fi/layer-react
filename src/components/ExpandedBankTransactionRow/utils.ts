@@ -117,6 +117,7 @@ export const getCustomerVendorForBankTransaction = (bankTransaction: BankTransac
 export const getLocalSplitStateForExpandedTransaction = (
   bankTransaction: BankTransaction,
   selectedCategory: BankTransactionNonSuggestedMatchOption | null | undefined,
+  selectedTaxCode: string | null,
 ): Split[] => {
   let coercedSelectedCategory = selectedCategory
   if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
@@ -143,6 +144,7 @@ export const getLocalSplitStateForExpandedTransaction = (
   return [{
     amount: bankTransaction.amount,
     category: coercedSelectedCategory ?? null,
+    taxCode: selectedTaxCode ?? bankTransaction.tax_code ?? null,
     tags: bankTransaction.transaction_tags.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))),
     customerVendor: getCustomerVendorForBankTransaction(bankTransaction),
   }]

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { buildCategorizeBankTransactionPayloadForSplit, hasReceipts, isCategorized } from '@utils/bankTransactions/shared'
+import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
@@ -134,7 +135,7 @@ export const BankTransactionsMobileListSplitForm = ({
                             taxCode: value?.value ?? null,
                           }))
                         }}
-                        isDisabled={!showCategorization}
+                        isDisabled={!showCategorization || !canCategoryHaveTaxCode(split.category)}
                       />
                     </VStack>
                   )}

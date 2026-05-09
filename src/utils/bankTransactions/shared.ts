@@ -8,7 +8,7 @@ import { Direction } from '@internal-types/general'
 import type { TagFilterInput } from '@internal-types/tags'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { makeTagKeyValueFromTag } from '@schemas/tag'
-import { getDefaultTaxCodeOptionForBankTransaction } from '@utils/bankTransactions/taxCode'
+import { getDefaultTaxCodeForBankTransaction } from '@utils/bankTransactions/taxCode'
 import { BankTransactionSelectionVariant } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
@@ -179,7 +179,7 @@ export const buildCategorizeBankTransactionPayloadForSplit = (splits: Split[]): 
 export const getDefaultCategorizationForBankTransaction = (bankTransaction: BankTransaction) => {
   return {
     category: getDefaultSelectedCategoryForBankTransaction(bankTransaction),
-    taxCode: getDefaultTaxCodeOptionForBankTransaction(bankTransaction),
+    taxCode: getDefaultTaxCodeForBankTransaction(bankTransaction),
     match: getDefaultSuggestedMatchForBankTransaction(bankTransaction),
     variant: getDefaultVariantForBankTransaction(bankTransaction),
   }

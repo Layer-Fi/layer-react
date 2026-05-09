@@ -28,3 +28,22 @@ export const filterOptionsOrGroups = <T extends ComboBoxOption>(
   }
   return { options: [] }
 }
+
+export const resolveSelectedOption = <T extends ComboBoxOption>(
+  source: OptionsOrGroups<T>,
+  selectedValue: T | null,
+): T | null => {
+  if (!selectedValue) return null
+
+  const options = source.options ?? []
+  const optionMatch = options.find(option => option.value === selectedValue.value)
+  if (optionMatch) return optionMatch
+
+  const groups = source.groups ?? []
+  for (const group of groups) {
+    const match = group.options.find(option => option.value === selectedValue.value)
+    if (match) return match
+  }
+
+  return selectedValue
+}

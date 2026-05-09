@@ -8,7 +8,7 @@ import type {
   OptionsOrGroups,
   SingleSelectComboBoxProps,
 } from '@ui/ComboBox/types'
-import { filterOptionsOrGroups } from '@ui/MobileSelectionDrawer/filterUtils'
+import { filterOptionsOrGroups, resolveSelectedOption } from '@ui/MobileSelectionDrawer/filterUtils'
 import { MobileSelectionDrawerList } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerList'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
@@ -70,6 +70,10 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
     [options, groups, searchQuery],
   )
 
+  const resolvedSelectedValue = useMemo(() => {
+    return resolveSelectedOption(filteredOptionsOrGroups, selectedValue)
+  }, [filteredOptionsOrGroups, selectedValue])
+
   const Header = useCallback(() => (
     <ModalTitleWithClose
       heading={<ModalHeading size='md' weight='bold'>{heading}</ModalHeading>}
@@ -87,9 +91,9 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
           className='Layer__MobileSelectionDrawerWithTrigger__Trigger'
         >
           <Span size='sm' ellipsis>
-            {selectedValue?.label ?? resolvedPlaceholder}
+            {resolvedSelectedValue?.label ?? resolvedPlaceholder}
           </Span>
-          {triggerIcon}
+          {!isDisabled && triggerIcon}
         </HStack>
       </Button>
 
@@ -113,7 +117,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
             <MobileSelectionDrawerList<T>
               ariaLabel={ariaLabel}
               {...filteredOptionsOrGroups}
-              selectedValue={selectedValue}
+              selectedValue={resolvedSelectedValue}
               onSelectedValueChange={(value) => {
                 onSelectedValueChange(value)
                 close()

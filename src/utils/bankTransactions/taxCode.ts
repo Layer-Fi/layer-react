@@ -2,7 +2,6 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { type BankTransactionTaxOption } from '@schemas/bankTransactions/bankTransaction'
 import { isClassificationExclusion } from '@schemas/categorization'
 import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 
 export const getBankTransactionTaxOptions = (bankTransaction?: BankTransaction): BankTransactionTaxOption[] => {
   if (!bankTransaction?.tax_options) {
@@ -12,30 +11,30 @@ export const getBankTransactionTaxOptions = (bankTransaction?: BankTransaction):
   return Object.values(bankTransaction.tax_options).flat()
 }
 
-export const getDefaultTaxCodeOptionForBankTransaction = (bankTransaction?: BankTransaction): TaxCodeComboBoxOption | null => {
+export const getDefaultTaxCodeForBankTransaction = (bankTransaction?: BankTransaction): string | null => {
   const taxCode = bankTransaction?.tax_code
   if (!taxCode) return null
 
-  const option = getBankTransactionTaxOptions(bankTransaction).find(option => option.code === taxCode)
+  const isKnown = getBankTransactionTaxOptions(bankTransaction).some(option => option.code === taxCode)
 
-  return option ? new TaxCodeComboBoxOption(option) : null
+  return isKnown ? taxCode : null
 }
 
 export const hasBankTransactionTaxCode = (
   bankTransaction: BankTransaction | undefined,
-  selectedTaxCode: TaxCodeComboBoxOption | null,
+  selectedTaxCode: string | null,
 ) => {
   if (!selectedTaxCode) return false
-  return getBankTransactionTaxOptions(bankTransaction).some(taxOption => taxOption.code === selectedTaxCode.value)
+  return getBankTransactionTaxOptions(bankTransaction).some(taxOption => taxOption.code === selectedTaxCode)
 }
 
 export const getCategoryPayloadTaxCode = (
   selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
-  selectedTaxCode: TaxCodeComboBoxOption | null,
+  selectedTaxCode: string | null,
 ) => {
   if (!canCategoryHaveTaxCode(selectedCategory)) return null
 
-  return selectedTaxCode?.value ?? null
+  return selectedTaxCode ?? null
 }
 
 export const canCategoryHaveTaxCode = (
@@ -45,18 +44,23 @@ export const canCategoryHaveTaxCode = (
 
   if (isPlaceholderAsOption(category)) return false
   if (isSuggestedMatchAsOption(category)) return false
-  if (isSplitAsOption(category)) return false
+  if (isSplitAsOption(category)) {
+    if (category.isSingleSplit) {
+      const classification = category.original[0].category?.classification
+      return !!classification && !isClassificationExclusion(classification)
+    }
 
-  if (!category.classification) return false
-  if (isClassificationExclusion(category.classification)) return false
+    return false
+  }
 
-  return true
+  const classification = category.classification
+  return !!classification && !isClassificationExclusion(classification)
 }
 
 export const resolveCategoryTaxCode = (
   bankTransaction: BankTransaction | undefined,
   selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
-  selectedTaxCode: TaxCodeComboBoxOption | null,
+  selectedTaxCode: string | null,
 ): string | null => {
   const resolvedTaxCode = hasBankTransactionTaxCode(bankTransaction, selectedTaxCode) ? selectedTaxCode : null
 
