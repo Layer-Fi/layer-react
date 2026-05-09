@@ -6,10 +6,10 @@
   },
   "banner": {
     "categorization_incomplete": {
-      "description_one": "Au cours de l’année d’imposition {{year}}, vous avez {{count}} opération non catégorisée, avec potentiellement {{deductions}} en déductions et {{income}} en revenus non comptabilisés. Passez vos opérations en revue et catégorisez-les pour obtenir des estimations plus précises.",
-      "description_other": "Au cours de l’année d’imposition {{year}}, vous avez {{count}} opérations non catégorisées, avec potentiellement {{deductions}} en déductions et {{income}} en revenus non comptabilisés. Passez vos opérations en revue et catégorisez-les pour obtenir des estimations plus précises.",
+      "description_one": "Au cours de l’année d’imposition {{year}}, vous avez {{count}} transaction non catégorisée, avec potentiellement {{deductions}} en déductions et {{income}} en revenus non reconnus. Passez vos transactions en revue et catégorisez-les pour obtenir des estimations plus précises.",
+      "description_other": "Au cours de l’année d’imposition {{year}}, vous avez {{count}} transactions non catégorisées, avec potentiellement {{deductions}} en déductions et {{income}} en revenus non reconnus. Passez vos transactions en revue et catégorisez-les pour obtenir des estimations plus précises.",
       "description_short_one": "Vous avez {{count}} transaction non catégorisée : {{deductions}} en déductions et {{income}} en revenus non reconnus.",
-      "description_short_other": "Vous avez {{count}} transactions non catégorisées\u0000: {{deductions}} en déductions et {{income}} en revenus non reconnus.",
+      "description_short_other": "Vous avez {{count}} transactions non catégorisées: {{deductions}} en déductions et {{income}} en revenus non reconnus.",
       "description_with_range_one": "Au cours de l’année d’imposition {{year}}, vous avez {{count}} transaction non catégorisée couvrant la période {{dateRange}}, avec potentiellement {{deductions}} en déductions et {{income}} en revenus non reconnus. Passez vos transactions en revue et catégorisez-les pour obtenir des estimations plus précises.",
       "description_with_range_other": "Au cours de l’année d’imposition {{year}}, vous avez {{count}} transactions non catégorisées pour la période {{dateRange}}, avec potentiellement {{deductions}} en déductions et {{income}} en revenus non reconnus. Passez vos transactions en revue et catégorisez-les pour obtenir des estimations plus précises.",
       "title": "Vos estimations fiscales sont incomplètes"
