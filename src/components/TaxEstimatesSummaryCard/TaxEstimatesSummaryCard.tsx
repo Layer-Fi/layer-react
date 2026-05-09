@@ -97,7 +97,7 @@ const HorizontalBarChartContent = ({ data, commonProps }: Pick<ContentProps, 'da
     <VStack className='Layer__TaxEstimatesSummaryCard__Content Layer__TaxEstimatesSummaryCard__Content--horizontal' gap='md'>
       <HStack className='Layer__TaxEstimatesSummaryCard__TotalRow' justify='space-between' align='baseline' gap='md'>
         <Span size='md' variant='subtle'>{t('common:label.total', 'Total')}</Span>
-        <Span size='xl' weight='bold' className='Layer__TaxEstimatesSummaryCard__TotalValue'>
+        <Span size='xl' weight='bold' numeric='tabular-nums' className='Layer__TaxEstimatesSummaryCard__TotalValue'>
           {formatCurrencyFromCents(data.total)}
         </Span>
       </HStack>
