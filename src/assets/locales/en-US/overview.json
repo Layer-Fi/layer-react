@@ -3,6 +3,7 @@
   "label": {
     "accounting_overview": "Accounting overview",
     "bookkeeping_overview": "Bookkeeping overview",
+    "solopreneur_overview": "Solopreneur overview",
     "vs_comparison_month": "vs. {{comparisonMonth}}"
   }
 }

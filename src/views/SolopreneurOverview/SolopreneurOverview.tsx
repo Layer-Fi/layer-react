@@ -86,7 +86,7 @@ export const SolopreneurOverview = ({
       }
     >
       <View
-        title={stringOverrides?.title || t('common:label.overview', 'Overview')}
+        title={stringOverrides?.title || t('overview:label.solopreneur_overview', 'Solopreneur overview')}
         showHeader={showTitle}
         header={(
           <Header>
