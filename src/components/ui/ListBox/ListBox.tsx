@@ -11,7 +11,7 @@ import {
   type ListBoxProps as ReactAriaListBoxProps,
   ListBoxSection as ReactAriaListBoxSection,
   type ListBoxSectionProps as ReactAriaListBoxSectionProps,
-} from 'react-aria-components'
+} from 'react-aria-components/ListBox'
 import { mergeRefs } from 'react-merge-refs'
 
 import { useStopClickEventsRefCallback } from '@hooks/utils/react/useStopClickEventsRef'

@@ -4,7 +4,7 @@ import {
   type BreadcrumbProps as ReactAriaBreadcrumbProps,
   Breadcrumbs as ReactAriaBreadcrumbs,
   type BreadcrumbsProps as ReactAriaBreadcrumbsProps,
-} from 'react-aria-components'
+} from 'react-aria-components/Breadcrumbs'
 
 import ChevronRight from '@icons/ChevronRight'
 import { Link, type LinkProps } from '@ui/Link/Link'

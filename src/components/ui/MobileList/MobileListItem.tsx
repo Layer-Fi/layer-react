@@ -1,5 +1,6 @@
 import { type PropsWithChildren, useCallback } from 'react'
-import { composeRenderProps, GridListItem } from 'react-aria-components'
+import { composeRenderProps } from 'react-aria-components/composeRenderProps'
+import { GridListItem } from 'react-aria-components/GridList'
 
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 

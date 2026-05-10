@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { GridList, type Selection } from 'react-aria-components'
+import { GridList, type Selection } from 'react-aria-components/GridList'
 
 import { MobileListItem } from '@ui/MobileList/MobileListItem'
 import { MobileListSection } from '@ui/MobileList/MobileListSection'

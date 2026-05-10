@@ -1,8 +1,7 @@
-import { useCallback, useMemo, useState } from 'react'
+import { type Key, useCallback, useMemo, useState } from 'react'
 import type { ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
-import type { Key } from 'react-aria-components'
 import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'

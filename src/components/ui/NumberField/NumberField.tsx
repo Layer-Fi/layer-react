@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import {
   NumberField as ReactAriaNumberField,
   type NumberFieldProps as ReactAriaNumberFieldProps,
-} from 'react-aria-components'
+} from 'react-aria-components/NumberField'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 

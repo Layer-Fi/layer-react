@@ -1,5 +1,8 @@
 import { forwardRef } from 'react'
-import { Input as ReactAriaInput, type InputProps as ReactAriaInputProps } from 'react-aria-components'
+import {
+  Input as ReactAriaInput,
+  type InputProps as ReactAriaInputProps,
+} from 'react-aria-components/Input'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 

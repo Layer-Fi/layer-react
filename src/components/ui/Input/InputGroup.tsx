@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import {
   Group as ReactAriaGroup,
   type GroupProps as ReactAriaGroupProps,
-} from 'react-aria-components'
+} from 'react-aria-components/Group'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 

@@ -3,10 +3,12 @@ import {
   Dialog as ReactAriaDialog,
   type DialogProps,
   type DialogRenderProps,
+} from 'react-aria-components/Dialog'
+import {
   Modal as ReactAriaModal,
   ModalOverlay as ReactAriaModalOverlay,
   type ModalOverlayProps,
-} from 'react-aria-components'
+} from 'react-aria-components/Modal'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { useVirtualKeyboardHeight } from '@hooks/utils/size/useVirtualKeyboardHeight'

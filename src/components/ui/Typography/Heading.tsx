@@ -1,7 +1,9 @@
 import { forwardRef } from 'react'
 import classNames from 'classnames'
-import { Heading as ReactAriaHeading } from 'react-aria-components'
-import { type HeadingProps as ReactAriaHeadingProps } from 'react-aria-components'
+import {
+  Heading as ReactAriaHeading,
+  type HeadingProps as ReactAriaHeadingProps,
+} from 'react-aria-components/Heading'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import type { Spacing } from '@ui/sharedUITypes'

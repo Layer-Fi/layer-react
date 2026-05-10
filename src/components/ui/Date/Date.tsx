@@ -6,11 +6,13 @@ import {
   type DateFieldProps as ReactAriaDateFieldProps,
   DateInput as ReactAriaDateInput,
   type DateInputProps as ReactAriaDateInputProps,
-  DatePicker as ReactAriaDatePicker,
-  type DatePickerProps as ReactAriaDatePickerProps,
   DateSegment as ReactAriaDateSegment,
   type DateSegmentProps as ReactAriaDateSegmentProps,
-} from 'react-aria-components'
+} from 'react-aria-components/DateField'
+import {
+  DatePicker as ReactAriaDatePicker,
+  type DatePickerProps as ReactAriaDatePickerProps,
+} from 'react-aria-components/DatePicker'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 

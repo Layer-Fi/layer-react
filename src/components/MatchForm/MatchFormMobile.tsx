@@ -1,6 +1,4 @@
-import {
-  GridList,
-} from 'react-aria-components'
+import { GridList } from 'react-aria-components/GridList'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
