@@ -2,10 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { CalendarDate, fromDate, getLocalTimeZone, type ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import {
-  GridList,
-  GridListItem,
-} from 'react-aria-components'
+import { GridList, GridListItem } from 'react-aria-components/GridList'
 import { useTranslation } from 'react-i18next'
 
 import type { View } from '@internal-types/general'

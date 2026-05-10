@@ -7,7 +7,7 @@ import {
   type TreeItemContentProps as ReactAriaTreeItemContentProps,
   type TreeItemProps as ReactAriaTreeItemProps,
   type TreeProps as ReactAriaTreeProps,
-} from 'react-aria-components'
+} from 'react-aria-components/Tree'
 
 import { withRenderProp } from '@components/utility/withRenderProp'
 

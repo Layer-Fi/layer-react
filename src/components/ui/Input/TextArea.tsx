@@ -1,5 +1,5 @@
 import { type ComponentProps, forwardRef } from 'react'
-import { TextArea as ReactAriaTextArea } from 'react-aria-components'
+import { TextArea as ReactAriaTextArea } from 'react-aria-components/TextArea'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 

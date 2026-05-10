@@ -13,7 +13,7 @@ import {
   TableHeader as ReactAriaTableHeader,
   type TableHeaderProps,
   type TableProps,
-} from 'react-aria-components'
+} from 'react-aria-components/Table'
 
 import { Alignment } from '@schemas/reports/unifiedReport'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'

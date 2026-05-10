@@ -14,7 +14,7 @@ import {
   CalendarHeaderCell as ReactAriaCalendarHeaderCell,
   type CalendarHeaderCellProps as ReactAriaCalendarHeaderCellProps,
   type CalendarProps as ReactAriaCalendarProps,
-} from 'react-aria-components'
+} from 'react-aria-components/Calendar'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 

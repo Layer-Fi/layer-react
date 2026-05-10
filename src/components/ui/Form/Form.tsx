@@ -3,11 +3,15 @@ import classNames from 'classnames'
 import {
   FieldError as ReactAriaFieldError,
   type FieldErrorProps as ReactAriaFieldErrorProps,
+} from 'react-aria-components/FieldError'
+import {
   Form as ReactAriaForm,
   type FormProps as ReactAriaFormProps,
+} from 'react-aria-components/Form'
+import {
   TextField as ReactAriaTextField,
   type TextFieldProps as ReactAriaTextFieldProps,
-} from 'react-aria-components'
+} from 'react-aria-components/TextField'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { withRenderProp } from '@components/utility/withRenderProp'

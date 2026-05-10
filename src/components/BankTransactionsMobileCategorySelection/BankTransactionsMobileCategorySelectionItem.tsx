@@ -1,4 +1,4 @@
-import { GridListItem } from 'react-aria-components'
+import { GridListItem } from 'react-aria-components/GridList'
 
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import ChevronRight from '@icons/ChevronRight'

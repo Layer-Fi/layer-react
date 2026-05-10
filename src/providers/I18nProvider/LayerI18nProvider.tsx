@@ -1,5 +1,5 @@
 import { createContext, type PropsWithChildren, useContext, useEffect, useRef } from 'react'
-import { I18nProvider as AriaI18nProvider } from 'react-aria-components'
+import { I18nProvider as AriaI18nProvider } from 'react-aria-components/I18nProvider'
 import { I18nextProvider } from 'react-i18next'
 import { IntlProvider } from 'react-intl'
 

@@ -1,7 +1,7 @@
 import { useCallback, useId, useRef, useState } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
-import { Dialog, DialogTrigger } from 'react-aria-components'
+import { Dialog, DialogTrigger } from 'react-aria-components/Dialog'
 
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'

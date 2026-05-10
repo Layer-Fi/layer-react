@@ -1,5 +1,5 @@
 import { ArrowUpRight } from 'lucide-react'
-import { type PressEvent } from 'react-aria-components'
+import { type PressEvent } from 'react-aria-components/Button'
 
 import { Button } from '@ui/Button/Button'
 
