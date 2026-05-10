@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react'
+import { type PropsWithChildren, useCallback, useMemo, useRef } from 'react'
 import { flexRender, type Header, type HeaderGroup, type Row as RowType } from '@tanstack/react-table'
 import classNames from 'classnames'
 
@@ -13,6 +13,7 @@ import {
   TableHeader,
 } from '@ui/Table/Table'
 import { DataTableHeaderSkeleton, DataTableSkeleton, DEFAULT_SKELETON_COLUMNS } from '@components/DataTable/DataTableSkeleton'
+import { ConditionalList } from '@components/utility/ConditionalList'
 
 import './dataTable.scss'
 
@@ -41,6 +42,7 @@ export interface DataTableProps<TData> extends BaseDataTableProps {
   withClickableRow?: ClickableRowProps<TData>
 }
 
+const EMPTY_ARRAY: never[] = []
 export const DataTable = <TData extends object>({
   isLoading,
   isError,
@@ -96,67 +98,13 @@ export const DataTable = <TData extends object>({
     return headerGroups.flatMap(headerGroup => headerGroup.headers.map(header => renderHeaderColumn(header)))
   }, [showLoadingFallbackHeaders, nonAria, headerGroups, renderHeaderColumn])
 
-  const isEmptyTable = data?.length === 0
-  const renderTableBody = useMemo(() => {
-    if (isError) {
-      return (
-        <Row className='Layer__DataTable__EmptyState__Row' nonAria={nonAria}>
-          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={numColumns} nonAria={nonAria}>
-            <ErrorState />
-          </Cell>
-        </Row>
-      )
-    }
-
-    if (isLoading) {
-      return <DataTableSkeleton numColumns={numColumns} nonAria={nonAria} />
-    }
-
-    if (isEmptyTable) {
-      return (
-        <Row className='Layer__DataTable__EmptyState__Row' nonAria={nonAria}>
-          <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={numColumns} nonAria={nonAria}>
-            <EmptyState />
-          </Cell>
-        </Row>
-      )
-    }
-
-    return (
-      <>
-        {data?.map((row) => {
-          const isClickable = withClickableRow?.isRowClickable(row)
-
-          const onAction = isClickable && withClickableRow?.onRowClick
-            ? () => withClickableRow.onRowClick(row)
-            : undefined
-
-          return (
-            <Row
-              key={row.id}
-              depth={row.depth}
-              nonAria={nonAria}
-              onAction={onAction}
-              className={isClickable ? 'Layer__DataTable__ClickableRow' : undefined}
-            >
-              {row.getVisibleCells().map(cell => (
-                <Cell
-                  key={`${row.id}-${cell.id}`}
-                  className={`Layer__UI__Table-Cell__${componentName}--${cell.column.id}`}
-                  alignment={cell.column.columnDef.meta?.alignment}
-                  pinned={cell.column.getIsPinned()}
-                  style={pinningStyles.get(cell.column.id)}
-                  nonAria={nonAria}
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Cell>
-              ))}
-            </Row>
-          )
-        })}
-      </>
-    )
-  }, [isError, isLoading, isEmptyTable, data, nonAria, numColumns, ErrorState, EmptyState, withClickableRow, componentName, pinningStyles])
+  const FullWidthCellRow = useCallback(({ children }: PropsWithChildren) => (
+    <Row className='Layer__DataTable__EmptyState__Row' nonAria={nonAria}>
+      <Cell className='Layer__DataTable__EmptyState__Cell' colSpan={numColumns} nonAria={nonAria}>
+        {children}
+      </Cell>
+    </Row>
+  ), [nonAria, numColumns])
 
   return (
     <div
@@ -176,7 +124,44 @@ export const DataTable = <TData extends object>({
           {renderHeaderContent}
         </TableHeader>
         <TableBody dependencies={dependencies} nonAria={nonAria}>
-          {renderTableBody}
+          <ConditionalList
+            list={data ?? EMPTY_ARRAY}
+            isLoading={isLoading}
+            isError={isError}
+            Loading={<DataTableSkeleton numColumns={numColumns} nonAria={nonAria} />}
+            Error={<FullWidthCellRow><ErrorState /></FullWidthCellRow>}
+            Empty={<FullWidthCellRow><EmptyState /></FullWidthCellRow>}
+          >
+            {({ item: row }) => {
+              const isClickable = withClickableRow?.isRowClickable(row)
+              const onAction = isClickable && withClickableRow?.onRowClick
+                ? () => withClickableRow.onRowClick(row)
+                : undefined
+
+              return (
+                <Row
+                  key={row.id}
+                  depth={row.depth}
+                  nonAria={nonAria}
+                  onAction={onAction}
+                  className={isClickable ? 'Layer__DataTable__ClickableRow' : undefined}
+                >
+                  {row.getVisibleCells().map(cell => (
+                    <Cell
+                      key={`${row.id}-${cell.id}`}
+                      className={`Layer__UI__Table-Cell__${componentName}--${cell.column.id}`}
+                      alignment={cell.column.columnDef.meta?.alignment}
+                      pinned={cell.column.getIsPinned()}
+                      style={pinningStyles.get(cell.column.id)}
+                      nonAria={nonAria}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </Cell>
+                  ))}
+                </Row>
+              )
+            }}
+          </ConditionalList>
         </TableBody>
       </Table>
     </div>
