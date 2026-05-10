@@ -4,7 +4,6 @@ import {
   forwardRef,
   type Ref,
 } from 'react'
-import { mergeRefs } from '@react-aria/utils'
 import {
   ListBox as ReactAriaListBox,
   ListBoxItem as ReactAriaListBoxItem,
@@ -13,6 +12,7 @@ import {
   ListBoxSection as ReactAriaListBoxSection,
   type ListBoxSectionProps as ReactAriaListBoxSectionProps,
 } from 'react-aria-components'
+import { mergeRefs } from 'react-merge-refs'
 
 import { useStopClickEventsRefCallback } from '@hooks/utils/react/useStopClickEventsRef'
 import { Header } from '@ui/Typography/Text'
@@ -55,7 +55,7 @@ function InternalListBoxSection<
    * a section.
   */
   const stopClickEventsRef = useStopClickEventsRefCallback()
-  const mergedRef = mergeRefs<HTMLDivElement>(stopClickEventsRef, ref)
+  const mergedRef = mergeRefs<HTMLDivElement>([stopClickEventsRef, ref])
 
   return (
     <ReactAriaListBoxSection
@@ -98,7 +98,7 @@ type ListBoxItemProps<T extends Record<string, unknown>> = Omit<
 
 function InternalListBoxItem<
   T extends Record<string, unknown>,
->(props: ListBoxItemProps<T>, ref?: ForwardedRef<T>) {
+>(props: ListBoxItemProps<T>, ref: ForwardedRef<HTMLDivElement>) {
   return (
     <ReactAriaListBoxItem
       {...props}
@@ -109,5 +109,5 @@ function InternalListBoxItem<
 }
 
 export const ListBoxItem = forwardRef(InternalListBoxItem) as <T extends Record<string, unknown>>(
-  props: ListBoxItemProps<T> & { ref?: Ref<T> },
+  props: ListBoxItemProps<T> & { ref?: Ref<HTMLDivElement> },
 ) => ReturnType<typeof InternalListBoxItem>
