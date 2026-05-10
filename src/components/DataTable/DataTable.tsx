@@ -1,5 +1,5 @@
-import { useMemo, useRef } from 'react'
-import { flexRender, type HeaderGroup, type Row as RowType } from '@tanstack/react-table'
+import { useCallback, useMemo, useRef } from 'react'
+import { flexRender, type Header, type HeaderGroup, type Row as RowType } from '@tanstack/react-table'
 import classNames from 'classnames'
 
 import { useHorizontalOverflow } from '@hooks/utils/size/useHorizontalOverflow'
@@ -60,6 +60,41 @@ export const DataTable = <TData extends object>({
   const showLoadingFallbackHeaders = isLoading && numColumns === 0
 
   const { headerRef, pinningStyles } = useColumnPinningStyles(headerGroups)
+
+  const renderHeaderColumn = useCallback((header: Header<TData, unknown>) => (
+    <Column
+      key={header.id}
+      isRowHeader={header.column.columnDef.meta?.isRowHeader}
+      className={`Layer__UI__Table-Column__${componentName}--${header.id}`}
+      alignment={header.column.columnDef.meta?.alignment}
+      pinned={header.column.getIsPinned()}
+      style={pinningStyles.get(header.column.id)}
+      nonAria={nonAria}
+      colSpan={header.colSpan}
+    >
+      {header.isPlaceholder
+        ? null
+        : (typeof header.column.columnDef.header === 'function'
+          ? header.column.columnDef.header(header.getContext())
+          : header.column.columnDef.header)}
+    </Column>
+  ), [componentName, nonAria, pinningStyles])
+
+  const renderHeaderContent = useMemo(() => {
+    if (showLoadingFallbackHeaders) {
+      return <DataTableHeaderSkeleton nonAria={nonAria} numColumns={DEFAULT_SKELETON_COLUMNS} />
+    }
+
+    if (nonAria) {
+      return headerGroups.map(headerGroup => (
+        <Row key={headerGroup.id} nonAria={nonAria}>
+          {headerGroup.headers.map(header => renderHeaderColumn(header))}
+        </Row>
+      ))
+    }
+
+    return headerGroups.flatMap(headerGroup => headerGroup.headers.map(header => renderHeaderColumn(header)))
+  }, [showLoadingFallbackHeaders, nonAria, headerGroups, renderHeaderColumn])
 
   const isEmptyTable = data?.length === 0
   const renderTableBody = useMemo(() => {
@@ -138,30 +173,7 @@ export const DataTable = <TData extends object>({
         nonAria={nonAria}
       >
         <TableHeader ref={headerRef} nonAria={nonAria}>
-          {showLoadingFallbackHeaders
-            ? <DataTableHeaderSkeleton nonAria={nonAria} numColumns={DEFAULT_SKELETON_COLUMNS} />
-            : headerGroups.map(headerGroup => (
-              <Row key={headerGroup.id} nonAria={nonAria}>
-                {headerGroup.headers.map(header => (
-                  <Column
-                    key={header.id}
-                    isRowHeader={header.column.columnDef.meta?.isRowHeader}
-                    className={`Layer__UI__Table-Column__${componentName}--${header.id}`}
-                    alignment={header.column.columnDef.meta?.alignment}
-                    pinned={header.column.getIsPinned()}
-                    style={pinningStyles.get(header.column.id)}
-                    nonAria={nonAria}
-                    colSpan={header.colSpan}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : (typeof header.column.columnDef.header === 'function'
-                        ? header.column.columnDef.header(header.getContext())
-                        : header.column.columnDef.header)}
-                  </Column>
-                ))}
-              </Row>
-            ))}
+          {renderHeaderContent}
         </TableHeader>
         <TableBody dependencies={dependencies} nonAria={nonAria}>
           {renderTableBody}
