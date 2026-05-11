@@ -18,7 +18,7 @@ const CHART_BORDER_RADIUS = 8
 const Y_AXIS_CATEGORY_KEY = '__layer_hbar_category'
 const SMALL_SEGMENT_THRESHOLD = 0.25
 
-export function determineLabelMode(requestedLabelMode: LegendLayout, positiveItems: SeriesData[], legendDenominator: number): LegendLayout {
+function determineLabelMode(requestedLabelMode: LegendLayout, positiveItems: SeriesData[], legendDenominator: number): LegendLayout {
   if (legendDenominator <= 0) return LegendLayout.Table
 
   const hasSmallSegment = positiveItems.some(
