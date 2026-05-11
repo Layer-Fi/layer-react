@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { type SummaryCardInteractionProps, type SummaryCardStringOverrides } from '@ui/SummaryCard/useSummaryCardSlots'
 import { ExpensesSummaryCard } from '@components/ExpensesSummaryCard/ExpensesSummaryCard'
@@ -51,26 +50,15 @@ export interface SolopreneurOverviewProps {
   chartColorsList?: string[]
   stringOverrides?: SolopreneurOverviewStringOverrides
   interactionProps?: SolopreneurOverviewInteractionProps
-  slotProps?: {
-    profitAndLoss?: {
-      summaries?: {
-        variants?: Variants
-      }
-    }
-  }
 }
 
 export const SolopreneurOverview = ({
   interactionProps,
   chartColorsList,
   stringOverrides,
-  slotProps,
 }: SolopreneurOverviewProps) => {
   const { t } = useTranslation()
   const { value: sizeClass } = useSizeClass()
-
-  const profitAndLossSummariesVariants =
-    slotProps?.profitAndLoss?.summaries?.variants
 
   return (
     <ProfitAndLoss asContainer={false}>
@@ -92,7 +80,6 @@ export const SolopreneurOverview = ({
           stringOverrides={stringOverrides?.profitAndLossSummaries}
           chartColorsList={chartColorsList}
           onTransactionsToReviewClick={interactionProps?.common?.onTransactionsToReviewClick}
-          variants={profitAndLossSummariesVariants}
         />
         <div className='Layer__SolopreneurOverview__Grid'>
           <ProfitAndLossSummaryCard
