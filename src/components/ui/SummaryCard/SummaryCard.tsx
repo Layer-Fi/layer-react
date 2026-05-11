@@ -1,44 +1,29 @@
 import { type PropsWithChildren, type ReactNode } from 'react'
 import classNames from 'classnames'
 
-import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { type SummaryCardInteractionProps } from '@ui/SummaryCard/useSummaryCardSlots'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
 
 import './summaryCard.scss'
 
-import { type SummaryCardInteractionProps } from './useSummaryCardSlots'
-
-type PrimaryActionProps = {
-  content: ReactNode
-  onClick: () => void
-}
-const PrimaryAction = ({ content, onClick }: PrimaryActionProps) => {
-  return (
-    <div className='Layer__SummaryCard__HeaderPrimaryAction'>
-      <Button icon variant='ghost' onClick={onClick}>
-        {content}
-      </Button>
-    </div>
-  )
+type SummaryCardSlotProps = {
+  title: ReactNode
+  subtitle?: ReactNode
+  legend?: ReactNode
+  primaryAction?: ReactNode
 }
 
 export type SummaryCardProps = PropsWithChildren<{
-  slots: {
-    title: ReactNode
-    subtitle?: ReactNode
-    legend?: ReactNode
-    primaryAction?: ReactNode
-  }
+  slots: SummaryCardSlotProps
   interactionProps?: SummaryCardInteractionProps
   className?: string
 }>
 
 export const SummaryCard = ({
   slots,
-  interactionProps,
   children,
   className,
 }: SummaryCardProps) => {
@@ -78,9 +63,7 @@ export const SummaryCard = ({
                   {legend}
                 </div>
               )}
-              {(primaryAction && interactionProps?.onClickExpand) && (
-                <PrimaryAction content={primaryAction} onClick={interactionProps.onClickExpand} />
-              )}
+              {primaryAction}
             </HStack>
           )}
         </HStack>
