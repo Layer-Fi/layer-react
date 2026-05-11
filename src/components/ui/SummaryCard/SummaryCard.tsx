@@ -8,13 +8,15 @@ import { Card } from '@components/Card/Card'
 
 import './summaryCard.scss'
 
+type SummaryCardSlotProps = {
+  title: ReactNode
+  subtitle?: ReactNode
+  legend?: ReactNode
+  primaryAction?: ReactNode
+}
+
 export type SummaryCardProps = PropsWithChildren<{
-  slots: {
-    title: ReactNode
-    subtitle?: ReactNode
-    legend?: ReactNode
-    primaryAction?: ReactNode
-  }
+  slots: SummaryCardSlotProps
   className?: string
 }>
 
@@ -59,11 +61,7 @@ export const SummaryCard = ({
                   {legend}
                 </div>
               )}
-              {primaryAction && (
-                <div className='Layer__SummaryCard__HeaderPrimaryAction'>
-                  {primaryAction}
-                </div>
-              )}
+              {primaryAction}
             </HStack>
           )}
         </HStack>

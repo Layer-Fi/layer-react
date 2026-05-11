@@ -1,16 +1,13 @@
-import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type OnboardingStep } from '@internal-types/layerContext'
-import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { type SummaryCardInteractionProps, type SummaryCardStringOverrides } from '@ui/SummaryCard/useSummaryCardSlots'
 import { ExpensesSummaryCard } from '@components/ExpensesSummaryCard/ExpensesSummaryCard'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
 import { MileageTrackingSummary } from '@components/MileageTrackingSummary/MileageTrackingSummary'
-import { Onboarding } from '@components/Onboarding/Onboarding'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import {
   ProfitAndLossSummaries,
@@ -22,72 +19,51 @@ import {
   TaxEstimatesSummaryCardMode,
 } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
 import { View } from '@components/View/View'
-import { type TagOption } from '@views/ProjectProfitability/ProjectProfitability'
 
 import './solopreneurOverview.scss'
-
-type CardStringOverrides = {
-  header?: string
-}
 
 interface SolopreneurOverviewStringOverrides {
   title?: string
   profitAndLossSummaries?: ProfitAndLossSummariesStringOverrides
-  cards?: {
-    profitAndLoss?: CardStringOverrides
-    expenses?: CardStringOverrides
-    taxEstimates?: CardStringOverrides
-    mileageTracking?: CardStringOverrides
+  summaryCards?: {
+    profitAndLoss?: SummaryCardStringOverrides
+    expenses?: SummaryCardStringOverrides
+    taxEstimates?: SummaryCardStringOverrides
+    mileageTracking?: SummaryCardStringOverrides
+  }
+}
+
+interface SolopreneurOverviewInteractionProps {
+  profitAndLossSummaries?: {
+    onTransactionsToReviewClick?: () => void
+  }
+  summaryCards?: {
+    profitAndLoss?: SummaryCardInteractionProps
+    expenses?: SummaryCardInteractionProps
+    taxEstimates?: SummaryCardInteractionProps
+    mileageTracking?: SummaryCardInteractionProps
   }
 }
 
 export interface SolopreneurOverviewProps {
-  showTitle?: boolean
-  enableOnboarding?: boolean
-  onboardingStepOverride?: OnboardingStep
-  onTransactionsToReviewClick?: () => void
-  middleBanner?: ReactNode
   chartColorsList?: string[]
   stringOverrides?: SolopreneurOverviewStringOverrides
-  tagFilter?: TagOption
-  slotProps?: {
-    profitAndLoss?: {
-      summaries?: {
-        variants?: Variants
-      }
-    }
-  }
+  interactionProps?: SolopreneurOverviewInteractionProps
 }
 
 export const SolopreneurOverview = ({
-  showTitle = true,
-  enableOnboarding = false,
-  onboardingStepOverride = undefined,
-  onTransactionsToReviewClick,
-  middleBanner,
+  interactionProps,
   chartColorsList,
   stringOverrides,
-  tagFilter = undefined,
-  slotProps,
 }: SolopreneurOverviewProps) => {
   const { t } = useTranslation()
   const { value: sizeClass } = useSizeClass()
 
-  const profitAndLossSummariesVariants =
-    slotProps?.profitAndLoss?.summaries?.variants
-
   return (
-    <ProfitAndLoss
-      asContainer={false}
-      tagFilter={
-        tagFilter
-          ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
-          : undefined
-      }
-    >
+    <ProfitAndLoss asContainer={false}>
       <View
         title={stringOverrides?.title || t('common:label.overview', 'Overview')}
-        showHeader={showTitle}
+        showHeader
         header={(
           <Header>
             <HeaderRow>
@@ -98,33 +74,30 @@ export const SolopreneurOverview = ({
           </Header>
         )}
       >
-        {enableOnboarding && (
-          <Onboarding
-            onTransactionsToReviewClick={onTransactionsToReviewClick}
-            onboardingStepOverride={onboardingStepOverride}
-          />
-        )}
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLossSummaries}
           chartColorsList={chartColorsList}
-          onTransactionsToReviewClick={onTransactionsToReviewClick}
-          variants={profitAndLossSummariesVariants}
+          onTransactionsToReviewClick={interactionProps?.profitAndLossSummaries?.onTransactionsToReviewClick}
         />
-        {middleBanner}
         <div className='Layer__SolopreneurOverview__Grid'>
           <ProfitAndLossSummaryCard
-            stringOverrides={{ title: stringOverrides?.cards?.profitAndLoss?.header }}
+            stringOverrides={stringOverrides?.summaryCards?.profitAndLoss}
+            interactionProps={interactionProps?.summaryCards?.profitAndLoss}
           />
           <ExpensesSummaryCard
             stylingProps={{ chartColorsList }}
-            stringOverrides={{ title: stringOverrides?.cards?.expenses?.header }}
+            stringOverrides={stringOverrides?.summaryCards?.expenses}
+            interactionProps={interactionProps?.summaryCards?.expenses}
           />
           <TaxEstimatesSummaryCard
             mode={TaxEstimatesSummaryCardMode.HorizontalBarChart}
-            withHeaderSeparator
-            title={stringOverrides?.cards?.taxEstimates?.header}
+            stringOverrides={stringOverrides?.summaryCards?.taxEstimates}
+            interactionProps={interactionProps?.summaryCards?.taxEstimates}
           />
-          <MileageTrackingSummary {...stringOverrides?.cards?.mileageTracking} />
+          <MileageTrackingSummary
+            interactionProps={interactionProps?.summaryCards?.mileageTracking}
+            stringOverrides={stringOverrides?.summaryCards?.mileageTracking}
+          />
         </div>
       </View>
     </ProfitAndLoss>
