@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type OnboardingStep } from '@internal-types/layerContext'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { Container } from '@components/Container/Container'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { Header } from '@components/Header/Header'

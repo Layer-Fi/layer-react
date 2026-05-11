@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { useTaxEstimatesDeadlines } from '@hooks/features/taxEstimates/useTaxEstimatesDeadlines'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'

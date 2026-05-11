@@ -4,7 +4,7 @@ import { type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 
 type UseTaxBannerResult = {
   bannerDescription: string

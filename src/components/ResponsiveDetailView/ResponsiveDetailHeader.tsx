@@ -1,4 +1,4 @@
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'

@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { UnifiedReportStoreProvider } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { ReportsNavigation } from '@components/ReportsNavigation/ReportsNavigation'

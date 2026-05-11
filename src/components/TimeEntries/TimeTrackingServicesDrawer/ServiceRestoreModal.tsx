@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/catalogService'
 import { useReactivateCatalogService } from '@hooks/api/businesses/[business-id]/catalog/services/[service-id]/useReactivateCatalogService'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
 
 type ServiceRestoreModalProps = {

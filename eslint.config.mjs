@@ -22,7 +22,9 @@ export default tsEslint.config(
     plugins: { 'react-hooks': reactHooksPlugin },
     rules: {
       ...reactHooksPlugin.configs.recommended.rules,
-      'react-hooks/exhaustive-deps': 'error',
+      'react-hooks/exhaustive-deps': ['error', {
+        additionalHooks: '(useIsomorphicLayoutEffect)',
+      }],
     },
   },
   {

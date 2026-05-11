@@ -3,7 +3,7 @@ import { type ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { Dialog } from 'react-aria-components/Dialog'
 
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { DATE_PICKER_CLASS_NAME, DatePicker as BaseDatePicker } from '@ui/Date/Date'
 import { Label, type TextStyleProps } from '@ui/Typography/Text'
 import { DateCalendar } from '@components/DateCalendar/DateCalendar'
