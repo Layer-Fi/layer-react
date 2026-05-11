@@ -3,6 +3,7 @@ import { Info } from 'lucide-react'
 
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Banner } from '@ui/Banner/Banner'
 import { Button as LayerButton } from '@ui/Button/Button'
@@ -87,20 +88,22 @@ export type SolopreneurOnboardingBannerProps = {
 }
 
 export function SolopreneurOnboardingBanner({ onSetupTaxProfile, onLinkBankAccounts }: SolopreneurOnboardingBannerProps) {
-  const { state } = useSolopreneurOnboardingBanner()
+  const state = useSolopreneurOnboardingBannerState()
   if (state === OnboardingBannerState.Loading || state === OnboardingBannerState.Onboarded) {
     return null
   }
 
   return (
-    <HStack className='Layer__SolopreneurLayout__OnboardingBanner'>
-      {state === OnboardingBannerState.NoBankAccountsLinked && <NoBankAccountsLinkedBanner onLinkBankAccounts={onLinkBankAccounts} />}
-      {state === OnboardingBannerState.NoTaxProfile && <NoTaxProfileBanner onSetupTaxProfile={onSetupTaxProfile} />}
-    </HStack>
+    <LinkedAccountsProvider>
+      <HStack className='Layer__SolopreneurLayout__OnboardingBanner'>
+        {state === OnboardingBannerState.NoBankAccountsLinked && <NoBankAccountsLinkedBanner onLinkBankAccounts={onLinkBankAccounts} />}
+        {state === OnboardingBannerState.NoTaxProfile && <NoTaxProfileBanner onSetupTaxProfile={onSetupTaxProfile} />}
+      </HStack>
+    </LinkedAccountsProvider>
   )
 }
 
-const useSolopreneurOnboardingBanner = () => {
+const useSolopreneurOnboardingBannerState = () => {
   const { data: linkedAccounts, isLoading: isLinkedAccountsLoading, loadingStatus: linkedAccountsLoadingStatus } = useContext(LinkedAccountsContext)
   const { data: taxProfile, isLoading: isTaxProfileLoading } = useTaxProfile()
 
@@ -115,9 +118,5 @@ Array.isArray(linkedAccounts) && linkedAccounts.length > 0
 
   const hasSavedTaxProfile = taxProfile?.userHasSavedTaxProfile === true
 
-  const state = getOnboardingBannerState({ isLoading, hasLinkedAccounts, hasSavedTaxProfile })
-
-  return {
-    state,
-  }
+  return getOnboardingBannerState({ isLoading, hasLinkedAccounts, hasSavedTaxProfile })
 }
