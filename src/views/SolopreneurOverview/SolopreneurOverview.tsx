@@ -14,6 +14,7 @@ import {
   type ProfitAndLossSummariesStringOverrides,
 } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { ProfitAndLossSummaryCard } from '@components/ProfitAndLossSummaryCard/ProfitAndLossSummaryCard'
+import { SolopreneurOnboardingBanner } from '@components/SolopreneurOnboardingBanner/SolopreneurOnboardingBanner'
 import {
   TaxEstimatesSummaryCard,
   TaxEstimatesSummaryCardMode,
@@ -34,6 +35,9 @@ interface SolopreneurOverviewStringOverrides {
 }
 
 interface SolopreneurOverviewInteractionProps {
+  banner?: {
+    onSetupTaxProfile?: () => void
+  }
   profitAndLossSummaries?: {
     onTransactionsToReviewClick?: () => void
   }
@@ -60,6 +64,7 @@ export const SolopreneurOverview = ({
   const { value: sizeClass } = useSizeClass()
 
   return (
+
     <ProfitAndLoss asContainer={false}>
       <View
         title={stringOverrides?.title || t('common:label.overview', 'Overview')}
@@ -74,6 +79,9 @@ export const SolopreneurOverview = ({
           </Header>
         )}
       >
+        <SolopreneurOnboardingBanner
+          onSetupTaxProfile={interactionProps?.banner?.onSetupTaxProfile}
+        />
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLossSummaries}
           chartColorsList={chartColorsList}
