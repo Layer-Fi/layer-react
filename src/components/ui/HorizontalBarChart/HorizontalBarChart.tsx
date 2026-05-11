@@ -18,19 +18,39 @@ const CHART_BORDER_RADIUS = 8
 const Y_AXIS_CATEGORY_KEY = '__layer_hbar_category'
 const SMALL_SEGMENT_THRESHOLD = 0.25
 
-type UseHorizontalBarChartProps<T extends SeriesData> = {
-  slots?: {
-    Legend?: ReactNode
-  }
+export function determineLabelMode(requestedLabelMode: LegendLayout, positiveItems: SeriesData[], legendDenominator: number): LegendLayout {
+  if (legendDenominator <= 0) return LegendLayout.Table
+
+  const hasSmallSegment = positiveItems.some(
+    item => item.value / legendDenominator < SMALL_SEGMENT_THRESHOLD,
+  )
+
+  if (hasSmallSegment) return LegendLayout.Table
+  return requestedLabelMode
+}
+export type HorizontalBarChartLabelMode = LegendLayout
+
+export type HorizontalBarChartProps<T extends SeriesData> = {
   data: DetailData<T>
   stylingProps: {
     colorSelector: ColorSelector<T>
   }
   formatValue: (value: number) => string
-  labelMode?: LegendLayout
+  showLegend?: boolean
+  labelMode?: HorizontalBarChartLabelMode
+  slots?: {
+    Legend?: ReactNode
+  }
 }
 
-const useHorizontalBarChart = <T extends SeriesData>({ data, stylingProps, formatValue, labelMode, slots }: UseHorizontalBarChartProps<T>) => {
+export const HorizontalBarChart = <T extends SeriesData>({
+  data,
+  stylingProps,
+  formatValue,
+  showLegend = true,
+  labelMode = LegendLayout.Table,
+  slots,
+}: HorizontalBarChartProps<T>) => {
   const { data: items, total } = data
 
   const positiveItems = useMemo(
@@ -41,17 +61,7 @@ const useHorizontalBarChart = <T extends SeriesData>({ data, stylingProps, forma
   const positiveTotal = useMemo(() => positiveItems.reduce((sum, item) => sum + item.value, 0), [positiveItems])
   const legendDenominator = positiveTotal > 0 ? positiveTotal : total
 
-  const effectiveLabelMode = useMemo(() => {
-    if (legendDenominator <= 0) return LegendLayout.Table
-
-    const hasSmallSegment = positiveItems.some(
-      item => item.value / legendDenominator < SMALL_SEGMENT_THRESHOLD,
-    )
-
-    if (hasSmallSegment) return LegendLayout.Table
-
-    return labelMode
-  }, [labelMode, legendDenominator, positiveItems])
+  const effectiveLabelMode = determineLabelMode(labelMode, positiveItems, legendDenominator)
 
   const chartData = useMemo(() => {
     const stacked = positiveItems.reduce<Record<string, number | string>>(
@@ -77,43 +87,6 @@ const useHorizontalBarChart = <T extends SeriesData>({ data, stylingProps, forma
         layout={effectiveLabelMode}
       />
     ), [slots?.Legend, positiveItems, legendDenominator, stylingProps.colorSelector, formatValue, effectiveLabelMode])
-
-  return {
-    chartKey,
-    legendNode,
-    chartData,
-    positiveTotal,
-    positiveItems,
-    stylingProps,
-    formatValue,
-    labelMode,
-  }
-}
-
-export type HorizontalBarChartLabelMode = LegendLayout
-
-export type HorizontalBarChartProps<T extends SeriesData> = {
-  data: DetailData<T>
-  stylingProps: {
-    colorSelector: ColorSelector<T>
-  }
-  formatValue: (value: number) => string
-  showLegend?: boolean
-  labelMode?: HorizontalBarChartLabelMode
-  slots?: {
-    Legend?: ReactNode
-  }
-}
-
-export const HorizontalBarChart = <T extends SeriesData>({
-  data,
-  stylingProps,
-  formatValue,
-  showLegend = true,
-  labelMode = LegendLayout.Table,
-  slots,
-}: HorizontalBarChartProps<T>) => {
-  const { chartKey, legendNode, chartData, positiveTotal, positiveItems } = useHorizontalBarChart<T>({ data, stylingProps, formatValue, labelMode, slots })
 
   return (
     <VStack className='Layer__HorizontalBarChart Layer__UI__Chart--focusReset' gap='md' justify='center'>
