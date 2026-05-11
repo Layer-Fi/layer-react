@@ -50,16 +50,16 @@ const NoBankAccountsLinkedBanner = ({ onLinkBankAccounts }: Pick<NoBankAccountsL
   const { addConnection } = useContext(LinkedAccountsContext)
   const { isMobile } = useSizeClass()
   const handleLinkBankAccounts = useCallback(() => {
-    if (onLinkBankAccounts) {
-      onLinkBankAccounts()
-    }
-    else {
+    if (onLinkBankAccounts === undefined) {
       void addConnection('PLAID')
+    }
+    else if (onLinkBankAccounts !== null) {
+      onLinkBankAccounts()
     }
   }, [addConnection, onLinkBankAccounts])
 
   const Icon = isMobile ? null : <Info size={16} />
-  const Button = <LayerButton onPress={handleLinkBankAccounts} variant='outlined-light'>Link your bank accounts</LayerButton>
+  const Button = onLinkBankAccounts !== null ? <LayerButton onPress={handleLinkBankAccounts} variant='outlined-light'>Link your bank accounts</LayerButton> : null
 
   return (
     <Banner
@@ -73,7 +73,7 @@ const NoBankAccountsLinkedBanner = ({ onLinkBankAccounts }: Pick<NoBankAccountsL
 const NoTaxProfileBanner = ({ onSetupTaxProfile }: Pick<SolopreneurOnboardingBannerProps, 'onSetupTaxProfile'>) => {
   const { isMobile } = useSizeClass()
   const Icon = isMobile ? null : <Info size={16} />
-  const Button = <LayerButton onPress={onSetupTaxProfile} variant='outlined-light'>Setup your tax profile</LayerButton>
+  const Button = onSetupTaxProfile ? <LayerButton onPress={onSetupTaxProfile} variant='outlined-light'>Setup your tax profile</LayerButton> : null
   return (
     <Banner
       title='Set up your tax profile'
