@@ -39,8 +39,9 @@ interface SolopreneurOverviewInteractionProps {
   common?: {
     onTransactionsToReviewClick?: () => void
   }
-  banner: {
-    onSetupTaxProfile: () => void
+  banner?: {
+    onLinkBankAccounts?: () => void
+    onSetupTaxProfile?: () => void
   }
   summaryCards?: {
     profitAndLoss?: SummaryCardInteractionProps
@@ -90,7 +91,7 @@ export const SolopreneurOverview = ({
           </Header>
         )}
       >
-        <SolopreneurOnboardingBanner onSetupTaxProfile={interactionProps.banner.onSetupTaxProfile} />
+        <SolopreneurOnboardingBanner {...interactionProps?.banner} />
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLossSummaries}
           chartColorsList={chartColorsList}
