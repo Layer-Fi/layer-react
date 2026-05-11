@@ -168,7 +168,6 @@ export const TaxEstimatesSummaryCard = ({
   return (
     <SummaryCard
       className={classNames('Layer__TaxEstimatesSummaryCard', isSummaryCardLayout && 'Layer__TaxEstimatesSummaryCard--summaryCard')}
-      interactionProps={interactionProps}
       slots={slots}
     >
       <ConditionalBlock data={detailData} isLoading={isLoading} isError={isError} Loading={<LoadingState mode={mode} />} Error={<ErrorState />}>

@@ -2,7 +2,6 @@ import { type PropsWithChildren, type ReactNode } from 'react'
 import classNames from 'classnames'
 
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { type SummaryCardInteractionProps } from '@ui/SummaryCard/useSummaryCardSlots'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
@@ -18,7 +17,6 @@ type SummaryCardSlotProps = {
 
 export type SummaryCardProps = PropsWithChildren<{
   slots: SummaryCardSlotProps
-  interactionProps?: SummaryCardInteractionProps
   className?: string
 }>
 

@@ -45,7 +45,6 @@ export const ProfitAndLossSummaryCard = ({
   return (
     <SummaryCard
       className={classNames('Layer__ProfitAndLossSummaryCard', 'Layer__UI__Chart--focusReset', className)}
-      interactionProps={interactionProps}
       slots={slots}
     >
       <ProfitAndLossChart tagFilter={tagFilter} hideLegend />

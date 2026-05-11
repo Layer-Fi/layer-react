@@ -101,7 +101,7 @@ export const MileageTrackingSummary = ({ stringOverrides, interactionProps }: Mi
   })
 
   return (
-    <SummaryCard className='Layer__MileageTrackingSummary' slots={slots} interactionProps={interactionProps}>
+    <SummaryCard className='Layer__MileageTrackingSummary' slots={slots}>
       <Content />
     </SummaryCard>
   )
