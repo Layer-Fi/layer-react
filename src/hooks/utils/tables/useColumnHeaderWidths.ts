@@ -1,4 +1,6 @@
-import { type RefObject, useLayoutEffect, useState } from 'react'
+import { type RefObject, useState } from 'react'
+
+import { useIsomorphicLayoutEffect } from '@hooks/utils/react/useIsomorphicLayoutEffect'
 
 export type ColumnHeaderWidths = Readonly<Record<string, number>>
 
@@ -36,7 +38,7 @@ export const useColumnHeaderWidths = (
   const [widths, setWidths] = useState<WidthsState>({})
   const idsKey = columnIds.join('|')
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const cells = getLeafHeaderCells(headerRef.current)
     if (!cells) return
 

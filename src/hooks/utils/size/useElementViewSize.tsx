@@ -1,14 +1,15 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { type View } from '@internal-types/general'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
+import { useIsomorphicLayoutEffect } from '@hooks/utils/react/useIsomorphicLayoutEffect'
 
 export const useElementViewSize = <T extends HTMLElement>() => {
   const containerRef = useRef<T>(null)
   const [view, setView] = useState<View>('desktop')
   const resizeTimeout = useRef<number | null>(null)
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const element = containerRef?.current
 
     if (!element) {

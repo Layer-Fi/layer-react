@@ -1,7 +1,8 @@
-import { createContext, type PropsWithChildren, useContext, useLayoutEffect, useState } from 'react'
+import { createContext, type PropsWithChildren, useContext, useState } from 'react'
 import { createStore, useStore } from 'zustand'
 
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
+import { useIsomorphicLayoutEffect } from '@hooks/utils/react/useIsomorphicLayoutEffect'
 
 export type SizeClass = 'mobile' | 'tablet' | 'desktop'
 
@@ -11,10 +12,7 @@ type WindowSizeState = {
 }
 
 function getInitialState(): WindowSizeState {
-  if (typeof window === 'undefined') {
-    return { width: 0, height: 0 }
-  }
-  return { width: window.innerWidth, height: window.innerHeight }
+  return { width: 0, height: 0 }
 }
 
 function buildStore() {
@@ -28,7 +26,7 @@ const WindowSizeStoreContext = createContext(defaultStore)
 export function WindowSizeStoreProvider({ children }: PropsWithChildren) {
   const [store] = useState(buildStore)
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (typeof window === 'undefined') return
 
     const update = () => {

@@ -1,4 +1,6 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useRef } from 'react'
+
+import { useIsomorphicLayoutEffect } from '@hooks/utils/react/useIsomorphicLayoutEffect'
 
 export interface ElementSize {
   width: number
@@ -15,7 +17,7 @@ export const useElementSize = <T extends HTMLElement>(
 
   callbackRef.current = callback
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const element = ref?.current
 
     if (!element) return
