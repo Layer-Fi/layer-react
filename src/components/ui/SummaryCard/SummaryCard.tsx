@@ -22,7 +22,6 @@ export type SummaryCardProps = PropsWithChildren<{
 
 export const SummaryCard = ({
   slots,
-  interactionProps,
   children,
   className,
 }: SummaryCardProps) => {
