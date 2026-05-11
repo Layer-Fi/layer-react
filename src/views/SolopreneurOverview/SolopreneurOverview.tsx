@@ -81,7 +81,6 @@ export const SolopreneurOverview = ({
         )}
       >
         <SolopreneurOnboardingBanner
-          onLinkBankAccounts={interactionProps?.banner?.onLinkBankAccounts}
           onSetupTaxProfile={interactionProps?.banner?.onSetupTaxProfile}
         />
         <ProfitAndLossSummaries

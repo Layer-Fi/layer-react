@@ -42,23 +42,15 @@ const getOnboardingBannerState = ({
   return OnboardingBannerState.Onboarded
 }
 
-type NoBankAccountsLinkedBannerProps = {
-  onLinkBankAccounts?: () => void
-}
-const NoBankAccountsLinkedBanner = ({ onLinkBankAccounts }: Pick<NoBankAccountsLinkedBannerProps, 'onLinkBankAccounts'>) => {
+const NoBankAccountsLinkedBanner = () => {
   const { addConnection } = useContext(LinkedAccountsContext)
   const { isMobile } = useSizeClass()
   const handleLinkBankAccounts = useCallback(() => {
-    if (onLinkBankAccounts === undefined) {
-      void addConnection('PLAID')
-    }
-    else if (onLinkBankAccounts !== null) {
-      onLinkBankAccounts()
-    }
-  }, [addConnection, onLinkBankAccounts])
+    void addConnection('PLAID')
+  }, [addConnection])
 
   const Icon = isMobile ? null : <Info size={16} />
-  const Button = onLinkBankAccounts !== null ? <LayerButton onPress={handleLinkBankAccounts} variant='outlined-light'>Link your bank accounts</LayerButton> : null
+  const Button = <LayerButton onPress={handleLinkBankAccounts} variant='outlined-light'>Link your bank accounts</LayerButton>
 
   return (
     <Banner
@@ -84,10 +76,9 @@ const NoTaxProfileBanner = ({ onSetupTaxProfile }: Pick<SolopreneurOnboardingBan
 
 export type SolopreneurOnboardingBannerProps = {
   onSetupTaxProfile?: () => void
-  onLinkBankAccounts?: () => void
 }
 
-export function SolopreneurOnboardingBanner({ onSetupTaxProfile, onLinkBankAccounts }: SolopreneurOnboardingBannerProps) {
+export function SolopreneurOnboardingBanner({ onSetupTaxProfile }: SolopreneurOnboardingBannerProps) {
   const state = useSolopreneurOnboardingBannerState()
   if (state === OnboardingBannerState.Loading || state === OnboardingBannerState.Onboarded) {
     return null
@@ -96,7 +87,7 @@ export function SolopreneurOnboardingBanner({ onSetupTaxProfile, onLinkBankAccou
   return (
     <LinkedAccountsProvider>
       <HStack className='Layer__SolopreneurLayout__OnboardingBanner'>
-        {state === OnboardingBannerState.NoBankAccountsLinked && <NoBankAccountsLinkedBanner onLinkBankAccounts={onLinkBankAccounts} />}
+        {state === OnboardingBannerState.NoBankAccountsLinked && <NoBankAccountsLinkedBanner />}
         {state === OnboardingBannerState.NoTaxProfile && <NoTaxProfileBanner onSetupTaxProfile={onSetupTaxProfile} />}
       </HStack>
     </LinkedAccountsProvider>
