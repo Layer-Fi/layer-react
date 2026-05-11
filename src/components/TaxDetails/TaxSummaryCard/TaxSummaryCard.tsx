@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 
 import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
-import { useWindowSize } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { useWindowSize } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
 import { TaxSummaryCardDesktop } from '@components/TaxDetails/TaxSummaryCard/TaxSummaryCardDesktop'

@@ -1,5 +1,5 @@
-import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
