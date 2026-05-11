@@ -58,7 +58,7 @@ export const HorizontalBarChart = <T extends SeriesData>({
     [items],
   )
 
-  const positiveTotal = useMemo(() => positiveItems.reduce((sum, item) => sum + item.value, 0), [positiveItems])
+  const positiveTotal = positiveItems.reduce((sum, item) => sum + item.value, 0)
   const legendDenominator = positiveTotal > 0 ? positiveTotal : total
 
   const effectiveLabelMode = determineLabelMode(labelMode, positiveItems, legendDenominator)
@@ -74,9 +74,9 @@ export const HorizontalBarChart = <T extends SeriesData>({
     return [stacked]
   }, [positiveItems])
 
-  const chartKey = useMemo(() => positiveItems.map(item => item.name).join('|'), [positiveItems])
+  const chartKey = positiveItems.map(item => item.name).join('|')
 
-  const legendNode = useMemo(() => slots?.Legend !== undefined
+  const legendNode = slots?.Legend !== undefined
     ? slots.Legend
     : (
       <Legend<T>
@@ -86,7 +86,7 @@ export const HorizontalBarChart = <T extends SeriesData>({
         formatValue={formatValue}
         layout={effectiveLabelMode}
       />
-    ), [slots?.Legend, positiveItems, legendDenominator, stylingProps.colorSelector, formatValue, effectiveLabelMode])
+    )
 
   return (
     <VStack className='Layer__HorizontalBarChart Layer__UI__Chart--focusReset' gap='md' justify='center'>
