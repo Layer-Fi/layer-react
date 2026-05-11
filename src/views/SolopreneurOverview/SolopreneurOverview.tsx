@@ -8,7 +8,6 @@ import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
 import { MileageTrackingSummary } from '@components/MileageTrackingSummary/MileageTrackingSummary'
-import { Onboarding } from '@components/Onboarding/Onboarding'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import {
   ProfitAndLossSummaries,
@@ -35,7 +34,7 @@ interface SolopreneurOverviewStringOverrides {
 }
 
 interface SolopreneurOverviewInteractionProps {
-  common?: {
+  profitAndLossSummaries?: {
     onTransactionsToReviewClick?: () => void
   }
   summaryCards?: {
@@ -75,11 +74,10 @@ export const SolopreneurOverview = ({
           </Header>
         )}
       >
-        <Onboarding onTransactionsToReviewClick={interactionProps?.common?.onTransactionsToReviewClick} />
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLossSummaries}
           chartColorsList={chartColorsList}
-          onTransactionsToReviewClick={interactionProps?.common?.onTransactionsToReviewClick}
+          onTransactionsToReviewClick={interactionProps?.profitAndLossSummaries?.onTransactionsToReviewClick}
         />
         <div className='Layer__SolopreneurOverview__Grid'>
           <ProfitAndLossSummaryCard
