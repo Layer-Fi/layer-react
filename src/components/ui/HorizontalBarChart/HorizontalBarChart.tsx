@@ -18,6 +18,78 @@ const CHART_BORDER_RADIUS = 8
 const Y_AXIS_CATEGORY_KEY = '__layer_hbar_category'
 const SMALL_SEGMENT_THRESHOLD = 0.25
 
+type UseHorizontalBarChartProps<T extends SeriesData> = {
+  slots?: {
+    Legend?: ReactNode
+  }
+  data: DetailData<T>
+  stylingProps: {
+    colorSelector: ColorSelector<T>
+  }
+  formatValue: (value: number) => string
+  labelMode?: LegendLayout
+}
+
+const useHorizontalBarChart = <T extends SeriesData>({ data, stylingProps, formatValue, labelMode, slots }: UseHorizontalBarChartProps<T>) => {
+  const { data: items, total } = data
+
+  const positiveItems = useMemo(
+    () => items.filter(item => item.value > 0),
+    [items],
+  )
+
+  const positiveTotal = useMemo(() => positiveItems.reduce((sum, item) => sum + item.value, 0), [positiveItems])
+  const legendDenominator = positiveTotal > 0 ? positiveTotal : total
+
+  const effectiveLabelMode = useMemo(() => {
+    if (legendDenominator <= 0) return LegendLayout.Table
+
+    const hasSmallSegment = positiveItems.some(
+      item => item.value / legendDenominator < SMALL_SEGMENT_THRESHOLD,
+    )
+
+    if (hasSmallSegment) return LegendLayout.Table
+
+    return labelMode
+  }, [labelMode, legendDenominator, positiveItems])
+
+  const chartData = useMemo(() => {
+    const stacked = positiveItems.reduce<Record<string, number | string>>(
+      (acc, item) => {
+        acc[item.name] = item.value
+        return acc
+      },
+      { [Y_AXIS_CATEGORY_KEY]: 'series' },
+    )
+    return [stacked]
+  }, [positiveItems])
+
+  const chartKey = useMemo(() => positiveItems.map(item => item.name).join('|'), [positiveItems])
+
+  const legendNode = useMemo(() => slots?.Legend !== undefined
+    ? slots.Legend
+    : (
+      <Legend<T>
+        items={positiveItems}
+        total={legendDenominator}
+        colorSelector={stylingProps.colorSelector}
+        formatValue={formatValue}
+        layout={effectiveLabelMode}
+      />
+    ), [slots?.Legend, positiveItems, legendDenominator, stylingProps.colorSelector, formatValue, effectiveLabelMode])
+
+  return {
+    chartKey,
+    legendNode,
+    chartData,
+    positiveTotal,
+    positiveItems,
+    stylingProps,
+    formatValue,
+    labelMode,
+  }
+}
+
 export type HorizontalBarChartLabelMode = LegendLayout
 
 export type HorizontalBarChartProps<T extends SeriesData> = {
@@ -41,50 +113,7 @@ export const HorizontalBarChart = <T extends SeriesData>({
   labelMode = LegendLayout.Table,
   slots,
 }: HorizontalBarChartProps<T>) => {
-  const { data: items, total } = data
-
-  const positiveItems = useMemo(
-    () => items.filter(item => item.value > 0),
-    [items],
-  )
-
-  const positiveTotal = positiveItems.reduce((sum, item) => sum + item.value, 0)
-  const legendDenominator = positiveTotal > 0 ? positiveTotal : total
-
-  const effectiveLabelMode = useMemo(() => {
-    if (labelMode === LegendLayout.Table || legendDenominator <= 0) {
-      return labelMode
-    }
-    const hasSmallSegment = positiveItems.some(
-      item => item.value / legendDenominator < SMALL_SEGMENT_THRESHOLD,
-    )
-    return hasSmallSegment ? LegendLayout.Table : labelMode
-  }, [labelMode, legendDenominator, positiveItems])
-
-  const chartData = useMemo(() => {
-    const stacked = positiveItems.reduce<Record<string, number | string>>(
-      (acc, item) => {
-        acc[item.name] = item.value
-        return acc
-      },
-      { [Y_AXIS_CATEGORY_KEY]: 'series' },
-    )
-    return [stacked]
-  }, [positiveItems])
-
-  const chartKey = positiveItems.map(item => item.name).join('|')
-
-  const legendNode = slots?.Legend !== undefined
-    ? slots.Legend
-    : (
-      <Legend<T>
-        items={positiveItems}
-        total={legendDenominator}
-        colorSelector={stylingProps.colorSelector}
-        formatValue={formatValue}
-        layout={effectiveLabelMode}
-      />
-    )
+  const { chartKey, legendNode, chartData, positiveTotal, positiveItems } = useHorizontalBarChart<T>({ data, stylingProps, formatValue, labelMode, slots })
 
   return (
     <VStack className='Layer__HorizontalBarChart Layer__UI__Chart--focusReset' gap='md' justify='center'>
