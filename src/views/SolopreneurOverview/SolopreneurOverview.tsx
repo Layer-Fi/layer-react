@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 
-import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { type SummaryCardInteractionProps, type SummaryCardStringOverrides } from '@ui/SummaryCard/useSummaryCardSlots'
@@ -37,12 +36,12 @@ interface SolopreneurOverviewStringOverrides {
 }
 
 interface SolopreneurOverviewInteractionProps {
-  common?: {
-    onTransactionsToReviewClick?: () => void
-  }
   banner?: {
     onLinkBankAccounts?: () => void
     onSetupTaxProfile?: () => void
+  }
+  profitAndLossSummaries?: {
+    onTransactionsToReviewClick?: () => void
   }
   summaryCards?: {
     profitAndLoss?: SummaryCardInteractionProps
@@ -55,27 +54,16 @@ interface SolopreneurOverviewInteractionProps {
 export interface SolopreneurOverviewProps {
   chartColorsList?: string[]
   stringOverrides?: SolopreneurOverviewStringOverrides
-  interactionProps: SolopreneurOverviewInteractionProps
-  slotProps?: {
-    profitAndLoss?: {
-      summaries?: {
-        variants?: Variants
-      }
-    }
-  }
+  interactionProps?: SolopreneurOverviewInteractionProps
 }
 
 export const SolopreneurOverview = ({
   interactionProps,
   chartColorsList,
   stringOverrides,
-  slotProps,
 }: SolopreneurOverviewProps) => {
   const { t } = useTranslation()
   const { value: sizeClass } = useSizeClass()
-
-  const profitAndLossSummariesVariants =
-    slotProps?.profitAndLoss?.summaries?.variants
 
   return (
     <LinkedAccountsProvider>
@@ -100,8 +88,7 @@ export const SolopreneurOverview = ({
           <ProfitAndLossSummaries
             stringOverrides={stringOverrides?.profitAndLossSummaries}
             chartColorsList={chartColorsList}
-            onTransactionsToReviewClick={interactionProps?.common?.onTransactionsToReviewClick}
-            variants={profitAndLossSummariesVariants}
+            onTransactionsToReviewClick={interactionProps?.profitAndLossSummaries?.onTransactionsToReviewClick}
           />
           <div className='Layer__SolopreneurOverview__Grid'>
             <ProfitAndLossSummaryCard

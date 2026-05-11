@@ -92,16 +92,14 @@ export type MileageTrackingSummaryProps = {
 
 export const MileageTrackingSummary = ({ stringOverrides, interactionProps }: MileageTrackingSummaryProps = {}) => {
   const { t } = useTranslation()
-  const title = stringOverrides?.title ?? t('mileageTracking:label.mileage_tracking', 'Mileage Tracking')
-
   const slots = useSummaryCardSlots({
-    defaultTitle: title,
+    defaultTitle: t('mileageTracking:label.mileage_tracking', 'Mileage Tracking'),
     interactionProps,
-    stringOverrides: { title },
+    stringOverrides,
   })
 
   return (
-    <SummaryCard className='Layer__MileageTrackingSummary' slots={slots} interactionProps={interactionProps}>
+    <SummaryCard className='Layer__MileageTrackingSummary' slots={slots}>
       <Content />
     </SummaryCard>
   )
