@@ -32,7 +32,6 @@
 
   &.Layer__card {
     gap: var(--spacing-lg);
-    padding: var(--spacing-lg);
     border: 1px solid var(--color-base-200);
     box-shadow: none;
   }
@@ -78,5 +77,10 @@
     .Layer__TaxEstimatesSummaryCard__Content {
       align-items: center;
     }
+  }
+
+  &--empty {
+    height: 100%;
+    margin: 0 auto;
   }
 }

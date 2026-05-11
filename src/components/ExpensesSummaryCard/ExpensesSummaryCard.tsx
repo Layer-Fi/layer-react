@@ -47,6 +47,7 @@ export const ExpensesSummaryCard = ({
   return (
     <SummaryCard
       className={classNames('Layer__ExpensesSummaryCard', className)}
+      interactionProps={interactionProps}
       slots={slots}
     >
       <ProfitAndLossDetailedCharts

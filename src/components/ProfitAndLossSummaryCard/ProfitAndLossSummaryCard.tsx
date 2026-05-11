@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
-import { VStack } from '@ui/Stack/Stack'
 import { SummaryCard } from '@ui/SummaryCard/SummaryCard'
 import {
   type SummaryCardInteractionProps,
@@ -45,13 +44,12 @@ export const ProfitAndLossSummaryCard = ({
 
   return (
     <SummaryCard
-      className={classNames('Layer__ProfitAndLossSummaryCard', className)}
+      className={classNames('Layer__ProfitAndLossSummaryCard', 'Layer__UI__Chart--focusReset', className)}
+      interactionProps={interactionProps}
       slots={slots}
     >
-      <VStack gap='sm'>
-        <ProfitAndLossChart tagFilter={tagFilter} hideLegend />
-        {!isDesktop && legend}
-      </VStack>
+      <ProfitAndLossChart tagFilter={tagFilter} hideLegend />
+      {!isDesktop && legend}
     </SummaryCard>
   )
 }

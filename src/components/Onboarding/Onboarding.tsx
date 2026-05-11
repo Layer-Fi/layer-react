@@ -37,7 +37,7 @@ export const Onboarding = (props: OnboardingProps) => (
   </AccountConfirmationStoreProvider>
 )
 
-export const OnboardingContent = ({
+const OnboardingContent = ({
   onTransactionsToReviewClick,
   onboardingStepOverride = undefined,
 }: OnboardingProps) => {

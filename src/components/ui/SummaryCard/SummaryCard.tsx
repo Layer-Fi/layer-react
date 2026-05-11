@@ -8,6 +8,20 @@ import { Card } from '@components/Card/Card'
 
 import './summaryCard.scss'
 
+import { type SummaryCardInteractionProps } from './useSummaryCardSlots'
+
+type PrimaryActionProps = {
+  content: ReactNode
+  onClick: () => void
+}
+const PrimaryAction = ({ content, onClick }: PrimaryActionProps) => {
+  return (
+    <div className='Layer__SummaryCard__HeaderPrimaryAction' onClick={onClick}>
+      {content}
+    </div>
+  )
+}
+
 export type SummaryCardProps = PropsWithChildren<{
   slots: {
     title: ReactNode
@@ -15,11 +29,13 @@ export type SummaryCardProps = PropsWithChildren<{
     legend?: ReactNode
     primaryAction?: ReactNode
   }
+  interactionProps?: SummaryCardInteractionProps
   className?: string
 }>
 
 export const SummaryCard = ({
   slots,
+  interactionProps,
   children,
   className,
 }: SummaryCardProps) => {
@@ -59,10 +75,8 @@ export const SummaryCard = ({
                   {legend}
                 </div>
               )}
-              {primaryAction && (
-                <div className='Layer__SummaryCard__HeaderPrimaryAction'>
-                  {primaryAction}
-                </div>
+              {(primaryAction && interactionProps?.onClickExpand) && (
+                <PrimaryAction content={primaryAction} onClick={interactionProps.onClickExpand} />
               )}
             </HStack>
           )}

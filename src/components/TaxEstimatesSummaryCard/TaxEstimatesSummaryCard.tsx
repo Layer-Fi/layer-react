@@ -8,9 +8,9 @@ import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { HorizontalBarChart } from '@ui/HorizontalBarChart/HorizontalBarChart'
 import { LegendLayout } from '@ui/Legend/Legend'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { Heading } from '@ui/Typography/Heading'
+import { SummaryCard } from '@ui/SummaryCard/SummaryCard'
+import { type SummaryCardInteractionProps, type SummaryCardStringOverrides, useSummaryCardSlots } from '@ui/SummaryCard/useSummaryCardSlots'
 import { Span } from '@ui/Typography/Text'
-import { Card } from '@components/Card/Card'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { DetailedChart, type DetailedChartProps } from '@components/DetailedCharts/DetailedChart'
 import { type DetailData, type SeriesData } from '@components/DetailedCharts/types'
@@ -61,10 +61,10 @@ function TaxEstimatesSummaryCardEmpty() {
   const { t } = useTranslation()
   return (
     <DataState
+      className='Layer__TaxEstimatesSummaryCard--empty'
       status={DataStateStatus.info}
       title={t('taxEstimates:empty.no_tax_estimates_summary', 'Get started with your tax estimates')}
       description={t('taxEstimates:empty.no_tax_estimates_summary_description', 'Start by importing and categorizing your bank transactions')}
-      spacing
     />
   )
 }
@@ -134,19 +134,17 @@ const PieChartContent = ({ data, commonProps, layout }: Pick<ContentProps, 'data
 
 export type TaxEstimatesSummaryCardProps = {
   mode?: TaxEstimatesSummaryCardMode
-  title?: string
-  withHeaderSeparator?: boolean
+  interactionProps?: SummaryCardInteractionProps
+  stringOverrides?: SummaryCardStringOverrides
 }
 
 export const TaxEstimatesSummaryCard = ({
   mode = TaxEstimatesSummaryCardMode.PieChart,
-  title: titleOverride,
-  withHeaderSeparator = false,
+  interactionProps,
+  stringOverrides,
 }: TaxEstimatesSummaryCardProps = {}) => {
   const { detailData, layout, title: defaultTitle, isLoading, isError } = useTaxEstimatesSummaryCard()
-  const { isDesktop } = useSizeClass()
   const isSummaryCardLayout = layout === 'summaryCard'
-  const title = titleOverride ?? defaultTitle
 
   const commonProps: CommonProps = useMemo(() => {
     const colorByKey = detailData?.data?.reduce<Record<string, string>>((acc, item) => {
@@ -160,28 +158,23 @@ export const TaxEstimatesSummaryCard = ({
     }
   }, [detailData?.data])
 
+  const slots = useSummaryCardSlots({
+    defaultTitle,
+    interactionProps,
+    stringOverrides,
+  })
+
   return (
-    <VStack className='Layer__TaxEstimatesSummaryCard__Container'>
-      <Card className={classNames('Layer__TaxEstimatesSummaryCard', isSummaryCardLayout && 'Layer__TaxEstimatesSummaryCard--summaryCard')}>
-        <VStack gap='md' className='Layer__TaxEstimatesSummaryCard__Body'>
-          <HStack
-            className={classNames(
-              'Layer__TaxEstimatesSummaryCard__Header',
-              (isSummaryCardLayout || withHeaderSeparator) && 'Layer__SummaryCard__ContainerHeader',
-            )}
-            justify='space-between'
-            align={isSummaryCardLayout ? 'center' : 'start'}
-            gap='md'
-          >
-            <Heading size={!isDesktop ? 'sm' : 'md'}>{title}</Heading>
-          </HStack>
-          <ConditionalBlock data={detailData} isLoading={isLoading} isError={isError} Loading={<LoadingState mode={mode} />} Error={<ErrorState />}>
-            {({ data }) => allTaxSectionsAreEmpty(data)
-              ? <TaxEstimatesSummaryCardEmpty />
-              : <Content data={data} mode={mode} commonProps={commonProps} layout={layout} />}
-          </ConditionalBlock>
-        </VStack>
-      </Card>
-    </VStack>
+    <SummaryCard
+      className={classNames('Layer__TaxEstimatesSummaryCard', isSummaryCardLayout && 'Layer__TaxEstimatesSummaryCard--summaryCard')}
+      interactionProps={interactionProps}
+      slots={slots}
+    >
+      <ConditionalBlock data={detailData} isLoading={isLoading} isError={isError} Loading={<LoadingState mode={mode} />} Error={<ErrorState />}>
+        {({ data }) => allTaxSectionsAreEmpty(data)
+          ? <TaxEstimatesSummaryCardEmpty />
+          : <Content data={data} mode={mode} commonProps={commonProps} layout={layout} />}
+      </ConditionalBlock>
+    </SummaryCard>
   )
 }
