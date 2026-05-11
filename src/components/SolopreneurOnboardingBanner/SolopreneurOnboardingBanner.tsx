@@ -3,7 +3,6 @@ import { Info } from 'lucide-react'
 
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Banner } from '@ui/Banner/Banner'
 import { Button as LayerButton } from '@ui/Button/Button'
@@ -89,14 +88,11 @@ export type SolopreneurOnboardingBannerProps = {
 
 export function SolopreneurOnboardingBanner({ onSetupTaxProfile, onLinkBankAccounts }: SolopreneurOnboardingBannerProps) {
   const { state } = useSolopreneurOnboardingBanner()
-
   return (
-    <LinkedAccountsProvider>
-      <HStack className='Layer__SolopreneurLayout__OnboardingBanner'>
-        {state === OnboardingBannerState.NoBankAccountsLinked && <NoBankAccountsLinkedBanner onLinkBankAccounts={onLinkBankAccounts} />}
-        {state === OnboardingBannerState.NoTaxProfile && <NoTaxProfileBanner onSetupTaxProfile={onSetupTaxProfile} />}
-      </HStack>
-    </LinkedAccountsProvider>
+    <HStack className='Layer__SolopreneurLayout__OnboardingBanner'>
+      {state === OnboardingBannerState.NoBankAccountsLinked && <NoBankAccountsLinkedBanner onLinkBankAccounts={onLinkBankAccounts} />}
+      {state === OnboardingBannerState.NoTaxProfile && <NoTaxProfileBanner onSetupTaxProfile={onSetupTaxProfile} />}
+    </HStack>
   )
 }
 

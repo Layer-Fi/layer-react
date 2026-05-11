@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { type SummaryCardInteractionProps, type SummaryCardStringOverrides } from '@ui/SummaryCard/useSummaryCardSlots'
 import { ExpensesSummaryCard } from '@components/ExpensesSummaryCard/ExpensesSummaryCard'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
@@ -77,48 +78,53 @@ export const SolopreneurOverview = ({
     slotProps?.profitAndLoss?.summaries?.variants
 
   return (
-    <ProfitAndLoss asContainer={false}>
-      <View
-        title={stringOverrides?.title || t('common:label.overview', 'Overview')}
-        showHeader
-        header={(
-          <Header>
-            <HeaderRow>
-              <HeaderCol>
-                <GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />
-              </HeaderCol>
-            </HeaderRow>
-          </Header>
-        )}
-      >
-        <SolopreneurOnboardingBanner {...interactionProps?.banner} />
-        <ProfitAndLossSummaries
-          stringOverrides={stringOverrides?.profitAndLossSummaries}
-          chartColorsList={chartColorsList}
-          onTransactionsToReviewClick={interactionProps?.common?.onTransactionsToReviewClick}
-          variants={profitAndLossSummariesVariants}
-        />
-        <div className='Layer__SolopreneurOverview__Grid'>
-          <ProfitAndLossSummaryCard
-            stringOverrides={stringOverrides?.summaryCards?.profitAndLoss}
-            interactionProps={interactionProps?.summaryCards?.profitAndLoss}
+    <LinkedAccountsProvider>
+      <ProfitAndLoss asContainer={false}>
+        <View
+          title={stringOverrides?.title || t('common:label.overview', 'Overview')}
+          showHeader
+          header={(
+            <Header>
+              <HeaderRow>
+                <HeaderCol>
+                  <GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />
+                </HeaderCol>
+              </HeaderRow>
+            </Header>
+          )}
+        >
+          <SolopreneurOnboardingBanner
+            onLinkBankAccounts={interactionProps?.banner?.onLinkBankAccounts}
+            onSetupTaxProfile={interactionProps?.banner?.onSetupTaxProfile}
           />
-          <ExpensesSummaryCard
-            stylingProps={{ chartColorsList }}
-            stringOverrides={stringOverrides?.summaryCards?.expenses}
-            interactionProps={interactionProps?.summaryCards?.expenses}
+          <ProfitAndLossSummaries
+            stringOverrides={stringOverrides?.profitAndLossSummaries}
+            chartColorsList={chartColorsList}
+            onTransactionsToReviewClick={interactionProps?.common?.onTransactionsToReviewClick}
+            variants={profitAndLossSummariesVariants}
           />
-          <TaxEstimatesSummaryCard
-            mode={TaxEstimatesSummaryCardMode.HorizontalBarChart}
-            stringOverrides={stringOverrides?.summaryCards?.taxEstimates}
-            interactionProps={interactionProps?.summaryCards?.taxEstimates}
-          />
-          <MileageTrackingSummary
-            interactionProps={interactionProps?.summaryCards?.mileageTracking}
-            stringOverrides={stringOverrides?.summaryCards?.mileageTracking}
-          />
-        </div>
-      </View>
-    </ProfitAndLoss>
+          <div className='Layer__SolopreneurOverview__Grid'>
+            <ProfitAndLossSummaryCard
+              stringOverrides={stringOverrides?.summaryCards?.profitAndLoss}
+              interactionProps={interactionProps?.summaryCards?.profitAndLoss}
+            />
+            <ExpensesSummaryCard
+              stylingProps={{ chartColorsList }}
+              stringOverrides={stringOverrides?.summaryCards?.expenses}
+              interactionProps={interactionProps?.summaryCards?.expenses}
+            />
+            <TaxEstimatesSummaryCard
+              mode={TaxEstimatesSummaryCardMode.HorizontalBarChart}
+              stringOverrides={stringOverrides?.summaryCards?.taxEstimates}
+              interactionProps={interactionProps?.summaryCards?.taxEstimates}
+            />
+            <MileageTrackingSummary
+              interactionProps={interactionProps?.summaryCards?.mileageTracking}
+              stringOverrides={stringOverrides?.summaryCards?.mileageTracking}
+            />
+          </div>
+        </View>
+      </ProfitAndLoss>
+    </LinkedAccountsProvider>
   )
 }
