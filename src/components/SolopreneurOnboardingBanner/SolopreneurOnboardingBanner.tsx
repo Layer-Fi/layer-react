@@ -2,7 +2,6 @@ import { useCallback, useContext } from 'react'
 import { Info } from 'lucide-react'
 
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
-import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
@@ -102,7 +101,7 @@ export function SolopreneurOnboardingBanner({ onSetupTaxProfile, onLinkBankAccou
 }
 
 const useSolopreneurOnboardingBanner = () => {
-  const { data: linkedAccounts, isLoading: isLinkedAccountsLoading, loadingStatus: linkedAccountsLoadingStatus } = useLinkedAccounts()
+  const { data: linkedAccounts, isLoading: isLinkedAccountsLoading, loadingStatus: linkedAccountsLoadingStatus } = useContext(LinkedAccountsContext)
   const { data: taxProfile, isLoading: isTaxProfileLoading } = useTaxProfile()
 
   const isLoading =
