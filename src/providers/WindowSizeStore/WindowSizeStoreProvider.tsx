@@ -1,4 +1,4 @@
-import { createContext, type PropsWithChildren, useContext } from 'react'
+import { createContext, type PropsWithChildren, useContext, useLayoutEffect, useState } from 'react'
 import { createStore, useStore } from 'zustand'
 
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
@@ -17,20 +17,32 @@ function getInitialState(): WindowSizeState {
   return { width: window.innerWidth, height: window.innerHeight }
 }
 
-const windowSizeStore = createStore<WindowSizeState>(() => getInitialState())
-
-if (typeof window !== 'undefined') {
-  const update = () => {
-    windowSizeStore.setState({ width: window.innerWidth, height: window.innerHeight })
-  }
-  window.addEventListener('resize', update)
+function buildStore() {
+  return createStore<WindowSizeState>(() => getInitialState())
 }
 
-const WindowSizeStoreContext = createContext(windowSizeStore)
+const defaultStore = buildStore()
+
+const WindowSizeStoreContext = createContext(defaultStore)
 
 export function WindowSizeStoreProvider({ children }: PropsWithChildren) {
+  const [store] = useState(buildStore)
+
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const update = () => {
+      store.setState({ width: window.innerWidth, height: window.innerHeight })
+    }
+
+    window.addEventListener('resize', update)
+    update()
+
+    return () => window.removeEventListener('resize', update)
+  }, [store])
+
   return (
-    <WindowSizeStoreContext.Provider value={windowSizeStore}>
+    <WindowSizeStoreContext.Provider value={store}>
       {children}
     </WindowSizeStoreContext.Provider>
   )
