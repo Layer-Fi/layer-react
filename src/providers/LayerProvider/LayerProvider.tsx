@@ -13,6 +13,7 @@ import { EnvironmentInputProvider } from '@providers/Environment/EnvironmentInpu
 import { GlobalDateStoreProvider } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { LayerI18nProvider } from '@providers/I18nProvider/LayerI18nProvider'
 import { StaleLocaleCacheInvalidator } from '@providers/I18nProvider/StaleLocaleCacheInvalidator'
+import { WindowSizeStoreProvider } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 
 export type EventCallbacks = {
   onTransactionCategorized?: () => void
@@ -75,9 +76,11 @@ export const LayerProvider = ({
             appSecret={appSecret}
             businessAccessToken={businessAccessToken}
           >
-            <GlobalDateStoreProvider>
-              <BusinessProvider {...restProps} />
-            </GlobalDateStoreProvider>
+            <WindowSizeStoreProvider>
+              <GlobalDateStoreProvider>
+                <BusinessProvider {...restProps} />
+              </GlobalDateStoreProvider>
+            </WindowSizeStoreProvider>
           </AuthInputProvider>
         </EnvironmentInputProvider>
       </LayerI18nProvider>
