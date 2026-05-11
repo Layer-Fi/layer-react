@@ -1,6 +1,7 @@
 import { type PropsWithChildren, type ReactNode } from 'react'
 import classNames from 'classnames'
 
+import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
@@ -16,8 +17,10 @@ type PrimaryActionProps = {
 }
 const PrimaryAction = ({ content, onClick }: PrimaryActionProps) => {
   return (
-    <div className='Layer__SummaryCard__HeaderPrimaryAction' onClick={onClick}>
-      {content}
+    <div className='Layer__SummaryCard__HeaderPrimaryAction'>
+      <Button icon variant='ghost' onClick={onClick}>
+        {content}
+      </Button>
     </div>
   )
 }

@@ -16,6 +16,7 @@ const CHART_HEIGHT = 24
 const CHART_MARGIN = { top: 0, right: 0, bottom: 0, left: 0 }
 const CHART_BORDER_RADIUS = 8
 const Y_AXIS_CATEGORY_KEY = '__layer_hbar_category'
+const SMALL_SEGMENT_THRESHOLD = 0.25
 
 export type HorizontalBarChartLabelMode = LegendLayout
 
@@ -50,6 +51,16 @@ export const HorizontalBarChart = <T extends SeriesData>({
   const positiveTotal = positiveItems.reduce((sum, item) => sum + item.value, 0)
   const legendDenominator = positiveTotal > 0 ? positiveTotal : total
 
+  const effectiveLabelMode = useMemo(() => {
+    if (labelMode === LegendLayout.Table || legendDenominator <= 0) {
+      return labelMode
+    }
+    const hasSmallSegment = positiveItems.some(
+      item => item.value / legendDenominator < SMALL_SEGMENT_THRESHOLD,
+    )
+    return hasSmallSegment ? LegendLayout.Table : labelMode
+  }, [labelMode, legendDenominator, positiveItems])
+
   const chartData = useMemo(() => {
     const stacked = positiveItems.reduce<Record<string, number | string>>(
       (acc, item) => {
@@ -71,7 +82,7 @@ export const HorizontalBarChart = <T extends SeriesData>({
         total={legendDenominator}
         colorSelector={stylingProps.colorSelector}
         formatValue={formatValue}
-        layout={labelMode}
+        layout={effectiveLabelMode}
       />
     )
 

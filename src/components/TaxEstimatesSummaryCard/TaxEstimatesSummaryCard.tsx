@@ -94,6 +94,7 @@ const HorizontalBarChartContent = ({ data, commonProps }: Pick<ContentProps, 'da
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
   const { isDesktop } = useSizeClass()
+
   return (
     <VStack className='Layer__TaxEstimatesSummaryCard__Content Layer__TaxEstimatesSummaryCard__Content--horizontal' gap='md' pi='lg' pbe='lg'>
       <HStack className='Layer__TaxEstimatesSummaryCard__TotalRow' justify='space-between' align='baseline' gap='md'>
