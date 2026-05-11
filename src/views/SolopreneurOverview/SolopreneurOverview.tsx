@@ -9,13 +9,13 @@ import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
 import { MileageTrackingSummary } from '@components/MileageTrackingSummary/MileageTrackingSummary'
-import { Onboarding } from '@components/Onboarding/Onboarding'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import {
   ProfitAndLossSummaries,
   type ProfitAndLossSummariesStringOverrides,
 } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { ProfitAndLossSummaryCard } from '@components/ProfitAndLossSummaryCard/ProfitAndLossSummaryCard'
+import { SolopreneurOnboardingBanner } from '@components/SolopreneurOnboardingBanner/SolopreneurOnboardingBanner'
 import {
   TaxEstimatesSummaryCard,
   TaxEstimatesSummaryCardMode,
@@ -39,6 +39,9 @@ interface SolopreneurOverviewInteractionProps {
   common?: {
     onTransactionsToReviewClick?: () => void
   }
+  banner: {
+    onSetupTaxProfile: () => void
+  }
   summaryCards?: {
     profitAndLoss?: SummaryCardInteractionProps
     expenses?: SummaryCardInteractionProps
@@ -50,7 +53,7 @@ interface SolopreneurOverviewInteractionProps {
 export interface SolopreneurOverviewProps {
   chartColorsList?: string[]
   stringOverrides?: SolopreneurOverviewStringOverrides
-  interactionProps?: SolopreneurOverviewInteractionProps
+  interactionProps: SolopreneurOverviewInteractionProps
   slotProps?: {
     profitAndLoss?: {
       summaries?: {
@@ -87,7 +90,7 @@ export const SolopreneurOverview = ({
           </Header>
         )}
       >
-        <Onboarding onTransactionsToReviewClick={interactionProps?.common?.onTransactionsToReviewClick} />
+        <SolopreneurOnboardingBanner onSetupTaxProfile={interactionProps.banner.onSetupTaxProfile} />
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLossSummaries}
           chartColorsList={chartColorsList}
