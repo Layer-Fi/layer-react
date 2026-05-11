@@ -1,4 +1,4 @@
-import { useWindowSize } from '@hooks/utils/size/useWindowSize'
+import { useWindowSize } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@components/TaxEstimates/TaxEstimatesHeader'
 import { TaxEstimatesSummaryCard } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'

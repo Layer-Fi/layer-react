@@ -1,4 +1,4 @@
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { HStack } from '@ui/Stack/Stack'
 import { ExpandableDataTableToggleButton } from '@components/ExpandableDataTable/ExpandableDataTableToggleButton'
 import { ReportsMobileSelectionDrawer } from '@components/ReportsNavigation/ReportsMobileSelectionDrawer'

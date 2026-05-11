@@ -3,7 +3,7 @@ import { Edit, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { Trip } from '@schemas/trip'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'

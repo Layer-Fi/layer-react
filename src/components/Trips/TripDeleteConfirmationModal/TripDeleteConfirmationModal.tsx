@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type Trip } from '@schemas/trip'
 import { useDeleteTrip } from '@hooks/api/businesses/[business-id]/mileage/trips/[trip-id]/useDeleteTrip'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 

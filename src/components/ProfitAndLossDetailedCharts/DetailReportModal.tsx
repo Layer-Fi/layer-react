@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { Drawer } from '@ui/Modal/Modal'
 import { ProfitAndLossDetailReport, type ProfitAndLossDetailReportProps } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { type SelectedLineItem } from '@components/ProfitAndLossReport/ProfitAndLossReport'

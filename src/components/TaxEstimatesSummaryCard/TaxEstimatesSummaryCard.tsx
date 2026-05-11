@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type TaxSummarySectionType } from '@schemas/taxEstimates/summary'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { HorizontalBarChart } from '@ui/HorizontalBarChart/HorizontalBarChart'
 import { LegendLayout } from '@ui/Legend/Legend'
 import { HStack, VStack } from '@ui/Stack/Stack'

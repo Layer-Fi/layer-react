@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type TaxSummary, type TaxSummarySectionType } from '@schemas/taxEstimates/summary'
 import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { useFullYearProjection } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { type DetailData, type SeriesData } from '@components/DetailedCharts/types'

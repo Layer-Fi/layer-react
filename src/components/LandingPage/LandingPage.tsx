@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useInterpolateTemplate } from '@utils/i18n/useInterpolateTemplate'
 import { isCalendlyLink, useCalendly } from '@hooks/features/calendly/useCalendly'
-import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass, useWindowSize } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'

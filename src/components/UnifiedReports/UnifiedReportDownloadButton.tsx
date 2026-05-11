@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { useUnifiedReportExcel } from '@hooks/api/businesses/[business-id]/reports/unified/report-name/exports/excel/useUnifiedReportExcel'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import DownloadCloud from '@icons/DownloadCloud'
 import RefreshCcw from '@icons/RefreshCcw'
 import { Button } from '@ui/Button/Button'

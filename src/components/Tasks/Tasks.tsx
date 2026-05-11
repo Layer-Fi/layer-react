@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { CallBookingPurpose, useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { P, Span } from '@ui/Typography/Text'

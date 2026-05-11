@@ -1,7 +1,7 @@
 import { useCallback, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import CollapseIcon from '@icons/Collapse'
 import ExpandIcon from '@icons/Expand'
 import { Button } from '@ui/Button/Button'

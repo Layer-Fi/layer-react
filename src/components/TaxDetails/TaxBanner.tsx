@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
 import { useTaxBanner } from '@hooks/features/taxEstimates/useTaxBanner'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { useTaxEstimatesContext } from '@contexts/TaxEstimatesContext/TaxEstimatesContextProvider'
 import { Banner, BannerButton } from '@ui/Banner/Banner'
 import { VStack } from '@ui/Stack/Stack'

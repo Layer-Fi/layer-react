@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type TaxProfile } from '@schemas/taxEstimates/profile'
 import { flattenValidationErrors } from '@utils/form'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useSizeClass } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { Form } from '@ui/Form/Form'

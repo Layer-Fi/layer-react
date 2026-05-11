@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
-import { useWindowSize } from '@hooks/utils/size/useWindowSize'
+import { useWindowSize } from '@providers/WindowSizeStore/WindowSizeStoreProvider'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Loader } from '@components/Loader/Loader'
