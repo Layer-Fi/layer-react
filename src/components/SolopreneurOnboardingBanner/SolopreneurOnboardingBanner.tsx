@@ -88,6 +88,10 @@ export type SolopreneurOnboardingBannerProps = {
 
 export function SolopreneurOnboardingBanner({ onSetupTaxProfile, onLinkBankAccounts }: SolopreneurOnboardingBannerProps) {
   const { state } = useSolopreneurOnboardingBanner()
+  if (state === OnboardingBannerState.Loading || state === OnboardingBannerState.Onboarded) {
+    return null
+  }
+
   return (
     <HStack className='Layer__SolopreneurLayout__OnboardingBanner'>
       {state === OnboardingBannerState.NoBankAccountsLinked && <NoBankAccountsLinkedBanner onLinkBankAccounts={onLinkBankAccounts} />}

@@ -37,7 +37,7 @@ interface SolopreneurOverviewStringOverrides {
 
 interface SolopreneurOverviewInteractionProps {
   banner?: {
-    onLinkBankAccounts?: () => void
+    onLinkBankAccounts: (() => void | undefined | null)
     onSetupTaxProfile?: () => void
   }
   profitAndLossSummaries?: {
