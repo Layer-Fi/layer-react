@@ -74,22 +74,26 @@ const NoTaxProfileBanner = ({ onSetupTaxProfile }: Pick<SolopreneurOnboardingBan
   )
 }
 
+function SolopreneurOnboardingBannerInternal({ onSetupTaxProfile }: Pick<SolopreneurOnboardingBannerProps, 'onSetupTaxProfile'>) {
+  const state = useSolopreneurOnboardingBannerState()
+  if (state === OnboardingBannerState.Loading || state === OnboardingBannerState.Onboarded) {
+    return null
+  }
+  return (
+    <HStack className='Layer__SolopreneurLayout__OnboardingBanner'>
+      {state === OnboardingBannerState.NoBankAccountsLinked && <NoBankAccountsLinkedBanner />}
+      {state === OnboardingBannerState.NoTaxProfile && <NoTaxProfileBanner onSetupTaxProfile={onSetupTaxProfile} />}
+    </HStack>
+  )
+}
 export type SolopreneurOnboardingBannerProps = {
   onSetupTaxProfile?: () => void
 }
 
 export function SolopreneurOnboardingBanner({ onSetupTaxProfile }: SolopreneurOnboardingBannerProps) {
-  const state = useSolopreneurOnboardingBannerState()
-  if (state === OnboardingBannerState.Loading || state === OnboardingBannerState.Onboarded) {
-    return null
-  }
-
   return (
     <LinkedAccountsProvider>
-      <HStack className='Layer__SolopreneurLayout__OnboardingBanner'>
-        {state === OnboardingBannerState.NoBankAccountsLinked && <NoBankAccountsLinkedBanner />}
-        {state === OnboardingBannerState.NoTaxProfile && <NoTaxProfileBanner onSetupTaxProfile={onSetupTaxProfile} />}
-      </HStack>
+      <SolopreneurOnboardingBannerInternal onSetupTaxProfile={onSetupTaxProfile} />
     </LinkedAccountsProvider>
   )
 }
