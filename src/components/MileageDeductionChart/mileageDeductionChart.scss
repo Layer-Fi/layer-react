@@ -1,4 +1,11 @@
 .Layer__MileageDeductionChart {
+  .recharts-wrapper:focus,
+  .recharts-wrapper :focus,
+  .recharts-surface:focus,
+  .recharts-bar-rectangle:focus {
+    outline: none;
+  }
+
   .recharts-responsive-container {
     box-sizing: border-box;
     padding: 0;
