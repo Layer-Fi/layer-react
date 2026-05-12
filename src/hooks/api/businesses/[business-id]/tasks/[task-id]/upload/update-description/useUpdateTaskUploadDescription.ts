@@ -31,27 +31,29 @@ function buildKey({
   access_token: accessToken,
   apiUrl,
   businessId,
+  taskId,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
+  taskId: string
 }) {
   if (accessToken && apiUrl) {
     return {
       accessToken,
       apiUrl,
       businessId,
+      taskId,
       tags: ['#update-task-upload-description'],
     } as const
   }
 }
 
 type UseUpdateTaskUploadDescriptionArg = {
-  taskId: string
   description: string
 }
 
-export function useUpdateTaskUploadDescription() {
+export function useUpdateTaskUploadDescription(taskId: string) {
   const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
@@ -61,10 +63,11 @@ export function useUpdateTaskUploadDescription() {
     () => withLocale(buildKey({
       ...auth,
       businessId,
+      taskId,
     })),
     (
       { accessToken, apiUrl, businessId },
-      { arg: { taskId, description } }: { arg: UseUpdateTaskUploadDescriptionArg },
+      { arg: { description } }: { arg: UseUpdateTaskUploadDescriptionArg },
     ) => updateTaskUploadsDescription(
       apiUrl,
       accessToken,

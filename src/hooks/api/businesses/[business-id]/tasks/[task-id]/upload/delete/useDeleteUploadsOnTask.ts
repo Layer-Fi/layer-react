@@ -26,26 +26,25 @@ function buildKey({
   access_token: accessToken,
   apiUrl,
   businessId,
+  taskId,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
+  taskId: string
 }) {
   if (accessToken && apiUrl) {
     return {
       accessToken,
       apiUrl,
       businessId,
+      taskId,
       tags: ['#delete-uploads-on-task'],
     } as const
   }
 }
 
-type UseDeleteUploadsOnTaskArg = {
-  taskId: string
-}
-
-export function useDeleteUploadsOnTask() {
+export function useDeleteUploadsOnTask(taskId: string) {
   const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
@@ -55,10 +54,10 @@ export function useDeleteUploadsOnTask() {
     () => withLocale(buildKey({
       ...auth,
       businessId,
+      taskId,
     })),
     (
       { accessToken, apiUrl, businessId },
-      { arg: { taskId } }: { arg: UseDeleteUploadsOnTaskArg },
     ) => deleteUploadsOnTask(
       apiUrl,
       accessToken,

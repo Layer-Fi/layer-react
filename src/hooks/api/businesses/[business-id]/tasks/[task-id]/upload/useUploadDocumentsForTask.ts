@@ -44,28 +44,30 @@ function buildKey({
   access_token: accessToken,
   apiUrl,
   businessId,
+  taskId,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
+  taskId: string
 }) {
   if (accessToken && apiUrl) {
     return {
       accessToken,
       apiUrl,
       businessId,
+      taskId,
       tags: ['#use-upload-documents-for-task'],
     } as const
   }
 }
 
 type UseUploadDocumentsForTaskArg = {
-  taskId: string
   files: ReadonlyArray<File>
   description?: string
 }
 
-export function useUploadDocumentsForTask() {
+export function useUploadDocumentsForTask(taskId: string) {
   const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
@@ -75,10 +77,11 @@ export function useUploadDocumentsForTask() {
     () => withLocale(buildKey({
       ...auth,
       businessId,
+      taskId,
     })),
     (
       { accessToken, apiUrl, businessId },
-      { arg: { taskId, files, description } }: { arg: UseUploadDocumentsForTaskArg },
+      { arg: { files, description } }: { arg: UseUploadDocumentsForTaskArg },
     ) => completeTaskWithUpload(
       apiUrl,
       accessToken,

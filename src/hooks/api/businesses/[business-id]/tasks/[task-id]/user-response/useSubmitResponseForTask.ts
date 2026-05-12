@@ -30,27 +30,29 @@ function buildKey({
   access_token: accessToken,
   apiUrl,
   businessId,
+  taskId,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
+  taskId: string
 }) {
   if (accessToken && apiUrl) {
     return {
       accessToken,
       apiUrl,
       businessId,
+      taskId,
       tags: ['#submit-user-response-for-task'],
     } as const
   }
 }
 
 type UseSubmitUserResponseForTaskArg = {
-  taskId: string
   userResponse: string
 }
 
-export function useSubmitUserResponseForTask() {
+export function useSubmitUserResponseForTask(taskId: string) {
   const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
@@ -60,10 +62,11 @@ export function useSubmitUserResponseForTask() {
     () => withLocale(buildKey({
       ...auth,
       businessId,
+      taskId,
     })),
     (
       { accessToken, apiUrl, businessId },
-      { arg: { taskId, userResponse } }: { arg: UseSubmitUserResponseForTaskArg },
+      { arg: { userResponse } }: { arg: UseSubmitUserResponseForTaskArg },
     ) => submitUserResponseForTask(
       apiUrl,
       accessToken,
