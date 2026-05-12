@@ -16,7 +16,7 @@ type AmountWithLabelProps = {
 }
 
 const AmountWithLabel = ({ slotProps }: AmountWithLabelProps) => (
-  <VStack className='Layer__TaxSummaryCard__AmountWithLabel' gap='2xs' align='start'>
+  <VStack className='Layer__TaxSummaryCard__AmountWithLabel' gap='2xs' align='center'>
     <MoneySpan {...slotProps.MoneySpan} />
     <Badge size={BadgeSize.SMALL} variant={BadgeVariant.NEUTRAL} {...slotProps.Badge} />
   </VStack>
