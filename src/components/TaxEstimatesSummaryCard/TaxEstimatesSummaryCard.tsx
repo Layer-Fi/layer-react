@@ -2,6 +2,7 @@ import classNames from 'classnames'
 
 import { SummaryCard } from '@ui/SummaryCard/SummaryCard'
 import { type SummaryCardInteractionProps, type SummaryCardStringOverrides, useSummaryCardSlots } from '@ui/SummaryCard/useSummaryCardSlots'
+import { TaxEstimatesSummaryCardMode } from '@components/TaxEstimatesSummaryCard/constants'
 import { TaxEstimatesSummaryCardError as Error } from '@components/TaxEstimatesSummaryCard/states/TaxEstimatesSummaryCardError'
 import { TaxEstimatesSummaryCardLoading as Loading } from '@components/TaxEstimatesSummaryCard/states/TaxEstimatesSummaryCardLoading'
 import { Content } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCardContent'
@@ -10,10 +11,7 @@ import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import './taxEstimatesSummaryCard.scss'
 
-export enum TaxEstimatesSummaryCardMode {
-  PieChart = 'PieChart',
-  HorizontalBarChart = 'HorizontalBarChart',
-}
+export { TaxEstimatesSummaryCardMode }
 
 export type TaxEstimatesSummaryCardProps = {
   mode?: TaxEstimatesSummaryCardMode

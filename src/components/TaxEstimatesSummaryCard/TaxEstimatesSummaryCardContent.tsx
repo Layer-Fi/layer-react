@@ -12,11 +12,9 @@ import { DetailedChart, type DetailedChartProps } from '@components/DetailedChar
 import { type DetailData, type SeriesData } from '@components/DetailedCharts/types'
 import { NO_OP_INTERACTION_PROPS, NO_SORT_PROPS } from '@components/DetailedCharts/utils'
 import { DetailedTableWithData } from '@components/DetailedTable/DetailedTable'
-
-import { resolveCategoryColor } from './constants'
-import { TaxEstimatesSummaryCardEmpty } from './states/TaxEstimatesSummaryCardEmpty'
-import { TaxEstimatesSummaryCardNegativeOrZero } from './states/TaxEstimatesSummaryCardNegativeOrZero'
-import { TaxEstimatesSummaryCardMode } from './TaxEstimatesSummaryCard'
+import { resolveCategoryColor, TaxEstimatesSummaryCardMode } from '@components/TaxEstimatesSummaryCard/constants'
+import { TaxEstimatesSummaryCardEmpty } from '@components/TaxEstimatesSummaryCard/states/TaxEstimatesSummaryCardEmpty'
+import { TaxEstimatesSummaryCardNegativeOrZero } from '@components/TaxEstimatesSummaryCard/states/TaxEstimatesSummaryCardNegativeOrZero'
 
 type CommonProps = Pick<DetailedChartProps<SeriesData>, 'interactionProps' | 'stylingProps'>
 

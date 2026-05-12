@@ -1,6 +1,6 @@
 import { VStack } from '@ui/Stack/Stack'
 import { CircleSkeletonLoader, SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
-import { TaxEstimatesSummaryCardMode } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
+import { TaxEstimatesSummaryCardMode } from '@components/TaxEstimatesSummaryCard/constants'
 
 export const TaxEstimatesSummaryCardLoading = ({ mode }: { mode: TaxEstimatesSummaryCardMode }) => {
   if (mode === TaxEstimatesSummaryCardMode.HorizontalBarChart) {
