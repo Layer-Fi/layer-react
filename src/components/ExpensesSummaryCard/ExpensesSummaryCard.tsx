@@ -46,7 +46,7 @@ export const ExpensesSummaryCard = ({
 
   return (
     <SummaryCard
-      className={classNames('Layer__ExpensesSummaryCard', className)}
+      className={classNames('Layer__ExpensesSummaryCard', 'Layer__UI__Chart--focusReset', className)}
       slots={slots}
     >
       <ProfitAndLossDetailedCharts
