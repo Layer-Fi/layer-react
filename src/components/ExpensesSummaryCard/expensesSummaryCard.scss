@@ -18,7 +18,7 @@
   .Layer__profit-and-loss-detailed-charts__content {
     display: flex;
     align-items: stretch;
-    justify-content: center;
+    justify-content: start;
     overflow: hidden;
   }
 
@@ -30,7 +30,6 @@
   }
 
   .Layer__profit-and-loss-detailed-charts__content > .Layer__DetailedTable {
-    flex: unset;
     overflow-x: hidden;
     overflow-y: auto;
     min-block-size: 0;
@@ -56,8 +55,7 @@
   }
 
   .Layer__profit-and-loss-detailed-charts .Layer__DetailedChart__container {
-    padding-inline-start: var(--spacing-xs);
-    padding-inline-end: var(--spacing-xs);
+    padding-inline: var(--spacing-md);
   }
 
   .Layer__DetailedTable {
