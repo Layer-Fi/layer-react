@@ -27,7 +27,7 @@
     inline-size: auto;
     min-inline-size: 14rem;
     max-inline-size: 18rem;
-    margin: 0 auto;
+    margin-inline: auto;
   }
 
   .Layer__profit-and-loss-detailed-charts__content > .Layer__DetailedTable {
@@ -61,7 +61,7 @@
     padding-inline: var(--spacing-md);
 
     @media (width <= 767px) {
-      padding: 0;
+      padding-inline: 0;
     }
   }
 
