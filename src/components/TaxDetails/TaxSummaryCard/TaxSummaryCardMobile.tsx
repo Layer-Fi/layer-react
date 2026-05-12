@@ -53,7 +53,7 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
             })}
           </Span>
           <Span size='sm' variant='subtle'>
-            {t('taxEstimates:label.taxes_due_at', 'Due on {{date}}', { date: formatDate(data.taxesDueAt) })}
+            {t('taxEstimates:label.due_at', 'Due on {{date}}', { date: formatDate(data.taxesDueAt) })}
           </Span>
         </HStack>
         <HStack className='Layer__TaxSummaryCard__MobileAmountRow' justify='space-between' align='baseline' gap='md'>
