@@ -14,10 +14,13 @@ export const TaxProfile = () => {
   const { t } = useTranslation()
   const navigate = useTaxEstimatesNavigation()
   const { data: taxProfile } = useTaxProfile()
+  const hasSavedTaxProfile = taxProfile?.userHasSavedTaxProfile === true
 
   const handleGoBack = useCallback(() => {
-    navigate.toEstimates()
-  }, [navigate])
+    if (hasSavedTaxProfile) {
+      navigate.toEstimates()
+    }
+  }, [navigate, hasSavedTaxProfile])
 
   const TaxProfileHeader = useCallback(() => {
     return <Heading size='md'>{t('taxEstimates:label.tax_profile', 'Tax Profile')}</Heading>
@@ -27,7 +30,7 @@ export const TaxProfile = () => {
     <BaseDetailView
       slots={{ Header: TaxProfileHeader, BackIcon: BackArrow }}
       name='TaxProfile'
-      onGoBack={handleGoBack}
+      onGoBack={hasSavedTaxProfile ? handleGoBack : undefined}
     >
       <TaxProfileForm taxProfile={taxProfile} />
     </BaseDetailView>
