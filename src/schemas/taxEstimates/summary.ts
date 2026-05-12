@@ -11,7 +11,7 @@ export enum TaxSummaryState {
   UNKNOWN = 'UNKNOWN',
 }
 
-const TransformedTaxSummaryStateSchema = createTransformedEnumSchema(
+export const TransformedTaxSummaryStateSchema = createTransformedEnumSchema(
   Schema.Enums(TaxSummaryState),
   TaxSummaryState,
   TaxSummaryState.NO_TRANSACTIONS,

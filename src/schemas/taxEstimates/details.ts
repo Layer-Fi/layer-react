@@ -6,6 +6,7 @@ import {
   UnifiedCellValuePercentageSchema,
   UnifiedCellValueUnknownSchema,
 } from '@schemas/reports/unifiedReport'
+import { TransformedTaxSummaryStateSchema } from '@schemas/taxEstimates/summary'
 
 const TaxDetailsValueSchema = Schema.Union(
   UnifiedCellValueCurrencySchema,
@@ -55,6 +56,7 @@ export type TaxDetailsMeta = typeof TaxDetailsMetaSchema.Type
 
 const TaxDetailsSchema = Schema.Struct({
   type: Schema.String,
+  state: Schema.NullishOr(TransformedTaxSummaryStateSchema),
   meta: TaxDetailsMetaSchema,
   rows: Schema.Array(TaxDetailsRowSchema),
 })
