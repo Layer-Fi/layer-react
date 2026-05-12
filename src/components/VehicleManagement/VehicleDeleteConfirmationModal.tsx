@@ -25,7 +25,7 @@ export function VehicleDeleteConfirmationModal({
     await deleteVehicle()
   }, [deleteVehicle])
 
-  const vehicleName = getVehicleDisplayName(vehicle)
+  const vehicleName = getVehicleDisplayName(vehicle, t)
 
   return (
     <BaseConfirmationModal

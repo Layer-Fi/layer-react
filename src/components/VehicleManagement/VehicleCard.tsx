@@ -47,7 +47,7 @@ export const VehicleCard = ({ vehicle, onEdit }: VehicleCardProps) => {
     [t],
   )
 
-  const vehicleName = getVehicleDisplayName(vehicle)
+  const vehicleName = getVehicleDisplayName(vehicle, t)
   const isArchived = vehicle.archivedAt !== null && vehicle.archivedAt !== undefined
 
   return (

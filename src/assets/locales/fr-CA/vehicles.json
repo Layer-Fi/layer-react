@@ -32,6 +32,7 @@
     "enter_vin": "Saisissez le NIV",
     "license_plate": "Plaque d’immatriculation",
     "make_model": "Marque et modèle",
+    "unnamed_vehicle": "",
     "vehicle": "Véhicule",
     "vehicle_name_hidden_from_active_list": "{{vehicleName}} sera masqué de votre liste de véhicules actifs. Vous pourrez le réactiver en tout temps.",
     "vehicle_name_restored_to_active_list": "{{vehicleName}} sera restauré dans votre liste de véhicules actifs et pourra être utilisé pour faire le suivi de vos déplacements.",
