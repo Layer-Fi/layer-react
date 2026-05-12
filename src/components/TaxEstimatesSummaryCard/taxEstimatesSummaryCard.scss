@@ -79,8 +79,23 @@
     }
   }
 
-  &--empty {
+  &__DataState--empty {
     height: 100%;
+    min-height: 15rem;
     margin: 0 auto;
+
+    @media (width >= 760px) {
+      max-width: 30rem;
+    }
+  }
+
+  &__DataState--negativeOrZero {
+    height: 100%;
+    min-height: 15rem;
+    margin: 0 auto;
+
+    @media (width >= 760px) {
+      max-width: 30rem;
+    }
   }
 }

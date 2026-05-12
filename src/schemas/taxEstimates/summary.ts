@@ -1,6 +1,21 @@
 import { pipe, Schema } from 'effect'
 
+import { createTransformedEnumSchema } from '@schemas/utils'
+
 const TaxSummarySectionTypeSchema = Schema.Literal('federal', 'state')
+
+export enum TaxSummaryState {
+  NO_TRANSACTIONS = 'NO_TRANSACTIONS',
+  NEGATIVE_TAXES_OWED = 'NEGATIVE_TAXES_OWED',
+  ZERO_OR_POSITIVE_TAXES_OWED = 'ZERO_OR_POSITIVE_TAXES_OWED',
+  UNKNOWN = 'UNKNOWN',
+}
+
+const TransformedTaxSummaryStateSchema = createTransformedEnumSchema(
+  Schema.Enums(TaxSummaryState),
+  TaxSummaryState,
+  TaxSummaryState.NO_TRANSACTIONS,
+)
 
 export type TaxSummarySectionType = typeof TaxSummarySectionTypeSchema.Type
 
@@ -23,6 +38,7 @@ export type TaxSummarySection = typeof TaxSummarySectionSchema.Type
 
 const TaxSummarySchema = Schema.Struct({
   year: Schema.Number,
+  state: Schema.NullishOr(TransformedTaxSummaryStateSchema),
   projectedTaxesOwed: pipe(
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('projected_taxes_owed'),
