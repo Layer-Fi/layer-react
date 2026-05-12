@@ -38,7 +38,7 @@ export type TaxSummarySection = typeof TaxSummarySectionSchema.Type
 
 const TaxSummarySchema = Schema.Struct({
   year: Schema.Number,
-  state: Schema.NullishOr(TransformedTaxSummaryStateSchema),
+  state: TransformedTaxSummaryStateSchema,
   projectedTaxesOwed: pipe(
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('projected_taxes_owed'),

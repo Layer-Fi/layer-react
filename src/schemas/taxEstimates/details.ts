@@ -56,7 +56,7 @@ export type TaxDetailsMeta = typeof TaxDetailsMetaSchema.Type
 
 const TaxDetailsSchema = Schema.Struct({
   type: Schema.String,
-  state: Schema.NullishOr(TransformedTaxSummaryStateSchema),
+  state: TransformedTaxSummaryStateSchema,
   meta: TaxDetailsMetaSchema,
   rows: Schema.Array(TaxDetailsRowSchema),
 })
