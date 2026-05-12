@@ -1,5 +1,6 @@
 import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
+import { type TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
@@ -11,7 +12,6 @@ import { P } from '@ui/Typography/Text'
 import { Label } from '@ui/Typography/Text'
 
 import './vehicleSelector.scss'
-import { TFunction } from 'i18next'
 
 class VehicleAsOption {
   private internalVehicle: Vehicle
@@ -76,11 +76,9 @@ export function VehicleSelector({
 
   const { data, isLoading, isError } = useListVehicles()
 
-  const unnamedVehicleString = t('vehicles:label.unnamed_vehicle', 'Unnamed Vehicle')
-
   const options = useMemo(() => {
     return data?.map(vehicle => new VehicleAsOption(vehicle, t)) || []
-  }, [data, unnamedVehicleString])
+  }, [data, t])
 
   const onSelectedValueChange = useCallback((option: VehicleAsOption | null) => {
     onSelectedVehicleChange(option?.original || null)
@@ -94,7 +92,7 @@ export function VehicleSelector({
 
       return new VehicleAsOption(selectedVehicle, t)
     },
-    [selectedVehicle, unnamedVehicleString],
+    [selectedVehicle, t],
   )
 
   const EmptyMessage = useMemo(
