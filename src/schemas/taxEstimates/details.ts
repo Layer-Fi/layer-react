@@ -6,8 +6,7 @@ import {
   UnifiedCellValuePercentageSchema,
   UnifiedCellValueUnknownSchema,
 } from '@schemas/reports/unifiedReport'
-
-import { TransformedTaxSummaryStateSchema } from './summary'
+import { TransformedTaxSummaryStateSchema } from '@schemas/taxEstimates/summary'
 
 const TaxDetailsValueSchema = Schema.Union(
   UnifiedCellValueCurrencySchema,
