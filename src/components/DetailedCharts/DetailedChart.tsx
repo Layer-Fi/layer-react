@@ -97,7 +97,7 @@ export const DetailedChart = <T extends SeriesData>({
           verticalAnchor='middle'
           breakAll={true}
           maxLines={2}
-          width={width - 40}
+          width={Math.max(width - 40, 0)}
           className='Layer__DetailedChart__centerLabelTitle'
         >
           {text}
