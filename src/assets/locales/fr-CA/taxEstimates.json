@@ -52,7 +52,7 @@
     "categorization_incomplete": "Catégorisation incomplète",
     "deductions": "Déductions",
     "due": "Échéance",
-    "due_at": "Due on {{date}}",
+    "due_at": "Échéance le {{date}}",
     "due_with_date": "Échéance : {{date}}",
     "enter_amount": "Saisissez un montant",
     "enter_area": "Saisissez la superficie",
