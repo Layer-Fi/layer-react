@@ -25,7 +25,7 @@ export function VehicleReactivateConfirmationModal({
     await reactivateVehicle()
   }, [reactivateVehicle])
 
-  const vehicleName = getVehicleDisplayName(vehicle, t('vehicles:label.unnamed_vehicle', 'Unnamed Vehicle'))
+  const vehicleName = getVehicleDisplayName(vehicle, t)
 
   return (
     <BaseConfirmationModal

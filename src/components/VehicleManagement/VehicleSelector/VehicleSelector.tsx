@@ -11,14 +11,15 @@ import { P } from '@ui/Typography/Text'
 import { Label } from '@ui/Typography/Text'
 
 import './vehicleSelector.scss'
+import { TFunction } from 'i18next'
 
 class VehicleAsOption {
   private internalVehicle: Vehicle
-  private unnamedVehicleString: string
+  private t: TFunction
 
-  constructor(vehicle: Vehicle, unnamedVehicleString: string) {
+  constructor(vehicle: Vehicle, t: TFunction) {
     this.internalVehicle = vehicle
-    this.unnamedVehicleString = unnamedVehicleString
+    this.t = t
   }
 
   get original() {
@@ -26,7 +27,7 @@ class VehicleAsOption {
   }
 
   get label() {
-    return getVehicleDisplayName(this.internalVehicle, this.unnamedVehicleString)
+    return getVehicleDisplayName(this.internalVehicle, this.t)
   }
 
   get id() {
@@ -78,7 +79,7 @@ export function VehicleSelector({
   const unnamedVehicleString = t('vehicles:label.unnamed_vehicle', 'Unnamed Vehicle')
 
   const options = useMemo(() => {
-    return data?.map(vehicle => new VehicleAsOption(vehicle, unnamedVehicleString)) || []
+    return data?.map(vehicle => new VehicleAsOption(vehicle, t)) || []
   }, [data, unnamedVehicleString])
 
   const onSelectedValueChange = useCallback((option: VehicleAsOption | null) => {
@@ -91,7 +92,7 @@ export function VehicleSelector({
         return null
       }
 
-      return new VehicleAsOption(selectedVehicle, unnamedVehicleString)
+      return new VehicleAsOption(selectedVehicle, t)
     },
     [selectedVehicle, unnamedVehicleString],
   )
