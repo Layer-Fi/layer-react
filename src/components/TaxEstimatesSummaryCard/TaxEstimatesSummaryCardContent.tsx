@@ -42,10 +42,10 @@ export const Content = ({ state, data, mode, layout }: Omit<ContentProps, 'commo
   switch (state) {
     case TaxSummaryState.NO_TRANSACTIONS:
       return <TaxEstimatesSummaryCardEmpty />
-    case TaxSummaryState.NEGATIVE_TAXES_OWED:
+    case TaxSummaryState.NO_TAXES_OWED:
       return <TaxEstimatesSummaryCardNegativeOrZero />
     case TaxSummaryState.UNKNOWN:
-    case TaxSummaryState.ZERO_OR_POSITIVE_TAXES_OWED:
+    case TaxSummaryState.TAXES_OWED:
       if (mode === TaxEstimatesSummaryCardMode.HorizontalBarChart) {
         return <HorizontalBarChartContent data={data} commonProps={commonProps} />
       }

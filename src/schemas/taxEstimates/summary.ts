@@ -6,8 +6,8 @@ const TaxSummarySectionTypeSchema = Schema.Literal('federal', 'state')
 
 export enum TaxSummaryState {
   NO_TRANSACTIONS = 'NO_TRANSACTIONS',
-  NEGATIVE_TAXES_OWED = 'NEGATIVE_TAXES_OWED',
-  ZERO_OR_POSITIVE_TAXES_OWED = 'ZERO_OR_POSITIVE_TAXES_OWED',
+  NO_TAXES_OWED = 'NO_TAXES_OWED',
+  TAXES_OWED = 'TAXES_OWED',
   UNKNOWN = 'UNKNOWN',
 }
 

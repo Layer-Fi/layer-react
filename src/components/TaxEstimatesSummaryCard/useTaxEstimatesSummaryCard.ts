@@ -44,7 +44,7 @@ export const useTaxEstimatesSummaryCard = () => {
     detailData,
     isLoading,
     isError,
-    state: taxSummaryData?.state ?? TaxSummaryState.ZERO_OR_POSITIVE_TAXES_OWED,
+    state: taxSummaryData?.state ?? TaxSummaryState.TAXES_OWED,
     layout: isDesktop ? 'taxOverview' as const : 'summaryCard' as const,
     title: t('taxEstimates:label.tax_summary', 'Tax Summary'),
   }
