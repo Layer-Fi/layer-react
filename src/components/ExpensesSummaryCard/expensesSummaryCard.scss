@@ -27,12 +27,14 @@
     inline-size: auto;
     min-inline-size: 14rem;
     max-inline-size: 18rem;
+    margin-inline: auto;
   }
 
   .Layer__profit-and-loss-detailed-charts__content > .Layer__DetailedTable {
     overflow-x: hidden;
     overflow-y: auto;
     min-block-size: 0;
+    inline-size: 100%;
     min-inline-size: 0;
 
     @media (width <= 767px) {
@@ -55,7 +57,12 @@
   }
 
   .Layer__profit-and-loss-detailed-charts .Layer__DetailedChart__container {
+    transition: padding 0.2s ease-in-out;
     padding-inline: var(--spacing-md);
+
+    @media (width <= 767px) {
+      padding-inline: 0;
+    }
   }
 
   .Layer__DetailedTable {
