@@ -7,9 +7,9 @@ export const TaxEstimatesSummaryCardError = () => {
   return (
     <DataState
       className='Layer__TaxEstimatesSummaryCard__DataState Layer__TaxEstimatesSummaryCard__DataState--error Layer__data-state--reset'
-      status={DataStateStatus.info}
+      status={DataStateStatus.failed}
       title={t('taxEstimates:error.load_tax_estimates_summary', 'We couldn\'t load your tax summary')}
-      description={t('taxEstimates:error.load_tax_estimates_summary_description', 'An error occurred while loading your tax summary. Please check your connection and try again.')}
+      description={t('taxEstimates:error.while_loading_tax_estimates_summary', 'An error occurred while loading your tax summary. Please check your connection and try again.')}
     />
   )
 }

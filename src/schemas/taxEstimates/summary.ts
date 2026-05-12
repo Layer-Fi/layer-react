@@ -14,7 +14,7 @@ export enum TaxSummaryState {
 export const TransformedTaxSummaryStateSchema = createTransformedEnumSchema(
   Schema.Enums(TaxSummaryState),
   TaxSummaryState,
-  TaxSummaryState.NO_TRANSACTIONS,
+  TaxSummaryState.UNKNOWN,
 )
 
 export type TaxSummarySectionType = typeof TaxSummarySectionTypeSchema.Type

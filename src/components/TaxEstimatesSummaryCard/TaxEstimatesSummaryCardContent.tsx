@@ -17,7 +17,6 @@ import { resolveCategoryColor } from './constants'
 import { TaxEstimatesSummaryCardEmpty } from './states/TaxEstimatesSummaryCardEmpty'
 import { TaxEstimatesSummaryCardNegativeOrZero } from './states/TaxEstimatesSummaryCardNegativeOrZero'
 import { TaxEstimatesSummaryCardMode } from './TaxEstimatesSummaryCard'
-import { useTaxEstimatesSummaryCard } from './useTaxEstimatesSummaryCard'
 
 type CommonProps = Pick<DetailedChartProps<SeriesData>, 'interactionProps' | 'stylingProps'>
 
@@ -29,11 +28,9 @@ export type ContentProps = {
   layout: 'taxOverview' | 'summaryCard'
 }
 
-export const Content = ({ state, data, mode }: Omit<ContentProps, 'commonProps'>) => {
-  const { detailData, layout } = useTaxEstimatesSummaryCard()
-
+export const Content = ({ state, data, mode, layout }: Omit<ContentProps, 'commonProps'>) => {
   const commonProps: CommonProps = useMemo(() => {
-    const colorByKey = detailData?.data?.reduce<Record<string, string>>((acc, item) => {
+    const colorByKey = data?.data?.reduce<Record<string, string>>((acc, item) => {
       acc[item.name] = resolveCategoryColor({ key: item.name as TaxSummarySectionType })
       return acc
     }, {})
@@ -42,7 +39,7 @@ export const Content = ({ state, data, mode }: Omit<ContentProps, 'commonProps'>
       interactionProps: NO_OP_INTERACTION_PROPS,
       stylingProps: { colorSelector: (item: SeriesData) => ({ color: colorByKey?.[item.name] ?? 'var(--color-base-300)', opacity: 1 }) },
     }
-  }, [detailData?.data])
+  }, [data])
 
   switch (state) {
     case TaxSummaryState.NO_TRANSACTIONS:
