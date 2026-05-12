@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type TaxSummarySectionType, TaxSummaryState } from '@schemas/taxEstimates/summary'
@@ -6,7 +7,7 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { HorizontalBarChart } from '@ui/HorizontalBarChart/HorizontalBarChart'
 import { LegendLayout } from '@ui/Legend/Legend'
-import { HStack, VStack } from '@ui/Stack/Stack'
+import { HStack, Stack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { DetailedChart, type DetailedChartProps } from '@components/DetailedCharts/DetailedChart'
 import { type DetailData, type SeriesData } from '@components/DetailedCharts/types'
@@ -78,20 +79,20 @@ const HorizontalBarChartContent = ({ data, commonProps }: Pick<ContentProps, 'da
 
 const PieChartContent = ({ data, commonProps, layout }: Pick<ContentProps, 'data' | 'commonProps' | 'layout'>) => {
   const { isMobile } = useSizeClass()
-  const isSummaryCardLayout = layout === 'summaryCard'
+  const isVerticalLayout = isMobile || layout === 'summaryCard'
+  const stackProps = {
+    direction: isVerticalLayout ? 'column' as const : 'row' as const,
+    className: classNames(
+      'Layer__TaxEstimatesSummaryCard__Content',
+      isVerticalLayout && 'Layer__TaxEstimatesSummaryCard__Content--mobile',
+    ),
+    gap: 'lg' as const,
+    align: isVerticalLayout ? undefined : 'center' as const,
+  }
   return (
-    isMobile || isSummaryCardLayout
-      ? (
-        <VStack className='Layer__TaxEstimatesSummaryCard__Content Layer__TaxEstimatesSummaryCard__Content--mobile' gap='lg'>
-          <DetailedChart<SeriesData> data={data} {...commonProps} />
-          <DetailedTableWithData<SeriesData> data={data} {...commonProps} {...NO_SORT_PROPS} />
-        </VStack>
-      )
-      : (
-        <HStack className='Layer__TaxEstimatesSummaryCard__Content' align='center' gap='lg'>
-          <DetailedChart<SeriesData> data={data} {...commonProps} />
-          <DetailedTableWithData<SeriesData> data={data} {...commonProps} {...NO_SORT_PROPS} />
-        </HStack>
-      )
+    <Stack {...stackProps}>
+      <DetailedChart<SeriesData> data={data} {...commonProps} />
+      <DetailedTableWithData<SeriesData> data={data} {...commonProps} {...NO_SORT_PROPS} />
+    </Stack>
   )
 }
