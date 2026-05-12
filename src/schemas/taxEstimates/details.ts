@@ -46,6 +46,7 @@ const TaxDetailsRowSchema = Schema.Struct({
 
 const TaxDetailsMetaSchema = Schema.Struct({
   year: Schema.Number,
+  state: TransformedTaxSummaryStateSchema,
   filingStatus: pipe(
     Schema.propertySignature(Schema.String),
     Schema.fromKey('filing_status'),
@@ -56,7 +57,6 @@ export type TaxDetailsMeta = typeof TaxDetailsMetaSchema.Type
 
 const TaxDetailsSchema = Schema.Struct({
   type: Schema.String,
-  state: TransformedTaxSummaryStateSchema,
   meta: TaxDetailsMetaSchema,
   rows: Schema.Array(TaxDetailsRowSchema),
 })
