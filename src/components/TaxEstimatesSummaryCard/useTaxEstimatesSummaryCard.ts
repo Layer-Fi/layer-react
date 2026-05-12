@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type TaxSummary, type TaxSummarySectionType } from '@schemas/taxEstimates/summary'
+import { type TaxSummary, type TaxSummarySectionType, TaxSummaryState } from '@schemas/taxEstimates/summary'
 import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
@@ -33,6 +33,7 @@ export const useTaxEstimatesSummaryCard = () => {
     if (!taxSummaryData) return undefined
 
     const data = prepareTaxSummaryData(taxSummaryData, shortenedDisplayName, isMobile)
+
     return {
       data,
       total: data.reduce((sum, section) => sum + section.value, 0),
@@ -43,6 +44,7 @@ export const useTaxEstimatesSummaryCard = () => {
     detailData,
     isLoading,
     isError,
+    state: taxSummaryData?.state ?? TaxSummaryState.TAXES_OWED,
     layout: isDesktop ? 'taxOverview' as const : 'summaryCard' as const,
     title: t('taxEstimates:label.tax_summary', 'Tax Summary'),
   }
