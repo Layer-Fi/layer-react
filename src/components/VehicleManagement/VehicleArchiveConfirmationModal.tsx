@@ -25,7 +25,7 @@ export function VehicleArchiveConfirmationModal({
     await archiveVehicle()
   }, [archiveVehicle])
 
-  const vehicleName = getVehicleDisplayName(vehicle)
+  const vehicleName = getVehicleDisplayName(vehicle, t('vehicles:label.unnamed_vehicle', 'Unnamed Vehicle'))
 
   return (
     <BaseConfirmationModal

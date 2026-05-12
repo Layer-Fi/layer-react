@@ -62,7 +62,7 @@ const getColumnConfig = (
   {
     id: TripColumns.Vehicle,
     header: t('vehicles:label.vehicle', 'Vehicle'),
-    cell: (row: TripsRowType) => <Span ellipsis withTooltip>{getVehicleDisplayName(row.original.vehicle)}</Span>,
+    cell: (row: TripsRowType) => <Span ellipsis withTooltip>{getVehicleDisplayName(row.original.vehicle, t('vehicles:label.unnamed_vehicle', 'Unnamed Vehicle'))}</Span>,
     isRowHeader: true,
   },
   {

@@ -14,9 +14,11 @@ import './vehicleSelector.scss'
 
 class VehicleAsOption {
   private internalVehicle: Vehicle
+  private unnamedVehicleString: string
 
-  constructor(vehicle: Vehicle) {
+  constructor(vehicle: Vehicle, unnamedVehicleString: string) {
     this.internalVehicle = vehicle
+    this.unnamedVehicleString = unnamedVehicleString
   }
 
   get original() {
@@ -24,7 +26,7 @@ class VehicleAsOption {
   }
 
   get label() {
-    return getVehicleDisplayName(this.internalVehicle)
+    return getVehicleDisplayName(this.internalVehicle, this.unnamedVehicleString)
   }
 
   get id() {
@@ -73,9 +75,11 @@ export function VehicleSelector({
 
   const { data, isLoading, isError } = useListVehicles()
 
+  const unnamedVehicleString = t('vehicles:label.unnamed_vehicle', 'Unnamed Vehicle')
+
   const options = useMemo(() => {
-    return data?.map(vehicle => new VehicleAsOption(vehicle)) || []
-  }, [data])
+    return data?.map(vehicle => new VehicleAsOption(vehicle, unnamedVehicleString)) || []
+  }, [data, unnamedVehicleString])
 
   const onSelectedValueChange = useCallback((option: VehicleAsOption | null) => {
     onSelectedVehicleChange(option?.original || null)
@@ -87,9 +91,9 @@ export function VehicleSelector({
         return null
       }
 
-      return new VehicleAsOption(selectedVehicle)
+      return new VehicleAsOption(selectedVehicle, unnamedVehicleString)
     },
-    [selectedVehicle],
+    [selectedVehicle, unnamedVehicleString],
   )
 
   const EmptyMessage = useMemo(
