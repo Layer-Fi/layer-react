@@ -1,4 +1,11 @@
 .Layer__HorizontalBarChart {
+  .recharts-wrapper:focus,
+  .recharts-wrapper :focus,
+  .recharts-surface:focus,
+  .recharts-bar-rectangle:focus {
+    outline: none;
+  }
+
   container: horizontal-bar-chart / inline-size;
   inline-size: 100%;
 }
