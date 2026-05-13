@@ -17,9 +17,12 @@ import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossOverviewDetailedCharts } from '@components/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
 import { type ProfitAndLossSummariesStringOverrides } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
+import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
 import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
 import { View } from '@components/View/View'
 import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
+
+import './bookkeepingOverview.scss'
 
 type BookkeepingOverviewTasksContentProps = {
   callBooking?: CallBookingData
@@ -111,7 +114,7 @@ export const BookkeepingOverview = ({
   return (
     <ProfitAndLoss asContainer={false}>
       <View
-        viewClassName='Layer__bookkeeping-overview--view'
+        viewClassName='Layer__bookkeeping-overview--view Layer__BookkeepingOverview'
         title={stringOverrides?.title || title || t('overview:label.bookkeeping_overview', 'Bookkeeping overview')}
         header={(
           <Header>
@@ -160,6 +163,7 @@ export const BookkeepingOverview = ({
         >
           <Container
             name='bookkeeping-overview-profit-and-loss'
+            className='Layer__BookkeepingOverview__ProfitAndLossContainer'
             asWidget
             style={{
               position: 'relative',
@@ -169,6 +173,7 @@ export const BookkeepingOverview = ({
             <ProfitAndLoss.Header
               text={stringOverrides?.profitAndLoss?.header || t('common:label.profit_loss', 'Profit & Loss')}
               withStatus
+              trailingContent={<PnlLegend direction='row' />}
             />
             <VStack pb='md' pi='md' fluid>
               <ProfitAndLoss.Summaries
@@ -176,7 +181,7 @@ export const BookkeepingOverview = ({
                 variants={profitAndLossSummariesVariants}
               />
             </VStack>
-            <ProfitAndLoss.Chart />
+            <ProfitAndLoss.Chart hideLegend />
           </Container>
         </div>
         <ProfitAndLossOverviewDetailedCharts

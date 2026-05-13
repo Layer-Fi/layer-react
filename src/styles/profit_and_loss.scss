@@ -24,10 +24,6 @@
   font-size: 0.75rem;
 }
 
-.Layer__profit-and-loss-chart .recharts-legend-wrapper {
-  margin-top: -46px;
-}
-
 .Layer__profit-and-loss-chart .recharts-legend-item-text {
   font-size: 12px;
   color: var(--color-base-700);
@@ -49,12 +45,6 @@
 
 .Layer__profit-and-loss-chart .legend-item-2 {
   fill: var(--base-transparent-16-light);
-}
-
-.Layer__profit-and-loss-chart__selection-indicator {
-  stroke: var(--chart-indicator-color);
-  fill: none;
-  transition: opacity 0.1s linear;
 }
 
 /** ---- */
