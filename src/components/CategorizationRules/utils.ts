@@ -20,16 +20,6 @@ export const getCategorizationRuleDirectionLabel = (
   return entry ? t(entry.i18nKey, entry.defaultValue) : t('categorizationRules:label.any_direction', 'Any direction')
 }
 
-// Strip Java-style `\Q...\E` literal-quote markers from a regex-based
-// transaction_description_filter so it reads as plain text. Only strips when
-// the whole filter is a single `\Q...\E` block — anything more elaborate falls
-// through unchanged so we don't silently hide unquoted regex parts.
-export const parseTransactionDescriptionFilter = (filter: string): string => {
-  return filter.match(/^\\Q(.*)\\E$/)?.[1] ?? filter
-}
-
 export const getCategorizationRuleCounterpartyLabel = (rule: CategorizationRule): string | undefined => {
-  if (rule.counterpartyFilter?.name) return rule.counterpartyFilter.name
-  if (rule.transactionDescriptionFilter) return parseTransactionDescriptionFilter(rule.transactionDescriptionFilter)
-  return undefined
+  return rule.counterpartyFilter?.name ?? rule.readableTransactionDescriptionFilter ?? undefined
 }
