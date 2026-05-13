@@ -25,7 +25,7 @@ export function VehicleReactivateConfirmationModal({
     await reactivateVehicle()
   }, [reactivateVehicle])
 
-  const vehicleName = getVehicleDisplayName(vehicle)
+  const vehicleName = getVehicleDisplayName(vehicle, t)
 
   return (
     <BaseConfirmationModal

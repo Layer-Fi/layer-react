@@ -72,3 +72,10 @@ export const getLeafCategories = (categories: NestedCategorization[]): NestedCat
     return getLeafCategories(category.subCategories)
   })
 }
+
+export const flattenCategories = (categories: NestedCategorization[]): NestedCategorization[] => {
+  return categories.flatMap(category => [
+    category,
+    ...(category.subCategories ? flattenCategories(category.subCategories) : []),
+  ])
+}

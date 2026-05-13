@@ -1,4 +1,5 @@
-import { SelectionIndicator, ToggleButton } from 'react-aria-components'
+import { SelectionIndicator } from 'react-aria-components/SelectionIndicator'
+import { ToggleButton } from 'react-aria-components/ToggleButton'
 import { useTranslation } from 'react-i18next'
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'

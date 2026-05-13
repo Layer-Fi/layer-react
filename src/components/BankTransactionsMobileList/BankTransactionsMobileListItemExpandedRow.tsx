@@ -1,5 +1,4 @@
-import { useMemo, useState } from 'react'
-import type { Key } from 'react-aria-components'
+import { type Key, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
@@ -7,7 +6,6 @@ import { hasMatch } from '@utils/bankTransactions/shared'
 import { translationKey } from '@utils/i18n/translationKey'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import {
-  type BankTransactionCategorization,
   BankTransactionSelectionVariant,
   useBankTransactionsCategorizationActions,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
@@ -27,6 +25,10 @@ const PURPOSE_TOGGLE_CONFIG = [
 export interface BankTransactionsMobileListItemExpandedRowProps {
   bankTransaction: BankTransaction
   isOpen?: boolean
+
+  purpose: Purpose
+  setPurpose: (value: Purpose) => void
+
   showCategorization?: boolean
   showDescriptions: boolean
   showReceiptUploads: boolean
@@ -36,6 +38,8 @@ export interface BankTransactionsMobileListItemExpandedRowProps {
 export const BankTransactionsMobileListItemExpandedRow = ({
   bankTransaction,
   isOpen,
+  purpose,
+  setPurpose,
   showCategorization,
   showDescriptions,
   showReceiptUploads,
@@ -44,8 +48,6 @@ export const BankTransactionsMobileListItemExpandedRow = ({
   const { t } = useTranslation()
   const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
   const { setTransactionSelectionVariant } = useBankTransactionsCategorizationActions()
-
-  const [purpose, setPurpose] = useState(getPurposeFromStore(selectedCategorization))
 
   const purposeToggleOptions = useMemo(
     () => PURPOSE_TOGGLE_CONFIG.map(opt => ({
@@ -92,20 +94,4 @@ export const BankTransactionsMobileListItemExpandedRow = ({
     </VStack>
 
   )
-}
-
-const getPurposeFromStore = (selectedCategorization: BankTransactionCategorization): Purpose => {
-  if (selectedCategorization.variant === BankTransactionSelectionVariant.MATCH) {
-    return Purpose.more
-  }
-
-  if (selectedCategorization.category === null) {
-    return Purpose.business
-  }
-
-  if (isSplitAsOption(selectedCategorization.category)) {
-    return Purpose.more
-  }
-
-  return Purpose.business
 }

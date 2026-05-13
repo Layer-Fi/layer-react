@@ -1,6 +1,7 @@
 .Layer__UI__Banner {
   box-sizing: border-box;
   min-height: 56px;
+  width: 100%;
   padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--border-radius-sm);
   border: 1px solid var(--banner-border-color);
@@ -43,6 +44,21 @@
     --banner-border-color: color-mix(in srgb, var(--color-info-success) 50%, var(--color-base-0));
     --banner-icon-color: var(--color-info-success-fg);
     --banner-icon-bg: var(--color-info-success-bg);
+  }
+
+  @media (width <= 500px) {
+    &.Layer__Stack {
+      flex-direction: column;
+      align-items: stretch;
+
+      .Layer__UI__Banner__actions {
+        width: 100%;
+
+        .Layer__UI__Button {
+          inline-size: 100%;
+        }
+      }
+    }
   }
 }
 

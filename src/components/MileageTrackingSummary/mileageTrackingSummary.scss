@@ -1,0 +1,18 @@
+.Layer__MileageTrackingSummary__Cards {
+  min-width: 12rem;
+}
+
+@media (width <= 760px) {
+  .Layer__MileageTrackingSummary__Cards {
+    min-width: 0;
+
+    .Layer__MileageTrackingSummary__StatCardSlot {
+      display: flex;
+      flex: 1;
+
+      > * {
+        flex: 1;
+      }
+    }
+  }
+}

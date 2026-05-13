@@ -2,7 +2,6 @@
 .Layer__Label,
 .Layer__P,
 .Layer__Span {
-  max-inline-size: min(80ch, 60rem);
   margin: 0;
   font-size: var(--text-md);
   line-height: 140%;
@@ -37,6 +36,10 @@
 
   &[data-no-wrap] {
     white-space: nowrap;
+  }
+
+  &[data-numeric='tabular-nums'] {
+    font-variant-numeric: tabular-nums;
   }
 
   &[data-ellipsis],
@@ -93,4 +96,16 @@
    * A `label` is an inline element by default. This change allows us to apply padding.
    */
   display: inline-block;
+}
+
+.Layer__Span[data-ellipsis],
+.Layer__Span[data-with-tooltip] {
+  /*
+   * `Span` is `display: inline` by default, which ignores `overflow` and `text-overflow`
+   * — so ellipsis silently does nothing. Promote to `inline-block` so the rules above
+   * actually apply, and pin `vertical-align` so the new baseline doesn't shift the span
+   * relative to neighbouring inline content.
+   */
+  display: inline-block;
+  vertical-align: middle;
 }

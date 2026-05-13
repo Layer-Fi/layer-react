@@ -1,4 +1,19 @@
+import type { TFunction } from 'i18next'
+
 import type { Vehicle } from '@schemas/vehicle'
 
-export const getVehicleDisplayName = (vehicle: Vehicle | null | undefined): string =>
-  vehicle ? `${vehicle.year} ${vehicle.makeAndModel}` : ''
+import { translationKey } from './i18n/translationKey'
+
+const unnamedVehicle = translationKey('vehicles:label.unnamed_vehicle', 'Unnamed vehicle')
+
+export const getVehicleDisplayName = (vehicle: Vehicle | null | undefined, t: TFunction): string => {
+  if (!vehicle) return ''
+
+  const makeAndModel = vehicle.makeAndModel.trim()
+
+  if (vehicle.year == null) {
+    return makeAndModel || t(unnamedVehicle.i18nKey, unnamedVehicle.defaultValue)
+  }
+
+  return `${vehicle.year} ${makeAndModel}`.trim()
+}

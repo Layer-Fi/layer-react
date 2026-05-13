@@ -37,9 +37,21 @@ const TaxEstimatesBannerQuarterSchema = Schema.Struct({
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('uncategorized_count'),
   ),
-  uncategorizedSum: pipe(
+  uncategorizedMoneyIn: pipe(
     Schema.propertySignature(Schema.Number),
-    Schema.fromKey('uncategorized_sum'),
+    Schema.fromKey('uncategorized_money_in'),
+  ),
+  uncategorizedMoneyOut: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('uncategorized_money_out'),
+  ),
+  earliestUncategorizedAt: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
+    Schema.fromKey('earliest_uncategorized_at'),
+  ),
+  latestUncategorizedAt: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
+    Schema.fromKey('latest_uncategorized_at'),
   ),
 })
 
@@ -59,9 +71,21 @@ const TaxEstimatesBannerSchema = Schema.Struct({
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('total_uncategorized_count'),
   ),
-  totalUncategorizedSum: pipe(
+  totalUncategorizedMoneyIn: pipe(
     Schema.propertySignature(Schema.Number),
-    Schema.fromKey('total_uncategorized_sum'),
+    Schema.fromKey('total_uncategorized_money_in'),
+  ),
+  totalUncategorizedMoneyOut: pipe(
+    Schema.propertySignature(Schema.Number),
+    Schema.fromKey('total_uncategorized_money_out'),
+  ),
+  earliestUncategorizedAt: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
+    Schema.fromKey('earliest_uncategorized_at'),
+  ),
+  latestUncategorizedAt: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Date)),
+    Schema.fromKey('latest_uncategorized_at'),
   ),
   quarters: Schema.Array(TaxEstimatesBannerQuarterSchema),
 })

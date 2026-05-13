@@ -1,0 +1,11 @@
+.Layer__SolopreneurOverview__Grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, auto);
+  gap: var(--spacing-md);
+  max-inline-size: 1406px;
+
+  @container (max-width: 1023px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

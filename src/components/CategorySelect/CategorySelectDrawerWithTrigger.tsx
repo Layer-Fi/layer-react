@@ -5,19 +5,26 @@ import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTran
 import ChevronDown from '@icons/ChevronDown'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
-import { Span } from '@ui/Typography/Text'
+import { Span, type TextStyleProps } from '@ui/Typography/Text'
 import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 
 import './categorySelectDrawerWithTrigger.scss'
 
-type Props = {
-  value: BankTransactionNonSuggestedMatchOption | null
-  onChange: (newValue: BankTransactionNonSuggestedMatchOption | null) => void
-  disabled?: boolean
+type CategorySelectDrawerWithTriggerProps = {
+  selectedValue: BankTransactionNonSuggestedMatchOption | null
+  onSelectedValueChange: (newValue: BankTransactionNonSuggestedMatchOption | null) => void
   showTooltips: boolean
+  slotProps?: {
+    TriggerSpan?: TextStyleProps
+  }
 }
 
-export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips }: Props) => {
+export const CategorySelectDrawerWithTrigger = ({
+  selectedValue,
+  onSelectedValueChange,
+  showTooltips,
+  slotProps,
+}: CategorySelectDrawerWithTriggerProps) => {
   const { t } = useTranslation()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
@@ -29,13 +36,13 @@ export const CategorySelectDrawerWithTrigger = ({ value, onChange, showTooltips 
         onClick={() => { setIsDrawerOpen(true) }}
         variant='outlined'
       >
-        <Span ellipsis>{value?.label ?? t('common:action.select_label', 'Select...')}</Span>
+        <Span ellipsis size='md' {...slotProps?.TriggerSpan}>{selectedValue?.label ?? t('common:action.select_label', 'Select...')}</Span>
         <ChevronDown size={16} />
       </Button>
 
       <CategorySelectDrawer
-        onSelect={onChange}
-        selectedId={value?.value}
+        onSelectedValueChange={onSelectedValueChange}
+        selectedValue={selectedValue}
         showTooltips={showTooltips}
         isOpen={isDrawerOpen}
         onOpenChange={setIsDrawerOpen}

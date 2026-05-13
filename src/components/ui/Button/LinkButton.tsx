@@ -1,5 +1,8 @@
 import { forwardRef } from 'react'
-import { Link as ReactAriaLink, type LinkProps as ReactAriaLinkProps } from 'react-aria-components'
+import {
+  Link as ReactAriaLink,
+  type LinkProps as ReactAriaLinkProps,
+} from 'react-aria-components/Link'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { BUTTON_CLASS_NAMES, type ButtonStyleProps } from '@ui/Button/Button'

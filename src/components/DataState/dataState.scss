@@ -54,6 +54,18 @@
   color: var(--color-base-500);
 }
 
+.Layer__data-state--reset {
+  gap: var(--spacing-xs);
+
+  .Layer__data-state__description {
+    margin-bottom: 0;
+  }
+
+  .Layer__data-state__icon {
+    margin-bottom: 0;
+  }
+}
+
 .Layer__data-state--inline {
   flex-direction: row;
   gap: var(--spacing-xs);

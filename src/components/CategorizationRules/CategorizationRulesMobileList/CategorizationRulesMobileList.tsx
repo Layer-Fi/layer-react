@@ -9,7 +9,7 @@ import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { ResolvedCategoryName } from '@components/CategorizationRules/ResolvedCategoryName'
-import { getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
+import { getCategorizationRuleCounterpartyLabel, getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
 import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
 import './categorizationRulesMobileList.scss'
@@ -26,10 +26,11 @@ const CategorizationRuleMobileListItem = ({
   onDeletePress,
 }: CategorizationRuleMobileListItemProps) => {
   const { t } = useTranslation()
+  const counterpartyLabel = getCategorizationRuleCounterpartyLabel(rule)
   return (
     <HStack justify='space-between' align='center' gap='sm' className='Layer__CategorizationRulesMobileListItem'>
       <VStack gap='2xs' className='Layer__CategorizationRulesMobileListItem__Content'>
-        <Span weight='bold' ellipsis>{rule.counterpartyFilter?.name}</Span>
+        <Span weight='bold' ellipsis>{counterpartyLabel}</Span>
         <HStack gap='3xs' align='center'>
           <Span size='sm' variant='subtle'>{t('common:label.direction', 'Direction:')}</Span>
           <Span size='sm' variant='subtle'>{getCategorizationRuleDirectionLabel(rule.bankDirectionFilter, t)}</Span>

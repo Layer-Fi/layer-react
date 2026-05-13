@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useIntl } from 'react-intl'
 
 import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
 import { SplitAsOption } from '@internal-types/categorizationOption'
+import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
 import { convertCentsToDecimalString } from '@utils/format'
 import { toLocalizedNumber } from '@utils/i18n/number/input'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
@@ -44,21 +45,47 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
   const { t } = useTranslation()
   const intl = useIntl()
   const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
-  const { category: selectedCategory } = selectedCategorization
+  const { category: selectedCategory, taxCode: selectedTaxCode } = selectedCategorization
+
+  const prevIsOpenRef = useRef<boolean | undefined>(isOpen)
+  const prevBankTransactionRef = useRef<BankTransaction>(bankTransaction)
 
   const [localSplits, setLocalSplits] = useState<Split[]>(
-    getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory),
+    getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory, selectedTaxCode),
   )
 
   const [inputValues, setInputValues] = useState<Record<number, string>>({})
   const [splitFormError, setSplitFormError] = useState<string | undefined>()
-  const { setTransactionCategorySelection } = useBankTransactionsCategorizationActions()
+  const {
+    setTransactionCategorySelection,
+    setTransactionTaxCodeSelection,
+  } = useBankTransactionsCategorizationActions()
 
-  useEffect(() => {
-    setLocalSplits(getLocalSplitStateForExpandedTransaction(bankTransaction, selectedCategory))
+  const resetLocalSplits = useCallback(() => {
+    setLocalSplits(getLocalSplitStateForExpandedTransaction(
+      bankTransaction,
+      selectedCategory,
+      selectedTaxCode,
+    ))
     setSplitFormError(undefined)
     setInputValues({})
-  }, [bankTransaction, selectedCategory, isOpen])
+  }, [bankTransaction, selectedCategory, selectedTaxCode])
+
+  useEffect(() => {
+    if (prevBankTransactionRef.current === bankTransaction) return
+
+    resetLocalSplits()
+
+    prevBankTransactionRef.current = bankTransaction
+  }, [bankTransaction, resetLocalSplits])
+
+  useEffect(() => {
+    if (prevIsOpenRef.current === isOpen) return
+
+    resetLocalSplits()
+
+    prevIsOpenRef.current = isOpen
+  }, [isOpen, resetLocalSplits])
 
   const saveLocalSplitsToCategoryStore = useCallback((splits: Split[]) => {
     if (!isSplitsValid(splits)) {
@@ -67,8 +94,12 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
     }
 
     setTransactionCategorySelection(bankTransaction.id, new SplitAsOption(splits))
+
+    const nextTaxCode = splits.length === 1 ? splits[0].taxCode : null
+    setTransactionTaxCodeSelection(bankTransaction.id, nextTaxCode ?? null)
+
     setSplitFormError(undefined)
-  }, [bankTransaction.id, setTransactionCategorySelection, t])
+  }, [bankTransaction.id, setTransactionCategorySelection, setTransactionTaxCodeSelection, t])
 
   const addSplit = useCallback(() => {
     const newSplits = calculateAddSplit(localSplits)
@@ -113,7 +144,11 @@ export const useSplitsForm = ({ bankTransaction, isOpen }: UseSplitsFormOptions)
     if (newCategory === null) return
 
     const newLocalSplits = [...localSplits]
-    newLocalSplits[index].category = newCategory
+    newLocalSplits[index] = {
+      ...newLocalSplits[index],
+      category: newCategory,
+      taxCode: canCategoryHaveTaxCode(newCategory) ? newLocalSplits[index].taxCode : null,
+    }
     setLocalSplits(newLocalSplits)
     setSplitFormError(undefined)
 

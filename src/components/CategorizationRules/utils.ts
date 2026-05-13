@@ -1,5 +1,6 @@
 import type { TFunction } from 'i18next'
 
+import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { BankDirectionFilter } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { translationKey } from '@utils/i18n/translationKey'
 
@@ -17,4 +18,8 @@ export const getCategorizationRuleDirectionLabel = (
   }
   const entry = DIRECTION_CONFIG.find(c => c.value === bankDirectionFilter)
   return entry ? t(entry.i18nKey, entry.defaultValue) : t('categorizationRules:label.any_direction', 'Any direction')
+}
+
+export const getCategorizationRuleCounterpartyLabel = (rule: CategorizationRule): string | undefined => {
+  return rule.counterpartyFilter?.name ?? rule.readableTransactionDescriptionFilter ?? undefined
 }

@@ -1,4 +1,4 @@
-import { GridListItem } from 'react-aria-components'
+import { GridListItem } from 'react-aria-components/GridList'
 
 import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
 import { isCredit } from '@utils/bankTransactions/shared'

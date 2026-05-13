@@ -41,11 +41,7 @@
   }
 
   &__AmountWithLabel {
-    min-width: 0;
-  }
-
-  &__Operator {
-    align-self: center;
+    min-inline-size: 5.5rem;
   }
 
   &--mobile {

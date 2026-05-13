@@ -6,8 +6,12 @@
   },
   "banner": {
     "categorization_incomplete": {
-      "description_one": "You have {{count}} uncategorized transaction with {{amount}} in potential deductions to review.",
-      "description_other": "You have {{count}} uncategorized transactions with {{amount}} in potential deductions to review.",
+      "description_one": "In tax year {{year}}, you have {{count}} uncategorized transaction with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
+      "description_other": "In tax year {{year}}, you have {{count}} uncategorized transactions with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
+      "description_short_one": "You have {{count}} uncategorized transaction: {{deductions}} in deductions and {{income}} in unrecognized income.",
+      "description_short_other": "You have {{count}} uncategorized transactions: {{deductions}} in deductions and {{income}} in unrecognized income.",
+      "description_with_range_one": "In tax year {{year}}, you have {{count}} uncategorized transaction spanning {{dateRange}} with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
+      "description_with_range_other": "In tax year {{year}}, you have {{count}} uncategorized transactions spanning from {{dateRange}} with potentially {{deductions}} in deductions and {{income}} in unrecognized income. Review and categorize your transactions for more accurate estimates.",
       "title": "Your tax estimates are incomplete"
     }
   },
@@ -18,7 +22,11 @@
   "empty": {
     "no_tax_details": "No tax details",
     "no_tax_details_description": "No tax details found",
+    "no_tax_estimates_summary": "Get started with your tax estimates",
+    "no_tax_estimates_summary_description": "Start by importing and categorizing your bank transactions",
     "no_tax_payments_to_display": "There are no tax payments to display.",
+    "tax_due_is_negative_or_zero": "No taxes owed this year",
+    "tax_due_is_negative_or_zero_description": "Your deductible losses exceed your income for this period, bringing your tax liability to zero.",
     "tax_payments": "No tax payments found"
   },
   "error": {
@@ -33,6 +41,7 @@
     "retrieve_tax_profile": "We couldn’t retrieve your tax profile. Please check your connection and try again.",
     "while_loading_tax_details": "An error occurred while loading your tax details. Please check your connection and try again.",
     "while_loading_tax_estimates": "An error occurred while loading your tax estimates. Please check your connection and try again.",
+    "while_loading_tax_estimates_summary": "An error occurred while loading your tax summary. Please check your connection and try again.",
     "while_loading_tax_payments": "An error occurred while loading your tax payments. Please check your connection and try again.",
     "while_loading_tax_summary": "An error occurred while loading your tax summary. Please check your connection and try again."
   },
@@ -46,6 +55,7 @@
     "categorization_incomplete": "Categorization incomplete",
     "deductions": "Deductions",
     "due": "Due",
+    "due_at": "Due on {{date}}",
     "due_with_date": "Due: {{date}}",
     "enter_amount": "Enter amount",
     "enter_area": "Enter area",
@@ -75,6 +85,8 @@
     "quarter_taxes": "{{quarterLabel}} taxes",
     "remaining_balance": "Remaining Balance",
     "rolled_over_from_previous_quarter": "Rolled Over From Previous Quarter",
+    "set_up_your_tax_profile": "Set up your tax profile",
+    "set_up_your_tax_profile_description": "Configuring your tax profile allows us to provide you with tax estimates and avoid any surprises come tax time.",
     "single": "Single",
     "state": "State",
     "tax_details": "Tax Details",
@@ -91,7 +103,6 @@
     "taxable_income_estimate_to_date_for_year_projected": "Taxable income projection for year {{year}}",
     "taxable_income_for_year": "Taxable income for {{year}}",
     "taxable_income_for_year_projected": "Projected taxable income for {{year}}",
-    "taxes_due_at": "Taxes due on {{date}}",
     "taxes_owed": "Taxes Owed",
     "taxes_owed_projected": "Projected Taxes Owed",
     "taxes_paid": "Taxes Paid",

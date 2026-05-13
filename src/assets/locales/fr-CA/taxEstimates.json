@@ -6,8 +6,12 @@
   },
   "banner": {
     "categorization_incomplete": {
-      "description_one": "Vous avez {{count}} transaction non catégorisée avec {{amount}} en déductions potentielles à examiner.",
-      "description_other": "Vous avez {{count}} transactions non catégorisées avec {{amount}} en déductions potentielles à examiner.",
+      "description_one": "Au cours de l’année d’imposition {{year}}, vous avez {{count}} transaction non catégorisée, avec potentiellement {{deductions}} en déductions et {{income}} en revenus non reconnus. Passez vos transactions en revue et catégorisez-les pour obtenir des estimations plus précises.",
+      "description_other": "Au cours de l’année d’imposition {{year}}, vous avez {{count}} transactions non catégorisées, avec potentiellement {{deductions}} en déductions et {{income}} en revenus non reconnus. Passez vos transactions en revue et catégorisez-les pour obtenir des estimations plus précises.",
+      "description_short_one": "Vous avez {{count}} transaction non catégorisée : {{deductions}} en déductions et {{income}} en revenus non reconnus.",
+      "description_short_other": "Vous avez {{count}} transactions non catégorisées: {{deductions}} en déductions et {{income}} en revenus non reconnus.",
+      "description_with_range_one": "Au cours de l’année d’imposition {{year}}, vous avez {{count}} transaction non catégorisée couvrant la période {{dateRange}}, avec potentiellement {{deductions}} en déductions et {{income}} en revenus non reconnus. Passez vos transactions en revue et catégorisez-les pour obtenir des estimations plus précises.",
+      "description_with_range_other": "Au cours de l’année d’imposition {{year}}, vous avez {{count}} transactions non catégorisées pour la période {{dateRange}}, avec potentiellement {{deductions}} en déductions et {{income}} en revenus non reconnus. Passez vos transactions en revue et catégorisez-les pour obtenir des estimations plus précises.",
       "title": "Vos estimations fiscales sont incomplètes"
     }
   },
@@ -18,7 +22,11 @@
   "empty": {
     "no_tax_details": "Aucun détail fiscal",
     "no_tax_details_description": "Aucun détail fiscal trouvé",
+    "no_tax_estimates_summary": "Commencez vos estimations d’impôt",
+    "no_tax_estimates_summary_description": "Commencez par importer et catégoriser vos opérations bancaires",
     "no_tax_payments_to_display": "Il n’y a aucun paiement d’impôt à afficher.",
+    "tax_due_is_negative_or_zero": "Aucun impôt à payer cette année",
+    "tax_due_is_negative_or_zero_description": "Vos pertes déductibles dépassent votre revenu pour cette période, ce qui ramène votre impôt à payer à zéro.",
     "tax_payments": "Aucun paiement d’impôt trouvé"
   },
   "error": {
@@ -33,6 +41,7 @@
     "retrieve_tax_profile": "Nous n’avons pas pu récupérer votre profil fiscal. Veuillez vérifier votre connexion et réessayer.",
     "while_loading_tax_details": "Une erreur s’est produite lors du chargement de vos détails fiscaux. Veuillez vérifier votre connexion et réessayer.",
     "while_loading_tax_estimates": "Une erreur s’est produite lors du chargement de vos estimations d’impôt. Veuillez vérifier votre connexion et réessayer.",
+    "while_loading_tax_estimates_summary": "Une erreur s'est produite lors du chargement de votre sommaire fiscal. Veuillez vérifier votre connexion et réessayer.",
     "while_loading_tax_payments": "Une erreur s’est produite lors du chargement de vos paiements d’impôt. Veuillez vérifier votre connexion et réessayer.",
     "while_loading_tax_summary": "Une erreur s’est produite lors du chargement de votre sommaire fiscal. Veuillez vérifier votre connexion et réessayer."
   },
@@ -46,6 +55,7 @@
     "categorization_incomplete": "Catégorisation incomplète",
     "deductions": "Déductions",
     "due": "Échéance",
+    "due_at": "Échéance le {{date}}",
     "due_with_date": "Échéance : {{date}}",
     "enter_amount": "Saisissez un montant",
     "enter_area": "Saisissez la superficie",
@@ -75,6 +85,8 @@
     "quarter_taxes": "Impôts du {{quarterLabel}}",
     "remaining_balance": "Solde restant",
     "rolled_over_from_previous_quarter": "Reporté du trimestre précédent",
+    "set_up_your_tax_profile": "Configurez votre profil fiscal",
+    "set_up_your_tax_profile_description": "La configuration de votre profil fiscal nous permet de vous fournir des estimations d'impôt et d'éviter les mauvaises surprises au moment des impôts.",
     "single": "Célibataire",
     "state": "État",
     "tax_details": "Détails fiscaux",
@@ -91,7 +103,6 @@
     "taxable_income_estimate_to_date_for_year_projected": "Projection du revenu imposable pour l’année {{year}}",
     "taxable_income_for_year": "Revenu imposable pour {{year}}",
     "taxable_income_for_year_projected": "Revenu imposable projeté pour {{year}}",
-    "taxes_due_at": "Taxes à payer le {{date}}",
     "taxes_owed": "Impôts dus",
     "taxes_owed_projected": "Impôts dus projetés",
     "taxes_paid": "Impôts payés",

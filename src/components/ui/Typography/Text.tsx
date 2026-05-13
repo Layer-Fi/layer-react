@@ -2,8 +2,9 @@ import { forwardRef, useRef } from 'react'
 import classNames from 'classnames'
 import type React from 'react'
 import type { ComponentPropsWithoutRef, PropsWithChildren } from 'react'
-import { Text as ReactAriaText } from 'react-aria-components'
-import { Header as ReactAriaHeader, Label as ReactAriaLabel } from 'react-aria-components'
+import { Header as ReactAriaHeader } from 'react-aria-components/Header'
+import { Label as ReactAriaLabel } from 'react-aria-components/Label'
+import { Text as ReactAriaText } from 'react-aria-components/Text'
 import { mergeRefs } from 'react-merge-refs'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
@@ -17,6 +18,7 @@ export type TextStyleProps = {
   align?: 'center' | 'right'
   ellipsis?: true
   noWrap?: true
+  numeric?: 'tabular-nums'
   pb?: Spacing
   pbe?: Spacing
   pbs?: Spacing
@@ -38,6 +40,7 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
     ellipsis,
     nonAria,
     noWrap,
+    numeric,
     pb,
     pbe,
     pbs,
@@ -54,6 +57,7 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
       align,
       ellipsis,
       'no-wrap': noWrap,
+      numeric,
       pb,
       pbe,
       pbs,

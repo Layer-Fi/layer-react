@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import ChevronDown from '@icons/ChevronDown'
@@ -8,11 +8,11 @@ import type {
   OptionsOrGroups,
   SingleSelectComboBoxProps,
 } from '@ui/ComboBox/types'
-import { filterOptionsOrGroups } from '@ui/MobileSelectionDrawer/filterUtils'
+import { filterOptionsOrGroups, resolveSelectedOption } from '@ui/MobileSelectionDrawer/filterUtils'
 import { MobileSelectionDrawerList } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerList'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
-import { VStack } from '@ui/Stack/Stack'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { SearchField } from '@components/SearchField/SearchField'
 
@@ -24,6 +24,11 @@ export type MobileSelectionDrawerWithTriggerProps<T extends ComboBoxOption> =
     ariaLabel: string
     heading: string
     searchPlaceholder?: string
+    slotProps?: {
+      Trigger?: {
+        icon?: ReactNode
+      }
+    }
   }
 
 export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
@@ -37,6 +42,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
   isDisabled = false,
   isSearchable = false,
   searchPlaceholder,
+  slotProps,
   ...optionOrGroups
 }: MobileSelectionDrawerWithTriggerProps<T>) => {
   const { t } = useTranslation()
@@ -54,6 +60,8 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
   const resolvedPlaceholder = placeholder ?? t('common:action.select_label', 'Select...')
   const resolvedSearchPlaceholder = searchPlaceholder ?? t('common:action.search_label', 'Search')
 
+  const triggerIcon = slotProps?.Trigger?.icon ?? <ChevronDown size={16} />
+
   const filteredOptionsOrGroups = useMemo<OptionsOrGroups<T>>(
     () => filterOptionsOrGroups(
       (groups ? { groups } : { options: options ?? [] }) as OptionsOrGroups<T>,
@@ -61,6 +69,10 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
     ),
     [options, groups, searchQuery],
   )
+
+  const resolvedSelectedValue = useMemo(() => {
+    return resolveSelectedOption(filteredOptionsOrGroups, selectedValue)
+  }, [filteredOptionsOrGroups, selectedValue])
 
   const Header = useCallback(() => (
     <ModalTitleWithClose
@@ -72,11 +84,17 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
 
   return (
     <>
-      <Button onClick={openDrawer} variant='outlined' isDisabled={isDisabled}>
-        <Span size='sm' ellipsis>
-          {selectedValue?.label ?? resolvedPlaceholder}
-        </Span>
-        <ChevronDown size={16} />
+      <Button onClick={openDrawer} variant='outlined' isDisabled={isDisabled} fullWidth flex>
+        <HStack
+          fluid
+          justify='space-between'
+          className='Layer__MobileSelectionDrawerWithTrigger__Trigger'
+        >
+          <Span size='sm' ellipsis>
+            {resolvedSelectedValue?.label ?? resolvedPlaceholder}
+          </Span>
+          {!isDisabled && triggerIcon}
+        </HStack>
       </Button>
 
       <Drawer
@@ -88,7 +106,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
         isDismissable
       >
         {({ close }) => (
-          <VStack className='Layer__MobileSelectionDrawerWithTrigger' pi='sm' pb='xs' gap='md'>
+          <VStack className='Layer__MobileSelectionDrawerWithTrigger__Drawer' pi='sm' pb='xs' gap='md'>
             {isSearchable && (
               <SearchField
                 value={searchQuery}
@@ -99,7 +117,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
             <MobileSelectionDrawerList<T>
               ariaLabel={ariaLabel}
               {...filteredOptionsOrGroups}
-              selectedValue={selectedValue}
+              selectedValue={resolvedSelectedValue}
               onSelectedValueChange={(value) => {
                 onSelectedValueChange(value)
                 close()

@@ -1,8 +1,8 @@
+import { Input as ReactAriaInput } from 'react-aria-components/Input'
 import {
-  Input as ReactAriaInput,
   SearchField as ReactAriaSearchField,
   type SearchFieldProps as ReactAriaSearchFieldProps,
-} from 'react-aria-components'
+} from 'react-aria-components/SearchField'
 import { useTranslation } from 'react-i18next'
 
 import X from '@icons/X'

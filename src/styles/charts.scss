@@ -20,12 +20,13 @@
   }
 }
 
-.Layer__component .recharts-responsive-container.Layer__chart-container {
-  padding-top: 42px;
-}
-
-.Layer__chart-wrapper {
-  position: relative;
+.Layer__UI__Chart--focusReset {
+  .recharts-wrapper:focus,
+  .recharts-wrapper :focus,
+  .recharts-surface:focus,
+  .recharts-bar-rectangle:focus {
+    outline: none;
+  }
 }
 
 .Layer__chart-container {

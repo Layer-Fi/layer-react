@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { useInterpolateTemplate } from '@utils/i18n/useInterpolateTemplate'
 import { isCalendlyLink } from '@hooks/features/calendly/useCalendly'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -10,7 +11,6 @@ import { Heading } from '@ui/Typography/Heading'
 import { P, Span } from '@ui/Typography/Text'
 import { Badge } from '@components/Badge/Badge'
 import { BadgeSize, BadgeVariant } from '@components/Badge/Badge'
-import { LandingPageHelper } from '@components/LandingPage/LandingPageHelper'
 import { type LandingPageCardConfig, type LandingPagePlatformConfig } from '@components/LandingPage/types'
 import { Separator } from '@components/Separator/Separator'
 export interface LandingPageOptionsProps {
@@ -29,6 +29,7 @@ export const LandingPageOffer = ({
   className,
 }: LandingPageOptionsProps) => {
   const { t } = useTranslation()
+  const interpolateTemplate = useInterpolateTemplate<LandingPagePlatformConfig>()
   const handleCtaClick = useCallback(() => {
     if (isCalendlyLink(config.cta.primary)) {
       openCalendly(config.cta.primary.url)
@@ -59,14 +60,14 @@ export const LandingPageOffer = ({
         <VStack gap='md'>
           <HStack>
             <Badge size={BadgeSize.SMALL} variant={badgeVariant}>
-              {LandingPageHelper.interpolateTemplate(config.stringOverrides.badge, platformConfig)}
+              {interpolateTemplate(config.stringOverrides.badge, platformConfig)}
             </Badge>
           </HStack>
           <Heading size='sm'>
-            {LandingPageHelper.interpolateTemplate(config.stringOverrides.title, platformConfig)}
+            {interpolateTemplate(config.stringOverrides.title, platformConfig)}
           </Heading>
           <P variant='subtle'>
-            {LandingPageHelper.interpolateTemplate(config.stringOverrides.subtitle, platformConfig)}
+            {interpolateTemplate(config.stringOverrides.subtitle, platformConfig)}
           </P>
         </VStack>
         <Separator />

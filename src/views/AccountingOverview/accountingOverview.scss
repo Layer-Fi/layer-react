@@ -1,0 +1,21 @@
+.Layer__AccountingOverview {
+  &__ProfitAndLossHeader {
+    padding-block-start: var(--spacing-lg);
+    padding-block-end: 0;
+    padding-inline: var(--spacing-lg);
+  }
+
+  &__ProfitAndLossContainer {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__ProfitAndLossCharts {
+    max-inline-size: 1406px;
+  }
+
+  &__ProfitAndLossChart {
+    box-sizing: border-box;
+    inline-size: 100%;
+  }
+}

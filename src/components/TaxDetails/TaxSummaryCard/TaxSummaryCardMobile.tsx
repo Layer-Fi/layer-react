@@ -53,18 +53,11 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
             })}
           </Span>
           <Span size='sm' variant='subtle'>
-            {t('taxEstimates:label.taxes_due_at', 'Taxes due on {{date}}', { date: formatDate(data.taxesDueAt) })}
+            {t('taxEstimates:label.due_at', 'Due on {{date}}', { date: formatDate(data.taxesDueAt) })}
           </Span>
         </HStack>
-        <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
-        {isExpanded && (
-          <VStack className='Layer__TaxSummaryCard__MobileSections' gap='md'>
-            {data.sections.map(section => (
-              <SectionEquation key={section.key ?? section.label} section={section} />
-            ))}
-          </VStack>
-        )}
-        <HStack className='Layer__TaxSummaryCard__MobileToggleWrapper' justify='center'>
+        <HStack className='Layer__TaxSummaryCard__MobileAmountRow' justify='space-between' align='baseline' gap='md'>
+          <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
           <Button
             variant='text'
             onClick={() => setIsExpanded(prev => !prev)}
@@ -74,6 +67,13 @@ export const TaxSummaryCardMobile = ({ data }: TaxSummaryCardMobileProps) => {
               : t('common:label.show_details', 'Show details')}
           </Button>
         </HStack>
+        {isExpanded && (
+          <VStack className='Layer__TaxSummaryCard__MobileSections' gap='md'>
+            {data.sections.map(section => (
+              <SectionEquation key={section.key ?? section.label} section={section} />
+            ))}
+          </VStack>
+        )}
       </VStack>
     </Card>
   )

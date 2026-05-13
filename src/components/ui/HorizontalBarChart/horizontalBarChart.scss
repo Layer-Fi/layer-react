@@ -1,0 +1,51 @@
+.Layer__HorizontalBarChart {
+  .recharts-wrapper:focus,
+  .recharts-wrapper :focus,
+  .recharts-surface:focus,
+  .recharts-bar-rectangle:focus {
+    outline: none;
+  }
+
+  container: horizontal-bar-chart / inline-size;
+  inline-size: 100%;
+}
+
+.Layer__HorizontalBarChart__Bar {
+  block-size: 1.5rem;
+  inline-size: 100%;
+
+  .recharts-responsive-container {
+    padding: 0;
+  }
+}
+
+@container horizontal-bar-chart (max-width: 1100px) {
+  .Layer__HorizontalBarChart .Layer__UI__Legend--table.Layer__Stack[data-direction] {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    align-items: stretch;
+  }
+
+  .Layer__HorizontalBarChart .Layer__UI__Legend__Item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 0;
+    column-gap: var(--spacing-sm);
+    align-items: center;
+    min-inline-size: 100%;
+    max-inline-size: none;
+  }
+
+  .Layer__HorizontalBarChart .Layer__UI__Legend__Label {
+    min-inline-size: 0;
+  }
+
+  .Layer__HorizontalBarChart .Layer__UI__Legend__Meta {
+    justify-self: end;
+  }
+
+  .Layer__HorizontalBarChart .Layer__UI__Legend__Value,
+  .Layer__HorizontalBarChart .Layer__UI__Legend__Percentage {
+    white-space: nowrap;
+  }
+}

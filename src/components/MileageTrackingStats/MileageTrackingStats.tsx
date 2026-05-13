@@ -1,10 +1,7 @@
-import { useMemo } from 'react'
-import { getYear } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
-import { useMileageSummary } from '@hooks/api/businesses/[business-id]/mileage/summary/useMileageSummary'
+import { useMileageTrackingYearlySummary } from '@hooks/features/mileage/useMileageTrackingYearlySummary'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
@@ -15,23 +12,18 @@ import { MileageDeductionChart } from '@components/MileageDeductionChart/Mileage
 
 import './mileageTrackingStats.scss'
 
-const EMPTY_MONTHS = Array.from({ length: 12 }, (_, i) => ({
-  month: i + 1,
-  miles: 0,
-  estimatedDeduction: 0,
-}))
-
 interface StatBreakdown {
   business: number
   personal: number
   uncategorized: number
 }
 
-type MileageTrackingStatsCardProps = {
+export type MileageTrackingStatsCardProps = {
   title: string
   amount: number
   formatAsMoney?: boolean
   breakdown?: StatBreakdown
+  description?: string
 }
 
 const MileageTrackingStatsRow = ({ label, value }: { label: string, value: number }) => {
@@ -45,16 +37,17 @@ const MileageTrackingStatsRow = ({ label, value }: { label: string, value: numbe
   )
 }
 
-const MileageTrackingStatsCard = ({ title, amount, formatAsMoney, breakdown }: MileageTrackingStatsCardProps) => {
+export const MileageTrackingStatsCard = ({ title, amount, formatAsMoney, breakdown, description }: MileageTrackingStatsCardProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
 
   return (
-    <VStack className='Layer__MileageTrackingStats__Card' gap='3xs'>
+    <VStack className='Layer__MileageTrackingStats__Card' gap='3xs' pi='xs' pb='xs'>
       <Span size='md'>{title}</Span>
       {formatAsMoney
         ? <MoneySpan amount={amount} size='lg' weight='bold' />
         : <Span size='lg' weight='bold'>{formatNumber(amount)}</Span>}
+      {description && <Span size='xs' variant='subtle'>{description}</Span>}
       {breakdown && (
         <HStack gap='md'>
           <MileageTrackingStatsRow label={t('common:label.business', 'Business')} value={breakdown.business} />
@@ -68,28 +61,7 @@ const MileageTrackingStatsCard = ({ title, amount, formatAsMoney, breakdown }: M
 
 export const MileageTrackingStats = () => {
   const { t } = useTranslation()
-  const { data: mileageData, isLoading, isError } = useMileageSummary()
-  const { startDate } = useGlobalDateRange({ dateSelectionMode: 'year' })
-  const selectedYear = getYear(startDate)
-
-  const selectedYearData = useMemo(() => {
-    return mileageData?.years.find(y => y.year === selectedYear)
-  }, [mileageData, selectedYear])
-
-  const chartData = useMemo(() => {
-    if (!selectedYearData) return { years: [{ year: selectedYear, months: EMPTY_MONTHS }] }
-
-    return {
-      years: [{
-        year: selectedYearData.year,
-        months: selectedYearData.months.map(({ month, miles, estimatedDeduction }) => ({
-          month,
-          miles,
-          estimatedDeduction,
-        })),
-      }],
-    }
-  }, [selectedYearData, selectedYear])
+  const { data: mileageData, selectedYear, selectedYearData, chartData, isLoading, isError } = useMileageTrackingYearlySummary()
 
   if (isError) {
     return (

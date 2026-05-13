@@ -1,0 +1,8 @@
+.Layer__ProfitAndLossDetailedCharts {
+  .recharts-wrapper:focus,
+  .recharts-wrapper :focus,
+  .recharts-surface:focus,
+  .recharts-bar-rectangle:focus {
+    outline: none;
+  }
+}

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { type ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { isAnyBankAccountSyncing } from '@utils/bankAccount'
@@ -32,6 +32,7 @@ export interface ProfitAndLossHeaderProps {
   withDownloadButton?: boolean
   withStatus?: boolean
   dateSelectionMode?: DateSelectionMode
+  trailingContent?: ReactNode
 }
 
 export const ProfitAndLossHeader = ({
@@ -43,6 +44,7 @@ export const ProfitAndLossHeader = ({
   withStatus = true,
   stringOverrides,
   dateSelectionMode = 'full',
+  trailingContent,
 }: ProfitAndLossHeaderProps) => {
   const { t } = useTranslation()
   const { data: linkedAccounts } = useLinkedAccounts()
@@ -68,7 +70,8 @@ export const ProfitAndLossHeader = ({
           </span>
         )}
       </span>
-      <HStack gap='xs'>
+      <HStack gap='xs' align='center'>
+        {trailingContent}
         {withDatePicker && <CombinedDateRangeSelection mode={dateSelectionMode} showLabels={false} />}
         {withDownloadButton && <ProfitAndLossDownloadButton stringOverrides={stringOverrides?.downloadButton} />}
       </HStack>

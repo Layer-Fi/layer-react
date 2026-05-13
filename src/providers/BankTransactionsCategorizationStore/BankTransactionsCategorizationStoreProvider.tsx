@@ -2,9 +2,9 @@ import { createContext, type PropsWithChildren, useContext, useMemo, useState } 
 import { createStore, useStore } from 'zustand'
 
 import type { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
+import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { type BankTransactionCategoryComboBoxOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import type { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 
 export enum BankTransactionSelectionVariant {
   MATCH = 'MATCH',
@@ -13,7 +13,7 @@ export enum BankTransactionSelectionVariant {
 
 export type BankTransactionCategorization = {
   category: BankTransactionNonSuggestedMatchOption | null
-  taxCode: TaxCodeComboBoxOption | null
+  taxCode: string | null
 
   match: SuggestedMatchAsOption | null
 
@@ -29,7 +29,7 @@ type BankTransactionsCategorizationActions = {
 
   setTransactionCategorySelection: (id: string, category: BankTransactionNonSuggestedMatchOption | null) => void
   setTransactionMatchSelection: (id: string, match: SuggestedMatchAsOption | null) => void
-  setTransactionTaxCodeSelection: (id: string, taxCode: TaxCodeComboBoxOption | null) => void
+  setTransactionTaxCodeSelection: (id: string, taxCode: string | null) => void
   setTransactionSelectionVariant: (id: string, variant: BankTransactionSelectionVariant) => void
 
   setOnlyNewTransactionCategorizations: (categorizations: Map<string, BankTransactionCategorization>) => void
@@ -96,7 +96,13 @@ function buildStore() {
         },
 
         setTransactionCategorySelection: (id, category) => {
-          set(({ categorizations }) => updateCategorizationProperty(categorizations, id, 'category', category))
+          set(({ categorizations }) => {
+            const { categorizations: nextCategorizations } = updateCategorizationProperty(categorizations, id, 'category', category)
+            if (category && !canCategoryHaveTaxCode(category)) {
+              return updateCategorizationProperty(nextCategorizations, id, 'taxCode', null)
+            }
+            return { categorizations: nextCategorizations }
+          })
         },
 
         setTransactionMatchSelection: (id, match) => {

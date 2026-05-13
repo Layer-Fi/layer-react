@@ -225,7 +225,7 @@ function buildCustomSingleValue<T extends ComboBoxOption, IsMulti extends boolea
     children,
     ...restProps
   }: SingleValueProps<T, IsMulti, GroupBase<T>>) {
-    const defaultRenderedSingleValue = <Span ellipsis>{children}</Span>
+    const defaultRenderedSingleValue = <Span variant='inherit' ellipsis>{children}</Span>
 
     return (
       <components.SingleValue {...restProps}>

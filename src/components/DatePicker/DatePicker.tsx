@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
-import { Dialog } from 'react-aria-components'
+import { Dialog } from 'react-aria-components/Dialog'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { DATE_PICKER_CLASS_NAME, DatePicker as BaseDatePicker } from '@ui/Date/Date'

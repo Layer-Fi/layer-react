@@ -34,6 +34,8 @@ import { ProfitAndLossChartStateCard } from '@components/ProfitAndLossChart/Prof
 import { ProfitAndLossChartTooltip } from '@components/ProfitAndLossChart/ProfitAndLossChartTooltip'
 import { transformPnLData } from '@components/ProfitAndLossChart/transformPnLData'
 
+import './profitAndLossChart.scss'
+
 export interface ProfitAndLossChartProps {
   tagFilter?: {
     key: string
@@ -42,7 +44,7 @@ export interface ProfitAndLossChartProps {
   hideLegend?: boolean
 }
 
-const CHART_MARGINS = { left: 12, right: 12, bottom: 12 }
+const CHART_MARGINS = { left: 12, right: 12, bottom: 12, top: 24 }
 
 export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndLossChartProps) => {
   const { formatMonthName } = useIntlFormatter()
@@ -138,10 +140,10 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
   }, [compactView])
 
   return (
-    <div className='Layer__chart-wrapper'>
+    <div className='Layer__ProfitAndLossChart'>
       <ResponsiveContainer
         key='pnl-chart'
-        className='Layer__chart-container'
+        className='Layer__ProfitAndLossChart__Container'
         width='100%'
         height='100%'
         onResize={onResize}
@@ -151,7 +153,7 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
           margin={CHART_MARGINS}
           data={dataOrPlaceholderData}
           onClick={onClick}
-          className='Layer__profit-and-loss-chart'
+          className='Layer__profit-and-loss-chart Layer__ProfitAndLossChart__Chart'
         >
           <ProfitAndLossChartPatternDefs />
           <ReferenceLine y={0} stroke={getColor(300)?.hex ?? '#EBEDF0'} xAxisId='revenue' zIndex={DefaultZIndexes.bar - 1} />

@@ -1,4 +1,4 @@
-import { GridListHeader, GridListSection } from 'react-aria-components'
+import { GridListHeader, GridListSection } from 'react-aria-components/GridList'
 
 import { MobileListItem } from '@ui/MobileList/MobileListItem'
 import { Span } from '@ui/Typography/Text'
