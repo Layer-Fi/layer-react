@@ -25,6 +25,8 @@
     "no_tax_estimates_summary": "Commencez vos estimations d’impôt",
     "no_tax_estimates_summary_description": "Commencez par importer et catégoriser vos opérations bancaires",
     "no_tax_payments_to_display": "Il n’y a aucun paiement d’impôt à afficher.",
+    "tax_due_is_negative_or_zero": "",
+    "tax_due_is_negative_or_zero_description": "",
     "tax_payments": "Aucun paiement d’impôt trouvé"
   },
   "error": {
@@ -37,8 +39,6 @@
     "load_tax_information": "Impossible de charger les renseignements fiscaux",
     "load_tax_payments": "Nous n’avons pas pu charger vos paiements d’impôt",
     "retrieve_tax_profile": "Nous n’avons pas pu récupérer votre profil fiscal. Veuillez vérifier votre connexion et réessayer.",
-    "tax_due_is_negative_or_zero": "",
-    "tax_due_is_negative_or_zero_description": "",
     "while_loading_tax_details": "Une erreur s’est produite lors du chargement de vos détails fiscaux. Veuillez vérifier votre connexion et réessayer.",
     "while_loading_tax_estimates": "Une erreur s’est produite lors du chargement de vos estimations d’impôt. Veuillez vérifier votre connexion et réessayer.",
     "while_loading_tax_estimates_summary": "",

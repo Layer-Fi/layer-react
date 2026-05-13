@@ -8,8 +8,8 @@ export const TaxEstimatesSummaryCardNegativeOrZero = () => {
     <DataState
       className='Layer__TaxEstimatesSummaryCard__DataState Layer__data-state--reset'
       status={DataStateStatus.info}
-      title={t('taxEstimates:error.tax_due_is_negative_or_zero', 'No taxes owed this year')}
-      description={t('taxEstimates:error.tax_due_is_negative_or_zero_description', 'Your deductible losses exceed your income for this period, bringing your tax liability to zero.')}
+      title={t('taxEstimates:empty.tax_due_is_negative_or_zero', 'No taxes owed this year')}
+      description={t('taxEstimates:empty.tax_due_is_negative_or_zero_description', 'Your deductible losses exceed your income for this period, bringing your tax liability to zero.')}
     />
   )
 }
