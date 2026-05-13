@@ -25,8 +25,8 @@
     "no_tax_estimates_summary": "Commencez vos estimations d’impôt",
     "no_tax_estimates_summary_description": "Commencez par importer et catégoriser vos opérations bancaires",
     "no_tax_payments_to_display": "Il n’y a aucun paiement d’impôt à afficher.",
-    "tax_due_is_negative_or_zero": "No taxes owed this year",
-    "tax_due_is_negative_or_zero_description": "Your deductible losses exceed your income for this period, bringing your tax liability to zero.",
+    "tax_due_is_negative_or_zero": "Aucun impôt à payer cette année",
+    "tax_due_is_negative_or_zero_description": "Vos pertes déductibles dépassent votre revenu pour cette période, ce qui ramène votre impôt à payer à zéro.",
     "tax_payments": "Aucun paiement d’impôt trouvé"
   },
   "error": {
@@ -41,7 +41,7 @@
     "retrieve_tax_profile": "Nous n’avons pas pu récupérer votre profil fiscal. Veuillez vérifier votre connexion et réessayer.",
     "while_loading_tax_details": "Une erreur s’est produite lors du chargement de vos détails fiscaux. Veuillez vérifier votre connexion et réessayer.",
     "while_loading_tax_estimates": "Une erreur s’est produite lors du chargement de vos estimations d’impôt. Veuillez vérifier votre connexion et réessayer.",
-    "while_loading_tax_estimates_summary": "An error occurred while loading your tax summary. Please check your connection and try again.",
+    "while_loading_tax_estimates_summary": "Une erreur s'est produite lors du chargement de votre sommaire fiscal. Veuillez vérifier votre connexion et réessayer.",
     "while_loading_tax_payments": "Une erreur s’est produite lors du chargement de vos paiements d’impôt. Veuillez vérifier votre connexion et réessayer.",
     "while_loading_tax_summary": "Une erreur s’est produite lors du chargement de votre sommaire fiscal. Veuillez vérifier votre connexion et réessayer."
   },
@@ -85,8 +85,8 @@
     "quarter_taxes": "Impôts du {{quarterLabel}}",
     "remaining_balance": "Solde restant",
     "rolled_over_from_previous_quarter": "Reporté du trimestre précédent",
-    "set_up_your_tax_profile": "Set up your tax profile",
-    "set_up_your_tax_profile_description": "Configuring your tax profile allows us to provide you with tax estimates and avoid any surprises come tax time.",
+    "set_up_your_tax_profile": "Configurez votre profil fiscal",
+    "set_up_your_tax_profile_description": "La configuration de votre profil fiscal nous permet de vous fournir des estimations d'impôt et d'éviter les mauvaises surprises au moment des impôts.",
     "single": "Célibataire",
     "state": "État",
     "tax_details": "Détails fiscaux",
