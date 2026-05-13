@@ -1,10 +1,15 @@
 .Layer__BookkeepingOverview {
+  &__ProfitAndLossContainer {
+    display: flex;
+    flex-direction: column;
+  }
+
   &__ProfitAndLossCharts {
-    max-width: 1406px;
+    max-inline-size: 1406px;
   }
 
   &__ProfitAndLossChart {
     box-sizing: border-box;
-    width: 100%;
+    inline-size: 100%;
   }
 }
