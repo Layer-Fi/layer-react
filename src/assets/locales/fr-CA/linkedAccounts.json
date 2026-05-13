@@ -53,6 +53,8 @@
     "ledger_balance": "Solde du grand livre",
     "link_bank_accounts_and_credit_cards": "Liez vos comptes bancaires et vos cartes de crédit",
     "link_more_accounts_any_time": "Vous pouvez lier d’autres comptes en tout temps à partir de la section Transactions bancaires",
+    "link_your_bank_accounts": "Liez vos comptes bancaires",
+    "link_your_bank_accounts_description": "Lier vos comptes bancaires nous permet de charger vos opérations bancaires et de les catégoriser automatiquement.",
     "linked_accounts": "Comptes liés",
     "loading_accounts": "Chargement de vos comptes...",
     "may_take_few_minutes": "Cela peut prendre quelques minutes",
