@@ -83,6 +83,7 @@ export const AccountingOverview = ({
     >
       <View
         title={stringOverrides?.title || title || t('overview:label.accounting_overview', 'Accounting overview')}
+        viewClassName='Layer__AccountingOverview'
         showHeader={showTitle}
         header={(
           <Header>

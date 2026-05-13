@@ -1,5 +1,7 @@
 .Layer__BookkeepingOverview {
-  max-width: 1406px;
+  &__ProfitAndLossCharts {
+    max-width: 1406px;
+  }
 
   &__ProfitAndLossChart {
     box-sizing: border-box;

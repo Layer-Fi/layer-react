@@ -114,7 +114,7 @@ export const BookkeepingOverview = ({
   return (
     <ProfitAndLoss asContainer={false}>
       <View
-        viewClassName='Layer__bookkeeping-overview--view'
+        viewClassName='Layer__bookkeeping-overview--view Layer__BookkeepingOverview'
         title={stringOverrides?.title || title || t('overview:label.bookkeeping_overview', 'Bookkeeping overview')}
         header={(
           <Header>
