@@ -33,7 +33,7 @@
 
 ### CSS Selector Naming
 - Follow BEM style: `Layer__Block__Element--modifier`
-  - `Block` and `Element` are in PascalCase
+  - `Block` and `Element` are in PascalCase, while `modifier` uses camelCase.
   - `Layer__` is a namespace
 
 # Components
