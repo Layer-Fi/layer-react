@@ -31,6 +31,7 @@ export const TaxEstimatesSummaryCard = ({
     defaultTitle,
     interactionProps,
     stringOverrides,
+    subtitleMode: 'year',
   })
 
   return (

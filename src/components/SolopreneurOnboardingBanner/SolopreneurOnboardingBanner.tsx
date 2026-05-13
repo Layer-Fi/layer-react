@@ -64,7 +64,7 @@ const NoBankAccountsLinkedBanner = () => {
 const NoTaxProfileBanner = ({ onSetupTaxProfile }: Pick<SolopreneurOnboardingBannerProps, 'onSetupTaxProfile'>) => {
   const { isMobile } = useSizeClass()
   const Icon = isMobile ? null : <Info size={16} />
-  const Button = onSetupTaxProfile ? <LayerButton onPress={onSetupTaxProfile} variant='outlined-light'>Setup your tax profile</LayerButton> : null
+  const Button = onSetupTaxProfile ? <LayerButton onPress={onSetupTaxProfile} variant='outlined-light'>Set up your tax profile</LayerButton> : null
   return (
     <Banner
       title='Set up your tax profile'
