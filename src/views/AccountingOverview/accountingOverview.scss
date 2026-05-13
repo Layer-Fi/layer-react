@@ -9,4 +9,13 @@
     display: flex;
     flex-direction: column;
   }
+
+  &__ProfitAndLossCharts {
+    max-width: 1406px;
+  }
+
+  &__ProfitAndLossChart {
+    box-sizing: border-box;
+    width: 100%;
+  }
 }

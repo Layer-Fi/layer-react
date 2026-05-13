@@ -22,6 +22,8 @@ import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
 import { View } from '@components/View/View'
 import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
 
+import './bookkeepingOverview.scss'
+
 type BookkeepingOverviewTasksContentProps = {
   callBooking?: CallBookingData
   showCallBookingCard: boolean

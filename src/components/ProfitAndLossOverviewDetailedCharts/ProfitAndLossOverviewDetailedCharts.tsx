@@ -44,12 +44,12 @@ export const ProfitAndLossOverviewDetailedCharts = ({
   ), [detailedChartsStringOverrides, t])
 
   const chartsWrapperClassName = variant === 'accounting'
-    ? 'Layer__accounting-overview-profit-and-loss-charts'
-    : 'Layer__bookkeeping-overview-profit-and-loss-charts'
+    ? 'Layer__AccountingOverview__ProfitAndLossCharts'
+    : 'Layer__BookkeepingOverview__ProfitAndLossCharts'
 
   const chartContainerName = variant === 'accounting'
-    ? 'accounting-overview-profit-and-loss-chart'
-    : 'bookkeeping-overview-profit-and-loss-chart'
+    ? 'AccountingOverview__ProfitAndLossChart'
+    : 'BookkeepingOverview__ProfitAndLossChart'
 
   return (
     <VStack className={chartsWrapperClassName} gap='md' ref={elementRef}>
