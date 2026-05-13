@@ -25,7 +25,7 @@
 
 ## CSS Selectors
 
-- DRY: Use existing design-system props instead of new SCSS selectors when possible
+- DRY: Use existing design-system props instead of new SCSS selectors when possible (see `ui/Span` or `ui/Stack`)
 - `ComponentName.tsx` should add CSS selectors useing `import './componentName.scss'` (camelCase)
 - For any styling that component props can't express, create a new CSS class following name guidelines below
 - Nest selectors that share a block prefix under one `&__` root; do not nest more than one level (excluding pseudo-classes, pseudo-elements, and media queries): `.Layer__<ComponentName> { &__Element { … } }`
