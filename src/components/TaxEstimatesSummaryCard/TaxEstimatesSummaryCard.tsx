@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 
+import { DateFormat } from '@utils/i18n/date/patterns'
 import { SummaryCard } from '@ui/SummaryCard/SummaryCard'
 import { type SummaryCardInteractionProps, type SummaryCardStringOverrides, useSummaryCardSlots } from '@ui/SummaryCard/useSummaryCardSlots'
 import { TaxEstimatesSummaryCardMode } from '@components/TaxEstimatesSummaryCard/constants'
@@ -31,6 +32,7 @@ export const TaxEstimatesSummaryCard = ({
     defaultTitle,
     interactionProps,
     stringOverrides,
+    subtitleDateFormat: DateFormat.Year,
   })
 
   return (
