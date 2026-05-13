@@ -96,7 +96,7 @@ export const MileageTrackingSummary = ({ stringOverrides, interactionProps }: Mi
     defaultTitle: t('mileageTracking:label.mileage_tracking', 'Mileage Tracking'),
     interactionProps,
     stringOverrides,
-    subtitleMode: 'year',
+    subtitleDateFormat: DateFormat.Year,
   })
 
   return (

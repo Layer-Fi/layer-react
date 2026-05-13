@@ -1,7 +1,8 @@
 import { type ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useGlobalLabels } from '@hooks/utils/i18n/useGlobalMonthSubtitle'
+import { DateFormat } from '@utils/i18n/date/patterns'
+import { useGlobalDateFormatter } from '@hooks/utils/i18n/useGlobalDateFormatter'
 import { ExpandSummaryCardButton } from '@ui/SummaryCard/ExpandSummaryCardButton'
 import { type SummaryCardProps } from '@ui/SummaryCard/SummaryCard'
 
@@ -16,7 +17,7 @@ export type SummaryCardStringOverrides = {
 type UseSummaryCardSlotsParams = {
   defaultTitle: string
   legend?: ReactNode
-  subtitleMode?: 'monthYear' | 'year'
+  subtitleDateFormat?: DateFormat
   interactionProps?: SummaryCardInteractionProps
   stringOverrides?: SummaryCardStringOverrides
 }
@@ -25,11 +26,11 @@ export const useSummaryCardSlots = ({
   defaultTitle,
   legend,
   interactionProps,
-  subtitleMode = 'monthYear',
+  subtitleDateFormat = DateFormat.MonthYear,
   stringOverrides,
 }: UseSummaryCardSlotsParams): SummaryCardProps['slots'] => {
   const { t } = useTranslation()
-  const { monthYear, year } = useGlobalLabels()
+  const formatGlobalDate = useGlobalDateFormatter()
   const { onClickExpand } = interactionProps ?? {}
 
   return useMemo(() => {
@@ -39,9 +40,9 @@ export const useSummaryCardSlots = ({
 
     return {
       title: stringOverrides?.title ?? defaultTitle,
-      subtitle: subtitleMode === 'monthYear' ? monthYear : year,
+      subtitle: formatGlobalDate(subtitleDateFormat),
       legend,
       primaryAction,
     }
-  }, [stringOverrides?.title, defaultTitle, subtitleMode, monthYear, year, legend, onClickExpand, t])
+  }, [stringOverrides?.title, defaultTitle, subtitleDateFormat, formatGlobalDate, legend, onClickExpand, t])
 }
