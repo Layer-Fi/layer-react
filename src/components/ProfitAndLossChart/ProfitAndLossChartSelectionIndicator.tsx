@@ -23,7 +23,7 @@ export const ProfitAndLossChartSelectionIndicator = ({ viewBox, selected }: Prof
       rx={borderRadius}
       ry={borderRadius}
       x={x - margin}
-      y={-margin + 36}
+      y={24}
       width={boxWidth}
       height='calc(100% - 38px)'
     />
