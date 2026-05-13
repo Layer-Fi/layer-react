@@ -53,6 +53,8 @@
     "ledger_balance": "Ledger balance",
     "link_bank_accounts_and_credit_cards": "Link your bank accounts and credit cards",
     "link_more_accounts_any_time": "You can link more accounts at any time from the Bank Transactions section",
+    "link_your_bank_accounts": "Link your bank accounts",
+    "link_your_bank_accounts_description": "Linking your bank accounts allows us to load your bank transactions and automatically categorize them.",
     "linked_accounts": "Linked Accounts",
     "loading_accounts": "Loading Your Accounts...",
     "may_take_few_minutes": "This may take a few minutes",
