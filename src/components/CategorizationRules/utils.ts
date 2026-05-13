@@ -18,3 +18,10 @@ export const getCategorizationRuleDirectionLabel = (
   const entry = DIRECTION_CONFIG.find(c => c.value === bankDirectionFilter)
   return entry ? t(entry.i18nKey, entry.defaultValue) : t('categorizationRules:label.any_direction', 'Any direction')
 }
+
+// Strip Java-style `\Q...\E` literal-quote markers from a regex-based
+// transaction_description_filter so it reads as plain text.
+// Fall through unchanged if the pattern doesn't match.
+export const parseTransactionDescriptionFilter = (filter: string): string => {
+  return filter.match(/\\Q(.*?)\\E/)?.[1] ?? filter
+}

@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { PencilRuler } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { getLeafCategories } from '@internal-types/categories'
+import { flattenCategories } from '@internal-types/categories'
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { CategoriesListMode } from '@schemas/categorization'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
@@ -81,7 +81,7 @@ export const ResponsiveCategorizationRulesView = () => {
   const { data: categories, isLoading: categoriesAreLoading } = useCategories({ mode: CategoriesListMode.All })
   const options = useMemo(() => {
     if (!categories) return []
-    return getLeafCategories(categories)
+    return flattenCategories(categories)
   }, [categories])
 
   const { data, hasMore, isLoading: rulesAreLoading, isError, size, setSize } = useListCategorizationRules({})

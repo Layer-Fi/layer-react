@@ -159,6 +159,10 @@ export const CategorizationRuleSchema = Schema.Struct({
     Schema.propertySignature(Schema.NullishOr(BankTransactionCounterpartySchema)),
     Schema.fromKey('counterparty_filter'),
   ),
+  transactionDescriptionFilter: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('transaction_description_filter'),
+  ),
   bankDirectionFilter: pipe(
     Schema.propertySignature(Schema.NullishOr(BankDirectionFilterSchema)),
     Schema.fromKey('bank_direction_filter'),
