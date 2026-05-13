@@ -16,7 +16,7 @@ type AmountWithLabelProps = {
 }
 
 const AmountWithLabel = ({ slotProps }: AmountWithLabelProps) => (
-  <VStack className='Layer__TaxSummaryCard__AmountWithLabel' gap='2xs' align='start'>
+  <VStack className='Layer__TaxSummaryCard__AmountWithLabel' gap='2xs' align='center'>
     <MoneySpan {...slotProps.MoneySpan} />
     <Badge size={BadgeSize.SMALL} variant={BadgeVariant.NEUTRAL} {...slotProps.Badge} />
   </VStack>
@@ -38,14 +38,14 @@ export const EquationRow = ({ section, size = 'md' }: EquationRowProps) => {
           Badge: { children: t('common:label.total', 'Total') },
         }}
       />
-      <Span className='Layer__TaxSummaryCard__Operator' size={size} variant='subtle'>-</Span>
+      <Span size={size} variant='subtle'>-</Span>
       <AmountWithLabel
         slotProps={{
           MoneySpan: { amount: section.taxesPaid, size },
           Badge: { children: t('taxEstimates:label.taxes_paid', 'Taxes Paid') },
         }}
       />
-      <Span className='Layer__TaxSummaryCard__Operator' size={size} variant='subtle'>=</Span>
+      <Span size={size} variant='subtle'>=</Span>
       <AmountWithLabel
         slotProps={{
           MoneySpan: { amount: section.taxesOwed, size },

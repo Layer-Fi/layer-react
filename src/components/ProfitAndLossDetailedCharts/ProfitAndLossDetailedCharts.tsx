@@ -20,6 +20,8 @@ import { usePnlDetailedTableRows } from '@components/ProfitAndLossDetailedCharts
 import { isLineItemUncategorized, mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/utils'
 import type { ProfitAndLossDetailReportProps } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { type SelectedLineItem } from '@components/ProfitAndLossReport/ProfitAndLossReport'
+
+import './profitAndLossDetailedCharts.scss'
 export interface DetailedChartStringOverrides {
   expenseChartHeader?: string
   revenueChartHeader?: string
@@ -203,7 +205,7 @@ export const ProfitAndLossDetailedCharts = ({
   const handleClose = useCallback(() => setSidebarScope(undefined), [setSidebarScope])
 
   return (
-    <div className='Layer__profit-and-loss-detailed-charts'>
+    <div className='Layer__profit-and-loss-detailed-charts Layer__ProfitAndLossDetailedCharts'>
       {!hideHeader && (
         <ProfitAndLossDetailedChartsHeader
           mode={isDesktop ? 'desktop' : 'tablet'}

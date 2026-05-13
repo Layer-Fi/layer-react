@@ -5,7 +5,7 @@ import {
   RadioGroup as ReactAriaRadioGroup,
   type RadioGroupProps as ReactAriaRadioGroupProps,
   type RadioProps as ReactAriaRadioProps,
-} from 'react-aria-components'
+} from 'react-aria-components/RadioGroup'
 
 import { withRenderProp } from '@components/utility/withRenderProp'
 

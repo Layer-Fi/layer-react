@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { MenuTrigger, Popover } from 'react-aria-components'
+import { MenuTrigger, Popover } from 'react-aria-components/Menu'
 
 import AlertCircle from '@icons/AlertCircle'
 import { Menu, MenuItem } from '@ui/Menu/Menu'

@@ -64,7 +64,7 @@ export const TaxSummaryCardDesktop = ({ data }: TaxSummaryCardDesktopProps) => {
       <VStack className='Layer__TaxSummaryCard__Cell' gap='2xs' align='start'>
         <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
         <Span size='sm' variant='subtle'>
-          {t('taxEstimates:label.taxes_due_at', 'Taxes due on {{date}}', { date: formatDate(data.taxesDueAt) })}
+          {t('taxEstimates:label.due_at', 'Due on {{date}}', { date: formatDate(data.taxesDueAt) })}
         </Span>
       </VStack>
       {data.sections.map(section => (

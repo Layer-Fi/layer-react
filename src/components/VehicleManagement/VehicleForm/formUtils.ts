@@ -47,7 +47,7 @@ export const validateVehicleForm = ({ vehicle }: { vehicle: VehicleForm }) => {
   }
 
   const currentYear = new Date().getFullYear()
-  if (!Number.isNaN(year) && (year < 1900 || year > currentYear + 1)) {
+  if (year != null && !Number.isNaN(year) && (year < 1900 || year > currentYear + 1)) {
     errors.push({ field: 'year', reason: VehicleFormInvalidReason.YearRange })
   }
 

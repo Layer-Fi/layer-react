@@ -1,7 +1,10 @@
 import { useMemo } from 'react'
 import classNames from 'classnames'
 import { Check, Minus } from 'lucide-react'
-import { Checkbox as ReactAriaCheckbox, type CheckboxProps as AriaCheckboxProps } from 'react-aria-components'
+import {
+  Checkbox as ReactAriaCheckbox,
+  type CheckboxProps as AriaCheckboxProps,
+} from 'react-aria-components/Checkbox'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'

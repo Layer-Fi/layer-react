@@ -1,5 +1,6 @@
 import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
+import { type TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
@@ -14,9 +15,11 @@ import './vehicleSelector.scss'
 
 class VehicleAsOption {
   private internalVehicle: Vehicle
+  private t: TFunction
 
-  constructor(vehicle: Vehicle) {
+  constructor(vehicle: Vehicle, t: TFunction) {
     this.internalVehicle = vehicle
+    this.t = t
   }
 
   get original() {
@@ -24,7 +27,7 @@ class VehicleAsOption {
   }
 
   get label() {
-    return getVehicleDisplayName(this.internalVehicle)
+    return getVehicleDisplayName(this.internalVehicle, this.t)
   }
 
   get id() {
@@ -74,8 +77,8 @@ export function VehicleSelector({
   const { data, isLoading, isError } = useListVehicles()
 
   const options = useMemo(() => {
-    return data?.map(vehicle => new VehicleAsOption(vehicle)) || []
-  }, [data])
+    return data?.map(vehicle => new VehicleAsOption(vehicle, t)) || []
+  }, [data, t])
 
   const onSelectedValueChange = useCallback((option: VehicleAsOption | null) => {
     onSelectedVehicleChange(option?.original || null)
@@ -87,9 +90,9 @@ export function VehicleSelector({
         return null
       }
 
-      return new VehicleAsOption(selectedVehicle)
+      return new VehicleAsOption(selectedVehicle, t)
     },
-    [selectedVehicle],
+    [selectedVehicle, t],
   )
 
   const EmptyMessage = useMemo(

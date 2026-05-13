@@ -1,5 +1,4 @@
-import { useMemo } from 'react'
-import type { Key } from 'react-aria-components'
+import { type Key, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'

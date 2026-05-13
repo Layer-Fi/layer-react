@@ -3,7 +3,7 @@ import {
   Menu as ReactAriaMenu,
   MenuItem as ReactAriaMenuItem,
   type MenuItemProps as ReactAriaMenuItemProps,
-} from 'react-aria-components'
+} from 'react-aria-components/Menu'
 
 import './menu.scss'
 

@@ -1,6 +1,12 @@
 import { createContext, type PropsWithChildren, useContext } from 'react'
 import type React from 'react'
-import { Dialog, Menu as AriaMenu, MenuItem as AriaMenuItem, MenuTrigger, Popover } from 'react-aria-components'
+import { Dialog } from 'react-aria-components/Dialog'
+import {
+  Menu as AriaMenu,
+  MenuItem as AriaMenuItem,
+  MenuTrigger,
+  Popover,
+} from 'react-aria-components/Menu'
 import { useTranslation } from 'react-i18next'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'

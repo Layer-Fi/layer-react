@@ -1,9 +1,7 @@
 import { type ReactElement, type ReactNode, useCallback, useMemo, useState } from 'react'
-import {
-  Button as ReactAriaButton,
-  Collection as ReactAriaCollection,
-  type Selection,
-} from 'react-aria-components'
+import { Button as ReactAriaButton } from 'react-aria-components/Button'
+import { Collection as ReactAriaCollection } from 'react-aria-components/Collection'
+import { type Selection } from 'react-aria-components/GridList'
 import { useTranslation } from 'react-i18next'
 
 import ChevronRight from '@icons/ChevronRight'
