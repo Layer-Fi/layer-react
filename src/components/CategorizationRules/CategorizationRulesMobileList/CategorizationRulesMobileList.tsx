@@ -9,7 +9,7 @@ import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { ResolvedCategoryName } from '@components/CategorizationRules/ResolvedCategoryName'
-import { getCategorizationRuleDirectionLabel, parseTransactionDescriptionFilter } from '@components/CategorizationRules/utils'
+import { getCategorizationRuleCounterpartyLabel, getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
 import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
 import './categorizationRulesMobileList.scss'
@@ -26,8 +26,7 @@ const CategorizationRuleMobileListItem = ({
   onDeletePress,
 }: CategorizationRuleMobileListItemProps) => {
   const { t } = useTranslation()
-  const counterpartyLabel = rule.counterpartyFilter?.name
-    ?? (rule.transactionDescriptionFilter ? parseTransactionDescriptionFilter(rule.transactionDescriptionFilter) : undefined)
+  const counterpartyLabel = getCategorizationRuleCounterpartyLabel(rule)
   return (
     <HStack justify='space-between' align='center' gap='sm' className='Layer__CategorizationRulesMobileListItem'>
       <VStack gap='2xs' className='Layer__CategorizationRulesMobileListItem__Content'>

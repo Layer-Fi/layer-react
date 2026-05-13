@@ -1,5 +1,6 @@
 import type { TFunction } from 'i18next'
 
+import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { BankDirectionFilter } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { translationKey } from '@utils/i18n/translationKey'
 
@@ -20,8 +21,15 @@ export const getCategorizationRuleDirectionLabel = (
 }
 
 // Strip Java-style `\Q...\E` literal-quote markers from a regex-based
-// transaction_description_filter so it reads as plain text.
-// Fall through unchanged if the pattern doesn't match.
+// transaction_description_filter so it reads as plain text. Only strips when
+// the whole filter is a single `\Q...\E` block — anything more elaborate falls
+// through unchanged so we don't silently hide unquoted regex parts.
 export const parseTransactionDescriptionFilter = (filter: string): string => {
-  return filter.match(/\\Q(.*?)\\E/)?.[1] ?? filter
+  return filter.match(/^\\Q(.*)\\E$/)?.[1] ?? filter
+}
+
+export const getCategorizationRuleCounterpartyLabel = (rule: CategorizationRule): string | undefined => {
+  if (rule.counterpartyFilter?.name) return rule.counterpartyFilter.name
+  if (rule.transactionDescriptionFilter) return parseTransactionDescriptionFilter(rule.transactionDescriptionFilter)
+  return undefined
 }

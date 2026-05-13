@@ -8,7 +8,7 @@ import type { NestedCategorization } from '@schemas/categorization'
 import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
 import { ResolvedCategoryName } from '@components/CategorizationRules/ResolvedCategoryName'
-import { getCategorizationRuleDirectionLabel, parseTransactionDescriptionFilter } from '@components/CategorizationRules/utils'
+import { getCategorizationRuleCounterpartyLabel, getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
 import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { PaginatedTable, type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
@@ -50,12 +50,9 @@ export const CategorizationRulesTable = ({
     {
       id: CategorizationRuleColumns.Counterparty,
       header: t('common:label.counterparty', 'Counterparty'),
-      cell: (row: Row<CategorizationRule>) => {
-        const counterpartyName = row.original.counterpartyFilter?.name
-        const descriptionFilter = row.original.transactionDescriptionFilter
-        const label = counterpartyName ?? (descriptionFilter ? parseTransactionDescriptionFilter(descriptionFilter) : undefined)
-        return <Span ellipsis>{label}</Span>
-      },
+      cell: (row: Row<CategorizationRule>) => (
+        <Span ellipsis>{getCategorizationRuleCounterpartyLabel(row.original)}</Span>
+      ),
     },
     {
       id: CategorizationRuleColumns.Direction,

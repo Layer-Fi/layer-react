@@ -21,6 +21,7 @@ import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirm
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { CategorizationRulesMobileList } from '@components/CategorizationRules/CategorizationRulesMobileList/CategorizationRulesMobileList'
 import { CategorizationRulesTable } from '@components/CategorizationRules/CategorizationRulesTable/CategorizationRulesTable'
+import { getCategorizationRuleCounterpartyLabel } from '@components/CategorizationRules/utils'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
 const CategorizationRulesEmptyState = () => {
@@ -171,7 +172,7 @@ export const ResponsiveCategorizationRulesView = () => {
         isOpen={showDeletionConfirmationModal}
         onOpenChange={setShowDeletionConfirmationModal}
         title={t('categorizationRules:prompt.delete_categorization_rule', 'Delete categorization rule?')}
-        description={t('categorizationRules:label.transaction_no_longer_automatically_categorized', 'Transactions will no longer automatically be categorized by this rule. Any transactions previously categorized to {{counterparty}} will not be affected.', { counterparty: selectedRule?.counterpartyFilter?.name ?? t('bankTransactions:label.selected_counterparty', 'this counterparty') })}
+        description={t('categorizationRules:label.transaction_no_longer_automatically_categorized', 'Transactions will no longer automatically be categorized by this rule. Any transactions previously categorized to {{counterparty}} will not be affected.', { counterparty: (selectedRule ? getCategorizationRuleCounterpartyLabel(selectedRule) : undefined) ?? t('bankTransactions:label.selected_counterparty', 'this counterparty') })}
         onConfirm={archiveCategorizationRule}
         confirmLabel={t('common:action.delete_label', 'Delete')}
         cancelLabel={t('common:action.cancel_label', 'Cancel')}
