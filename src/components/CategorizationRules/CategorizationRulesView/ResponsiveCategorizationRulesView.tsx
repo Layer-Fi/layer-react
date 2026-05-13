@@ -162,6 +162,9 @@ export const ResponsiveCategorizationRulesView = () => {
     </VStack>
   ), [toBankTransactionsTable, categorizationRules, isLoading, isError, paginationProps, options, onDeleteRule])
 
+  const selectedRuleCounterpartyLabel = (selectedRule && getCategorizationRuleCounterpartyLabel(selectedRule))
+    ?? t('bankTransactions:label.selected_counterparty', 'this counterparty')
+
   return (
     <>
       <ResponsiveComponent
@@ -172,7 +175,7 @@ export const ResponsiveCategorizationRulesView = () => {
         isOpen={showDeletionConfirmationModal}
         onOpenChange={setShowDeletionConfirmationModal}
         title={t('categorizationRules:prompt.delete_categorization_rule', 'Delete categorization rule?')}
-        description={t('categorizationRules:label.transaction_no_longer_automatically_categorized', 'Transactions will no longer automatically be categorized by this rule. Any transactions previously categorized to {{counterparty}} will not be affected.', { counterparty: selectedRule ? getCategorizationRuleCounterpartyLabel(selectedRule) : t('bankTransactions:label.selected_counterparty', 'this counterparty') })}
+        description={t('categorizationRules:label.transaction_no_longer_automatically_categorized', 'Transactions will no longer automatically be categorized by this rule. Any transactions previously categorized to {{counterparty}} will not be affected.', { counterparty: selectedRuleCounterpartyLabel })}
         onConfirm={archiveCategorizationRule}
         confirmLabel={t('common:action.delete_label', 'Delete')}
         cancelLabel={t('common:action.cancel_label', 'Cancel')}
