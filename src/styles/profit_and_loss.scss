@@ -51,12 +51,6 @@
   fill: var(--base-transparent-16-light);
 }
 
-.Layer__profit-and-loss-chart__selection-indicator {
-  stroke: var(--chart-indicator-color);
-  fill: none;
-  transition: opacity 0.1s linear;
-}
-
 /** ---- */
 .Layer__profit-and-loss__chart_with_summaries {
   display: flex;

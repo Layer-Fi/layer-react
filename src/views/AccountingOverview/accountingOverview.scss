@@ -1,0 +1,12 @@
+.Layer__AccountingOverview {
+  &__ProfitAndLossHeader {
+    padding-block-start: var(--spacing-lg);
+    padding-block-end: 0;
+    padding-inline: var(--spacing-lg);
+  }
+
+  &__ProfitAndLossContainer {
+    display: flex;
+    flex-direction: column;
+  }
+}

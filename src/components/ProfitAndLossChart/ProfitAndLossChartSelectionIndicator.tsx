@@ -4,6 +4,8 @@ type ProfitAndLossChartSelectionIndicatorProps = Pick<LabelProps, 'viewBox'> & {
   selected?: boolean
 }
 
+import './profitAndLossChartSelectionIndicator.scss'
+
 export const ProfitAndLossChartSelectionIndicator = ({ viewBox, selected }: ProfitAndLossChartSelectionIndicatorProps) => {
   if (!selected) return null
 
@@ -17,13 +19,13 @@ export const ProfitAndLossChartSelectionIndicator = ({ viewBox, selected }: Prof
 
   return (
     <rect
-      className='Layer__profit-and-loss-chart__selection-indicator'
+      className='Layer__ProfitAndLossChart__SelectionIndicator'
       rx={borderRadius}
       ry={borderRadius}
       x={x - margin}
-      y={16}
+      y={-margin + 36}
       width={boxWidth}
-      height='calc(100% - 30px)'
+      height='calc(100% - 38px)'
     />
   )
 }

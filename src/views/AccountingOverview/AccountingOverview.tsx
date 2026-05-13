@@ -17,8 +17,11 @@ import {
   ProfitAndLossSummaries,
   type ProfitAndLossSummariesStringOverrides,
 } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
+import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
 import { View } from '@components/View/View'
 import { type TagOption } from '@views/ProjectProfitability/ProjectProfitability'
+
+import './accountingOverview.scss'
 
 interface AccountingOverviewStringOverrides {
   title?: string
@@ -105,10 +108,13 @@ export const AccountingOverview = ({
         />
         <Container
           name='accounting-overview-profit-and-loss'
+          className='Layer__AccountingOverview__ProfitAndLossContainer'
           asWidget
         >
           <ProfitAndLoss.Header
             text={stringOverrides?.header || t('common:label.profit_loss', 'Profit & Loss')}
+            className='Layer__AccountingOverview__ProfitAndLossHeader'
+            trailingContent={<PnlLegend direction='row' />}
           />
           <ProfitAndLoss.Chart
             tagFilter={
@@ -116,6 +122,7 @@ export const AccountingOverview = ({
                 ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
                 : undefined
             }
+            hideLegend
           />
         </Container>
         {middleBanner && (
