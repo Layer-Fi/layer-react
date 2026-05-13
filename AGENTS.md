@@ -21,7 +21,8 @@
 
 - Do not use the `style` prop or write raw utility/atomic class strings in `className`
 - Do not re-state styles the target component or its parent stack already set
-- Use the following spacing scale: (`4xs|3xs|2xs|xs|sm|md|lg|xl|2xl|3xl|5xl`)
+- Use color and spacing variables from `src/styles/variables.scss`
+- Do not use inline styles
 
 ## CSS Selectors
 
