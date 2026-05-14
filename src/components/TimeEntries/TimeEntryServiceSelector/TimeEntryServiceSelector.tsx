@@ -5,7 +5,7 @@ import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/catalogService'
-import { ApiEnumErrorType, APIError } from '@utils/api/apiError'
+import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
 import { useListCatalogServices } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
@@ -78,14 +78,6 @@ const formatCreateLabel = (inputValue: string, t: TFunction) => (
   </Span>
 )
 
-const isSpecifiedIdNotFoundError = (error: unknown) => {
-  if (!(error instanceof APIError)) {
-    return false
-  }
-
-  return error.messages?.some(message => message.error_enum === ApiEnumErrorType.SpecifiedIdNotFound) === true
-}
-
 export function TimeEntryServiceSelector({
   selectedServiceId,
   onSelectedServiceIdChange,
@@ -105,7 +97,7 @@ export function TimeEntryServiceSelector({
   const { data: servicesResponse, isLoading, isError, error } = useListCatalogServices({ allowArchived })
 
   const isLoadingWithoutFallback = isLoading && !servicesResponse
-  const shouldHideError = hideSpecifiedIdNotFoundError && isSpecifiedIdNotFoundError(error)
+  const shouldHideError = hideSpecifiedIdNotFoundError && isAPIErrorOfType(error, ApiEnumErrorType.SpecifiedIdNotFound)
   const shouldShowError = isError && !shouldHideError
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 

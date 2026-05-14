@@ -32,3 +32,11 @@ export class APIError extends Error {
     return this.messages?.map(x => x.description)
   }
 }
+
+export const isAPIErrorOfType = (error: unknown, errorType: ApiEnumErrorType) => {
+  if (!(error instanceof APIError)) {
+    return false
+  }
+
+  return error.messages?.some(message => message.error_enum === errorType) === true
+}

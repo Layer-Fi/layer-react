@@ -4,7 +4,7 @@ import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type Customer } from '@schemas/customer'
-import { ApiEnumErrorType, APIError } from '@utils/api/apiError'
+import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
 import { getCustomerName } from '@utils/customerVendor'
 import { useListCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
@@ -63,14 +63,6 @@ const formatCreateLabel = (inputValue: string, t: TFunction) =>
     ? t('customerVendor:action.create_customer_input_value', 'Create customer "{{inputValue}}"', { inputValue })
     : t('customerVendor:action.create_new_customer', 'Create new customer')
 
-const isSpecifiedIdNotFoundError = (error: unknown) => {
-  if (!(error instanceof APIError)) {
-    return false
-  }
-
-  return error.messages?.some(message => message.error_enum === ApiEnumErrorType.SpecifiedIdNotFound) === true
-}
-
 export function CustomerSelector({
   selectedCustomer,
   onSelectedCustomerChange,
@@ -101,7 +93,7 @@ export function CustomerSelector({
     : searchQuery
 
   const { data, isLoading, isError, error } = useListCustomers({ query: effectiveSearchQuery })
-  const shouldHideError = hideSpecifiedIdNotFoundError && isSpecifiedIdNotFoundError(error)
+  const shouldHideError = hideSpecifiedIdNotFoundError && isAPIErrorOfType(error, ApiEnumErrorType.SpecifiedIdNotFound)
   const shouldShowError = isError && !shouldHideError
 
   const options = useMemo(() =>
