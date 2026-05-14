@@ -4,6 +4,7 @@ import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type Customer } from '@schemas/customer'
+import { ApiEnumErrorType, APIError } from '@utils/api/apiError'
 import { getCustomerName } from '@utils/customerVendor'
 import { useListCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
@@ -49,6 +50,7 @@ type CustomerSelectorBaseProps = {
   inline?: boolean
 
   className?: string
+  hideSpecifiedIdNotFoundError?: boolean
 }
 
 type CustomerSelectorProps = CustomerSelectorBaseProps & (
@@ -61,6 +63,14 @@ const formatCreateLabel = (inputValue: string, t: TFunction) =>
     ? t('customerVendor:action.create_customer_input_value', 'Create customer "{{inputValue}}"', { inputValue })
     : t('customerVendor:action.create_new_customer', 'Create new customer')
 
+const isSpecifiedIdNotFoundError = (error: unknown) => {
+  if (!(error instanceof APIError)) {
+    return false
+  }
+
+  return error.messages?.some(message => message.error_enum === ApiEnumErrorType.SpecifiedIdNotFound) === true
+}
+
 export function CustomerSelector({
   selectedCustomer,
   onSelectedCustomerChange,
@@ -71,6 +81,7 @@ export function CustomerSelector({
   isReadOnly,
   inline,
   className,
+  hideSpecifiedIdNotFoundError,
   showLabel = true,
 }: CustomerSelectorProps) {
   const { t } = useTranslation()
@@ -89,7 +100,9 @@ export function CustomerSelector({
     ? undefined
     : searchQuery
 
-  const { data, isLoading, isError } = useListCustomers({ query: effectiveSearchQuery })
+  const { data, isLoading, isError, error } = useListCustomers({ query: effectiveSearchQuery })
+  const shouldHideError = hideSpecifiedIdNotFoundError && isSpecifiedIdNotFoundError(error)
+  const shouldShowError = isError && !shouldHideError
 
   const options = useMemo(() =>
     data?.flatMap(({ data }) => data).map(customer => new CustomerAsOption(customer)) || [],
@@ -174,7 +187,7 @@ export function CustomerSelector({
     placeholder,
     slots: { EmptyMessage, ErrorMessage },
     isDisabled: shouldDisableComboBox,
-    isError,
+    isError: shouldShowError,
     isLoading: isLoadingWithoutFallback,
     isReadOnly,
     ['aria-label']: showLabel ? undefined : resolvedLabel,

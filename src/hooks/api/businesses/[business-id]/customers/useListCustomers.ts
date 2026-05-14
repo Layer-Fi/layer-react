@@ -89,7 +89,7 @@ type UseListCustomersParams = {
   isEnabled?: boolean
 }
 
-export function useListCustomers({ query, isEnabled = true }: UseListCustomersParams = {}) {
+export function useListCustomers({ query, isEnabled = true }: UseListCustomersParams = {}): SWRInfiniteResult<ListCustomersRawResult> & { error: unknown } {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
@@ -131,7 +131,12 @@ export function useListCustomers({ query, isEnabled = true }: UseListCustomersPa
 
   usePreserveInfiniteSize(swrResponse)
 
-  return new SWRInfiniteResult(swrResponse)
+  const error: unknown = swrResponse.error
+
+  return Object.assign(
+    new SWRInfiniteResult(swrResponse),
+    { error },
+  )
 }
 
 export function usePreloadCustomers(parameters?: UseListCustomersParams) {

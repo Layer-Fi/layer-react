@@ -54,6 +54,7 @@ const TimeEntryCustomerField = ({ value, entryCustomer, isReadOnly, onChange }: 
       label={t('timeTracking:label.customer_optional', 'Customer (optional)')}
       placeholder={t('timeTracking:label.select_customer_short', 'Select a customer')}
       className='Layer__TimeEntryForm__Field__Customer'
+      hideSpecifiedIdNotFoundError
     />
   )
 }
@@ -126,6 +127,7 @@ export const TimeEntryForm = ({ onSuccess, entry, isReadOnly }: TimeEntryFormPro
             className='Layer__TimeEntryForm__Field__Service'
             isCreatable={!isReadOnly}
             onCreateService={handleCreateService}
+            hideSpecifiedIdNotFoundError
           />
         )}
       </form.Field>

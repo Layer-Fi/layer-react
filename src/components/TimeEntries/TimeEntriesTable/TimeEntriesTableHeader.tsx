@@ -47,6 +47,7 @@ export const TimeEntriesTableHeader = () => {
         showLabel={false}
         allowArchived
         inline
+        hideSpecifiedIdNotFoundError
       />
       <CustomerSelector
         selectedCustomer={selectedCustomer}
@@ -56,6 +57,7 @@ export const TimeEntriesTableHeader = () => {
         placeholder={t('timeTracking:label.all_customers', 'All Customers')}
         showLabel={false}
         inline
+        hideSpecifiedIdNotFoundError
       />
     </HStack>
   ), [selectedCustomer, setSelectedCustomer, selectedServiceId, setSelectedServiceId, t])

@@ -5,6 +5,7 @@ import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/catalogService'
+import { ApiEnumErrorType, APIError } from '@utils/api/apiError'
 import { useListCatalogServices } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
@@ -53,6 +54,7 @@ type TimeEntryServiceSelectorSharedProps = {
   inline?: boolean
   className?: string
   showLabel?: boolean
+  hideSpecifiedIdNotFoundError?: boolean
 }
 
 type TimeEntryServiceSelectorProps =
@@ -76,6 +78,14 @@ const formatCreateLabel = (inputValue: string, t: TFunction) => (
   </Span>
 )
 
+const isSpecifiedIdNotFoundError = (error: unknown) => {
+  if (!(error instanceof APIError)) {
+    return false
+  }
+
+  return error.messages?.some(message => message.error_enum === ApiEnumErrorType.SpecifiedIdNotFound) === true
+}
+
 export function TimeEntryServiceSelector({
   selectedServiceId,
   onSelectedServiceIdChange,
@@ -85,15 +95,18 @@ export function TimeEntryServiceSelector({
   inline,
   className,
   showLabel = true,
+  hideSpecifiedIdNotFoundError,
   allowArchived,
   isCreatable,
   onCreateService,
 }: TimeEntryServiceSelectorProps) {
   const { t } = useTranslation()
 
-  const { data: servicesResponse, isLoading, isError } = useListCatalogServices({ allowArchived })
+  const { data: servicesResponse, isLoading, isError, error } = useListCatalogServices({ allowArchived })
 
   const isLoadingWithoutFallback = isLoading && !servicesResponse
+  const shouldHideError = hideSpecifiedIdNotFoundError && isSpecifiedIdNotFoundError(error)
+  const shouldShowError = isError && !shouldHideError
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
   const serviceOptions = useMemo<ServiceAsOption[]>(
@@ -136,7 +149,7 @@ export function TimeEntryServiceSelector({
 
   const ErrorMessage = useMemo(
     () => {
-      if (!isError) {
+      if (!shouldShowError) {
         return null
       }
 
@@ -146,7 +159,7 @@ export function TimeEntryServiceSelector({
         </P>
       )
     },
-    [isError, t],
+    [shouldShowError, t],
   )
 
   const inputId = useId()
@@ -160,7 +173,7 @@ export function TimeEntryServiceSelector({
     slots: { EmptyMessage, ErrorMessage },
     isClearable,
     isDisabled: shouldDisableComboBox,
-    isError,
+    isError: shouldShowError,
     isLoading: isLoadingWithoutFallback,
     isReadOnly,
     ['aria-label']: showLabel ? undefined : t('timeTracking:label.service', 'Service'),
