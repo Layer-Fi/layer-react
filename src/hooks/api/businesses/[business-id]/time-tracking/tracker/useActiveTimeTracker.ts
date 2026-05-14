@@ -45,7 +45,14 @@ function buildKey({
   }
 }
 
-export function useActiveTimeTracker() {
+export class ActiveTimeTrackerSWRResponse extends SWRQueryResult<TimeEntry | null> {
+  get error(): unknown {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this.swrResponse.error
+  }
+}
+
+export function useActiveTimeTracker(): ActiveTimeTrackerSWRResponse {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
@@ -66,7 +73,7 @@ export function useActiveTimeTracker() {
       .then(({ data }) => data.timeEntry ?? null),
   )
 
-  return new SWRQueryResult<TimeEntry | null>(response)
+  return new ActiveTimeTrackerSWRResponse(response)
 }
 
 export function useActiveTimeTrackerGlobalCacheActions() {
