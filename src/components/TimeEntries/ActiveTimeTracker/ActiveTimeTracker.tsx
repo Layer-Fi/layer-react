@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
 import { useActiveTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useActiveTimeTracker'
 import { useElapsedSeconds } from '@hooks/utils/dates/useElapsedSeconds'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -23,7 +24,7 @@ export const ActiveTimeTracker = ({ isDrawerOpen, onDrawerOpenChange }: ActiveTi
   const { isMobile } = useSizeClass()
   const { formatSecondsAsDuration } = useIntlFormatter()
 
-  const { data: activeEntry, isLoading, isError } = useActiveTimeTracker()
+  const { data: activeEntry, isLoading, isError, error } = useActiveTimeTracker()
 
   const elapsedSeconds = useElapsedSeconds(activeEntry?.createdAt)
   const timerDisplayValue = useMemo(
@@ -36,6 +37,10 @@ export const ActiveTimeTracker = ({ isDrawerOpen, onDrawerOpenChange }: ActiveTi
   }
 
   if (isError) {
+    if (isAPIErrorOfType(error, ApiEnumErrorType.SpecifiedIdNotFound)) {
+      return null
+    }
+
     return (
       <Container name='ActiveTimeTracker'>
         <VStack pi='lg' pbe='md'>
