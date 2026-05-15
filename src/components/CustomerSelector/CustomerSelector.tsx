@@ -4,6 +4,7 @@ import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type Customer } from '@schemas/customer'
+import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
 import { getCustomerName } from '@utils/customerVendor'
 import { useListCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
@@ -49,6 +50,7 @@ type CustomerSelectorBaseProps = {
   inline?: boolean
 
   className?: string
+  hideSpecifiedIdNotFoundError?: boolean
 }
 
 type CustomerSelectorProps = CustomerSelectorBaseProps & (
@@ -71,6 +73,7 @@ export function CustomerSelector({
   isReadOnly,
   inline,
   className,
+  hideSpecifiedIdNotFoundError,
   showLabel = true,
 }: CustomerSelectorProps) {
   const { t } = useTranslation()
@@ -89,7 +92,9 @@ export function CustomerSelector({
     ? undefined
     : searchQuery
 
-  const { data, isLoading, isError } = useListCustomers({ query: effectiveSearchQuery })
+  const { data, isLoading, isError, error } = useListCustomers({ query: effectiveSearchQuery })
+  const shouldHideError = hideSpecifiedIdNotFoundError && isAPIErrorOfType(error, ApiEnumErrorType.SpecifiedIdNotFound)
+  const shouldShowError = isError && !shouldHideError
 
   const options = useMemo(() =>
     data?.flatMap(({ data }) => data).map(customer => new CustomerAsOption(customer)) || [],
@@ -174,7 +179,7 @@ export function CustomerSelector({
     placeholder,
     slots: { EmptyMessage, ErrorMessage },
     isDisabled: shouldDisableComboBox,
-    isError,
+    isError: shouldShowError,
     isLoading: isLoadingWithoutFallback,
     isReadOnly,
     ['aria-label']: showLabel ? undefined : resolvedLabel,
