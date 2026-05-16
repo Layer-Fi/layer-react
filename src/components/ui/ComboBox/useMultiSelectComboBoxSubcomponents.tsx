@@ -84,7 +84,7 @@ const buildCustomMultiValueLabel = <T extends ComboBoxOption>() => {
 
     return (
       <components.MultiValueLabel {...restProps} innerProps={mergedInnerProps}>
-        <HStack gap='3xs' align='center' overflow='hidden'>
+        <HStack gap='3xs' align='center'>
           <Badge size={BadgeSize.SMALL} variant={BadgeVariant.INFO}>
             {selectedCount}
             <Filter size={12} />
