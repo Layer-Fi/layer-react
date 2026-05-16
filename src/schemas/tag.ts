@@ -33,6 +33,8 @@ export const TagValueDefinitionSchema = Schema.Struct({
 })
 export type TagValueDefinition = typeof TagValueDefinitionSchema.Type
 
+export const isActiveTagValueDefinition = (tagValueDefinition: TagValueDefinition): boolean => tagValueDefinition.archivedAt == null
+
 export const TagKeyValueSchema = Schema.Struct({
   key: Schema.NonEmptyTrimmedString,
   value: Schema.NonEmptyTrimmedString,

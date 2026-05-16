@@ -4,7 +4,7 @@ import { createStore, type StoreApi, useStore } from 'zustand'
 
 import { type ReportConfig, ReportControl, type ReportGroup } from '@schemas/reports/reportConfig'
 import { DateGroupBy, type DateQueryParams, type DateRangeQueryParams, type UnifiedReportColumn } from '@schemas/reports/unifiedReport'
-import type { TagValueDefinition } from '@schemas/tag'
+import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/tag'
 import type { QueryParams } from '@utils/request/toDefinedSearchParameters'
 import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/config/useReportConfig'
 import { type DateSelectionMode, useGlobalDate, useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -148,6 +148,7 @@ const buildUnifiedReportTagFilters = (
   if (!key) return
 
   const values = selectedTagValues
+    .filter(isActiveTagValueDefinition)
     .map(tagValue => tagValue.value)
     .filter(value => value.trim().length > 0)
 
@@ -209,12 +210,13 @@ const createUnifiedReportStore = (dateSelectionMode: DateSelectionMode) =>
         set({
           baseReport,
           detailReportConfig: null,
-          selectedTagValues: baseReport.tagControl?.initialSelectedTags ?? [],
+          selectedTagValues: baseReport.tagControl?.initialSelectedTags.filter(isActiveTagValueDefinition) ?? [],
         }),
       openDetailReport: (detailReportConfig: DetailReportConfig) => set({ detailReportConfig }),
       closeDetailReport: () => set({ detailReportConfig: null }),
       setGroupBy: (groupBy: DateGroupBy | null) => set({ groupBy }),
-      setSelectedTagValues: (selectedTagValues: ReadonlyArray<TagValueDefinition>) => set({ selectedTagValues }),
+      setSelectedTagValues: (selectedTagValues: ReadonlyArray<TagValueDefinition>) =>
+        set({ selectedTagValues: selectedTagValues.filter(isActiveTagValueDefinition) }),
     },
   }))
 

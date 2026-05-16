@@ -2,7 +2,7 @@ import { useId } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { TagControl } from '@schemas/reports/reportConfig'
-import type { TagValueDefinition } from '@schemas/tag'
+import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/tag'
 import { useUnifiedReportTagSelection } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { MultiSelectComboBox } from '@ui/ComboBox/MultiSelectComboBox'
 import { VStack } from '@ui/Stack/Stack'
@@ -31,8 +31,8 @@ export function UnifiedReportTagControl({ tagControl }: UnifiedReportTagControlP
   const { t } = useTranslation()
   const { selectedTagValues, setSelectedTagValues } = useUnifiedReportTagSelection()
   const dimensionName = tagControl.tagDimension.displayName ?? tagControl.tagDimension.key
-  const options = tagControl.tagDimension.definedValues.map(toOption)
-  const selectedValues = selectedTagValues.map(toOption)
+  const options = tagControl.tagDimension.definedValues.filter(isActiveTagValueDefinition).map(toOption)
+  const selectedValues = selectedTagValues.filter(isActiveTagValueDefinition).map(toOption)
 
   const handleSelectedValuesChange = (values: ReadonlyArray<UnifiedReportTagValueOption>) => {
     setSelectedTagValues(values.map(({ tagValueDefinition }) => tagValueDefinition))
