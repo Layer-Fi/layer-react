@@ -11,8 +11,6 @@
   --block-size: 2.25rem;
 
   block-size: var(--block-size);
-  min-inline-size: 0;
-  max-inline-size: 100%;
 
   border-radius: var(--input-border-radius);
   border: 1px solid var(--border-color);
@@ -63,8 +61,6 @@
 }
 
 .Layer__ComboBoxValueContainer {
-  min-inline-size: 0;
-
   padding-inline-start: var(--spacing-xs);
 
   cursor: text;
@@ -73,13 +69,11 @@
 }
 
 .Layer__ComboBoxMultiValue {
-  min-inline-size: 0;
   max-width: calc(100% - var(--spacing-3xs));
 }
 
 .Layer__ComboBoxMultiValueLabel {
   overflow: hidden;
-  min-inline-size: 0;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
