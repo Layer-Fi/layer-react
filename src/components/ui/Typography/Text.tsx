@@ -33,7 +33,7 @@ type TextRenderingProps = {
   nonAria?: true
 }
 
-function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRenderingProps & TRest>) {
+function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRenderingProps & TooltipCapableComponentProps & TRest>) {
   const {
     align,
     children,
@@ -46,8 +46,10 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
     pbs,
     size,
     status,
+    tooltipContentWidth: _tooltipContentWidth,
     variant,
     weight,
+    withTooltip: _withTooltip,
     ...restProps
   } = props
 
