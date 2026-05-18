@@ -8,8 +8,6 @@ import { MultiSelectComboBox } from '@ui/ComboBox/MultiSelectComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 
-import './unifiedReportTagControl.scss'
-
 type UnifiedReportTagControlProps = {
   tagControl: TagControl
 }
