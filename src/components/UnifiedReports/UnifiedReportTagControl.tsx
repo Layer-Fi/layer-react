@@ -8,6 +8,8 @@ import { MultiSelectComboBox } from '@ui/ComboBox/MultiSelectComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 
+import './unifiedReportTagControl.scss'
+
 type UnifiedReportTagControlProps = {
   tagControl: TagControl
 }
@@ -37,7 +39,7 @@ export function UnifiedReportTagControl({ tagControl }: UnifiedReportTagControlP
   }
 
   return (
-    <VStack gap='3xs' className='Layer__UnifiedReports__TagControl'>
+    <VStack gap='3xs' className='Layer__UnifiedReports__TagControl__Container'>
       <Label size='sm' htmlFor={inputId}>
         {dimensionName}
       </Label>
@@ -47,6 +49,7 @@ export function UnifiedReportTagControl({ tagControl }: UnifiedReportTagControlP
         selectedValues={selectedValues}
         onSelectedValuesChange={handleSelectedValuesChange}
         placeholder={t('tags:action.select_dimension_name', 'Select {{dimensionName}}', { dimensionName })}
+        isSearchable={selectedValues.length === 0}
       />
     </VStack>
   )

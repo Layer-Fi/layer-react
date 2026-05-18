@@ -1,0 +1,14 @@
+.Layer__UnifiedReports__TagControl__Container {
+  inline-size: 16rem;
+
+  .Layer__ComboBoxContainer,
+  .Layer__ComboBoxControl,
+  .Layer__ComboBoxValueContainer,
+  .Layer__ComboBoxMultiValueLabel {
+    min-inline-size: 0;
+  }
+
+  .Layer__ComboBoxMultiValue {
+    flex: 1 1 auto;
+  }
+}
