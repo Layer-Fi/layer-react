@@ -1,10 +1,7 @@
 .Layer__UnifiedReports__TagControl__Container {
   inline-size: 16rem;
 
-  .Layer__ComboBoxContainer,
-  .Layer__ComboBoxControl,
-  .Layer__ComboBoxValueContainer,
-  .Layer__ComboBoxMultiValueLabel {
+  .Layer__ComboBoxControl {
     min-inline-size: 0;
   }
 
