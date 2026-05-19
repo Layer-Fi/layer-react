@@ -1,5 +1,6 @@
 import { pipe, Schema } from 'effect'
 
+import { TagDimensionSchema, TagValueDefinitionSchema } from '@schemas/tag'
 import { createTransformedEnumSchema } from '@schemas/utils'
 
 export enum ReportControl {
@@ -17,6 +18,18 @@ const TransformedReportControlSchema = createTransformedEnumSchema(
   ReportControl.Unknown,
 )
 
+export const TagControlSchema = Schema.Struct({
+  tagDimension: pipe(
+    Schema.propertySignature(TagDimensionSchema),
+    Schema.fromKey('tag_dimension'),
+  ),
+  initialSelectedTags: pipe(
+    Schema.propertySignature(Schema.Array(TagValueDefinitionSchema)),
+    Schema.fromKey('initial_selected_tags'),
+  ),
+})
+export type TagControl = typeof TagControlSchema.Type
+
 export const ReportConfigSchema = Schema.Struct({
   key: Schema.String,
   reportRoute: pipe(
@@ -33,6 +46,7 @@ export const ReportConfigSchema = Schema.Struct({
     Schema.fromKey('base_query_parameters'),
   ),
   isDefaultReport: Schema.optional(Schema.Boolean).pipe(Schema.fromKey('is_default_report')),
+  tagControl: Schema.optional(Schema.NullOr(TagControlSchema)).pipe(Schema.fromKey('tag_control')),
 })
 export type ReportConfig = typeof ReportConfigSchema.Type
 
