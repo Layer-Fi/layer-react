@@ -62,7 +62,7 @@ export const UnifiedReportControls = () => {
 
   const hasGroupBy = dateSelectionMode === 'full' && hasControl(baseReport, ReportControl.GroupBy)
   const hasYear = hasControl(baseReport, ReportControl.Year)
-  const hasReportingBasis = hasControl(baseReport, ReportControl.ReportingBasis)
+  const hasReportingBasis = hasControl(baseReport, ReportControl.ReportingBasis) && reportingBasis != null
   const tagControl = baseReport?.tagControl
   return (
     <Stack

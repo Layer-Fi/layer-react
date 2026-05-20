@@ -15,16 +15,14 @@ const REPORTING_BASIS_CONFIG = [
   { value: ReportingBasis.Accrual, ...translationKey('reports:label.accrual', 'Accrual') },
 ] satisfies ReadonlyArray<{ value: UnifiedReportReportingBasis, i18nKey: string, defaultValue: string }>
 
-const CONTROL_CLASS_NAME = 'Layer__UnifiedReports__ReportingBasisControl'
-
 type ReportingBasisOption = {
   label: string
   value: UnifiedReportReportingBasis
 }
 
 type UnifiedReportReportingBasisControlProps = {
-  value: UnifiedReportReportingBasis | null
-  onValueChange: (value: UnifiedReportReportingBasis | null) => void
+  value: UnifiedReportReportingBasis
+  onValueChange: (value: UnifiedReportReportingBasis) => void
 }
 
 const useReportingBasisControlData = () => {
@@ -48,11 +46,11 @@ export function UnifiedReportReportingBasisControl({
   const selectedOption = value ? (options.find(option => option.value === value) ?? null) : null
 
   const handleSelectedValueChange = (option: ReportingBasisOption | null) => {
-    onValueChange(option?.value ?? null)
+    if (option) onValueChange(option.value)
   }
 
   return (
-    <VStack className={`${CONTROL_CLASS_NAME}__Container`}>
+    <VStack className='Layer__UnifiedReports__ReportingBasisControl__Container'>
       <Label pbe='3xs' size='sm' htmlFor={inputId}>{label}</Label>
       <ComboBox<ReportingBasisOption>
         options={options}
