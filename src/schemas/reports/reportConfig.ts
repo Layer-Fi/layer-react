@@ -1,6 +1,5 @@
 import { pipe, Schema } from 'effect'
 
-import { ReportingBasis } from '@schemas/accountingConfiguration'
 import { TagDimensionSchema, TagValueDefinitionSchema } from '@schemas/tag'
 import { createTransformedEnumSchema } from '@schemas/utils'
 
@@ -19,12 +18,6 @@ const TransformedReportControlSchema = createTransformedEnumSchema(
   ReportControl,
   ReportControl.Unknown,
 )
-
-export const UNIFIED_REPORT_REPORTING_BASIS_OPTIONS = [ReportingBasis.Cash, ReportingBasis.Accrual] as const
-export type UnifiedReportReportingBasis = typeof UNIFIED_REPORT_REPORTING_BASIS_OPTIONS[number]
-
-export const isUnifiedReportReportingBasis = (value: string | undefined): value is UnifiedReportReportingBasis =>
-  UNIFIED_REPORT_REPORTING_BASIS_OPTIONS.includes(value as UnifiedReportReportingBasis)
 
 export const TagControlSchema = Schema.Struct({
   tagDimension: pipe(

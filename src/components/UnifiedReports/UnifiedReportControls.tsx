@@ -2,7 +2,13 @@ import { useState } from 'react'
 
 import { ReportControl } from '@schemas/reports/reportConfig'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
-import { hasControl, useBaseUnifiedReport, useUnifiedReportDateSelectionMode, useUnifiedReportGroupByParam } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import {
+  hasControl,
+  useBaseUnifiedReport,
+  useUnifiedReportDateSelectionMode,
+  useUnifiedReportGroupByParam,
+  useUnifiedReportReportingBasisParam,
+} from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Stack, VStack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 import { CombinedDateSelection } from '@components/DateSelection/CombinedDateSelection'
@@ -44,6 +50,7 @@ const UnifiedReportDateSelection = ({ isCompact }: { isCompact: boolean }) => {
 export const UnifiedReportControls = () => {
   const { baseReport } = useBaseUnifiedReport()
   const { groupBy, setGroupBy } = useUnifiedReportGroupByParam()
+  const { reportingBasis, setReportingBasis } = useUnifiedReportReportingBasisParam()
   const dateSelectionMode = useUnifiedReportDateSelectionMode()
   const [size, setSize] = useState(3)
 
@@ -71,7 +78,12 @@ export const UnifiedReportControls = () => {
           {hasYear && <GlobalYearPicker />}
           {hasGroupBy && <DateGroupByComboBox value={groupBy} onValueChange={setGroupBy} />}
           {tagControl && <UnifiedReportTagControl tagControl={tagControl} />}
-          {hasReportingBasis && <UnifiedReportReportingBasisControl />}
+          {hasReportingBasis && (
+            <UnifiedReportReportingBasisControl
+              value={reportingBasis}
+              onValueChange={setReportingBasis}
+            />
+          )}
         </div>
       )}
     </Stack>

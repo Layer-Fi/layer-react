@@ -2,9 +2,8 @@ import { useId } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ReportingBasis } from '@schemas/accountingConfiguration'
-import type { UnifiedReportReportingBasis } from '@schemas/reports/reportConfig'
+import type { UnifiedReportReportingBasis } from '@schemas/reports/unifiedReport'
 import { translationKey } from '@utils/i18n/translationKey'
-import { useUnifiedReportReportingBasisParam } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
@@ -23,6 +22,11 @@ type ReportingBasisOption = {
   value: UnifiedReportReportingBasis
 }
 
+type UnifiedReportReportingBasisControlProps = {
+  value: UnifiedReportReportingBasis | null
+  onValueChange: (value: UnifiedReportReportingBasis | null) => void
+}
+
 const useReportingBasisControlData = () => {
   const { t } = useTranslation()
 
@@ -35,15 +39,16 @@ const useReportingBasisControlData = () => {
   return { label, options }
 }
 
-export function UnifiedReportReportingBasisControl() {
+export function UnifiedReportReportingBasisControl({
+  value,
+  onValueChange,
+}: UnifiedReportReportingBasisControlProps) {
   const inputId = useId()
   const { label, options } = useReportingBasisControlData()
-  const { reportingBasis, setReportingBasis } = useUnifiedReportReportingBasisParam()
-  const selectedOption = reportingBasis ? (options.find(option => option.value === reportingBasis) ?? null) : null
+  const selectedOption = value ? (options.find(option => option.value === value) ?? null) : null
 
   const handleSelectedValueChange = (option: ReportingBasisOption | null) => {
-    if (!option) return
-    setReportingBasis(option.value)
+    onValueChange(option?.value ?? null)
   }
 
   return (
