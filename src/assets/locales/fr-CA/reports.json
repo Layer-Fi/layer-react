@@ -18,10 +18,8 @@
   },
   "label": {
     "adjustments_net_income": "Ajustements au bénéfice net",
-    "accrual": "Comptabilité d’exercice",
     "assets": "Actifs",
     "balance_sheet": "Bilan",
-    "cash": "Comptabilité de caisse",
     "cash_beginning_of_period": "Trésorerie au début de la période",
     "cash_end_of_period": "Trésorerie à la fin de la période",
     "cash_flow_statement": "État des flux de trésorerie",
@@ -41,7 +39,6 @@
     "profit_loss_detail_report": "Rapport détaillé de l’état des résultats",
     "report_period": "Période du rapport",
     "report_type": "Type de rapport",
-    "reporting_basis": "Méthode de comptabilité",
     "reports": "Rapports",
     "reports_navigation": "Navigation des rapports",
     "select_report": "Sélectionner un rapport",
