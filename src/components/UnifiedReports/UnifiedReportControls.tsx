@@ -8,6 +8,7 @@ import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDa
 import { CombinedDateSelection } from '@components/DateSelection/CombinedDateSelection'
 import { DateGroupByComboBox } from '@components/DateSelection/DateGroupByComboBox'
 import { GlobalYearPicker } from '@components/GlobalYearPicker/GlobalYearPicker'
+import { UnifiedReportReportingBasisControl } from '@components/UnifiedReports/UnifiedReportReportingBasisControl'
 import { UnifiedReportTagControl } from '@components/UnifiedReports/UnifiedReportTagControl'
 
 import './unifiedReportControls.scss'
@@ -54,6 +55,7 @@ export const UnifiedReportControls = () => {
 
   const hasGroupBy = dateSelectionMode === 'full' && hasControl(baseReport, ReportControl.GroupBy)
   const hasYear = hasControl(baseReport, ReportControl.Year)
+  const hasReportingBasis = hasControl(baseReport, ReportControl.ReportingBasis)
   const tagControl = baseReport?.tagControl
   return (
     <Stack
@@ -64,11 +66,12 @@ export const UnifiedReportControls = () => {
       gap='xs'
     >
       <UnifiedReportDateSelection isCompact={variant === 'small'} />
-      {(hasYear || hasGroupBy || tagControl) && (
+      {(hasYear || hasGroupBy || hasReportingBasis || tagControl) && (
         <div className='Layer__UnifiedReports__AdditionalControls' data-variant={variant}>
           {hasYear && <GlobalYearPicker />}
           {hasGroupBy && <DateGroupByComboBox value={groupBy} onValueChange={setGroupBy} />}
           {tagControl && <UnifiedReportTagControl tagControl={tagControl} />}
+          {hasReportingBasis && <UnifiedReportReportingBasisControl />}
         </div>
       )}
     </Stack>

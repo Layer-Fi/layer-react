@@ -2,7 +2,13 @@ import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, 
 import { getYear } from 'date-fns'
 import { createStore, type StoreApi, useStore } from 'zustand'
 
-import { type ReportConfig, ReportControl, type ReportGroup } from '@schemas/reports/reportConfig'
+import {
+  isUnifiedReportReportingBasis,
+  type ReportConfig,
+  ReportControl,
+  type ReportGroup,
+  type UnifiedReportReportingBasis,
+} from '@schemas/reports/reportConfig'
 import { DateGroupBy, type DateQueryParams, type DateRangeQueryParams, type UnifiedReportColumn } from '@schemas/reports/unifiedReport'
 import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/tag'
 import type { QueryParams } from '@utils/request/toDefinedSearchParameters'
@@ -20,6 +26,7 @@ type UnifiedReportStoreActions = {
   openDetailReport: (params: DetailReportConfig) => void
   closeDetailReport: () => void
   setGroupBy: (groupBy: DateGroupBy | null) => void
+  setReportingBasis: (reportingBasis: UnifiedReportReportingBasis | null) => void
   setSelectedTagValues: (selectedTagValues: ReadonlyArray<TagValueDefinition>) => void
 }
 
@@ -27,6 +34,7 @@ type UnifiedReportStoreShape = {
   baseReport: ReportConfig | null
   detailReportConfig: DetailReportConfig | null
   groupBy: DateGroupBy | null
+  reportingBasis: UnifiedReportReportingBasis | null
   selectedTagValues: ReadonlyArray<TagValueDefinition>
   dateSelectionMode: DateSelectionMode
   actions: UnifiedReportStoreActions
@@ -39,6 +47,7 @@ export type ReportControlParams = {
   [ReportControl.Date]: DateQueryParams
   [ReportControl.DateRange]: DateRangeQueryParams
   [ReportControl.GroupBy]: { groupBy: DateGroupBy }
+  [ReportControl.ReportingBasis]: { reportingBasis: UnifiedReportReportingBasis }
   [ReportControl.Year]: { year: number }
 }
 
@@ -50,6 +59,7 @@ export type UnifiedReportControlParams = Partial<
   & ReportControlParams[ReportControl.Date]
   & ReportControlParams[ReportControl.DateRange]
   & ReportControlParams[ReportControl.GroupBy]
+  & ReportControlParams[ReportControl.ReportingBasis]
   & ReportControlParams[ReportControl.Year]
   & UnifiedReportTagFilterParams
 >
@@ -63,6 +73,7 @@ const UnifiedReportStoreContext = createContext(
     baseReport: null,
     detailReportConfig: null,
     groupBy: DateGroupBy.AllTime,
+    reportingBasis: null,
     selectedTagValues: [],
     dateSelectionMode: 'full',
     actions: {
@@ -70,6 +81,7 @@ const UnifiedReportStoreContext = createContext(
       openDetailReport: () => {},
       closeDetailReport: () => {},
       setGroupBy: () => {},
+      setReportingBasis: () => {},
       setSelectedTagValues: () => {},
     },
   })),
@@ -131,6 +143,15 @@ export function useUnifiedReportGroupByParam() {
   return useMemo(() => ({ groupBy, setGroupBy }), [groupBy, setGroupBy])
 }
 
+export function useUnifiedReportReportingBasisParam() {
+  const store = useContext(UnifiedReportStoreContext)
+
+  const reportingBasis = useStore(store, state => state.reportingBasis)
+  const setReportingBasis = useStore(store, state => state.actions.setReportingBasis)
+
+  return useMemo(() => ({ reportingBasis, setReportingBasis }), [reportingBasis, setReportingBasis])
+}
+
 export function useUnifiedReportTagSelection() {
   const store = useContext(UnifiedReportStoreContext)
 
@@ -157,10 +178,30 @@ const buildUnifiedReportTagFilters = (
   return JSON.stringify(values.map(value => ({ key, values: [value] })))
 }
 
+const REPORTING_BASIS_QUERY_PARAMETER = 'reporting_basis'
+
+const getInitialReportingBasis = (report: ReportConfig): UnifiedReportReportingBasis | null => {
+  const value = report.baseQueryParameters[REPORTING_BASIS_QUERY_PARAMETER]
+  return isUnifiedReportReportingBasis(value) ? value : null
+}
+
+const getBaseQueryParameters = (
+  report: ReportConfig,
+  hasReportingBasisControl: boolean,
+): QueryParams => {
+  if (!hasReportingBasisControl) return report.baseQueryParameters
+
+  return Object.fromEntries(
+    Object.entries(report.baseQueryParameters)
+      .filter(([key]) => key !== REPORTING_BASIS_QUERY_PARAMETER),
+  )
+}
+
 export function useUnifiedReportParams(): UnifiedReportParams | null {
   const { report } = useActiveUnifiedReport()
   const store = useContext(UnifiedReportStoreContext)
   const groupBy = useStore(store, state => state.groupBy)
+  const reportingBasis = useStore(store, state => state.reportingBasis)
   const selectedTagValues = useStore(store, state => state.selectedTagValues)
   const dateSelectionMode = useUnifiedReportDateSelectionMode()
   const { date: effectiveDate } = useGlobalDate({ dateSelectionMode })
@@ -171,17 +212,20 @@ export function useUnifiedReportParams(): UnifiedReportParams | null {
     if (!report) return null
 
     const tagFilters = buildUnifiedReportTagFilters(report, selectedTagValues)
+    const hasReportingBasisControl = hasControl(report, ReportControl.ReportingBasis)
+    const baseQueryParameters = getBaseQueryParameters(report, hasReportingBasisControl)
 
     return {
       route: report.reportRoute,
-      ...report.baseQueryParameters,
+      ...baseQueryParameters,
       ...(hasControl(report, ReportControl.Date) && { effectiveDate }),
       ...(hasControl(report, ReportControl.DateRange) && { startDate, endDate }),
       ...(hasControl(report, ReportControl.GroupBy) && groupBy != null && { groupBy }),
+      ...(hasReportingBasisControl && reportingBasis != null && { reportingBasis }),
       ...(hasControl(report, ReportControl.Year) && { year: getYear(yearStartDate) }),
       ...(tagFilters && { tagFilters }),
     }
-  }, [effectiveDate, endDate, groupBy, report, selectedTagValues, startDate, yearStartDate])
+  }, [effectiveDate, endDate, groupBy, report, reportingBasis, selectedTagValues, startDate, yearStartDate])
 }
 
 const findDefaultReport = (groups: ReadonlyArray<ReportGroup>): ReportConfig | null => {
@@ -203,6 +247,7 @@ const createUnifiedReportStore = (dateSelectionMode: DateSelectionMode) =>
     baseReport: null,
     detailReportConfig: null,
     groupBy: DateGroupBy.AllTime,
+    reportingBasis: null,
     selectedTagValues: [],
     dateSelectionMode,
     actions: {
@@ -210,11 +255,13 @@ const createUnifiedReportStore = (dateSelectionMode: DateSelectionMode) =>
         set({
           baseReport,
           detailReportConfig: null,
+          reportingBasis: getInitialReportingBasis(baseReport),
           selectedTagValues: baseReport.tagControl?.initialSelectedTags.filter(isActiveTagValueDefinition) ?? [],
         }),
       openDetailReport: (detailReportConfig: DetailReportConfig) => set({ detailReportConfig }),
       closeDetailReport: () => set({ detailReportConfig: null }),
       setGroupBy: (groupBy: DateGroupBy | null) => set({ groupBy }),
+      setReportingBasis: (reportingBasis: UnifiedReportReportingBasis | null) => set({ reportingBasis }),
       setSelectedTagValues: (selectedTagValues: ReadonlyArray<TagValueDefinition>) =>
         set({ selectedTagValues: selectedTagValues.filter(isActiveTagValueDefinition) }),
     },
