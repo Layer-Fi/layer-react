@@ -1,5 +1,6 @@
 import { pipe, Schema } from 'effect'
 
+import { ReportingBasis } from '@schemas/accountingConfiguration'
 import { ReportConfigSchema } from '@schemas/reports/reportConfig'
 import { createTransformedEnumSchema } from '@schemas/utils'
 
@@ -8,6 +9,11 @@ export enum DateGroupBy {
   Month = 'MONTH',
   Year = 'YEAR',
 }
+
+export type UnifiedReportReportingBasis = ReportingBasis.Cash | ReportingBasis.Accrual
+
+export const isUnifiedReportReportingBasis = (value: string | undefined): value is UnifiedReportReportingBasis =>
+  value === ReportingBasis.Cash || value === ReportingBasis.Accrual
 
 export enum Alignment {
   Left = 'LEFT',

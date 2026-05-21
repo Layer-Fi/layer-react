@@ -11,7 +11,8 @@
   }
 
   &[data-variant='large'] {
-    grid-template-columns: repeat(3, max-content);
+    grid-auto-columns: max-content;
+    grid-auto-flow: column;
   }
 
   &[data-variant='small'],
