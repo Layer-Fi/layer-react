@@ -11,6 +11,8 @@ import { TaxDetails } from '@components/TaxDetails/TaxDetails'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
 import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 
+import './taxEstimatesPage.scss'
+
 const TAX_ESTIMATES_TAB_CONFIG = [
   // { value: TaxEstimatesRoute.Overview, ...translationKey('common:label.overview', 'Overview') },
   { value: TaxEstimatesRoute.Estimates, ...translationKey('taxEstimates:label.estimates', 'Estimates') },
@@ -56,7 +58,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
   }
 
   return (
-    <VStack gap='md'>
+    <VStack className='Layer__TaxEstimatesPage' gap='md'>
       <Toggle
         ariaLabel={t('taxEstimates:label.tax_estimate_view', 'Tax estimate view')}
         options={tabOptions}

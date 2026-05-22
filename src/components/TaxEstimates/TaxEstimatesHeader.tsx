@@ -1,15 +1,15 @@
 import { useMemo } from 'react'
+import classNames from 'classnames'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { tConditional } from '@utils/i18n/conditional'
 import { DateFormat } from '@utils/i18n/date/patterns'
-import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
-import { HStack, Stack } from '@ui/Stack/Stack'
-import { ResponsiveDetailHeader } from '@components/ResponsiveDetailView/ResponsiveDetailHeader'
+import { HStack, Stack, VStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
+import { Span } from '@ui/Typography/Text'
 import { FullYearProjectionComboBox } from '@components/TaxEstimates/FullYearProjectionComboBox/FullYearProjectionComboBox'
 
 import './taxEstimatesHeader.scss'
@@ -118,16 +118,23 @@ const useTaxEstimatesHeader = ({ type }: TaxEstimatesHeaderProps): TaxEstimatesH
 }
 
 export const TaxEstimatesHeader = ({ type }: TaxEstimatesHeaderProps) => {
-  const [viewportWidth] = useWindowSize()
-  const isMobile = viewportWidth < BREAKPOINTS.MOBILE
   const isOverview = type === TaxEstimatesHeaderType.Overview
   const { title, description } = useTaxEstimatesHeader({ type })
-  const pie = isOverview || isMobile ? undefined : 'lg' as const
 
   return (
-    <Stack className='Layer__TaxEstimatesHeader' direction={isMobile ? 'column' : 'row'} gap='md' justify='space-between' align='start' fluid pie={pie}>
-      <ResponsiveDetailHeader title={title} description={description} />
-      <HStack justify={isMobile ? 'start' : 'end'} className='Layer__TaxEstimatesHeader__ComboBoxContainer'>
+    <Stack
+      className={classNames('Layer__TaxEstimatesHeader', { 'Layer__TaxEstimatesHeader--overview': isOverview })}
+      direction='row'
+      gap='md'
+      justify='space-between'
+      align='start'
+      fluid
+    >
+      <VStack className='Layer__TaxEstimatesHeader__Text' gap='3xs'>
+        <Heading className='Layer__TaxEstimatesHeader__Title' size='md'>{title}</Heading>
+        <Span className='Layer__TaxEstimatesHeader__Desc' size='md' variant='subtle'>{description}</Span>
+      </VStack>
+      <HStack className='Layer__TaxEstimatesHeader__Combo' justify='end'>
         <FullYearProjectionComboBox />
       </HStack>
     </Stack>

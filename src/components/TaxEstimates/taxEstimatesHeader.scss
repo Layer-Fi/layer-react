@@ -1,5 +1,32 @@
-@media (width <= 500px) {
-  .Layer__TaxEstimatesHeader__ComboBoxContainer {
-    width: 100%;
+@use '../../views/TaxEstimates/breakpoints' as tb;
+
+.Layer__TaxEstimatesHeader {
+  padding-block: var(--spacing-md);
+  padding-inline-end: var(--spacing-lg);
+}
+
+.Layer__TaxEstimatesHeader--overview {
+  padding-inline-end: 0;
+}
+
+.Layer__TaxEstimatesHeader[data-direction='row'] {
+  flex-wrap: wrap;
+}
+
+@include tb.tax-detail-narrow {
+  .Layer__TaxEstimatesHeader {
+    padding-block: 0;
+    padding-inline-end: 0;
+  }
+}
+
+@container tax-detail (max-width: 400px) {
+  .Layer__TaxEstimatesHeader__Combo {
+    inline-size: 100%;
+  }
+
+  .Layer__TaxEstimatesHeader__Combo .Layer__FullYearProjectionComboBox__Container {
+    inline-size: 100%;
+    max-inline-size: 100%;
   }
 }
