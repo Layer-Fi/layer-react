@@ -9,8 +9,8 @@
   gap: var(--spacing-xs);
 }
 
-@container unified-report-controls (max-width: 75rem) {
-  .Layer__UnifiedReports__Controls[data-direction='row'] {
+@container unified-report-controls (max-width: 1200px) {
+  .Layer__UnifiedReports__Controls.Layer__Stack[data-direction='row'] {
     flex-direction: column;
   }
 
@@ -27,7 +27,7 @@
   }
 }
 
-@container unified-report-controls (max-width: 35rem) {
+@container unified-report-controls (max-width: 560px) {
   .Layer__UnifiedReports__AdditionalControls {
     grid-template-columns: 1fr;
   }
