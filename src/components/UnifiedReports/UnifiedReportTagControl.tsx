@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { TagControl } from '@schemas/reports/reportConfig'
@@ -32,8 +32,18 @@ export function UnifiedReportTagControl({ tagControl }: UnifiedReportTagControlP
   const { t } = useTranslation()
   const { selectedTagValues, setSelectedTagValues } = useUnifiedReportTagSelection()
   const dimensionName = tagControl.tagDimension.displayName ?? capitalizeFirstLetter(tagControl.tagDimension.key)
-  const options = tagControl.tagDimension.definedValues.filter(isActiveTagValueDefinition).map(toOption)
-  const selectedValues = selectedTagValues.filter(isActiveTagValueDefinition).map(toOption)
+  const options = useMemo(
+    () => tagControl.tagDimension.definedValues.filter(isActiveTagValueDefinition).map(toOption),
+    [tagControl.tagDimension.definedValues],
+  )
+  const selectedValues = useMemo(() => {
+    const optionsByTagValueId = new Map(options.map(option => [option.tagValueDefinition.id, option]))
+
+    return selectedTagValues.flatMap((tagValue) => {
+      const option = optionsByTagValueId.get(tagValue.id)
+      return option ? [option] : []
+    })
+  }, [options, selectedTagValues])
 
   const handleSelectedValuesChange = (values: ReadonlyArray<UnifiedReportTagValueOption>) => {
     setSelectedTagValues(values.map(({ tagValueDefinition }) => tagValueDefinition))

@@ -11,7 +11,7 @@ import classNames from 'classnames'
 
 import { type Alignment } from '@schemas/reports/unifiedReport'
 import { HStack } from '@ui/Stack/Stack'
-import { Cell, Column as TableColumn, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
+import { Cell, Column as TableColumn, type ColumnHeaderTone, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
 import { getColumnDefs, type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { Loader } from '@components/Loader/Loader'
 
@@ -22,6 +22,7 @@ declare module '@tanstack/react-table' {
   interface ColumnMeta<TData extends RowData, TValue> {
     isRowHeader: boolean
     alignment?: Alignment
+    headerTone?: ColumnHeaderTone
   }
 }
 
@@ -141,6 +142,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
               key={header.id}
               isRowHeader={header.column.columnDef.meta?.isRowHeader}
               alignment={header.column.columnDef.meta?.alignment}
+              headerTone={header.column.columnDef.meta?.headerTone}
               className={classNames(
                 `${CSS_PREFIX}__header-cell`,
                 `Layer__UI__Table-Column__${componentName}--${header.id}`,

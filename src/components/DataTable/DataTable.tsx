@@ -69,6 +69,7 @@ export const DataTable = <TData extends object>({
       isRowHeader={header.column.columnDef.meta?.isRowHeader}
       className={`Layer__UI__Table-Column__${componentName}--${header.id}`}
       alignment={header.column.columnDef.meta?.alignment}
+      headerTone={header.column.columnDef.meta?.headerTone}
       pinned={header.column.getIsPinned()}
       style={pinningStyles.get(header.column.id)}
       nonAria={nonAria}

@@ -3,6 +3,10 @@
   min-width: 100%;
   border-bottom: 1px solid var(--color-base-300);
 
+  .Layer__UI__Table-TableHeader .Layer__UI__Table-Column[data-header-tone='shaded'] {
+    background-color: var(--color-base-100);
+  }
+
   .Layer__UI__Table-Column,
   .Layer__UI__Table-Cell {
     display: table-cell;

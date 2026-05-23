@@ -1,27 +1,34 @@
+.Layer__UnifiedReports__ControlsContainer {
+  container: unified-report-controls / inline-size;
+}
+
 .Layer__UnifiedReports__AdditionalControls {
   display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
   gap: var(--spacing-xs);
+}
 
-  &[data-variant='small'] {
-    grid-template-columns: 1fr;
+@container unified-report-controls (max-width: 75rem) {
+  .Layer__UnifiedReports__Controls[data-direction='row'] {
+    flex-direction: column;
   }
 
-  &[data-variant='medium'] {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .Layer__UnifiedReports__AdditionalControls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: row;
 
-  &[data-variant='large'] {
-    grid-auto-columns: max-content;
-    grid-auto-flow: column;
-  }
-
-  &[data-variant='small'],
-  &[data-variant='medium'] {
     > *,
     .Layer__DateGroupByComboBox__Container,
     .Layer__YearPicker {
       inline-size: 100%;
       max-inline-size: none;
     }
+  }
+}
+
+@container unified-report-controls (max-width: 35rem) {
+  .Layer__UnifiedReports__AdditionalControls {
+    grid-template-columns: 1fr;
   }
 }
