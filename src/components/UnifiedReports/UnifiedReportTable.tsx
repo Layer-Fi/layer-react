@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { asMutable } from '@utils/asMutable'
 import { useUnifiedReport } from '@hooks/api/businesses/[business-id]/reports/unified/report-name/useUnifiedReport'
-import { useActiveUnifiedReport, useUnifiedReportTagSelection } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import { useActiveUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
@@ -16,14 +16,13 @@ const COMPONENT_NAME = 'UnifiedReports'
 export const UnifiedReportTable = () => {
   const { t } = useTranslation()
   const { report } = useActiveUnifiedReport()
-  const { selectedTagValues } = useUnifiedReportTagSelection()
   const { data, isLoading, isError, refetch } = useUnifiedReport()
   const { setExpanded } = useContext(ExpandableDataTableContext)
   const mutableRows = data?.rows ? asMutable(data.rows) : undefined
 
   const columnConfig = useMemo(
-    () => data ? buildNestedColumnConfig(data.columns, selectedTagValues) : [],
-    [data, selectedTagValues],
+    () => data ? buildNestedColumnConfig(data.columns) : [],
+    [data],
   )
 
   useEffect(() => {

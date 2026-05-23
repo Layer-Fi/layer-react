@@ -22,7 +22,6 @@ import { withRenderProp } from '@components/utility/withRenderProp'
 import './table.scss'
 
 type PinnedSide = 'left' | 'right' | false
-export type ColumnHeaderTone = 'shaded'
 
 enum TableSubComponent {
   Table = 'Table',
@@ -172,13 +171,12 @@ Row.displayName = TableSubComponent.Row
 type ColumnStyleProps = {
   alignment?: Alignment
   colSpan?: number
-  headerTone?: ColumnHeaderTone
   pinned?: PinnedSide
 }
 
 const Column = forwardRef<HTMLTableCellElement, ColumnProps & ColumnStyleProps & TableRenderingProps>(
-  ({ children, className, nonAria, id, alignment = Alignment.Left, colSpan = 1, headerTone, pinned, ...restProps }, ref) => {
-    const dataProperties = toDataProperties({ 'align': toAlignmentDataValue(alignment), 'header-tone': headerTone, 'pinned': pinned })
+  ({ children, className, nonAria, id, alignment = Alignment.Left, colSpan = 1, pinned, ...restProps }, ref) => {
+    const dataProperties = toDataProperties({ align: toAlignmentDataValue(alignment), pinned })
     const columnClassName = getClassName(TableSubComponent.Column, className)
 
     const ColumnComponent = nonAria

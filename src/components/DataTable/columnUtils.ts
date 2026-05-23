@@ -3,7 +3,6 @@ import type { CSSProperties } from 'react'
 
 import { type Alignment } from '@schemas/reports/unifiedReport'
 import type { ColumnHeaderWidths } from '@hooks/utils/tables/useColumnHeaderWidths'
-import type { ColumnHeaderTone } from '@ui/Table/Table'
 
 export type ColumnPinningSide = 'left' | 'right'
 
@@ -12,7 +11,6 @@ type BaseColumn = {
   header?: React.ReactNode
   alignment?: Alignment
   isRowHeader?: boolean
-  headerTone?: ColumnHeaderTone
 }
 
 export type CellRenderer<TData> = ((row: Row<TData>) => React.ReactNode)
@@ -36,7 +34,6 @@ export type NestedColumnConfig<TData> = ColumnNode<TData>[]
 
 const getColumnMeta = (col: BaseColumn) => ({
   alignment: col.alignment,
-  headerTone: col.headerTone,
   isRowHeader: col.isRowHeader ?? false,
 })
 
