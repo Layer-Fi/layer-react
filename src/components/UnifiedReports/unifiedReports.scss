@@ -1,4 +1,6 @@
 .Layer__view.Layer__UnifiedReports {
+  container: unified-reports / inline-size;
+
   overflow: hidden;
   max-height: 100vh;
   min-width: clamp(23rem, 100%, 1406px);

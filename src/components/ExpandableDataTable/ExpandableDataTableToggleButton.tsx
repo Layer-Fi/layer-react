@@ -7,10 +7,15 @@ import ExpandIcon from '@icons/Expand'
 import { Button } from '@ui/Button/Button'
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 
-export const ExpandableDataTableToggleButton = () => {
+type ExpandableDataTableToggleButtonProps = {
+  iconOnly?: boolean
+}
+
+export const ExpandableDataTableToggleButton = ({ iconOnly }: ExpandableDataTableToggleButtonProps) => {
   const { t } = useTranslation()
   const { expanded, setExpanded } = useContext(ExpandableDataTableContext)
   const { isDesktop } = useSizeClass()
+  const resolvedIconOnly = iconOnly ?? !isDesktop
 
   const shouldCollapse = expanded === true
   const onClickExpandOrCollapse = useCallback(() => {
@@ -30,12 +35,12 @@ export const ExpandableDataTableToggleButton = () => {
 
   return (
     <Button
-      icon={!isDesktop}
+      icon={resolvedIconOnly}
       variant='outlined'
       onClick={onClickExpandOrCollapse}
-      aria-label={!isDesktop ? buttonText : undefined}
+      aria-label={resolvedIconOnly ? buttonText : undefined}
     >
-      {!isDesktop ? <Icon /> : buttonText}
+      {resolvedIconOnly ? <Icon /> : buttonText}
     </Button>
   )
 }
