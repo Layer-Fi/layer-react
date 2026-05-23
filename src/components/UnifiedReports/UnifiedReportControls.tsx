@@ -19,16 +19,7 @@ import { UnifiedReportTagControl } from '@components/UnifiedReports/UnifiedRepor
 
 import './unifiedReportControls.scss'
 
-const SMALL_BREAKPOINT = 560
-const MEDIUM_BREAKPOINT = 760
-
-type ControlsVariant = 'small' | 'medium' | 'large'
-
-const getVariantForWidth = (width: number): ControlsVariant => {
-  if (width >= MEDIUM_BREAKPOINT) return 'large'
-  if (width >= SMALL_BREAKPOINT) return 'medium'
-  return 'small'
-}
+const COMPACT_DATE_SELECTION_BREAKPOINT = 560
 
 const UnifiedReportDateSelection = ({ isCompact }: { isCompact: boolean }) => {
   const { baseReport } = useBaseUnifiedReport()
@@ -58,34 +49,36 @@ export const UnifiedReportControls = () => {
     setSize(size.width)
   })
 
-  const variant = getVariantForWidth(size)
+  const isCompact = size < COMPACT_DATE_SELECTION_BREAKPOINT
 
   const hasGroupBy = dateSelectionMode === 'full' && hasControl(baseReport, ReportControl.GroupBy)
   const hasYear = hasControl(baseReport, ReportControl.Year)
   const hasReportingBasis = hasControl(baseReport, ReportControl.ReportingBasis) && reportingBasis != null
   const tagControl = baseReport?.tagControl
   return (
-    <Stack
-      ref={containerRef}
-      direction={variant === 'large' ? 'row' : 'column'}
-      pb='md'
-      pi='lg'
-      gap='xs'
-    >
-      <UnifiedReportDateSelection isCompact={variant === 'small'} />
-      {(hasYear || hasGroupBy || hasReportingBasis || tagControl) && (
-        <div className='Layer__UnifiedReports__AdditionalControls' data-variant={variant}>
-          {hasYear && <GlobalYearPicker />}
-          {hasGroupBy && <DateGroupByComboBox value={groupBy} onValueChange={setGroupBy} />}
-          {tagControl && <UnifiedReportTagControl tagControl={tagControl} />}
-          {hasReportingBasis && (
-            <UnifiedReportReportingBasisControl
-              value={reportingBasis}
-              onValueChange={setReportingBasis}
-            />
-          )}
-        </div>
-      )}
-    </Stack>
+    <VStack ref={containerRef} className='Layer__UnifiedReports__ControlsContainer'>
+      <Stack
+        direction='row'
+        pb='md'
+        pi='lg'
+        gap='xs'
+        className='Layer__UnifiedReports__Controls'
+      >
+        <UnifiedReportDateSelection isCompact={isCompact} />
+        {(hasYear || hasGroupBy || hasReportingBasis || tagControl) && (
+          <div className='Layer__UnifiedReports__AdditionalControls'>
+            {hasYear && <GlobalYearPicker />}
+            {hasGroupBy && <DateGroupByComboBox value={groupBy} onValueChange={setGroupBy} />}
+            {tagControl && <UnifiedReportTagControl tagControl={tagControl} />}
+            {hasReportingBasis && (
+              <UnifiedReportReportingBasisControl
+                value={reportingBasis}
+                onValueChange={setReportingBasis}
+              />
+            )}
+          </div>
+        )}
+      </Stack>
+    </VStack>
   )
 }
