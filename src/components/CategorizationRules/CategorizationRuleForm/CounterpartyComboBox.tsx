@@ -48,7 +48,6 @@ export const CounterpartyComboBox = ({
   })
 
   const onInputValueChange = useCallback((nextInput: string) => {
-    if (nextInput === '') return
     debouncedSetQuery(nextInput)
   }, [debouncedSetQuery])
 
