@@ -5,10 +5,11 @@ import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import type { NestedCategorization } from '@schemas/categorization'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
 import { ResolvedCategoryName } from '@components/CategorizationRules/ResolvedCategoryName'
-import { getCategorizationRuleCounterpartyLabel, getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
+import { getCategorizationRuleAmountLabel, getCategorizationRuleCounterpartyLabel, getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
 import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { PaginatedTable, type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
@@ -18,6 +19,7 @@ enum CategorizationRuleColumns {
   Category = 'Category',
   Counterparty = 'Counterparty',
   Direction = 'Direction',
+  Amount = 'Amount',
   Edit = 'Edit',
   Delete = 'Delete',
 }
@@ -49,6 +51,7 @@ export const CategorizationRulesTable = ({
   slots,
 }: CategorizationRulesTableProps) => {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const columnConfig: NestedColumnConfig<CategorizationRule> = useMemo(() => [
     {
       id: CategorizationRuleColumns.Counterparty,
@@ -62,6 +65,13 @@ export const CategorizationRulesTable = ({
       header: t('common:label.direction', 'Direction'),
       cell: (row: Row<CategorizationRule>) => (
         <Span ellipsis>{getCategorizationRuleDirectionLabel(row.original.bankDirectionFilter, t)}</Span>
+      ),
+    },
+    {
+      id: CategorizationRuleColumns.Amount,
+      header: t('common:label.amount', 'Amount'),
+      cell: (row: Row<CategorizationRule>) => (
+        <Span ellipsis>{getCategorizationRuleAmountLabel(row.original, formatCurrencyFromCents, t)}</Span>
       ),
     },
     {
@@ -103,7 +113,7 @@ export const CategorizationRulesTable = ({
         </Button>
       ),
     },
-  ], [t, options, onEditRule, onDeleteRule])
+  ], [t, formatCurrencyFromCents, options, onEditRule, onDeleteRule])
 
   return (
     <PaginatedTable

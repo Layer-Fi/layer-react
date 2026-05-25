@@ -19,6 +19,7 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
+import { CategorizationRuleFormDrawer } from '@components/CategorizationRules/CategorizationRuleForm/CategorizationRuleFormDrawer'
 import { CategorizationRulesMobileList } from '@components/CategorizationRules/CategorizationRulesMobileList/CategorizationRulesMobileList'
 import { CategorizationRulesTable } from '@components/CategorizationRules/CategorizationRulesTable/CategorizationRulesTable'
 import { getCategorizationRuleCounterpartyLabel } from '@components/CategorizationRules/utils'
@@ -88,13 +89,17 @@ export const ResponsiveCategorizationRulesView = () => {
   const { t } = useTranslation()
   const [selectedRule, setSelectedRule] = useState<CategorizationRule | null>(null)
   const [showDeletionConfirmationModal, setShowDeletionConfirmationModal] = useState(false)
-  const [, setFormState] = useState<CategorizationRuleFormState | null>(null)
+  const [formState, setFormState] = useState<CategorizationRuleFormState | null>(null)
   const { trigger: archiveCategorizationRuleTrigger } = useArchiveCategorizationRule()
   const { addToast } = useLayerContext()
   const { isMobile } = useSizeClass()
 
   const onCreateRule = useCallback(() => setFormState({ mode: 'create' }), [])
   const onEditRule = useCallback((rule: CategorizationRule) => setFormState({ mode: 'edit', rule }), [])
+  const onFormDrawerOpenChange = useCallback((isOpen: boolean) => {
+    if (!isOpen) setFormState(null)
+  }, [])
+  const onFormSuccess = useCallback(() => setFormState(null), [])
 
   const { data: categories, isLoading: categoriesAreLoading } = useCategories({ mode: CategoriesListMode.All })
   const options = useMemo(() => {
@@ -204,6 +209,12 @@ export const ResponsiveCategorizationRulesView = () => {
         confirmLabel={t('common:action.delete_label', 'Delete')}
         cancelLabel={t('common:action.cancel_label', 'Cancel')}
         useDrawer={isMobile}
+      />
+      <CategorizationRuleFormDrawer
+        isOpen={formState !== null}
+        onOpenChange={onFormDrawerOpenChange}
+        formState={formState}
+        onSuccess={onFormSuccess}
       />
     </>
   )

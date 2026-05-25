@@ -1,0 +1,22 @@
+.Layer__CategorizationRuleForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+
+  &__FormError {
+    width: 100%;
+  }
+
+  &__AmountRow {
+    width: 100%;
+
+    > * {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+
+  &__Submit {
+    align-items: stretch;
+  }
+}

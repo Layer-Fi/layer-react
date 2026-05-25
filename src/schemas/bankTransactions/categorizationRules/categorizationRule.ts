@@ -234,6 +234,14 @@ export const CategorizationRuleSchema = Schema.Struct({
     Schema.propertySignature(Schema.NullishOr(BankDirectionFilterSchema)),
     Schema.fromKey('bank_direction_filter'),
   ),
+  amountMinFilter: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+    Schema.fromKey('amount_min_filter'),
+  ),
+  amountMaxFilter: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+    Schema.fromKey('amount_max_filter'),
+  ),
   createdAt: pipe(
     Schema.propertySignature(Schema.Date),
     Schema.fromKey('created_at'),
