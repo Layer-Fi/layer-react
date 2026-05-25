@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import type { Row } from '@tanstack/react-table'
-import { Trash2 } from 'lucide-react'
+import { Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
@@ -18,6 +18,7 @@ enum CategorizationRuleColumns {
   Category = 'Category',
   Counterparty = 'Counterparty',
   Direction = 'Direction',
+  Edit = 'Edit',
   Delete = 'Delete',
 }
 
@@ -29,6 +30,7 @@ export interface CategorizationRulesTableProps {
   isError: boolean
   paginationProps: TablePaginationProps
   options: NestedCategorization[]
+  onEditRule: (rule: CategorizationRule) => void
   onDeleteRule: (rule: CategorizationRule) => void
   slots: {
     EmptyState: React.FC
@@ -42,6 +44,7 @@ export const CategorizationRulesTable = ({
   isError,
   paginationProps,
   options,
+  onEditRule,
   onDeleteRule,
   slots,
 }: CategorizationRulesTableProps) => {
@@ -73,6 +76,20 @@ export const CategorizationRulesTable = ({
       isRowHeader: true,
     },
     {
+      id: CategorizationRuleColumns.Edit,
+      cell: (row: Row<CategorizationRule>) => (
+        <Button
+          inset
+          icon
+          onPress={() => onEditRule(row.original)}
+          aria-label={t('categorizationRules:action.edit_rule', 'Edit rule')}
+          variant='ghost'
+        >
+          <Pencil size={16} />
+        </Button>
+      ),
+    },
+    {
       id: CategorizationRuleColumns.Delete,
       cell: (row: Row<CategorizationRule>) => (
         <Button
@@ -86,7 +103,7 @@ export const CategorizationRulesTable = ({
         </Button>
       ),
     },
-  ], [t, options, onDeleteRule])
+  ], [t, options, onEditRule, onDeleteRule])
 
   return (
     <PaginatedTable

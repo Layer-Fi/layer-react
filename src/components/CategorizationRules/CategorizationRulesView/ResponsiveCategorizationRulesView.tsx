@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import { PencilRuler } from 'lucide-react'
+import { PencilRuler, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { flattenCategories } from '@internal-types/categories'
@@ -53,21 +53,34 @@ const CategorizationRulesErrorState = () => {
 
 type CategorizationRulesHeaderProps = {
   onGoBack?: () => void
+  onCreateRule: () => void
 }
 
-const CategorizationRulesHeader = ({ onGoBack }: CategorizationRulesHeaderProps) => {
+const CategorizationRulesHeader = ({ onGoBack, onCreateRule }: CategorizationRulesHeaderProps) => {
   const { t } = useTranslation()
   return (
-    <HStack align='center' gap='md'>
-      {onGoBack && (
-        <Button variant='outlined' icon onPress={onGoBack}>
-          <BackArrow />
+    <HStack fluid justify='space-between' align='center' gap='xs'>
+      <HStack align='center' gap='md'>
+        {onGoBack && (
+          <Button variant='outlined' icon onPress={onGoBack}>
+            <BackArrow />
+          </Button>
+        )}
+        <Heading size='sm'>{t('categorizationRules:label.categorization_rules', 'Categorization Rules')}</Heading>
+      </HStack>
+      <HStack pie='md' align='center' gap='xs'>
+        <Button variant='outlined-light' onPress={onCreateRule}>
+          {t('categorizationRules:action.new_rule', 'New rule')}
+          <Plus size={16} />
         </Button>
-      )}
-      <Heading size='sm'>{t('categorizationRules:label.categorization_rules', 'Categorization Rules')}</Heading>
+      </HStack>
     </HStack>
   )
 }
+
+type CategorizationRuleFormState =
+  | { mode: 'create' }
+  | { mode: 'edit', rule: CategorizationRule }
 
 const resolveVariant = ({ width }: { width: number }) => width < BREAKPOINTS.TABLET ? 'Mobile' : 'Desktop'
 
@@ -75,9 +88,13 @@ export const ResponsiveCategorizationRulesView = () => {
   const { t } = useTranslation()
   const [selectedRule, setSelectedRule] = useState<CategorizationRule | null>(null)
   const [showDeletionConfirmationModal, setShowDeletionConfirmationModal] = useState(false)
+  const [, setFormState] = useState<CategorizationRuleFormState | null>(null)
   const { trigger: archiveCategorizationRuleTrigger } = useArchiveCategorizationRule()
   const { addToast } = useLayerContext()
   const { isMobile } = useSizeClass()
+
+  const onCreateRule = useCallback(() => setFormState({ mode: 'create' }), [])
+  const onEditRule = useCallback((rule: CategorizationRule) => setFormState({ mode: 'edit', rule }), [])
 
   const { data: categories, isLoading: categoriesAreLoading } = useCategories({ mode: CategoriesListMode.All })
   const options = useMemo(() => {
@@ -123,9 +140,14 @@ export const ResponsiveCategorizationRulesView = () => {
   const isLoading = data === undefined || rulesAreLoading || categoriesAreLoading
   const { toBankTransactionsTable } = useBankTransactionsNavigation()
 
+  const DesktopHeader = useCallback(
+    () => <CategorizationRulesHeader onCreateRule={onCreateRule} />,
+    [onCreateRule],
+  )
+
   const DesktopView = useMemo(() => (
     <BaseDetailView
-      slots={{ Header: CategorizationRulesHeader, BackIcon: BackArrow }}
+      slots={{ Header: DesktopHeader, BackIcon: BackArrow }}
       name='CategorizationRulesDrawer'
       onGoBack={toBankTransactionsTable}
     >
@@ -135,6 +157,7 @@ export const ResponsiveCategorizationRulesView = () => {
         isError={isError}
         paginationProps={paginationProps}
         options={options}
+        onEditRule={onEditRule}
         onDeleteRule={onDeleteRule}
         slots={{
           EmptyState: CategorizationRulesEmptyState,
@@ -142,17 +165,18 @@ export const ResponsiveCategorizationRulesView = () => {
         }}
       />
     </BaseDetailView>
-  ), [toBankTransactionsTable, categorizationRules, isLoading, isError, paginationProps, options, onDeleteRule])
+  ), [DesktopHeader, toBankTransactionsTable, categorizationRules, isLoading, isError, paginationProps, options, onEditRule, onDeleteRule])
 
   const MobileView = useMemo(() => (
     <VStack gap='md'>
-      <CategorizationRulesHeader onGoBack={toBankTransactionsTable} />
+      <CategorizationRulesHeader onGoBack={toBankTransactionsTable} onCreateRule={onCreateRule} />
       <CategorizationRulesMobileList
         data={categorizationRules}
         isLoading={isLoading}
         isError={isError}
         paginationProps={paginationProps}
         options={options}
+        onEditRule={onEditRule}
         onDeleteRule={onDeleteRule}
         slots={{
           EmptyState: CategorizationRulesEmptyState,
@@ -160,7 +184,7 @@ export const ResponsiveCategorizationRulesView = () => {
         }}
       />
     </VStack>
-  ), [toBankTransactionsTable, categorizationRules, isLoading, isError, paginationProps, options, onDeleteRule])
+  ), [toBankTransactionsTable, onCreateRule, categorizationRules, isLoading, isError, paginationProps, options, onEditRule, onDeleteRule])
 
   const selectedRuleCounterpartyLabel = (selectedRule && getCategorizationRuleCounterpartyLabel(selectedRule))
     ?? t('bankTransactions:label.selected_counterparty', 'this counterparty')

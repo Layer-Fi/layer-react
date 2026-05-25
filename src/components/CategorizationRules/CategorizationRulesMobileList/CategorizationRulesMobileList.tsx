@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { Trash2 } from 'lucide-react'
+import { Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
@@ -17,12 +17,14 @@ import './categorizationRulesMobileList.scss'
 type CategorizationRuleMobileListItemProps = {
   rule: CategorizationRule
   options: NestedCategorization[]
+  onEditPress: (rule: CategorizationRule) => void
   onDeletePress: (rule: CategorizationRule) => void
 }
 
 const CategorizationRuleMobileListItem = ({
   rule,
   options,
+  onEditPress,
   onDeletePress,
 }: CategorizationRuleMobileListItemProps) => {
   const { t } = useTranslation()
@@ -46,15 +48,26 @@ const CategorizationRuleMobileListItem = ({
           </HStack>
         )}
       </VStack>
-      <Button
-        inset
-        icon
-        onPress={() => onDeletePress(rule)}
-        aria-label={t('categorizationRules:action.delete_rule', 'Delete rule')}
-        variant='ghost'
-      >
-        <Trash2 size={16} />
-      </Button>
+      <HStack gap='3xs' align='center'>
+        <Button
+          inset
+          icon
+          onPress={() => onEditPress(rule)}
+          aria-label={t('categorizationRules:action.edit_rule', 'Edit rule')}
+          variant='ghost'
+        >
+          <Pencil size={16} />
+        </Button>
+        <Button
+          inset
+          icon
+          onPress={() => onDeletePress(rule)}
+          aria-label={t('categorizationRules:action.delete_rule', 'Delete rule')}
+          variant='ghost'
+        >
+          <Trash2 size={16} />
+        </Button>
+      </HStack>
     </HStack>
   )
 }
@@ -65,6 +78,7 @@ export interface CategorizationRulesMobileListProps {
   isError: boolean
   paginationProps: TablePaginationProps
   options: NestedCategorization[]
+  onEditRule: (rule: CategorizationRule) => void
   onDeleteRule: (rule: CategorizationRule) => void
   slots: {
     EmptyState: React.FC
@@ -78,13 +92,19 @@ export const CategorizationRulesMobileList = ({
   isError,
   paginationProps,
   options,
+  onEditRule,
   onDeleteRule,
   slots,
 }: CategorizationRulesMobileListProps) => {
   const { t } = useTranslation()
   const renderItem = useCallback((rule: CategorizationRule) => (
-    <CategorizationRuleMobileListItem rule={rule} options={options} onDeletePress={onDeleteRule} />
-  ), [options, onDeleteRule])
+    <CategorizationRuleMobileListItem
+      rule={rule}
+      options={options}
+      onEditPress={onEditRule}
+      onDeletePress={onDeleteRule}
+    />
+  ), [options, onEditRule, onDeleteRule])
 
   return (
     <div className='Layer__CategorizationRulesMobileList'>
