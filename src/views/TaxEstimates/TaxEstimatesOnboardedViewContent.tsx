@@ -6,6 +6,8 @@ import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-e
 import { TaxEstimatesRoute, useFullYearProjection, useTaxEstimatesNavigation, useTaxEstimatesRouteState, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
+import { P } from '@ui/Typography/Text'
+import { Container } from '@components/Container/Container'
 import { TaxBanner } from '@components/TaxDetails/TaxBanner'
 import { TaxDetails } from '@components/TaxDetails/TaxDetails'
 import { TaxPayments } from '@components/TaxPayments/TaxPayments'
@@ -71,6 +73,16 @@ export const TaxEstimatesOnboardedViewContent = () => {
       {/* {route === TaxEstimatesRoute.Overview && <TaxOverview />} */}
       {route === TaxEstimatesRoute.Estimates && <TaxDetails />}
       {route === TaxEstimatesRoute.Payments && <TaxPayments />}
+      <Container name='TaxEstimatesDisclaimer' transparentBg>
+        <P size='xs' variant='subtle'>
+          <em>
+            {t(
+              'taxEstimates:disclaimer.content',
+              'The Tax Estimates tool and related content are for informational purposes only, and are not intended as legal, accounting, or tax advice, or a substitute for professional counsel. We are not a financial planner or tax advisor, and users assume sole responsibility for their tax obligations, accuracy of data, and compliance with laws. All calculations are estimated and may contain errors, and are based only on the information you provide to us.',
+            )}
+          </em>
+        </P>
+      </Container>
     </VStack>
   )
 }
