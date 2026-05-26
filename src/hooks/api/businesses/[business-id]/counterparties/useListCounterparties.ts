@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
@@ -8,7 +7,6 @@ import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -173,31 +171,3 @@ export function useListCounterparties({
 
 const withUpdatedCounterparty = (updated: BankTransactionCounterparty) =>
   (rule: BankTransactionCounterparty): BankTransactionCounterparty => rule.id === updated.id ? updated : rule
-
-export function useCounterpartiesGlobalCacheActions() {
-  const { patchCache, forceReload } = useGlobalCacheActions()
-
-  const patchCounterpartyByKey = useCallback((updatedCounterparty: BankTransactionCounterparty) =>
-    patchCache<ListCounterpartiesReturn[] | ListCounterpartiesReturn | undefined>(
-      ({ tags }) => tags.includes(LIST_COUNTERPARTIES_TAG_KEY),
-      (currentData) => {
-        const iterateOverPage = (page: ListCounterpartiesReturn): ListCounterpartiesReturn => ({
-          ...page,
-          data: page.data.map(withUpdatedCounterparty(updatedCounterparty)),
-        })
-
-        return Array.isArray(currentData)
-          ? currentData.map(iterateOverPage)
-          : currentData
-      },
-    ),
-  [patchCache],
-  )
-
-  const forceReloadCounterparties = useCallback(
-    () => forceReload(({ tags }) => tags.includes(LIST_COUNTERPARTIES_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { patchCounterpartyByKey, forceReloadCounterparties }
-}

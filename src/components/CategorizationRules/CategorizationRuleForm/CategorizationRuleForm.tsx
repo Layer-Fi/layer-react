@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next'
 
 import { BankDirectionFilter, type CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { CategoriesListMode } from '@schemas/categorization'
-import { flattenValidationErrors } from '@utils/form'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 import { CounterpartyComboBox } from '@components/CategorizationRules/CategorizationRuleForm/CounterpartyComboBox'
 import { type CategorizationRuleFormState, type DirectionFormValue } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 import { useCategorizationRuleForm } from '@components/CategorizationRules/CategorizationRuleForm/useCategorizationRuleForm'
@@ -40,47 +40,53 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
 
   return (
     <Form className='Layer__CategorizationRuleForm' onSubmit={blockNativeOnSubmit}>
-      <form.Subscribe selector={state => state.errorMap}>
-        {(errorMap) => {
-          const validationErrors = flattenValidationErrors(errorMap)
-          if (validationErrors.length > 0 || submitError) {
-            return (
-              <HStack className='Layer__CategorizationRuleForm__FormError'>
-                <DataState
-                  icon={<AlertTriangle size={16} />}
-                  status={DataStateStatus.failed}
-                  title={validationErrors[0] || submitError}
-                  titleSize={TextSize.md}
-                  inline
-                />
-              </HStack>
-            )
-          }
-        }}
-      </form.Subscribe>
+      {submitError && (
+        <HStack className='Layer__CategorizationRuleForm__FormError'>
+          <DataState
+            icon={<AlertTriangle size={16} />}
+            status={DataStateStatus.failed}
+            title={submitError}
+            titleSize={TextSize.md}
+            inline
+          />
+        </HStack>
+      )}
 
       <form.Field name='counterparty'>
-        {field => (
-          <CounterpartyComboBox
-            label={t('common:label.counterparty', 'Counterparty')}
-            value={field.state.value}
-            onValueChange={field.handleChange}
-            placeholder={t('categorizationRules:placeholder.select_counterparty', 'Select counterparty')}
-            showLabel
-          />
-        )}
+        {(field) => {
+          const errorMessage = field.state.meta.errors[0] as string | undefined
+          return (
+            <VStack gap='3xs'>
+              <CounterpartyComboBox
+                label={t('common:label.counterparty', 'Counterparty')}
+                value={field.state.value}
+                onValueChange={field.handleChange}
+                placeholder={t('categorizationRules:placeholder.select_counterparty', 'Select counterparty')}
+                showLabel
+                isError={Boolean(errorMessage)}
+              />
+              {errorMessage && <Span size='sm' status='error'>{errorMessage}</Span>}
+            </VStack>
+          )
+        }}
       </form.Field>
 
       <form.Field name='category'>
-        {field => (
-          <LedgerAccountCombobox
-            label={t('common:label.category', 'Category')}
-            value={field.state.value}
-            onValueChange={field.handleChange}
-            mode={CategoriesListMode.All}
-            showLabel
-          />
-        )}
+        {(field) => {
+          const errorMessage = field.state.meta.errors[0] as string | undefined
+          return (
+            <VStack gap='3xs'>
+              <LedgerAccountCombobox
+                label={t('common:label.category', 'Category')}
+                value={field.state.value}
+                onValueChange={field.handleChange}
+                mode={CategoriesListMode.All}
+                showLabel
+              />
+              {errorMessage && <Span size='sm' status='error'>{errorMessage}</Span>}
+            </VStack>
+          )
+        }}
       </form.Field>
 
       <form.AppField name='bankDirectionFilter'>

@@ -1,4 +1,4 @@
-import { useCallback, useId, useMemo, useState } from 'react'
+import { useId, useMemo, useState } from 'react'
 
 import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
 import { useListCounterparties } from '@hooks/api/businesses/[business-id]/counterparties/useListCounterparties'
@@ -26,7 +26,6 @@ type CounterpartyComboBoxProps = {
   isReadOnly?: boolean
   isError?: boolean
   placeholder?: string
-  className?: string
 }
 
 export const CounterpartyComboBox = ({
@@ -37,7 +36,6 @@ export const CounterpartyComboBox = ({
   isReadOnly,
   isError,
   placeholder,
-  className,
 }: CounterpartyComboBoxProps) => {
   const inputId = useId()
   const [debouncedQuery, setDebouncedQuery] = useState('')
@@ -46,10 +44,6 @@ export const CounterpartyComboBox = ({
     q: debouncedQuery || undefined,
     limit: 50,
   })
-
-  const onInputValueChange = useCallback((nextInput: string) => {
-    debouncedSetQuery(nextInput)
-  }, [debouncedSetQuery])
 
   const fetchedOptions = useMemo<ReadonlyArray<CounterpartyOption>>(() => {
     if (!data) return []
@@ -70,7 +64,7 @@ export const CounterpartyComboBox = ({
   const additionalAriaProps = !showLabel ? { 'aria-label': label } : {}
 
   return (
-    <VStack gap='3xs' className={className}>
+    <VStack gap='3xs'>
       {showLabel && (
         <Label size='sm' htmlFor={inputId}>
           {label}
@@ -80,7 +74,7 @@ export const CounterpartyComboBox = ({
         options={options}
         selectedValue={selectedOption}
         onSelectedValueChange={option => onValueChange(option?.counterparty ?? null)}
-        onInputValueChange={onInputValueChange}
+        onInputValueChange={debouncedSetQuery}
         inputId={inputId}
         isLoading={isLoading}
         isReadOnly={isReadOnly}
