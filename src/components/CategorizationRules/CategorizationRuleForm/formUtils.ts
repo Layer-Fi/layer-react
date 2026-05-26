@@ -9,8 +9,12 @@ import {
   PatchCategorizationRuleSchema,
 } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { type Classification, isClassificationAccountIdentifier } from '@schemas/categorization'
-import { fromNonRecursiveBigDecimal, type NonRecursiveBigDecimal, toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
-import { convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
+import {
+  convertCentsToNonRecursiveBigDecimal,
+  convertNonRecursiveBigDecimalToCents,
+  fromNonRecursiveBigDecimal,
+  type NonRecursiveBigDecimal,
+} from '@schemas/nonRecursiveBigDecimal'
 
 export type CategorizationRuleFormState =
   | { mode: 'create' }
@@ -28,12 +32,12 @@ export type CategorizationRuleFormValues = {
 
 const centsToFormAmount = (cents: number | null | undefined): NonRecursiveBigDecimal | null => {
   if (cents == null) return null
-  return toNonRecursiveBigDecimal(convertCentsToBigDecimal(cents))
+  return convertCentsToNonRecursiveBigDecimal(cents)
 }
 
 const formAmountToCents = (amount: NonRecursiveBigDecimal | null): number | null => {
   if (amount == null) return null
-  return convertBigDecimalToCents(fromNonRecursiveBigDecimal(amount))
+  return convertNonRecursiveBigDecimalToCents(amount)
 }
 
 export const getCategorizationRuleFormDefaultValues = (
