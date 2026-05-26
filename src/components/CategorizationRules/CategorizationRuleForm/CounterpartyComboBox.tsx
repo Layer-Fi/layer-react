@@ -1,4 +1,5 @@
 import { useId, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
 import { useListCounterparties } from '@hooks/api/businesses/[business-id]/counterparties/useListCounterparties'
@@ -6,7 +7,7 @@ import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { VStack } from '@ui/Stack/Stack'
-import { Label } from '@ui/Typography/Text'
+import { Label, Span } from '@ui/Typography/Text'
 
 type CounterpartyOption = ComboBoxOption & {
   counterparty: BankTransactionCounterparty
@@ -37,6 +38,7 @@ export const CounterpartyComboBox = ({
   isError,
   placeholder,
 }: CounterpartyComboBoxProps) => {
+  const { t } = useTranslation()
   const inputId = useId()
   const [debouncedQuery, setDebouncedQuery] = useState('')
   const debouncedSetQuery = useDebounce(setDebouncedQuery)
@@ -49,6 +51,24 @@ export const CounterpartyComboBox = ({
     if (!data) return []
     return data.flatMap(({ data: page }) => page.map(counterpartyToOption))
   }, [data])
+
+  const slots = useMemo(() => {
+    if (debouncedQuery === '' && !isLoading && fetchedOptions.length === 0) {
+      return {
+        EmptyMessage: (
+          <VStack pi='md'>
+            <Span>
+              {t(
+                'categorizationRules:empty.no_counterparties_yet',
+                'No counterparties yet. They will appear here automatically as your transactions are processed.',
+              )}
+            </Span>
+          </VStack>
+        ),
+      }
+    }
+    return undefined
+  }, [debouncedQuery, isLoading, fetchedOptions.length, t])
 
   const options = useMemo<ReadonlyArray<CounterpartyOption>>(() => {
     if (!value) return fetchedOptions
@@ -80,6 +100,7 @@ export const CounterpartyComboBox = ({
         isReadOnly={isReadOnly}
         isError={isError}
         placeholder={placeholder}
+        slots={slots}
         {...additionalAriaProps}
       />
     </VStack>
