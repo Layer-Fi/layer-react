@@ -2,7 +2,7 @@ import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
 import { PaginatedResponseMetaSchema, type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
-import { type BankTransactionCounterparty, BankTransactionCounterpartySchema } from '@schemas/bankTransactions/base'
+import { BankTransactionCounterpartySchema } from '@schemas/bankTransactions/base'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
@@ -168,6 +168,3 @@ export function useListCounterparties({
 
   return new ListCounterpartiesSWRResponse(swrResponse)
 }
-
-const withUpdatedCounterparty = (updated: BankTransactionCounterparty) =>
-  (rule: BankTransactionCounterparty): BankTransactionCounterparty => rule.id === updated.id ? updated : rule
