@@ -22,8 +22,12 @@ export type TextStyleProps = {
   pb?: Spacing
   pbe?: Spacing
   pbs?: Spacing
+  pi?: Spacing
+  pie?: Spacing
+  pis?: Spacing
   size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   status?: 'error' | 'success'
+  textCase?: 'uppercase' | 'lowercase' | 'capitalize'
   variant?: 'placeholder' | 'subtle' | 'inherit' | 'white'
   weight?: 'normal' | 'bold'
   className?: string
@@ -44,8 +48,12 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
     pb,
     pbe,
     pbs,
+    pi,
+    pie,
+    pis,
     size,
     status,
+    textCase,
     variant,
     weight,
     ...restProps
@@ -61,8 +69,12 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
       pb,
       pbe,
       pbs,
+      pi,
+      pie,
+      pis,
       size,
       status,
+      'text-case': textCase,
       variant,
       weight,
     }),

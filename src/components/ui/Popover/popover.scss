@@ -1,5 +1,7 @@
 .Layer__Popover {
   display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
   inline-size: min(90svi, 60ch);
 
   border-radius: var(--border-radius-xs);

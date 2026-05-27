@@ -4,18 +4,27 @@ import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedRepor
 import { type DefaultVariant, ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import { ReportsMegaMenu } from '@components/ReportsNavigation/ReportsMegaMenu'
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 import { UnifiedReportControls } from '@components/UnifiedReports/UnifiedReportControls'
 import { UnifiedReportHeaderButtons } from '@components/UnifiedReports/UnifiedReportHeaderButtons'
+import { type UnifiedReportNavigationVariant } from '@components/UnifiedReports/UnifiedReports'
 
 import './unifiedReportBaseHeader.scss'
 
 const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
   width <= BREAKPOINTS.MOBILE ? 'Mobile' : 'Desktop'
 
-const UnifiedReportBaseHeaderRow = ({ variant }: { variant: DefaultVariant }) => {
+type UnifiedReportBaseHeaderRowProps = {
+  variant: 'Desktop'
+  navigationVariant: UnifiedReportNavigationVariant
+} | {
+  variant: 'Mobile'
+}
+
+const UnifiedReportBaseHeaderRow = (props: UnifiedReportBaseHeaderRowProps) => {
   const { baseReport } = useBaseUnifiedReport()
-  const isMobile = variant === 'Mobile'
+  const isMobile = props.variant === 'Mobile'
 
   return (
     <HStack
@@ -26,16 +35,23 @@ const UnifiedReportBaseHeaderRow = ({ variant }: { variant: DefaultVariant }) =>
       className='Layer__UnifiedReports__BaseHeaderRow'
     >
       {!isMobile && (
-        baseReport
-          ? <Span size='lg' weight='bold'>{baseReport.displayName}</Span>
-          : <SkeletonLoader width='192px' height='24px' />
+        <HStack align='center' gap='lg'>
+          {baseReport
+            ? <Span size='lg' weight='bold'>{baseReport.displayName}</Span>
+            : <SkeletonLoader width='192px' height='24px' />}
+          {props.navigationVariant === 'menu' && <ReportsMegaMenu />}
+        </HStack>
       )}
-      <UnifiedReportHeaderButtons variant={variant} />
+      <UnifiedReportHeaderButtons variant={props.variant} />
     </HStack>
   )
 }
 
-export const UnifiedReportBaseHeader = () => {
+type UnifiedReportBaseHeaderProps = {
+  navigationVariant: UnifiedReportNavigationVariant
+}
+
+export const UnifiedReportBaseHeader = ({ navigationVariant }: UnifiedReportBaseHeaderProps) => {
   const { isDesktop } = useSizeClass()
 
   return (
@@ -44,7 +60,7 @@ export const UnifiedReportBaseHeader = () => {
         <ResponsiveComponent
           resolveVariant={resolveVariant}
           slots={{
-            Desktop: <UnifiedReportBaseHeaderRow variant='Desktop' />,
+            Desktop: <UnifiedReportBaseHeaderRow variant='Desktop' navigationVariant={navigationVariant} />,
             Mobile: <UnifiedReportBaseHeaderRow variant='Mobile' />,
           }}
         />

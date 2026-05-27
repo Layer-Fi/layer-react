@@ -35,14 +35,3 @@
     }
   }
 }
-
-.Layer__TreeNavigation__Chevron {
-  padding: 0;
-  border: none;
-  background: transparent;
-  transition: transform var(--transition-speed) ease;
-}
-
-.Layer__UI__TreeItem[data-expanded] .Layer__TreeNavigation__Chevron {
-  transform: rotate(90deg);
-}

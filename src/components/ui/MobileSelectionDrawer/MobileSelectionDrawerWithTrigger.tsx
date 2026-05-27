@@ -90,7 +90,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
           justify='space-between'
           className='Layer__MobileSelectionDrawerWithTrigger__Trigger'
         >
-          <Span size='sm' ellipsis>
+          <Span size='sm' ellipsis pie='xs'>
             {resolvedSelectedValue?.label ?? resolvedPlaceholder}
           </Span>
           {!isDisabled && triggerIcon}
