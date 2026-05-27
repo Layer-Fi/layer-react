@@ -102,6 +102,9 @@ export const BookkeepingOverview = ({
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
+  const profitAndLossTagFilter = tagFilter?.tagValues.length
+    ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
+    : undefined
 
   const { upperContentRef, targetElementRef, upperElementInFocus } =
     useKeepInMobileViewport()
@@ -119,11 +122,7 @@ export const BookkeepingOverview = ({
   return (
     <ProfitAndLoss
       asContainer={false}
-      tagFilter={
-        tagFilter
-          ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
-          : undefined
-      }
+      tagFilter={profitAndLossTagFilter}
     >
       <View
         viewClassName='Layer__bookkeeping-overview--view Layer__BookkeepingOverview'
@@ -195,11 +194,8 @@ export const BookkeepingOverview = ({
               />
             </VStack>
             <ProfitAndLoss.Chart
-              tagFilter={
-                tagFilter
-                  ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
-                  : undefined
-              }
+              hideLegend
+              tagFilter={profitAndLossTagFilter}
             />
           </Container>
         </div>

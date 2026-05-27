@@ -71,15 +71,14 @@ export const AccountingOverview = ({
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
+  const profitAndLossTagFilter = tagFilter?.tagValues.length
+    ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
+    : undefined
 
   return (
     <ProfitAndLoss
       asContainer={false}
-      tagFilter={
-        tagFilter
-          ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
-          : undefined
-      }
+      tagFilter={profitAndLossTagFilter}
     >
       <View
         title={stringOverrides?.title || title || t('overview:label.accounting_overview', 'Accounting overview')}
@@ -118,11 +117,7 @@ export const AccountingOverview = ({
             trailingContent={<PnlLegend direction='row' />}
           />
           <ProfitAndLoss.Chart
-            tagFilter={
-              tagFilter
-                ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
-                : undefined
-            }
+            tagFilter={profitAndLossTagFilter}
             hideLegend
           />
         </Container>
