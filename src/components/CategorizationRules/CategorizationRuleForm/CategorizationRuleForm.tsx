@@ -9,7 +9,7 @@ import { flattenValidationErrors } from '@utils/form'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { CounterpartyComboBox } from '@components/CategorizationRules/CategorizationRuleForm/CounterpartyComboBox'
+import { CounterpartySelect } from '@components/CategorizationRules/CategorizationRuleForm/CounterpartySelect'
 import { type CategorizationRuleFormState, type DirectionFormValue } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 import { useCategorizationRuleForm } from '@components/CategorizationRules/CategorizationRuleForm/useCategorizationRuleForm'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
@@ -61,7 +61,7 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
 
       <form.Field name='counterparty'>
         {field => (
-          <CounterpartyComboBox
+          <CounterpartySelect
             label={t('common:label.counterparty', 'Counterparty')}
             value={field.state.value}
             onValueChange={field.handleChange}

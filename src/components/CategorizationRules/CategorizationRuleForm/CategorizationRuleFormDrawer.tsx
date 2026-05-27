@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { VStack } from '@ui/Stack/Stack'
@@ -36,6 +37,7 @@ export const CategorizationRuleFormDrawer = ({
   formState,
 }: CategorizationRuleFormDrawerProps) => {
   const { t } = useTranslation()
+  const { isMobile } = useSizeClass()
 
   const title = formState?.mode === 'edit'
     ? t('categorizationRules:action.edit_rule', 'Edit Rule')
@@ -52,6 +54,8 @@ export const CategorizationRuleFormDrawer = ({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       aria-label={title}
+      variant={isMobile ? 'mobile-drawer' : 'drawer'}
+      flexBlock={isMobile}
       slots={{ Header }}
     >
       <VStack pbe='lg' pi='md'>
