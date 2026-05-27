@@ -13,6 +13,7 @@ import { usePreloadCustomers } from '@hooks/api/businesses/[business-id]/custome
 import { usePreloadTagDimensions } from '@hooks/api/businesses/[business-id]/tags/dimensions/useTagDimensions'
 import { usePreloadVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
 import { BankTransactionsCategorizationStoreProvider } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
@@ -180,6 +181,7 @@ const BankTransactionsTableView = ({
   const isMonthlyViewMode = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
 
   const { currentBankTransactionsPage: currentPage, setCurrentBankTransactionsPage: setCurrentPage } = useCurrentBankTransactionsPage()
+  const emitLayerEvent = useEmitLayerEvent()
 
   const { data, isLoading, display, hasMore, fetchMore } = useBankTransactionsContext()
 
@@ -393,7 +395,13 @@ const BankTransactionsTableView = ({
             currentPage={currentPage}
             totalCount={data?.length || 0}
             pageSize={pageSize}
-            onPageChange={page => setCurrentPage(page)}
+            onPageChange={(page) => {
+              emitLayerEvent({
+                name: 'transactions.page_changed',
+                properties: { page },
+              })
+              setCurrentPage(page)
+            }}
             fetchMore={fetchMore}
             hasMore={hasMore}
           />

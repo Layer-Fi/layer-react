@@ -10,6 +10,7 @@ import { translationKey } from '@utils/i18n/translationKey'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useHandleDownloadTransactions } from '@hooks/features/bankTransactions/useHandleBankTransactionsDownload'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -62,11 +63,16 @@ type TransactionsSearchProps = {
 function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
   const { t } = useTranslation()
   const { filters, setFilters } = useBankTransactionsFiltersContext()
+  const emitLayerEvent = useEmitLayerEvent()
 
   const [localSearch, setLocalSearch] = useState(() => filters?.query ?? '')
 
   const debouncedSetDescription = useDebounce((value: string) => {
     setFilters({ query: value })
+    emitLayerEvent({
+      name: 'transactions.searched',
+      properties: { query: value },
+    })
   })
 
   const handleSearch = useCallback((value: string) => {

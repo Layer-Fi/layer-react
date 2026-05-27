@@ -13,8 +13,10 @@ import { EnvironmentInputProvider } from '@providers/Environment/EnvironmentInpu
 import { GlobalDateStoreProvider } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { LayerI18nProvider } from '@providers/I18nProvider/LayerI18nProvider'
 import { StaleLocaleCacheInvalidator } from '@providers/I18nProvider/StaleLocaleCacheInvalidator'
+import type { LayerEvent } from '@providers/LayerProvider/layerEvents'
 
 export type EventCallbacks = {
+  onEvent?: (event: LayerEvent) => void
   onTransactionCategorized?: () => void
   onTransactionsFetched?: () => void
 }

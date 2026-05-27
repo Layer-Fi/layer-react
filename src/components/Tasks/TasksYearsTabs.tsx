@@ -4,6 +4,7 @@ import { getMonth } from 'date-fns'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { Tabs } from '@components/Tabs/Tabs'
@@ -17,6 +18,7 @@ export const TasksYearsTabs = ({ isMobile }: TasksYearsTabsProps) => {
   const { date } = useGlobalDate()
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
   const { formatDate } = useIntlFormatter()
+  const emitLayerEvent = useEmitLayerEvent()
 
   const activeYear = date.getFullYear()
 
@@ -24,6 +26,11 @@ export const TasksYearsTabs = ({ isMobile }: TasksYearsTabsProps) => {
 
   const setCurrentYear = (year: string) => {
     const currentMonth = getMonth(date)
+
+    emitLayerEvent({
+      name: 'tasks.year_selected',
+      properties: { year: Number(year) },
+    })
 
     setMonthByPeriod({
       monthNumber: currentMonth + 1,

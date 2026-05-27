@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { asMutable } from '@utils/asMutable'
 import { useUnifiedReport } from '@hooks/api/businesses/[business-id]/reports/unified/report-name/useUnifiedReport'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useActiveUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
@@ -18,6 +19,7 @@ export const UnifiedReportTable = () => {
   const { report } = useActiveUnifiedReport()
   const { data, isLoading, isError, refetch } = useUnifiedReport()
   const { setExpanded } = useContext(ExpandableDataTableContext)
+  const emitLayerEvent = useEmitLayerEvent()
   const mutableRows = data?.rows ? asMutable(data.rows) : undefined
 
   const columnConfig = useMemo(
@@ -67,6 +69,11 @@ export const UnifiedReportTable = () => {
       }}
       getSubRows={getSubRows}
       getRowId={row => row.rowKey}
+      onRowExpandToggle={({ rowKey, expanded }) =>
+        emitLayerEvent({
+          name: 'reports.section_expanded',
+          properties: { sectionKey: rowKey, expanded },
+        })}
     />
   )
 }

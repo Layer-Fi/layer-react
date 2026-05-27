@@ -4,6 +4,7 @@ import { getMonth, getYear, set } from 'date-fns'
 import { getCompletedTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { BookkeepingPeriodStatus, useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { TaskMonthTile } from '@components/Tasks/TaskMonthTile'
@@ -30,6 +31,7 @@ function TasksMonthSelector({ isMobile }: TasksMonthSelectorProps) {
   const { date } = useGlobalDate()
   const { formatDate } = useIntlFormatter()
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
+  const emitLayerEvent = useEmitLayerEvent()
 
   const { periodsInActiveYear } = useActiveYearBookkeepingPeriods()
 
@@ -75,10 +77,16 @@ function TasksMonthSelector({ isMobile }: TasksMonthSelectorProps) {
         return (
           <TaskMonthTile
             key={idx}
-            onClick={() => setMonthByPeriod({
-              yearNumber: monthData.year,
-              monthNumber: monthData.month,
-            })}
+            onClick={() => {
+              emitLayerEvent({
+                name: 'tasks.month_selected',
+                properties: { year: monthData.year, month: monthData.month },
+              })
+              setMonthByPeriod({
+                yearNumber: monthData.year,
+                monthNumber: monthData.month,
+              })
+            }}
             data={monthData}
             active={monthData.month === activeMonthNumber}
             disabled={monthData.disabled}
