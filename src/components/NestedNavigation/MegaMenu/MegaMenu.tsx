@@ -11,7 +11,7 @@ const PADDING = 16
 
 const getWidth = (numGroups: number) => {
   const numColumns = Math.min(numGroups, 3)
-  return (numColumns * COLUMN_WIDTH) + (numColumns * (COLUMN_GAP - 1)) + (PADDING * 2)
+  return (numColumns * COLUMN_WIDTH) + ((numColumns - 1) * COLUMN_GAP) + (PADDING * 2)
 }
 
 type MegaMenuProps<TGroup extends object, TLeaf extends object> = {

@@ -21,7 +21,7 @@ export function MegaMenuListSection<TGroup extends object, TLeaf extends object>
 }: MegaMenuListSectionProps<TGroup, TLeaf>) {
   return (
     <ListBoxSection id={id} className='Layer__MegaMenuListSection'>
-      <Header pis='xs' pbe='xs'>{groupConfig.renderLabel(group)}</Header>
+      <Header slot='header' pis='xs' pbe='xs'>{groupConfig.renderLabel(group)}</Header>
       {Array.from(groupConfig.getChildren(group)).map((leaf) => {
         const leafId = leafConfig.getId(leaf)
         return (

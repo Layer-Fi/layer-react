@@ -24,7 +24,7 @@ const EMPTY_ARRAY: never[] = []
 
 export function ReportsMegaMenu() {
   const { t } = useTranslation()
-  const { data } = useReportConfig()
+  const { data, isLoading, isError } = useReportConfig()
   const { baseReport, setBaseReport } = useBaseUnifiedReport()
 
   const leafConfig = useMemo(
@@ -33,11 +33,11 @@ export function ReportsMegaMenu() {
   )
 
   const Trigger = useMemo(() => (
-    <Button variant='outlined'>
+    <Button variant='outlined' isPending={isLoading} isDisabled={isError}>
       {t('reports:label.switch_report', 'Switch report')}
       <ChevronDown size={14} />
     </Button>
-  ), [t])
+  ), [t, isLoading, isError])
 
   return (
     <MegaMenu
