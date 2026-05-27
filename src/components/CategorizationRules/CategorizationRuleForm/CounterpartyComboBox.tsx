@@ -1,23 +1,13 @@
-import { useId, useMemo, useState } from 'react'
+import { useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
 import { useListCounterparties } from '@hooks/api/businesses/[business-id]/counterparties/useListCounterparties'
-import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
+import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
-
-type CounterpartyOption = ComboBoxOption & {
-  counterparty: BankTransactionCounterparty
-}
-
-const counterpartyToOption = (counterparty: BankTransactionCounterparty): CounterpartyOption => ({
-  label: counterparty.name ?? counterparty.id,
-  value: counterparty.id,
-  counterparty,
-})
+import { CounterpartyComboBoxOption } from '@components/CategorizationRules/CategorizationRuleForm/counterpartyComboBoxOption'
 
 type CounterpartyComboBoxProps = {
   label: string
@@ -40,40 +30,58 @@ export const CounterpartyComboBox = ({
 }: CounterpartyComboBoxProps) => {
   const { t } = useTranslation()
   const inputId = useId()
-  const [debouncedQuery, setDebouncedQuery] = useState('')
-  const debouncedSetQuery = useDebounce(setDebouncedQuery)
-  const { data, isLoading } = useListCounterparties({
-    q: debouncedQuery || undefined,
+  const { searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: '' })
+  const { data, isLoading, isError: isListError } = useListCounterparties({
+    q: searchQuery || undefined,
     limit: 50,
   })
 
-  const fetchedOptions = useMemo<ReadonlyArray<CounterpartyOption>>(() => {
+  const fetchedOptions = useMemo<ReadonlyArray<CounterpartyComboBoxOption>>(() => {
     if (!data) return []
-    return data.flatMap(({ data: page }) => page.map(counterpartyToOption))
+    return data.flatMap(({ data: page }) => page.map(counterparty => new CounterpartyComboBoxOption(counterparty)))
   }, [data])
 
   const slots = useMemo(() => {
-    if (debouncedQuery === '' && !isLoading && fetchedOptions.length === 0) {
-      return {
-        EmptyMessage: (
-          <VStack pi='md'>
-            <Span>
-              {t(
-                'categorizationRules:empty.no_counterparties_yet',
-                'No counterparties yet. They will appear here automatically as your transactions are processed.',
-              )}
-            </Span>
-          </VStack>
-        ),
-      }
-    }
-    return undefined
-  }, [debouncedQuery, isLoading, fetchedOptions.length, t])
+    const wrapMessage = (message: string) => (
+      <VStack pi='md'>
+        <Span>{message}</Span>
+      </VStack>
+    )
 
-  const options = useMemo<ReadonlyArray<CounterpartyOption>>(() => {
+    let EmptyMessage
+    if (isListError) {
+      EmptyMessage = wrapMessage(
+        t('categorizationRules:error.load_counterparties', 'Couldn’t load counterparties. Please try again.'),
+      )
+    }
+    else if (searchQuery === '') {
+      EmptyMessage = wrapMessage(
+        t(
+          'categorizationRules:empty.no_counterparties_yet',
+          'No counterparties yet. They will appear here automatically as your transactions are processed.',
+        ),
+      )
+    }
+    else {
+      EmptyMessage = wrapMessage(
+        t('categorizationRules:empty.no_matching_counterparties', 'No matching counterparties.'),
+      )
+    }
+
+    return {
+      EmptyMessage,
+      ErrorMessage: (
+        <Span size='xs' status='error'>
+          {t('categorizationRules:validation.counterparty_required', 'Counterparty is required.')}
+        </Span>
+      ),
+    }
+  }, [isListError, searchQuery, t])
+
+  const options = useMemo<ReadonlyArray<CounterpartyComboBoxOption>>(() => {
     if (!value) return fetchedOptions
     if (fetchedOptions.some(option => option.value === value.id)) return fetchedOptions
-    return [counterpartyToOption(value), ...fetchedOptions]
+    return [new CounterpartyComboBoxOption(value), ...fetchedOptions]
   }, [fetchedOptions, value])
 
   const selectedOption = useMemo(() => {
@@ -93,8 +101,9 @@ export const CounterpartyComboBox = ({
       <ComboBox
         options={options}
         selectedValue={selectedOption}
-        onSelectedValueChange={option => onValueChange(option?.counterparty ?? null)}
-        onInputValueChange={debouncedSetQuery}
+        onSelectedValueChange={option => onValueChange(option?.original ?? null)}
+        onInputValueChange={handleInputChange}
+        filterOption={null}
         inputId={inputId}
         isLoading={isLoading}
         isReadOnly={isReadOnly}

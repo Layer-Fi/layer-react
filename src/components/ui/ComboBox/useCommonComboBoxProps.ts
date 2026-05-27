@@ -22,6 +22,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   isSearchable = true,
   isLoading,
   isMutating,
+  filterOption,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledby,
   'aria-describedby': ariaDescribedby,
@@ -42,6 +43,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   | 'isSearchable'
   | 'isLoading'
   | 'isMutating'
+  | 'filterOption'
 > & AriaLabelProps) {
   const internalInputId = useId()
   const effectiveInputId = inputId ?? internalInputId
@@ -98,6 +100,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     openMenuOnClick: !isReadOnly,
     menuPlacement: 'auto' as const,
     menuShouldScrollIntoView: false,
+    filterOption,
     ['aria-label']: ariaLabel,
     ['aria-labelledby']: ariaLabelledby,
     ['aria-describedby']: ariaDescribedby,
@@ -108,6 +111,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     className,
     components,
     effectiveInputId,
+    filterOption,
     groups,
     isClearable,
     isDisabled,

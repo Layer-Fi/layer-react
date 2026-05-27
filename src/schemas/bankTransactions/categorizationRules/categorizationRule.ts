@@ -49,69 +49,69 @@ export const CreateCategorizationRuleSchema = Schema.Struct({
     Schema.fromKey('apply_retroactively'),
   ),
   createdBySuggestionId: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.optional(Schema.NullishOr(Schema.String)),
     Schema.fromKey('created_by_suggestion_id'),
   ),
   externalId: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.optional(Schema.NullishOr(Schema.String)),
     Schema.fromKey('external_id'),
   ),
-  name: Schema.NullishOr(Schema.String),
-  category: Schema.NullishOr(AccountIdentifierSchema),
+  name: Schema.optional(Schema.NullishOr(Schema.String)),
+  category: Schema.optional(Schema.NullishOr(AccountIdentifierSchema)),
   suggestion1: pipe(
-    Schema.propertySignature(Schema.NullishOr(AccountIdentifierSchema)),
+    Schema.optional(Schema.NullishOr(AccountIdentifierSchema)),
     Schema.fromKey('suggestion_1'),
   ),
   suggestion2: pipe(
-    Schema.propertySignature(Schema.NullishOr(AccountIdentifierSchema)),
+    Schema.optional(Schema.NullishOr(AccountIdentifierSchema)),
     Schema.fromKey('suggestion_2'),
   ),
   suggestion3: pipe(
-    Schema.propertySignature(Schema.NullishOr(AccountIdentifierSchema)),
+    Schema.optional(Schema.NullishOr(AccountIdentifierSchema)),
     Schema.fromKey('suggestion_3'),
   ),
   businessNameFilter: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.optional(Schema.NullishOr(Schema.String)),
     Schema.fromKey('business_name_filter'),
   ),
   clientNameFilter: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.optional(Schema.NullishOr(Schema.String)),
     Schema.fromKey('client_name_filter'),
   ),
   merchantTypeFilter: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.optional(Schema.NullishOr(Schema.String)),
     Schema.fromKey('merchant_type_filter'),
   ),
   transactionDescriptionFilter: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.optional(Schema.NullishOr(Schema.String)),
     Schema.fromKey('transaction_description_filter'),
   ),
   transactionTypeFilter: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.optional(Schema.NullishOr(Schema.String)),
     Schema.fromKey('transaction_type_filter'),
   ),
   bankDirectionFilter: pipe(
-    Schema.propertySignature(Schema.NullishOr(BankDirectionFilterSchema)),
+    Schema.optional(Schema.NullishOr(BankDirectionFilterSchema)),
     Schema.fromKey('bank_direction_filter'),
   ),
   amountMinFilter: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+    Schema.optional(Schema.NullishOr(Schema.Number)),
     Schema.fromKey('amount_min_filter'),
   ),
   amountMaxFilter: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+    Schema.optional(Schema.NullishOr(Schema.Number)),
     Schema.fromKey('amount_max_filter'),
   ),
   counterpartyFilter: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.UUID)),
+    Schema.optional(Schema.NullishOr(Schema.UUID)),
     Schema.fromKey('counterparty_filter'),
   ),
   bankTransactionTypeFilter: pipe(
-    Schema.propertySignature(Schema.NullishOr(BankTransactionTypeSchema)),
+    Schema.optional(Schema.NullishOr(BankTransactionTypeSchema)),
     Schema.fromKey('bank_transaction_type_filter'),
   ),
   mccFilter: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.optional(Schema.NullishOr(Schema.String)),
     Schema.fromKey('mcc_filter'),
   ),
 })

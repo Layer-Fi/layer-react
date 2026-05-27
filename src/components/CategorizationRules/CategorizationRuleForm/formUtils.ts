@@ -103,24 +103,11 @@ export const convertFormToCreateBody = (values: CategorizationRuleFormValues) =>
 
   const parsed = {
     applyRetroactively: false,
-    createdBySuggestionId: null,
-    externalId: null,
-    name: null,
     category: values.category,
-    suggestion1: null,
-    suggestion2: null,
-    suggestion3: null,
-    businessNameFilter: null,
-    clientNameFilter: null,
-    merchantTypeFilter: null,
-    transactionDescriptionFilter: null,
-    transactionTypeFilter: null,
     bankDirectionFilter: values.bankDirectionFilter === '' ? null : values.bankDirectionFilter,
     amountMinFilter: formAmountToCents(values.amountMinFilter),
     amountMaxFilter: formAmountToCents(values.amountMaxFilter),
     counterpartyFilter: values.counterparty.id,
-    bankTransactionTypeFilter: null,
-    mccFilter: null,
   }
 
   return Schema.encodeUnknownSync(CreateCategorizationRuleSchema)(parsed)

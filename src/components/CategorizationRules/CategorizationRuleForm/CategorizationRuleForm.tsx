@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { AlertTriangle, Save } from 'lucide-react'
 import type { FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -32,11 +32,11 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
     e.stopPropagation()
   }, [])
 
-  const directionOptions: Array<{ value: DirectionFormValue, label: string }> = [
+  const directionOptions = useMemo<Array<{ value: DirectionFormValue, label: string }>>(() => [
     { value: '', label: t('categorizationRules:label.any', 'Any') },
     { value: BankDirectionFilter.MONEY_IN, label: t('common:label.money_in', 'Money in') },
     { value: BankDirectionFilter.MONEY_OUT, label: t('common:label.money_out', 'Money out') },
-  ]
+  ], [t])
 
   return (
     <Form className='Layer__CategorizationRuleForm' onSubmit={blockNativeOnSubmit}>

@@ -34,17 +34,10 @@ export const getCategorizationRuleAmountLabel = (
     return t('categorizationRules:label.any_amount', 'Any amount')
   }
   if (min != null && max != null) {
-    return t('categorizationRules:label.amount_range', '{{min}} – {{max}}', {
-      min: formatCurrencyFromCents(min),
-      max: formatCurrencyFromCents(max),
-    })
+    return `${formatCurrencyFromCents(min)} – ${formatCurrencyFromCents(max)}`
   }
   if (min != null) {
-    return t('categorizationRules:label.amount_at_least', '≥ {{amount}}', {
-      amount: formatCurrencyFromCents(min),
-    })
+    return `≥ ${formatCurrencyFromCents(min)}`
   }
-  return t('categorizationRules:label.amount_at_most', '≤ {{amount}}', {
-    amount: formatCurrencyFromCents(max as number),
-  })
+  return `≤ ${formatCurrencyFromCents(max as number)}`
 }

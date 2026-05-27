@@ -64,7 +64,7 @@ export function useUpsertCategorizationRule() {
   const { businessId } = useLayerContext()
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
-  const { forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
+  const { forceReloadCategorizationRules, patchCategorizationRuleByKey } = useCategorizationRulesGlobalCacheActions()
 
   const mutationResponse = useSWRMutation(
     () => withLocale(buildKey({
@@ -98,6 +98,7 @@ export function useUpsertCategorizationRule() {
     },
     {
       revalidate: false,
+      throwOnError: true,
     },
   )
 
@@ -110,16 +111,18 @@ export function useUpsertCategorizationRule() {
     ) => {
       const triggerResult = await originalTrigger(arg, options)
 
-      void forceReloadCategorizationRules()
-
       if (arg.mode === 'create') {
+        void forceReloadCategorizationRules()
         void forceReloadBankTransactions()
         void debouncedInvalidateProfitAndLoss()
+      }
+      else if (triggerResult) {
+        void patchCategorizationRuleByKey(triggerResult.data)
       }
 
       return triggerResult
     },
-    [originalTrigger, forceReloadCategorizationRules, forceReloadBankTransactions, debouncedInvalidateProfitAndLoss],
+    [originalTrigger, forceReloadCategorizationRules, forceReloadBankTransactions, debouncedInvalidateProfitAndLoss, patchCategorizationRuleByKey],
   )
 
   return new Proxy(mutationResponse, {

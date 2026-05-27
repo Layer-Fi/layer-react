@@ -8,12 +8,15 @@ import { VStack } from '@ui/Stack/Stack'
 import { CategorizationRuleForm } from '@components/CategorizationRules/CategorizationRuleForm/CategorizationRuleForm'
 import { type CategorizationRuleFormState } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 
-export type CategorizationRuleFormDrawerProps = {
-  isOpen: boolean
+type CategorizationRuleFormDrawerSharedProps = {
   onOpenChange: (isOpen: boolean) => void
   onSuccess: (rule: CategorizationRule) => void
-  formState: CategorizationRuleFormState | null
 }
+
+export type CategorizationRuleFormDrawerProps = CategorizationRuleFormDrawerSharedProps & (
+  | { isOpen: false, formState: null }
+  | { isOpen: true, formState: CategorizationRuleFormState }
+)
 
 const CategorizationRuleFormDrawerHeader = ({ title, close }: { title: string, close: () => void }) => (
   <ModalTitleWithClose
@@ -42,7 +45,7 @@ export const CategorizationRuleFormDrawer = ({
     <CategorizationRuleFormDrawerHeader title={title} close={close} />
   ), [title])
 
-  if (formState === null) return null
+  if (!isOpen) return null
 
   return (
     <Drawer
@@ -51,10 +54,8 @@ export const CategorizationRuleFormDrawer = ({
       aria-label={title}
       slots={{ Header }}
     >
-      <VStack pb='lg'>
-        <VStack pi='md'>
-          <CategorizationRuleForm formState={formState} onSuccess={onSuccess} />
-        </VStack>
+      <VStack pbe='lg' pi='md'>
+        <CategorizationRuleForm formState={formState} onSuccess={onSuccess} />
       </VStack>
     </Drawer>
   )
