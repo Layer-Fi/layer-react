@@ -72,6 +72,18 @@
     &[data-pbs="#{$spacing}"] {
       padding-block-start: var(--spacing-#{$spacing});
     }
+
+    &[data-pi="#{$spacing}"] {
+      padding-inline: var(--spacing-#{$spacing});
+    }
+
+    &[data-pie="#{$spacing}"] {
+      padding-inline-end: var(--spacing-#{$spacing});
+    }
+
+    &[data-pis="#{$spacing}"] {
+      padding-inline-start: var(--spacing-#{$spacing});
+    }
   }
 
   $alignments: left center right justify;
@@ -79,6 +91,14 @@
   @each $alignment in $alignments {
     &[data-align=#{$alignment}] {
       text-align: $alignment;
+    }
+  }
+
+  $cases: uppercase lowercase capitalize;
+
+  @each $case in $cases {
+    &[data-text-case=#{$case}] {
+      text-transform: $case;
     }
   }
 

@@ -1,0 +1,6 @@
+.Layer__Overlay__Dialog {
+  display: grid;
+  overflow-y: auto;
+  min-block-size: 0;
+  border-radius: var(--border-radius-xs);
+}

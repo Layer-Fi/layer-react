@@ -6,7 +6,7 @@ import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateSto
 import { UnifiedReportStoreProvider } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
-import { ReportsNavigation } from '@components/ReportsNavigation/ReportsNavigation'
+import { ReportsNavigationSidebar } from '@components/ReportsNavigation/ReportsNavigationSidebar'
 import { UnifiedReportHeaderButtons } from '@components/UnifiedReports/UnifiedReportHeaderButtons'
 import { UnifiedReportTable } from '@components/UnifiedReports/UnifiedReportTable'
 import { UnifiedReportTableHeader } from '@components/UnifiedReports/UnifiedReportTableHeader'
@@ -14,11 +14,14 @@ import { View } from '@components/View/View'
 
 import './unifiedReports.scss'
 
+export type UnifiedReportNavigationVariant = 'sidebar' | 'menu'
+
 type UnifiedReportProps = {
   dateSelectionMode?: DateSelectionMode
+  navigationVariant?: UnifiedReportNavigationVariant
 }
 
-const UnifiedReportContent = () => {
+const UnifiedReportContent = ({ navigationVariant = 'menu' }: Pick<UnifiedReportProps, 'navigationVariant'>) => {
   const { t } = useTranslation()
   const { isDesktop } = useSizeClass()
 
@@ -31,13 +34,13 @@ const UnifiedReportContent = () => {
   return (
     <View title={t('reports:label.reports', 'Reports')} viewClassName='Layer__UnifiedReports' header={header}>
       <HStack className='Layer__UnifiedReports__Body'>
-        {isDesktop && (
+        {isDesktop && navigationVariant === 'sidebar' && (
           <VStack className='Layer__UnifiedReports__Sidebar'>
-            <ReportsNavigation />
+            <ReportsNavigationSidebar />
           </VStack>
         )}
         <VStack fluid className='Layer__UnifiedReports__Content'>
-          <UnifiedReportTableHeader />
+          <UnifiedReportTableHeader navigationVariant={navigationVariant} />
           <UnifiedReportTable />
         </VStack>
       </HStack>
@@ -45,11 +48,11 @@ const UnifiedReportContent = () => {
   )
 }
 
-export const UnifiedReports = ({ dateSelectionMode }: UnifiedReportProps) => {
+export const UnifiedReports = ({ dateSelectionMode, navigationVariant }: UnifiedReportProps) => {
   return (
     <UnifiedReportStoreProvider dateSelectionMode={dateSelectionMode}>
       <ExpandableDataTableProvider>
-        <UnifiedReportContent />
+        <UnifiedReportContent navigationVariant={navigationVariant} />
       </ExpandableDataTableProvider>
     </UnifiedReportStoreProvider>
   )
