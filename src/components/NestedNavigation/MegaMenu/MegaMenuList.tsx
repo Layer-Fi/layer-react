@@ -40,6 +40,8 @@ export function MegaMenuList<TGroup extends object, TLeaf extends object>({
     onSelectItem()
   }, [leafMap, leafConfig.onSelectLeaf, onSelectItem])
 
+  const sectionCount = Math.min(itemArray.length, 3)
+
   return (
     <ListBox
       layout='grid'
@@ -48,6 +50,7 @@ export function MegaMenuList<TGroup extends object, TLeaf extends object>({
       onSelectionChange={handleSelectionChange}
       items={itemArray}
       className='Layer__MegaMenuList'
+      data-section-count={sectionCount}
     >
       {group => (
         <MegaMenuListSection
