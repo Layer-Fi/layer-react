@@ -1,0 +1,25 @@
+.Layer__MegaMenuListItem {
+  position: relative;
+  padding-block: var(--spacing-xs);
+  padding-inline: var(--spacing-sm);
+  cursor: pointer;
+
+  &[data-hovered],
+  &[data-focused] {
+    background-color: var(--color-base-50);
+  }
+
+  &[data-selected] {
+    background-color: var(--color-base-100);
+    font-weight: var(--font-weight-bold);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: 0;
+      width: 2px;
+      background: var(--color-black);
+    }
+  }
+}
