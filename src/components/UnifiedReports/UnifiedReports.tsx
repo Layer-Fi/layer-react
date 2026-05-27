@@ -21,7 +21,7 @@ type UnifiedReportProps = {
   navigationVariant?: UnifiedReportNavigationVariant
 }
 
-const UnifiedReportContent = ({ navigationVariant = 'menu' }: Pick<UnifiedReportProps, 'navigationVariant'>) => {
+const UnifiedReportContent = ({ navigationVariant = 'sidebar' }: Pick<UnifiedReportProps, 'navigationVariant'>) => {
   const { t } = useTranslation()
   const { isDesktop } = useSizeClass()
 
