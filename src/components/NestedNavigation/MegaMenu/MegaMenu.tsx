@@ -6,7 +6,7 @@ import { MegaMenuList } from '@components/NestedNavigation/MegaMenu/MegaMenuList
 import type { FlatNestedNavigationGroupConfig, Key, NestedNavigationLeafConfig } from '@components/NestedNavigation/types'
 
 const COLUMN_WIDTH = 200
-const COLUMN_GAP = 16
+const COLUMN_GAP = 24
 const PADDING = 16
 
 const getWidth = (numGroups: number) => {
