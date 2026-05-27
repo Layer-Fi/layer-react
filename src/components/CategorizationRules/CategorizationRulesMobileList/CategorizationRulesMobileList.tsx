@@ -62,7 +62,7 @@ const CategorizationRuleMobileListItem = ({
           inset
           icon
           onPress={() => onEditPress(rule)}
-          aria-label={t('categorizationRules:action.edit_rule', 'Edit rule')}
+          aria-label={t('categorizationRules:action.edit_rule', 'Edit Rule')}
           variant='ghost'
         >
           <Pencil size={16} />
@@ -71,7 +71,7 @@ const CategorizationRuleMobileListItem = ({
           inset
           icon
           onPress={() => onDeletePress(rule)}
-          aria-label={t('categorizationRules:action.delete_rule', 'Delete rule')}
+          aria-label={t('categorizationRules:action.delete_rule', 'Delete Rule')}
           variant='ghost'
         >
           <Trash2 size={16} />

@@ -70,8 +70,8 @@ const CategorizationRulesHeader = ({ onGoBack, onCreateRule }: CategorizationRul
         <Heading size='sm'>{t('categorizationRules:label.categorization_rules', 'Categorization Rules')}</Heading>
       </HStack>
       <HStack pie='md' align='center' gap='xs'>
-        <Button variant='outlined-light' onPress={onCreateRule}>
-          {t('categorizationRules:action.new_rule', 'New rule')}
+        <Button onPress={onCreateRule}>
+          {t('categorizationRules:action.create_rule', 'Create Rule')}
           <Plus size={16} />
         </Button>
       </HStack>

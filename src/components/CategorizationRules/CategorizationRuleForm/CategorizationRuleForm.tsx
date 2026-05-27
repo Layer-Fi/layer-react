@@ -87,7 +87,7 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
         {field => (
           <field.FormRadioGroupField
             label={t('common:label.direction', 'Direction')}
-            orientation='horizontal'
+            orientation='vertical'
             options={directionOptions}
           />
         )}
@@ -127,8 +127,8 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
             >
               <Save size={14} />
               {formState.mode === 'edit'
-                ? t('categorizationRules:action.save_rule', 'Save rule')
-                : t('categorizationRules:action.create_rule', 'Create rule')}
+                ? t('categorizationRules:action.save_rule', 'Save Rule')
+                : t('categorizationRules:action.create_rule', 'Create Rule')}
             </Button>
           )}
         </form.Subscribe>

@@ -92,7 +92,7 @@ export const CategorizationRulesTable = ({
           inset
           icon
           onPress={() => onEditRule(row.original)}
-          aria-label={t('categorizationRules:action.edit_rule', 'Edit rule')}
+          aria-label={t('categorizationRules:action.edit_rule', 'Edit Rule')}
           variant='ghost'
         >
           <Pencil size={16} />
@@ -106,7 +106,7 @@ export const CategorizationRulesTable = ({
           inset
           icon
           onPress={() => onDeleteRule(row.original)}
-          aria-label={t('categorizationRules:action.delete_rule', 'Delete rule')}
+          aria-label={t('categorizationRules:action.delete_rule', 'Delete Rule')}
           variant='ghost'
         >
           <Trash2 size={16} />
