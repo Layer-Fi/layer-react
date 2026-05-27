@@ -4,16 +4,15 @@ import type { FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { BankDirectionFilter, type CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { CategoriesListMode } from '@schemas/categorization'
 import { flattenValidationErrors } from '@utils/form'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { CategorySelect } from '@components/CategorizationRules/CategorizationRuleForm/CategorySelect'
 import { CounterpartySelect } from '@components/CategorizationRules/CategorizationRuleForm/CounterpartySelect'
 import { type CategorizationRuleFormState, type DirectionFormValue } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 import { useCategorizationRuleForm } from '@components/CategorizationRules/CategorizationRuleForm/useCategorizationRuleForm'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
 import { TextSize } from '@components/Typography/Text'
 
 import './categorizationRuleForm.scss'
@@ -73,11 +72,10 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
 
       <form.Field name='category'>
         {field => (
-          <LedgerAccountCombobox
+          <CategorySelect
             label={t('common:label.category', 'Category')}
             value={field.state.value}
             onValueChange={field.handleChange}
-            mode={CategoriesListMode.All}
             showLabel
           />
         )}
