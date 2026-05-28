@@ -17,9 +17,11 @@
     "load_reports_navigation": "Something went wrong while loading this navigation. Please try again."
   },
   "label": {
+    "accrual": "Accrual",
     "adjustments_net_income": "Adjustments to Net Income",
     "assets": "Assets",
     "balance_sheet": "Balance Sheet",
+    "cash": "Cash",
     "cash_beginning_of_period": "Cash at Beginning of Period",
     "cash_end_of_period": "Cash at End of Period",
     "cash_flow_statement": "Cash Flow Statement",
@@ -39,9 +41,11 @@
     "profit_loss_detail_report": "Profit and Loss Detail Report",
     "report_period": "Report period",
     "report_type": "Report type",
+    "reporting_basis": "Reporting basis",
     "reports": "Reports",
     "reports_navigation": "Reports navigation",
     "select_report": "Select report",
+    "switch_report": "Switch report",
     "total_display_name": "Total of {{displayName}}"
   }
 }
