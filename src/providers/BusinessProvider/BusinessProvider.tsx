@@ -79,16 +79,33 @@ export const BusinessProvider = ({
     eventCallbacksRef.current = eventCallbacks
   }, [eventCallbacks])
 
-  // Create stable callback wrappers that always call the latest version
+  // Create stable callback wrappers that always call the latest version.
+  // Consumer handlers are third-party code, so each invocation is isolated:
+  // a throwing handler must never break the host UI action that triggered it.
   const stableEventCallbacks = useMemo(() => ({
     onEvent: (event: LayerEvent) => {
-      eventCallbacksRef.current?.onEvent?.(event)
+      try {
+        eventCallbacksRef.current?.onEvent?.(event)
+      }
+      catch (error) {
+        console.error('Layer eventCallbacks.onEvent handler failed', error)
+      }
     },
     onTransactionCategorized: () => {
-      eventCallbacksRef.current?.onTransactionCategorized?.()
+      try {
+        eventCallbacksRef.current?.onTransactionCategorized?.()
+      }
+      catch (error) {
+        console.error('Layer eventCallbacks.onTransactionCategorized handler failed', error)
+      }
     },
     onTransactionsFetched: () => {
-      eventCallbacksRef.current?.onTransactionsFetched?.()
+      try {
+        eventCallbacksRef.current?.onTransactionsFetched?.()
+      }
+      catch (error) {
+        console.error('Layer eventCallbacks.onTransactionsFetched handler failed', error)
+      }
     },
   }), [])
 
