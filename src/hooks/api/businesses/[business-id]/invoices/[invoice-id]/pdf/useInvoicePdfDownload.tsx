@@ -77,15 +77,15 @@ export function useInvoicePdfDownload({
       },
     )()
       .then(Schema.decodeUnknownPromise(InvoicePdfReturnSchema))
-      .then(({ data }) => data),
+      .then(async ({ data }) => {
+        if (onSuccess) {
+          await onSuccess(data)
+        }
+        return data
+      }),
     {
       revalidate: false,
       throwOnError: false,
-      onSuccess: (data) => {
-        if (onSuccess) {
-          void onSuccess(data)
-        }
-      },
       onError,
     },
   )
