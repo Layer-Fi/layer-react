@@ -3,8 +3,10 @@ import { Menu as MenuIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
+import { useInvoicePdfDownload } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/pdf/useInvoicePdfDownload'
 import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
 import { useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { Span } from '@ui/Typography/Text'
@@ -12,35 +14,55 @@ import { InvoiceRefundModal } from '@components/Invoices/modals/InvoiceRefundMod
 import { InvoiceResetModal } from '@components/Invoices/modals/InvoiceResetModal'
 import { InvoiceVoidModal } from '@components/Invoices/modals/InvoiceVoidModal'
 import { InvoiceWriteoffModal } from '@components/Invoices/modals/InvoiceWriteoffModal'
+import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 enum InvoiceDetailHeaderMenuActions {
   Edit = 'Edit',
+  DownloadPdf = 'DownloadPdf',
   Void = 'Void',
   Refund = 'Refund',
   Writeoff = 'Writeoff',
   Reset = 'Reset',
 }
 
-type InvoiceActionModalType = Exclude<InvoiceDetailHeaderMenuActions, InvoiceDetailHeaderMenuActions.Edit>
+type InvoiceActionModalType = Exclude<
+  InvoiceDetailHeaderMenuActions,
+  InvoiceDetailHeaderMenuActions.Edit | InvoiceDetailHeaderMenuActions.DownloadPdf
+>
 
 const availableActions: Record<InvoiceStatus, InvoiceDetailHeaderMenuActions[]> = {
   [InvoiceStatus.Sent]: [
     InvoiceDetailHeaderMenuActions.Edit,
+    InvoiceDetailHeaderMenuActions.DownloadPdf,
     InvoiceDetailHeaderMenuActions.Void,
     InvoiceDetailHeaderMenuActions.Writeoff,
   ],
   [InvoiceStatus.PartiallyPaid]: [
+    InvoiceDetailHeaderMenuActions.DownloadPdf,
     InvoiceDetailHeaderMenuActions.Writeoff,
     InvoiceDetailHeaderMenuActions.Reset,
   ],
   [InvoiceStatus.Paid]: [
+    InvoiceDetailHeaderMenuActions.DownloadPdf,
     InvoiceDetailHeaderMenuActions.Refund,
     InvoiceDetailHeaderMenuActions.Reset,
   ],
-  [InvoiceStatus.Voided]: [InvoiceDetailHeaderMenuActions.Reset],
-  [InvoiceStatus.PartiallyWrittenOff]: [InvoiceDetailHeaderMenuActions.Reset],
-  [InvoiceStatus.WrittenOff]: [InvoiceDetailHeaderMenuActions.Reset],
-  [InvoiceStatus.Refunded]: [InvoiceDetailHeaderMenuActions.Reset],
+  [InvoiceStatus.Voided]: [
+    InvoiceDetailHeaderMenuActions.DownloadPdf,
+    InvoiceDetailHeaderMenuActions.Reset,
+  ],
+  [InvoiceStatus.PartiallyWrittenOff]: [
+    InvoiceDetailHeaderMenuActions.DownloadPdf,
+    InvoiceDetailHeaderMenuActions.Reset,
+  ],
+  [InvoiceStatus.WrittenOff]: [
+    InvoiceDetailHeaderMenuActions.DownloadPdf,
+    InvoiceDetailHeaderMenuActions.Reset,
+  ],
+  [InvoiceStatus.Refunded]: [
+    InvoiceDetailHeaderMenuActions.DownloadPdf,
+    InvoiceDetailHeaderMenuActions.Reset,
+  ],
 }
 
 const getInvoiceActions = (invoice: Invoice): InvoiceDetailHeaderMenuActions[] => {
@@ -54,7 +76,9 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
   const { t } = useTranslation()
   const viewState = useInvoiceDetail()
   const { toViewInvoice } = useInvoiceNavigation()
+  const { addToast } = useLayerContext()
   const [openModal, setOpenModal] = useState<InvoiceActionModalType>()
+  const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
 
   const onSuccessUpdateInvoice = useCallback((updatedInvoice: Invoice) => {
     toViewInvoice(updatedInvoice)
@@ -78,6 +102,24 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
       </Button>
     )
   }, [])
+
+  const invoiceId = viewState.mode === UpsertInvoiceMode.Update ? viewState.invoice.id : ''
+  const { trigger: downloadInvoicePdf, isMutating: isDownloadingInvoicePdf } = useInvoicePdfDownload({
+    invoiceId,
+    onSuccess: ({ presignedUrl, fileName }) => {
+      triggerInvisibleDownload({
+        url: presignedUrl,
+        filename: fileName,
+      })
+      addToast({ content: t('invoices:label.download_successful', 'Download successful'), type: 'success' })
+    },
+    onError: () => addToast({ content: t('invoices:error.download_failed', 'Download failed'), type: 'error' }),
+  })
+
+  const onDownloadInvoicePdf = () => {
+    addToast({ content: t('invoices:label.download_started', 'Download started') })
+    void downloadInvoicePdf()
+  }
 
   if (viewState.mode === UpsertInvoiceMode.Create) return null
 
@@ -119,8 +161,18 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
               <Span size='sm'>{t('invoices:action.reset_to_sent', 'Reset to sent')}</Span>
             </MenuItem>
           )}
+          {invoiceActions.includes(InvoiceDetailHeaderMenuActions.DownloadPdf) && (
+            <MenuItem
+              key={InvoiceDetailHeaderMenuActions.DownloadPdf}
+              isDisabled={isDownloadingInvoicePdf}
+              onClick={onDownloadInvoicePdf}
+            >
+              <Span size='sm'>{t('invoices:action.download_pdf', 'Download PDF')}</Span>
+            </MenuItem>
+          )}
         </MenuList>
       </DropdownMenu>
+      <InvisibleDownload ref={invisibleDownloadRef} />
       <InvoiceRefundModal
         isOpen={openModal === InvoiceDetailHeaderMenuActions.Refund}
         onOpenChange={onOpenChangeByMode(InvoiceDetailHeaderMenuActions.Refund)}

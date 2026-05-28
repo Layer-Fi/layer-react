@@ -2,6 +2,7 @@
   "action": {
     "add_line_item": "Ajouter une ligne",
     "create_invoice": "Créer une facture",
+    "download_pdf": "",
     "mark_paid": "Marquer comme payée",
     "mark_void": "Marquer comme annulée",
     "record_invoice_payment": "Enregistrer le paiement de la facture",
@@ -21,6 +22,7 @@
   },
   "error": {
     "couldnt_load_invoices": "Nous n’avons pas réussi à récupérer vos factures",
+    "download_failed": "",
     "load_invoices": "Une erreur s’est produite lors du chargement de vos factures. Veuillez vérifier votre connexion et réessayer.",
     "load_payment_methods": "Nous n’avons pas pu charger les modes de paiement",
     "refund_invoice": "Une erreur s’est produite lors de l’émission d’un remboursement pour cette facture. Veuillez vérifier votre connexion et réessayer dans quelques secondes.",
@@ -38,6 +40,8 @@
     "custom": "Personnalisé",
     "custom_payment_instructions": "Instructions de paiement personnalisées",
     "discount": "Rabais",
+    "download_started": "",
+    "download_successful": "",
     "due_date": "Date d’échéance",
     "editing_invoice": "Modification de la facture",
     "editing_invoice_number": "Modification de la facture #{{invoiceNumber}}",
@@ -47,6 +51,7 @@
     "invoice_number_component": "<label>Facture</label> <value>#{{invoiceNumber}}</value>",
     "invoice_number_label": "Numéro de facture",
     "invoice_paid_successfully": "Facture payée avec succès",
+    "invoice_saved": "",
     "invoice_saved_and_sent_successfully": "Facture enregistrée et envoyée avec succès",
     "invoices": "Factures",
     "net_10": "Net 10",

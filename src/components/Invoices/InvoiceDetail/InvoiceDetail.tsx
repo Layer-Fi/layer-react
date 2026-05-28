@@ -24,12 +24,19 @@ export const InvoiceDetail = () => {
   const [isPaymentDrawerOpen, setIsPaymentDrawerOpen] = useState(false)
   const [isDiscardChangesModalOpen, setIsDiscardChangesModalOpen] = useState(false)
   const { toInvoiceTable, toPreviewInvoice, toEditInvoice, toViewInvoice } = useInvoiceNavigation()
-  const { addToast } = useLayerContext()
+  const { addToast, accountingConfiguration } = useLayerContext()
+  const enablePaymentMethodsOnFinalize = !!accountingConfiguration?.enableStripeOnboarding
   const invoiceFormRef = useRef<{ submit: () => Promise<void> }>(null)
 
   const onUpsertInvoiceSuccess = useCallback((invoice: Invoice) => {
+    if (!enablePaymentMethodsOnFinalize) {
+      addToast({
+        content: t('invoices:label.invoice_saved', 'Invoice saved'),
+        type: 'success',
+      })
+    }
     toPreviewInvoice(invoice)
-  }, [toPreviewInvoice])
+  }, [addToast, enablePaymentMethodsOnFinalize, t, toPreviewInvoice])
 
   const onSubmitInvoiceForm = useCallback(() => invoiceFormRef.current?.submit(), [])
   const [formState, setFormState] = useState<InvoiceFormState>({
@@ -42,7 +49,10 @@ export const InvoiceDetail = () => {
   }, [])
 
   const onFinalizeInvoiceSuccess = useCallback((invoice: Invoice) => {
-    addToast({ content: t('invoices:label.invoice_saved_and_sent_successfully', 'Invoice saved and sent successfully'), type: 'success' })
+    addToast({
+      content: t('invoices:label.invoice_saved_and_sent_successfully', 'Invoice saved and sent successfully'),
+      type: 'success',
+    })
     toViewInvoice(invoice)
   }, [addToast, t, toViewInvoice])
 
@@ -85,9 +95,7 @@ export const InvoiceDetail = () => {
           />
         )}
         {showInvoicePreview && (
-          <InvoiceFinalizeStep
-            onSuccess={onFinalizeInvoiceSuccess}
-          />
+          <InvoiceFinalizeStep onSuccess={onFinalizeInvoiceSuccess} />
         )}
       </BaseDetailView>
       <DiscardInvoiceChangesModal
