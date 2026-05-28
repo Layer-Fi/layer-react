@@ -33,7 +33,7 @@ function buildKey({
   businessId: string
   invoiceId: string
 }) {
-  if (accessToken && apiUrl) {
+  if (accessToken && apiUrl && invoiceId) {
     return {
       accessToken,
       apiUrl,

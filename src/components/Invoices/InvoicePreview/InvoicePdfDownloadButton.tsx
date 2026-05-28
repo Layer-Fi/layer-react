@@ -1,7 +1,8 @@
+import { Download, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useInvoicePdfDownload } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/pdf/useInvoicePdfDownload'
-import { DownloadButton } from '@components/Button/DownloadButton'
+import { Button } from '@ui/Button/Button'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 type InvoicePdfDownloadButtonProps = {
@@ -11,7 +12,7 @@ type InvoicePdfDownloadButtonProps = {
 export const InvoicePdfDownloadButton = ({ invoiceId }: InvoicePdfDownloadButtonProps) => {
   const { t } = useTranslation()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
-  const { trigger, isMutating, error } = useInvoicePdfDownload({
+  const { trigger, isMutating, isError } = useInvoicePdfDownload({
     invoiceId,
     onSuccess: ({ presignedUrl, fileName }) => triggerInvisibleDownload({
       url: presignedUrl,
@@ -19,14 +20,16 @@ export const InvoicePdfDownloadButton = ({ invoiceId }: InvoicePdfDownloadButton
     }),
   })
 
+  const buttonText = isError
+    ? t('common:action.retry_label', 'Retry')
+    : t('invoices:action.download_pdf', 'Download PDF')
+
   return (
     <>
-      <DownloadButton
-        onClick={() => { void trigger() }}
-        isDownloading={isMutating}
-        requestFailed={Boolean(error)}
-        text={t('invoices:action.download_pdf', 'Download PDF')}
-      />
+      <Button isPending={isMutating} isDisabled={isMutating} onPress={() => { void trigger() }}>
+        {buttonText}
+        {isError ? <RefreshCcw size={14} /> : <Download size={14} />}
+      </Button>
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>
   )

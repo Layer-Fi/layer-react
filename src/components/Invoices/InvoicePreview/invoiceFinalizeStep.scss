@@ -41,4 +41,8 @@
     border-top: 1px solid var(--border-color);
     border-right: none;
   }
+
+  .Layer__InvoiceFinalizeStep__PreviewPanel--previewOnly {
+    border-top: none;
+  }
 }
