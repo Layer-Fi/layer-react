@@ -1,6 +1,6 @@
 {
   "action": {
-    "click_copy_required": "Cliquez pour copier les en-têtes de colonnes requis",
+    "click_copy_required": "Cliquez pour copier les noms de colonnes requis",
     "create_account": "Créer un compte",
     "create_input_value": "Créer \"{{inputValue}}\"",
     "download_template": "Télécharger le modèle",
