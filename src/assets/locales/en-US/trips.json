@@ -1,6 +1,5 @@
 {
   "action": {
-    "add_trip": "Add Trip",
     "delete_trip": "Delete Trip",
     "edit_trip": "Edit Trip",
     "record_trip": "Record Trip",

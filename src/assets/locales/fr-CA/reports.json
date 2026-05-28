@@ -17,9 +17,11 @@
     "load_reports_navigation": "Une erreur s’est produite lors du chargement de cette navigation. Veuillez réessayer."
   },
   "label": {
+    "accrual": "",
     "adjustments_net_income": "Ajustements au bénéfice net",
     "assets": "Actifs",
     "balance_sheet": "Bilan",
+    "cash": "",
     "cash_beginning_of_period": "Trésorerie au début de la période",
     "cash_end_of_period": "Trésorerie à la fin de la période",
     "cash_flow_statement": "État des flux de trésorerie",
@@ -39,9 +41,11 @@
     "profit_loss_detail_report": "Rapport détaillé de l’état des résultats",
     "report_period": "Période du rapport",
     "report_type": "Type de rapport",
+    "reporting_basis": "",
     "reports": "Rapports",
     "reports_navigation": "Navigation des rapports",
     "select_report": "Sélectionner un rapport",
+    "switch_report": "",
     "total_display_name": "Total de {{displayName}}"
   }
 }
