@@ -21,6 +21,7 @@ import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
 import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
 import { View } from '@components/View/View'
 import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
+import { type TagOption } from '@views/ProjectProfitability/ProjectProfitability'
 
 import './bookkeepingOverview.scss'
 
@@ -77,7 +78,9 @@ export interface BookkeepingOverviewProps {
     }
   }
 
+  chartColorsList?: string[]
   onClickReconnectAccounts?: () => void
+  tagFilter?: TagOption
   /**
    * @deprecated Use `stringOverrides.title` instead
    */
@@ -88,8 +91,10 @@ export const BookkeepingOverview = ({
   title,
   showTitle = true,
   onClickReconnectAccounts,
+  chartColorsList,
   stringOverrides,
   slotProps,
+  tagFilter = undefined,
 }: BookkeepingOverviewProps) => {
   const { t } = useTranslation()
   const [width] = useWindowSize()
@@ -97,6 +102,9 @@ export const BookkeepingOverview = ({
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
+  const profitAndLossTagFilter = tagFilter?.tagValues.length
+    ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
+    : undefined
 
   const { upperContentRef, targetElementRef, upperElementInFocus } =
     useKeepInMobileViewport()
@@ -112,7 +120,10 @@ export const BookkeepingOverview = ({
   } = useBookkeepingOnboardingCallBooking()
 
   return (
-    <ProfitAndLoss asContainer={false}>
+    <ProfitAndLoss
+      asContainer={false}
+      tagFilter={profitAndLossTagFilter}
+    >
       <View
         viewClassName='Layer__bookkeeping-overview--view Layer__BookkeepingOverview'
         title={stringOverrides?.title || title || t('overview:label.bookkeeping_overview', 'Bookkeeping overview')}
@@ -178,15 +189,20 @@ export const BookkeepingOverview = ({
             <VStack pb='md' pi='md' fluid>
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
+                chartColorsList={chartColorsList}
                 variants={profitAndLossSummariesVariants}
               />
             </VStack>
-            <ProfitAndLoss.Chart hideLegend />
+            <ProfitAndLoss.Chart
+              hideLegend
+              tagFilter={profitAndLossTagFilter}
+            />
           </Container>
         </div>
         <ProfitAndLossOverviewDetailedCharts
           variant='bookkeeping'
           detailedChartsStringOverrides={stringOverrides?.profitAndLoss?.detailedCharts}
+          chartColorsList={chartColorsList}
         />
       </View>
       {isCalendlyVisible && (
