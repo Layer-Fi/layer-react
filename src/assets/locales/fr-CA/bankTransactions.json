@@ -27,7 +27,7 @@
     "split_transaction": "Répartir la transaction",
     "uncategorize_all": "Tout décatégoriser",
     "upload_receipt": "Téléverser un reçu",
-    "upload_transactions_manually": "Téléverser des transactions manuellement"
+    "upload_transactions_manually": "Importer les transactions manuellement"
   },
   "empty": {
     "no_categorized_transactions": "Vous n’avez aucune transaction catégorisée",
@@ -42,7 +42,7 @@
     "approval_failed_check_connection": "L’approbation a échoué. Vérifiez la connexion et réessayez dans quelques secondes.",
     "categorize_transactions": "Échec de la catégorisation des transactions",
     "confirm_transactions": "Échec de la confirmation des transactions",
-    "couldnt_load_transactions": "Nous n’avons pas pu charger vos transactions",
+    "couldnt_load_transactions": "Nous n’avons pas réussi à récupérer vos transactions",
     "delete": "Échec de la suppression",
     "download_retry": "Le téléchargement a échoué, veuillez réessayer",
     "matching_transactions_not_found": "Nous n’avons pas trouvé de transactions correspondantes",
@@ -60,7 +60,7 @@
     "affected_transactions": "Transactions concernées",
     "all_categories_uppercase": "TOUTES LES CATÉGORIES",
     "all_done": "Tout est terminé",
-    "bank_transactions": "Transactions bancaires",
+    "bank_transactions": "Activité bancaire",
     "categorization_status": "État de la catégorisation",
     "categorize_count_selected_one": "Cette action catégorisera {{displayCount}} transaction sélectionnée dans la catégorie {{category}}.",
     "categorize_count_selected_other": "Cette action catégorisera {{displayCount}} transactions sélectionnées dans la catégorie {{category}}.",
@@ -100,7 +100,7 @@
     "transfer_uppercase": "VIREMENT",
     "uncategorize_count_selected_one": "Cette action décatégorisera {{displayCount}} transaction sélectionnée.",
     "uncategorize_count_selected_other": "Cette action décatégorisera {{displayCount}} transactions sélectionnées.",
-    "upload_transactions_or_wait_for_bank_sync": "Téléversez vos transactions ou attendez qu’elles soient synchronisées depuis votre banque."
+    "upload_transactions_or_wait_for_bank_sync": "Importez vos transactions ou attendez qu’elles soient synchronisées depuis votre banque"
   },
   "prompt": {
     "categorize_selected_transactions": "Catégoriser toutes les transactions sélectionnées?",
