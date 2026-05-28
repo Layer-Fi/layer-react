@@ -6,6 +6,7 @@ import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { useInvoicePdfDownload } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/pdf/useInvoicePdfDownload'
 import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
 import { useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { Span } from '@ui/Typography/Text'
@@ -56,6 +57,7 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
   const { t } = useTranslation()
   const viewState = useInvoiceDetail()
   const { toViewInvoice } = useInvoiceNavigation()
+  const { addToast } = useLayerContext()
   const [openModal, setOpenModal] = useState<InvoiceActionModalType>()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
 
@@ -85,11 +87,20 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
   const invoiceId = viewState.mode === UpsertInvoiceMode.Update ? viewState.invoice.id : ''
   const { trigger: downloadInvoicePdf } = useInvoicePdfDownload({
     invoiceId,
-    onSuccess: ({ presignedUrl, fileName }) => triggerInvisibleDownload({
-      url: presignedUrl,
-      filename: fileName,
-    }),
+    onSuccess: ({ presignedUrl, fileName }) => {
+      triggerInvisibleDownload({
+        url: presignedUrl,
+        filename: fileName,
+      })
+      addToast({ content: t('invoices:label.download_successful', 'Download successful'), type: 'success' })
+    },
+    onError: () => addToast({ content: t('invoices:error.download_failed', 'Download failed'), type: 'error' }),
   })
+
+  const onDownloadInvoicePdf = () => {
+    addToast({ content: t('invoices:label.download_started', 'Download started') })
+    void downloadInvoicePdf()
+  }
 
   if (viewState.mode === UpsertInvoiceMode.Create) return null
 
@@ -131,7 +142,7 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
               <Span size='sm'>{t('invoices:action.reset_to_sent', 'Reset to sent')}</Span>
             </MenuItem>
           )}
-          <MenuItem key='DownloadPdf' onClick={() => { void downloadInvoicePdf() }}>
+          <MenuItem key='DownloadPdf' onClick={onDownloadInvoicePdf}>
             <Span size='sm'>{t('invoices:action.download_pdf', 'Download PDF')}</Span>
           </MenuItem>
         </MenuList>

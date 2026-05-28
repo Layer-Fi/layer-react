@@ -47,11 +47,13 @@ function buildKey({
 type UseInvoicePdfDownloadProps = {
   invoiceId: string
   onSuccess?: (url: S3PresignedUrlSchemaType) => Awaitable<unknown>
+  onError?: () => void
 }
 
 export function useInvoicePdfDownload({
   invoiceId,
   onSuccess,
+  onError,
 }: UseInvoicePdfDownloadProps) {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
@@ -83,6 +85,7 @@ export function useInvoicePdfDownload({
     {
       revalidate: false,
       throwOnError: false,
+      onError,
     },
   )
 
