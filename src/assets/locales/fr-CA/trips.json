@@ -1,6 +1,5 @@
 {
   "action": {
-    "add_trip": "Ajouter un voyage",
     "delete_trip": "Supprimer le voyage",
     "edit_trip": "Modifier le voyage",
     "record_trip": "Ajouter un voyage",
