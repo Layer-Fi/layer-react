@@ -20,7 +20,7 @@
     "invoices_filtered": "Nous n’avons trouvé aucune facture avec les filtres actuels. Essayez de les modifier ou de les effacer pour voir plus de résultats."
   },
   "error": {
-    "couldnt_load_invoices": "Nous n’avons pas pu charger vos factures",
+    "couldnt_load_invoices": "Nous n’avons pas réussi à récupérer vos factures",
     "load_invoices": "Une erreur s’est produite lors du chargement de vos factures. Veuillez vérifier votre connexion et réessayer.",
     "load_payment_methods": "Nous n’avons pas pu charger les modes de paiement",
     "refund_invoice": "Une erreur s’est produite lors de l’émission d’un remboursement pour cette facture. Veuillez vérifier votre connexion et réessayer dans quelques secondes.",
