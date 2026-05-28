@@ -12,7 +12,7 @@ export enum TripPurposeFilterValue {
 }
 
 const TRIP_PURPOSE_CONFIG = [
-  { ...translationKey('common:label.value', 'All'), value: TripPurposeFilterValue.All },
+  { ...translationKey('common:label.all', 'All'), value: TripPurposeFilterValue.All },
   { ...translationKey('common:label.business', 'Business'), value: TripPurposeFilterValue.Business },
   { ...translationKey('common:label.personal', 'Personal'), value: TripPurposeFilterValue.Personal },
 ]
