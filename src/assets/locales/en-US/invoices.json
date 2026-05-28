@@ -2,6 +2,7 @@
   "action": {
     "add_line_item": "Add line item",
     "create_invoice": "Create Invoice",
+    "download_pdf": "Download PDF",
     "mark_paid": "Mark as paid",
     "mark_void": "Mark as void",
     "record_invoice_payment": "Record invoice payment",
@@ -47,6 +48,7 @@
     "invoice_number_component": "<label>Invoice</label> <value>#{{invoiceNumber}}</value>",
     "invoice_number_label": "Invoice number",
     "invoice_paid_successfully": "Invoice paid successfully",
+    "invoice_saved": "Invoice saved",
     "invoice_saved_and_sent_successfully": "Invoice saved and sent successfully",
     "invoices": "Invoices",
     "net_10": "Net 10",

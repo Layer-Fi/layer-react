@@ -6,6 +6,7 @@ import { useInvoicePaymentMethods } from '@hooks/api/businesses/[business-id]/in
 import {
   useInvoicePreviewRoute,
 } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import {
@@ -21,13 +22,26 @@ type InvoiceFinalizeStepProps = {
   onSuccess: (invoice: Invoice) => void
 }
 
-export const InvoiceFinalizeStep = ({
-  onSuccess,
-}: InvoiceFinalizeStepProps) => {
+export const InvoiceFinalizeStep = ({ onSuccess }: InvoiceFinalizeStepProps) => {
   const { t } = useTranslation()
+  const { accountingConfiguration } = useLayerContext()
   const { invoice } = useInvoicePreviewRoute()
-  const { data, isLoading, isError } = useInvoicePaymentMethods({ invoiceId: invoice.id })
+  const showPaymentMethods = !!accountingConfiguration?.enableStripeOnboarding
+  const { data, isLoading, isError } = useInvoicePaymentMethods({
+    invoiceId: invoice.id,
+    isEnabled: showPaymentMethods,
+  })
   const paymentMethodsData = data?.data
+
+  if (!showPaymentMethods) {
+    return (
+      <HStack className='Layer__InvoiceFinalizeStep Layer__InvoiceFinalizeStep--previewOnly'>
+        <VStack className='Layer__InvoiceFinalizeStep__PreviewPanel Layer__InvoiceFinalizeStep__PreviewPanel--previewOnly' fluid>
+          <InvoicePreview />
+        </VStack>
+      </HStack>
+    )
+  }
 
   return (
     <HStack className='Layer__InvoiceFinalizeStep'>

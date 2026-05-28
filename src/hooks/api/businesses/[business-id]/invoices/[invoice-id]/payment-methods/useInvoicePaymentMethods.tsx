@@ -42,19 +42,25 @@ const getInvoicePaymentMethods = get<
 
 interface UseInvoicePaymentMethodsProps {
   invoiceId: string
+  isEnabled?: boolean
 }
 
-export function useInvoicePaymentMethods({ invoiceId }: UseInvoicePaymentMethodsProps) {
+export function useInvoicePaymentMethods({
+  invoiceId,
+  isEnabled = true,
+}: UseInvoicePaymentMethodsProps) {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
 
   const response = useSWR(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-      invoiceId,
-    })),
+    () => isEnabled
+      ? withLocale(buildKey({
+        ...data,
+        businessId,
+        invoiceId,
+      }))
+      : null,
     ({ accessToken, apiUrl, businessId, invoiceId }) => getInvoicePaymentMethods(
       apiUrl,
       accessToken,

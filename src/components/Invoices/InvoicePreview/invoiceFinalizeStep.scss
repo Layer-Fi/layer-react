@@ -15,6 +15,14 @@
   border-right: 1px solid var(--border-color);
 }
 
+.Layer__InvoiceFinalizeStep--previewOnly {
+  grid-template-columns: 1fr;
+}
+
+.Layer__InvoiceFinalizeStep__PreviewPanel--previewOnly {
+  border-right: none;
+}
+
 .Layer__InvoiceFinalizeStep__PaymentMethodsPanelError {
   padding: var(--spacing-md);
 }

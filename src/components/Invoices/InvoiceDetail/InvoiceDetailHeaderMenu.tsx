@@ -3,6 +3,7 @@ import { Menu as MenuIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
+import { useInvoicePdfDownload } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/pdf/useInvoicePdfDownload'
 import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
 import { useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
@@ -12,6 +13,7 @@ import { InvoiceRefundModal } from '@components/Invoices/modals/InvoiceRefundMod
 import { InvoiceResetModal } from '@components/Invoices/modals/InvoiceResetModal'
 import { InvoiceVoidModal } from '@components/Invoices/modals/InvoiceVoidModal'
 import { InvoiceWriteoffModal } from '@components/Invoices/modals/InvoiceWriteoffModal'
+import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 enum InvoiceDetailHeaderMenuActions {
   Edit = 'Edit',
@@ -55,6 +57,7 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
   const viewState = useInvoiceDetail()
   const { toViewInvoice } = useInvoiceNavigation()
   const [openModal, setOpenModal] = useState<InvoiceActionModalType>()
+  const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
 
   const onSuccessUpdateInvoice = useCallback((updatedInvoice: Invoice) => {
     toViewInvoice(updatedInvoice)
@@ -78,6 +81,15 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
       </Button>
     )
   }, [])
+
+  const invoiceId = viewState.mode === UpsertInvoiceMode.Update ? viewState.invoice.id : ''
+  const { trigger: downloadInvoicePdf } = useInvoicePdfDownload({
+    invoiceId,
+    onSuccess: ({ presignedUrl, fileName }) => triggerInvisibleDownload({
+      url: presignedUrl,
+      filename: fileName,
+    }),
+  })
 
   if (viewState.mode === UpsertInvoiceMode.Create) return null
 
@@ -119,8 +131,12 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
               <Span size='sm'>{t('invoices:action.reset_to_sent', 'Reset to sent')}</Span>
             </MenuItem>
           )}
+          <MenuItem key='DownloadPdf' onClick={() => { void downloadInvoicePdf() }}>
+            <Span size='sm'>{t('invoices:action.download_pdf', 'Download PDF')}</Span>
+          </MenuItem>
         </MenuList>
       </DropdownMenu>
+      <InvisibleDownload ref={invisibleDownloadRef} />
       <InvoiceRefundModal
         isOpen={openModal === InvoiceDetailHeaderMenuActions.Refund}
         onOpenChange={onOpenChangeByMode(InvoiceDetailHeaderMenuActions.Refund)}

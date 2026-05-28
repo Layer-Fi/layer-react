@@ -1,6 +1,6 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import type { TFunction } from 'i18next'
-import { ArrowRight, HandCoins } from 'lucide-react'
+import { ArrowRight, HandCoins, Save } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { Awaitable } from '@internal-types/utility/promises'
@@ -8,11 +8,13 @@ import { InvoiceStatus } from '@schemas/invoices/invoice'
 import { translationKey } from '@utils/i18n/translationKey'
 import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
 import { type InvoiceDetailRouteState, InvoiceDetailStep, useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { InvoiceDetailHeaderMenu } from '@components/Invoices/InvoiceDetail/InvoiceDetailHeaderMenu'
 import type { InvoiceFormState } from '@components/Invoices/InvoiceForm/formUtils'
+import { InvoicePdfDownloadButton } from '@components/Invoices/InvoicePreview/InvoicePdfDownloadButton'
 
 import './invoiceDetailHeader.scss'
 
@@ -34,8 +36,8 @@ const getHeaderMode = (viewState: InvoiceDetailRouteState): HeaderMode => {
 
 const HEADING_I18N: Record<HeaderMode, { withNumber: ReturnType<typeof translationKey>, noNumber: ReturnType<typeof translationKey> }> = {
   [HeaderMode.Preview]: {
-    withNumber: translationKey('invoices:label.previewing_invoice_number', 'Previewing Invoice #{{invoiceNumber}}'),
-    noNumber: translationKey('invoices:label.previewing_invoice', 'Previewing Invoice'),
+    withNumber: translationKey('invoices:label.invoice_number', 'Invoice #{{invoiceNumber}}'),
+    noNumber: translationKey('invoices:action.view_invoice', 'View Invoice'),
   },
   [HeaderMode.View]: {
     withNumber: translationKey('invoices:label.invoice_number', 'Invoice #{{invoiceNumber}}'),
@@ -66,25 +68,34 @@ export const InvoiceDetailHeader = ({
   openInvoicePaymentDrawer,
 }: InvoiceDetailHeaderProps) => {
   const { t } = useTranslation()
+  const { accountingConfiguration } = useLayerContext()
   const viewState = useInvoiceDetail()
   const { toEditInvoice } = useInvoiceNavigation()
+  const enablePaymentMethodsOnFinalize = !!accountingConfiguration?.enableStripeOnboarding
 
-  const onPressNext = useCallback(() => {
+  const onPressSubmit = useCallback(() => {
     void onSubmitInvoiceForm()
   }, [onSubmitInvoiceForm])
 
-  const previewButton = useMemo(() => (
-    <Button isDisabled={formState.isSubmitting} onPress={onPressNext}>
-      {t('common:label.next', 'Next')}
-      <ArrowRight size={14} />
-    </Button>
-  ), [t, formState.isSubmitting, onPressNext])
+  const formStepButton = enablePaymentMethodsOnFinalize
+    ? (
+      <Button isDisabled={formState.isSubmitting} onPress={onPressSubmit}>
+        {t('common:label.next', 'Next')}
+        <ArrowRight size={14} />
+      </Button>
+    )
+    : (
+      <Button isDisabled={formState.isSubmitting} onPress={onPressSubmit}>
+        {t('common:action.save_label', 'Save')}
+        <Save size={14} />
+      </Button>
+    )
 
   if (viewState.mode === UpsertInvoiceMode.Create) {
     return (
       <HStack justify='space-between' align='center' fluid pie='md'>
         <Heading>{t('invoices:action.create_invoice', 'Create Invoice')}</Heading>
-        {previewButton}
+        {formStepButton}
       </HStack>
     )
   }
@@ -98,7 +109,10 @@ export const InvoiceDetailHeader = ({
   return (
     <HStack justify='space-between' align='center' fluid pie='md'>
       <Heading className='Layer__InvoiceDetail__Heading' ellipsis>{headingContent}</Heading>
-      {headerMode === HeaderMode.Edit && previewButton}
+      {headerMode === HeaderMode.Edit && formStepButton}
+      {headerMode === HeaderMode.Preview && (
+        <InvoicePdfDownloadButton invoiceId={viewState.invoice.id} />
+      )}
       {headerMode === HeaderMode.View && (
         <HStack gap='xs'>
           {canMarkAsPaid && (
