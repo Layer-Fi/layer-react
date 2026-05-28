@@ -55,7 +55,7 @@ export type InvoiceStatusOption = {
 }
 
 const INVOICE_STATUS_CONFIG = [
-  { value: InvoiceStatusFilter.All, ...translationKey('common:label.value', 'All') },
+  { value: InvoiceStatusFilter.All, ...translationKey('common:label.all', 'All') },
   { value: InvoiceStatusFilter.Unpaid, ...translationKey('invoices:state.unpaid', 'Unpaid') },
   { value: InvoiceStatusFilter.Overdue, ...translationKey('invoices:state.overdue', 'Overdue') },
   { value: InvoiceStatusFilter.Sent, ...translationKey('invoices:state.sent', 'Sent') },
@@ -301,7 +301,7 @@ export const InvoiceTable = () => {
   return (
     <Container name='InvoiceTable'>
       <DataTableHeader
-        name='Invoices'
+        name={t('invoices:label.invoices', 'Invoices')}
         slots={{
           HeaderActions: CreateInvoiceButton,
           HeaderFilters: StatusFilter,
