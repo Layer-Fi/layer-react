@@ -191,11 +191,16 @@ export const ResponsiveCategorizationRulesView = () => {
   const selectedRuleCounterpartyLabel = (selectedRule && getCategorizationRuleCounterpartyLabel(selectedRule))
     ?? t('bankTransactions:label.selected_counterparty', 'this counterparty')
 
+  const responsiveSlots = useMemo(
+    () => ({ Desktop: DesktopView, Mobile: MobileView }),
+    [DesktopView, MobileView],
+  )
+
   return (
     <>
       <ResponsiveComponent
         resolveVariant={resolveVariant}
-        slots={{ Desktop: DesktopView, Mobile: MobileView }}
+        slots={responsiveSlots}
       />
       <BaseConfirmationModal
         isOpen={showDeletionConfirmationModal}

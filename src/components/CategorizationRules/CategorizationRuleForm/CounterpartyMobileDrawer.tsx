@@ -64,6 +64,10 @@ export const CounterpartyMobileDrawer = ({
     />
   ), [label])
 
+  const drawerSlots = useMemo(() => ({ Header }), [Header])
+
+  const openDrawer = useCallback(() => setIsOpen(true), [])
+
   const triggerLabel = selectedOption?.label
     ?? placeholder
     ?? t('common:action.select_label', 'Select…')
@@ -77,7 +81,7 @@ export const CounterpartyMobileDrawer = ({
       )}
       <Button
         id={inputId}
-        onPress={() => setIsOpen(true)}
+        onPress={openDrawer}
         variant='outlined'
         isDisabled={isReadOnly}
         fullWidth
@@ -96,7 +100,7 @@ export const CounterpartyMobileDrawer = ({
         fixedHeight
         isDismissable
         aria-label={label}
-        slots={{ Header }}
+        slots={drawerSlots}
       >
         {({ close }) => (
           <VStack pi='sm' pb='xs' gap='md'>

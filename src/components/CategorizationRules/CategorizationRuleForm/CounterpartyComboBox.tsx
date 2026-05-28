@@ -1,4 +1,4 @@
-import { useId, useMemo } from 'react'
+import { useCallback, useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
@@ -89,7 +89,17 @@ export const CounterpartyComboBox = ({
     return options.find(option => option.value === value.id) ?? null
   }, [options, value])
 
-  const additionalAriaProps = !showLabel ? { 'aria-label': label } : {}
+  const additionalAriaProps = useMemo(
+    () => (showLabel ? {} : { 'aria-label': label }),
+    [showLabel, label],
+  )
+
+  const handleSelectedValueChange = useCallback(
+    (option: CounterpartyComboBoxOption | null) => {
+      onValueChange(option?.original ?? null)
+    },
+    [onValueChange],
+  )
 
   return (
     <VStack gap='3xs'>
@@ -101,7 +111,7 @@ export const CounterpartyComboBox = ({
       <ComboBox
         options={options}
         selectedValue={selectedOption}
-        onSelectedValueChange={option => onValueChange(option?.original ?? null)}
+        onSelectedValueChange={handleSelectedValueChange}
         onInputValueChange={handleInputChange}
         filterOption={null}
         inputId={inputId}

@@ -55,6 +55,8 @@ export const CategoryMobileDrawer = ({
     [onValueChange],
   )
 
+  const openDrawer = useCallback(() => setIsOpen(true), [])
+
   const triggerLabel = selectedOption?.label
     ?? placeholder
     ?? t('common:action.select_label', 'Select…')
@@ -66,7 +68,7 @@ export const CategoryMobileDrawer = ({
       )}
       <Button
         id={inputId}
-        onPress={() => setIsOpen(true)}
+        onPress={openDrawer}
         variant='outlined'
         isDisabled={isReadOnly}
         fullWidth

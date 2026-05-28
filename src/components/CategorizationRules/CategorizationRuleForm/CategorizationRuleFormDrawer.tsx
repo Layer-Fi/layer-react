@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
@@ -47,6 +47,8 @@ export const CategorizationRuleFormDrawer = ({
     <CategorizationRuleFormDrawerHeader title={title} close={close} />
   ), [title])
 
+  const slots = useMemo(() => ({ Header }), [Header])
+
   if (!isOpen) return null
 
   return (
@@ -56,7 +58,7 @@ export const CategorizationRuleFormDrawer = ({
       aria-label={title}
       variant={isMobile ? 'mobile-drawer' : 'drawer'}
       flexBlock={isMobile}
-      slots={{ Header }}
+      slots={slots}
     >
       <VStack pbe='lg' pi='md'>
         <CategorizationRuleForm formState={formState} onSuccess={onSuccess} />
