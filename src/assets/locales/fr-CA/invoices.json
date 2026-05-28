@@ -2,6 +2,7 @@
   "action": {
     "add_line_item": "Ajouter une ligne",
     "create_invoice": "Créer une facture",
+    "download_failed": "",
     "download_pdf": "",
     "mark_paid": "Marquer comme payée",
     "mark_void": "Marquer comme annulée",
@@ -40,7 +41,6 @@
     "custom": "Personnalisé",
     "custom_payment_instructions": "Instructions de paiement personnalisées",
     "discount": "Rabais",
-    "download_failed": "",
     "download_started": "",
     "download_successful": "",
     "due_date": "Date d’échéance",
