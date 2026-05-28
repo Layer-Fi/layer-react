@@ -2,7 +2,6 @@ import { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react'
 import type React from 'react'
 
 import type { Invoice } from '@schemas/invoices/invoice'
-import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
 import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
 import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -29,9 +28,8 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
   const { mode } = viewState
 
   const { onSuccess, onChangeFormState } = props
-  const { businessId } = useLayerContext()
-  const { data: accountingConfig } = useAccountingConfiguration({ businessId })
-  const enableCustomerManagement = accountingConfig?.enableCustomerManagement ?? false
+  const { accountingConfiguration } = useLayerContext()
+  const enableCustomerManagement = accountingConfiguration?.enableCustomerManagement === true
 
   const { form, formState, totals, submitError } = useInvoiceForm(
     { onSuccess, ...viewState },

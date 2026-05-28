@@ -17,13 +17,19 @@ function buildKey({
   access_token: accessToken,
   apiUrl,
   businessId,
+  isEnabled,
   invoiceId,
 }: {
   access_token?: string
   apiUrl?: string
   businessId: string
+  isEnabled: boolean
   invoiceId: string | null
 }) {
+  if (!isEnabled) {
+    return
+  }
+
   if (accessToken && apiUrl && invoiceId) {
     return {
       accessToken,
@@ -42,9 +48,13 @@ const getInvoicePaymentMethods = get<
 
 interface UseInvoicePaymentMethodsProps {
   invoiceId: string
+  isEnabled?: boolean
 }
 
-export function useInvoicePaymentMethods({ invoiceId }: UseInvoicePaymentMethodsProps) {
+export function useInvoicePaymentMethods({
+  invoiceId,
+  isEnabled = true,
+}: UseInvoicePaymentMethodsProps) {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
@@ -53,6 +63,7 @@ export function useInvoicePaymentMethods({ invoiceId }: UseInvoicePaymentMethods
     () => withLocale(buildKey({
       ...data,
       businessId,
+      isEnabled,
       invoiceId,
     })),
     ({ accessToken, apiUrl, businessId, invoiceId }) => getInvoicePaymentMethods(
