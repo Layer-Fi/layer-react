@@ -40,6 +40,7 @@
     "custom": "Personnalisé",
     "custom_payment_instructions": "Instructions de paiement personnalisées",
     "discount": "Rabais",
+    "download_failed": "",
     "download_started": "",
     "download_successful": "",
     "due_date": "Date d’échéance",
