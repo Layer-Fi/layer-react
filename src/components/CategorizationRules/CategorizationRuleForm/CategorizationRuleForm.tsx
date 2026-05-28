@@ -44,7 +44,7 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
           const validationErrors = flattenValidationErrors(errorMap)
           if (validationErrors.length > 0 || submitError) {
             return (
-              <HStack className='Layer__CategorizationRuleForm__FormError'>
+              <HStack>
                 <DataState
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}

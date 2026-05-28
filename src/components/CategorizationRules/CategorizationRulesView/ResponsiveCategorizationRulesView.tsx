@@ -20,6 +20,7 @@ import { Heading } from '@ui/Typography/Heading'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { CategorizationRuleFormDrawer } from '@components/CategorizationRules/CategorizationRuleForm/CategorizationRuleFormDrawer'
+import { type CategorizationRuleFormState } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 import { CategorizationRulesMobileList } from '@components/CategorizationRules/CategorizationRulesMobileList/CategorizationRulesMobileList'
 import { CategorizationRulesTable } from '@components/CategorizationRules/CategorizationRulesTable/CategorizationRulesTable'
 import { getCategorizationRuleCounterpartyLabel } from '@components/CategorizationRules/utils'
@@ -78,10 +79,6 @@ const CategorizationRulesHeader = ({ onGoBack, onCreateRule }: CategorizationRul
     </HStack>
   )
 }
-
-type CategorizationRuleFormState =
-  | { mode: 'create' }
-  | { mode: 'edit', rule: CategorizationRule }
 
 const resolveVariant = ({ width }: { width: number }) => width < BREAKPOINTS.TABLET ? 'Mobile' : 'Desktop'
 
