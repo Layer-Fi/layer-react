@@ -18,32 +18,51 @@ import InvisibleDownload, { useInvisibleDownload } from '@components/utility/Inv
 
 enum InvoiceDetailHeaderMenuActions {
   Edit = 'Edit',
+  DownloadPdf = 'DownloadPdf',
   Void = 'Void',
   Refund = 'Refund',
   Writeoff = 'Writeoff',
   Reset = 'Reset',
 }
 
-type InvoiceActionModalType = Exclude<InvoiceDetailHeaderMenuActions, InvoiceDetailHeaderMenuActions.Edit>
+type InvoiceActionModalType = Exclude<
+  InvoiceDetailHeaderMenuActions,
+  InvoiceDetailHeaderMenuActions.Edit | InvoiceDetailHeaderMenuActions.DownloadPdf
+>
 
 const availableActions: Record<InvoiceStatus, InvoiceDetailHeaderMenuActions[]> = {
   [InvoiceStatus.Sent]: [
     InvoiceDetailHeaderMenuActions.Edit,
+    InvoiceDetailHeaderMenuActions.DownloadPdf,
     InvoiceDetailHeaderMenuActions.Void,
     InvoiceDetailHeaderMenuActions.Writeoff,
   ],
   [InvoiceStatus.PartiallyPaid]: [
+    InvoiceDetailHeaderMenuActions.DownloadPdf,
     InvoiceDetailHeaderMenuActions.Writeoff,
     InvoiceDetailHeaderMenuActions.Reset,
   ],
   [InvoiceStatus.Paid]: [
+    InvoiceDetailHeaderMenuActions.DownloadPdf,
     InvoiceDetailHeaderMenuActions.Refund,
     InvoiceDetailHeaderMenuActions.Reset,
   ],
-  [InvoiceStatus.Voided]: [InvoiceDetailHeaderMenuActions.Reset],
-  [InvoiceStatus.PartiallyWrittenOff]: [InvoiceDetailHeaderMenuActions.Reset],
-  [InvoiceStatus.WrittenOff]: [InvoiceDetailHeaderMenuActions.Reset],
-  [InvoiceStatus.Refunded]: [InvoiceDetailHeaderMenuActions.Reset],
+  [InvoiceStatus.Voided]: [
+    InvoiceDetailHeaderMenuActions.DownloadPdf,
+    InvoiceDetailHeaderMenuActions.Reset,
+  ],
+  [InvoiceStatus.PartiallyWrittenOff]: [
+    InvoiceDetailHeaderMenuActions.DownloadPdf,
+    InvoiceDetailHeaderMenuActions.Reset,
+  ],
+  [InvoiceStatus.WrittenOff]: [
+    InvoiceDetailHeaderMenuActions.DownloadPdf,
+    InvoiceDetailHeaderMenuActions.Reset,
+  ],
+  [InvoiceStatus.Refunded]: [
+    InvoiceDetailHeaderMenuActions.DownloadPdf,
+    InvoiceDetailHeaderMenuActions.Reset,
+  ],
 }
 
 const getInvoiceActions = (invoice: Invoice): InvoiceDetailHeaderMenuActions[] => {
@@ -85,7 +104,7 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
   }, [])
 
   const invoiceId = viewState.mode === UpsertInvoiceMode.Update ? viewState.invoice.id : ''
-  const { trigger: downloadInvoicePdf } = useInvoicePdfDownload({
+  const { trigger: downloadInvoicePdf, isMutating: isDownloadingInvoicePdf } = useInvoicePdfDownload({
     invoiceId,
     onSuccess: ({ presignedUrl, fileName }) => {
       triggerInvisibleDownload({
@@ -142,9 +161,15 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
               <Span size='sm'>{t('invoices:action.reset_to_sent', 'Reset to sent')}</Span>
             </MenuItem>
           )}
-          <MenuItem key='DownloadPdf' onClick={onDownloadInvoicePdf}>
-            <Span size='sm'>{t('invoices:action.download_pdf', 'Download PDF')}</Span>
-          </MenuItem>
+          {invoiceActions.includes(InvoiceDetailHeaderMenuActions.DownloadPdf) && (
+            <MenuItem
+              key={InvoiceDetailHeaderMenuActions.DownloadPdf}
+              isDisabled={isDownloadingInvoicePdf}
+              onClick={onDownloadInvoicePdf}
+            >
+              <Span size='sm'>{t('invoices:action.download_pdf', 'Download PDF')}</Span>
+            </MenuItem>
+          )}
         </MenuList>
       </DropdownMenu>
       <InvisibleDownload ref={invisibleDownloadRef} />

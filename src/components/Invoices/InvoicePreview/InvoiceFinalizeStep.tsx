@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import { AlertTriangle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -33,51 +34,43 @@ export const InvoiceFinalizeStep = ({ onSuccess }: InvoiceFinalizeStepProps) => 
   })
   const paymentMethodsData = data?.data
 
-  if (!showPaymentMethods) {
-    return (
-      <HStack className='Layer__InvoiceFinalizeStep Layer__InvoiceFinalizeStep--previewOnly'>
-        <VStack className='Layer__InvoiceFinalizeStep__PreviewPanel Layer__InvoiceFinalizeStep__PreviewPanel--previewOnly' fluid>
-          <InvoicePreview />
-        </VStack>
-      </HStack>
-    )
-  }
-
   return (
-    <HStack className='Layer__InvoiceFinalizeStep'>
-      <VStack className='Layer__InvoiceFinalizeStep__PreviewPanel' fluid>
+    <HStack className={classNames('Layer__InvoiceFinalizeStep', !showPaymentMethods && 'Layer__InvoiceFinalizeStep--previewOnly')}>
+      <VStack className={classNames('Layer__InvoiceFinalizeStep__PreviewPanel', !showPaymentMethods && 'Layer__InvoiceFinalizeStep__PreviewPanel--previewOnly')} fluid>
         <InvoicePreview />
       </VStack>
-      <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanel' fluid>
-        <ConditionalBlock
-          data={paymentMethodsData}
-          isLoading={isLoading}
-          isError={isError}
-          Loading={(
-            <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanelLoading' justify='center' align='center' fluid>
-              <Loader />
-            </VStack>
-          )}
-          Error={(
-            <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanelError'>
-              <DataState
-                icon={<AlertTriangle size={16} />}
-                status={DataStateStatus.failed}
-                title={t('invoices:error.load_payment_methods', 'We couldn\'t load payment methods')}
-                description={t('common:error.please_try_again', 'Please try again.')}
+      {showPaymentMethods && (
+        <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanel' fluid>
+          <ConditionalBlock
+            data={paymentMethodsData}
+            isLoading={isLoading}
+            isError={isError}
+            Loading={(
+              <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanelLoading' justify='center' align='center' fluid>
+                <Loader />
+              </VStack>
+            )}
+            Error={(
+              <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanelError'>
+                <DataState
+                  icon={<AlertTriangle size={16} />}
+                  status={DataStateStatus.failed}
+                  title={t('invoices:error.load_payment_methods', 'We couldn\'t load payment methods')}
+                  description={t('common:error.please_try_again', 'Please try again.')}
+                />
+              </VStack>
+            )}
+          >
+            {({ data: invoicePaymentMethods }) => (
+              <InvoiceFinalizeForm
+                invoice={invoice}
+                initialPaymentMethods={invoicePaymentMethods.paymentMethods}
+                onSuccess={onSuccess}
               />
-            </VStack>
-          )}
-        >
-          {({ data: invoicePaymentMethods }) => (
-            <InvoiceFinalizeForm
-              invoice={invoice}
-              initialPaymentMethods={invoicePaymentMethods.paymentMethods}
-              onSuccess={onSuccess}
-            />
-          )}
-        </ConditionalBlock>
-      </VStack>
+            )}
+          </ConditionalBlock>
+        </VStack>
+      )}
     </HStack>
   )
 }

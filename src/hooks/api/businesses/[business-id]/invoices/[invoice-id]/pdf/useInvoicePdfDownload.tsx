@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
@@ -33,7 +34,7 @@ function buildKey({
   businessId: string
   invoiceId: string
 }) {
-  if (accessToken && apiUrl && invoiceId) {
+  if (accessToken && apiUrl) {
     return {
       accessToken,
       apiUrl,
@@ -76,18 +77,34 @@ export function useInvoicePdfDownload({
       },
     )()
       .then(Schema.decodeUnknownPromise(InvoicePdfReturnSchema))
-      .then(async ({ data }) => {
-        if (onSuccess) {
-          await onSuccess(data)
-        }
-        return data
-      }),
+      .then(({ data }) => data),
     {
       revalidate: false,
       throwOnError: false,
+      onSuccess: (data) => {
+        if (onSuccess) {
+          void onSuccess(data)
+        }
+      },
       onError,
     },
   )
 
-  return new SWRMutationResult(rawMutationResponse)
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
+  const originalTrigger = mutationResponse.trigger
+
+  const stableProxiedTrigger = useCallback(
+    async (...triggerParameters: Parameters<typeof originalTrigger>) => originalTrigger(...triggerParameters),
+    [originalTrigger],
+  )
+
+  return new Proxy(mutationResponse, {
+    get(target, prop) {
+      if (prop === 'trigger') {
+        return stableProxiedTrigger
+      }
+
+      return Reflect.get(target, prop) as unknown
+    },
+  })
 }

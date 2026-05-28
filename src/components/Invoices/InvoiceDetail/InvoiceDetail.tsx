@@ -28,19 +28,15 @@ export const InvoiceDetail = () => {
   const enablePaymentMethodsOnFinalize = !!accountingConfiguration?.enableStripeOnboarding
   const invoiceFormRef = useRef<{ submit: () => Promise<void> }>(null)
 
-  const showInvoiceSavedToast = useCallback(() => {
-    addToast({
-      content: t('invoices:label.invoice_saved', 'Invoice saved'),
-      type: 'success',
-    })
-  }, [addToast, t])
-
   const onUpsertInvoiceSuccess = useCallback((invoice: Invoice) => {
     if (!enablePaymentMethodsOnFinalize) {
-      showInvoiceSavedToast()
+      addToast({
+        content: t('invoices:label.invoice_saved', 'Invoice saved'),
+        type: 'success',
+      })
     }
     toPreviewInvoice(invoice)
-  }, [enablePaymentMethodsOnFinalize, showInvoiceSavedToast, toPreviewInvoice])
+  }, [addToast, enablePaymentMethodsOnFinalize, t, toPreviewInvoice])
 
   const onSubmitInvoiceForm = useCallback(() => invoiceFormRef.current?.submit(), [])
   const [formState, setFormState] = useState<InvoiceFormState>({

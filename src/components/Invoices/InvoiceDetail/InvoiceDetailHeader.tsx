@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import type { TFunction } from 'i18next'
 import { ArrowRight, HandCoins, Save } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -73,23 +72,26 @@ export const InvoiceDetailHeader = ({
   const { toEditInvoice } = useInvoiceNavigation()
   const enablePaymentMethodsOnFinalize = !!accountingConfiguration?.enableStripeOnboarding
 
-  const onPressSubmit = useCallback(() => {
-    void onSubmitInvoiceForm()
-  }, [onSubmitInvoiceForm])
-
-  const formStepButton = enablePaymentMethodsOnFinalize
+  const buttonContent = enablePaymentMethodsOnFinalize
     ? (
-      <Button isDisabled={formState.isSubmitting} onPress={onPressSubmit}>
-        {t('common:label.next', 'Next')}
-        <ArrowRight size={14} />
-      </Button>
+      {
+        label: t('common:label.next', 'Next'),
+        icon: <ArrowRight size={14} />,
+      }
     )
     : (
-      <Button isDisabled={formState.isSubmitting} onPress={onPressSubmit}>
-        {t('common:action.save_label', 'Save')}
-        <Save size={14} />
-      </Button>
+      {
+        label: t('common:action.save_label', 'Save'),
+        icon: <Save size={14} />,
+      }
     )
+
+  const formStepButton = (
+    <Button isDisabled={formState.isSubmitting} onPress={() => { void onSubmitInvoiceForm() }}>
+      {buttonContent.label}
+      {buttonContent.icon}
+    </Button>
+  )
 
   if (viewState.mode === UpsertInvoiceMode.Create) {
     return (
