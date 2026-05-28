@@ -34,7 +34,7 @@
     "trips": "Voyages"
   },
   "prompt": {
-    "delete_trip": "Supprimer ce trajet?"
+    "delete_trip": "Supprimer ce voyage?"
   },
   "validation": {
     "distance_greater_than_zero": "La distance doit être supérieure à zéro.",
