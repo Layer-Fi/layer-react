@@ -1,14 +1,15 @@
 import { useMemo } from 'react'
 import type { Row } from '@tanstack/react-table'
-import { Trash2 } from 'lucide-react'
+import { Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import type { NestedCategorization } from '@schemas/categorization'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
 import { ResolvedCategoryName } from '@components/CategorizationRules/ResolvedCategoryName'
-import { getCategorizationRuleCounterpartyLabel, getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
+import { getCategorizationRuleAmountLabel, getCategorizationRuleCounterpartyLabel, getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
 import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { PaginatedTable, type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
@@ -18,6 +19,8 @@ enum CategorizationRuleColumns {
   Category = 'Category',
   Counterparty = 'Counterparty',
   Direction = 'Direction',
+  Amount = 'Amount',
+  Edit = 'Edit',
   Delete = 'Delete',
 }
 
@@ -29,6 +32,7 @@ export interface CategorizationRulesTableProps {
   isError: boolean
   paginationProps: TablePaginationProps
   options: NestedCategorization[]
+  onEditRule: (rule: CategorizationRule) => void
   onDeleteRule: (rule: CategorizationRule) => void
   slots: {
     EmptyState: React.FC
@@ -42,10 +46,12 @@ export const CategorizationRulesTable = ({
   isError,
   paginationProps,
   options,
+  onEditRule,
   onDeleteRule,
   slots,
 }: CategorizationRulesTableProps) => {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const columnConfig: NestedColumnConfig<CategorizationRule> = useMemo(() => [
     {
       id: CategorizationRuleColumns.Counterparty,
@@ -62,6 +68,13 @@ export const CategorizationRulesTable = ({
       ),
     },
     {
+      id: CategorizationRuleColumns.Amount,
+      header: t('common:label.amount', 'Amount'),
+      cell: (row: Row<CategorizationRule>) => (
+        <Span ellipsis>{getCategorizationRuleAmountLabel(row.original, formatCurrencyFromCents, t)}</Span>
+      ),
+    },
+    {
       id: CategorizationRuleColumns.Category,
       header: t('common:label.category', 'Category'),
       cell: (row: Row<CategorizationRule>) => {
@@ -73,20 +86,34 @@ export const CategorizationRulesTable = ({
       isRowHeader: true,
     },
     {
+      id: CategorizationRuleColumns.Edit,
+      cell: (row: Row<CategorizationRule>) => (
+        <Button
+          inset
+          icon
+          onPress={() => onEditRule(row.original)}
+          aria-label={t('categorizationRules:action.edit_rule', 'Edit Rule')}
+          variant='ghost'
+        >
+          <Pencil size={16} />
+        </Button>
+      ),
+    },
+    {
       id: CategorizationRuleColumns.Delete,
       cell: (row: Row<CategorizationRule>) => (
         <Button
           inset
           icon
           onPress={() => onDeleteRule(row.original)}
-          aria-label={t('categorizationRules:action.delete_rule', 'Delete rule')}
+          aria-label={t('categorizationRules:action.delete_rule', 'Delete Rule')}
           variant='ghost'
         >
           <Trash2 size={16} />
         </Button>
       ),
     },
-  ], [t, options, onDeleteRule])
+  ], [t, formatCurrencyFromCents, options, onEditRule, onDeleteRule])
 
   return (
     <PaginatedTable
