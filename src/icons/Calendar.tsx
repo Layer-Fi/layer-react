@@ -9,7 +9,7 @@ const Calendar = (props: SVGProps<SVGSVGElement>) => (
     {...props}
   >
     <path
-      stroke='currentColor'
+      stroke='var(--color-base-1000)'
       strokeLinecap='round'
       strokeLinejoin='round'
       strokeWidth={2}

@@ -11,7 +11,7 @@ const BackArrow = ({ size = 18, ...props }: IconSvgProps) => (
   >
     <path
       d='M7.375 8.75L4.625 6L7.375 3.25'
-      stroke='currentColor'
+      stroke='var(--color-base-1000)'
       strokeLinecap='round'
       strokeLinejoin='round'
     />
