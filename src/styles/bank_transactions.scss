@@ -540,7 +540,7 @@
       background:
         linear-gradient(
           90deg,
-          color-mix(in srgb, var(--color-base-0) 0%, transparent) 0%,
+          rgb(from var(--color-base-0) r g b / 0%) 0%,
           var(--color-base-0) 120%
         );
       content: '';
