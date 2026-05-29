@@ -3,7 +3,7 @@
 .Layer__component-container .Layer__profit-and-loss {
   display: flex;
   align-items: stretch;
-  background-color: white;
+  background-color: var(--color-base-0);
 }
 
 .Layer__profit-and-loss__title {
@@ -192,7 +192,7 @@
   padding: var(--spacing-lg) var(--spacing-4xs);
   border-radius: var(--border-radius-sm);
   box-shadow: 0 0 0 1px var(--base-transparent-4);
-  background: #fff;
+  background: var(--color-base-0);
   transform: translate(-50%, -60px);
 
   .Layer__icon-box {

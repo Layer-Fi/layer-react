@@ -91,7 +91,7 @@
   overflow: hidden;
   padding: 1rem;
   border-radius: var(--border-radius-base);
-  background: white;
+  background: var(--color-base-0);
 }
 
 .skeleton-loader::after {
@@ -105,7 +105,7 @@
     linear-gradient(
       90deg,
       transparent,
-      rgb(255 255 255 / 100%),
+      var(--color-scrim-light-solid),
       transparent
     );
   content: '';
@@ -255,7 +255,7 @@
   }
 
   &.--is-syncing {
-    background: hsl(200deg 11% 96%);
+    background: var(--color-linked-account-syncing-bg);
   }
 
   &.--as-widget {
@@ -314,8 +314,8 @@
     background:
       linear-gradient(
         270deg,
-        #f8f8fa 1.52%,
-        rgb(248 248 250 / 0%) 99.75%
+        var(--color-linked-account-overlay) 1.52%,
+        var(--color-linked-account-overlay-transparent) 99.75%
       );
     opacity: 0;
     touch-action: none;
@@ -331,7 +331,7 @@
       border: none;
       box-shadow:
         0 0 8px 0
-        var(--base-transparent-12, rgb(16 24 40 / 12%));
+        var(--base-transparent-12);
       margin: var(--spacing-xs);
       background: var(--color-base-0);
       cursor: pointer;

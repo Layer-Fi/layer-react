@@ -14,7 +14,7 @@ const LinkBroken = ({ size = 24, ...props }: Props) => (
     {...props}
   >
     <path
-      stroke='#000'
+      stroke='currentColor'
       strokeLinecap='round'
       strokeLinejoin='round'
       strokeWidth={2}

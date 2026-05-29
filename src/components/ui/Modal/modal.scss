@@ -4,7 +4,7 @@
   inset: 0;
   display: grid;
 
-  background: rgb(0 0 0 / 50%);
+  background: var(--color-backdrop);
   place-items: center;
 
   &[data-variant='mobile-drawer'],
@@ -87,7 +87,7 @@
   border-radius: var(--border-radius-2xs);
 
   outline: none;
-  background-color: white;
+  background-color: var(--color-base-0);
 
   [slot='content'] {
     flex: 1;
@@ -136,7 +136,7 @@
     padding-block-start: var(--spacing-md);
     padding-inline: var(--spacing-md);
 
-    background-color: white;
+    background-color: var(--color-base-0);
   }
 
   &__Content {
@@ -146,7 +146,7 @@
 
   &__KeyboardSpacer {
     flex-shrink: 0;
-    background-color: white;
+    background-color: var(--color-base-0);
   }
 }
 
@@ -172,10 +172,10 @@
 
 @keyframes overlay-fade {
   from {
-    background: rgb(0 0 0 / 0%);
+    background: var(--color-backdrop-transparent);
   }
 
   to {
-    background: rgb(0 0 0 / 50%);
+    background: var(--color-backdrop);
   }
 }

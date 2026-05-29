@@ -64,6 +64,23 @@
   --base-transparent-12: hsl(var(--color-dark-h) var(--color-dark-s) var(--color-dark-l) / 12%);
   --base-transparent-16: hsl(var(--color-dark-h) var(--color-dark-s) var(--color-dark-l) / 16%);
   --base-transparent-16-light: hsl(var(--color-light-h) var(--color-light-s) var(--color-light-l) / 16%);
+  --color-scrim-light-solid: rgb(255 255 255 / 100%);
+  --color-scrim-light-transparent: rgb(255 255 255 / 0%);
+  --color-scrim-light-50: rgb(255 255 255 / 50%);
+  --color-scrim-light-60: rgb(255 255 255 / 60%);
+  --color-scrim-light-64: rgb(255 255 255 / 64%);
+  --color-backdrop: rgb(0 0 0 / 50%);
+  --color-backdrop-transparent: rgb(0 0 0 / 0%);
+  --color-focus-ring: rgb(26 26 26 / 8%);
+  --color-transparent-ring: rgb(0 0 0 / 0%);
+  --color-active-time-tracker-divider: rgb(255 255 255 / 14%);
+  --shadow-color-bank-transactions-header: rgb(23 51 45 / 16%);
+  --shadow-color-hover-menu: rgb(25 25 25 / 6%);
+  --shadow-color-toggle-option-sm: rgb(0 0 0 / 4%);
+  --shadow-color-toggle-option-md: rgb(0 0 0 / 2%);
+  --shadow-color-toggle-option-lg: rgb(0 0 0 / 1%);
+  --shadow-color-card: rgb(0 0 0 / 10%);
+  --shadow-color-card-subtle: rgb(0 0 0 / 6%);
 
   --color-primary: var(--color-dark);
   --color-accent: var(--color-light);
@@ -87,6 +104,30 @@
   --text-color-primary: var(--color-dark);
   --text-color-secondary: var(--color-base-600);
   --bg-element-focus: var(--color-base-50);
+  --color-scrollbar-track: #f1f1f1;
+  --color-scrollbar-thumb: #e2e2e2;
+  --color-scrollbar-thumb-hover: #999;
+  --color-select-multi-value-remove-hover: #f3b9b9;
+  --color-linked-account-syncing-bg: hsl(200deg 11% 96%);
+  --color-linked-account-overlay: #f8f8fa;
+  --color-linked-account-overlay-transparent: rgb(248 248 250 / 0%);
+  --color-task-status-done: #3b9c63;
+  --color-task-status-pending: #dfa000;
+  --color-tax-overview-income-meter-fill: #6d3cc8;
+  --color-tax-overview-deductions-meter-fill: #1c7e9a;
+  --color-tax-overview-taxable-income-meter-fill: #3b9c63;
+  --color-chart-tooltip-cursor: #f7f8fa;
+  --color-chart-loading-fill: #f8f8fa;
+  --color-chart-primary-series: #8884d8;
+  --color-chart-placeholder-fill: #e6e6e6;
+  --color-chart-grid-stroke: #f0f0f0;
+  --color-chart-empty-series: #eeeef0;
+  --color-profit-and-loss-zero-line: #ebedf0;
+  --color-profit-and-loss-net-profit-line: #000;
+  --color-chart-of-accounts-mark-bg: #fff2cc;
+  --color-active-time-tracker-border: #000;
+  --color-active-time-tracker-bg: #000;
+  --color-tree-navigation-selected-indicator: #000;
 
   /* Extended Customization */
   --font-family: 'InterVariable', 'Inter', sans-serif;

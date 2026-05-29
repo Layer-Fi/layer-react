@@ -70,7 +70,7 @@
   &:active,
   &:focus-visible {
     box-shadow:
-      0 0 0 3px rgb(26 26 26 / 8%),
+      0 0 0 3px var(--color-focus-ring),
       0 0 0 1px var(--color-base-700);
     outline: none;
   }
@@ -100,7 +100,7 @@
   &:active,
   &:focus-visible {
     box-shadow:
-      0 0 0 3px rgb(26 26 26 / 8%),
+      0 0 0 3px var(--color-focus-ring),
       0 0 0 1px var(--color-base-700);
     outline: none;
   }
@@ -152,7 +152,7 @@
 
   & .Layer__select__control--is-focused {
     box-shadow:
-      0 0 0 3px rgb(26 26 26 / 8%),
+      0 0 0 3px var(--color-focus-ring),
       0 0 0 1px var(--color-base-700);
   }
 
@@ -168,7 +168,7 @@
     color: var(--color-base-700);
 
     .Layer__select__multi-value__remove:hover {
-      background: #f3b9b9;
+      background: var(--color-select-multi-value-remove-hover);
       cursor: pointer;
       color: var(--color-danger);
     }
@@ -259,7 +259,7 @@
   .Layer__select__menu-notice {
     font-size: 12px;
     font-family: var(--font-family);
-    color: #999;
+    color: var(--color-scrollbar-thumb-hover);
   }
 
   .Layer__select__option-menu-content {
@@ -332,7 +332,7 @@
   border-width: 0;
   box-shadow:
     0 0 0 1px var(--input-border-color),
-    0 0 0 2px rgb(0 0 0 / 0%);
+    0 0 0 2px var(--color-transparent-ring);
   margin: 1px;
   background-color: var(--color-base-0);
   cursor: pointer;

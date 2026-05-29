@@ -100,7 +100,7 @@ export function ProfitAndLossSummariesMiniChart({
         innerRadius={innerRadius}
         outerRadius={outerRadius}
         paddingAngle={0.4}
-        fill='#8884d8'
+        fill='var(--color-chart-primary-series)'
         width={36}
         height={36}
         animationDuration={250}
@@ -114,7 +114,7 @@ export function ProfitAndLossSummariesMiniChart({
               key={`cell-${index}`}
               className='Layer__DetailedChart__Slice'
               fill={
-                entry.name === 'placeholder' ? '#e6e6e6' : colorConfig.color
+                entry.name === 'placeholder' ? 'var(--color-chart-placeholder-fill)' : colorConfig.color
               }
               opacity={colorConfig?.opacity}
             />

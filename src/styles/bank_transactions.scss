@@ -394,7 +394,7 @@
   width: 130px;
   min-width: 130px;
 
-  box-shadow: -8px 0 20px -2px rgb(255 255 255 / 64%);
+  box-shadow: -8px 0 20px -2px var(--color-scrim-light-64);
   text-align: right;
 
   &[data-show-receipt-upload-column] {
@@ -420,7 +420,7 @@
   width: 0;
   min-width: 0;
   max-width: 0;
-  box-shadow: -8px 0 20px -2px rgb(255 255 255 / 64%);
+  box-shadow: -8px 0 20px -2px var(--color-scrim-light-64);
   text-align: center;
 
   &[data-show-receipt-upload-column] {
@@ -540,8 +540,8 @@
       background:
         linear-gradient(
           90deg,
-          rgb(255 255 255 / 0%) 0%,
-          rgb(255 255 255 / 100%) 120%
+          var(--color-scrim-light-transparent) 0%,
+          var(--color-scrim-light-solid) 120%
         );
       content: '';
     }
@@ -564,7 +564,7 @@
     top: 0;
     border-top-left-radius: var(--border-radius-sm);
     border-top-right-radius: var(--border-radius-sm);
-    box-shadow: 0 -1px 0 0 rgb(23 51 45 / 16%) inset;
+    box-shadow: 0 -1px 0 0 var(--shadow-color-bank-transactions-header) inset;
     background-color: var(--table-bg);
   }
 

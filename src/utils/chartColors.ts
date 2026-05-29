@@ -1,3 +1,4 @@
+// Intentional categorical chart palette; consumers can override chart series tokens separately.
 export const DEFAULT_CHART_COLORS = [
   '#008028',
   '#7417B3',

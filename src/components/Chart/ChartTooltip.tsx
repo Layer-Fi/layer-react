@@ -49,7 +49,7 @@ export const ChartTooltipCursor = ({ width, points, height }: ChartTooltipCursor
   return (
     <ZIndexLayer zIndex={DefaultZIndexes.cursorRectangle}>
       <Rectangle
-        fill='#F7F8FA'
+        fill='var(--color-chart-tooltip-cursor)'
         stroke='none'
         x={points[0].x - width / 2}
         y={points[0].y}

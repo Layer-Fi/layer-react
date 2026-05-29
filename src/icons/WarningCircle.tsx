@@ -37,7 +37,7 @@ const WarningCircle = ({ size = 18, ...props }: IconSvgProps) => (
         <rect
           width='11'
           height='11'
-          fill='white'
+          fill='var(--color-base-0)'
           transform='translate(0.5 0.5)'
         />
       </clipPath>
