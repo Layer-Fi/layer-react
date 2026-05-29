@@ -4,7 +4,7 @@
   inset: 0;
   display: grid;
 
-  background: color-mix(in srgb, var(--color-black) 50%, transparent);
+  background: color-mix(in srgb, var(--color-base-1000) 50%, transparent);
   place-items: center;
 
   &[data-variant='mobile-drawer'],
@@ -172,10 +172,10 @@
 
 @keyframes overlay-fade {
   from {
-    background: color-mix(in srgb, var(--color-black) 0%, transparent);
+    background: color-mix(in srgb, var(--color-base-1000) 0%, transparent);
   }
 
   to {
-    background: color-mix(in srgb, var(--color-black) 50%, transparent);
+    background: color-mix(in srgb, var(--color-base-1000) 50%, transparent);
   }
 }

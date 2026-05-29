@@ -50,10 +50,10 @@
   border-radius: 6px;
   box-shadow:
     0 0 0 1px var(--color-base-300),
-    0 1px 1px 0 color-mix(in srgb, var(--color-black) 4%, transparent),
-    0 2px 3px 0 color-mix(in srgb, var(--color-black) 4%, transparent),
-    0 3px 4px 0 color-mix(in srgb, var(--color-black) 2%, transparent),
-    0 4px 5px 0 color-mix(in srgb, var(--color-black) 1%, transparent);
+    0 1px 1px 0 color-mix(in srgb, var(--color-base-1000) 4%, transparent),
+    0 2px 3px 0 color-mix(in srgb, var(--color-base-1000) 4%, transparent),
+    0 3px 4px 0 color-mix(in srgb, var(--color-base-1000) 2%, transparent),
+    0 4px 5px 0 color-mix(in srgb, var(--color-base-1000) 1%, transparent);
   background: var(--color-white);
   transition-property: translate, width;
   transition-duration: 200ms;
