@@ -332,7 +332,7 @@
   border-width: 0;
   box-shadow:
     0 0 0 1px var(--input-border-color),
-    0 0 0 2px color-mix(in srgb, var(--color-base-1000) 0%, transparent);
+    0 0 0 2px rgb(0 0 0 / 0%);
   margin: 1px;
   background-color: var(--color-base-0);
   cursor: pointer;

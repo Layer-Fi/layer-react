@@ -12,7 +12,7 @@
 .Layer__ActiveTimeTracker__ErrorStrip {
   box-sizing: border-box;
   flex-shrink: 0;
-  border-block-end: 1px solid color-mix(in srgb, var(--color-base-0) 14%, transparent);
+  border-block-end: 1px solid rgb(255 255 255 / 14%);
   background-color: color-mix(in srgb, var(--color-info-error), transparent);
 }
 

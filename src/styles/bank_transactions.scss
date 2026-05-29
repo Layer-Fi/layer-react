@@ -394,7 +394,7 @@
   width: 130px;
   min-width: 130px;
 
-  box-shadow: -8px 0 20px -2px color-mix(in srgb, var(--color-base-0) 64%, transparent);
+  box-shadow: -8px 0 20px -2px rgb(255 255 255 / 64%);
   text-align: right;
 
   &[data-show-receipt-upload-column] {
@@ -420,7 +420,7 @@
   width: 0;
   min-width: 0;
   max-width: 0;
-  box-shadow: -8px 0 20px -2px color-mix(in srgb, var(--color-base-0) 64%, transparent);
+  box-shadow: -8px 0 20px -2px rgb(255 255 255 / 64%);
   text-align: center;
 
   &[data-show-receipt-upload-column] {
@@ -540,8 +540,8 @@
       background:
         linear-gradient(
           90deg,
-          rgb(from var(--color-base-0) r g b / 0%) 0%,
-          var(--color-base-0) 120%
+          rgb(255 255 255 / 0%) 0%,
+          rgb(255 255 255 / 100%) 120%
         );
       content: '';
     }
