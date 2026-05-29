@@ -19,7 +19,7 @@ export type LayerEvent =
   | { name: 'tasks.year_selected', properties: { year: number } }
   | { name: 'tasks.task_clicked', properties: { taskId: string } }
   | { name: 'bookkeeping_overview.book_call_clicked' }
-  | { name: 'profit_and_loss.chart_hovered', properties: { index: number } }
+  | { name: 'profit_and_loss.month_selected', properties: { year: number, month: number } }
   | { name: 'transactions.searched', properties: { query: string } }
   | { name: 'transactions.download_clicked', properties?: { format?: string } }
   | { name: 'transactions.page_changed', properties: { page: number } }
