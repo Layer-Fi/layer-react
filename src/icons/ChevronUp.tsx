@@ -10,7 +10,7 @@ const ChevronUp = (props: SVGProps<SVGSVGElement>) => (
     {...props}
   >
     <path
-      stroke='#000'
+      stroke='var(--color-base-1000)'
       strokeLinecap='round'
       strokeLinejoin='round'
       strokeWidth={2}

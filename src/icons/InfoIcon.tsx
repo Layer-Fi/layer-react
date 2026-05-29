@@ -31,7 +31,7 @@ const InfoIcon = ({ size = 16, ...props }: IconSvgProps) => (
     </g>
     <defs>
       <clipPath id='clip0_5615_32375'>
-        <rect width='16' height='16' fill='white' />
+        <rect width='16' height='16' fill='var(--color-base-0)' />
       </clipPath>
     </defs>
   </svg>

@@ -46,7 +46,7 @@ const CoffeeIcon = ({ size = 11, ...props }: IconSvgProps) => (
         <rect
           width='11'
           height='11'
-          fill='white'
+          fill='var(--color-base-0)'
           transform='matrix(-1 0 0 1 11.5 0.5)'
         />
       </clipPath>

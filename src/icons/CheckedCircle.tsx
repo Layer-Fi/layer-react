@@ -8,7 +8,7 @@ type Props = SVGProps<SVGSVGElement> & {
 
 const CheckedCircle = ({
   fillColor = 'none',
-  strokeColor = '#000',
+  strokeColor = 'var(--color-base-1000)',
   size = 24,
   ...props
 }: Props) => (
