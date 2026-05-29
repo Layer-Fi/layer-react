@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
@@ -9,15 +9,12 @@ import { VStack } from '@ui/Stack/Stack'
 import { CategorizationRuleForm } from '@components/CategorizationRules/CategorizationRuleForm/CategorizationRuleForm'
 import { type CategorizationRuleFormState } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 
-type CategorizationRuleFormDrawerSharedProps = {
+export type CategorizationRuleFormDrawerProps = {
+  isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
   onSuccess: (rule: CategorizationRule) => void
+  formState: CategorizationRuleFormState | null
 }
-
-export type CategorizationRuleFormDrawerProps = CategorizationRuleFormDrawerSharedProps & (
-  | { isOpen: false, formState: null }
-  | { isOpen: true, formState: CategorizationRuleFormState }
-)
 
 const CategorizationRuleFormDrawerHeader = ({ title, close }: { title: string, close: () => void }) => (
   <ModalTitleWithClose
@@ -39,7 +36,13 @@ export const CategorizationRuleFormDrawer = ({
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
 
-  const title = formState?.mode === 'edit'
+  const lastFormStateRef = useRef(formState)
+  if (formState) {
+    lastFormStateRef.current = formState
+  }
+  const activeFormState = formState ?? lastFormStateRef.current
+
+  const title = activeFormState?.mode === 'edit'
     ? t('categorizationRules:action.edit_rule', 'Edit Rule')
     : t('categorizationRules:action.new_rule', 'New Rule')
 
@@ -48,8 +51,6 @@ export const CategorizationRuleFormDrawer = ({
   ), [title])
 
   const slots = useMemo(() => ({ Header }), [Header])
-
-  if (!isOpen) return null
 
   return (
     <Drawer
@@ -60,9 +61,11 @@ export const CategorizationRuleFormDrawer = ({
       flexBlock={isMobile}
       slots={slots}
     >
-      <VStack pbe='lg' pi='md'>
-        <CategorizationRuleForm formState={formState} onSuccess={onSuccess} />
-      </VStack>
+      {activeFormState && (
+        <VStack pbe='lg' pi='md'>
+          <CategorizationRuleForm formState={activeFormState} onSuccess={onSuccess} />
+        </VStack>
+      )}
     </Drawer>
   )
 }

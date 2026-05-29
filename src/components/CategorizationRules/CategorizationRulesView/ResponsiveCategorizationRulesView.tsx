@@ -212,14 +212,12 @@ export const ResponsiveCategorizationRulesView = () => {
         cancelLabel={t('common:action.cancel_label', 'Cancel')}
         useDrawer={isMobile}
       />
-      {formState && (
-        <CategorizationRuleFormDrawer
-          isOpen
-          formState={formState}
-          onOpenChange={onFormDrawerOpenChange}
-          onSuccess={onFormSuccess}
-        />
-      )}
+      <CategorizationRuleFormDrawer
+        isOpen={!!formState}
+        formState={formState}
+        onOpenChange={onFormDrawerOpenChange}
+        onSuccess={onFormSuccess}
+      />
     </>
   )
 }

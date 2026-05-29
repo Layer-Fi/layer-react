@@ -1,24 +1,19 @@
-import { useCallback, useId, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useCallback, useMemo } from 'react'
 
 import { getLeafCategories } from '@internal-types/categories'
 import { CategoryAsOption } from '@internal-types/categorizationOption'
 import { type Classification, ClassificationEquivalence } from '@schemas/categorization'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
-import ChevronDown from '@icons/ChevronDown'
-import { Button } from '@ui/Button/Button'
-import { HStack, VStack } from '@ui/Stack/Stack'
-import { Label, Span } from '@ui/Typography/Text'
-import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
+import { VStack } from '@ui/Stack/Stack'
+import { Label } from '@ui/Typography/Text'
+import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 
 type CategoryMobileDrawerProps = {
   label: string
   value: Classification | null
   onValueChange: (value: Classification | null) => void
   showLabel?: boolean
-  isReadOnly?: boolean
-  placeholder?: string
 }
 
 export const CategoryMobileDrawer = ({
@@ -26,12 +21,7 @@ export const CategoryMobileDrawer = ({
   value,
   onValueChange,
   showLabel,
-  isReadOnly,
-  placeholder,
 }: CategoryMobileDrawerProps) => {
-  const { t } = useTranslation()
-  const inputId = useId()
-  const [isOpen, setIsOpen] = useState(false)
   const { data: categories } = useCategories()
 
   const flatOptions = useMemo(() => {
@@ -46,46 +36,19 @@ export const CategoryMobileDrawer = ({
 
   const handleSelectedValueChange = useCallback(
     (option: BankTransactionNonSuggestedMatchOption | null) => {
-      if (option instanceof CategoryAsOption) {
-        onValueChange(option.classification)
-        return
-      }
-      onValueChange(null)
+      onValueChange(option instanceof CategoryAsOption ? option.classification : null)
     },
     [onValueChange],
   )
 
-  const openDrawer = useCallback(() => setIsOpen(true), [])
-
-  const triggerLabel = selectedOption?.label
-    ?? placeholder
-    ?? t('common:action.select_label', 'Select…')
-
   return (
     <VStack gap='3xs'>
-      {showLabel && (
-        <Label size='sm' htmlFor={inputId}>{label}</Label>
-      )}
-      <Button
-        id={inputId}
-        onPress={openDrawer}
-        variant='outlined'
-        isDisabled={isReadOnly}
-        fullWidth
-        flex
-        aria-label={label}
-      >
-        <HStack fluid justify='space-between' align='center'>
-          <Span size='sm' ellipsis>{triggerLabel}</Span>
-          {!isReadOnly && <ChevronDown size={16} />}
-        </HStack>
-      </Button>
-      <CategorySelectDrawer
-        isOpen={isOpen}
-        onOpenChange={setIsOpen}
+      {showLabel && <Label size='sm'>{label}</Label>}
+      <CategorySelectDrawerWithTrigger
         selectedValue={selectedOption}
         onSelectedValueChange={handleSelectedValueChange}
         showTooltips={false}
+        slotProps={{ TriggerSpan: { size: 'sm' } }}
       />
     </VStack>
   )

@@ -8,8 +8,6 @@ type CategorySelectProps = {
   value: Classification | null
   onValueChange: (value: Classification | null) => void
   showLabel?: boolean
-  isReadOnly?: boolean
-  placeholder?: string
 }
 
 export const CategorySelect = (props: CategorySelectProps) => {
@@ -24,7 +22,6 @@ export const CategorySelect = (props: CategorySelectProps) => {
       onValueChange={props.onValueChange}
       mode={CategoriesListMode.All}
       showLabel={props.showLabel}
-      isReadOnly={props.isReadOnly}
     />
   )
 }
