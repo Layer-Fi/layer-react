@@ -67,7 +67,7 @@
     "categorized": "Catégorisé",
     "count_transactions_will_be_skipped_one": "{{displayCount}} transaction sera ignorée en raison de l’absence de catégorie.",
     "count_transactions_will_be_skipped_other": "{{displayCount}} transactions seront ignorées en raison de l’absence de catégorie.",
-    "data_on_platform_categorize": "Une fois vos données sur la plateforme, catégorisez-les dans l’onglet Activité bancaire",
+    "data_on_platform_categorize": "Une fois vos données sur la plateforme, catégorisez-les dans l’onglet Transactions bancaires",
     "find_match": "Trouver une correspondance",
     "generating_suggestions": "Génération des suggestions...",
     "generating_suggestions_transaction": "Génération de suggestions pour la transaction...",
