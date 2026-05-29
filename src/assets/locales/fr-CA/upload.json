@@ -21,7 +21,7 @@
     "count_transactions_have_one": "{{displayCount}} transaction a été téléversée vers votre compte.",
     "count_transactions_have_other": "{{displayCount}} transactions ont été téléversées vers votre compte.",
     "csv_validation_preview": "Aperçu de la validation du fichier CSV",
-    "drag_drop_file_browse": "Glissez-déposez un fichier ou <browse>parcourez</browse>.",
+    "drag_drop_file_browse": "Glissez et déposez un fichier, ou <browse>parcourez vos fichiers</browse>.",
     "im_done_uploading": "J’ai terminé de téléverser les transactions",
     "need_help_download_example_csv": "Besoin d’aide? Téléchargez un fichier CSV d’exemple",
     "review_transactions": "Vérifier les transactions",
