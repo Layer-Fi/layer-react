@@ -25,7 +25,7 @@
   top: 0;
   border-top-left-radius: var(--border-radius-sm);
   border-top-right-radius: var(--border-radius-sm);
-  background: var(--color-scrim-light-50);
+  background: color-mix(in srgb, var(--color-base-0) 50%, transparent);
   backdrop-filter: blur(6px);
 }
 

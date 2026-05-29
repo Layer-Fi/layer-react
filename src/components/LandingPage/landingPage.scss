@@ -61,7 +61,9 @@ body .calendly-overlay .calendly-popup {
   gap: var(--spacing-xs);
   border-radius: 16px;
   border: 1px solid var(--color-base-100);
-  box-shadow: 0 5px 10px 0 var(--shadow-color-card), 0 1px 2px 0 var(--shadow-color-card-subtle);
+  box-shadow:
+    0 5px 10px 0 color-mix(in srgb, var(--color-black) 10%, transparent),
+    0 1px 2px 0 color-mix(in srgb, var(--color-black) 6%, transparent);
   margin: 0;
   background: var(--color-base-0);
   overflow-wrap: break-word;

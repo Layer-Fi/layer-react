@@ -44,9 +44,9 @@
       padding: var(--spacing-3xs);
       border-radius: var(--spacing-xs);
       box-shadow:
-        0 0 0 1px var(--shadow-color-hover-menu),
-        0 4px 12px 0 var(--base-transparent-1),
-        0 2px 4px 0 var(--shadow-color-hover-menu);
+        0 0 0 1px rgb(25 25 25 / 6%),
+        0 4px 12px 0 var(--base-transparent-1, rgb(16 24 40 / 1%)),
+        0 2px 4px 0 rgb(25 25 25 / 6%);
       margin: 0;
       background: var(--color-base-0);
       list-style: none;

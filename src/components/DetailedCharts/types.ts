@@ -16,7 +16,7 @@ export interface TypeColorMapping {
 }
 
 export const DEFAULT_TYPE_COLOR_MAPPING: TypeColorMapping = {
-  color: 'var(--color-chart-empty-series)',
+  color: '#EEEEF0',
   opacity: 1,
 }
 

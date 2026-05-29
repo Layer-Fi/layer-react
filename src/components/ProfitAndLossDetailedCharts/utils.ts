@@ -41,7 +41,7 @@ export const mapTypesToColors = <T extends PnlChartLineItem>(
 
     if (isLineItemUncategorized(lineItem)) {
       mapping[key] = {
-        color: 'var(--color-chart-empty-series)',
+        color: '#EEEEF0',
         opacity: 1,
       }
       return

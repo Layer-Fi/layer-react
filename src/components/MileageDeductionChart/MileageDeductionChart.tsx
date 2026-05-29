@@ -45,7 +45,7 @@ const CURSOR_WIDTH_MULTIPLE = 2.2
 
 const BAR_RADIUS: [number, number, number, number] = [2, 2, 0, 0]
 const GRID_STROKE_DASHARRAY = '5 5'
-const GRID_STROKE_FALLBACK = 'var(--color-chart-grid-stroke)'
+const GRID_STROKE_FALLBACK = '#f0f0f0'
 const TICK_FONT_SIZE = 12
 
 const SMALL_BREAKPOINT = 480

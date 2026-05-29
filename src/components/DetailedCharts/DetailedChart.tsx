@@ -171,7 +171,7 @@ export const DetailedChart = <T extends SeriesData>({
                   innerRadius='91%'
                   outerRadius='100%'
                   paddingAngle={0}
-                  fill='var(--color-chart-loading-fill)'
+                  fill='#F8F8FA'
                   animationDuration={200}
                   animationEasing='ease-in-out'
                 >
@@ -188,7 +188,7 @@ export const DetailedChart = <T extends SeriesData>({
                   innerRadius='91%'
                   outerRadius='100%'
                   paddingAngle={0.5}
-                  fill='var(--color-chart-primary-series)'
+                  fill='#8884d8'
                   animationDuration={200}
                   animationEasing='ease-in-out'
                 >

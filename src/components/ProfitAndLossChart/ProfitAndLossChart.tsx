@@ -156,7 +156,7 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
           className='Layer__profit-and-loss-chart Layer__ProfitAndLossChart__Chart'
         >
           <ProfitAndLossChartPatternDefs />
-          <ReferenceLine y={0} stroke={getColor(300)?.hex ?? 'var(--color-profit-and-loss-zero-line)'} xAxisId='revenue' zIndex={DefaultZIndexes.bar - 1} />
+          <ReferenceLine y={0} stroke={getColor(300)?.hex ?? '#EBEDF0'} xAxisId='revenue' zIndex={DefaultZIndexes.bar - 1} />
           <ProfitAndLossChartTooltip cursorWidth={cursorWidth} />
           <CartesianGrid
             vertical={false}
@@ -181,7 +181,7 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
             strokeWidth={1}
             type='linear'
             dataKey='netProfit'
-            stroke={getColor(1000)?.hex ?? 'var(--color-profit-and-loss-net-profit-line)'}
+            stroke={getColor(1000)?.hex ?? 'var(--color-black)'}
             name='Net profit'
             xAxisId='revenue'
             animationDuration={200}

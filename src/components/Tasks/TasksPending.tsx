@@ -13,8 +13,8 @@ import { Heading, HeadingSize } from '@components/Typography/Heading'
 import { Text, TextSize } from '@components/Typography/Text'
 
 const TASKS_CHARTS_COLORS = {
-  done: 'var(--color-task-status-done)',
-  pending: 'var(--color-task-status-pending)',
+  done: '#3B9C63',
+  pending: '#DFA000',
 }
 
 export const TasksPending = () => {
