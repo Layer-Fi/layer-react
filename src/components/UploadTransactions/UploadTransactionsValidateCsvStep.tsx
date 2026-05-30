@@ -16,7 +16,7 @@ import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
 import { type PreviewCsv } from '@components/CsvUpload/types'
 import { ValidateCsvTable } from '@components/CsvUpload/ValidateCsvTable'
 import { Separator } from '@components/Separator/Separator'
-import { templateHeaders } from '@components/UploadTransactions/template'
+import { TEMPLATE_HEADERS } from '@components/UploadTransactions/template'
 import { useWizard } from '@components/Wizard/Wizard'
 
 interface UploadTransactionsValidateCsvStepProps {
@@ -41,7 +41,7 @@ const generateDynamicHeaders = (
     headers: {
       ...(hasExternalId && { external_id: 'External ID' }),
       ...(hasReferenceNumber && { reference_number: 'Reference No.' }),
-      ...templateHeaders,
+      ...TEMPLATE_HEADERS,
     },
   }
 }

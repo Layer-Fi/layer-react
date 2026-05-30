@@ -1,18 +1,18 @@
 import { type CustomAccountTransactionRow } from '@internal-types/customAccounts'
 
-export const templateHeaders: { [K in keyof CustomAccountTransactionRow]: string } = {
+export const TEMPLATE_HEADERS: { [K in keyof CustomAccountTransactionRow]: string } = {
   date: 'Date',
   description: 'Description',
   amount: 'Amount',
 }
 
-export const allHeaders: { [K in keyof CustomAccountTransactionRow]: string } = {
+export const ALL_HEADERS: { [K in keyof CustomAccountTransactionRow]: string } = {
   external_id: 'External ID',
   reference_number: 'Reference Number',
-  ...templateHeaders,
+  ...TEMPLATE_HEADERS,
 }
 
-export const templateExampleTransactions: CustomAccountTransactionRow[] = [
+export const TEMPLATE_EXAMPLE_TRANSACTIONS: CustomAccountTransactionRow[] = [
   {
     date: '05/12/2025',
     description: 'Grocery Store Purchase',

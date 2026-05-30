@@ -1,7 +1,7 @@
 import { type ElementType, forwardRef, type Key, type ReactNode, type Ref } from 'react'
 import { AnimatePresence, type HTMLMotionProps, motion } from 'motion/react'
 
-import { variants } from '@ui/AnimatedPresenceElement/variants'
+import { VARIANTS } from '@ui/AnimatedPresenceElement/variants'
 
 type AnimationVariant = 'fade' | 'slideUp' | 'expand'
 type AnimatePresenceMode = 'sync' | 'wait' | 'popLayout'
@@ -31,7 +31,7 @@ function AnimatedPresenceElementInner<T extends ValidHTMLElement = 'div'>(
   }: AnimatedPresenceElementProps<T>,
   ref: Ref<HTMLElementTagNameMap[T]>,
 ) {
-  const config = variants[variant]
+  const config = VARIANTS[variant]
   const MotionComponent = motion[as ?? 'div'] as ElementType
 
   return (
