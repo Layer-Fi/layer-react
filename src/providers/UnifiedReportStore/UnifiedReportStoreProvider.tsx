@@ -125,7 +125,7 @@ export function useBaseUnifiedReport() {
     emitLayerEvent({
       type: LayerEventType.ReportsTabClicked,
       version: 1,
-      payload: { tab: report.key },
+      payload: { reportKey: report.key },
     })
     setBaseReport(report)
   }, [emitLayerEvent, setBaseReport])

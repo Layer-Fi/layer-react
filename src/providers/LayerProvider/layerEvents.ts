@@ -107,12 +107,11 @@ export const TransactionReceiptUploadClickedEventV1 = LayerEventEnvelope(
   LayerEventType.TransactionReceiptUploadClicked, 1,
   { transactionId: Schema.String },
 )
-// `tab` is a free-form report key: the UnifiedReports surface is server-config driven
-// (`ReportConfig.key`), not limited to the static Reports.tsx tab identifiers, so this is a
-// plain string rather than a literal union — a strict union would silently drop real events.
+// `reportKey` is server-defined: the UnifiedReports surface is driven by `ReportConfig.key`,
+// not limited to static Reports.tsx tab identifiers.
 export const ReportsTabClickedEventV1 = LayerEventEnvelope(
   LayerEventType.ReportsTabClicked, 1,
-  { tab: Schema.String },
+  { reportKey: Schema.String },
 )
 export const ReportsPeriodSelectedEventV1 = LayerEventEnvelope(
   LayerEventType.ReportsPeriodSelected, 1,
