@@ -34,8 +34,16 @@ export const LayerEventComponent = {
 
 export type LayerEventComponent = (typeof LayerEventComponent)[keyof typeof LayerEventComponent]
 
+const LayerEventComponentSchema = Schema.Literal(
+  LayerEventComponent.BankTransactions,
+  LayerEventComponent.Tasks,
+  LayerEventComponent.ProfitAndLossChart,
+  LayerEventComponent.BookkeepingOverview,
+  LayerEventComponent.UnifiedReports,
+)
+
 const LayerEventMetadata = Schema.Struct({
-  component: Schema.String,
+  component: LayerEventComponentSchema,
   timestamp: Schema.String,
   packageVersion: Schema.optional(Schema.String),
 })
