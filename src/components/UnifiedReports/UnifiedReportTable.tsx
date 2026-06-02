@@ -46,6 +46,16 @@ export const UnifiedReportTable = () => {
     )
   }, [t])
 
+  const onRowExpandToggle = useCallback(
+    ({ rowKey, expanded }: { rowKey: string, expanded: boolean }) =>
+      emitLayerEvent({
+        type: LayerEventType.ReportsSectionExpanded,
+        version: 1,
+        payload: { sectionKey: rowKey, expanded },
+      }),
+    [emitLayerEvent],
+  )
+
   const UnifiedReportErrorState = useCallback(() => (
     <DataState
       status={DataStateStatus.failed}
@@ -70,12 +80,7 @@ export const UnifiedReportTable = () => {
       }}
       getSubRows={getSubRows}
       getRowId={row => row.rowKey}
-      onRowExpandToggle={({ rowKey, expanded }) =>
-        emitLayerEvent({
-          type: LayerEventType.ReportsSectionExpanded,
-          version: 1,
-          payload: { sectionKey: rowKey, expanded },
-        })}
+      onRowExpandToggle={onRowExpandToggle}
     />
   )
 }

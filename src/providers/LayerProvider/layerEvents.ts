@@ -108,4 +108,9 @@ export type LayerEvent = typeof LayerEventSchema.Type
 
 // Input accepted by the centralized emitter: type + version + payload only.
 // `source` and `metadata` are added by the emitter.
-export type LayerEventInput = Pick<LayerEvent, 'type' | 'version' | 'payload'>
+// Distribute the Pick over the union so the (type, version, payload) discriminated
+// link is preserved — otherwise mismatched payloads would type-check and only fail
+// at runtime validation.
+export type LayerEventInput = LayerEvent extends infer E
+  ? E extends LayerEvent ? Pick<E, 'type' | 'version' | 'payload'> : never
+  : never
