@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { asMutable } from '@utils/asMutable'
 import { useUnifiedReport } from '@hooks/api/businesses/[business-id]/reports/unified/report-name/useUnifiedReport'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
-import { LayerEventType } from '@providers/LayerProvider/layerEvents'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useActiveUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
@@ -13,7 +13,7 @@ import { buildNestedColumnConfig, getSubRows } from '@components/UnifiedReports/
 
 import './unifiedReportTable.scss'
 
-const COMPONENT_NAME = 'UnifiedReports'
+const COMPONENT_NAME = LayerEventComponent.UnifiedReports
 
 export const UnifiedReportTable = () => {
   const { t } = useTranslation()

@@ -7,7 +7,7 @@ import { BookkeepingPeriodStatus, useBookkeepingPeriods } from '@hooks/api/busin
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { LayerEventType } from '@providers/LayerProvider/layerEvents'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { TaskMonthTile } from '@components/Tasks/TaskMonthTile'
 import { type MonthData } from '@components/Tasks/types'
 
@@ -32,7 +32,7 @@ function TasksMonthSelector({ isMobile }: TasksMonthSelectorProps) {
   const { date } = useGlobalDate()
   const { formatDate } = useIntlFormatter()
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
-  const emitLayerEvent = useEmitLayerEvent('Tasks')
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.Tasks)
 
   const { periodsInActiveYear } = useActiveYearBookkeepingPeriods()
 

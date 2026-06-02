@@ -23,6 +23,18 @@ export const LayerEventType = {
 
 export type LayerEventType = (typeof LayerEventType)[keyof typeof LayerEventType]
 
+// Embedded Layer surfaces that emit events. Stamped into `metadata.component`, so these
+// are part of the public contract — add here rather than passing ad-hoc strings.
+export const LayerEventComponent = {
+  BankTransactions: 'BankTransactions',
+  Tasks: 'Tasks',
+  ProfitAndLossChart: 'ProfitAndLossChart',
+  BookkeepingOverview: 'BookkeepingOverview',
+  UnifiedReports: 'UnifiedReports',
+} as const
+
+export type LayerEventComponent = (typeof LayerEventComponent)[keyof typeof LayerEventComponent]
+
 const LayerEventMetadata = Schema.Struct({
   component: Schema.String,
   timestamp: Schema.String,

@@ -3,6 +3,7 @@ import { Schema } from 'effect'
 
 import {
   type LayerEvent,
+  type LayerEventComponent,
   type LayerEventInput,
   LayerEventSchema,
 } from '@providers/LayerProvider/layerEvents'
@@ -19,9 +20,9 @@ const validateLayerEvent = Schema.validateSync(LayerEventSchema)
  * (component, timestamp, packageVersion) — validates it against the public
  * contract, then forwards it to the consumer's `eventCallbacks.onEvent`.
  *
- * @param component  Name of the embedded Layer surface emitting the event (e.g. 'BankTransactions').
+ * @param component  The embedded Layer surface emitting the event.
  */
-export function useEmitLayerEvent(component: string) {
+export function useEmitLayerEvent(component: LayerEventComponent) {
   const { eventCallbacks } = useLayerContext()
 
   return useCallback((input: LayerEventInput) => {

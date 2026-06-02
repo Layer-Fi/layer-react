@@ -20,7 +20,7 @@ import type { QueryParams } from '@utils/request/toDefinedSearchParameters'
 import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/config/useReportConfig'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { type DateSelectionMode, useGlobalDate, useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { LayerEventType } from '@providers/LayerProvider/layerEvents'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 
 type DetailReportConfig = {
   report: ReportConfig
@@ -113,7 +113,7 @@ export function useActiveUnifiedReport() {
 
 export function useBaseUnifiedReport() {
   const store = useContext(UnifiedReportStoreContext)
-  const emitLayerEvent = useEmitLayerEvent('UnifiedReports')
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.UnifiedReports)
 
   const baseReport = useStore(store, state => state.baseReport)
   const setBaseReport = useStore(store, state => state.actions.setBaseReport)

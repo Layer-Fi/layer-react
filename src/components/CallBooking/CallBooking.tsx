@@ -6,7 +6,7 @@ import { DateFormat } from '@utils/i18n/date/patterns'
 import { translationKey } from '@utils/i18n/translationKey'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { LayerEventType } from '@providers/LayerProvider/layerEvents'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { Button } from '@ui/Button/Button'
 import { LinkButton } from '@ui/Button/LinkButton'
 import { DateTile } from '@ui/DateTile/DateTile'
@@ -41,7 +41,7 @@ export interface CallBookingProps {
 
 const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
   const { t } = useTranslation()
-  const emitLayerEvent = useEmitLayerEvent('BookkeepingOverview')
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BookkeepingOverview)
 
   const handleBookCall = () => {
     emitLayerEvent({ type: LayerEventType.BookkeepingScheduleCallClicked, version: 1, payload: {} })

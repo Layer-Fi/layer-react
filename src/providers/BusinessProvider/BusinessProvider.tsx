@@ -15,8 +15,7 @@ import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/
 import { useBusiness } from '@hooks/api/businesses/[business-id]/useBusiness'
 import { useDataSync } from '@hooks/legacy/useDataSync'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import type { LayerEvent } from '@providers/LayerProvider/layerEvents'
-import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
+import { type EventCallbacks, type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
 import { LayerContext } from '@contexts/LayerContext/LayerContext'
 import { type ToastProps, ToastsContainer } from '@components/Toast/Toast'
 
@@ -82,32 +81,26 @@ export const BusinessProvider = ({
   // Create stable callback wrappers that always call the latest version.
   // Consumer handlers are third-party code, so each invocation is isolated:
   // a throwing handler must never break the host UI action that triggered it.
-  const stableEventCallbacks = useMemo(() => ({
-    onEvent: (event: LayerEvent) => {
+  const stableEventCallbacks = useMemo(() => {
+    const isolate = <TArgs extends unknown[]>(
+      name: string,
+      pick: (cb: EventCallbacks) => ((...args: TArgs) => void) | undefined,
+    ) => (...args: TArgs) => {
       try {
-        eventCallbacksRef.current?.onEvent?.(event)
+        const cb = eventCallbacksRef.current
+        if (cb) pick(cb)?.(...args)
       }
       catch (error) {
-        console.error('Layer eventCallbacks.onEvent handler failed', error)
+        console.error(`Layer eventCallbacks.${name} handler failed`, error)
       }
-    },
-    onTransactionCategorized: () => {
-      try {
-        eventCallbacksRef.current?.onTransactionCategorized?.()
-      }
-      catch (error) {
-        console.error('Layer eventCallbacks.onTransactionCategorized handler failed', error)
-      }
-    },
-    onTransactionsFetched: () => {
-      try {
-        eventCallbacksRef.current?.onTransactionsFetched?.()
-      }
-      catch (error) {
-        console.error('Layer eventCallbacks.onTransactionsFetched handler failed', error)
-      }
-    },
-  }), [])
+    }
+
+    return {
+      onEvent: isolate('onEvent', cb => cb.onEvent),
+      onTransactionCategorized: isolate('onTransactionCategorized', cb => cb.onTransactionCategorized),
+      onTransactionsFetched: isolate('onTransactionsFetched', cb => cb.onTransactionsFetched),
+    }
+  }, [])
 
   const [state, dispatch] = useReducer(reducer, {
     businessId,

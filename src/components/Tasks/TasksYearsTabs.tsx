@@ -7,7 +7,7 @@ import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookke
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { LayerEventType } from '@providers/LayerProvider/layerEvents'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { Tabs } from '@components/Tabs/Tabs'
 import { TaskStatusBadge } from '@components/Tasks/TaskStatusBadge'
 
@@ -19,7 +19,7 @@ export const TasksYearsTabs = ({ isMobile }: TasksYearsTabsProps) => {
   const { date } = useGlobalDate()
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
   const { formatDate } = useIntlFormatter()
-  const emitLayerEvent = useEmitLayerEvent('Tasks')
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.Tasks)
 
   const activeYear = date.getFullYear()
 
