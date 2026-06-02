@@ -14,6 +14,7 @@
   border: 1px solid var(--border-color);
 
   background-color: var(--color-base-0);
+  color: var(--color-base-900);
 
   &--focused {
     border-color: var(--outline-active);
@@ -64,6 +65,7 @@
   cursor: text;
 
   font-size: var(--input-font-size);
+  color: var(--color-base-900);
 }
 
 .Layer__ComboBoxMultiValue {
@@ -132,6 +134,7 @@
   margin-block-start: var(--spacing-2xs);
 
   background-color: var(--color-base-0);
+  color: var(--color-base-900);
 }
 
 .Layer__ComboBoxMenuList {
@@ -181,6 +184,7 @@
   padding-inline: var(--spacing-3xs);
 
   border: 2px solid transparent;
+  color: var(--color-base-900);
 
   &--focused {
     background-color: var(--color-base-100);

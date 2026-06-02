@@ -211,6 +211,10 @@
       padding: var(--spacing-sm) 0;
       color: var(--color-base-500);
     }
+
+    .account-balance {
+      color: var(--color-base-900);
+    }
   }
 
   .loadingbar {
@@ -251,6 +255,10 @@
 
     .account-balance-text {
       color: var(--color-base-500);
+    }
+
+    .account-balance {
+      color: var(--color-base-900);
     }
   }
 
@@ -314,8 +322,8 @@
     background:
       linear-gradient(
         270deg,
-        #f8f8fa 1.52%,
-        rgb(248 248 250 / 0%) 99.75%
+        var(--color-base-50) 1.52%,
+        color-mix(in srgb, var(--color-base-50) 0%, transparent) 99.75%
       );
     opacity: 0;
     touch-action: none;
@@ -331,10 +339,11 @@
       border: none;
       box-shadow:
         0 0 8px 0
-        var(--base-transparent-12, rgb(16 24 40 / 12%));
+        var(--base-transparent-12);
       margin: var(--spacing-xs);
       background: var(--color-base-0);
       cursor: pointer;
+      color: var(--color-base-900);
       transform: translate3d(5px, -5px, 0);
       transition: 0.15s all ease-out;
     }

@@ -20,6 +20,8 @@
     background: none;
 
     font-family: var(--font-family);
+    color: var(--color-base-900);
+    caret-color: var(--color-base-900);
 
     &::-webkit-search-cancel-button,
     &::-webkit-search-decoration {
