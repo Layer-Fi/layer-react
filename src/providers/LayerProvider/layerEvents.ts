@@ -18,7 +18,6 @@ export const LayerEventType = {
   TransactionsPageChanged: 'transactions.page_changed',
 
   ReportsTabClicked: 'reports.tab_clicked',
-  ReportsSectionExpanded: 'reports.section_expanded',
 } as const
 
 export type LayerEventType = (typeof LayerEventType)[keyof typeof LayerEventType]
@@ -86,10 +85,6 @@ export const TransactionsPageChangedEventV1 = LayerEventEnvelope(
   LayerEventType.TransactionsPageChanged, 1,
   { page: Schema.Number },
 )
-export const ReportsSectionExpandedEventV1 = LayerEventEnvelope(
-  LayerEventType.ReportsSectionExpanded, 1,
-  { sectionKey: Schema.String, expanded: Schema.Boolean },
-)
 // `reportKey` is server-defined (`ReportConfig.key`), not a static Reports.tsx tab id.
 export const ReportsTabClickedEventV1 = LayerEventEnvelope(
   LayerEventType.ReportsTabClicked, 1,
@@ -104,7 +99,6 @@ export const LayerEventSchema = Schema.Union(
   ProfitAndLossMonthSelectedEventV1,
   TransactionsSearchSubmittedEventV1,
   TransactionsPageChangedEventV1,
-  ReportsSectionExpandedEventV1,
   ReportsTabClickedEventV1,
 )
 

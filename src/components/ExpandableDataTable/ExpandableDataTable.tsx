@@ -38,8 +38,6 @@ type ExpandableDataTableProps<TData> = BaseDataTableProps & {
   getSubRows: (row: TData) => TData[] | undefined
   getRowId: (row: TData) => string
   indentSize?: ExpandableDataTableIndentSize
-  /** Called when the user toggles a row's expansion, with the resulting state. */
-  onRowExpandToggle?: (params: { rowKey: string, expanded: boolean }) => void
 }
 
 const EMPTY_ARRAY: never[] = []
@@ -55,7 +53,6 @@ export function ExpandableDataTable<TData extends object>({
   getSubRows,
   getRowId,
   indentSize = 'sm',
-  onRowExpandToggle,
 }: ExpandableDataTableProps<TData>) {
   const { expanded, setExpanded } = useContext(ExpandableDataTableContext)
 
@@ -119,9 +116,8 @@ export function ExpandableDataTable<TData extends object>({
   }, [])
 
   const onRowClick = useCallback((row: Row<TData>) => {
-    onRowExpandToggle?.({ rowKey: row.id, expanded: !row.getIsExpanded() })
     row.toggleExpanded()
-  }, [onRowExpandToggle])
+  }, [])
 
   const withClickableRow = useMemo(() => ({
     onRowClick,
