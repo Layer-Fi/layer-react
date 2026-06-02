@@ -9,7 +9,7 @@ import {
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 // eslint-disable-next-line import/no-relative-parent-imports
-import pkg from '../../package.json'
+import { version as packageVersion } from '../../package.json'
 
 const validateLayerEvent = Schema.validateSync(LayerEventSchema)
 
@@ -33,7 +33,7 @@ export function useEmitLayerEvent(component: string) {
       metadata: {
         component,
         timestamp: new Date().toISOString(),
-        packageVersion: pkg.version,
+        packageVersion,
       },
     }
 
