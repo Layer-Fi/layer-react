@@ -1,10 +1,6 @@
 import { Schema } from 'effect'
 
-/**
- * Public UI-event contract for Layer components, emitted via `eventCallbacks.onEvent`.
- * Adding a type or version is backwards-compatible; changing an existing (type, version)
- * payload shape is NOT — bump the version instead.
- */
+/** Versioned public contract for events emitted via `eventCallbacks.onEvent`. */
 export const LayerEventType = {
   TaskMonthSelected: 'tasks.month_selected',
   TaskYearSelected: 'tasks.year_selected',
@@ -22,8 +18,7 @@ export const LayerEventType = {
 
 export type LayerEventType = (typeof LayerEventType)[keyof typeof LayerEventType]
 
-// Embedded Layer surfaces that emit events. Stamped into `metadata.component`, so these
-// are part of the public contract — add here rather than passing ad-hoc strings.
+// Public component names stamped into `metadata.component`.
 export const LayerEventComponent = {
   BankTransactions: 'BankTransactions',
   Tasks: 'Tasks',
@@ -112,9 +107,7 @@ export const LayerEventSchema = Schema.Union(
 
 export type LayerEvent = typeof LayerEventSchema.Type
 
-// Input accepted by the centralized emitter: type + version + payload only.
-// `source` and `metadata` are added by the emitter. The Pick is distributed over
-// the union (not `Pick<LayerEvent, ...>`) to keep type/version/payload linked.
+// Preserve type/version/payload correlation for emitter inputs.
 export type LayerEventInput = LayerEvent extends infer E
   ? E extends LayerEvent ? Pick<E, 'type' | 'version' | 'payload'> : never
   : never
