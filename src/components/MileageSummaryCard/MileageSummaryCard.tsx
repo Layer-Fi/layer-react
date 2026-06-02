@@ -149,7 +149,7 @@ export const MileageSummaryCard = () => {
           {t('mileageTracking:label.mileage_tracking', 'Mileage Tracking')}
         </Span>
         <Button onPress={onRecordTrip}>
-          {t('trips:action.add_trip', 'Add Trip')}
+          {t('trips:action.record_trip', 'Record Trip')}
           <Plus size={16} />
         </Button>
       </HStack>

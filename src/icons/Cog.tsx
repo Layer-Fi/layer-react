@@ -20,7 +20,7 @@ const Cog = ({ size = 12, ...props }: IconSvgProps) => {
       </g>
       <defs>
         <clipPath id={id}>
-          <rect width='12' height='12' fill='white' />
+          <rect width='12' height='12' fill='var(--color-base-0)' />
         </clipPath>
       </defs>
     </svg>

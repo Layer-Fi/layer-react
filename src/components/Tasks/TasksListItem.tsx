@@ -31,8 +31,8 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
   const [userResponse, setUserResponse] = useState(task.user_response ?? '')
   const [selectedFiles, setSelectedFiles] = useState<File[]>()
 
-  const { trigger: handleSubmitUserResponseForTask } = useSubmitUserResponseForTask()
-  const { trigger: handleUploadDocumentsForTask } = useUploadDocumentsForTask()
+  const { trigger: handleSubmitUserResponseForTask, isMutating: isSubmittingResponse } = useSubmitUserResponseForTask()
+  const { trigger: handleUploadDocumentsForTask, isMutating: isUploadingDocuments } = useUploadDocumentsForTask()
   const { trigger: handleDeleteUploadsOnTask } = useDeleteUploadsOnTask()
   const { trigger: handleUpdateTaskUploadDescription } = useUpdateTaskUploadDescription()
 
@@ -108,6 +108,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
               <Button
                 variant={ButtonVariant.primary}
                 onClick={() => void submit()}
+                disabled={isUploadingDocuments}
               >
                 {t('common:action.submit_label', 'Submit')}
               </Button>
@@ -149,7 +150,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
       else { return null }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [t, task, selectedFiles, userResponse])
+  }, [t, task, selectedFiles, userResponse, isUploadingDocuments])
 
   return (
     <div className='Layer__tasks-list-item-wrapper' ref={ref}>
@@ -210,7 +211,8 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 : (
                   <Button
                     disabled={
-                      userResponse.length === 0
+                      isSubmittingResponse
+                      || userResponse.length === 0
                       || userResponse === task.user_response
                     }
                     variant={ButtonVariant.secondary}

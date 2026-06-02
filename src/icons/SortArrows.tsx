@@ -48,7 +48,7 @@ const SortArrows = ({ size = 13, ...props }: IconSvgProps) => (
         <rect
           width='12'
           height='12'
-          fill='white'
+          fill='var(--color-base-0)'
           transform='translate(0 0.5)'
         />
       </clipPath>

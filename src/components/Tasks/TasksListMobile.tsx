@@ -38,7 +38,7 @@ export const TasksListMobile = ({
     <div className='Layer__tasks-list'>
       {unresolvedTasks.map((task, index) => (
         <TasksListItem
-          key={index}
+          key={task.id}
           task={task}
           defaultOpen={index === indexFirstIncomplete}
         />
@@ -69,7 +69,7 @@ export const TasksListMobile = ({
             <div className='Layer__tasks-list'>
               {sortedTasks.map((task, index) => (
                 <TasksListItem
-                  key={index}
+                  key={task.id}
                   task={task}
                   defaultOpen={index === indexFirstIncomplete}
                 />

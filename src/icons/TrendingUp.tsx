@@ -11,7 +11,7 @@ const TrendingUp = ({ size = 20, ...props }: IconSvgProps) => (
   >
     <path
       d='M19.1667 5L11.25 12.9167L7.08337 8.75L0.833374 15'
-      stroke='white'
+      stroke='var(--color-base-0)'
       strokeLinecap='round'
       strokeLinejoin='round'
     />
@@ -23,7 +23,7 @@ const TrendingUp = ({ size = 20, ...props }: IconSvgProps) => (
     />
     <path
       d='M14.1666 5H19.1666V10'
-      stroke='white'
+      stroke='var(--color-base-0)'
       strokeLinecap='round'
       strokeLinejoin='round'
     />

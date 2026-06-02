@@ -91,7 +91,7 @@
   overflow: hidden;
   padding: 1rem;
   border-radius: var(--border-radius-base);
-  background: white;
+  background: var(--color-base-0);
 }
 
 .skeleton-loader::after {
@@ -105,7 +105,7 @@
     linear-gradient(
       90deg,
       transparent,
-      rgb(255 255 255 / 100%),
+      var(--color-base-0),
       transparent
     );
   content: '';

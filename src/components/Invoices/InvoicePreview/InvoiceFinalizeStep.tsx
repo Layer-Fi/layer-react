@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import { AlertTriangle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -6,6 +7,7 @@ import { useInvoicePaymentMethods } from '@hooks/api/businesses/[business-id]/in
 import {
   useInvoicePreviewRoute,
 } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import {
@@ -21,49 +23,54 @@ type InvoiceFinalizeStepProps = {
   onSuccess: (invoice: Invoice) => void
 }
 
-export const InvoiceFinalizeStep = ({
-  onSuccess,
-}: InvoiceFinalizeStepProps) => {
+export const InvoiceFinalizeStep = ({ onSuccess }: InvoiceFinalizeStepProps) => {
   const { t } = useTranslation()
+  const { accountingConfiguration } = useLayerContext()
   const { invoice } = useInvoicePreviewRoute()
-  const { data, isLoading, isError } = useInvoicePaymentMethods({ invoiceId: invoice.id })
+  const showPaymentMethods = !!accountingConfiguration?.enableStripeOnboarding
+  const { data, isLoading, isError } = useInvoicePaymentMethods({
+    invoiceId: invoice.id,
+    isEnabled: showPaymentMethods,
+  })
   const paymentMethodsData = data?.data
 
   return (
-    <HStack className='Layer__InvoiceFinalizeStep'>
-      <VStack className='Layer__InvoiceFinalizeStep__PreviewPanel' fluid>
+    <HStack className={classNames('Layer__InvoiceFinalizeStep', !showPaymentMethods && 'Layer__InvoiceFinalizeStep--previewOnly')}>
+      <VStack className={classNames('Layer__InvoiceFinalizeStep__PreviewPanel', !showPaymentMethods && 'Layer__InvoiceFinalizeStep__PreviewPanel--previewOnly')} fluid>
         <InvoicePreview />
       </VStack>
-      <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanel' fluid>
-        <ConditionalBlock
-          data={paymentMethodsData}
-          isLoading={isLoading}
-          isError={isError}
-          Loading={(
-            <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanelLoading' justify='center' align='center' fluid>
-              <Loader />
-            </VStack>
-          )}
-          Error={(
-            <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanelError'>
-              <DataState
-                icon={<AlertTriangle size={16} />}
-                status={DataStateStatus.failed}
-                title={t('invoices:error.load_payment_methods', 'We couldn\'t load payment methods')}
-                description={t('common:error.please_try_again', 'Please try again.')}
+      {showPaymentMethods && (
+        <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanel' fluid>
+          <ConditionalBlock
+            data={paymentMethodsData}
+            isLoading={isLoading}
+            isError={isError}
+            Loading={(
+              <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanelLoading' justify='center' align='center' fluid>
+                <Loader />
+              </VStack>
+            )}
+            Error={(
+              <VStack className='Layer__InvoiceFinalizeStep__PaymentMethodsPanelError'>
+                <DataState
+                  icon={<AlertTriangle size={16} />}
+                  status={DataStateStatus.failed}
+                  title={t('invoices:error.load_payment_methods', 'We couldn\'t load payment methods')}
+                  description={t('common:error.please_try_again', 'Please try again.')}
+                />
+              </VStack>
+            )}
+          >
+            {({ data: invoicePaymentMethods }) => (
+              <InvoiceFinalizeForm
+                invoice={invoice}
+                initialPaymentMethods={invoicePaymentMethods.paymentMethods}
+                onSuccess={onSuccess}
               />
-            </VStack>
-          )}
-        >
-          {({ data: invoicePaymentMethods }) => (
-            <InvoiceFinalizeForm
-              invoice={invoice}
-              initialPaymentMethods={invoicePaymentMethods.paymentMethods}
-              onSuccess={onSuccess}
-            />
-          )}
-        </ConditionalBlock>
-      </VStack>
+            )}
+          </ConditionalBlock>
+        </VStack>
+      )}
     </HStack>
   )
 }

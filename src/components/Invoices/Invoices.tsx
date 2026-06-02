@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { usePreloadCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { InvoiceRoute, InvoicesRouteStoreProvider, useInvoiceRouteState } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { InvoiceDetail } from '@components/Invoices/InvoiceDetail/InvoiceDetail'
@@ -13,11 +15,12 @@ export interface InvoicesProps {
 }
 
 export const Invoices = ({ stringOverrides }: InvoicesProps) => {
+  const { t } = useTranslation()
   usePreloadCustomers()
 
   return (
     <InvoicesRouteStoreProvider>
-      <View title={stringOverrides?.title || 'Invoices'}>
+      <View title={stringOverrides?.title || t('invoices:label.invoices', 'Invoices')}>
         <InvoicesContent />
       </View>
     </InvoicesRouteStoreProvider>
