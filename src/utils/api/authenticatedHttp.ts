@@ -4,7 +4,7 @@ import { DEFAULT_LOCALE, type SupportedLocale } from '@utils/i18n/supportedLocal
 import type { ParameterValues } from '@utils/request/toDefinedSearchParameters'
 
 // eslint-disable-next-line import/no-relative-parent-imports
-import { version as packageVersion } from '../../../package.json'
+import pkg from '../../../package.json'
 
 let _locale: SupportedLocale = DEFAULT_LOCALE
 
@@ -14,7 +14,7 @@ export function setLocaleHeader(locale: SupportedLocale | undefined = DEFAULT_LO
 
 const getCustomHeaders = (): Record<string, string> => ({
   'Layer-Locale': _locale,
-  'Layer-React-Version': packageVersion,
+  'Layer-React-Version': pkg.version,
 })
 
 type APIResponseError = {
