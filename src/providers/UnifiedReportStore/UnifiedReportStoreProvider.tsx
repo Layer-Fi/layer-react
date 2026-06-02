@@ -20,6 +20,7 @@ import type { QueryParams } from '@utils/request/toDefinedSearchParameters'
 import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/config/useReportConfig'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { type DateSelectionMode, useGlobalDate, useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { LayerEventType } from '@providers/LayerProvider/layerEvents'
 
 type DetailReportConfig = {
   report: ReportConfig
@@ -112,7 +113,7 @@ export function useActiveUnifiedReport() {
 
 export function useBaseUnifiedReport() {
   const store = useContext(UnifiedReportStoreContext)
-  const emitLayerEvent = useEmitLayerEvent()
+  const emitLayerEvent = useEmitLayerEvent('UnifiedReports')
 
   const baseReport = useStore(store, state => state.baseReport)
   const setBaseReport = useStore(store, state => state.actions.setBaseReport)
@@ -122,8 +123,9 @@ export function useBaseUnifiedReport() {
   // default report calls the store action directly and is intentionally silent.
   const setBaseReportWithEvent = useCallback((report: ReportConfig) => {
     emitLayerEvent({
-      name: 'reports.tab_clicked',
-      properties: { reportType: report.key },
+      type: LayerEventType.ReportsTabClicked,
+      version: 1,
+      payload: { tab: report.key },
     })
     setBaseReport(report)
   }, [emitLayerEvent, setBaseReport])

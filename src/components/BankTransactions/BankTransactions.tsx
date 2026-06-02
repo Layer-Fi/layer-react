@@ -20,6 +20,7 @@ import { BankTransactionsCategorizationStoreProvider } from '@providers/BankTran
 import { BankTransactionsProvider } from '@providers/BankTransactionsProvider/BankTransactionsProvider'
 import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState, useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { BulkSelectionStoreProvider } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { type BankTransactionsMode, LegacyModeProvider } from '@providers/LegacyModeProvider/LegacyModeProvider'
 import {
   useBankTransactionsContext,
@@ -181,7 +182,7 @@ const BankTransactionsTableView = ({
   const isMonthlyViewMode = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
 
   const { currentBankTransactionsPage: currentPage, setCurrentBankTransactionsPage: setCurrentPage } = useCurrentBankTransactionsPage()
-  const emitLayerEvent = useEmitLayerEvent()
+  const emitLayerEvent = useEmitLayerEvent('BankTransactions')
 
   const { data, isLoading, display, hasMore, fetchMore } = useBankTransactionsContext()
 
@@ -397,8 +398,9 @@ const BankTransactionsTableView = ({
             pageSize={pageSize}
             onPageChange={(page) => {
               emitLayerEvent({
-                name: 'transactions.page_changed',
-                properties: { page },
+                type: LayerEventType.TransactionsPageChanged,
+                version: 1,
+                payload: { page },
               })
               setCurrentPage(page)
             }}

@@ -9,6 +9,7 @@ import { useUpdateTaskUploadDescription } from '@hooks/api/businesses/[business-
 import { useUploadDocumentsForTask } from '@hooks/api/businesses/[business-id]/tasks/[task-id]/upload/useUploadDocumentsForTask'
 import { useSubmitUserResponseForTask } from '@hooks/api/businesses/[business-id]/tasks/[task-id]/user-response/useSubmitResponseForTask'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
+import { LayerEventType } from '@providers/LayerProvider/layerEvents'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { FileInput } from '@components/Input/FileInput'
@@ -26,7 +27,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
   ref,
 ) => {
   const { t } = useTranslation()
-  const emitLayerEvent = useEmitLayerEvent()
+  const emitLayerEvent = useEmitLayerEvent('Tasks')
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const [userResponse, setUserResponse] = useState(task.user_response ?? '')
   const [selectedFiles, setSelectedFiles] = useState<File[]>()
@@ -75,8 +76,9 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
 
   const onClickTaskItemHead = useCallback(() => {
     emitLayerEvent({
-      name: 'tasks.task_clicked',
-      properties: { taskId: task.id },
+      type: LayerEventType.TaskClicked,
+      version: 1,
+      payload: { taskId: task.id },
     })
     setIsOpen(!isOpen)
     onExpandTask?.(!isOpen)

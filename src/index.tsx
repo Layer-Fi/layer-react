@@ -67,7 +67,7 @@ export { TimeTracking } from './views/TimeTracking'
 */
 export { EntityName, type LinkingMetadata } from './contexts/InAppLinkContext'
 export { useLayerContext } from './contexts/LayerContext/LayerContext'
-export type { LayerEvent } from './providers/LayerProvider/layerEvents'
+export { type LayerEvent, LayerEventType } from './providers/LayerProvider/layerEvents'
 export { type EventCallbacks, LayerProvider } from './providers/LayerProvider/LayerProvider'
 export { DisplayState } from './types/bankTransactions'
 export { Direction } from './types/general'

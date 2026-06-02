@@ -1,20 +1,53 @@
 import { useCallback } from 'react'
+import { Schema } from 'effect'
 
-import type { LayerEvent } from '@providers/LayerProvider/layerEvents'
+import {
+  type LayerEvent,
+  type LayerEventInput,
+  LayerEventSchema,
+} from '@providers/LayerProvider/layerEvents'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
+// eslint-disable-next-line import/no-relative-parent-imports
+import pkg from '../../package.json'
+
+const validateLayerEvent = Schema.validateSync(LayerEventSchema)
+
 /**
- * Returns a stable dispatcher that forwards a `LayerEvent` to the consumer's
- * `eventCallbacks.onEvent` handler, if one was provided to `LayerProvider`.
+ * Returns a stable dispatcher that builds a fully-formed LayerEvent envelope from a
+ * `{ type, version, payload }` input — stamping `source`, and `metadata`
+ * (component, timestamp, packageVersion) — validates it against the public
+ * contract, then forwards it to the consumer's `eventCallbacks.onEvent`.
  *
- * The returned function is referentially stable because `eventCallbacks` is
- * itself stabilized in `BusinessProvider`, so it is safe to use in effect
- * dependency arrays.
+ * @param component  Name of the embedded Layer surface emitting the event (e.g. 'BankTransactions').
  */
-export function useEmitLayerEvent() {
+export function useEmitLayerEvent(component: string) {
   const { eventCallbacks } = useLayerContext()
 
-  return useCallback((event: LayerEvent) => {
-    eventCallbacks?.onEvent?.(event)
-  }, [eventCallbacks])
+  return useCallback((input: LayerEventInput) => {
+    const event = {
+      source: 'layer' as const,
+      type: input.type,
+      version: input.version,
+      payload: input.payload,
+      metadata: {
+        component,
+        timestamp: new Date().toISOString(),
+        packageVersion: pkg.version,
+      },
+    }
+
+    // Contract guard: never emit a malformed envelope. This is separate from the
+    // consumer-error try/catch in BusinessProvider (which guards the host's handler).
+    let validated: LayerEvent
+    try {
+      validated = validateLayerEvent(event)
+    }
+    catch (error) {
+      console.error('Layer onEvent: dropped malformed event', input.type, error)
+      return
+    }
+
+    eventCallbacks?.onEvent?.(validated)
+  }, [eventCallbacks, component])
 }

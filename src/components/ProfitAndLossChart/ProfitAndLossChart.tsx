@@ -24,6 +24,7 @@ import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ChartYAxis } from '@components/Chart/ChartYAxis'
 import { areChartWindowsEqual, getChartWindow } from '@components/ProfitAndLossChart/getChartWindow'
@@ -58,7 +59,7 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
 
   const { date } = useGlobalDate({ dateSelectionMode: 'month' })
   const { setMonth } = useGlobalDateRangeActions()
-  const emitLayerEvent = useEmitLayerEvent()
+  const emitLayerEvent = useEmitLayerEvent('ProfitAndLossChart')
 
   const [chartWindow, setChartWindow] = useState({
     start: startOfMonth(sub(date, { months: 11 })),
@@ -121,8 +122,9 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
 
     if (isMonthAllowed) {
       emitLayerEvent({
-        name: 'profit_and_loss.month_selected',
-        properties: { year: selectedDate.getFullYear(), month: selectedDate.getMonth() + 1 },
+        type: LayerEventType.ProfitAndLossMonthSelected,
+        version: 1,
+        payload: { year: selectedDate.getFullYear(), month: selectedDate.getMonth() + 1 },
       })
       setMonth({ startDate: selectedDate })
     }
