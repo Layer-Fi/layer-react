@@ -26,7 +26,7 @@ export const FederalTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
 
       <form.AppField name='usConfiguration.federal.annualW2Income'>
         {field => (
-          <field.FormBigDecimalField
+          <field.FormNonRecursiveBigDecimalField
             label={t('taxEstimates:label.annual_w2_income', 'Annual W-2 income')}
             mode='currency'
             isReadOnly={isReadOnly}
@@ -38,7 +38,7 @@ export const FederalTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
 
       <form.AppField name='usConfiguration.federal.tipIncome'>
         {field => (
-          <field.FormBigDecimalField
+          <field.FormNonRecursiveBigDecimalField
             label={t('taxEstimates:label.tip_income', 'Tip income')}
             mode='currency'
             isReadOnly={isReadOnly}
@@ -50,7 +50,7 @@ export const FederalTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
 
       <form.AppField name='usConfiguration.federal.overtimeIncome'>
         {field => (
-          <field.FormBigDecimalField
+          <field.FormNonRecursiveBigDecimalField
             label={t('taxEstimates:label.overtime_income', 'Overtime income')}
             mode='currency'
             isReadOnly={isReadOnly}
@@ -74,7 +74,7 @@ export const FederalTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
         {useCustomWithholding => useCustomWithholding && (
           <form.AppField name='usConfiguration.federal.withholding.amount'>
             {field => (
-              <field.FormBigDecimalField
+              <field.FormNonRecursiveBigDecimalField
                 label={t('taxEstimates:label.withholding_amount', 'Withholding amount')}
                 mode='currency'
                 isReadOnly={isReadOnly}

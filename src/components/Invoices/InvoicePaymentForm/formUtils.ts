@@ -4,13 +4,14 @@ import { BigDecimal as BD } from 'effect'
 
 import { type Invoice } from '@schemas/invoices/invoice'
 import { type DedicatedInvoicePaymentForm } from '@schemas/invoices/invoicePayment'
-import { convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
+import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents, fromNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
+import { convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
 
 export const getInvoicePaymentFormDefaultValues = (invoice: Invoice): DedicatedInvoicePaymentForm => {
   const paidAt = fromDate(startOfToday(), getLocalTimeZone())
 
   return {
-    amount: convertCentsToBigDecimal(invoice.outstandingBalance),
+    amount: convertCentsToNonRecursiveBigDecimal(invoice.outstandingBalance),
     method: null,
     paidAt,
     referenceNumber: '',
@@ -36,12 +37,13 @@ export const validateInvoicePaymentForm = (
   { invoicePayment, invoice }: { invoicePayment: DedicatedInvoicePaymentForm, invoice: Invoice },
 ) => {
   const { amount, paidAt, method } = invoicePayment
+  const amountBd = fromNonRecursiveBigDecimal(amount)
   const errors: InvoicePaymentValidationError[] = []
-  if (!BD.isPositive(amount)) {
+  if (!BD.isPositive(amountBd)) {
     errors.push({ field: 'amount', reason: InvoicePaymentInvalidReason.AmountMustBePositive })
   }
 
-  if (BD.greaterThan(amount, convertCentsToBigDecimal(invoice.outstandingBalance))) {
+  if (BD.greaterThan(amountBd, convertCentsToBigDecimal(invoice.outstandingBalance))) {
     errors.push({ field: 'amount', reason: InvoicePaymentInvalidReason.AmountExceedsOutstandingBalance })
   }
 
@@ -65,7 +67,7 @@ export const validateInvoicePaymentForm = (
 }
 
 export const convertInvoicePaymentFormToParams = (form: DedicatedInvoicePaymentForm): unknown => ({
-  amount: convertBigDecimalToCents(form.amount),
+  amount: convertNonRecursiveBigDecimalToCents(form.amount),
   method: form.method,
   paidAt: form.paidAt?.toDate(),
   referenceNumber: form.referenceNumber.trim() || undefined,

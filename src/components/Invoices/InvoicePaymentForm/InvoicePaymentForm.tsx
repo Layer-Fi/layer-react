@@ -6,6 +6,7 @@ import { Trans, useTranslation } from 'react-i18next'
 
 import type { Invoice } from '@schemas/invoices/invoice'
 import type { InvoicePayment } from '@schemas/invoices/invoicePayment'
+import { fromNonRecursiveBigDecimal, type NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import { convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
 import { flattenValidationErrors } from '@utils/form'
 import type { UpsertDedicatedInvoicePaymentMode } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment/useUpsertDedicatedInvoicePayment'
@@ -42,8 +43,8 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
     { onSuccess, invoice },
   )
 
-  const formatBalanceDue = useCallback((amount: BD.BigDecimal) => {
-    const balanceDue = BD.subtract(convertCentsToBigDecimal(invoice.outstandingBalance), amount)
+  const formatBalanceDue = useCallback((amount: NonRecursiveBigDecimal) => {
+    const balanceDue = BD.subtract(convertCentsToBigDecimal(invoice.outstandingBalance), fromNonRecursiveBigDecimal(amount))
 
     return formatCurrencyFromCents(convertBigDecimalToCents(balanceDue))
   }, [invoice.outstandingBalance, formatCurrencyFromCents])
@@ -117,7 +118,7 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
       </VStack>
       <VStack className={`${INVOICE_PAYMENT_FORM_CSS_PREFIX}__Section`} gap='sm'>
         <form.AppField name='amount'>
-          {field => <field.FormBigDecimalField label={t('invoices:label.amount_paid', 'Amount paid')} inline className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__Amount`} mode='currency' isReadOnly={isReadOnly} maxValue={convertCentsToBigDecimal(invoice.outstandingBalance)} />}
+          {field => <field.FormNonRecursiveBigDecimalField label={t('invoices:label.amount_paid', 'Amount paid')} inline className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__Amount`} mode='currency' isReadOnly={isReadOnly} maxValue={convertCentsToBigDecimal(invoice.outstandingBalance)} />}
         </form.AppField>
         <form.Subscribe selector={state => [state.values.amount]}>
           {([amount]) => (

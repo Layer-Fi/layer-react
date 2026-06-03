@@ -1,8 +1,15 @@
 import { BigDecimal as BD } from 'effect'
 import type { TFunction } from 'i18next'
 
+import {
+  convertCentsToNonRecursiveBigDecimal,
+  convertNonRecursiveBigDecimalToCents,
+  fromNonRecursiveBigDecimal,
+  type NonRecursiveBigDecimal,
+  NRBD_ZERO,
+  toNonRecursiveBigDecimal,
+} from '@schemas/nonRecursiveBigDecimal'
 import { type TaxProfile } from '@schemas/taxEstimates/profile'
-import { BIG_DECIMAL_ZERO, convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
 import type { AppForm } from '@hooks/features/forms/useForm'
 import type { TaxProfileForm } from '@components/TaxProfileForm/taxProfileFormSchema'
 
@@ -19,37 +26,29 @@ export const getFormFieldProps = (isDesktop: boolean) => isDesktop
   }
   : {}
 
-const centsToBigDecimalOrZero = (value: number | null | undefined): BD.BigDecimal => {
-  if (value == null) return BIG_DECIMAL_ZERO
-  return convertCentsToBigDecimal(value)
-}
+const centsToNrbdOrZero = (value: number | null | undefined): NonRecursiveBigDecimal =>
+  value == null ? NRBD_ZERO : convertCentsToNonRecursiveBigDecimal(value)
 
-const bigDecimalToCentsNullable = (value: BD.BigDecimal | null | undefined): number | null => {
-  if (value == null) return null
-  return convertBigDecimalToCents(value)
-}
+const nrbdToCentsNullable = (value: NonRecursiveBigDecimal | null | undefined): number | null =>
+  value == null ? null : convertNonRecursiveBigDecimalToCents(value)
 
-const numberToBigDecimalOrZero = (value: number | null | undefined): BD.BigDecimal => {
-  if (value == null) return BIG_DECIMAL_ZERO
-  return BD.unsafeFromNumber(value)
-}
+const numberToNrbdOrZero = (value: number | null | undefined): NonRecursiveBigDecimal =>
+  value == null ? NRBD_ZERO : toNonRecursiveBigDecimal(BD.unsafeFromNumber(value))
 
-const bigDecimalToNumberNullable = (value: BD.BigDecimal | null | undefined): number | null => {
-  if (value == null) return null
-  return BD.unsafeToNumber(value)
-}
+const nrbdToNumberNullable = (value: NonRecursiveBigDecimal | null | undefined): number | null =>
+  value == null ? null : BD.unsafeToNumber(fromNonRecursiveBigDecimal(value))
 
 const DEFAULT_TAX_PROFILE_FORM: TaxProfileForm = {
   taxCountryCode: 'US',
   usConfiguration: {
     federal: {
       filingStatus: null,
-      annualW2Income: BIG_DECIMAL_ZERO,
-      tipIncome: BIG_DECIMAL_ZERO,
-      overtimeIncome: BIG_DECIMAL_ZERO,
+      annualW2Income: NRBD_ZERO,
+      tipIncome: NRBD_ZERO,
+      overtimeIncome: NRBD_ZERO,
       withholding: {
         useCustomWithholding: false,
-        amount: BIG_DECIMAL_ZERO,
+        amount: NRBD_ZERO,
       },
     },
     state: {
@@ -57,13 +56,13 @@ const DEFAULT_TAX_PROFILE_FORM: TaxProfileForm = {
       filingStatus: null,
       withholding: {
         useCustomWithholding: false,
-        amount: BIG_DECIMAL_ZERO,
+        amount: NRBD_ZERO,
       },
     },
     deductions: {
       homeOffice: {
         useHomeOfficeDeduction: false,
-        homeOfficeArea: BIG_DECIMAL_ZERO,
+        homeOfficeArea: NRBD_ZERO,
       },
       vehicle: {
         useMileageDeduction: false,
@@ -86,11 +85,11 @@ export const taxProfileToFormValues = (taxProfile?: TaxProfile | null): TaxProfi
       federal: federal
         ? {
           ...federal,
-          annualW2Income: centsToBigDecimalOrZero(federal.annualW2Income),
-          tipIncome: centsToBigDecimalOrZero(federal.tipIncome),
-          overtimeIncome: centsToBigDecimalOrZero(federal.overtimeIncome),
+          annualW2Income: centsToNrbdOrZero(federal.annualW2Income),
+          tipIncome: centsToNrbdOrZero(federal.tipIncome),
+          overtimeIncome: centsToNrbdOrZero(federal.overtimeIncome),
           withholding: federal.withholding
-            ? { ...federal.withholding, amount: centsToBigDecimalOrZero(federal.withholding.amount) }
+            ? { ...federal.withholding, amount: centsToNrbdOrZero(federal.withholding.amount) }
             : null,
         }
         : null,
@@ -98,7 +97,7 @@ export const taxProfileToFormValues = (taxProfile?: TaxProfile | null): TaxProfi
         ? {
           ...state,
           withholding: state.withholding
-            ? { ...state.withholding, amount: centsToBigDecimalOrZero(state.withholding.amount) }
+            ? { ...state.withholding, amount: centsToNrbdOrZero(state.withholding.amount) }
             : null,
         }
         : null,
@@ -106,7 +105,7 @@ export const taxProfileToFormValues = (taxProfile?: TaxProfile | null): TaxProfi
         ? {
           ...deductions,
           homeOffice: deductions.homeOffice
-            ? { ...deductions.homeOffice, homeOfficeArea: numberToBigDecimalOrZero(deductions.homeOffice.homeOfficeArea) }
+            ? { ...deductions.homeOffice, homeOfficeArea: numberToNrbdOrZero(deductions.homeOffice.homeOfficeArea) }
             : null,
         }
         : null,
@@ -125,11 +124,11 @@ export const formValuesToTaxProfile = (form: TaxProfileForm): TaxProfile => {
       federal: federal
         ? {
           ...federal,
-          annualW2Income: bigDecimalToCentsNullable(federal.annualW2Income),
-          tipIncome: bigDecimalToCentsNullable(federal.tipIncome),
-          overtimeIncome: bigDecimalToCentsNullable(federal.overtimeIncome),
+          annualW2Income: nrbdToCentsNullable(federal.annualW2Income),
+          tipIncome: nrbdToCentsNullable(federal.tipIncome),
+          overtimeIncome: nrbdToCentsNullable(federal.overtimeIncome),
           withholding: federal.withholding
-            ? { ...federal.withholding, amount: bigDecimalToCentsNullable(federal.withholding.amount) }
+            ? { ...federal.withholding, amount: nrbdToCentsNullable(federal.withholding.amount) }
             : null,
         }
         : null,
@@ -137,7 +136,7 @@ export const formValuesToTaxProfile = (form: TaxProfileForm): TaxProfile => {
         ? {
           ...state,
           withholding: state.withholding
-            ? { ...state.withholding, amount: bigDecimalToCentsNullable(state.withholding.amount) }
+            ? { ...state.withholding, amount: nrbdToCentsNullable(state.withholding.amount) }
             : null,
         }
         : null,
@@ -145,7 +144,7 @@ export const formValuesToTaxProfile = (form: TaxProfileForm): TaxProfile => {
         ? {
           ...deductions,
           homeOffice: deductions.homeOffice
-            ? { ...deductions.homeOffice, homeOfficeArea: bigDecimalToNumberNullable(deductions.homeOffice.homeOfficeArea) }
+            ? { ...deductions.homeOffice, homeOfficeArea: nrbdToNumberNullable(deductions.homeOffice.homeOfficeArea) }
             : null,
         }
         : null,

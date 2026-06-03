@@ -8,7 +8,6 @@ import {
 } from '@tanstack/react-form'
 
 import { BaseFormTextField } from '@components/forms/BaseFormTextField'
-import { FormBigDecimalField } from '@components/forms/FormBigDecimalField'
 import { FormCheckboxField } from '@components/forms/FormCheckboxField'
 import { FormDateField } from '@components/forms/FormDateField'
 import { FormDatePickerField } from '@components/forms/FormDatePickerField'
@@ -26,7 +25,6 @@ export const { fieldContext, useFieldContext, formContext, useFormContext } =
 const { useAppForm: useRawAppForm } = createFormHook({
   fieldComponents: {
     BaseFormTextField,
-    FormBigDecimalField,
     FormCheckboxField,
     FormDateField,
     FormDatePickerField,

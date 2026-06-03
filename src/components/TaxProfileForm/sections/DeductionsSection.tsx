@@ -29,7 +29,7 @@ export const DeductionsSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
         {useHomeOffice => useHomeOffice && (
           <form.AppField name='usConfiguration.deductions.homeOffice.homeOfficeArea'>
             {field => (
-              <field.FormBigDecimalField
+              <field.FormNonRecursiveBigDecimalField
                 label={t('taxEstimates:label.home_office_area_sq', 'Home office area (sq ft)')}
                 isReadOnly={isReadOnly}
                 placeholder={t('taxEstimates:label.enter_area', 'Enter area')}

@@ -86,7 +86,7 @@ export const InvoiceRefundForm = forwardRef(({ onSuccess, invoice }: InvoiceRefu
           )}
         </form.Field>
         <form.AppField name='amount'>
-          {field => <field.FormBigDecimalField label={t('common:label.amount', 'Amount')} inline className={`${INVOICE_REFUND_FORM_FIELD_CSS_PREFIX}__Amount`} mode='currency' isReadOnly />}
+          {field => <field.FormNonRecursiveBigDecimalField label={t('common:label.amount', 'Amount')} inline className={`${INVOICE_REFUND_FORM_FIELD_CSS_PREFIX}__Amount`} mode='currency' isReadOnly />}
         </form.AppField>
       </VStack>
     </Form>
