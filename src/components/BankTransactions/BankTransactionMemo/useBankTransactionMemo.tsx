@@ -27,18 +27,18 @@ export const useBankTransactionMemo = ({ bankTransactionId }: BankTransactionMem
     },
     onSubmit: async ({ value }) => {
       if (value.memo !== undefined && form.state.isDirty) {
-        emitLayerEvent({
-          type: LayerEventType.TransactionDescriptionEntered,
-          version: 1,
-          payload: { transactionId: bankTransactionId },
-        })
-
         const result = await mutateBankTransactionMetadata(
           updateBankTransactionMetadata({ memo: value.memo ?? '' }),
           { optimisticData: { memo: value.memo ?? '' }, revalidate: false },
         )
 
         if (result !== undefined) {
+          emitLayerEvent({
+            type: LayerEventType.TransactionDescriptionEntered,
+            version: 1,
+            payload: { transactionId: bankTransactionId },
+          })
+
           form.reset(value)
         }
       }
