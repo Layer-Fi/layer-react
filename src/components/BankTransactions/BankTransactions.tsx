@@ -352,6 +352,17 @@ const BankTransactionsTableView = ({
     ? false
     : (bankTransactions?.length ?? 0) === 0
 
+  const handlePageChange = useCallback((page: number) => {
+    if (page === currentPage) return
+
+    emitLayerEvent({
+      type: LayerEventType.TransactionsPageChanged,
+      version: 1,
+      payload: { page },
+    })
+    setCurrentPage(page)
+  }, [currentPage, emitLayerEvent, setCurrentPage])
+
   return (
     <Container
       className={
@@ -396,14 +407,7 @@ const BankTransactionsTableView = ({
             currentPage={currentPage}
             totalCount={data?.length || 0}
             pageSize={pageSize}
-            onPageChange={(page) => {
-              emitLayerEvent({
-                type: LayerEventType.TransactionsPageChanged,
-                version: 1,
-                payload: { page },
-              })
-              setCurrentPage(page)
-            }}
+            onPageChange={handlePageChange}
             fetchMore={fetchMore}
             hasMore={hasMore}
           />

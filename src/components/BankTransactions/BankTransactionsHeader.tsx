@@ -69,6 +69,8 @@ function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
   const [localSearch, setLocalSearch] = useState(() => filters?.query ?? '')
 
   const debouncedSetDescription = useDebounce((value: string) => {
+    if (value === (filters?.query ?? '')) return
+
     setFilters({ query: value })
 
     emitLayerEvent({
