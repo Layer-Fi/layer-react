@@ -1,8 +1,7 @@
-import { type Key, useCallback, useMemo, useRef, useState } from 'react'
+import { type Key, useCallback, useMemo, useState } from 'react'
 import type { ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
-import { debounce } from 'lodash-es'
 import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'
@@ -71,36 +70,19 @@ function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
 
   const debouncedSetDescription = useDebounce((value: string) => {
     setFilters({ query: value })
+
+    emitLayerEvent({
+      type: LayerEventType.TransactionsSearchSubmitted,
+      version: 1,
+      payload: { query: value },
+    })
   })
-
-  // The host only cares about the final search, so this is a trailing-only
-  // debounce (no maxWait) that fires once the query settles, deduped against the
-  // last emitted value. Kept separate from setFilters, whose maxWait is tuned for
-  // progressive result fetching and would emit noisy mid-typing events.
-  const emitSearchRef = useRef(emitLayerEvent)
-  emitSearchRef.current = emitLayerEvent
-  const lastEmittedQueryRef = useRef<string | null>(null)
-
-  const debouncedEmitSearch = useMemo(
-    () => debounce((value: string) => {
-      if (value === lastEmittedQueryRef.current) return
-      lastEmittedQueryRef.current = value
-
-      emitSearchRef.current({
-        type: LayerEventType.TransactionsSearchSubmitted,
-        version: 1,
-        payload: { query: value },
-      })
-    }, 300),
-    [],
-  )
 
   const handleSearch = useCallback((value: string) => {
     setLocalSearch(value)
 
     void debouncedSetDescription(value)
-    debouncedEmitSearch(value)
-  }, [debouncedSetDescription, debouncedEmitSearch])
+  }, [debouncedSetDescription])
 
   return (
     <SearchField

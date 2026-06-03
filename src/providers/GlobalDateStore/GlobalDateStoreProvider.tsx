@@ -1,4 +1,4 @@
-import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
+import { createContext, type PropsWithChildren, useCallback, useContext, useMemo, useState } from 'react'
 import {
   endOfDay,
   endOfMonth,
@@ -129,6 +129,55 @@ function buildStore() {
 
 const GlobalDateStoreContext = createContext(buildStore())
 
+/**
+ * Optional listener for user-driven changes to the global date range. The
+ * pickers that write to the store are shared across surfaces, so a surface
+ * that wants to attribute period changes to itself (e.g. UnifiedReports
+ * emitting `reports.period_selected`) provides this around its date controls
+ * instead of instrumenting each shared picker.
+ */
+const GlobalDateChangeListenerContext = createContext<((range: DateRange) => void) | null>(null)
+
+export function GlobalDateChangeListenerProvider({
+  onDateChange,
+  children,
+}: PropsWithChildren<{ onDateChange: (range: DateRange) => void }>) {
+  return (
+    <GlobalDateChangeListenerContext.Provider value={onDateChange}>
+      {children}
+    </GlobalDateChangeListenerContext.Provider>
+  )
+}
+
+/**
+ * Wraps a date store action so the subtree's change listener (if any) is
+ * notified when the resulting range differs from the current one. The equality
+ * check keeps mount-time syncs (e.g. GlobalDateRangePicker re-applying the
+ * current range) from notifying.
+ */
+function useWithDateChangeListener() {
+  const store = useContext(GlobalDateStoreContext)
+  const listener = useContext(GlobalDateChangeListenerContext)
+
+  return useCallback(<TOptions,>(action: (options: TOptions) => DateRange) => {
+    if (!listener) return action
+
+    return (options: TOptions) => {
+      const previous = store.getState()
+      const next = action(options)
+
+      if (
+        next.startDate.valueOf() !== previous.startDate.valueOf()
+        || next.endDate.valueOf() !== previous.endDate.valueOf()
+      ) {
+        listener(next)
+      }
+
+      return next
+    }
+  }, [store, listener])
+}
+
 const getEffectiveDateForMode = (mode: DateSelectionMode, { date }: { date: Date }): { date: Date } => {
   return { date: getDateRange({ mode, startDate: date, endDate: date }).endDate }
 }
@@ -146,10 +195,14 @@ export function useGlobalDate({ dateSelectionMode = 'full' }: { dateSelectionMod
 
 export function useGlobalDateActions() {
   const store = useContext(GlobalDateStoreContext)
+  const withDateChangeListener = useWithDateChangeListener()
 
   const setDate = useStore(store, ({ actions: { setDate } }) => setDate)
 
-  return { setDate }
+  return useMemo(
+    () => ({ setDate: withDateChangeListener(setDate) }),
+    [withDateChangeListener, setDate],
+  )
 }
 
 const getEffectiveDateRangeForMode = (
@@ -175,16 +228,17 @@ export function useGlobalDateRange({ dateSelectionMode }: { dateSelectionMode: D
 
 export function useGlobalDateRangeActions() {
   const store = useContext(GlobalDateStoreContext)
+  const withDateChangeListener = useWithDateChangeListener()
 
   const setDateRange = useStore(store, ({ actions: { setDateRange } }) => setDateRange)
   const setMonth = useStore(store, ({ actions: { setMonth } }) => setMonth)
   const setYear = useStore(store, ({ actions: { setYear } }) => setYear)
 
-  return {
-    setDateRange,
-    setMonth,
-    setYear,
-  }
+  return useMemo(() => ({
+    setDateRange: withDateChangeListener(setDateRange),
+    setMonth: withDateChangeListener(setMonth),
+    setYear: withDateChangeListener(setYear),
+  }), [withDateChangeListener, setDateRange, setMonth, setYear])
 }
 
 export function useGlobalDatePeriodAlignedActions() {

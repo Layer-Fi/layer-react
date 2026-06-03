@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 
 import type { BankAccount } from '@internal-types/linkedAccounts'
 import { isAllExternalAccountsUserCreatedCustom } from '@utils/bankAccount'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
@@ -13,7 +15,18 @@ type UnlinkAccountConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenCh
 export function UnlinkAccountConfirmationModal({ isOpen, onOpenChange, bankAccount }: UnlinkAccountConfirmationModalProps) {
   const { t } = useTranslation()
   const { unlinkBankAccount } = useContext(LinkedAccountsContext)
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.LinkedAccounts)
   const variant = isAllExternalAccountsUserCreatedCustom(bankAccount) ? 'DELETE' : 'UNLINK'
+
+  // Fires when the user confirms in the modal, not on API success.
+  const onConfirm = () => {
+    emitLayerEvent({
+      type: LayerEventType.LinkedAccountsUnlinkAccountClicked,
+      version: 1,
+      payload: { accountId: bankAccount.id },
+    })
+    return unlinkBankAccount(bankAccount.id)
+  }
 
   const modalContent = useMemo(() => {
     switch (variant) {
@@ -41,7 +54,7 @@ export function UnlinkAccountConfirmationModal({ isOpen, onOpenChange, bankAccou
       onOpenChange={onOpenChange}
       title={modalContent.title}
       description={modalContent.description}
-      onConfirm={() => unlinkBankAccount(bankAccount.id)}
+      onConfirm={onConfirm}
       confirmLabel={modalContent.confirmLabel}
       errorText={modalContent.errorText}
     />

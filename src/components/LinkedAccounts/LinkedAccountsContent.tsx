@@ -2,6 +2,8 @@ import { useContext } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import PlusIcon from '@icons/PlusIcon'
 import { HStack } from '@ui/Stack/Stack'
@@ -24,6 +26,16 @@ export const LinkedAccountsContent = ({
 }: LinkedAccountsDataProps) => {
   const { t } = useTranslation()
   const { data, addConnection } = useContext(LinkedAccountsContext)
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.LinkedAccounts)
+
+  const onAddAccountClick = () => {
+    emitLayerEvent({
+      type: LayerEventType.LinkedAccountsAddAccountClicked,
+      version: 1,
+      payload: {},
+    })
+    void addConnection('PLAID')
+  }
 
   const linkedAccountsNewAccountClassName = classNames(
     'Layer__linked-accounts__new-account',
@@ -49,7 +61,7 @@ export const LinkedAccountsContent = ({
         <div
           role='button'
           tabIndex={0}
-          onClick={() => { void addConnection('PLAID') }}
+          onClick={onAddAccountClick}
           className={linkedAccountsNewAccountClassName}
         >
           <HStack align='center' gap='2xs'>

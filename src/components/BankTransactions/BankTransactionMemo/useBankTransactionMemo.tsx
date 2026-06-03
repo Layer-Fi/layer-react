@@ -4,6 +4,8 @@ import { useForm } from '@tanstack/react-form'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { useBankTransactionMetadata } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useBankTransactionsMetadata'
 import { useUpdateBankTransactionMetadata } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useUpdateBankTransactionMetadata'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 
 interface BankTransactionMemoProps {
   bankTransactionId: BankTransaction['id']
@@ -17,6 +19,7 @@ export const useBankTransactionMemo = ({ bankTransactionId }: BankTransactionMem
     data: updateResult,
   } = useUpdateBankTransactionMetadata({ bankTransactionId })
   const { data: bankTransactionMetadata, mutate: mutateBankTransactionMetadata } = useBankTransactionMetadata({ bankTransactionId })
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BankTransactions)
 
   const form = useForm({
     defaultValues: {
@@ -24,6 +27,12 @@ export const useBankTransactionMemo = ({ bankTransactionId }: BankTransactionMem
     },
     onSubmit: async ({ value }) => {
       if (value.memo !== undefined && form.state.isDirty) {
+        emitLayerEvent({
+          type: LayerEventType.TransactionDescriptionEntered,
+          version: 1,
+          payload: { transactionId: bankTransactionId },
+        })
+
         const result = await mutateBankTransactionMetadata(
           updateBankTransactionMetadata({ memo: value.memo ?? '' }),
           { optimisticData: { memo: value.memo ?? '' }, revalidate: false },
