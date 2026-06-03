@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { format } from 'date-fns'
 
 import { ReportControl } from '@schemas/reports/reportConfig'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
@@ -64,7 +65,7 @@ export const UnifiedReportControls = () => {
     emitLayerEvent({
       type: LayerEventType.ReportsPeriodSelected,
       version: 1,
-      payload: { startDate: startDate.toISOString(), endDate: endDate.toISOString() },
+      payload: { startDate: format(startDate, 'yyyy-MM-dd'), endDate: format(endDate, 'yyyy-MM-dd') },
     })
   }, [emitLayerEvent])
 
