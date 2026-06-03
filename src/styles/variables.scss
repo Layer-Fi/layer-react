@@ -87,6 +87,7 @@
   --text-color-primary: var(--color-dark);
   --text-color-secondary: var(--color-base-600);
   --bg-element-focus: var(--color-base-50);
+  --header-bg-color: color-mix(in srgb, var(--color-base-0) 50%, transparent);
 
   /* Extended Customization */
   --font-family: 'InterVariable', 'Inter', sans-serif;
