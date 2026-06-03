@@ -273,9 +273,9 @@ export const InvoiceFormSchema = Schema.Struct({
 
   lineItems: Schema.Array(InvoiceFormLineItemSchema),
 
-  discountRate: Schema.BigDecimal,
+  discountRate: NonRecursiveBigDecimalSchema,
 
-  taxRate: Schema.BigDecimal,
+  taxRate: NonRecursiveBigDecimalSchema,
 
   memo: Schema.String,
 })

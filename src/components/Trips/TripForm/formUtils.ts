@@ -2,15 +2,15 @@ import { getLocalTimeZone, today } from '@internationalized/date'
 import { BigDecimal as BD } from 'effect'
 import type { TFunction } from 'i18next'
 
+import { fromNonRecursiveBigDecimal, NRBD_ZERO, toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import { type Trip, type TripForm, TripPurpose } from '@schemas/trip'
-import { BIG_DECIMAL_ZERO } from '@utils/bigDecimalUtils'
 
 export const getTripFormDefaultValues = (trip?: Trip): TripForm => {
   if (trip) {
     return {
       vehicle: trip.vehicle ?? null,
       tripDate: trip.tripDate,
-      distance: trip.distance,
+      distance: toNonRecursiveBigDecimal(trip.distance),
       purpose: trip.purpose,
       startAddress: trip.startAddress || '',
       endAddress: trip.endAddress || '',
@@ -21,7 +21,7 @@ export const getTripFormDefaultValues = (trip?: Trip): TripForm => {
   return {
     vehicle: null,
     tripDate: today(getLocalTimeZone()),
-    distance: BIG_DECIMAL_ZERO,
+    distance: NRBD_ZERO,
     purpose: TripPurpose.Business,
     startAddress: '',
     endAddress: '',
@@ -42,7 +42,7 @@ export const validateTripForm = ({ trip }: { trip: TripForm }, t: TFunction) => 
     errors.push({ tripDate: t('trips:validation.trip_date_not_future', 'Trip date cannot be in the future.') })
   }
 
-  if (!BD.isPositive(distance)) {
+  if (!BD.isPositive(fromNonRecursiveBigDecimal(distance))) {
     errors.push({ distance: t('trips:validation.distance_greater_than_zero', 'Distance must be greater than zero.') })
   }
 
@@ -57,7 +57,7 @@ export const convertTripFormToUpsertTrip = (form: TripForm): unknown => {
   return {
     vehicleId: form.vehicle?.id,
     tripDate: form.tripDate,
-    distance: form.distance,
+    distance: fromNonRecursiveBigDecimal(form.distance),
     purpose: form.purpose,
     startAddress: form.startAddress.trim() || null,
     endAddress: form.endAddress.trim() || null,

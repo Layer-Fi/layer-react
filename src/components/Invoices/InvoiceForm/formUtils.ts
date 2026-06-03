@@ -10,11 +10,11 @@ import {
   fromNonRecursiveBigDecimal,
   NRBD_ONE,
   NRBD_ZERO,
+  nrbdEquals,
   toNonRecursiveBigDecimal,
 } from '@schemas/nonRecursiveBigDecimal'
 import {
   BIG_DECIMAL_ZERO,
-  convertBigDecimalToCents,
   convertCentsToBigDecimal,
   safeDivide,
 } from '@utils/bigDecimalUtils'
@@ -71,8 +71,8 @@ export const getEmptyInvoiceFormValues = (): InvoiceForm => {
     address: '',
     lineItems: [EMPTY_LINE_ITEM],
     memo: '',
-    discountRate: BIG_DECIMAL_ZERO,
-    taxRate: BIG_DECIMAL_ZERO,
+    discountRate: NRBD_ZERO,
+    taxRate: NRBD_ZERO,
   }
 }
 
@@ -101,14 +101,14 @@ export const getInvoiceFormInitialValues = (invoice: Invoice): InvoiceForm => {
   const rawTaxableSubtotal = computeRawTaxableSubtotal(invoiceFormLineItems)
 
   const additionalDiscount = convertCentsToBigDecimal(invoice.additionalDiscount)
-  const discountRate = safeDivide(additionalDiscount, subtotal)
+  const discountRate = safeDivide(additionalDiscount, fromNonRecursiveBigDecimal(subtotal))
 
-  const taxableSubtotal = computeTaxableSubtotal({ rawTaxableSubtotal, discountRate })
+  const taxableSubtotal = computeTaxableSubtotal({ rawTaxableSubtotal, discountRate: toNonRecursiveBigDecimal(discountRate) })
 
   const taxes = invoice.lineItems.reduce(
     (sum, item) =>
       BD.sum(sum, convertCentsToBigDecimal(item.salesTaxTotal)), BIG_DECIMAL_ZERO)
-  const taxRate = safeDivide(taxes, taxableSubtotal)
+  const taxRate = safeDivide(taxes, fromNonRecursiveBigDecimal(taxableSubtotal))
   const sentAt = invoice.sentAt ? fromDate(invoice.sentAt, 'UTC') : null
   const dueAt = invoice.dueAt ? fromDate(invoice.dueAt, 'UTC') : null
 
@@ -121,8 +121,8 @@ export const getInvoiceFormInitialValues = (invoice: Invoice): InvoiceForm => {
     email: invoice.customer?.email || '',
     address: invoice.customer?.addressString || '',
     lineItems: invoiceFormLineItems,
-    discountRate,
-    taxRate,
+    discountRate: toNonRecursiveBigDecimal(discountRate),
+    taxRate: toNonRecursiveBigDecimal(taxRate),
     memo: invoice.memo || '',
   }
 }
@@ -171,7 +171,7 @@ export const validateInvoiceForm = ({ value: invoice }: { value: InvoiceForm }, 
   })
 
   const grandTotal = getGrandTotalFromInvoice(invoice)
-  if (BD.isNegative(grandTotal)) {
+  if (BD.isNegative(fromNonRecursiveBigDecimal(grandTotal))) {
     errors.push({ lineItems: t('invoices:label.invoice_negative_total', 'Invoice has a negative total.') })
   }
 
@@ -196,17 +196,16 @@ export const convertInvoiceFormToParams = (
         quantity: fromNonRecursiveBigDecimal(item.quantity),
       }
 
-      if (!item.isTaxable || BD.equals(form.taxRate, BIG_DECIMAL_ZERO)) return baseLineItem
+      if (!item.isTaxable || nrbdEquals(form.taxRate, NRBD_ZERO)) return baseLineItem
 
-      const itemAmount = fromNonRecursiveBigDecimal(item.amount)
-      const itemTaxableSubtotal = computeTaxableSubtotal({ rawTaxableSubtotal: itemAmount, discountRate: form.discountRate })
+      const itemTaxableSubtotal = computeTaxableSubtotal({ rawTaxableSubtotal: item.amount, discountRate: form.discountRate })
       const itemTaxes = computeTaxes({ taxableSubtotal: itemTaxableSubtotal, taxRate: form.taxRate })
 
-      return { ...baseLineItem, salesTaxes: [{ amount: convertBigDecimalToCents(itemTaxes) }] }
+      return { ...baseLineItem, salesTaxes: [{ amount: convertNonRecursiveBigDecimalToCents(itemTaxes) }] }
     }),
 
-  ...(!BD.equals(form.discountRate, BIG_DECIMAL_ZERO) && {
-    additionalDiscount: convertBigDecimalToCents(
+  ...(!nrbdEquals(form.discountRate, NRBD_ZERO) && {
+    additionalDiscount: convertNonRecursiveBigDecimalToCents(
       computeAdditionalDiscount({ subtotal: computeSubtotal(form.lineItems), discountRate: form.discountRate }),
     ),
   }),

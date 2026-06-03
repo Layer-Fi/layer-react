@@ -68,7 +68,7 @@ export const TripForm = (props: TripFormProps) => {
 
       <form.AppField name='distance'>
         {field => (
-          <field.FormBigDecimalField
+          <field.FormNonRecursiveBigDecimalField
             label={t('trips:label.distance_miles', 'Distance (miles)')}
             inline
             isReadOnly={isReadOnly}

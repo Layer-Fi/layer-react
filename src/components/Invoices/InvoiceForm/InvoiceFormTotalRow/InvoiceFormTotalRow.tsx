@@ -1,8 +1,7 @@
 import classNames from 'classnames'
-import { type BigDecimal as BD } from 'effect'
 import type { PropsWithChildren } from 'react'
 
-import { convertBigDecimalToCents } from '@utils/bigDecimalUtils'
+import { convertNonRecursiveBigDecimalToCents, type NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -11,7 +10,7 @@ import './invoiceFormTotalRow.scss'
 
 type InvoiceFormTotalRowProps = PropsWithChildren<{
   label: string
-  value: BD.BigDecimal
+  value: NonRecursiveBigDecimal
 }>
 
 export const InvoiceFormTotalRow = ({ label, value, children }: InvoiceFormTotalRowProps) => {
@@ -26,7 +25,7 @@ export const InvoiceFormTotalRow = ({ label, value, children }: InvoiceFormTotal
       <Span>{label}</Span>
       {children}
       <Span align='right'>
-        {formatCurrencyFromCents(convertBigDecimalToCents(value))}
+        {formatCurrencyFromCents(convertNonRecursiveBigDecimalToCents(value))}
       </Span>
     </HStack>
   )

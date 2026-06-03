@@ -2,14 +2,14 @@ import { fromDate, getLocalTimeZone, toCalendarDate, today } from '@internationa
 import { startOfToday } from 'date-fns'
 
 import { type Invoice } from '@schemas/invoices/invoice'
-import { convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
+import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents } from '@schemas/nonRecursiveBigDecimal'
 import type { InvoiceRefundForm } from '@components/Invoices/InvoiceRefundForm/invoiceRefundFormSchemas'
 
 export const getInvoiceRefundFormDefaultValues = (invoice: Invoice): InvoiceRefundForm => {
   const completedAt = fromDate(startOfToday(), getLocalTimeZone())
 
   return {
-    amount: convertCentsToBigDecimal(invoice.totalAmount),
+    amount: convertCentsToNonRecursiveBigDecimal(invoice.totalAmount),
     method: null,
     completedAt: completedAt,
   }
@@ -52,7 +52,7 @@ export const validateInvoiceRefundForm = (
 }
 
 export const convertInvoiceRefundFormToParams = (form: InvoiceRefundForm): unknown => ({
-  amount: convertBigDecimalToCents(form.amount),
+  amount: convertNonRecursiveBigDecimalToCents(form.amount),
   method: form.method,
   completedAt: form.completedAt?.toDate(),
 })

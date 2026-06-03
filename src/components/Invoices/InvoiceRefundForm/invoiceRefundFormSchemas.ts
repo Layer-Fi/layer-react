@@ -1,10 +1,11 @@
 import { Schema } from 'effect'
 
 import { ZonedDateTimeFromSelf } from '@schemas/common/zonedDateTimeFromSelf'
+import { NonRecursiveBigDecimalSchema } from '@schemas/nonRecursiveBigDecimal'
 import { PaymentMethodSchema } from '@components/PaymentMethod/schemas'
 
 export const InvoiceRefundFormSchema = Schema.Struct({
-  amount: Schema.BigDecimal,
+  amount: NonRecursiveBigDecimalSchema,
 
   method: Schema.NullOr(PaymentMethodSchema),
 

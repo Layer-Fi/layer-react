@@ -1,15 +1,16 @@
 import { Schema } from 'effect'
 
 import type { USStateCode } from '@internal-types/location'
+import { NonRecursiveBigDecimalSchema } from '@schemas/nonRecursiveBigDecimal'
 import type { FilingStatus } from '@schemas/taxEstimates/filingStatus'
 
 const WithholdingFormSchema = Schema.Struct({
   useCustomWithholding: Schema.NullishOr(Schema.Boolean),
-  amount: Schema.NullishOr(Schema.BigDecimal),
+  amount: Schema.NullishOr(NonRecursiveBigDecimalSchema),
 })
 const HomeOfficeDeductionFormSchema = Schema.Struct({
   useHomeOfficeDeduction: Schema.NullishOr(Schema.Boolean),
-  homeOfficeArea: Schema.NullishOr(Schema.BigDecimal),
+  homeOfficeArea: Schema.NullishOr(NonRecursiveBigDecimalSchema),
 })
 const VehicleDeductionFormSchema = Schema.Struct({
   useMileageDeduction: Schema.NullishOr(Schema.Boolean),
@@ -20,9 +21,9 @@ const DeductionsFormSchema = Schema.Struct({
 })
 const FederalConfigurationFormSchema = Schema.Struct({
   filingStatus: Schema.NullishOr(Schema.String) as Schema.Schema<FilingStatus | null | undefined>,
-  annualW2Income: Schema.NullishOr(Schema.BigDecimal),
-  tipIncome: Schema.NullishOr(Schema.BigDecimal),
-  overtimeIncome: Schema.NullishOr(Schema.BigDecimal),
+  annualW2Income: Schema.NullishOr(NonRecursiveBigDecimalSchema),
+  tipIncome: Schema.NullishOr(NonRecursiveBigDecimalSchema),
+  overtimeIncome: Schema.NullishOr(NonRecursiveBigDecimalSchema),
   withholding: Schema.NullishOr(WithholdingFormSchema),
 })
 const StateConfigurationFormSchema = Schema.Struct({

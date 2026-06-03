@@ -9,6 +9,12 @@ export const NonRecursiveBigDecimalSchema = Schema.Struct({
   scale: Schema.Int,
 })
 
+export const makeNonRecursiveBigDecimal = (fields: { value: bigint, scale: number }): NonRecursiveBigDecimal =>
+  NonRecursiveBigDecimalSchema.make(fields)
+
+export const negateNonRecursiveBigDecimal = ({ value, scale }: NonRecursiveBigDecimal): NonRecursiveBigDecimal =>
+  makeNonRecursiveBigDecimal({ value: -value, scale })
+
 export const NRBD_ZERO: NonRecursiveBigDecimal = { value: BigInt(0), scale: 0 }
 export const NRBD_ONE: NonRecursiveBigDecimal = { value: BigInt(1), scale: 0 }
 

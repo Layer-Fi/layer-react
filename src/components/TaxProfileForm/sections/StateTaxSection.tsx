@@ -50,7 +50,7 @@ export const StateTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFormS
         {useCustomWithholding => useCustomWithholding && (
           <form.AppField name='usConfiguration.state.withholding.amount'>
             {field => (
-              <field.FormBigDecimalField
+              <field.FormNonRecursiveBigDecimalField
                 label={t('taxEstimates:label.withholding_amount', 'Withholding amount')}
                 mode='currency'
                 isReadOnly={isReadOnly}
