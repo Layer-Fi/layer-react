@@ -1,5 +1,6 @@
 import { pipe, Schema } from 'effect'
 
+import { NonRecursiveBigDecimalSchema } from '@schemas/nonRecursiveBigDecimal'
 import { VehicleSchema } from '@schemas/vehicle'
 
 import { CalendarDateFromSelf, CalendarDateSchema } from './common/calendarDateFromSelf'
@@ -79,7 +80,7 @@ export type TripEncoded = typeof TripSchema.Encoded
 export const TripFormSchema = Schema.Struct({
   vehicle: Schema.NullOr(VehicleSchema),
   tripDate: Schema.NullOr(CalendarDateFromSelf),
-  distance: Schema.BigDecimal,
+  distance: NonRecursiveBigDecimalSchema,
   purpose: TripPurposeSchema,
   startAddress: Schema.String,
   endAddress: Schema.String,
