@@ -57,7 +57,7 @@ export const JournalEntryLineItem = ({ form, index, displayIndex, isReadOnly, on
 
         <form.AppField name={`lineItems[${index}].amount`}>
           {field => (
-            <field.FormBigDecimalField
+            <field.FormNonRecursiveBigDecimalField
               label={t('common:label.amount', 'Amount')}
               mode='currency'
               showLabel={showLabels}

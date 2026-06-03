@@ -4,13 +4,14 @@ import { AccountIdentifierSchema } from '@schemas/accountIdentifier'
 import { ZonedDateTimeFromSelf } from '@schemas/common/zonedDateTimeFromSelf'
 import { CustomerSchema } from '@schemas/customer'
 import { LedgerEntryDirectionSchema, SingleChartAccountSchema } from '@schemas/generalLedger/ledgerAccount'
+import { NonRecursiveBigDecimalSchema } from '@schemas/nonRecursiveBigDecimal'
 import { TagKeyValueSchema, TagSchema, TransactionTagSchema } from '@schemas/tag'
 import { VendorSchema } from '@schemas/vendor'
 
 export const JournalEntryFormLineItemSchema = Schema.Struct({
   externalId: Schema.NullOr(Schema.String),
   accountIdentifier: AccountIdentifierSchema,
-  amount: Schema.BigDecimal,
+  amount: NonRecursiveBigDecimalSchema,
   direction: LedgerEntryDirectionSchema,
   memo: Schema.NullOr(Schema.String),
   tags: Schema.Array(TagSchema),
