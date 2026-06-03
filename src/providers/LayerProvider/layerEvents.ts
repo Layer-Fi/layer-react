@@ -116,7 +116,6 @@ export const ReportsTabClickedEventV1 = LayerEventEnvelope(
   LayerEventType.ReportsTabClicked, 1,
   { reportKey: Schema.String },
 )
-// ISO-8601 strings; for single-date reports the range collapses to one day.
 export const ReportsPeriodSelectedEventV1 = LayerEventEnvelope(
   LayerEventType.ReportsPeriodSelected, 1,
   { startDate: Schema.String, endDate: Schema.String },

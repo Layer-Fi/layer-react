@@ -1,11 +1,7 @@
-import { useCallback, useState } from 'react'
-import { format } from 'date-fns'
+import { useState } from 'react'
 
 import { ReportControl } from '@schemas/reports/reportConfig'
-import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
-import { type DateRange, GlobalDateChangeListenerProvider } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import {
   hasControl,
   useBaseUnifiedReport,
@@ -60,41 +56,30 @@ export const UnifiedReportControls = () => {
   const hasReportingBasis = hasControl(baseReport, ReportControl.ReportingBasis) && reportingBasis != null
   const tagControl = baseReport?.tagControl
 
-  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.UnifiedReports)
-  const onDateChange = useCallback(({ startDate, endDate }: DateRange) => {
-    emitLayerEvent({
-      type: LayerEventType.ReportsPeriodSelected,
-      version: 1,
-      payload: { startDate: format(startDate, 'yyyy-MM-dd'), endDate: format(endDate, 'yyyy-MM-dd') },
-    })
-  }, [emitLayerEvent])
-
   return (
-    <GlobalDateChangeListenerProvider onDateChange={onDateChange}>
-      <VStack ref={containerRef} className='Layer__UnifiedReports__ControlsContainer'>
-        <Stack
-          direction='row'
-          pb='md'
-          pi='lg'
-          gap='xs'
-          className='Layer__UnifiedReports__Controls'
-        >
-          <UnifiedReportDateSelection isCompact={isCompact} />
-          {(hasYear || hasGroupBy || hasReportingBasis || tagControl) && (
-            <div className='Layer__UnifiedReports__AdditionalControls'>
-              {hasYear && <GlobalYearPicker />}
-              {hasGroupBy && <DateGroupByComboBox value={groupBy} onValueChange={setGroupBy} />}
-              {tagControl && <UnifiedReportTagControl tagControl={tagControl} />}
-              {hasReportingBasis && (
-                <UnifiedReportReportingBasisControl
-                  value={reportingBasis}
-                  onValueChange={setReportingBasis}
-                />
-              )}
-            </div>
-          )}
-        </Stack>
-      </VStack>
-    </GlobalDateChangeListenerProvider>
+    <VStack ref={containerRef} className='Layer__UnifiedReports__ControlsContainer'>
+      <Stack
+        direction='row'
+        pb='md'
+        pi='lg'
+        gap='xs'
+        className='Layer__UnifiedReports__Controls'
+      >
+        <UnifiedReportDateSelection isCompact={isCompact} />
+        {(hasYear || hasGroupBy || hasReportingBasis || tagControl) && (
+          <div className='Layer__UnifiedReports__AdditionalControls'>
+            {hasYear && <GlobalYearPicker />}
+            {hasGroupBy && <DateGroupByComboBox value={groupBy} onValueChange={setGroupBy} />}
+            {tagControl && <UnifiedReportTagControl tagControl={tagControl} />}
+            {hasReportingBasis && (
+              <UnifiedReportReportingBasisControl
+                value={reportingBasis}
+                onValueChange={setReportingBasis}
+              />
+            )}
+          </div>
+        )}
+      </Stack>
+    </VStack>
   )
 }
