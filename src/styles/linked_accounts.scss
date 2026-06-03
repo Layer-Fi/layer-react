@@ -213,7 +213,7 @@
     }
 
     .account-balance {
-      color: var(--color-base-900);
+      color: var(--color-base-1000);
     }
   }
 
@@ -258,7 +258,7 @@
     }
 
     .account-balance {
-      color: var(--color-base-900);
+      color: var(--color-base-1000);
     }
   }
 
@@ -343,7 +343,7 @@
       margin: var(--spacing-xs);
       background: var(--color-base-0);
       cursor: pointer;
-      color: var(--color-base-900);
+      color: var(--color-base-1000);
       transform: translate3d(5px, -5px, 0);
       transition: 0.15s all ease-out;
     }
