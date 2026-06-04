@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 
 import { type LoadedStatus } from '@internal-types/general'
 import { type AccountSource, type BankAccount, type ExternalAccountConnection } from '@internal-types/linkedAccounts'
@@ -8,14 +7,11 @@ import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-ac
 import { useUnlinkBankAccount } from '@hooks/api/businesses/[business-id]/bank-accounts/useUnlinkBankAccount'
 import { useConfirmExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/confirm'
 import { useExcludeExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/exclude'
-import { useUpdateConnectionStatus } from '@hooks/api/businesses/[business-id]/external-accounts/update-connection-status'
 import { useBreakPlaidItemConnection } from '@hooks/api/businesses/[business-id]/plaid/items/[plaid-item-id]/sandbox-reset-item-login'
 import { useUnlinkPlaidItem } from '@hooks/api/businesses/[business-id]/plaid/items/[plaid-item-id]/unlink'
 import { useCreatePlaidLink } from '@hooks/api/businesses/[business-id]/plaid/link'
-import { useExchangePlaidPublicToken } from '@hooks/api/businesses/[business-id]/plaid/link/exchange'
 import { useCreatePlaidUpdateModeLink } from '@hooks/api/businesses/[business-id]/plaid/update-mode-link'
-import { useAccountConfirmationStoreActions } from '@providers/AccountConfirmationStoreProvider'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { type LinkMode, usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export function getAccountsNeedingConfirmation(bankAccounts: ReadonlyArray<BankAccount>): ExternalAccountConnection[] {
@@ -45,8 +41,6 @@ type UseLinkedAccounts = () => {
   breakConnection: (source: AccountSource, connectionExternalId: string) => Promise<void>
 }
 
-type LinkMode = 'update' | 'add'
-
 /**
  * Returns a memoized action that only runs for Plaid-sourced connections,
  * logging a consistent "not yet supported" message for any other source.
@@ -68,18 +62,12 @@ const usePlaidOnlyAction = <Args extends unknown[]>(
   )
 
 export const useLinkedAccounts: UseLinkedAccounts = () => {
-  const { usePlaidSandbox } = useEnvironment()
   const { addToast } = useLayerContext()
   const { t } = useTranslation()
-  const {
-    preload: preloadAccountConfirmation,
-    reset: resetAccountConfirmation,
-  } = useAccountConfirmationStoreActions()
 
   const [linkToken, setLinkToken] = useState<string | null>(null)
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
-  const [isLinking, setIsLinking] = useState(false)
 
   const {
     data: bankAccounts,
@@ -91,10 +79,8 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
   const { trigger: triggerCreatePlaidLink } = useCreatePlaidLink()
   const { trigger: triggerCreatePlaidUpdateModeLink } = useCreatePlaidUpdateModeLink()
-  const { trigger: triggerExchangePlaidPublicToken } = useExchangePlaidPublicToken()
   const { trigger: triggerConfirmExternalAccount } = useConfirmExternalAccount()
   const { trigger: triggerExcludeExternalAccount } = useExcludeExternalAccount()
-  const { trigger: triggerUpdateConnectionStatus } = useUpdateConnectionStatus()
   const { trigger: triggerUnlinkPlaidItem } = useUnlinkPlaidItem()
   const { trigger: triggerBreakPlaidItemConnection } = useBreakPlaidItemConnection()
 
@@ -162,7 +148,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     () => fetchLinkToken(
       'add',
       () => triggerCreatePlaidLink({}),
-      t('linkedAccounts:error.start_connection', 'We couldn’t initiate the Plaid connection flow. Please try again.'),
+      t('linkedAccounts:error.start_connection', 'We couldn’t start connecting your account. Please try again.'),
     ),
     [fetchLinkToken, triggerCreatePlaidLink, t],
   )
@@ -174,67 +160,17 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     (plaidItemPlaidId: string) => fetchLinkToken(
       'update',
       () => triggerCreatePlaidUpdateModeLink({ plaidItemId: plaidItemPlaidId }),
-      t('linkedAccounts:error.repair_connection', 'We couldn’t start the connection repair flow. Please try again.'),
+      t('linkedAccounts:error.repair_connection', 'We couldn’t start reconnecting your account. Please try again.'),
     ),
     [fetchLinkToken, triggerCreatePlaidUpdateModeLink, t],
   )
 
-  /**
-   * When the user has finished entering credentials, send the resulting
-   * token to the backend where it will fetch and save the Plaid access token
-   * and item id.
-   */
-  const exchangePlaidPublicToken = useCallback(
-    async (publicToken: string, metadata: PlaidLinkOnSuccessMetadata) => {
-      setIsLinking(true)
-      preloadAccountConfirmation()
-
-      await mutateAndRefetchAccounts(
-        () => triggerExchangePlaidPublicToken({
-          public_token: publicToken,
-          institution: metadata.institution,
-        }),
-        t('linkedAccounts:error.connect_account', 'We couldn’t finish connecting your account. Please try again.'),
-      ).finally(() => {
-        setIsLinking(false)
-        resetAccountConfirmation()
-      })
-    },
-    [mutateAndRefetchAccounts, triggerExchangePlaidPublicToken, t, preloadAccountConfirmation, resetAccountConfirmation],
-  )
-
-  const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
+  const { isLinking } = usePlaidLinkModal({
     token: linkToken,
-
-    // If in update mode, we don't need to exchange the public token for an access token.
-    // The existing access token will automatically become valid again
-    onSuccess: (
-      publicToken: string,
-      metadata: PlaidLinkOnSuccessMetadata,
-    ) => {
-      if (linkMode == 'add') {
-        // Note: a sync is kicked off in the backend in this endpoint
-        void exchangePlaidPublicToken(publicToken, metadata)
-      }
-      else {
-        // Refresh the account connections, which should remove the error
-        // pills from any broken accounts
-        void triggerUpdateConnectionStatus().then(() => {
-          void refetchAccounts()
-          setLinkMode('add')
-        })
-      }
-    },
-    onExit: () => setLinkMode('add'),
-    env: usePlaidSandbox ? 'sandbox' : undefined,
+    onSuccess: refetchAccounts,
+    linkMode,
+    setLinkMode,
   })
-
-  useEffect(() => {
-    if (plaidLinkReady) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      plaidLinkStart()
-    }
-  }, [plaidLinkStart, plaidLinkReady])
 
   const addConnection = usePlaidOnlyAction('Adding a connection', fetchPlaidLinkToken)
 
@@ -243,7 +179,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const handleRemoveConnection = useCallback(
     (connectionExternalId: string) => mutateAndRefetchAccounts(
       () => triggerUnlinkPlaidItem({ plaidItemId: connectionExternalId }),
-      t('linkedAccounts:error.remove_connection', 'We couldn’t remove the connection. Please try again.'),
+      t('linkedAccounts:error.remove_connection', 'We couldn’t remove this connection. Please try again.'),
     ),
     [mutateAndRefetchAccounts, triggerUnlinkPlaidItem, t],
   )
@@ -252,7 +188,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const handleConfirmAccount = useCallback(
     (accountId: string) => mutateAndRefetchAccounts(
       () => triggerConfirmExternalAccount({ accountId }),
-      t('linkedAccounts:error.confirm_account', 'We couldn’t confirm the account. Please try again.'),
+      t('linkedAccounts:error.confirm_account', 'We couldn’t confirm your account. Please try again.'),
     ),
     [mutateAndRefetchAccounts, triggerConfirmExternalAccount, t],
   )
@@ -261,7 +197,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const handleExcludeAccount = useCallback(
     (accountId: string) => mutateAndRefetchAccounts(
       () => triggerExcludeExternalAccount({ accountId, body: { is_duplicate: true } }),
-      t('linkedAccounts:error.exclude_account', 'We couldn’t exclude the account. Please try again.'),
+      t('linkedAccounts:error.exclude_account', 'We couldn’t exclude your account. Please try again.'),
     ),
     [mutateAndRefetchAccounts, triggerExcludeExternalAccount, t],
   )
@@ -270,7 +206,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const handleBreakConnection = useCallback(
     (connectionExternalId: string) => mutateAndRefetchAccounts(
       () => triggerBreakPlaidItemConnection({ plaidItemId: connectionExternalId }),
-      t('linkedAccounts:error.break_connection', 'We couldn’t reset the connection. Please try again.'),
+      t('linkedAccounts:error.break_connection', 'We couldn’t reset this connection. Please try again.'),
     ),
     [mutateAndRefetchAccounts, triggerBreakPlaidItemConnection, t],
   )
@@ -283,7 +219,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const unlinkBankAccount = useCallback(
     (bankAccountId: string) => mutateAndRefetchAccounts(
       () => triggerUnlinkBankAccount(bankAccountId),
-      t('linkedAccounts:error.unlink_account', 'We couldn’t unlink the account. Please try again.'),
+      t('linkedAccounts:error.unlink_account', 'We couldn’t unlink your account. Please try again.'),
     ),
     [mutateAndRefetchAccounts, triggerUnlinkBankAccount, t],
   )
