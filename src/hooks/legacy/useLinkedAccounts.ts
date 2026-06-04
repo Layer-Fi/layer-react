@@ -313,7 +313,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const unlinkBankAccount = async (bankAccountId: string) => {
     await triggerUnlinkBankAccount(bankAccountId)
     await refetchAccounts()
-    void forceReloadBankTransactions()
     touch(DataModel.LINKED_ACCOUNTS)
   }
 

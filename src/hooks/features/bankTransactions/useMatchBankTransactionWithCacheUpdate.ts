@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
@@ -9,14 +8,13 @@ import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/Ba
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export function useMatchBankTransactionWithCacheUpdate() {
-  const { t } = useTranslation()
-  const { addToast, eventCallbacks } = useLayerContext()
+  const { eventCallbacks } = useLayerContext()
   const { updateLocalBankTransactions, data } = useBankTransactionsContext()
 
   const { trigger: matchBankTransaction, isMutating, isError } = useMatchBankTransaction()
 
   const match = useCallback(
-    async (bankTransaction: BankTransaction, suggestedMatchId: string, notify?: boolean) => {
+    async (bankTransaction: BankTransaction, suggestedMatchId: string) => {
       return matchBankTransaction({
         bankTransactionId: bankTransaction.id,
         match_id: suggestedMatchId,
@@ -50,15 +48,15 @@ export function useMatchBankTransactionWithCacheUpdate() {
 
           updateLocalBankTransactions(transactionsToUpdate)
 
-          if (notify) {
-            addToast({ content: t('bankTransactions:label.transaction_saved', 'Transaction saved') })
-          }
-        })
-        .finally(() => {
           eventCallbacks?.onTransactionCategorized?.()
         })
+        .catch(() => {
+          // The mutation now rejects on a failed match (throwOnError: true).
+          // Swallow it so callers awaiting `match()` don't see an unhandled
+          // rejection; `isError`/`isMutating` drive the inline retry UI.
+        })
     },
-    [matchBankTransaction, updateLocalBankTransactions, data, addToast, eventCallbacks, t],
+    [matchBankTransaction, updateLocalBankTransactions, data, eventCallbacks],
   )
 
   return useMemo(

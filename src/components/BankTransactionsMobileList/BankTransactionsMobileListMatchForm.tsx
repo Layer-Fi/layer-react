@@ -52,7 +52,7 @@ export const BankTransactionsMobileListMatchForm = ({
   const [formError, setFormError] = useState<string | undefined>()
 
   const onMatchSubmit = useCallback(async (matchId: string) => {
-    await matchBankTransaction(bankTransaction, matchId, true)
+    await matchBankTransaction(bankTransaction, matchId)
   }, [matchBankTransaction, bankTransaction])
 
   const save = useCallback(() => {

@@ -96,7 +96,6 @@ export const BankTransactionsMobileListPersonalForm = ({
         },
         taxCode: null,
       },
-      true,
     )
   }
 
