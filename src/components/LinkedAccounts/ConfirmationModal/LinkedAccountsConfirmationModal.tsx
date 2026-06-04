@@ -91,9 +91,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
     accounts.map(({ id }) => [id, true]),
   ))
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { trigger, isMutating, error } = useConfirmAndExcludeMultiple({ onSuccess: refetchAccounts })
-  const hasError = Boolean(error)
+  const { trigger, isMutating, isError } = useConfirmAndExcludeMultiple({ onSuccess: refetchAccounts })
 
   const handleFinish = async () => {
     const success = await trigger(formState)
@@ -191,7 +189,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
       </ModalContent>
       <ModalActions>
         <VStack gap='md'>
-          {hasError
+          {isError
             ? (
               <>
                 <P size='sm'>

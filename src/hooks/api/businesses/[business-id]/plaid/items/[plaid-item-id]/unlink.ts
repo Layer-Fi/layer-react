@@ -1,26 +1,22 @@
 import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
-import { del } from '@utils/api/authenticatedHttp'
+import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-const UNLINK_BANK_ACCOUNT_TAG_KEY = '#unlink-bank-account'
+const UNLINK_PLAID_ITEM_TAG_KEY = '#unlink-plaid-item'
 
-const unlinkBankAccount = del<
+const unlinkPlaidItem = post<
   Record<string, unknown>,
   Record<string, unknown>,
-  {
-    businessId: string
-    bankAccountId: string
-  }
+  { businessId: string, plaidItemId: string }
 >(
-  ({ businessId, bankAccountId }) =>
-    `/v1/businesses/${businessId}/bank-accounts/${bankAccountId}`,
+  ({ businessId, plaidItemId }) =>
+    `/v1/businesses/${businessId}/plaid/items/${plaidItemId}/unlink`,
 )
 
 function buildKey({
@@ -37,28 +33,29 @@ function buildKey({
       accessToken,
       apiUrl,
       businessId,
-      tags: [UNLINK_BANK_ACCOUNT_TAG_KEY],
+      tags: [UNLINK_PLAID_ITEM_TAG_KEY],
     } as const
   }
 }
 
-export function useUnlinkBankAccount() {
+export function useUnlinkPlaidItem() {
   const withLocale = useLocalizedKey()
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
+  const { businessId } = useLayerContext()
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
       access_token: auth?.access_token,
-      apiUrl,
+      apiUrl: auth?.apiUrl,
       businessId,
     })),
-    ({ accessToken, apiUrl, businessId }, { arg: bankAccountId }: { arg: string }) =>
-      unlinkBankAccount(apiUrl, accessToken, {
-        params: { businessId, bankAccountId },
-      }),
+    (
+      { accessToken, apiUrl, businessId },
+      { arg: { plaidItemId } }: { arg: { plaidItemId: string } },
+    ) => unlinkPlaidItem(apiUrl, accessToken, {
+      params: { businessId, plaidItemId },
+    }),
     {
       revalidate: false,
     },

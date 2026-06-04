@@ -5,6 +5,7 @@ import { type BankAccount } from '@internal-types/linkedAccounts'
 import { getBankAccountInstitution, isAllExternalAccountsUserCreatedCustom } from '@utils/bankAccount'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { OpeningBalanceModalContext } from '@contexts/OpeningBalanceModalContext/OpeningBalanceModalContext'
 import type { HoverMenuProps } from '@components/HoverMenu/HoverMenu'
 import { LinkedAccountOptions } from '@components/LinkedAccountOptions/LinkedAccountOptions'
 import { LinkedAccountPill } from '@components/LinkedAccountPill/LinkedAccountPill'
@@ -58,8 +59,8 @@ export const LinkedAccountItemThumb = ({
     confirmAccount,
     excludeAccount,
     breakConnection,
-    setAccountsToAddOpeningBalanceInModal,
   } = useContext(LinkedAccountsContext)
+  const { setAccountsToAddOpeningBalanceInModal } = useContext(OpeningBalanceModalContext)
   const { environment } = useEnvironment()
   const [isUnlinkConfirmationModalOpen, setIsUnlinkConfirmationModalOpen] = useState(false)
 

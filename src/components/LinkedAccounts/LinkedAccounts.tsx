@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { AccountConfirmationStoreProvider } from '@providers/AccountConfirmationStoreProvider'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
+import { OpeningBalanceModalProvider } from '@providers/OpeningBalanceModalProvider/OpeningBalanceModalProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Container } from '@components/Container/Container'
 import { Header } from '@components/Container/Header'
@@ -29,7 +30,9 @@ export const LinkedAccounts = (props: LinkedAccountsProps) => {
   return (
     <AccountConfirmationStoreProvider>
       <LinkedAccountsProvider>
-        <LinkedAccountsComponent {...props} />
+        <OpeningBalanceModalProvider>
+          <LinkedAccountsComponent {...props} />
+        </OpeningBalanceModalProvider>
       </LinkedAccountsProvider>
     </AccountConfirmationStoreProvider>
   )

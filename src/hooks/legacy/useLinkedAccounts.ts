@@ -1,97 +1,21 @@
 import { useEffect, useState } from 'react'
 import { type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 
-import { DataModel, type LoadedStatus } from '@internal-types/general'
-import type { PublicToken } from '@internal-types/linkedAccounts'
+import { type LoadedStatus } from '@internal-types/general'
 import { type AccountSource, type BankAccount, type ExternalAccountConnection } from '@internal-types/linkedAccounts'
-import type { OneOf } from '@internal-types/utility/oneOf'
-import { post } from '@utils/api/authenticatedHttp'
 import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { useUnlinkBankAccount } from '@hooks/api/businesses/[business-id]/bank-accounts/useUnlinkBankAccount'
-import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
+import { useConfirmExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/confirm'
+import { useExcludeExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/exclude'
+import { useUpdateConnectionStatus } from '@hooks/api/businesses/[business-id]/external-accounts/update-connection-status'
+import { useBreakPlaidItemConnection } from '@hooks/api/businesses/[business-id]/plaid/items/[plaid-item-id]/sandbox-reset-item-login'
+import { useUnlinkPlaidItem } from '@hooks/api/businesses/[business-id]/plaid/items/[plaid-item-id]/unlink'
+import { useCreatePlaidLink } from '@hooks/api/businesses/[business-id]/plaid/link'
+import { useExchangePlaidPublicToken } from '@hooks/api/businesses/[business-id]/plaid/link/exchange'
+import { useCreatePlaidUpdateModeLink } from '@hooks/api/businesses/[business-id]/plaid/update-mode-link'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useAccountConfirmationStoreActions } from '@providers/AccountConfirmationStoreProvider'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-
-const getPlaidLinkToken = post<
-  { data: { type: 'Link_Token', link_token: string } },
-  Record<string, unknown>,
-  { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/plaid/link`)
-
-const getPlaidUpdateModeLinkToken = post<
-  { data: { type: 'Link_Token', link_token: string } },
-  Record<string, unknown>,
-  { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/plaid/update-mode-link`)
-
-const exchangePlaidPublicTokenApi = post<
-  Record<string, unknown>,
-  PublicToken,
-  { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/plaid/link/exchange`)
-
-export type ConfirmAccountBodyStrict = OneOf<[
-  { is_unique: true },
-  { is_relevant: true },
-]>
-
-export const confirmAccountApi = post<
-  never,
-  ConfirmAccountBodyStrict,
-  { businessId: string, accountId: string }
->(
-  ({ businessId, accountId }) =>
-    `/v1/businesses/${businessId}/external-accounts/${accountId}/confirm`,
-)
-
-export type ExcludeAccountBodyStrict = OneOf<[
-  { is_irrelevant: true },
-  { is_duplicate: true },
-]>
-
-export const excludeAccountApi = post<
-  never,
-  ExcludeAccountBodyStrict,
-  { businessId: string, accountId: string }
->(
-  ({ businessId, accountId }) =>
-    `/v1/businesses/${businessId}/external-accounts/${accountId}/exclude`,
-)
-
-const breakPlaidItemConnection = post<
-  Record<string, unknown>,
-  Record<string, unknown>,
-  { businessId: string, plaidItemPlaidId: string }
->(
-  ({ businessId, plaidItemPlaidId }) =>
-    `/v1/businesses/${businessId}/plaid/items/${plaidItemPlaidId}/sandbox-reset-item-login`,
-)
-
-const syncConnection = post<
-  Record<string, unknown>,
-  Record<string, unknown>,
-  { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/sync`)
-
-const updateConnectionStatusApi = post<
-  Record<string, unknown>,
-  Record<string, unknown>,
-  { businessId: string }
->(
-  ({ businessId }) =>
-    `/v1/businesses/${businessId}/external-accounts/update-connection-status`,
-)
-
-const unlinkPlaidItemApi = post<
-  Record<string, unknown>,
-  Record<string, unknown>,
-  { businessId: string, plaidItemPlaidId: string }
->(
-  ({ businessId, plaidItemPlaidId }) =>
-    `/v1/businesses/${businessId}/plaid/items/${plaidItemPlaidId}/unlink`,
-)
 
 export function getAccountsNeedingConfirmation(bankAccounts: ReadonlyArray<BankAccount>): ExternalAccountConnection[] {
   return bankAccounts.flatMap(ba =>
@@ -111,14 +35,10 @@ type UseLinkedAccounts = () => {
   addConnection: (source: AccountSource) => Promise<void>
   removeConnection: (source: AccountSource, sourceId: string) => Promise<void>
   repairConnection: (source: AccountSource, sourceId: string) => Promise<void>
-  updateConnectionStatus: () => Promise<void>
   refetchAccounts: () => Promise<void>
-  syncAccounts: () => Promise<void>
   unlinkBankAccount: (bankAccountId: string) => Promise<void>
   confirmAccount: (source: AccountSource, accountId: string) => Promise<void>
   excludeAccount: (source: AccountSource, accountId: string) => Promise<void>
-  accountsToAddOpeningBalanceInModal: BankAccount[]
-  setAccountsToAddOpeningBalanceInModal: (accounts: BankAccount[]) => void
 
   // Only works in non-production environments for test purposes
   breakConnection: (source: AccountSource, connectionExternalId: string) => Promise<void>
@@ -127,15 +47,7 @@ type UseLinkedAccounts = () => {
 type LinkMode = 'update' | 'add'
 
 export const useLinkedAccounts: UseLinkedAccounts = () => {
-  const {
-    businessId,
-    touch,
-    read,
-    syncTimestamps,
-    hasBeenTouched,
-  } = useLayerContext()
-
-  const { apiUrl, usePlaidSandbox } = useEnvironment()
+  const { usePlaidSandbox } = useEnvironment()
   const { data: auth } = useAuth()
   const {
     preload: preloadAccountConfirmation,
@@ -146,10 +58,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
   const [isLinking, setIsLinking] = useState(false)
-  const [accountsToAddOpeningBalanceInModal, setAccountsToAddOpeningBalanceInModal] =
-    useState<BankAccount[]>([])
-
-  const queryKey = businessId && auth?.access_token && `linked-accounts-${businessId}`
 
   const {
     data: bankAccounts,
@@ -159,7 +67,14 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     mutate,
   } = useListBankAccounts()
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
-  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
+  const { trigger: triggerCreatePlaidLink } = useCreatePlaidLink()
+  const { trigger: triggerCreatePlaidUpdateModeLink } = useCreatePlaidUpdateModeLink()
+  const { trigger: triggerExchangePlaidPublicToken } = useExchangePlaidPublicToken()
+  const { trigger: triggerConfirmExternalAccount } = useConfirmExternalAccount()
+  const { trigger: triggerExcludeExternalAccount } = useExcludeExternalAccount()
+  const { trigger: triggerUpdateConnectionStatus } = useUpdateConnectionStatus()
+  const { trigger: triggerUnlinkPlaidItem } = useUnlinkPlaidItem()
+  const { trigger: triggerBreakPlaidItemConnection } = useBreakPlaidItemConnection()
 
   useEffect(() => {
     if (!isLoading && bankAccounts) {
@@ -183,13 +98,11 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
    */
   const fetchPlaidLinkToken = async () => {
     if (auth?.access_token) {
-      const linkToken = (
-        await getPlaidLinkToken(apiUrl, auth.access_token, {
-          params: { businessId },
-        })
-      ).data.link_token
+      const result = await triggerCreatePlaidLink({})
+      if (!result) return
+
       setLinkMode('add')
-      setLinkToken(linkToken)
+      setLinkToken(result.linkToken)
     }
   }
 
@@ -198,14 +111,11 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
    */
   const fetchPlaidUpdateModeLinkToken = async (plaidItemPlaidId: string) => {
     if (auth?.access_token) {
-      const linkToken = (
-        await getPlaidUpdateModeLinkToken(apiUrl, auth.access_token, {
-          params: { businessId },
-          body: { plaid_item_id: plaidItemPlaidId },
-        })
-      ).data.link_token
+      const result = await triggerCreatePlaidUpdateModeLink({ plaidItemId: plaidItemPlaidId })
+      if (!result) return
+
       setLinkMode('update')
-      setLinkToken(linkToken)
+      setLinkToken(result.linkToken)
     }
   }
 
@@ -222,13 +132,11 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     preloadAccountConfirmation()
 
     try {
-      await exchangePlaidPublicTokenApi(apiUrl, auth?.access_token, {
-        params: { businessId },
-        body: { public_token: publicToken, institution: metadata.institution },
+      await triggerExchangePlaidPublicToken({
+        public_token: publicToken,
+        institution: metadata.institution,
       })
       await refetchAccounts()
-
-      void forceReloadBankTransactions()
     }
     finally {
       setIsLinking(false)
@@ -252,10 +160,9 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
       else {
         // Refresh the account connections, which should remove the error
         // pills from any broken accounts
-        void updateConnectionStatus().then(() => {
+        void triggerUpdateConnectionStatus().then(() => {
           void refetchAccounts()
           setLinkMode('add')
-          touch(DataModel.LINKED_ACCOUNTS)
         })
       }
     },
@@ -313,20 +220,12 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const unlinkBankAccount = async (bankAccountId: string) => {
     await triggerUnlinkBankAccount(bankAccountId)
     await refetchAccounts()
-    void forceReloadBankTransactions()
-    touch(DataModel.LINKED_ACCOUNTS)
   }
 
   const confirmAccount = async (source: AccountSource, accountId: string) => {
     if (source === 'PLAID') {
-      await confirmAccountApi(apiUrl, auth?.access_token, {
-        params: {
-          businessId,
-          accountId,
-        },
-      })
+      await triggerConfirmExternalAccount({ accountId })
       await refetchAccounts()
-      touch(DataModel.LINKED_ACCOUNTS)
     }
     else {
       console.error(
@@ -337,17 +236,11 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
 
   const excludeAccount = async (source: AccountSource, accountId: string) => {
     if (source === 'PLAID') {
-      await excludeAccountApi(apiUrl, auth?.access_token, {
-        params: {
-          businessId,
-          accountId,
-        },
-        body: {
-          is_duplicate: true,
-        },
+      await triggerExcludeExternalAccount({
+        accountId,
+        body: { is_duplicate: true },
       })
       await refetchAccounts()
-      touch(DataModel.LINKED_ACCOUNTS)
     }
     else {
       console.error(
@@ -365,14 +258,8 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     connectionExternalId: string,
   ) => {
     if (source === 'PLAID') {
-      await breakPlaidItemConnection(apiUrl, auth?.access_token, {
-        params: {
-          businessId,
-          plaidItemPlaidId: connectionExternalId,
-        },
-      })
+      await triggerBreakPlaidItemConnection({ plaidItemId: connectionExternalId })
       await refetchAccounts()
-      touch(DataModel.LINKED_ACCOUNTS)
     }
     else {
       console.error(
@@ -385,41 +272,10 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     await mutate()
   }
 
-  const syncAccounts = async () => {
-    await syncConnection(apiUrl, auth?.access_token, {
-      params: { businessId },
-    })
-  }
-
-  const updateConnectionStatus = async () => {
-    await updateConnectionStatusApi(apiUrl, auth?.access_token, {
-      params: { businessId },
-    })
-  }
-
   const unlinkPlaidItem = async (plaidItemPlaidId: string) => {
-    await unlinkPlaidItemApi(apiUrl, auth?.access_token, {
-      params: { businessId, plaidItemPlaidId },
-    })
+    await triggerUnlinkPlaidItem({ plaidItemId: plaidItemPlaidId })
     await refetchAccounts()
-    void forceReloadBankTransactions()
-    touch(DataModel.LINKED_ACCOUNTS)
   }
-
-  // Refetch data if related models has been changed since last fetch
-  useEffect(() => {
-    if (queryKey && (isLoading || isValidating)) {
-      read(DataModel.LINKED_ACCOUNTS, queryKey)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, isValidating])
-
-  useEffect(() => {
-    if (queryKey && hasBeenTouched(queryKey)) {
-      void refetchAccounts()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [syncTimestamps])
 
   return {
     data: bankAccounts ?? [],
@@ -436,9 +292,5 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     confirmAccount,
     excludeAccount,
     breakConnection,
-    syncAccounts,
-    updateConnectionStatus,
-    accountsToAddOpeningBalanceInModal,
-    setAccountsToAddOpeningBalanceInModal,
   }
 }
