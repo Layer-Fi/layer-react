@@ -62,6 +62,7 @@ export function useUnlinkPlaidItem() {
       }),
     {
       revalidate: false,
+      throwOnError: true,
     },
   )
 
