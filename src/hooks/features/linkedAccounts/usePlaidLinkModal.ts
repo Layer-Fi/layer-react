@@ -13,7 +13,7 @@ export type LinkMode = 'update' | 'add'
 
 type UsePlaidLinkModalOptions = {
   /** Link token to open the Plaid modal with, or null when idle. */
-  token: string | null
+  linkToken: string | null
   /** Whether the open token is for adding a connection or repairing one. */
   linkMode: LinkMode
   /** Called after the connection set changes, so the caller can refresh accounts. */
@@ -28,7 +28,7 @@ type UsePlaidLinkModalOptions = {
  * (repair) on completion, and notifying the caller to refresh accounts.
  */
 export function usePlaidLinkModal({
-  token,
+  linkToken,
   linkMode,
   onSuccess,
   setLinkMode,
@@ -77,7 +77,7 @@ export function usePlaidLinkModal({
   )
 
   const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
-    token,
+    token: linkToken,
 
     // If in update mode, we don't need to exchange the public token for an access token.
     // The existing access token will automatically become valid again

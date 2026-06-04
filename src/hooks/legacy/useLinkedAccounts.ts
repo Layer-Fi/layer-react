@@ -105,6 +105,13 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     await mutate()
   }, [mutate])
 
+  const { isLinking } = usePlaidLinkModal({
+    linkToken,
+    linkMode,
+    setLinkMode,
+    onSuccess: refetchAccounts,
+  })
+
   /**
    * Runs a mutation, refreshing the account list on success and surfacing an
    * error toast on failure. A failed refresh is not reported as a mutation
@@ -169,13 +176,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     [fetchLinkToken, triggerCreatePlaidUpdateModeLink, t],
   )
 
-  const { isLinking } = usePlaidLinkModal({
-    token: linkToken,
-    onSuccess: refetchAccounts,
-    linkMode,
-    setLinkMode,
-  })
-
   const addConnection = usePlaidOnlyAction('Adding a connection', fetchPlaidLinkToken)
 
   const repairConnection = usePlaidOnlyAction('Repairing a connection', fetchPlaidUpdateModeLinkToken)
@@ -220,7 +220,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
    */
   const breakConnection = usePlaidOnlyAction('Breaking a sandbox connection', handleBreakConnection)
 
-  // Note: not routed through mutateAndRefetchAccountsWithToast — this is confirmed via
+  // Note: not routed through mutateAndRefetchAccounts — this is confirmed via
   // BaseConfirmationModal, which surfaces failures (errorText + Retry, stays
   // open) by catching a rejected onConfirm. Swallowing the error into a toast
   // would let the modal dismiss as if the unlink succeeded.
