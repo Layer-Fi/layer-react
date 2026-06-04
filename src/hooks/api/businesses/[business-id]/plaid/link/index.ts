@@ -72,7 +72,6 @@ export function useCreatePlaidLink() {
       .then(({ data }) => data),
     {
       revalidate: false,
-      throwOnError: false,
     },
   )
 
