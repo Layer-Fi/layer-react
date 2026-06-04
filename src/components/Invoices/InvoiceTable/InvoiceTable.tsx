@@ -42,7 +42,7 @@ enum InvoiceStatusFilter {
   All = 'All',
   Unpaid = 'Unpaid',
   Overdue = 'Overdue',
-  Sent = 'Sent',
+  Saved = 'Saved',
   Paid = 'Paid',
   WrittenOff = 'Written Off',
   Voided = 'Voided',
@@ -58,7 +58,7 @@ const INVOICE_STATUS_CONFIG = [
   { value: InvoiceStatusFilter.All, ...translationKey('common:label.all', 'All') },
   { value: InvoiceStatusFilter.Unpaid, ...translationKey('invoices:state.unpaid', 'Unpaid') },
   { value: InvoiceStatusFilter.Overdue, ...translationKey('invoices:state.overdue', 'Overdue') },
-  { value: InvoiceStatusFilter.Sent, ...translationKey('invoices:state.sent', 'Sent') },
+  { value: InvoiceStatusFilter.Saved, ...translationKey('invoices:state.saved', 'Saved') },
   { value: InvoiceStatusFilter.Paid, ...translationKey('invoices:state.paid', 'Paid') },
   { value: InvoiceStatusFilter.Voided, ...translationKey('invoices:state.voided', 'Voided') },
   { value: InvoiceStatusFilter.Refunded, ...translationKey('invoices:state.refunded', 'Refunded') },
@@ -80,7 +80,7 @@ const AmountCell = ({ invoice }: { invoice: Invoice }) => {
     case InvoiceStatus.WrittenOff:
     case InvoiceStatus.Voided:
     case InvoiceStatus.Refunded:
-    case InvoiceStatus.Sent: {
+    case InvoiceStatus.Saved: {
       return <Span align='right'>{totalAmount}</Span>
     }
     case InvoiceStatus.PartiallyPaid: {
@@ -116,7 +116,7 @@ const getColumnConfig = (
 ): NestedColumnConfig<Invoice> => [
   {
     id: InvoiceColumns.SentAt,
-    header: t('invoices:label.sent_date', 'Sent Date'),
+    header: t('invoices:label.created_date', 'Created Date'),
     cell: (row: InvoiceRowType) => <DateCell date={row.original.sentAt} />,
   },
   {
@@ -150,7 +150,7 @@ const getColumnConfig = (
   },
 ]
 
-const UNPAID_STATUSES = [InvoiceStatus.Sent, InvoiceStatus.PartiallyPaid]
+const UNPAID_STATUSES = [InvoiceStatus.Saved, InvoiceStatus.PartiallyPaid]
 const getStatusFilterParams = (statusFilter: InvoiceStatusFilter) => {
   switch (statusFilter) {
     case InvoiceStatusFilter.All:
@@ -162,7 +162,7 @@ const getStatusFilterParams = (statusFilter: InvoiceStatusFilter) => {
     case InvoiceStatusFilter.Overdue:
       return { status: UNPAID_STATUSES, dueAtEnd: endOfYesterday() }
 
-    case InvoiceStatusFilter.Sent:
+    case InvoiceStatusFilter.Saved:
       return { status: UNPAID_STATUSES, dueAtStart: startOfToday() }
 
     case InvoiceStatusFilter.Paid:

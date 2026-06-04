@@ -13,7 +13,7 @@ export enum InvoiceStatus {
   WrittenOff = 'WRITTEN_OFF',
   PartiallyWrittenOff = 'PARTIALLY_WRITTEN_OFF',
   PartiallyPaid = 'PARTIALLY_PAID',
-  Sent = 'SENT',
+  Saved = 'SAVED',
   Refunded = 'REFUNDED',
 }
 const InvoiceStatusSchema = Schema.Enums(InvoiceStatus)
@@ -26,7 +26,7 @@ export const TransformedInvoiceStatusSchema = Schema.transform(
       if (Object.values(InvoiceStatusSchema.enums).includes(input as InvoiceStatus)) {
         return input as InvoiceStatus
       }
-      return InvoiceStatus.Sent
+      return InvoiceStatus.Saved
     },
     encode: input => input,
   },
