@@ -36,7 +36,8 @@ export const ApiLinkTokenSchema = Schema.Struct({
     Schema.fromKey('link_token'),
   ),
 
-  hostedLink: Schema.optional(Schema.NullOr(Schema.String)).pipe(
+  hostedLink: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('hosted_link'),
   ),
 })
