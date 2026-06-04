@@ -13,7 +13,7 @@ export function useCategorizeBankTransactionWithCacheUpdate() {
   const { trigger: categorizeBankTransaction, isMutating, isError } = useCategorizeBankTransaction()
 
   const categorize = useCallback(
-    async (bankTransactionId: BankTransaction['id'], newCategory: CategoryUpdate) => {
+    async (bankTransactionId: BankTransaction['id'], newCategory: CategoryUpdate, options?: { onSuccess?: () => void }): Promise<void> => {
       return categorizeBankTransaction({ bankTransactionId, ...newCategory })
         .then(
           (updatedTransaction) => {
@@ -23,6 +23,8 @@ export function useCategorizeBankTransactionWithCacheUpdate() {
             }])
 
             eventCallbacks?.onTransactionCategorized?.()
+
+            options?.onSuccess?.()
           },
           () => {
             // Swallow the rejection; `isError`/`isMutating` drive the inline retry UI.

@@ -82,16 +82,19 @@ export const BankTransactionsListItem = ({
   const { setTransactionCategorization } = useBankTransactionsCategorizationActions()
   const selectedOption = useGetBankTransactionMatchOrCategoryWithDefault(bankTransaction)
 
+  const onBankTransactionSaveSuccess = useCallback(() => {
+    deselect(bankTransaction.id)
+    setOpenExpandedRow(false)
+  }, [bankTransaction.id, deselect, setOpenExpandedRow])
+
   const save = useCallback(async () => {
     if (openExpandedRow && !isExpandedRowValid) return
     if (!selectedOption) return
 
-    await saveBankTransactionRow(selectedOption, bankTransaction)
-
-    // Remove from bulk selection store
-    deselect(bankTransaction.id)
-    setOpenExpandedRow(false)
-  }, [bankTransaction, deselect, selectedOption, isExpandedRowValid, openExpandedRow, saveBankTransactionRow])
+    await saveBankTransactionRow(selectedOption, bankTransaction, {
+      onSuccess: onBankTransactionSaveSuccess,
+    })
+  }, [openExpandedRow, isExpandedRowValid, selectedOption, saveBankTransactionRow, bankTransaction, onBankTransactionSaveSuccess])
 
   const preventRowExpansion = (e: React.MouseEvent) => {
     e.stopPropagation()

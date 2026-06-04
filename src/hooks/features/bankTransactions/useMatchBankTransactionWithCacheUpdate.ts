@@ -14,7 +14,7 @@ export function useMatchBankTransactionWithCacheUpdate() {
   const { trigger: matchBankTransaction, isMutating, isError } = useMatchBankTransaction()
 
   const match = useCallback(
-    async (bankTransaction: BankTransaction, suggestedMatchId: string) => {
+    async (bankTransaction: BankTransaction, suggestedMatchId: string, options?: { onSuccess?: () => void }): Promise<void> => {
       return matchBankTransaction({
         bankTransactionId: bankTransaction.id,
         match_id: suggestedMatchId,
@@ -50,6 +50,8 @@ export function useMatchBankTransactionWithCacheUpdate() {
             updateLocalBankTransactions(transactionsToUpdate)
 
             eventCallbacks?.onTransactionCategorized?.()
+
+            options?.onSuccess?.()
           },
           () => {
             // Swallow the rejection; `isError`/`isMutating` drive the inline retry UI.
