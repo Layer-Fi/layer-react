@@ -1,27 +1,31 @@
 import { useCallback } from 'react'
+import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
-import { del } from '@utils/api/authenticatedHttp'
+import {
+  ApiLinkTokenSchema,
+  type CreatePlaidLinkParams,
+  type CreatePlaidLinkParamsEncoded,
+  encodeCreatePlaidLinkParams,
+} from '@schemas/linkedAccounts/plaid'
+import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-const UNLINK_BANK_ACCOUNT_TAG_KEY = '#unlink-bank-account'
+const CREATE_PLAID_LINK_TAG_KEY = '#create-plaid-link'
 
-const unlinkBankAccount = del<
-  Record<string, unknown>,
-  Record<string, unknown>,
-  {
-    businessId: string
-    bankAccountId: string
-  }
->(
-  ({ businessId, bankAccountId }) =>
-    `/v1/businesses/${businessId}/bank-accounts/${bankAccountId}`,
-)
+const CreatePlaidLinkReturnSchema = Schema.Struct({
+  data: ApiLinkTokenSchema,
+})
+type CreatePlaidLinkReturn = typeof CreatePlaidLinkReturnSchema.Type
+
+const createPlaidLink = post<
+  CreatePlaidLinkReturn,
+  CreatePlaidLinkParamsEncoded,
+  { businessId: string }
+>(({ businessId }) => `/v1/businesses/${businessId}/plaid/link`)
 
 function buildKey({
   access_token: accessToken,
@@ -37,28 +41,35 @@ function buildKey({
       accessToken,
       apiUrl,
       businessId,
-      tags: [UNLINK_BANK_ACCOUNT_TAG_KEY],
+      tags: [CREATE_PLAID_LINK_TAG_KEY],
     } as const
   }
 }
 
-export function useUnlinkBankAccount() {
+export function useCreatePlaidLink() {
   const withLocale = useLocalizedKey()
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
-  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
+  const { businessId } = useLayerContext()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
       access_token: auth?.access_token,
-      apiUrl,
+      apiUrl: auth?.apiUrl,
       businessId,
     })),
-    ({ accessToken, apiUrl, businessId }, { arg: bankAccountId }: { arg: string }) =>
-      unlinkBankAccount(apiUrl, accessToken, {
-        params: { businessId, bankAccountId },
-      }),
+    (
+      { accessToken, apiUrl, businessId },
+      { arg: params }: { arg: CreatePlaidLinkParams },
+    ) => createPlaidLink(
+      apiUrl,
+      accessToken,
+      {
+        params: { businessId },
+        body: encodeCreatePlaidLinkParams(params),
+      },
+    )
+      .then(Schema.decodeUnknownPromise(CreatePlaidLinkReturnSchema))
+      .then(({ data }) => data),
     {
       revalidate: false,
     },
@@ -69,12 +80,9 @@ export function useUnlinkBankAccount() {
   const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-      void forceReloadBankTransactions()
-      return triggerResult
-    },
-    [originalTrigger, forceReloadBankTransactions],
+    (...triggerParameters: Parameters<typeof originalTrigger>) =>
+      originalTrigger(...triggerParameters),
+    [originalTrigger],
   )
 
   return new Proxy(mutationResponse, {
