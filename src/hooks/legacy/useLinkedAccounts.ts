@@ -109,8 +109,12 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
    * Runs a mutation, refreshing the account list on success and surfacing an
    * error toast on failure. A failed refresh is not reported as a mutation
    * failure, since the mutation itself succeeded.
+   *
+   * Note: this swallows rejections (the failure becomes a toast and the returned
+   * promise resolves), so it must not back an `onConfirm`/submit handler whose
+   * caller relies on a rejection to show errors — e.g. BaseConfirmationModal.
    */
-  const mutateAndRefetchAccounts = useCallback(
+  const mutateAndRefetchAccountsWithToast = useCallback(
     (mutation: () => Promise<unknown>, errorMessage: string) =>
       mutation().then(
         () => refetchAccounts(),
@@ -177,38 +181,38 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const repairConnection = usePlaidOnlyAction('Repairing a connection', fetchPlaidUpdateModeLinkToken)
 
   const handleRemoveConnection = useCallback(
-    (connectionExternalId: string) => mutateAndRefetchAccounts(
+    (connectionExternalId: string) => mutateAndRefetchAccountsWithToast(
       () => triggerUnlinkPlaidItem({ plaidItemId: connectionExternalId }),
       t('linkedAccounts:error.remove_connection', 'We couldn’t remove this connection. Please try again.'),
     ),
-    [mutateAndRefetchAccounts, triggerUnlinkPlaidItem, t],
+    [mutateAndRefetchAccountsWithToast, triggerUnlinkPlaidItem, t],
   )
   const removeConnection = usePlaidOnlyAction('Removing a connection', handleRemoveConnection)
 
   const handleConfirmAccount = useCallback(
-    (accountId: string) => mutateAndRefetchAccounts(
+    (accountId: string) => mutateAndRefetchAccountsWithToast(
       () => triggerConfirmExternalAccount({ accountId }),
       t('linkedAccounts:error.confirm_account', 'We couldn’t confirm your account. Please try again.'),
     ),
-    [mutateAndRefetchAccounts, triggerConfirmExternalAccount, t],
+    [mutateAndRefetchAccountsWithToast, triggerConfirmExternalAccount, t],
   )
   const confirmAccount = usePlaidOnlyAction('Confirming an account', handleConfirmAccount)
 
   const handleExcludeAccount = useCallback(
-    (accountId: string) => mutateAndRefetchAccounts(
+    (accountId: string) => mutateAndRefetchAccountsWithToast(
       () => triggerExcludeExternalAccount({ accountId, body: { is_duplicate: true } }),
       t('linkedAccounts:error.exclude_account', 'We couldn’t exclude your account. Please try again.'),
     ),
-    [mutateAndRefetchAccounts, triggerExcludeExternalAccount, t],
+    [mutateAndRefetchAccountsWithToast, triggerExcludeExternalAccount, t],
   )
   const excludeAccount = usePlaidOnlyAction('Excluding an account', handleExcludeAccount)
 
   const handleBreakConnection = useCallback(
-    (connectionExternalId: string) => mutateAndRefetchAccounts(
+    (connectionExternalId: string) => mutateAndRefetchAccountsWithToast(
       () => triggerBreakPlaidItemConnection({ plaidItemId: connectionExternalId }),
       t('linkedAccounts:error.break_connection', 'We couldn’t reset this connection. Please try again.'),
     ),
-    [mutateAndRefetchAccounts, triggerBreakPlaidItemConnection, t],
+    [mutateAndRefetchAccountsWithToast, triggerBreakPlaidItemConnection, t],
   )
   /**
    * Test utility that puts a connection into a broken state; only works in non-production
@@ -216,12 +220,16 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
    */
   const breakConnection = usePlaidOnlyAction('Breaking a sandbox connection', handleBreakConnection)
 
+  // Note: not routed through mutateAndRefetchAccountsWithToast — this is confirmed via
+  // BaseConfirmationModal, which surfaces failures (errorText + Retry, stays
+  // open) by catching a rejected onConfirm. Swallowing the error into a toast
+  // would let the modal dismiss as if the unlink succeeded.
   const unlinkBankAccount = useCallback(
-    (bankAccountId: string) => mutateAndRefetchAccounts(
-      () => triggerUnlinkBankAccount(bankAccountId),
-      t('linkedAccounts:error.unlink_account', 'We couldn’t unlink your account. Please try again.'),
-    ),
-    [mutateAndRefetchAccounts, triggerUnlinkBankAccount, t],
+    async (bankAccountId: string) => {
+      await triggerUnlinkBankAccount(bankAccountId)
+      await refetchAccounts()
+    },
+    [triggerUnlinkBankAccount, refetchAccounts],
   )
 
   return {
