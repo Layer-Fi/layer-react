@@ -15,19 +15,19 @@ export function useCategorizeBankTransactionWithCacheUpdate() {
   const categorize = useCallback(
     async (bankTransactionId: BankTransaction['id'], newCategory: CategoryUpdate) => {
       return categorizeBankTransaction({ bankTransactionId, ...newCategory })
-        .then((updatedTransaction) => {
-          updateLocalBankTransactions([{
-            ...updatedTransaction,
-            recently_categorized: true,
-          }])
+        .then(
+          (updatedTransaction) => {
+            updateLocalBankTransactions([{
+              ...updatedTransaction,
+              recently_categorized: true,
+            }])
 
-          eventCallbacks?.onTransactionCategorized?.()
-        })
-        .catch(() => {
-          // The mutation now rejects on a failed categorization (throwOnError: true).
-          // Swallow it so callers awaiting `categorize()` don't see an unhandled
-          // rejection; `isError`/`isMutating` drive the inline retry UI.
-        })
+            eventCallbacks?.onTransactionCategorized?.()
+          },
+          () => {
+            // Swallow the rejection; `isError`/`isMutating` drive the inline retry UI.
+          },
+        )
     },
     [updateLocalBankTransactions, categorizeBankTransaction, eventCallbacks],
   )

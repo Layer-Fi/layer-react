@@ -9,6 +9,7 @@ import { post } from '@utils/api/authenticatedHttp'
 import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { useUnlinkBankAccount } from '@hooks/api/businesses/[business-id]/bank-accounts/useUnlinkBankAccount'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
+import { useUnlinkPlaidItem } from '@hooks/api/businesses/[business-id]/plaid/items/[plaid-item-plaid-id]/unlink/useUnlinkPlaidItem'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useAccountConfirmationStoreActions } from '@providers/AccountConfirmationStoreProvider'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -84,15 +85,6 @@ const updateConnectionStatusApi = post<
     `/v1/businesses/${businessId}/external-accounts/update-connection-status`,
 )
 
-const unlinkPlaidItemApi = post<
-  Record<string, unknown>,
-  Record<string, unknown>,
-  { businessId: string, plaidItemPlaidId: string }
->(
-  ({ businessId, plaidItemPlaidId }) =>
-    `/v1/businesses/${businessId}/plaid/items/${plaidItemPlaidId}/unlink`,
-)
-
 export function getAccountsNeedingConfirmation(bankAccounts: ReadonlyArray<BankAccount>): ExternalAccountConnection[] {
   return bankAccounts.flatMap(ba =>
     ba.external_accounts.filter(
@@ -159,6 +151,7 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     mutate,
   } = useListBankAccounts()
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
+  const { trigger: triggerUnlinkPlaidItem } = useUnlinkPlaidItem()
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
   useEffect(() => {
@@ -397,11 +390,8 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   }
 
   const unlinkPlaidItem = async (plaidItemPlaidId: string) => {
-    await unlinkPlaidItemApi(apiUrl, auth?.access_token, {
-      params: { businessId, plaidItemPlaidId },
-    })
+    await triggerUnlinkPlaidItem(plaidItemPlaidId)
     await refetchAccounts()
-    void forceReloadBankTransactions()
     touch(DataModel.LINKED_ACCOUNTS)
   }
 

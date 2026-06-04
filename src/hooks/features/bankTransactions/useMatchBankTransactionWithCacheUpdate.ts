@@ -20,41 +20,41 @@ export function useMatchBankTransactionWithCacheUpdate() {
         match_id: suggestedMatchId,
         type: 'Confirm_Match',
       })
-        .then((matchResult) => {
-          const transactionsToUpdate: BankTransaction[] = [
-            {
-              ...bankTransaction,
-              categorization_status: CategorizationStatus.MATCHED,
-              match: matchResult,
-              recently_categorized: true,
-            },
-          ]
-
-          if (matchResult.match_type === MatchType.TRANSFER) {
-            const matchedTransferBankTransactionId = matchResult.details.id
-
-            const matchedTransferBankTransaction = matchedTransferBankTransactionId
-              ? data?.find(({ id }) => id === matchedTransferBankTransactionId)
-              : undefined
-
-            if (matchedTransferBankTransaction) {
-              transactionsToUpdate.push({
-                ...matchedTransferBankTransaction,
+        .then(
+          (matchResult) => {
+            const transactionsToUpdate: BankTransaction[] = [
+              {
+                ...bankTransaction,
                 categorization_status: CategorizationStatus.MATCHED,
+                match: matchResult,
                 recently_categorized: true,
-              })
+              },
+            ]
+
+            if (matchResult.match_type === MatchType.TRANSFER) {
+              const matchedTransferBankTransactionId = matchResult.details.id
+
+              const matchedTransferBankTransaction = matchedTransferBankTransactionId
+                ? data?.find(({ id }) => id === matchedTransferBankTransactionId)
+                : undefined
+
+              if (matchedTransferBankTransaction) {
+                transactionsToUpdate.push({
+                  ...matchedTransferBankTransaction,
+                  categorization_status: CategorizationStatus.MATCHED,
+                  recently_categorized: true,
+                })
+              }
             }
-          }
 
-          updateLocalBankTransactions(transactionsToUpdate)
+            updateLocalBankTransactions(transactionsToUpdate)
 
-          eventCallbacks?.onTransactionCategorized?.()
-        })
-        .catch(() => {
-          // The mutation now rejects on a failed match (throwOnError: true).
-          // Swallow it so callers awaiting `match()` don't see an unhandled
-          // rejection; `isError`/`isMutating` drive the inline retry UI.
-        })
+            eventCallbacks?.onTransactionCategorized?.()
+          },
+          () => {
+            // Swallow the rejection; `isError`/`isMutating` drive the inline retry UI.
+          },
+        )
     },
     [matchBankTransaction, updateLocalBankTransactions, data, eventCallbacks],
   )
