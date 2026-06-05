@@ -31,7 +31,7 @@ type InvoiceActionModalType = Exclude<
 >
 
 const availableActions: Record<InvoiceStatus, InvoiceDetailHeaderMenuActions[]> = {
-  [InvoiceStatus.Sent]: [
+  [InvoiceStatus.Saved]: [
     InvoiceDetailHeaderMenuActions.Edit,
     InvoiceDetailHeaderMenuActions.DownloadPdf,
     InvoiceDetailHeaderMenuActions.Void,
@@ -158,7 +158,7 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
           )}
           {invoiceActions.includes(InvoiceDetailHeaderMenuActions.Reset) && (
             <MenuItem key={InvoiceDetailHeaderMenuActions.Reset} onClick={onOpenChangeByMode(InvoiceDetailHeaderMenuActions.Reset)}>
-              <Span size='sm'>{t('invoices:action.reset_to_sent', 'Reset to sent')}</Span>
+              <Span size='sm'>{t('invoices:action.reset_to_saved', 'Reset to saved')}</Span>
             </MenuItem>
           )}
           {invoiceActions.includes(InvoiceDetailHeaderMenuActions.DownloadPdf) && (

@@ -40,13 +40,13 @@ const getDueStatusConfig = (
     case InvoiceStatus.Voided: {
       return { text: t('invoices:state.voided', 'Voided') }
     }
-    case InvoiceStatus.Sent:
+    case InvoiceStatus.Saved:
     case InvoiceStatus.PartiallyPaid: {
       if (invoice.dueAt === null) {
         return {
           text: invoice.status === InvoiceStatus.PartiallyPaid
             ? t('invoices:state.partially_paid', 'Partially Paid')
-            : t('invoices:state.sent', 'Sent'),
+            : t('invoices:state.saved', 'Saved'),
         }
       }
 
@@ -73,7 +73,7 @@ const getDueStatusConfig = (
 
       const daysUntilDue = Math.abs(dueDifference)
       return {
-        text: t('invoices:state.sent', 'Sent'),
+        text: t('invoices:state.saved', 'Saved'),
         subText: tPlural(t, 'invoices:state.due_in_count_days', {
           count: daysUntilDue,
           displayCount: formatNumber(daysUntilDue),
