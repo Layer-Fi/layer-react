@@ -8,6 +8,7 @@ import { getDueDifference } from '@utils/time/timeUtils'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import AlertCircle from '@icons/AlertCircle'
 import CheckCircle from '@icons/CheckCircle'
+import File from '@icons/File'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
@@ -22,6 +23,12 @@ const getDueStatusConfig = (
   const iconSize = inline ? 10 : 12
 
   switch (invoice.status) {
+    case InvoiceStatus.Draft: {
+      return {
+        text: t('invoices:state.draft', 'Draft'),
+        badge: <Badge variant={BadgeVariant.NEUTRAL} size={badgeSize} icon={<File size={iconSize} />} iconOnly />,
+      }
+    }
     case InvoiceStatus.WrittenOff: {
       return { text: t('invoices:state.written_off', 'Written Off') }
     }

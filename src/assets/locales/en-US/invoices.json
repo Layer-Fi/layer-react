@@ -100,6 +100,7 @@
     "discard_changes_invoice": "Discard changes to this invoice?"
   },
   "state": {
+    "draft": "Draft",
     "due_count_days_ago_one": "Due {{displayCount}} day ago",
     "due_count_days_ago_other": "Due {{displayCount}} days ago",
     "due_in_count_days_one": "Due in {{displayCount}} day",

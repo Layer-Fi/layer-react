@@ -31,6 +31,9 @@ type InvoiceActionModalType = Exclude<
 >
 
 const availableActions: Record<InvoiceStatus, InvoiceDetailHeaderMenuActions[]> = {
+  [InvoiceStatus.Draft]: [
+    InvoiceDetailHeaderMenuActions.Edit,
+  ],
   [InvoiceStatus.Saved]: [
     InvoiceDetailHeaderMenuActions.Edit,
     InvoiceDetailHeaderMenuActions.DownloadPdf,
