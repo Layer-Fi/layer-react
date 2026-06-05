@@ -2,6 +2,7 @@ import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type OnboardingStep } from '@internal-types/layerContext'
+import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Container } from '@components/Container/Container'
@@ -40,6 +41,7 @@ export interface AccountingOverviewProps {
   showTitle?: boolean
   enableOnboarding?: boolean
   onboardingStepOverride?: OnboardingStep
+  plaidHostedLinkConfig?: PlaidHostedLinkConfig
   onTransactionsToReviewClick?: () => void
   middleBanner?: ReactNode
   chartColorsList?: string[]
@@ -59,6 +61,7 @@ export const AccountingOverview = ({
   showTitle = true,
   enableOnboarding = false,
   onboardingStepOverride = undefined,
+  plaidHostedLinkConfig,
   onTransactionsToReviewClick,
   middleBanner,
   chartColorsList,
@@ -98,6 +101,7 @@ export const AccountingOverview = ({
           <Onboarding
             onTransactionsToReviewClick={onTransactionsToReviewClick}
             onboardingStepOverride={onboardingStepOverride}
+            plaidHostedLinkConfig={plaidHostedLinkConfig}
           />
         )}
         <ProfitAndLossSummaries

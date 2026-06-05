@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type LoadedStatus } from '@internal-types/general'
 import { type AccountSource, type BankAccount, type ExternalAccountConnection } from '@internal-types/linkedAccounts'
+import { type PlaidHostedLinkConfig, toCreatePlaidLinkParams } from '@schemas/linkedAccounts/plaid'
 import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { useUnlinkBankAccount } from '@hooks/api/businesses/[business-id]/bank-accounts/useUnlinkBankAccount'
 import { useConfirmExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/confirm'
@@ -22,7 +23,11 @@ export function getAccountsNeedingConfirmation(bankAccounts: ReadonlyArray<BankA
   )
 }
 
-type UseLinkedAccounts = () => {
+type UseLinkedAccountsOptions = {
+  plaidHostedLinkConfig?: PlaidHostedLinkConfig
+}
+
+type UseLinkedAccounts = (options?: UseLinkedAccountsOptions) => {
   data?: BankAccount[]
   isLoading: boolean
   loadingStatus: LoadedStatus
@@ -61,7 +66,7 @@ const usePlaidOnlyAction = <Args extends unknown[]>(
     [operation, action],
   )
 
-export const useLinkedAccounts: UseLinkedAccounts = () => {
+export const useLinkedAccounts: UseLinkedAccounts = ({ plaidHostedLinkConfig } = {}) => {
   const { addToast } = useLayerContext()
   const { t } = useTranslation()
 
@@ -137,12 +142,22 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const fetchLinkToken = useCallback(
     (
       mode: LinkMode,
-      requestToken: () => Promise<{ linkToken: string } | undefined>,
+      requestToken: () => Promise<{ linkToken: string, hostedLink?: string | null } | undefined>,
       errorMessage: string,
+      // Snapshotted with the request so the response is handled with the same
+      // config, even if the prop changes while the request is in flight.
+      hostedLinkConfig?: PlaidHostedLinkConfig,
     ) =>
       requestToken().then(
-        (result) => {
+        async (result) => {
           if (!result) return
+
+          // When a hosted-link config is supplied, hand the Plaid-owned URL to the
+          // customer platform to navigate to rather than opening the embedded modal.
+          if (hostedLinkConfig && result.hostedLink) {
+            await hostedLinkConfig.navigateToHostedLink(result.hostedLink)
+            return
+          }
 
           setLinkMode(mode)
           setLinkToken(result.linkToken)
@@ -158,10 +173,11 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
   const fetchPlaidLinkToken = useCallback(
     () => fetchLinkToken(
       'add',
-      () => triggerCreatePlaidLink({}),
-      t('linkedAccounts:error.start_connection', 'We couldn’t start connecting your account. Please try again.'),
+      () => triggerCreatePlaidLink(toCreatePlaidLinkParams(plaidHostedLinkConfig)),
+      t('linkedAccounts:error.start_connection', 'We couldn’t initiate the Plaid connection flow. Please try again.'),
+      plaidHostedLinkConfig,
     ),
-    [fetchLinkToken, triggerCreatePlaidLink, t],
+    [fetchLinkToken, triggerCreatePlaidLink, plaidHostedLinkConfig, t],
   )
 
   /**
@@ -171,9 +187,10 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
     (plaidItemPlaidId: string) => fetchLinkToken(
       'update',
       () => triggerCreatePlaidUpdateModeLink({ plaidItemId: plaidItemPlaidId }),
-      t('linkedAccounts:error.repair_connection', 'We couldn’t start reconnecting your account. Please try again.'),
+      t('linkedAccounts:error.repair_connection', 'We couldn’t repair the Plaid connection with your account. Please try again.'),
+      plaidHostedLinkConfig,
     ),
-    [fetchLinkToken, triggerCreatePlaidUpdateModeLink, t],
+    [fetchLinkToken, triggerCreatePlaidUpdateModeLink, plaidHostedLinkConfig, t],
   )
 
   const addConnection = usePlaidOnlyAction('Adding a connection', fetchPlaidLinkToken)
@@ -220,10 +237,6 @@ export const useLinkedAccounts: UseLinkedAccounts = () => {
    */
   const breakConnection = usePlaidOnlyAction('Breaking a sandbox connection', handleBreakConnection)
 
-  // Note: not routed through mutateAndRefetchAccounts — this is confirmed via
-  // BaseConfirmationModal, which surfaces failures (errorText + Retry, stays
-  // open) by catching a rejected onConfirm. Swallowing the error into a toast
-  // would let the modal dismiss as if the unlink succeeded.
   const unlinkBankAccount = useCallback(
     async (bankAccountId: string) => {
       await triggerUnlinkBankAccount(bankAccountId)

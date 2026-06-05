@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
+import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { type SummaryCardInteractionProps, type SummaryCardStringOverrides } from '@ui/SummaryCard/useSummaryCardSlots'
 import { ExpensesSummaryCard } from '@components/ExpensesSummaryCard/ExpensesSummaryCard'
@@ -53,12 +54,14 @@ export interface SolopreneurOverviewProps {
   chartColorsList?: string[]
   stringOverrides?: SolopreneurOverviewStringOverrides
   interactionProps?: SolopreneurOverviewInteractionProps
+  plaidHostedLinkConfig?: PlaidHostedLinkConfig
 }
 
 export const SolopreneurOverview = ({
   interactionProps,
   chartColorsList,
   stringOverrides,
+  plaidHostedLinkConfig,
 }: SolopreneurOverviewProps) => {
   const { t } = useTranslation()
   const { value: sizeClass } = useSizeClass()
@@ -81,6 +84,7 @@ export const SolopreneurOverview = ({
       >
         <SolopreneurOnboardingBanner
           onSetupTaxProfile={interactionProps?.banner?.onSetupTaxProfile}
+          plaidHostedLinkConfig={plaidHostedLinkConfig}
         />
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLossSummaries}
