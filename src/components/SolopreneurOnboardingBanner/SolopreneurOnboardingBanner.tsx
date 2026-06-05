@@ -2,6 +2,7 @@ import { useCallback, useContext } from 'react'
 import { Info } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
@@ -81,11 +82,12 @@ function SolopreneurOnboardingBannerInternal({ onSetupTaxProfile }: Pick<Solopre
 }
 export type SolopreneurOnboardingBannerProps = {
   onSetupTaxProfile?: () => void
+  plaidHostedLinkConfig?: PlaidHostedLinkConfig
 }
 
-export function SolopreneurOnboardingBanner({ onSetupTaxProfile }: SolopreneurOnboardingBannerProps) {
+export function SolopreneurOnboardingBanner({ onSetupTaxProfile, plaidHostedLinkConfig }: SolopreneurOnboardingBannerProps) {
   return (
-    <LinkedAccountsProvider>
+    <LinkedAccountsProvider plaidHostedLinkConfig={plaidHostedLinkConfig}>
       <SolopreneurOnboardingBannerInternal onSetupTaxProfile={onSetupTaxProfile} />
     </LinkedAccountsProvider>
   )

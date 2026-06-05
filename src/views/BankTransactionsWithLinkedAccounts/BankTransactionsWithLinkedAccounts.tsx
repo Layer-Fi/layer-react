@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
 import { type BankTransactionsMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
 import {
@@ -39,6 +40,7 @@ export interface BankTransactionsWithLinkedAccountsProps {
   stringOverrides?: BankTransactionsWithLinkedAccountsStringOverrides
   renderInAppLink?: (details: LinkingMetadata) => ReactNode
   showCategorizationRules?: boolean
+  plaidHostedLinkConfig?: PlaidHostedLinkConfig
 }
 
 export const BankTransactionsWithLinkedAccounts = ({
@@ -61,6 +63,7 @@ export const BankTransactionsWithLinkedAccounts = ({
   stringOverrides,
   renderInAppLink,
   showCategorizationRules,
+  plaidHostedLinkConfig,
 }: BankTransactionsWithLinkedAccountsProps) => {
   const { t } = useTranslation()
   return (
@@ -74,6 +77,7 @@ export const BankTransactionsWithLinkedAccounts = ({
         showUnlinkItem={showUnlinkItem}
         showBreakConnection={showBreakConnection}
         stringOverrides={stringOverrides?.linkedAccounts}
+        plaidHostedLinkConfig={plaidHostedLinkConfig}
       />
       <BankTransactions
         asWidget

@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
 import { AccountConfirmationStoreProvider } from '@providers/AccountConfirmationStoreProvider'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { OpeningBalanceModalProvider } from '@providers/OpeningBalanceModalProvider/OpeningBalanceModalProvider'
@@ -21,15 +22,16 @@ export interface LinkedAccountsProps {
   showLedgerBalance?: boolean
   showUnlinkItem?: boolean
   showBreakConnection?: boolean
+  plaidHostedLinkConfig?: PlaidHostedLinkConfig
   stringOverrides?: {
     title?: string
   }
 }
 
-export const LinkedAccounts = (props: LinkedAccountsProps) => {
+export const LinkedAccounts = ({ plaidHostedLinkConfig, ...props }: LinkedAccountsProps) => {
   return (
     <AccountConfirmationStoreProvider>
-      <LinkedAccountsProvider>
+      <LinkedAccountsProvider plaidHostedLinkConfig={plaidHostedLinkConfig}>
         <OpeningBalanceModalProvider>
           <LinkedAccountsComponent {...props} />
         </OpeningBalanceModalProvider>
