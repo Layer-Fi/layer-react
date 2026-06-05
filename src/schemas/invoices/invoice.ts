@@ -8,6 +8,7 @@ import { TagKeyValueSchema, TransactionTagSchema } from '@schemas/tag'
 import { InvoiceTermsValues } from '@components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
 
 export enum InvoiceStatus {
+  Draft = 'DRAFT',
   Voided = 'VOIDED',
   Paid = 'PAID',
   WrittenOff = 'WRITTEN_OFF',

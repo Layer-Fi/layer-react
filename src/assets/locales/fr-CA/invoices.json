@@ -100,6 +100,7 @@
     "discard_changes_invoice": "Annuler les modifications apportées à cette facture?"
   },
   "state": {
+    "draft": "",
     "due_count_days_ago_one": "Échue depuis {{displayCount}} jour",
     "due_count_days_ago_other": "Échue depuis {{displayCount}} jours",
     "due_in_count_days_one": "Échéance dans {{displayCount}} jour",
