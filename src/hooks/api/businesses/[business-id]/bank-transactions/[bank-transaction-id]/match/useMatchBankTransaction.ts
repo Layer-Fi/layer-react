@@ -9,7 +9,6 @@ import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { EXTERNAL_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/external-accounts/useListExternalAccounts'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
@@ -105,7 +104,6 @@ export function useMatchBankTransaction() {
         key,
         ({ tags }) => (
           tags.includes(BANK_ACCOUNTS_TAG_KEY)
-          || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY)
         ),
       ))
 

@@ -14,7 +14,7 @@ export function getBankAccountDisplayName(bankAccount: BankAccount): string {
     ?? 'Unknown Account'
 }
 
-export function getBankAccountInstitution(bankAccount: BankAccount): { name: string, logo: string | null } | null {
+export function getBankAccountInstitution(bankAccount: BankAccount): { name: string, logo: string | null | undefined } | null {
   return bankAccount.institution
     ?? bankAccount.externalAccounts[0]?.institution
     ?? null
