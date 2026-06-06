@@ -1,15 +1,30 @@
 import { useCallback } from 'react'
+import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
-import type { Awaitable } from '@internal-types/utility/promises'
+import { ApiLinkTokenSchema } from '@schemas/linkedAccounts/plaid'
+import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { confirmExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/confirm'
-import { excludeExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/exclude'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-export type AccountConfirmExcludeFormState = Record<string, boolean>
+const CREATE_PLAID_UPDATE_MODE_LINK_TAG_KEY = '#create-plaid-update-mode-link'
+
+const CreatePlaidUpdateModeLinkReturnSchema = Schema.Struct({
+  data: ApiLinkTokenSchema,
+})
+type CreatePlaidUpdateModeLinkReturn = typeof CreatePlaidUpdateModeLinkReturnSchema.Type
+
+type CreatePlaidUpdateModeLinkBody = {
+  plaid_item_id: string
+}
+
+const createPlaidUpdateModeLink = post<
+  CreatePlaidUpdateModeLinkReturn,
+  CreatePlaidUpdateModeLinkBody,
+  { businessId: string }
+>(({ businessId }) => `/v1/businesses/${businessId}/plaid/update-mode-link`)
 
 function buildKey({
   access_token: accessToken,
@@ -25,12 +40,12 @@ function buildKey({
       accessToken,
       apiUrl,
       businessId,
-      tags: ['#bulk-confirm', '#bulk-exclude'],
-    }
+      tags: [CREATE_PLAID_UPDATE_MODE_LINK_TAG_KEY],
+    } as const
   }
 }
 
-export function useConfirmAndExcludeMultiple({ onSuccess }: { onSuccess?: () => Awaitable<unknown> }) {
+export function useCreatePlaidUpdateModeLink() {
   const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
@@ -43,26 +58,19 @@ export function useConfirmAndExcludeMultiple({ onSuccess }: { onSuccess?: () => 
     })),
     (
       { accessToken, apiUrl, businessId },
-      { arg }: { arg: AccountConfirmExcludeFormState },
-    ) =>
-      Promise.all(
-        Object.entries(arg).map(([accountId, isConfirmed]) =>
-          isConfirmed
-            ? confirmExternalAccount(apiUrl, accessToken, {
-              params: { businessId, accountId },
-              body: { is_relevant: true },
-            })
-            : excludeExternalAccount(apiUrl, accessToken, {
-              params: { businessId, accountId },
-              body: { is_irrelevant: true },
-            }),
-        ),
-      )
-        .then(() => onSuccess?.())
-        .then(() => true as const),
+      { arg: { plaidItemId } }: { arg: { plaidItemId: string } },
+    ) => createPlaidUpdateModeLink(
+      apiUrl,
+      accessToken,
+      {
+        params: { businessId },
+        body: { plaid_item_id: plaidItemId },
+      },
+    )
+      .then(Schema.decodeUnknownPromise(CreatePlaidUpdateModeLinkReturnSchema))
+      .then(({ data }) => data),
     {
       revalidate: false,
-      throwOnError: false,
     },
   )
 

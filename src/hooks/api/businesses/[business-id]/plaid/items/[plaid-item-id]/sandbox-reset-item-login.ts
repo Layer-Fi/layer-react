@@ -1,26 +1,25 @@
 import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
-import { del } from '@utils/api/authenticatedHttp'
+import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-const UNLINK_BANK_ACCOUNT_TAG_KEY = '#unlink-bank-account'
+const BREAK_PLAID_ITEM_CONNECTION_TAG_KEY = '#break-plaid-item-connection'
 
-const unlinkBankAccount = del<
+/**
+ * Test utility that puts a Plaid connection into a broken state; only works in
+ * non-production environments.
+ */
+const breakPlaidItemConnection = post<
   Record<string, unknown>,
   Record<string, unknown>,
-  {
-    businessId: string
-    bankAccountId: string
-  }
+  { businessId: string, plaidItemId: string }
 >(
-  ({ businessId, bankAccountId }) =>
-    `/v1/businesses/${businessId}/bank-accounts/${bankAccountId}`,
+  ({ businessId, plaidItemId }) =>
+    `/v1/businesses/${businessId}/plaid/items/${plaidItemId}/sandbox-reset-item-login`,
 )
 
 function buildKey({
@@ -37,28 +36,28 @@ function buildKey({
       accessToken,
       apiUrl,
       businessId,
-      tags: [UNLINK_BANK_ACCOUNT_TAG_KEY],
+      tags: [BREAK_PLAID_ITEM_CONNECTION_TAG_KEY],
     } as const
   }
 }
 
-export function useUnlinkBankAccount() {
+export function useBreakPlaidItemConnection() {
   const withLocale = useLocalizedKey()
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
-  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
+  const { businessId } = useLayerContext()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
       access_token: auth?.access_token,
-      apiUrl,
+      apiUrl: auth?.apiUrl,
       businessId,
     })),
-    ({ accessToken, apiUrl, businessId }, { arg: bankAccountId }: { arg: string }) =>
-      unlinkBankAccount(apiUrl, accessToken, {
-        params: { businessId, bankAccountId },
-      }),
+    (
+      { accessToken, apiUrl, businessId },
+      { arg: { plaidItemId } }: { arg: { plaidItemId: string } },
+    ) => breakPlaidItemConnection(apiUrl, accessToken, {
+      params: { businessId, plaidItemId },
+    }),
     {
       revalidate: false,
     },
@@ -69,12 +68,9 @@ export function useUnlinkBankAccount() {
   const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-      void forceReloadBankTransactions()
-      return triggerResult
-    },
-    [originalTrigger, forceReloadBankTransactions],
+    (...triggerParameters: Parameters<typeof originalTrigger>) =>
+      originalTrigger(...triggerParameters),
+    [originalTrigger],
   )
 
   return new Proxy(mutationResponse, {

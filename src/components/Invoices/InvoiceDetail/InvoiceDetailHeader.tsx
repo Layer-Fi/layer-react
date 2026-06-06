@@ -105,7 +105,7 @@ export const InvoiceDetailHeader = ({
   const headerMode = getHeaderMode(viewState)
   const headingContent = getHeadingContent(headerMode, viewState.invoice.invoiceNumber, t)
 
-  const canMarkAsPaid = viewState.invoice.status === InvoiceStatus.Sent
+  const canMarkAsPaid = viewState.invoice.status === InvoiceStatus.Saved
     || viewState.invoice.status === InvoiceStatus.PartiallyPaid
 
   return (

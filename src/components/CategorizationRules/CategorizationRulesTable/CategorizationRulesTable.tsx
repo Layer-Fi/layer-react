@@ -32,7 +32,7 @@ export interface CategorizationRulesTableProps {
   isError: boolean
   paginationProps: TablePaginationProps
   options: NestedCategorization[]
-  onEditRule: (rule: CategorizationRule) => void
+  onEditRule?: (rule: CategorizationRule) => void
   onDeleteRule: (rule: CategorizationRule) => void
   slots: {
     EmptyState: React.FC
@@ -85,20 +85,22 @@ export const CategorizationRulesTable = ({
       },
       isRowHeader: true,
     },
-    {
-      id: CategorizationRuleColumns.Edit,
-      cell: (row: Row<CategorizationRule>) => (
-        <Button
-          inset
-          icon
-          onPress={() => onEditRule(row.original)}
-          aria-label={t('categorizationRules:action.edit_rule', 'Edit Rule')}
-          variant='ghost'
-        >
-          <Pencil size={16} />
-        </Button>
-      ),
-    },
+    ...(onEditRule
+      ? [{
+        id: CategorizationRuleColumns.Edit,
+        cell: (row: Row<CategorizationRule>) => (
+          <Button
+            inset
+            icon
+            onPress={() => onEditRule(row.original)}
+            aria-label={t('categorizationRules:action.edit_rule', 'Edit Rule')}
+            variant='ghost'
+          >
+            <Pencil size={16} />
+          </Button>
+        ),
+      }]
+      : []),
     {
       id: CategorizationRuleColumns.Delete,
       cell: (row: Row<CategorizationRule>) => (

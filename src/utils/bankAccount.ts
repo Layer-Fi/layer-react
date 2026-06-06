@@ -1,4 +1,12 @@
-import type { BankAccount } from '@internal-types/linkedAccounts'
+import type { BankAccount, ExternalAccountConnection } from '@internal-types/linkedAccounts'
+
+export function getAccountsNeedingConfirmation(bankAccounts: ReadonlyArray<BankAccount>): ExternalAccountConnection[] {
+  return bankAccounts.flatMap(ba =>
+    ba.external_accounts.filter(
+      ({ notifications }) => notifications?.some(({ type }) => type === 'CONFIRM_RELEVANT'),
+    ),
+  )
+}
 
 export function getBankAccountDisplayName(bankAccount: BankAccount): string {
   return bankAccount.account_name

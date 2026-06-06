@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
 import { useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
-import { getAccountsNeedingConfirmation } from '@hooks/legacy/useLinkedAccounts'
+import { getAccountsNeedingConfirmation } from '@utils/bankAccount'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
