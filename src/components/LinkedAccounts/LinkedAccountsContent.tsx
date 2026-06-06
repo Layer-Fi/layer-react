@@ -27,7 +27,7 @@ export const LinkedAccountsContent = ({
   const { t } = useTranslation()
   const { data, addConnection } = useContext(LinkedAccountsContext)
   const { business } = useLayerContext()
-  const isDemoBusiness = business?.isDemo ?? true
+  const isDemoBusiness = business?.isDemo ?? false
 
   const linkedAccountsNewAccountClassName = classNames(
     'Layer__linked-accounts__new-account',
@@ -54,7 +54,7 @@ export const LinkedAccountsContent = ({
         <LinkAccountDemoTooltip active={isDemoBusiness} asChild>
           <div
             role='button'
-            tabIndex={isDemoBusiness ? -1 : 0}
+            tabIndex={0}
             aria-disabled={isDemoBusiness}
             onClick={() => {
               if (isDemoBusiness) return
