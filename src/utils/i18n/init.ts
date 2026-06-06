@@ -32,6 +32,9 @@ export const initI18n = (locale: SupportedLocale) => {
       lng: locale,
       fallbackLng: DEFAULT_LOCALE,
       defaultNS: 'common',
+      // React escapes interpolated values at render time, so i18next's own HTML
+      // escaping is redundant and would turn characters like `&` into `&amp;`.
+      interpolation: { escapeValue: false },
       resources: {
         'en-US': enUS,
         'fr-CA': frCA,

@@ -64,6 +64,12 @@ export const accountIdentifierIsForCategory = (accountIdentifier: AccountIdentif
   }
 }
 
+export const getResolvedCategoryName = (
+  accountIdentifier: AccountIdentifier,
+  options: NestedCategorization[],
+): string | undefined =>
+  options.find(option => accountIdentifierIsForCategory(accountIdentifier, option))?.displayName
+
 export const getLeafCategories = (categories: NestedCategorization[]): NestedCategorization[] => {
   return categories.flatMap((category) => {
     if (!category.subCategories || category.subCategories.length === 0) {
