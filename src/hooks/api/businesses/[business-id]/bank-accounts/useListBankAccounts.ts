@@ -1,6 +1,7 @@
+import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { type BankAccount } from '@internal-types/linkedAccounts'
+import { type BankAccount, BankAccountSchema } from '@schemas/bankAccounts/bankAccount'
 import { get } from '@utils/api/authenticatedHttp'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -9,11 +10,15 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const BANK_ACCOUNTS_TAG_KEY = '#bank-accounts'
 
+const ListBankAccountsResponseSchema = Schema.Struct({
+  data: Schema.Array(BankAccountSchema),
+})
+
 const requiresNotification = (bankAccount: BankAccount): boolean =>
-  bankAccount.is_disconnected && bankAccount.notify_when_disconnected
+  bankAccount.isDisconnected && bankAccount.notifyWhenDisconnected
 
 const listBankAccounts = get<
-  { data: BankAccount[] },
+  Record<string, unknown>,
   {
     businessId: string
   }
@@ -67,7 +72,9 @@ export function useListBankAccounts(): ListBankAccountsSWRResponse {
       {
         params: { businessId },
       },
-    )().then(({ data }) => data),
+    )()
+      .then(Schema.decodeUnknownPromise(ListBankAccountsResponseSchema))
+      .then(({ data }) => [...data]),
   )
 
   return new ListBankAccountsSWRResponse(swrResponse)

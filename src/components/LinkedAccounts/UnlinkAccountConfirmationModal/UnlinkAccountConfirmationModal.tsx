@@ -1,7 +1,7 @@
 import { useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { BankAccount } from '@internal-types/linkedAccounts'
+import type { BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { isAllExternalAccountsUserCreatedCustom } from '@utils/bankAccount'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { type ModalProps } from '@ui/Modal/Modal'
