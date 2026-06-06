@@ -42,7 +42,7 @@
     "approval_failed_check_connection": "L’approbation a échoué. Vérifiez la connexion et réessayez dans quelques secondes.",
     "categorize_transactions": "Échec de la catégorisation des transactions",
     "confirm_transactions": "Échec de la confirmation des transactions",
-    "couldnt_load_transactions": "Nous n’avons pas réussi à récupérer vos transactions",
+    "couldnt_load_transactions": "Nous n’avons pas pu charger vos transactions",
     "delete": "Échec de la suppression",
     "download_retry": "Le téléchargement a échoué, veuillez réessayer",
     "matching_transactions_not_found": "Nous n’avons pas trouvé de transactions correspondantes",
@@ -98,7 +98,7 @@
     "transfer_uppercase": "VIREMENT",
     "uncategorize_count_selected_one": "Cette action décatégorisera {{displayCount}} transaction sélectionnée.",
     "uncategorize_count_selected_other": "Cette action décatégorisera {{displayCount}} transactions sélectionnées.",
-    "upload_transactions_or_wait_for_bank_sync": "Importez vos transactions ou attendez qu’elles soient synchronisées depuis votre banque"
+    "upload_transactions_or_wait_for_bank_sync": "Importez vos transactions ou attendez qu’elles soient synchronisées depuis votre banque."
   },
   "prompt": {
     "categorize_selected_transactions": "Catégoriser toutes les transactions sélectionnées?",
