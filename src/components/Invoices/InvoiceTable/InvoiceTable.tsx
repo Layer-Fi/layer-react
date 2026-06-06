@@ -191,9 +191,9 @@ const getStatusFilterParams = (statusFilter: InvoiceStatusFilter) => {
   }
 }
 
-const getListInvoiceParams = ({ status, query }: InvoiceTableFilters): ListInvoicesFilterParams => {
+const getListInvoiceParams = ({ showSalesReceipts, status, query }: InvoiceTableFilters): ListInvoicesFilterParams => {
   const statusFilterParams = getStatusFilterParams(status.value)
-  return { ...statusFilterParams, query }
+  return { ...statusFilterParams, showSalesReceipts, query }
 }
 
 export const InvoiceTable = () => {
