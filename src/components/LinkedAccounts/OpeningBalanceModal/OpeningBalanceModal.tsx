@@ -13,7 +13,7 @@ import {
   useBulkSetOpeningBalanceAndDate,
 } from '@hooks/legacy/useUpdateOpeningBalanceAndDate'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { OpeningBalanceModalContext } from '@contexts/OpeningBalanceModalContext/OpeningBalanceModalContext'
 import { Button } from '@ui/Button/Button'
 import { Modal } from '@ui/Modal/Modal'
 import { ModalActions, ModalContent, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
@@ -172,7 +172,7 @@ export function OpeningBalanceModal({
   const {
     accountsToAddOpeningBalanceInModal,
     setAccountsToAddOpeningBalanceInModal,
-  } = useContext(LinkedAccountsContext)
+  } = useContext(OpeningBalanceModalContext)
 
   const shouldShowModal = Boolean(accountsToAddOpeningBalanceInModal.length)
 

@@ -6,6 +6,7 @@ import { type OnboardingStep } from '@internal-types/layerContext'
 import { countTransactionsToReview } from '@utils/bankTransactions/shared'
 import { useAugmentedBankTransactions } from '@hooks/features/bankTransactions/useAugmentedBankTransactions'
 import { useBankTransactionsFilters } from '@contexts/BankTransactionsFiltersContext/useBankTransactionsFilters'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import BellIcon from '@icons/Bell'
 import CreditCardIcon from '@icons/CreditCard'
@@ -18,6 +19,7 @@ import { Badge, BadgeVariant } from '@components/Badge/Badge'
 import { BadgeSize } from '@components/Badge/Badge'
 import { Button } from '@components/Button/Button'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { LinkAccountDemoTooltip } from '@components/LinkedAccounts/LinkAccountDemoTooltip'
 import { Text } from '@components/Typography/Text'
 
 export interface ConnectAccountProps {
@@ -32,6 +34,8 @@ export const ConnectAccount = ({
 }: ConnectAccountProps) => {
   const { t } = useTranslation()
   const { addConnection } = useContext(LinkedAccountsContext)
+  const { business } = useLayerContext()
+  const isDemoBusiness = business?.isDemo ?? false
   const { filters } = useBankTransactionsFilters({
     scope: DisplayState.review,
   })
@@ -58,12 +62,15 @@ export const ConnectAccount = ({
           title={t('linkedAccounts:label.connect_accounts', 'Connect accounts')}
           description={t('linkedAccounts:label.import_data_simple_integration', 'Import data with one simple integration.')}
           button={(
-            <Button
-              onClick={() => { void addConnection('PLAID') }}
-              rightIcon={<LinkIcon size={12} />}
-            >
-              {t('common:action.connect_label', 'Connect')}
-            </Button>
+            <LinkAccountDemoTooltip active={isDemoBusiness}>
+              <Button
+                onClick={() => { void addConnection('PLAID') }}
+                disabled={isDemoBusiness}
+                rightIcon={<LinkIcon size={12} />}
+              >
+                {t('common:action.connect_label', 'Connect')}
+              </Button>
+            </LinkAccountDemoTooltip>
           )}
         />
       </>

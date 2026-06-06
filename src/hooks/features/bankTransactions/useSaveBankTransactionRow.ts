@@ -7,10 +7,15 @@ import { useMatchBankTransactionWithCacheUpdate } from '@hooks/features/bankTran
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
+type SaveBankTransactionRowOptions = {
+  onSuccess?: () => void
+}
+
 export type SaveBankTransactionRowFn = (
   selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
   bankTransaction: BankTransaction,
-) => Promise<void> | void
+  options?: SaveBankTransactionRowOptions,
+) => Promise<void>
 
 export const useSaveBankTransactionRow = () => {
   const {
@@ -25,21 +30,22 @@ export const useSaveBankTransactionRow = () => {
     isError: isErrorMatching,
   } = useMatchBankTransactionWithCacheUpdate()
 
-  const saveBankTransactionRow = useCallback(async (
-    selectedCategory: BankTransactionCategoryComboBoxOption | null | undefined,
-    bankTransaction: BankTransaction,
+  const saveBankTransactionRow = useCallback<SaveBankTransactionRowFn>(async (
+    selectedCategory,
+    bankTransaction,
+    options,
   ) => {
     if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
       return
     }
 
     if (isSuggestedMatchAsOption(selectedCategory)) {
-      return matchBankTransaction(bankTransaction, selectedCategory.original.id)
+      return matchBankTransaction(bankTransaction, selectedCategory.original.id, options)
     }
 
     if (isSplitAsOption(selectedCategory)) {
       const splitCategorizationRequest = buildCategorizeBankTransactionPayloadForSplit(selectedCategory.original)
-      return categorizeBankTransaction(bankTransaction.id, splitCategorizationRequest)
+      return categorizeBankTransaction(bankTransaction.id, splitCategorizationRequest, options)
     }
 
     if (!selectedCategory.classification) return
@@ -47,7 +53,7 @@ export const useSaveBankTransactionRow = () => {
     return categorizeBankTransaction(bankTransaction.id, {
       type: 'Category',
       category: selectedCategory.classification,
-    })
+    }, options)
   }, [categorizeBankTransaction, matchBankTransaction])
 
   return useMemo(() => ({

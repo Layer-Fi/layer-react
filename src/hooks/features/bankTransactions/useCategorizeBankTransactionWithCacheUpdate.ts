@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
@@ -8,30 +7,31 @@ import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/Ba
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export function useCategorizeBankTransactionWithCacheUpdate() {
-  const { t } = useTranslation()
-  const { addToast, eventCallbacks } = useLayerContext()
+  const { eventCallbacks } = useLayerContext()
   const { updateLocalBankTransactions } = useBankTransactionsContext()
 
   const { trigger: categorizeBankTransaction, isMutating, isError } = useCategorizeBankTransaction()
 
   const categorize = useCallback(
-    async (bankTransactionId: BankTransaction['id'], newCategory: CategoryUpdate, notify?: boolean) => {
+    async (bankTransactionId: BankTransaction['id'], newCategory: CategoryUpdate, options?: { onSuccess?: () => void }): Promise<void> => {
       return categorizeBankTransaction({ bankTransactionId, ...newCategory })
-        .then((updatedTransaction) => {
-          updateLocalBankTransactions([{
-            ...updatedTransaction,
-            recently_categorized: true,
-          }])
+        .then(
+          (updatedTransaction) => {
+            updateLocalBankTransactions([{
+              ...updatedTransaction,
+              recently_categorized: true,
+            }])
 
-          if (notify) {
-            addToast({ content: t('bankTransactions:label.transaction_confirmed', 'Transaction confirmed') })
-          }
-        })
-        .finally(() => {
-          eventCallbacks?.onTransactionCategorized?.()
-        })
+            eventCallbacks?.onTransactionCategorized?.()
+
+            options?.onSuccess?.()
+          },
+          () => {
+            // Swallow the rejection; `isError`/`isMutating` drive the inline retry UI.
+          },
+        )
     },
-    [updateLocalBankTransactions, categorizeBankTransaction, addToast, eventCallbacks, t],
+    [updateLocalBankTransactions, categorizeBankTransaction, eventCallbacks],
   )
 
   return useMemo(

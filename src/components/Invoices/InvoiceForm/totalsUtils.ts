@@ -1,60 +1,65 @@
 import { BigDecimal as BD } from 'effect'
 
 import type { InvoiceForm, InvoiceFormLineItem } from '@schemas/invoices/invoice'
-import { fromNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
+import { fromNonRecursiveBigDecimal, type NonRecursiveBigDecimal, toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import { BIG_DECIMAL_ZERO, roundDecimalToCents } from '@utils/bigDecimalUtils'
 
-export function computeSubtotal(lineItems: InvoiceFormLineItem[]): BD.BigDecimal
-export function computeSubtotal(lineItems: readonly InvoiceFormLineItem[]): BD.BigDecimal
+export function computeSubtotal(lineItems: InvoiceFormLineItem[]): NonRecursiveBigDecimal
+export function computeSubtotal(lineItems: readonly InvoiceFormLineItem[]): NonRecursiveBigDecimal
 
 export function computeSubtotal(
   lineItems: readonly InvoiceFormLineItem[],
-): BD.BigDecimal {
-  return lineItems.reduce((sum, item) => BD.sum(sum, fromNonRecursiveBigDecimal(item.amount)), BIG_DECIMAL_ZERO)
+): NonRecursiveBigDecimal {
+  return toNonRecursiveBigDecimal(
+    lineItems.reduce((sum, item) => BD.sum(sum, fromNonRecursiveBigDecimal(item.amount)), BIG_DECIMAL_ZERO),
+  )
 }
 
-export const computeRawTaxableSubtotal = (lineItems: InvoiceFormLineItem[]): BD.BigDecimal =>
-  lineItems
+export const computeRawTaxableSubtotal = (lineItems: InvoiceFormLineItem[]): NonRecursiveBigDecimal => {
+  const sum = lineItems
     .filter(item => item.isTaxable)
     .reduce((sum, item) => BD.sum(sum, fromNonRecursiveBigDecimal(item.amount)), BIG_DECIMAL_ZERO)
+  return toNonRecursiveBigDecimal(sum)
+}
 
 export function computeAdditionalDiscount({
   subtotal,
   discountRate,
 }: {
-  subtotal: BD.BigDecimal
-  discountRate: BD.BigDecimal
-}) {
-  const rawDiscountAmount = BD.multiply(subtotal, discountRate)
+  subtotal: NonRecursiveBigDecimal
+  discountRate: NonRecursiveBigDecimal
+}): NonRecursiveBigDecimal {
+  const rawDiscountAmount = BD.multiply(fromNonRecursiveBigDecimal(subtotal), fromNonRecursiveBigDecimal(discountRate))
   const additionalDiscount = roundDecimalToCents(rawDiscountAmount)
 
-  return additionalDiscount
+  return toNonRecursiveBigDecimal(additionalDiscount)
 }
 
 export function computeTaxableSubtotal({
   rawTaxableSubtotal,
   discountRate,
 }: {
-  rawTaxableSubtotal: BD.BigDecimal
-  discountRate: BD.BigDecimal
-}) {
-  const discountForTaxableSubtotal = BD.multiply(rawTaxableSubtotal, discountRate)
-  const taxableSubtotal = BD.subtract(rawTaxableSubtotal, discountForTaxableSubtotal)
+  rawTaxableSubtotal: NonRecursiveBigDecimal
+  discountRate: NonRecursiveBigDecimal
+}): NonRecursiveBigDecimal {
+  const rawTaxableSubtotalBd = fromNonRecursiveBigDecimal(rawTaxableSubtotal)
+  const discountForTaxableSubtotal = BD.multiply(rawTaxableSubtotalBd, fromNonRecursiveBigDecimal(discountRate))
+  const taxableSubtotal = BD.subtract(rawTaxableSubtotalBd, discountForTaxableSubtotal)
 
-  return taxableSubtotal
+  return toNonRecursiveBigDecimal(taxableSubtotal)
 }
 
 export function computeTaxes({
   taxableSubtotal,
   taxRate,
 }: {
-  taxableSubtotal: BD.BigDecimal
-  taxRate: BD.BigDecimal
-}) {
-  const rawTaxAmount = BD.multiply(taxableSubtotal, taxRate)
+  taxableSubtotal: NonRecursiveBigDecimal
+  taxRate: NonRecursiveBigDecimal
+}): NonRecursiveBigDecimal {
+  const rawTaxAmount = BD.multiply(fromNonRecursiveBigDecimal(taxableSubtotal), fromNonRecursiveBigDecimal(taxRate))
   const taxes = roundDecimalToCents(rawTaxAmount)
 
-  return taxes
+  return toNonRecursiveBigDecimal(taxes)
 }
 
 export function computeGrandTotal({
@@ -62,17 +67,17 @@ export function computeGrandTotal({
   additionalDiscount,
   taxes,
 }: {
-  subtotal: BD.BigDecimal
-  additionalDiscount: BD.BigDecimal
-  taxes: BD.BigDecimal
-}) {
-  const subtotalLessDiscounts = BD.subtract(subtotal, additionalDiscount)
-  const grandTotal = BD.sum(subtotalLessDiscounts, taxes)
+  subtotal: NonRecursiveBigDecimal
+  additionalDiscount: NonRecursiveBigDecimal
+  taxes: NonRecursiveBigDecimal
+}): NonRecursiveBigDecimal {
+  const subtotalLessDiscounts = BD.subtract(fromNonRecursiveBigDecimal(subtotal), fromNonRecursiveBigDecimal(additionalDiscount))
+  const grandTotal = BD.sum(subtotalLessDiscounts, fromNonRecursiveBigDecimal(taxes))
 
-  return grandTotal
+  return toNonRecursiveBigDecimal(grandTotal)
 }
 
-export const getGrandTotalFromInvoice = (invoice: InvoiceForm): BD.BigDecimal => {
+export const getGrandTotalFromInvoice = (invoice: InvoiceForm): NonRecursiveBigDecimal => {
   const { lineItems, discountRate, taxRate } = invoice
 
   const subtotal = computeSubtotal(lineItems)

@@ -77,6 +77,15 @@
   &:hover {
     background: var(--base-transparent-2);
   }
+
+  &.--disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+
+    &:hover {
+      background: var(--base-transparent-1);
+    }
+  }
 }
 
 /* stylelint-disable-next-line keyframes-name-pattern */
@@ -91,7 +100,7 @@
   overflow: hidden;
   padding: 1rem;
   border-radius: var(--border-radius-base);
-  background: white;
+  background: var(--color-base-0);
 }
 
 .skeleton-loader::after {
@@ -105,7 +114,7 @@
     linear-gradient(
       90deg,
       transparent,
-      rgb(255 255 255 / 100%),
+      var(--color-base-0),
       transparent
     );
   content: '';

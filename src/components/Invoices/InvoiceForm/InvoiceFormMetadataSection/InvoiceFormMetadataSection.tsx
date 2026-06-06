@@ -1,7 +1,6 @@
-import { type BigDecimal as BD } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { negate } from '@utils/bigDecimalUtils'
+import { negateNonRecursiveBigDecimal, type NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { InvoiceFormTotalRow } from '@components/Invoices/InvoiceForm/InvoiceFormTotalRow/InvoiceFormTotalRow'
@@ -12,11 +11,11 @@ import './invoiceFormMetadataSection.scss'
 type InvoiceFormMetadataSectionProps = {
   form: InvoiceFormType
   totals: {
-    subtotal: BD.BigDecimal
-    additionalDiscount: BD.BigDecimal
-    taxableSubtotal: BD.BigDecimal
-    taxes: BD.BigDecimal
-    grandTotal: BD.BigDecimal
+    subtotal: NonRecursiveBigDecimal
+    additionalDiscount: NonRecursiveBigDecimal
+    taxableSubtotal: NonRecursiveBigDecimal
+    taxes: NonRecursiveBigDecimal
+    grandTotal: NonRecursiveBigDecimal
   }
 }
 
@@ -38,15 +37,15 @@ export const InvoiceFormMetadataSection = ({
         </VStack>
         <VStack className='Layer__InvoiceForm__TotalFields' fluid>
           <InvoiceFormTotalRow label={t('invoices:label.subtotal', 'Subtotal')} value={subtotal} />
-          <InvoiceFormTotalRow label={t('invoices:label.discount', 'Discount')} value={negate(additionalDiscount)}>
+          <InvoiceFormTotalRow label={t('invoices:label.discount', 'Discount')} value={negateNonRecursiveBigDecimal(additionalDiscount)}>
             <form.AppField name='discountRate'>
-              {field => <field.FormBigDecimalField label={t('invoices:label.discount', 'Discount')} showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
+              {field => <field.FormNonRecursiveBigDecimalField label={t('invoices:label.discount', 'Discount')} showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
             </form.AppField>
           </InvoiceFormTotalRow>
           <InvoiceFormTotalRow label={t('invoices:label.taxable_subtotal', 'Taxable subtotal')} value={taxableSubtotal} />
           <InvoiceFormTotalRow label={t('invoices:label.tax_rate', 'Tax rate')} value={taxes}>
             <form.AppField name='taxRate'>
-              {field => <field.FormBigDecimalField label={t('invoices:label.tax_rate_title_case', 'Tax Rate')} showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
+              {field => <field.FormNonRecursiveBigDecimalField label={t('invoices:label.tax_rate_title_case', 'Tax Rate')} showLabel={false} mode='percent' isReadOnly={isReadOnly} />}
             </form.AppField>
           </InvoiceFormTotalRow>
           <InvoiceFormTotalRow label={t('common:label.total', 'Total')} value={grandTotal} />

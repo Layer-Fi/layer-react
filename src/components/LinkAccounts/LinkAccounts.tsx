@@ -2,7 +2,8 @@ import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { Awaitable } from '@internal-types/utility/promises'
-import { getAccountsNeedingConfirmation } from '@hooks/legacy/useLinkedAccounts'
+import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
+import { getAccountsNeedingConfirmation } from '@utils/bankAccount'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Heading } from '@ui/Typography/Heading'
@@ -14,11 +15,12 @@ import './linkAccounts.scss'
 
 type LinkAccountsProps = {
   onComplete?: () => Awaitable<void>
+  plaidHostedLinkConfig?: PlaidHostedLinkConfig
 }
 
-export function LinkAccounts(props: LinkAccountsProps) {
+export function LinkAccounts({ plaidHostedLinkConfig, ...props }: LinkAccountsProps) {
   return (
-    <LinkedAccountsProvider>
+    <LinkedAccountsProvider plaidHostedLinkConfig={plaidHostedLinkConfig}>
       <LinkAccountsContent {...props} />
     </LinkedAccountsProvider>
   )

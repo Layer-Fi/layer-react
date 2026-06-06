@@ -71,7 +71,6 @@ export const BankTransactionsMobileListBusinessForm = ({
           selectedTaxCode,
         ),
       },
-      true,
     )
   }
 

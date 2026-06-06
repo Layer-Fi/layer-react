@@ -88,16 +88,19 @@ export const BankTransactionRow = ({
 
   const displayAsCategorized = isBeingRemoved ? false : categorized
 
+  const onBankTransactionSaveSuccess = useCallback(() => {
+    deselect(bankTransaction.id)
+    setOpen(false)
+  }, [bankTransaction.id, deselect, setOpen])
+
   const save = useCallback(async () => {
     if (open && !isExpandedRowValid) return
     if (!selectedOption) return
 
-    await saveBankTransactionRow(selectedOption, bankTransaction)
-
-    // Remove from bulk selection store
-    deselect(bankTransaction.id)
-    setOpen(false)
-  }, [bankTransaction, deselect, selectedOption, isExpandedRowValid, open, saveBankTransactionRow])
+    await saveBankTransactionRow(selectedOption, bankTransaction, {
+      onSuccess: onBankTransactionSaveSuccess,
+    })
+  }, [open, isExpandedRowValid, selectedOption, saveBankTransactionRow, bankTransaction, onBankTransactionSaveSuccess])
 
   const submitButton = useMemo(() => (
     <SubmitButton

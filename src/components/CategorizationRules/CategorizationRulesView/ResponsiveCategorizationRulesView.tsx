@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import { PencilRuler } from 'lucide-react'
+import { PencilRuler, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { flattenCategories } from '@internal-types/categories'
@@ -19,6 +19,8 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
+import { CategorizationRuleFormDrawer } from '@components/CategorizationRules/CategorizationRuleForm/CategorizationRuleFormDrawer'
+import { type CategorizationRuleFormState } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 import { CategorizationRulesMobileList } from '@components/CategorizationRules/CategorizationRulesMobileList/CategorizationRulesMobileList'
 import { CategorizationRulesTable } from '@components/CategorizationRules/CategorizationRulesTable/CategorizationRulesTable'
 import { getCategorizationRuleCounterpartyLabel } from '@components/CategorizationRules/utils'
@@ -51,20 +53,33 @@ const CategorizationRulesErrorState = () => {
   )
 }
 
+const ENABLE_CATEGORIZATION_RULE_EDITING = false
+
 type CategorizationRulesHeaderProps = {
   onGoBack?: () => void
+  onCreateRule?: () => void
 }
 
-const CategorizationRulesHeader = ({ onGoBack }: CategorizationRulesHeaderProps) => {
+const CategorizationRulesHeader = ({ onGoBack, onCreateRule }: CategorizationRulesHeaderProps) => {
   const { t } = useTranslation()
   return (
-    <HStack align='center' gap='md'>
-      {onGoBack && (
-        <Button variant='outlined' icon onPress={onGoBack}>
-          <BackArrow />
-        </Button>
+    <HStack fluid justify='space-between' align='center' gap='xs'>
+      <HStack align='center' gap='md'>
+        {onGoBack && (
+          <Button variant='outlined' icon onPress={onGoBack}>
+            <BackArrow />
+          </Button>
+        )}
+        <Heading size='sm'>{t('categorizationRules:label.categorization_rules', 'Categorization Rules')}</Heading>
+      </HStack>
+      {onCreateRule && (
+        <HStack pie='md' align='center' gap='xs'>
+          <Button onPress={onCreateRule}>
+            {t('categorizationRules:action.create_rule', 'Create Rule')}
+            <Plus size={16} />
+          </Button>
+        </HStack>
       )}
-      <Heading size='sm'>{t('categorizationRules:label.categorization_rules', 'Categorization Rules')}</Heading>
     </HStack>
   )
 }
@@ -75,9 +90,19 @@ export const ResponsiveCategorizationRulesView = () => {
   const { t } = useTranslation()
   const [selectedRule, setSelectedRule] = useState<CategorizationRule | null>(null)
   const [showDeletionConfirmationModal, setShowDeletionConfirmationModal] = useState(false)
+  const [formState, setFormState] = useState<CategorizationRuleFormState | null>(null)
   const { trigger: archiveCategorizationRuleTrigger } = useArchiveCategorizationRule()
   const { addToast } = useLayerContext()
   const { isMobile } = useSizeClass()
+
+  const onCreateRule = useCallback(() => setFormState({ mode: 'create' }), [])
+  const onEditRule = useCallback((rule: CategorizationRule) => setFormState({ mode: 'edit', rule }), [])
+  const createRuleHandler = ENABLE_CATEGORIZATION_RULE_EDITING ? onCreateRule : undefined
+  const editRuleHandler = ENABLE_CATEGORIZATION_RULE_EDITING ? onEditRule : undefined
+  const onFormDrawerOpenChange = useCallback((isOpen: boolean) => {
+    if (!isOpen) setFormState(null)
+  }, [])
+  const onFormSuccess = useCallback(() => setFormState(null), [])
 
   const { data: categories, isLoading: categoriesAreLoading } = useCategories({ mode: CategoriesListMode.All })
   const options = useMemo(() => {
@@ -123,9 +148,14 @@ export const ResponsiveCategorizationRulesView = () => {
   const isLoading = data === undefined || rulesAreLoading || categoriesAreLoading
   const { toBankTransactionsTable } = useBankTransactionsNavigation()
 
+  const DesktopHeader = useCallback(
+    () => <CategorizationRulesHeader onCreateRule={createRuleHandler} />,
+    [createRuleHandler],
+  )
+
   const DesktopView = useMemo(() => (
     <BaseDetailView
-      slots={{ Header: CategorizationRulesHeader, BackIcon: BackArrow }}
+      slots={{ Header: DesktopHeader, BackIcon: BackArrow }}
       name='CategorizationRulesDrawer'
       onGoBack={toBankTransactionsTable}
     >
@@ -135,6 +165,7 @@ export const ResponsiveCategorizationRulesView = () => {
         isError={isError}
         paginationProps={paginationProps}
         options={options}
+        onEditRule={editRuleHandler}
         onDeleteRule={onDeleteRule}
         slots={{
           EmptyState: CategorizationRulesEmptyState,
@@ -142,17 +173,18 @@ export const ResponsiveCategorizationRulesView = () => {
         }}
       />
     </BaseDetailView>
-  ), [toBankTransactionsTable, categorizationRules, isLoading, isError, paginationProps, options, onDeleteRule])
+  ), [DesktopHeader, toBankTransactionsTable, categorizationRules, isLoading, isError, paginationProps, options, editRuleHandler, onDeleteRule])
 
   const MobileView = useMemo(() => (
     <VStack gap='md'>
-      <CategorizationRulesHeader onGoBack={toBankTransactionsTable} />
+      <CategorizationRulesHeader onGoBack={toBankTransactionsTable} onCreateRule={createRuleHandler} />
       <CategorizationRulesMobileList
         data={categorizationRules}
         isLoading={isLoading}
         isError={isError}
         paginationProps={paginationProps}
         options={options}
+        onEditRule={editRuleHandler}
         onDeleteRule={onDeleteRule}
         slots={{
           EmptyState: CategorizationRulesEmptyState,
@@ -160,16 +192,21 @@ export const ResponsiveCategorizationRulesView = () => {
         }}
       />
     </VStack>
-  ), [toBankTransactionsTable, categorizationRules, isLoading, isError, paginationProps, options, onDeleteRule])
+  ), [toBankTransactionsTable, createRuleHandler, categorizationRules, isLoading, isError, paginationProps, options, editRuleHandler, onDeleteRule])
 
   const selectedRuleCounterpartyLabel = (selectedRule && getCategorizationRuleCounterpartyLabel(selectedRule))
     ?? t('bankTransactions:label.selected_counterparty', 'this counterparty')
+
+  const responsiveSlots = useMemo(
+    () => ({ Desktop: DesktopView, Mobile: MobileView }),
+    [DesktopView, MobileView],
+  )
 
   return (
     <>
       <ResponsiveComponent
         resolveVariant={resolveVariant}
-        slots={{ Desktop: DesktopView, Mobile: MobileView }}
+        slots={responsiveSlots}
       />
       <BaseConfirmationModal
         isOpen={showDeletionConfirmationModal}
@@ -180,6 +217,12 @@ export const ResponsiveCategorizationRulesView = () => {
         confirmLabel={t('common:action.delete_label', 'Delete')}
         cancelLabel={t('common:action.cancel_label', 'Cancel')}
         useDrawer={isMobile}
+      />
+      <CategorizationRuleFormDrawer
+        isOpen={!!formState}
+        formState={formState}
+        onOpenChange={onFormDrawerOpenChange}
+        onSuccess={onFormSuccess}
       />
     </>
   )

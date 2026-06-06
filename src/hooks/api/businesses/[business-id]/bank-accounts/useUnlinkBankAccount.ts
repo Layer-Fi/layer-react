@@ -1,8 +1,10 @@
-import { useCallback, useRef } from 'react'
+import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
+import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -45,8 +47,9 @@ export function useUnlinkBankAccount() {
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
+  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
-  const { trigger: rawTrigger, ...rest } = useSWRMutation(
+  const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
       access_token: auth?.access_token,
       apiUrl,
@@ -61,13 +64,27 @@ export function useUnlinkBankAccount() {
     },
   )
 
-  const triggerRef = useRef(rawTrigger)
-  triggerRef.current = rawTrigger
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
-  const trigger = useCallback(
-    (bankAccountId: string) => triggerRef.current(bankAccountId),
-    [],
+  const { trigger: originalTrigger } = mutationResponse
+
+  const stableProxiedTrigger = useCallback(
+    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
+      const triggerResult = await originalTrigger(...triggerParameters)
+      void forceReloadBankTransactions()
+      return triggerResult
+    },
+    [originalTrigger, forceReloadBankTransactions],
   )
 
-  return { trigger, ...rest }
+  return new Proxy(mutationResponse, {
+    get(target, prop) {
+      if (prop === 'trigger') {
+        return stableProxiedTrigger
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return Reflect.get(target, prop)
+    },
+  })
 }

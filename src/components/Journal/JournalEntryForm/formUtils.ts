@@ -3,8 +3,9 @@ import { BigDecimal as BD } from 'effect'
 import type { TFunction } from 'i18next'
 
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
+import { convertCentsToNonRecursiveBigDecimal, fromNonRecursiveBigDecimal, NRBD_ZERO, nrbdEquals } from '@schemas/nonRecursiveBigDecimal'
 import { makeTagFromTransactionTag, makeTagKeyValueFromTag } from '@schemas/tag'
-import { BIG_DECIMAL_ZERO, convertBigDecimalToBigIntCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
+import { BIG_DECIMAL_ZERO, convertBigDecimalToBigIntCents } from '@utils/bigDecimalUtils'
 import type { ApiCustomJournalEntryWithEntry, CreateCustomJournalEntry, JournalEntryForm, JournalEntryFormLineItem } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
 
 /**
@@ -21,7 +22,7 @@ export function isLineItemBlank(lineItem: JournalEntryFormLineItem): boolean {
       ? Boolean(lineItem.accountIdentifier.stableName)
       : false
 
-  const hasAmount = !BD.equals(lineItem.amount, BIG_DECIMAL_ZERO)
+  const hasAmount = !nrbdEquals(lineItem.amount, NRBD_ZERO)
   const hasMemo = Boolean(lineItem.memo?.trim())
   const hasCustomer = Boolean(lineItem.customer)
   const hasVendor = Boolean(lineItem.vendor)
@@ -38,7 +39,7 @@ export function getJournalEntryLineItemFormDefaultValues(direction: LedgerEntryD
       type: 'AccountId',
       id: '',
     },
-    amount: BIG_DECIMAL_ZERO,
+    amount: NRBD_ZERO,
     direction,
     memo: null,
     customer: null,
@@ -83,7 +84,7 @@ export function getJournalEntryFormInitialValues(journalEntry: ApiCustomJournalE
         type: 'AccountId',
         id: entryLineItemsById.get(lineItem.id)!.account.accountId,
       },
-      amount: convertCentsToBigDecimal(entryLineItemsById.get(lineItem.id)!.amount),
+      amount: convertCentsToNonRecursiveBigDecimal(entryLineItemsById.get(lineItem.id)!.amount),
       direction: entryLineItemsById.get(lineItem.id)!.direction,
       memo: lineItem.memo ?? null,
       customer: lineItem.customer,
@@ -114,7 +115,7 @@ export function convertJournalEntryFormToParams(form: JournalEntryForm): CreateC
     lineItems: nonBlankLineItems.map(lineItem => ({
       ...(lineItem.externalId && { externalId: lineItem.externalId }),
       accountIdentifier: lineItem.accountIdentifier,
-      amount: convertBigDecimalToBigIntCents(lineItem.amount),
+      amount: convertBigDecimalToBigIntCents(fromNonRecursiveBigDecimal(lineItem.amount)),
       direction: lineItem.direction,
       ...(lineItem.memo?.trim() && { memo: lineItem.memo.trim() }),
       ...(lineItem.customer?.id && { customerId: lineItem.customer.id }),
@@ -158,8 +159,8 @@ export function validateJournalEntryForm({ value }: { value: JournalEntryForm },
       errors.push({ lineItems: t('generalLedger:validation.least_one_required', 'At least one credit line item is required.') })
     }
 
-    const debitTotal = nonBlankDebits.reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
-    const creditTotal = nonBlankCredits.reduce((sum, item) => BD.sum(sum, item.amount), BIG_DECIMAL_ZERO)
+    const debitTotal = nonBlankDebits.reduce((sum, item) => BD.sum(sum, fromNonRecursiveBigDecimal(item.amount)), BIG_DECIMAL_ZERO)
+    const creditTotal = nonBlankCredits.reduce((sum, item) => BD.sum(sum, fromNonRecursiveBigDecimal(item.amount)), BIG_DECIMAL_ZERO)
 
     if (!BD.equals(debitTotal, creditTotal)) {
       errors.push({ lineItems: t('generalLedger:validation.debit_credit_must', 'Debit and credit amounts must be equal') })
@@ -184,7 +185,7 @@ export function validateJournalEntryForm({ value }: { value: JournalEntryForm },
       else {
         errors.push({ [`lineItems[${index}].accountIdentifier`]: t('generalLedger:validation.account_required', 'Account is a required field.') })
       }
-      if (BD.lessThan(lineItem.amount, BIG_DECIMAL_ZERO)) {
+      if (BD.lessThan(fromNonRecursiveBigDecimal(lineItem.amount), BIG_DECIMAL_ZERO)) {
         errors.push({ [`lineItems[${index}].amount`]: t('generalLedger:validation.amount_greater_must', 'Amount must be greater than zero.') })
       }
     })
