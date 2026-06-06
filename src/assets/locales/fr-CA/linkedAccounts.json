@@ -27,17 +27,17 @@
     "no_accounts_connected": "Aucun compte connecté"
   },
   "error": {
-    "break_connection": "",
-    "confirm_account": "",
+    "break_connection": "Nous n’avons pas pu réinitialiser cette connexion. Veuillez réessayer.",
+    "confirm_account": "Nous n’avons pas pu confirmer votre compte. Veuillez réessayer.",
     "confirm_accounts_try_again_later": "Une erreur s’est produite lors de la confirmation des comptes. Vous aurez l’occasion de réessayer plus tard.",
-    "connect_account": "",
+    "connect_account": "Nous n’avons pas pu connecter votre compte. Veuillez réessayer.",
     "delete_account_check_connection": "La suppression a échoué. Veuillez vérifier votre connexion et réessayer dans quelques secondes.",
-    "exclude_account": "",
+    "exclude_account": "Nous n’avons pas pu exclure votre compte. Veuillez réessayer.",
     "load_accounts": "Échec du chargement des comptes",
-    "remove_connection": "",
-    "repair_connection": "",
+    "remove_connection": "Nous n’avons pas pu supprimer cette connexion. Veuillez réessayer.",
+    "repair_connection": "Nous n’avons pas pu réparer la connexion Plaid avec votre compte. Veuillez réessayer.",
     "save_data_try_again_later": "Une erreur s’est produite lors de l’enregistrement des données. Vous aurez l’occasion de réessayer plus tard.",
-    "start_connection": "",
+    "start_connection": "Nous n’avons pas pu lancer le processus de connexion Plaid. Veuillez réessayer.",
     "unlink_failed": "La dissociation a échoué. Veuillez vérifier votre connexion et réessayer dans quelques secondes."
   },
   "label": {
@@ -88,6 +88,6 @@
     "syncing_historical_account_data": "Synchronisation des données historiques du compte"
   },
   "tooltip": {
-    "cannot_link_demo_business": ""
+    "cannot_link_demo_business": "La liaison de compte n’est pas offerte pour les entreprises de démonstration. Il s’agit d’une entreprise exemple qui utilise des données fictives au lieu de connexions bancaires réelles."
   }
 }
