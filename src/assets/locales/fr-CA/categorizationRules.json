@@ -1,12 +1,17 @@
 {
   "action": {
+    "create_rule": "",
     "delete_rule": "Supprimer la règle",
     "dont_ask_again": "Ne plus demander",
+    "edit_rule": "",
     "no_decide_each_time": "Non, je déciderai chaque fois",
+    "save_rule": "",
     "yes_always_categorize": "Oui, toujours catégoriser"
   },
   "empty": {
     "no_categorization_rules_yet": "Aucune règle de catégorisation n’a encore été créée. Vous recevrez des suggestions de règles à créer au fur et à mesure que vous catégoriserez les transactions dans le flux bancaire.",
+    "no_counterparties_yet": "",
+    "no_matching_counterparties": "",
     "no_rules_found": "Aucune règle trouvée"
   },
   "error": {
@@ -15,10 +20,15 @@
     "create_categorization_rule": "Échec de la création de la règle de catégorisation",
     "load_affected_transactions": "Une erreur s’est produite lors du chargement des transactions concernées",
     "load_categorization_rules": "Une erreur s’est produite lors du chargement de vos règles de catégorisation. Veuillez vérifier votre connexion et réessayer.",
+    "load_counterparties": "",
     "load_transactions": "Erreur lors du chargement des transactions",
     "reject_rule_suggestion": "Échec du rejet de la suggestion de règle"
   },
   "label": {
+    "amount_max": "",
+    "amount_min": "",
+    "any": "",
+    "any_amount": "",
     "any_direction": "Entrées et sorties d’argent",
     "categorization_rules": "Règles de catégorisation",
     "following_count_transactions_one": "La {{displayCount}} transaction suivante sera touchée :",
@@ -29,8 +39,18 @@
     "transaction_no_longer_automatically_categorized": "Les transactions ne seront plus automatiquement catégorisées par cette règle. Les transactions déjà catégorisées sous {{counterparty}} ne seront pas touchées.",
     "update_categorization_rules": "Mettre à jour les règles de catégorisation"
   },
+  "placeholder": {
+    "no_maximum": "",
+    "no_minimum": "",
+    "select_counterparty": ""
+  },
   "prompt": {
     "always_use_category": "Toujours utiliser cette catégorie?",
     "delete_categorization_rule": "Supprimer la règle de catégorisation?"
+  },
+  "validation": {
+    "amount_min_greater_than_max": "",
+    "category_required": "",
+    "counterparty_required": ""
   }
 }

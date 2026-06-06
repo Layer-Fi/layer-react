@@ -94,6 +94,8 @@
     "liabilities": "Passifs",
     "loading": "Chargement...",
     "memo": "Note",
+    "money_in": "",
+    "money_out": "",
     "more": "Plus",
     "name": "Nom",
     "net_profit": "Bénéfice net",

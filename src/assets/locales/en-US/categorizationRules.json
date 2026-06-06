@@ -1,12 +1,17 @@
 {
   "action": {
+    "create_rule": "Create Rule",
     "delete_rule": "Delete rule",
     "dont_ask_again": "Don’t ask again",
+    "edit_rule": "Edit Rule",
     "no_decide_each_time": "No, I’ll decide each time",
+    "save_rule": "Save Rule",
     "yes_always_categorize": "Yes, always categorize"
   },
   "empty": {
     "no_categorization_rules_yet": "No categorization rules have been created yet. You will receive suggestions for rules to create as you categorize transactions in the bank feed.",
+    "no_counterparties_yet": "No counterparties yet. They will appear here automatically as your transactions are processed.",
+    "no_matching_counterparties": "No matching counterparties.",
     "no_rules_found": "No rules found"
   },
   "error": {
@@ -15,10 +20,15 @@
     "create_categorization_rule": "Failed to create categorization rule",
     "load_affected_transactions": "There was an error loading the affected transactions",
     "load_categorization_rules": "An error occurred while loading your categorization rules. Please check your connection and try again.",
+    "load_counterparties": "Couldn’t load counterparties. Please try again.",
     "load_transactions": "Error loading transactions",
     "reject_rule_suggestion": "Failed to reject rule suggestion"
   },
   "label": {
+    "amount_max": "Maximum amount",
+    "amount_min": "Minimum amount",
+    "any": "Any",
+    "any_amount": "Any amount",
     "any_direction": "Any direction",
     "categorization_rules": "Categorization Rules",
     "following_count_transactions_one": "The following {{displayCount}} transaction will be affected:",
@@ -29,8 +39,18 @@
     "transaction_no_longer_automatically_categorized": "Transactions will no longer automatically be categorized by this rule. Any transactions previously categorized to {{counterparty}} will not be affected.",
     "update_categorization_rules": "Update categorization rules"
   },
+  "placeholder": {
+    "no_maximum": "No maximum",
+    "no_minimum": "No minimum",
+    "select_counterparty": "Select counterparty"
+  },
   "prompt": {
     "always_use_category": "Always use this category?",
     "delete_categorization_rule": "Delete categorization rule?"
+  },
+  "validation": {
+    "amount_min_greater_than_max": "Minimum amount must be less than or equal to maximum amount.",
+    "category_required": "Category is required.",
+    "counterparty_required": "Counterparty is required."
   }
 }
