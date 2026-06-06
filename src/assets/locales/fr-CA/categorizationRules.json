@@ -27,10 +27,13 @@
   "label": {
     "amount_max": "",
     "amount_min": "",
+    "amount_value": "",
     "any": "",
     "any_amount": "",
     "any_direction": "Entrées et sorties d’argent",
     "categorization_rules": "Règles de catégorisation",
+    "category_value": "",
+    "direction_value": "",
     "following_count_transactions_one": "La {{displayCount}} transaction suivante sera touchée :",
     "following_count_transactions_other": "Les {{displayCount}} transactions suivantes seront touchées :",
     "money_in": "Entrées d’argent",

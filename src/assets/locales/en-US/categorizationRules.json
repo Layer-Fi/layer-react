@@ -27,10 +27,13 @@
   "label": {
     "amount_max": "Maximum amount",
     "amount_min": "Minimum amount",
+    "amount_value": "Amount: {{value}}",
     "any": "Any",
     "any_amount": "Any amount",
     "any_direction": "Any direction",
     "categorization_rules": "Categorization Rules",
+    "category_value": "Category: {{value}}",
+    "direction_value": "Direction: {{value}}",
     "following_count_transactions_one": "The following {{displayCount}} transaction will be affected:",
     "following_count_transactions_other": "The following {{displayCount}} transactions will be affected:",
     "money_in": "Money In",
