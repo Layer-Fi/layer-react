@@ -18,7 +18,7 @@ import './categorizationRulesMobileList.scss'
 type CategorizationRuleMobileListItemProps = {
   rule: CategorizationRule
   options: NestedCategorization[]
-  onEditPress: (rule: CategorizationRule) => void
+  onEditPress?: (rule: CategorizationRule) => void
   onDeletePress: (rule: CategorizationRule) => void
 }
 
@@ -58,15 +58,17 @@ const CategorizationRuleMobileListItem = ({
         )}
       </VStack>
       <HStack gap='3xs' align='center'>
-        <Button
-          inset
-          icon
-          onPress={() => onEditPress(rule)}
-          aria-label={t('categorizationRules:action.edit_rule', 'Edit Rule')}
-          variant='ghost'
-        >
-          <Pencil size={16} />
-        </Button>
+        {onEditPress && (
+          <Button
+            inset
+            icon
+            onPress={() => onEditPress(rule)}
+            aria-label={t('categorizationRules:action.edit_rule', 'Edit Rule')}
+            variant='ghost'
+          >
+            <Pencil size={16} />
+          </Button>
+        )}
         <Button
           inset
           icon
@@ -87,7 +89,7 @@ export interface CategorizationRulesMobileListProps {
   isError: boolean
   paginationProps: TablePaginationProps
   options: NestedCategorization[]
-  onEditRule: (rule: CategorizationRule) => void
+  onEditRule?: (rule: CategorizationRule) => void
   onDeleteRule: (rule: CategorizationRule) => void
   slots: {
     EmptyState: React.FC
