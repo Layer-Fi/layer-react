@@ -6,16 +6,13 @@
   .Layer__UI__Table-TableHeader > tr {
     display: grid;
     grid-template-columns:
-      minmax(8rem, 26%)
-      minmax(6rem, 14%)
-      minmax(7rem, 20%)
       minmax(8rem, 32%)
-      auto
+      minmax(7rem, 20%)
+      minmax(8rem, 40%)
       auto;
   }
 
   .Layer__UI__Table-Cell__CategorizationRulesTable {
-    &--Edit,
     &--Delete {
       justify-content: end;
     }

@@ -30,5 +30,3 @@ export const BankTransactionCounterpartySchema = Schema.Struct({
   logo: Schema.optional(Schema.NullOr(Schema.String)),
   mccs: Schema.Array(Schema.String),
 })
-
-export type BankTransactionCounterparty = typeof BankTransactionCounterpartySchema.Type

@@ -23,21 +23,3 @@ export const getCategorizationRuleDirectionLabel = (
 export const getCategorizationRuleCounterpartyLabel = (rule: CategorizationRule): string | undefined => {
   return rule.counterpartyFilter?.name ?? rule.readableTransactionDescriptionFilter ?? undefined
 }
-
-export const getCategorizationRuleAmountLabel = (
-  rule: Pick<CategorizationRule, 'amountMinFilter' | 'amountMaxFilter'>,
-  formatCurrencyFromCents: (cents: number) => string,
-  t: TFunction,
-): string => {
-  const { amountMinFilter: min, amountMaxFilter: max } = rule
-  if (min == null && max == null) {
-    return t('categorizationRules:label.any_amount', 'Any amount')
-  }
-  if (min != null && max != null) {
-    return `${formatCurrencyFromCents(min)} – ${formatCurrencyFromCents(max)}`
-  }
-  if (min != null) {
-    return `≥ ${formatCurrencyFromCents(min)}`
-  }
-  return `≤ ${formatCurrencyFromCents(max as number)}`
-}

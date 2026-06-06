@@ -1,7 +1,5 @@
 import { BigDecimal as BD, Schema } from 'effect'
 
-import { convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
-
 export type NonRecursiveBigDecimal = { value: bigint, scale: number }
 
 export const NonRecursiveBigDecimalSchema = Schema.Struct({
@@ -29,12 +27,4 @@ export const fromNonRecursiveBigDecimal = (nrbd: NonRecursiveBigDecimal): BD.Big
 
 export const nrbdEquals = (a: NonRecursiveBigDecimal, b: NonRecursiveBigDecimal): boolean => {
   return BD.equals(fromNonRecursiveBigDecimal(a), fromNonRecursiveBigDecimal(b))
-}
-
-export const convertCentsToNonRecursiveBigDecimal = (cents: number): NonRecursiveBigDecimal => {
-  return toNonRecursiveBigDecimal(convertCentsToBigDecimal(cents))
-}
-
-export const convertNonRecursiveBigDecimalToCents = (nrbd: NonRecursiveBigDecimal): number => {
-  return convertBigDecimalToCents(fromNonRecursiveBigDecimal(nrbd))
 }

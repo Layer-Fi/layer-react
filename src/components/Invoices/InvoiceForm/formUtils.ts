@@ -5,8 +5,6 @@ import type { TFunction } from 'i18next'
 
 import { type Invoice, type InvoiceForm, type InvoiceFormLineItem, InvoiceFormLineItemEquivalence, type InvoiceLineItem } from '@schemas/invoices/invoice'
 import {
-  convertCentsToNonRecursiveBigDecimal,
-  convertNonRecursiveBigDecimalToCents,
   fromNonRecursiveBigDecimal,
   NRBD_ONE,
   NRBD_ZERO,
@@ -88,7 +86,7 @@ const getInvoiceFormLineItem = (lineItem: InvoiceLineItem): InvoiceFormLineItem 
   return {
     description: description || '',
     quantity: toNonRecursiveBigDecimal(quantity),
-    unitPrice: convertCentsToNonRecursiveBigDecimal(unitPrice),
+    unitPrice: toNonRecursiveBigDecimal(convertCentsToBigDecimal(unitPrice)),
     amount: toNonRecursiveBigDecimal(getInvoiceLineItemAmount(lineItem)),
     isTaxable: lineItem.salesTaxTotal > 0,
   }
@@ -192,7 +190,7 @@ export const convertInvoiceFormToParams = (
     .map((item) => {
       const baseLineItem = {
         description: item.description.trim(),
-        unitPrice: convertNonRecursiveBigDecimalToCents(item.unitPrice),
+        unitPrice: convertBigDecimalToCents(fromNonRecursiveBigDecimal(item.unitPrice)),
         quantity: fromNonRecursiveBigDecimal(item.quantity),
       }
 

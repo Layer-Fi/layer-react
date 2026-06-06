@@ -5,11 +5,14 @@ import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/catalogService'
 import {
-  convertCentsToNonRecursiveBigDecimal,
-  convertNonRecursiveBigDecimalToCents,
   fromNonRecursiveBigDecimal,
   type NonRecursiveBigDecimal,
+  toNonRecursiveBigDecimal,
 } from '@schemas/nonRecursiveBigDecimal'
+import {
+  convertBigDecimalToCents,
+  convertCentsToBigDecimal,
+} from '@utils/bigDecimalUtils'
 import { useUpdateCatalogService } from '@hooks/api/businesses/[business-id]/catalog/services/[service-id]/useUpdateCatalogService'
 import { useCreateCatalogService } from '@hooks/api/businesses/[business-id]/catalog/services/useCreateCatalogService'
 import { useAppForm } from '@hooks/features/forms/useForm'
@@ -42,7 +45,7 @@ const getServiceFormDefaultValues = ({
 }): ServiceFormValues => ({
   name: service?.name ?? initialName ?? '',
   hourlyRate: service?.billableRatePerHourAmount != null && !Number.isNaN(service.billableRatePerHourAmount)
-    ? convertCentsToNonRecursiveBigDecimal(service.billableRatePerHourAmount)
+    ? toNonRecursiveBigDecimal(convertCentsToBigDecimal(service.billableRatePerHourAmount))
     : null,
 })
 
@@ -67,7 +70,7 @@ export function useServiceForm(props: ServiceFormProps) {
     const trimmedName = value.name.trim()
     const billableRatePerHourAmount = value.hourlyRate === null
       ? undefined
-      : convertNonRecursiveBigDecimalToCents(value.hourlyRate)
+      : convertBigDecimalToCents(fromNonRecursiveBigDecimal(value.hourlyRate))
 
     setSubmitError(null)
 

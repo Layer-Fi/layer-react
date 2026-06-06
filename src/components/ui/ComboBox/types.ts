@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { FilterOptionOption, GroupBase } from 'react-select'
+import type { GroupBase } from 'react-select'
 
 import type { OneOf } from '@internal-types/utility/oneOf'
 
@@ -46,8 +46,6 @@ export type BaseComboBoxProps<T extends ComboBoxOption> = {
   isSearchable?: boolean
   isClearable?: boolean
   isReadOnly?: boolean
-
-  filterOption?: ((option: FilterOptionOption<T>, inputValue: string) => boolean) | null
 
   displayDisabledAsSelected?: boolean
 } & OptionsOrGroups<T> & AriaLabelProps
