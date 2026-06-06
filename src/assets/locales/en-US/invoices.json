@@ -70,8 +70,6 @@
     "payment_method": "Payment method",
     "payment_methods": "Payment methods",
     "percentage_invoices_overdue": "Percentage of invoices overdue",
-    "previewing_invoice": "Previewing Invoice",
-    "previewing_invoice_number": "Previewing Invoice #{{invoiceNumber}}",
     "quantity": "Quantity",
     "rate": "Rate",
     "refund_date": "Refund date",
