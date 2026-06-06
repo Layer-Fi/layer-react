@@ -70,8 +70,6 @@
     "payment_method": "Mode de paiement",
     "payment_methods": "Modes de paiement",
     "percentage_invoices_overdue": "Pourcentage de factures en retard",
-    "previewing_invoice": "Aperçu de la facture",
-    "previewing_invoice_number": "Aperçu de la facture #{{invoiceNumber}}",
     "quantity": "Quantité",
     "rate": "Tarif",
     "refund_date": "Date du remboursement",
