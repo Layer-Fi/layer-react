@@ -1,4 +1,4 @@
-import { accountIdentifierIsForCategory } from '@internal-types/categories'
+import { getResolvedCategoryName } from '@internal-types/categories'
 import type { AccountIdentifier } from '@schemas/accountIdentifier'
 import type { NestedCategorization } from '@schemas/categorization'
 import { Span, type TextStyleProps } from '@ui/Typography/Text'
@@ -12,11 +12,9 @@ type ResolvedCategoryNameProps = {
 }
 
 export const ResolvedCategoryName = ({ accountIdentifier, options, slotProps }: ResolvedCategoryNameProps) => {
-  const category = options.find(cat =>
-    accountIdentifierIsForCategory(accountIdentifier, cat),
-  )
+  const name = getResolvedCategoryName(accountIdentifier, options)
 
-  if (!category) return null
+  if (!name) return null
 
-  return <Span {...slotProps?.Span} ellipsis>{category.displayName}</Span>
+  return <Span {...slotProps?.Span} ellipsis>{name}</Span>
 }
