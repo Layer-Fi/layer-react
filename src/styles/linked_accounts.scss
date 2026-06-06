@@ -77,6 +77,15 @@
   &:hover {
     background: var(--base-transparent-2);
   }
+
+  &.--disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+
+    &:hover {
+      background: var(--base-transparent-1);
+    }
+  }
 }
 
 /* stylelint-disable-next-line keyframes-name-pattern */
