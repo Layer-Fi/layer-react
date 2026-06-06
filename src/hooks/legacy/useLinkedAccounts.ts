@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type LoadedStatus } from '@internal-types/general'
-import { type AccountSource, type BankAccount, type ExternalAccountConnection } from '@internal-types/linkedAccounts'
+import { type AccountSource, type BankAccount } from '@internal-types/linkedAccounts'
 import { type PlaidHostedLinkConfig, toCreatePlaidLinkParams } from '@schemas/linkedAccounts/plaid'
 import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { useUnlinkBankAccount } from '@hooks/api/businesses/[business-id]/bank-accounts/useUnlinkBankAccount'
@@ -14,14 +14,6 @@ import { useCreatePlaidLink } from '@hooks/api/businesses/[business-id]/plaid/li
 import { useCreatePlaidUpdateModeLink } from '@hooks/api/businesses/[business-id]/plaid/update-mode-link'
 import { type LinkMode, usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-
-export function getAccountsNeedingConfirmation(bankAccounts: ReadonlyArray<BankAccount>): ExternalAccountConnection[] {
-  return bankAccounts.flatMap(ba =>
-    ba.external_accounts.filter(
-      ({ notifications }) => notifications?.some(({ type }) => type === 'CONFIRM_RELEVANT'),
-    ),
-  )
-}
 
 type UseLinkedAccountsOptions = {
   plaidHostedLinkConfig?: PlaidHostedLinkConfig

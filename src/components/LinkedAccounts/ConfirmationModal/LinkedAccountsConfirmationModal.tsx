@@ -1,9 +1,10 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { getAccountsNeedingConfirmation } from '@utils/bankAccount'
 import { tPlural } from '@utils/i18n/plural'
 import { type AccountConfirmExcludeFormState, useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
-import { getAccountsNeedingConfirmation, useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useAccountConfirmationStore } from '@providers/AccountConfirmationStoreProvider'
 import { Button } from '@ui/Button/Button'
