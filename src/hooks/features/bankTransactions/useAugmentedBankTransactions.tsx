@@ -6,7 +6,6 @@ import {
 } from '@internal-types/bankTransactions'
 import { DataModel, Direction } from '@internal-types/general'
 import { type TagFilterInput } from '@internal-types/tags'
-import { decodeRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { isAnyBankAccountSyncing } from '@utils/bankAccount'
 import { type BankTransactionFilters, filterVisibility, type NumericRangeFilter } from '@utils/bankTransactions/shared'
 import { useBankTransactions, type UseBankTransactionsOptions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
@@ -179,8 +178,7 @@ export const useAugmentedBankTransactions = (
 
     for (const bt of newBankTransactions) {
       if (bt.updateCategorizationRulesSuggestion) {
-        const decodedRuleSuggestion = decodeRulesSuggestion(bt.updateCategorizationRulesSuggestion)
-        setRuleSuggestion(decodedRuleSuggestion)
+        setRuleSuggestion(bt.updateCategorizationRulesSuggestion)
       }
     }
 
