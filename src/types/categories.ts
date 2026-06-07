@@ -32,16 +32,6 @@ export type AccountIdentifierPayloadObject =
     exclusion_type: string
   }
 
-export function hasSuggestions(
-  categorization: Categorization | null,
-): categorization is SuggestedCategorization {
-  return (
-    categorization != null
-    && (categorization as SuggestedCategorization).suggestions !== undefined
-    && (categorization as SuggestedCategorization).suggestions.length > 0
-  )
-}
-
 export const accountIdentifierIsForCategory = (accountIdentifier: AccountIdentifier, category: NestedCategorization): boolean => {
   if (accountIdentifier.type === 'AccountId') {
     switch (category.type) {

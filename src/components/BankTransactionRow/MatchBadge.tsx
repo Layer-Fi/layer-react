@@ -11,7 +11,7 @@ import './matchBadge.scss'
 
 interface MatchTooltipProps {
   amount: number
-  date: string
+  date: Date
   description: string
 }
 
@@ -45,10 +45,10 @@ export const MatchBadge = ({ bankTransaction }: MatchBadgeProps) => {
     : t('bankTransactions:label.matched', 'Matched')
 
   if (
-    bankTransaction.categorization_status === CategorizationStatus.MATCHED
+    bankTransaction.categorizationStatus === CategorizationStatus.MATCHED
     && bankTransaction.match
   ) {
-    const { date, amount } = bankTransaction.match.bank_transaction
+    const { date, amount } = bankTransaction.match.bankTransaction
     const description = bankTransaction.match.details?.description ?? ''
 
     return (

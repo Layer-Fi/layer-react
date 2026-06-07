@@ -47,7 +47,7 @@ const BankTransactionCategoryComboBoxOption = ({ option, fallback }: BankTransac
     return (
       <VStack gap='xs' justify='start'>
         <VStack gap='3xs' justify='start'>
-          <DateTime onlyDate value={option.original.details.date} slotProps={{ Date: { size: 'sm', variant: 'subtle' } }} />
+          <DateTime onlyDate valueAsDate={option.original.details.date} slotProps={{ Date: { size: 'sm', variant: 'subtle' } }} />
           <Span size='sm' variant='placeholder'>{option.label}</Span>
           {inAppLink}
         </VStack>

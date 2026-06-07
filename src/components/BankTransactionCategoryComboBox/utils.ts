@@ -1,13 +1,10 @@
-import { Schema } from 'effect/index'
 import type { TFunction } from 'i18next'
 
 import type { BankTransaction, SuggestedMatch } from '@internal-types/bankTransactions'
-import { CategorizationType, hasSuggestions } from '@internal-types/categories'
 import { ApiCategorizationAsOption, CategoryAsOption, PlaceholderAsOption, SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
-import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { type CategorizationEncoded, isSplitCategorizationEncoded, type NestedCategorization } from '@schemas/categorization'
-import { decodeCustomerVendor } from '@schemas/customerVendor'
-import { TransactionTagSchema } from '@schemas/tag'
+import { CategorizationStatus, InputStrategy } from '@schemas/bankTransactions/bankTransaction'
+import { type Categorization, isSplitCategorization, type NestedCategorization } from '@schemas/categorization'
+import { makeCustomerVendor } from '@schemas/customerVendor'
 import { makeTagFromTransactionTag } from '@schemas/tag'
 import { translationKey } from '@utils/i18n/translationKey'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
@@ -41,19 +38,16 @@ export const getGroupDisplayLabel = (label: string | undefined, t: TFunction): s
 export const isBoldGroupLabel = (label: string | undefined): boolean =>
   label !== undefined && BOLD_GROUP_LABELS.has(label as BankTransactionCategoryComboBoxGroup)
 
-export const convertApiCategorizationToCategoryOrSplitAsOption = (categorization: CategorizationEncoded): BankTransactionNonSuggestedMatchOption => {
-  if (isSplitCategorizationEncoded(categorization)) {
-    const splits = categorization.entries.map(splitEntryEncoded => ({
-      amount: splitEntryEncoded.amount || 0,
-      category: splitEntryEncoded.category ? new ApiCategorizationAsOption(splitEntryEncoded.category) : null,
-      taxCode: splitEntryEncoded.tax_code ?? null,
-      tags: splitEntryEncoded.tags?.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))) ?? [],
-      customerVendor: splitEntryEncoded.customer
-        ? decodeCustomerVendor({ ...splitEntryEncoded.customer, customerVendorType: 'CUSTOMER' })
-        : splitEntryEncoded.vendor
-          ? decodeCustomerVendor({ ...splitEntryEncoded.vendor, customerVendorType: 'VENDOR' })
-          : null,
+export const convertApiCategorizationToCategoryOrSplitAsOption = (categorization: Categorization): BankTransactionNonSuggestedMatchOption => {
+  if (isSplitCategorization(categorization)) {
+    const splits = categorization.entries.map(splitEntry => ({
+      amount: splitEntry.amount || 0,
+      category: splitEntry.category ? new ApiCategorizationAsOption(splitEntry.category) : null,
+      taxCode: splitEntry.taxCode ?? null,
+      tags: splitEntry.tags?.map(makeTagFromTransactionTag) ?? [],
+      customerVendor: makeCustomerVendor(splitEntry.customer, splitEntry.vendor),
     }))
+
     return new SplitAsOption(splits)
   }
 
@@ -76,11 +70,11 @@ export const flattenCategories = (categories: NestedCategorization[]) => {
 }
 
 const hasOnlyTransferMatches = (bankTransaction: BankTransaction) => {
-  return bankTransaction.suggested_matches?.every(x => x.details.type === 'Transfer_Match') ?? false
+  return bankTransaction.suggestedMatches?.every(x => x.details.type === 'Transfer_Match') ?? false
 }
 
 export const getSuggestedMatchesGroup = (bankTransaction: BankTransaction) => {
-  if (!bankTransaction.suggested_matches || bankTransaction.suggested_matches.length === 0) {
+  if (!bankTransaction.suggestedMatches || bankTransaction.suggestedMatches.length === 0) {
     return null
   }
 
@@ -88,7 +82,7 @@ export const getSuggestedMatchesGroup = (bankTransaction: BankTransaction) => {
     label: hasOnlyTransferMatches(bankTransaction)
       ? BankTransactionCategoryComboBoxGroup.TRANSFER
       : BankTransactionCategoryComboBoxGroup.MATCH,
-    options: bankTransaction.suggested_matches.map((match: SuggestedMatch) => new SuggestedMatchAsOption(match)),
+    options: bankTransaction.suggestedMatches.map((match: SuggestedMatch) => new SuggestedMatchAsOption(match)),
   }
 }
 
@@ -100,7 +94,7 @@ export const getAllCategoriesGroup = () => {
 }
 
 export const isLoadingSuggestions = (bankTransaction: BankTransaction) => {
-  return bankTransaction.categorization_status === CategorizationStatus.PENDING
+  return bankTransaction.categorizationStatus === CategorizationStatus.PENDING
 }
 export const getSuggestedCategoriesGroup = (bankTransaction: BankTransaction, t: TFunction) => {
   if (isLoadingSuggestions(bankTransaction)) {
@@ -110,11 +104,11 @@ export const getSuggestedCategoriesGroup = (bankTransaction: BankTransaction, t:
     }
   }
 
-  const categorizationFlow = bankTransaction.categorization_flow
-  if (categorizationFlow?.type === CategorizationType.ASK_FROM_SUGGESTIONS && hasSuggestions(categorizationFlow)) {
+  const categorizationFlow = bankTransaction.categorizationFlow
+  if (categorizationFlow?.type === InputStrategy.AskFromSuggestions && categorizationFlow.suggestions.length > 0) {
     return {
       label: BankTransactionCategoryComboBoxGroup.SUGGESTIONS,
-      options: categorizationFlow.suggestions.map(suggestion => convertApiCategorizationToCategoryOrSplitAsOption(suggestion)),
+      options: categorizationFlow.suggestions.map(convertApiCategorizationToCategoryOrSplitAsOption),
     }
   }
 

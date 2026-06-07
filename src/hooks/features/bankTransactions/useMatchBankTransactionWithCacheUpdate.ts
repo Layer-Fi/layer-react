@@ -25,13 +25,13 @@ export function useMatchBankTransactionWithCacheUpdate() {
             const transactionsToUpdate: BankTransaction[] = [
               {
                 ...bankTransaction,
-                categorization_status: CategorizationStatus.MATCHED,
+                categorizationStatus: CategorizationStatus.MATCHED,
                 match: matchResult,
-                recently_categorized: true,
+                recentlyCategorized: true,
               },
             ]
 
-            if (matchResult.match_type === MatchType.TRANSFER) {
+            if (matchResult.matchType === MatchType.TRANSFER) {
               const matchedTransferBankTransactionId = matchResult.details.id
 
               const matchedTransferBankTransaction = matchedTransferBankTransactionId
@@ -41,8 +41,8 @@ export function useMatchBankTransactionWithCacheUpdate() {
               if (matchedTransferBankTransaction) {
                 transactionsToUpdate.push({
                   ...matchedTransferBankTransaction,
-                  categorization_status: CategorizationStatus.MATCHED,
-                  recently_categorized: true,
+                  categorizationStatus: CategorizationStatus.MATCHED,
+                  recentlyCategorized: true,
                 })
               }
             }

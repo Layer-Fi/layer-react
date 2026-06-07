@@ -26,7 +26,7 @@ export const MatchFormMobile = ({
 }: MatchFormMobileProps) => {
   const { t } = useTranslation()
   const { renderInAppLink } = useInAppLinkContext()
-  const suggestedMatches = bankTransaction.suggested_matches
+  const suggestedMatches = bankTransaction.suggestedMatches
 
   return (
     <GridList

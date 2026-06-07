@@ -5,7 +5,7 @@ import { DateTime } from '@components/DateTime/DateTime'
 
 interface BankTransactionsAmountDateProps {
   amount: number
-  date: string
+  date: Date
   slotProps?: {
     MoneySpan?: { size?: 'sm' | 'md', displayPlusSign?: boolean }
     DateTime?: { size?: 'xs' | 'sm' }
@@ -27,7 +27,7 @@ export const BankTransactionsAmountDate = ({ amount, date, slotProps }: BankTran
       </HStack>
 
       <DateTime
-        value={date}
+        valueAsDate={date}
         dateFormat={DateFormat.MonthDayShort}
         onlyDate
         slotProps={{

@@ -1,8 +1,9 @@
 import { useCallback } from 'react'
+import { Schema } from 'effect'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
-import type { BankTransactionMatch } from '@internal-types/bankTransactions'
+import { MatchSchema } from '@schemas/bankTransactions/match'
 import { put } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
@@ -20,8 +21,12 @@ export type MatchBankTransactionBody = {
   type: 'Confirm_Match'
 }
 
+const MatchBankTransactionResponseSchema = Schema.Struct({
+  data: MatchSchema,
+})
+
 const matchBankTransaction = put<
-  { data: BankTransactionMatch },
+  Record<string, unknown>,
   MatchBankTransactionBody,
   {
     businessId: string
@@ -86,7 +91,9 @@ export function useMatchBankTransaction() {
         },
         body,
       },
-    ).then(({ data }) => data),
+    )
+      .then(Schema.decodeUnknownPromise(MatchBankTransactionResponseSchema))
+      .then(({ data }) => data),
     {
       revalidate: false,
       throwOnError: true,

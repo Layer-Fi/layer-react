@@ -32,10 +32,7 @@ export const MatchForm = ({
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const { renderInAppLink } = useInAppLinkContext()
 
-  const {
-    suggested_matches: suggestedMatches = [],
-    match,
-  } = bankTransaction
+  const { suggestedMatches = [], match } = bankTransaction
 
   const effectiveSuggestedMatches = isCategorizationEnabled
     ? suggestedMatches

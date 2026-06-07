@@ -1,6 +1,6 @@
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { CategorizationType } from '@internal-types/categories'
 import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/categorizationOption'
+import { InputStrategy } from '@schemas/bankTransactions/bankTransaction'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
@@ -28,8 +28,8 @@ export const buildInitialSessionCategoriesMap = (
     }
   }
 
-  if (bankTransaction?.categorization_flow?.type === CategorizationType.ASK_FROM_SUGGESTIONS) {
-    bankTransaction.categorization_flow.suggestions.forEach((suggestion) => {
+  if (bankTransaction?.categorizationFlow?.type === InputStrategy.AskFromSuggestions) {
+    bankTransaction.categorizationFlow.suggestions.forEach((suggestion) => {
       const suggestionOption = new ApiCategorizationAsOption(suggestion)
       categoriesMap.set(suggestionOption.value, suggestionOption)
     })

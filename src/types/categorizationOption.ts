@@ -3,7 +3,7 @@ import { Schema } from 'effect'
 import type { Split, SuggestedMatch } from '@internal-types/bankTransactions'
 import { makeAccountId, makeStableName } from '@schemas/accountIdentifier'
 import {
-  type CategorizationEncoded,
+  type Categorization,
   type Classification,
   type ClassificationEncoded,
   ClassificationSchema,
@@ -199,8 +199,8 @@ export class SplitAsOption extends BaseCategorizationOption<Split[]> {
   }
 }
 
-export class ApiCategorizationAsOption extends BaseCategorizationOption<CategorizationEncoded> {
-  constructor(categorization: CategorizationEncoded) {
+export class ApiCategorizationAsOption extends BaseCategorizationOption<Categorization> {
+  constructor(categorization: Categorization) {
     super(categorization)
   }
 
@@ -213,7 +213,7 @@ export class ApiCategorizationAsOption extends BaseCategorizationOption<Categori
   }
 
   get label() {
-    return this.internalValue.display_name
+    return this.internalValue.displayName
   }
 
   get value() {
