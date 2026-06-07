@@ -38,11 +38,6 @@
     min-height: 3.25rem;
   }
 
-  // Break long unbroken strings so they wrap (and grow the row) rather than overflow
-  .Layer__UI__Table-Cell {
-    overflow-wrap: anywhere;
-  }
-
   // Cells are flex containers, so right-align the currency columns explicitly
   .Layer__UI__Table-Column__JournalTable--debit,
   .Layer__UI__Table-Column__JournalTable--credit,
