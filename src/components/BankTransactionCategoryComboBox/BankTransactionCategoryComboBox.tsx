@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import type { GroupBase } from 'react-select'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
+import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
@@ -38,7 +38,7 @@ const BankTransactionCategoryComboBoxOption = ({ option, fallback }: BankTransac
   }
 
   if (isSuggestedMatchAsOption(option)) {
-    const matchDetails = decodeMatchDetails(option.original.details)
+    const matchDetails = option.original.details
 
     const inAppLink = renderInAppLink && matchDetails
       ? renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails))

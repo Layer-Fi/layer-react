@@ -2,7 +2,7 @@ import { GridList } from 'react-aria-components/GridList'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
-import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
+import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { MatchFormMobileItem } from '@components/MatchForm/MatchFormMobileItem'
 import { ErrorText } from '@components/Typography/ErrorText'
@@ -45,8 +45,10 @@ export const MatchFormMobile = ({
       className='Layer__MatchFormMobile'
     >
       {suggestedMatches?.map((match) => {
-        const matchDetails = match.details ? decodeMatchDetails(match.details) : undefined
-        const inAppLink = renderInAppLink && matchDetails ? renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails)) : null
+        const matchDetails = match.details
+        const inAppLink = renderInAppLink && matchDetails
+          ? renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails))
+          : null
 
         return (
           <MatchFormMobileItem

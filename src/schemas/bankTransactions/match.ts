@@ -160,15 +160,6 @@ export const SuggestedMatchesWithTransactionsSchema = Schema.Struct({
   ),
 })
 
-export const decodeMatchDetails = (data: unknown) => {
-  const result = Schema.decodeUnknownEither(MatchDetailsSchema)(data)
-  if (result._tag === 'Left') {
-    console.warn('Failed to decode match details:', result.left)
-    return null
-  }
-  return result.right
-}
-
 export const convertMatchDetailsToLinkingMetadata = (matchDetails: MatchDetailsType): LinkingMetadata => {
   const baseMetadata: LinkingMetadata = {
     id: matchDetails.id,

@@ -3,7 +3,7 @@ import classNames from 'classnames'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
+import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
 import { hasReceipts, isCategorized, isCredit } from '@utils/bankTransactions/shared'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
@@ -57,10 +57,7 @@ const getInAppLink = (
     && renderInAppLink
     && bankTransaction.match?.details
   ) {
-    const matchDetails = decodeMatchDetails(bankTransaction.match.details)
-    if (matchDetails) {
-      return renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails))
-    }
+    return renderInAppLink(convertMatchDetailsToLinkingMetadata(bankTransaction.match.details))
   }
   return null
 }
