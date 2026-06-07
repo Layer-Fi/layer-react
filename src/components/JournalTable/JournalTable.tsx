@@ -30,19 +30,22 @@ type LedgerEntryLineItem = LedgerEntry['lineItems'][number]
 /**
  * The journal renders two heterogeneous row shapes — a ledger entry and its line
  * items — but TanStack requires parent and child rows to share a type, so we model
- * them as a discriminated union and branch per `kind` in each cell renderer.
+ * them as a discriminated union keyed on `kind`.
  */
-type JournalRow =
-  | { kind: 'entry', entry: LedgerEntry }
-  | { kind: 'lineItem', lineItem: LedgerEntryLineItem, parentId: string }
+type EntryRow = { kind: 'entry', entry: LedgerEntry }
+type LineItemRow = { kind: 'lineItem', lineItem: LedgerEntryLineItem, parentId: string }
+type JournalRow = EntryRow | LineItemRow
+
+const isEntryRow = (row: JournalRow): row is EntryRow => row.kind === 'entry'
+const isLineItemRow = (row: JournalRow): row is LineItemRow => row.kind === 'lineItem'
 
 const getSubRows = (row: JournalRow): JournalRow[] | undefined =>
-  row.kind === 'entry' && row.entry.lineItems.length > 0
+  isEntryRow(row) && row.entry.lineItems.length > 0
     ? row.entry.lineItems.map(lineItem => ({ kind: 'lineItem' as const, lineItem, parentId: row.entry.id }))
     : undefined
 
 const getRowId = (row: JournalRow): string =>
-  row.kind === 'entry' ? `journal-row-${row.entry.id}` : `journal-lineitem-${row.lineItem.id}`
+  isEntryRow(row) ? `journal-row-${row.entry.id}` : `journal-lineitem-${row.lineItem.id}`
 
 type JournalTableProps = {
   stringOverrides?: JournalTableStringOverrides
@@ -138,7 +141,7 @@ const JournalTableContent = ({
         id: 'accountNumber',
         header: stringOverrides?.accountNumberColumnHeader || t('generalLedger:label.account_number', 'Account Number'),
         cell: (row: Row<JournalRow>) =>
-          row.original.kind === 'lineItem'
+          isLineItemRow(row.original)
             ? <Span ellipsis>{row.original.lineItem.account.accountNumber}</Span>
             : null,
       }]
@@ -150,26 +153,26 @@ const JournalTableContent = ({
         header: stringOverrides?.idColumnHeader || t('common:label.id', 'Id'),
         isRowHeader: true,
         cell: (row: Row<JournalRow>) =>
-          row.original.kind === 'entry' ? <Span>{entryNumber(row.original.entry)}</Span> : null,
+          isEntryRow(row.original) ? <Span>{entryNumber(row.original.entry)}</Span> : null,
       },
       {
         id: 'date',
         header: stringOverrides?.dateColumnHeader || t('common:label.date', 'Date'),
         cell: (row: Row<JournalRow>) =>
-          row.original.kind === 'entry' ? <Span>{formatDate(row.original.entry.entryAt)}</Span> : null,
+          isEntryRow(row.original) ? <Span>{formatDate(row.original.entry.entryAt)}</Span> : null,
       },
       {
         id: 'transaction',
         header: stringOverrides?.transactionColumnHeader || t('common:label.transaction', 'Transaction'),
         cell: (row: Row<JournalRow>) =>
-          row.original.kind === 'entry' ? <Span>{humanizeEnum(row.original.entry.entryType ?? '')}</Span> : null,
+          isEntryRow(row.original) ? <Span>{humanizeEnum(row.original.entry.entryType ?? '')}</Span> : null,
       },
       ...accountNumberColumn,
       {
         id: 'account',
         header: stringOverrides?.accountColumnHeader || t('generalLedger:label.account_name_title_case', 'Account Name'),
         cell: (row: Row<JournalRow>) =>
-          row.original.kind === 'entry'
+          isEntryRow(row.original)
             ? <Span>{`(${row.original.entry.lineItems.length})`}</Span>
             : <Span>{row.original.lineItem.account.name}</Span>,
       },
@@ -177,21 +180,21 @@ const JournalTableContent = ({
         id: 'debit',
         header: stringOverrides?.debitColumnHeader || t('common:label.debit', 'Debit'),
         alignment: Alignment.Right,
-        cell: (row: Row<JournalRow>) => renderAmountCell(row, LedgerEntryDirection.Debit),
+        cell: (row: Row<JournalRow>) => <AmountCell row={row} direction={LedgerEntryDirection.Debit} />,
       },
       {
         id: 'credit',
         header: stringOverrides?.creditColumnHeader || t('common:label.credit', 'Credit'),
         alignment: Alignment.Right,
-        cell: (row: Row<JournalRow>) => renderAmountCell(row, LedgerEntryDirection.Credit),
+        cell: (row: Row<JournalRow>) => <AmountCell row={row} direction={LedgerEntryDirection.Credit} />,
       },
     ]
   }, [enableAccountNumbers, stringOverrides, t, formatDate])
 
   const withClickableRow = useMemo<ClickableRowProps<JournalRow>>(() => ({
-    isRowClickable: row => row.original.kind === 'entry',
+    isRowClickable: row => isEntryRow(row.original),
     onRowClick: (row) => {
-      if (row.original.kind !== 'entry') return
+      if (!isEntryRow(row.original)) return
 
       const { id } = row.original.entry
       if (selectedEntryId === id) {
@@ -205,7 +208,7 @@ const JournalTableContent = ({
 
   const isRowSelected = useCallback(
     (row: Row<JournalRow>) =>
-      row.original.kind === 'entry'
+      isEntryRow(row.original)
         ? row.original.entry.id === selectedEntryId
         : row.original.parentId === selectedEntryId,
     [selectedEntryId],
@@ -241,8 +244,8 @@ const JournalTableContent = ({
   )
 }
 
-const renderAmountCell = (row: Row<JournalRow>, direction: LedgerEntryDirection) => {
-  if (row.original.kind === 'entry') {
+const AmountCell = ({ row, direction }: { row: Row<JournalRow>, direction: LedgerEntryDirection }) => {
+  if (isEntryRow(row.original)) {
     return (
       <MoneySpan amount={Math.abs(sumLineItemAmountsByDirection(row.original.entry.lineItems, direction))} />
     )
