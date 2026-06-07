@@ -7,12 +7,12 @@
   .Layer__UI__Table-TableHeader > tr {
     display: grid;
     grid-template-columns:
-      minmax(8rem, 1fr)
-      minmax(8rem, 12rem)
-      minmax(9rem, 14rem)
-      minmax(12rem, 2fr)
-      minmax(8rem, 12rem)
-      minmax(8rem, 12rem);
+      minmax(4rem, 1fr)
+      minmax(4rem, 1fr)
+      minmax(5rem, 1.2fr)
+      minmax(7rem, 2fr)
+      minmax(4rem, 1fr)
+      minmax(4rem, 1fr);
     width: 100%;
   }
 
@@ -21,13 +21,13 @@
     .Layer__UI__Table-Row,
     .Layer__UI__Table-TableHeader > tr {
       grid-template-columns:
-        minmax(8rem, 1fr)
-        minmax(8rem, 12rem)
-        minmax(9rem, 14rem)
-        minmax(9rem, 10rem)
-        minmax(12rem, 2fr)
-        minmax(8rem, 12rem)
-        minmax(8rem, 12rem);
+        minmax(4rem, 1fr)
+        minmax(4rem, 1fr)
+        minmax(5rem, 1.2fr)
+        minmax(5rem, 1fr)
+        minmax(7rem, 2fr)
+        minmax(4rem, 1fr)
+        minmax(4rem, 1fr);
     }
   }
 
