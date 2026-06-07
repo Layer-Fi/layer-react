@@ -1,6 +1,7 @@
 .Layer__UI__Table__JournalTable {
   table-layout: fixed;
   width: 100%;
+  border-bottom: 1px solid var(--color-base-300);
 
   // Default layout: id, date, transaction, account, debit, credit
   .Layer__UI__Table-Row,

@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useState } from 'react'
+import { useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react'
 import { type Row } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 
@@ -16,7 +16,7 @@ import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { type ClickableRowProps } from '@components/DataTable/DataTable'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
-import { ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
+import { ExpandableDataTableContext, ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { type JournalTableStringOverrides } from '@components/JournalTable/JournalTableWithPanel'
 import { Pagination } from '@components/Pagination/Pagination'
 
@@ -75,7 +75,16 @@ const JournalTableContent = ({
   const { accountingConfiguration } = useLayerContext()
   const enableAccountNumbers = !!accountingConfiguration?.enableAccountNumbers
 
+  const { setExpanded } = useContext(ExpandableDataTableContext)
+
   const [currentPage, setCurrentPage] = useState(1)
+
+  // Re-expand every row on page change. Once a row is collapsed, TanStack rewrites
+  // `expanded: true` into a per-row map covering only the current page's slice, so
+  // the next page would render collapsed without this reset.
+  useLayoutEffect(() => {
+    setExpanded(true)
+  }, [currentPage, setExpanded])
 
   const pageData = useMemo(
     () => {
