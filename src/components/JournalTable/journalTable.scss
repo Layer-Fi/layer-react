@@ -1,0 +1,42 @@
+.Layer__UI__Table__JournalTable {
+  table-layout: fixed;
+  width: 100%;
+
+  // Default layout: id, date, transaction, account, debit, credit
+  .Layer__UI__Table-Row,
+  .Layer__UI__Table-TableHeader > tr {
+    display: grid;
+    grid-template-columns:
+      minmax(5rem, 1fr)
+      minmax(5rem, 12rem)
+      minmax(6rem, 14rem)
+      minmax(8rem, 2fr)
+      minmax(5rem, 12rem)
+      minmax(5rem, 12rem);
+    width: 100%;
+  }
+
+  // When account numbers are enabled an extra column is inserted after Transaction
+  &:has(.Layer__UI__Table-Column__JournalTable--accountNumber) {
+    .Layer__UI__Table-Row,
+    .Layer__UI__Table-TableHeader > tr {
+      grid-template-columns:
+        minmax(5rem, 1fr)
+        minmax(5rem, 12rem)
+        minmax(6rem, 14rem)
+        minmax(6rem, 10rem)
+        minmax(8rem, 2fr)
+        minmax(5rem, 12rem)
+        minmax(5rem, 12rem);
+    }
+  }
+
+  // Cells are flex containers, so right-align the currency columns explicitly
+  .Layer__UI__Table-Column__JournalTable--debit,
+  .Layer__UI__Table-Column__JournalTable--credit,
+  .Layer__UI__Table-Cell__JournalTable--debit,
+  .Layer__UI__Table-Cell__JournalTable--credit {
+    justify-content: flex-end;
+    text-align: right;
+  }
+}
