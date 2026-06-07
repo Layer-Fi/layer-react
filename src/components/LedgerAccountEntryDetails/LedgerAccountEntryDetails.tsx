@@ -493,7 +493,7 @@ export const LedgerAccountEntryDetails = ({
           }
           isLoading={isLoadingEntry}
         >
-          {entryData?.createdAt && <DateTime valueAsDate={entryData?.createdAt} />}
+          {entryData?.date && <DateTime valueAsDate={entryData?.date} />}
         </DetailsListItem>
         {entryData?.reversalId && (
           <DetailsListItem

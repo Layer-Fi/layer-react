@@ -91,10 +91,7 @@ export const LedgerEntrySchema = Schema.Struct({
   ),
   customer: Schema.NullishOr(CustomerSchema),
   vendor: Schema.NullishOr(VendorSchema),
-  createdAt: pipe(
-    Schema.propertySignature(Schema.Date),
-    Schema.fromKey('date'),
-  ),
+  date: Schema.Date,
   entryAt: pipe(
     Schema.propertySignature(Schema.Date),
     Schema.fromKey('entry_at'),

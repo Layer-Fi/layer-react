@@ -148,7 +148,7 @@ export const JournalEntryDetails = () => {
           {entry?.entryAt && <DateTime valueAsDate={entry?.entryAt} />}
         </DetailsListItem>
         <DetailsListItem label={t('date:label.creation_date', 'Creation date')}>
-          {entry?.createdAt && <DateTime valueAsDate={entry?.createdAt} />}
+          {entry?.date && <DateTime valueAsDate={entry?.date} />}
         </DetailsListItem>
         {entry?.reversalId && (
           <DetailsListItem label={t('generalLedger:label.reversal', 'Reversal')}>
