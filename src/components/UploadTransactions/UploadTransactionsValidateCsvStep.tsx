@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { type CustomAccountTransactionRow } from '@internal-types/customAccounts'
-import { asMutable } from '@utils/asMutable'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import type { CustomAccountParseCsvResponse } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
 import { useCreateCustomAccountTransactions } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/useCreateCustomAccountTransactions'
@@ -81,7 +80,7 @@ export function UploadTransactionsValidateCsvStep(
       customAccountId: selectedAccountId!,
     }).then((transactions) => {
       if (transactions) {
-        onUploadTransactionsSuccess?.(asMutable(transactions))
+        onUploadTransactionsSuccess?.([...transactions])
         void next()
       }
     })

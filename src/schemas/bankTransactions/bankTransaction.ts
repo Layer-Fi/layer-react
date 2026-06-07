@@ -17,7 +17,7 @@ export enum CategorizationStatus {
   CATEGORIZED = 'CATEGORIZED',
   SPLIT = 'SPLIT',
   MATCHED = 'MATCHED',
-  Unknown = 'UNKNOWN',
+  UNKNOWN = 'UNKNOWN',
 }
 
 export enum InputStrategy {
@@ -52,7 +52,7 @@ export const CategorizationStatusSchema = Schema.Enums(CategorizationStatus)
 export const TransformedCategorizationStatusSchema = createTransformedEnumSchema(
   CategorizationStatusSchema,
   CategorizationStatus,
-  CategorizationStatus.Unknown,
+  CategorizationStatus.UNKNOWN,
 )
 
 export const CategorizationFlowSchema = Schema.Struct({
