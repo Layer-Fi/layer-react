@@ -8,11 +8,11 @@
     display: grid;
     grid-template-columns:
       minmax(6rem, 1fr)
-      minmax(6rem, 10rem)
-      minmax(7rem, 12rem)
+      minmax(6rem, 1fr)
+      minmax(7rem, 1.2fr)
       minmax(10rem, 2fr)
-      minmax(8rem, 12rem)
-      minmax(8rem, 12rem);
+      minmax(8rem, 1fr)
+      minmax(8rem, 1fr);
     width: 100%;
   }
 
@@ -22,12 +22,12 @@
     .Layer__UI__Table-TableHeader > tr {
       grid-template-columns:
         minmax(6rem, 1fr)
-        minmax(6rem, 10rem)
-        minmax(7rem, 12rem)
-        minmax(7rem, 9rem)
+        minmax(6rem, 1fr)
+        minmax(7rem, 1.2fr)
+        minmax(7rem, 1fr)
         minmax(10rem, 2fr)
-        minmax(8rem, 12rem)
-        minmax(8rem, 12rem);
+        minmax(8rem, 1fr)
+        minmax(8rem, 1fr);
     }
   }
 
