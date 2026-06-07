@@ -110,22 +110,21 @@ export function useTagLedgerEntry({ ledgerEntryId }: TagLedgerEntryOptions) {
           const optimisticTagId = uuidv4()
 
           const now = new Date()
-          const nowISOString = now.toISOString()
 
           return {
             ...ledgerEntry,
-            transaction_tags: [
-              ...ledgerEntry.transaction_tags,
+            transactionTags: [
+              ...ledgerEntry.transactionTags,
               {
                 id: optimisticTagId,
                 key,
                 value,
-                created_at: nowISOString,
-                updated_at: nowISOString,
-                dimension_display_name: dimensionDisplayName,
-                value_display_name: valueDisplayName,
-                archived_at: null,
-                deleted_at: null,
+                createdAt: now,
+                updatedAt: now,
+                dimensionDisplayName,
+                valueDisplayName,
+                archivedAt: null,
+                deletedAt: null,
                 _local: {
                   isOptimistic: true,
                 },

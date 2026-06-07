@@ -1,8 +1,8 @@
 import { pipe, Schema } from 'effect'
 
 import { CustomerSchema } from '@schemas/customer'
-import { LedgerAccountSchema, LedgerEntryDirectionSchema, NestedLedgerAccountSchema } from '@schemas/generalLedger/ledgerAccount'
-import { LedgerEntrySourceSchema } from '@schemas/generalLedger/ledgerEntrySource'
+import { LedgerEntryDirectionSchema, SingleChartAccountSchema } from '@schemas/generalLedger/ledgerAccount'
+import { TransactionTagSchema } from '@schemas/tag'
 import { VendorSchema } from '@schemas/vendor'
 
 export enum ClassifierAgent {
@@ -41,6 +41,91 @@ export enum EntryType {
 }
 const EntryTypeSchema = Schema.Enums(EntryType)
 
+export const LedgerEntryLineItemSchema = Schema.Struct({
+  id: Schema.UUID,
+  entryId: pipe(
+    Schema.propertySignature(Schema.UUID),
+    Schema.fromKey('entry_id'),
+  ),
+  account: SingleChartAccountSchema,
+  amount: Schema.Number,
+  direction: LedgerEntryDirectionSchema,
+  customer: Schema.NullishOr(CustomerSchema),
+  vendor: Schema.NullishOr(VendorSchema),
+  entryAt: pipe(
+    Schema.propertySignature(Schema.Date),
+    Schema.fromKey('entry_at'),
+  ),
+  createdAt: pipe(
+    Schema.propertySignature(Schema.Date),
+    Schema.fromKey('createdAt'),
+  ),
+  entryReversalOf: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('entry_reversal_of'),
+  ),
+  entryReversedBy: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('entry_reversed_by'),
+  ),
+})
+
+export const LedgerEntrySchema = Schema.Struct({
+  id: Schema.UUID,
+  businessId: pipe(
+    Schema.propertySignature(Schema.UUID),
+    Schema.fromKey('business_id'),
+  ),
+  ledgerId: pipe(
+    Schema.propertySignature(Schema.UUID),
+    Schema.fromKey('ledger_id'),
+  ),
+  entryNumber: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.Number)),
+    Schema.fromKey('entry_number'),
+  ),
+  agent: Schema.NullishOr(ClassifierAgentSchema),
+  entryType: pipe(
+    Schema.propertySignature(Schema.NullishOr(EntryTypeSchema)),
+    Schema.fromKey('entry_type'),
+  ),
+  customer: Schema.NullishOr(CustomerSchema),
+  vendor: Schema.NullishOr(VendorSchema),
+  createdAt: pipe(
+    Schema.propertySignature(Schema.Date),
+    Schema.fromKey('date'),
+  ),
+  entryAt: pipe(
+    Schema.propertySignature(Schema.Date),
+    Schema.fromKey('entry_at'),
+  ),
+  reversalOfId: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.UUID)),
+    Schema.fromKey('reversal_of_id'),
+  ),
+  reversalId: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.UUID)),
+    Schema.fromKey('reversal_id'),
+  ),
+  lineItems: pipe(
+    Schema.propertySignature(Schema.Array(LedgerEntryLineItemSchema)),
+    Schema.fromKey('line_items'),
+  ),
+  source: Schema.Unknown,
+  transactionTags: pipe(
+    Schema.propertySignature(Schema.Array(TransactionTagSchema)),
+    Schema.fromKey('transaction_tags'),
+  ),
+  memo: Schema.NullishOr(Schema.String),
+  metadata: Schema.NullishOr(Schema.Unknown),
+  referenceNumber: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('reference_number'),
+  ),
+})
+
+export type LedgerEntry = typeof LedgerEntrySchema.Type
+
 export const LedgerAccountLineItemSchema = Schema.Struct({
   id: Schema.String,
   entryId: pipe(
@@ -48,20 +133,20 @@ export const LedgerAccountLineItemSchema = Schema.Struct({
     Schema.fromKey('entry_id'),
   ),
   entryNumber: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.Number)),
+    Schema.propertySignature(Schema.NullishOr(Schema.Number)),
     Schema.fromKey('entry_number'),
   ),
-  account: LedgerAccountSchema,
+  account: SingleChartAccountSchema,
   amount: Schema.Number,
   direction: LedgerEntryDirectionSchema,
   date: Schema.Date,
-  source: LedgerEntrySourceSchema,
+  source: Schema.Unknown,
   entryReversalOf: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('entry_reversal_of'),
   ),
   entryReversedBy: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('entry_reversed_by'),
   ),
   isReversed: pipe(
@@ -72,73 +157,7 @@ export const LedgerAccountLineItemSchema = Schema.Struct({
     Schema.propertySignature(Schema.Number),
     Schema.fromKey('running_balance'),
   ),
+  tags: Schema.Array(TransactionTagSchema),
 })
 
-export const LedgerEntryLineItemSchema = Schema.Struct({
-  id: Schema.String,
-  entryId: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('entry_id'),
-  ),
-  account: LedgerAccountSchema,
-  amount: Schema.Number,
-  direction: LedgerEntryDirectionSchema,
-  entryAt: pipe(
-    Schema.propertySignature(Schema.Date),
-    Schema.fromKey('entry_at'),
-  ),
-  customer: Schema.NullOr(CustomerSchema),
-  vendor: Schema.NullOr(VendorSchema),
-})
-
-export const LedgerEntrySchema = Schema.Struct({
-  id: Schema.String,
-  businessId: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('business_id'),
-  ),
-  ledgerId: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('ledger_id'),
-  ),
-  agent: ClassifierAgentSchema,
-  entryType: pipe(
-    Schema.propertySignature(EntryTypeSchema),
-    Schema.fromKey('entry_type'),
-  ),
-  entryNumber: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.Number)),
-    Schema.fromKey('entry_number'),
-  ),
-  date: Schema.Date,
-  customer: Schema.NullOr(CustomerSchema),
-  vendor: Schema.NullOr(VendorSchema),
-  entryAt: pipe(
-    Schema.propertySignature(Schema.Date),
-    Schema.fromKey('entry_at'),
-  ),
-  reversalOfId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
-    Schema.fromKey('reversal_of_id'),
-  ),
-  reversalId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
-    Schema.fromKey('reversal_id'),
-  ),
-  lineItems: pipe(
-    Schema.propertySignature(Schema.Array(LedgerEntryLineItemSchema)),
-    Schema.fromKey('line_items'),
-  ),
-  source: LedgerEntrySourceSchema,
-  memo: Schema.NullOr(Schema.String),
-  metadata: Schema.NullOr(Schema.Unknown),
-  referenceNumber: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
-    Schema.fromKey('reference_number'),
-  ),
-})
-
-export const LedgerSchema = Schema.Struct({
-  accounts: Schema.Array(NestedLedgerAccountSchema),
-  enties: Schema.Array(LedgerEntrySchema),
-})
+export type LedgerAccountLineItem = typeof LedgerAccountLineItemSchema.Type

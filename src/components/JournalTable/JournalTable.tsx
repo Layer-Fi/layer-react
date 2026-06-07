@@ -2,15 +2,11 @@ import { Fragment, useContext, useLayoutEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type View } from '@internal-types/general'
-import {
-  type JournalEntry,
-  type JournalEntryLine,
-  type JournalEntryLineItem,
-} from '@internal-types/journal'
 import { TableCellAlign } from '@internal-types/table'
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
+import { type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
 import { humanizeEnum } from '@utils/format'
-import { entryNumber } from '@utils/journal'
+import { entryNumber, sumLineItemAmountsByDirection } from '@utils/journal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
@@ -25,25 +21,13 @@ import { TableCell } from '@components/TableCell/TableCell'
 import { TableHead } from '@components/TableHead/TableHead'
 import { TableRow } from '@components/TableRow/TableRow'
 
-const accountName = (
-  row: JournalEntry | JournalEntryLine | JournalEntryLineItem,
-) => {
-  if ('account' in row) {
-    return row.account.name
-  }
-  if ('account_identifier' in row) {
-    return row.account_identifier.name
-  }
-  return ''
-}
-
 export const JournalTable = ({
   view,
   data,
   stringOverrides,
 }: {
   view: View
-  data: JournalEntry[]
+  data: LedgerEntry[]
   stringOverrides?: JournalTableStringOverrides
 }) => (
   <TableProvider>
@@ -60,7 +44,7 @@ const JournalTableContent = ({
   stringOverrides,
 }: {
   view: View
-  data: JournalEntry[]
+  data: LedgerEntry[]
   stringOverrides?: JournalTableStringOverrides
 }) => {
   const { t } = useTranslation()
@@ -80,12 +64,12 @@ const JournalTableContent = ({
   }, [data])
 
   const renderJournalRow = (
-    row: JournalEntry,
+    row: LedgerEntry,
     index: number,
     rowKey: string,
     depth: number,
   ) => {
-    const expandable = !!row.line_items && row.line_items.length > 0
+    const expandable = !!row.lineItems && row.lineItems.length > 0
     const expanded = !expandable || isOpen(rowKey)
 
     return (
@@ -118,38 +102,26 @@ const JournalTableContent = ({
             {entryNumber(row)}
           </TableCell>
           <TableCell>
-            {row.entry_at && formatDate(row.entry_at)}
+            {formatDate(row.entryAt)}
           </TableCell>
-          <TableCell>{humanizeEnum(row.entry_type)}</TableCell>
+          <TableCell>{humanizeEnum(row.entryType ?? '')}</TableCell>
           {/* Empty cell for account number on Transaction level */}
           {enableAccountNumbers && <TableCell />}
           <TableCell>
             (
-            {row.line_items.length}
+            {row.lineItems.length}
             )
           </TableCell>
           <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-            {'line_items' in row
-              && Math.abs(
-                row.line_items
-                  .filter(item => item.direction === LedgerEntryDirection.Debit)
-                  .map(item => item.amount)
-                  .reduce((a, b) => a + b, 0),
-              )}
+            {Math.abs(sumLineItemAmountsByDirection(row.lineItems, LedgerEntryDirection.Debit))}
           </TableCell>
           <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-            {'line_items' in row
-              && Math.abs(
-                row.line_items
-                  .filter(item => item.direction === LedgerEntryDirection.Credit)
-                  .map(item => item.amount)
-                  .reduce((a, b) => a + b, 0),
-              )}
+            {Math.abs(sumLineItemAmountsByDirection(row.lineItems, LedgerEntryDirection.Credit))}
           </TableCell>
         </TableRow>
         {expandable
           && expanded
-          && row.line_items.map((subItem, subIdx) => (
+          && row.lineItems.map((subItem, subIdx) => (
             <TableRow
               key={rowKey + '-' + index + '-' + subIdx}
               rowKey={rowKey + '-' + index + '-' + subIdx}
@@ -163,12 +135,12 @@ const JournalTableContent = ({
                 <TableCell>
                   <HStack className='Layer__JournalTable__account-number-cell'>
                     <Span ellipsis>
-                      {subItem.account.account_number}
+                      {subItem.account.accountNumber}
                     </Span>
                   </HStack>
                 </TableCell>
               )}
-              <TableCell>{accountName(subItem)}</TableCell>
+              <TableCell>{subItem.account.name}</TableCell>
               {subItem.direction === LedgerEntryDirection.Debit && subItem.amount >= 0
                 ? (
                   <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
