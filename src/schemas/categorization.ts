@@ -130,7 +130,7 @@ export interface NestedAccountCategorization extends Schema.Struct.Type<typeof n
   subCategories?: NestedApiCategorization[] | null
 }
 
-export interface NestedAccountCategorizationEncoded extends Schema.Struct.Encoded<typeof nestedAccountCategorizationFields> {
+interface NestedAccountCategorizationEncoded extends Schema.Struct.Encoded<typeof nestedAccountCategorizationFields> {
   subCategories?: NestedApiCategorizationEncoded[] | null
 }
 
@@ -138,7 +138,7 @@ export interface NestedOptionalCategorization extends Schema.Struct.Type<typeof 
   subCategories?: NestedApiCategorization[] | null
 }
 
-export interface NestedOptionalCategorizationEncoded extends Schema.Struct.Encoded<typeof nestedOptionalCategorizationFields> {
+interface NestedOptionalCategorizationEncoded extends Schema.Struct.Encoded<typeof nestedOptionalCategorizationFields> {
   subCategories?: NestedApiCategorizationEncoded[] | null
 }
 
@@ -146,12 +146,12 @@ export interface NestedExclusionCategorization extends Schema.Struct.Type<typeof
   subCategories?: NestedApiCategorization[] | null
 }
 
-export interface NestedExclusionCategorizationEncoded extends Schema.Struct.Encoded<typeof nestedExclusionCategorizationFields> {
+interface NestedExclusionCategorizationEncoded extends Schema.Struct.Encoded<typeof nestedExclusionCategorizationFields> {
   subCategories?: NestedApiCategorizationEncoded[] | null
 }
 
 export type NestedApiCategorization = NestedAccountCategorization | NestedOptionalCategorization | NestedExclusionCategorization
-export type NestedApiCategorizationEncoded = NestedAccountCategorizationEncoded | NestedOptionalCategorizationEncoded | NestedExclusionCategorizationEncoded
+type NestedApiCategorizationEncoded = NestedAccountCategorizationEncoded | NestedOptionalCategorizationEncoded | NestedExclusionCategorizationEncoded
 
 export const NestedAccountCategorizationSchema = Schema.Struct({
   ...nestedAccountCategorizationFields,

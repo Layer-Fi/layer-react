@@ -6,6 +6,7 @@ import { CategorizationStatus, InputStrategy } from '@schemas/bankTransactions/b
 import { type Categorization, isSplitCategorization, type NestedCategorization } from '@schemas/categorization'
 import { makeCustomerVendor } from '@schemas/customerVendor'
 import { makeTagFromTransactionTag } from '@schemas/tag'
+import { hasSuggestions } from '@utils/bankTransactions/shared'
 import { translationKey } from '@utils/i18n/translationKey'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 
@@ -105,7 +106,7 @@ export const getSuggestedCategoriesGroup = (bankTransaction: BankTransaction, t:
   }
 
   const categorizationFlow = bankTransaction.categorizationFlow
-  if (categorizationFlow?.type === InputStrategy.AskFromSuggestions && categorizationFlow.suggestions.length > 0) {
+  if (categorizationFlow?.type === InputStrategy.AskFromSuggestions && hasSuggestions(bankTransaction)) {
     return {
       label: BankTransactionCategoryComboBoxGroup.SUGGESTIONS,
       options: categorizationFlow.suggestions.map(convertApiCategorizationToCategoryOrSplitAsOption),
