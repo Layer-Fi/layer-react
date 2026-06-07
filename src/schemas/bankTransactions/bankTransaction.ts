@@ -4,6 +4,7 @@ import { BankTransactionDirectionSchema } from '@schemas/bankTransactions/base'
 import { UpdateCategorizationRulesSuggestionSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { MatchSchema, SuggestedMatchSchema } from '@schemas/bankTransactions/match'
 import { ClassificationSchema } from '@schemas/categorization'
+import { AccountInstitutionSchema } from '@schemas/common/accountInstitution'
 import { CustomerSchema } from '@schemas/customer'
 import { TransactionTagSchema } from '@schemas/tag'
 import { VendorSchema } from '@schemas/vendor'
@@ -22,11 +23,6 @@ export enum InputStrategy {
   AskFromSuggestions = 'ASK_FROM_SUGGESTIONS',
   LayerReview = 'LAYER_REVIEW',
 }
-
-export const AccountInstitutionSchema = Schema.Struct({
-  name: Schema.String,
-  logo: Schema.NullOr(Schema.String),
-})
 
 export const BankTransactionTaxOptionSchema = Schema.Struct({
   code: Schema.String,

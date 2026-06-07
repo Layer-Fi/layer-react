@@ -3,7 +3,7 @@ import type { BankAccount, ExternalAccountConnection } from '@schemas/bankAccoun
 export function getAccountsNeedingConfirmation(bankAccounts: ReadonlyArray<BankAccount>): ExternalAccountConnection[] {
   return bankAccounts.flatMap(ba =>
     ba.externalAccounts.filter(
-      ({ notifications }) => notifications?.some(({ type }) => type === 'CONFIRM_RELEVANT'),
+      ({ notifications }) => notifications.some(({ type }) => type === 'CONFIRM_RELEVANT'),
     ),
   )
 }

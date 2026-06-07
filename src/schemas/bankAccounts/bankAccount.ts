@@ -1,10 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-export const AccountInstitutionSchema = Schema.Struct({
-  name: Schema.String,
-  logo: Schema.NullishOr(Schema.String),
-})
-export type AccountInstitution = typeof AccountInstitutionSchema.Type
+import { AccountInstitutionSchema } from '@schemas/common/accountInstitution'
 
 export const AccountNotificationSchema = Schema.Struct({
   type: Schema.String,

@@ -14,7 +14,7 @@ import { LinkedAccountThumb } from '@components/LinkedAccountThumb/LinkedAccount
 
 function accountNeedsUniquenessConfirmation(bankAccount: BankAccount) {
   return bankAccount.externalAccounts.some(
-    ea => ea.notifications?.some(({ type }) => type === 'CONFIRM_UNIQUE'),
+    ea => ea.notifications.some(({ type }) => type === 'CONFIRM_UNIQUE'),
   )
 }
 
@@ -70,7 +70,7 @@ export const LinkedAccountItemThumb = ({
   let pillConfig
   if (accountNeedsUniquenessConfirmation(bankAccount)) {
     const plaidAccountForConfirm = bankAccount.externalAccounts.find(
-      ea => ea.notifications?.some(({ type }) => type === 'CONFIRM_UNIQUE'),
+      ea => ea.notifications.some(({ type }) => type === 'CONFIRM_UNIQUE'),
     )
     if (plaidAccountForConfirm) {
       pillConfig = {
