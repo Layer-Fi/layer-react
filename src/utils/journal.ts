@@ -1,34 +1,19 @@
-import { type AccountIdentifierPayloadObject, type JournalEntry, type JournalEntryLineItem } from '@internal-types/journal'
-import { type LedgerAccountLineItem, type LedgerAccountsEntry } from '@internal-types/ledgerAccounts'
+import { type LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
+import { type LedgerAccountLineItem, type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
 
-export const getAccountIdentifierPayload = (
-  journalLineItem: JournalEntryLineItem,
-): AccountIdentifierPayloadObject => {
-  if (journalLineItem.account_identifier.stable_name) {
-    return {
-      type: 'StableName',
-      stable_name: journalLineItem.account_identifier.stable_name,
-    }
-  }
+export const entryNumber = (entry: LedgerEntry): string =>
+  entry.entryNumber?.toString() ?? entry.id.substring(0, 5)
 
-  if (journalLineItem.account_identifier.id) {
-    return {
-      type: 'AccountId',
-      id: journalLineItem.account_identifier.id,
-    }
-  }
-
-  throw new Error('Invalid account identifier')
-}
-
-export const entryNumber = (
-  entry: JournalEntry | LedgerAccountsEntry,
-): string => {
-  return entry.entry_number?.toString() ?? entry.id.substring(0, 5)
-}
+export const sumLineItemAmountsByDirection = (
+  lineItems: ReadonlyArray<{ amount: number, direction: LedgerEntryDirection }>,
+  direction: LedgerEntryDirection,
+): number =>
+  lineItems
+    .filter(item => item.direction === direction)
+    .reduce((total, item) => total + item.amount, 0)
 
 export const lineEntryNumber = (
   ledgerEntryLine: LedgerAccountLineItem,
 ): string => {
-  return ledgerEntryLine.entry_number?.toString() ?? ledgerEntryLine.entry_id.substring(0, 5)
+  return ledgerEntryLine.entryNumber?.toString() ?? ledgerEntryLine.entryId.substring(0, 5)
 }

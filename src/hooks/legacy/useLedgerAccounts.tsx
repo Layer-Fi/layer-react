@@ -1,17 +1,16 @@
 import { useCallback, useMemo, useState } from 'react'
 
 import type { LedgerAccountBalanceWithNodeType } from '@internal-types/chartOfAccounts'
-import { type LedgerAccountLineItem, type LedgerAccountsEntry } from '@internal-types/ledgerAccounts'
+import { type LedgerAccountLineItem, type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
 import { type ListLedgerAccountLinesReturn, useListLedgerAccountLines } from '@hooks/api/businesses/[business-id]/ledger/accounts/[account-id]/lines/useListLedgerAccountLines'
 import { useLedgerAccountsEntry } from '@hooks/api/businesses/[business-id]/ledger/entries/[entry-id]/useLedgerAccountsEntry'
 
 type UseLedgerAccounts = () => {
   data?: LedgerAccountLineItem[] | undefined
-  entryData?: LedgerAccountsEntry
+  entryData?: LedgerEntry
   isLoading?: boolean
   isLoadingEntry?: boolean
   isValidating?: boolean
-  isValidatingEntry?: boolean
   isError?: boolean
   isErrorEntry?: boolean
   refetch: () => Promise<ListLedgerAccountLinesReturn[] | undefined>
@@ -60,7 +59,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     const lastPage = paginatedData[paginatedData.length - 1]
     return Boolean(
       lastPage.meta?.pagination.cursor
-      && lastPage.meta?.pagination.has_more,
+      && lastPage.meta?.pagination.hasMore,
     )
   }, [paginatedData, shouldFetch])
 
@@ -74,7 +73,6 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     data: entryData,
     mutate: mutateEntryData,
     isLoading: isLoadingEntry,
-    isValidating: isValdiatingEntry,
     isError: isErrorEntry,
   } = useLedgerAccountsEntry({ entryId: selectedEntryId })
 
@@ -91,7 +89,6 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     isLoading: shouldFetch ? paginationIsLoading : false,
     isLoadingEntry,
     isValidating: shouldFetch ? paginationIsValidating : false,
-    isValidatingEntry: isValdiatingEntry,
     isError: shouldFetch && isError,
     isErrorEntry,
     refetch,

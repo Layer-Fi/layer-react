@@ -9,7 +9,6 @@ export const LedgerAccountsContext = createContext<LedgerAccountsContextType>({
   isLoading: false,
   isLoadingEntry: false,
   isValidating: false,
-  isValidatingEntry: false,
   isError: false,
   isErrorEntry: false,
   refetch: () => Promise.resolve(undefined),
