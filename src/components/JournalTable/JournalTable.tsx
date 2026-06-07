@@ -106,10 +106,6 @@ const JournalTableContent = ({
     }
   }
 
-  // ConditionalList renders the loading skeleton ahead of existing rows, so only
-  // flag loading on the initial fetch — background validation/pagination keeps
-  // the current page visible (SWR retains previous data).
-  const isInitialLoading = !!isLoading && !rawData
   const hasEntries = !!rawData?.length
 
   const slots = useMemo(() => ({
@@ -222,8 +218,8 @@ const JournalTableContent = ({
         ariaLabel={t('generalLedger:label.journal', 'Journal')}
         columnConfig={columnConfig}
         data={rows}
-        isLoading={isInitialLoading}
-        isError={!!isError}
+        isLoading={isLoading}
+        isError={isError}
         slots={slots}
         getSubRows={getSubRows}
         getRowId={getRowId}
