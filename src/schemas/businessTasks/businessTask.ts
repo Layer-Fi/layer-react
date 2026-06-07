@@ -1,6 +1,7 @@
 import { pipe, Schema } from 'effect'
 
 import { S3PresignedUrlSchema } from '@schemas/common/s3PresignedUrl'
+import { createTransformedEnumSchema } from '@schemas/utils'
 
 export enum BusinessTaskStatus {
   Todo = 'TODO',
@@ -11,19 +12,10 @@ export enum BusinessTaskStatus {
 
 export const BusinessTaskStatusSchema = Schema.Enums(BusinessTaskStatus)
 
-const TransformedBusinessTaskStatusSchema = Schema.transform(
-  Schema.NonEmptyTrimmedString,
-  Schema.typeSchema(BusinessTaskStatusSchema),
-  {
-    decode: (input) => {
-      if (Object.values(BusinessTaskStatusSchema.enums).includes(input as BusinessTaskStatus)) {
-        return input as BusinessTaskStatus
-      }
-
-      return BusinessTaskStatus.Todo
-    },
-    encode: input => input,
-  },
+const TransformedBusinessTaskStatusSchema = createTransformedEnumSchema(
+  BusinessTaskStatusSchema,
+  BusinessTaskStatus,
+  BusinessTaskStatus.Todo,
 )
 
 export enum TaskUserResponseType {
@@ -34,19 +26,10 @@ export enum TaskUserResponseType {
 
 export const TaskUserResponseTypeSchema = Schema.Enums(TaskUserResponseType)
 
-const TransformedTaskUserResponseTypeSchema = Schema.transform(
-  Schema.NonEmptyTrimmedString,
-  Schema.typeSchema(TaskUserResponseTypeSchema),
-  {
-    decode: (input) => {
-      if (Object.values(TaskUserResponseTypeSchema.enums).includes(input as TaskUserResponseType)) {
-        return input as TaskUserResponseType
-      }
-
-      return TaskUserResponseType.Unknown
-    },
-    encode: input => input,
-  },
+const TransformedTaskUserResponseTypeSchema = createTransformedEnumSchema(
+  TaskUserResponseTypeSchema,
+  TaskUserResponseType,
+  TaskUserResponseType.Unknown,
 )
 
 const TaskDocumentSchema = Schema.Struct({
