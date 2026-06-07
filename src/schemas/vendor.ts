@@ -60,4 +60,4 @@ export const VendorSchema = Schema.Struct({
   }).pipe(Schema.optional),
 })
 
-export const encodeVendor = Schema.encodeSync(VendorSchema)
+export type Vendor = typeof VendorSchema.Type

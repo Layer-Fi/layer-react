@@ -1,7 +1,20 @@
-import { type AccountIdentifierPayloadObject } from '@internal-types/categories'
 import { type LedgerEntryDirection, type SingleChartAccountEncodedType } from '@schemas/generalLedger/ledgerAccount'
 import { type LedgerEntrySourceType } from '@schemas/generalLedger/ledgerEntrySource'
 import type { Tag, TransactionTagEncoded } from '@schemas/tag'
+
+export type AccountIdentifierPayloadObject =
+  | {
+    type: 'StableName'
+    stable_name: string
+  }
+  | {
+    type: 'AccountId'
+    id: string
+  }
+  | {
+    type: 'Exclusion'
+    exclusion_type: string
+  }
 
 export interface JournalEntry {
   id: string

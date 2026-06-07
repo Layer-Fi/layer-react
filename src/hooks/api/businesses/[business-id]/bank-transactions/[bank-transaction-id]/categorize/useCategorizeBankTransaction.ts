@@ -1,9 +1,10 @@
 import { useCallback } from 'react'
+import { Schema } from 'effect'
 import { useSWRConfig } from 'swr'
 import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
 import useSWRMutation from 'swr/mutation'
 
-import type { BankTransaction } from '@internal-types/bankTransactions'
+import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 import { type CategoryUpdate, type CategoryUpdateEncoded, encodeCategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { put } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
@@ -19,8 +20,12 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const CATEGORIZE_BANK_TRANSACTION_TAG = '#categorize-bank-transaction'
 
+const CategorizeBankTransactionResponseSchema = Schema.Struct({
+  data: BankTransactionSchema,
+})
+
 const categorizeBankTransaction = put<
-  { data: BankTransaction },
+  Record<string, unknown>,
   CategoryUpdateEncoded,
   {
     businessId: string
@@ -89,7 +94,9 @@ export function useCategorizeBankTransaction() {
         },
         body: encodeCategoryUpdate(rest),
       },
-    ).then(({ data }) => data),
+    )
+      .then(Schema.decodeUnknownPromise(CategorizeBankTransactionResponseSchema))
+      .then(({ data }) => data),
     {
       revalidate: false,
       throwOnError: true,

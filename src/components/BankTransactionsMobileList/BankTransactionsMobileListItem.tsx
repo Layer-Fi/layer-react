@@ -3,7 +3,7 @@ import classNames from 'classnames'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
+import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
 import { hasReceipts, isCategorized, isCredit } from '@utils/bankTransactions/shared'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
@@ -53,14 +53,11 @@ const getInAppLink = (
   renderInAppLink?: (details: LinkingMetadata) => ReactNode,
 ) => {
   if (
-    bankTransaction.categorization_status === CategorizationStatus.MATCHED
+    bankTransaction.categorizationStatus === CategorizationStatus.MATCHED
     && renderInAppLink
     && bankTransaction.match?.details
   ) {
-    const matchDetails = decodeMatchDetails(bankTransaction.match.details)
-    if (matchDetails) {
-      return renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails))
-    }
+    return renderInAppLink(convertMatchDetailsToLinkingMetadata(bankTransaction.match.details))
   }
   return null
 }
@@ -149,12 +146,12 @@ export const BankTransactionsMobileListItem = ({
 
   // Close item when transaction is re-categorized/re-matched
   useEffect(() => {
-    if (bankTransaction.recently_categorized && !shouldHideAfterCategorize) {
+    if (bankTransaction.recentlyCategorized && !shouldHideAfterCategorize) {
       close()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    bankTransaction.recently_categorized,
+    bankTransaction.recentlyCategorized,
     bankTransaction.match,
     bankTransaction.category,
   ])
@@ -207,7 +204,7 @@ export const BankTransactionsMobileListItem = ({
                 pb='sm'
               >
                 <Span ellipsis>
-                  {bankTransaction.counterparty_name ?? bankTransaction.description}
+                  {bankTransaction.counterpartyName ?? bankTransaction.description}
                 </Span>
                 {inAppLink && (
                   <Span className='Layer__BankTransactionsMobileListItem__CategorizedValue'>
@@ -217,9 +214,9 @@ export const BankTransactionsMobileListItem = ({
                 <HStack gap='2xs' align='center'>
                   <Span size='sm' ellipsis>
                     <Span ellipsis size='sm'>
-                      {bankTransaction.account_institution?.name && `${bankTransaction.account_institution.name} — `}
-                      {bankTransaction.account_name}
-                      {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
+                      {bankTransaction.accountInstitution?.name && `${bankTransaction.accountInstitution.name} — `}
+                      {bankTransaction.accountName}
+                      {bankTransaction.accountMask && ` ${bankTransaction.accountMask}`}
                     </Span>
                   </Span>
                   {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}

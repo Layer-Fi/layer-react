@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { type CustomerVendorSchema, decodeCustomerVendor } from '@schemas/customerVendor'
+import { type CustomerVendorSchema, makeCustomerVendor } from '@schemas/customerVendor'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
@@ -25,27 +25,8 @@ export function BankTransactionCustomerVendorSelector({
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
   const selectedCustomerVendor = useMemo(
-    () => {
-      if (customer) {
-        return decodeCustomerVendor({
-          ...customer,
-          customerVendorType: 'CUSTOMER',
-        })
-      }
-
-      if (vendor) {
-        return decodeCustomerVendor({
-          ...vendor,
-          customerVendorType: 'VENDOR',
-        })
-      }
-
-      return null
-    },
-    [
-      customer,
-      vendor,
-    ],
+    () => makeCustomerVendor(customer, vendor),
+    [customer, vendor],
   )
 
   const { trigger, isMutating } = useSetMetadataOnBankTransaction({ bankTransactionId })

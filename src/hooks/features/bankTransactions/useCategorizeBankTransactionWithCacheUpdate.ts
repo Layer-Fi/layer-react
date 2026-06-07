@@ -19,7 +19,7 @@ export function useCategorizeBankTransactionWithCacheUpdate() {
           (updatedTransaction) => {
             updateLocalBankTransactions([{
               ...updatedTransaction,
-              recently_categorized: true,
+              recentlyCategorized: true,
             }])
 
             eventCallbacks?.onTransactionCategorized?.()

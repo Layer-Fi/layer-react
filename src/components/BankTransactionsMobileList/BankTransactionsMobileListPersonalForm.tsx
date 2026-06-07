@@ -27,8 +27,8 @@ interface BankTransactionsMobileListPersonalFormProps {
 
 const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
   if (
-    bankTransaction.categorization_status === CategorizationStatus.MATCHED
-    || bankTransaction?.categorization_status === CategorizationStatus.SPLIT
+    bankTransaction.categorizationStatus === CategorizationStatus.MATCHED
+    || bankTransaction?.categorizationStatus === CategorizationStatus.SPLIT
   ) {
     return false
   }
@@ -39,15 +39,15 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
 
   const category = bankTransaction.category
 
-  if (category.type === 'Account' && 'stable_name' in category) {
-    const stableName = category.stable_name
+  if (category.type === 'Account' && 'stableName' in category) {
+    const stableName = category.stableName
     if (stableName === PersonalStableName.CREDIT || stableName === PersonalStableName.DEBIT) {
       return true
     }
   }
 
   if (category.type === 'Exclusion') {
-    const displayName = category.display_name
+    const displayName = category.displayName
     if (Object.values(LegacyPersonalCategories).includes(displayName as LegacyPersonalCategories)) {
       return true
     }

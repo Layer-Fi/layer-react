@@ -3,10 +3,11 @@ import { pipe, Schema } from 'effect/index'
 import { BankTransactionDirectionSchema } from '@schemas/bankTransactions/base'
 import { UpdateCategorizationRulesSuggestionSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { MatchSchema, SuggestedMatchSchema } from '@schemas/bankTransactions/match'
-import { ClassificationSchema } from '@schemas/categorization'
+import { CategorizationSchema } from '@schemas/categorization'
 import { AccountInstitutionSchema } from '@schemas/common/accountInstitution'
 import { CustomerSchema } from '@schemas/customer'
 import { TransactionTagSchema } from '@schemas/tag'
+import { createTransformedEnumSchema } from '@schemas/utils'
 import { VendorSchema } from '@schemas/vendor'
 
 export enum CategorizationStatus {
@@ -16,12 +17,14 @@ export enum CategorizationStatus {
   CATEGORIZED = 'CATEGORIZED',
   SPLIT = 'SPLIT',
   MATCHED = 'MATCHED',
+  UNKNOWN = 'UNKNOWN',
 }
 
 export enum InputStrategy {
   Auto = 'AUTO',
   AskFromSuggestions = 'ASK_FROM_SUGGESTIONS',
   LayerReview = 'LAYER_REVIEW',
+  Unknown = 'UNKNOWN',
 }
 
 export const BankTransactionTaxOptionSchema = Schema.Struct({
@@ -31,7 +34,7 @@ export const BankTransactionTaxOptionSchema = Schema.Struct({
     Schema.fromKey('display_name'),
   ),
 })
-export type BankTransactionTaxOption = typeof BankTransactionTaxOptionSchema.Encoded
+export type BankTransactionTaxOption = typeof BankTransactionTaxOptionSchema.Type
 
 export const BankTransactionTaxOptionsSchema = Schema.Record({
   key: Schema.String,
@@ -39,11 +42,23 @@ export const BankTransactionTaxOptionsSchema = Schema.Record({
 })
 
 export const InputStrategySchema = Schema.Enums(InputStrategy)
+export const TransformedInputStrategySchema = createTransformedEnumSchema(
+  InputStrategySchema,
+  InputStrategy,
+  InputStrategy.Unknown,
+)
+
+export const CategorizationStatusSchema = Schema.Enums(CategorizationStatus)
+export const TransformedCategorizationStatusSchema = createTransformedEnumSchema(
+  CategorizationStatusSchema,
+  CategorizationStatus,
+  CategorizationStatus.UNKNOWN,
+)
 
 export const CategorizationFlowSchema = Schema.Struct({
-  type: InputStrategySchema,
-  category: Schema.NullishOr(ClassificationSchema),
-  suggestions: Schema.Array(ClassificationSchema),
+  type: TransformedInputStrategySchema,
+  category: Schema.NullishOr(CategorizationSchema),
+  suggestions: Schema.Array(CategorizationSchema),
 })
 
 export const BankTransactionSchema = Schema.Struct({
@@ -57,46 +72,51 @@ export const BankTransactionSchema = Schema.Struct({
     Schema.fromKey('source_transaction_id'),
   ),
   sourceAccountId: pipe(
-    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('source_account_id'),
   ),
   date: Schema.Date,
   direction: BankTransactionDirectionSchema,
   amount: Schema.Number,
   counterpartyName: pipe(
-    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('counterparty_name'),
   ),
-  description: Schema.optional(Schema.NullOr(Schema.String)),
+  description: Schema.NullishOr(Schema.String),
   accountName: pipe(
-    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('account_name'),
   ),
   accountMask: pipe(
-    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('account_mask'),
   ),
   accountInstitution: pipe(
-    Schema.optional(Schema.NullOr(AccountInstitutionSchema)),
+    Schema.propertySignature(Schema.NullishOr(AccountInstitutionSchema)),
     Schema.fromKey('account_institution'),
   ),
+  categorizationStatus: pipe(
+    Schema.propertySignature(TransformedCategorizationStatusSchema),
+    Schema.fromKey('categorization_status'),
+  ),
+  category: Schema.NullishOr(CategorizationSchema),
   categorizationFlow: pipe(
-    Schema.optional(Schema.NullOr(CategorizationFlowSchema)),
+    Schema.propertySignature(Schema.NullishOr(CategorizationFlowSchema)),
     Schema.fromKey('categorization_flow'),
   ),
   taxCode: pipe(
-    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('tax_code'),
   ),
   taxOptions: pipe(
-    Schema.optional(Schema.NullOr(BankTransactionTaxOptionsSchema)),
+    Schema.propertySignature(Schema.NullishOr(BankTransactionTaxOptionsSchema)),
     Schema.fromKey('tax_options'),
   ),
   suggestedMatches: pipe(
     Schema.propertySignature(Schema.Array(SuggestedMatchSchema)),
     Schema.fromKey('suggested_matches'),
   ),
-  match: Schema.optional(Schema.NullOr(MatchSchema)),
+  match: Schema.NullishOr(MatchSchema),
   transactionTags: pipe(
     Schema.propertySignature(Schema.Array(TransactionTagSchema)),
     Schema.fromKey('transaction_tags'),
@@ -105,17 +125,17 @@ export const BankTransactionSchema = Schema.Struct({
     Schema.propertySignature(Schema.Array(Schema.String)),
     Schema.fromKey('document_ids'),
   ),
-  memo: Schema.optional(Schema.NullOr(Schema.String)),
+  memo: Schema.NullishOr(Schema.String),
   referenceNumber: pipe(
-    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('reference_number'),
   ),
-  metadata: Schema.optional(Schema.NullOr(Schema.Unknown)),
-  customer: Schema.optional(Schema.NullOr(CustomerSchema)),
-  vendor: Schema.optional(Schema.NullOr(VendorSchema)),
+  metadata: Schema.NullishOr(Schema.Unknown),
+  customer: Schema.NullishOr(CustomerSchema),
+  vendor: Schema.NullishOr(VendorSchema),
 
   updateCategorizationRulesSuggestion: pipe(
-    Schema.optional(Schema.NullOr(UpdateCategorizationRulesSuggestionSchema)),
+    Schema.propertySignature(Schema.NullishOr(UpdateCategorizationRulesSuggestionSchema)),
     Schema.fromKey('update_categorization_rules_suggestion'),
   ),
 })

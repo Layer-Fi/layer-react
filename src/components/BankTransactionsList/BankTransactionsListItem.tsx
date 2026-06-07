@@ -117,15 +117,15 @@ export const BankTransactionsListItem = ({
 
           <span className='Layer__bank-transaction-list-item__heading-separator' />
 
-          {bankTransaction.account_institution?.name && (
+          {bankTransaction.accountInstitution?.name && (
             <Span ellipsis size='sm'>
-              {`${bankTransaction.account_institution.name} — `}
+              {`${bankTransaction.accountInstitution.name} — `}
             </Span>
           )}
 
           <Span ellipsis size='sm'>
-            {bankTransaction.account_name}
-            {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
+            {bankTransaction.accountName}
+            {bankTransaction.accountMask && ` ${bankTransaction.accountMask}`}
           </Span>
 
           {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
@@ -163,7 +163,7 @@ export const BankTransactionsListItem = ({
             </div>
           )}
           <Span withTooltip>
-            {bankTransaction.counterparty_name ?? bankTransaction.description}
+            {bankTransaction.counterpartyName ?? bankTransaction.description}
           </Span>
         </HStack>
         <MoneySpan

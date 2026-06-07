@@ -113,22 +113,21 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
       void optimisticallyUpdateBankTransactions((bankTransaction) => {
         if (bankTransaction.id === bankTransactionId) {
           const now = new Date()
-          const nowISOString = now.toISOString()
 
           return {
             ...bankTransaction,
-            transaction_tags: [
-              ...bankTransaction.transaction_tags,
+            transactionTags: [
+              ...bankTransaction.transactionTags,
               {
                 id: optimisticTagId,
                 key,
                 value,
-                created_at: nowISOString,
-                updated_at: nowISOString,
-                dimension_display_name: dimensionDisplayName,
-                value_display_name: valueDisplayName,
-                archived_at: null,
-                deleted_at: null,
+                createdAt: now,
+                updatedAt: now,
+                dimensionDisplayName,
+                valueDisplayName,
+                archivedAt: null,
+                deletedAt: null,
 
                 _local: {
                   isOptimistic: true,

@@ -190,7 +190,7 @@ export const BankTransactionRow = ({
         >
           <span className='Layer__table-cell-content'>
             <Span withTooltip>
-              {bankTransaction.counterparty_name ?? bankTransaction.description}
+              {bankTransaction.counterpartyName ?? bankTransaction.description}
             </Span>
           </span>
         </td>
@@ -200,12 +200,12 @@ export const BankTransactionRow = ({
           <span className='Layer__table-cell-content'>
             <VStack align='start'>
               <Span ellipsis>
-                {bankTransaction.account_name}
-                {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
+                {bankTransaction.accountName}
+                {bankTransaction.accountMask && ` ${bankTransaction.accountMask}`}
               </Span>
-              {bankTransaction.account_institution?.name && (
+              {bankTransaction.accountInstitution?.name && (
                 <Span ellipsis variant='subtle' size='sm'>
-                  {bankTransaction.account_institution.name}
+                  {bankTransaction.accountInstitution.name}
                 </Span>
               )}
             </VStack>
@@ -228,7 +228,7 @@ export const BankTransactionRow = ({
           className='Layer__table-cell Layer__bank-transactions__documents-col'
           {...showReceiptDataProperties}
         >
-          {showReceiptUploads && bankTransaction.document_ids?.length > 0 && (
+          {showReceiptUploads && bankTransaction.documentIds?.length > 0 && (
             <span className='Layer__table-cell-content'>
               <IconBox>
                 <FileIcon size={12} />

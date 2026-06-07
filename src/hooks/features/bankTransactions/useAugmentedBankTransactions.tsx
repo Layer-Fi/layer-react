@@ -6,7 +6,6 @@ import {
 } from '@internal-types/bankTransactions'
 import { DataModel, Direction } from '@internal-types/general'
 import { type TagFilterInput } from '@internal-types/tags'
-import { decodeRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { isAnyBankAccountSyncing } from '@utils/bankAccount'
 import { type BankTransactionFilters, filterVisibility, type NumericRangeFilter } from '@utils/bankTransactions/shared'
 import { useBankTransactions, type UseBankTransactionsOptions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
@@ -20,22 +19,20 @@ const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
 const applyAccountFilter = (
   data?: BankTransaction[],
   filter?: string[],
-) => data?.filter(x => filter && filter.includes(x.source_account_id))
+) => data?.filter(x => filter && x.sourceAccountId != null && filter.includes(x.sourceAccountId))
 
 const applyCategorizationStatusFilter = (
   data?: BankTransaction[],
   filter?: DisplayState,
 ) => {
-  if (!filter) {
-    return data
-  }
+  if (!filter) return data
 
   return data?.filter(
     tx =>
       filterVisibility(filter, tx)
       || filter === DisplayState.all
-      || (filter === DisplayState.review && tx.recently_categorized)
-      || (filter === DisplayState.categorized && tx.recently_categorized),
+      || (filter === DisplayState.review && tx.recentlyCategorized)
+      || (filter === DisplayState.categorized && tx.recentlyCategorized),
   )
 }
 
@@ -180,9 +177,8 @@ export const useAugmentedBankTransactions = (
     )
 
     for (const bt of newBankTransactions) {
-      if (bt.update_categorization_rules_suggestion) {
-        const decodedRuleSuggestion = decodeRulesSuggestion(bt.update_categorization_rules_suggestion)
-        setRuleSuggestion(decodedRuleSuggestion)
+      if (bt.updateCategorizationRulesSuggestion) {
+        setRuleSuggestion(bt.updateCategorizationRulesSuggestion)
       }
     }
 

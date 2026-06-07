@@ -11,7 +11,7 @@ export class TaxCodeComboBoxOption extends BaseComboBoxOption<BankTransactionTax
   static noTaxCode(label: string): TaxCodeComboBoxOption {
     return new TaxCodeComboBoxOption({
       code: NO_TAX_CODE,
-      display_name: label,
+      displayName: label,
     })
   }
 
@@ -20,7 +20,7 @@ export class TaxCodeComboBoxOption extends BaseComboBoxOption<BankTransactionTax
   }
 
   get label() {
-    return this.internalValue.display_name
+    return this.internalValue.displayName
   }
 
   get value() {

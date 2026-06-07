@@ -1,21 +1,11 @@
-import { type Categorization } from '@internal-types/categories'
-import { type Direction, type S3PresignedUrl } from '@internal-types/general'
+import { type S3PresignedUrl } from '@internal-types/general'
 import {
-  type BankTransactionTaxOptionsSchema,
-  type CategorizationStatus,
+  type BankTransactionSchema,
 } from '@schemas/bankTransactions/bankTransaction'
-import { type UpdateCategorizationRulesSuggestionSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { type MatchDetailsType, type MatchType } from '@schemas/bankTransactions/match'
-import type { CategorizationEncoded } from '@schemas/categorization'
-import type { CustomerSchema } from '@schemas/customer'
+import { type MatchSchema, type SuggestedMatchSchema } from '@schemas/bankTransactions/match'
 import type { CustomerVendorSchema } from '@schemas/customerVendor'
-import type { Tag, TransactionTagEncoded } from '@schemas/tag'
-import type { VendorSchema } from '@schemas/vendor'
+import type { Tag } from '@schemas/tag'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
-
-export enum BankTransactionMatchType {
-  CONFIRM_MATCH = 'Confirm_Match',
-}
 
 export enum DisplayState {
   all = 'all',
@@ -23,63 +13,17 @@ export enum DisplayState {
   categorized = 'categorized',
 }
 
-export interface AccountInstitution {
-  name: string
-  logo: string | null
-}
+/**
+ * Derived from the decoded `BankTransactionSchema`. `recentlyCategorized`is a client-only
+ * flag set during optimistic categorization and is not part of the API payload.
+ */
+export type BankTransaction =
+  & typeof BankTransactionSchema.Type
+  & { recentlyCategorized?: boolean }
 
-export type BankTransactionTaxOptions = typeof BankTransactionTaxOptionsSchema.Encoded
+export type SuggestedMatch = typeof SuggestedMatchSchema.Type
 
-// This isn't my favorite but BankTransaction contains much
-// more than we're using right now.
-export interface BankTransaction extends Record<string, unknown> {
-  type: 'Bank_Transaction'
-  account_name?: string
-  account_institution?: AccountInstitution
-  account_mask?: string
-  business_id: string
-  recently_categorized?: boolean
-  id: string
-  date: string
-  source: string
-  source_transaction_id: string
-  source_account_id: string
-  imported_at: string
-  description: string | null
-  amount: number
-  direction: Direction
-  counterparty_name: string
-  category: CategorizationEncoded | null
-  tax_code?: string | null
-  tax_options?: BankTransactionTaxOptions | null
-  categorization_status: CategorizationStatus
-  categorization_flow: Categorization | null
-  categorization_method: string
-  error?: string
-  processing?: boolean
-  suggested_matches?: SuggestedMatch[]
-  match?: BankTransactionMatch
-  document_ids: string[]
-  transaction_tags: ReadonlyArray<TransactionTagEncoded>
-
-  customer: typeof CustomerSchema.Encoded | null
-  vendor: typeof VendorSchema.Encoded | null
-  update_categorization_rules_suggestion?: typeof UpdateCategorizationRulesSuggestionSchema.Encoded | null
-}
-
-export interface SuggestedMatch {
-  id: string
-  // Yes, this really is camelCase in the API response.
-  matchType: MatchType
-  details: MatchDetailsType
-}
-
-export interface BankTransactionMatch {
-  bank_transaction: BankTransaction
-  id: string
-  match_type: MatchType
-  details: MatchDetailsType
-}
+export type BankTransactionMatch = typeof MatchSchema.Type
 
 export interface BankTransactionMetadata {
   memo: string | null
