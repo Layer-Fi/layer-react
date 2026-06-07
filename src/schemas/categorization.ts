@@ -22,7 +22,6 @@ export const AccountCategorizationSchema = Schema.Struct({
   ),
   description: Schema.optional(Schema.NullOr(Schema.String)),
 })
-export const AccountCategorizationEncoded = typeof AccountCategorizationSchema.Encoded
 
 export const ExclusionCategorizationSchema = Schema.Struct({
   type: Schema.Literal('Exclusion'),
@@ -34,7 +33,6 @@ export const ExclusionCategorizationSchema = Schema.Struct({
   ),
   description: Schema.optional(Schema.NullOr(Schema.String)),
 })
-export const ExclusionCategorizationEncoded = typeof ExclusionCategorizationSchema.Encoded
 
 export const AccountSplitEntrySchema = Schema.Struct({
   type: Schema.Literal('AccountSplitEntry'),
@@ -191,10 +189,6 @@ export const CategorizationSchema = Schema.Union(
 export type SplitCategorization = typeof SplitCategorizationSchema.Type
 export type Categorization = typeof CategorizationSchema.Type
 
-export type AccountCategorizationEncoded = typeof AccountCategorizationSchema.Encoded
-export type ExclusionCategorizationEncoded = typeof ExclusionCategorizationSchema.Encoded
-export type CategorizationEncoded = typeof CategorizationSchema.Encoded
-
 export const isSplitCategorization = (categorization: Categorization): categorization is SplitCategorization => {
   return categorization.type === 'Split_Categorization'
 }
@@ -240,4 +234,3 @@ export const isClassificationAccountIdentifier = (value: Classification): value 
 
 export const ClassificationEquivalence = Schema.equivalence(ClassificationSchema)
 export type Classification = typeof ClassificationSchema.Type
-export type ClassificationEncoded = typeof ClassificationSchema.Encoded

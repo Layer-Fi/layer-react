@@ -1,12 +1,8 @@
-import { Schema } from 'effect'
-
 import type { Split, SuggestedMatch } from '@internal-types/bankTransactions'
 import { makeAccountId, makeStableName } from '@schemas/accountIdentifier'
 import {
   type Categorization,
   type Classification,
-  type ClassificationEncoded,
-  ClassificationSchema,
   makeExclusion,
   type NestedCategorization,
 } from '@schemas/categorization'
@@ -27,9 +23,6 @@ export abstract class BaseCategorizationOption<T> extends BaseComboBoxOption<T> 
 
   /** Returns the Classification for this option, or null if not applicable */
   abstract get classification(): Classification | null
-
-  /** Returns the encoded Classification for this option, or null if not applicable */
-  abstract get classificationEncoded(): ClassificationEncoded | null
 }
 
 export class SuggestedMatchAsOption extends BaseCategorizationOption<SuggestedMatch> {
@@ -54,10 +47,6 @@ export class SuggestedMatchAsOption extends BaseCategorizationOption<SuggestedMa
   }
 
   get classification() {
-    return null
-  }
-
-  get classificationEncoded() {
     return null
   }
 }
@@ -110,10 +99,6 @@ export class CategoryAsOption extends BaseCategorizationOption<NestedCategorizat
         })
     }
   }
-
-  get classificationEncoded(): ClassificationEncoded {
-    return Schema.encodeSync(ClassificationSchema)(this.classification)
-  }
 }
 
 export type PlaceholderOption = {
@@ -154,10 +139,6 @@ export class PlaceholderAsOption extends BaseCategorizationOption<PlaceholderOpt
   get classification() {
     return null
   }
-
-  get classificationEncoded() {
-    return null
-  }
 }
 
 export class SplitAsOption extends BaseCategorizationOption<Split[]> {
@@ -191,10 +172,6 @@ export class SplitAsOption extends BaseCategorizationOption<Split[]> {
   }
 
   get classification() {
-    return null
-  }
-
-  get classificationEncoded() {
     return null
   }
 }
@@ -234,9 +211,5 @@ export class ApiCategorizationAsOption extends BaseCategorizationOption<Categori
           message: 'Unexpected categorization type in ApiCategorizationAsOption.classification',
         })
     }
-  }
-
-  get classificationEncoded(): ClassificationEncoded | null {
-    return this.classification ? Schema.encodeSync(ClassificationSchema)(this.classification) : null
   }
 }
