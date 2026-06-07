@@ -119,7 +119,7 @@ export function LinkAccountsLinkStep() {
         {({ item: bankAccount }) => (
           <BasicLinkedAccountContainer key={bankAccount.id} isSelected>
             <BasicLinkedAccountContent account={{
-              external_account_name: getBankAccountDisplayName(bankAccount),
+              externalAccountName: getBankAccountDisplayName(bankAccount),
               mask: bankAccount.mask,
               institution: getBankAccountInstitution(bankAccount),
             }}
