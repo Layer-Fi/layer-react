@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react'
 
-import type { ExternalAccountConnection } from '@internal-types/linkedAccounts'
+import type { ExternalAccountConnection } from '@schemas/bankAccounts/bankAccount'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import InstitutionIcon from '@icons/InstitutionIcon'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -26,7 +26,7 @@ export function BasicLinkedAccountContainer({ children, isSelected }: BasicLinke
 }
 
 type BasicLinkedAccountLogoProps = {
-  account: Pick<ExternalAccountConnection, 'institution' | 'external_account_name'>
+  account: Pick<ExternalAccountConnection, 'institution' | 'externalAccountName'>
 }
 
 function BasicLinkedAccountLogo({ account }: BasicLinkedAccountLogoProps) {
@@ -41,7 +41,7 @@ function BasicLinkedAccountLogo({ account }: BasicLinkedAccountLogoProps) {
             alt={
               account.institution?.name
                 ? account.institution?.name
-                : account.external_account_name
+                : account.externalAccountName
             }
           />
         )
@@ -53,7 +53,7 @@ function BasicLinkedAccountLogo({ account }: BasicLinkedAccountLogoProps) {
 }
 
 type BasicLinkedAccountContainerProps = {
-  account: Pick<ExternalAccountConnection, 'external_account_name' | 'mask' | 'institution'>
+  account: Pick<ExternalAccountConnection, 'externalAccountName' | 'mask' | 'institution'>
 }
 
 export function BasicLinkedAccountContent({ account }: BasicLinkedAccountContainerProps) {
@@ -61,7 +61,7 @@ export function BasicLinkedAccountContent({ account }: BasicLinkedAccountContain
     <HStack gap='md'>
       <BasicLinkedAccountLogo account={account} />
       <VStack>
-        <Heading level={3} size='xs' pbe='3xs'>{account.external_account_name}</Heading>
+        <Heading level={3} size='xs' pbe='3xs'>{account.externalAccountName}</Heading>
         <HStack gap='xs'>
           <P size='sm'>
             {account.institution?.name}

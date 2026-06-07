@@ -3,7 +3,7 @@ import { pipe, Schema } from 'effect/index'
 import { BankTransactionDirectionSchema } from '@schemas/bankTransactions/base'
 import { UpdateCategorizationRulesSuggestionSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { MatchSchema, SuggestedMatchSchema } from '@schemas/bankTransactions/match'
-import { CategorizationSchema } from '@schemas/categorization'
+import { AccountInstitutionSchema } from '@schemas/common/accountInstitution'
 import { CustomerSchema } from '@schemas/customer'
 import { TransactionTagSchema } from '@schemas/tag'
 import { createTransformedEnumSchema } from '@schemas/utils'
@@ -25,11 +25,6 @@ export enum InputStrategy {
   LayerReview = 'LAYER_REVIEW',
   Unknown = 'UNKNOWN',
 }
-
-export const AccountInstitutionSchema = Schema.Struct({
-  name: Schema.String,
-  logo: Schema.NullishOr(Schema.String),
-})
 
 export const BankTransactionTaxOptionSchema = Schema.Struct({
   code: Schema.String,

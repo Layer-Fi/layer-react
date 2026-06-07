@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { type BankAccount } from '@internal-types/linkedAccounts'
+import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution, isBankAccountSyncing } from '@utils/bankAccount'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import InstitutionIcon from '@icons/InstitutionIcon'
@@ -56,7 +56,7 @@ export const LinkedAccountThumb = ({
 
   const bankBalance = slots.Pill ?? (
     <Text as='span' className='account-balance'>
-      {formatCurrencyFromCents(bankAccount.latest_balance_timestamp?.balance)}
+      {formatCurrencyFromCents(bankAccount.latestBalanceTimestamp?.balance)}
     </Text>
   )
 
@@ -140,7 +140,7 @@ export const LinkedAccountThumb = ({
                     </Text>
                   )}
                 <Text as='span' className='account-balance'>
-                  {formatCurrencyFromCents(bankAccount.current_ledger_balance)}
+                  {formatCurrencyFromCents(bankAccount.currentLedgerBalance)}
                 </Text>
               </div>
             )}

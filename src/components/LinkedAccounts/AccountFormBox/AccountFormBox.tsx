@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react'
 import { endOfDay } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
-import { type BankAccount } from '@internal-types/linkedAccounts'
+import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/bankAccount'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import CheckCircle from '@icons/CheckCircle'
