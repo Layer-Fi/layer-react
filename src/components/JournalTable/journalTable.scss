@@ -31,6 +31,18 @@
     }
   }
 
+  // Let body rows grow when cell content wraps onto multiple lines, instead of
+  // clamping to the shared fixed row height.
+  .Layer__UI__Table-TableBody .Layer__UI__Table-Row {
+    height: auto;
+    min-height: 3.25rem;
+  }
+
+  // Break long unbroken strings so they wrap (and grow the row) rather than overflow
+  .Layer__UI__Table-Cell {
+    overflow-wrap: anywhere;
+  }
+
   // Cells are flex containers, so right-align the currency columns explicitly
   .Layer__UI__Table-Column__JournalTable--debit,
   .Layer__UI__Table-Column__JournalTable--credit,
