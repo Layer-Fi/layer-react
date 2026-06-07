@@ -1,5 +1,9 @@
 .Layer__journal__entry-details__line-items {
   padding: var(--spacing-md);
+
+  .Layer__table .Layer__table-row.Layer__table-row--variant-summation {
+    background: var(--color-base-0);
+  }
 }
 
 @container (max-width: 1024px) {
