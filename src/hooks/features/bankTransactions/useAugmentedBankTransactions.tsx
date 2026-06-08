@@ -4,7 +4,7 @@ import {
   type BankTransaction,
   DisplayState,
 } from '@internal-types/bankTransactions'
-import { DataModel, Direction } from '@internal-types/general'
+import { Direction } from '@internal-types/general'
 import { type TagFilterInput } from '@internal-types/tags'
 import { isAnyBankAccountSyncing } from '@utils/bankAccount'
 import { type BankTransactionFilters, filterVisibility, type NumericRangeFilter } from '@utils/bankTransactions/shared'
@@ -112,7 +112,7 @@ export type UseAugmentedBankTransactionsWithFiltersParams = {
 export const useAugmentedBankTransactions = (
   params: UseAugmentedBankTransactionsWithFiltersParams,
 ) => {
-  const { touch, eventCallbacks } = useLayerContext()
+  const { eventCallbacks } = useLayerContext()
 
   const { setRuleSuggestion } = useContext(CategorizationRulesContext)
 
@@ -264,7 +264,6 @@ export const useAugmentedBankTransactions = (
     clearInterval(intervalIdRef.current)
     setPollIntervalMs(POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS)
     eventCallbacks?.onTransactionsFetched?.()
-    touch(DataModel.BANK_TRANSACTIONS)
   })
 
   return {

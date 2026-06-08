@@ -13,7 +13,6 @@ import { errorHandler, type LayerError } from '@utils/api/errorHandler'
 import { buildColorsPalette } from '@utils/colors'
 import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
 import { useBusiness } from '@hooks/api/businesses/[business-id]/useBusiness'
-import { useDataSync } from '@hooks/legacy/useDataSync'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
 import { LayerContext } from '@contexts/LayerContext/LayerContext'
@@ -97,15 +96,6 @@ export const BusinessProvider = ({
     toasts: [],
     eventCallbacks: {},
   })
-
-  const {
-    touch,
-    syncTimestamps,
-    read,
-    readTimestamps,
-    hasBeenTouched,
-    resetCaches,
-  } = useDataSync()
 
   const globalDateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
   const { setDateRange } = useGlobalDateRangeActions()
@@ -231,12 +221,6 @@ export const BusinessProvider = ({
         addToast,
         removeToast,
         onError: (payload: LayerError) => errorHandler.onError(payload),
-        touch,
-        read,
-        syncTimestamps,
-        readTimestamps,
-        expireDataCaches: resetCaches,
-        hasBeenTouched,
         eventCallbacks: stableEventCallbacks,
         accountingConfiguration,
         dateRange,
