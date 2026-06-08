@@ -91,11 +91,11 @@ const nestedLedgerAccountFields = {
   ),
   name: Schema.String,
   stableName: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('stable_name'),
   ),
   accountNumber: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('account_number'),
   ),
   normality: LedgerEntryDirectionSchema,
@@ -109,7 +109,7 @@ const nestedLedgerAccountFields = {
   ),
   balance: Schema.Number,
   isDeletable: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.Boolean)),
+    Schema.propertySignature(Schema.NullishOr(Schema.Boolean)),
     Schema.fromKey('is_deletable'),
   ),
 }
@@ -143,7 +143,7 @@ const nestedChartAccountFields = {
     Schema.fromKey('stable_name'),
   ),
   accountNumber: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('account_number'),
   ),
   normality: LedgerEntryDirectionSchema,

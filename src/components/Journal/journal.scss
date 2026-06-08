@@ -1,0 +1,25 @@
+.Layer__component-container.Layer__journal {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+@container (min-width: 1025px) {
+  .Layer__component-container.Layer__journal {
+    overflow: unset;
+  }
+}
+
+.Layer__journal .Layer__panel {
+  max-width: 100%;
+}
+
+.Layer__journal .Layer__panel__sidebar .Layer__panel__sidebar-content {
+  width: 100%;
+}
+
+@container (max-width: 1024px) {
+  .Layer__journal .Layer__panel.Layer__panel--open {
+    overflow: hidden;
+  }
+}

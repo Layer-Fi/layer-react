@@ -32,6 +32,8 @@ import { TableHead } from '@components/TableHead/TableHead'
 import { TableRow } from '@components/TableRow/TableRow'
 import { Heading, HeadingSize } from '@components/Typography/Heading'
 
+import './journalEntryDetails.scss'
+
 export const JournalEntryDetails = () => {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()

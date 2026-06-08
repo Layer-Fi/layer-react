@@ -32,6 +32,17 @@
       min-width: 140px;
       max-width: 140px;
     }
+
+    @container (max-width: 499px) {
+      flex-direction: column;
+      gap: var(--spacing-2xs);
+      align-items: flex-start;
+      padding-top: var(--spacing-sm);
+
+      & > label {
+        width: 100%;
+      }
+    }
   }
 }
 
