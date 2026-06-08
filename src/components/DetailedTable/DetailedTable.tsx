@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
 import classNames from 'classnames'
-import { ArrowUpDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import SortArrows from '@icons/SortArrows'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -95,7 +95,7 @@ export const DetailedTable = <T extends SeriesData>({
                     <Span variant={buildHeaderVariant('category')} size='sm'>
                       {stringOverrides?.categoryColumnHeader || t('common:label.category', 'Category')}
                     </Span>
-                    {isSortable && <ArrowUpDown className='Layer__DetailedTable__sortArrows' size={13} />}
+                    {isSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
                   </HStack>
                 </th>
                 {!isMobile && hasType && (
@@ -110,7 +110,7 @@ export const DetailedTable = <T extends SeriesData>({
                       <Span variant={buildHeaderVariant('type')} size='sm'>
                         {stringOverrides?.typeColumnHeader || t('common:label.type', 'Type')}
                       </Span>
-                      {isSortable && <ArrowUpDown className='Layer__DetailedTable__sortArrows' size={13} />}
+                      {isSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
                     </HStack>
                   </th>
                 )}
@@ -126,7 +126,7 @@ export const DetailedTable = <T extends SeriesData>({
                     <Span variant={buildHeaderVariant('value')} size='sm'>
                       {stringOverrides?.valueColumnHeader || t('common:label.value', 'Value')}
                     </Span>
-                    {isSortable && <ArrowUpDown className='Layer__DetailedTable__sortArrows' size={13} />}
+                    {isSortable && <SortArrows className='Layer__DetailedTable__sortArrows' />}
                   </HStack>
                 </th>
                 <th className='Layer__DetailedTable__Column--percent'></th>
