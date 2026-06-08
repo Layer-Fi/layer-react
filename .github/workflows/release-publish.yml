@@ -5,7 +5,7 @@ name: Release — Publish
 # the Release — Tag hook on PR merge), publishes to npm, and updates Linear:
 #   - alpha  (package.json is a prerelease) -> publish --tag alpha; sync Linear.
 #   - stable (plain version)                -> publish (latest); sync + complete
-#     the Linear release, then queue the next one (next_bump).
+#     the Linear release, then queue the next one (next_linear_release).
 #
 # Tagging is NOT done here — the Release — Tag hook owns that.
 #
@@ -20,15 +20,15 @@ name: Release — Publish
 on:
   workflow_dispatch:
     inputs:
-      next_bump:
-        description: 'Next release to queue in Linear when publishing a STABLE (calculated from this release)'
+      next_linear_release:
+        description: 'Next Linear release (ignored for alphas)'
         type: choice
         options: [ patch, minor, major ]
         default: patch
       dry_run:
-        description: 'Rehearse only: npm publish --dry-run, Linear read-only'
+        description: 'As dry run'
         type: boolean
-        default: false
+        default: true
 
 permissions:
   contents: read
@@ -53,7 +53,7 @@ jobs:
         case "$V" in *-*) TYPE=alpha ;; *) TYPE=stable ;; esac
         # Next version: plain bash bump of BASE (X.Y.Z), no semver dependency.
         IFS=. read -r MA MI PA <<< "$BASE"
-        case "${{ inputs.next_bump }}" in
+        case "${{ inputs.next_linear_release }}" in
           patch) NEXT="$MA.$MI.$((PA + 1))" ;;
           minor) NEXT="$MA.$((MI + 1)).0" ;;
           major) NEXT="$((MA + 1)).0.0" ;;
@@ -71,7 +71,7 @@ jobs:
           echo "| --- | --- |"
           echo "| version | \`$V\` |"
           echo "| channel | $TYPE ($([ "$TYPE" = alpha ] && echo 'npm tag: alpha' || echo 'npm tag: latest')) |"
-          [ "$TYPE" = stable ] && echo "| next queued in Linear | \`$NEXT\` (${{ inputs.next_bump }}) |"
+          [ "$TYPE" = stable ] && echo "| next queued in Linear | \`$NEXT\` (${{ inputs.next_linear_release }}) |"
           [ "${{ inputs.dry_run }}" = "true" ] && echo "| mode | DRY RUN |"
         } >> "$GITHUB_STEP_SUMMARY"
         echo "Publishing $V ($TYPE)"
