@@ -23,7 +23,7 @@ export const BaseDetailView = ({ name, onGoBack, slots, children, borderless = f
   return (
     <Container name={name} className='Layer__BaseDetailView' transparentBg={borderless}>
       <HStack align='center' gap='md' className='Layer__BaseDetailView__Header'>
-        {onGoBack && (<Button variant='outlined' icon onPress={onGoBack}><BackIcon size={18} color='#1A130D' /></Button>)}
+        {onGoBack && (<Button variant='outlined' icon onPress={onGoBack}><BackIcon size={18} /></Button>)}
         <Header />
       </HStack>
       {children}
