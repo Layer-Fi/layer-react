@@ -35,6 +35,8 @@ type GetBankTransactionsPaginatedParams = {
   tagFilterQueryString?: string
   bankAccountIds?: string
   sourceAccountIds?: string
+  amountMin?: number
+  amountMax?: number
   sortOrder?: 'ASC' | 'DESC'
   sortBy?: string
   cursor?: string
@@ -59,6 +61,8 @@ const getBankTransactions = get<
     tagFilterQueryString,
     bankAccountIds,
     sourceAccountIds,
+    amountMin,
+    amountMax,
   }: GetBankTransactionsPaginatedParams) => {
     const parameters = toDefinedSearchParameters({
       cursor,
@@ -72,6 +76,8 @@ const getBankTransactions = get<
       limit,
       bankAccountIds,
       sourceAccountIds,
+      amountMin,
+      amountMax,
     })
 
     return `/v1/businesses/${businessId}/bank-transactions?${parameters}${tagFilterQueryString ? `&${tagFilterQueryString}` : ''}`
@@ -94,6 +100,8 @@ const keyMatchesParams = createKeyMatcher<BankTransactionsKey, UseBankTransactio
   { key: 'tagFilterQueryString' },
   { key: 'bankAccountIds' },
   { key: 'sourceAccountIds' },
+  { key: 'amountMin' },
+  { key: 'amountMax' },
 ])
 
 class BankTransactionsSWRResponse extends SWRInfiniteResult<GetBankTransactionsReturn> {
@@ -113,6 +121,8 @@ export type UseBankTransactionsOptions = {
   tagFilterQueryString?: string
   bankAccountIds?: string
   sourceAccountIds?: string
+  amountMin?: number
+  amountMax?: number
 }
 
 function keyLoader(
@@ -129,6 +139,8 @@ function keyLoader(
     tagFilterQueryString,
     bankAccountIds,
     sourceAccountIds,
+    amountMin,
+    amountMax,
   }: UseBankTransactionsOptions & {
     access_token?: string
     apiUrl?: string
@@ -149,6 +161,8 @@ function keyLoader(
       tagFilterQueryString,
       bankAccountIds,
       sourceAccountIds,
+      amountMin,
+      amountMax,
       tags: [BANK_TRANSACTIONS_TAG_KEY],
     } as const
   }
@@ -163,6 +177,8 @@ export function useBankTransactions({
   tagFilterQueryString,
   bankAccountIds,
   sourceAccountIds,
+  amountMin,
+  amountMax,
 }: UseBankTransactionsOptions) {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
@@ -182,6 +198,8 @@ export function useBankTransactions({
         tagFilterQueryString,
         bankAccountIds,
         sourceAccountIds,
+        amountMin,
+        amountMax,
       },
     )),
     ({
@@ -197,6 +215,8 @@ export function useBankTransactions({
       tagFilterQueryString,
       bankAccountIds,
       sourceAccountIds,
+      amountMin,
+      amountMax,
     }: NonNullable<ReturnType<typeof keyLoader>>) => {
       return getBankTransactions(
         apiUrl,
@@ -214,6 +234,8 @@ export function useBankTransactions({
             tagFilterQueryString,
             bankAccountIds,
             sourceAccountIds,
+            amountMin,
+            amountMax,
           },
         },
       )().then(Schema.decodeUnknownPromise(GetBankTransactionsResponseSchema))

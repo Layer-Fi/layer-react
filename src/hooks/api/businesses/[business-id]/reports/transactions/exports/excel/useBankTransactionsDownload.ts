@@ -19,6 +19,8 @@ type GetBankTransactionsExportParams = {
   tagFilterQueryString?: string
   bankAccountIds?: string
   sourceAccountIds?: string
+  amountMin?: number
+  amountMax?: number
   sortOrder?: 'ASC' | 'DESC'
   sortBy?: string
 }
@@ -37,6 +39,8 @@ const getBankTransactionsExcel = get<
   sortOrder = 'DESC',
   bankAccountIds,
   sourceAccountIds,
+  amountMin,
+  amountMax,
 }: GetBankTransactionsExportParams) => {
   const parameters = toDefinedSearchParameters({
     categorized,
@@ -48,6 +52,8 @@ const getBankTransactionsExcel = get<
     sortOrder,
     bankAccountIds,
     sourceAccountIds,
+    amountMin,
+    amountMax,
   })
 
   return `/v1/businesses/${businessId}/reports/transactions/exports/excel?${parameters}`
@@ -105,6 +111,8 @@ export function useBankTransactionsDownload() {
             tagFilterQueryString,
             bankAccountIds,
             sourceAccountIds,
+            amountMin,
+            amountMax,
           },
         }: { arg: UseBankTransactionsDownloadOptions },
       ) =>
@@ -122,6 +130,8 @@ export function useBankTransactionsDownload() {
               tagFilterQueryString,
               bankAccountIds,
               sourceAccountIds,
+              amountMin,
+              amountMax,
             },
           },
         )().then(({ data }) => data),
