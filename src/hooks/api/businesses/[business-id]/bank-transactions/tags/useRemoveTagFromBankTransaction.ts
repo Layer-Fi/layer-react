@@ -93,7 +93,7 @@ export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTag
 
           return {
             ...bankTransaction,
-            transaction_tags: bankTransaction.transaction_tags.filter(
+            transactionTags: bankTransaction.transactionTags.filter(
               tag => tag.id !== tagId,
             ),
           }

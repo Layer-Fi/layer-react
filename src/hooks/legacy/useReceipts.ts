@@ -218,12 +218,12 @@ export const useReceipts: UseReceipts = ({
       // Update the bank transaction with the new document id
       if (
         result?.data?.id
-        && bankTransaction?.document_ids
-        && bankTransaction.document_ids.length === 0
+        && bankTransaction?.documentIds
+        && bankTransaction.documentIds.length === 0
       ) {
         updateLocalBankTransactions([{
           ...bankTransaction,
-          document_ids: [result.data.id],
+          documentIds: [result.data.id],
         }])
       }
     }

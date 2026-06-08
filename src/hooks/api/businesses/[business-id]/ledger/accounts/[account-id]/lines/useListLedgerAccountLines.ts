@@ -1,8 +1,10 @@
 import { useCallback, useMemo } from 'react'
+import { Schema } from 'effect'
 import { debounce } from 'lodash-es'
 import useSWRInfinite from 'swr/infinite'
 
-import { type LedgerAccountLineItem, type LedgerAccountLineItems } from '@internal-types/ledgerAccounts'
+import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
+import { type LedgerAccountLineItem, LedgerAccountLineItemSchema } from '@schemas/generalLedger/ledgerEntry'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
@@ -29,19 +31,17 @@ type GetLedgerAccountLinesParams = {
   show_total_count?: boolean
 }
 
-export type ListLedgerAccountLinesReturn = {
-  data: LedgerAccountLineItems
-  meta?: {
-    pagination: {
-      cursor?: string
-      has_more: boolean
-      total_count?: number
-    }
-  }
-}
+const ListLedgerAccountLinesResponseSchema = Schema.Struct({
+  data: Schema.Array(LedgerAccountLineItemSchema),
+  meta: Schema.optional(Schema.Struct({
+    pagination: PaginatedResponseMetaSchema,
+  })),
+})
+
+export type ListLedgerAccountLinesReturn = typeof ListLedgerAccountLinesResponseSchema.Type
 
 export const listLedgerAccountLines = get<
-  ListLedgerAccountLinesReturn,
+  typeof ListLedgerAccountLinesResponseSchema.Encoded,
   GetLedgerAccountLinesParams
 >(({
   businessId,
@@ -107,7 +107,7 @@ function keyLoader(
       apiUrl,
       businessId,
       accountId,
-      cursor: previousPageData?.meta?.pagination.cursor,
+      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
       include_entries_before_activation,
       include_child_account_lines,
       start_date,
@@ -199,7 +199,7 @@ export function useListLedgerAccountLines({
           show_total_count,
         },
       },
-    )(),
+    )().then(Schema.decodeUnknownPromise(ListLedgerAccountLinesResponseSchema)),
     {
       keepPreviousData: true,
       revalidateFirstPage: false,
@@ -255,10 +255,7 @@ export function useLedgerAccountLinesOptimisticUpdater() {
         (currentData) => {
           return {
             ...currentData,
-            data: {
-              ...currentData.data,
-              lines: currentData.data?.map(line => transformLineItem(line)),
-            },
+            data: currentData.data.map(line => transformLineItem(line)),
           }
         },
       ),

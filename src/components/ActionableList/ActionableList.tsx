@@ -1,7 +1,6 @@
 import classNames from 'classnames'
+import { Check, ChevronRight } from 'lucide-react'
 
-import CheckIcon from '@icons/Check'
-import ChevronRight from '@icons/ChevronRight'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Text, TextSize } from '@components/Typography/Text'
@@ -64,7 +63,7 @@ export const ActionableList = <T,>({
           {!x.asLink && selectedId && selectedId === x.id
             ? (
               <Span className='Layer__ActionableList__Select Layer__ActionableList__Select--selected'>
-                <CheckIcon
+                <Check
                   size={14}
                 />
               </Span>

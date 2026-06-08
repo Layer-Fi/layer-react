@@ -1,9 +1,10 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { getAccountsNeedingConfirmation } from '@utils/bankAccount'
 import { tPlural } from '@utils/i18n/plural'
 import { type AccountConfirmExcludeFormState, useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
-import { getAccountsNeedingConfirmation, useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useAccountConfirmationStore } from '@providers/AccountConfirmationStoreProvider'
 import { Button } from '@ui/Button/Button'
@@ -91,9 +92,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
     accounts.map(({ id }) => [id, true]),
   ))
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { trigger, isMutating, error } = useConfirmAndExcludeMultiple({ onSuccess: refetchAccounts })
-  const hasError = Boolean(error)
+  const { trigger, isMutating, isError } = useConfirmAndExcludeMultiple({ onSuccess: refetchAccounts })
 
   const handleFinish = async () => {
     const success = await trigger(formState)
@@ -191,7 +190,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
       </ModalContent>
       <ModalActions>
         <VStack gap='md'>
-          {hasError
+          {isError
             ? (
               <>
                 <P size='sm'>

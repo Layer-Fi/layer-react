@@ -1,15 +1,15 @@
 import { useCallback } from 'react'
+import { Schema } from 'effect'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
-import type { BankTransactionMatch } from '@internal-types/bankTransactions'
+import { MatchSchema } from '@schemas/bankTransactions/match'
 import { put } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { EXTERNAL_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/external-accounts/useListExternalAccounts'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
@@ -20,8 +20,12 @@ export type MatchBankTransactionBody = {
   type: 'Confirm_Match'
 }
 
+const MatchBankTransactionResponseSchema = Schema.Struct({
+  data: MatchSchema,
+})
+
 const matchBankTransaction = put<
-  { data: BankTransactionMatch },
+  Record<string, unknown>,
   MatchBankTransactionBody,
   {
     businessId: string
@@ -86,10 +90,12 @@ export function useMatchBankTransaction() {
         },
         body,
       },
-    ).then(({ data }) => data),
+    )
+      .then(Schema.decodeUnknownPromise(MatchBankTransactionResponseSchema))
+      .then(({ data }) => data),
     {
       revalidate: false,
-      throwOnError: false,
+      throwOnError: true,
     },
   )
 
@@ -105,7 +111,6 @@ export function useMatchBankTransaction() {
         key,
         ({ tags }) => (
           tags.includes(BANK_ACCOUNTS_TAG_KEY)
-          || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY)
         ),
       ))
 

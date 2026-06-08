@@ -1,9 +1,9 @@
+import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBulkSelectionActions, useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import X from '@icons/X'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -43,7 +43,7 @@ export const BulkActionsModule = ({ showSelectedLabel = true, fullWidth = false,
           onClick={clearSelection}
           aria-label={t('common:action.clear_selected_items', 'Clear selected items')}
         >
-          <X />
+          <X size={18} />
         </Button>
       </HStack>
       <slots.BulkActions />

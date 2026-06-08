@@ -1,12 +1,12 @@
 import { useCallback, useMemo, useState } from 'react'
 import type { TFunction } from 'i18next'
+import { Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { CustomAccount } from '@internal-types/customAccounts'
 import { humanizeEnum } from '@utils/format'
 import { type CustomAccountParseCsvResponse, useCustomAccountParseCsv } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
 import { useCustomAccounts } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
-import Check from '@icons/Check'
 import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
 import { CreatableComboBox } from '@ui/ComboBox/CreatableComboBox'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'

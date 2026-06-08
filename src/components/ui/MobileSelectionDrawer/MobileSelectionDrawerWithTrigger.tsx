@@ -1,7 +1,7 @@
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import ChevronDown from '@icons/ChevronDown'
 import { Button } from '@ui/Button/Button'
 import type {
   ComboBoxOption,

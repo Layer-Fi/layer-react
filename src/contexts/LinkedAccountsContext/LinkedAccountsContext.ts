@@ -10,7 +10,6 @@ export const LinkedAccountsContext = createContext<LinkedAccountsContextType>({
   isValidating: false,
   isLinking: false,
   error: undefined,
-  updateConnectionStatus: () => Promise.resolve(),
   addConnection: () => Promise.resolve(),
   removeConnection: () => Promise.resolve(),
   repairConnection: () => Promise.resolve(),
@@ -19,7 +18,4 @@ export const LinkedAccountsContext = createContext<LinkedAccountsContextType>({
   excludeAccount: () => Promise.resolve(),
   confirmAccount: () => Promise.resolve(),
   breakConnection: () => Promise.resolve(),
-  syncAccounts: () => Promise.resolve(),
-  accountsToAddOpeningBalanceInModal: [],
-  setAccountsToAddOpeningBalanceInModal: () => {},
 })

@@ -8,12 +8,13 @@ import { TagKeyValueSchema, TransactionTagSchema } from '@schemas/tag'
 import { InvoiceTermsValues } from '@components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
 
 export enum InvoiceStatus {
+  Draft = 'DRAFT',
   Voided = 'VOIDED',
   Paid = 'PAID',
   WrittenOff = 'WRITTEN_OFF',
   PartiallyWrittenOff = 'PARTIALLY_WRITTEN_OFF',
   PartiallyPaid = 'PARTIALLY_PAID',
-  Sent = 'SENT',
+  Saved = 'SAVED',
   Refunded = 'REFUNDED',
 }
 const InvoiceStatusSchema = Schema.Enums(InvoiceStatus)
@@ -26,7 +27,7 @@ export const TransformedInvoiceStatusSchema = Schema.transform(
       if (Object.values(InvoiceStatusSchema.enums).includes(input as InvoiceStatus)) {
         return input as InvoiceStatus
       }
-      return InvoiceStatus.Sent
+      return InvoiceStatus.Saved
     },
     encode: input => input,
   },

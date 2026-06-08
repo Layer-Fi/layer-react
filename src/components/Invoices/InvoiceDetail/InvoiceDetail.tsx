@@ -1,12 +1,11 @@
 import { useCallback, useRef, useState } from 'react'
+import { ChevronLeft, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice } from '@schemas/invoices/invoice'
 import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
 import { InvoiceDetailStep, useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import BackArrow from '@icons/BackArrow'
-import X from '@icons/X'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { DiscardInvoiceChangesModal } from '@components/Invoices/InvoiceDetail/DiscardInvoiceChangesModal'
 import { InvoiceDetailHeader } from '@components/Invoices/InvoiceDetail/InvoiceDetailHeader'
@@ -85,7 +84,7 @@ export const InvoiceDetail = () => {
 
   return (
     <>
-      <BaseDetailView slots={{ Header, BackIcon: invoiceFormHasChanges ? X : BackArrow }} name='InvoiceDetail' onGoBack={onGoBack}>
+      <BaseDetailView slots={{ Header, BackIcon: invoiceFormHasChanges ? X : ChevronLeft }} name='InvoiceDetail' onGoBack={onGoBack}>
         {viewState.mode === UpsertInvoiceMode.Update && <InvoiceDetailSubHeader invoice={viewState.invoice} />}
         {showInvoiceForm && (
           <InvoiceForm

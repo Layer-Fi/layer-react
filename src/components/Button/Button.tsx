@@ -1,7 +1,7 @@
 import { type ButtonHTMLAttributes, type ReactNode, useRef } from 'react'
 import classNames from 'classnames'
+import { Loader } from 'lucide-react'
 
-import LoaderIcon from '@icons/Loader'
 import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
 export enum ButtonVariant {
@@ -88,7 +88,7 @@ export const Button = ({
         >
           {isProcessing
             ? (
-              <LoaderIcon size={12} className='Layer__anim--rotating' />
+              <Loader size={12} className='Layer__anim--rotating' />
             )
             : (
               leftIcon
@@ -105,7 +105,7 @@ export const Button = ({
         >
           {isProcessing
             ? (
-              <LoaderIcon size={12} className='Layer__anim--rotating' />
+              <Loader size={12} className='Layer__anim--rotating' />
             )
             : (
               rightIcon

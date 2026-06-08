@@ -1,12 +1,12 @@
 import { useContext } from 'react'
+import { ChevronRight, Link } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/bankAccount'
 import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
-import ChevronRight from '@icons/ChevronRight'
-import LinkIcon from '@icons/Link'
 import { Button } from '@ui/Button/Button'
 import { ElevatedLoadingSpinner, ElevatedLoadingSpinnerContainer } from '@ui/Loading/ElevatedLoadingSpinner'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -15,6 +15,7 @@ import { ActionableRow } from '@components/ActionableRow/ActionableRow'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { LinkAccountsListContainer } from '@components/LinkAccounts/LinkAccountsListContainer'
 import { BasicLinkedAccountContainer, BasicLinkedAccountContent } from '@components/LinkedAccounts/BasicLinkedAccount/BasicLinkedAccount'
+import { LinkAccountDemoTooltip } from '@components/LinkedAccounts/LinkAccountDemoTooltip'
 import { Loader } from '@components/Loader/Loader'
 import { Separator } from '@components/Separator/Separator'
 import { Text } from '@components/Typography/Text'
@@ -32,6 +33,8 @@ export function LinkAccountsLinkStep() {
     refetchAccounts,
     addConnection,
   } = useContext(LinkedAccountsContext)
+  const { business } = useLayerContext()
+  const isDemoBusiness = business?.isDemo ?? false
 
   const { next } = useWizard()
 
@@ -48,13 +51,15 @@ export function LinkAccountsLinkStep() {
               <Text status='disabled'>
                 {t('linkedAccounts:label.connect_bank_accounts_and_credit_cards', 'Connect your bank accounts and credit cards to automatically import your business transactions.')}
               </Text>
-              <Button
-                onClick={() => { void addConnection('PLAID') }}
-                isDisabled={loadingStatus !== 'complete' || isLinking}
-              >
-                {t('linkedAccounts:action.connect_my_bank', 'Connect my bank')}
-                <LinkIcon size={12} />
-              </Button>
+              <LinkAccountDemoTooltip active={isDemoBusiness}>
+                <Button
+                  onClick={() => { void addConnection('PLAID') }}
+                  isDisabled={isDemoBusiness || loadingStatus !== 'complete' || isLinking}
+                >
+                  {t('linkedAccounts:action.connect_my_bank', 'Connect my bank')}
+                  <Link size={12} />
+                </Button>
+              </LinkAccountDemoTooltip>
             </VStack>
           </ElevatedLoadingSpinnerContainer>
         )}
@@ -82,14 +87,16 @@ export function LinkAccountsLinkStep() {
                 <ActionableRow
                   title={t('linkedAccounts:prompt.use_other_bank_accounts_or_cards', 'Do you use any other bank accounts or credit cards for your business?')}
                   button={(
-                    <Button
-                      onClick={() => { void addConnection('PLAID') }}
-                      isDisabled={loadingStatus !== 'complete' || isLinking}
-                      variant='outlined'
-                    >
-                      {t('linkedAccounts:action.link_another_bank', 'Link another bank')}
-                      <LinkIcon size={12} />
-                    </Button>
+                    <LinkAccountDemoTooltip active={isDemoBusiness}>
+                      <Button
+                        onClick={() => { void addConnection('PLAID') }}
+                        isDisabled={isDemoBusiness || loadingStatus !== 'complete' || isLinking}
+                        variant='outlined'
+                      >
+                        {t('linkedAccounts:action.link_another_bank', 'Link another bank')}
+                        <Link size={12} />
+                      </Button>
+                    </LinkAccountDemoTooltip>
                   )}
                 />
               </VStack>
@@ -111,7 +118,7 @@ export function LinkAccountsLinkStep() {
         {({ item: bankAccount }) => (
           <BasicLinkedAccountContainer key={bankAccount.id} isSelected>
             <BasicLinkedAccountContent account={{
-              external_account_name: getBankAccountDisplayName(bankAccount),
+              externalAccountName: getBankAccountDisplayName(bankAccount),
               mask: bankAccount.mask,
               institution: getBankAccountInstitution(bankAccount),
             }}
@@ -126,7 +133,7 @@ export function LinkAccountsLinkStep() {
             <HStack justify='start' gap='sm'>
               <Button onClick={() => { void next() }}>
                 {t('linkedAccounts:action.im_done_linking', 'I’m done linking my banks')}
-                <ChevronRight />
+                <ChevronRight size={18} />
               </Button>
             </HStack>
           </>

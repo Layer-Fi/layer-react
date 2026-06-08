@@ -1,11 +1,11 @@
-import { isWithinInterval, parseISO } from 'date-fns'
+import { isWithinInterval } from 'date-fns'
 
 import { type BankTransaction, DisplayState, type Split, type SuggestedMatch } from '@internal-types/bankTransactions'
-import { hasSuggestions } from '@internal-types/categories'
 import { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { type DateRange } from '@internal-types/general'
-import { Direction } from '@internal-types/general'
+import { type Direction } from '@internal-types/general'
 import type { TagFilterInput } from '@internal-types/tags'
+import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { makeTagKeyValueFromTag } from '@schemas/tag'
 import { getDefaultTaxCodeForBankTransaction } from '@utils/bankTransactions/taxCode'
@@ -19,10 +19,10 @@ export const filterVisibility = (
   bankTransaction: BankTransaction,
 ) => {
   const categorized = CategorizedCategories.includes(
-    bankTransaction.categorization_status,
+    bankTransaction.categorizationStatus,
   )
   const inReview = ReviewCategories.includes(
-    bankTransaction.categorization_status,
+    bankTransaction.categorizationStatus,
   )
 
   return (
@@ -44,14 +44,14 @@ export enum BankTransactionsDateFilterMode {
 
 export const hasMatch = (bankTransaction?: BankTransaction) => {
   return Boolean(
-    (bankTransaction?.suggested_matches
-      && bankTransaction?.suggested_matches?.length > 0)
+    (bankTransaction?.suggestedMatches
+      && bankTransaction?.suggestedMatches?.length > 0)
     || bankTransaction?.match,
   )
 }
 
 export const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
-  direction === Direction.CREDIT
+  direction === BankTransactionDirection.Credit
 
 export const countTransactionsToReview = ({
   transactions,
@@ -70,7 +70,7 @@ export const countTransactionsToReview = ({
         try {
           return (
             filterVisibility(DisplayState.review, tx)
-            && isWithinInterval(parseISO(tx.date), dateRangeInterval)
+            && isWithinInterval(tx.date, dateRangeInterval)
           )
         }
         catch (_err) {
@@ -86,7 +86,7 @@ export const countTransactionsToReview = ({
 }
 
 export const hasReceipts = (bankTransaction?: BankTransaction) =>
-  bankTransaction?.document_ids && bankTransaction.document_ids.length > 0
+  bankTransaction?.documentIds && bankTransaction.documentIds.length > 0
 
 export const isTransferMatch = (bankTransaction?: BankTransaction) => {
   return bankTransaction?.match?.details.type === 'Transfer_Match'
@@ -94,16 +94,19 @@ export const isTransferMatch = (bankTransaction?: BankTransaction) => {
 
 export const hasSuggestedTransferMatches = (bankTransaction?: BankTransaction) => {
   return (
-    (bankTransaction?.suggested_matches?.length ?? 0) > 0
-    && bankTransaction?.suggested_matches?.every(x => x.details.type === 'Transfer_Match')
+    (bankTransaction?.suggestedMatches?.length ?? 0) > 0
+    && bankTransaction?.suggestedMatches?.every(x => x.details.type === 'Transfer_Match')
   )
 }
 
+export const hasSuggestions = (bankTransaction?: BankTransaction) =>
+  (bankTransaction?.categorizationFlow?.suggestions.length ?? 0) > 0
+
 export const getBankTransactionMatchAsSuggestedMatch = (bankTransaction?: BankTransaction): SuggestedMatch | undefined => {
   if (bankTransaction?.match) {
-    const foundMatch = bankTransaction.suggested_matches?.find(
+    const foundMatch = bankTransaction.suggestedMatches?.find(
       x => x.details.id === bankTransaction?.match?.details.id
-        || x.details.id === bankTransaction?.match?.bank_transaction.id,
+        || x.details.id === bankTransaction?.match?.bankTransaction.id,
     )
     return foundMatch
   }
@@ -112,7 +115,7 @@ export const getBankTransactionMatchAsSuggestedMatch = (bankTransaction?: BankTr
 }
 
 export const getSuggestedMatchForBankTransaction = (bankTransaction?: BankTransaction): SuggestedMatch | undefined => {
-  return getBankTransactionMatchAsSuggestedMatch(bankTransaction) ?? bankTransaction?.suggested_matches?.[0]
+  return getBankTransactionMatchAsSuggestedMatch(bankTransaction) ?? bankTransaction?.suggestedMatches?.[0]
 }
 
 export const getBankTransactionFirstSuggestedMatch = (bankTransaction?: BankTransaction): SuggestedMatch | undefined => {
@@ -132,8 +135,8 @@ export const getDefaultSelectedCategoryForBankTransaction = (
     return convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.category)
   }
 
-  if (hasSuggestions(bankTransaction.categorization_flow)) {
-    return convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.categorization_flow.suggestions[0])
+  if (hasSuggestions(bankTransaction)) {
+    return convertApiCategorizationToCategoryOrSplitAsOption(bankTransaction.categorizationFlow!.suggestions[0])
   }
 
   return null
@@ -155,7 +158,8 @@ export type BankTransactionFilters = {
   query?: string
   tagFilter?: TagFilterInput
 }
-export const isCategorized = (bankTransaction: BankTransaction) => CategorizedCategories.includes(bankTransaction.categorization_status)
+
+export const isCategorized = (bankTransaction: BankTransaction) => CategorizedCategories.includes(bankTransaction.categorizationStatus)
 export const buildCategorizeBankTransactionPayloadForSplit = (splits: Split[]): CategoryUpdate => {
   return splits.length === 1 && splits[0].category
     ? ({

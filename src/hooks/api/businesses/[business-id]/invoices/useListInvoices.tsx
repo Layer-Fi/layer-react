@@ -21,6 +21,7 @@ type ListInvoicesBaseParams = {
 }
 
 export type ListInvoicesFilterParams = {
+  showSalesReceipts?: boolean
   status?: ReadonlyArray<InvoiceStatus>
   query?: string
   dueAtStart?: Date
@@ -47,8 +48,9 @@ type ListInvoicesReturn = typeof ListInvoicesReturnSchema.Type
 export const listInvoices = get<
   ListInvoicesReturn,
   ListInvoicesParams
->(({ businessId, status, query, dueAtStart, dueAtEnd, sortBy, sortOrder, cursor, limit, showTotalCount }) => {
+>(({ businessId, showSalesReceipts, status, query, dueAtStart, dueAtEnd, sortBy, sortOrder, cursor, limit, showTotalCount }) => {
   const parameters = toDefinedSearchParameters({
+    showSalesReceipts,
     status,
     q: query,
     dueAtStart,
@@ -70,6 +72,7 @@ function keyLoader(
     access_token: accessToken,
     apiUrl,
     businessId,
+    showSalesReceipts,
     status,
     query,
     dueAtStart,
@@ -88,6 +91,7 @@ function keyLoader(
       accessToken,
       apiUrl,
       businessId,
+      showSalesReceipts,
       status,
       query,
       dueAtStart,
@@ -104,6 +108,7 @@ function keyLoader(
 
 export function useListInvoices({
   status,
+  showSalesReceipts,
   query,
   dueAtStart,
   dueAtEnd,
@@ -124,6 +129,7 @@ export function useListInvoices({
         ...auth,
         apiUrl,
         businessId,
+        showSalesReceipts,
         status,
         query,
         dueAtStart,
@@ -139,6 +145,7 @@ export function useListInvoices({
       apiUrl,
       businessId,
       cursor,
+      showSalesReceipts,
       status,
       query,
       dueAtStart,
@@ -153,6 +160,7 @@ export function useListInvoices({
       {
         params: {
           businessId,
+          showSalesReceipts,
           status,
           query,
           dueAtStart,

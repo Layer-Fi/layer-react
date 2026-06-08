@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
-import { type CustomerSchema, encodeCustomer } from '@schemas/customer'
-import { encodeVendor, type VendorSchema } from '@schemas/vendor'
+import { type CustomerSchema } from '@schemas/customer'
+import { type VendorSchema } from '@schemas/vendor'
 import { patch } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
@@ -111,20 +111,20 @@ export function useSetMetadataOnBankTransaction({
           return {
             ...bankTransaction,
             customer: customer
-              ? encodeCustomer({
+              ? {
                 ...customer,
                 _local: {
                   isOptimistic: true,
                 },
-              })
+              }
               : null,
             vendor: vendor
-              ? encodeVendor({
+              ? {
                 ...vendor,
                 _local: {
                   isOptimistic: true,
                 },
-              })
+              }
               : null,
           }
         }

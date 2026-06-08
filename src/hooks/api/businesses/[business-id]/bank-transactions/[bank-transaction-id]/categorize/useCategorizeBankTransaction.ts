@@ -1,9 +1,10 @@
 import { useCallback } from 'react'
+import { Schema } from 'effect'
 import { useSWRConfig } from 'swr'
 import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
 import useSWRMutation from 'swr/mutation'
 
-import type { BankTransaction } from '@internal-types/bankTransactions'
+import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 import { type CategoryUpdate, type CategoryUpdateEncoded, encodeCategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { put } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
@@ -12,7 +13,6 @@ import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { type GetBankTransactionsReturn } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { EXTERNAL_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/external-accounts/useListExternalAccounts'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
@@ -20,8 +20,12 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const CATEGORIZE_BANK_TRANSACTION_TAG = '#categorize-bank-transaction'
 
+const CategorizeBankTransactionResponseSchema = Schema.Struct({
+  data: BankTransactionSchema,
+})
+
 const categorizeBankTransaction = put<
-  { data: BankTransaction },
+  Record<string, unknown>,
   CategoryUpdateEncoded,
   {
     businessId: string
@@ -90,10 +94,12 @@ export function useCategorizeBankTransaction() {
         },
         body: encodeCategoryUpdate(rest),
       },
-    ).then(({ data }) => data),
+    )
+      .then(Schema.decodeUnknownPromise(CategorizeBankTransactionResponseSchema))
+      .then(({ data }) => data),
     {
       revalidate: false,
-      throwOnError: false,
+      throwOnError: true,
     },
   )
 
@@ -107,8 +113,7 @@ export function useCategorizeBankTransaction() {
 
       void mutate(key => withSWRKeyTags(
         key,
-        ({ tags }) => tags.includes(BANK_ACCOUNTS_TAG_KEY)
-          || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY),
+        ({ tags }) => tags.includes(BANK_ACCOUNTS_TAG_KEY),
       ))
 
       void forceReloadBackgroundBankTransactions(useBankTransactionsOptions)

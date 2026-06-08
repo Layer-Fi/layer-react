@@ -1,19 +1,27 @@
-import type { BankAccount } from '@internal-types/linkedAccounts'
+import type { BankAccount, ExternalAccountConnection } from '@schemas/bankAccounts/bankAccount'
+
+export function getAccountsNeedingConfirmation(bankAccounts: ReadonlyArray<BankAccount>): ExternalAccountConnection[] {
+  return bankAccounts.flatMap(ba =>
+    ba.externalAccounts.filter(
+      ({ notifications }) => notifications.some(({ type }) => type === 'CONFIRM_RELEVANT'),
+    ),
+  )
+}
 
 export function getBankAccountDisplayName(bankAccount: BankAccount): string {
-  return bankAccount.account_name
-    ?? bankAccount.external_accounts[0]?.external_account_name
+  return bankAccount.accountName
+    ?? bankAccount.externalAccounts[0]?.externalAccountName
     ?? 'Unknown Account'
 }
 
-export function getBankAccountInstitution(bankAccount: BankAccount): { name: string, logo: string | null } | null {
+export function getBankAccountInstitution(bankAccount: BankAccount): { name: string, logo: string | null | undefined } | null {
   return bankAccount.institution
-    ?? bankAccount.external_accounts[0]?.institution
+    ?? bankAccount.externalAccounts[0]?.institution
     ?? null
 }
 
 export function isBankAccountSyncing(bankAccount: BankAccount): boolean {
-  return bankAccount.external_accounts.some(ea => ea.is_syncing)
+  return bankAccount.externalAccounts.some(ea => ea.isSyncing)
 }
 
 export function isAnyBankAccountSyncing(bankAccounts: ReadonlyArray<BankAccount>): boolean {
@@ -21,6 +29,6 @@ export function isAnyBankAccountSyncing(bankAccounts: ReadonlyArray<BankAccount>
 }
 
 export function isAllExternalAccountsUserCreatedCustom(bankAccount: BankAccount): boolean {
-  return bankAccount.external_accounts.length > 0
-    && bankAccount.external_accounts.every(ea => ea.external_account_source === 'CUSTOM' && ea.user_created)
+  return bankAccount.externalAccounts.length > 0
+    && bankAccount.externalAccounts.every(ea => ea.externalAccountSource === 'CUSTOM' && ea.userCreated)
 }

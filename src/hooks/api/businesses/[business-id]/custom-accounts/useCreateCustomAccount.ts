@@ -8,7 +8,6 @@ import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
-import { EXTERNAL_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/external-accounts/useListExternalAccounts'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -84,8 +83,7 @@ export function useCreateCustomAccount() {
       void mutate(key => withSWRKeyTags(
         key,
         ({ tags }) => tags.includes(CUSTOM_ACCOUNTS_TAG_KEY)
-          || tags.includes(BANK_ACCOUNTS_TAG_KEY)
-          || tags.includes(EXTERNAL_ACCOUNTS_TAG_KEY),
+          || tags.includes(BANK_ACCOUNTS_TAG_KEY),
       ))
 
       return triggerResult

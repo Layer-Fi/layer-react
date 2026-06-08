@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import type { NestedCategorization } from '@schemas/categorization'
+import { getResolvedCategoryName } from '@utils/categories'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { ResolvedCategoryName } from '@components/CategorizationRules/ResolvedCategoryName'
 import { getCategorizationRuleAmountLabel, getCategorizationRuleCounterpartyLabel, getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
 import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
@@ -18,7 +18,7 @@ import './categorizationRulesMobileList.scss'
 type CategorizationRuleMobileListItemProps = {
   rule: CategorizationRule
   options: NestedCategorization[]
-  onEditPress: (rule: CategorizationRule) => void
+  onEditPress?: (rule: CategorizationRule) => void
   onDeletePress: (rule: CategorizationRule) => void
 }
 
@@ -32,41 +32,38 @@ const CategorizationRuleMobileListItem = ({
   const { formatCurrencyFromCents } = useIntlFormatter()
   const counterpartyLabel = getCategorizationRuleCounterpartyLabel(rule)
   const hasAmountFilter = rule.amountMinFilter != null || rule.amountMaxFilter != null
+  const categoryName = rule.category ? getResolvedCategoryName(rule.category, options) : undefined
+
   return (
     <HStack justify='space-between' align='center' gap='sm' className='Layer__CategorizationRulesMobileListItem'>
       <VStack gap='2xs' className='Layer__CategorizationRulesMobileListItem__Content'>
         <Span weight='bold' ellipsis>{counterpartyLabel}</Span>
-        <HStack gap='3xs' align='center'>
-          <Span size='sm' variant='subtle'>{t('common:label.direction', 'Direction:')}</Span>
-          <Span size='sm' variant='subtle'>{getCategorizationRuleDirectionLabel(rule.bankDirectionFilter, t)}</Span>
-        </HStack>
+        <Span size='sm' variant='subtle'>
+          {t('categorizationRules:label.direction_value', 'Direction: {{value}}', { value: getCategorizationRuleDirectionLabel(rule.bankDirectionFilter, t) })}
+        </Span>
         {hasAmountFilter && (
-          <HStack gap='3xs' align='center'>
-            <Span size='sm' variant='subtle'>{t('common:label.amount', 'Amount:')}</Span>
-            <Span size='sm' variant='subtle'>{getCategorizationRuleAmountLabel(rule, formatCurrencyFromCents, t)}</Span>
-          </HStack>
+          <Span size='sm' variant='subtle'>
+            {t('categorizationRules:label.amount_value', 'Amount: {{value}}', { value: getCategorizationRuleAmountLabel(rule, formatCurrencyFromCents, t) })}
+          </Span>
         )}
-        {rule.category && (
-          <HStack gap='3xs' align='center'>
-            <Span size='sm' variant='subtle'>{t('common:label.category', 'Category:')}</Span>
-            <ResolvedCategoryName
-              accountIdentifier={rule.category}
-              options={options}
-              slotProps={{ Span: { size: 'sm', variant: 'subtle' } }}
-            />
-          </HStack>
+        {categoryName && (
+          <Span size='sm' variant='subtle'>
+            {t('categorizationRules:label.category_value', 'Category: {{value}}', { value: categoryName })}
+          </Span>
         )}
       </VStack>
       <HStack gap='3xs' align='center'>
-        <Button
-          inset
-          icon
-          onPress={() => onEditPress(rule)}
-          aria-label={t('categorizationRules:action.edit_rule', 'Edit Rule')}
-          variant='ghost'
-        >
-          <Pencil size={16} />
-        </Button>
+        {onEditPress && (
+          <Button
+            inset
+            icon
+            onPress={() => onEditPress(rule)}
+            aria-label={t('categorizationRules:action.edit_rule', 'Edit Rule')}
+            variant='ghost'
+          >
+            <Pencil size={16} />
+          </Button>
+        )}
         <Button
           inset
           icon
@@ -87,7 +84,7 @@ export interface CategorizationRulesMobileListProps {
   isError: boolean
   paginationProps: TablePaginationProps
   options: NestedCategorization[]
-  onEditRule: (rule: CategorizationRule) => void
+  onEditRule?: (rule: CategorizationRule) => void
   onDeleteRule: (rule: CategorizationRule) => void
   slots: {
     EmptyState: React.FC

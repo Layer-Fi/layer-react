@@ -63,7 +63,7 @@ export const BankTransactionsTable = ({
   const showReceiptColumn =
   (showReceiptUploads
     && bankTransactions?.some(
-      transaction => transaction.document_ids?.length > 0,
+      transaction => transaction.documentIds?.length > 0,
     ))
     ?? false
 

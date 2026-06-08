@@ -3,7 +3,7 @@ import { startOfYear } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 import { useIntl } from 'react-intl'
 
-import { type BankAccount } from '@internal-types/linkedAccounts'
+import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { getActivationDate } from '@utils/business'
 import { toLocalizedCents } from '@utils/i18n/number/input'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
@@ -13,7 +13,7 @@ import {
   useBulkSetOpeningBalanceAndDate,
 } from '@hooks/legacy/useUpdateOpeningBalanceAndDate'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { OpeningBalanceModalContext } from '@contexts/OpeningBalanceModalContext/OpeningBalanceModalContext'
 import { Button } from '@ui/Button/Button'
 import { Modal } from '@ui/Modal/Modal'
 import { ModalActions, ModalContent, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
@@ -172,7 +172,7 @@ export function OpeningBalanceModal({
   const {
     accountsToAddOpeningBalanceInModal,
     setAccountsToAddOpeningBalanceInModal,
-  } = useContext(LinkedAccountsContext)
+  } = useContext(OpeningBalanceModalContext)
 
   const shouldShowModal = Boolean(accountsToAddOpeningBalanceInModal.length)
 

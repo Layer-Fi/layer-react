@@ -1,15 +1,15 @@
 import { useContext, useMemo } from 'react'
+import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { Direction } from '@internal-types/general'
 import { TableCellAlign } from '@internal-types/table'
+import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
 import { convertLedgerEntrySourceToLinkingMetadata, decodeLedgerEntrySource, type LedgerEntrySourceType } from '@schemas/generalLedger/ledgerEntrySource'
 import { humanizeEnum } from '@utils/format'
 import { entryNumber } from '@utils/journal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
-import XIcon from '@icons/X'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
@@ -381,11 +381,11 @@ export const LedgerAccountEntryDetails = ({
   const { totalDebit, totalCredit } = useMemo(() => {
     let totalDebit = 0
     let totalCredit = 0
-    entryData?.line_items?.forEach((item) => {
-      if (item.direction === Direction.CREDIT) {
+    entryData?.lineItems?.forEach((item) => {
+      if (item.direction === LedgerEntryDirection.Credit) {
         totalCredit += item.amount || 0
       }
-      else if (item.direction === Direction.DEBIT) {
+      else if (item.direction === LedgerEntryDirection.Debit) {
         totalDebit += item.amount || 0
       }
     })
@@ -398,14 +398,14 @@ export const LedgerAccountEntryDetails = ({
   }, [entryData?.source])
 
   const badgeOrInAppLink = useMemo(() => {
-    const badgeContent = ledgerEntrySource?.entityName ?? entryData?.entry_type
+    const badgeContent = ledgerEntrySource?.entityName ?? entryData?.entryType
     const defaultBadge = <Badge>{badgeContent}</Badge>
     if (!renderInAppLink || !ledgerEntrySource) {
       return defaultBadge
     }
     const linkingMetadata = convertLedgerEntrySourceToLinkingMetadata(ledgerEntrySource)
     return renderInAppLink(linkingMetadata) ?? defaultBadge
-  }, [renderInAppLink, entryData?.entry_type, ledgerEntrySource])
+  }, [renderInAppLink, entryData?.entryType, ledgerEntrySource])
 
   return (
     <div className='Layer__ledger-account__entry-details'>
@@ -435,7 +435,7 @@ export const LedgerAccountEntryDetails = ({
         titleClassName='Layer__hidden-lg Layer__hidden-xl'
         actions={(
           <Button
-            rightIcon={<XIcon />}
+            rightIcon={<X size={18} />}
             iconOnly={true}
             onClick={closeSelectedEntry}
             variant={ButtonVariant.secondary}
@@ -478,13 +478,13 @@ export const LedgerAccountEntryDetails = ({
           }
           isLoading={isLoadingEntry}
         >
-          {humanizeEnum(entryData?.entry_type ?? '')}
+          {humanizeEnum(entryData?.entryType ?? '')}
         </DetailsListItem>
         <DetailsListItem
           label={stringOverrides?.journalEntry?.details?.dateLabel || t('common:label.date', 'Date')}
           isLoading={isLoadingEntry}
         >
-          {entryData?.entry_at && <DateTime value={entryData?.entry_at} />}
+          {entryData?.entryAt && <DateTime valueAsDate={entryData?.entryAt} />}
         </DetailsListItem>
         <DetailsListItem
           label={
@@ -493,9 +493,9 @@ export const LedgerAccountEntryDetails = ({
           }
           isLoading={isLoadingEntry}
         >
-          {entryData?.date && <DateTime value={entryData?.date} />}
+          {entryData?.date && <DateTime valueAsDate={entryData?.date} />}
         </DetailsListItem>
-        {entryData?.reversal_id && (
+        {entryData?.reversalId && (
           <DetailsListItem
             label={
               stringOverrides?.journalEntry?.details?.reversalLabel
@@ -503,7 +503,7 @@ export const LedgerAccountEntryDetails = ({
             }
             isLoading={isLoadingEntry}
           >
-            {entryData?.reversal_id.substring(0, 5)}
+            {entryData?.reversalId.substring(0, 5)}
           </DetailsListItem>
         )}
       </DetailsList>
@@ -533,21 +533,21 @@ export const LedgerAccountEntryDetails = ({
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {entryData?.line_items?.map((item, index) => (
+                  {entryData?.lineItems?.map((item, index) => (
                     <TableRow
                       key={`ledger-line-item-${index}`}
                       rowKey={`ledger-line-item-${index}`}
                     >
                       <TableCell>{item.account?.name || ''}</TableCell>
                       <TableCell align={TableCellAlign.RIGHT}>
-                        {item.direction === Direction.DEBIT && (
+                        {item.direction === LedgerEntryDirection.Debit && (
                           <Badge variant={BadgeVariant.WARNING}>
                             {formatCurrencyFromCents(item.amount || 0)}
                           </Badge>
                         )}
                       </TableCell>
                       <TableCell align={TableCellAlign.RIGHT}>
-                        {item.direction === Direction.CREDIT && (
+                        {item.direction === LedgerEntryDirection.Credit && (
                           <Badge variant={BadgeVariant.SUCCESS}>
                             {formatCurrencyFromCents(item.amount || 0)}
                           </Badge>

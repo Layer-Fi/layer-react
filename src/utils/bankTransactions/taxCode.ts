@@ -4,15 +4,13 @@ import { isClassificationExclusion } from '@schemas/categorization'
 import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export const getBankTransactionTaxOptions = (bankTransaction?: BankTransaction): BankTransactionTaxOption[] => {
-  if (!bankTransaction?.tax_options) {
-    return []
-  }
+  if (!bankTransaction?.taxOptions) return []
 
-  return Object.values(bankTransaction.tax_options).flat()
+  return Object.values(bankTransaction.taxOptions).flat()
 }
 
 export const getDefaultTaxCodeForBankTransaction = (bankTransaction?: BankTransaction): string | null => {
-  const taxCode = bankTransaction?.tax_code
+  const taxCode = bankTransaction?.taxCode
   if (!taxCode) return null
 
   const isKnown = getBankTransactionTaxOptions(bankTransaction).some(option => option.code === taxCode)

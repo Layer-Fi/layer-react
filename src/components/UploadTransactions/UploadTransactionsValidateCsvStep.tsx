@@ -80,7 +80,7 @@ export function UploadTransactionsValidateCsvStep(
       customAccountId: selectedAccountId!,
     }).then((transactions) => {
       if (transactions) {
-        onUploadTransactionsSuccess?.(transactions)
+        onUploadTransactionsSuccess?.([...transactions])
         void next()
       }
     })

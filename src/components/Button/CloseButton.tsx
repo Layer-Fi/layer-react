@@ -1,7 +1,6 @@
 import { type ButtonHTMLAttributes } from 'react'
 import classNames from 'classnames'
-
-import CloseIcon from '@icons/CloseIcon'
+import { X } from 'lucide-react'
 
 type CloseButtonProps = {
   textOnly?: boolean
@@ -16,7 +15,7 @@ export const CloseButton = ({
 
   return (
     <button {...props} className={baseClassName}>
-      {textOnly ? 'Back' : <CloseIcon size={16} />}
+      {textOnly ? 'Back' : <X size={16} />}
     </button>
   )
 }

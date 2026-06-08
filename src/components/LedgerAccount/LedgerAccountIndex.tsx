@@ -81,9 +81,9 @@ export const LedgerAccount = ({
 
     const firstPageIndex = (currentPage - 1) * pageSize
     const lastPageIndex = firstPageIndex + pageSize
-    return rawData
-      ?.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
-      ?.slice(firstPageIndex, lastPageIndex)
+    return [...rawData]
+      .sort((a, b) => b.date.getTime() - a.date.getTime())
+      .slice(firstPageIndex, lastPageIndex)
   }, [rawData, currentPage, pageSize])
 
   const handlePageChange = (page: number) => {

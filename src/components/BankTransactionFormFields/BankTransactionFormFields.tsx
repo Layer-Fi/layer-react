@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { makeTag, type Tag } from '@schemas/tag'
+import { makeTagFromTransactionTag, type Tag } from '@schemas/tag'
 import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
 import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
@@ -15,7 +15,7 @@ import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimen
 type BankTransactionFormFieldProps = {
   bankTransaction: Pick<
     BankTransaction,
-    'id' | 'transaction_tags' | 'customer' | 'vendor'
+    'id' | 'transactionTags' | 'customer' | 'vendor'
   >
   showDescriptions?: boolean
   hideTags?: boolean
@@ -40,18 +40,8 @@ export function BankTransactionFormFields({
   const { trigger: removeTagFromBankTransaction } = useRemoveTagFromBankTransaction({ bankTransactionId: bankTransaction.id })
 
   const selectedTags = useMemo(
-    () => bankTransaction.transaction_tags.map(({ id, key, value, dimension_display_name, value_display_name, archived_at, _local }) => makeTag({
-      id,
-      key,
-      value,
-      dimensionDisplayName: dimension_display_name,
-      valueDisplayName: value_display_name,
-      archivedAt: archived_at,
-      _local: {
-        isOptimistic: _local?.isOptimistic ?? false,
-      },
-    })),
-    [bankTransaction.transaction_tags],
+    () => bankTransaction.transactionTags.map(makeTagFromTransactionTag),
+    [bankTransaction.transactionTags],
   )
 
   const handleTagsChange = (newTags: readonly Tag[]) => {
