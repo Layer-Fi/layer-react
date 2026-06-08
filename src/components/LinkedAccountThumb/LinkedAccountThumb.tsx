@@ -45,27 +45,38 @@ export const LinkedAccountThumb = ({
   const institutionName = institution?.name
   const institutionLogo = institution?.logo
 
+  const isFilterInteractive = isFilterSelectable && onToggleFilter != null
+
   const linkedAccountThumbClassName = classNames(
     'Layer__linked-account-thumb',
     asWidget && '--as-widget',
     isSyncing && '--is-syncing',
     isSyncing && 'skeleton-loader',
     showLedgerBalance && '--show-ledger-balance',
-    isFilterSelectable && '--selectable',
+    isFilterInteractive && '--selectable',
     isFilterSelected && '--selected',
   )
 
-  const filterToggleProps = isFilterSelectable
+  const isEventFromNestedControl = (event: React.SyntheticEvent) => {
+    const target = event.target as Element | null
+    const interactive = target?.closest('button, a, input, select, textarea, [role="button"], [role="menuitem"]')
+    return interactive != null && interactive !== event.currentTarget
+  }
+
+  const filterToggleProps = isFilterInteractive
     ? {
       'role': 'button',
       'tabIndex': 0,
       'aria-pressed': isFilterSelected,
-      'onClick': onToggleFilter,
+      'onClick': (event: React.MouseEvent<HTMLDivElement>) => {
+        if (isEventFromNestedControl(event)) return
+        onToggleFilter()
+      },
       'onKeyDown': (event: React.KeyboardEvent<HTMLDivElement>) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault()
-          onToggleFilter?.()
-        }
+        if (event.key !== 'Enter' && event.key !== ' ') return
+        if (isEventFromNestedControl(event)) return
+        event.preventDefault()
+        onToggleFilter()
       },
     }
     : {}
