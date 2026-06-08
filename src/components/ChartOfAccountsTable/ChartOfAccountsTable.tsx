@@ -1,6 +1,6 @@
 import { type ReactNode, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react'
 import { type Row } from '@tanstack/react-table'
-import { List, Trash2 } from 'lucide-react'
+import { List, Pen, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -13,7 +13,6 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
-import Edit2 from '@icons/Edit2'
 import { Button as UIButton } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -243,7 +242,7 @@ export const ChartOfAccountsTable = ({
               </Button>
               <Button
                 variant={ButtonVariant.secondary}
-                rightIcon={<Edit2 size={14} />}
+                rightIcon={<Pen size={14} />}
                 iconOnly
                 disabled={isNonEditable}
                 onClick={e => onClickEdit(account, e)}

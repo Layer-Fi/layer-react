@@ -1,6 +1,7 @@
+import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { type LedgerAccountsEntry } from '@internal-types/ledgerAccounts'
+import { LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
 import { get } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
@@ -10,7 +11,9 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const LEDGER_ACCOUNTS_ENTRY_TAG_KEY = '#ledger-accounts-entry'
 
-const getLedgerAccountsEntry = get<{ data: LedgerAccountsEntry }>(
+const LedgerAccountsEntryResponseSchema = Schema.Struct({ data: LedgerEntrySchema })
+
+const getLedgerAccountsEntry = get<typeof LedgerAccountsEntryResponseSchema.Encoded>(
   ({ businessId, entryId }) =>
     `/v1/businesses/${businessId}/ledger/entries/${entryId}`,
 )
@@ -53,7 +56,7 @@ export function useLedgerAccountsEntry({ entryId }: { entryId?: string }) {
   ({ accessToken, apiUrl, businessId, entryId }) =>
     getLedgerAccountsEntry(apiUrl, accessToken, {
       params: { businessId, entryId },
-    })(),
+    })().then(Schema.decodeUnknownPromise(LedgerAccountsEntryResponseSchema)),
   )
 
   return new SWRQueryResult(swrResponse)

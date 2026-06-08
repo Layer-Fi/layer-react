@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
+import { Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import CheckIcon from '@icons/Check'
 import type {
   ComboBoxOption,
   OptionsOrGroups,
@@ -67,7 +67,7 @@ export const MobileSelectionDrawerList = <T extends ComboBoxOption>({
     return (
       <HStack fluid pi='xs' align='center' justify='space-between' gap='sm'>
         <Span size='sm'>{option.label}</Span>
-        <CheckIcon
+        <Check
           size={16}
           className='Layer__MobileSelectionDrawerList__Check'
           data-selected={isSelected}

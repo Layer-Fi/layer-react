@@ -27,10 +27,17 @@
     "no_accounts_connected": "No accounts connected"
   },
   "error": {
+    "break_connection": "We couldn’t reset this connection. Please try again.",
+    "confirm_account": "We couldn’t confirm your account. Please try again.",
     "confirm_accounts_try_again_later": "An error occurred while confirming accounts. You will have an opportunity to try again later.",
+    "connect_account": "We couldn’t connect your account. Please try again.",
     "delete_account_check_connection": "Deletion failed. Please check your connection and try again in a few seconds.",
+    "exclude_account": "We couldn’t exclude your account. Please try again.",
     "load_accounts": "Failed to load accounts",
+    "remove_connection": "We couldn’t remove this connection. Please try again.",
+    "repair_connection": "We couldn’t repair the Plaid connection with your account. Please try again.",
     "save_data_try_again_later": "An error occurred while saving data. You will have an opportunity to try again later.",
+    "start_connection": "We couldn’t initiate the Plaid connection flow. Please try again.",
     "unlink_failed": "Unlink failed. Please check your connection and try again in a few seconds."
   },
   "label": {
@@ -79,5 +86,8 @@
   "state": {
     "syncing_account_data": "Syncing account data",
     "syncing_historical_account_data": "Syncing historical account data"
+  },
+  "tooltip": {
+    "cannot_link_demo_business": "Account linking is not available for demo businesses. This is a sample business that uses example data instead of real bank connections."
   }
 }

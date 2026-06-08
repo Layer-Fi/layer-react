@@ -1,11 +1,10 @@
 import { useCallback, useContext, useMemo, useState } from 'react'
-import { AlertCircle, CheckIcon } from 'lucide-react'
+import { AlertCircle, CheckIcon, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { translationKey } from '@utils/i18n/translationKey'
 import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
 import QuickbooksIcon from '@icons/QuickbooksIcon'
-import RefreshCcw from '@icons/RefreshCcw'
 import { HStack } from '@ui/Stack/Stack'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
 import { BadgeSize } from '@components/Badge/Badge'

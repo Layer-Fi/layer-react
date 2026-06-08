@@ -263,12 +263,3 @@ export const UpdateCategorizationRulesSuggestionSchema = Schema.Union(
 )
 
 export type UpdateCategorizationRulesSuggestion = typeof UpdateCategorizationRulesSuggestionSchema.Type
-
-export const decodeRulesSuggestion = (data: unknown): UpdateCategorizationRulesSuggestion | null => {
-  const result = Schema.decodeUnknownEither(UpdateCategorizationRulesSuggestionSchema)(data)
-  if (result._tag === 'Left') {
-    console.warn('Failed to decode categorization rules update suggestion:', result.left)
-    return null
-  }
-  return result.right
-}

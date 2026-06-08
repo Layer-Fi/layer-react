@@ -5,6 +5,7 @@ import {
   type Row,
   useReactTable,
 } from '@tanstack/react-table'
+import { Button as ReactAriaButton } from 'react-aria-components/Button'
 
 import { HStack } from '@ui/Stack/Stack'
 import {
@@ -15,10 +16,13 @@ import {
 } from '@components/DataTable/columnUtils'
 import {
   type BaseDataTableProps,
+  type ClickableRowProps,
   DataTable,
 } from '@components/DataTable/DataTable'
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { ExpandButton } from '@components/ExpandButton/ExpandButton'
+
+import './expandableDataTable.scss'
 
 const INDENT_SIZE_XS = 10
 const INDENT_SIZE_SM = 20
@@ -38,6 +42,14 @@ type ExpandableDataTableProps<TData> = BaseDataTableProps & {
   getSubRows: (row: TData) => TData[] | undefined
   getRowId: (row: TData) => string
   indentSize?: ExpandableDataTableIndentSize
+  /**
+   * Overrides the default row-click behavior (toggle expansion). When provided,
+   * the expand/collapse chevron remains independently interactive, so a consumer
+   * can make row-click do something else (e.g. select the row) while the chevron
+   * still expands/collapses.
+   */
+  withClickableRow?: ClickableRowProps<TData>
+  isRowSelected?: (row: Row<TData>) => boolean
 }
 
 const EMPTY_ARRAY: never[] = []
@@ -53,6 +65,8 @@ export function ExpandableDataTable<TData extends object>({
   getSubRows,
   getRowId,
   indentSize = 'sm',
+  withClickableRow: withClickableRowOverride,
+  isRowSelected,
 }: ExpandableDataTableProps<TData>) {
   const { expanded, setExpanded } = useContext(ExpandableDataTableContext)
 
@@ -74,7 +88,18 @@ export function ExpandableDataTable<TData extends object>({
         return (
           <div style={rowIndentStyle}>
             <HStack align='center' gap='xs'>
-              <ExpandButton isExpanded={row.getIsExpanded()} />
+              {/*
+                React Aria does not fire a Row's `onAction` when an interactive
+                element inside it is pressed, so wrapping the chevron in a Button
+                lets it toggle expansion independently of whatever row-click does.
+              */}
+              <ReactAriaButton
+                className='Layer__ExpandableDataTable__ExpandToggle'
+                aria-label={row.getIsExpanded() ? 'Collapse row' : 'Expand row'}
+                onPress={() => row.toggleExpanded()}
+              >
+                <ExpandButton isExpanded={row.getIsExpanded()} />
+              </ReactAriaButton>
               {cellRenderer(row)}
             </HStack>
           </div>
@@ -106,7 +131,7 @@ export function ExpandableDataTable<TData extends object>({
 
   const { rows } = table.getExpandedRowModel()
 
-  const dependencies = useMemo(() => [expanded], [expanded])
+  const dependencies = useMemo(() => [expanded, isRowSelected], [expanded, isRowSelected])
 
   const headerGroups = table.getHeaderGroups()
   const numColumns = table.getVisibleLeafColumns().length
@@ -119,10 +144,12 @@ export function ExpandableDataTable<TData extends object>({
     row.toggleExpanded()
   }, [])
 
-  const withClickableRow = useMemo(() => ({
+  const defaultClickableRow = useMemo(() => ({
     onRowClick,
     isRowClickable,
   }), [onRowClick, isRowClickable])
+
+  const withClickableRow = withClickableRowOverride ?? defaultClickableRow
 
   return (
     <DataTable
@@ -136,6 +163,7 @@ export function ExpandableDataTable<TData extends object>({
       dependencies={dependencies}
       headerGroups={headerGroups}
       withClickableRow={withClickableRow}
+      isRowSelected={isRowSelected}
     />
   )
 }

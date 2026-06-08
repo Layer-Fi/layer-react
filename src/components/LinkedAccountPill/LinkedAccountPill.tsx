@@ -1,7 +1,7 @@
 import { useState } from 'react'
+import { CircleAlert } from 'lucide-react'
 import { MenuTrigger, Popover } from 'react-aria-components/Menu'
 
-import AlertCircle from '@icons/AlertCircle'
 import { Menu, MenuItem } from '@ui/Menu/Menu'
 import { Pill } from '@ui/Pill/Pill'
 import { Span } from '@ui/Typography/Text'
@@ -23,7 +23,7 @@ export function LinkedAccountPill({ label, items }: LinkedAccountPillProps) {
         status='error'
         onPress={() => setIsOpen(true)}
       >
-        <AlertCircle size={14} />
+        <CircleAlert size={14} />
         {label}
       </Pill>
       <Popover

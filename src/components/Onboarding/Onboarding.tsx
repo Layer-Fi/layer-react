@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 
 import { type OnboardingStep } from '@internal-types/layerContext'
+import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
 import { AccountConfirmationStoreProvider } from '@providers/AccountConfirmationStoreProvider'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -27,11 +28,12 @@ const EXPANDED_STYLE = {
 export interface OnboardingProps {
   onTransactionsToReviewClick?: () => void
   onboardingStepOverride?: OnboardingStep
+  plaidHostedLinkConfig?: PlaidHostedLinkConfig
 }
 
-export const Onboarding = (props: OnboardingProps) => (
+export const Onboarding = ({ plaidHostedLinkConfig, ...props }: OnboardingProps) => (
   <AccountConfirmationStoreProvider>
-    <LinkedAccountsProvider>
+    <LinkedAccountsProvider plaidHostedLinkConfig={plaidHostedLinkConfig}>
       <OnboardingContent {...props} />
     </LinkedAccountsProvider>
   </AccountConfirmationStoreProvider>

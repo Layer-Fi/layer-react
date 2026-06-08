@@ -1,6 +1,6 @@
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { type CategorizationEncoded, isSplitCategorizationEncoded } from '@schemas/categorization'
+import { type Categorization, isSplitCategorization } from '@schemas/categorization'
 import { isTransferMatch } from '@utils/bankTransactions/shared'
 import { BankTransactionsBaseSelectedValue, type BankTransactionsBaseSelectedValueProps } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
 
@@ -15,23 +15,23 @@ type BankTransactionsCategorizedSelectedValueProps = {
   }
 }
 
-const extractDescriptionForSplit = (category: CategorizationEncoded | null) => {
-  if (!category || !isSplitCategorizationEncoded(category)) {
+const extractDescriptionForSplit = (category: Categorization | null | undefined) => {
+  if (!category || !isSplitCategorization(category)) {
     return ''
   }
 
-  return category.entries.map(c => c.category.display_name).join(', ')
+  return category.entries.map(c => c.category.displayName).join(', ')
 }
 
 const normalizeFromBankTransaction = (bankTransaction: BankTransaction): BankTransactionsBaseSelectedValueProps => {
-  if (bankTransaction.categorization_status === CategorizationStatus.MATCHED && bankTransaction.match) {
+  if (bankTransaction.categorizationStatus === CategorizationStatus.MATCHED && bankTransaction.match) {
     return {
       type: isTransferMatch(bankTransaction) ? 'transfer' : 'match',
       label: bankTransaction.match?.details?.description ?? '',
     }
   }
 
-  if (bankTransaction.categorization_status === CategorizationStatus.SPLIT) {
+  if (bankTransaction.categorizationStatus === CategorizationStatus.SPLIT) {
     return {
       type: 'split',
       label: extractDescriptionForSplit(bankTransaction.category),
@@ -40,7 +40,7 @@ const normalizeFromBankTransaction = (bankTransaction: BankTransaction): BankTra
 
   return {
     type: 'category',
-    label: bankTransaction.category?.display_name ?? '',
+    label: bankTransaction.category?.displayName ?? '',
   }
 }
 

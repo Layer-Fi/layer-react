@@ -1,10 +1,10 @@
 import { BigDecimal as BD } from 'effect'
+import { Check } from 'lucide-react'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { convertBigIntCentsToBigDecimal, convertDecimalToPercent, formatBigDecimalToString, safeDivide } from '@utils/bigDecimalUtils'
 import { useInvoiceSummaryStats } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import Check from '@icons/Check'
 import { Meter } from '@ui/Meter/Meter'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'

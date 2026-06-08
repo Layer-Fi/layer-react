@@ -6,6 +6,7 @@ import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/
 import { ALL_OPTION, type InvoiceStatusOption } from '@components/Invoices/InvoiceTable/InvoiceTable'
 
 export type InvoiceTableFilters = {
+  showSalesReceipts: boolean
   status: InvoiceStatusOption
   query: string
 }
@@ -55,7 +56,7 @@ type InvoicesRouteStoreShape = {
 const InvoicesRouteStoreContext = createContext(
   createStore<InvoicesRouteStoreShape>(() => ({
     routeState: { route: InvoiceRoute.Table },
-    tableFilters: { status: ALL_OPTION, query: '' },
+    tableFilters: { status: ALL_OPTION, query: '', showSalesReceipts: false },
     setTableFilters: () => {},
     navigate: {
       toCreateInvoice: () => {},
@@ -111,7 +112,7 @@ export function InvoicesRouteStoreProvider(props: PropsWithChildren) {
   const [store] = useState(() =>
     createStore<InvoicesRouteStoreShape>(set => ({
       routeState: { route: InvoiceRoute.Table },
-      tableFilters: { status: ALL_OPTION, query: '' },
+      tableFilters: { status: ALL_OPTION, query: '', showSalesReceipts: false },
       setTableFilters: (patchFilters: Partial<InvoiceTableFilters>) => {
         set(state => ({
           tableFilters: {

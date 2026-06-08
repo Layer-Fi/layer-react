@@ -1,22 +1,22 @@
-import type { RawTask } from '@internal-types/tasks'
-import AlertCircle from '@icons/AlertCircle'
-import Check from '@icons/Check'
+import { Check, CircleAlert } from 'lucide-react'
+
+import { type BusinessTask, BusinessTaskStatus } from '@schemas/businessTasks/businessTask'
 
 const STATUS_TO_ICON_MAP = {
-  TODO: {
-    icon: <AlertCircle size={12} />,
+  [BusinessTaskStatus.Todo]: {
+    icon: <CircleAlert size={12} />,
   },
-  USER_MARKED_COMPLETED: {
+  [BusinessTaskStatus.UserMarkedCompleted]: {
     icon: <Check size={12} />,
   },
-  COMPLETED: {
+  [BusinessTaskStatus.Completed]: {
     icon: null,
   },
-  ARCHIVED: {
+  [BusinessTaskStatus.Archived]: {
     icon: null,
   },
 } as const
 
-export function getIconForTask(task: Pick<RawTask, 'status'>) {
+export function getIconForTask(task: Pick<BusinessTask, 'status'>) {
   return STATUS_TO_ICON_MAP[task.status].icon
 }

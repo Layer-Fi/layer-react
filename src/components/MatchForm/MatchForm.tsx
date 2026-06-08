@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
-import { convertMatchDetailsToLinkingMetadata, decodeMatchDetails } from '@schemas/bankTransactions/match'
+import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
@@ -32,10 +32,7 @@ export const MatchForm = ({
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const { renderInAppLink } = useInAppLinkContext()
 
-  const {
-    suggested_matches: suggestedMatches = [],
-    match,
-  } = bankTransaction
+  const { suggestedMatches = [], match } = bankTransaction
 
   const effectiveSuggestedMatches = isCategorizationEnabled
     ? suggestedMatches
@@ -59,8 +56,11 @@ export const MatchForm = ({
         {match && <div className='Layer__MatchForm__Table__status' />}
       </div>
       {effectiveSuggestedMatches.map((suggestedMatch) => {
-        const matchDetails = suggestedMatch.details ? decodeMatchDetails(suggestedMatch.details) : undefined
-        const inAppLink = renderInAppLink && matchDetails ? renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails)) : null
+        const matchDetails = suggestedMatch.details
+        const inAppLink = renderInAppLink && matchDetails
+          ? renderInAppLink(convertMatchDetailsToLinkingMetadata(matchDetails))
+          : null
+
         return (
           <div
             key={suggestedMatch.id}

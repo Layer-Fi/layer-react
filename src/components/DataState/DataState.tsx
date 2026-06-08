@@ -1,12 +1,9 @@
 import { type ReactNode } from 'react'
 import classNames from 'classnames'
+import { CircleCheckBig, Loader, OctagonAlert, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import AlertOctagon from '@icons/AlertOctagon'
-import CheckCircle from '@icons/CheckCircle'
-import Loader from '@icons/Loader'
-import RefreshCcw from '@icons/RefreshCcw'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
@@ -37,25 +34,25 @@ const getIcon = (status: DataStateStatus, icon?: ReactNode) => {
     case DataStateStatus.failed:
       return (
         <span className='Layer__data-state__icon Layer__data-state__icon--error'>
-          {icon ?? <AlertOctagon size={12} />}
+          {icon ?? <OctagonAlert size={12} />}
         </span>
       )
     case DataStateStatus.info:
       return (
         <span className='Layer__data-state__icon Layer__data-state__icon--neutral'>
-          {icon ?? <AlertOctagon size={12} />}
+          {icon ?? <OctagonAlert size={12} />}
         </span>
       )
     case DataStateStatus.success:
       return (
         <span className='Layer__data-state__icon Layer__data-state__icon--success'>
-          {icon ?? <CheckCircle size={12} />}
+          {icon ?? <CircleCheckBig size={12} />}
         </span>
       )
     case DataStateStatus.allDone:
       return (
         <span className='Layer__data-state__icon Layer__data-state__icon--neutral'>
-          {icon ?? <CheckCircle size={12} />}
+          {icon ?? <CircleCheckBig size={12} />}
         </span>
       )
     default:

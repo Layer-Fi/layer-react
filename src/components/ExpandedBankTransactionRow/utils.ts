@@ -1,12 +1,10 @@
-import { Schema } from 'effect/index'
 import type { TFunction } from 'i18next'
 import { uniqBy } from 'lodash-es'
 
 import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
-import { type SplitCategorizationEntryEncoded } from '@schemas/categorization'
-import { isSplitCategorizationEncoded } from '@schemas/categorization'
-import { decodeCustomerVendor } from '@schemas/customerVendor'
-import { makeTagFromTransactionTag, TransactionTagSchema } from '@schemas/tag'
+import { isSplitCategorization } from '@schemas/categorization'
+import { makeCustomerVendor } from '@schemas/customerVendor'
+import { makeTagFromTransactionTag } from '@schemas/tag'
 import { toLocalizedCents } from '@utils/i18n/number/input'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
@@ -98,20 +96,8 @@ export const calculateUpdatedAmounts = (
   return [...initialRowSplits]
 }
 
-export const getCustomerVendorForSplitEntry = (splitEntry: SplitCategorizationEntryEncoded) => {
-  return splitEntry.customer
-    ? decodeCustomerVendor({ ...splitEntry.customer, customerVendorType: 'CUSTOMER' })
-    : splitEntry.vendor
-      ? decodeCustomerVendor({ ...splitEntry.vendor, customerVendorType: 'VENDOR' })
-      : null
-}
-
 export const getCustomerVendorForBankTransaction = (bankTransaction: BankTransaction) => {
-  return bankTransaction.customer
-    ? decodeCustomerVendor({ ...bankTransaction.customer, customerVendorType: 'CUSTOMER' })
-    : bankTransaction.vendor
-      ? decodeCustomerVendor({ ...bankTransaction.vendor, customerVendorType: 'VENDOR' })
-      : null
+  return makeCustomerVendor(bankTransaction.customer, bankTransaction.vendor)
 }
 
 export const getLocalSplitStateForExpandedTransaction = (
@@ -124,7 +110,7 @@ export const getLocalSplitStateForExpandedTransaction = (
     coercedSelectedCategory = null
   }
 
-  else if (isApiCategorizationAsOption(selectedCategory) && isSplitCategorizationEncoded(selectedCategory.original)) {
+  else if (isApiCategorizationAsOption(selectedCategory) && isSplitCategorization(selectedCategory.original)) {
     coercedSelectedCategory = convertApiCategorizationToCategoryOrSplitAsOption(selectedCategory.original)
   }
 
@@ -144,8 +130,8 @@ export const getLocalSplitStateForExpandedTransaction = (
   return [{
     amount: bankTransaction.amount,
     category: coercedSelectedCategory ?? null,
-    taxCode: selectedTaxCode ?? bankTransaction.tax_code ?? null,
-    tags: bankTransaction.transaction_tags.map(tag => makeTagFromTransactionTag(Schema.decodeSync(TransactionTagSchema)(tag))),
+    taxCode: selectedTaxCode ?? bankTransaction.taxCode ?? null,
+    tags: bankTransaction.transactionTags.map(tag => makeTagFromTransactionTag(tag)),
     customerVendor: getCustomerVendorForBankTransaction(bankTransaction),
   }]
 }

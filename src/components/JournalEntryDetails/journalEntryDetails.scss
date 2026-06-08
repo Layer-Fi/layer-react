@@ -1,0 +1,42 @@
+.Layer__journal__entry-details__line-items {
+  padding: var(--spacing-md);
+
+  .Layer__table .Layer__table-row.Layer__table-row--variant-summation {
+    background: var(--color-base-0);
+  }
+}
+
+@container (max-width: 1024px) {
+  .Layer__journal__debit-credit-col {
+    width: 25%;
+  }
+}
+
+@container (max-width: 499px) {
+  .Layer__journal__entry-details__line-items {
+    padding-top: 0;
+    padding-right: 0;
+    padding-left: 0;
+
+    .Layer__card {
+      border-radius: 0;
+      box-shadow: none;
+    }
+  }
+}
+
+.Layer__journal__entry-details__reverse-btn-container {
+  padding: var(--spacing-sm) 0;
+
+  .Layer__btn--disabled {
+    cursor: not-allowed;
+  }
+
+  .Layer__btn {
+    min-width: 150px;
+
+    .Layer__btn-icon:not(.Layer__anim--rotating) {
+      color: var(--color-danger);
+    }
+  }
+}

@@ -1,8 +1,7 @@
 import { type ZonedDateTime } from '@internationalized/date'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import type { View } from '@internal-types/general'
-import ChevronLeft from '@icons/ChevronLeft'
-import ChevronRight from '@icons/ChevronRight'
 import { Button } from '@ui/Button/Button'
 import { Calendar, CalendarCell, CalendarGrid, CalendarGridBody, CalendarGridHeader, CalendarHeaderCell } from '@ui/Calendar/Calendar'
 import { HStack } from '@ui/Stack/Stack'

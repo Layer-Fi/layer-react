@@ -1,8 +1,8 @@
 import { useCallback, useId, useMemo } from 'react'
 
-import { getLeafCategories } from '@internal-types/categories'
 import { CategoryAsOption } from '@internal-types/categorizationOption'
 import { type CategoriesListMode, type Classification, ClassificationEquivalence } from '@schemas/categorization'
+import { getLeafCategories } from '@utils/categories'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'

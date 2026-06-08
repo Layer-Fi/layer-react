@@ -1,4 +1,5 @@
 import type { TFunction } from 'i18next'
+import { CircleAlert, CircleCheckBig, File } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
@@ -6,8 +7,6 @@ import { tPlural } from '@utils/i18n/plural'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { getDueDifference } from '@utils/time/timeUtils'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import AlertCircle from '@icons/AlertCircle'
-import CheckCircle from '@icons/CheckCircle'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
@@ -22,6 +21,12 @@ const getDueStatusConfig = (
   const iconSize = inline ? 10 : 12
 
   switch (invoice.status) {
+    case InvoiceStatus.Draft: {
+      return {
+        text: t('invoices:state.draft', 'Draft'),
+        badge: <Badge variant={BadgeVariant.NEUTRAL} size={badgeSize} icon={<File size={iconSize} />} iconOnly />,
+      }
+    }
     case InvoiceStatus.WrittenOff: {
       return { text: t('invoices:state.written_off', 'Written Off') }
     }
@@ -34,19 +39,19 @@ const getDueStatusConfig = (
     case InvoiceStatus.Paid: {
       return {
         text: t('invoices:state.paid', 'Paid'),
-        badge: <Badge variant={BadgeVariant.SUCCESS} size={badgeSize} icon={<CheckCircle size={iconSize} />} iconOnly />,
+        badge: <Badge variant={BadgeVariant.SUCCESS} size={badgeSize} icon={<CircleCheckBig size={iconSize} />} iconOnly />,
       }
     }
     case InvoiceStatus.Voided: {
       return { text: t('invoices:state.voided', 'Voided') }
     }
-    case InvoiceStatus.Sent:
+    case InvoiceStatus.Saved:
     case InvoiceStatus.PartiallyPaid: {
       if (invoice.dueAt === null) {
         return {
           text: invoice.status === InvoiceStatus.PartiallyPaid
             ? t('invoices:state.partially_paid', 'Partially Paid')
-            : t('invoices:state.sent', 'Sent'),
+            : t('invoices:state.saved', 'Saved'),
         }
       }
 
@@ -67,13 +72,13 @@ const getDueStatusConfig = (
             one: 'Due {{displayCount}} day ago',
             other: 'Due {{displayCount}} days ago',
           }),
-          badge: <Badge variant={BadgeVariant.WARNING} size={badgeSize} icon={<AlertCircle size={iconSize} />} iconOnly />,
+          badge: <Badge variant={BadgeVariant.WARNING} size={badgeSize} icon={<CircleAlert size={iconSize} />} iconOnly />,
         }
       }
 
       const daysUntilDue = Math.abs(dueDifference)
       return {
-        text: t('invoices:state.sent', 'Sent'),
+        text: t('invoices:state.saved', 'Saved'),
         subText: tPlural(t, 'invoices:state.due_in_count_days', {
           count: daysUntilDue,
           displayCount: formatNumber(daysUntilDue),

@@ -11,6 +11,8 @@ import { Container } from '@components/Container/Container'
 import { JournalEntryDrawer } from '@components/Journal/JournalEntryDrawer/JournalEntryDrawer'
 import { type JournalTableStringOverrides, JournalTableWithPanel } from '@components/JournalTable/JournalTableWithPanel'
 
+import './journal.scss'
+
 export interface JournalStringOverrides {
   journalTable?: JournalTableStringOverrides
 }

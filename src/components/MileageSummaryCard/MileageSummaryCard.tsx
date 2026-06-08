@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react'
+import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { useMileageSummary } from '@hooks/api/businesses/[business-id]/mileage/summary/useMileageSummary'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import ArrowRightCircleAlt from '@icons/ArrowRightCircleAlt'
-import Plus from '@icons/Plus'
+import ArrowRightCircleSubtle from '@icons/ArrowRightCircleSubtle'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -106,7 +106,7 @@ export const MileageSummaryCard = () => {
         {/* Header */}
         <HStack align='center' className='Layer__MileageSummaryCard__Panel-header Layer__MileageSummaryCard__Panel-left'>
           <Span size='lg'>{t('mileageTracking:label.miles_month', 'Miles this month')}</Span>
-          <ArrowRightCircleAlt size={24} className='Layer__MileageSummaryCard__Panel-header-arrow-icon' />
+          <ArrowRightCircleSubtle size={24} className='Layer__MileageSummaryCard__Panel-header-arrow-icon' />
         </HStack>
         <HStack align='center' className='Layer__MileageSummaryCard__Panel-header'>
           <HStack gap='xs' className='Layer__MileageSummaryCard__Panel-header-content'>

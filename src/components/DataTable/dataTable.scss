@@ -10,3 +10,22 @@
 .Layer__DataTable__ClickableRow {
   cursor: pointer;
 }
+
+.Layer__DataTable__SelectedRow {
+  background: var(--color-base-100);
+
+  .Layer__UI__Table-Cell:first-child {
+    position: relative;
+
+    &::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      height: 100%;
+      width: 4px;
+      background: var(--color-base-400);
+      content: '';
+    }
+  }
+}

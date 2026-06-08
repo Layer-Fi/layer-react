@@ -1,12 +1,11 @@
 import { useEffect, useMemo } from 'react'
 import { endOfDay } from 'date-fns'
+import { CircleCheckBig, Landmark } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type BankAccount } from '@internal-types/linkedAccounts'
+import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/bankAccount'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import CheckCircle from '@icons/CheckCircle'
-import InstitutionIcon from '@icons/InstitutionIcon'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { DatePicker } from '@components/DatePicker/DatePicker'
 import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
@@ -94,7 +93,7 @@ export const AccountFormBox = ({
             />
           )
           : (
-            <InstitutionIcon />
+            <Landmark size={18} />
           )}
       </div>
       <div className={`${CLASS_NAME}__details-col`}>
@@ -160,7 +159,7 @@ export const AccountFormBox = ({
         </div>
       )}
       <div className={`${CLASS_NAME}__success-banner`}>
-        <CheckCircle size={36} />
+        <CircleCheckBig size={36} />
       </div>
     </div>
   )

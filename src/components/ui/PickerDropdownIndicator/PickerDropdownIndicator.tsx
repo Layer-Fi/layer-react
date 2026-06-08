@@ -1,6 +1,5 @@
+import { ChevronDown } from 'lucide-react'
 import { Button } from 'react-aria-components/Button'
-
-import ChevronDown from '@icons/ChevronDown'
 
 import './pickerDropdownIndicator.scss'
 

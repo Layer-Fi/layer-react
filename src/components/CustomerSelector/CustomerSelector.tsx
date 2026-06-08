@@ -1,6 +1,5 @@
 import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
-import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type Customer } from '@schemas/customer'
@@ -57,11 +56,6 @@ type CustomerSelectorProps = CustomerSelectorBaseProps & (
   | { isCreatable: true, onCreateCustomer: (name: string) => void }
   | { isCreatable?: false, onCreateCustomer?: (name: string) => void }
 )
-
-const formatCreateLabel = (inputValue: string, t: TFunction) =>
-  inputValue
-    ? t('customerVendor:action.create_customer_input_value', 'Create customer "{{inputValue}}"', { inputValue })
-    : t('customerVendor:action.create_new_customer', 'Create new customer')
 
 export function CustomerSelector({
   selectedCustomer,
@@ -171,13 +165,15 @@ export function CustomerSelector({
   const isLoadingWithoutFallback = isLoading && !data
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
+  const slots = useMemo(() => ({ EmptyMessage, ErrorMessage }), [EmptyMessage, ErrorMessage])
+
   const sharedProps = {
     selectedValue: selectedCustomerForComboBox,
     onSelectedValueChange: handleSelectionChange,
     onInputValueChange: handleInputChange,
     inputId,
     placeholder,
-    slots: { EmptyMessage, ErrorMessage },
+    slots,
     isDisabled: shouldDisableComboBox,
     isError: shouldShowError,
     isLoading: isLoadingWithoutFallback,
@@ -185,14 +181,24 @@ export function CustomerSelector({
     ['aria-label']: showLabel ? undefined : resolvedLabel,
   }
 
-  const creatableProps = isCreatable
-    ? {
-      isCreatable: true as const,
-      onCreateOption: onCreateCustomer,
-      formatCreateLabel: (inputValue: string) => formatCreateLabel(inputValue, t),
-      groups: [{ label: t('customerVendor:label.customers', 'Customers'), options }],
-    }
-    : { isCreatable: false as const, options }
+  const formatCreateLabel = useCallback((inputValue: string) =>
+    inputValue
+      ? t('customerVendor:action.create_customer_input_value', 'Create customer "{{inputValue}}"', { inputValue })
+      : t('customerVendor:action.create_new_customer', 'Create new customer'),
+  [t],
+  )
+
+  const groups = useMemo(
+    () => [{ label: t('customerVendor:label.customers', 'Customers'), options }],
+    [t, options],
+  )
+
+  const creatableProps = useMemo(
+    () => isCreatable
+      ? ({ isCreatable: true as const, onCreateOption: onCreateCustomer, formatCreateLabel, groups })
+      : ({ isCreatable: false as const, options }),
+    [isCreatable, onCreateCustomer, formatCreateLabel, groups, options],
+  )
 
   return (
     <VStack className={combinedClassName}>

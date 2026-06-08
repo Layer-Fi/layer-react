@@ -1,17 +1,17 @@
+import { Minimize2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { isTransferMatch } from '@utils/bankTransactions/shared'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import MinimizeTwo from '@icons/MinimizeTwo'
 import { Badge } from '@components/Badge/Badge'
 
 import './matchBadge.scss'
 
 interface MatchTooltipProps {
   amount: number
-  date: string
+  date: Date
   description: string
 }
 
@@ -45,15 +45,15 @@ export const MatchBadge = ({ bankTransaction }: MatchBadgeProps) => {
     : t('bankTransactions:label.matched', 'Matched')
 
   if (
-    bankTransaction.categorization_status === CategorizationStatus.MATCHED
+    bankTransaction.categorizationStatus === CategorizationStatus.MATCHED
     && bankTransaction.match
   ) {
-    const { date, amount } = bankTransaction.match.bank_transaction
+    const { date, amount } = bankTransaction.match.bankTransaction
     const description = bankTransaction.match.details?.description ?? ''
 
     return (
       <Badge
-        icon={<MinimizeTwo size={11} />}
+        icon={<Minimize2 size={11} />}
         tooltip={<MatchTooltip amount={amount} date={date} description={description} />}
       >
         {text}

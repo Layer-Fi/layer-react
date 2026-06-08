@@ -1,10 +1,8 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { Save } from 'lucide-react'
+import { ChevronLeft, Save, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
-import BackArrow from '@icons/BackArrow'
-import X from '@icons/X'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -55,7 +53,7 @@ export const JournalEntryDrawer = ({ showTags = true, showCustomerVendor = true 
   return (
     <>
       <BaseDetailView
-        slots={{ Header, BackIcon: hasChanges ? X : BackArrow }}
+        slots={{ Header, BackIcon: hasChanges ? X : ChevronLeft }}
         name='JournalEntryDrawer'
         onGoBack={onGoBack}
       >

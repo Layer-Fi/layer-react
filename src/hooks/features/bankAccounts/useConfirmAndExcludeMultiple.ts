@@ -1,8 +1,11 @@
+import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
 import type { Awaitable } from '@internal-types/utility/promises'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { confirmAccountApi, excludeAccountApi } from '@hooks/legacy/useLinkedAccounts'
+import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
+import { confirmExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/confirm'
+import { excludeExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/exclude'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -27,64 +30,12 @@ function buildKey({
   }
 }
 
-function exclude({
-  apiUrl,
-  accessToken,
-  businessId,
-  accountId,
-}: {
-  apiUrl: string
-  accessToken: string
-  businessId: string
-  accountId: string
-}) {
-  return excludeAccountApi(
-    apiUrl,
-    accessToken,
-    {
-      params: {
-        businessId,
-        accountId,
-      },
-      body: {
-        is_irrelevant: true,
-      },
-    },
-  )
-}
-
-function confirm({
-  apiUrl,
-  accessToken,
-  businessId,
-  accountId,
-}: {
-  apiUrl: string
-  accessToken: string
-  businessId: string
-  accountId: string
-}) {
-  return confirmAccountApi(
-    apiUrl,
-    accessToken,
-    {
-      params: {
-        businessId,
-        accountId,
-      },
-      body: {
-        is_relevant: true,
-      },
-    },
-  )
-}
-
 export function useConfirmAndExcludeMultiple({ onSuccess }: { onSuccess?: () => Awaitable<unknown> }) {
   const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
 
-  return useSWRMutation(
+  const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
       access_token: auth?.access_token,
       apiUrl: auth?.apiUrl,
@@ -93,18 +44,46 @@ export function useConfirmAndExcludeMultiple({ onSuccess }: { onSuccess?: () => 
     (
       { accessToken, apiUrl, businessId },
       { arg }: { arg: AccountConfirmExcludeFormState },
-    ) => Promise.all(
-      Object.entries(arg).map(([accountId, isConfirmed]) =>
-        isConfirmed
-          ? confirm({ accessToken, apiUrl, accountId, businessId })
-          : exclude({ accessToken, apiUrl, accountId, businessId }),
-      ),
-    )
-      .then(() => onSuccess?.())
-      .then(() => true as const),
+    ) =>
+      Promise.all(
+        Object.entries(arg).map(([accountId, isConfirmed]) =>
+          isConfirmed
+            ? confirmExternalAccount(apiUrl, accessToken, {
+              params: { businessId, accountId },
+              body: { is_relevant: true },
+            })
+            : excludeExternalAccount(apiUrl, accessToken, {
+              params: { businessId, accountId },
+              body: { is_irrelevant: true },
+            }),
+        ),
+      )
+        .then(() => onSuccess?.())
+        .then(() => true as const),
     {
       revalidate: false,
       throwOnError: false,
     },
   )
+
+  const mutationResponse = new SWRMutationResult(rawMutationResponse)
+
+  const { trigger: originalTrigger } = mutationResponse
+
+  const stableProxiedTrigger = useCallback(
+    (...triggerParameters: Parameters<typeof originalTrigger>) =>
+      originalTrigger(...triggerParameters),
+    [originalTrigger],
+  )
+
+  return new Proxy(mutationResponse, {
+    get(target, prop) {
+      if (prop === 'trigger') {
+        return stableProxiedTrigger
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return Reflect.get(target, prop)
+    },
+  })
 }

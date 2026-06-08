@@ -1,9 +1,6 @@
 import classNames from 'classnames'
+import { CloudDownload, Eye, Loader, Trash2 } from 'lucide-react'
 
-import DownloadCloud from '@icons/DownloadCloud'
-import EyeIcon from '@icons/Eye'
-import LoaderIcon from '@icons/Loader'
-import TrashIcon from '@icons/Trash'
 import { IconButton } from '@components/Button/IconButton'
 import { Text, TextSize } from '@components/Typography/Text'
 
@@ -65,7 +62,7 @@ export const FileThumb = ({
                 <Text as='span' size={TextSize.sm}>
                   {deletePending ? 'Deleting...' : 'Uploading'}
                 </Text>
-                <LoaderIcon className='Layer__anim--rotating' size={11} />
+                <Loader className='Layer__anim--rotating' size={11} />
               </div>
             )
             : error
@@ -97,7 +94,7 @@ export const FileThumb = ({
                 active={!disabled}
                 disabled={disabled}
                 icon={
-                  <TrashIcon className='Layer__file-thumb__actions__remove' />
+                  <Trash2 className='Layer__file-thumb__actions__remove' size={18} />
                 }
               />
             )}
@@ -109,7 +106,7 @@ export const FileThumb = ({
                   disabled={disabled}
                   download={name ?? 'receipt'}
                   icon={
-                    <DownloadCloud className='Layer__file-thumb__actions__download' />
+                    <CloudDownload className='Layer__file-thumb__actions__download' size={18} />
                   }
                 />
               )
@@ -118,7 +115,7 @@ export const FileThumb = ({
               ? (
                 <IconButton
                   active={!disabled}
-                  icon={<EyeIcon className='Layer__file-thumb__actions__open' />}
+                  icon={<Eye className='Layer__file-thumb__actions__open' size={18} />}
                   disabled={disabled}
                   onClick={(e) => {
                     onOpen(e as React.MouseEvent<HTMLAnchorElement, MouseEvent>)
@@ -134,7 +131,7 @@ export const FileThumb = ({
                   rel='noopener noreferrer'
                   active={!disabled}
                   disabled={disabled}
-                  icon={<EyeIcon className='Layer__file-thumb__actions__open' />}
+                  icon={<Eye className='Layer__file-thumb__actions__open' size={18} />}
                 />
               )
               : null}

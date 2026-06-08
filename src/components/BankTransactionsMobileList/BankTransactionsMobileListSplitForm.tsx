@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
+import { Paperclip, Scissors, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
@@ -11,9 +12,6 @@ import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOp
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
-import PaperclipIcon from '@icons/Paperclip'
-import Scissors from '@icons/Scissors'
-import Trash from '@icons/Trash'
 import { Button } from '@ui/Button/Button'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -145,7 +143,7 @@ export const BankTransactionsMobileListSplitForm = ({
                     icon
                     isDisabled={index == 0}
                   >
-                    <Trash size={16} />
+                    <Trash2 size={16} />
                   </Button>
 
                 </HStack>
@@ -207,7 +205,7 @@ export const BankTransactionsMobileListSplitForm = ({
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
             text={t('bankTransactions:action.upload_receipt', 'Upload receipt')}
             iconOnly={true}
-            icon={<PaperclipIcon />}
+            icon={<Paperclip size={20} />}
             accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
           />
         )}

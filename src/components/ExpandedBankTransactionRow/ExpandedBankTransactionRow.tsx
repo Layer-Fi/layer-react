@@ -5,6 +5,7 @@ import {
   useState,
 } from 'react'
 import classNames from 'classnames'
+import { Scissors, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -31,8 +32,6 @@ import {
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useBankTransactionTagVisibility } from '@contexts/BankTransactionTagVisibilityContext/BankTransactionTagVisibilityContext'
-import Scissors from '@icons/ScissorsFullOpen'
-import Trash from '@icons/Trash'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
@@ -330,7 +329,7 @@ export const ExpandedBankTransactionRow = ({
                                 icon
                                 isDisabled={index === 0}
                               >
-                                <Trash size={18} />
+                                <Trash2 size={18} />
                               </Button>
                             </div>
                           </VStack>
