@@ -148,19 +148,24 @@
     transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
 
     &:hover {
-      border-color: var(--color-accent);
+      border-color: var(--color-base-500);
     }
 
     &:focus-visible {
-      box-shadow: 0 0 0 1px var(--color-accent);
+      box-shadow: 0 0 0 3px var(--base-transparent-12);
       outline: none;
-      border-color: var(--color-accent);
+      border-color: var(--bg-brand-accent, var(--color-primary));
     }
   }
 
   &.--selected {
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 1px var(--color-accent);
+    border-color: var(--bg-brand-accent, var(--color-primary));
+    border-width: 2px;
+    box-shadow: 0 0 0 3px var(--base-transparent-12);
+
+    .topbar {
+      background: var(--base-transparent-5);
+    }
   }
 
   .topbar {
