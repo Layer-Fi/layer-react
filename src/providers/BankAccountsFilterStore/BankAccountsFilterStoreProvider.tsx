@@ -1,11 +1,14 @@
-import { createContext, type PropsWithChildren, useContext, useState } from 'react'
+import { createContext, type PropsWithChildren, useContext, useEffect, useState } from 'react'
 import { createStore, useStore } from 'zustand'
+
+import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 
 type BankAccountsFilterStoreShape = {
   isActive: boolean
   selectedBankAccountIds: string[]
   actions: {
     toggleBankAccountId: (bankAccountId: string) => void
+    retainBankAccountIds: (validBankAccountIds: string[]) => void
     clear: () => void
   }
 }
@@ -16,6 +19,7 @@ const BankAccountsFilterStoreContext = createContext(
     selectedBankAccountIds: [],
     actions: {
       toggleBankAccountId: () => {},
+      retainBankAccountIds: () => {},
       clear: () => {},
     },
   })),
@@ -48,10 +52,24 @@ export function BankAccountsFilterStoreProvider({ children }: PropsWithChildren)
               ? state.selectedBankAccountIds.filter(id => id !== bankAccountId)
               : [...state.selectedBankAccountIds, bankAccountId],
           })),
+        retainBankAccountIds: (validBankAccountIds: string[]) =>
+          set((state) => {
+            const validIds = new Set(validBankAccountIds)
+            const next = state.selectedBankAccountIds.filter(id => validIds.has(id))
+            return next.length === state.selectedBankAccountIds.length
+              ? state
+              : { selectedBankAccountIds: next }
+          }),
         clear: () => set(() => ({ selectedBankAccountIds: [] })),
       },
     })),
   )
+
+  const { data: bankAccounts } = useListBankAccounts()
+  useEffect(() => {
+    if (!bankAccounts) return
+    store.getState().actions.retainBankAccountIds(bankAccounts.map(account => account.id))
+  }, [bankAccounts, store])
 
   return (
     <BankAccountsFilterStoreContext.Provider value={store}>
