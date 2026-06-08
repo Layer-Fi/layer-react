@@ -1,13 +1,11 @@
 import { type ReactNode } from 'react'
+import { CircleAlert, CircleCheckBig, Clock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import AlertCircle from '@icons/AlertCircle'
-import CheckCircle from '@icons/CheckCircle'
-import Clock from '@icons/Clock'
 import { type TextStatus } from '@components/Typography/Text'
 
 type InternalStatusConfig = {
@@ -64,7 +62,7 @@ export function useBookkeepingStatusConfig(
         label: t('bookkeeping:state.action_required', 'Action required'),
         description: t('bookkeeping:label.respond_to_below_tasks', 'Please respond to the below tasks to help us complete your {{monthName}} books.', { monthName }),
         color: 'warning',
-        icon: <AlertCircle size={12} />,
+        icon: <CircleAlert size={12} />,
       }
     }
     case BookkeepingPeriodStatus.CLOSED_COMPLETE: {
@@ -72,7 +70,7 @@ export function useBookkeepingStatusConfig(
         label: t('bookkeeping:state.books_completed', 'Books completed'),
         description: t('bookkeeping:label.month_name_books_complete', 'Your {{monthName}} books are complete and ready to view!', { monthName }),
         color: 'success',
-        icon: <CheckCircle size={12} />,
+        icon: <CircleCheckBig size={12} />,
       }
     }
     case BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE: {

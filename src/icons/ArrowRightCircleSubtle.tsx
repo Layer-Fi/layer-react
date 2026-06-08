@@ -1,6 +1,6 @@
 import { type IconSvgProps } from '@icons/types'
 
-const ArrowRightCircleAlt = ({ size = 18, ...props }: IconSvgProps) => (
+const ArrowRightCircleSubtle = ({ size = 18, ...props }: IconSvgProps) => (
   <svg
     xmlns='http://www.w3.org/2000/svg'
     viewBox='0 0 18 18'
@@ -29,4 +29,4 @@ const ArrowRightCircleAlt = ({ size = 18, ...props }: IconSvgProps) => (
     />
   </svg>
 )
-export default ArrowRightCircleAlt
+export default ArrowRightCircleSubtle

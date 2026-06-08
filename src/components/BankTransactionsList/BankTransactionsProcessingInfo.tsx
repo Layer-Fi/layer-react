@@ -1,7 +1,7 @@
+import { Clock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
-import Clock from '@icons/Clock'
 import { HStack } from '@ui/Stack/Stack'
 import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'

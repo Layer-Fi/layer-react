@@ -1,7 +1,7 @@
 import { type ButtonHTMLAttributes } from 'react'
 import classNames from 'classnames'
+import { RefreshCcw } from 'lucide-react'
 
-import RefreshCcw from '@icons/RefreshCcw'
 import { Button, ButtonVariant } from '@components/Button/Button'
 
 export interface RetryButtonProps

@@ -1,4 +1,4 @@
-import LoaderIcon from '@icons/Loader'
+import { Loader } from 'lucide-react'
 
 export interface SmallLoaderProps {
   size?: number
@@ -10,7 +10,7 @@ export const SmallLoader = ({ size = 28 }: SmallLoaderProps) => {
       className='Layer__loader Layer__loader--with-bg'
       style={{ width: size, height: size, minWidth: size, minHeight: size }}
     >
-      <LoaderIcon className='Layer__anim--rotating' size={size - 16} />
+      <Loader className='Layer__anim--rotating' size={size - 16} />
     </span>
   )
 }

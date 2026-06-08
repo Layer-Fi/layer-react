@@ -1,7 +1,7 @@
+import { ChevronLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useDetailUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
-import ChevronLeft from '@icons/ChevronLeft'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'

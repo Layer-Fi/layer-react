@@ -1,8 +1,8 @@
 import { type ReactElement } from 'react'
+import { ChevronRight } from 'lucide-react'
 import { Button as ReactAriaButton } from 'react-aria-components/Button'
 import { Collection as ReactAriaCollection } from 'react-aria-components/Collection'
 
-import ChevronRight from '@icons/ChevronRight'
 import { HStack } from '@ui/Stack/Stack'
 import { TreeItem, TreeItemContent } from '@ui/Tree/Tree'
 import type { Key, RecursiveNestedNavigationGroupConfig } from '@components/NestedNavigation/types'

@@ -1,3 +1,4 @@
+import { CircleAlert, CircleArrowRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { DateFormat } from '@utils/i18n/date/patterns'
@@ -6,8 +7,6 @@ import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-ac
 import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import AlertCircle from '@icons/AlertCircle'
-import ArrowRightCircle from '@icons/ArrowRightCircle'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
 type TasksPanelNotificationProps = {
@@ -30,7 +29,7 @@ export const TasksPanelNotification = ({
       <div className='Layer__tasks-header__notification' data-status='error'>
         <div className='Layer__tasks-header__notification__text'>
           <Text>
-            <AlertCircle size={11} />
+            <CircleAlert size={11} />
           </Text>
           <Text size={TextSize.md} weight={TextWeight.bold}>
             {tPlural(t, 'bookkeeping:label.bank_accounts_disconnected', {
@@ -56,7 +55,7 @@ export const TasksPanelNotification = ({
                 other: 'Reconnect {{displayCount}} accounts',
               })}
             </Text>
-            <ArrowRightCircle size={14} />
+            <CircleArrowRight size={14} />
           </button>
         )}
       </div>
@@ -70,7 +69,7 @@ export const TasksPanelNotification = ({
       <div className='Layer__tasks-header__notification' data-status='warning'>
         <div className='Layer__tasks-header__notification__text'>
           <Text status='warning' invertColor>
-            <AlertCircle size={11} />
+            <CircleAlert size={11} />
           </Text>
           <Text
             size={TextSize.sm}
@@ -99,7 +98,7 @@ export const TasksPanelNotification = ({
           <Text size={TextSize.sm} weight={TextWeight.bold}>
             {t('bookkeeping:action.view_and_complete', 'View and complete')}
           </Text>
-          <ArrowRightCircle size={14} />
+          <CircleArrowRight size={14} />
         </button>
       </div>
     )

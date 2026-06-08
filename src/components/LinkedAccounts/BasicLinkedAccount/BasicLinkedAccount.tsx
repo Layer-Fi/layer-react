@@ -1,8 +1,8 @@
+import { Landmark } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
 
 import type { ExternalAccountConnection } from '@schemas/bankAccounts/bankAccount'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import InstitutionIcon from '@icons/InstitutionIcon'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { P } from '@ui/Typography/Text'
@@ -46,7 +46,7 @@ function BasicLinkedAccountLogo({ account }: BasicLinkedAccountLogoProps) {
           />
         )
         : (
-          <InstitutionIcon />
+          <Landmark size={18} />
         )}
     </VStack>
   )

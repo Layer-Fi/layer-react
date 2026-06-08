@@ -1,10 +1,10 @@
 import { type RefObject, useContext } from 'react'
+import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type View } from '@internal-types/general'
 import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
-import PlusIcon from '@icons/PlusIcon'
 import { Button } from '@components/Button/Button'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
@@ -85,7 +85,7 @@ export const JournalTableWithPanel = ({
             <Button
               onClick={() => toCreateEntry()}
               iconOnly={view === 'mobile'}
-              leftIcon={view === 'mobile' && <PlusIcon size={14} />}
+              leftIcon={view === 'mobile' && <CirclePlus size={14} />}
             >
               {stringOverrides?.addEntryButton || t('generalLedger:action.add_entry', 'Add Entry')}
             </Button>

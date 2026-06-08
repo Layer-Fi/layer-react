@@ -1,6 +1,6 @@
+import { Loader } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import Loader from '@icons/Loader'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
 import { BadgeSize } from '@components/Badge/Badge'
 

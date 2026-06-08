@@ -1,4 +1,5 @@
-import ChevronRight from '@icons/ChevronRight'
+import { ChevronRight } from 'lucide-react'
+
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'

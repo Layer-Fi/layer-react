@@ -1,4 +1,5 @@
 import { useContext, useMemo } from 'react'
+import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { TableCellAlign } from '@internal-types/table'
@@ -9,7 +10,6 @@ import { entryNumber } from '@utils/journal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
-import XIcon from '@icons/X'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
@@ -435,7 +435,7 @@ export const LedgerAccountEntryDetails = ({
         titleClassName='Layer__hidden-lg Layer__hidden-xl'
         actions={(
           <Button
-            rightIcon={<XIcon />}
+            rightIcon={<X size={18} />}
             iconOnly={true}
             onClick={closeSelectedEntry}
             variant={ButtonVariant.secondary}

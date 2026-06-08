@@ -1,6 +1,5 @@
+import { Loader as LoaderIcon } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
-
-import LoaderIcon from '@icons/Loader'
 
 type LoaderProps = PropsWithChildren<{
   size?: number

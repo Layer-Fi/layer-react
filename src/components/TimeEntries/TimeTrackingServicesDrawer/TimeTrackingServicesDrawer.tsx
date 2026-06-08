@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ArchiveRestore, Plus } from 'lucide-react'
+import { ArchiveRestore, Loader, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/catalogService'
 import { useListCatalogServices } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import Loader from '@icons/Loader'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalCloseButton, ModalHeading } from '@ui/Modal/ModalSlots'
@@ -75,7 +74,7 @@ const LoadingState = () => {
     <DataState
       status={DataStateStatus.info}
       title={t('common:label.loading', 'Loading...')}
-      icon={<Loader className='Layer__anim--rotating' />}
+      icon={<Loader className='Layer__anim--rotating' size={18} />}
       spacing
     />
   )

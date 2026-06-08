@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import classNames from 'classnames'
+import { File } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
@@ -18,7 +19,6 @@ import { useBankTransactionsCategorizationActions } from '@providers/BankTransac
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import ChevronDownFill from '@icons/ChevronDownFill'
-import FileIcon from '@icons/File'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
@@ -128,7 +128,7 @@ export const BankTransactionsListItem = ({
             {bankTransaction.accountMask && ` ${bankTransaction.accountMask}`}
           </Span>
 
-          {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
+          {hasReceipts(bankTransaction) ? <File size={12} /> : null}
 
         </div>
         <div
