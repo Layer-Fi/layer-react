@@ -16,11 +16,6 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
 
-const applyAccountFilter = (
-  data?: BankTransaction[],
-  filter?: string[],
-) => data?.filter(x => filter && x.sourceAccountId != null && filter.includes(x.sourceAccountId))
-
 const applyCategorizationStatusFilter = (
   data?: BankTransaction[],
   filter?: DisplayState,
@@ -102,6 +97,8 @@ export function bankTransactionFiltersToHookOptions(
     startDate: filters?.dateRange?.startDate,
     endDate: filters?.dateRange?.endDate,
     tagFilterQueryString: filters?.tagFilter ? tagFilterToQueryString(filters.tagFilter) : undefined,
+    bankAccountIds: filters?.bankAccountIds?.length ? filters.bankAccountIds.join(',') : undefined,
+    sourceAccountIds: filters?.sourceAccountIds?.length ? filters.sourceAccountIds.join(',') : undefined,
   }
 }
 
@@ -162,10 +159,6 @@ export const useAugmentedBankTransactions = (
 
     if (filters?.amount?.min || filters?.amount?.max) {
       filtered = applyAmountFilter(filtered, filters.amount)
-    }
-
-    if (filters?.account) {
-      filtered = applyAccountFilter(filtered, filters.account)
     }
 
     return filtered

@@ -143,6 +143,26 @@
     height: 154px;
   }
 
+  &.--selectable {
+    cursor: pointer;
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+
+    &:hover {
+      border-color: var(--color-accent);
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 1px var(--color-accent);
+      outline: none;
+      border-color: var(--color-accent);
+    }
+  }
+
+  &.--selected {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 1px var(--color-accent);
+  }
+
   .topbar {
     box-sizing: border-box;
     display: flex;

@@ -11,6 +11,9 @@ export interface LinkedAccountThumbProps {
   bankAccount: BankAccount
   asWidget?: boolean
   showLedgerBalance?: boolean
+  isFilterSelectable?: boolean
+  isFilterSelected?: boolean
+  onToggleFilter?: () => void
   slots: {
     Pill: React.ReactNode
   }
@@ -29,6 +32,9 @@ export const LinkedAccountThumb = ({
   bankAccount,
   asWidget,
   showLedgerBalance,
+  isFilterSelectable = false,
+  isFilterSelected = false,
+  onToggleFilter,
   slots,
 }: LinkedAccountThumbProps) => {
   const { t } = useTranslation()
@@ -45,7 +51,24 @@ export const LinkedAccountThumb = ({
     isSyncing && '--is-syncing',
     isSyncing && 'skeleton-loader',
     showLedgerBalance && '--show-ledger-balance',
+    isFilterSelectable && '--selectable',
+    isFilterSelected && '--selected',
   )
+
+  const filterToggleProps = isFilterSelectable
+    ? {
+      'role': 'button',
+      'tabIndex': 0,
+      'aria-pressed': isFilterSelected,
+      'onClick': onToggleFilter,
+      'onKeyDown': (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault()
+          onToggleFilter?.()
+        }
+      },
+    }
+    : {}
 
   const linkedAccountInfoClassName = classNames(
     'topbar',
@@ -60,7 +83,7 @@ export const LinkedAccountThumb = ({
   )
 
   return (
-    <div className={linkedAccountThumbClassName}>
+    <div className={linkedAccountThumbClassName} {...filterToggleProps}>
       <div className={linkedAccountInfoClassName}>
         <div className='topbar-details'>
           <Text as='div' className='account-name'>

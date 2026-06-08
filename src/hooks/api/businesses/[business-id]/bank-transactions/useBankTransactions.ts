@@ -33,6 +33,8 @@ type GetBankTransactionsPaginatedParams = {
   startDate?: Date
   endDate?: Date
   tagFilterQueryString?: string
+  bankAccountIds?: string
+  sourceAccountIds?: string
   sortOrder?: 'ASC' | 'DESC'
   sortBy?: string
   cursor?: string
@@ -55,6 +57,8 @@ const getBankTransactions = get<
     sortBy = 'date',
     sortOrder = 'DESC',
     tagFilterQueryString,
+    bankAccountIds,
+    sourceAccountIds,
   }: GetBankTransactionsPaginatedParams) => {
     const parameters = toDefinedSearchParameters({
       cursor,
@@ -66,6 +70,8 @@ const getBankTransactions = get<
       sortBy,
       sortOrder,
       limit,
+      bankAccountIds,
+      sourceAccountIds,
     })
 
     return `/v1/businesses/${businessId}/bank-transactions?${parameters}${tagFilterQueryString ? `&${tagFilterQueryString}` : ''}`
@@ -86,6 +92,8 @@ const keyMatchesParams = createKeyMatcher<BankTransactionsKey, UseBankTransactio
   { key: 'startDate', compare: compareDates },
   { key: 'endDate', compare: compareDates },
   { key: 'tagFilterQueryString' },
+  { key: 'bankAccountIds' },
+  { key: 'sourceAccountIds' },
 ])
 
 class BankTransactionsSWRResponse extends SWRInfiniteResult<GetBankTransactionsReturn> {
@@ -103,6 +111,8 @@ export type UseBankTransactionsOptions = {
   startDate?: Date
   endDate?: Date
   tagFilterQueryString?: string
+  bankAccountIds?: string
+  sourceAccountIds?: string
 }
 
 function keyLoader(
@@ -117,6 +127,8 @@ function keyLoader(
     startDate,
     endDate,
     tagFilterQueryString,
+    bankAccountIds,
+    sourceAccountIds,
   }: UseBankTransactionsOptions & {
     access_token?: string
     apiUrl?: string
@@ -135,6 +147,8 @@ function keyLoader(
       startDate,
       endDate,
       tagFilterQueryString,
+      bankAccountIds,
+      sourceAccountIds,
       tags: [BANK_TRANSACTIONS_TAG_KEY],
     } as const
   }
@@ -147,6 +161,8 @@ export function useBankTransactions({
   startDate,
   endDate,
   tagFilterQueryString,
+  bankAccountIds,
+  sourceAccountIds,
 }: UseBankTransactionsOptions) {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
@@ -164,6 +180,8 @@ export function useBankTransactions({
         startDate,
         endDate,
         tagFilterQueryString,
+        bankAccountIds,
+        sourceAccountIds,
       },
     )),
     ({
@@ -177,6 +195,8 @@ export function useBankTransactions({
       startDate,
       endDate,
       tagFilterQueryString,
+      bankAccountIds,
+      sourceAccountIds,
     }: NonNullable<ReturnType<typeof keyLoader>>) => {
       return getBankTransactions(
         apiUrl,
@@ -192,6 +212,8 @@ export function useBankTransactions({
             startDate,
             endDate,
             tagFilterQueryString,
+            bankAccountIds,
+            sourceAccountIds,
           },
         },
       )().then(Schema.decodeUnknownPromise(GetBankTransactionsResponseSchema))
