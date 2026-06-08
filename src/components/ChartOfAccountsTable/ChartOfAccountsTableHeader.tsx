@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { Plus } from 'lucide-react'
+import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -84,7 +84,7 @@ export const ChartOfAccountsTableHeader = ({
                 onClick={() => addAccount()}
                 iconOnly={!isDesktop}
                 leftIcon={
-                  !isDesktop && <Plus size={14} />
+                  !isDesktop && <CirclePlus size={14} />
                 }
               >
                 {stringOverrides?.addAccountButtonText || t('chartOfAccounts:action.add_account', 'Add Account')}
