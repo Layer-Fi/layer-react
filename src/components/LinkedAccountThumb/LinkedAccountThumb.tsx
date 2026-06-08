@@ -1,11 +1,10 @@
 import classNames from 'classnames'
+import { Landmark, Loader } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution, isBankAccountSyncing } from '@utils/bankAccount'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import InstitutionIcon from '@icons/InstitutionIcon'
-import LoaderIcon from '@icons/Loader'
 import { Text, type TextSize } from '@components/Typography/Text'
 
 export interface LinkedAccountThumbProps {
@@ -89,7 +88,7 @@ export const LinkedAccountThumb = ({
               />
             )
             : (
-              <InstitutionIcon />
+              <Landmark size={18} />
             )}
         </div>
       </div>
@@ -103,7 +102,7 @@ export const LinkedAccountThumb = ({
               </div>
             </div>
             <div className='loading-wrapper'>
-              <LoaderIcon size={11} className='Layer__anim--rotating' />
+              <Loader size={11} className='Layer__anim--rotating' />
             </div>
           </div>
         )

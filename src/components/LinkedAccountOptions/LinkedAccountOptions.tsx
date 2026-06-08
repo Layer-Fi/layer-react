@@ -1,6 +1,6 @@
 import classNames from 'classnames'
+import { EllipsisVertical } from 'lucide-react'
 
-import MoreVertical from '@icons/MoreVertical'
 import { HoverMenu, type HoverMenuProps } from '@components/HoverMenu/HoverMenu'
 
 interface LinkedAccountOptionsProps extends HoverMenuProps {
@@ -23,7 +23,7 @@ export const LinkedAccountOptions = ({
           ? (
             <div className='Layer__linked-accounts__options-overlay-button'>
               <HoverMenu config={config}>
-                <MoreVertical size={16} />
+                <EllipsisVertical size={16} />
               </HoverMenu>
             </div>
           )

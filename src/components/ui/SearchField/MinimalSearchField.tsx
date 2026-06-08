@@ -1,3 +1,4 @@
+import { X } from 'lucide-react'
 import { Input as ReactAriaInput } from 'react-aria-components/Input'
 import {
   SearchField as ReactAriaSearchField,
@@ -5,7 +6,6 @@ import {
 } from 'react-aria-components/SearchField'
 import { useTranslation } from 'react-i18next'
 
-import X from '@icons/X'
 import { Button } from '@ui/Button/Button'
 
 import './minimalSearchField.scss'
@@ -29,7 +29,7 @@ export function MinimalSearchField({
         placeholder={placeholder}
       />
       <Button slot='clear-button' inset icon variant='ghost' aria-label={t('ui:action.clear_search', 'Clear search')}>
-        <X />
+        <X size={18} />
       </Button>
     </ReactAriaSearchField>
   )

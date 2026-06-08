@@ -1,10 +1,10 @@
+import { Minimize2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { isTransferMatch } from '@utils/bankTransactions/shared'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import MinimizeTwo from '@icons/MinimizeTwo'
 import { Badge } from '@components/Badge/Badge'
 
 import './matchBadge.scss'
@@ -53,7 +53,7 @@ export const MatchBadge = ({ bankTransaction }: MatchBadgeProps) => {
 
     return (
       <Badge
-        icon={<MinimizeTwo size={11} />}
+        icon={<Minimize2 size={11} />}
         tooltip={<MatchTooltip amount={amount} date={date} description={description} />}
       >
         {text}

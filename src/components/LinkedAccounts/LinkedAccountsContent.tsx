@@ -1,10 +1,10 @@
 import { useContext } from 'react'
 import classNames from 'classnames'
+import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
-import PlusIcon from '@icons/PlusIcon'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { LinkedAccountsConfirmationModal } from '@components/LinkedAccounts/ConfirmationModal/LinkedAccountsConfirmationModal'
@@ -63,7 +63,7 @@ export const LinkedAccountsContent = ({
             className={linkedAccountsNewAccountClassName}
           >
             <HStack align='center' gap='2xs'>
-              <PlusIcon size={14} />
+              <CirclePlus size={14} />
               <Span variant='placeholder'>
                 {t('linkedAccounts:action.add_account', 'Add Account')}
               </Span>

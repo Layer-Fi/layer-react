@@ -1,6 +1,6 @@
+import { Coffee } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import CoffeeIcon from '@icons/Coffee'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { Link } from '@components/Button/Link'
 import { IconBox } from '@components/IconBox/IconBox'
@@ -22,7 +22,7 @@ export const BookkeepingUpsellBar = ({
     <div className='Layer__bar-banner Layer__bar-banner--bookkeeping'>
       <div className='Layer__bar-banner__left-col'>
         <IconBox>
-          <CoffeeIcon />
+          <Coffee size={11} />
         </IconBox>
         <div className='Layer__bar-banner__text-container'>
           <Text size={TextSize.md} weight={TextWeight.bold}>

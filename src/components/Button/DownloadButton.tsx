@@ -1,6 +1,6 @@
+import { CloudDownload } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import DownloadCloud from '@icons/DownloadCloud'
 import { Button, type ButtonProps, ButtonVariant } from '@components/Button/Button'
 import { RetryButton } from '@components/Button/RetryButton'
 
@@ -50,7 +50,7 @@ export const DownloadButton = ({
   return (
     <Button
       variant={variant}
-      rightIcon={<DownloadCloud size={12} />}
+      rightIcon={<CloudDownload size={12} />}
       onClick={() => void onClick?.()}
       disabled={isDownloading || disabled}
       iconAsPrimary={iconOnly}

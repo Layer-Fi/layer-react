@@ -1,6 +1,6 @@
+import { ChevronLeft } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
 
-import BackArrow from '@icons/BackArrow'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Container } from '@components/Container/Container'
@@ -23,7 +23,7 @@ export const BaseDetailView = ({ name, onGoBack, slots, children, borderless = f
   return (
     <Container name={name} className='Layer__BaseDetailView' transparentBg={borderless}>
       <HStack align='center' gap='md' className='Layer__BaseDetailView__Header'>
-        {onGoBack && (<Button variant='outlined' icon onPress={onGoBack}>{BackIcon ? <BackIcon /> : <BackArrow />}</Button>)}
+        {onGoBack && (<Button variant='outlined' icon onPress={onGoBack}>{BackIcon ? <BackIcon /> : <ChevronLeft size={18} color='#1A130D' />}</Button>)}
         <Header />
       </HStack>
       {children}

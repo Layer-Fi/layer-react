@@ -1,9 +1,9 @@
 import { useContext } from 'react'
+import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
-import PlusIcon from '@icons/Plus'
 import { HStack } from '@ui/Stack/Stack'
 import { Button } from '@components/Button/Button'
 import { AccountBalancesDownloadButton } from '@components/ChartOfAccounts/download/AccountBalancesDownloadButton'
@@ -84,7 +84,7 @@ export const ChartOfAccountsTableHeader = ({
                 onClick={() => addAccount()}
                 iconOnly={!isDesktop}
                 leftIcon={
-                  !isDesktop && <PlusIcon size={14} />
+                  !isDesktop && <Plus size={14} />
                 }
               >
                 {stringOverrides?.addAccountButtonText || t('chartOfAccounts:action.add_account', 'Add Account')}

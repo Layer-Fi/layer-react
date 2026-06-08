@@ -1,9 +1,9 @@
 import classNames from 'classnames'
+import { RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import RefreshCcw from '@icons/RefreshCcw'
 import { IconButton } from '@components/Button/IconButton'
 import { SmallLoader } from '@components/Loader/SmallLoader'
 
@@ -80,7 +80,7 @@ export const SyncingComponent = ({
             <SmallLoader />
           )
           : (
-            <IconButton icon={<RefreshCcw />} onClick={handleRefresh} />
+            <IconButton icon={<RefreshCcw size={18} />} onClick={handleRefresh} />
           )}
       </div>
       {!hideContent && (

@@ -1,9 +1,8 @@
 import { useCallback, useContext } from 'react'
+import { ChevronsDownUp, ChevronsUpDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import CollapseIcon from '@icons/Collapse'
-import ExpandIcon from '@icons/Expand'
 import { Button } from '@ui/Button/Button'
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 
@@ -31,7 +30,7 @@ export const ExpandableDataTableToggleButton = ({ iconOnly }: ExpandableDataTabl
     ? t('common:action.collapse_all', 'Collapse All')
     : t('common:action.expand_all', 'Expand All')
 
-  const Icon = shouldCollapse ? CollapseIcon : ExpandIcon
+  const Icon = shouldCollapse ? ChevronsDownUp : ChevronsUpDown
 
   return (
     <Button
@@ -40,7 +39,7 @@ export const ExpandableDataTableToggleButton = ({ iconOnly }: ExpandableDataTabl
       onClick={onClickExpandOrCollapse}
       aria-label={resolvedIconOnly ? buttonText : undefined}
     >
-      {resolvedIconOnly ? <Icon /> : buttonText}
+      {resolvedIconOnly ? <Icon size={18} /> : buttonText}
     </Button>
   )
 }

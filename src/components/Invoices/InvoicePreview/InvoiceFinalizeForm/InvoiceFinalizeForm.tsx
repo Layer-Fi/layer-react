@@ -1,13 +1,12 @@
 import { useCallback, useMemo } from 'react'
 import { useStore } from '@tanstack/react-form'
-import { Save } from 'lucide-react'
+import { CreditCard, Save } from 'lucide-react'
 import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { Invoice } from '@schemas/invoices/invoice'
 import type { InvoicePaymentMethod } from '@schemas/invoices/invoicePaymentMethod'
 import { flattenValidationErrors } from '@utils/form'
-import CreditCardIcon from '@icons/CreditCard'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -54,7 +53,7 @@ export const InvoiceFinalizeForm = ({
           {field => (
             <field.FormSwitchField
               label={t('common:label.credit_card', 'Credit Card')}
-              slots={{ LabelIcon: <CreditCardIcon size={14} /> }}
+              slots={{ LabelIcon: <CreditCard size={14} /> }}
               inline
             />
           )}

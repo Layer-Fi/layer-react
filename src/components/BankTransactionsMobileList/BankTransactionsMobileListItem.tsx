@@ -1,5 +1,6 @@
 import { type ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import classNames from 'classnames'
+import { File } from 'lucide-react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
@@ -16,7 +17,6 @@ import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelecti
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { type LinkingMetadata, useInAppLinkContext } from '@contexts/InAppLinkContext'
-import FileIcon from '@icons/File'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -219,7 +219,7 @@ export const BankTransactionsMobileListItem = ({
                       {bankTransaction.accountMask && ` ${bankTransaction.accountMask}`}
                     </Span>
                   </Span>
-                  {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
+                  {hasReceipts(bankTransaction) ? <File size={12} /> : null}
                 </HStack>
               </VStack>
             </HStack>

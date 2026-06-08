@@ -1,4 +1,5 @@
 import { useContext, useMemo } from 'react'
+import { Bell, CreditCard, Folder, Link, Sunrise } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'
@@ -8,12 +9,7 @@ import { useAugmentedBankTransactions } from '@hooks/features/bankTransactions/u
 import { useBankTransactionsFilters } from '@contexts/BankTransactionsFiltersContext/useBankTransactionsFilters'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
-import BellIcon from '@icons/Bell'
-import CreditCardIcon from '@icons/CreditCard'
-import FolderIcon from '@icons/Folder'
-import LinkIcon from '@icons/Link'
 import PlaidIcon from '@icons/PlaidIcon'
-import SunriseIcon from '@icons/Sunrise'
 import { ActionableRow } from '@components/ActionableRow/ActionableRow'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
 import { BadgeSize } from '@components/Badge/Badge'
@@ -53,7 +49,7 @@ export const ConnectAccount = ({
       <>
         <DataState
           status={DataStateStatus.info}
-          icon={<CreditCardIcon size={12} />}
+          icon={<CreditCard size={12} />}
           title={t('linkedAccounts:empty.no_accounts_connected', 'No accounts connected')}
           description={t('linkedAccounts:label.populate_accounting_dashboard_three_steps', 'Populate your accounting dashboard in 3 steps')}
         />
@@ -66,7 +62,7 @@ export const ConnectAccount = ({
               <Button
                 onClick={() => { void addConnection('PLAID') }}
                 disabled={isDemoBusiness}
-                rightIcon={<LinkIcon size={12} />}
+                rightIcon={<Link size={12} />}
               >
                 {t('common:action.connect_label', 'Connect')}
               </Button>
@@ -81,14 +77,14 @@ export const ConnectAccount = ({
     <>
       <DataState
         status={DataStateStatus.success}
-        icon={<SunriseIcon size={12} />}
+        icon={<Sunrise size={12} />}
         title={t('linkedAccounts:label.account_linked_successfully', 'Account linked successfully')}
         description={t('bankTransactions:label.transactions_available_platform', 'Your transactions are now available on the platform, to see all data on the charts, categorize transactions.')}
       />
       {onTransactionsToReviewClick && transactionsToReview > 0
         ? (
           <ActionableRow
-            icon={<FolderIcon size={12} />}
+            icon={<Folder size={12} />}
             title={(
               <Text>
                 {t('bankTransactions:action.categorize_transactions', 'Categorize transactions')}
@@ -96,7 +92,7 @@ export const ConnectAccount = ({
                 <Badge
                   variant={BadgeVariant.WARNING}
                   size={BadgeSize.SMALL}
-                  icon={<BellIcon size={12} />}
+                  icon={<Bell size={12} />}
                 >
                   {transactionsToReview}
                   {' '}

@@ -1,11 +1,10 @@
+import { CircleArrowRight, CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { TaxSummary } from '@schemas/taxEstimates/summary'
 import { tConditional } from '@utils/i18n/conditional'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useFullYearProjection } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
-import ArrowRightCircle from '@icons/ArrowRightCircle'
-import PlusIcon from '@icons/PlusIcon'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
@@ -17,13 +16,13 @@ type TaxSummaryCardDesktopProps = {
 
 const PlusCircle = () => (
   <span className='Layer__TaxSummaryCard__OperatorCircle' aria-hidden>
-    <PlusIcon size={24} />
+    <CirclePlus size={24} />
   </span>
 )
 
 const ArrowCircle = () => (
   <span className='Layer__TaxSummaryCard__OperatorCircle' aria-hidden>
-    <ArrowRightCircle size={24} />
+    <CircleArrowRight size={24} />
   </span>
 )
 

@@ -1,12 +1,10 @@
 import { useCallback, useRef, useState } from 'react'
 import classNames from 'classnames'
 import type { TFunction } from 'i18next'
-import { FileSpreadsheet } from 'lucide-react'
+import { CloudUpload, FileSpreadsheet, X } from 'lucide-react'
 import { type FileRejection, useDropzone } from 'react-dropzone'
 import { Trans, useTranslation } from 'react-i18next'
 
-import CloseIcon from '@icons/CloseIcon'
-import UploadCloud from '@icons/UploadCloud'
 import { Button } from '@ui/Button/Button'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
@@ -51,7 +49,7 @@ const FileRow = ({ file, onClearFile, asDropTarget }: FileRowProps) => {
         <HStack>
           <Spacer />
           <Button variant='ghost' inset icon onClick={onClearFile}>
-            <CloseIcon size={16} />
+            <X size={16} />
           </Button>
         </HStack>
         <HStack align='center' justify='center' gap='xs'>
@@ -68,7 +66,7 @@ const FileRow = ({ file, onClearFile, asDropTarget }: FileRowProps) => {
       <P size='md'>{file.name}</P>
       <Spacer />
       <Button variant='ghost' inset icon onClick={onClearFile}>
-        <CloseIcon size={16} />
+        <X size={16} />
       </Button>
     </HStack>
   )
@@ -151,7 +149,7 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
       >
         <input {...getInputProps()} />
         <HStack align='center' gap='xs'>
-          <UploadCloud size={12} />
+          <CloudUpload size={12} />
           <P size='sm'>
             <Trans
               i18nKey='upload:label.drag_drop_file_browse'

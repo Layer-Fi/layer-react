@@ -1,11 +1,10 @@
 import { type PropsWithChildren, type ReactNode } from 'react'
-import { SearchX } from 'lucide-react'
+import { Inbox, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
-import InboxIcon from '@icons/Inbox'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
 type BankTransactionsTableEmptyStatesProps = {
@@ -58,7 +57,7 @@ export const BankTransactionsTableEmptyState = () => {
             ? t('bankTransactions:empty.uncategorized_transactions_displayed_here', 'All uncategorized transactions will be displayed here')
             : t('bankTransactions:empty.transactions_displayed_here_once_reviewed', 'All transactions will be displayed here once reviewed')
         }
-        icon={isCategorizationMode ? undefined : <InboxIcon />}
+        icon={isCategorizationMode ? undefined : <Inbox size={18} />}
         spacing
       />
     </DataStateContainer>
