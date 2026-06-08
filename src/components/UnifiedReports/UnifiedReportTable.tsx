@@ -13,14 +13,14 @@ import { buildNestedColumnConfig, getSubRows } from '@components/UnifiedReports/
 
 import './unifiedReportTable.scss'
 
-const COMPONENT_NAME = LayerEventComponent.UnifiedReports
+const COMPONENT_NAME = 'UnifiedReports'
 
 export const UnifiedReportTable = () => {
   const { t } = useTranslation()
   const { report } = useActiveUnifiedReport()
   const { data, isLoading, isError, refetch } = useUnifiedReport()
   const { setExpanded } = useContext(ExpandableDataTableContext)
-  const emitLayerEvent = useEmitLayerEvent(COMPONENT_NAME)
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.UnifiedReports)
   const mutableRows = data?.rows ? asMutable(data.rows) : undefined
 
   const columnConfig = useMemo(

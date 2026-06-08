@@ -123,7 +123,7 @@ export function useBaseUnifiedReport() {
   // default report calls the store action directly and is intentionally silent.
   const setBaseReportWithEvent = useCallback((report: ReportConfig) => {
     emitLayerEvent({
-      type: LayerEventType.ReportsTabClicked,
+      type: LayerEventType.ReportsNavigated,
       version: 1,
       payload: { reportKey: report.key },
     })

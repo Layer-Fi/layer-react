@@ -16,7 +16,7 @@ export const LayerEventType = {
   TransactionReceiptUploadClicked: 'transactions.receipt_upload_clicked',
   TransactionsPageChanged: 'transactions.page_changed',
 
-  ReportsTabClicked: 'reports.tab_clicked',
+  ReportsNavigated: 'reports.navigated',
   ReportsPeriodSelected: 'reports.period_selected',
   ReportsDownloadClicked: 'reports.download_clicked',
   ReportsSectionExpanded: 'reports.section_expanded',
@@ -111,9 +111,10 @@ export const TransactionsPageChangedEventV1 = LayerEventEnvelope(
   LayerEventType.TransactionsPageChanged, 1,
   { page: Schema.Number },
 )
+// Emitted when the user navigates to a report (sidebar or mega menu), not a tab click.
 // `reportKey` is server-defined (`ReportConfig.key`), not a static Reports.tsx tab id.
-export const ReportsTabClickedEventV1 = LayerEventEnvelope(
-  LayerEventType.ReportsTabClicked, 1,
+export const ReportsNavigatedEventV1 = LayerEventEnvelope(
+  LayerEventType.ReportsNavigated, 1,
   { reportKey: Schema.String },
 )
 export const ReportsPeriodSelectedEventV1 = LayerEventEnvelope(
@@ -148,7 +149,7 @@ export const LayerEventSchema = Schema.Union(
   TransactionDescriptionEnteredEventV1,
   TransactionReceiptUploadClickedEventV1,
   TransactionsPageChangedEventV1,
-  ReportsTabClickedEventV1,
+  ReportsNavigatedEventV1,
   ReportsPeriodSelectedEventV1,
   ReportsDownloadClickedEventV1,
   ReportsSectionExpandedEventV1,

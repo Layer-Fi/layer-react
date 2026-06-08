@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { getMonth, getYear, set } from 'date-fns'
 
 import { getCompletedTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
@@ -39,6 +39,15 @@ function TasksMonthSelector({ isMobile }: TasksMonthSelectorProps) {
   const activeMonthNumber = getMonth(date) + 1
   const activeYear = getYear(date)
 
+  const handleMonthClick = useCallback((year: number, month: number) => {
+    emitLayerEvent({
+      type: LayerEventType.TaskMonthSelected,
+      version: 1,
+      payload: { year, month },
+    })
+    setMonthByPeriod({ yearNumber: year, monthNumber: month })
+  }, [emitLayerEvent, setMonthByPeriod])
+
   const monthsData = useMemo(() => {
     return Array.from({ length: 12 }, (_, index) => {
       const date = set(
@@ -78,17 +87,7 @@ function TasksMonthSelector({ isMobile }: TasksMonthSelectorProps) {
         return (
           <TaskMonthTile
             key={idx}
-            onClick={() => {
-              emitLayerEvent({
-                type: LayerEventType.TaskMonthSelected,
-                version: 1,
-                payload: { year: monthData.year, month: monthData.month },
-              })
-              setMonthByPeriod({
-                yearNumber: monthData.year,
-                monthNumber: monthData.month,
-              })
-            }}
+            onClick={() => handleMonthClick(monthData.year, monthData.month)}
             data={monthData}
             active={monthData.month === activeMonthNumber}
             disabled={monthData.disabled}
