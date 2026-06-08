@@ -14,6 +14,12 @@
   color: var(--color-base-1000);
   vertical-align: middle;
 
+  &:disabled,
+  &[data-disabled] {
+    cursor: not-allowed;
+    color: var(--color-base-500);
+  }
+
   &[data-inset] {
     padding-inline: 0;
 
