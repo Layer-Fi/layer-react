@@ -42,10 +42,8 @@ export enum EntryType {
 const EntryTypeSchema = Schema.Enums(EntryType)
 
 export const LedgerEntryLineItemSchema = Schema.Struct({
-  // Composite identifier (entry id + line index), not a plain UUID
   id: Schema.String,
   entryId: pipe(
-    // References the composite entry id below, not a plain UUID
     Schema.propertySignature(Schema.String),
     Schema.fromKey('entry_id'),
   ),
@@ -73,7 +71,6 @@ export const LedgerEntryLineItemSchema = Schema.Struct({
 })
 
 export const LedgerEntrySchema = Schema.Struct({
-  // Composite identifier (concatenated UUIDs), not a plain UUID
   id: Schema.String,
   businessId: pipe(
     Schema.propertySignature(Schema.UUID),
@@ -100,12 +97,10 @@ export const LedgerEntrySchema = Schema.Struct({
     Schema.fromKey('entry_at'),
   ),
   reversalOfId: pipe(
-    // References a composite entry id, not a plain UUID
     Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('reversal_of_id'),
   ),
   reversalId: pipe(
-    // References a composite entry id, not a plain UUID
     Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('reversal_id'),
   ),
