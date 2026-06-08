@@ -1,5 +1,4 @@
 import { type DateRange } from '@internal-types/general'
-import { type DataModel } from '@internal-types/general'
 import { type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
 import { type Business } from '@schemas/business'
 import { type LayerError } from '@utils/api/errorHandler'
@@ -34,12 +33,6 @@ export type LayerContextHelpers = {
   addToast: (toast: ToastProps) => void
   removeToast: (toast: ToastProps) => void
   onError?: (error: LayerError) => void
-  touch: (model: DataModel) => void
-  read: (model: DataModel, cacheKey: string) => void
-  syncTimestamps: Partial<Record<DataModel, number>>
-  readTimestamps: Partial<Record<string, { t: number, m: DataModel }>>
-  expireDataCaches: () => void
-  hasBeenTouched: (cacheKey: string) => boolean
   setTheme: (theme: LayerThemeConfig) => void
 }
 
