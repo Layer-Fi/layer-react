@@ -9,6 +9,8 @@ import { useDeleteUploadsOnTask } from '@hooks/api/businesses/[business-id]/task
 import { useUpdateTaskUploadDescription } from '@hooks/api/businesses/[business-id]/tasks/[task-id]/upload/update-description/useUpdateTaskUploadDescription'
 import { useUploadDocumentsForTask } from '@hooks/api/businesses/[business-id]/tasks/[task-id]/upload/useUploadDocumentsForTask'
 import { useSubmitUserResponseForTask } from '@hooks/api/businesses/[business-id]/tasks/[task-id]/user-response/useSubmitResponseForTask'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { FileInput } from '@components/Input/FileInput'
@@ -26,6 +28,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
   ref,
 ) => {
   const { t } = useTranslation()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.Tasks)
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const [userResponse, setUserResponse] = useState(task.userResponse ?? '')
   const [selectedFiles, setSelectedFiles] = useState<File[]>()
@@ -73,9 +76,14 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
   }
 
   const onClickTaskItemHead = useCallback(() => {
+    emitLayerEvent({
+      type: LayerEventType.TaskClicked,
+      version: 1,
+      payload: { taskId: task.id },
+    })
     setIsOpen(!isOpen)
     onExpandTask?.(!isOpen)
-  }, [isOpen, onExpandTask])
+  }, [isOpen, onExpandTask, emitLayerEvent, task.id])
 
   const uploadDocumentAction = useMemo(() => {
     if (task.userResponseType === TaskUserResponseType.UploadDocument) {

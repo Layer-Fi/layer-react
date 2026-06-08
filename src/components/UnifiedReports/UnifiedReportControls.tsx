@@ -55,6 +55,7 @@ export const UnifiedReportControls = () => {
   const hasYear = hasControl(baseReport, ReportControl.Year)
   const hasReportingBasis = hasControl(baseReport, ReportControl.ReportingBasis) && reportingBasis != null
   const tagControl = baseReport?.tagControl
+
   return (
     <VStack ref={containerRef} className='Layer__UnifiedReports__ControlsContainer'>
       <Stack

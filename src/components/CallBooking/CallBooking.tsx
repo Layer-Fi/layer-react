@@ -4,7 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { translationKey } from '@utils/i18n/translationKey'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { Button } from '@ui/Button/Button'
 import { LinkButton } from '@ui/Button/LinkButton'
 import { DateTile } from '@ui/DateTile/DateTile'
@@ -39,6 +41,12 @@ export interface CallBookingProps {
 
 const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
   const { t } = useTranslation()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BookkeepingOverview)
+
+  const handleBookCall = () => {
+    emitLayerEvent({ type: LayerEventType.BookkeepingScheduleCallClicked, version: 1, payload: {} })
+    onBookCall?.()
+  }
 
   return (
     <VStack gap='md' align='center' pi='lg' pb='lg'>
@@ -48,7 +56,7 @@ const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
       <Span variant='subtle' align='center'>
         {t('callBookings:label.book_call_with_bookkeeper', 'Schedule an onboarding call with your bookkeeper')}
       </Span>
-      <Button variant='solid' onClick={onBookCall}>
+      <Button variant='solid' onClick={handleBookCall}>
         {t('callBookings:action.book_call', 'Schedule Call')}
       </Button>
     </VStack>
