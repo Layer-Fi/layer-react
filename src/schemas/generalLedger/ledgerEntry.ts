@@ -42,9 +42,9 @@ export enum EntryType {
 const EntryTypeSchema = Schema.Enums(EntryType)
 
 export const LedgerEntryLineItemSchema = Schema.Struct({
-  id: Schema.UUID,
+  id: Schema.String,
   entryId: pipe(
-    Schema.propertySignature(Schema.UUID),
+    Schema.propertySignature(Schema.String),
     Schema.fromKey('entry_id'),
   ),
   account: SingleChartAccountSchema,
@@ -71,7 +71,7 @@ export const LedgerEntryLineItemSchema = Schema.Struct({
 })
 
 export const LedgerEntrySchema = Schema.Struct({
-  id: Schema.UUID,
+  id: Schema.String,
   businessId: pipe(
     Schema.propertySignature(Schema.UUID),
     Schema.fromKey('business_id'),
@@ -97,11 +97,11 @@ export const LedgerEntrySchema = Schema.Struct({
     Schema.fromKey('entry_at'),
   ),
   reversalOfId: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.UUID)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('reversal_of_id'),
   ),
   reversalId: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.UUID)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('reversal_id'),
   ),
   lineItems: pipe(

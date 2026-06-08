@@ -13,10 +13,10 @@ const reverseJournalEntry = post<Record<never, never>>(
 )
 
 type UseJournal = () => {
-  data?: ReadonlyArray<LedgerEntry>
-  isLoading?: boolean
-  isValidating?: boolean
-  isError?: boolean
+  data: ReadonlyArray<LedgerEntry> | undefined
+  isLoading: boolean
+  isValidating: boolean
+  isError: boolean
   refetch: () => Promise<ListLedgerEntriesReturn[] | undefined>
   selectedEntryId?: string
   setSelectedEntryId: (id?: string) => void

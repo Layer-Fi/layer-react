@@ -17,7 +17,7 @@ import { ConditionalList } from '@components/utility/ConditionalList'
 
 import './dataTable.scss'
 
-type ClickableRowProps<TData> = {
+export type ClickableRowProps<TData> = {
   onRowClick: (row: RowType<TData>) => void
   isRowClickable: (row: RowType<TData>) => boolean
 }
@@ -40,6 +40,7 @@ export interface DataTableProps<TData> extends BaseDataTableProps {
   headerGroups: HeaderGroup<TData>[]
   numColumns: number
   withClickableRow?: ClickableRowProps<TData>
+  isRowSelected?: (row: RowType<TData>) => boolean
 }
 
 const EMPTY_ARRAY: never[] = []
@@ -54,6 +55,7 @@ export const DataTable = <TData extends object>({
   headerGroups,
   numColumns,
   withClickableRow,
+  isRowSelected,
 }: DataTableProps<TData>) => {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null)
   const nonAria = headerGroups.length > 1 || numColumns === 0
@@ -144,7 +146,10 @@ export const DataTable = <TData extends object>({
                   depth={row.depth}
                   nonAria={nonAria}
                   onAction={onAction}
-                  className={isClickable ? 'Layer__DataTable__ClickableRow' : undefined}
+                  className={classNames(
+                    isClickable && 'Layer__DataTable__ClickableRow',
+                    isRowSelected?.(row) && 'Layer__DataTable__SelectedRow',
+                  )}
                 >
                   {row.getVisibleCells().map(cell => (
                     <Cell
