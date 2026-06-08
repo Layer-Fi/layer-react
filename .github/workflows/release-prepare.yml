@@ -26,12 +26,12 @@ on:
   workflow_dispatch:
     inputs:
       release_type:
-        description: 'What to prepare'
+        description: 'Release channel'
         type: choice
         options: [ alpha, stable ]
         default: alpha
-      bump:
-        description: 'Base bump — used only to START a cycle (alpha from stable) or ship straight from stable; ignored otherwise'
+      increment:
+        description: 'Increment (used for first version in release cycle)'
         type: choice
         options: [ patch, minor, major ]
         default: patch
@@ -66,12 +66,12 @@ jobs:
         if [ "${{ inputs.release_type }}" = "alpha" ]; then
           case "$CUR" in
             *-*) NEWV=$(npm version prerelease --preid=alpha --no-git-tag-version) ;;
-            *)   NEWV=$(npm version "pre${{ inputs.bump }}" --preid=alpha --no-git-tag-version) ;;
+            *)   NEWV=$(npm version "pre${{ inputs.increment }}" --preid=alpha --no-git-tag-version) ;;
           esac
         else
           case "$CUR" in
             *-*) NEWV=$(npm version patch --no-git-tag-version) ;;          # finalize: drop -alpha.N
-            *)   NEWV=$(npm version "${{ inputs.bump }}" --no-git-tag-version) ;;
+            *)   NEWV=$(npm version "${{ inputs.increment }}" --no-git-tag-version) ;;
           esac
         fi
         NEWV=${NEWV#v}
