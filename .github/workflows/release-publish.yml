@@ -12,7 +12,10 @@ name: Release — Publish
 # Set `dry_run` to rehearse: npm publish --dry-run, Linear read-only, and the
 # tag is not required (falls back to main HEAD).
 #
-# Secrets: NPM_TOKEN (npm automation token), LINEAR_ACCESS_KEY (pipeline key).
+# npm auth: OIDC trusted publishing (no token). Configure the trusted publisher
+# for @layerfi/components on npmjs.com.
+#
+# Secret: LINEAR_ACCESS_KEY.
 
 on:
   workflow_dispatch:
@@ -29,6 +32,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write   # OIDC for npm trusted publishing
 
 jobs:
   publish:
@@ -84,18 +88,20 @@ jobs:
           exit 1
         fi
 
+    # No registry-url: it writes an empty _authToken that makes npm skip OIDC.
     - uses: actions/setup-node@v4
       with:
         node-version: '22'
         cache: 'npm'
-        registry-url: 'https://registry.npmjs.org'
+
+    # Trusted publishing needs npm >= 11.5.1; pin it.
+    - name: Upgrade npm for trusted publishing
+      run: npm install -g npm@11.5.1
 
     - name: Install dependencies
       run: npm ci
 
     - name: Publish to npm
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       run: npm publish --access public --tag ${{ steps.r.outputs.type == 'alpha' && 'alpha' || 'latest' }} ${{ inputs.dry_run && '--dry-run' || '' }}
 
     - name: Sync release in Linear
