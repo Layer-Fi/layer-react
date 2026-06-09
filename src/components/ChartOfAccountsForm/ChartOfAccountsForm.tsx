@@ -258,8 +258,8 @@ export const ChartOfAccountsForm = ({
   }, [data?.accounts, formMode])
 
   // If an account being edited drops out of the loaded data after the panel opened
-  // (e.g. deleted elsewhere, or a date-range change), close the form once the data
-  // has settled rather than leaving the panel open with nothing to render.
+  // (e.g. it's deleted, or a refetch returns a different set), close the form once
+  // the data has settled rather than leaving the panel open with nothing to render.
   const isMissingEditTarget = formMode?.action === 'edit' && !contentProps && !isLoading
   useEffect(() => {
     if (isMissingEditTarget) {
