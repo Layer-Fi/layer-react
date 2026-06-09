@@ -21,8 +21,10 @@ import { isDateAllowedToBrowse } from '@utils/business'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import { useProfitAndLossLTM } from '@hooks/features/profitAndLoss/useProfitAndLossLTM'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ChartYAxis } from '@components/Chart/ChartYAxis'
 import { areChartWindowsEqual, getChartWindow } from '@components/ProfitAndLossChart/getChartWindow'
@@ -57,6 +59,7 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
 
   const { date } = useGlobalDate({ dateSelectionMode: 'month' })
   const { setMonth } = useGlobalDateRangeActions()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.ProfitAndLossChart)
 
   const [chartWindow, setChartWindow] = useState({
     start: startOfMonth(sub(date, { months: 11 })),
@@ -118,6 +121,11 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
     const isMonthAllowed = isDateAllowedToBrowse(selectedDate, business)
 
     if (isMonthAllowed) {
+      emitLayerEvent({
+        type: LayerEventType.ProfitAndLossMonthSelected,
+        version: 1,
+        payload: { year: selectedDate.getFullYear(), month: selectedDate.getMonth() + 1 },
+      })
       setMonth({ startDate: selectedDate })
     }
 
@@ -127,7 +135,7 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
       setBarAnimation(true)
       prevChartWindowRef.current = newChartWindow
     }
-  }, [chartWindow, setMonth, business, activationDate])
+  }, [chartWindow, setMonth, business, activationDate, emitLayerEvent])
 
   const onResize = useCallback((width: number | undefined) => {
     if (width && width < 620 && !compactView) {
@@ -177,11 +185,14 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
             />
           ))}
           <Line
-            dot
+            dot={{
+              fill: 'var(--color-base-0)',
+              stroke: 'var(--color-base-1000)',
+            }}
             strokeWidth={1}
             type='linear'
             dataKey='netProfit'
-            stroke={getColor(1000)?.hex ?? 'var(--color-base-1000)'}
+            stroke='var(--pnl-chart-line-color, var(--color-base-1000))'
             name='Net profit'
             xAxisId='revenue'
             animationDuration={200}

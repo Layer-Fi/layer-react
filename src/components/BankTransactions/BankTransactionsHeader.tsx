@@ -10,9 +10,11 @@ import { translationKey } from '@utils/i18n/translationKey'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useHandleDownloadTransactions } from '@hooks/features/bankTransactions/useHandleBankTransactionsDownload'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
@@ -62,11 +64,20 @@ type TransactionsSearchProps = {
 function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
   const { t } = useTranslation()
   const { filters, setFilters } = useBankTransactionsFiltersContext()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BankTransactions)
 
   const [localSearch, setLocalSearch] = useState(() => filters?.query ?? '')
 
   const debouncedSetDescription = useDebounce((value: string) => {
+    if (value === (filters?.query ?? '')) return
+
     setFilters({ query: value })
+
+    emitLayerEvent({
+      type: LayerEventType.TransactionsSearchSubmitted,
+      version: 1,
+      payload: { query: value },
+    })
   })
 
   const handleSearch = useCallback((value: string) => {

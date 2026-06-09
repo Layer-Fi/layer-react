@@ -1,4 +1,4 @@
-import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, type PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { getYear } from 'date-fns'
 import { createStore, type StoreApi, useStore } from 'zustand'
 
@@ -18,7 +18,9 @@ import {
 import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/tag'
 import type { QueryParams } from '@utils/request/toDefinedSearchParameters'
 import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/config/useReportConfig'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { type DateSelectionMode, useGlobalDate, useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 
 type DetailReportConfig = {
   report: ReportConfig
@@ -111,11 +113,27 @@ export function useActiveUnifiedReport() {
 
 export function useBaseUnifiedReport() {
   const store = useContext(UnifiedReportStoreContext)
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.UnifiedReports)
 
   const baseReport = useStore(store, state => state.baseReport)
   const setBaseReport = useStore(store, state => state.actions.setBaseReport)
 
-  return useMemo(() => ({ baseReport, setBaseReport }), [baseReport, setBaseReport])
+  // Wraps the store action so every user-driven report switch (sidebar, mega
+  // menu, mobile drawer) emits a single event. Programmatic hydration of the
+  // default report calls the store action directly and is intentionally silent.
+  const setBaseReportWithEvent = useCallback((report: ReportConfig) => {
+    emitLayerEvent({
+      type: LayerEventType.ReportsNavigated,
+      version: 1,
+      payload: { reportKey: report.key },
+    })
+    setBaseReport(report)
+  }, [emitLayerEvent, setBaseReport])
+
+  return useMemo(
+    () => ({ baseReport, setBaseReport: setBaseReportWithEvent }),
+    [baseReport, setBaseReportWithEvent],
+  )
 }
 
 export function useDetailUnifiedReport() {

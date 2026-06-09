@@ -83,9 +83,11 @@
   padding: 8px;
   border-radius: var(--input-border-radius);
   border: 1px solid var(--border-color);
+  background-color: var(--color-base-0);
   font-size: var(--input-font-size);
   line-height: 140%;
   font-family: var(--font-family);
+  color: var(--color-base-1000);
 
   &.Layer__input--error {
     border: 1px solid var(--color-danger);
@@ -148,6 +150,7 @@
     max-height: 36px;
     border-radius: var(--input-border-radius);
     border: 1px solid var(--color-base-300);
+    background-color: var(--color-base-0);
   }
 
   & .Layer__select__control--is-focused {
@@ -195,6 +198,10 @@
 
   & .Layer__select__indicator {
     padding: 7px;
+  }
+
+  & .Layer__select__single-value {
+    color: var(--color-base-1000);
   }
 
   & .Layer__select__placeholder {

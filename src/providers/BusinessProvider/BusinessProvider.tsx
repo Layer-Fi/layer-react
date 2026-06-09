@@ -14,6 +14,7 @@ import { buildColorsPalette } from '@utils/colors'
 import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
 import { useBusiness } from '@hooks/api/businesses/[business-id]/useBusiness'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { type LayerEvent } from '@providers/LayerProvider/layerEvents'
 import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
 import { LayerContext } from '@contexts/LayerContext/LayerContext'
 import { type ToastProps, ToastsContainer } from '@components/Toast/Toast'
@@ -79,6 +80,9 @@ export const BusinessProvider = ({
 
   // Create stable callback wrappers that always call the latest version
   const stableEventCallbacks = useMemo(() => ({
+    onEvent: (event: LayerEvent) => {
+      eventCallbacksRef.current?.onEvent?.(event)
+    },
     onTransactionCategorized: () => {
       eventCallbacksRef.current?.onTransactionCategorized?.()
     },

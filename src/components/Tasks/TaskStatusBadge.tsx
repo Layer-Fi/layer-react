@@ -47,6 +47,7 @@ const getBadgeConfig = (
   switch (status) {
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
     case BookkeepingPeriodStatus.NOT_STARTED:
+    case BookkeepingPeriodStatus.CLOSING_OPEN_ITEMS:
     case BookkeepingPeriodStatus.CLOSING_IN_REVIEW: {
       return {
         color: 'info',

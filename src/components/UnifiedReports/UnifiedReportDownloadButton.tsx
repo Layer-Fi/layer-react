@@ -2,7 +2,10 @@ import { CloudDownload, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useUnifiedReportExcel } from '@hooks/api/businesses/[business-id]/reports/unified/report-name/exports/excel/useUnifiedReportExcel'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
+import { useActiveUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Button } from '@ui/Button/Button'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
@@ -20,6 +23,20 @@ export function UnifiedReportDownloadButton({ iconOnly }: UnifiedReportDownloadB
     onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
   })
 
+  const { report } = useActiveUnifiedReport()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.UnifiedReports)
+
+  const onPress = () => {
+    if (report) {
+      emitLayerEvent({
+        type: LayerEventType.ReportsDownloadClicked,
+        version: 1,
+        payload: { reportKey: report.key },
+      })
+    }
+    void trigger()
+  }
+
   const buttonText = isError
     ? t('common:action.retry_label', 'Retry')
     : t('common:action.download_label', 'Download')
@@ -28,7 +45,7 @@ export function UnifiedReportDownloadButton({ iconOnly }: UnifiedReportDownloadB
     <>
       <Button
         variant='outlined'
-        onPress={() => { void trigger() }}
+        onPress={onPress}
         isPending={isMutating}
         isDisabled={isMutating}
         icon={resolvedIconOnly}

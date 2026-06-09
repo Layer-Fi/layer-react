@@ -1,0 +1,135 @@
+name: Release — Publish
+
+# Phase 2b (manual button). Ships the release that Prepare + Tag produced.
+# Reads the version from package.json on main, checks out its tag (created by
+# the Release — Tag hook on PR merge), publishes to npm, and updates Linear:
+#   - alpha  (package.json is a prerelease) -> publish --tag alpha; sync Linear.
+#   - stable (plain version)                -> publish (latest); sync + complete
+#     the Linear release, then queue the next one (next_linear_release).
+#
+# Tagging is NOT done here — the Release — Tag hook owns that.
+#
+# Set `dry_run` to rehearse: npm publish --dry-run, Linear read-only, and the
+# tag is not required (falls back to main HEAD).
+#
+# npm auth: OIDC trusted publishing (no token). Configure the trusted publisher
+# for @layerfi/components on npmjs.com.
+#
+# Secret: LINEAR_ACCESS_KEY.
+
+on:
+  workflow_dispatch:
+    inputs:
+      next_linear_release:
+        description: 'Next Linear release (ignored for alphas)'
+        type: choice
+        options: [ patch, minor, major ]
+        default: patch
+      dry_run:
+        description: 'As dry run'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  id-token: write   # OIDC for npm trusted publishing
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: main
+        fetch-depth: 0
+
+    - name: Resolve release
+      id: r
+      run: |
+        git fetch --tags origin >/dev/null 2>&1 || true
+        V=$(node -p "require('./package.json').version")   # relative file require; no node_modules needed
+        BASE=${V%%-*}
+        case "$V" in *-*) TYPE=alpha ;; *) TYPE=stable ;; esac
+        # Next version: plain bash bump of BASE (X.Y.Z), no semver dependency.
+        IFS=. read -r MA MI PA <<< "$BASE"
+        case "${{ inputs.next_linear_release }}" in
+          patch) NEXT="$MA.$MI.$((PA + 1))" ;;
+          minor) NEXT="$MA.$((MI + 1)).0" ;;
+          major) NEXT="$((MA + 1)).0.0" ;;
+        esac
+        {
+          echo "version=$V"
+          echo "base=$BASE"
+          echo "type=$TYPE"
+          echo "next=$NEXT"
+        } >> "$GITHUB_OUTPUT"
+        {
+          echo "### Publishing"
+          echo ""
+          echo "| field | value |"
+          echo "| --- | --- |"
+          echo "| version | \`$V\` |"
+          echo "| channel | $TYPE ($([ "$TYPE" = alpha ] && echo 'npm tag: alpha' || echo 'npm tag: latest')) |"
+          [ "$TYPE" = stable ] && echo "| next queued in Linear | \`$NEXT\` (${{ inputs.next_linear_release }}) |"
+          [ "${{ inputs.dry_run }}" = "true" ] && echo "| mode | DRY RUN |"
+        } >> "$GITHUB_STEP_SUMMARY"
+        echo "Publishing $V ($TYPE)"
+
+    - name: Check out the tagged commit
+      run: |
+        V="${{ steps.r.outputs.version }}"
+        if git rev-parse "v$V" >/dev/null 2>&1; then
+          git checkout "v$V"
+        elif [ "${{ inputs.dry_run }}" = "true" ]; then
+          echo "::notice::DRY RUN — tag v$V not found; using main HEAD."
+        else
+          echo "::error::Tag v$V not found. Merge the Release — Prepare PR first (the Release — Tag hook creates it)."
+          exit 1
+        fi
+
+    # No registry-url: it writes an empty _authToken that makes npm skip OIDC.
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    # Trusted publishing needs npm >= 11.5.1; pin it.
+    - name: Upgrade npm for trusted publishing
+      run: npm install -g npm@11.5.1
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Publish to npm
+      run: npm publish --access public --tag ${{ steps.r.outputs.type == 'alpha' && 'alpha' || 'latest' }} ${{ inputs.dry_run && '--dry-run' || '' }}
+
+    - name: Sync release in Linear
+      uses: linear/linear-release-action@v0
+      with:
+        access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
+        command: sync
+        version: ${{ steps.r.outputs.base }}
+        name: ${{ steps.r.outputs.base }}
+        dry_run: ${{ inputs.dry_run }}
+
+    - name: Complete release in Linear
+      if: ${{ steps.r.outputs.type == 'stable' }}
+      uses: linear/linear-release-action@v0
+      with:
+        access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
+        command: complete
+        version: ${{ steps.r.outputs.base }}
+        dry_run: ${{ inputs.dry_run }}
+
+    # Seed the next release so it exists in Linear right after this one ships.
+    # (CLI can only create it In Progress, not Planned.)
+    - name: Queue the next release in Linear
+      if: ${{ steps.r.outputs.type == 'stable' }}
+      uses: linear/linear-release-action@v0
+      with:
+        access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
+        command: sync
+        version: ${{ steps.r.outputs.next }}
+        name: ${{ steps.r.outputs.next }}
+        dry_run: ${{ inputs.dry_run }}
