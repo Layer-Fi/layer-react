@@ -148,17 +148,7 @@ export function CustomerSelector({
     [t],
   )
 
-  const ErrorMessage = useMemo(
-    () => (
-      <P
-        size='xs'
-        status='error'
-      >
-        {t('customerVendor:error.load_customers', 'An error occurred while loading customers.')}
-      </P>
-    ),
-    [t],
-  )
+  const ErrorMessage = t('customerVendor:error.load_customers', 'An error occurred while loading customers.')
 
   const inputId = useId()
 

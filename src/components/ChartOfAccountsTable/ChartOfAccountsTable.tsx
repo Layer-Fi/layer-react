@@ -9,6 +9,7 @@ import {
 } from '@internal-types/chartOfAccounts'
 import { Alignment } from '@schemas/reports/unifiedReport'
 import { asMutable } from '@utils/asMutable'
+import { useDeleteAccountFromLedger } from '@hooks/api/businesses/[business-id]/ledger/accounts/[account-id]/useDeleteLedgerAccount'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -19,7 +20,7 @@ import { Span } from '@ui/Typography/Text'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { type ChartOfAccountsTableStringOverrides } from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
-import { filterAccounts, getInitialExpandedState, getMatchedTextIndices, getRowId } from '@components/ChartOfAccountsTable/utils/utils'
+import { filterAccounts, getInitialExpandedState, getMatchedTextIndices, getRowId } from '@components/ChartOfAccountsTable/utils'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
@@ -92,9 +93,11 @@ const ChartOfAccountsErrorState = () => {
 export const ChartOfAccountsTable = ({
   stringOverrides,
   searchQuery,
+  onEditAccount,
   templateAccountsEditable = true,
 }: {
   searchQuery: string
+  onEditAccount: (accountId: string) => void
   stringOverrides?: ChartOfAccountsTableStringOverrides
   templateAccountsEditable?: boolean
 }) => {
@@ -102,14 +105,16 @@ export const ChartOfAccountsTable = ({
   const { formatCurrencyFromCents } = useIntlFormatter()
   const { setSelectedAccount } = useContext(LedgerAccountsContext)
   const { setExpanded } = useContext(ExpandableDataTableContext)
-  const { data, isLoading, isError, editAccount, deleteAccount } = useContext(ChartOfAccountsContext)
+  const { data, isLoading, isError, refetch } = useContext(ChartOfAccountsContext)
+  const { trigger: deleteAccount } = useDeleteAccountFromLedger()
   const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
   const { accountingConfiguration } = useLayerContext()
   const enableAccountNumbers = !!accountingConfiguration?.enableAccountNumbers
 
   const onConfirmDelete = async () => {
     if (!accountToDelete) return
-    await deleteAccount(accountToDelete.accountId)
+    await deleteAccount({ accountId: accountToDelete.accountId })
+    await refetch()
   }
 
   const getDeleteButtonTooltip = useCallback((account: AugmentedLedgerAccountBalance) => {
@@ -154,8 +159,8 @@ export const ChartOfAccountsTable = ({
   const onClickEdit = useCallback((account: AugmentedLedgerAccountBalance, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    editAccount(account.accountId)
-  }, [editAccount])
+    onEditAccount(account.accountId)
+  }, [onEditAccount])
 
   const onClickDelete = (account: AugmentedLedgerAccountBalance, e: React.MouseEvent) => {
     e.preventDefault()
@@ -227,7 +232,9 @@ export const ChartOfAccountsTable = ({
         alignment: Alignment.Right,
         cell: (row: Row<AugmentedLedgerAccountBalance>) => {
           const account = row.original
-          const isNonEditable = !templateAccountsEditable && !!account.stableName
+          // Top-level accounts have no parent, which the form requires, so they cannot be edited.
+          const isTopLevelAccount = row.depth === 0
+          const isNonEditable = isTopLevelAccount || (!templateAccountsEditable && !!account.stableName)
           const isDeleteDisabled = !account.isDeletable
 
           return (

@@ -56,11 +56,7 @@ export const CounterpartyComboBox = ({
           <Span>{emptyMessageContent}</Span>
         </VStack>
       ),
-      ErrorMessage: (
-        <Span size='xs' status='error'>
-          {t('categorizationRules:validation.counterparty_required', 'Counterparty is required.')}
-        </Span>
-      ),
+      ErrorMessage: t('categorizationRules:validation.counterparty_required', 'Counterparty is required.'),
     }
   }, [isListError, searchQuery, t])
 

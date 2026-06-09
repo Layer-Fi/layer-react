@@ -1,31 +1,40 @@
-import { useContext, useMemo } from 'react'
+import { useCallback, useContext, useEffect, useMemo } from 'react'
+import { AlertTriangle, X } from 'lucide-react'
+import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { flattenAccounts } from '@hooks/legacy/useChartOfAccounts'
+import { type LedgerAccountType, type LedgerEntryDirection, type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
+import { UpsertLedgerAccountMode } from '@hooks/api/businesses/[business-id]/ledger/accounts/useUpsertLedgerAccount'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
-import { Button, ButtonVariant } from '@components/Button/Button'
-import { RetryButton } from '@components/Button/RetryButton'
-import { SubmitButton } from '@components/Button/SubmitButton'
-import { useChartOfAccountsFormOptions } from '@components/ChartOfAccountsForm/useChartOfAccountsFormOptions'
-import { useParentOptions } from '@components/ChartOfAccountsForm/useParentOptions'
-import { Header } from '@components/Header/Header'
-import { HeaderCol } from '@components/Header/HeaderCol'
-import { HeaderRow } from '@components/Header/HeaderRow'
-import { Input } from '@components/Input/Input'
-import { InputGroup } from '@components/Input/InputGroup'
-import { Select } from '@components/Input/Select'
-import { Heading, HeadingSize } from '@components/Typography/Heading'
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { Button } from '@ui/Button/Button'
+import { Form } from '@ui/Form/Form'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
+import { Span } from '@ui/Typography/Text'
+import { AccountSubtypeComboBox } from '@components/ChartOfAccountsForm/AccountSubtypeComboBox'
+import { AccountTypeComboBox } from '@components/ChartOfAccountsForm/AccountTypeComboBox'
+import { flattenAccounts } from '@components/ChartOfAccountsForm/flattenAccounts'
+import { NormalityComboBox } from '@components/ChartOfAccountsForm/NormalityComboBox'
+import { ParentComboBox } from '@components/ChartOfAccountsForm/ParentComboBox'
+import { useChartOfAccountsForm } from '@components/ChartOfAccountsForm/useChartOfAccountsForm'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { TextSize } from '@components/Typography/Text'
 
 import './chartOfAccountsForm.scss'
+
+export type ChartOfAccountsFormMode =
+  | { action: 'new' }
+  | { action: 'edit', accountId: string }
 
 export interface ChartOfAccountsFormStringOverrides {
   editModeHeader?: string
   createModeHeader?: string
   cancelButton?: string
-  retryButton?: string
   saveButton?: string
+  retryButton?: string
   parentLabel?: string
   nameLabel?: string
   accountNumberLabel?: string
@@ -34,245 +43,240 @@ export interface ChartOfAccountsFormStringOverrides {
   normalityLabel?: string
 }
 
-export const ChartOfAccountsForm = ({
-  stringOverrides,
-}: {
+type ChartOfAccountsFormContentMode =
+  | { mode: UpsertLedgerAccountMode.Create }
+  | { mode: UpsertLedgerAccountMode.Update, account: NestedLedgerAccountType, parentAccountId?: string }
+
+type ChartOfAccountsFormContentProps = ChartOfAccountsFormContentMode & {
+  onCancel: () => void
   stringOverrides?: ChartOfAccountsFormStringOverrides
-}) => {
+}
+
+const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
+  const { onCancel, stringOverrides } = props
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
-  const {
-    form,
-    data,
-    changeFormData,
-    cancelForm,
-    submitForm,
-    sendingForm,
-    apiError,
-  } = useContext(ChartOfAccountsContext)
+  const { data } = useContext(ChartOfAccountsContext)
+  const { accountingConfiguration } = useLayerContext()
+  const enableAccountNumbers = !!accountingConfiguration?.enableAccountNumbers
+  const { isMobile } = useSizeClass()
+  const inline = !isMobile
 
-  const parentOptions = useParentOptions(data)
-  const {
-    ledgerAccountTypesOptions,
-    normalityOptions,
-    ledgerAccountSubtypesForType,
-  } = useChartOfAccountsFormOptions()
+  const cancelLabel = stringOverrides?.cancelButton || t('common:action.cancel_label', 'Cancel')
 
-  const entry = useMemo(() => {
-    if (form?.action === 'edit' && form.accountId) {
-      return flattenAccounts(data?.accounts || []).find(
-        x => x.accountId === form.accountId,
-      )
+  const isEdit = props.mode === UpsertLedgerAccountMode.Update
+  const account = props.mode === UpsertLedgerAccountMode.Update ? props.account : undefined
+
+  const { form, submitError } = useChartOfAccountsForm(
+    props.mode === UpsertLedgerAccountMode.Update
+      ? { mode: UpsertLedgerAccountMode.Update, account: props.account, parentAccountId: props.parentAccountId, onSuccess: onCancel }
+      : { mode: UpsertLedgerAccountMode.Create, onSuccess: onCancel },
+  )
+
+  const allAccounts = useMemo(() => flattenAccounts(data?.accounts ?? []), [data?.accounts])
+
+  /* When setting the parent field, inherit the parent's type, sub-type, and normality */
+  const onChangeParent = useCallback((value: string | null) => {
+    form.setFieldValue('parent', value)
+
+    const foundParent = value
+      ? allAccounts.find(accountItem => accountItem.accountId === value)
+      : undefined
+
+    if (foundParent) {
+      form.setFieldValue('type', foundParent.accountType.value)
+      form.setFieldValue('subType', foundParent.accountSubtype?.value ?? null)
+      form.setFieldValue('normality', foundParent.normality)
     }
+  }, [allAccounts, form])
 
-    return
-  }, [data?.accounts, form?.accountId, form?.action])
+  // Prevents default browser form submission behavior since we're handling submission externally.
+  const blockNativeOnSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }, [])
 
-  if (!form) {
+  return (
+    <Form className='Layer__ChartOfAccountsForm' onSubmit={blockNativeOnSubmit}>
+      <HStack className='Layer__ChartOfAccountsForm__Header' justify='space-between' align='center' gap='md'>
+        <Heading level={2} size='sm'>
+          {isEdit
+            ? stringOverrides?.editModeHeader || t('chartOfAccounts:action.edit_account', 'Edit Account')
+            : stringOverrides?.createModeHeader || t('chartOfAccounts:action.add_new_account', 'Add New Account')}
+        </Heading>
+        <Button variant='outlined' icon onPress={onCancel} aria-label={cancelLabel}>
+          <X size={16} />
+        </Button>
+      </HStack>
+
+      {submitError && (
+        <HStack className='Layer__ChartOfAccountsForm__FormError' pb='sm' pi='md'>
+          <DataState
+            icon={<AlertTriangle size={16} />}
+            status={DataStateStatus.failed}
+            title={submitError}
+            titleSize={TextSize.md}
+            inline
+          />
+        </HStack>
+      )}
+
+      {account && (
+        <HStack className='Layer__ChartOfAccountsForm__EditEntry' justify='space-between' align='center' gap='md'>
+          <Span weight='bold'>{account.name}</Span>
+          <Span weight='bold'>{formatCurrencyFromCents(account.balance)}</Span>
+        </HStack>
+      )}
+
+      <VStack className='Layer__ChartOfAccountsForm__Section' gap='sm'>
+        <form.Field name='parent'>
+          {field => (
+            <ParentComboBox
+              label={stringOverrides?.parentLabel || t('chartOfAccounts:label.parent', 'Parent')}
+              data={data}
+              value={field.state.value}
+              onChange={onChangeParent}
+              error={field.state.meta.errors[0] as string | undefined}
+              inline={inline}
+            />
+          )}
+        </form.Field>
+
+        <form.AppField name='name'>
+          {field => (
+            <field.FormTextField
+              label={stringOverrides?.nameLabel || t('common:label.name', 'Name')}
+              placeholder={t('chartOfAccounts:label.enter_name', 'Enter name...')}
+              inline={inline}
+            />
+          )}
+        </form.AppField>
+
+        {enableAccountNumbers && (
+          <form.AppField name='accountNumber'>
+            {field => (
+              <field.FormTextField
+                label={stringOverrides?.accountNumberLabel || t('generalLedger:label.account_number', 'Account Number')}
+                placeholder={t('chartOfAccounts:label.enter_account_number', 'Enter account number...')}
+                inline={inline}
+              />
+            )}
+          </form.AppField>
+        )}
+
+        <form.Subscribe selector={state => state.values.parent}>
+          {parent => (
+            <form.Field name='type'>
+              {field => (
+                <AccountTypeComboBox
+                  label={stringOverrides?.typeLabel || t('common:label.type', 'Type')}
+                  value={field.state.value}
+                  onChange={value => field.handleChange(value as LedgerAccountType | null)}
+                  isDisabled={isEdit || parent !== null}
+                  error={field.state.meta.errors[0] as string | undefined}
+                  inline={inline}
+                />
+              )}
+            </form.Field>
+          )}
+        </form.Subscribe>
+
+        <form.Subscribe selector={state => state.values.type}>
+          {type => (
+            <form.Field name='subType'>
+              {field => (
+                <AccountSubtypeComboBox
+                  label={stringOverrides?.subTypeLabel || t('chartOfAccounts:label.sub_type', 'Sub-Type')}
+                  type={type}
+                  value={field.state.value}
+                  onChange={field.handleChange}
+                  error={field.state.meta.errors[0] as string | undefined}
+                  inline={inline}
+                />
+              )}
+            </form.Field>
+          )}
+        </form.Subscribe>
+
+        <form.Field name='normality'>
+          {field => (
+            <NormalityComboBox
+              label={stringOverrides?.normalityLabel || t('common:label.normality', 'Normality')}
+              value={field.state.value}
+              onChange={value => field.handleChange(value as LedgerEntryDirection | null)}
+              error={field.state.meta.errors[0] as string | undefined}
+              inline={inline}
+            />
+          )}
+        </form.Field>
+      </VStack>
+
+      <HStack className='Layer__ChartOfAccountsForm__Footer' justify='end' align='center' gap='xs'>
+        <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting] as const}>
+          {([canSubmit, isSubmitting]) => (
+            <>
+              <Button variant='outlined' onPress={onCancel} isDisabled={isSubmitting}>
+                {cancelLabel}
+              </Button>
+              <Button isDisabled={!canSubmit} isPending={isSubmitting} onPress={() => { void form.handleSubmit() }}>
+                {submitError
+                  ? stringOverrides?.retryButton || t('common:action.retry_label', 'Retry')
+                  : stringOverrides?.saveButton || t('common:action.save_label', 'Save')}
+              </Button>
+            </>
+          )}
+        </form.Subscribe>
+      </HStack>
+    </Form>
+  )
+}
+
+export const ChartOfAccountsForm = ({
+  formMode,
+  onCancel,
+  stringOverrides,
+}: {
+  formMode?: ChartOfAccountsFormMode
+  onCancel: () => void
+  stringOverrides?: ChartOfAccountsFormStringOverrides
+}) => {
+  const { data, isLoading } = useContext(ChartOfAccountsContext)
+
+  const contentProps = useMemo((): ChartOfAccountsFormContentMode | undefined => {
+    if (!formMode) return undefined
+    if (formMode.action === 'new') return { mode: UpsertLedgerAccountMode.Create }
+
+    const allAccounts = flattenAccounts(data?.accounts ?? [])
+    const account = allAccounts.find(accountItem => accountItem.accountId === formMode.accountId)
+    if (!account) return undefined
+
+    const parentAccountId = allAccounts.find(
+      accountItem => accountItem.subAccounts?.some(child => child.accountId === account.accountId),
+    )?.accountId
+
+    return { mode: UpsertLedgerAccountMode.Update, account, parentAccountId }
+  }, [data?.accounts, formMode])
+
+  // If an account being edited drops out of the loaded data after the panel opened
+  // (e.g. it's deleted, or a refetch returns a different set), close the form once
+  // the data has settled rather than leaving the panel open with nothing to render.
+  const isMissingEditTarget = formMode?.action === 'edit' && !contentProps && !isLoading
+  useEffect(() => {
+    if (isMissingEditTarget) {
+      onCancel()
+    }
+  }, [isMissingEditTarget, onCancel])
+
+  if (!contentProps) {
     return null
   }
 
   return (
-    <form
-      className='Layer__form'
-      onSubmit={(e) => {
-        e.preventDefault()
-        submitForm()
-      }}
-    >
-      <Header className='Layer__chart-of-accounts__sidebar__header'>
-        <HeaderRow>
-          <HeaderCol>
-            <Heading size={HeadingSize.secondary} className='title'>
-              {form?.action === 'edit'
-                ? stringOverrides?.editModeHeader || t('chartOfAccounts:action.edit_account', 'Edit Account')
-                : stringOverrides?.createModeHeader || t('chartOfAccounts:action.add_new_account', 'Add New Account')}
-            </Heading>
-          </HeaderCol>
-          <HeaderCol className='actions'>
-            <Button
-              type='button'
-              onClick={cancelForm}
-              variant={ButtonVariant.secondary}
-              disabled={sendingForm}
-            >
-              {stringOverrides?.cancelButton || t('common:action.cancel_label', 'Cancel')}
-            </Button>
-            {apiError && (
-              <RetryButton
-                type='submit'
-                processing={sendingForm}
-                error={t('chartOfAccounts:error.check_connection_retry_message', 'Check connection and retry in a few seconds.')}
-                disabled={sendingForm}
-              >
-                {stringOverrides?.retryButton || t('common:action.retry_label', 'Retry')}
-              </RetryButton>
-            )}
-            {!apiError && (
-              <SubmitButton
-                type='submit'
-                noIcon={true}
-                active={true}
-                disabled={sendingForm}
-              >
-                {stringOverrides?.saveButton || t('common:action.save_label', 'Save')}
-              </SubmitButton>
-            )}
-          </HeaderCol>
-        </HeaderRow>
-      </Header>
-
-      {apiError && (
-        <Text
-          size={TextSize.sm}
-          className='Layer__chart-of-accounts__form__error-message'
-        >
-          {apiError}
-        </Text>
-      )}
-
-      {entry && (
-        <div className='Layer__chart-of-accounts__form-edit-entry'>
-          <Text weight={TextWeight.bold}>{entry.name}</Text>
-          <Text weight={TextWeight.bold}>
-            {formatCurrencyFromCents(entry.balance)}
-          </Text>
-        </div>
-      )}
-
-      <div className='Layer__chart-of-accounts__form'>
-        <InputGroup
-          name='parent'
-          label={stringOverrides?.parentLabel || t('chartOfAccounts:label.parent', 'Parent')}
-          inline={true}
-        >
-          <Select
-            options={parentOptions}
-            value={form?.data.parent}
-            onChange={sel => changeFormData('parent', sel)}
-            disabled={sendingForm}
-            isInvalid={Boolean(form?.errors?.find(x => x.field === 'parent'))}
-            errorMessage={form?.errors?.find(x => x.field === 'parent')?.message}
-          />
-        </InputGroup>
-        <InputGroup
-          name='name'
-          label={stringOverrides?.nameLabel || t('common:label.name', 'Name')}
-          inline
-        >
-          <Input
-            name='name'
-            placeholder={t('chartOfAccounts:label.enter_name', 'Enter name...')}
-            value={form?.data.name}
-            isInvalid={Boolean(form?.errors?.find(x => x.field === 'name'))}
-            errorMessage={form?.errors?.find(x => x.field === 'name')?.message}
-            disabled={sendingForm}
-            onChange={e =>
-              changeFormData('name', (e.target as HTMLInputElement).value)}
-          />
-        </InputGroup>
-        <InputGroup
-          name='accountNumber'
-          label={stringOverrides?.accountNumberLabel || t('generalLedger:label.account_number', 'Account Number')}
-          inline
-        >
-          <Input
-            name='accountNumber'
-            placeholder={t('chartOfAccounts:label.enter_account_number', 'Enter account number...')}
-            value={form?.data.accountNumber}
-            isInvalid={Boolean(form?.errors?.find(x => x.field === 'accountNumber'))}
-            errorMessage={form?.errors?.find(x => x.field === 'accountNumber')?.message}
-            disabled={sendingForm}
-            onChange={e =>
-              changeFormData('accountNumber', (e.target as HTMLInputElement).value)}
-          />
-        </InputGroup>
-        <InputGroup
-          name='type'
-          label={stringOverrides?.typeLabel || t('common:label.type', 'Type')}
-          inline={true}
-        >
-          <Select
-            options={ledgerAccountTypesOptions}
-            value={form?.data.type}
-            onChange={sel => changeFormData('type', sel)}
-            isInvalid={Boolean(form?.errors?.find(x => x.field === 'type'))}
-            errorMessage={form?.errors?.find(x => x.field === 'type')?.message}
-            disabled={
-              sendingForm
-              || form.action === 'edit'
-              || form.data.parent !== undefined
-            }
-          />
-        </InputGroup>
-        <InputGroup
-          name='subType'
-          label={stringOverrides?.subTypeLabel || t('chartOfAccounts:label.sub_type', 'Sub-Type')}
-          inline={true}
-        >
-          <Select
-            options={
-              form?.data.type?.value !== undefined
-                ? ledgerAccountSubtypesForType[form?.data.type?.value]
-                : Object.values(ledgerAccountSubtypesForType).flat()
-            }
-            value={form?.data.subType}
-            isInvalid={Boolean(form?.errors?.find(x => x.field === 'subType'))}
-            errorMessage={form?.errors?.find(x => x.field === 'subType')?.message}
-            onChange={sel => changeFormData('subType', sel)}
-            disabled={sendingForm}
-          />
-        </InputGroup>
-        <InputGroup
-          name='normality'
-          label={stringOverrides?.normalityLabel || t('common:label.normality', 'Normality')}
-          inline={true}
-        >
-          <Select
-            options={normalityOptions}
-            value={form?.data.normality}
-            isInvalid={Boolean(
-              form?.errors?.find(x => x.field === 'normality'),
-            )}
-            errorMessage={
-              form?.errors?.find(x => x.field === 'normality')?.message
-            }
-            onChange={sel => changeFormData('normality', sel)}
-            disabled={sendingForm}
-          />
-        </InputGroup>
-
-        <div className='actions'>
-          <Button
-            type='button'
-            onClick={cancelForm}
-            variant={ButtonVariant.secondary}
-            disabled={sendingForm}
-          >
-            {stringOverrides?.cancelButton || t('common:action.cancel_label', 'Cancel')}
-          </Button>
-          {apiError && (
-            <RetryButton
-              type='submit'
-              processing={sendingForm}
-              error={t('chartOfAccounts:error.check_connection_retry_message', 'Check connection and retry in a few seconds.')}
-              disabled={sendingForm}
-            >
-              {stringOverrides?.retryButton || t('common:action.retry_label', 'Retry')}
-            </RetryButton>
-          )}
-          {!apiError && (
-            <SubmitButton
-              type='submit'
-              noIcon={true}
-              active={true}
-              disabled={sendingForm}
-            >
-              {stringOverrides?.saveButton || t('common:action.save_label', 'Save')}
-            </SubmitButton>
-          )}
-        </div>
-      </div>
-    </form>
+    <ChartOfAccountsFormContent
+      key={contentProps.mode === UpsertLedgerAccountMode.Update ? contentProps.account.accountId : 'new'}
+      {...contentProps}
+      onCancel={onCancel}
+      stringOverrides={stringOverrides}
+    />
   )
 }

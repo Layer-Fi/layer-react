@@ -1,7 +1,10 @@
+import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { useLedgerBalancesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/balances/useLedgerBalances'
+import { useLedgerEntriesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -57,10 +60,25 @@ export function useDeleteAccountFromLedger() {
 
   const { trigger: originalTrigger } = mutationResponse
 
+  const { invalidateLedgerBalances } = useLedgerBalancesCacheActions()
+  const { forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
+
+  const stableProxiedTrigger = useCallback(
+    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
+      const triggerResult = await originalTrigger(...triggerParameters)
+
+      void invalidateLedgerBalances()
+      void forceReloadLedgerEntries()
+
+      return triggerResult
+    },
+    [originalTrigger, invalidateLedgerBalances, forceReloadLedgerEntries],
+  )
+
   return new Proxy(mutationResponse, {
     get(target, prop) {
       if (prop === 'trigger') {
-        return originalTrigger
+        return stableProxiedTrigger
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
