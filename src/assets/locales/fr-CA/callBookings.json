@@ -1,17 +1,17 @@
 {
   "action": {
-    "add_calendar": "Ajouter au calendrier",
+    "add_calendar": "Add to Calendar",
     "book_call": "Réserver un appel",
-    "download_ics_file": "Télécharger le fichier .ics",
+    "download_ics_file": "Download .ics file",
     "join_call": "Rejoindre l’appel"
   },
   "label": {
-    "ad_hoc_call": "Appel ponctuel",
+    "ad_hoc_call": "Ad hoc call",
     "book_call_with_bookkeeper": "Réservez un appel avec votre teneur de livres",
     "google_calendar": "Google Calendar",
     "meet_bookkeeping_team": "Rencontrez notre équipe de tenue de livres",
-    "on_this_call_well": "Lors de cet appel, nous allons",
-    "onboarding_call": "Appel d’intégration",
+    "on_this_call_well": "On this call, we'll",
+    "onboarding_call": "Onboarding call",
     "onboarding_cover_bookkeeping_process": "Découvrez notre processus de tenue de livres",
     "onboarding_cover_connect_bank_and_cards": "Connectez vos comptes bancaires d’entreprise et vos cartes de crédit",
     "onboarding_cover_introduce_bookkeeper": "Présentez votre teneur de livres",
@@ -19,13 +19,13 @@
     "yahoo_calendar": "Yahoo Calendar"
   },
   "prompt": {
-    "ready_to_get_started": "Prêt à commencer?"
+    "ready_to_get_started": "Ready to get started?"
   },
   "state": {
-    "call_in_count_days_one": "dans {{displayCount}} jour",
-    "call_in_count_days_other": "dans {{displayCount}} jours",
+    "call_in_count_days_one": "in {{displayCount}} day",
+    "call_in_count_days_other": "in {{displayCount}} days",
     "call_in_count_hours_one": "dans {{displayCount}} heure",
-    "call_in_count_hours_other": "dans {{displayCount}} heures",
+    "call_in_count_hours_other": "in {{displayCount}} hours",
     "starting_soon": "commence bientôt"
   }
 }

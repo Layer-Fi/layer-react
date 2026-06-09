@@ -21,24 +21,24 @@
     "distance": "Distance",
     "distance_mi": "{{distance}} mi",
     "distance_miles": "Distance (milles)",
-    "end_address": "Adresse de destination",
+    "end_address": "End address",
     "enter_address": "Saisissez l’adresse",
     "enter_distance": "Saisissez la distance",
     "search_trips": "Rechercher des voyages",
-    "start_address": "Adresse de départ",
+    "start_address": "Start address",
     "trip_date": "Date du voyage",
     "trip_details": "Détails du voyage",
-    "trip_end_address": "<bold>Destination :</bold> {{address}}",
+    "trip_end_address": "<bold>End:</bold> {{address}}",
     "trip_purpose": "Motif du voyage",
-    "trip_start_address": "<bold>Départ :</bold> {{address}}",
+    "trip_start_address": "<bold>Start:</bold> {{address}}",
     "trips": "Voyages"
   },
   "prompt": {
     "delete_trip": "Supprimer ce voyage?"
   },
   "validation": {
-    "distance_greater_than_zero": "La distance doit être supérieure à zéro.",
-    "purpose_required": "Le motif est un champ obligatoire.",
+    "distance_greater_than_zero": "Distance must be greater than zero.",
+    "purpose_required": "Purpose is a required field.",
     "trip_date_not_future": "La date du voyage ne peut pas être dans le futur.",
     "trip_date_required": "La date du voyage est un champ obligatoire."
   }

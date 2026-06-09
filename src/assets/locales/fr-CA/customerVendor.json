@@ -1,36 +1,36 @@
 {
   "action": {
-    "create_customer_input_value": "Créer le client \"{{inputValue}}\"",
-    "create_new_customer": "Créer un nouveau client",
+    "create_customer_input_value": "Create customer \"{{inputValue}}\"",
+    "create_new_customer": "Create new customer",
     "edit_customer_details": "Modifier les renseignements du client",
-    "save_customer": "Enregistrer le client",
-    "select_customer_vendor": "Sélectionner un client ou un fournisseur",
+    "save_customer": "Save Customer",
+    "select_customer_vendor": "Select customer or vendor",
     "set_customer_vendor": "Sélectionner un client ou un fournisseur"
   },
   "empty": {
-    "matching_customers": "Aucun client correspondant",
+    "matching_customers": "No matching customers",
     "matching_customers_vendors": "Aucun client ni fournisseur correspondant trouvé"
   },
   "error": {
-    "load_customer_vendor": "Une erreur s’est produite lors du chargement des options de clients et de fournisseurs.",
-    "load_customers": "Une erreur s’est produite lors du chargement des clients."
+    "load_customer_vendor": "An error occurred while loading customer and vendor options.",
+    "load_customers": "An error occurred while loading customers."
   },
   "label": {
-    "company_name": "Nom de l’entreprise",
+    "company_name": "Company name",
     "customer": "Client",
-    "customer_vendor": "Client ou fournisseur",
-    "customers": "Clients",
+    "customer_vendor": "Customer or Vendor",
+    "customers": "Customers",
     "enter_address": "Saisissez l’adresse",
     "enter_company_name": "Saisissez le nom de l’entreprise",
     "enter_email_address": "Saisissez l’adresse courriel",
     "enter_individual_name": "Saisissez le nom de la personne",
-    "individual_name": "Nom de la personne",
-    "vendor": "Fournisseur",
-    "vendor_description": "Description du fournisseur",
-    "vendors": "Fournisseurs"
+    "individual_name": "Individual name",
+    "vendor": "Vendor",
+    "vendor_description": "Vendor Description",
+    "vendors": "Vendors"
   },
   "validation": {
-    "either_individual_required": "Le nom de la personne ou le nom de l’entreprise est requis.",
-    "email_required": "L’adresse courriel est obligatoire."
+    "either_individual_required": "Either individual name or company name is required.",
+    "email_required": "Email is a required field."
   }
 }

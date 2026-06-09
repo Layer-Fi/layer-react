@@ -1,29 +1,29 @@
 {
   "action": {
-    "select_a_month": "Sélectionner un mois"
+    "select_a_month": "Select a month"
   },
   "label": {
-    "all_time": "Depuis le début",
+    "all_time": "All time",
     "completed_at": "Terminé le",
-    "creation_date": "Date de création",
-    "custom": "Personnalisé",
-    "effective_date": "Date d’effet",
-    "end_date": "Date de fin",
-    "last_month": "Le mois dernier",
-    "last_quarter": "Le trimestre dernier",
-    "last_year": "L’année dernière",
-    "month": "Mois",
-    "next_year": "Année suivante",
-    "previous_year": "Année précédente",
-    "start_date": "Date de début",
-    "this_month": "Ce mois-ci",
-    "this_quarter": "Ce trimestre",
-    "this_year": "Cette année",
-    "year": "Année"
+    "creation_date": "Creation date",
+    "custom": "Custom",
+    "effective_date": "Effective date",
+    "end_date": "End date",
+    "last_month": "Last Month",
+    "last_quarter": "Last Quarter",
+    "last_year": "Last Year",
+    "month": "Month",
+    "next_year": "Next year",
+    "previous_year": "Previous year",
+    "start_date": "Start date",
+    "this_month": "This Month",
+    "this_quarter": "This Quarter",
+    "this_year": "This Year",
+    "year": "Year"
   },
   "validation": {
-    "date_before_min": "Impossible de sélectionner une date antérieure au {{minDate}}",
+    "date_before_min": "Cannot select date before {{minDate}}",
     "date_in_future": "Impossible de sélectionner une date future",
-    "date_not_empty": "Impossible de laisser la date vide"
+    "date_not_empty": "Cannot select empty date"
   }
 }

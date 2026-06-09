@@ -1,24 +1,24 @@
 {
   "action": {
-    "clear_filters": "Effacer tous les filtres",
-    "clear_search": "Effacer la recherche",
-    "close_modal": "Fermer la fenêtre modale",
-    "get_more_results": "Afficher plus de résultats"
+    "clear_filters": "Clear All Filters",
+    "clear_search": "Clear search",
+    "close_modal": "Close Modal",
+    "get_more_results": "Get more results"
   },
   "empty": {
-    "matching_options": "Aucune option correspondante"
+    "matching_options": "No matching options"
   },
   "error": {
-    "generic": "Une erreur s’est produite."
+    "generic": "An error occurred."
   },
   "label": {
-    "go_next_page": "Aller à la page suivante",
-    "go_page_number": "Aller à la page {{pageNumber}}",
-    "go_previous_page": "Aller à la page précédente",
+    "go_next_page": "Go to next page",
+    "go_page_number": "Go to page {{pageNumber}}",
+    "go_previous_page": "Go to previous page",
     "menu": "Menu",
     "pagination": "Pagination"
   },
   "state": {
-    "pending": "en attente"
+    "pending": "pending"
   }
 }

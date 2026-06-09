@@ -1,33 +1,33 @@
 {
   "action": {
-    "connect_integration": "Connecter l’intégration",
-    "connect_quickbooks": "Connecter QuickBooks",
-    "retry_connect_quickbooks": "Réessayer de connecter QuickBooks",
-    "retry_sync": "Réessayer la synchronisation",
-    "sync_label": "Synchroniser",
-    "unlink_quickbooks": "Dissocier QuickBooks"
+    "connect_integration": "Connect Integration",
+    "connect_quickbooks": "Connect QuickBooks",
+    "retry_connect_quickbooks": "Retry Connect QuickBooks",
+    "retry_sync": "Retry Sync",
+    "sync_label": "Sync",
+    "unlink_quickbooks": "Unlink QuickBooks"
   },
   "empty": {
-    "active_integrations": "Aucune intégration active"
+    "active_integrations": "No active integrations"
   },
   "error": {
-    "connect_quickbooks": "Échec de la connexion à QuickBooks",
-    "unlink_failed": "Échec de la dissociation. Veuillez vérifier votre connexion et réessayer dans quelques secondes."
+    "connect_quickbooks": "Failed to connect QuickBooks",
+    "unlink_failed": "Unlink failed. Please check your connection and try again in a few seconds."
   },
   "label": {
-    "integrations": "Intégrations",
+    "integrations": "Integrations",
     "quickbooks_connected": "QuickBooks connecté",
     "take_five_minutes": "Cela peut prendre jusqu’à 5 minutes",
-    "unlink_quickbooks": "Dissocier QuickBooks"
+    "unlink_quickbooks": "Unlink QuickBooks"
   },
   "prompt": {
-    "confirm_unlink_quickbooks": "Veuillez confirmer que vous souhaitez dissocier QuickBooks."
+    "confirm_unlink_quickbooks": "Please confirm that you want to unlink QuickBooks."
   },
   "state": {
-    "connected_quickbooks": "Connecté à QuickBooks",
-    "last_sync": "Dernière synchronisation le",
+    "connected_quickbooks": "Connected to QuickBooks",
+    "last_sync": "Last synced on",
     "last_sync_failed_at": "La dernière synchronisation a échoué à",
-    "synced": "Synchronisé",
-    "syncing_account_data": "Synchronisation des données du compte"
+    "synced": "Synced",
+    "syncing_account_data": "Syncing account data"
   }
 }

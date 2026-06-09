@@ -1,59 +1,59 @@
 {
   "action": {
-    "create_rule": "Créer une règle",
-    "delete_rule": "Supprimer la règle",
-    "dont_ask_again": "Ne plus demander",
-    "edit_rule": "Modifier la règle",
-    "no_decide_each_time": "Non, je déciderai chaque fois",
-    "save_rule": "Enregistrer la règle",
-    "yes_always_categorize": "Oui, toujours catégoriser"
+    "create_rule": "Create Rule",
+    "delete_rule": "Delete rule",
+    "dont_ask_again": "Don’t ask again",
+    "edit_rule": "Edit Rule",
+    "no_decide_each_time": "No, I’ll decide each time",
+    "save_rule": "Save Rule",
+    "yes_always_categorize": "Yes, always categorize"
   },
   "empty": {
-    "no_categorization_rules_yet": "Aucune règle de catégorisation n’a encore été créée. Vous recevrez des suggestions de règles à créer au fur et à mesure que vous catégoriserez les transactions dans le flux bancaire.",
-    "no_counterparties_yet": "Aucune contrepartie pour le moment. Elles s’afficheront ici automatiquement à mesure que vos transactions seront traitées.",
-    "no_matching_counterparties": "Aucune contrepartie correspondante.",
+    "no_categorization_rules_yet": "No categorization rules have been created yet. You will receive suggestions for rules to create as you categorize transactions in the bank feed.",
+    "no_counterparties_yet": "No counterparties yet. They will appear here automatically as your transactions are processed.",
+    "no_matching_counterparties": "No matching counterparties.",
     "no_rules_found": "Aucune règle trouvée"
   },
   "error": {
-    "archive_categorization_rule": "Échec de l’archivage de la règle de catégorisation",
-    "couldnt_load_data": "Nous n’avons pas pu charger vos règles de catégorisation",
-    "create_categorization_rule": "Échec de la création de la règle de catégorisation",
-    "load_affected_transactions": "Une erreur s’est produite lors du chargement des transactions concernées",
-    "load_categorization_rules": "Une erreur s’est produite lors du chargement de vos règles de catégorisation. Veuillez vérifier votre connexion et réessayer.",
-    "load_counterparties": "Impossible de charger les contreparties. Veuillez réessayer.",
-    "load_transactions": "Erreur lors du chargement des transactions",
-    "reject_rule_suggestion": "Échec du rejet de la suggestion de règle"
+    "archive_categorization_rule": "Failed to archive categorization rule",
+    "couldnt_load_data": "We couldn’t load your categorization rules",
+    "create_categorization_rule": "Failed to create categorization rule",
+    "load_affected_transactions": "There was an error loading the affected transactions",
+    "load_categorization_rules": "An error occurred while loading your categorization rules. Please check your connection and try again.",
+    "load_counterparties": "Couldn’t load counterparties. Please try again.",
+    "load_transactions": "Error loading transactions",
+    "reject_rule_suggestion": "Failed to reject rule suggestion"
   },
   "label": {
-    "amount_max": "Montant maximal",
-    "amount_min": "Montant minimal",
-    "amount_value": "Montant : {{value}}",
-    "any": "Peu importe",
-    "any_amount": "N’importe quel montant",
+    "amount_max": "Maximum amount",
+    "amount_min": "Minimum amount",
+    "amount_value": "Amount: {{value}}",
+    "any": "Any",
+    "any_amount": "Any amount",
     "any_direction": "Entrées et sorties d’argent",
-    "categorization_rules": "Règles de catégorisation",
-    "category_value": "Catégorie : {{value}}",
-    "direction_value": "Sens : {{value}}",
+    "categorization_rules": "Categorization Rules",
+    "category_value": "Category: {{value}}",
+    "direction_value": "Direction: {{value}}",
     "following_count_transactions_one": "La {{displayCount}} transaction suivante sera touchée :",
     "following_count_transactions_other": "Les {{displayCount}} transactions suivantes seront touchées :",
-    "money_in": "Entrées d’argent",
-    "money_out": "Sorties d’argent",
-    "or": "OU",
+    "money_in": "Money In",
+    "money_out": "Money Out",
+    "or": "OR",
     "transaction_no_longer_automatically_categorized": "Les transactions ne seront plus automatiquement catégorisées par cette règle. Les transactions déjà catégorisées sous {{counterparty}} ne seront pas touchées.",
-    "update_categorization_rules": "Mettre à jour les règles de catégorisation"
+    "update_categorization_rules": "Update categorization rules"
   },
   "placeholder": {
-    "no_maximum": "Aucun maximum",
-    "no_minimum": "Aucun minimum",
-    "select_counterparty": "Sélectionner une contrepartie"
+    "no_maximum": "No maximum",
+    "no_minimum": "No minimum",
+    "select_counterparty": "Select counterparty"
   },
   "prompt": {
     "always_use_category": "Toujours utiliser cette catégorie?",
     "delete_categorization_rule": "Supprimer la règle de catégorisation?"
   },
   "validation": {
-    "amount_min_greater_than_max": "Le montant minimal doit être inférieur ou égal au montant maximal.",
-    "category_required": "La catégorie est obligatoire.",
-    "counterparty_required": "La contrepartie est obligatoire."
+    "amount_min_greater_than_max": "Minimum amount must be less than or equal to maximum amount.",
+    "category_required": "Category is required.",
+    "counterparty_required": "Counterparty is required."
   }
 }

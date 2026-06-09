@@ -18,8 +18,7 @@
   },
   "error": {
     "check_fields": "Please check all fields.",
-    "operation_retry": "Operation failed. Try again.",
-    "submit_failed_check_connection": "Submit failed. Please check your connection and try again."
+    "operation_retry": "Operation failed. Try again."
   },
   "label": {
     "account_name": "Account name",
@@ -60,10 +59,8 @@
   "validation": {
     "account_name_required": "Account name is required",
     "account_required": "Account is a required field.",
-    "account_required_short": "Account is required",
     "account_type_required": "Account type is required",
     "amount_greater_must": "Amount must be greater than zero.",
-    "amount_not_empty_or_zero": "Amount cannot be empty or zero",
     "create_required": "Created by is a required field.",
     "debit_credit_must": "Debit and credit amounts must be equal",
     "entry_date_required": "Entry date is a required field.",
