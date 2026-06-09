@@ -1,4 +1,5 @@
 import { Direction } from '@internal-types/general'
+import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { translationKey } from '@utils/i18n/translationKey'
 
 export type OptionConfig = { value: string, i18nKey: string, defaultValue: string }
@@ -91,3 +92,11 @@ export const EXPENSE_LEDGER_ACCOUNT_SUBTYPES_CONFIG: OptionConfig[] = [
   { value: 'BAD_DEBT', ...translationKey('chartOfAccounts:label.bad_debt', 'Bad Debt') },
   { value: 'OTHER_EXPENSES', ...translationKey('chartOfAccounts:label.other_expenses', 'Other Expenses') },
 ]
+
+export const SUBTYPES_CONFIG_BY_TYPE: Record<LedgerAccountType, OptionConfig[]> = {
+  [LedgerAccountType.Asset]: ASSET_LEDGER_ACCOUNT_SUBTYPES_CONFIG,
+  [LedgerAccountType.Liability]: LIABILITY_LEDGER_ACCOUNT_SUBTYPES_CONFIG,
+  [LedgerAccountType.Equity]: EQUITY_LEDGER_ACCOUNT_SUBTYPES_CONFIG,
+  [LedgerAccountType.Revenue]: REVENUE_LEDGER_ACCOUNT_SUBTYPES_CONFIG,
+  [LedgerAccountType.Expense]: EXPENSE_LEDGER_ACCOUNT_SUBTYPES_CONFIG,
+}

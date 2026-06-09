@@ -1,8 +1,8 @@
-import { type RefObject, useContext } from 'react'
+import { type RefObject } from 'react'
 
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
-import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { ChartOfAccountsForm, type ChartOfAccountsFormStringOverrides } from '@components/ChartOfAccountsForm/ChartOfAccountsForm'
+import { useChartOfAccountsFormMode } from '@components/ChartOfAccountsForm/useChartOfAccountsFormMode'
 import { ChartOfAccountsTable } from '@components/ChartOfAccountsTable/ChartOfAccountsTable'
 import { ChartOfAccountsTableHeader } from '@components/ChartOfAccountsTable/ChartOfAccountsTableHeader'
 import { ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
@@ -37,7 +37,7 @@ export const ChartOfAccountsTableWithPanel = ({
   stringOverrides?: ChartOfAccountsTableStringOverrides
   templateAccountsEditable?: boolean
 }) => {
-  const { form } = useContext(ChartOfAccountsContext)
+  const { formMode, addAccount, editAccount, cancelForm } = useChartOfAccountsFormMode()
 
   const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: '' })
 
@@ -46,10 +46,12 @@ export const ChartOfAccountsTableWithPanel = ({
       <Panel
         sidebar={(
           <ChartOfAccountsForm
+            formMode={formMode}
+            onCancel={cancelForm}
             stringOverrides={stringOverrides?.chartOfAccountsForm}
           />
         )}
-        sidebarIsOpen={!!form}
+        sidebarIsOpen={!!formMode}
         parentRef={containerRef}
       >
         <ChartOfAccountsTableHeader
@@ -57,6 +59,7 @@ export const ChartOfAccountsTableWithPanel = ({
           withDateControl={withDateControl}
           withExpandAllButton={withExpandAllButton}
           showAddAccountButton={showAddAccountButton}
+          onAddAccount={addAccount}
           inputValue={inputValue}
           onSearchChange={handleInputChange}
           stringOverrides={stringOverrides}
@@ -64,6 +67,7 @@ export const ChartOfAccountsTableWithPanel = ({
 
         <ChartOfAccountsTable
           searchQuery={searchQuery}
+          onEditAccount={editAccount}
           stringOverrides={stringOverrides}
           templateAccountsEditable={templateAccountsEditable}
         />

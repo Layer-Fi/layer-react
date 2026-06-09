@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import { type BaseSelectOption } from '@internal-types/general'
 import { type LedgerBalancesSchemaType } from '@schemas/generalLedger/ledgerAccount'
-import { flattenAccounts } from '@hooks/legacy/useChartOfAccounts'
+import { flattenAccounts } from '@components/ChartOfAccountsForm/flattenAccounts'
 
 const isAlphanumeric = (char: string) => /[\p{L}\p{N}]/u.test(char)
 
@@ -25,17 +25,8 @@ const compareSpecialCharsLast = (a: string, b: string): number => {
 export const useParentOptions = (
   data?: LedgerBalancesSchemaType,
 ): BaseSelectOption[] =>
-  useMemo(
-    () =>
-      flattenAccounts(data?.accounts || [])
-        .sort((a, b) =>
-          a?.name && b?.name ? compareSpecialCharsLast(a.name, b.name) : 0,
-        )
-        .map((x) => {
-          return {
-            label: x.name,
-            value: x.accountId,
-          }
-        }),
-    [data?.accounts],
+  useMemo(() => flattenAccounts(data?.accounts || [])
+    .sort((a, b) => a?.name && b?.name ? compareSpecialCharsLast(a.name, b.name) : 0)
+    .map(x => ({ label: x.name, value: x.accountId })),
+  [data?.accounts],
   )
