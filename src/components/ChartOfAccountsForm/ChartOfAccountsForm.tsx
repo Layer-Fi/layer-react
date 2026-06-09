@@ -4,7 +4,6 @@ import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type LedgerAccountType, type LedgerEntryDirection, type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
-import { flattenValidationErrors } from '@utils/form'
 import { UpsertLedgerAccountMode } from '@hooks/api/businesses/[business-id]/ledger/accounts/useUpsertLedgerAccount'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -110,24 +109,17 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
         </Button>
       </HStack>
 
-      <form.Subscribe selector={state => state.errorMap}>
-        {(errorMap) => {
-          const validationErrors = flattenValidationErrors(errorMap)
-          if (validationErrors.length > 0 || submitError) {
-            return (
-              <HStack className='Layer__ChartOfAccountsForm__FormError'>
-                <DataState
-                  icon={<AlertTriangle size={16} />}
-                  status={DataStateStatus.failed}
-                  title={submitError || validationErrors[0]}
-                  titleSize={TextSize.md}
-                  inline
-                />
-              </HStack>
-            )
-          }
-        }}
-      </form.Subscribe>
+      {submitError && (
+        <HStack className='Layer__ChartOfAccountsForm__FormError'>
+          <DataState
+            icon={<AlertTriangle size={16} />}
+            status={DataStateStatus.failed}
+            title={submitError}
+            titleSize={TextSize.md}
+            inline
+          />
+        </HStack>
+      )}
 
       {account && (
         <HStack className='Layer__ChartOfAccountsForm__EditEntry' justify='space-between' align='center' gap='md'>

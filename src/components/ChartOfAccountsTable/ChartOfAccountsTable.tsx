@@ -232,7 +232,9 @@ export const ChartOfAccountsTable = ({
         alignment: Alignment.Right,
         cell: (row: Row<AugmentedLedgerAccountBalance>) => {
           const account = row.original
-          const isNonEditable = !templateAccountsEditable && !!account.stableName
+          // Top-level accounts have no parent, which the form requires, so they cannot be edited.
+          const isTopLevelAccount = row.depth === 0
+          const isNonEditable = isTopLevelAccount || (!templateAccountsEditable && !!account.stableName)
           const isDeleteDisabled = !account.isDeletable
 
           return (

@@ -6,19 +6,19 @@ export type EditLedgerAccountContext = {
   parentAccountId?: string
 }
 
-const DEFAULT_LEDGER_ACCOUNT_FORM = {
-  parent: null,
-  name: '',
-  accountNumber: '',
-  type: null,
-  subType: null,
-  normality: null,
-}
-
 export const getLedgerAccountFormDefaultValues = (
   edit?: EditLedgerAccountContext,
 ): LedgerAccountForm => {
-  if (!edit) return DEFAULT_LEDGER_ACCOUNT_FORM
+  if (!edit) {
+    return {
+      parent: null,
+      name: '',
+      accountNumber: '',
+      type: null,
+      subType: null,
+      normality: null,
+    }
+  }
 
   const { account, parentAccountId } = edit
 

@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { Effect, Schema } from 'effect'
+import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { SingleChartAccountSchema } from '@schemas/generalLedger/ledgerAccount'
@@ -61,65 +61,6 @@ const UpsertLedgerAccountReturnSchema = Schema.Struct({
 
 type UpsertLedgerAccountReturn = typeof UpsertLedgerAccountReturnSchema.Type
 
-const CreateParamsSchema = Schema.Struct({
-  businessId: Schema.String,
-})
-
-const UpdateParamsSchema = Schema.Struct({
-  businessId: Schema.String,
-  accountId: Schema.String,
-})
-
-export type CreateParams = typeof CreateParamsSchema.Type
-export type UpdateParams = typeof UpdateParamsSchema.Type
-
-export type UpsertParams = CreateParams | UpdateParams
-
-type RequestArgs = {
-  apiUrl: string
-  accessToken: string
-  body: UpsertLedgerAccountBody
-}
-
-type UpsertRequestFn = (args: RequestArgs) => Promise<UpsertLedgerAccountReturn>
-
-const isParamsValidForMode = <M extends UpsertLedgerAccountMode>(
-  mode: M,
-  params: unknown,
-): params is M extends UpsertLedgerAccountMode.Update ? UpdateParams : CreateParams => {
-  if (mode === UpsertLedgerAccountMode.Update) {
-    return Effect.runSync(Effect.either(Schema.decodeUnknown(UpdateParamsSchema)(params)))._tag === 'Right'
-  }
-
-  if (mode === UpsertLedgerAccountMode.Create) {
-    return Effect.runSync(Effect.either(Schema.decodeUnknown(CreateParamsSchema)(params)))._tag === 'Right'
-  }
-
-  return false
-}
-
-function getRequestFn(
-  mode: UpsertLedgerAccountMode,
-  params: UpsertParams,
-): UpsertRequestFn {
-  if (mode === UpsertLedgerAccountMode.Update) {
-    if (!isParamsValidForMode(UpsertLedgerAccountMode.Update, params)) {
-      throw new Error('Invalid params for update mode')
-    }
-
-    return ({ apiUrl, accessToken, body }: RequestArgs) =>
-      updateLedgerAccount(apiUrl, accessToken, { params, body })
-  }
-  else {
-    if (!isParamsValidForMode(UpsertLedgerAccountMode.Create, params)) {
-      throw new Error('Invalid params for create mode')
-    }
-
-    return ({ apiUrl, accessToken, body }: RequestArgs) =>
-      createLedgerAccount(apiUrl, accessToken, { params, body })
-  }
-}
-
 type UseUpsertLedgerAccountProps =
   | { mode: UpsertLedgerAccountMode.Create }
   | { mode: UpsertLedgerAccountMode.Update, accountId: string }
@@ -142,13 +83,17 @@ export const useUpsertLedgerAccount = (props: UseUpsertLedgerAccountProps) => {
       { accessToken, apiUrl, businessId, accountId },
       { arg: body }: { arg: UpsertLedgerAccountBody },
     ) => {
-      const request = getRequestFn(mode, { businessId, accountId })
+      if (mode === UpsertLedgerAccountMode.Update) {
+        if (!accountId) {
+          throw new Error('Cannot update a ledger account without an account id')
+        }
 
-      return request({
-        apiUrl,
-        accessToken,
-        body,
-      }).then(Schema.decodeUnknownPromise(UpsertLedgerAccountReturnSchema))
+        return updateLedgerAccount(apiUrl, accessToken, { params: { businessId, accountId }, body })
+          .then(Schema.decodeUnknownPromise(UpsertLedgerAccountReturnSchema))
+      }
+
+      return createLedgerAccount(apiUrl, accessToken, { params: { businessId }, body })
+        .then(Schema.decodeUnknownPromise(UpsertLedgerAccountReturnSchema))
     },
     {
       revalidate: false,

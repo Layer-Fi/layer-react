@@ -3,6 +3,4 @@ import type { NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccou
 export const flattenAccounts = (
   accounts: readonly NestedLedgerAccountType[],
 ): NestedLedgerAccountType[] => accounts
-  .flatMap(account => [account, flattenAccounts(account.subAccounts || [])])
-  .flat()
-  .filter(account => account)
+  .flatMap(account => [account, ...flattenAccounts(account.subAccounts || [])])
