@@ -3,11 +3,12 @@ import { Info } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
+import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Banner } from '@ui/Banner/Banner'
 import { Button as LayerButton } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
@@ -97,16 +98,12 @@ export function SolopreneurOnboardingBanner({ onSetupTaxProfile, plaidHostedLink
 }
 
 const useSolopreneurOnboardingBannerState = () => {
-  const { accountingConfiguration } = useLayerContext()
+  const { businessId } = useLayerContext()
+  const { data: accountingConfiguration, isLoading: isAccountingConfigLoading } = useAccountingConfiguration({ businessId })
   const { data: linkedAccounts, isLoading: isLinkedAccountsLoading, loadingStatus: linkedAccountsLoadingStatus } = useContext(LinkedAccountsContext)
   const { data: taxProfile, isLoading: isTaxProfileLoading } = useTaxProfile()
 
   const isTaxEstimatesEnabled = !!accountingConfiguration?.enableTaxEstimates
-
-  // Config hasn't loaded yet — we can't tell whether tax estimates are enabled,
-  // so treat undefined config as loading to avoid prematurely resolving to
-  // Onboarded and hiding the tax-profile banner.
-  const isAccountingConfigLoading = accountingConfiguration === undefined
 
   const isLoading =
   isLinkedAccountsLoading
