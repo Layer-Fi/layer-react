@@ -21,7 +21,7 @@ on:
   workflow_dispatch:
     inputs:
       next_linear_release:
-        description: 'Next Linear release (ignored for alphas)'
+        description: 'Linear release increment (stable only)'
         type: choice
         options: [ patch, minor, major ]
         default: patch

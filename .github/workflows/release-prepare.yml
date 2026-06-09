@@ -85,6 +85,10 @@ jobs:
         V: ${{ steps.ver.outputs.version }}
         BR: ${{ steps.ver.outputs.branch }}
       run: |
+        if git ls-remote --exit-code --heads origin "$BR" >/dev/null 2>&1; then
+          echo "::error::Branch $BR already exists on origin. A release PR for v$V is likely still open — merge or close it (and delete the branch) before re-running." >&2
+          exit 1
+        fi
         git checkout -b "$BR"
         git commit -am "chore(release): v$V"
         git push origin "$BR"
