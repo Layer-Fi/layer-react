@@ -101,9 +101,17 @@ const useSolopreneurOnboardingBannerState = () => {
   const { data: linkedAccounts, isLoading: isLinkedAccountsLoading, loadingStatus: linkedAccountsLoadingStatus } = useContext(LinkedAccountsContext)
   const { data: taxProfile, isLoading: isTaxProfileLoading } = useTaxProfile()
 
+  const isTaxEstimatesEnabled = !!accountingConfiguration?.enableTaxEstimates
+
+  // Config hasn't loaded yet — we can't tell whether tax estimates are enabled,
+  // so treat undefined config as loading to avoid prematurely resolving to
+  // Onboarded and hiding the tax-profile banner.
+  const isAccountingConfigLoading = accountingConfiguration === undefined
+
   const isLoading =
   isLinkedAccountsLoading
-  || isTaxProfileLoading
+  || isAccountingConfigLoading
+  || (isTaxEstimatesEnabled && isTaxProfileLoading)
   || linkedAccountsLoadingStatus === 'loading'
   || linkedAccountsLoadingStatus === 'initial'
 
@@ -111,8 +119,6 @@ const useSolopreneurOnboardingBannerState = () => {
 Array.isArray(linkedAccounts) && linkedAccounts.length > 0
 
   const hasSavedTaxProfile = taxProfile?.userHasSavedTaxProfile === true
-
-  const isTaxEstimatesEnabled = !!accountingConfiguration?.enableTaxEstimates
 
   return getOnboardingBannerState({ isLoading, hasLinkedAccounts, hasSavedTaxProfile, isTaxEstimatesEnabled })
 }
