@@ -110,7 +110,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
       </HStack>
 
       {submitError && (
-        <HStack className='Layer__ChartOfAccountsForm__FormError'>
+        <HStack className='Layer__ChartOfAccountsForm__FormError' pb='sm' pi='md'>
           <DataState
             icon={<AlertTriangle size={16} />}
             status={DataStateStatus.failed}
