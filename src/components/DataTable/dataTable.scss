@@ -7,8 +7,19 @@
   justify-content: center;
 }
 
-.Layer__DataTable__ClickableRow {
+// Compound with `Layer__UI__Table-Row` so the hover rule out-specifies the
+// depth-based cell background in table.scss. Cell backgrounds are opaque, so
+// the highlight has to be applied to the cells, not the row element.
+.Layer__UI__Table-Row.Layer__DataTable__ClickableRow {
   cursor: pointer;
+
+  .Layer__UI__Table-Cell {
+    transition: background-color 120ms ease-in-out;
+  }
+
+  &:hover .Layer__UI__Table-Cell {
+    background-color: var(--color-base-50);
+  }
 }
 
 .Layer__DataTable__SelectedRow {
