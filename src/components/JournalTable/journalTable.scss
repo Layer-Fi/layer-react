@@ -37,6 +37,10 @@
   .Layer__UI__Table-TableBody .Layer__UI__Table-Row {
     height: auto;
     min-height: 3.25rem;
+
+    @media (width <= 499px) {
+      min-height: auto;
+    }
   }
 
   // Cells are flex containers, so right-align the currency columns explicitly
