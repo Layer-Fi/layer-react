@@ -2,11 +2,11 @@ import { useContext } from 'react'
 
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
 import { LedgerEntryDetails } from '@components/LedgerEntryDetails/LedgerEntryDetails'
-import { type LedgerEntryDetailsStringOverrides } from '@components/LedgerEntryDetails/types'
+import { type LedgerEntryDetailStringOverrides } from '@components/LedgerEntryDetails/types'
 
 export { SourceDetailView } from '@components/LedgerEntryDetails/SourceDetailView'
 
-export type LedgerAccountEntryDetailsStringOverrides = LedgerEntryDetailsStringOverrides
+export type LedgerAccountEntryDetailsStringOverrides = LedgerEntryDetailStringOverrides
 
 export const LedgerAccountEntryDetails = ({
   stringOverrides,

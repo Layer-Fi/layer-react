@@ -63,6 +63,7 @@
 }
 
 .Layer__panel.Layer__panel--open .Layer__panel__sidebar {
+  overflow-y: auto;
   max-height: none;
   max-width: 480px;
   margin-left: -1px;

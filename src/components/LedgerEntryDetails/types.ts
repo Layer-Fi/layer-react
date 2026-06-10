@@ -12,7 +12,7 @@ export interface SourceDetailStringOverrides {
   processorLabel?: string
 }
 
-export interface JournalEntryDetailsStringOverrides {
+export interface JournalEntryDetailStringOverrides {
   entryTypeLabel?: string
   dateLabel?: string
   creationDateLabel?: string
@@ -26,7 +26,7 @@ export interface LineItemsTableStringOverrides {
   totalRowHeader?: string
 }
 
-export interface LedgerEntryDetailsStringOverrides {
+export interface LedgerEntryDetailStringOverrides {
   title?: string
   transactionSource?: {
     header?: string
@@ -34,7 +34,7 @@ export interface LedgerEntryDetailsStringOverrides {
   }
   journalEntry?: {
     header?: (entryId?: string) => string
-    details?: JournalEntryDetailsStringOverrides
+    details?: JournalEntryDetailStringOverrides
   }
   lineItemsTable?: LineItemsTableStringOverrides
 }

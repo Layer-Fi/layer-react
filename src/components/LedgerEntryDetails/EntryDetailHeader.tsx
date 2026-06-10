@@ -8,12 +8,12 @@ import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
 
-interface EntryDetailsHeaderProps {
+interface EntryDetailHeaderProps {
   onClose: () => void
   title: ReactNode
 }
 
-export const EntryDetailsHeader = ({ onClose, title }: EntryDetailsHeaderProps) => {
+export const EntryDetailHeader = ({ onClose, title }: EntryDetailHeaderProps) => {
   const { t } = useTranslation()
 
   return (

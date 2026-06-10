@@ -66,7 +66,7 @@ export const LineItemsTable = ({
   const rows = useMemo<LineItemRow[]>(() => {
     if (!lineItems?.length) return []
 
-    // Surface credits before debits, mirroring the journal entry ordering.
+    // Surface debits before credits, mirroring the journal entry ordering.
     const sorted = lineItems
       .slice()
       .sort((a, b) => (a.direction > b.direction ? -1 : a.direction < b.direction ? 1 : 0))

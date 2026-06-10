@@ -9,12 +9,12 @@ import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { VStack } from '@ui/Stack/Stack'
 import { Badge } from '@components/Badge/Badge'
 import { DateTime } from '@components/DateTime/DateTime'
+import { EntryDetailHeader } from '@components/LedgerEntryDetails/EntryDetailHeader'
 import { EntryDetailField, EntryDetailSection } from '@components/LedgerEntryDetails/EntryDetailSection'
-import { EntryDetailsHeader } from '@components/LedgerEntryDetails/EntryDetailsHeader'
 import { LineItemsTable } from '@components/LedgerEntryDetails/LineItemsTable'
 import { ReverseEntryButton } from '@components/LedgerEntryDetails/ReverseEntryButton'
 import { SourceDetailView } from '@components/LedgerEntryDetails/SourceDetailView'
-import { type LedgerEntryDetailsStringOverrides } from '@components/LedgerEntryDetails/types'
+import { type LedgerEntryDetailStringOverrides } from '@components/LedgerEntryDetails/types'
 
 export interface LedgerEntryDetailsProps {
   entry?: LedgerEntry
@@ -23,7 +23,7 @@ export interface LedgerEntryDetailsProps {
   onClose: () => void
   /** When provided, a "Reverse entry" action is rendered for the entry. */
   onReverse?: () => Promise<void>
-  stringOverrides?: LedgerEntryDetailsStringOverrides
+  stringOverrides?: LedgerEntryDetailStringOverrides
 }
 
 export const LedgerEntryDetails = ({
@@ -54,21 +54,23 @@ export const LedgerEntryDetails = ({
 
   const id = entry ? entryNumber(entry) : ''
 
+  const defaultTitle = entry
+    ? t('generalLedger:label.journal_entry_number', 'Journal Entry #{{entryNumber}}', { entryNumber: id })
+    : t('generalLedger:label.journal_entry', 'Journal Entry')
+
   const headerTitle = stringOverrides?.journalEntry?.header
-    ? stringOverrides.journalEntry.header(id)
-    : entry
-      ? t('generalLedger:label.journal_entry_number', 'Journal Entry #{{entryNumber}}', { entryNumber: id })
-      : t('generalLedger:label.journal_entry', 'Journal Entry')
+    ? stringOverrides.journalEntry.header(entry ? id : undefined)
+    : stringOverrides?.title ?? defaultTitle
 
   return (
     <VStack className='Layer__LedgerEntryDetails'>
-      <EntryDetailsHeader onClose={onClose} title={headerTitle} />
+      <EntryDetailHeader onClose={onClose} title={headerTitle} />
 
       <EntryDetailSection
         title={stringOverrides?.transactionSource?.header || t('bankTransactions:label.transaction_source', 'Transaction source')}
       >
         <EntryDetailField
-          label={stringOverrides?.transactionSource?.details?.sourceLabel || t('generalLedger:label.source_type', 'Source type')}
+          label={stringOverrides?.transactionSource?.details?.sourceLabel || t('common:label.source', 'Source')}
           isLoading={isLoading}
         >
           {badgeOrInAppLink}
