@@ -43,7 +43,7 @@ export const DetailReportBreadcrumb = ({
                     </Button>
                   )}
                 {index < breadcrumbs.length - 1 && (
-                  <ChevronRight color='currentColor' strokeWidth={1.5} />
+                  <ChevronRight color='currentColor' size={18} strokeWidth={1.5} />
                 )}
               </HStack>
             ))}
