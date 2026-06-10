@@ -63,7 +63,7 @@ export const LedgerEntryDetails = ({
     : stringOverrides?.title ?? defaultTitle
 
   return (
-    <VStack className='Layer__LedgerEntryDetails'>
+    <VStack pbe='lg'>
       <EntryDetailHeader onClose={onClose} title={headerTitle} />
 
       <EntryDetailSection
