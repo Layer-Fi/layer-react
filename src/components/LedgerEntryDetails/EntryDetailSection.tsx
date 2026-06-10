@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 import classNames from 'classnames'
 
+import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
@@ -47,7 +48,7 @@ const renderValue = (value: ReactNode | string) => {
 
 export const EntryDetailField = ({ label, children, isLoading, fullWidth }: EntryDetailFieldProps) => {
   return (
-    <div className={classNames('Layer__EntryDetailSection__Field', fullWidth && 'Layer__EntryDetailSection__Field--fullWidth')}>
+    <VStack gap='3xs' className={classNames('Layer__EntryDetailSection__Field', fullWidth && 'Layer__EntryDetailSection__Field--fullWidth')}>
       <dt>
         <Span size='xs' weight='normal' textCase='uppercase' variant='subtle'>
           {label}
@@ -56,6 +57,6 @@ export const EntryDetailField = ({ label, children, isLoading, fullWidth }: Entr
       <dd className='Layer__EntryDetailSection__Value'>
         {isLoading ? <SkeletonLoader /> : renderValue(children)}
       </dd>
-    </div>
+    </VStack>
   )
 }
