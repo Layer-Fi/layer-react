@@ -1,12 +1,12 @@
 .Layer__LinkedAccountsConfirmationModal {
   &__Content {
     overflow-y: auto;
-    height: 24rem;
+    max-block-size: 24rem;
     padding: var(--spacing-md);
     border: 1px solid var(--border-color);
 
-    @media (height < 48rem) {
-      height: 18rem;
+    @media (height <= 48rem) {
+      max-block-size: 18rem;
     }
   }
 }
