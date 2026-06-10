@@ -16,6 +16,8 @@ import { ReverseEntryButton } from '@components/LedgerEntryDetails/ReverseEntryB
 import { SourceDetailView } from '@components/LedgerEntryDetails/SourceDetailView'
 import { type LedgerEntryDetailStringOverrides } from '@components/LedgerEntryDetails/types'
 
+import './ledgerEntryDetails.scss'
+
 export interface LedgerEntryDetailsProps {
   entry?: LedgerEntry
   isLoading?: boolean

@@ -161,16 +161,18 @@ export const LedgerLineItemsTable = ({
       status={DataStateStatus.info}
       title={t('generalLedger:empty.ledger_activity', 'No ledger activity')}
       description={t('generalLedger:empty.entry_journal_message', 'There are no ledger entries in this account.')}
+      spacing
     />
   ), [t])
 
   const ErrorState = useCallback(() => (
     <DataState
       status={DataStateStatus.failed}
-      title={t('common:error.something_went_wrong', 'Something went wrong')}
-      description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
+      title={t('generalLedger:error.couldnt_load_ledger_entries', 'We couldn’t load ledger entries')}
+      description={t('generalLedger:error.load_ledger_entries', 'An error occurred while loading this account’s ledger entries. Please check your connection and try again.')}
       onRefresh={() => { void refetch() }}
       isLoading={isValidating || isLoading}
+      spacing
     />
   ), [refetch, isValidating, isLoading, t])
 
