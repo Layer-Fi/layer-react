@@ -17,11 +17,11 @@ import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { PaginatedTable, type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
-import './ledgerLineItemsTable.scss'
+import './ledgerAccountLineItemsTable.scss'
 
-const COMPONENT_NAME = 'LedgerLineItemsTable'
+const COMPONENT_NAME = 'LedgerAccountLineItemsTable'
 
-export interface LedgerLineItemsTableStringOverrides {
+export interface LedgerAccountLineItemsTableStringOverrides {
   dateColumnHeader?: string
   journalIdColumnHeader?: string
   sourceColumnHeader?: string
@@ -31,7 +31,7 @@ export interface LedgerLineItemsTableStringOverrides {
   runningBalanceColumnHeader?: string
 }
 
-enum LedgerLineItemColumns {
+enum LedgerAccountLineItemColumns {
   Date = 'Date',
   JournalId = 'JournalId',
   Source = 'Source',
@@ -41,29 +41,29 @@ enum LedgerLineItemColumns {
   RunningBalance = 'RunningBalance',
 }
 
-type LedgerLineItemRow = Row<LedgerAccountLineItem>
+type LedgerAccountLineItemRow = Row<LedgerAccountLineItem>
 
 const getColumnConfig = (
   nodeType: LedgerAccountNodeType | undefined,
-  stringOverrides: LedgerLineItemsTableStringOverrides | undefined,
+  stringOverrides: LedgerAccountLineItemsTableStringOverrides | undefined,
   formatDate: ReturnType<typeof useIntlFormatter>['formatDate'],
   t: TFunction,
 ): NestedColumnConfig<LedgerAccountLineItem> => [
   {
-    id: LedgerLineItemColumns.Date,
+    id: LedgerAccountLineItemColumns.Date,
     header: stringOverrides?.dateColumnHeader ?? t('common:label.date', 'Date'),
-    cell: (row: LedgerLineItemRow) => <Span>{formatDate(row.original.date)}</Span>,
+    cell: (row: LedgerAccountLineItemRow) => <Span>{formatDate(row.original.date)}</Span>,
   },
   {
-    id: LedgerLineItemColumns.JournalId,
+    id: LedgerAccountLineItemColumns.JournalId,
     header: stringOverrides?.journalIdColumnHeader ?? t('generalLedger:label.journal_id', 'Journal ID #'),
-    cell: (row: LedgerLineItemRow) => <Span>{lineEntryNumber(row.original)}</Span>,
+    cell: (row: LedgerAccountLineItemRow) => <Span>{lineEntryNumber(row.original)}</Span>,
     isRowHeader: true,
   },
   {
-    id: LedgerLineItemColumns.Source,
+    id: LedgerAccountLineItemColumns.Source,
     header: stringOverrides?.sourceColumnHeader ?? t('common:label.source', 'Source'),
-    cell: (row: LedgerLineItemRow) => (
+    cell: (row: LedgerAccountLineItemRow) => (
       <Span ellipsis withTooltip>
         {(row.original.source ? decodeLedgerEntrySource(row.original.source)?.displayDescription : undefined) ?? ''}
       </Span>
@@ -71,46 +71,46 @@ const getColumnConfig = (
   },
   ...(nodeType !== LedgerAccountNodeType.Leaf
     ? [{
-      id: LedgerLineItemColumns.Account,
+      id: LedgerAccountLineItemColumns.Account,
       header: stringOverrides?.accountColumnHeader ?? t('common:label.account', 'Account'),
-      cell: (row: LedgerLineItemRow) => <Span ellipsis withTooltip>{row.original.account.name}</Span>,
+      cell: (row: LedgerAccountLineItemRow) => <Span ellipsis withTooltip>{row.original.account.name}</Span>,
     }]
     : []),
   {
-    id: LedgerLineItemColumns.Debit,
+    id: LedgerAccountLineItemColumns.Debit,
     header: stringOverrides?.debitColumnHeader ?? t('common:label.debit', 'Debit'),
     alignment: Alignment.Right,
-    cell: (row: LedgerLineItemRow) =>
+    cell: (row: LedgerAccountLineItemRow) =>
       (row.original.direction === LedgerEntryDirection.Debit
         ? <MoneySpan amount={row.original.amount} />
         : null),
   },
   {
-    id: LedgerLineItemColumns.Credit,
+    id: LedgerAccountLineItemColumns.Credit,
     header: stringOverrides?.creditColumnHeader ?? t('common:label.credit', 'Credit'),
     alignment: Alignment.Right,
-    cell: (row: LedgerLineItemRow) =>
+    cell: (row: LedgerAccountLineItemRow) =>
       (row.original.direction === LedgerEntryDirection.Credit
         ? <MoneySpan amount={row.original.amount} />
         : null),
   },
   {
-    id: LedgerLineItemColumns.RunningBalance,
+    id: LedgerAccountLineItemColumns.RunningBalance,
     header: stringOverrides?.runningBalanceColumnHeader ?? t('generalLedger:label.running_balance', 'Running balance'),
     alignment: Alignment.Right,
-    cell: (row: LedgerLineItemRow) => <MoneySpan amount={row.original.runningBalance} />,
+    cell: (row: LedgerAccountLineItemRow) => <MoneySpan amount={row.original.runningBalance} />,
   },
 ]
 
-export interface LedgerLineItemsTableProps {
+export interface LedgerAccountLineItemsTableProps {
   pageSize?: number
-  stringOverrides?: LedgerLineItemsTableStringOverrides
+  stringOverrides?: LedgerAccountLineItemsTableStringOverrides
 }
 
-export const LedgerLineItemsTable = ({
+export const LedgerAccountLineItemsTable = ({
   pageSize = 15,
   stringOverrides,
-}: LedgerLineItemsTableProps) => {
+}: LedgerAccountLineItemsTableProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
   const {
@@ -141,7 +141,7 @@ export const LedgerLineItemsTable = ({
 
   const withClickableRow = useMemo(() => ({
     isRowClickable: () => true,
-    onRowClick: (row: LedgerLineItemRow) => {
+    onRowClick: (row: LedgerAccountLineItemRow) => {
       if (selectedEntryId === row.original.entryId) {
         closeSelectedEntry()
       }
@@ -152,7 +152,7 @@ export const LedgerLineItemsTable = ({
   }), [selectedEntryId, setSelectedEntryId, closeSelectedEntry])
 
   const isRowSelected = useCallback(
-    (row: LedgerLineItemRow) => row.original.entryId === selectedEntryId,
+    (row: LedgerAccountLineItemRow) => row.original.entryId === selectedEntryId,
     [selectedEntryId],
   )
 

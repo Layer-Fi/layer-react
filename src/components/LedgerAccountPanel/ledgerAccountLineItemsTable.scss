@@ -1,4 +1,4 @@
-.Layer__UI__Table__LedgerLineItemsTable {
+.Layer__UI__Table__LedgerAccountLineItemsTable {
   table-layout: fixed;
   width: 100%;
 
@@ -14,7 +14,7 @@
       minmax(8rem, 16%);
   }
 
-  &:has(.Layer__UI__Table-Column__LedgerLineItemsTable--Account) {
+  &:has(.Layer__UI__Table-Column__LedgerAccountLineItemsTable--Account) {
     .Layer__UI__Table-Row,
     .Layer__UI__Table-TableHeader > tr {
       grid-template-columns:
@@ -28,8 +28,8 @@
     }
   }
 
-  .Layer__UI__Table-Column__LedgerLineItemsTable,
-  .Layer__UI__Table-Cell__LedgerLineItemsTable {
+  .Layer__UI__Table-Column__LedgerAccountLineItemsTable,
+  .Layer__UI__Table-Cell__LedgerAccountLineItemsTable {
     &--Debit,
     &--Credit,
     &--RunningBalance {

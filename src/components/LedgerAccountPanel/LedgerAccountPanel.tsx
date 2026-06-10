@@ -7,15 +7,15 @@ import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAcc
 import { VStack } from '@ui/Stack/Stack'
 import { LedgerAccountEntryDetails } from '@components/LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 import { type LedgerAccountEntryDetailsStringOverrides } from '@components/LedgerAccountEntryDetails/LedgerAccountEntryDetails'
+import { LedgerAccountLineItemsTable, type LedgerAccountLineItemsTableStringOverrides } from '@components/LedgerAccountPanel/LedgerAccountLineItemsTable'
 import { LedgerAccountPanelHeader } from '@components/LedgerAccountPanel/LedgerAccountPanelHeader'
-import { LedgerLineItemsTable, type LedgerLineItemsTableStringOverrides } from '@components/LedgerAccountPanel/LedgerLineItemsTable'
 import { Panel } from '@components/Panel/Panel'
 
 import './ledgerAccountPanel.scss'
 
 export interface LedgerAccountStringOverrides {
   ledgerEntryDetail?: LedgerAccountEntryDetailsStringOverrides
-  ledgerEntriesTable?: LedgerLineItemsTableStringOverrides
+  ledgerEntriesTable?: LedgerAccountLineItemsTableStringOverrides
 }
 
 export interface LedgerAccountProps {
@@ -53,7 +53,7 @@ export const LedgerAccountPanel = ({
     >
       <VStack>
         <LedgerAccountPanelHeader onClose={close} />
-        <LedgerLineItemsTable
+        <LedgerAccountLineItemsTable
           pageSize={pageSize}
           stringOverrides={stringOverrides?.ledgerEntriesTable}
         />
