@@ -16,8 +16,6 @@ import { ReverseEntryButton } from '@components/LedgerEntryDetails/ReverseEntryB
 import { SourceDetailView } from '@components/LedgerEntryDetails/SourceDetailView'
 import { type LedgerEntryDetailStringOverrides } from '@components/LedgerEntryDetails/types'
 
-import './ledgerEntryDetails.scss'
-
 export interface LedgerEntryDetailsProps {
   entry?: LedgerEntry
   isLoading?: boolean
@@ -65,7 +63,7 @@ export const LedgerEntryDetails = ({
     : stringOverrides?.title ?? defaultTitle
 
   return (
-    <VStack className='Layer__LedgerEntryDetails'>
+    <VStack pbe='lg'>
       <EntryDetailHeader onClose={onClose} title={headerTitle} />
 
       <EntryDetailSection
