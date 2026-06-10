@@ -34,7 +34,7 @@
   z-index: 10;
 
   top: 0;
-  overflow-x: hidden;
+  overflow: hidden;
   height: 100%;
   max-height: 0;
   width: 480px;
@@ -100,10 +100,6 @@
     }
   }
 
-  .Layer__panel--open .Layer__panel__sidebar {
-    overflow: unset;
-  }
-
   .Layer__panel.Layer__panel--open .Layer__panel__sidebar {
     top: 0;
     left: 0;
@@ -120,6 +116,7 @@
   .Layer__panel.Layer__panel--open {
     .Layer__panel__content {
       width: 100%;
+      border-right: none;
     }
   }
 }

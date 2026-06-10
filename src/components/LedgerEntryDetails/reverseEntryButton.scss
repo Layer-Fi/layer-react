@@ -1,0 +1,15 @@
+.Layer__LedgerEntryDetails__Reverse {
+  padding: var(--spacing-md);
+
+  .Layer__btn--disabled {
+    cursor: not-allowed;
+  }
+
+  .Layer__btn {
+    min-width: 150px;
+
+    .Layer__btn-icon:not(.Layer__anim--rotating) {
+      color: var(--color-danger);
+    }
+  }
+}

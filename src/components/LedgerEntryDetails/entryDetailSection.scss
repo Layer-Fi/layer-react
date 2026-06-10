@@ -1,0 +1,44 @@
+.Layer__EntryDetailSection {
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+  background: var(--color-base-0);
+
+  &__Grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-sm) var(--spacing-lg);
+    max-inline-size: 32rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__Field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3xs);
+    min-width: 0;
+  }
+
+  &__Field--fullWidth {
+    grid-column: 1 / -1;
+  }
+
+  &__Value {
+    display: flex;
+    align-items: center;
+    min-height: 1.25rem;
+    margin: 0;
+    color: var(--color-base-900);
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+
+  @container (max-width: 499px) {
+    padding: var(--spacing-md);
+
+    &__Grid {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-sm);
+    }
+  }
+}
