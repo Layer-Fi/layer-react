@@ -16,6 +16,8 @@ import { P } from '@ui/Typography/Text'
 import { LinkedAccountToConfirm } from '@components/LinkedAccounts/ConfirmationModal/LinkedAccountToConfirm'
 import { ConditionalList } from '@components/utility/ConditionalList'
 
+import './linkedAccountsConfirmationModal.scss'
+
 function useLinkedAccountsConfirmationModal() {
   const { data, refetchAccounts } = useLinkedAccounts()
   const accountsNeedingConfirmation = getAccountsNeedingConfirmation(data ?? [])
@@ -171,7 +173,7 @@ function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => vo
               </P>
             </VStack>
           )}
-          Container={({ children }) => <VStack gap='md'>{children}</VStack>}
+          Container={({ children }) => <VStack gap='md' className='Layer__LinkedAccountsConfirmationModal__Content'>{children}</VStack>}
         >
           {({ item }) => (
             <LinkedAccountToConfirm
