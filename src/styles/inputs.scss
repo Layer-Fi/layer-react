@@ -2,43 +2,6 @@
   color: var(--input-placeholder-color);
 }
 
-.Layer__input-group {
-  display: flex;
-  flex-direction: column;
-
-  &.Layer__input-group--inline {
-    flex: 1;
-    flex-direction: row;
-    gap: var(--spacing-sm);
-    align-items: center;
-    width: 100%;
-
-    & label {
-      display: flex;
-      flex: 1 1 auto;
-      width: 33%;
-    }
-
-    & input {
-      flex: 3 3 auto;
-    }
-
-    .Layer__input-tooltip {
-      flex: 3 3 auto;
-      width: 100%;
-    }
-
-    .Layer__input {
-      width: 100%;
-    }
-  }
-}
-
-.Layer__input-label {
-  padding: var(--spacing-2xs);
-  color: var(--label-color);
-}
-
 .Layer__textarea {
   box-sizing: border-box;
   min-height: 100px;
@@ -106,25 +69,6 @@
       0 0 0 1px var(--color-base-700);
     outline: none;
   }
-}
-
-.Layer__input--with-left-text {
-  padding-left: 60px;
-}
-
-.Layer__input-left-text {
-  box-sizing: border-box;
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  height: 100%;
-  padding: var(--spacing-xs);
-  padding-right: var(--spacing-sm);
-  border-right: 1px solid var(--input-border-color);
-  font-size: var(--text-sm);
-  color: var(--color-base-700);
 }
 
 .Layer__input-tooltip {
