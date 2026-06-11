@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import classNames from 'classnames'
 import { Paperclip, Scissors, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -16,7 +16,7 @@ import { Button } from '@ui/Button/Button'
 import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
-import { Span } from '@ui/Typography/Text'
+import { Label, Span } from '@ui/Typography/Text'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
@@ -46,6 +46,7 @@ export const BankTransactionsMobileListSplitForm = ({
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
+  const totalInputId = useId()
 
   const {
     categorize: categorizeBankTransaction,
@@ -154,12 +155,13 @@ export const BankTransactionsMobileListSplitForm = ({
           <HStack align='end'>
             {localSplits.length > 1 && (
               <VStack pbs='xs' gap='3xs'>
-                <Span size='sm' weight='bold'>
+                <Label size='sm' weight='bold' htmlFor={totalInputId}>
                   {t('common:label.total', 'Total')}
-                </Span>
+                </Label>
                 <InputGroup className='Layer__BankTransactionsMobileSplitForm__TotalAmountInput'>
                   <Input
                     inset
+                    id={totalInputId}
                     disabled={true}
                     inputMode='numeric'
                     value={formatCurrencyFromCents(localSplits.reduce((total, { amount }) => total + amount, 0))}
