@@ -6,13 +6,13 @@ import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiv
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { HStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import { Header } from '@components/Container/Header'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 import { ProfitAndLossDownloadButton } from '@components/ProfitAndLossDownloadButton/ProfitAndLossDownloadButton'
 import type { ProfitAndLossDownloadButtonStringOverrides } from '@components/ProfitAndLossDownloadButton/types'
 import { SyncingBadge } from '@components/SyncingBadge/SyncingBadge'
-import { Heading, HeadingSize } from '@components/Typography/Heading'
 
 import './profitAndLossHeader.scss'
 
@@ -26,6 +26,9 @@ export interface ProfitAndLossHeaderProps {
    */
   text?: string
   className?: string
+  /**
+   * @deprecated Has no effect — the heading no longer accepts a class name
+   */
   headingClassName?: string
   stringOverrides?: ProfitAndLossHeaderStringOverrides
   withDatePicker?: boolean
@@ -38,7 +41,6 @@ export interface ProfitAndLossHeaderProps {
 export const ProfitAndLossHeader = ({
   text,
   className,
-  headingClassName,
   withDatePicker,
   withDownloadButton,
   withStatus = true,
@@ -60,7 +62,7 @@ export const ProfitAndLossHeader = ({
   return (
     <Header className={className}>
       <span className='Layer__component-header__title-wrapper Layer__profit-and-loss__header'>
-        <Heading size={HeadingSize.secondary} className={headingClassName} align='left'>
+        <Heading level={2} size='sm' align='left'>
           {stringOverrides?.title || text || t('common:label.profit_loss', 'Profit & Loss')}
         </Heading>
         {isSyncing && <SyncingBadge />}

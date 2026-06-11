@@ -7,9 +7,9 @@ import { DateFormat } from '@utils/i18n/date/patterns'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { Heading } from '@ui/Typography/Heading'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import { BookkeepingStatusDescription } from '@components/BookkeepingStatus/BookkeepingStatusDescription'
-import { Heading, HeadingSize } from '@components/Typography/Heading'
 import { Text, TextSize } from '@components/Typography/Text'
 
 const TASKS_CHARTS_COLORS = {
@@ -48,7 +48,9 @@ export const TasksPending = () => {
   return (
     <div className='Layer__tasks-pending'>
       <div className='Layer__tasks-pending-header'>
-        <Heading size={HeadingSize.secondary}>{formatDate(date, DateFormat.MonthYear)}</Heading>
+        <Heading level={2} size='sm'>
+          {formatDate(date, DateFormat.MonthYear)}
+        </Heading>
         {activePeriod?.tasks && activePeriod.tasks.length > 0
           ? (
             <div className='Layer__tasks-pending-bar'>

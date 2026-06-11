@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { type View } from '@internal-types/general'
 import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
+import { Heading } from '@ui/Typography/Heading'
 import { Button } from '@components/Button/Button'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
@@ -13,7 +14,6 @@ import { JournalEntriesDownloadButton } from '@components/Journal/download/Journ
 import { JournalSidebar } from '@components/JournalSidebar/JournalSidebar'
 import { JournalTable } from '@components/JournalTable/JournalTable'
 import { Panel } from '@components/Panel/Panel'
-import { Heading, HeadingSize } from '@components/Typography/Heading'
 
 const COMPONENT_NAME = 'journal-table'
 
@@ -59,10 +59,7 @@ export const JournalTableWithPanel = ({
       >
         <HeaderRow>
           <HeaderCol>
-            <Heading
-              className={`Layer__${COMPONENT_NAME}__title`}
-              size={HeadingSize.view}
-            >
+            <Heading level={2} size='md'>
               {stringOverrides?.componentTitle || t('generalLedger:label.journal', 'Journal')}
             </Heading>
           </HeaderCol>
@@ -71,10 +68,7 @@ export const JournalTableWithPanel = ({
       <Header>
         <HeaderRow>
           <HeaderCol>
-            <Heading
-              size={HeadingSize.secondary}
-              className={`Layer__${COMPONENT_NAME}__subtitle`}
-            >
+            <Heading level={2} size='sm'>
               {stringOverrides?.componentSubtitle || t('generalLedger:label.entries', 'Entries')}
             </Heading>
           </HeaderCol>

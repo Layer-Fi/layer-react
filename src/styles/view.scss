@@ -28,11 +28,11 @@
     }
   }
 
-  .Layer__view-header__title + .Layer__view-header__children {
+  .Layer__UI__Heading + .Layer__view-header__children {
     width: min-content;
   }
 
-  .Layer__view-header__title {
+  .Layer__view-header__content > .Layer__UI__Heading {
     display: flex;
     align-items: center;
     min-height: 44px;

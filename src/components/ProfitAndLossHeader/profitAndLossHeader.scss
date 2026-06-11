@@ -7,6 +7,10 @@
 .Layer__profit-and-loss__header {
   flex-direction: column;
   gap: var(--spacing-2xs);
+
+  .Layer__UI__Heading {
+    align-self: flex-start;
+  }
 }
 
 @container (width < 460px) {
