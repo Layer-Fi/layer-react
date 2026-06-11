@@ -115,7 +115,6 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
                 options={accountTypeOptions}
                 selectedValue={accountTypeOptions.find(opt => opt.value === field.state.value) ?? null}
                 onSelectedValueChange={option => field.handleChange(option?.value)}
-                isClearable={false}
                 isError={field.state.meta.errors.length > 0}
                 slots={{ ErrorMessage: field.state.meta.errors.join(', ') }}
               />
