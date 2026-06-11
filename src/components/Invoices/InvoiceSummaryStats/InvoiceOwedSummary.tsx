@@ -15,7 +15,6 @@ import './invoiceOwedSummary.scss'
 const getPercentageOverdue = (sentTotal: bigint | undefined, overdueTotal: bigint | undefined): number => {
   if (sentTotal === undefined || overdueTotal === undefined) return 50
 
-  // Nothing owed at all — show a neutral 50/50 meter rather than implying a side.
   const total = sentTotal + overdueTotal
   if (total === BigInt(0)) return 50
 
