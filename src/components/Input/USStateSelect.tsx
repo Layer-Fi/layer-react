@@ -5,7 +5,7 @@ import { type BaseSelectOption } from '@internal-types/general'
 import { getUsStateOptions, type USState } from '@internal-types/location'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 
-export const findSelectOption = <T extends BaseSelectOption>(options: ReadonlyArray<T>, selected?: string) => {
+export const findSelectOption = <T extends BaseSelectOption>(options: ReadonlyArray<T>, selected: string | null) => {
   if (!selected) {
     return undefined
   }
@@ -17,7 +17,7 @@ export const findSelectOption = <T extends BaseSelectOption>(options: ReadonlyAr
 }
 
 export type USStateSelecttProps = {
-  value?: string
+  value: string | null
   onChange: (value: USState | null) => void
 }
 
