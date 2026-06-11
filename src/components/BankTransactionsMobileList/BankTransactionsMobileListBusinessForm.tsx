@@ -136,7 +136,7 @@ export const BankTransactionsMobileListBusinessForm = ({
         </HStack>
         {isErrorCategorizing && showRetry
           ? (
-            <ErrorText>
+            <ErrorText size='sm' align='center' pb='sm'>
               {t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
             </ErrorText>
           )

@@ -43,15 +43,11 @@
 .Layer__data-state__text > .Layer__Span:first-child {
   display: block;
   margin-bottom: var(--spacing-2xs);
-  text-align: center;
-  color: var(--color-base-700);
 }
 
 .Layer__data-state__text > .Layer__Span:last-child {
   display: block;
   margin-bottom: var(--spacing-xl);
-  text-align: center;
-  color: var(--color-base-500);
 }
 
 .Layer__data-state--reset {
@@ -72,7 +68,6 @@
 
   .Layer__data-state__text > .Layer__Span {
     margin-bottom: 0;
-    text-align: left;
   }
 
   .Layer__data-state__icon {

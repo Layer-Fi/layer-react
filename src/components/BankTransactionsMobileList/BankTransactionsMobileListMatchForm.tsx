@@ -126,10 +126,10 @@ export const BankTransactionsMobileListMatchForm = ({
           </Button>
         )}
       </HStack>
-      {formError && <ErrorText>{formError}</ErrorText>}
+      {formError && <ErrorText size='sm' align='center' pb='sm'>{formError}</ErrorText>}
       {isErrorMatching
         && (
-          <ErrorText>
+          <ErrorText size='sm' align='center' pb='sm'>
             {t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
           </ErrorText>
         )}

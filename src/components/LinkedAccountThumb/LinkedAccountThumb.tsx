@@ -64,7 +64,7 @@ export const LinkedAccountThumb = ({
     <div className={linkedAccountThumbClassName}>
       <div className={linkedAccountInfoClassName}>
         <div className='topbar-details'>
-          <P variant='inherit'>{displayName}</P>
+          <P variant='inherit' ellipsis>{displayName}</P>
           {!asWidget && bankAccount.mask && (
             <AccountNumber accountNumber={bankAccount.mask} />
           )}

@@ -32,12 +32,6 @@
   }
 }
 
-.Layer__bank-transaction-mobile-list-item .Layer__P[data-status='error'] {
-  padding: var(--spacing-sm) 0;
-  font-size: 12px;
-  text-align: center;
-}
-
 .Layer__bank-transaction-mobile-list-item__toggle-row {
   display: flex;
   gap: var(--spacing-3xs);

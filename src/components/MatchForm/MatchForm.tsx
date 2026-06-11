@@ -110,7 +110,7 @@ export const MatchForm = ({
           </div>
         )
       })}
-      {matchFormError && <ErrorText>{matchFormError}</ErrorText>}
+      {matchFormError && <ErrorText pbs='2xs' pbe='md'>{matchFormError}</ErrorText>}
     </div>
   )
 }

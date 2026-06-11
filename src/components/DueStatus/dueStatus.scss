@@ -9,21 +9,9 @@
     align-items: center;
   }
 
-  &[data-status='overdue'] {
-    .Layer__P[data-weight='bold'] {
-      color: var(--color-info-error);
-    }
-  }
-
   &[data-status='today'] {
     .Layer__P[data-weight='bold'] {
       color: var(--color-info-warning);
-    }
-  }
-
-  &[data-status='paid'] {
-    .Layer__P[data-weight='bold'] {
-      color: var(--color-info-success);
     }
   }
 

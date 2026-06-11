@@ -135,10 +135,16 @@ export const DueStatus = ({ dueDate, paidAt, size = 'md' }: DueStatusProps) => {
 
   const dataProps = toDataProperties({ status: date.type })
 
+  const titleStatus = date.type === 'overdue'
+    ? 'error' as const
+    : date.type === 'paid'
+      ? 'success' as const
+      : undefined
+
   return (
     <div {...dataProps} className={`Layer__due-status Layer__due-status--${size}`}>
       {date.title && (
-        <P weight='bold' size={size}>
+        <P weight='bold' size={size} status={titleStatus}>
           {date.title}
         </P>
       )}

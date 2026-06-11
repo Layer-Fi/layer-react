@@ -88,8 +88,21 @@ export const DataState = ({
     <div className={baseClassName}>
       {getIcon(status, icon)}
       <div className='Layer__data-state__text'>
-        <Span size={titleSize} weight='bold'>{title}</Span>
-        <Span size={inline ? 'sm' : 'md'}>{description}</Span>
+        <Span
+          size={titleSize}
+          weight='bold'
+          variant='placeholder'
+          align={inline ? undefined : 'center'}
+        >
+          {title}
+        </Span>
+        <Span
+          size={inline ? 'sm' : 'md'}
+          status='disabled'
+          align={inline ? undefined : 'center'}
+        >
+          {description}
+        </Span>
       </div>
       {onRefresh && (
         <span className='Layer__data-state__btn'>

@@ -63,12 +63,6 @@
     white-space: nowrap;
     text-overflow: ellipsis;
   }
-
-  .Layer__P[data-status='error'] {
-    padding: var(--spacing-2xs) 0;
-    padding-bottom: var(--spacing-md);
-    margin: 0;
-  }
 }
 
 .Layer__MatchForm__Row {

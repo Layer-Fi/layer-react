@@ -248,7 +248,7 @@ export const BankTransactionRow = ({
               <HStack pie='md' gap='md' justify='end' className='Layer__bank-transaction-row__category-open'>
                 {isError
                   && (
-                    <Span>
+                    <Span status='error'>
                       <span>{t('common:state.unsaved', 'Unsaved')}</span>
                       <CircleAlert size={12} />
                     </Span>
