@@ -5,11 +5,8 @@ import { StripeAccountStatus } from '@schemas/stripeAccountStatus'
 import { useStripeAccountStatus } from '@hooks/api/businesses/[business-id]/stripe/status/useStripeAccountStatus'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Banner, type BannerVariant } from '@ui/Banner/Banner'
-import { VStack } from '@ui/Stack/Stack'
 import { ConnectStripeButton } from '@components/Invoices/StripeConnectBanner/ConnectStripeButton'
 import { useStripeConnect } from '@components/Invoices/StripeConnectBanner/useStripeConnect'
-
-import '@components/Invoices/StripeConnectBanner/stripeConnectBanner.scss'
 
 export const StripeConnectBanner = () => {
   const { t } = useTranslation()
@@ -62,21 +59,19 @@ export const StripeConnectBanner = () => {
   const showButton = status === StripeAccountStatus.NotCreated || status === StripeAccountStatus.Incomplete
 
   return (
-    <VStack pi='lg' pbe='md' className='Layer__StripeConnectBanner__wrapper'>
-      <Banner
-        {...bannerConfig}
-        slots={showButton
-          ? {
-            Button: (
-              <ConnectStripeButton
-                isError={isStripeConnectError}
-                isMutating={isMutating}
-                onClick={() => void handleConnectStripe()}
-              />
-            ),
-          }
-          : undefined}
-      />
-    </VStack>
+    <Banner
+      {...bannerConfig}
+      slots={showButton
+        ? {
+          Button: (
+            <ConnectStripeButton
+              isError={isStripeConnectError}
+              isMutating={isMutating}
+              onClick={() => void handleConnectStripe()}
+            />
+          ),
+        }
+        : undefined}
+    />
   )
 }
