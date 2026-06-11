@@ -34,7 +34,7 @@ export function getNextSortOrder(currentSortOrder: SortOrder): SortOrder {
 }
 
 export const PaginatedResponseMetaSchema = Schema.Struct({
-  cursor: Schema.NullOr(Schema.String),
+  cursor: Schema.NullishOr(Schema.String),
 
   hasMore: pipe(
     Schema.propertySignature(Schema.Boolean),
@@ -42,7 +42,7 @@ export const PaginatedResponseMetaSchema = Schema.Struct({
   ),
 
   totalCount: pipe(
-    Schema.propertySignature(Schema.UndefinedOr(Schema.Number)),
+    Schema.propertySignature(Schema.NullishOr(Schema.Number)),
     Schema.fromKey('total_count'),
   ),
 })

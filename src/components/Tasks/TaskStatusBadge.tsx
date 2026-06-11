@@ -1,4 +1,5 @@
 import type { TFunction } from 'i18next'
+import { CircleAlert, CircleCheckBig, Clock } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -7,9 +8,6 @@ import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import AlertCircle from '@icons/AlertCircle'
-import CheckCircle from '@icons/CheckCircle'
-import Clock from '@icons/Clock'
 import { HStack } from '@ui/Stack/Stack'
 import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
@@ -49,6 +47,7 @@ const getBadgeConfig = (
   switch (status) {
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER:
     case BookkeepingPeriodStatus.NOT_STARTED:
+    case BookkeepingPeriodStatus.CLOSING_OPEN_ITEMS:
     case BookkeepingPeriodStatus.CLOSING_IN_REVIEW: {
       return {
         color: 'info',
@@ -61,7 +60,7 @@ const getBadgeConfig = (
     case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
       return {
         color: 'warning',
-        icon: <AlertCircle size={12} />,
+        icon: <CircleAlert size={12} />,
         label: tasksCount ? buildLongLabel(t, formatNumber, tasksCount) : undefined,
         labelShort: tasksCount ? formatNumber(tasksCount) : undefined,
       }
@@ -69,7 +68,7 @@ const getBadgeConfig = (
     case BookkeepingPeriodStatus.CLOSED_COMPLETE: {
       return {
         color: 'success',
-        icon: <CheckCircle size={12} />,
+        icon: <CircleCheckBig size={12} />,
       }
     }
     case BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE: {

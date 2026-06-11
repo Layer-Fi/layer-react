@@ -1,10 +1,12 @@
 import { useContext } from 'react'
 import classNames from 'classnames'
+import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
-import PlusIcon from '@icons/PlusIcon'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { LinkedAccountsConfirmationModal } from '@components/LinkedAccounts/ConfirmationModal/LinkedAccountsConfirmationModal'
@@ -27,7 +29,19 @@ export const LinkedAccountsContent = ({
   const { t } = useTranslation()
   const { data, addConnection } = useContext(LinkedAccountsContext)
   const { business } = useLayerContext()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.LinkedAccounts)
   const isDemoBusiness = business?.isDemo ?? false
+
+  const onAddAccountClick = () => {
+    if (isDemoBusiness) return
+
+    emitLayerEvent({
+      type: LayerEventType.LinkedAccountsAddAccountClicked,
+      version: 1,
+      payload: {},
+    })
+    void addConnection('PLAID')
+  }
 
   const linkedAccountsNewAccountClassName = classNames(
     'Layer__linked-accounts__new-account',
@@ -56,14 +70,11 @@ export const LinkedAccountsContent = ({
             role='button'
             tabIndex={0}
             aria-disabled={isDemoBusiness}
-            onClick={() => {
-              if (isDemoBusiness) return
-              void addConnection('PLAID')
-            }}
+            onClick={onAddAccountClick}
             className={linkedAccountsNewAccountClassName}
           >
             <HStack align='center' gap='2xs'>
-              <PlusIcon size={14} />
+              <CirclePlus size={14} />
               <Span variant='placeholder'>
                 {t('linkedAccounts:action.add_account', 'Add Account')}
               </Span>

@@ -7,6 +7,35 @@
   justify-content: center;
 }
 
-.Layer__DataTable__ClickableRow {
+.Layer__UI__Table-Row.Layer__DataTable__ClickableRow {
   cursor: pointer;
+
+  .Layer__UI__Table-Cell {
+    transition: background-color 120ms ease-in-out;
+  }
+
+  &:hover .Layer__UI__Table-Cell {
+    background-color: var(--color-base-50);
+  }
+}
+
+.Layer__UI__Table-Row.Layer__DataTable__SelectedRow {
+  &[data-depth] .Layer__UI__Table-Cell {
+    background-color: var(--color-base-100);
+  }
+
+  .Layer__UI__Table-Cell:first-child {
+    position: relative;
+
+    &::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      height: 100%;
+      width: 4px;
+      background: var(--color-base-400);
+      content: '';
+    }
+  }
 }

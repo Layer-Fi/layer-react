@@ -18,9 +18,10 @@
   }
 
   .Layer__SearchField__Icon {
+    color: var(--input-placeholder-color);
+
     &[data-disabled] {
       cursor: not-allowed;
-      color: var(--color-base-500);
     }
   }
 }

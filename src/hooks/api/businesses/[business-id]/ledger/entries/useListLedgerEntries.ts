@@ -1,8 +1,10 @@
 import { useCallback, useMemo } from 'react'
+import { Schema } from 'effect'
 import { debounce } from 'lodash-es'
 import useSWRInfinite from 'swr/infinite'
 
-import type { JournalEntry } from '@internal-types/journal'
+import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
+import { type LedgerEntry, LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
@@ -24,19 +26,17 @@ type GetLedgerEntriesParams = {
   show_total_count?: boolean
 }
 
-export type ListLedgerEntriesReturn = {
-  data: ReadonlyArray<JournalEntry>
-  meta?: {
-    pagination: {
-      cursor?: string
-      has_more: boolean
-      total_count?: number
-    }
-  }
-}
+const ListLedgerEntriesResponseSchema = Schema.Struct({
+  data: Schema.Array(LedgerEntrySchema),
+  meta: Schema.optional(Schema.Struct({
+    pagination: PaginatedResponseMetaSchema,
+  })),
+})
+
+export type ListLedgerEntriesReturn = typeof ListLedgerEntriesResponseSchema.Type
 
 export const listLedgerEntries = get<
-  ListLedgerEntriesReturn,
+  typeof ListLedgerEntriesResponseSchema.Encoded,
   GetLedgerEntriesParams
 >(({ businessId, sort_by, sort_order, cursor, limit, show_total_count }) => {
   const parameters = toDefinedSearchParameters({
@@ -75,7 +75,7 @@ function keyLoader(
       accessToken,
       apiUrl,
       businessId,
-      cursor: previousPageData?.meta?.pagination.cursor,
+      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
       sort_by,
       sort_order,
       limit,
@@ -138,7 +138,7 @@ export function useListLedgerEntries({
           show_total_count,
         },
       },
-    )(),
+    )().then(Schema.decodeUnknownPromise(ListLedgerEntriesResponseSchema)),
     {
       keepPreviousData: true,
       revalidateFirstPage: false,
@@ -193,7 +193,7 @@ export function useLedgerEntriesOptimisticUpdater() {
 
   const optimisticallyUpdateLedgerEntries = useCallback(
     (
-      transformJournalEntry: (entry: JournalEntry) => JournalEntry,
+      transformJournalEntry: (entry: LedgerEntry) => LedgerEntry,
     ) =>
       optimisticUpdate<ListLedgerEntriesReturn>(
         ({ tags }) => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY),

@@ -1,8 +1,6 @@
-import { Layers2Icon } from 'lucide-react'
+import { Layers2Icon, Minimize2, Scissors } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import MinimizeTwo from '@icons/MinimizeTwo'
-import Scissors from '@icons/Scissors'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeSize } from '@components/Badge/Badge'
@@ -35,7 +33,7 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
   if (type === 'match' || type === 'transfer') {
     return (
       <HStack gap='xs' align='center' className={className}>
-        <Badge size={BadgeSize.SMALL} icon={<MinimizeTwo size={11} />}>
+        <Badge size={BadgeSize.SMALL} icon={<Minimize2 size={11} />}>
           {type === 'transfer' ? t('bankTransactions:label.transfer', 'Transfer') : t('bankTransactions:label.match', 'Match')}
         </Badge>
         <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>

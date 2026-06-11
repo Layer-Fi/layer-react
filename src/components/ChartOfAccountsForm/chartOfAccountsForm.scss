@@ -1,114 +1,49 @@
-.Layer__chart-of-accounts__sidebar__header {
-  display: flex;
-  gap: var(--spacing-md);
-  align-items: flex-start;
-  justify-content: space-between;
-
-  .actions {
-    display: flex;
-    gap: var(--spacing-sm);
-    align-items: center;
-  }
-}
-
-.Layer__chart-of-accounts__form .actions {
-  display: none;
-  gap: var(--spacing-sm);
-  align-items: center;
-  justify-content: flex-end;
-  padding-top: var(--spacing-xl);
-}
-
-.Layer__chart-of-accounts__form {
+.Layer__ChartOfAccountsForm {
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-xl) var(--spacing-md);
 
-  .Layer__input-group.Layer__input-group--inline {
-    padding: var(--spacing-xs) 0;
+  .Layer__ChartOfAccountsForm__Header {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+  }
 
-    label {
-      width: 140px;
-      min-width: 140px;
-      max-width: 140px;
+  .Layer__ChartOfAccountsForm__FormError {
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .Layer__ChartOfAccountsForm__EditEntry {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .Layer__ChartOfAccountsForm__Section {
+    padding: var(--spacing-md);
+  }
+
+  .Layer__ChartOfAccountsForm__Footer {
+    padding: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+  }
+
+  // Inline text fields get a fixed label column; stacked (mobile) uses the @ui default.
+  .Layer__UI__TextField[data-inline] {
+    grid-template-columns: 9rem auto;
+  }
+
+  .Layer__ChartOfAccountsForm__ComboBoxField {
+    display: grid;
+
+    grid-template-areas:
+      'label'
+      'input';
+    gap: var(--spacing-3xs);
+
+    &--inline {
+      grid-template-areas: 'label input';
+      grid-template-columns: 9rem auto;
+      gap: 0;
+
+      align-items: center;
     }
-  }
-}
-
-.Layer__chart-of-accounts__form-edit-entry {
-  display: flex;
-  gap: var(--spacing-md);
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--spacing-md);
-
-  .Layer__text {
-    margin: 0;
-  }
-}
-
-.Layer__chart-of-accounts__form__error-message {
-  box-sizing: border-box;
-  width: 100%;
-  padding: var(--spacing-4xs) var(--spacing-xl);
-  text-align: right;
-  color: var(--color-danger);
-}
-
-@container (min-width: 1401px) {
-  .Layer__chart-of-accounts .Layer__panel__sidebar .Layer__chart-of-accounts__form {
-    padding: var(--spacing-xl);
-  }
-
-  .Layer__chart-of-accounts__form-edit-entry {
-    padding: var(--spacing-md) var(--spacing-xl);
-  }
-}
-
-@container (max-width: 1024px) {
-  .Layer__chart-of-accounts__sidebar__header .actions {
-    display: none;
-  }
-
-  .Layer__chart-of-accounts__form .actions {
-    display: flex;
-  }
-
-  .Layer__chart-of-accounts.Layer__component .Layer__panel__sidebar .Layer__panel__sidebar-content {
-    width: 100%;
-
-    .Layer__form .Layer__input-group {
-      box-sizing: border-box;
-      width: 100%;
-      max-width: 600px;
-      margin: auto;
-    }
-
-    .Layer__form .Layer__chart-of-accounts__form-edit-entry {
-      box-sizing: border-box;
-      width: 100%;
-      max-width: calc(600px + (var(--spacing-xl) * 2));
-      padding: var(--spacing-md) var(--spacing-xl);
-      margin: auto;
-    }
-
-    .Layer__form .Layer__header__col {
-      width: 100%;
-      max-width: calc(600px + (var(--spacing-xl) * 2));
-      padding: var(--spacing-md) var(--spacing-xl);
-      margin: auto;
-    }
-
-    .actions {
-      width: 100%;
-      max-width: 600px;
-      margin: auto;
-    }
-  }
-}
-
-@container (min-width: 761px) and (max-width: 1024px) {
-  .Layer__chart-of-accounts__form {
-    padding: var(--spacing-xl);
   }
 }

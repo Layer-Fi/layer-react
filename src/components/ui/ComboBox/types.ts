@@ -22,7 +22,7 @@ export type AriaLabelProps = Pick<
 
 export type ComboBoxSlots<T extends ComboBoxOption> = {
   EmptyMessage?: ReactNode
-  ErrorMessage?: ReactNode
+  ErrorMessage?: string
   GroupHeading?: React.FC<{ group: GroupBase<T>, fallback: ReactNode }>
   Option?: React.FC<{ option: T, fallback: ReactNode }>
   SingleValue?: React.FC<{ option: T, fallback: ReactNode }>

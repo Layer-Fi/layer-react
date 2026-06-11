@@ -1,7 +1,8 @@
+import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import type { RawTask } from '@internal-types/tasks'
 import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
+import { BusinessTaskSchema } from '@schemas/businessTasks/businessTask'
 import { get } from '@utils/api/authenticatedHttp'
 import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
 import { isActiveBookkeepingPeriod } from '@utils/bookkeeping/periods/getFilteredBookkeepingPeriods'
@@ -20,6 +21,7 @@ export enum BookkeepingPeriodStatus {
   IN_PROGRESS_AWAITING_BOOKKEEPER = 'IN_PROGRESS_AWAITING_BOOKKEEPER',
   IN_PROGRESS_AWAITING_CUSTOMER = 'IN_PROGRESS_AWAITING_CUSTOMER',
   CLOSING_IN_REVIEW = 'CLOSING_IN_REVIEW',
+  CLOSING_OPEN_ITEMS = 'CLOSING_OPEN_ITEMS',
   CLOSED_OPEN_TASKS = 'CLOSED_OPEN_TASKS',
   CLOSED_COMPLETE = 'CLOSED_COMPLETE',
 }
@@ -43,20 +45,23 @@ export type BookkeepingPeriod = Omit<RawBookkeepingPeriod, 'status'> & {
   status: BookkeepingPeriodStatus
 }
 
-type RawBookkeepingPeriod = {
-  id: string
-  month: number
-  year: number
-  status: RawBookkeepingPeriodStatus
-  tasks: ReadonlyArray<RawTask>
-}
+const RawBookkeepingPeriodSchema = Schema.Struct({
+  id: Schema.String,
+  month: Schema.Number,
+  year: Schema.Number,
+  status: Schema.String,
+  tasks: Schema.Array(BusinessTaskSchema),
+})
+type RawBookkeepingPeriod = typeof RawBookkeepingPeriodSchema.Type
+
+const BookkeepingPeriodsResponseSchema = Schema.Struct({
+  data: Schema.Struct({
+    periods: Schema.Array(RawBookkeepingPeriodSchema),
+  }),
+})
 
 const getBookkeepingPeriods = get<
-  {
-    data: {
-      periods: ReadonlyArray<RawBookkeepingPeriod>
-    }
-  },
+  Record<string, unknown>,
   { businessId: string }
 >(({ businessId }) => {
   return `/v1/businesses/${businessId}/bookkeeping/periods`
@@ -104,6 +109,7 @@ export function useBookkeepingPeriods() {
       accessToken,
       { params: { businessId } },
     )()
+      .then(Schema.decodeUnknownPromise(BookkeepingPeriodsResponseSchema))
       .then(
         ({ data: { periods } }) =>
           periods

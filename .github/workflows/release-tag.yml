@@ -1,0 +1,55 @@
+name: Release — Tag
+
+# Phase 2a (automatic hook). When a "Release — Prepare" bump PR is merged,
+# create the git tag + GitHub Release on the merge commit. The version comes
+# from the PR's head branch name (release/vX.Y.Z[-alpha.N]); an alpha tag is
+# marked as a prerelease. Run "Release — Publish" afterwards to ship to npm and
+# update Linear.
+
+on:
+  pull_request:
+    types: [ closed ]
+    branches: [ main ]
+
+permissions:
+  contents: write       # create the tag + GitHub Release
+  pull-requests: read   # read the merged PR's settled merge_commit_sha
+
+jobs:
+  tag:
+    # Only for merged Release — Prepare PRs.
+    if: >-
+      github.event.pull_request.merged == true &&
+      startsWith(github.event.pull_request.head.ref, 'release/v')
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: main
+        fetch-depth: 0
+
+    - name: Create the tagged release
+      env:
+        GH_TOKEN: ${{ github.token }}
+        HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        PR: ${{ github.event.pull_request.number }}
+      run: |
+        V="${HEAD_REF#release/v}"          # X.Y.Z or X.Y.Z-alpha.N
+        # stable -> mark the GitHub Release as Latest; alpha -> prerelease (never Latest)
+        FLAGS=(--latest)
+        case "$V" in *-*) FLAGS=(--prerelease --latest=false) ;; esac
+        if gh release view "v$V" >/dev/null 2>&1; then
+          echo "::notice::Release v$V already exists; nothing to do."
+          exit 0
+        fi
+        # The event payload's merge_commit_sha can be null/stale (race at close,
+        # and it varies by merge method). Fetch the settled value, and fall back
+        # to main's tip if it is still empty.
+        SHA=$(gh api "repos/{owner}/{repo}/pulls/$PR" --jq '.merge_commit_sha')
+        if [ -z "$SHA" ] || [ "$SHA" = "null" ]; then
+          SHA=$(git rev-parse HEAD)
+        fi
+        gh release create "v$V" --target "$SHA" --title "v$V" --generate-notes "${FLAGS[@]}"
+        echo "Created tagged release v$V at $SHA"
+        echo "[Release v$V](https://github.com/${{ github.repository }}/releases/tag/v$V)" >> "$GITHUB_STEP_SUMMARY"

@@ -1,9 +1,5 @@
 import { type ReactNode } from 'react'
-
-import AlertCircle from '@icons/AlertCircle'
-import CheckIcon from '@icons/Check'
-import LoaderIcon from '@icons/Loader'
-import XIcon from '@icons/X'
+import { Check, CircleAlert, Loader, X } from 'lucide-react'
 export interface BadgeLoaderProps {
   children?: ReactNode
   size?: number
@@ -12,11 +8,11 @@ export interface BadgeLoaderProps {
 }
 
 const BadgeLoaderIcon = ({ variant, showLoading }: { variant: BadgeLoaderProps['variant'], showLoading?: boolean }) => {
-  if (showLoading) return <LoaderIcon size={12} className='Layer__anim--rotating' />
-  if (variant === 'success') return <CheckIcon size={12} />
-  if (variant === 'error') return <XIcon size={12} />
-  if (variant === 'warning') return <AlertCircle size={12} />
-  return <LoaderIcon size={12} className='Layer__anim--rotating' />
+  if (showLoading) return <Loader size={12} className='Layer__anim--rotating' />
+  if (variant === 'success') return <Check size={12} />
+  if (variant === 'error') return <X size={12} />
+  if (variant === 'warning') return <CircleAlert size={12} />
+  return <Loader size={12} className='Layer__anim--rotating' />
 }
 
 export const BadgeLoader = ({ children, showLoading, variant = 'default' }: BadgeLoaderProps) => {

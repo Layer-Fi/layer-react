@@ -1,9 +1,7 @@
-import { useContext } from 'react'
+import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
-import PlusIcon from '@icons/Plus'
 import { HStack } from '@ui/Stack/Stack'
 import { Button } from '@components/Button/Button'
 import { AccountBalancesDownloadButton } from '@components/ChartOfAccounts/download/AccountBalancesDownloadButton'
@@ -23,6 +21,7 @@ type ChartOfAccountsTableHeaderProps = {
   withDateControl: boolean
   withExpandAllButton: boolean
   showAddAccountButton: boolean
+  onAddAccount: () => void
   inputValue: string
   onSearchChange: (value: string) => void
   stringOverrides?: ChartOfAccountsTableStringOverrides
@@ -33,12 +32,12 @@ export const ChartOfAccountsTableHeader = ({
   withDateControl,
   withExpandAllButton,
   showAddAccountButton,
+  onAddAccount,
   inputValue,
   onSearchChange,
   stringOverrides,
 }: ChartOfAccountsTableHeaderProps) => {
   const { t } = useTranslation()
-  const { addAccount } = useContext(ChartOfAccountsContext)
   const { isDesktop } = useSizeClass()
 
   return (
@@ -81,10 +80,10 @@ export const ChartOfAccountsTableHeader = ({
             />
             {showAddAccountButton && (
               <Button
-                onClick={() => addAccount()}
+                onClick={() => onAddAccount()}
                 iconOnly={!isDesktop}
                 leftIcon={
-                  !isDesktop && <PlusIcon size={14} />
+                  !isDesktop && <CirclePlus size={14} />
                 }
               >
                 {stringOverrides?.addAccountButtonText || t('chartOfAccounts:action.add_account', 'Add Account')}

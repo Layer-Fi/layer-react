@@ -1,0 +1,37 @@
+name: Linear Release — sync on merge
+
+# Attaches issues/PRs to the current in-progress Linear release on every push to
+# main (i.e. every merged PR), so the release stays current as work lands.
+#
+# `sync` is run with NO version, so it targets the pipeline's currently started
+# (In Progress) release — the one seeded by the previous stable ship, or the one
+# a fresh alpha cut creates. It scans the full range since the last completed
+# release, so issues are attached cumulatively.
+#
+# Release — Publish also syncs (and, for stable, completes) at ship time. That
+# is deliberate: this hook runs asynchronously after a merge, so Publish
+# guarantees attachment/completion at the moment that matters without racing it.
+#
+# Requires the `LINEAR_ACCESS_KEY` secret (this pipeline's access key).
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # full history so the commit scan can reach the previous release
+
+    - name: Sync current in-progress release
+      uses: linear/linear-release-action@v0
+      with:
+        access_key: ${{ secrets.LINEAR_ACCESS_KEY }}
+        command: sync

@@ -1,232 +1,258 @@
-import { Fragment, useContext, useLayoutEffect } from 'react'
+import { useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react'
+import { type Row } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 
-import { type View } from '@internal-types/general'
-import {
-  type JournalEntry,
-  type JournalEntryLine,
-  type JournalEntryLineItem,
-} from '@internal-types/journal'
-import { TableCellAlign } from '@internal-types/table'
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
+import { type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
+import { Alignment } from '@schemas/reports/unifiedReport'
 import { humanizeEnum } from '@utils/format'
-import { entryNumber } from '@utils/journal'
+import { entryNumber, sumLineItemAmountsByDirection } from '@utils/journal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { TableProvider } from '@contexts/TableContext/TableContext'
-import { HStack } from '@ui/Stack/Stack'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
+import { type ClickableRowProps } from '@components/DataTable/DataTable'
+import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
+import { ExpandableDataTableContext, ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { type JournalTableStringOverrides } from '@components/JournalTable/JournalTableWithPanel'
-import { Table } from '@components/Table/Table'
-import { TableBody } from '@components/TableBody/TableBody'
-import { TableCell } from '@components/TableCell/TableCell'
-import { TableHead } from '@components/TableHead/TableHead'
-import { TableRow } from '@components/TableRow/TableRow'
+import { Pagination } from '@components/Pagination/Pagination'
 
-const accountName = (
-  row: JournalEntry | JournalEntryLine | JournalEntryLineItem,
-) => {
-  if ('account' in row) {
-    return row.account.name
-  }
-  if ('account_identifier' in row) {
-    return row.account_identifier.name
-  }
-  return ''
+import './journalTable.scss'
+
+const COMPONENT_NAME = 'JournalTable'
+const PAGE_SIZE = 15
+
+type LedgerEntryLineItem = LedgerEntry['lineItems'][number]
+
+/**
+ * The journal renders two heterogeneous row shapes — a ledger entry and its line
+ * items — but TanStack requires parent and child rows to share a type, so we model
+ * them as a discriminated union keyed on `kind`.
+ */
+type EntryRow = { kind: 'entry', entry: LedgerEntry }
+type LineItemRow = { kind: 'lineItem', lineItem: LedgerEntryLineItem, parentId: string }
+type JournalRow = EntryRow | LineItemRow
+
+const isEntryRow = (row: JournalRow): row is EntryRow => row.kind === 'entry'
+const isLineItemRow = (row: JournalRow): row is LineItemRow => row.kind === 'lineItem'
+
+const getSubRows = (row: JournalRow): JournalRow[] | undefined =>
+  isEntryRow(row) && row.entry.lineItems.length > 0
+    ? row.entry.lineItems.map(lineItem => ({ kind: 'lineItem' as const, lineItem, parentId: row.entry.id }))
+    : undefined
+
+const getRowId = (row: JournalRow): string =>
+  isEntryRow(row) ? `journal-row-${row.entry.id}` : `journal-lineitem-${row.lineItem.id}`
+
+type JournalTableProps = {
+  stringOverrides?: JournalTableStringOverrides
 }
 
-export const JournalTable = ({
-  view,
-  data,
-  stringOverrides,
-}: {
-  view: View
-  data: JournalEntry[]
-  stringOverrides?: JournalTableStringOverrides
-}) => (
-  <TableProvider>
-    <JournalTableContent
-      view={view}
-      data={data}
-      stringOverrides={stringOverrides}
-    />
-  </TableProvider>
+export const JournalTable = (props: JournalTableProps) => (
+  <ExpandableDataTableProvider defaultExpanded>
+    <JournalTableContent {...props} />
+  </ExpandableDataTableProvider>
 )
 
 const JournalTableContent = ({
-  data,
   stringOverrides,
-}: {
-  view: View
-  data: JournalEntry[]
-  stringOverrides?: JournalTableStringOverrides
-}) => {
+}: JournalTableProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
-  const { selectedEntryId, setSelectedEntryId, closeSelectedEntry } =
-    useContext(JournalContext)
+  const {
+    data: rawData,
+    isLoading,
+    isError,
+    isValidating,
+    refetch,
+    selectedEntryId,
+    setSelectedEntryId,
+    closeSelectedEntry,
+    hasMore,
+    fetchMore,
+  } = useContext(JournalContext)
 
-  const { isOpen, setIsOpen } = useTableExpandRow()
   const { accountingConfiguration } = useLayerContext()
   const enableAccountNumbers = !!accountingConfiguration?.enableAccountNumbers
 
+  const { setExpanded } = useContext(ExpandableDataTableContext)
+
+  const [currentPage, setCurrentPage] = useState(1)
+
+  // Re-expand every row on page change. Once a row is collapsed, TanStack rewrites
+  // `expanded: true` into a per-row map covering only the current page's slice, so
+  // the next page would render collapsed without this reset.
   useLayoutEffect(() => {
-    if (data.length > 0) {
-      setIsOpen(data.map(x => `journal-row-${x.id}`))
+    setExpanded(true)
+  }, [currentPage, setExpanded])
+
+  const pageData = useMemo(
+    () => {
+      if (!rawData) return undefined
+
+      const firstPageIndex = (currentPage - 1) * PAGE_SIZE
+      return rawData.slice(firstPageIndex, firstPageIndex + PAGE_SIZE)
+    },
+    [rawData, currentPage],
+  )
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    if (rawData) {
+      const requestedItemIndex = (page - 1) * PAGE_SIZE + PAGE_SIZE - 1
+      if (requestedItemIndex > rawData.length - 1 && hasMore) {
+        fetchMore()
+      }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
+  }
 
-  const renderJournalRow = (
-    row: JournalEntry,
-    index: number,
-    rowKey: string,
-    depth: number,
-  ) => {
-    const expandable = !!row.line_items && row.line_items.length > 0
-    const expanded = !expandable || isOpen(rowKey)
+  const hasEntries = !!rawData?.length
 
+  const slots = useMemo(() => ({
+    EmptyState: () => (
+      <DataState
+        status={DataStateStatus.allDone}
+        title={t('generalLedger:empty.entries', 'No entries found')}
+        description={t('generalLedger:label.entry_journal', 'There are no entries in the journal.')}
+      />
+    ),
+    ErrorState: () => (
+      <DataState
+        status={DataStateStatus.failed}
+        title={t('common:error.something_went_wrong', 'Something went wrong')}
+        description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
+        onRefresh={() => { void refetch() }}
+        isLoading={isValidating || isLoading}
+      />
+    ),
+  }), [t, refetch, isValidating, isLoading])
+
+  const rows = useMemo<JournalRow[] | undefined>(
+    () => pageData?.map(entry => ({ kind: 'entry' as const, entry })),
+    [pageData],
+  )
+
+  const columnConfig = useMemo<NestedColumnConfig<JournalRow>>(() => {
+    const accountNumberColumn = enableAccountNumbers
+      ? [{
+        id: 'accountNumber',
+        header: stringOverrides?.accountNumberColumnHeader || t('generalLedger:label.account_number', 'Account Number'),
+        cell: (row: Row<JournalRow>) =>
+          isLineItemRow(row.original)
+            ? <Span ellipsis>{row.original.lineItem.account.accountNumber}</Span>
+            : null,
+      }]
+      : []
+
+    return [
+      {
+        id: 'id',
+        header: stringOverrides?.idColumnHeader || t('common:label.id', 'Id'),
+        isRowHeader: true,
+        cell: (row: Row<JournalRow>) =>
+          isEntryRow(row.original) ? <Span>{entryNumber(row.original.entry)}</Span> : null,
+      },
+      {
+        id: 'date',
+        header: stringOverrides?.dateColumnHeader || t('common:label.date', 'Date'),
+        cell: (row: Row<JournalRow>) =>
+          isEntryRow(row.original) ? <Span>{formatDate(row.original.entry.entryAt)}</Span> : null,
+      },
+      {
+        id: 'transaction',
+        header: stringOverrides?.transactionColumnHeader || t('common:label.transaction', 'Transaction'),
+        cell: (row: Row<JournalRow>) =>
+          isEntryRow(row.original) ? <Span>{humanizeEnum(row.original.entry.entryType ?? '')}</Span> : null,
+      },
+      ...accountNumberColumn,
+      {
+        id: 'account',
+        header: stringOverrides?.accountColumnHeader || t('generalLedger:label.account_name_title_case', 'Account Name'),
+        cell: (row: Row<JournalRow>) =>
+          isEntryRow(row.original)
+            ? <Span>{`(${row.original.entry.lineItems.length})`}</Span>
+            : <Span>{row.original.lineItem.account.name}</Span>,
+      },
+      {
+        id: 'debit',
+        header: stringOverrides?.debitColumnHeader || t('common:label.debit', 'Debit'),
+        alignment: Alignment.Right,
+        cell: (row: Row<JournalRow>) => <AmountCell row={row} direction={LedgerEntryDirection.Debit} />,
+      },
+      {
+        id: 'credit',
+        header: stringOverrides?.creditColumnHeader || t('common:label.credit', 'Credit'),
+        alignment: Alignment.Right,
+        cell: (row: Row<JournalRow>) => <AmountCell row={row} direction={LedgerEntryDirection.Credit} />,
+      },
+    ]
+  }, [enableAccountNumbers, stringOverrides, t, formatDate])
+
+  const withClickableRow = useMemo<ClickableRowProps<JournalRow>>(() => ({
+    isRowClickable: row => isEntryRow(row.original),
+    onRowClick: (row) => {
+      if (!isEntryRow(row.original)) return
+
+      const { id } = row.original.entry
+      if (selectedEntryId === id) {
+        closeSelectedEntry()
+      }
+      else {
+        setSelectedEntryId(id)
+      }
+    },
+  }), [selectedEntryId, setSelectedEntryId, closeSelectedEntry])
+
+  const isRowSelected = useCallback(
+    (row: Row<JournalRow>) =>
+      isEntryRow(row.original)
+        ? row.original.entry.id === selectedEntryId
+        : row.original.parentId === selectedEntryId,
+    [selectedEntryId],
+  )
+
+  return (
+    <>
+      <ExpandableDataTable<JournalRow>
+        componentName={COMPONENT_NAME}
+        ariaLabel={t('generalLedger:label.journal', 'Journal')}
+        columnConfig={columnConfig}
+        data={rows}
+        isLoading={isLoading}
+        isError={isError}
+        slots={slots}
+        getSubRows={getSubRows}
+        getRowId={getRowId}
+        withClickableRow={withClickableRow}
+        isRowSelected={isRowSelected}
+      />
+
+      {hasEntries && (
+        <Pagination
+          currentPage={currentPage}
+          totalCount={rawData?.length || 0}
+          pageSize={PAGE_SIZE}
+          onPageChange={handlePageChange}
+          hasMore={hasMore}
+          fetchMore={fetchMore}
+        />
+      )}
+    </>
+  )
+}
+
+const AmountCell = ({ row, direction }: { row: Row<JournalRow>, direction: LedgerEntryDirection }) => {
+  if (isEntryRow(row.original)) {
     return (
-      <Fragment key={rowKey + '-' + index}>
-        <TableRow
-          rowKey={rowKey + '-' + index}
-          expandable={expandable}
-          isExpanded={expanded}
-          handleExpand={() => setIsOpen(rowKey)}
-          selected={selectedEntryId === row.id}
-          onClick={(e) => {
-            e.stopPropagation()
-
-            if (selectedEntryId === row.id) {
-              closeSelectedEntry()
-            }
-            else {
-              setSelectedEntryId(row.id)
-            }
-          }}
-          depth={depth}
-        >
-          <TableCell
-            withExpandIcon={expandable}
-            onClick={(e) => {
-              e.stopPropagation()
-              if (expandable) setIsOpen(rowKey)
-            }}
-          >
-            {entryNumber(row)}
-          </TableCell>
-          <TableCell>
-            {row.entry_at && formatDate(row.entry_at)}
-          </TableCell>
-          <TableCell>{humanizeEnum(row.entry_type)}</TableCell>
-          {/* Empty cell for account number on Transaction level */}
-          {enableAccountNumbers && <TableCell />}
-          <TableCell>
-            (
-            {row.line_items.length}
-            )
-          </TableCell>
-          <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-            {'line_items' in row
-              && Math.abs(
-                row.line_items
-                  .filter(item => item.direction === LedgerEntryDirection.Debit)
-                  .map(item => item.amount)
-                  .reduce((a, b) => a + b, 0),
-              )}
-          </TableCell>
-          <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-            {'line_items' in row
-              && Math.abs(
-                row.line_items
-                  .filter(item => item.direction === LedgerEntryDirection.Credit)
-                  .map(item => item.amount)
-                  .reduce((a, b) => a + b, 0),
-              )}
-          </TableCell>
-        </TableRow>
-        {expandable
-          && expanded
-          && row.line_items.map((subItem, subIdx) => (
-            <TableRow
-              key={rowKey + '-' + index + '-' + subIdx}
-              rowKey={rowKey + '-' + index + '-' + subIdx}
-              depth={depth + 1}
-              selected={selectedEntryId === row.id}
-            >
-              <TableCell />
-              <TableCell />
-              <TableCell />
-              {enableAccountNumbers && (
-                <TableCell>
-                  <HStack className='Layer__JournalTable__account-number-cell'>
-                    <Span ellipsis>
-                      {subItem.account.account_number}
-                    </Span>
-                  </HStack>
-                </TableCell>
-              )}
-              <TableCell>{accountName(subItem)}</TableCell>
-              {subItem.direction === LedgerEntryDirection.Debit && subItem.amount >= 0
-                ? (
-                  <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-                    {subItem.amount}
-                  </TableCell>
-                )
-                : (
-                  <TableCell />
-                )}
-              {subItem.direction === LedgerEntryDirection.Credit && subItem.amount >= 0
-                ? (
-                  <TableCell isCurrency primary align={TableCellAlign.RIGHT}>
-                    {subItem.amount}
-                  </TableCell>
-                )
-                : (
-                  <TableCell />
-                )}
-            </TableRow>
-          ))}
-      </Fragment>
+      <MoneySpan amount={Math.abs(sumLineItemAmountsByDirection(row.original.entry.lineItems, direction))} />
     )
   }
 
-  return (
-    <Table borderCollapse='collapse' componentName='JournalTable'>
-      <TableHead>
-        <TableRow isHeadRow rowKey='journal-head-row'>
-          <TableCell isHeaderCell>
-            {stringOverrides?.idColumnHeader || t('common:label.id', 'Id')}
-          </TableCell>
-          <TableCell isHeaderCell>
-            {stringOverrides?.dateColumnHeader || t('common:label.date', 'Date')}
-          </TableCell>
-          <TableCell isHeaderCell>
-            {stringOverrides?.transactionColumnHeader || t('common:label.transaction', 'Transaction')}
-          </TableCell>
-          {enableAccountNumbers && (
-            <TableCell isHeaderCell>
-              {stringOverrides?.accountNumberColumnHeader || t('generalLedger:label.account_number', 'Account Number')}
-            </TableCell>
-          )}
-          <TableCell isHeaderCell>
-            {stringOverrides?.accountColumnHeader || t('generalLedger:label.account_name_title_case', 'Account Name')}
-          </TableCell>
-          <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
-            {stringOverrides?.debitColumnHeader || t('common:label.debit', 'Debit')}
-          </TableCell>
-          <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
-            {stringOverrides?.creditColumnHeader || t('common:label.credit', 'Credit')}
-          </TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {data.map((entry, idx) =>
-          renderJournalRow(entry, idx, `journal-row-${entry.id}`, 0),
-        )}
-      </TableBody>
-    </Table>
-  )
+  const { lineItem } = row.original
+  return lineItem.direction === direction && lineItem.amount >= 0
+    ? <MoneySpan amount={lineItem.amount} />
+    : null
 }

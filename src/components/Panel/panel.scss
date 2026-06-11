@@ -25,7 +25,7 @@
   top: 0;
   border-top-left-radius: var(--border-radius-sm);
   border-top-right-radius: var(--border-radius-sm);
-  background: rgb(255 255 255 / 50%);
+  background: var(--color-base-0);
   backdrop-filter: blur(6px);
 }
 
@@ -34,7 +34,7 @@
   z-index: 10;
 
   top: 0;
-  overflow-x: hidden;
+  overflow: hidden;
   height: 100%;
   max-height: 0;
   width: 480px;
@@ -42,12 +42,11 @@
   border-top-right-radius: var(--border-radius-sm);
   border-left: 1px solid var(--color-base-300);
   background: var(--color-base-0);
-  transition: max-width 180ms ease-in-out;
 
   .Layer__panel__sidebar-content {
     height: 100%;
     width: 480px;
-    min-width: 480px;
+    min-width: 240px;
     opacity: 0.2;
     transition: opacity 180ms ease-in-out;
   }
@@ -64,6 +63,7 @@
 }
 
 .Layer__panel.Layer__panel--open .Layer__panel__sidebar {
+  overflow-y: auto;
   max-height: none;
   max-width: 480px;
   margin-left: -1px;
@@ -101,10 +101,6 @@
     }
   }
 
-  .Layer__panel--open .Layer__panel__sidebar {
-    overflow: unset;
-  }
-
   .Layer__panel.Layer__panel--open .Layer__panel__sidebar {
     top: 0;
     left: 0;
@@ -121,6 +117,7 @@
   .Layer__panel.Layer__panel--open {
     .Layer__panel__content {
       width: 100%;
+      border-right: none;
     }
   }
 }

@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import classNames from 'classnames'
+import { File } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
@@ -18,7 +19,6 @@ import { useBankTransactionsCategorizationActions } from '@providers/BankTransac
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import ChevronDownFill from '@icons/ChevronDownFill'
-import FileIcon from '@icons/File'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
@@ -117,18 +117,18 @@ export const BankTransactionsListItem = ({
 
           <span className='Layer__bank-transaction-list-item__heading-separator' />
 
-          {bankTransaction.account_institution?.name && (
+          {bankTransaction.accountInstitution?.name && (
             <Span ellipsis size='sm'>
-              {`${bankTransaction.account_institution.name} — `}
+              {`${bankTransaction.accountInstitution.name} — `}
             </Span>
           )}
 
           <Span ellipsis size='sm'>
-            {bankTransaction.account_name}
-            {bankTransaction.account_mask && ` ${bankTransaction.account_mask}`}
+            {bankTransaction.accountName}
+            {bankTransaction.accountMask && ` ${bankTransaction.accountMask}`}
           </Span>
 
-          {hasReceipts(bankTransaction) ? <FileIcon size={12} /> : null}
+          {hasReceipts(bankTransaction) ? <File size={12} /> : null}
 
         </div>
         <div
@@ -163,7 +163,7 @@ export const BankTransactionsListItem = ({
             </div>
           )}
           <Span withTooltip>
-            {bankTransaction.counterparty_name ?? bankTransaction.description}
+            {bankTransaction.counterpartyName ?? bankTransaction.description}
           </Span>
         </HStack>
         <MoneySpan

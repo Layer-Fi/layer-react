@@ -1,7 +1,7 @@
 import { type ChangeEvent, useRef } from 'react'
+import { CloudUpload } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import UploadCloud from '@icons/UploadCloud'
 import { ButtonVariant } from '@components/Button/Button'
 import { Button } from '@components/Button/Button'
 import { TextButton } from '@components/Button/TextButton'
@@ -68,7 +68,7 @@ export const FileInput = ({
       <Button
         onClick={onClick}
         variant={ButtonVariant.secondary}
-        rightIcon={icon ?? <UploadCloud />}
+        rightIcon={icon ?? <CloudUpload size={18} />}
         disabled={disabled}
         iconOnly={iconOnly}
       >

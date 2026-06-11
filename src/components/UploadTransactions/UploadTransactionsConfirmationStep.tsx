@@ -1,10 +1,9 @@
 import { useCallback } from 'react'
+import { ChevronRight, CloudUpload } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import ChevronRight from '@icons/ChevronRight'
-import UploadCloud from '@icons/UploadCloud'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
@@ -45,14 +44,14 @@ export function UploadTransactionsConfirmationStep({ onRestartFlow, uploadedTran
         <Button
           onClick={goRestartFlow}
           variant={ButtonVariant.secondary}
-          rightIcon={<UploadCloud size={12} />}
+          rightIcon={<CloudUpload size={12} />}
           className='Layer__upload-transactions__confirmation-step__button-row-item'
         >
           {t('upload:action.upload_another_file', 'Upload another file')}
         </Button>
         <Button
           onClick={() => { void next() }}
-          rightIcon={<ChevronRight />}
+          rightIcon={<ChevronRight size={18} />}
           className='Layer__upload-transactions__confirmation-step__button-row-item'
         >
           {t('upload:label.im_done_uploading', 'I’m done uploading transactions')}

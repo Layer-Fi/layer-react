@@ -3,12 +3,13 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   type PaginationState,
+  type Row,
   useReactTable,
 } from '@tanstack/react-table'
 
 import { VStack } from '@ui/Stack/Stack'
 import { getColumnDefs, type NestedColumnConfig } from '@components/DataTable/columnUtils'
-import { type BaseDataTableProps, DataTable } from '@components/DataTable/DataTable'
+import { type BaseDataTableProps, type ClickableRowProps, DataTable } from '@components/DataTable/DataTable'
 import { Pagination } from '@components/Pagination/Pagination'
 
 import './paginatedDataTable.scss'
@@ -26,6 +27,8 @@ interface PaginatedTableProps<TData> extends BaseDataTableProps {
   data: TData[] | undefined
   columnConfig: NestedColumnConfig<TData>
   paginationProps: TablePaginationProps
+  withClickableRow?: ClickableRowProps<TData>
+  isRowSelected?: (row: Row<TData>) => boolean
 }
 
 export function PaginatedTable<TData extends { id: string }>({
@@ -37,6 +40,8 @@ export function PaginatedTable<TData extends { id: string }>({
   ariaLabel,
   paginationProps,
   slots,
+  withClickableRow,
+  isRowSelected,
 }: PaginatedTableProps<TData>) {
   const { pageSize = 20, hasMore, fetchMore, initialPage = 0, onSetPage, autoResetPageIndexRef } = paginationProps
 
@@ -81,6 +86,8 @@ export function PaginatedTable<TData extends { id: string }>({
         componentName={componentName}
         slots={slots}
         headerGroups={headerGroups}
+        withClickableRow={withClickableRow}
+        isRowSelected={isRowSelected}
       />
       {!isError && !isLoading && (
         <Pagination

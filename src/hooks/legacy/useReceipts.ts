@@ -7,9 +7,11 @@ import type { FileMetadata } from '@internal-types/fileUpload'
 import { type Awaitable } from '@internal-types/utility/promises'
 import { get, post, postWithFormData } from '@utils/api/authenticatedHttp'
 import { hasReceipts } from '@utils/bankTransactions/shared'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { type DocumentWithStatus } from '@components/BankTransactionReceipts/BankTransactionReceipts'
@@ -117,6 +119,7 @@ export const useReceipts: UseReceipts = ({
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
   const { updateLocalBankTransactions } = useBankTransactionsContext()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BankTransactions)
 
   const [receiptUrls, setReceiptUrls] = useState<DocumentWithStatus[]>([])
   const pendingUploadNamesRef = useRef<Set<string>>(new Set())
@@ -154,6 +157,12 @@ export const useReceipts: UseReceipts = ({
   }
 
   const uploadReceipt = async (file: File) => {
+    emitLayerEvent({
+      type: LayerEventType.TransactionReceiptUploadClicked,
+      version: 1,
+      payload: { transactionId: bankTransaction.id },
+    })
+
     if (!isValidReceiptFile(file)) {
       const id = new Date().valueOf().toString()
       setReceiptUrls(prev => [
@@ -209,12 +218,12 @@ export const useReceipts: UseReceipts = ({
       // Update the bank transaction with the new document id
       if (
         result?.data?.id
-        && bankTransaction?.document_ids
-        && bankTransaction.document_ids.length === 0
+        && bankTransaction?.documentIds
+        && bankTransaction.documentIds.length === 0
       ) {
         updateLocalBankTransactions([{
           ...bankTransaction,
-          document_ids: [result.data.id],
+          documentIds: [result.data.id],
         }])
       }
     }

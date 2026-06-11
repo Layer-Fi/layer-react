@@ -1,6 +1,6 @@
 import { type PropsWithChildren, useMemo, useState } from 'react'
 
-import { type BankAccount } from '@internal-types/linkedAccounts'
+import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { OpeningBalanceModalContext } from '@contexts/OpeningBalanceModalContext/OpeningBalanceModalContext'
 
 export function OpeningBalanceModalProvider({ children }: PropsWithChildren) {

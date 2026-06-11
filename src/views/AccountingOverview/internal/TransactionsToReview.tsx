@@ -1,14 +1,11 @@
 import { useMemo } from 'react'
 import { getMonth, getYear } from 'date-fns'
+import { Bell, Check, ChevronRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useProfitAndLossSummaries } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-summaries/useProfitAndLossSummaries'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import BellIcon from '@icons/Bell'
-import CheckIcon from '@icons/Check'
-import ChevronRight from '@icons/ChevronRight'
-import RefreshCcw from '@icons/RefreshCcw'
 import { type StackProps, VStack } from '@ui/Stack/Stack'
 import { Badge } from '@components/Badge/Badge'
 import { BadgeSize, BadgeVariant } from '@components/Badge/Badge'
@@ -83,7 +80,7 @@ export function TransactionsToReview({
         <Badge
           variant={BadgeVariant.WARNING}
           size={BadgeSize.SMALL}
-          icon={<BellIcon size={12} />}
+          icon={<Bell size={12} />}
         >
           {numTransactionsToReview}
           {' '}
@@ -96,7 +93,7 @@ export function TransactionsToReview({
       <Badge
         variant={BadgeVariant.SUCCESS}
         size={BadgeSize.SMALL}
-        icon={<CheckIcon size={12} />}
+        icon={<Check size={12} />}
       >
         {t('bankTransactions:label.all_done', 'All done')}
       </Badge>
@@ -120,7 +117,7 @@ export function TransactionsToReview({
         </ProfitAndLossSummariesHeading>
         {transactionsToReviewBadge}
       </VStack>
-      <IconButton icon={<ChevronRight />} withBorder onClick={onClick} />
+      <IconButton icon={<ChevronRight size={18} />} withBorder onClick={onClick} />
     </div>
   )
 }

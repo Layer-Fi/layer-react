@@ -1,11 +1,10 @@
 import { useCallback, useContext, useState } from 'react'
+import { Check, Link } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
-import CheckIcon from '@icons/Check'
 import Cog from '@icons/Cog'
-import LinkIcon from '@icons/Link'
 import QuickbooksIcon from '@icons/QuickbooksIcon'
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
@@ -55,7 +54,7 @@ export const IntegrationsConnectMenu = () => {
               <QuickbooksIcon size={20} />
               <Span size='sm'>{t('integrations:label.quickbooks_connected', 'QuickBooks connected')}</Span>
               <Spacer />
-              <CheckIcon size={16} />
+              <Check size={16} />
             </MenuItem>
           )
           : (
@@ -65,7 +64,7 @@ export const IntegrationsConnectMenu = () => {
                 { isLinkQuickbooksError ? t('integrations:action.retry_connect_quickbooks', 'Retry Connect QuickBooks') : t('integrations:action.connect_quickbooks', 'Connect QuickBooks') }
               </Span>
               <Spacer />
-              <LinkIcon size={12} />
+              <Link size={12} />
             </MenuItem>
           )}
       </MenuList>

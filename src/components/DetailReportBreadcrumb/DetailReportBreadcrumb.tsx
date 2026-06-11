@@ -1,4 +1,5 @@
-import ChevronRight from '@icons/ChevronRight'
+import { ChevronRight } from 'lucide-react'
+
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -42,7 +43,7 @@ export const DetailReportBreadcrumb = ({
                     </Button>
                   )}
                 {index < breadcrumbs.length - 1 && (
-                  <ChevronRight color='currentColor' size={8} />
+                  <ChevronRight color='currentColor' size={18} strokeWidth={1.5} />
                 )}
               </HStack>
             ))}

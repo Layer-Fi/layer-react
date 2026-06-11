@@ -1,5 +1,6 @@
 import { type ComponentProps, useMemo, useRef } from 'react'
 import classNames from 'classnames'
+import { Check, ChevronDown, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import {
   type ClearIndicatorProps,
@@ -15,9 +16,6 @@ import {
 } from 'react-select'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import Check from '@icons/Check'
-import ChevronDown from '@icons/ChevronDown'
-import X from '@icons/X'
 import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
 import type { ComboBoxOption, ComboBoxSlots } from '@ui/ComboBox/types'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'

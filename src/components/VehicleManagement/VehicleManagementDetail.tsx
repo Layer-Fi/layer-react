@@ -1,12 +1,11 @@
 import { useCallback, useRef, useState } from 'react'
-import { Plus } from 'lucide-react'
+import { ChevronLeft, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { useListVehicles } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
-import BackArrow from '@icons/BackArrow'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Switch } from '@ui/Switch/Switch'
@@ -130,7 +129,7 @@ export const VehicleManagementDetail = () => {
   return (
     <>
       <BaseDetailView
-        slots={{ Header, BackIcon: BackArrow }}
+        slots={{ Header, BackIcon: ChevronLeft }}
         name='VehicleManagementDetail'
         onGoBack={toTripsTable}
       >

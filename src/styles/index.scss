@@ -5,7 +5,6 @@
 @forward './button';
 @forward './charts';
 @forward './component';
-@forward './details_list';
 @forward './header';
 @forward './inputs';
 @forward './table';
@@ -14,12 +13,10 @@
 @forward './utils';
 @forward './view';
 @forward '../public/styles/publicReset';
-@forward './ledger_account';
 @forward './balance_sheet';
 @forward './statement_of_cash';
 @forward './bank_transactions';
 @forward './bank_transactions_mobile_list';
-@forward './journal';
 @forward './icons';
 @forward './linked_accounts';
 @forward './loader';

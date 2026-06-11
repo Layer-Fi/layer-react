@@ -1,7 +1,7 @@
+import { ChevronRight } from 'lucide-react'
 import { GridListItem } from 'react-aria-components/GridList'
 
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
-import ChevronRight from '@icons/ChevronRight'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'

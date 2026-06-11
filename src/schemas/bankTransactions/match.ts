@@ -1,5 +1,7 @@
 import { pipe, Schema } from 'effect'
 
+import { MinimalBankTransactionSchema } from '@schemas/bankTransactions/base'
+import { createTransformedEnumSchema } from '@schemas/utils'
 import { EntityName, type LinkingMetadata } from '@contexts/InAppLinkContext'
 
 export const MatchAdjustmentSchema = Schema.Struct({
@@ -31,7 +33,7 @@ const BaseMatchDetailsSchema = Schema.Struct({
     Schema.fromKey('external_id'),
   ),
   amount: Schema.Number,
-  date: Schema.String,
+  date: Schema.Date,
   description: Schema.String,
   adjustment: Schema.NullOr(MatchAdjustmentSchema),
   referenceNumber: pipe(
@@ -158,15 +160,6 @@ export const SuggestedMatchesWithTransactionsSchema = Schema.Struct({
   ),
 })
 
-export const decodeMatchDetails = (data: unknown) => {
-  const result = Schema.decodeUnknownEither(MatchDetailsSchema)(data)
-  if (result._tag === 'Left') {
-    console.warn('Failed to decode match details:', result.left)
-    return null
-  }
-  return result.right
-}
-
 export const convertMatchDetailsToLinkingMetadata = (matchDetails: MatchDetailsType): LinkingMetadata => {
   const baseMetadata: LinkingMetadata = {
     id: matchDetails.id,
@@ -275,8 +268,14 @@ export enum MatchType {
   MANUAL_JOURNAL_ENTRY = 'MANUAL_JOURNAL_ENTRY',
   BILL_PAYMENT = 'BILL_PAYMENT',
   PAYROLL_PAYMENT = 'PAYROLL_PAYMENT',
+  Unknown = 'UNKNOWN',
 }
 export const MatchTypeSchema = Schema.Enums(MatchType)
+export const TransformedMatchTypeSchema = createTransformedEnumSchema(
+  MatchTypeSchema,
+  MatchType,
+  MatchType.Unknown,
+)
 
 export const SuggestedMatchSchema = Schema.Struct({
   id: Schema.String,
@@ -287,9 +286,15 @@ export const SuggestedMatchSchema = Schema.Struct({
 export const MatchSchema = Schema.Struct({
   id: Schema.String,
   matchType: pipe(
-    Schema.propertySignature(MatchTypeSchema),
+    Schema.propertySignature(TransformedMatchTypeSchema),
     Schema.fromKey('match_type'),
   ),
-  // Intentionally leaving out bank_transaction for now for simplicity. Add it later if necessary.
+  // Minimal to avoid recursing into the full BankTransactionSchema.
+  bankTransaction: pipe(
+    Schema.propertySignature(MinimalBankTransactionSchema),
+    Schema.fromKey('bank_transaction'),
+  ),
   details: MatchDetailsSchema,
 })
+
+export type Match = typeof MatchSchema.Type

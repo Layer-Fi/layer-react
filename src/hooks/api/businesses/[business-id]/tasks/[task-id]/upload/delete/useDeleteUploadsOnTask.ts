@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
-import type { RawTask } from '@internal-types/tasks'
+import type { BusinessTaskEncoded } from '@schemas/businessTasks/businessTask'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
@@ -11,7 +11,7 @@ import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const deleteUploadsOnTask = post<
-  { data: RawTask },
+  { data: BusinessTaskEncoded },
   Record<string, never>,
   {
     businessId: string

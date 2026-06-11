@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-const StableNameSchema = Schema.Struct({
+export const StableNameSchema = Schema.Struct({
   type: Schema.Literal('StableName'),
   stableName: pipe(
     Schema.propertySignature(Schema.String),
@@ -8,7 +8,7 @@ const StableNameSchema = Schema.Struct({
   ),
 })
 
-const AccountIdSchema = Schema.Struct({
+export const AccountIdSchema = Schema.Struct({
   type: Schema.Literal('AccountId'),
   id: Schema.String,
 })

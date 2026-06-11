@@ -1,7 +1,6 @@
 import { type ButtonHTMLAttributes } from 'react'
 import classNames from 'classnames'
-
-import BackArrow from '@icons/BackArrow'
+import { ChevronLeft } from 'lucide-react'
 
 type BackButtonProps = {
   textOnly?: boolean
@@ -16,7 +15,7 @@ export const BackButton = ({
 
   return (
     <button {...props} className={baseClassName}>
-      {textOnly ? 'Back' : <BackArrow size={16} />}
+      {textOnly ? 'Back' : <ChevronLeft size={16} color='#1A130D' />}
     </button>
   )
 }

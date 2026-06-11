@@ -1,11 +1,13 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { getMonth, getYear, set } from 'date-fns'
 
 import { getCompletedTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { BookkeepingPeriodStatus, useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { TaskMonthTile } from '@components/Tasks/TaskMonthTile'
 import { type MonthData } from '@components/Tasks/types'
 
@@ -30,11 +32,21 @@ function TasksMonthSelector({ isMobile }: TasksMonthSelectorProps) {
   const { date } = useGlobalDate()
   const { formatDate } = useIntlFormatter()
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.Tasks)
 
   const { periodsInActiveYear } = useActiveYearBookkeepingPeriods()
 
   const activeMonthNumber = getMonth(date) + 1
   const activeYear = getYear(date)
+
+  const handleMonthClick = useCallback((year: number, month: number) => {
+    emitLayerEvent({
+      type: LayerEventType.TaskMonthSelected,
+      version: 1,
+      payload: { year, month },
+    })
+    setMonthByPeriod({ yearNumber: year, monthNumber: month })
+  }, [emitLayerEvent, setMonthByPeriod])
 
   const monthsData = useMemo(() => {
     return Array.from({ length: 12 }, (_, index) => {
@@ -75,10 +87,7 @@ function TasksMonthSelector({ isMobile }: TasksMonthSelectorProps) {
         return (
           <TaskMonthTile
             key={idx}
-            onClick={() => setMonthByPeriod({
-              yearNumber: monthData.year,
-              monthNumber: monthData.month,
-            })}
+            onClick={() => handleMonthClick(monthData.year, monthData.month)}
             data={monthData}
             active={monthData.month === activeMonthNumber}
             disabled={monthData.disabled}

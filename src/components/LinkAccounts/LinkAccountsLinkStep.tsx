@@ -1,4 +1,5 @@
 import { useContext } from 'react'
+import { ChevronRight, Link } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/bankAccount'
@@ -6,8 +7,6 @@ import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
-import ChevronRight from '@icons/ChevronRight'
-import LinkIcon from '@icons/Link'
 import { Button } from '@ui/Button/Button'
 import { ElevatedLoadingSpinner, ElevatedLoadingSpinnerContainer } from '@ui/Loading/ElevatedLoadingSpinner'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -58,7 +57,7 @@ export function LinkAccountsLinkStep() {
                   isDisabled={isDemoBusiness || loadingStatus !== 'complete' || isLinking}
                 >
                   {t('linkedAccounts:action.connect_my_bank', 'Connect my bank')}
-                  <LinkIcon size={12} />
+                  <Link size={12} />
                 </Button>
               </LinkAccountDemoTooltip>
             </VStack>
@@ -95,7 +94,7 @@ export function LinkAccountsLinkStep() {
                         variant='outlined'
                       >
                         {t('linkedAccounts:action.link_another_bank', 'Link another bank')}
-                        <LinkIcon size={12} />
+                        <Link size={12} />
                       </Button>
                     </LinkAccountDemoTooltip>
                   )}
@@ -119,7 +118,7 @@ export function LinkAccountsLinkStep() {
         {({ item: bankAccount }) => (
           <BasicLinkedAccountContainer key={bankAccount.id} isSelected>
             <BasicLinkedAccountContent account={{
-              external_account_name: getBankAccountDisplayName(bankAccount),
+              externalAccountName: getBankAccountDisplayName(bankAccount),
               mask: bankAccount.mask,
               institution: getBankAccountInstitution(bankAccount),
             }}
@@ -134,7 +133,7 @@ export function LinkAccountsLinkStep() {
             <HStack justify='start' gap='sm'>
               <Button onClick={() => { void next() }}>
                 {t('linkedAccounts:action.im_done_linking', 'I’m done linking my banks')}
-                <ChevronRight />
+                <ChevronRight size={18} />
               </Button>
             </HStack>
           </>

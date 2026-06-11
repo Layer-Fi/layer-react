@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
+import { Paperclip } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
@@ -7,7 +8,6 @@ import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasReceipts, isCategorized, isCredit } from '@utils/bankTransactions/shared'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
-import PaperclipIcon from '@icons/Paperclip'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
@@ -27,8 +27,8 @@ interface BankTransactionsMobileListPersonalFormProps {
 
 const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
   if (
-    bankTransaction.categorization_status === CategorizationStatus.MATCHED
-    || bankTransaction?.categorization_status === CategorizationStatus.SPLIT
+    bankTransaction.categorizationStatus === CategorizationStatus.MATCHED
+    || bankTransaction?.categorizationStatus === CategorizationStatus.SPLIT
   ) {
     return false
   }
@@ -39,15 +39,15 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
 
   const category = bankTransaction.category
 
-  if (category.type === 'Account' && 'stable_name' in category) {
-    const stableName = category.stable_name
+  if (category.type === 'Account' && 'stableName' in category) {
+    const stableName = category.stableName
     if (stableName === PersonalStableName.CREDIT || stableName === PersonalStableName.DEBIT) {
       return true
     }
   }
 
   if (category.type === 'Exclusion') {
-    const displayName = category.display_name
+    const displayName = category.displayName
     if (Object.values(LegacyPersonalCategories).includes(displayName as LegacyPersonalCategories)) {
       return true
     }
@@ -133,7 +133,7 @@ export const BankTransactionsMobileListPersonalForm = ({
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
             text={t('bankTransactions:action.upload_receipt', 'Upload receipt')}
             iconOnly={true}
-            icon={<PaperclipIcon />}
+            icon={<Paperclip size={20} />}
             accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
           />
         )}

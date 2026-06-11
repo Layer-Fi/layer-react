@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { Smile } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { isCompletedTask, isIncompleteTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
 import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
-import SmileIcon from '@icons/SmileIcon'
 import { VStack } from '@ui/Stack/Stack'
 import { Pagination } from '@components/Pagination/Pagination'
 import { TasksListItem } from '@components/Tasks/TasksListItem'
@@ -16,7 +16,7 @@ const TasksEmptyState = () => {
   return (
     <div className='Layer__tasks-empty-state'>
       <div className='Layer__tasks-icon'>
-        <SmileIcon />
+        <Smile size={12} color='#3B9C63' />
       </div>
       <Text size={TextSize.sm}>
         {t('bookkeeping:label.pending_tasks', 'There are no pending tasks!')}

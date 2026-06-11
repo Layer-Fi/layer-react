@@ -1,0 +1,100 @@
+name: Crowdin Translations
+
+# Refresh fr-CA translations before a release (run manually).
+#
+# extract keys -> upload sources to Crowdin -> pre-translate fr-CA (TM, then AI)
+# -> download fr-CA -> open one PR with the updated en-US keys + fr-CA files.
+#
+# Secrets:  CROWDIN_PROJECT_ID, CROWDIN_PERSONAL_TOKEN
+# Variable: CROWDIN_AI_PROMPT_ID (optional) — adds an AI (OpenAI) pass to
+#           translate keys that have no translation-memory match.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: main
+        fetch-depth: 0
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Configure git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+    - name: Extract translation keys
+      run: npx i18next-cli extract
+
+    - name: Upload sources to Crowdin
+      uses: crowdin/github-action@v2
+      with:
+        upload_sources: true
+        download_translations: false
+      env:
+        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+    - name: Pre-translate fr-CA from translation memory
+      uses: crowdin/github-action@v2
+      with:
+        command: pre-translate
+        command_args: -l fr-CA --method tm
+      env:
+        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+    # Fills keys with no TM match using your OpenAI-backed Crowdin AI prompt.
+    - name: Pre-translate fr-CA with AI (OpenAI)
+      if: ${{ vars.CROWDIN_AI_PROMPT_ID != '' }}
+      uses: crowdin/github-action@v2
+      with:
+        command: pre-translate
+        command_args: -l fr-CA --method ai --ai-prompt ${{ vars.CROWDIN_AI_PROMPT_ID }}
+      env:
+        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+    - name: Download fr-CA translations
+      uses: crowdin/github-action@v2
+      with:
+        command: download
+        command_args: -l fr-CA
+      env:
+        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+    - name: Commit en-US keys + fr-CA translations and open PR
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        BR=l10n/crowdin-sync
+        git checkout -b "$BR"
+        git add src/assets/locales
+        if git diff --cached --quiet; then
+          echo "No translation changes."
+          exit 0
+        fi
+        git commit -m "i18n: sync en-US keys and fr-CA translations from Crowdin"
+        git push -f origin "$BR"
+        if [ -z "$(gh pr list --head "$BR" --state open --json number --jq '.[0].number // empty')" ]; then
+          gh pr create --base main --head "$BR" \
+            --title "i18n: sync en-US keys and fr-CA translations" \
+            --body "Extracted en-US keys and fr-CA translations pulled from Crowdin."
+        fi

@@ -18,16 +18,6 @@ export interface S3PresignedUrl {
 
 export type LoadedStatus = 'initial' | 'loading' | 'complete'
 
-export enum DataModel {
-  BUSINESS = 'BUSINESS',
-  BALANCE_SHEET = 'BALANCE_SHEET',
-  BANK_TRANSACTIONS = 'BANK_TRANSACTIONS',
-  BILLS = 'BILLS',
-  LEDGER_ACCOUNTS = 'LEDGER_ACCOUNTS',
-  LINKED_ACCOUNTS = 'LINKED_ACCOUNTS',
-  STATEMENT_OF_CASH_FLOWS = 'STATEMENT_OF_CASH_FLOWS',
-}
-
 export interface FormError {
   field: string
   message: string

@@ -139,20 +139,9 @@ export function TimeEntryServiceSelector({
     [t],
   )
 
-  const ErrorMessage = useMemo(
-    () => {
-      if (!shouldShowError) {
-        return null
-      }
-
-      return (
-        <P size='xs' status='error'>
-          {t('timeTracking:error.load_services', 'Failed to load services.')}
-        </P>
-      )
-    },
-    [shouldShowError, t],
-  )
+  const ErrorMessage = shouldShowError
+    ? t('timeTracking:error.load_services', 'Failed to load services.')
+    : undefined
 
   const inputId = useId()
 

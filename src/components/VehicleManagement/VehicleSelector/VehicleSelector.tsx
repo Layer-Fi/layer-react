@@ -104,17 +104,7 @@ export function VehicleSelector({
     [t],
   )
 
-  const ErrorMessage = useMemo(
-    () => (
-      <P
-        size='xs'
-        status='error'
-      >
-        {t('vehicles:error.load_vehicles', 'An error occurred while loading vehicles.')}
-      </P>
-    ),
-    [t],
-  )
+  const ErrorMessage = t('vehicles:error.load_vehicles', 'An error occurred while loading vehicles.')
 
   const inputId = useId()
   const additionalAriaProps = !showLabel && { 'aria-label': t('vehicles:label.vehicle', 'Vehicle') }

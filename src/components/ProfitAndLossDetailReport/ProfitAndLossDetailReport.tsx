@@ -14,17 +14,15 @@ import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLo
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
-import { Label } from '@ui/Typography/Text'
+import { Label, Span } from '@ui/Typography/Text'
 import { Badge } from '@components/Badge/Badge'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { DateTime } from '@components/DateTime/DateTime'
 import { type BreadcrumbItem, DetailReportBreadcrumb } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
-import { DetailsList } from '@components/DetailsList/DetailsList'
-import { DetailsListItem } from '@components/DetailsList/DetailsListItem'
-import { SourceDetailView } from '@components/LedgerAccountEntryDetails/LedgerAccountEntryDetails'
-import { Text, TextSize, TextUseTooltip, TextWeight } from '@components/Typography/Text'
+import { EntryDetailField, EntryDetailSection } from '@components/LedgerEntryDetails/EntryDetailSection'
+import { SourceDetailView } from '@components/LedgerEntryDetails/SourceDetailView'
 import { VirtualizedDataTable } from '@components/VirtualizedDataTable/VirtualizedDataTable'
 
 import './profitAndLossDetailReport.scss'
@@ -158,7 +156,7 @@ export const ProfitAndLossDetailReport = ({
           value={row.original.date}
           onlyDate
           slotProps={
-            { Date: { size: TextSize.md, weight: TextWeight.normal, variant: 'subtle' } }
+            { Date: { size: 'md', weight: 'normal', variant: 'subtle' } }
           }
         />
       ),
@@ -184,26 +182,18 @@ export const ProfitAndLossDetailReport = ({
       id: PnlDetailColumns.Account,
       header: stringOverrides?.accountColumnHeader || t('common:label.account', 'Account'),
       cell: (row: PnlDetailRowType) => (
-        <Text
-          as='span'
-          withDeprecatedTooltip={TextUseTooltip.whenTruncated}
-          ellipsis
-        >
+        <Span withTooltip ellipsis>
           {row.original.account.name || '-'}
-        </Text>
+        </Span>
       ),
     },
     {
       id: PnlDetailColumns.Description,
       header: stringOverrides?.descriptionColumnHeader || t('common:label.description', 'Description'),
       cell: (row: PnlDetailRowType) => (
-        <Text
-          as='span'
-          withDeprecatedTooltip={TextUseTooltip.whenTruncated}
-          ellipsis
-        >
+        <Span withTooltip ellipsis>
           {row.original.source?.displayDescription || row.original.account.accountSubtype.displayName || '-'}
-        </Text>
+        </Span>
       ),
       isRowHeader: true,
     },
@@ -241,14 +231,14 @@ export const ProfitAndLossDetailReport = ({
     return (
       <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={handleBackToList} borderless>
         <VStack pi='md'>
-          <DetailsList
+          <EntryDetailSection
             title={stringOverrides?.sourceDetailsTitle || t('bankTransactions:label.transaction_source', 'Transaction source')}
           >
-            <DetailsListItem label={t('common:label.source', 'Source')}>
+            <EntryDetailField label={t('common:label.source', 'Source')}>
               {badgeOrInAppLink}
-            </DetailsListItem>
+            </EntryDetailField>
             <SourceDetailView source={selectedSource} />
-          </DetailsList>
+          </EntryDetailSection>
         </VStack>
       </BaseDetailView>
     )

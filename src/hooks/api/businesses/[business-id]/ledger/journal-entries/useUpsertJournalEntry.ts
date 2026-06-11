@@ -2,7 +2,6 @@ import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
-import { DataModel } from '@internal-types/general'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -55,7 +54,7 @@ type UseUpsertJournalEntryProps =
 export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
-  const { businessId, touch } = useLayerContext()
+  const { businessId } = useLayerContext()
 
   const { mode } = props
   // For now, we only support create mode since the API doesn't have an update endpoint
@@ -100,13 +99,9 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
       void invalidate(({ tags }) => tags.includes('#balance-sheet'))
       void invalidate(({ tags }) => tags.includes('#statement-of-cash-flow'))
 
-      // Touch data models to trigger sync
-      touch(DataModel.BALANCE_SHEET)
-      touch(DataModel.STATEMENT_OF_CASH_FLOWS)
-
       return result
     },
-    [rawMutationResponse, forceReloadLedgerEntries, debouncedInvalidateProfitAndLoss, invalidate, touch],
+    [rawMutationResponse, forceReloadLedgerEntries, debouncedInvalidateProfitAndLoss, invalidate],
   )
 
   return {

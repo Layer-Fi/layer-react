@@ -3,7 +3,7 @@ import { startOfYear } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 import { useIntl } from 'react-intl'
 
-import { type BankAccount } from '@internal-types/linkedAccounts'
+import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { getActivationDate } from '@utils/business'
 import { toLocalizedCents } from '@utils/i18n/number/input'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'

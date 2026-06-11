@@ -1,14 +1,18 @@
 import { VStack } from '@ui/Stack/Stack'
 import { InvoiceSummaryStats } from '@components/Invoices/InvoiceSummaryStats/InvoiceSummaryStats'
-import { InvoiceTable } from '@components/Invoices/InvoiceTable/InvoiceTable'
+import { ResponsiveInvoiceView } from '@components/Invoices/InvoiceTable/ResponsiveInvoiceView'
 import { StripeConnectBanner } from '@components/Invoices/StripeConnectBanner/StripeConnectBanner'
+
+import './invoiceOverview.scss'
 
 export const InvoiceOverview = () => {
   return (
-    <VStack>
-      <InvoiceSummaryStats />
-      <StripeConnectBanner />
-      <InvoiceTable />
+    <VStack gap='md' className='Layer__InvoiceOverview'>
+      <VStack gap='md'>
+        <InvoiceSummaryStats />
+        <StripeConnectBanner />
+      </VStack>
+      <ResponsiveInvoiceView />
     </VStack>
   )
 }

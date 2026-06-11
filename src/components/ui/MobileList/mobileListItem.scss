@@ -1,9 +1,11 @@
 .Layer__MobileListItem {
   display: grid;
-  grid-template-areas: 'content';
+  grid-template-areas:
+    'content'
+    'footer';
   grid-template-columns: 1fr;
+  overflow: hidden;
 
-  padding: var(--spacing-sm);
   border-radius: var(--border-radius-sm);
 
   border: 1px solid var(--border-color);
@@ -11,13 +13,31 @@
 
   &[data-selection-mode='multiple'],
   &[data-selection-mode='single'] {
-    grid-template-areas: 'selection content';
+    grid-template-areas:
+      'selection content'
+      'footer footer';
     grid-template-columns: auto 1fr;
   }
 
+  &__Content {
+    grid-area: content;
+    padding: var(--spacing-sm);
+  }
+
+  &__Footer {
+    grid-area: footer;
+  }
+
   [data-variant='compact'] & {
-    padding-inline: 0;
     border-radius: 0;
     border: none;
+  }
+
+  [data-variant='compact'] &__Content {
+    padding-inline: 0;
+  }
+
+  [data-variant='compact'] &__Footer {
+    border-radius: 0;
   }
 }

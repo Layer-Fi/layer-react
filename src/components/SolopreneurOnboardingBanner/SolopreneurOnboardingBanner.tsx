@@ -3,9 +3,11 @@ import { Info } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
+import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Banner } from '@ui/Banner/Banner'
 import { Button as LayerButton } from '@ui/Button/Button'
@@ -24,10 +26,12 @@ const getOnboardingBannerState = ({
   isLoading,
   hasLinkedAccounts,
   hasSavedTaxProfile,
+  isTaxEstimatesEnabled,
 }: {
   isLoading: boolean
   hasLinkedAccounts: boolean
   hasSavedTaxProfile: boolean
+  isTaxEstimatesEnabled: boolean
 }) => {
   if (isLoading) {
     return OnboardingBannerState.Loading
@@ -37,7 +41,7 @@ const getOnboardingBannerState = ({
     return OnboardingBannerState.NoBankAccountsLinked
   }
 
-  if (!hasSavedTaxProfile) {
+  if (isTaxEstimatesEnabled && !hasSavedTaxProfile) {
     return OnboardingBannerState.NoTaxProfile
   }
 
@@ -94,12 +98,17 @@ export function SolopreneurOnboardingBanner({ onSetupTaxProfile, plaidHostedLink
 }
 
 const useSolopreneurOnboardingBannerState = () => {
+  const { businessId } = useLayerContext()
+  const { data: accountingConfiguration, isLoading: isAccountingConfigLoading } = useAccountingConfiguration({ businessId })
   const { data: linkedAccounts, isLoading: isLinkedAccountsLoading, loadingStatus: linkedAccountsLoadingStatus } = useContext(LinkedAccountsContext)
   const { data: taxProfile, isLoading: isTaxProfileLoading } = useTaxProfile()
 
+  const isTaxEstimatesEnabled = !!accountingConfiguration?.enableTaxEstimates
+
   const isLoading =
   isLinkedAccountsLoading
-  || isTaxProfileLoading
+  || isAccountingConfigLoading
+  || (isTaxEstimatesEnabled && isTaxProfileLoading)
   || linkedAccountsLoadingStatus === 'loading'
   || linkedAccountsLoadingStatus === 'initial'
 
@@ -108,5 +117,5 @@ Array.isArray(linkedAccounts) && linkedAccounts.length > 0
 
   const hasSavedTaxProfile = taxProfile?.userHasSavedTaxProfile === true
 
-  return getOnboardingBannerState({ isLoading, hasLinkedAccounts, hasSavedTaxProfile })
+  return getOnboardingBannerState({ isLoading, hasLinkedAccounts, hasSavedTaxProfile, isTaxEstimatesEnabled })
 }

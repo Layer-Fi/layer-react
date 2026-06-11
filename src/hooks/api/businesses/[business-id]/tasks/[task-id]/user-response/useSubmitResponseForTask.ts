@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
-import type { RawTask } from '@internal-types/tasks'
+import type { BusinessTaskEncoded } from '@schemas/businessTasks/businessTask'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
@@ -16,7 +16,7 @@ type SubmitUserResponseForTaskBody = {
 }
 
 const submitUserResponseForTask = post<
-  { data: RawTask },
+  { data: BusinessTaskEncoded },
   SubmitUserResponseForTaskBody,
   {
     businessId: string

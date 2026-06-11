@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
+import { ChevronLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 import {
   useTaxEstimatesNavigation,
 } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
-import BackArrow from '@icons/BackArrow'
 import { Heading } from '@ui/Typography/Heading'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { TaxProfileForm } from '@components/TaxProfileForm/TaxProfileForm'
@@ -28,7 +28,7 @@ export const TaxProfile = () => {
 
   return (
     <BaseDetailView
-      slots={{ Header: TaxProfileHeader, BackIcon: BackArrow }}
+      slots={{ Header: TaxProfileHeader, BackIcon: ChevronLeft }}
       name='TaxProfile'
       onGoBack={hasSavedTaxProfile ? handleGoBack : undefined}
     >

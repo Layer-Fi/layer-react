@@ -1,8 +1,8 @@
 import { useCallback, useId, useMemo, useState } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
-import ChevronDown from '@icons/ChevronDown'
 import { Button } from '@ui/Button/Button'
 import { MobileSelectionDrawerList } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerList'
 import { Drawer } from '@ui/Modal/Modal'

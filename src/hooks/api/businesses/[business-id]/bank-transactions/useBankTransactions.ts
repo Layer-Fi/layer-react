@@ -1,8 +1,11 @@
 import { useCallback, useMemo } from 'react'
+import { Schema } from 'effect'
 import { debounce } from 'lodash-es'
 import useSWRInfinite from 'swr/infinite'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
+import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
+import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
@@ -13,15 +16,14 @@ import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-export type GetBankTransactionsReturn = {
-  data: ReadonlyArray<BankTransaction>
-  meta: {
-    pagination: {
-      cursor?: string
-      has_more: boolean
-    }
-  }
-}
+const GetBankTransactionsResponseSchema = Schema.Struct({
+  data: Schema.Array(BankTransactionSchema),
+  meta: Schema.Struct({
+    pagination: PaginatedResponseMetaSchema,
+  }),
+})
+
+export type GetBankTransactionsReturn = typeof GetBankTransactionsResponseSchema.Type
 
 type GetBankTransactionsPaginatedParams = {
   businessId: string
@@ -38,7 +40,7 @@ type GetBankTransactionsPaginatedParams = {
 }
 
 const getBankTransactions = get<
-  GetBankTransactionsReturn,
+  Record<string, unknown>,
   GetBankTransactionsPaginatedParams
 >(
   ({
@@ -89,7 +91,7 @@ const keyMatchesParams = createKeyMatcher<BankTransactionsKey, UseBankTransactio
 class BankTransactionsSWRResponse extends SWRInfiniteResult<GetBankTransactionsReturn> {
   get hasMore() {
     return this.data && this.data.length > 0
-      ? this.data[this.data.length - 1].meta.pagination.has_more
+      ? this.data[this.data.length - 1].meta.pagination.hasMore
       : false
   }
 }
@@ -127,7 +129,7 @@ function keyLoader(
       apiUrl,
       businessId,
       categorized,
-      cursor: previousPageData ? previousPageData.meta.pagination.cursor : undefined,
+      cursor: previousPageData?.meta.pagination.cursor ?? undefined,
       direction,
       query,
       startDate,
@@ -192,7 +194,7 @@ export function useBankTransactions({
             tagFilterQueryString,
           },
         },
-      )()
+      )().then(Schema.decodeUnknownPromise(GetBankTransactionsResponseSchema))
     },
     {
       keepPreviousData: true,

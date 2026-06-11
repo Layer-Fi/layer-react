@@ -1,6 +1,6 @@
 import { createContext } from 'react'
 
-import { type BankAccount } from '@internal-types/linkedAccounts'
+import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 
 export type OpeningBalanceModalContextType = {
   accountsToAddOpeningBalanceInModal: BankAccount[]

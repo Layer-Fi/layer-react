@@ -1,11 +1,9 @@
 import { useCallback, useMemo, useState } from 'react'
-import { MenuIcon, PencilRuler } from 'lucide-react'
+import { CloudDownload, CloudUpload, MenuIcon, PencilRuler } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useHandleDownloadTransactions } from '@hooks/features/bankTransactions/useHandleBankTransactionsDownload'
 import { useBankTransactionsNavigation } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
-import DownloadCloud from '@icons/DownloadCloud'
-import UploadCloud from '@icons/UploadCloud'
 import { BankTransactionsUploadModal } from '@components/BankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
 import { DataTableHeaderMenu, type DataTableHeaderMenuItem } from '@components/DataTable/DataTableHeaderMenu'
 import InvisibleDownload from '@components/utility/InvisibleDownload'
@@ -35,7 +33,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
       items.push({
         key: BankTransactionsHeaderMenuActions.DownloadTransactions,
         onClick: handleDownloadTransactions,
-        icon: <DownloadCloud size={16} />,
+        icon: <CloudDownload size={16} />,
         label: t('bankTransactions:action.download_transactions', 'Download transactions'),
       })
     }
@@ -44,7 +42,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
       items.push({
         key: BankTransactionsHeaderMenuActions.UploadTransactions,
         onClick: () => setIsModalOpen(true),
-        icon: <UploadCloud size={16} />,
+        icon: <CloudUpload size={16} />,
         label: t('bankTransactions:action.upload_transactions_manually', 'Upload transactions manually'),
       })
     }
@@ -63,7 +61,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
 
   const Icon = useCallback(() => {
     if (actions.length === 1 && actions[0] === BankTransactionsHeaderMenuActions.UploadTransactions) {
-      return <UploadCloud size={16} />
+      return <CloudUpload size={16} />
     }
     return <MenuIcon size={14} />
   }, [actions])

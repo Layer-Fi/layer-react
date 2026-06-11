@@ -2,12 +2,15 @@ import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
+import { BusinessTaskStatus, TaskUserResponseType } from '@schemas/businessTasks/businessTask'
 import { isCompletedTask, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { getIconForTask } from '@utils/bookkeeping/tasks/getBookkeepingTaskStatusIcon'
 import { useDeleteUploadsOnTask } from '@hooks/api/businesses/[business-id]/tasks/[task-id]/upload/delete/useDeleteUploadsOnTask'
 import { useUpdateTaskUploadDescription } from '@hooks/api/businesses/[business-id]/tasks/[task-id]/upload/update-description/useUpdateTaskUploadDescription'
 import { useUploadDocumentsForTask } from '@hooks/api/businesses/[business-id]/tasks/[task-id]/upload/useUploadDocumentsForTask'
 import { useSubmitUserResponseForTask } from '@hooks/api/businesses/[business-id]/tasks/[task-id]/user-response/useSubmitResponseForTask'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { FileInput } from '@components/Input/FileInput'
@@ -25,8 +28,9 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
   ref,
 ) => {
   const { t } = useTranslation()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.Tasks)
   const [isOpen, setIsOpen] = useState(defaultOpen)
-  const [userResponse, setUserResponse] = useState(task.user_response ?? '')
+  const [userResponse, setUserResponse] = useState(task.userResponse ?? '')
   const [selectedFiles, setSelectedFiles] = useState<File[]>()
 
   const { trigger: handleSubmitUserResponseForTask, isMutating: isSubmittingResponse } = useSubmitUserResponseForTask()
@@ -72,13 +76,18 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
   }
 
   const onClickTaskItemHead = useCallback(() => {
+    emitLayerEvent({
+      type: LayerEventType.TaskClicked,
+      version: 1,
+      payload: { taskId: task.id },
+    })
     setIsOpen(!isOpen)
     onExpandTask?.(!isOpen)
-  }, [isOpen, onExpandTask])
+  }, [isOpen, onExpandTask, emitLayerEvent, task.id])
 
   const uploadDocumentAction = useMemo(() => {
-    if (task.user_response_type === 'UPLOAD_DOCUMENT') {
-      if (task.status === 'TODO') {
+    if (task.userResponseType === TaskUserResponseType.UploadDocument) {
+      if (task.status === BusinessTaskStatus.Todo) {
         if (!selectedFiles) {
           return (
             <FileInput
@@ -110,8 +119,8 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
           )
         }
       }
-      else if (task.status === 'USER_MARKED_COMPLETED') {
-        if (task.user_response && task.user_response != userResponse) {
+      else if (task.status === BusinessTaskStatus.UserMarkedCompleted) {
+        if (task.userResponse && task.userResponse != userResponse) {
           return (
             <Button
               variant={ButtonVariant.secondary}
@@ -172,11 +181,11 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
             <Text size={TextSize.sm}>{task.question}</Text>
             <Textarea
               value={userResponse}
-              placeholder={task.user_response_type === 'UPLOAD_DOCUMENT' ? t('bookkeeping:label.optional_description', 'Optional description') : ''}
+              placeholder={task.userResponseType === TaskUserResponseType.UploadDocument ? t('bookkeeping:label.optional_description', 'Optional description') : ''}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 setUserResponse(e.target.value)}
             />
-            {task.user_response_type === 'UPLOAD_DOCUMENT'
+            {task.userResponseType === TaskUserResponseType.UploadDocument
               ? (
                 <div className='Layer__tasks-list__link-list'>
                   {selectedFiles
@@ -190,7 +199,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                       : null}
                   <ul className='Layer__tasks-list__links-list'>
                     {task.documents?.map((document, idx) => (
-                      <li key={`uploaded-doc-name-${idx}`}><a className='Layer__tasks-list-item__link' href={document.presigned_url.presignedUrl}>{document.file_name}</a></li>
+                      <li key={`uploaded-doc-name-${idx}`}><a className='Layer__tasks-list-item__link' href={document.presignedUrl.presignedUrl}>{document.fileName}</a></li>
                     ))}
                     {selectedFiles?.map((file, idx) => (
                       <li key={`selected-file-name-${idx}`}><a className='Layer__tasks-list-item__link'>{file.name}</a></li>
@@ -200,14 +209,14 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
               )
               : null}
             <div className='Layer__tasks-list-item__actions'>
-              {task.user_response_type === 'UPLOAD_DOCUMENT'
+              {task.userResponseType === TaskUserResponseType.UploadDocument
                 ? uploadDocumentAction
                 : (
                   <Button
                     disabled={
                       isSubmittingResponse
                       || userResponse.length === 0
-                      || userResponse === task.user_response
+                      || userResponse === task.userResponse
                     }
                     variant={ButtonVariant.secondary}
                     onClick={() => {
@@ -217,7 +226,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                         })
                     }}
                   >
-                    {task.user_response && task.user_response !== userResponse
+                    {task.userResponse && task.userResponse !== userResponse
                       ? t('common:action.update_label', 'Update')
                       : t('common:action.save_label', 'Save')}
                   </Button>

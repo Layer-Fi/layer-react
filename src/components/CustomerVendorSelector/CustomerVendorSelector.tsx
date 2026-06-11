@@ -200,17 +200,7 @@ export function CustomerVendorSelector({
     [t],
   )
 
-  const ErrorMessage = useMemo(
-    () => (
-      <P
-        size='xs'
-        status='error'
-      >
-        {t('customerVendor:error.load_customer_vendor', 'An error occurred while loading customer and vendor options.')}
-      </P>
-    ),
-    [t],
-  )
+  const ErrorMessage = t('customerVendor:error.load_customer_vendor', 'An error occurred while loading customer and vendor options.')
 
   const inputId = useId()
 

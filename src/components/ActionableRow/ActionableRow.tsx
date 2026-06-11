@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
+import { ChevronRight } from 'lucide-react'
 
-import ChevronRightIcon from '@icons/ChevronRight'
 import { IconButton } from '@components/Button/IconButton'
 import { Text } from '@components/Typography/Text'
 
@@ -76,7 +76,7 @@ export const ActionableRow = ({
           ? (
             <IconButton
               onClick={onClick}
-              icon={<ChevronRightIcon size={11} />}
+              icon={<ChevronRight size={11} />}
               withBorder
             />
           )

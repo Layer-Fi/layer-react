@@ -1,4 +1,5 @@
 import { type ForwardedRef, forwardRef, type ReactElement } from 'react'
+import { ChevronRight } from 'lucide-react'
 import {
   Breadcrumb as ReactAriaBreadcrumb,
   type BreadcrumbProps as ReactAriaBreadcrumbProps,
@@ -6,7 +7,6 @@ import {
   type BreadcrumbsProps as ReactAriaBreadcrumbsProps,
 } from 'react-aria-components/Breadcrumbs'
 
-import ChevronRight from '@icons/ChevronRight'
 import { Link, type LinkProps } from '@ui/Link/Link'
 
 import './breadcrumbs.scss'
@@ -40,7 +40,7 @@ export const Breadcrumb = forwardRef<HTMLLIElement, BreadcrumbProps>(
         {({ isCurrent }) => (
           <>
             <Link {...linkProps}>{children}</Link>
-            {!isCurrent && <ChevronRight />}
+            {!isCurrent && <ChevronRight size={18} strokeWidth={1.5} />}
           </>
         )}
       </ReactAriaBreadcrumb>

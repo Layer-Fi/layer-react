@@ -1,12 +1,8 @@
 import { type ButtonHTMLAttributes } from 'react'
 import classNames from 'classnames'
-import { UploadCloud } from 'lucide-react'
+import { CircleAlert, CircleCheckBig, Loader, Save, UploadCloud } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import AlertCircle from '@icons/AlertCircle'
-import CheckCircle from '@icons/CheckCircle'
-import Loader from '@icons/Loader'
-import Save from '@icons/Save'
 import { Button, type ButtonProps, ButtonVariant } from '@components/Button/Button'
 import { RetryButton } from '@components/Button/RetryButton'
 import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
@@ -55,7 +51,7 @@ const buildRightIcon = ({
     return (
       <DeprecatedTooltip offset={12}>
         <DeprecatedTooltipTrigger>
-          <AlertCircle size={14} />
+          <CircleAlert size={14} />
         </DeprecatedTooltipTrigger>
         <DeprecatedTooltipContent className='Layer__tooltip'>{error}</DeprecatedTooltipContent>
       </DeprecatedTooltip>
@@ -67,7 +63,7 @@ const buildRightIcon = ({
   }
 
   if (action === SubmitAction.UPDATE) {
-    return <CheckCircle size={14} />
+    return <CircleCheckBig size={14} />
   }
 
   return <Save size={16} />

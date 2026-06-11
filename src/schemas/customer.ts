@@ -66,8 +66,6 @@ export const CustomerSchema = Schema.Struct({
 })
 export type Customer = typeof CustomerSchema.Type
 
-export const encodeCustomer = Schema.encodeSync(CustomerSchema)
-
 export const UpsertCustomerSchema = Schema.Struct({
   externalId: Schema.optional(Schema.NullOr(Schema.String)).pipe(
     Schema.fromKey('external_id'),

@@ -1,10 +1,10 @@
 import { useCallback, useMemo, useState } from 'react'
-import { PencilRuler, Plus } from 'lucide-react'
+import { ChevronLeft, PencilRuler, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { flattenCategories } from '@internal-types/categories'
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { CategoriesListMode } from '@schemas/categorization'
+import { flattenCategories } from '@utils/categories'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import { useArchiveCategorizationRule } from '@hooks/api/businesses/[business-id]/categorization-rules/[categorization-rule-id]/archive/useArchiveCategorizationRule'
@@ -12,7 +12,6 @@ import { useListCategorizationRules } from '@hooks/api/businesses/[business-id]/
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBankTransactionsNavigation, useSetCurrentCategorizationRulesPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import BackArrow from '@icons/BackArrow'
 import { Button } from '@ui/Button/Button'
 import { ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -67,7 +66,7 @@ const CategorizationRulesHeader = ({ onGoBack, onCreateRule }: CategorizationRul
       <HStack align='center' gap='md'>
         {onGoBack && (
           <Button variant='outlined' icon onPress={onGoBack}>
-            <BackArrow />
+            <ChevronLeft size={18} color='#1A130D' />
           </Button>
         )}
         <Heading size='sm'>{t('categorizationRules:label.categorization_rules', 'Categorization Rules')}</Heading>
@@ -155,7 +154,7 @@ export const ResponsiveCategorizationRulesView = () => {
 
   const DesktopView = useMemo(() => (
     <BaseDetailView
-      slots={{ Header: DesktopHeader, BackIcon: BackArrow }}
+      slots={{ Header: DesktopHeader, BackIcon: ChevronLeft }}
       name='CategorizationRulesDrawer'
       onGoBack={toBankTransactionsTable}
     >
