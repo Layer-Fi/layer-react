@@ -61,7 +61,7 @@ export function BasicLinkedAccountContent({ account }: BasicLinkedAccountContain
     <HStack gap='md'>
       <BasicLinkedAccountLogo account={account} />
       <VStack>
-        <Heading level={3} size='xs' pbe='3xs'>{account.externalAccountName}</Heading>
+        <Heading level={4} size='xs' pbe='3xs'>{account.externalAccountName}</Heading>
         <HStack gap='xs'>
           <P size='sm'>
             {account.institution?.name}

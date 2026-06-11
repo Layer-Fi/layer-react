@@ -45,7 +45,7 @@ export const ChartOfAccountsTableHeader = ({
       <Header asHeader rounded>
         <HeaderRow>
           <HeaderCol>
-            <Heading level={2} size={asWidget ? 'md' : 'lg'}>
+            <Heading level={asWidget ? 3 : 2} size={asWidget ? 'md' : 'lg'}>
               {stringOverrides?.headerText || t('chartOfAccounts:label.chart_of_accounts', 'Chart of Accounts')}
             </Heading>
           </HeaderCol>
@@ -54,16 +54,12 @@ export const ChartOfAccountsTableHeader = ({
       <Header sticky>
         <HeaderRow>
           <HeaderCol>
-            <Heading level={2} size='sm'>
-              {withDateControl || withExpandAllButton
-                ? (
-                  <HStack align='center' gap='xs'>
-                    {withDateControl && <GlobalMonthPicker />}
-                    {withExpandAllButton && <ExpandableDataTableToggleButton />}
-                  </HStack>
-                )
-                : null}
-            </Heading>
+            {(withDateControl || withExpandAllButton) && (
+              <HStack align='center' gap='xs'>
+                {withDateControl && <GlobalMonthPicker />}
+                {withExpandAllButton && <ExpandableDataTableToggleButton />}
+              </HStack>
+            )}
           </HeaderCol>
           <HeaderCol className='Layer__chart-of-accounts__actions'>
             <SearchField
