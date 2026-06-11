@@ -59,11 +59,7 @@ export const JournalTableWithPanel = ({
       >
         <HeaderRow>
           <HeaderCol>
-            <Heading
-              level={2}
-              className={`Layer__${COMPONENT_NAME}__title`}
-              size='md'
-            >
+            <Heading level={2} size='md'>
               {stringOverrides?.componentTitle || t('generalLedger:label.journal', 'Journal')}
             </Heading>
           </HeaderCol>
@@ -72,11 +68,7 @@ export const JournalTableWithPanel = ({
       <Header>
         <HeaderRow>
           <HeaderCol>
-            <Heading
-              level={2}
-              size='sm'
-              className={`Layer__${COMPONENT_NAME}__subtitle`}
-            >
+            <Heading level={2} size='sm'>
               {stringOverrides?.componentSubtitle || t('generalLedger:label.entries', 'Entries')}
             </Heading>
           </HeaderCol>

@@ -7,7 +7,6 @@ import classNames from 'classnames'
 
 export enum HeaderLayout {
   DEFAULT = 'default',
-  NEXT_LINE_ACTIONS = 'next-line-actions',
 }
 
 export interface HeaderProps {

@@ -59,7 +59,7 @@ export const LinkedAccountsComponent = ({
   return (
     <Container name={COMPONENT_NAME} elevated={elevated}>
       <Header className='Layer__linked-accounts__header'>
-        <Heading level={2} size='sm' className='Layer__linked-accounts__title'>
+        <Heading level={2} size='sm'>
           {stringOverrides?.title || t('linkedAccounts:label.linked_accounts', 'Linked Accounts')}
         </Heading>
       </Header>

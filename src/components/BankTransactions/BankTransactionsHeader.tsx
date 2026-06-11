@@ -176,11 +176,7 @@ export const BankTransactionsHeader = ({
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
       <HStack align='center'>
-        <Heading
-          level={2}
-          className='Layer__bank-transactions__title'
-          size='sm'
-        >
+        <Heading level={2} size='sm'>
           {stringOverrides?.header || t('common:label.transactions', 'Transactions')}
         </Heading>
         {isSyncing && (

@@ -14,9 +14,7 @@ export const ViewHeader = ({ title, className, children }: ViewHeaderProps) => {
     <div className={classNames('Layer__view-header', className)}>
       <div className='Layer__view-header__content'>
         {title && (
-          <Heading level={2} size='lg' className='Layer__view-header__title'>
-            {title}
-          </Heading>
+          <Heading level={2} size='lg'>{title}</Heading>
         )}
         {children && (
           <div className='Layer__view-header__children'>{children}</div>

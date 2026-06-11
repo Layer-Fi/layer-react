@@ -51,15 +51,6 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-lg);
-
-  &.Layer__component-header--next-line-actions {
-    flex-direction: column;
-    align-items: flex-start;
-
-    .Layer__header__actions {
-      width: 100%;
-    }
-  }
 }
 
 .Layer__component-header__title-wrapper {
