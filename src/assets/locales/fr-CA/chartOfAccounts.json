@@ -10,9 +10,6 @@
     "accounts": "Aucun compte trouvé",
     "accounts_match_filters": "Aucun compte ne correspond aux filtres actuels. Cliquez sur \"Ajouter un compte\" pour en créer un nouveau."
   },
-  "error": {
-    "check_connection_retry_message": "Vérifiez la connexion et réessayez dans quelques secondes."
-  },
   "label": {
     "account_remove_warning": "Ce compte sera définitivement supprimé de votre plan comptable.",
     "accounts_payable": "Comptes fournisseurs",
@@ -83,10 +80,21 @@
     "undeposited_outflows": "Décaissements non déposés",
     "unearned_revenue": "Produits perçus d'avance"
   },
+  "placeholder": {
+    "select_normality": "",
+    "select_parent": "",
+    "select_sub_type": "",
+    "select_type": ""
+  },
   "validation": {
     "account_not_modifiable": "Ce compte ne peut pas être modifié",
     "delete_account_has_children": "Ce compte ne peut pas être supprimé parce qu'il comporte des comptes enfants",
     "delete_account_has_ledger_entries": "Ce compte ne peut pas être supprimé parce qu'il comporte des écritures au grand livre",
-    "delete_account_is_required": "Ce compte ne peut pas être supprimé parce qu'il s'agit d'un compte obligatoire"
+    "delete_account_is_required": "Ce compte ne peut pas être supprimé parce qu'il s'agit d'un compte obligatoire",
+    "name_required": "",
+    "normality_required": "",
+    "parent_required": "",
+    "subtype_required": "",
+    "type_required": ""
   }
 }

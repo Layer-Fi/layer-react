@@ -27,7 +27,7 @@ export const EntryDetailHeader = ({ onClose, title }: EntryDetailHeaderProps) =>
           <Heading size='sm'>{title}</Heading>
         </HeaderCol>
         <HeaderCol className='Layer__show-lg Layer__show-xl'>
-          <CloseButton onClick={onClose} aria-label={t('common:action.close', 'Close')} />
+          <CloseButton onClick={onClose} aria-label={t('common:action.close_label', 'Close')} />
         </HeaderCol>
       </HeaderRow>
     </Header>

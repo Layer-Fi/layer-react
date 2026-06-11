@@ -13,6 +13,7 @@
     "confirm_label": "Confirm",
     "connect_label": "Connect",
     "continue_label": "Continue",
+    "create_label": "Create",
     "delete_label": "Delete",
     "delete_line_item": "Delete line item",
     "discard_changes": "Discard changes",
@@ -156,8 +157,6 @@
     "updating": "Updating..."
   },
   "validation": {
-    "must_be_selected": "Must be selected",
-    "value_not_blank": "Cannot be blank",
     "value_required": "Field is required"
   }
 }
