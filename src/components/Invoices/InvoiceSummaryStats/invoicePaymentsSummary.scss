@@ -1,0 +1,12 @@
+.Layer__InvoiceSummaryStats__Payments {
+  box-sizing: border-box;
+
+  justify-content: center;
+
+  min-width: 12rem;
+  padding: var(--spacing-md) var(--spacing-lg);
+
+  border-radius: var(--border-radius-xs);
+  border: 1px solid var(--border-color);
+  background-color: var(--color-base-0);
+}

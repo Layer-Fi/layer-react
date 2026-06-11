@@ -1,0 +1,68 @@
+.Layer__InvoiceOwedSummary__StatCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xs);
+
+  min-width: 0;
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-xs);
+  border: 1px solid var(--color-base-200);
+  background: var(--color-base-0);
+
+  &__Status { order: 1; }
+  &__Total { order: 2; }
+  &__Count { order: 3; }
+
+  &__Dot {
+    flex-shrink: 0;
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+
+    &--overdue {
+      background: var(--color-info-warning);
+    }
+
+    &--upcoming {
+      background: var(--color-info);
+    }
+  }
+
+  &__Total .Layer__Span {
+    line-height: 1;
+  }
+
+  @media (width >= 500px) {
+    flex-flow: row wrap;
+    row-gap: var(--spacing-2xs);
+    column-gap: var(--spacing-2xs);
+    align-items: baseline;
+
+    .Layer__InvoiceOwedSummary__StatCard__Status { order: 1; }
+    .Layer__InvoiceOwedSummary__StatCard__Count { order: 2; }
+
+    .Layer__InvoiceOwedSummary__StatCard__Total {
+      order: 3;
+      flex-basis: 100%;
+    }
+
+    .Layer__InvoiceOwedSummary__StatCard__Count::before {
+      content: '·';
+      display: inline-block;
+      padding-inline-end: var(--spacing-2xs);
+      font-size: var(--text-sm);
+      line-height: 1;
+      color: var(--fg-subtle);
+      vertical-align: middle;
+    }
+  }
+
+  @media (width >= 1200px) {
+    flex-wrap: nowrap;
+
+    .Layer__InvoiceOwedSummary__StatCard__Total {
+      flex-basis: auto;
+      margin-inline-start: auto;
+    }
+  }
+}
