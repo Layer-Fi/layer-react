@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type BaseSelectOption } from '@internal-types/general'
@@ -18,7 +18,7 @@ export const findSelectOption = <T extends BaseSelectOption>(options: ReadonlyAr
 
 export type USStateSelecttProps = {
   value?: string
-  onChange: (value: USState) => void
+  onChange: (value: USState | null) => void
 }
 
 export const USStateSelect = ({ value, onChange }: USStateSelecttProps) => {
@@ -28,18 +28,11 @@ export const USStateSelect = ({ value, onChange }: USStateSelecttProps) => {
     [t],
   )
 
-  const handleChange = useCallback((option: USState | null) => {
-    if (option) {
-      onChange(option)
-    }
-  }, [onChange])
-
   return (
     <ComboBox
       options={usStateOptions}
       selectedValue={findSelectOption(usStateOptions, value) ?? null}
-      onSelectedValueChange={handleChange}
-      isClearable={false}
+      onSelectedValueChange={onChange}
       placeholder={t('usStates:label.us_state', 'US state')}
     />
   )
