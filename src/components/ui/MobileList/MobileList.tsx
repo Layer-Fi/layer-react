@@ -25,6 +25,7 @@ interface MobileListBaseProps<TData> {
     ErrorState: React.FC
   }
   renderItem: (item: TData) => React.ReactNode
+  renderFooter?: (item: TData) => React.ReactNode
   onClickItem?: (item: TData) => void
   variant?: MobileListVariant
 }
@@ -61,6 +62,7 @@ export const MobileList = <TData extends { id: string }>({
   data,
   slots,
   renderItem,
+  renderFooter,
   onClickItem,
   isLoading,
   isError,
@@ -90,7 +92,7 @@ export const MobileList = <TData extends { id: string }>({
   }
 
   const renderRow = (item: TData) => (
-    <MobileListItem key={item.id} item={item} onClickItem={onClickItem}>
+    <MobileListItem key={item.id} item={item} onClickItem={onClickItem} slots={{ Footer: renderFooter?.(item) }}>
       {renderItem(item)}
     </MobileListItem>
   )
@@ -113,6 +115,7 @@ export const MobileList = <TData extends { id: string }>({
             label={group.label}
             items={group.items}
             renderItem={renderItem}
+            renderFooter={renderFooter}
             onClickItem={onClickItem}
           />
         ))

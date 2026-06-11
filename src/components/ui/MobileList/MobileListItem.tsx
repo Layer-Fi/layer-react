@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useCallback } from 'react'
+import { type PropsWithChildren, type ReactNode, useCallback } from 'react'
 import { composeRenderProps } from 'react-aria-components/composeRenderProps'
 import { GridListItem } from 'react-aria-components/GridList'
 
@@ -9,12 +9,16 @@ import './mobileListItem.scss'
 type MobileListItemProps<TData> = PropsWithChildren<{
   item: TData
   onClickItem?: (item: TData) => void
+  slots?: {
+    Footer?: ReactNode
+  }
 }>
 
 export const MobileListItem = <TData extends { id: string }>({
   item,
   onClickItem,
   children,
+  slots,
 }: MobileListItemProps<TData>) => {
   const onAction = useCallback(() => {
     onClickItem?.(item)
@@ -32,7 +36,14 @@ export const MobileListItem = <TData extends { id: string }>({
           {selectionMode !== 'none' && selectionBehavior === 'toggle' && (
             <Checkbox slot='selection' size='md' />
           )}
-          {children}
+          <div className='Layer__MobileListItem__Content'>
+            {children}
+          </div>
+          {slots?.Footer && (
+            <div className='Layer__MobileListItem__Footer'>
+              {slots.Footer}
+            </div>
+          )}
         </>
       ))}
     </GridListItem>

@@ -9,6 +9,7 @@ type MobileListSectionProps<TData extends { id: string }> = {
   label: string
   items: ReadonlyArray<TData>
   renderItem: (item: TData) => React.ReactNode
+  renderFooter?: (item: TData) => React.ReactNode
   onClickItem?: (item: TData) => void
 }
 
@@ -16,6 +17,7 @@ export const MobileListSection = <TData extends { id: string }>({
   label,
   items,
   renderItem,
+  renderFooter,
   onClickItem,
 }: MobileListSectionProps<TData>) => (
   <GridListSection
@@ -30,6 +32,7 @@ export const MobileListSection = <TData extends { id: string }>({
         key={item.id}
         item={item}
         onClickItem={onClickItem}
+        slots={{ Footer: renderFooter?.(item) }}
       >
         {renderItem(item)}
       </MobileListItem>

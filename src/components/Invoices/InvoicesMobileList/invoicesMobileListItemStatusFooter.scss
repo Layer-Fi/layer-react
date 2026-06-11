@@ -1,0 +1,31 @@
+.Layer__InvoicesMobileListItem__StatusFooter {
+  --status-bar-bg: var(--color-base-50);
+  --status-bar-icon-color: var(--color-base-700);
+
+  padding: var(--spacing-xs) var(--spacing-sm);
+
+  background-color: var(--status-bar-bg);
+  color: var(--status-bar-icon-color);
+
+  &[data-status-variant='warning'] {
+    --status-bar-bg: color-mix(in srgb, var(--color-info-warning-bg) 50%, var(--color-base-0));
+    --status-bar-icon-color: var(--badge-fg-color-warning);
+  }
+
+  &[data-status-variant='success'] {
+    --status-bar-bg: color-mix(in srgb, var(--color-info-success-bg) 35%, var(--color-base-0));
+    --status-bar-icon-color: var(--badge-fg-color-success);
+  }
+}
+
+.Layer__InvoicesMobileListItem__StatusFooter__Icon {
+  flex-shrink: 0;
+}
+
+.Layer__InvoicesMobileListItem__StatusFooter__Dot {
+  flex-shrink: 0;
+  block-size: 6px;
+  inline-size: 6px;
+  border-radius: var(--border-radius-5xl);
+  background-color: var(--color-base-700);
+}
