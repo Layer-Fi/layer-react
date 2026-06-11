@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { convertBigIntCentsToBigDecimal, formatBigDecimalToString } from '@utils/bigDecimalUtils'
+import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -30,7 +31,12 @@ export const InvoiceOwedSummaryStatCard = ({ variant, label, total, count, showS
       <div className='Layer__InvoiceOwedSummary__StatCard__Count'>
         <FallbackWithSkeletonLoader isLoading={showSkeleton} height='14px' width='60px'>
           <Span size='sm' variant='subtle'>
-            {count !== undefined && t('invoices:label.invoices_count', '{{count}} invoices', { count })}
+            {count !== undefined && tPlural(t, 'invoices:label.invoices_count', {
+              count,
+              displayCount: formatter.formatNumber(count),
+              one: '{{displayCount}} invoice',
+              other: '{{displayCount}} invoices',
+            })}
           </Span>
         </FallbackWithSkeletonLoader>
       </div>

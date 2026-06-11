@@ -13,11 +13,12 @@ import { FallbackWithSkeletonLoader } from '@components/SkeletonLoader/SkeletonL
 import './invoiceOwedSummary.scss'
 
 const getPercentageOverdue = (sentTotal: bigint | undefined, overdueTotal: bigint | undefined): number => {
-  if (!sentTotal && !overdueTotal) return 50
-  if (!sentTotal) return 100
-  if (!overdueTotal) return 0
+  if (sentTotal === undefined || overdueTotal === undefined) return 50
 
-  const totalAsBigDecimal = convertBigIntCentsToBigDecimal(sentTotal + overdueTotal)
+  const total = sentTotal + overdueTotal
+  if (total === BigInt(0)) return 0
+
+  const totalAsBigDecimal = convertBigIntCentsToBigDecimal(total)
   const overdueTotalAsBigDecimal = convertBigIntCentsToBigDecimal(overdueTotal)
 
   const decimalOverdue = safeDivide(overdueTotalAsBigDecimal, totalAsBigDecimal)
