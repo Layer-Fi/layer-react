@@ -3,7 +3,7 @@ import { createStore, useStore } from 'zustand'
 
 import type { Invoice } from '@schemas/invoices/invoice'
 import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
-import { ALL_OPTION, type InvoiceStatusOption } from '@components/Invoices/InvoiceTable/InvoiceTable'
+import { ALL_OPTION, type InvoiceStatusOption } from '@components/Invoices/utils/invoiceFilters'
 
 export type InvoiceTableFilters = {
   showSalesReceipts: boolean

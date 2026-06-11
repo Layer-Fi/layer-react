@@ -1,6 +1,6 @@
 import { VStack } from '@ui/Stack/Stack'
 import { InvoiceSummaryStats } from '@components/Invoices/InvoiceSummaryStats/InvoiceSummaryStats'
-import { InvoiceTable } from '@components/Invoices/InvoiceTable/InvoiceTable'
+import { ResponsiveInvoiceView } from '@components/Invoices/InvoiceTable/ResponsiveInvoiceView'
 import { StripeConnectBanner } from '@components/Invoices/StripeConnectBanner/StripeConnectBanner'
 
 export const InvoiceOverview = () => {
@@ -8,7 +8,7 @@ export const InvoiceOverview = () => {
     <VStack>
       <InvoiceSummaryStats />
       <StripeConnectBanner />
-      <InvoiceTable />
+      <ResponsiveInvoiceView />
     </VStack>
   )
 }
