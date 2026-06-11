@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice } from '@schemas/invoices/invoice'
+import { type SearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
 import { InvoicesMobileHeader } from '@components/Invoices/InvoicesMobileHeader/InvoicesMobileHeader'
 import { InvoicesMobileListItem } from '@components/Invoices/InvoicesMobileList/InvoicesMobileListItem'
@@ -15,6 +16,7 @@ export interface InvoicesMobileListProps {
   paginationProps: TablePaginationProps
   onViewInvoice: (invoice: Invoice) => void
   onCreateInvoice: () => void
+  searchProps: SearchProps
   slots: {
     EmptyState: React.FC
     ErrorState: React.FC
@@ -28,6 +30,7 @@ export const InvoicesMobileList = ({
   paginationProps,
   onViewInvoice,
   onCreateInvoice,
+  searchProps,
   slots,
 }: InvoicesMobileListProps) => {
   const { t } = useTranslation()
@@ -36,7 +39,7 @@ export const InvoicesMobileList = ({
 
   return (
     <div className='Layer__InvoicesMobileList'>
-      <InvoicesMobileHeader onCreateInvoice={onCreateInvoice} />
+      <InvoicesMobileHeader onCreateInvoice={onCreateInvoice} searchProps={searchProps} />
       <PaginatedMobileList
         ariaLabel={t('invoices:label.invoices', 'Invoices')}
         data={data}

@@ -33,11 +33,11 @@
     border: none;
   }
 
-  &[data-variant='compact'] &__Content {
+  [data-variant='compact'] &__Content {
     padding-inline: 0;
   }
 
-  &[data-variant='compact'] &__Footer {
+  [data-variant='compact'] &__Footer {
     border-radius: 0;
   }
 }

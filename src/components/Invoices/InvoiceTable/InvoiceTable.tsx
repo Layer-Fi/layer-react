@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import type { Row } from '@tanstack/react-table'
 import type { TFunction } from 'i18next'
 import { Plus } from 'lucide-react'
@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { getCustomerName } from '@utils/customerVendor'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
+import { type SearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useInvoiceTableFilters } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import ChevronRightFill from '@icons/ChevronRightFill'
@@ -127,6 +127,7 @@ export interface InvoiceTableProps {
   paginationProps: TablePaginationProps
   onViewInvoice: (invoice: Invoice) => void
   onCreateInvoice: () => void
+  searchProps: SearchProps
   slots: {
     EmptyState: React.FC
     ErrorState: React.FC
@@ -140,17 +141,12 @@ export const InvoiceTable = ({
   paginationProps,
   onViewInvoice,
   onCreateInvoice,
+  searchProps,
   slots,
 }: InvoiceTableProps) => {
   const { t } = useTranslation()
   const { tableFilters, setTableFilters } = useInvoiceTableFilters()
-  const { status: selectedInvoiceStatusOption, query } = tableFilters
-
-  const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: query })
-
-  useEffect(() => {
-    setTableFilters({ query: searchQuery })
-  }, [searchQuery, setTableFilters])
+  const { status: selectedInvoiceStatusOption } = tableFilters
 
   const options = useInvoiceStatusOptions()
 
@@ -200,9 +196,8 @@ export const InvoiceTable = ({
         slotProps={{
           SearchField: {
             label: t('invoices:label.search_invoices', 'Search invoices'),
-            value: inputValue,
-            onChange: handleInputChange,
             className: 'Layer__InvoiceTable__SearchField',
+            ...searchProps,
           },
         }}
       />

@@ -6,6 +6,11 @@ type UseDebouncedSearchQueryOptions = {
   initialInputState: string | (() => string)
 }
 
+export interface SearchProps {
+  value: string
+  onChange: (value: string) => void
+}
+
 export function useDebouncedSearchInput({
   initialInputState,
 }: UseDebouncedSearchQueryOptions) {

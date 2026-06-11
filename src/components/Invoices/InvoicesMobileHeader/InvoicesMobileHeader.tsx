@@ -1,8 +1,8 @@
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
+import { type SearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useInvoiceTableFilters } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { MobileSelectionDrawerWithTrigger } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
@@ -14,18 +14,13 @@ import { SearchField } from '@components/SearchField/SearchField'
 
 interface InvoicesMobileHeaderProps {
   onCreateInvoice: () => void
+  searchProps: SearchProps
 }
 
-export const InvoicesMobileHeader = ({ onCreateInvoice }: InvoicesMobileHeaderProps) => {
+export const InvoicesMobileHeader = ({ onCreateInvoice, searchProps }: InvoicesMobileHeaderProps) => {
   const { t } = useTranslation()
   const { tableFilters, setTableFilters } = useInvoiceTableFilters()
-  const { status: selectedInvoiceStatusOption, query } = tableFilters
-
-  const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: query })
-
-  useEffect(() => {
-    setTableFilters({ query: searchQuery })
-  }, [searchQuery, setTableFilters])
+  const { status: selectedInvoiceStatusOption } = tableFilters
 
   const options = useInvoiceStatusOptions()
 
@@ -47,9 +42,8 @@ export const InvoicesMobileHeader = ({ onCreateInvoice }: InvoicesMobileHeaderPr
 
         <SearchField
           label={t('invoices:label.search_invoices', 'Search invoices')}
-          value={inputValue}
-          onChange={handleInputChange}
           className='Layer__InvoicesMobileHeader__SearchField'
+          {...searchProps}
         />
 
         <MobileSelectionDrawerWithTrigger<InvoiceStatusOption>
