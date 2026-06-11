@@ -32,6 +32,30 @@
 
   &[data-status='success'] {
     color: var(--color-info-success);
+
+    &[data-invert] {
+      color: var(--color-info-success-bg);
+    }
+  }
+
+  &[data-status='warning'] {
+    color: var(--color-info-warning-fg);
+
+    &[data-invert] {
+      color: var(--color-info-warning-bg);
+    }
+  }
+
+  &[data-status='disabled'] {
+    color: var(--color-base-500);
+  }
+
+  &[data-status='info'] {
+    color: var(--color-info-fg);
+
+    &[data-invert] {
+      color: var(--color-info-bg);
+    }
   }
 
   &[data-no-wrap] {
