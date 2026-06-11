@@ -16,7 +16,7 @@ const getPercentageOverdue = (sentTotal: bigint | undefined, overdueTotal: bigin
   if (sentTotal === undefined || overdueTotal === undefined) return 50
 
   const total = sentTotal + overdueTotal
-  if (total === BigInt(0)) return 0
+  if (total === BigInt(0)) return 50
 
   const totalAsBigDecimal = convertBigIntCentsToBigDecimal(total)
   const overdueTotalAsBigDecimal = convertBigIntCentsToBigDecimal(overdueTotal)
