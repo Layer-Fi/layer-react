@@ -81,20 +81,20 @@
     "unearned_revenue": "Produits perçus d'avance"
   },
   "placeholder": {
-    "select_normality": "",
-    "select_parent": "",
-    "select_sub_type": "",
-    "select_type": ""
+    "select_normality": "Sélectionner une normalité",
+    "select_parent": "Sélectionner un compte parent",
+    "select_sub_type": "Sélectionner un sous-type",
+    "select_type": "Sélectionner un type"
   },
   "validation": {
     "account_not_modifiable": "Ce compte ne peut pas être modifié",
     "delete_account_has_children": "Ce compte ne peut pas être supprimé parce qu'il comporte des comptes enfants",
     "delete_account_has_ledger_entries": "Ce compte ne peut pas être supprimé parce qu'il comporte des écritures au grand livre",
     "delete_account_is_required": "Ce compte ne peut pas être supprimé parce qu'il s'agit d'un compte obligatoire",
-    "name_required": "",
-    "normality_required": "",
-    "parent_required": "",
-    "subtype_required": "",
-    "type_required": ""
+    "name_required": "Saisissez un nom de compte",
+    "normality_required": "Sélectionner une normalité",
+    "parent_required": "Sélectionner un compte parent",
+    "subtype_required": "Sélectionner un sous-type",
+    "type_required": "Sélectionner un type de compte"
   }
 }

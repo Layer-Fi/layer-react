@@ -15,13 +15,13 @@
     "entries": "Aucune écriture trouvée",
     "entry_journal_message": "Il n’y a aucune écriture comptable dans ce compte.",
     "ledger_activity": "Aucune activité au grand livre",
-    "line_items": "",
-    "line_items_description": ""
+    "line_items": "Aucune ligne",
+    "line_items_description": "Cette écriture ne comporte aucune ligne."
   },
   "error": {
     "check_fields": "Veuillez vérifier tous les champs.",
-    "couldnt_load_ledger_entries": "",
-    "load_ledger_entries": "",
+    "couldnt_load_ledger_entries": "Nous n’avons pas pu charger les écritures du grand livre",
+    "load_ledger_entries": "Une erreur s’est produite lors du chargement des écritures du grand livre de ce compte. Veuillez vérifier votre connexion et réessayer.",
     "operation_retry": "L’opération a échoué. Réessayez."
   },
   "label": {
@@ -35,7 +35,7 @@
     "enter_institution_name": "Saisissez le nom de l’institution...",
     "entries": "Écritures",
     "entry_date": "Date d’écriture",
-    "entry_details": "",
+    "entry_details": "Détails de l’écriture",
     "entry_journal": "Il n’y a aucune écriture dans le journal.",
     "entry_reversed": "Cette écriture a déjà été contrepassée",
     "entry_type": "Type d’écriture",
@@ -48,7 +48,7 @@
     "journal_entry_number": "Écriture de journal #{{entryNumber}}",
     "journal_entry_posted": "Écriture de journal #{{journalEntryNumber}} comptabilisée",
     "journal_id": "ID du journal #",
-    "ledger_entries": "",
+    "ledger_entries": "Écritures du grand livre",
     "ledger_view": "Vue du grand livre",
     "line_items": "Lignes",
     "payday": "Jour de paie",
