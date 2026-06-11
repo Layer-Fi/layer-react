@@ -29,7 +29,7 @@ export const useInvoicesList = () => {
 
   return {
     invoices,
-    isLoading: data === undefined || isLoading,
+    isLoading,
     isError,
     paginationProps,
     refetch,
