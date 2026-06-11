@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { HStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
 import { Button } from '@components/Button/Button'
 import { AccountBalancesDownloadButton } from '@components/ChartOfAccounts/download/AccountBalancesDownloadButton'
 import { type ChartOfAccountsTableStringOverrides } from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
@@ -12,7 +13,6 @@ import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
 import { SearchField } from '@components/SearchField/SearchField'
-import { Heading, HeadingSize } from '@components/Typography/Heading'
 
 import './chartOfAccountsTableHeader.scss'
 
@@ -46,7 +46,8 @@ export const ChartOfAccountsTableHeader = ({
         <HeaderRow>
           <HeaderCol>
             <Heading
-              size={asWidget ? HeadingSize.view : HeadingSize.primary}
+              level={2}
+              size={asWidget ? 'md' : 'lg'}
             >
               {stringOverrides?.headerText || t('chartOfAccounts:label.chart_of_accounts', 'Chart of Accounts')}
             </Heading>
@@ -57,7 +58,8 @@ export const ChartOfAccountsTableHeader = ({
         <HeaderRow>
           <HeaderCol>
             <Heading
-              size={HeadingSize.secondary}
+              level={2}
+              size='sm'
             >
               {withDateControl || withExpandAllButton
                 ? (

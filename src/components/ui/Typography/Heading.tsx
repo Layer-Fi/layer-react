@@ -13,7 +13,7 @@ import './heading.scss'
 export type HeadingSize = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 
 type HeadingDataProps = {
-  align?: 'center'
+  align?: 'left' | 'center' | 'right' | 'justify'
   pbe?: Spacing
   pie?: Spacing
   size?: HeadingSize
