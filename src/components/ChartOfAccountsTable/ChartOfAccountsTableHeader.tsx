@@ -45,10 +45,7 @@ export const ChartOfAccountsTableHeader = ({
       <Header asHeader rounded>
         <HeaderRow>
           <HeaderCol>
-            <Heading
-              level={2}
-              size={asWidget ? 'md' : 'lg'}
-            >
+            <Heading level={2} size={asWidget ? 'md' : 'lg'}>
               {stringOverrides?.headerText || t('chartOfAccounts:label.chart_of_accounts', 'Chart of Accounts')}
             </Heading>
           </HeaderCol>
@@ -57,10 +54,7 @@ export const ChartOfAccountsTableHeader = ({
       <Header sticky>
         <HeaderRow>
           <HeaderCol>
-            <Heading
-              level={2}
-              size='sm'
-            >
+            <Heading level={2} size='sm'>
               {withDateControl || withExpandAllButton
                 ? (
                   <HStack align='center' gap='xs'>

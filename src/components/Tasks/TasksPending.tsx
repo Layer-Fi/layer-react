@@ -48,7 +48,9 @@ export const TasksPending = () => {
   return (
     <div className='Layer__tasks-pending'>
       <div className='Layer__tasks-pending-header'>
-        <Heading level={2} size='sm'>{formatDate(date, DateFormat.MonthYear)}</Heading>
+        <Heading level={2} size='sm'>
+          {formatDate(date, DateFormat.MonthYear)}
+        </Heading>
         {activePeriod?.tasks && activePeriod.tasks.length > 0
           ? (
             <div className='Layer__tasks-pending-bar'>

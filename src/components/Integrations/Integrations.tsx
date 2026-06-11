@@ -37,11 +37,7 @@ export const IntegrationsComponent = ({
   return (
     <Container name={COMPONENT_NAME}>
       <Header className='Layer__linked-accounts__header'>
-        <Heading
-          level={2}
-          className='Layer__linked-accounts__title'
-          size='sm'
-        >
+        <Heading level={2} size='sm' className='Layer__linked-accounts__title'>
           {stringOverrides?.title || t('integrations:label.integrations', 'Integrations')}
         </Heading>
         <IntegrationsConnectMenu />
