@@ -17,13 +17,6 @@
       'ss03' on;
   }
 
-  .Layer__statement-of-cash-flow__title {
-    display: inline;
-    flex: 1;
-    margin: 0;
-    font-size: var(--text-heading);
-  }
-
   @container (max-width: 800px) {
     .Layer__statement-of-cash-flow__header {
       flex-direction: column;

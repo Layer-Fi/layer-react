@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next'
 
 import { QuickbooksContextProvider } from '@providers/QuickbooksContextProvider/QuickbooksContextProvider'
 import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
+import { Heading } from '@ui/Typography/Heading'
 import { Container } from '@components/Container/Container'
 import { Header } from '@components/Container/Header'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { IntegrationsConnectMenu } from '@components/Integrations/IntegrationsConnectMenu/IntegrationsConnectMenu'
 import { IntegrationsContent } from '@components/Integrations/IntegrationsContent'
 import { Loader } from '@components/Loader/Loader'
-import { Heading, HeadingSize } from '@components/Typography/Heading'
 
 const COMPONENT_NAME = 'integrations'
 
@@ -37,10 +37,7 @@ export const IntegrationsComponent = ({
   return (
     <Container name={COMPONENT_NAME}>
       <Header className='Layer__linked-accounts__header'>
-        <Heading
-          className='Layer__linked-accounts__title'
-          size={HeadingSize.secondary}
-        >
+        <Heading level={3} size='sm'>
           {stringOverrides?.title || t('integrations:label.integrations', 'Integrations')}
         </Heading>
         <IntegrationsConnectMenu />

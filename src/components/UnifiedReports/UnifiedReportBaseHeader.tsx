@@ -3,7 +3,7 @@ import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { type DefaultVariant, ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { Span } from '@ui/Typography/Text'
+import { Heading } from '@ui/Typography/Heading'
 import { ReportsMegaMenu } from '@components/ReportsNavigation/ReportsMegaMenu'
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 import { UnifiedReportControls } from '@components/UnifiedReports/UnifiedReportControls'
@@ -37,7 +37,7 @@ const UnifiedReportBaseHeaderRow = (props: UnifiedReportBaseHeaderRowProps) => {
       {!isMobile && (
         <HStack align='center' gap='lg'>
           {baseReport
-            ? <Span size='lg' weight='bold'>{baseReport.displayName}</Span>
+            ? <Heading level={3} size='sm'>{baseReport.displayName}</Heading>
             : <SkeletonLoader width='192px' height='24px' />}
           {props.navigationVariant === 'menu' && <ReportsMegaMenu />}
         </HStack>

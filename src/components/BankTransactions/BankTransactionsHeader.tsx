@@ -20,6 +20,7 @@ import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFil
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
+import { Heading } from '@ui/Typography/Heading'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
 import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
 import { BankTransactionsTableContent } from '@components/BankTransactions/constants'
@@ -31,7 +32,6 @@ import { Header } from '@components/Container/Header'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 import { SearchField } from '@components/SearchField/SearchField'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
-import { Heading, HeadingSize } from '@components/Typography/Heading'
 import InvisibleDownload from '@components/utility/InvisibleDownload'
 
 export interface BankTransactionsHeaderProps {
@@ -128,7 +128,6 @@ const DownloadButton = ({
 
 export const BankTransactionsHeader = ({
   shiftStickyHeader,
-  asWidget,
   tableContentMode,
   stringOverrides,
   isSyncing,
@@ -177,10 +176,7 @@ export const BankTransactionsHeader = ({
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
       <HStack align='center'>
-        <Heading
-          className='Layer__bank-transactions__title'
-          size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
-        >
+        <Heading level={3} size='sm'>
           {stringOverrides?.header || t('common:label.transactions', 'Transactions')}
         </Heading>
         {isSyncing && (
@@ -205,7 +201,6 @@ export const BankTransactionsHeader = ({
   ), [
     t,
     activationDate,
-    asWidget,
     isSyncing,
     isListView,
     monthPickerDate,

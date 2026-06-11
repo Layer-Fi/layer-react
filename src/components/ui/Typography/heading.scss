@@ -8,7 +8,7 @@
   font-weight: var(--font-weight-bold);
 
   text-wrap: pretty;
-  color: var(--color-base-900);
+  color: var(--text-color-primary);
 
   &[data-variant='subtle'] {
     color: var(--fg-subtle);

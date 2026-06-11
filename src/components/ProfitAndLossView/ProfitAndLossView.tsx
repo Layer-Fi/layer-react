@@ -64,7 +64,6 @@ const ProfitAndLossPanel = ({
       <ProfitAndLoss.Header
         text={stringOverrides?.header || t('common:label.profit_loss', 'Profit & Loss')}
         className={`Layer__${COMPONENT_NAME}__header`}
-        headingClassName='Layer__profit-and-loss__title'
       />
 
       <Components stringOverrides={stringOverrides} {...props} />

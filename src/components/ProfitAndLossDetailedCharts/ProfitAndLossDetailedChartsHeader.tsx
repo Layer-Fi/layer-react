@@ -6,6 +6,7 @@ import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { BackButton } from '@components/Button/BackButton'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
@@ -21,9 +22,9 @@ type HeaderTitleProps = {
 
 const HeaderTitle = ({ title, dateLabel, isTablet, showDatePicker }: HeaderTitleProps) => (
   <VStack className='Layer__ProfitAndLossDetailedChartsHeader__head'>
-    <Span size='lg' weight='bold'>
+    <Heading level={3} size='sm'>
       {title}
-    </Span>
+    </Heading>
     <Span
       size='sm'
       variant={isTablet ? undefined : 'subtle'}

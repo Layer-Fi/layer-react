@@ -109,8 +109,8 @@ export const InvoiceDetailHeader = ({
     || viewState.invoice.status === InvoiceStatus.PartiallyPaid
 
   return (
-    <HStack justify='space-between' align='center' fluid pie='md'>
-      <Heading className='Layer__InvoiceDetail__Heading' ellipsis>{headingContent}</Heading>
+    <HStack className='Layer__InvoiceDetail__Header' justify='space-between' align='center' fluid pie='md'>
+      <Heading ellipsis>{headingContent}</Heading>
       {headerMode === HeaderMode.Edit && formStepButton}
       {headerMode === HeaderMode.Preview && (
         <InvoicePdfDownloadButton invoiceId={viewState.invoice.id} />
