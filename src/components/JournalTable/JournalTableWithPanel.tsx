@@ -68,7 +68,7 @@ export const JournalTableWithPanel = ({
       <Header>
         <HeaderRow>
           <HeaderCol>
-            <Heading level={2} size='sm'>
+            <Heading level={3} size='sm'>
               {stringOverrides?.componentSubtitle || t('generalLedger:label.entries', 'Entries')}
             </Heading>
           </HeaderCol>

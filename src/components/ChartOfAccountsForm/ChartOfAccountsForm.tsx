@@ -99,7 +99,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
   return (
     <Form className='Layer__ChartOfAccountsForm' onSubmit={blockNativeOnSubmit}>
       <HStack className='Layer__ChartOfAccountsForm__Header' justify='space-between' align='center' gap='md'>
-        <Heading level={2} size='sm'>
+        <Heading level={3} size='sm'>
           {isEdit
             ? stringOverrides?.editModeHeader || t('chartOfAccounts:action.edit_account', 'Edit Account')
             : stringOverrides?.createModeHeader || t('chartOfAccounts:action.add_new_account', 'Add New Account')}
