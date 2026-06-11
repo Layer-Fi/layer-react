@@ -7,10 +7,11 @@ import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/bankAccount'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
+import { VStack } from '@ui/Stack/Stack'
+import { Label } from '@ui/Typography/Text'
 import { DatePicker } from '@components/DatePicker/DatePicker'
 import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 import { AmountInput } from '@components/Input/AmountInput'
-import { InputGroup } from '@components/Input/InputGroup'
 import { ErrorText } from '@components/Typography/ErrorText'
 import { Text, TextSize } from '@components/Typography/Text'
 
@@ -118,7 +119,10 @@ export const AccountFormBox = ({
           </Text>
         </div>
         <div className={`${CLASS_NAME}__details-col__inputs`}>
-          <InputGroup label={t('linkedAccounts:label.opening_date', 'Opening date')}>
+          <VStack className={`${CLASS_NAME}__input-group`}>
+            <Label size='sm' pbe='3xs'>
+              {t('linkedAccounts:label.opening_date', 'Opening date')}
+            </Label>
             <DatePicker
               label={t('linkedAccounts:label.opening_date', 'Opening date')}
               date={date}
@@ -129,8 +133,11 @@ export const AccountFormBox = ({
               isInvalid={isDateInvalid}
               errorText={dateErrorText}
             />
-          </InputGroup>
-          <InputGroup label={t('linkedAccounts:label.opening_balance', 'Opening balance')}>
+          </VStack>
+          <VStack className={`${CLASS_NAME}__input-group`}>
+            <Label size='sm' pbe='3xs'>
+              {t('linkedAccounts:label.opening_balance', 'Opening balance')}
+            </Label>
             <AmountInput
               name='openingBalance'
               defaultValue={value.openingBalance}
@@ -140,7 +147,7 @@ export const AccountFormBox = ({
               isInvalid={errors.includes('MISSING_BALANCE')}
               errorMessage={t('common:validation.value_required', 'Field is required')}
             />
-          </InputGroup>
+          </VStack>
         </div>
         {errors.includes('API_ERROR') && (
           <ErrorText>

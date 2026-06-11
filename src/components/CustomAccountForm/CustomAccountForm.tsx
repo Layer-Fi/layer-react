@@ -4,12 +4,14 @@ import { useTranslation } from 'react-i18next'
 import { type CustomAccount, CustomAccountSubtype } from '@internal-types/customAccounts'
 import { notEmpty } from '@utils/form'
 import { translationKey } from '@utils/i18n/translationKey'
+import { FieldError, TextField } from '@ui/Form/Form'
+import { Input } from '@ui/Input/Input'
+import { InputGroup } from '@ui/Input/InputGroup'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
+import { Label } from '@ui/Typography/Text'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { SubmitButton } from '@components/Button/SubmitButton'
 import { useCustomAccountForm } from '@components/CustomAccountForm/useCustomAccountForm'
-import { Input } from '@components/Input/Input'
-import { InputGroup } from '@components/Input/InputGroup'
 import { Select } from '@components/Input/Select'
 import { ErrorText } from '@components/Typography/ErrorText'
 
@@ -63,18 +65,27 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
           }}
         >
           {field => (
-            <InputGroup name='account_name' label={t('generalLedger:label.account_name', 'Account name')} className='Layer__custom-account-form__field'>
-              <Input
-                className='Layer__custom-account-form__input'
-                name='account_name'
-                placeholder={t('generalLedger:label.enter_account_name', 'Enter account name...')}
-                value={field.state.value}
-                onChange={e =>
-                  field.handleChange((e.target as HTMLInputElement).value)}
-                isInvalid={field.state.meta.errors.length > 0}
-                errorMessage={field.state.meta.errors.join(', ')}
-              />
-            </InputGroup>
+            <TextField
+              name='account_name'
+              isInvalid={field.state.meta.errors.length > 0}
+              className='Layer__custom-account-form__field'
+            >
+              <Label slot='label' size='sm' htmlFor='account_name' pbe='3xs'>
+                {t('generalLedger:label.account_name', 'Account name')}
+              </Label>
+              <InputGroup slot='input'>
+                <Input
+                  inset
+                  id='account_name'
+                  name='account_name'
+                  placeholder={t('generalLedger:label.enter_account_name', 'Enter account name...')}
+                  value={field.state.value}
+                  onChange={e =>
+                    field.handleChange((e.target as HTMLInputElement).value)}
+                />
+              </InputGroup>
+              <FieldError>{field.state.meta.errors.join(', ')}</FieldError>
+            </TextField>
           )}
         </form.Field>
 
@@ -85,18 +96,27 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
           }}
         >
           {field => (
-            <InputGroup name='institution_name' label={t('generalLedger:label.institution_name', 'Institution name')} className='Layer__custom-account-form__field'>
-              <Input
-                className='Layer__custom-account-form__input'
-                name='institution_name'
-                placeholder={t('generalLedger:label.enter_institution_name', 'Enter institution name...')}
-                value={field.state.value}
-                onChange={e =>
-                  field.handleChange((e.target as HTMLInputElement).value)}
-                isInvalid={field.state.meta.errors.length > 0}
-                errorMessage={field.state.meta.errors.join(', ')}
-              />
-            </InputGroup>
+            <TextField
+              name='institution_name'
+              isInvalid={field.state.meta.errors.length > 0}
+              className='Layer__custom-account-form__field'
+            >
+              <Label slot='label' size='sm' htmlFor='institution_name' pbe='3xs'>
+                {t('generalLedger:label.institution_name', 'Institution name')}
+              </Label>
+              <InputGroup slot='input'>
+                <Input
+                  inset
+                  id='institution_name'
+                  name='institution_name'
+                  placeholder={t('generalLedger:label.enter_institution_name', 'Enter institution name...')}
+                  value={field.state.value}
+                  onChange={e =>
+                    field.handleChange((e.target as HTMLInputElement).value)}
+                />
+              </InputGroup>
+              <FieldError>{field.state.meta.errors.join(', ')}</FieldError>
+            </TextField>
           )}
         </form.Field>
 
@@ -107,7 +127,10 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
           }}
         >
           {field => (
-            <InputGroup name='account_type' label={t('generalLedger:label.account_type', 'Account type')} className='Layer__custom-account-form__field'>
+            <VStack className='Layer__custom-account-form__field'>
+              <Label size='sm' htmlFor='account_type' pbe='3xs'>
+                {t('generalLedger:label.account_type', 'Account type')}
+              </Label>
               <Select
                 className='Layer__custom-account-form__input'
                 name='account_type'
@@ -118,7 +141,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
                 isInvalid={field.state.meta.errors.length > 0}
                 errorMessage={field.state.meta.errors.join(', ')}
               />
-            </InputGroup>
+            </VStack>
           )}
         </form.Field>
 

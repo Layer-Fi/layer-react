@@ -13,6 +13,8 @@ import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { Button } from '@ui/Button/Button'
+import { Input } from '@ui/Input/Input'
+import { InputGroup } from '@ui/Input/InputGroup'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
@@ -21,7 +23,6 @@ import { type BankTransactionReceiptsHandle } from '@components/BankTransactionR
 import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 import { AmountInput } from '@components/Input/AmountInput'
 import { FileInput } from '@components/Input/FileInput'
-import { Input } from '@components/Input/Input'
 import { TaxCodeMobileDrawer } from '@components/TaxCodeSelect/TaxCodeMobileDrawer'
 import { ErrorText } from '@components/Typography/ErrorText'
 
@@ -156,12 +157,14 @@ export const BankTransactionsMobileListSplitForm = ({
                 <Span size='sm' weight='bold'>
                   {t('common:label.total', 'Total')}
                 </Span>
-                <Input
-                  disabled={true}
-                  inputMode='numeric'
-                  value={formatCurrencyFromCents(localSplits.reduce((total, { amount }) => total + amount, 0))}
-                  className='Layer__BankTransactionsMobileSplitForm__TotalAmountInput'
-                />
+                <InputGroup className='Layer__BankTransactionsMobileSplitForm__TotalAmountInput'>
+                  <Input
+                    inset
+                    disabled={true}
+                    inputMode='numeric'
+                    value={formatCurrencyFromCents(localSplits.reduce((total, { amount }) => total + amount, 0))}
+                  />
+                </InputGroup>
               </VStack>
             )}
             <Spacer />
