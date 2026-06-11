@@ -2,7 +2,7 @@ import { toDate } from '@utils/i18n/date/input'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack } from '@ui/Stack/Stack'
-import { P, Span, type TextStyleProps } from '@ui/Typography/Text'
+import { Span, type TextStyleProps } from '@ui/Typography/Text'
 
 import './dateTime.scss'
 
@@ -50,9 +50,11 @@ export const DateTime = ({
 
   if (format) {
     return (
-      <P>
-        {formatDate(dateValue, format)}
-      </P>
+      <HStack className='Layer__datetime' gap='md' align='center'>
+        <Span>
+          {formatDate(dateValue, format)}
+        </Span>
+      </HStack>
     )
   }
 
