@@ -41,7 +41,6 @@
     padding: var(--spacing-3xs) var(--spacing-xs);
     border-radius: 8px;
     background-color: var(--color-base-50);
-    font-weight: 540;
 
     .mini-chart {
       transform: rotate(90deg);
@@ -140,7 +139,7 @@
           display: flex;
           flex-direction: column;
 
-          .Layer__text {
+          .Layer__P {
             margin-bottom: var(--spacing-md);
           }
 
@@ -329,7 +328,7 @@
     border-radius: 50%;
   }
 
-  .Layer__text {
+  .Layer__P {
     line-height: 10px;
   }
 
@@ -400,7 +399,7 @@
     box-shadow: 0 0 0 1px var(--color-base-500), 0 0 0 3px var(--color-base-300);
   }
 
-  .Layer__tasks-month-selector__month__str {
+  .Layer__P {
     min-width: 24px;
   }
 }

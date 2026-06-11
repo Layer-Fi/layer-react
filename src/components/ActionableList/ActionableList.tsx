@@ -2,8 +2,7 @@ import classNames from 'classnames'
 import { Check, ChevronRight } from 'lucide-react'
 
 import { VStack } from '@ui/Stack/Stack'
-import { Span } from '@ui/Typography/Text'
-import { Text, TextSize } from '@components/Typography/Text'
+import { P, Span } from '@ui/Typography/Text'
 
 import './actionableList.scss'
 
@@ -46,17 +45,14 @@ export const ActionableList = <T,>({
           )}
         >
           <VStack gap='2xs' align='start' className='Layer__ActionableList__Content'>
-            <Text size={TextSize.sm}>{x.label}</Text>
+            <P size='sm' variant='inherit'>{x.label}</P>
             {
               showDescriptions
               && x.description
               && (
-                <Text
-                  className='Layer__ActionableList__ContentDescription'
-                  size={TextSize.sm}
-                >
+                <P size='sm' variant='subtle'>
                   {x.description}
-                </Text>
+                </P>
               )
             }
           </VStack>

@@ -6,9 +6,9 @@ import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ReceiptsProvider } from '@providers/ReceiptsProvider/ReceiptsProvider'
 import { useReceiptsContext } from '@contexts/ReceiptsContext/ReceiptsContext'
+import { P } from '@ui/Typography/Text'
 import { FileThumb } from '@components/FileThumb/FileThumb'
 import { FileInput } from '@components/Input/FileInput'
-import { Text, TextSize } from '@components/Typography/Text'
 
 const MAX_RECEIPTS_COUNT = 10
 
@@ -101,9 +101,9 @@ const BankTransactionReceipts = forwardRef<
       <div className={`${classNamePrefix}__file-upload`}>
         {receiptUrls && receiptUrls.length > 0 && label
           ? (
-            <Text size={TextSize.sm} className='Layer__file-upload__label'>
+            <P size='sm'>
               {label}
-            </Text>
+            </P>
           )
           : null}
         {!hideUploadButtons && (!receiptUrls || receiptUrls.length === 0)

@@ -41,20 +41,15 @@
   max-width: 500px;
 }
 
-.Layer__caobfb__details-col__name__institution-name {
+.Layer__caobfb__details-col__name > .Layer__P {
   overflow: hidden;
   max-width: 50%;
-  color: var(--color-base-500);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.Layer__caobfb__details-col__name__account-name {
-  overflow: hidden;
-  max-width: 50%;
+.Layer__caobfb__details-col__name > .Layer__P:last-child {
   color: var(--color-base-1000);
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .Layer__caobfb__details-col__inputs {

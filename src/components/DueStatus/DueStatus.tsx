@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { tPlural } from '@utils/i18n/plural'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
+import { P } from '@ui/Typography/Text'
 
 import './dueStatus.scss'
 
@@ -138,18 +138,14 @@ export const DueStatus = ({ dueDate, paidAt, size = 'md' }: DueStatusProps) => {
   return (
     <div {...dataProps} className={`Layer__due-status Layer__due-status--${size}`}>
       {date.title && (
-        <Text
-          className='Layer__due-status__title'
-          weight={TextWeight.bold}
-          size={size === 'sm' ? TextSize.sm : TextSize.md}
-        >
+        <P weight='bold' size={size}>
           {date.title}
-        </Text>
+        </P>
       )}
       {date.diffText && (
-        <Text className='Layer__due-status__subtitle' size={TextSize.sm}>
+        <P size='sm'>
           {date.diffText}
-        </Text>
+        </P>
       )}
     </div>
   )

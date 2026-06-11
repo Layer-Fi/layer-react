@@ -311,13 +311,6 @@
   }
 }
 
-.Layer__unsaved-info {
-  display: flex;
-  gap: var(--spacing-4xs);
-  align-items: center;
-  color: var(--color-danger);
-}
-
 .Layer__btn.Layer__btn--with-tooltip {
   padding: 0;
 

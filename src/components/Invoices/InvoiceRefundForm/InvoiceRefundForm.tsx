@@ -12,7 +12,6 @@ import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { useInvoiceRefundForm } from '@components/Invoices/InvoiceRefundForm/useInvoiceRefundForm'
 import { PaymentMethodComboBox } from '@components/PaymentMethod/PaymentMethodComboBox'
-import { TextSize } from '@components/Typography/Text'
 
 import './invoiceRefundForm.scss'
 
@@ -52,7 +51,7 @@ export const InvoiceRefundForm = forwardRef(({ onSuccess, invoice }: InvoiceRefu
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize={TextSize.md}
+                  titleSize='md'
                   inline
                 />
               </HStack>

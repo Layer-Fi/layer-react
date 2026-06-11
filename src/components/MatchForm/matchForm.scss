@@ -62,20 +62,9 @@
     padding: var(--spacing-xs) var(--spacing-sm);
     white-space: nowrap;
     text-overflow: ellipsis;
-
-    .Layer__tooltip-trigger {
-      display: flex;
-    }
-
-    .Layer__MatchForm__Table__desc-tooltip {
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-      max-width: 100%;
-    }
   }
 
-  .Layer__text--error {
+  .Layer__P[data-status='error'] {
     padding: var(--spacing-2xs) 0;
     padding-bottom: var(--spacing-md);
     margin: 0;
@@ -225,7 +214,7 @@
     gap: var(--spacing-sm);
     justify-content: space-between;
 
-    & > span:first-child {
+    & > .Layer__UI__tooltip-trigger:first-child {
       width: calc(100% - 220px);
     }
 

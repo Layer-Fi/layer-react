@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react'
 import { ChevronRight } from 'lucide-react'
 
+import { P } from '@ui/Typography/Text'
 import { IconButton } from '@components/Button/IconButton'
-import { Text } from '@components/Typography/Text'
 
 import './actionableRow.scss'
 
@@ -29,7 +29,7 @@ const renderIcon = (icon?: ReactNode, iconBox?: ReactNode) => {
 
 const renderTitle = (title?: string | ReactNode) => {
   if (title && typeof title === 'string') {
-    return <Text className='Layer__actionable_row__title'>{title}</Text>
+    return <P>{title}</P>
   }
 
   if (title) {
@@ -41,9 +41,7 @@ const renderTitle = (title?: string | ReactNode) => {
 
 const renderDescription = (description?: string | ReactNode) => {
   if (description && typeof description === 'string') {
-    return (
-      <Text className='Layer__actionable_row__description'>{description}</Text>
-    )
+    return <P size='sm' variant='subtle'>{description}</P>
   }
 
   if (description) {

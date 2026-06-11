@@ -6,6 +6,7 @@ import { translationKey } from '@utils/i18n/translationKey'
 import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
 import QuickbooksIcon from '@icons/QuickbooksIcon'
 import { HStack } from '@ui/Stack/Stack'
+import { P } from '@ui/Typography/Text'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
 import { BadgeSize } from '@components/Badge/Badge'
 import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
@@ -14,7 +15,6 @@ import { IntegrationsQuickbooksItemThumbFooter } from '@components/Integrations/
 import { IntegrationsQuickbooksUnlinkConfirmationModal } from '@components/Integrations/IntegrationsQuickbooksItemThumb/IntegrationsQuickbooksUnlinkConfirmationModal'
 import { getQuickbooksConnectionSyncUiState, QuickbooksConnectionSyncUiState } from '@components/Integrations/IntegrationsQuickbooksItemThumb/utils'
 import { LinkedAccountOptions } from '@components/LinkedAccountOptions/LinkedAccountOptions'
-import { Text, TextSize } from '@components/Typography/Text'
 
 const getBadgeConfig = (
   quickbooksUiState: QuickbooksConnectionSyncUiState,
@@ -86,7 +86,7 @@ export const IntegrationsQuickbooksItemThumb = () => {
       <Card className='Layer__linked-account-thumb Layer__integrations-quickbooks-item-thumb'>
         <div className='topbar'>
           <HStack gap='xs'>
-            <Text size={TextSize.md}>QuickBooks</Text>
+            <P variant='inherit'>QuickBooks</P>
             {quickbooksUiState === QuickbooksConnectionSyncUiState.Syncing
               ? <BadgeLoader variant={BadgeVariant.INFO} />
               : (

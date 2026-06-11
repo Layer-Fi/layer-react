@@ -19,7 +19,6 @@ import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { useInvoicePaymentForm } from '@components/Invoices/InvoicePaymentForm/useInvoicePaymentForm'
 import { PaymentMethodComboBox } from '@components/PaymentMethod/PaymentMethodComboBox'
-import { TextSize } from '@components/Typography/Text'
 
 import './invoicePaymentForm.scss'
 
@@ -69,7 +68,7 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize={TextSize.md}
+                  titleSize='md'
                   inline
                 />
               </HStack>

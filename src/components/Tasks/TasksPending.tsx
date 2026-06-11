@@ -7,10 +7,10 @@ import { DateFormat } from '@utils/i18n/date/patterns'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { P } from '@ui/Typography/Text'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import { BookkeepingStatusDescription } from '@components/BookkeepingStatus/BookkeepingStatusDescription'
 import { Heading, HeadingSize } from '@components/Typography/Heading'
-import { Text, TextSize } from '@components/Typography/Text'
 
 const TASKS_CHARTS_COLORS = {
   done: '#3B9C63',
@@ -52,7 +52,7 @@ export const TasksPending = () => {
         {activePeriod?.tasks && activePeriod.tasks.length > 0
           ? (
             <div className='Layer__tasks-pending-bar'>
-              <Text size={TextSize.sm}>
+              <P size='sm'>
                 <Trans
                   i18nKey='bookkeeping:label.completed_over_total_done'
                   count={totalTaskCount}
@@ -62,7 +62,7 @@ export const TasksPending = () => {
                     completed: <span className={taskStatusClassName} />,
                   }}
                 />
-              </Text>
+              </P>
               <PieChart width={24} height={24} className='mini-chart'>
                 <Pie
                   data={chartData}

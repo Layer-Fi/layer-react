@@ -34,8 +34,7 @@
   }
 }
 
-.Layer__input-label {
-  padding: var(--spacing-2xs);
+.Layer__input-group > .Layer__Label {
   color: var(--label-color);
 }
 
