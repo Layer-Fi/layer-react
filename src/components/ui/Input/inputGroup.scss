@@ -31,6 +31,22 @@
     grid-template-columns: minmax(0, 1fr) auto auto;
   }
 
+  &[data-leading-text] {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  &__LeadingText {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+
+    padding-inline-end: var(--spacing-xs);
+    border-inline-end: 1px solid var(--border-color);
+
+    font-size: var(--text-sm);
+    color: var(--color-base-700);
+  }
+
   &[data-disabled] {
     cursor: not-allowed;
   }
