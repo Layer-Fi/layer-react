@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { type CustomAccount, CustomAccountSubtype } from '@internal-types/customAccounts'
 import { notEmpty } from '@utils/form'
 import { translationKey } from '@utils/i18n/translationKey'
+import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { SubmitButton } from '@components/Button/SubmitButton'
 import { useCustomAccountForm } from '@components/CustomAccountForm/useCustomAccountForm'
 import { Input } from '@components/Input/Input'
 import { InputGroup } from '@components/Input/InputGroup'
-import { Select } from '@components/Input/Select'
 import { ErrorText } from '@components/Typography/ErrorText'
 
 import './customAccountForm.scss'
@@ -108,15 +108,16 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         >
           {field => (
             <InputGroup name='account_type' label={t('generalLedger:label.account_type', 'Account type')} className='Layer__custom-account-form__field'>
-              <Select
+              <ComboBox
                 className='Layer__custom-account-form__input'
                 name='account_type'
                 placeholder={t('generalLedger:action.select_account_type', 'Select account type...')}
                 options={accountTypeOptions}
-                value={accountTypeOptions.find(opt => opt.value === field.state.value) || null}
-                onChange={option => field.handleChange(option?.value)}
-                isInvalid={field.state.meta.errors.length > 0}
-                errorMessage={field.state.meta.errors.join(', ')}
+                selectedValue={accountTypeOptions.find(opt => opt.value === field.state.value) ?? null}
+                onSelectedValueChange={option => field.handleChange(option?.value)}
+                isClearable={false}
+                isError={field.state.meta.errors.length > 0}
+                slots={{ ErrorMessage: field.state.meta.errors.join(', ') }}
               />
             </InputGroup>
           )}

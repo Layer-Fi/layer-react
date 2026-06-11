@@ -1,11 +1,11 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type BaseSelectOption } from '@internal-types/general'
 import { getUsStateOptions, type USState } from '@internal-types/location'
-import { Select } from '@components/Input/Select'
+import { ComboBox } from '@ui/ComboBox/ComboBox'
 
-export const findSelectOption = (options: BaseSelectOption[], selected?: string) => {
+export const findSelectOption = <T extends BaseSelectOption>(options: ReadonlyArray<T>, selected?: string) => {
   if (!selected) {
     return undefined
   }
@@ -23,16 +23,23 @@ export type USStateSelecttProps = {
 
 export const USStateSelect = ({ value, onChange }: USStateSelecttProps) => {
   const { t } = useTranslation()
-  const usStateOptions: BaseSelectOption[] = useMemo(
+  const usStateOptions: USState[] = useMemo(
     () => getUsStateOptions(t),
     [t],
   )
 
+  const handleChange = useCallback((option: USState | null) => {
+    if (option) {
+      onChange(option)
+    }
+  }, [onChange])
+
   return (
-    <Select
+    <ComboBox
       options={usStateOptions}
-      value={findSelectOption(usStateOptions, value)}
-      onChange={option => onChange(option as USState)}
+      selectedValue={findSelectOption(usStateOptions, value) ?? null}
+      onSelectedValueChange={handleChange}
+      isClearable={false}
       placeholder={t('usStates:label.us_state', 'US state')}
     />
   )
