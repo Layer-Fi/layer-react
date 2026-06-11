@@ -14,12 +14,15 @@
     "debit_line_items": "Aucune ligne de débit n’a encore été ajoutée. Cliquez sur « Ajouter la ligne suivante » pour commencer.",
     "entries": "Aucune écriture trouvée",
     "entry_journal_message": "Il n’y a aucune écriture comptable dans ce compte.",
-    "ledger_activity": "Aucune activité au grand livre"
+    "ledger_activity": "Aucune activité au grand livre",
+    "line_items": "No line items",
+    "line_items_description": "This entry has no line items."
   },
   "error": {
     "check_fields": "Veuillez vérifier tous les champs.",
-    "operation_retry": "L’opération a échoué. Réessayez.",
-    "submit_failed_check_connection": "L’envoi a échoué. Veuillez vérifier votre connexion et réessayer."
+    "couldnt_load_ledger_entries": "We couldn’t load ledger entries",
+    "load_ledger_entries": "An error occurred while loading this account’s ledger entries. Please check your connection and try again.",
+    "operation_retry": "L’opération a échoué. Réessayez."
   },
   "label": {
     "account_name": "Nom du compte",
@@ -28,11 +31,11 @@
     "account_type": "Type de compte",
     "balance": "Solde actuel",
     "bill_number": "Numéro de facture fournisseur",
-    "creation_date": "Date de création",
     "enter_account_name": "Saisissez le nom du compte...",
     "enter_institution_name": "Saisissez le nom de l’institution...",
     "entries": "Écritures",
     "entry_date": "Date d’écriture",
+    "entry_details": "Entry details",
     "entry_journal": "Il n’y a aucune écriture dans le journal.",
     "entry_reversed": "Cette écriture a déjà été contrepassée",
     "entry_type": "Type d’écriture",
@@ -45,7 +48,7 @@
     "journal_entry_number": "Écriture de journal #{{entryNumber}}",
     "journal_entry_posted": "Écriture de journal #{{journalEntryNumber}} comptabilisée",
     "journal_id": "ID du journal #",
-    "journal_id_display": "ID du journal #{{journalId}}",
+    "ledger_entries": "Ledger entries",
     "ledger_view": "Vue du grand livre",
     "line_items": "Lignes",
     "payday": "Jour de paie",
@@ -60,10 +63,8 @@
   "validation": {
     "account_name_required": "Le nom du compte est obligatoire",
     "account_required": "Le compte est un champ obligatoire.",
-    "account_required_short": "Le compte est obligatoire",
     "account_type_required": "Le type de compte est obligatoire",
     "amount_greater_must": "Le montant doit être supérieur à zéro.",
-    "amount_not_empty_or_zero": "Le montant ne peut pas être vide ou égal à zéro",
     "create_required": "Le champ Créé par est obligatoire.",
     "debit_credit_must": "Les montants au débit et au crédit doivent être égaux",
     "entry_date_required": "La date d’écriture est un champ obligatoire.",
