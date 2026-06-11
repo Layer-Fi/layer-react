@@ -5,22 +5,16 @@
 import { type CSSProperties, forwardRef, type ReactNode } from 'react'
 import classNames from 'classnames'
 
-export enum HeaderLayout {
-  DEFAULT = 'default',
-}
-
 export interface HeaderProps {
   className?: string
   style?: CSSProperties
   children: ReactNode
-  layout?: HeaderLayout
 }
 
 const Header = forwardRef<HTMLElement, HeaderProps>(
-  ({ className, children, style, layout }, ref) => {
+  ({ className, children, style }, ref) => {
     const baseClassName = classNames(
       'Layer__component-header',
-      layout && `Layer__component-header--${layout}`,
       className,
     )
 
