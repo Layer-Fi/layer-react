@@ -92,7 +92,7 @@ export const MobileList = <TData extends { id: string }>({
   }
 
   const renderRow = (item: TData) => (
-    <MobileListItem key={item.id} item={item} onClickItem={onClickItem} slots={{ Footer: renderFooter?.(item) }}>
+    <MobileListItem key={item.id} item={item} onClickItem={onClickItem} renderFooter={renderFooter}>
       {renderItem(item)}
     </MobileListItem>
   )

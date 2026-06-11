@@ -32,7 +32,7 @@ export const MobileListSection = <TData extends { id: string }>({
         key={item.id}
         item={item}
         onClickItem={onClickItem}
-        slots={{ Footer: renderFooter?.(item) }}
+        renderFooter={renderFooter}
       >
         {renderItem(item)}
       </MobileListItem>

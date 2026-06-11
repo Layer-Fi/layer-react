@@ -9,16 +9,14 @@ import './mobileListItem.scss'
 type MobileListItemProps<TData> = PropsWithChildren<{
   item: TData
   onClickItem?: (item: TData) => void
-  slots?: {
-    Footer?: ReactNode
-  }
+  renderFooter?: (item: TData) => ReactNode
 }>
 
 export const MobileListItem = <TData extends { id: string }>({
   item,
   onClickItem,
   children,
-  slots,
+  renderFooter,
 }: MobileListItemProps<TData>) => {
   const onAction = useCallback(() => {
     onClickItem?.(item)
@@ -39,9 +37,9 @@ export const MobileListItem = <TData extends { id: string }>({
           <div className='Layer__MobileListItem__Content'>
             {children}
           </div>
-          {slots?.Footer && (
+          {renderFooter && (
             <div className='Layer__MobileListItem__Footer'>
-              {slots.Footer}
+              {renderFooter(item)}
             </div>
           )}
         </>
