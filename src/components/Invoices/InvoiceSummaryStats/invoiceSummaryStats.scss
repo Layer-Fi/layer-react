@@ -3,7 +3,7 @@
   flex-direction: row;
   gap: var(--spacing-lg);
 
-  @media (width <= 720px) {
+  @media (width < 760px) {
     flex-direction: column;
     gap: var(--spacing-md);
   }

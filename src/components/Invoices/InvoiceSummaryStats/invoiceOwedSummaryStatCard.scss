@@ -32,6 +32,12 @@
     line-height: 1;
   }
 
+  &__Count .Layer__skeleton-loader,
+  &__Total .Layer__skeleton-loader {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
   @media (width >= 500px) {
     flex-flow: row wrap;
     row-gap: var(--spacing-2xs);
