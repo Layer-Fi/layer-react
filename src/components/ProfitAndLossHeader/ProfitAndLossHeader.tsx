@@ -26,6 +26,10 @@ export interface ProfitAndLossHeaderProps {
    */
   text?: string
   className?: string
+  /**
+   * @deprecated Has no effect — the heading no longer accepts a class name
+   */
+  headingClassName?: string
   stringOverrides?: ProfitAndLossHeaderStringOverrides
   withDatePicker?: boolean
   withDownloadButton?: boolean
