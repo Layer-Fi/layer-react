@@ -4,8 +4,6 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack } from '@ui/Stack/Stack'
 import { Span, type TextStyleProps } from '@ui/Typography/Text'
 
-import './dateTime.scss'
-
 interface BaseDateTimeProps {
   format?: DateFormat
   dateFormat?: DateFormat
@@ -56,7 +54,7 @@ export const DateTime = ({
   const time = formatDate(dateValue, timeFormat)
 
   return (
-    <HStack className='Layer__datetime' gap='md' align='center'>
+    <HStack gap='md' align='center'>
       {!onlyTime && (
         <Span {...slotProps.Date}>
           {date}
