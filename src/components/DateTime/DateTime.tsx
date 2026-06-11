@@ -49,13 +49,7 @@ export const DateTime = ({
   if (!dateValue) return null
 
   if (format) {
-    return (
-      <HStack className='Layer__datetime' gap='md' align='center'>
-        <Span>
-          {formatDate(dateValue, format)}
-        </Span>
-      </HStack>
-    )
+    return <Span>{formatDate(dateValue, format)}</Span>
   }
 
   const date = formatDate(dateValue, dateFormat)
