@@ -1,5 +1,4 @@
 import { forwardRef } from 'react'
-import classNames from 'classnames'
 import {
   Heading as ReactAriaHeading,
   type HeadingProps as ReactAriaHeadingProps,
@@ -25,15 +24,15 @@ type HeadingDataProps = {
 const HEADING_CLASS_NAME = 'Layer__UI__Heading'
 const Heading = forwardRef<
   HTMLHeadingElement,
-  ReactAriaHeadingProps & HeadingDataProps
->(({ align, pie, pbe, size, variant, weight, ellipsis, className, ...restProps }, ref) => {
+  Omit<ReactAriaHeadingProps, 'className'> & HeadingDataProps
+>(({ align, pie, pbe, size, variant, weight, ellipsis, ...restProps }, ref) => {
   const dataProperties = toDataProperties({ pbe, pie, size, align, variant, weight, ellipsis })
 
   return (
     <ReactAriaHeading
       {...restProps}
       {...dataProperties}
-      className={classNames(HEADING_CLASS_NAME, className)}
+      className={HEADING_CLASS_NAME}
       ref={ref}
     />
   )

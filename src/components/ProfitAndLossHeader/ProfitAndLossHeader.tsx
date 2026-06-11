@@ -26,10 +26,6 @@ export interface ProfitAndLossHeaderProps {
    */
   text?: string
   className?: string
-  /**
-   * @deprecated Passing a class name to the heading is discouraged
-   */
-  headingClassName?: string
   stringOverrides?: ProfitAndLossHeaderStringOverrides
   withDatePicker?: boolean
   withDownloadButton?: boolean
@@ -41,7 +37,6 @@ export interface ProfitAndLossHeaderProps {
 export const ProfitAndLossHeader = ({
   text,
   className,
-  headingClassName,
   withDatePicker,
   withDownloadButton,
   withStatus = true,
@@ -63,7 +58,7 @@ export const ProfitAndLossHeader = ({
   return (
     <Header className={className}>
       <span className='Layer__component-header__title-wrapper Layer__profit-and-loss__header'>
-        <Heading level={2} size='sm' className={headingClassName} align='left'>
+        <Heading level={2} size='sm' align='left'>
           {stringOverrides?.title || text || t('common:label.profit_loss', 'Profit & Loss')}
         </Heading>
         {isSyncing && <SyncingBadge />}
