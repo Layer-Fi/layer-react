@@ -9,9 +9,9 @@ import { DateFormat } from '@utils/i18n/date/patterns'
 import type { CustomAccountParseCsvResponse } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
 import { useCreateCustomAccountTransactions } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/useCreateCustomAccountTransactions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { Button } from '@ui/Button/Button'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
-import { Button, ButtonVariant } from '@components/Button/Button'
 import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
 import { type PreviewCsv } from '@components/CsvUpload/types'
 import { ValidateCsvTable } from '@components/CsvUpload/ValidateCsvTable'
@@ -111,7 +111,7 @@ export function UploadTransactionsValidateCsvStep(
       </VStack>
       <Separator />
       <HStack gap='xs'>
-        <Button onClick={() => { void previous() }} variant={ButtonVariant.secondary}>{t('common:action.back', 'Back')}</Button>
+        <Button onPress={() => { void previous() }} variant='outlined'>{t('common:action.back', 'Back')}</Button>
         <Spacer />
         {isValidCsv
           ? (
@@ -121,18 +121,14 @@ export function UploadTransactionsValidateCsvStep(
               onClick={onClickUploadTransactions}
               action={SubmitAction.UPLOAD}
               withRetry
-              iconAsPrimary={false}
             >
               {uploadTransactionsError ? t('common:action.retry_label', 'Retry') : t('upload:action.upload_transactions', 'Upload transactions')}
             </SubmitButton>
           )
           : (
-            <Button
-              onClick={onClickReupload}
-              rightIcon={<RefreshCcw size={12} />}
-              variant={ButtonVariant.primary}
-            >
+            <Button onPress={onClickReupload}>
               {t('upload:action.reupload', 'Reupload')}
+              <RefreshCcw size={12} />
             </Button>
           )}
       </HStack>

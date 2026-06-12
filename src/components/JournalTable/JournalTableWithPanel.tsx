@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { type View } from '@internal-types/general'
 import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
+import { Button } from '@ui/Button/Button'
 import { Heading } from '@ui/Typography/Heading'
-import { Button } from '@components/Button/Button'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
@@ -41,6 +41,7 @@ export const JournalTableWithPanel = ({
 }) => {
   const { t } = useTranslation()
   const { toCreateEntry } = useJournalNavigation()
+  const addEntryLabel = stringOverrides?.addEntryButton || t('generalLedger:action.add_entry', 'Add Entry')
 
   const { selectedEntryId } = useContext(JournalContext)
 
@@ -77,11 +78,11 @@ export const JournalTableWithPanel = ({
               iconOnly={['mobile', 'tablet'].includes(view)}
             />
             <Button
-              onClick={() => toCreateEntry()}
-              iconOnly={view === 'mobile'}
-              leftIcon={view === 'mobile' && <CirclePlus size={14} />}
+              onPress={() => toCreateEntry()}
+              icon={view === 'mobile'}
+              aria-label={view === 'mobile' ? addEntryLabel : undefined}
             >
-              {stringOverrides?.addEntryButton || t('generalLedger:action.add_entry', 'Add Entry')}
+              {view === 'mobile' ? <CirclePlus size={14} /> : addEntryLabel}
             </Button>
           </HeaderCol>
         </HeaderRow>

@@ -26,7 +26,6 @@ import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@
 import { BankTransactionsTableContent } from '@components/BankTransactions/constants'
 import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
 import { BulkActionsModule } from '@components/BulkActionsModule/BulkActionsModule'
-import { ButtonVariant } from '@components/Button/Button'
 import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
 import { Header } from '@components/Container/Header'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
@@ -113,7 +112,6 @@ const DownloadButton = ({
   return (
     <>
       <DownloadButtonComponent
-        variant={ButtonVariant.secondary}
         iconOnly={iconOnly}
         onClick={handleDownloadTransactions}
         isDownloading={isMutating}

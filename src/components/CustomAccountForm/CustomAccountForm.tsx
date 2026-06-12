@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { type CustomAccount, CustomAccountSubtype } from '@internal-types/customAccounts'
 import { notEmpty } from '@utils/form'
 import { translationKey } from '@utils/i18n/translationKey'
+import { Button } from '@ui/Button/Button'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
-import { Button, ButtonVariant } from '@components/Button/Button'
 import { SubmitButton } from '@components/Button/SubmitButton'
 import { useCustomAccountForm } from '@components/CustomAccountForm/useCustomAccountForm'
 import { Input } from '@components/Input/Input'
@@ -136,7 +136,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
           )}
           <Spacer />
           {onCancel && (
-            <Button type='button' variant={ButtonVariant.secondary} onClick={onCancel}>
+            <Button type='button' variant='outlined' onPress={onCancel}>
               {t('common:action.cancel_label', 'Cancel')}
             </Button>
           )}

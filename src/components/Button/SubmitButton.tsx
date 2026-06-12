@@ -1,25 +1,20 @@
-import { type ButtonHTMLAttributes } from 'react'
-import classNames from 'classnames'
-import { CircleAlert, CircleCheckBig, Loader, Save, UploadCloud } from 'lucide-react'
+import { type ReactNode } from 'react'
+import { CircleAlert, CircleCheckBig, RefreshCcw, Save, UploadCloud } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { Button, type ButtonProps, ButtonVariant } from '@components/Button/Button'
-import { RetryButton } from '@components/Button/RetryButton'
-import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
+import { Button, type ButtonProps } from '@ui/Button/Button'
 
-export interface SubmitButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface SubmitButtonProps {
+  children?: ReactNode
+  onClick?: ButtonProps['onClick']
+  type?: ButtonProps['type']
   processing?: boolean
   disabled?: boolean
   error?: boolean | string
-  active?: boolean
-  iconOnly?: boolean
-  variant?: ButtonProps['variant']
   action?: SubmitAction
   noIcon?: boolean
   tooltip?: ButtonProps['tooltip']
   withRetry?: boolean
-  iconAsPrimary?: boolean
 }
 
 export enum SubmitAction {
@@ -28,34 +23,21 @@ export enum SubmitAction {
   UPLOAD = 'upload',
 }
 
-const buildRightIcon = ({
-  processing,
+const buildIcon = ({
   error,
   action,
   noIcon,
 }: {
-  processing?: boolean
   error?: boolean | string
   action: SubmitAction
   noIcon?: boolean
 }) => {
   if (noIcon) {
-    return
-  }
-
-  if (processing) {
-    return <Loader size={14} className='Layer__anim--rotating' />
+    return null
   }
 
   if (error) {
-    return (
-      <DeprecatedTooltip offset={12}>
-        <DeprecatedTooltipTrigger>
-          <CircleAlert size={14} />
-        </DeprecatedTooltipTrigger>
-        <DeprecatedTooltipContent className='Layer__tooltip'>{error}</DeprecatedTooltipContent>
-      </DeprecatedTooltip>
-    )
+    return <CircleAlert size={14} />
   }
 
   if (action === SubmitAction.UPLOAD) {
@@ -70,48 +52,45 @@ const buildRightIcon = ({
 }
 
 export const SubmitButton = ({
-  active,
-  className,
   processing,
   disabled,
   error,
   children,
   action = SubmitAction.SAVE,
   noIcon,
-  variant = ButtonVariant.primary,
+  tooltip,
   withRetry,
-  iconAsPrimary = true,
-  ...props
+  onClick,
+  type,
 }: SubmitButtonProps) => {
   const { t } = useTranslation()
-  const baseClassName = classNames(
-    active ? 'Layer__btn--active' : '',
-    className,
-  )
 
   if (withRetry && error) {
     return (
-      <RetryButton
-        {...props}
-        className={baseClassName}
-        disabled={processing || disabled}
-        error={typeof error === 'string' ? error : t('common:error.something_went_wrong', 'Something went wrong')}
+      <Button
+        variant='outlined'
+        onClick={onClick}
+        type={type}
+        isDisabled={processing || disabled}
+        isPending={processing}
+        tooltip={typeof error === 'string' ? error : t('common:error.something_went_wrong', 'Something went wrong')}
       >
         {children}
-      </RetryButton>
+        <RefreshCcw size={12} />
+      </Button>
     )
   }
 
   return (
     <Button
-      {...props}
-      className={baseClassName}
-      variant={variant}
-      disabled={processing || disabled}
-      rightIcon={buildRightIcon({ processing, error, action, noIcon })}
-      iconAsPrimary={iconAsPrimary}
+      onClick={onClick}
+      type={type}
+      isDisabled={processing || disabled}
+      isPending={processing}
+      tooltip={typeof error === 'string' ? error : tooltip}
     >
       {children}
+      {buildIcon({ error, action, noIcon })}
     </Button>
   )
 }

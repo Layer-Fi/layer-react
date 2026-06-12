@@ -1,5 +1,5 @@
 .Layer__coa__actions {
-  .Layer__btn {
+  .Layer__UI__Button {
     opacity: 0;
     visibility: hidden;
     transition: all 300ms ease-out;
@@ -7,7 +7,7 @@
   }
 }
 
-.Layer__UI__Table-Row:hover .Layer__coa__actions .Layer__btn {
+.Layer__UI__Table-Row:hover .Layer__coa__actions .Layer__UI__Button {
   opacity: 1;
   visibility: visible;
   transform: scale(1);

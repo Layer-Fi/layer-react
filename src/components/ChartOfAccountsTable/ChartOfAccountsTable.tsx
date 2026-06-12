@@ -14,11 +14,10 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
-import { Button as UIButton } from '@ui/Button/Button'
+import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
-import { Button, ButtonVariant } from '@components/Button/Button'
 import { type ChartOfAccountsTableStringOverrides } from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
 import { filterAccounts, getInitialExpandedState, getMatchedTextIndices, getRowId } from '@components/ChartOfAccountsTable/utils'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
@@ -200,9 +199,9 @@ export const ChartOfAccountsTable = ({
         id: ChartOfAccountsColumn.Name,
         header: stringOverrides?.nameColumnHeader || t('generalLedger:label.account_name_title_case', 'Account Name'),
         cell: (row: Row<AugmentedLedgerAccountBalance>) => (
-          <UIButton variant='text' ellipsis onClick={e => onClickView(row, e)}>
+          <Button variant='text' ellipsis onClick={e => onClickView(row, e)}>
             {renderHighlightedValue(row, row.original.name)}
-          </UIButton>
+          </Button>
         ),
         isRowHeader: true,
       },
@@ -240,32 +239,32 @@ export const ChartOfAccountsTable = ({
           return (
             <HStack className='Layer__coa__actions' gap='xs'>
               <Button
-                variant={ButtonVariant.secondary}
-                rightIcon={<List size={14} />}
-                iconOnly
+                variant='outlined'
+                icon
+                aria-label={t('common:action.view_label', 'View')}
                 onClick={e => onClickView(row, e)}
               >
-                {t('common:action.view_label', 'View')}
+                <List size={14} />
               </Button>
               <Button
-                variant={ButtonVariant.secondary}
-                rightIcon={<Pen size={14} />}
-                iconOnly
-                disabled={isNonEditable}
+                variant='outlined'
+                icon
+                aria-label={t('common:action.edit_label', 'Edit')}
+                isDisabled={isNonEditable}
                 onClick={e => onClickEdit(account, e)}
                 tooltip={isNonEditable ? t('chartOfAccounts:validation.account_not_modifiable', 'This account cannot be modified') : undefined}
               >
-                {t('common:action.edit_label', 'Edit')}
+                <Pen size={14} />
               </Button>
               <Button
-                variant={ButtonVariant.secondary}
-                rightIcon={<Trash2 size={14} />}
-                iconOnly
+                variant='outlined'
+                icon
+                aria-label={t('common:action.delete_label', 'Delete')}
                 onClick={e => onClickDelete(account, e)}
-                disabled={isDeleteDisabled}
+                isDisabled={isDeleteDisabled}
                 tooltip={getDeleteButtonTooltip(account)}
               >
-                {t('common:action.delete_label', 'Delete')}
+                <Trash2 size={14} />
               </Button>
             </HStack>
           )

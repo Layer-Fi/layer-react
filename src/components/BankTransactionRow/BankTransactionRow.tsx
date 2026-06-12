@@ -107,9 +107,7 @@ export const BankTransactionRow = ({
           void save()
         }
       }}
-      className={isError ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
       processing={isProcessing}
-      active={open}
       disabled={selectedOption === null || isBulkSelectionActive}
       action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
       withRetry
@@ -126,7 +124,6 @@ export const BankTransactionRow = ({
     isBulkSelectionActive,
     isError,
     isProcessing,
-    open,
     save,
     selectedOption,
     stringOverrides?.approveButtonText,

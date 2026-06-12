@@ -6,7 +6,13 @@ import {
 } from 'react'
 import classNames from 'classnames'
 
-import { type ButtonJustify, ButtonVariant } from '@components/Button/Button'
+export enum ButtonVariant {
+  primary = 'primary',
+  secondary = 'secondary',
+  tertiary = 'tertiary',
+}
+
+export type ButtonJustify = 'center' | 'space-between' | 'start'
 
 export interface LinkProps extends LinkHTMLAttributes<HTMLAnchorElement> {
   variant?: ButtonVariant

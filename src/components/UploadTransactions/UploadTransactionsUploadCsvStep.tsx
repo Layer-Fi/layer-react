@@ -180,7 +180,6 @@ export function UploadTransactionsUploadCsvStep(
                 <DownloadCsvTemplateButton
                   fileName='upload_transactions.csv'
                   csvProps={{ headers: allHeaders, rows: templateExampleTransactions }}
-                  className='Layer__upload-transactions__template-section__button-row-item'
                 >
                   {t('upload:action.download_template', 'Download template')}
                 </DownloadCsvTemplateButton>

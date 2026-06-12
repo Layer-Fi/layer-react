@@ -2,7 +2,7 @@ import { type PropsWithChildren } from 'react'
 import { FileDownIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { Button, ButtonVariant } from '@components/Button/Button'
+import { Button } from '@ui/Button/Button'
 
 interface DownloadCsvTemplateButtonProps<T> {
   csvProps: {
@@ -10,10 +10,9 @@ interface DownloadCsvTemplateButtonProps<T> {
     rows?: T[]
   }
   fileName?: string
-  className?: string
 }
 
-export const DownloadCsvTemplateButton = <T extends { [K in keyof T]: string | number | null | undefined }>({ children, className, csvProps, fileName = 'template.csv' }: PropsWithChildren<DownloadCsvTemplateButtonProps<T>>) => {
+export const DownloadCsvTemplateButton = <T extends { [K in keyof T]: string | number | null | undefined }>({ children, csvProps, fileName = 'template.csv' }: PropsWithChildren<DownloadCsvTemplateButtonProps<T>>) => {
   const { t } = useTranslation()
   const { headers, rows = [] } = csvProps
   const handleDownload = () => {
@@ -40,13 +39,12 @@ export const DownloadCsvTemplateButton = <T extends { [K in keyof T]: string | n
 
   return (
     <Button
-      className={className}
-      variant={ButtonVariant.secondary}
-      rightIcon={<FileDownIcon size={12} />}
-      onClick={handleDownload}
+      variant='outlined'
+      onPress={handleDownload}
       tooltip={t('upload:label.need_help_download_example_csv', 'Need help? Download an example CSV')}
     >
       {children}
+      <FileDownIcon size={12} />
     </Button>
   )
 }

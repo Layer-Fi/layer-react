@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { getIncompleteTasks, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { Button } from '@components/Button/Button'
+import { Button } from '@ui/Button/Button'
 import { TextButton } from '@components/Button/TextButton'
 import { MobilePanel } from '@components/MobilePanel/MobilePanel'
 import { Pagination } from '@components/Pagination/Pagination'
@@ -53,7 +53,7 @@ export const TasksListMobile = ({
       {unresolvedTasks.length !== 0 && tasksCount > unresolvedTasks.length
         ? (
           <div style={{ textAlign: 'center', padding: '12px 24px' }}>
-            <Button onClick={() => setShowMobilePanel(true)} fullWidth>
+            <Button onPress={() => setShowMobilePanel(true)} fullWidth>
               {t('bookkeeping:action.show_all_tasks_count', 'Show all tasks ({{tasksCount}})', { tasksCount: formatNumber(tasksCount) })}
             </Button>
           </div>

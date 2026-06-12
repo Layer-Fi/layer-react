@@ -10,11 +10,11 @@ import { useBankTransactionsFilters } from '@contexts/BankTransactionsFiltersCon
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import PlaidIcon from '@icons/PlaidIcon'
+import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
 import { ActionableRow } from '@components/ActionableRow/ActionableRow'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
 import { BadgeSize } from '@components/Badge/Badge'
-import { Button } from '@components/Button/Button'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { LinkAccountDemoTooltip } from '@components/LinkedAccounts/LinkAccountDemoTooltip'
 
@@ -60,11 +60,11 @@ export const ConnectAccount = ({
           button={(
             <LinkAccountDemoTooltip active={isDemoBusiness}>
               <Button
-                onClick={() => { void addConnection('PLAID') }}
-                disabled={isDemoBusiness}
-                rightIcon={<Link size={12} />}
+                onPress={() => { void addConnection('PLAID') }}
+                isDisabled={isDemoBusiness}
               >
                 {t('common:action.connect_label', 'Connect')}
+                <Link size={12} />
               </Button>
             </LinkAccountDemoTooltip>
           )}

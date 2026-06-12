@@ -131,14 +131,6 @@
   border-color: transparent;
 }
 
-.Layer__download-retry-btn {
-  width: 122px;
-}
-
-.Layer__download-retry-btn.Layer__btn--icon-only {
-  width: 36px;
-}
-
 .Layer__btn--primary {
   background: var(--btn-bg-color-primary);
   color: var(--btn-color-primary);
@@ -148,8 +140,7 @@
     color: var(--btn-color-primary);
   }
 
-  &:hover:not([disabled]),
-  &.Layer__btn--active:not([disabled]) {
+  &:hover:not([disabled]) {
     .Layer__btn-icon {
       background: var(--btn-bg-color-icon-hover);
       color: var(--btn-color-icon-hover);
@@ -176,8 +167,7 @@
     color: var(--btn-color-primary);
   }
 
-  &:hover:not([disabled]),
-  &.Layer__btn--active:not([disabled]) {
+  &:hover:not([disabled]) {
     .Layer__btn-icon {
       background: transparent;
       color: var(--btn-color-primary);
@@ -287,36 +277,5 @@
 
   &:hover {
     color: var(--color-base-1000);
-  }
-}
-
-.Layer__retry-btn {
-  color: var(--color-danger);
-
-  .Layer__btn-icon {
-    color: var(--color-danger);
-    transition: all 300ms ease-in-out;
-  }
-
-  &:hover {
-    .Layer__btn-icon {
-      transform: rotate(-30deg);
-    }
-  }
-
-  &.Layer__btn--processing {
-    .Layer__btn-icon {
-      animation: rotating-ccw 2s linear infinite;
-    }
-  }
-}
-
-.Layer__btn.Layer__btn--with-tooltip {
-  padding: 0;
-
-  .Layer__tooltip-trigger {
-    justify-content: center;
-    height: 100%;
-    padding: 0 var(--spacing-md);
   }
 }

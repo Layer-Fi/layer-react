@@ -210,7 +210,6 @@ export const BankTransactionsListItem = ({
             <SubmitButton
               disabled={isProcessing}
               onClick={() => { void save() }}
-              className={isError ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
               processing={isProcessing}
               action={!displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
               withRetry

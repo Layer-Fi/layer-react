@@ -2,8 +2,7 @@ import { type ChangeEvent, useRef } from 'react'
 import { CloudUpload } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { ButtonVariant } from '@components/Button/Button'
-import { Button } from '@components/Button/Button'
+import { Button } from '@ui/Button/Button'
 import { TextButton } from '@components/Button/TextButton'
 
 export interface FileInputProps {
@@ -66,13 +65,14 @@ export const FileInput = ({
   return (
     <>
       <Button
-        onClick={onClick}
-        variant={ButtonVariant.secondary}
-        rightIcon={icon ?? <CloudUpload size={18} />}
-        disabled={disabled}
-        iconOnly={iconOnly}
+        onPress={onClick}
+        variant='outlined'
+        isDisabled={disabled}
+        icon={iconOnly}
+        aria-label={iconOnly ? buttonText : undefined}
       >
         {!iconOnly && buttonText}
+        {icon ?? <CloudUpload size={18} />}
       </Button>
       <input
         type='file'

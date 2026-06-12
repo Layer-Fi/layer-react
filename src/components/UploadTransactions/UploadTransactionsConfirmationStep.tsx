@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { Button } from '@ui/Button/Button'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
-import { Button, ButtonVariant } from '@components/Button/Button'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { Separator } from '@components/Separator/Separator'
 import { UploadTransactionsStep } from '@components/UploadTransactions/types'
@@ -42,19 +42,17 @@ export function UploadTransactionsConfirmationStep({ onRestartFlow, uploadedTran
       <HStack gap='xs' className='Layer__upload-transactions__confirmation-step__button-row'>
         <Spacer />
         <Button
-          onClick={goRestartFlow}
-          variant={ButtonVariant.secondary}
-          rightIcon={<CloudUpload size={12} />}
-          className='Layer__upload-transactions__confirmation-step__button-row-item'
+          onPress={goRestartFlow}
+          variant='outlined'
         >
           {t('upload:action.upload_another_file', 'Upload another file')}
+          <CloudUpload size={12} />
         </Button>
         <Button
-          onClick={() => { void next() }}
-          rightIcon={<ChevronRight size={18} />}
-          className='Layer__upload-transactions__confirmation-step__button-row-item'
+          onPress={() => { void next() }}
         >
           {t('upload:label.im_done_uploading', 'I’m done uploading transactions')}
+          <ChevronRight size={18} />
         </Button>
       </HStack>
     </VStack>

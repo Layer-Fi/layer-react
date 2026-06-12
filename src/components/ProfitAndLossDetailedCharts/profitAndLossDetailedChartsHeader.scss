@@ -4,13 +4,6 @@
   justify-content: space-between;
   padding: var(--spacing-lg);
   box-shadow: 0 -1px 0 0 var(--color-base-300) inset;
-
-  button.Layer__btn.Layer__btn--icon-only {
-    block-size: 2rem;
-    min-block-size: 2rem;
-    inline-size: 2rem;
-    padding: 0;
-  }
 }
 
 .Layer__ProfitAndLossDetailedChartsHeader--tablet {

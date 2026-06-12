@@ -1,7 +1,6 @@
-import { type ReactNode } from 'react'
+import { type MouseEventHandler, type ReactNode } from 'react'
 import classNames from 'classnames'
 
-import { type ButtonProps } from '@components/Button/Button'
 import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
 import './badge.scss'
@@ -24,7 +23,7 @@ export enum BadgeVariant {
 export interface BadgeProps {
   children?: ReactNode
   icon?: ReactNode
-  onClick?: ButtonProps['onClick']
+  onClick?: MouseEventHandler<HTMLButtonElement>
   tooltip?: ReactNode
   size?: BadgeSize
   variant?: BadgeVariant

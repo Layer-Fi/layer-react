@@ -1,9 +1,9 @@
 import { Coffee } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { Button } from '@ui/Button/Button'
 import { P } from '@ui/Typography/Text'
-import { Button, ButtonVariant } from '@components/Button/Button'
-import { Link } from '@components/Button/Link'
+import { ButtonVariant, Link } from '@components/Button/Link'
 import { IconBox } from '@components/IconBox/IconBox'
 
 import './bookkeepingUpsellBar.scss'
@@ -35,7 +35,7 @@ export const BookkeepingUpsellBar = ({
       </div>
       {onClick
         ? (
-          <Button variant={ButtonVariant.secondary} onClick={onClick}>
+          <Button variant='outlined' onPress={onClick}>
             {t('bookkeeping:action.schedule_a_demo', 'Schedule a demo')}
           </Button>
         )
