@@ -110,6 +110,14 @@
       text-align: $alignment;
     }
   }
+
+  &[data-align='center'] {
+    justify-content: center;
+  }
+
+  &[data-align='end'] {
+    justify-content: flex-end;
+  }
 }
 
 .Layer__UI__Table-ScrollContainer {

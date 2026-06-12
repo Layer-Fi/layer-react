@@ -79,13 +79,13 @@ export const BankTransactionsTable = ({
   return (
     <table
       width='100%'
-      className='Layer__table Layer__bank-transactions__table with-cell-separators'
+      className='Layer__bank-transactions__table'
     >
       <thead>
         <tr>
           {isCategorizationEnabled && (
-            <th className='Layer__table-header Layer__bank-transactions__checkbox-col' style={{ padding: 0 }}>
-              <span className='Layer__table-cell-content'>
+            <th className='Layer__bank-transactions__table-header Layer__bank-transactions__checkbox-col'>
+              <span className='Layer__bank-transactions__table-cell-content'>
                 <Checkbox
                   isSelected={isAllSelected}
                   isIndeterminate={isPartiallySelected}
@@ -95,37 +95,37 @@ export const BankTransactionsTable = ({
               </span>
             </th>
           )}
-          <th className='Layer__table-header Layer__bank-transactions__date-col'>
+          <th className='Layer__bank-transactions__table-header Layer__bank-transactions__date-col'>
             {stringOverrides?.transactionsTable?.dateColumnHeaderText || t('common:label.date', 'Date')}
           </th>
-          <th className='Layer__table-header Layer__bank-transactions__tx-col'>
+          <th className='Layer__bank-transactions__table-header Layer__bank-transactions__tx-col'>
             {stringOverrides?.transactionsTable?.transactionColumnHeaderText
               || t('common:label.transaction', 'Transaction')}
           </th>
-          <th className='Layer__table-header Layer__bank-transactions__account-col'>
+          <th className='Layer__bank-transactions__table-header Layer__bank-transactions__account-col'>
             {stringOverrides?.transactionsTable?.accountColumnHeaderText
               || t('common:label.account', 'Account')}
           </th>
           <th
-            className='Layer__table-header Layer__table-cell--amount Layer__table-cell__amount-col'
+            className='Layer__bank-transactions__table-header Layer__bank-transactions__table-cell--amount Layer__bank-transactions__amount-col'
             {...showReceiptDataProperties}
           >
             {stringOverrides?.transactionsTable?.amountColumnHeaderText
               || t('common:label.amount', 'Amount')}
           </th>
           <th
-            className='Layer__table-header Layer__bank-transactions__documents-col'
+            className='Layer__bank-transactions__table-header Layer__bank-transactions__documents-col'
             {...showReceiptDataProperties}
           />
           {isCategorizationEnabled && display !== DisplayState.categorized
             ? (
-              <th className='Layer__table-header Layer__table-header--primary Layer__table-cell__category-col'>
+              <th className='Layer__bank-transactions__table-header Layer__bank-transactions__table-header--primary Layer__bank-transactions__category-col'>
                 {stringOverrides?.transactionsTable?.categorizeColumnHeaderText
                   || t('common:action.categorize', 'Categorize')}
               </th>
             )
             : (
-              <th className='Layer__table-header Layer__table-cell__category-col'>
+              <th className='Layer__bank-transactions__table-header Layer__bank-transactions__category-col'>
                 {stringOverrides?.transactionsTable?.categoryColumnHeaderText
                   || t('common:label.category', 'Category')}
               </th>

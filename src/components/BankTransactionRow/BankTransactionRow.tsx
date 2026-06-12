@@ -157,8 +157,8 @@ export const BankTransactionRow = ({
     <>
       <AnimatedPresenceElement as='tr' variant='fade' isOpen={!isBeingRemoved} motionKey={bankTransaction.id} className={rowClassName} onClick={toggleOpen}>
         {isCategorizationEnabled && (
-          <td className='Layer__table-cell Layer__bank-transactions__checkbox-col' onClick={preventRowExpansion}>
-            <span className='Layer__table-cell-content'>
+          <td className='Layer__bank-transactions__table-cell Layer__bank-transactions__checkbox-col' onClick={preventRowExpansion}>
+            <span className='Layer__bank-transactions__table-cell-content'>
               <Checkbox
                 isSelected={isTransactionSelected}
                 onChange={(selected) => {
@@ -174,25 +174,25 @@ export const BankTransactionRow = ({
           </td>
         )}
         <td
-          className='Layer__table-cell Layer__bank-transaction-table__date-col'
+          className='Layer__bank-transactions__table-cell Layer__bank-transaction-table__date-col'
         >
-          <span className='Layer__table-cell-content'>
+          <span className='Layer__bank-transactions__table-cell-content'>
             <Span>{formatDate(bankTransaction.date)}</Span>
           </span>
         </td>
         <td
-          className='Layer__table-cell Layer__bank-transactions__tx-col'
+          className='Layer__bank-transactions__table-cell Layer__bank-transactions__tx-col'
         >
-          <span className='Layer__table-cell-content'>
+          <span className='Layer__bank-transactions__table-cell-content'>
             <Span withTooltip>
               {bankTransaction.counterpartyName ?? bankTransaction.description}
             </Span>
           </span>
         </td>
         <td
-          className='Layer__table-cell Layer__bank-transactions__account-col'
+          className='Layer__bank-transactions__table-cell Layer__bank-transactions__account-col'
         >
-          <span className='Layer__table-cell-content'>
+          <span className='Layer__bank-transactions__table-cell-content'>
             <VStack align='start'>
               <Span ellipsis>
                 {bankTransaction.accountName}
@@ -207,7 +207,7 @@ export const BankTransactionRow = ({
           </span>
         </td>
         <td
-          className={`Layer__table-cell Layer__table-cell__amount-col Layer__bank-transactions__amount-col Layer__table-cell--amount ${className}__table-cell--amount-${isCredit(bankTransaction) ? 'credit' : 'debit'
+          className={`Layer__bank-transactions__table-cell Layer__bank-transactions__amount-col Layer__bank-transactions__table-cell--amount ${className}__table-cell--amount-${isCredit(bankTransaction) ? 'credit' : 'debit'
           }`}
           {...showReceiptDataProperties}
         >
@@ -215,16 +215,16 @@ export const BankTransactionRow = ({
             <MoneySpan
               amount={bankTransaction.amount}
               displayPlusSign={isCredit(bankTransaction)}
-              className='Layer__table-cell-content'
+              className='Layer__bank-transactions__table-cell-content'
             />
           </VStack>
         </td>
         <td
-          className='Layer__table-cell Layer__bank-transactions__documents-col'
+          className='Layer__bank-transactions__table-cell Layer__bank-transactions__documents-col'
           {...showReceiptDataProperties}
         >
           {showReceiptUploads && bankTransaction.documentIds?.length > 0 && (
-            <span className='Layer__table-cell-content'>
+            <span className='Layer__bank-transactions__table-cell-content'>
               <IconBox>
                 <File size={12} />
               </IconBox>
@@ -233,8 +233,8 @@ export const BankTransactionRow = ({
         </td>
         <td
           className={classNames(
-            'Layer__table-cell',
-            'Layer__table-cell__category-col',
+            'Layer__bank-transactions__table-cell',
+            'Layer__bank-transactions__category-col',
             `${className}__actions-cell`,
             `${className}__actions-cell--${open ? 'open' : 'close'}`,
           )}

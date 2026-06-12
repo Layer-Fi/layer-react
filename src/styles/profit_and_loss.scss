@@ -10,29 +10,6 @@
   font-size: 0.75rem;
 }
 
-.Layer__profit-and-loss-chart .recharts-legend-item-text {
-  font-size: 12px;
-  color: var(--color-base-700);
-  vertical-align: middle;
-}
-
-.Layer__profit-and-loss-chart .recharts-legend-item {
-  fill: var(--bar-color-income);
-  vertical-align: middle;
-}
-
-.Layer__profit-and-loss-chart .legend-item-0 {
-  fill: var(--bar-color-income);
-}
-
-.Layer__profit-and-loss-chart .legend-item-1 {
-  fill: var(--bar-color-expenses);
-}
-
-.Layer__profit-and-loss-chart .legend-item-2 {
-  fill: var(--base-transparent-16-light);
-}
-
 /** ---- */
 .Layer__profit-and-loss__chart_with_summaries {
   display: flex;
@@ -104,10 +81,6 @@
 
 #layer-pie-stripe-pattern rect {
   fill: var(--color-base-300);
-}
-
-#layer-dots-stripe-pattern rect {
-  fill: var(--color-base-500);
 }
 
 #layer-pie-dots-pattern rect {
@@ -199,21 +172,11 @@
 }
 
 .Layer__compare__table__wrapper {
-  .Layer__table__wrapper {
-    overflow: auto;
-    max-width: 100%;
-  }
-
   .Layer__profit-and-loss-compare-table__sticky-cell {
     position: sticky;
     z-index: 1;
     left: 0;
     background-color: inherit;
-  }
-
-  .Layer__table tr td:last-child .Layer__table-cell-content,
-  .Layer__table tr th:last-child .Layer__table-cell-content {
-    justify-content: flex-start;
-    padding-right: var(--spacing-lg);
+    white-space: nowrap;
   }
 }

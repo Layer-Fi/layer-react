@@ -1,15 +1,16 @@
-import { Fragment, type ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Fragment } from 'react'
 
 import { type LineItem } from '@internal-types/lineItem'
 import { type StatementOfCashFlow } from '@internal-types/statementOfCashFlow'
-import { TableCellAlign } from '@internal-types/table'
-import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
-import { Table } from '@components/Table/Table'
-import { TableBody } from '@components/TableBody/TableBody'
-import { TableCell } from '@components/TableCell/TableCell'
-import { TableHead } from '@components/TableHead/TableHead'
-import { TableRow } from '@components/TableRow/TableRow'
+import {
+  ReportsTable,
+  ReportsTableAmountCell,
+  ReportsTableBody,
+  ReportsTableHeader,
+  ReportsTableLineItems,
+  ReportsTableNameCell,
+  ReportsTableRow,
+} from '@components/ReportsTable/ReportsTable'
 
 type StatementOfCashFlowRowProps = {
   name: string
@@ -33,107 +34,40 @@ export const StatementOfCashFlowTable = ({
   config: StatementOfCashFlowRowProps[]
   stringOverrides?: StatementOfCashFlowTableStringOverrides
 }) => {
-  const { t } = useTranslation()
-  const { isOpen, setIsOpen } = useTableExpandRow()
-
-  const renderLineItem = (
-    lineItem: LineItem,
-    depth: number = 0,
-    rowKey: string,
-    rowIndex: number,
-  ): ReactNode => {
-    const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
-    const expanded = expandable ? isOpen(rowKey) : true
-
-    return (
-      <Fragment key={rowKey + '-' + rowIndex}>
-        <TableRow
-          rowKey={rowKey + '-' + rowIndex}
-          expandable={expandable}
-          isExpanded={expanded}
-          handleExpand={() => setIsOpen(rowKey)}
-          depth={depth}
-        >
-          <TableCell withExpandIcon={expandable} primary={expandable}>
-            {lineItem.display_name}
-          </TableCell>
-          <TableCell
-            isCurrency={!expandable || (expandable && !expanded)}
-            primary={expandable}
-            align={TableCellAlign.RIGHT}
-          >
-            {(!expandable || (expandable && !expanded)) && lineItem.value}
-          </TableCell>
-        </TableRow>
-        {expanded
-          && lineItem.line_items
-          && lineItem.line_items.map((subItem, subIdx) =>
-            renderLineItem(
-              subItem,
-              depth + 1,
-              rowKey + ':' + subItem.name,
-              subIdx,
-            ),
-          )}
-        {expanded && expandable && (
-          <TableRow
-            rowKey={rowKey + '-' + rowIndex + '--summation'}
-            depth={depth + 1}
-            variant='summation'
-          >
-            <TableCell primary>{t('reports:label.total_display_name', 'Total of {{displayName}}', { displayName: lineItem.display_name })}</TableCell>
-            <TableCell primary isCurrency align={TableCellAlign.RIGHT}>
-              {lineItem.value}
-            </TableCell>
-          </TableRow>
-        )}
-      </Fragment>
-    )
-  }
-
   return (
-    <Table borderCollapse='collapse'>
-      <TableHead>
-        <TableRow rowKey='soc-flow-head-row' isHeadRow>
-          <TableCell isHeaderCell>
-            {stringOverrides?.typeColumnHeader || t('common:label.type', 'Type')}
-          </TableCell>
-          <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
-            {stringOverrides?.totalColumnHeader || t('common:label.total', 'Total')}
-          </TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
+    <ReportsTable>
+      <ReportsTableHeader
+        typeColumnHeader={stringOverrides?.typeColumnHeader}
+        totalColumnHeader={stringOverrides?.totalColumnHeader}
+      />
+      <ReportsTableBody>
         {config.map((row, idx) => {
           if (row.type === 'line_item') {
             return (
               <Fragment key={row.lineItem}>
-                {data[row.lineItem as keyof StatementOfCashFlow]
-                  && renderLineItem(
-                    data[row.lineItem as keyof StatementOfCashFlow] as LineItem,
-                    0,
-                    row.lineItem ? row.lineItem : '',
-                    idx,
-                  )}
+                {data[row.lineItem as keyof StatementOfCashFlow] && (
+                  <ReportsTableLineItems
+                    lineItem={data[row.lineItem as keyof StatementOfCashFlow] as LineItem}
+                    rowKey={row.lineItem ? row.lineItem : ''}
+                    rowIndex={idx}
+                  />
+                )}
               </Fragment>
             )
           }
           else {
             return (
-              <TableRow
-                key={row.name + '-' + idx}
-                rowKey={row.name + '-' + idx}
-                variant='default'
-              >
-                <TableCell primary>{row.displayName}</TableCell>
-                <TableCell primary isCurrency align={TableCellAlign.RIGHT}>
-                  {data[row.lineItem as keyof StatementOfCashFlow] as number}
-                </TableCell>
-              </TableRow>
+              <ReportsTableRow key={row.name + '-' + idx}>
+                <ReportsTableNameCell bold>{row.displayName}</ReportsTableNameCell>
+                <ReportsTableAmountCell
+                  amount={(data[row.lineItem as keyof StatementOfCashFlow] as number) ?? 0}
+                  bold
+                />
+              </ReportsTableRow>
             )
           }
         })}
-      </TableBody>
-    </Table>
+      </ReportsTableBody>
+    </ReportsTable>
   )
 }

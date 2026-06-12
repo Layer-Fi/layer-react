@@ -17,15 +17,19 @@ import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { HStack } from '@ui/Stack/Stack'
+import { Column, Row, TableHeader } from '@ui/Table/Table'
+import { Span } from '@ui/Typography/Text'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import { type ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
+import {
+  ReportsTable,
+  ReportsTableAmountCell,
+  ReportsTableBody,
+  ReportsTableNameCell,
+  ReportsTableRow,
+} from '@components/ReportsTable/ReportsTable'
 import { ReportsTableErrorState } from '@components/ReportsTableState/ReportsTableErrorState'
 import { ReportsTableLoader } from '@components/ReportsTableState/ReportsTableLoader'
-import { Table } from '@components/Table/Table'
-import { TableBody } from '@components/TableBody/TableBody'
-import { TableCell } from '@components/TableCell/TableCell'
-import { TableHead } from '@components/TableHead/TableHead'
-import { TableRow } from '@components/TableRow/TableRow'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 interface ProfitAndLossCompareTableProps {
@@ -128,35 +132,38 @@ export const ProfitAndLossCompareTable = ({
     const expandable =
       lineItem?.line_items && lineItem.line_items.length > 0 ? true : false
     const expanded = expandable ? isOpen(rowKey) : true
+    const displayName = lineItem ? lineItem.display_name : rowDisplayName
 
     return (
       <Fragment key={rowKey}>
-        <TableRow
-          rowKey={rowKey}
-          expandable={expandable}
-          isExpanded={expanded}
+        <ReportsTableRow
           depth={depth}
-          variant={expandable ? 'expandable' : 'default'}
-          handleExpand={() => setIsOpen(rowKey)}
+          expandable={expandable}
+          onExpand={expandable ? () => setIsOpen(rowKey) : undefined}
         >
-          <TableCell
-            primary
-            withExpandIcon={expandable}
-            nowrap
+          <ReportsTableNameCell
+            expandable={expandable}
+            expanded={expanded}
+            bold
             className='Layer__profit-and-loss-compare-table__sticky-cell'
           >
-            {lineItem ? lineItem.display_name : rowDisplayName}
-          </TableCell>
-          {rowData.map((cell, i) => (
-            <TableCell key={'compare-value' + i} isCurrency>
-              {getComparisonValue(
-                lineItem ? lineItem.display_name : rowDisplayName,
-                depth,
-                cell as string | number | LineItemEncoded,
-              )}
-            </TableCell>
-          ))}
-        </TableRow>
+            {displayName}
+          </ReportsTableNameCell>
+          {rowData.map((cell, i) => {
+            const comparisonValue = getComparisonValue(
+              displayName,
+              depth,
+              cell as string | number | LineItemEncoded,
+            )
+
+            return (
+              <ReportsTableAmountCell
+                key={'compare-value' + i}
+                amount={typeof comparisonValue === 'number' && Number.isFinite(comparisonValue) ? comparisonValue : 0}
+              />
+            )
+          })}
+        </ReportsTableRow>
         {expanded && lineItem?.line_items
           ? lineItem.line_items.map(child =>
             renderRow({
@@ -186,33 +193,33 @@ export const ProfitAndLossCompareTable = ({
       )}
     >
       {({ data: resolvedComparisonData }) => (
-        <Table borderCollapse='collapse' bottomSpacing={false}>
-          <TableHead>
-            {selectedCompareOptions && selectedCompareOptions.length > 1 && (
-              <TableRow rowKey=''>
-                <TableCell
-                  isHeaderCell
+        <ReportsTable bottomSpacing={false}>
+          {selectedCompareOptions && selectedCompareOptions.length > 1 && (
+            <TableHeader nonAria>
+              <Row nonAria>
+                <Column
+                  nonAria
                   className='Layer__profit-and-loss-compare-table__sticky-cell'
                 />
                 {selectedCompareOptions.map((option, i) => (
                   <Fragment key={option.displayName + '-' + i}>
-                    <TableCell key={option.displayName + '-' + i} primary isHeaderCell>
-                      {option.displayName}
-                    </TableCell>
+                    <Column key={option.displayName + '-' + i} nonAria>
+                      <Span weight='bold'>{option.displayName}</Span>
+                    </Column>
                     {comparePeriods
                       && Array.from({ length: comparePeriods - 1 }, (_, index) => (
-                        <TableCell key={option.displayName + '-' + index} isHeaderCell />
+                        <Column key={option.displayName + '-' + index} nonAria />
                       ))}
                   </Fragment>
                 ))}
-              </TableRow>
-            )}
-          </TableHead>
-          <TableBody>
+              </Row>
+            </TableHeader>
+          )}
+          <ReportsTableBody>
             {comparePeriods && (
-              <TableRow rowKey=''>
-                <TableCell
-                  isHeaderCell
+              <Row nonAria>
+                <Column
+                  nonAria
                   className='Layer__profit-and-loss-compare-table__sticky-cell'
                 />
                 {selectedCompareOptions && selectedCompareOptions.length > 0
@@ -220,13 +227,13 @@ export const ProfitAndLossCompareTable = ({
                     selectedCompareOptions.map((option, i) => (
                       <Fragment key={option.displayName + '-' + i}>
                         {comparisonPeriods.map((period, index) => (
-                          <TableCell key={option.displayName + '-' + index} isHeaderCell>
+                          <Column key={option.displayName + '-' + index} nonAria>
                             <HStack gap='2xs'>
                               {period.label}
                               {' '}
                               {getBookkeepingPeriodStatus(period.date)}
                             </HStack>
-                          </TableCell>
+                          </Column>
                         ))}
                       </Fragment>
                     ))
@@ -234,13 +241,13 @@ export const ProfitAndLossCompareTable = ({
                   : (
                     <Fragment key='total-1'>
                       {comparisonPeriods.map((period, index) => (
-                        <TableCell key={'total-' + index + '-cell'} isHeaderCell>
+                        <Column key={'total-' + index + '-cell'} nonAria>
                           {period.label}
-                        </TableCell>
+                        </Column>
                       ))}
                     </Fragment>
                   )}
-              </TableRow>
+              </Row>
             )}
             {renderRow({
               comparisonData: resolvedComparisonData,
@@ -296,8 +303,8 @@ export const ProfitAndLossCompareTable = ({
               depth: 0,
               rowDisplayName: t('reports:label.other_outflows', 'Other Outflows'),
             })}
-          </TableBody>
-        </Table>
+          </ReportsTableBody>
+        </ReportsTable>
       )}
     </ConditionalBlock>
   )
