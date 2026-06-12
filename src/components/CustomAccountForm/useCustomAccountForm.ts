@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { type CustomAccount, CustomAccountSubtype, CustomAccountType } from '@internal-types/customAccounts'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { useCreateCustomAccount } from '@hooks/api/businesses/[business-id]/custom-accounts/useCreateCustomAccount'
-import { useForm } from '@hooks/features/forms/useForm'
+import { useAppForm } from '@hooks/features/forms/useForm'
 
 export const getCustomAccountTypeFromSubtype = (subtype: CustomAccountSubtype): CustomAccountType => {
   switch (subtype) {
@@ -37,7 +37,7 @@ export const useCustomAccountForm = ({ onSuccess }: UseCustomAccountFormProps) =
 
   const { trigger: createCustomAccount } = useCreateCustomAccount()
 
-  const form = useForm<CustomAccountFormData>({
+  const form = useAppForm<CustomAccountFormData>({
     defaultValues: {
       account_name: undefined,
       institution_name: undefined,

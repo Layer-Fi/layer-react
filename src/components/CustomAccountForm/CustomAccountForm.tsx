@@ -1,4 +1,4 @@
-import { type FormEvent, useCallback, useEffect, useMemo } from 'react'
+import { type FormEvent, useCallback, useEffect, useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type CustomAccount, CustomAccountSubtype } from '@internal-types/customAccounts'
@@ -6,11 +6,10 @@ import { notEmpty } from '@utils/form'
 import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
+import { Label } from '@ui/Typography/Text'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { SubmitButton } from '@components/Button/SubmitButton'
 import { useCustomAccountForm } from '@components/CustomAccountForm/useCustomAccountForm'
-import { Input } from '@components/Input/Input'
-import { InputGroup } from '@components/Input/InputGroup'
 import { ErrorText } from '@components/Typography/ErrorText'
 
 import './customAccountForm.scss'
@@ -30,6 +29,7 @@ export type CustomAccountsFormProps = {
 export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: CustomAccountsFormProps) => {
   const { t } = useTranslation()
   const { form, submitError, isFormValid } = useCustomAccountForm({ onSuccess })
+  const accountTypeInputId = useId()
 
   const accountTypeOptions = useMemo(
     () => accountTypeConfig.map(opt => ({
@@ -56,49 +56,35 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
       onSubmit={onSubmit}
     >
       <VStack gap='xs'>
-        <form.Field
+        <form.AppField
           name='account_name'
           validators={{
             onSubmit: ({ value }) => notEmpty(value) ? undefined : t('generalLedger:validation.account_name_required', 'Account name is required'),
           }}
         >
           {field => (
-            <InputGroup name='account_name' label={t('generalLedger:label.account_name', 'Account name')} className='Layer__custom-account-form__field'>
-              <Input
-                className='Layer__custom-account-form__input'
-                name='account_name'
-                placeholder={t('generalLedger:label.enter_account_name', 'Enter account name...')}
-                value={field.state.value}
-                onChange={e =>
-                  field.handleChange((e.target as HTMLInputElement).value)}
-                isInvalid={field.state.meta.errors.length > 0}
-                errorMessage={field.state.meta.errors.join(', ')}
-              />
-            </InputGroup>
+            <field.FormTextField
+              label={t('generalLedger:label.account_name', 'Account name')}
+              placeholder={t('generalLedger:label.enter_account_name', 'Enter account name...')}
+              className='Layer__custom-account-form__field'
+            />
           )}
-        </form.Field>
+        </form.AppField>
 
-        <form.Field
+        <form.AppField
           name='institution_name'
           validators={{
             onSubmit: ({ value }) => notEmpty(value) ? undefined : t('generalLedger:validation.institution_name_required', 'Institution name is required'),
           }}
         >
           {field => (
-            <InputGroup name='institution_name' label={t('generalLedger:label.institution_name', 'Institution name')} className='Layer__custom-account-form__field'>
-              <Input
-                className='Layer__custom-account-form__input'
-                name='institution_name'
-                placeholder={t('generalLedger:label.enter_institution_name', 'Enter institution name...')}
-                value={field.state.value}
-                onChange={e =>
-                  field.handleChange((e.target as HTMLInputElement).value)}
-                isInvalid={field.state.meta.errors.length > 0}
-                errorMessage={field.state.meta.errors.join(', ')}
-              />
-            </InputGroup>
+            <field.FormTextField
+              label={t('generalLedger:label.institution_name', 'Institution name')}
+              placeholder={t('generalLedger:label.enter_institution_name', 'Enter institution name...')}
+              className='Layer__custom-account-form__field'
+            />
           )}
-        </form.Field>
+        </form.AppField>
 
         <form.Field
           name='account_type'
@@ -107,9 +93,13 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
           }}
         >
           {field => (
-            <InputGroup name='account_type' label={t('generalLedger:label.account_type', 'Account type')} className='Layer__custom-account-form__field'>
+            <VStack className='Layer__custom-account-form__field'>
+              <Label size='sm' htmlFor={accountTypeInputId} pbe='3xs'>
+                {t('generalLedger:label.account_type', 'Account type')}
+              </Label>
               <ComboBox
                 className='Layer__custom-account-form__input'
+                inputId={accountTypeInputId}
                 name='account_type'
                 placeholder={t('generalLedger:action.select_account_type', 'Select account type...')}
                 options={accountTypeOptions}
@@ -119,7 +109,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
                 isError={field.state.meta.errors.length > 0}
                 slots={{ ErrorMessage: field.state.meta.errors.join(', ') }}
               />
-            </InputGroup>
+            </VStack>
           )}
         </form.Field>
 
