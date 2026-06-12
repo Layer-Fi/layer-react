@@ -12,9 +12,9 @@ import { useSubmitUserResponseForTask } from '@hooks/api/businesses/[business-id
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import ChevronDownFill from '@icons/ChevronDownFill'
+import { TextArea } from '@ui/Input/TextArea'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { FileInput } from '@components/Input/FileInput'
-import { Textarea } from '@components/Textarea/Textarea'
 import { Text, TextSize } from '@components/Typography/Text'
 
 type TasksListItemProps = {
@@ -179,7 +179,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
         <div className={taskBodyClassName}>
           <div className='Layer__tasks-list-item__body-info'>
             <Text size={TextSize.sm}>{task.question}</Text>
-            <Textarea
+            <TextArea
               value={userResponse}
               placeholder={task.userResponseType === TaskUserResponseType.UploadDocument ? t('bookkeeping:label.optional_description', 'Optional description') : ''}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
