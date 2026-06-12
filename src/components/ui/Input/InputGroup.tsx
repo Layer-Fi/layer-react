@@ -7,7 +7,6 @@ import {
 } from 'react-aria-components/Group'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { Span } from '@ui/Typography/Text'
 
 import './inputGroup.scss'
 
@@ -38,9 +37,9 @@ export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
         {composeRenderProps(children, node => (
           <>
             {leadingText && (
-              <Span className={`${INPUT_GROUP_CLASS_NAME}__LeadingText`}>
+              <span className={`${INPUT_GROUP_CLASS_NAME}__LeadingText`}>
                 {leadingText}
-              </Span>
+              </span>
             )}
             {node}
           </>
