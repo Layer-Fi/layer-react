@@ -13,9 +13,9 @@ import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { Button } from '@ui/Button/Button'
+import { TextArea } from '@ui/Input/TextArea'
 import { P } from '@ui/Typography/Text'
 import { FileInput } from '@components/Input/FileInput'
-import { Textarea } from '@components/Textarea/Textarea'
 
 type TasksListItemProps = {
   task: UserVisibleTask
@@ -178,7 +178,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
         <div className={taskBodyClassName}>
           <div className='Layer__tasks-list-item__body-info'>
             <P size='sm' variant='inherit'>{task.question}</P>
-            <Textarea
+            <TextArea
               value={userResponse}
               placeholder={task.userResponseType === TaskUserResponseType.UploadDocument ? t('bookkeeping:label.optional_description', 'Optional description') : ''}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>

@@ -241,15 +241,10 @@
     align-items: center;
     justify-content: space-between;
 
-    .Layer__input-tooltip {
-      position: relative;
+    .Layer__expanded-bank-transaction-row__total-input {
       flex: 1;
       width: 100%;
       max-width: 42%;
-    }
-
-    .Layer__input {
-      max-width: 100%;
     }
   }
 }
@@ -258,13 +253,12 @@
   text-align: right;
 }
 
-.Layer__expanded-bank-transaction-row__total-and-btns .Layer__input {
-  max-width: 100%;
+.Layer__expanded-bank-transaction-row__total-input .Layer__UI__Input {
   text-align: right;
 }
 
 @container (min-width: 401px) {
-  .Layer__expanded-bank-transaction-row__total-and-btns .Layer__input-tooltip,
+  .Layer__expanded-bank-transaction-row__total-and-btns .Layer__expanded-bank-transaction-row__total-input,
   .Layer__expanded-bank-transaction-row__table-cell--split-entry .Layer__input-tooltip {
     flex: 1;
     max-width: 12rem;
@@ -277,8 +271,8 @@
 
 @container (max-width: 480px) {
   .Layer__expanded-bank-transaction-row__total-and-btns {
-    & > .Layer__input-tooltip > .Layer__input-left-text {
-      border-right-color: transparent;
+    & > .Layer__expanded-bank-transaction-row__total-input > .Layer__UI__InputGroup__LeadingText {
+      border-inline-end-color: transparent;
     }
   }
 }
