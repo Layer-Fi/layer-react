@@ -205,10 +205,6 @@
     border-bottom-left-radius: var(--border-radius-xs);
     border-bottom-right-radius: var(--border-radius-xs);
     background: var(--color-base-50);
-
-    > .Layer__Span:last-child {
-      color: var(--color-base-1000);
-    }
   }
 
   .loadingbar {
@@ -242,10 +238,6 @@
     align-items: center;
     justify-content: space-between;
     padding: var(--spacing-3xs) var(--spacing-xs);
-
-    > .Layer__Span:last-child {
-      color: var(--color-base-1000);
-    }
   }
 
   &.--is-syncing {

@@ -29,7 +29,7 @@ export type TextStyleProps = {
   status?: 'error' | 'success' | 'warning' | 'disabled' | 'info'
   invert?: true
   textCase?: 'uppercase' | 'lowercase' | 'capitalize'
-  variant?: 'placeholder' | 'subtle' | 'inherit' | 'white'
+  variant?: 'placeholder' | 'subtle' | 'inherit' | 'white' | 'strong'
   weight?: 'normal' | 'bold'
   className?: string
 }

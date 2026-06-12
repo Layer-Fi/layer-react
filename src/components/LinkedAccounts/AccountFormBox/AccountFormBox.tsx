@@ -100,7 +100,7 @@ export const AccountFormBox = ({
         <div className={`${CLASS_NAME}__details-col__details`}>
           <div className={`${CLASS_NAME}__details-col__name`}>
             <P size='sm' variant='subtle'>{institutionName}</P>
-            <P size='sm'>{displayName}</P>
+            <P size='sm' variant='strong'>{displayName}</P>
           </div>
           <P size='sm' variant='inherit'>
             •••

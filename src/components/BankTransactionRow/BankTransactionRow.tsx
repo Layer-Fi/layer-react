@@ -249,7 +249,7 @@ export const BankTransactionRow = ({
                 {isError
                   && (
                     <Span status='error'>
-                      <span>{t('common:state.unsaved', 'Unsaved')}</span>
+                      {t('common:state.unsaved', 'Unsaved')}
                       <CircleAlert size={12} />
                     </Span>
                   )}

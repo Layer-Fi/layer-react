@@ -8,22 +8,4 @@
     gap: var(--spacing-3xs);
     align-items: center;
   }
-
-  &[data-status='today'] {
-    .Layer__P[data-weight='bold'] {
-      color: var(--color-info-warning);
-    }
-  }
-
-  &[data-status='soon'] {
-    .Layer__P[data-weight='bold'] {
-      color: var(--color-base-800);
-    }
-  }
-
-  &[data-status='before'] {
-    .Layer__P[data-weight='bold'] {
-      color: var(--color-base-800);
-    }
-  }
 }
