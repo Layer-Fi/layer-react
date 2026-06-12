@@ -45,7 +45,7 @@ export const TasksListMobile = ({
       {unresolvedTasks.length === 0 && tasksCount > 0
         ? (
           <div style={{ textAlign: 'center', padding: '12px 24px' }}>
-            <Button variant='text' onPress={() => setShowMobilePanel(true)}>{t('bookkeeping:action.show_completed_tasks', 'Show completed tasks')}</Button>
+            <Button variant='text' underline onPress={() => setShowMobilePanel(true)}>{t('bookkeeping:action.show_completed_tasks', 'Show completed tasks')}</Button>
           </div>
         )
         : null}

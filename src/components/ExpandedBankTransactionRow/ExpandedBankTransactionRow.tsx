@@ -360,10 +360,7 @@ export const ExpandedBankTransactionRow = ({
                             <div className='Layer__expanded-bank-transaction-row__splits-buttons'>
                               {effectiveSplits.length > 1
                                 ? (
-                                  <Button
-                                    variant='text'
-                                    onPress={addSplit}
-                                  >
+                                  <Button variant='text' underline onPress={addSplit}>
                                     {t('bankTransactions:action.add_new_split', 'Add new split')}
                                   </Button>
                                 )

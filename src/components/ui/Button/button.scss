@@ -140,6 +140,19 @@
     &[data-pressed]:not([data-focus-visible]) {
       text-decoration: none;
     }
+
+    &[data-underline] {
+      color: var(--color-base-700);
+      text-decoration: underline;
+
+      &[data-hovered]:not([data-disabled], [data-pressed]) {
+        color: var(--color-base-1000);
+      }
+
+      &[data-pressed]:not([data-focus-visible]) {
+        text-decoration: underline;
+      }
+    }
   }
 
   &[data-variant='branded'] {

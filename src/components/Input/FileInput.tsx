@@ -46,7 +46,7 @@ export const FileInput = ({
   if (secondary) {
     return (
       <>
-        <Button variant='text' onPress={onClick} isDisabled={disabled}>
+        <Button variant='text' underline onPress={onClick} isDisabled={disabled}>
           {buttonText}
         </Button>
         <input
