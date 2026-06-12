@@ -11,7 +11,6 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { type CustomerFormState } from '@components/CustomerForm/formUtils'
 import { useCustomerForm } from '@components/CustomerForm/useCustomerForm'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { TextSize } from '@components/Typography/Text'
 
 import './customerForm.scss'
 
@@ -43,7 +42,7 @@ export const CustomerForm = ({ onSuccess, isReadOnly, ...formState }: CustomerFo
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize={TextSize.md}
+                  titleSize='md'
                   inline
                 />
               </HStack>

@@ -10,7 +10,6 @@ import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { DateTime } from '@components/DateTime/DateTime'
-import { TextSize, TextWeight } from '@components/Typography/Text'
 import { VirtualizedDataTable } from '@components/VirtualizedDataTable/VirtualizedDataTable'
 
 import './affectedTransactionsTable.scss'
@@ -69,9 +68,7 @@ export const AffectedTransactionsTable = ({
         <DateTime
           valueAsDate={row.original.date}
           onlyDate
-          slotProps={
-            { Date: { size: TextSize.md, weight: TextWeight.normal, variant: 'subtle' } }
-          }
+          slotProps={{ Date: { variant: 'subtle' } }}
         />
       ),
     },

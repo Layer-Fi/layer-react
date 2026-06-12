@@ -9,7 +9,7 @@ import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack } from '@ui/Stack/Stack'
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
+import { P } from '@ui/Typography/Text'
 
 type TaskStatusBadgeProps = {
   status: BookkeepingPeriod['status']
@@ -100,15 +100,14 @@ const BadgeContent = ({ color, icon, display }: BadgeContentProps) => {
       </HStack>
       {display
         ? (
-          <Text
-            className='Layer__TasksBadge__Label'
-            size={TextSize.sm}
+          <P
+            size='sm'
             status={color}
-            invertColor={color === 'warning'}
-            weight={TextWeight.bold}
+            invert={color === 'warning' ? true : undefined}
+            weight='bold'
           >
             {display}
-          </Text>
+          </P>
         )
         : null}
     </HStack>

@@ -1,10 +1,8 @@
 import { toDate } from '@utils/i18n/date/input'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { HStack } from '@ui/Stack/Stack'
 import { Span, type TextStyleProps } from '@ui/Typography/Text'
-import { Text } from '@components/Typography/Text'
-
-import './dateTime.scss'
 
 interface BaseDateTimeProps {
   format?: DateFormat
@@ -49,28 +47,20 @@ export const DateTime = ({
   if (!dateValue) return null
 
   if (format) {
-    return (
-      <Text className='Layer__datetime'>
-        {formatDate(dateValue, format)}
-      </Text>
-    )
+    return <Span>{formatDate(dateValue, format)}</Span>
   }
 
   const date = formatDate(dateValue, dateFormat)
   const time = formatDate(dateValue, timeFormat)
 
   return (
-    <Text className='Layer__datetime'>
+    <HStack gap='md' align='center'>
       {!onlyTime && (
-        <Span {...slotProps.Date}>
-          {date}
-        </Span>
+        <Span {...slotProps.Date}>{date}</Span>
       )}
       {!onlyDate && (
-        <Span {...slotProps.Time}>
-          {time}
-        </Span>
+        <Span {...slotProps.Time}>{time}</Span>
       )}
-    </Text>
+    </HStack>
   )
 }

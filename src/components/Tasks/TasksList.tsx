@@ -6,10 +6,10 @@ import { isCompletedTask, isIncompleteTask } from '@utils/bookkeeping/tasks/book
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
 import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
 import { VStack } from '@ui/Stack/Stack'
+import { P } from '@ui/Typography/Text'
 import { Pagination } from '@components/Pagination/Pagination'
 import { TasksListItem } from '@components/Tasks/TasksListItem'
 import { TasksListMobile } from '@components/Tasks/TasksListMobile'
-import { Text, TextSize } from '@components/Typography/Text'
 
 const TasksEmptyState = () => {
   const { t } = useTranslation()
@@ -18,12 +18,12 @@ const TasksEmptyState = () => {
       <div className='Layer__tasks-icon'>
         <Smile size={12} color='#3B9C63' />
       </div>
-      <Text size={TextSize.sm}>
+      <P size='sm' variant='subtle'>
         {t('bookkeeping:label.pending_tasks', 'There are no pending tasks!')}
         <br />
         {' '}
         {t('bookkeeping:label.great_job', 'Great job!')}
-      </Text>
+      </P>
     </div>
   )
 }

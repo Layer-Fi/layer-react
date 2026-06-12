@@ -70,7 +70,7 @@
 .Layer__error-boundary {
   padding: var(--spacing-xl);
 
-  .Layer__data-state__description {
+  .Layer__data-state__text > .Layer__Span:last-child {
     margin-bottom: 0;
   }
 }

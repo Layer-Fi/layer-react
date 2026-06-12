@@ -7,12 +7,12 @@ import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/bankAccount'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
+import { Span } from '@ui/Typography/Text'
 import { DatePicker } from '@components/DatePicker/DatePicker'
 import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 import { AmountInput } from '@components/Input/AmountInput'
 import { InputGroup } from '@components/Input/InputGroup'
 import { ErrorText } from '@components/Typography/ErrorText'
-import { Text, TextSize } from '@components/Typography/Text'
 
 import './accountFormBox.scss'
 
@@ -99,23 +99,13 @@ export const AccountFormBox = ({
       <div className={`${CLASS_NAME}__details-col`}>
         <div className={`${CLASS_NAME}__details-col__details`}>
           <div className={`${CLASS_NAME}__details-col__name`}>
-            <Text
-              className={`${CLASS_NAME}__details-col__name__institution-name`}
-              size={TextSize.sm}
-            >
-              {institutionName}
-            </Text>
-            <Text
-              className={`${CLASS_NAME}__details-col__name__account-name`}
-              size={TextSize.sm}
-            >
-              {displayName}
-            </Text>
+            <Span size='sm' variant='subtle'>{institutionName}</Span>
+            <Span size='sm'>{displayName}</Span>
           </div>
-          <Text size={TextSize.sm}>
+          <Span size='sm' variant='placeholder'>
             •••
             {bankAccount.mask}
-          </Text>
+          </Span>
         </div>
         <div className={`${CLASS_NAME}__details-col__inputs`}>
           <InputGroup label={t('linkedAccounts:label.opening_date', 'Opening date')}>

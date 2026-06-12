@@ -19,7 +19,6 @@ import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { useInvoicePaymentForm } from '@components/Invoices/InvoicePaymentForm/useInvoicePaymentForm'
 import { PaymentMethodComboBox } from '@components/PaymentMethod/PaymentMethodComboBox'
-import { TextSize } from '@components/Typography/Text'
 
 import './invoicePaymentForm.scss'
 
@@ -69,7 +68,7 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize={TextSize.md}
+                  titleSize='md'
                   inline
                 />
               </HStack>
@@ -124,9 +123,7 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
           {([amount]) => (
             <HStack justify='end' className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__OutstandingBalance`} gap='xs' align='center'>
               <Span size='sm'>{t('invoices:label.balance_due', 'Balance due')}</Span>
-              <Span size='md' weight='bold'>
-                {formatBalanceDue(amount)}
-              </Span>
+              <Span size='md' weight='bold'>{formatBalanceDue(amount)}</Span>
             </HStack>
           )}
         </form.Subscribe>

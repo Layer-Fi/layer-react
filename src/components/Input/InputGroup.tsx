@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react'
 import classNames from 'classnames'
 
-import { Text, TextSize } from '@components/Typography/Text'
+import { Label } from '@ui/Typography/Text'
 
 export interface InputGroupProps {
   label?: string
@@ -26,14 +26,7 @@ export const InputGroup = ({
   return (
     <div className={baseClassName}>
       {label && (
-        <Text
-          as='label'
-          size={TextSize.sm}
-          className='Layer__input-label'
-          htmlFor={name}
-        >
-          {label}
-        </Text>
+        <Label size='sm' pb='2xs' pi='2xs' htmlFor={name}>{label}</Label>
       )}
       {children}
     </div>

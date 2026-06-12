@@ -59,7 +59,7 @@ export const MatchFormMobile = ({
           />
         )
       })}
-      {matchFormError && <ErrorText>{matchFormError}</ErrorText>}
+      {matchFormError && <ErrorText size='sm' align='center' pb='sm'>{matchFormError}</ErrorText>}
     </GridList>
   )
 }

@@ -47,7 +47,7 @@
   }
 
   .Layer__upload-transactions__confirmation-step__data-state {
-    .Layer__data-state__description {
+    .Layer__data-state__text > .Layer__Span:last-child {
       margin-bottom: 0;
     }
   }

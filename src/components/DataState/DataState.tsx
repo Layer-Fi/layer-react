@@ -4,8 +4,8 @@ import { CircleCheckBig, Loader, OctagonAlert, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { Span } from '@ui/Typography/Text'
 import { Button, ButtonVariant } from '@components/Button/Button'
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
 import './dataState.scss'
 
@@ -25,7 +25,7 @@ export interface DataStateProps {
   isLoading?: boolean
   spacing?: boolean
   inline?: boolean
-  titleSize?: TextSize
+  titleSize?: 'sm' | 'md' | 'lg'
   className?: string
 }
 
@@ -72,7 +72,7 @@ export const DataState = ({
   icon,
   spacing,
   inline,
-  titleSize = inline ? TextSize.sm : TextSize.lg,
+  titleSize = inline ? 'sm' : 'lg',
   className,
 }: DataStateProps) => {
   const { t } = useTranslation()
@@ -87,18 +87,22 @@ export const DataState = ({
   return (
     <div className={baseClassName}>
       {getIcon(status, icon)}
-      <div>
-        <Text
-          as='span'
+      <div className='Layer__data-state__text'>
+        <Span
           size={titleSize}
-          weight={TextWeight.bold}
-          className='Layer__data-state__title'
+          weight='bold'
+          variant='placeholder'
+          align={inline ? undefined : 'center'}
         >
           {title}
-        </Text>
-        <Text as='span' size={inline ? TextSize.sm : TextSize.md} className='Layer__data-state__description'>
+        </Span>
+        <Span
+          size={inline ? 'sm' : 'md'}
+          status='disabled'
+          align={inline ? undefined : 'center'}
+        >
           {description}
-        </Text>
+        </Span>
       </div>
       {onRefresh && (
         <span className='Layer__data-state__btn'>

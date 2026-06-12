@@ -168,19 +168,17 @@
       color: var(--color-base-500);
     }
 
-    .account-institution {
-      overflow: hidden;
-      color: var(--color-base-500);
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
     .topbar-details {
       display: flex;
       flex-direction: column;
       gap: var(--spacing-4xs);
       justify-content: stretch;
       min-width: 0;
+
+      > .Layer__Span:first-child {
+        flex: 1;
+        width: 200px;
+      }
     }
 
     .topbar-logo {
@@ -193,14 +191,6 @@
       border-radius: var(--border-radius-3xs);
       background: var(--color-base-0);
       color: var(--color-base-200);
-    }
-
-    .account-name {
-      flex: 1;
-      overflow: hidden;
-      width: 200px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
   }
 
@@ -215,15 +205,6 @@
     border-bottom-left-radius: var(--border-radius-xs);
     border-bottom-right-radius: var(--border-radius-xs);
     background: var(--color-base-50);
-
-    .account-balance-text {
-      padding: var(--spacing-sm) 0;
-      color: var(--color-base-500);
-    }
-
-    .account-balance {
-      color: var(--color-base-1000);
-    }
   }
 
   .loadingbar {
@@ -249,10 +230,6 @@
       border-radius: 50%;
       background: var(--color-blue);
     }
-
-    .syncing-data-description {
-      color: var(--color-base-500);
-    }
   }
 
   .bottombar {
@@ -261,14 +238,6 @@
     align-items: center;
     justify-content: space-between;
     padding: var(--spacing-3xs) var(--spacing-xs);
-
-    .account-balance-text {
-      color: var(--color-base-500);
-    }
-
-    .account-balance {
-      color: var(--color-base-1000);
-    }
   }
 
   &.--is-syncing {

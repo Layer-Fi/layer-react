@@ -13,7 +13,6 @@ import { CounterpartySelect } from '@components/CategorizationRules/Categorizati
 import { type CategorizationRuleFormState, type DirectionFormValue } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 import { useCategorizationRuleForm } from '@components/CategorizationRules/CategorizationRuleForm/useCategorizationRuleForm'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { TextSize } from '@components/Typography/Text'
 
 import './categorizationRuleForm.scss'
 
@@ -49,7 +48,7 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize={TextSize.md}
+                  titleSize='md'
                   inline
                 />
               </HStack>

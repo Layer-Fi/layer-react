@@ -32,40 +32,6 @@
   }
 }
 
-.Layer__bank-transaction-mobile-list-item .Layer__text--error {
-  padding: var(--spacing-sm) 0;
-  font-size: 12px;
-  text-align: center;
-}
-
-.Layer__bank-transaction-mobile-list-item__value {
-  box-sizing: border-box;
-  display: flex;
-  gap: var(--spacing-3xs);
-  align-items: center;
-  justify-content: flex-end;
-  overflow: hidden;
-  height: 0;
-  padding: 0 var(--spacing-sm);
-  border-bottom-left-radius: var(--border-radius-sm);
-  border-bottom-right-radius: var(--border-radius-sm);
-  background-color: var(--base-transparent-2);
-  transition: all 180ms ease-in-out;
-  opacity: 0;
-
-  &.open {
-    height: auto;
-    padding: var(--spacing-sm);
-    opacity: 1;
-  }
-
-  & > .Layer__text {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-  }
-}
-
 .Layer__bank-transaction-mobile-list-item__toggle-row {
   display: flex;
   gap: var(--spacing-3xs);

@@ -3,7 +3,6 @@ import { AlertTriangle } from 'lucide-react'
 
 import { HStack } from '@ui/Stack/Stack'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { TextSize } from '@components/Typography/Text'
 
 import './formErrorBanner.scss'
 
@@ -19,7 +18,7 @@ export const FormErrorBanner = ({ message, className }: FormErrorBannerProps) =>
         icon={<AlertTriangle size={16} />}
         status={DataStateStatus.failed}
         title={message}
-        titleSize={TextSize.md}
+        titleSize='md'
         inline
       />
     </HStack>
