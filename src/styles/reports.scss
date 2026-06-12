@@ -2,46 +2,6 @@
   overflow: hidden;
 }
 
-.Layer__UI__Table-Table.Layer__UI__Table__Report {
-  width: 100%;
-
-  &.Layer__UI__Table__Report--bottom-spacing {
-    border-bottom: 1px solid var(--border-color);
-    margin-bottom: var(--spacing-lg);
-  }
-
-  .Layer__UI__Table-Row {
-    background-color: var(--color-base-50);
-
-    .Layer__UI__Table-Cell {
-      background-color: inherit;
-    }
-  }
-
-  .Layer__UI__Table-TableHeader .Layer__UI__Table-Row {
-    background-color: var(--color-base-0);
-  }
-
-  .Layer__UI__Table-Row.Layer__ReportTable__ExpandableRow {
-    background-color: var(--color-base-0);
-    cursor: pointer;
-  }
-
-  .Layer__UI__Table-Row.Layer__ReportTable__SummationRow {
-    background-color: var(--color-base-100);
-  }
-
-  .Layer__UI__Table-Row.Layer__ReportTable__DividerRow .Layer__UI__Table-Cell {
-    border-top: var(--spacing-2xs) solid var(--color-base-100);
-  }
-
-  @for $depth from 1 through 10 {
-    .Layer__UI__Table-Row[data-depth='#{$depth}'] > :first-child {
-      padding-inline-start: calc(var(--spacing-lg) * #{$depth} + var(--spacing-md));
-    }
-  }
-}
-
 .Layer__reports .Layer__panel__content {
   border-radius: var(--border-radius-sm);
 }

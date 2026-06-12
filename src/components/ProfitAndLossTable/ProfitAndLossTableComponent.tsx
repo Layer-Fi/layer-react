@@ -1,5 +1,4 @@
 import { Fragment, useContext } from 'react'
-import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import type { LineItem } from '@schemas/common/lineItem'
@@ -8,12 +7,16 @@ import { useEffectOnMount } from '@hooks/utils/react/useEffectOnMount'
 import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { Button } from '@ui/Button/Button'
-import { HStack } from '@ui/Stack/Stack'
-import { Cell, Row, Table, TableBody } from '@ui/Table/Table'
+import { Cell } from '@ui/Table/Table'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
-import { Span } from '@ui/Typography/Text'
 import { type BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
-import { ExpandButton } from '@components/ExpandButton/ExpandButton'
+import {
+  ReportsTable,
+  ReportsTableAmountCell,
+  ReportsTableBody,
+  ReportsTableNameCell,
+  ReportsTableRow,
+} from '@components/ReportsTable/ReportsTable'
 import { ReportsTableErrorState } from '@components/ReportsTableState/ReportsTableErrorState'
 import { ReportsTableLoader } from '@components/ReportsTableState/ReportsTableLoader'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
@@ -79,45 +82,31 @@ export const ProfitAndLossTableComponent = ({
 
     return (
       <Fragment key={rowKey + '-' + rowIndex}>
-        <Row
-          nonAria
+        <ReportsTableRow
           depth={depth}
-          className={classNames(
-            variant === 'summation' && 'Layer__ReportTable__SummationRow',
-            !variant && expandable && 'Layer__ReportTable__ExpandableRow',
-          )}
-          onAction={expandable ? () => setIsOpen(rowKey) : undefined}
+          expandable={!variant && expandable}
+          summation={variant === 'summation'}
+          onExpand={expandable ? () => setIsOpen(rowKey) : undefined}
         >
-          <Cell nonAria>
-            {expandable
-              ? (
-                <HStack align='center' gap='xs'>
-                  <ExpandButton isExpanded={expanded} />
-                  <Span weight='bold'>{lineItem.displayName}</Span>
-                </HStack>
-              )
-              : <Span weight='bold'>{lineItem.displayName}</Span>}
-          </Cell>
+          <ReportsTableNameCell expandable={expandable} expanded={expanded} bold>
+            {lineItem.displayName}
+          </ReportsTableNameCell>
           {
             showValue
-            && (
-              <Cell nonAria alignment={Alignment.Right}>
-                {variant === 'summation' || !onLineItemClick
-                  ? (
+            && (variant === 'summation' || !onLineItemClick
+              ? <ReportsTableAmountCell amount={amount} bold />
+              : (
+                <Cell nonAria alignment={Alignment.Right}>
+                  <Button
+                    variant='text'
+                    onPress={() => onLineItemClick(lineItem.name, currentBreadcrumbs)}
+                  >
                     <MoneySpan amount={amount} weight='bold' />
-                  )
-                  : (
-                    <Button
-                      variant='text'
-                      onPress={() => onLineItemClick(lineItem.name, currentBreadcrumbs)}
-                    >
-                      <MoneySpan amount={amount} weight='bold' />
-                    </Button>
-                  )}
-              </Cell>
-            )
+                  </Button>
+                </Cell>
+              ))
           }
-        </Row>
+        </ReportsTableRow>
         {expanded && lineItem.lineItems
           ? lineItem.lineItems.map((child, i) =>
             renderLineItem({
@@ -147,99 +136,97 @@ export const ProfitAndLossTableComponent = ({
       )}
     >
       {({ data }) => (
-        <div className='Layer__UI__Table-ScrollContainer'>
-          <Table nonAria className='Layer__UI__Table__Report'>
-            <TableBody nonAria>
-              {renderLineItem({
-                lineItem: data.income,
-                depth: 0,
-                rowKey: 'income',
-                rowIndex: 0,
-              })}
+        <ReportsTable bottomSpacing={false}>
+          <ReportsTableBody>
+            {renderLineItem({
+              lineItem: data.income,
+              depth: 0,
+              rowKey: 'income',
+              rowIndex: 0,
+            })}
 
-              {data.costOfGoodsSold
-                && renderLineItem({
-                  lineItem: data.costOfGoodsSold,
+            {data.costOfGoodsSold
+              && renderLineItem({
+                lineItem: data.costOfGoodsSold,
+                depth: 0,
+                rowKey: 'cost_of_goods_sold',
+                rowIndex: 1,
+              })}
+            {renderLineItem({
+              lineItem: {
+                name: 'gross_profit',
+                value: data.grossProfit,
+                displayName: stringOverrides?.grossProfitLabel || t('common:label.gross_profit', 'Gross Profit'),
+                lineItems: [],
+              },
+              depth: 0,
+              rowKey: 'gross_profit',
+              rowIndex: 2,
+              variant: 'summation',
+            })}
+            {renderLineItem({
+              lineItem: data.expenses,
+              depth: 0,
+              rowKey: 'expenses',
+              rowIndex: 3,
+            })}
+            {renderLineItem({
+              lineItem: {
+                name: 'profit_before_taxes',
+                value: data.profitBeforeTaxes,
+                displayName:
+                  stringOverrides?.profitBeforeTaxesLabel || t('reports:label.profit_before_taxes', 'Profit Before Taxes'),
+                lineItems: [],
+              },
+              depth: 0,
+              rowKey: 'profit_before_taxes',
+              rowIndex: 4,
+              variant: 'summation',
+            })}
+            {renderLineItem({
+              lineItem: data.taxes,
+              depth: 0,
+              rowKey: 'taxes',
+              rowIndex: 5,
+            })}
+            {renderLineItem({
+              lineItem: {
+                name: 'net_profit',
+                value: data.netProfit,
+                displayName: stringOverrides?.netProfitLabel || t('common:label.net_profit', 'Net Profit'),
+                lineItems: [],
+              },
+              depth: 0,
+              rowKey: 'net_profit',
+              rowIndex: 6,
+              variant: 'summation',
+            })}
+            {data.personalExpenses
+              && renderLineItem({
+                lineItem: data.personalExpenses,
+                depth: 0,
+                rowKey: 'personal_expenses',
+                rowIndex: 7,
+              })}
+            {data.otherOutflows
+              && renderLineItem({
+                lineItem: data.otherOutflows,
+                depth: 0,
+                rowKey: 'other_outflows',
+                rowIndex: 8,
+              })}
+            {data.customLineItems
+              && data.customLineItems.map((customLineItem, index) =>
+                renderLineItem({
+                  lineItem: customLineItem,
                   depth: 0,
-                  rowKey: 'cost_of_goods_sold',
-                  rowIndex: 1,
-                })}
-              {renderLineItem({
-                lineItem: {
-                  name: 'gross_profit',
-                  value: data.grossProfit,
-                  displayName: stringOverrides?.grossProfitLabel || t('common:label.gross_profit', 'Gross Profit'),
-                  lineItems: [],
-                },
-                depth: 0,
-                rowKey: 'gross_profit',
-                rowIndex: 2,
-                variant: 'summation',
-              })}
-              {renderLineItem({
-                lineItem: data.expenses,
-                depth: 0,
-                rowKey: 'expenses',
-                rowIndex: 3,
-              })}
-              {renderLineItem({
-                lineItem: {
-                  name: 'profit_before_taxes',
-                  value: data.profitBeforeTaxes,
-                  displayName:
-                    stringOverrides?.profitBeforeTaxesLabel || t('reports:label.profit_before_taxes', 'Profit Before Taxes'),
-                  lineItems: [],
-                },
-                depth: 0,
-                rowKey: 'profit_before_taxes',
-                rowIndex: 4,
-                variant: 'summation',
-              })}
-              {renderLineItem({
-                lineItem: data.taxes,
-                depth: 0,
-                rowKey: 'taxes',
-                rowIndex: 5,
-              })}
-              {renderLineItem({
-                lineItem: {
-                  name: 'net_profit',
-                  value: data.netProfit,
-                  displayName: stringOverrides?.netProfitLabel || t('common:label.net_profit', 'Net Profit'),
-                  lineItems: [],
-                },
-                depth: 0,
-                rowKey: 'net_profit',
-                rowIndex: 6,
-                variant: 'summation',
-              })}
-              {data.personalExpenses
-                && renderLineItem({
-                  lineItem: data.personalExpenses,
-                  depth: 0,
-                  rowKey: 'personal_expenses',
-                  rowIndex: 7,
-                })}
-              {data.otherOutflows
-                && renderLineItem({
-                  lineItem: data.otherOutflows,
-                  depth: 0,
-                  rowKey: 'other_outflows',
-                  rowIndex: 8,
-                })}
-              {data.customLineItems
-                && data.customLineItems.map((customLineItem, index) =>
-                  renderLineItem({
-                    lineItem: customLineItem,
-                    depth: 0,
-                    rowKey: `custom_line_item_${index}`,
-                    rowIndex: 9 + index,
-                    showValue: false,
-                  }),
-                )}
-            </TableBody>
-          </Table>
-        </div>
+                  rowKey: `custom_line_item_${index}`,
+                  rowIndex: 9 + index,
+                  showValue: false,
+                }),
+              )}
+          </ReportsTableBody>
+        </ReportsTable>
       )}
     </ConditionalBlock>
   )
