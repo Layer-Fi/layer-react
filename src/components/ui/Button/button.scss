@@ -93,7 +93,6 @@
 
     &[data-hovered]:not([data-pressed], [data-focus-visible], [data-disabled]) {
       outline: 1px solid var(--outline-default);
-      background-color: var(--color-base-100);
     }
 
     &[data-pressed]:not([data-focus-visible], [data-disabled]) {
