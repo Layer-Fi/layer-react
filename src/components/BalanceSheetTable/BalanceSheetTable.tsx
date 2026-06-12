@@ -86,7 +86,7 @@ export const BalanceSheetTable = ({
               : lineItem.display_name}
           </Cell>
           <Cell nonAria alignment={Alignment.Right}>
-            {(!expandable || (expandable && !expanded)) && (
+            {(!expandable || !showChildren) && (
               <MoneySpan
                 amount={lineItem.value ?? 0}
                 weight={expandable ? 'bold' : 'normal'}

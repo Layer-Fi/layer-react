@@ -111,7 +111,7 @@ export const ProfitAndLossTableComponent = ({
                       variant='text'
                       onPress={() => onLineItemClick(lineItem.name, currentBreadcrumbs)}
                     >
-                      <MoneySpan amount={lineItem.value ?? 0} weight='bold' />
+                      <MoneySpan amount={amount} weight='bold' />
                     </Button>
                   )}
               </Cell>
