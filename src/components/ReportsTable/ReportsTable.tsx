@@ -166,10 +166,10 @@ export const ReportsTableLineItems = ({
   depth = 0,
   withDividers = false,
 }: ReportsTableLineItemsProps) => {
-  const { isOpen, setIsOpen, expandedAllRows } = useTableExpandRow()
+  const { isOpen, setIsOpen } = useTableExpandRow()
 
   const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
-  const expanded = (expandable ? isOpen(rowKey) : true) || expandedAllRows
+  const expanded = expandable ? isOpen(rowKey) : true
 
   return (
     <>
