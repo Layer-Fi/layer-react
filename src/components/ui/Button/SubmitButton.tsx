@@ -3,6 +3,7 @@ import { CircleAlert, CircleCheckBig, RefreshCcw, Save, UploadCloud } from 'luci
 import { useTranslation } from 'react-i18next'
 
 import { Button, type ButtonProps } from '@ui/Button/Button'
+import { ButtonIconBox } from '@ui/Button/ButtonIconBox'
 
 export interface SubmitButtonProps {
   children?: ReactNode
@@ -13,6 +14,7 @@ export interface SubmitButtonProps {
   error?: boolean | string
   action?: SubmitAction
   noIcon?: boolean
+  iconBox?: true
   tooltip?: ButtonProps['tooltip']
   withRetry?: boolean
 }
@@ -51,6 +53,19 @@ const buildIcon = ({
   return <Save size={16} />
 }
 
+const withRenderedIcon = ({
+  iconBox,
+  ...iconProps
+}: Parameters<typeof buildIcon>[0] & { iconBox?: true }) => {
+  const icon = buildIcon(iconProps)
+
+  if (icon && iconBox) {
+    return <ButtonIconBox>{icon}</ButtonIconBox>
+  }
+
+  return icon
+}
+
 export const SubmitButton = ({
   processing,
   disabled,
@@ -58,6 +73,7 @@ export const SubmitButton = ({
   children,
   action = SubmitAction.SAVE,
   noIcon,
+  iconBox,
   tooltip,
   withRetry,
   onClick,
@@ -90,7 +106,7 @@ export const SubmitButton = ({
       tooltip={typeof error === 'string' ? error : tooltip}
     >
       {children}
-      {buildIcon({ error, action, noIcon })}
+      {withRenderedIcon({ error, action, noIcon, iconBox })}
     </Button>
   )
 }
