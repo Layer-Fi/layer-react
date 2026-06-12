@@ -159,7 +159,7 @@ export const ProfitAndLossCompareTable = ({
             return (
               <ReportsTableAmountCell
                 key={'compare-value' + i}
-                amount={typeof comparisonValue === 'number' ? comparisonValue : 0}
+                amount={typeof comparisonValue === 'number' && Number.isFinite(comparisonValue) ? comparisonValue : 0}
               />
             )
           })}
