@@ -1,6 +1,7 @@
 .Layer__ExpandButton {
   height: 16px;
   min-width: 16px;
+  transition: transform 100ms ease-in-out;
 
   &--collapsed {
     transform: rotate(-90deg);

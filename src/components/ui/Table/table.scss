@@ -1,6 +1,11 @@
 .Layer__UI__Table-Table {
   border-collapse: separate;
   border-spacing: 0;
+
+  &[data-bottom-spacing] {
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-lg);
+  }
 }
 
 .Layer__UI__Table-TableHeader {
@@ -57,6 +62,35 @@
       background-color: var(--color-base-100);
     }
   }
+
+  &[data-variant] .Layer__UI__Table-Cell {
+    background-color: inherit;
+  }
+
+  &[data-variant='expandable'],
+  &[data-variant='main'] {
+    background-color: var(--color-base-0);
+  }
+
+  &[data-variant='expandable'] {
+    cursor: pointer;
+  }
+
+  &[data-variant='main']:hover {
+    background-color: var(--color-base-50);
+  }
+
+  &[data-variant='default'] {
+    background-color: var(--color-base-50);
+  }
+
+  &[data-variant='summation'] {
+    background-color: var(--color-base-100);
+  }
+
+  &[data-divider] .Layer__UI__Table-Cell {
+    border-top: var(--spacing-2xs) solid var(--color-base-100);
+  }
 }
 
 .Layer__UI__Table-Column {
@@ -99,6 +133,16 @@
   &:last-child {
     padding-right: var(--spacing-md);
   }
+
+  &[data-nowrap] {
+    white-space: nowrap;
+  }
+
+  @for $indent from 1 through 10 {
+    &[data-indent='#{$indent}'] {
+      padding-inline-start: calc(var(--spacing-lg) * #{$indent} + var(--spacing-md));
+    }
+  }
 }
 
 .Layer__UI__Table-Column,
@@ -109,6 +153,18 @@
     &[data-align="#{$alignment}"] {
       text-align: $alignment;
     }
+  }
+
+  &[data-align='center'] {
+    justify-content: center;
+  }
+
+  &[data-align='end'] {
+    justify-content: flex-end;
+  }
+
+  &[data-primary] {
+    font-weight: var(--font-weight-bold);
   }
 }
 

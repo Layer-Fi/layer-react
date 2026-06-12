@@ -3,14 +3,13 @@ import { useTranslation } from 'react-i18next'
 
 import type { BalanceSheet } from '@internal-types/balanceSheet'
 import type { LineItem } from '@internal-types/lineItem'
-import { TableCellAlign } from '@internal-types/table'
+import { Alignment } from '@schemas/reports/unifiedReport'
 import { useEffectOnMount } from '@hooks/utils/react/useEffectOnMount'
 import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
-import { Table } from '@components/Table/Table'
-import { TableBody } from '@components/TableBody/TableBody'
-import { TableCell } from '@components/TableCell/TableCell'
-import { TableHead } from '@components/TableHead/TableHead'
-import { TableRow } from '@components/TableRow/TableRow'
+import { HStack } from '@ui/Stack/Stack'
+import { Cell, Column, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { ExpandButton } from '@components/ExpandButton/ExpandButton'
 
 export interface BalanceSheetTableStringOverrides {
   typeColumnHeader?: string
@@ -65,25 +64,29 @@ export const BalanceSheetTable = ({
 
     return (
       <Fragment key={rowKey + '-' + rowIndex}>
-        <TableRow
-          rowKey={rowKey + '-' + rowIndex}
-          expandable={expandable}
-          isExpanded={showChildren}
-          handleExpand={() => setIsOpen(rowKey)}
+        <Row
+          nonAria
           depth={depth}
+          variant={expandable ? 'expandable' : 'default'}
           withDivider={depth === 0 && rowIndex > 0}
+          onAction={expandable ? () => setIsOpen(rowKey) : undefined}
         >
-          <TableCell withExpandIcon={expandable} primary={expandable}>
-            {lineItem.display_name}
-          </TableCell>
-          <TableCell
-            isCurrency={!expandable || (expandable && !expanded)}
-            primary={expandable}
-            align={TableCellAlign.RIGHT}
-          >
-            {(!expandable || (expandable && !expanded)) && lineItem.value}
-          </TableCell>
-        </TableRow>
+          <Cell nonAria indent={depth} primary={expandable}>
+            {expandable
+              ? (
+                <HStack align='center' gap='xs'>
+                  <ExpandButton isExpanded={showChildren} />
+                  {lineItem.display_name}
+                </HStack>
+              )
+              : lineItem.display_name}
+          </Cell>
+          <Cell nonAria primary={expandable} alignment={Alignment.Right}>
+            {(!expandable || (expandable && !expanded)) && (
+              <MoneySpan amount={lineItem.value ?? 0} />
+            )}
+          </Cell>
+        </Row>
         {showChildren
           && lineItem.line_items
           && lineItem.line_items.map((subItem, subIdx) =>
@@ -95,46 +98,46 @@ export const BalanceSheetTable = ({
             ),
           )}
         {showChildren && expandable && (
-          <TableRow
-            rowKey={rowKey + '-' + rowIndex + '--summation'}
-            depth={depth + 1}
-            variant='summation'
-          >
-            <TableCell primary>{t('reports:label.total_display_name', 'Total of {{displayName}}', { displayName: lineItem.display_name })}</TableCell>
-            <TableCell primary isCurrency align={TableCellAlign.RIGHT}>
-              {lineItem.value}
-            </TableCell>
-          </TableRow>
+          <Row nonAria depth={depth + 1} variant='summation'>
+            <Cell nonAria indent={depth + 1} primary>
+              {t('reports:label.total_display_name', 'Total of {{displayName}}', { displayName: lineItem.display_name })}
+            </Cell>
+            <Cell nonAria primary alignment={Alignment.Right}>
+              <MoneySpan amount={lineItem.value ?? 0} />
+            </Cell>
+          </Row>
         )}
       </Fragment>
     )
   }
 
   return (
-    <Table borderCollapse='collapse'>
-      <TableHead>
-        <TableRow isHeadRow rowKey='balance-sheet-head-row'>
-          <TableCell isHeaderCell>
-            {stringOverrides?.typeColumnHeader || 'Type'}
-          </TableCell>
-          <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
-            {stringOverrides?.totalColumnHeader || 'Total'}
-          </TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {config.map((row, idx) => (
-          <Fragment key={row.lineItem}>
-            {data[row.lineItem as keyof BalanceSheet]
-              && renderLineItem(
-                data[row.lineItem as keyof BalanceSheet] as LineItem,
-                0,
-                row.lineItem,
-                idx,
-              )}
-          </Fragment>
-        ))}
-      </TableBody>
-    </Table>
+    <div className='Layer__UI__Table-ScrollContainer'>
+      <Table nonAria bottomSpacing className='Layer__UI__Table__Report'>
+        <TableHeader nonAria>
+          <Row nonAria>
+            <Column nonAria>
+              {stringOverrides?.typeColumnHeader || 'Type'}
+            </Column>
+            <Column nonAria alignment={Alignment.Right}>
+              {stringOverrides?.totalColumnHeader || 'Total'}
+            </Column>
+          </Row>
+        </TableHeader>
+        <TableBody nonAria>
+          {config.map((row, idx) => (
+            <Fragment key={row.lineItem}>
+              {data[row.lineItem as keyof BalanceSheet]
+                && renderLineItem(
+                  data[row.lineItem as keyof BalanceSheet] as LineItem,
+                  0,
+                  row.lineItem,
+                  idx,
+                )}
+            </Fragment>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   )
 }

@@ -54,8 +54,14 @@ type TableRenderingProps = {
 }
 
 // TABLE
-const Table = forwardRef<HTMLTableElement, TableProps & TableRenderingProps>(
-  ({ children, className, nonAria, slot, ...restProps }, ref) => {
+type TableStyleProps = {
+  bottomSpacing?: boolean
+}
+
+const Table = forwardRef<HTMLTableElement, TableProps & TableStyleProps & TableRenderingProps>(
+  ({ children, className, nonAria, slot, bottomSpacing, ...restProps }, ref) => {
+    const dataProperties = toDataProperties({ 'bottom-spacing': bottomSpacing })
+
     const TableComponent = nonAria
       ? 'table'
       : ReactAriaTable
@@ -65,6 +71,7 @@ const Table = forwardRef<HTMLTableElement, TableProps & TableRenderingProps>(
         className={getClassName(TableSubComponent.Table, className)}
         slot={slot ?? undefined}
         {...restProps}
+        {...dataProperties}
         ref={ref}
       >
         {children}
@@ -129,15 +136,19 @@ const TableBody = forwardRef(TableBodyInner) as (<T>(
 TableBody.displayName = TableSubComponent.TableBody
 
 // TABLE ROW
+type RowVariant = 'default' | 'expandable' | 'summation' | 'main'
+
 type RowStyleProps = {
   depth?: number
+  variant?: RowVariant
+  withDivider?: boolean
 }
 
 const RowInner = <T extends object>(
-  { children, className, depth = 0, nonAria, id, onAction, ...restProps }: RowProps<T> & RowStyleProps & TableRenderingProps,
+  { children, className, depth = 0, variant, withDivider, nonAria, id, onAction, ...restProps }: RowProps<T> & RowStyleProps & TableRenderingProps,
   ref: React.Ref<HTMLTableRowElement>,
 ) => {
-  const dataProperties = toDataProperties({ depth })
+  const dataProperties = toDataProperties({ depth, variant, divider: withDivider })
 
   const RowComponent = nonAria
     ? 'tr'
@@ -172,11 +183,12 @@ type ColumnStyleProps = {
   alignment?: Alignment
   colSpan?: number
   pinned?: PinnedSide
+  primary?: boolean
 }
 
 const Column = forwardRef<HTMLTableCellElement, ColumnProps & ColumnStyleProps & TableRenderingProps>(
-  ({ children, className, nonAria, id, alignment = Alignment.Left, colSpan = 1, pinned, ...restProps }, ref) => {
-    const dataProperties = toDataProperties({ align: toAlignmentDataValue(alignment), pinned })
+  ({ children, className, nonAria, id, alignment = Alignment.Left, colSpan = 1, pinned, primary, ...restProps }, ref) => {
+    const dataProperties = toDataProperties({ align: toAlignmentDataValue(alignment), pinned, primary })
     const columnClassName = getClassName(TableSubComponent.Column, className)
 
     const ColumnComponent = nonAria
@@ -204,11 +216,14 @@ Column.displayName = TableSubComponent.Column
 type CellStyleProps = {
   alignment?: Alignment
   pinned?: PinnedSide
+  primary?: boolean
+  nowrap?: boolean
+  indent?: number
 }
 
 const Cell = forwardRef<HTMLTableCellElement, CellProps & CellStyleProps & TableRenderingProps>(
-  ({ children, className, nonAria, id, alignment, pinned, ...restProps }, ref) => {
-    const dataProperties = toDataProperties({ align: toAlignmentDataValue(alignment), pinned })
+  ({ children, className, nonAria, id, alignment, pinned, primary, nowrap, indent, ...restProps }, ref) => {
+    const dataProperties = toDataProperties({ align: toAlignmentDataValue(alignment), pinned, primary, nowrap, indent })
 
     const CellComponent = nonAria
       ? 'td'
