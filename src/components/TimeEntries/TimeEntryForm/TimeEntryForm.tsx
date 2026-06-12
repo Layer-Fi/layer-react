@@ -15,7 +15,6 @@ import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { useTimeEntryForm } from '@components/TimeEntries/TimeEntryForm/useTimeEntryForm'
 import { TimeEntryServiceSelector } from '@components/TimeEntries/TimeEntryServiceSelector/TimeEntryServiceSelector'
-import { TextSize } from '@components/Typography/Text'
 
 import './timeEntryForm.scss'
 
@@ -85,7 +84,7 @@ export const TimeEntryForm = ({ onSuccess, entry, isReadOnly }: TimeEntryFormPro
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize={TextSize.md}
+                  titleSize='md'
                   inline
                 />
               </HStack>

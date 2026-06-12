@@ -16,10 +16,6 @@
   align-items: center;
 }
 
-.Layer__bar-banner__text-container__desc {
-  color: var(--color-base-300);
-}
-
 @container (max-width: 560px) {
   .Layer__bar-banner--bookkeeping {
     flex-direction: column;

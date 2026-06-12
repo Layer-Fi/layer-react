@@ -6,6 +6,7 @@
   font-size: var(--text-md);
   line-height: 140%;
   font-family: var(--font-family);
+  font-variant-numeric: lining-nums proportional-nums;
 
   color: var(--color-base-900);
   text-wrap: pretty;
@@ -32,6 +33,30 @@
 
   &[data-status='success'] {
     color: var(--color-info-success);
+
+    &[data-invert] {
+      color: var(--color-info-success-bg);
+    }
+  }
+
+  &[data-status='warning'] {
+    color: var(--color-info-warning-fg);
+
+    &[data-invert] {
+      color: var(--color-info-warning-bg);
+    }
+  }
+
+  &[data-status='disabled'] {
+    color: var(--color-base-500);
+  }
+
+  &[data-status='info'] {
+    color: var(--color-info-fg);
+
+    &[data-invert] {
+      color: var(--color-info-bg);
+    }
   }
 
   &[data-no-wrap] {

@@ -32,7 +32,6 @@ import { IconButton } from '@components/Button/IconButton'
 import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { IconBox } from '@components/IconBox/IconBox'
-import { Text, TextSize } from '@components/Typography/Text'
 
 import './bankTransactionRow.scss'
 
@@ -179,9 +178,7 @@ export const BankTransactionRow = ({
           className='Layer__table-cell Layer__bank-transaction-table__date-col'
         >
           <span className='Layer__table-cell-content'>
-            <Span>
-              {formatDate(bankTransaction.date)}
-            </Span>
+            <Span>{formatDate(bankTransaction.date)}</Span>
           </span>
         </td>
         <td
@@ -249,14 +246,10 @@ export const BankTransactionRow = ({
               <HStack pie='md' gap='md' justify='end' className='Layer__bank-transaction-row__category-open'>
                 {isError
                   && (
-                    <Text
-                      as='span'
-                      size={TextSize.md}
-                      className='Layer__unsaved-info'
-                    >
-                      <span>{t('common:state.unsaved', 'Unsaved')}</span>
+                    <Span status='error'>
+                      {t('common:state.unsaved', 'Unsaved')}
                       <CircleAlert size={12} />
-                    </Text>
+                    </Span>
                   )}
                 {isCategorizationEnabled && submitButton}
                 {!isCategorizationEnabled && !displayAsCategorized && (

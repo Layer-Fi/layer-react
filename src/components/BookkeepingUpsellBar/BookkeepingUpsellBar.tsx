@@ -1,10 +1,10 @@
 import { Coffee } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { P } from '@ui/Typography/Text'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { Link } from '@components/Button/Link'
 import { IconBox } from '@components/IconBox/IconBox'
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
 import './bookkeepingUpsellBar.scss'
 
@@ -25,15 +25,12 @@ export const BookkeepingUpsellBar = ({
           <Coffee size={11} />
         </IconBox>
         <div className='Layer__bar-banner__text-container'>
-          <Text size={TextSize.md} weight={TextWeight.bold}>
+          <P weight='bold' variant='inherit'>
             {t('bookkeeping:prompt.need_help_books', 'Need help with your books?')}
-          </Text>
-          <Text
-            size={TextSize.sm}
-            className='Layer__bar-banner__text-container__desc'
-          >
+          </P>
+          <P size='sm' variant='white'>
             {t('bookkeeping:label.order_our_bookkeeping_service', 'Order our bookkeeping service supported by real humans.')}
-          </Text>
+          </P>
         </div>
       </div>
       {onClick

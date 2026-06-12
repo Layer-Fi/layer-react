@@ -26,7 +26,8 @@ export type TextStyleProps = {
   pie?: Spacing
   pis?: Spacing
   size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-  status?: 'error' | 'success'
+  status?: 'error' | 'success' | 'warning' | 'disabled' | 'info'
+  invert?: true
   textCase?: 'uppercase' | 'lowercase' | 'capitalize'
   variant?: 'placeholder' | 'subtle' | 'inherit' | 'white'
   weight?: 'normal' | 'bold'
@@ -42,6 +43,7 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
     align,
     children,
     ellipsis,
+    invert,
     nonAria,
     noWrap,
     numeric,
@@ -64,6 +66,7 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
     dataProperties: toDataProperties({
       align,
       ellipsis,
+      invert,
       'no-wrap': noWrap,
       numeric,
       pb,

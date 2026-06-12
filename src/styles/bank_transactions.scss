@@ -283,13 +283,6 @@
   .Layer__bank-transaction-list-item__expanded-row {
     overflow: hidden;
   }
-
-  & > .Layer__text--error {
-    padding: var(--spacing-md);
-    padding-top: 0;
-    margin: 0;
-    font-size: var(--text-xs);
-  }
 }
 
 .Layer__bank-transaction-list-item.Layer__bank-transaction-list-item--expanded {
@@ -627,7 +620,7 @@
     gap: var(--spacing-sm);
   }
 
-  .Layer__file-upload__label {
+  .Layer__file-upload > .Layer__P {
     color: var(--color-base-500);
   }
 }

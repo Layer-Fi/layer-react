@@ -12,7 +12,6 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { useTripForm } from '@components/Trips/TripForm/useTripForm'
 import { TripPurposeComboBox } from '@components/Trips/TripPurposeComboBox/TripPurposeComboBox'
-import { TextSize } from '@components/Typography/Text'
 import { VehicleSelector } from '@components/VehicleManagement/VehicleSelector/VehicleSelector'
 
 import './tripForm.scss'
@@ -46,7 +45,7 @@ export const TripForm = (props: TripFormProps) => {
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize={TextSize.md}
+                  titleSize='md'
                   inline
                 />
               </HStack>

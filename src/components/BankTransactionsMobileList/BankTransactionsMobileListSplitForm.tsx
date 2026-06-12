@@ -177,7 +177,7 @@ export const BankTransactionsMobileListSplitForm = ({
               </HStack>
             </Button>
           </HStack>
-          {splitFormError && <ErrorText>{splitFormError}</ErrorText>}
+          {splitFormError && <ErrorText size='sm' align='center' pb='sm'>{splitFormError}</ErrorText>}
         </VStack>
       )}
       <BankTransactionFormFields
@@ -232,7 +232,7 @@ export const BankTransactionsMobileListSplitForm = ({
       </HStack>
       {(isErrorCategorizing && showRetry)
         && (
-          <ErrorText>
+          <ErrorText size='sm' align='center' pb='sm'>
             {t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
           </ErrorText>
         )}

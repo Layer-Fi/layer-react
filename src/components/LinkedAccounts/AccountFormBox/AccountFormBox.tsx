@@ -8,12 +8,11 @@ import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/ban
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { VStack } from '@ui/Stack/Stack'
-import { Label } from '@ui/Typography/Text'
+import { Label, Span } from '@ui/Typography/Text'
 import { DatePicker } from '@components/DatePicker/DatePicker'
 import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 import { AmountInput } from '@components/Input/AmountInput'
 import { ErrorText } from '@components/Typography/ErrorText'
-import { Text, TextSize } from '@components/Typography/Text'
 
 import './accountFormBox.scss'
 
@@ -100,23 +99,13 @@ export const AccountFormBox = ({
       <div className={`${CLASS_NAME}__details-col`}>
         <div className={`${CLASS_NAME}__details-col__details`}>
           <div className={`${CLASS_NAME}__details-col__name`}>
-            <Text
-              className={`${CLASS_NAME}__details-col__name__institution-name`}
-              size={TextSize.sm}
-            >
-              {institutionName}
-            </Text>
-            <Text
-              className={`${CLASS_NAME}__details-col__name__account-name`}
-              size={TextSize.sm}
-            >
-              {displayName}
-            </Text>
+            <Span size='sm' variant='subtle'>{institutionName}</Span>
+            <Span size='sm'>{displayName}</Span>
           </div>
-          <Text size={TextSize.sm}>
+          <Span size='sm' variant='placeholder'>
             •••
             {bankAccount.mask}
-          </Text>
+          </Span>
         </div>
         <div className={`${CLASS_NAME}__details-col__inputs`}>
           <VStack className={`${CLASS_NAME}__input-group`}>

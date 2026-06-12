@@ -1,8 +1,8 @@
 import classNames from 'classnames'
 import { CloudDownload, Eye, Loader, Trash2 } from 'lucide-react'
 
+import { Span } from '@ui/Typography/Text'
 import { IconButton } from '@components/Button/IconButton'
-import { Text, TextSize } from '@components/Typography/Text'
 
 import './fileThumb.scss'
 
@@ -59,21 +59,15 @@ export const FileThumb = ({
           {uploadPending || deletePending
             ? (
               <div className='Layer__file-thumb__details__uploading'>
-                <Text as='span' size={TextSize.sm}>
+                <Span size='sm' status='info'>
                   {deletePending ? 'Deleting...' : 'Uploading'}
-                </Text>
+                </Span>
                 <Loader className='Layer__anim--rotating' size={11} />
               </div>
             )
             : error
               ? (
-                <Text
-                  as='span'
-                  size={TextSize.sm}
-                  className='Layer__file-thumb__details__error'
-                >
-                  {error}
-                </Text>
+                <Span size='sm' status='error'>{error}</Span>
               )
               : (
                 <div className='Layer__file-thumb__details__date'>{date}</div>

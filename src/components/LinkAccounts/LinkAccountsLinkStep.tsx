@@ -11,6 +11,7 @@ import { Button } from '@ui/Button/Button'
 import { ElevatedLoadingSpinner, ElevatedLoadingSpinnerContainer } from '@ui/Loading/ElevatedLoadingSpinner'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
+import { P } from '@ui/Typography/Text'
 import { ActionableRow } from '@components/ActionableRow/ActionableRow'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { LinkAccountsListContainer } from '@components/LinkAccounts/LinkAccountsListContainer'
@@ -18,7 +19,6 @@ import { BasicLinkedAccountContainer, BasicLinkedAccountContent } from '@compone
 import { LinkAccountDemoTooltip } from '@components/LinkedAccounts/LinkAccountDemoTooltip'
 import { Loader } from '@components/Loader/Loader'
 import { Separator } from '@components/Separator/Separator'
-import { Text } from '@components/Typography/Text'
 import { ConditionalList } from '@components/utility/ConditionalList'
 import { useWizard } from '@components/Wizard/Wizard'
 
@@ -48,9 +48,9 @@ export function LinkAccountsLinkStep() {
           <ElevatedLoadingSpinnerContainer>
             {isLinking && <ElevatedLoadingSpinner />}
             <VStack gap='xl' pbe='md'>
-              <Text status='disabled'>
+              <P status='disabled'>
                 {t('linkedAccounts:label.connect_bank_accounts_and_credit_cards', 'Connect your bank accounts and credit cards to automatically import your business transactions.')}
-              </Text>
+              </P>
               <LinkAccountDemoTooltip active={isDemoBusiness}>
                 <Button
                   onClick={() => { void addConnection('PLAID') }}
@@ -76,9 +76,9 @@ export function LinkAccountsLinkStep() {
                     other: 'We’ve found {{displayCount}} accounts',
                   })}
                 </Heading>
-                <Text status='disabled'>
+                <P status='disabled'>
                   {t('linkedAccounts:label.remove_unused_accounts_next_step', 'You’ll have the chance to remove any accounts you don’t use for your business in the next step.')}
-                </Text>
+                </P>
               </VStack>
               <LinkAccountsListContainer>
                 {children}

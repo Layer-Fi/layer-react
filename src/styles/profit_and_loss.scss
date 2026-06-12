@@ -194,8 +194,7 @@
   justify-content: center;
 }
 
-.Layer__profit-and-loss-chart__state-card__description {
-  text-align: center;
+.Layer__profit-and-loss-chart__state-card__text > .Layer__P[data-size='sm'] {
   color: var(--text-color-secondary);
 }
 

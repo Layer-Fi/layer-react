@@ -18,7 +18,6 @@ import { JournalEntryLineItemsTable } from '@components/Journal/JournalEntryForm
 import { useJournalEntryForm } from '@components/Journal/JournalEntryForm/useJournalEntryForm'
 import { Separator } from '@components/Separator/Separator'
 import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
-import { TextSize } from '@components/Typography/Text'
 
 import './journalEntryForm.scss'
 
@@ -82,7 +81,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize={TextSize.md}
+                  titleSize='md'
                   inline
                 />
               </HStack>

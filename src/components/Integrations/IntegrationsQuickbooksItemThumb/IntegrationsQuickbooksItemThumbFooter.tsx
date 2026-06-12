@@ -5,9 +5,9 @@ import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
 import { QuickbooksConnectionSyncUiState } from '@components/Integrations/IntegrationsQuickbooksItemThumb/utils'
-import { Text, TextSize } from '@components/Typography/Text'
 
 const useFooterConfig = (
   quickbooksUiState: QuickbooksConnectionSyncUiState,
@@ -64,11 +64,9 @@ export const IntegrationsQuickbooksItemThumbFooter = ({ quickbooksUiState }: Int
   return (
     <HStack className='loadingbar'>
       <VStack>
-        <Text size={TextSize.sm}>{title}</Text>
+        <Span size='sm'>{title}</Span>
         {description && (
-          <Text size={TextSize.sm} className='syncing-data-description'>
-            {description}
-          </Text>
+          <Span size='sm' variant='subtle'>{description}</Span>
         )}
       </VStack>
       <Spacer />

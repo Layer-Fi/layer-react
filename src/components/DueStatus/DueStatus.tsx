@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { tPlural } from '@utils/i18n/plural'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
+import { P, Span, type TextStyleProps } from '@ui/Typography/Text'
 
 import './dueStatus.scss'
 
@@ -101,6 +101,19 @@ const dueStatusTitle = (
   }
 }
 
+const dueStatusTextStatus = (type: string): TextStyleProps['status'] => {
+  switch (type) {
+    case 'overdue':
+      return 'error'
+    case 'paid':
+      return 'success'
+    case 'today':
+      return 'warning'
+    default:
+      return undefined
+  }
+}
+
 const getDiff = (refDate: Date | string) => {
   const d = (refDate instanceof Date ? refDate : parseISO(refDate)).setHours(0, 0, 0, 0)
   if (isNaN(d)) {
@@ -138,18 +151,12 @@ export const DueStatus = ({ dueDate, paidAt, size = 'md' }: DueStatusProps) => {
   return (
     <div {...dataProps} className={`Layer__due-status Layer__due-status--${size}`}>
       {date.title && (
-        <Text
-          className='Layer__due-status__title'
-          weight={TextWeight.bold}
-          size={size === 'sm' ? TextSize.sm : TextSize.md}
-        >
+        <Span weight='bold' size={size} status={dueStatusTextStatus(date.type)}>
           {date.title}
-        </Text>
+        </Span>
       )}
       {date.diffText && (
-        <Text className='Layer__due-status__subtitle' size={TextSize.sm}>
-          {date.diffText}
-        </Text>
+        <P size='sm'>{date.diffText}</P>
       )}
     </div>
   )
