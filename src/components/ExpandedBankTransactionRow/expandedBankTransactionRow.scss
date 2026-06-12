@@ -117,6 +117,15 @@
 
 .Layer__expanded-bank-transaction-row__splits-buttons {
   padding-bottom: 2px;
+
+  .Layer__UI__Button[data-variant='text'] {
+    color: var(--color-base-700);
+    text-decoration: underline;
+
+    &[data-hovered] {
+      color: var(--color-base-1000);
+    }
+  }
 }
 
 .Layer__expanded-bank-transaction-row__total-and-btns {
