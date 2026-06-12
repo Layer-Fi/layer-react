@@ -6,7 +6,6 @@ import {
   type ProfitAndLossComparisonPnl,
 } from '@internal-types/profitAndLoss'
 import { type LineItemEncoded } from '@schemas/common/lineItem'
-import { Alignment } from '@schemas/reports/unifiedReport'
 import {
   generateComparisonPeriods,
   getComparisonValue,
@@ -161,7 +160,6 @@ export const ProfitAndLossCompareTable = ({
               <ReportsTableAmountCell
                 key={'compare-value' + i}
                 amount={typeof comparisonValue === 'number' ? comparisonValue : 0}
-                alignment={Alignment.Left}
               />
             )
           })}

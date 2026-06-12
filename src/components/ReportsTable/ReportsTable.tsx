@@ -123,22 +123,16 @@ export const ReportsTableNameCell = ({
 type ReportsTableAmountCellProps = {
   amount?: number
   bold?: boolean
-  alignment?: Alignment
   onPress?: () => void
 }
 
-export const ReportsTableAmountCell = ({
-  amount,
-  bold = false,
-  alignment = Alignment.Right,
-  onPress,
-}: ReportsTableAmountCellProps) => {
+export const ReportsTableAmountCell = ({ amount, bold = false, onPress }: ReportsTableAmountCellProps) => {
   const moneySpan = amount !== undefined
     ? <MoneySpan amount={amount} weight={bold ? 'bold' : 'normal'} />
     : null
 
   return (
-    <Cell nonAria alignment={alignment}>
+    <Cell nonAria alignment={Alignment.Right}>
       {moneySpan && (
         onPress
           ? <Button variant='text' onPress={onPress}>{moneySpan}</Button>
