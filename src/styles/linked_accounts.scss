@@ -175,7 +175,7 @@
       justify-content: stretch;
       min-width: 0;
 
-      > .Layer__Span {
+      > .Layer__Span:first-child {
         flex: 1;
         width: 200px;
       }
