@@ -10,7 +10,7 @@ import { useBankTransactionsFilters } from '@contexts/BankTransactionsFiltersCon
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import PlaidIcon from '@icons/PlaidIcon'
-import { P } from '@ui/Typography/Text'
+import { Span } from '@ui/Typography/Text'
 import { ActionableRow } from '@components/ActionableRow/ActionableRow'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
 import { BadgeSize } from '@components/Badge/Badge'
@@ -86,7 +86,7 @@ export const ConnectAccount = ({
           <ActionableRow
             icon={<Folder size={12} />}
             title={(
-              <P>
+              <Span>
                 {t('bankTransactions:action.categorize_transactions', 'Categorize transactions')}
                 {' '}
                 <Badge
@@ -98,7 +98,7 @@ export const ConnectAccount = ({
                   {' '}
                   {t('ui:state.pending', 'pending')}
                 </Badge>
-              </P>
+              </Span>
             )}
             description={t('bankTransactions:label.data_on_platform_categorize', 'Once your data is on the platform categorize them in Bank Transactions tab')}
             onClick={() => onTransactionsToReviewClick()}

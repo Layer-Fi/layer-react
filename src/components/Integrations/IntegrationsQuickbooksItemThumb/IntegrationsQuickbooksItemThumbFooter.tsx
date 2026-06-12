@@ -5,7 +5,7 @@ import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { QuickbooksContext } from '@contexts/QuickbooksContext/QuickbooksContext'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
-import { P } from '@ui/Typography/Text'
+import { Span } from '@ui/Typography/Text'
 import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
 import { QuickbooksConnectionSyncUiState } from '@components/Integrations/IntegrationsQuickbooksItemThumb/utils'
 
@@ -64,9 +64,9 @@ export const IntegrationsQuickbooksItemThumbFooter = ({ quickbooksUiState }: Int
   return (
     <HStack className='loadingbar'>
       <VStack>
-        <P size='sm'>{title}</P>
+        <Span size='sm'>{title}</Span>
         {description && (
-          <P size='sm' variant='subtle'>{description}</P>
+          <Span size='sm' variant='subtle'>{description}</Span>
         )}
       </VStack>
       <Spacer />

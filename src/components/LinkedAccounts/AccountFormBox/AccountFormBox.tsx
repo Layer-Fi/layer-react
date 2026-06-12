@@ -7,7 +7,7 @@ import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/bankAccount'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
-import { P } from '@ui/Typography/Text'
+import { Span } from '@ui/Typography/Text'
 import { DatePicker } from '@components/DatePicker/DatePicker'
 import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 import { AmountInput } from '@components/Input/AmountInput'
@@ -99,13 +99,13 @@ export const AccountFormBox = ({
       <div className={`${CLASS_NAME}__details-col`}>
         <div className={`${CLASS_NAME}__details-col__details`}>
           <div className={`${CLASS_NAME}__details-col__name`}>
-            <P size='sm' variant='subtle'>{institutionName}</P>
-            <P size='sm' variant='strong'>{displayName}</P>
+            <Span size='sm' variant='subtle'>{institutionName}</Span>
+            <Span size='sm' variant='strong'>{displayName}</Span>
           </div>
-          <P size='sm' variant='inherit'>
+          <Span size='sm' variant='inherit'>
             •••
             {bankAccount.mask}
-          </P>
+          </Span>
         </div>
         <div className={`${CLASS_NAME}__details-col__inputs`}>
           <InputGroup label={t('linkedAccounts:label.opening_date', 'Opening date')}>

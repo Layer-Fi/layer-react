@@ -6,7 +6,7 @@ import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution, isBankAccountSyncing } from '@utils/bankAccount'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
-import { P, Span } from '@ui/Typography/Text'
+import { Span } from '@ui/Typography/Text'
 
 export interface LinkedAccountThumbProps {
   bankAccount: BankAccount
@@ -19,10 +19,10 @@ export interface LinkedAccountThumbProps {
 
 const AccountNumber = ({ accountNumber }: { accountNumber: string }) => (
   <div className='account-number'>
-    <P size='sm' variant='inherit'>
+    <Span size='sm' variant='inherit'>
       •••
       {accountNumber}
-    </P>
+    </Span>
   </div>
 )
 
@@ -64,7 +64,7 @@ export const LinkedAccountThumb = ({
     <div className={linkedAccountThumbClassName}>
       <div className={linkedAccountInfoClassName}>
         <div className='topbar-details'>
-          <P variant='inherit' ellipsis>{displayName}</P>
+          <Span variant='inherit' ellipsis>{displayName}</Span>
           {!asWidget && bankAccount.mask && (
             <AccountNumber accountNumber={bankAccount.mask} />
           )}
@@ -91,12 +91,12 @@ export const LinkedAccountThumb = ({
         ? (
           <div className='loadingbar'>
             <div className='loading-text'>
-              <P size='sm' variant='inherit'>
+              <Span size='sm' variant='inherit'>
                 {t('linkedAccounts:state.syncing_account_data', 'Syncing account data')}
-              </P>
-              <P size='sm' variant='subtle'>
+              </Span>
+              <Span size='sm' variant='subtle'>
                 {t('linkedAccounts:label.may_take_up_to_5_minutes', 'This may take up to 5 minutes')}
-              </P>
+              </Span>
             </div>
             <div className='loading-wrapper'>
               <Loader size={11} className='Layer__anim--rotating' />

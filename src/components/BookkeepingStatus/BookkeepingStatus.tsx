@@ -1,6 +1,6 @@
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { type BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
-import { P } from '@ui/Typography/Text'
+import { Span } from '@ui/Typography/Text'
 import { useBookkeepingStatusConfig } from '@components/BookkeepingStatus/useBookkeepingStatusConfig'
 
 import './bookkeepingStatus.scss'
@@ -26,9 +26,9 @@ export const BookkeepingStatus = ({ status, text, monthNumber, iconOnly }: Bookk
         {statusConfig.icon}
       </span>
       {!iconOnly && (
-        <P size='sm' status={statusConfig.color}>
+        <Span size='sm' status={statusConfig.color}>
           {text ?? statusConfig.label}
-        </P>
+        </Span>
       )}
     </span>
   )
