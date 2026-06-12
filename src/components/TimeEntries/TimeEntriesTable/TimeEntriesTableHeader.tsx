@@ -21,7 +21,7 @@ export const TimeEntriesTableHeader = () => {
 
   const HeaderActions = useCallback(() => (
     <HStack gap='xs'>
-      <Button variant='outlined-light' onPress={onAddEntry}>
+      <Button variant='outlined' onPress={onAddEntry}>
         {t('timeTracking:action.add_entry', 'Add Entry')}
         <Plus size={16} />
       </Button>

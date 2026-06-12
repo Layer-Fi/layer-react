@@ -58,7 +58,7 @@ const NoBankAccountsLinkedBanner = () => {
   const Icon = isMobile ? null : <Info size={16} />
   const title = t('linkedAccounts:label.link_your_bank_accounts', 'Link your bank accounts')
   const description = t('linkedAccounts:label.link_your_bank_accounts_description', 'Linking your bank accounts allows us to load your bank transactions and automatically categorize them.')
-  const Button = <LayerButton onPress={handleLinkBankAccounts} variant='outlined-light'>{title}</LayerButton>
+  const Button = <LayerButton onPress={handleLinkBankAccounts} variant='outlined'>{title}</LayerButton>
   return <Banner title={title} description={description} slots={{ Icon, Button }} />
 }
 
@@ -68,7 +68,7 @@ const NoTaxProfileBanner = ({ onSetupTaxProfile }: Pick<SolopreneurOnboardingBan
   const Icon = isMobile ? null : <Info size={16} />
   const title = t('taxEstimates:label.set_up_your_tax_profile', 'Set up your tax profile')
   const description = t('taxEstimates:label.set_up_your_tax_profile_description', 'Configuring your tax profile allows us to provide you with tax estimates and avoid any surprises come tax time.')
-  const Button = onSetupTaxProfile ? <LayerButton onPress={onSetupTaxProfile} variant='outlined-light'>{title}</LayerButton> : null
+  const Button = onSetupTaxProfile ? <LayerButton onPress={onSetupTaxProfile} variant='outlined'>{title}</LayerButton> : null
   return <Banner title={title} description={description} slots={{ Icon, Button }} />
 }
 

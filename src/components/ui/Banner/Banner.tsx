@@ -147,7 +147,7 @@ export type BannerButtonProps = Omit<ButtonProps, 'variant'> & {
   variant?: ButtonProps['variant']
 }
 
-export const BannerButton = ({ variant = 'outlined-light', ...rest }: BannerButtonProps) => (
+export const BannerButton = ({ variant = 'outlined', ...rest }: BannerButtonProps) => (
   <Button variant={variant} {...rest} />
 )
 

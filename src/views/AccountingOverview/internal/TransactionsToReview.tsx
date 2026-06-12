@@ -118,7 +118,7 @@ export function TransactionsToReview({
         {transactionsToReviewBadge}
       </VStack>
       <Button
-        variant='outlined-light'
+        variant='outlined'
         icon
         onPress={onClick}
         aria-label={t('bankTransactions:label.transactions_to_review', 'Transactions to review')}

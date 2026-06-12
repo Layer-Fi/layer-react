@@ -76,7 +76,7 @@ export const ActionableRow = ({
         {!button && onClick
           ? (
             <Button
-              variant='outlined-light'
+              variant='outlined'
               icon
               onPress={onClick}
               aria-label={typeof title === 'string' ? title : t('common:action.view_details', 'View details')}
