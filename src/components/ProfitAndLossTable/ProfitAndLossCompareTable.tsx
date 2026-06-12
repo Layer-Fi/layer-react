@@ -19,6 +19,7 @@ import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLo
 import { HStack } from '@ui/Stack/Stack'
 import { Cell, Column, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { Span } from '@ui/Typography/Text'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import { ExpandButton } from '@components/ExpandButton/ExpandButton'
 import { type ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
@@ -133,24 +134,21 @@ export const ProfitAndLossCompareTable = ({
         <Row
           nonAria
           depth={depth}
-          variant={expandable ? 'expandable' : 'default'}
+          className={expandable ? 'Layer__ReportTable__ExpandableRow' : undefined}
           onAction={expandable ? () => setIsOpen(rowKey) : undefined}
         >
           <Cell
             nonAria
-            indent={depth}
-            primary
-            nowrap
             className='Layer__profit-and-loss-compare-table__sticky-cell'
           >
             {expandable
               ? (
                 <HStack align='center' gap='xs'>
                   <ExpandButton isExpanded={expanded} />
-                  {displayName}
+                  <Span weight='bold'>{displayName}</Span>
                 </HStack>
               )
-              : displayName}
+              : <Span weight='bold'>{displayName}</Span>}
           </Cell>
           {rowData.map((cell, i) => {
             const comparisonValue = getComparisonValue(
@@ -208,8 +206,8 @@ export const ProfitAndLossCompareTable = ({
                   />
                   {selectedCompareOptions.map((option, i) => (
                     <Fragment key={option.displayName + '-' + i}>
-                      <Column key={option.displayName + '-' + i} nonAria primary>
-                        {option.displayName}
+                      <Column key={option.displayName + '-' + i} nonAria>
+                        <Span weight='bold'>{option.displayName}</Span>
                       </Column>
                       {comparePeriods
                         && Array.from({ length: comparePeriods - 1 }, (_, index) => (
@@ -222,7 +220,7 @@ export const ProfitAndLossCompareTable = ({
             </TableHeader>
             <TableBody nonAria>
               {comparePeriods && (
-                <Row nonAria variant='default'>
+                <Row nonAria>
                   <Column
                     nonAria
                     className='Layer__profit-and-loss-compare-table__sticky-cell'

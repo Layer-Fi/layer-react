@@ -1,4 +1,5 @@
 import { Fragment, useContext } from 'react'
+import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import type { LineItem } from '@schemas/common/lineItem'
@@ -10,6 +11,7 @@ import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Cell, Row, Table, TableBody } from '@ui/Table/Table'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { Span } from '@ui/Typography/Text'
 import { type BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
 import { ExpandButton } from '@components/ExpandButton/ExpandButton'
 import { ReportsTableErrorState } from '@components/ReportsTableState/ReportsTableErrorState'
@@ -80,26 +82,29 @@ export const ProfitAndLossTableComponent = ({
         <Row
           nonAria
           depth={depth}
-          variant={variant ? variant : expandable ? 'expandable' : 'default'}
+          className={classNames(
+            variant === 'summation' && 'Layer__ReportTable__SummationRow',
+            !variant && expandable && 'Layer__ReportTable__ExpandableRow',
+          )}
           onAction={expandable ? () => setIsOpen(rowKey) : undefined}
         >
-          <Cell nonAria indent={depth} primary>
+          <Cell nonAria>
             {expandable
               ? (
                 <HStack align='center' gap='xs'>
                   <ExpandButton isExpanded={expanded} />
-                  {lineItem.displayName}
+                  <Span weight='bold'>{lineItem.displayName}</Span>
                 </HStack>
               )
-              : lineItem.displayName}
+              : <Span weight='bold'>{lineItem.displayName}</Span>}
           </Cell>
           {
             showValue
             && (
-              <Cell nonAria primary alignment={Alignment.Right}>
+              <Cell nonAria alignment={Alignment.Right}>
                 {variant === 'summation' || !onLineItemClick
                   ? (
-                    <MoneySpan amount={amount} />
+                    <MoneySpan amount={amount} weight='bold' />
                   )
                   : (
                     <Button

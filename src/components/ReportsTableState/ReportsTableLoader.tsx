@@ -21,7 +21,7 @@ export const ReportsTableLoader = ({
 
   return (
     <div className='Layer__UI__Table-ScrollContainer'>
-      <Table nonAria bottomSpacing className='Layer__UI__Table__Report'>
+      <Table nonAria className='Layer__UI__Table__Report Layer__UI__Table__Report--bottom-spacing'>
         {showHeader && (
           <TableHeader nonAria>
             <Row nonAria>

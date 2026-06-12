@@ -1,4 +1,5 @@
 import { Fragment, type ReactNode, useEffect } from 'react'
+import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import type { BalanceSheet } from '@internal-types/balanceSheet'
@@ -9,6 +10,7 @@ import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { HStack } from '@ui/Stack/Stack'
 import { Cell, Column, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { Span } from '@ui/Typography/Text'
 import { ExpandButton } from '@components/ExpandButton/ExpandButton'
 
 export interface BalanceSheetTableStringOverrides {
@@ -67,23 +69,28 @@ export const BalanceSheetTable = ({
         <Row
           nonAria
           depth={depth}
-          variant={expandable ? 'expandable' : 'default'}
-          withDivider={depth === 0 && rowIndex > 0}
+          className={classNames(
+            expandable && 'Layer__ReportTable__ExpandableRow',
+            depth === 0 && rowIndex > 0 && 'Layer__ReportTable__DividerRow',
+          )}
           onAction={expandable ? () => setIsOpen(rowKey) : undefined}
         >
-          <Cell nonAria indent={depth} primary={expandable}>
+          <Cell nonAria>
             {expandable
               ? (
                 <HStack align='center' gap='xs'>
                   <ExpandButton isExpanded={showChildren} />
-                  {lineItem.display_name}
+                  <Span weight='bold'>{lineItem.display_name}</Span>
                 </HStack>
               )
               : lineItem.display_name}
           </Cell>
-          <Cell nonAria primary={expandable} alignment={Alignment.Right}>
+          <Cell nonAria alignment={Alignment.Right}>
             {(!expandable || (expandable && !expanded)) && (
-              <MoneySpan amount={lineItem.value ?? 0} />
+              <MoneySpan
+                amount={lineItem.value ?? 0}
+                weight={expandable ? 'bold' : 'normal'}
+              />
             )}
           </Cell>
         </Row>
@@ -98,12 +105,14 @@ export const BalanceSheetTable = ({
             ),
           )}
         {showChildren && expandable && (
-          <Row nonAria depth={depth + 1} variant='summation'>
-            <Cell nonAria indent={depth + 1} primary>
-              {t('reports:label.total_display_name', 'Total of {{displayName}}', { displayName: lineItem.display_name })}
+          <Row nonAria depth={depth + 1} className='Layer__ReportTable__SummationRow'>
+            <Cell nonAria>
+              <Span weight='bold'>
+                {t('reports:label.total_display_name', 'Total of {{displayName}}', { displayName: lineItem.display_name })}
+              </Span>
             </Cell>
-            <Cell nonAria primary alignment={Alignment.Right}>
-              <MoneySpan amount={lineItem.value ?? 0} />
+            <Cell nonAria alignment={Alignment.Right}>
+              <MoneySpan amount={lineItem.value ?? 0} weight='bold' />
             </Cell>
           </Row>
         )}
@@ -113,7 +122,7 @@ export const BalanceSheetTable = ({
 
   return (
     <div className='Layer__UI__Table-ScrollContainer'>
-      <Table nonAria bottomSpacing className='Layer__UI__Table__Report'>
+      <Table nonAria className='Layer__UI__Table__Report Layer__UI__Table__Report--bottom-spacing'>
         <TableHeader nonAria>
           <Row nonAria>
             <Column nonAria>

@@ -8,6 +8,7 @@ import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { HStack } from '@ui/Stack/Stack'
 import { Cell, Column, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { Span } from '@ui/Typography/Text'
 import { ExpandButton } from '@components/ExpandButton/ExpandButton'
 
 type StatementOfCashFlowRowProps = {
@@ -49,22 +50,25 @@ export const StatementOfCashFlowTable = ({
         <Row
           nonAria
           depth={depth}
-          variant={expandable ? 'expandable' : 'default'}
+          className={expandable ? 'Layer__ReportTable__ExpandableRow' : undefined}
           onAction={expandable ? () => setIsOpen(rowKey) : undefined}
         >
-          <Cell nonAria indent={depth} primary={expandable}>
+          <Cell nonAria>
             {expandable
               ? (
                 <HStack align='center' gap='xs'>
                   <ExpandButton isExpanded={expanded} />
-                  {lineItem.display_name}
+                  <Span weight='bold'>{lineItem.display_name}</Span>
                 </HStack>
               )
               : lineItem.display_name}
           </Cell>
-          <Cell nonAria primary={expandable} alignment={Alignment.Right}>
+          <Cell nonAria alignment={Alignment.Right}>
             {(!expandable || (expandable && !expanded)) && (
-              <MoneySpan amount={lineItem.value ?? 0} />
+              <MoneySpan
+                amount={lineItem.value ?? 0}
+                weight={expandable ? 'bold' : 'normal'}
+              />
             )}
           </Cell>
         </Row>
@@ -79,12 +83,14 @@ export const StatementOfCashFlowTable = ({
             ),
           )}
         {expanded && expandable && (
-          <Row nonAria depth={depth + 1} variant='summation'>
-            <Cell nonAria indent={depth + 1} primary>
-              {t('reports:label.total_display_name', 'Total of {{displayName}}', { displayName: lineItem.display_name })}
+          <Row nonAria depth={depth + 1} className='Layer__ReportTable__SummationRow'>
+            <Cell nonAria>
+              <Span weight='bold'>
+                {t('reports:label.total_display_name', 'Total of {{displayName}}', { displayName: lineItem.display_name })}
+              </Span>
             </Cell>
-            <Cell nonAria primary alignment={Alignment.Right}>
-              <MoneySpan amount={lineItem.value ?? 0} />
+            <Cell nonAria alignment={Alignment.Right}>
+              <MoneySpan amount={lineItem.value ?? 0} weight='bold' />
             </Cell>
           </Row>
         )}
@@ -94,7 +100,7 @@ export const StatementOfCashFlowTable = ({
 
   return (
     <div className='Layer__UI__Table-ScrollContainer'>
-      <Table nonAria bottomSpacing className='Layer__UI__Table__Report'>
+      <Table nonAria className='Layer__UI__Table__Report Layer__UI__Table__Report--bottom-spacing'>
         <TableHeader nonAria>
           <Row nonAria>
             <Column nonAria>
@@ -122,14 +128,15 @@ export const StatementOfCashFlowTable = ({
             }
             else {
               return (
-                <Row
-                  key={row.name + '-' + idx}
-                  nonAria
-                  variant='default'
-                >
-                  <Cell nonAria primary>{row.displayName}</Cell>
-                  <Cell nonAria primary alignment={Alignment.Right}>
-                    <MoneySpan amount={(data[row.lineItem as keyof StatementOfCashFlow] as number) ?? 0} />
+                <Row key={row.name + '-' + idx} nonAria>
+                  <Cell nonAria>
+                    <Span weight='bold'>{row.displayName}</Span>
+                  </Cell>
+                  <Cell nonAria alignment={Alignment.Right}>
+                    <MoneySpan
+                      amount={(data[row.lineItem as keyof StatementOfCashFlow] as number) ?? 0}
+                      weight='bold'
+                    />
                   </Cell>
                 </Row>
               )
