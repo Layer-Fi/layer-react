@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { type LineItem } from '@internal-types/lineItem'
 import { Alignment } from '@schemas/reports/unifiedReport'
 import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
+import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Cell, Column, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -122,15 +123,30 @@ export const ReportsTableNameCell = ({
 type ReportsTableAmountCellProps = {
   amount?: number
   bold?: boolean
+  alignment?: Alignment
+  onPress?: () => void
 }
 
-export const ReportsTableAmountCell = ({ amount, bold = false }: ReportsTableAmountCellProps) => (
-  <Cell nonAria alignment={Alignment.Right}>
-    {amount !== undefined && (
-      <MoneySpan amount={amount} weight={bold ? 'bold' : 'normal'} />
-    )}
-  </Cell>
-)
+export const ReportsTableAmountCell = ({
+  amount,
+  bold = false,
+  alignment = Alignment.Right,
+  onPress,
+}: ReportsTableAmountCellProps) => {
+  const moneySpan = amount !== undefined
+    ? <MoneySpan amount={amount} weight={bold ? 'bold' : 'normal'} />
+    : null
+
+  return (
+    <Cell nonAria alignment={alignment}>
+      {moneySpan && (
+        onPress
+          ? <Button variant='text' onPress={onPress}>{moneySpan}</Button>
+          : moneySpan
+      )}
+    </Cell>
+  )
+}
 
 type ReportsTableTotalRowProps = {
   depth: number

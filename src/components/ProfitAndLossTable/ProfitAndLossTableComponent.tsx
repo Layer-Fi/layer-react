@@ -2,13 +2,9 @@ import { Fragment, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { LineItem } from '@schemas/common/lineItem'
-import { Alignment } from '@schemas/reports/unifiedReport'
 import { useEffectOnMount } from '@hooks/utils/react/useEffectOnMount'
 import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
-import { Button } from '@ui/Button/Button'
-import { Cell } from '@ui/Table/Table'
-import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { type BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
 import {
   ReportsTable,
@@ -91,21 +87,15 @@ export const ProfitAndLossTableComponent = ({
           <ReportsTableNameCell expandable={expandable} expanded={expanded} bold>
             {lineItem.displayName}
           </ReportsTableNameCell>
-          {
-            showValue
-            && (variant === 'summation' || !onLineItemClick
-              ? <ReportsTableAmountCell amount={amount} bold />
-              : (
-                <Cell nonAria alignment={Alignment.Right}>
-                  <Button
-                    variant='text'
-                    onPress={() => onLineItemClick(lineItem.name, currentBreadcrumbs)}
-                  >
-                    <MoneySpan amount={amount} weight='bold' />
-                  </Button>
-                </Cell>
-              ))
-          }
+          {showValue && (
+            <ReportsTableAmountCell
+              amount={amount}
+              bold
+              onPress={variant !== 'summation' && onLineItemClick
+                ? () => onLineItemClick(lineItem.name, currentBreadcrumbs)
+                : undefined}
+            />
+          )}
         </ReportsTableRow>
         {expanded && lineItem.lineItems
           ? lineItem.lineItems.map((child, i) =>

@@ -6,6 +6,7 @@ import {
   type ProfitAndLossComparisonPnl,
 } from '@internal-types/profitAndLoss'
 import { type LineItemEncoded } from '@schemas/common/lineItem'
+import { Alignment } from '@schemas/reports/unifiedReport'
 import {
   generateComparisonPeriods,
   getComparisonValue,
@@ -17,13 +18,13 @@ import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { HStack } from '@ui/Stack/Stack'
-import { Cell, Column, Row, TableHeader } from '@ui/Table/Table'
-import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { Column, Row, TableHeader } from '@ui/Table/Table'
 import { Span } from '@ui/Typography/Text'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import { type ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
 import {
   ReportsTable,
+  ReportsTableAmountCell,
   ReportsTableBody,
   ReportsTableNameCell,
   ReportsTableRow,
@@ -157,11 +158,11 @@ export const ProfitAndLossCompareTable = ({
             )
 
             return (
-              <Cell nonAria key={'compare-value' + i}>
-                <MoneySpan
-                  amount={typeof comparisonValue === 'number' ? comparisonValue : 0}
-                />
-              </Cell>
+              <ReportsTableAmountCell
+                key={'compare-value' + i}
+                amount={typeof comparisonValue === 'number' ? comparisonValue : 0}
+                alignment={Alignment.Left}
+              />
             )
           })}
         </ReportsTableRow>
