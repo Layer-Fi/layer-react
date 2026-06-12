@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution, isBankAccountSyncing } from '@utils/bankAccount'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 
@@ -90,14 +91,14 @@ export const LinkedAccountThumb = ({
       {isSyncing
         ? (
           <div className='loadingbar'>
-            <div className='loading-text'>
+            <VStack className='loading-text'>
               <Span size='sm' variant='inherit'>
                 {t('linkedAccounts:state.syncing_account_data', 'Syncing account data')}
               </Span>
               <Span size='sm' variant='subtle'>
                 {t('linkedAccounts:label.may_take_up_to_5_minutes', 'This may take up to 5 minutes')}
               </Span>
-            </div>
+            </VStack>
             <div className='loading-wrapper'>
               <Loader size={11} className='Layer__anim--rotating' />
             </div>
