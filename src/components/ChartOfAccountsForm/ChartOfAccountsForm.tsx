@@ -103,7 +103,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
             ? stringOverrides?.editModeHeader || t('chartOfAccounts:action.edit_account', 'Edit Account')
             : stringOverrides?.createModeHeader || t('chartOfAccounts:action.add_new_account', 'Add New Account')}
         </Heading>
-        <CloseButton onPress={onCancel} />
+        <CloseButton onPress={onCancel} aria-label={cancelLabel} />
       </HStack>
 
       {submitError && (
