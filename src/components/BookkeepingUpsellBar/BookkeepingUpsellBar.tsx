@@ -2,8 +2,8 @@ import { Coffee } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@ui/Button/Button'
+import { LinkButton } from '@ui/Button/LinkButton'
 import { P } from '@ui/Typography/Text'
-import { ButtonVariant, Link } from '@components/Button/Link'
 import { IconBox } from '@components/IconBox/IconBox'
 
 import './bookkeepingUpsellBar.scss'
@@ -41,9 +41,9 @@ export const BookkeepingUpsellBar = ({
         )
         : href
           ? (
-            <Link href={href} target='_blank' variant={ButtonVariant.secondary}>
+            <LinkButton href={href} external variant='outlined'>
               {t('bookkeeping:action.schedule_a_demo', 'Schedule a demo')}
-            </Link>
+            </LinkButton>
           )
           : null}
     </div>

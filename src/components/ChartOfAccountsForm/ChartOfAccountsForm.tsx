@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo } from 'react'
-import { AlertTriangle, X } from 'lucide-react'
+import { AlertTriangle } from 'lucide-react'
 import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -9,6 +9,7 @@ import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
+import { CloseButton } from '@ui/Button/CloseButton'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -102,9 +103,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
             ? stringOverrides?.editModeHeader || t('chartOfAccounts:action.edit_account', 'Edit Account')
             : stringOverrides?.createModeHeader || t('chartOfAccounts:action.add_new_account', 'Add New Account')}
         </Heading>
-        <Button variant='outlined' icon onPress={onCancel} aria-label={cancelLabel}>
-          <X size={16} />
-        </Button>
+        <CloseButton onPress={onCancel} />
       </HStack>
 
       {submitError && (

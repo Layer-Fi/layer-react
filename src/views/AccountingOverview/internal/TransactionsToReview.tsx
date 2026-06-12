@@ -6,11 +6,11 @@ import { useTranslation } from 'react-i18next'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useProfitAndLossSummaries } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-summaries/useProfitAndLossSummaries'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { Button } from '@ui/Button/Button'
 import { type StackProps, VStack } from '@ui/Stack/Stack'
 import { Badge } from '@components/Badge/Badge'
 import { BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
-import { IconButton } from '@components/Button/IconButton'
 import { ProfitAndLossSummariesHeading } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesHeading'
 
 const CLASS_NAME = 'Layer__TransactionsToReview'
@@ -117,7 +117,14 @@ export function TransactionsToReview({
         </ProfitAndLossSummariesHeading>
         {transactionsToReviewBadge}
       </VStack>
-      <IconButton icon={<ChevronRight size={18} />} withBorder onClick={onClick} />
+      <Button
+        variant='outlined-light'
+        icon
+        onPress={onClick}
+        aria-label={t('bankTransactions:label.transactions_to_review', 'Transactions to review')}
+      >
+        <ChevronRight size={18} />
+      </Button>
     </div>
   )
 }

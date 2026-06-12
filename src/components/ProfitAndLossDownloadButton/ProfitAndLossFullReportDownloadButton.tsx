@@ -8,7 +8,7 @@ import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
-import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
+import { DownloadButton as DownloadButtonComponent } from '@ui/Button/DownloadButton'
 import type { ProfitAndLossDownloadButtonStringOverrides } from '@components/ProfitAndLossDownloadButton/types'
 
 export interface ProfitAndLossReportDownloadButtonProps {

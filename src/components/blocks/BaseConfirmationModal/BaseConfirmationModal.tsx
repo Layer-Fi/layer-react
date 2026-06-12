@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { type Awaitable } from '@internal-types/utility/promises'
 import { type APIError } from '@utils/api/apiError'
 import { Button } from '@ui/Button/Button'
+import { SubmitButton } from '@ui/Button/SubmitButton'
 import { Drawer, Modal, type ModalProps } from '@ui/Modal/Modal'
 import {
   ModalActions,
@@ -13,7 +14,6 @@ import {
   ModalTitleWithClose,
 } from '@ui/Modal/ModalSlots'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
-import { SubmitButton } from '@components/Button/SubmitButton'
 
 export type BaseConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   title: string

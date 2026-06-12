@@ -9,16 +9,6 @@
   }
 }
 
-.Layer__bank-transaction-row__expand-button:disabled {
-  cursor: default;
-  opacity: 0.5;
-
-  &:hover {
-    background-color: var(--color-base-0);
-    color: var(--color-base-500);
-  }
-}
-
 .Layer__bank-transactions__header--mobile .Layer__syncing-component {
   padding: 0 var(--spacing-xs);
   border-width: 0;
@@ -143,15 +133,6 @@
 .Layer__bank-transaction-list-item:hover {
   background-color: var(--bg-element-focus);
   transition: background-color var(--transition-speed) ease-in-out;
-}
-
-.Layer__bank-transaction-row:hover .Layer__bank-transaction-row__expand-button {
-  background-color: var(--color-base-200);
-  color: var(--color-base-1000);
-
-  &:hover {
-    background-color: var(--color-base-300);
-  }
 }
 
 .Layer__bank-transaction-list-item__content {

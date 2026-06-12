@@ -20,6 +20,7 @@ import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelecti
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
+import { SubmitAction, SubmitButton } from '@ui/Button/SubmitButton'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -31,7 +32,6 @@ import {
 } from '@components/BankTransactions/BankTransactions'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
-import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { ErrorText } from '@components/Typography/ErrorText'
 

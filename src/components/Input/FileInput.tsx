@@ -3,7 +3,6 @@ import { CloudUpload } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@ui/Button/Button'
-import { TextButton } from '@components/Button/TextButton'
 
 export interface FileInputProps {
   text?: string
@@ -47,9 +46,9 @@ export const FileInput = ({
   if (secondary) {
     return (
       <>
-        <TextButton onClick={onClick} disabled={disabled}>
+        <Button variant='text' onPress={onClick} isDisabled={disabled}>
           {buttonText}
-        </TextButton>
+        </Button>
         <input
           type='file'
           accept={accept}

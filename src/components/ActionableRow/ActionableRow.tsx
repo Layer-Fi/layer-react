@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react'
 import { ChevronRight } from 'lucide-react'
 
+import { Button } from '@ui/Button/Button'
 import { P } from '@ui/Typography/Text'
-import { IconButton } from '@components/Button/IconButton'
 
 import './actionableRow.scss'
 
@@ -72,11 +72,14 @@ export const ActionableRow = ({
         {button && button}
         {!button && onClick
           ? (
-            <IconButton
-              onClick={onClick}
-              icon={<ChevronRight size={11} />}
-              withBorder
-            />
+            <Button
+              variant='outlined-light'
+              icon
+              onPress={onClick}
+              aria-label={typeof title === 'string' ? title : undefined}
+            >
+              <ChevronRight size={11} />
+            </Button>
           )
           : null}
       </div>

@@ -12,6 +12,7 @@ import { useListCategorizationRules } from '@hooks/api/businesses/[business-id]/
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBankTransactionsNavigation, useSetCurrentCategorizationRulesPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { BackButton } from '@ui/Button/BackButton'
 import { Button } from '@ui/Button/Button'
 import { ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -64,11 +65,7 @@ const CategorizationRulesHeader = ({ onGoBack, onCreateRule }: CategorizationRul
   return (
     <HStack fluid justify='space-between' align='center' gap='xs'>
       <HStack align='center' gap='md'>
-        {onGoBack && (
-          <Button variant='outlined' icon onPress={onGoBack}>
-            <ChevronLeft size={18} color='#1A130D' />
-          </Button>
-        )}
+        {onGoBack && <BackButton onPress={onGoBack} />}
         <Heading size='sm'>{t('categorizationRules:label.categorization_rules', 'Categorization Rules')}</Heading>
       </HStack>
       {onCreateRule && (

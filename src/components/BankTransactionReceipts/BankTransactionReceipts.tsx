@@ -41,8 +41,7 @@ export interface BankTransactionReceiptsHandle {
 
 const openReceiptInNewTab =
   (url: string, receiptTitle: string) =>
-    (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-      e.preventDefault()
+    () => {
       const newWindow = window.open('', '_blank')
 
       if (newWindow) {

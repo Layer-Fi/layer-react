@@ -40,7 +40,6 @@ import { BankTransactionCategoryComboBox } from '@components/BankTransactionCate
 import { useBankTransactionCustomerVendorVisibility } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorVisibilityProvider'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { TextButton } from '@components/Button/TextButton'
 import { CustomerVendorSelector } from '@components/CustomerVendorSelector/CustomerVendorSelector'
 import { AmountInput } from '@components/Input/AmountInput'
 import { Input } from '@components/Input/Input'
@@ -355,11 +354,12 @@ export const ExpandedBankTransactionRow = ({
                             <div className='Layer__expanded-bank-transaction-row__splits-buttons'>
                               {effectiveSplits.length > 1
                                 ? (
-                                  <TextButton
-                                    onClick={addSplit}
+                                  <Button
+                                    variant='text'
+                                    onPress={addSplit}
                                   >
                                     {t('bankTransactions:action.add_new_split', 'Add new split')}
-                                  </TextButton>
+                                  </Button>
                                 )
                                 : (
                                   <Button

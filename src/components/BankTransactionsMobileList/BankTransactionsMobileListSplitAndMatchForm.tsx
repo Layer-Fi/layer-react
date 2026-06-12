@@ -4,9 +4,9 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { hasMatch } from '@utils/bankTransactions/shared'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { BankTransactionSelectionVariant, useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { Button } from '@ui/Button/Button'
 import { BankTransactionsMobileListMatchForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListMatchForm'
 import { BankTransactionsMobileListSplitForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListSplitForm'
-import { TextButton } from '@components/Button/TextButton'
 
 interface BankTransactionsMobileListSplitAndMatchFormProps {
   bankTransaction: BankTransaction
@@ -52,14 +52,14 @@ export const BankTransactionsMobileListSplitAndMatchForm = ({
       {showCategorization && anyMatch && (
         variant === BankTransactionSelectionVariant.MATCH
           ? (
-            <TextButton onClick={() => setTransactionSelectionVariant(bankTransaction.id, BankTransactionSelectionVariant.CATEGORY)}>
+            <Button variant='text' onPress={() => setTransactionSelectionVariant(bankTransaction.id, BankTransactionSelectionVariant.CATEGORY)}>
               {t('bankTransactions:action.or_split_transaction', 'or split transaction')}
-            </TextButton>
+            </Button>
           )
           : (
-            <TextButton onClick={() => setTransactionSelectionVariant(bankTransaction.id, BankTransactionSelectionVariant.MATCH)}>
+            <Button variant='text' onPress={() => setTransactionSelectionVariant(bankTransaction.id, BankTransactionSelectionVariant.MATCH)}>
               {t('bankTransactions:action.or_find_match', 'or find match')}
-            </TextButton>
+            </Button>
           )
       )}
     </>
