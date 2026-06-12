@@ -1,6 +1,16 @@
 .Layer__UI__Table-Table.Layer__ReportsTable {
   width: 100%;
 
+  // The ui table styles cells as flex containers and expect consumers to lay
+  // rows out with CSS grid. These report tables rely on the native table
+  // algorithm to size a dynamic number of columns, so restore table-cell
+  // display for them.
+  .Layer__UI__Table-Column,
+  .Layer__UI__Table-Cell {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
   &.Layer__ReportsTable--bottom-spacing {
     border-bottom: 1px solid var(--border-color);
     margin-bottom: var(--spacing-lg);

@@ -194,8 +194,8 @@ export const ProfitAndLossCompareTable = ({
     >
       {({ data: resolvedComparisonData }) => (
         <ReportsTable bottomSpacing={false}>
-          <TableHeader nonAria>
-            {selectedCompareOptions && selectedCompareOptions.length > 1 && (
+          {selectedCompareOptions && selectedCompareOptions.length > 1 && (
+            <TableHeader nonAria>
               <Row nonAria>
                 <Column
                   nonAria
@@ -213,8 +213,8 @@ export const ProfitAndLossCompareTable = ({
                   </Fragment>
                 ))}
               </Row>
-            )}
-          </TableHeader>
+            </TableHeader>
+          )}
           <ReportsTableBody>
             {comparePeriods && (
               <Row nonAria>
