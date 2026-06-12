@@ -50,9 +50,7 @@ export const ActionableList = <T,>({
               showDescriptions
               && x.description
               && (
-                <P size='sm' variant='subtle'>
-                  {x.description}
-                </P>
+                <P size='sm' variant='subtle'>{x.description}</P>
               )
             }
           </VStack>

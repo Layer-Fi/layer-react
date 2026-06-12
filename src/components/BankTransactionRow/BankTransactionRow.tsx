@@ -178,9 +178,7 @@ export const BankTransactionRow = ({
           className='Layer__table-cell Layer__bank-transaction-table__date-col'
         >
           <span className='Layer__table-cell-content'>
-            <Span>
-              {formatDate(bankTransaction.date)}
-            </Span>
+            <Span>{formatDate(bankTransaction.date)}</Span>
           </span>
         </td>
         <td

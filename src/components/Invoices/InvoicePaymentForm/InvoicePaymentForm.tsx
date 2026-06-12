@@ -123,9 +123,7 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
           {([amount]) => (
             <HStack justify='end' className={`${INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX}__OutstandingBalance`} gap='xs' align='center'>
               <Span size='sm'>{t('invoices:label.balance_due', 'Balance due')}</Span>
-              <Span size='md' weight='bold'>
-                {formatBalanceDue(amount)}
-              </Span>
+              <Span size='md' weight='bold'>{formatBalanceDue(amount)}</Span>
             </HStack>
           )}
         </form.Subscribe>

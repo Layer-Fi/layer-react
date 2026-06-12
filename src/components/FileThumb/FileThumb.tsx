@@ -67,9 +67,7 @@ export const FileThumb = ({
             )
             : error
               ? (
-                <Span size='sm' status='error'>
-                  {error}
-                </Span>
+                <Span size='sm' status='error'>{error}</Span>
               )
               : (
                 <div className='Layer__file-thumb__details__date'>{date}</div>

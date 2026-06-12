@@ -26,9 +26,7 @@ export const InputGroup = ({
   return (
     <div className={baseClassName}>
       {label && (
-        <Label size='sm' pb='2xs' pi='2xs' htmlFor={name}>
-          {label}
-        </Label>
+        <Label size='sm' pb='2xs' pi='2xs' htmlFor={name}>{label}</Label>
       )}
       {children}
     </div>

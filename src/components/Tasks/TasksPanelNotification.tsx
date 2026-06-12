@@ -28,9 +28,7 @@ export const TasksPanelNotification = ({
     return (
       <div className='Layer__tasks-header__notification' data-status='error'>
         <div className='Layer__tasks-header__notification__text'>
-          <P variant='inherit'>
-            <CircleAlert size={11} />
-          </P>
+          <P variant='inherit'><CircleAlert size={11} /></P>
           <P weight='bold' variant='inherit'>
             {tPlural(t, 'bookkeeping:label.bank_accounts_disconnected', {
               count: disconnectedAccountsRequiringNotification,
@@ -68,9 +66,7 @@ export const TasksPanelNotification = ({
     return (
       <div className='Layer__tasks-header__notification' data-status='warning'>
         <div className='Layer__tasks-header__notification__text'>
-          <P status='warning' invert>
-            <CircleAlert size={11} />
-          </P>
+          <P status='warning' invert><CircleAlert size={11} /></P>
           <P size='sm' weight='bold' status='warning' invert>
             {tPlural(t, 'bookkeeping:label.count_open_tasks', {
               count: unresolvedTasksCount,

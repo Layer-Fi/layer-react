@@ -101,9 +101,7 @@ const BankTransactionReceipts = forwardRef<
       <div className={`${classNamePrefix}__file-upload`}>
         {receiptUrls && receiptUrls.length > 0 && label
           ? (
-            <P size='sm'>
-              {label}
-            </P>
+            <P size='sm'>{label}</P>
           )
           : null}
         {!hideUploadButtons && (!receiptUrls || receiptUrls.length === 0)

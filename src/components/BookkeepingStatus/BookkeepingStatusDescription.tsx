@@ -15,8 +15,6 @@ export const BookkeepingStatusDescription = ({ monthNumber, status, incompleteTa
   }
 
   return (
-    <P size='sm' status='disabled'>
-      {statusConfig.description}
-    </P>
+    <P size='sm' status='disabled'>{statusConfig.description}</P>
   )
 }

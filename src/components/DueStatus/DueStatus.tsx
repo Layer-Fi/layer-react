@@ -156,9 +156,7 @@ export const DueStatus = ({ dueDate, paidAt, size = 'md' }: DueStatusProps) => {
         </Span>
       )}
       {date.diffText && (
-        <P size='sm'>
-          {date.diffText}
-        </P>
+        <P size='sm'>{date.diffText}</P>
       )}
     </div>
   )

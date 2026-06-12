@@ -56,14 +56,10 @@ export const DateTime = ({
   return (
     <HStack gap='md' align='center'>
       {!onlyTime && (
-        <Span {...slotProps.Date}>
-          {date}
-        </Span>
+        <Span {...slotProps.Date}>{date}</Span>
       )}
       {!onlyDate && (
-        <Span {...slotProps.Time}>
-          {time}
-        </Span>
+        <Span {...slotProps.Time}>{time}</Span>
       )}
     </HStack>
   )
