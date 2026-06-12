@@ -96,8 +96,8 @@
     }
 
     &[data-pressed]:not([data-focus-visible], [data-disabled]) {
+      border-color: var(--button-border-color-ghost-active);
       outline: 2px solid var(--outline-default);
-      background-color: var(--color-base-200);
     }
   }
 

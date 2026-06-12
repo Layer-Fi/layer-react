@@ -17,7 +17,7 @@ import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/Ban
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { Button } from '@ui/Button/Button'
-import { SubmitAction, SubmitButton } from '@ui/Button/SubmitButton'
+import { SubmitAction } from '@ui/Button/SubmitButton'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { VStack } from '@ui/Stack/Stack'
 import { HStack } from '@ui/Stack/Stack'
@@ -28,6 +28,7 @@ import { type BankTransactionCategoryComboBoxOption } from '@components/BankTran
 import {
   type BankTransactionCTAStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
+import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankTransactionsSubmitButton'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
@@ -101,8 +102,8 @@ export const BankTransactionRow = ({
   }, [open, isExpandedRowValid, selectedOption, saveBankTransactionRow, bankTransaction, onBankTransactionSaveSuccess])
 
   const submitButton = useMemo(() => (
-    <SubmitButton
-      onClick={() => {
+    <BankTransactionsSubmitButton
+      onPress={() => {
         if (!isProcessing) {
           void save()
         }
@@ -110,7 +111,7 @@ export const BankTransactionRow = ({
       processing={isProcessing}
       disabled={selectedOption === null || isBulkSelectionActive}
       action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-      withRetry
+      active={open}
       error={isError ? t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.') : undefined}
     >
       {isError
@@ -118,12 +119,13 @@ export const BankTransactionRow = ({
         : displayAsCategorized
           ? stringOverrides?.updateButtonText ?? t('common:action.update_label', 'Update')
           : stringOverrides?.approveButtonText ?? t('common:action.confirm_label', 'Confirm')}
-    </SubmitButton>
+    </BankTransactionsSubmitButton>
   ), [
     displayAsCategorized,
     isBulkSelectionActive,
     isError,
     isProcessing,
+    open,
     save,
     selectedOption,
     stringOverrides?.approveButtonText,

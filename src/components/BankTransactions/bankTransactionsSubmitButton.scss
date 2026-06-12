@@ -1,0 +1,53 @@
+.Layer__BankTransactionsSubmitButton {
+  display: contents;
+
+  .Layer__UI__Button {
+    gap: 0;
+    padding-inline: 0;
+  }
+
+  &__Label {
+    padding-inline: var(--spacing-md) calc(var(--spacing-md) - 4px);
+  }
+
+  &__IconBox {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    width: 30px;
+    border-radius: 4px;
+    margin-inline-end: 3px;
+    background-color: var(--btn-bg-color-icon);
+    color: var(--btn-color-icon);
+    transition: all 150ms ease-out;
+  }
+
+  .Layer__UI__Button[data-disabled] &__IconBox {
+    background-color: var(--color-base-100);
+    color: var(--color-base-500);
+  }
+
+  .Layer__UI__Button[data-hovered]:not([data-disabled]) &__IconBox,
+  &[data-active] .Layer__UI__Button:not([data-disabled]) &__IconBox {
+    background-color: var(--btn-bg-color-icon-hover);
+    color: var(--btn-color-icon-hover);
+  }
+
+  &[data-error] .Layer__UI__Button {
+    color: var(--color-danger);
+  }
+}
+
+.Layer__bank-transaction-row:hover .Layer__BankTransactionsSubmitButton:not([data-error]) {
+  .Layer__UI__Button:not([data-disabled]) {
+    background-color: var(--btn-bg-color-hover);
+    color: var(--btn-color-hover);
+  }
+
+  .Layer__UI__Button:not([data-disabled]) .Layer__BankTransactionsSubmitButton__IconBox {
+    background-color: var(--btn-bg-color-icon-hover);
+    color: var(--btn-color-icon-hover);
+  }
+}
