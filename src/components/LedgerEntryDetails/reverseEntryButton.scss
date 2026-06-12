@@ -4,7 +4,7 @@
   .Layer__UI__Button {
     min-width: 150px;
 
-    svg {
+    > svg {
       color: var(--color-danger);
     }
   }
