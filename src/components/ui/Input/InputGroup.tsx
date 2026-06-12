@@ -1,12 +1,13 @@
 import { forwardRef } from 'react'
 import classNames from 'classnames'
+import { composeRenderProps } from 'react-aria-components/composeRenderProps'
 import {
   Group as ReactAriaGroup,
   type GroupProps as ReactAriaGroupProps,
 } from 'react-aria-components/Group'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { withRenderProp } from '@components/utility/withRenderProp'
+import { Span } from '@ui/Typography/Text'
 
 import './inputGroup.scss'
 
@@ -34,12 +35,12 @@ export const InputGroup = forwardRef<HTMLDivElement, InputGroupProps>(
         className={combinedClassName}
         ref={ref}
       >
-        {withRenderProp(children, node => (
+        {composeRenderProps(children, node => (
           <>
             {leadingText && (
-              <span className={`${INPUT_GROUP_CLASS_NAME}__LeadingText`}>
+              <Span className={`${INPUT_GROUP_CLASS_NAME}__LeadingText`}>
                 {leadingText}
-              </span>
+              </Span>
             )}
             {node}
           </>

@@ -1,4 +1,4 @@
-import { type FormEvent, useCallback, useEffect, useMemo } from 'react'
+import { type FormEvent, useCallback, useEffect, useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type CustomAccount, CustomAccountSubtype } from '@internal-types/customAccounts'
@@ -29,6 +29,7 @@ export type CustomAccountsFormProps = {
 export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: CustomAccountsFormProps) => {
   const { t } = useTranslation()
   const { form, submitError, isFormValid } = useCustomAccountForm({ onSuccess })
+  const accountTypeInputId = useId()
 
   const accountTypeOptions = useMemo(
     () => accountTypeConfig.map(opt => ({
@@ -93,11 +94,12 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         >
           {field => (
             <VStack className='Layer__custom-account-form__field'>
-              <Label size='sm' htmlFor='account_type' pbe='3xs'>
+              <Label size='sm' htmlFor={accountTypeInputId} pbe='3xs'>
                 {t('generalLedger:label.account_type', 'Account type')}
               </Label>
               <ComboBox
                 className='Layer__custom-account-form__input'
+                inputId={accountTypeInputId}
                 name='account_type'
                 placeholder={t('generalLedger:action.select_account_type', 'Select account type...')}
                 options={accountTypeOptions}

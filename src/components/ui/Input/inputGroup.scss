@@ -32,7 +32,11 @@
   }
 
   &[data-leading-text] {
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  &[data-leading-text][data-action-count='2'] {
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
   }
 
   &__LeadingText {
