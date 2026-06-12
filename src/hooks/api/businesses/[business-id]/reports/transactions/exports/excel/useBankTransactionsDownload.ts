@@ -17,6 +17,10 @@ type GetBankTransactionsExportParams = {
   startDate?: Date
   endDate?: Date
   tagFilterQueryString?: string
+  bankAccountIds?: string
+  sourceAccountIds?: string
+  amountMin?: number
+  amountMax?: number
   sortOrder?: 'ASC' | 'DESC'
   sortBy?: string
 }
@@ -33,6 +37,10 @@ const getBankTransactionsExcel = get<
   endDate,
   sortBy = 'date',
   sortOrder = 'DESC',
+  bankAccountIds,
+  sourceAccountIds,
+  amountMin,
+  amountMax,
 }: GetBankTransactionsExportParams) => {
   const parameters = toDefinedSearchParameters({
     categorized,
@@ -42,6 +50,10 @@ const getBankTransactionsExcel = get<
     endDate,
     sortBy,
     sortOrder,
+    bankAccountIds,
+    sourceAccountIds,
+    amountMin,
+    amountMax,
   })
 
   return `/v1/businesses/${businessId}/reports/transactions/exports/excel?${parameters}`
@@ -97,6 +109,10 @@ export function useBankTransactionsDownload() {
             startDate,
             endDate,
             tagFilterQueryString,
+            bankAccountIds,
+            sourceAccountIds,
+            amountMin,
+            amountMax,
           },
         }: { arg: UseBankTransactionsDownloadOptions },
       ) =>
@@ -112,6 +128,10 @@ export function useBankTransactionsDownload() {
               startDate,
               endDate,
               tagFilterQueryString,
+              bankAccountIds,
+              sourceAccountIds,
+              amountMin,
+              amountMax,
             },
           },
         )().then(({ data }) => data),

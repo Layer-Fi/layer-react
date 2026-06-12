@@ -1,7 +1,8 @@
-import { type ReactNode } from 'react'
+import { type ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
+import { BankAccountsFilterStoreProvider, useSelectedBankAccountIds } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { type BankTransactionsMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
 import {
@@ -71,28 +72,60 @@ export const BankTransactionsWithLinkedAccounts = ({
       title={stringOverrides?.title || title || t('bankTransactions:label.bank_transactions', 'Bank transactions')}
       showHeader={showTitle}
     >
-      <LinkedAccounts
-        elevated={elevatedLinkedAccounts}
-        showLedgerBalance={showLedgerBalance}
-        showUnlinkItem={showUnlinkItem}
-        showBreakConnection={showBreakConnection}
-        stringOverrides={stringOverrides?.linkedAccounts}
-        plaidHostedLinkConfig={plaidHostedLinkConfig}
-      />
-      <BankTransactions
-        asWidget
-        showCustomerVendor={showCustomerVendor}
-        showDescriptions={showDescriptions}
-        showReceiptUploads={showReceiptUploads}
-        showTags={showTags}
-        showTooltips={showTooltips}
-        showUploadOptions={showUploadOptions}
-        mobileComponent={mobileComponent}
-        mode={mode}
-        stringOverrides={stringOverrides?.bankTransactions}
-        renderInAppLink={renderInAppLink}
-        showCategorizationRules={showCategorizationRules}
-      />
+      <BankAccountsFilterStoreProvider>
+        <LinkedAccounts
+          elevated={elevatedLinkedAccounts}
+          showLedgerBalance={showLedgerBalance}
+          showUnlinkItem={showUnlinkItem}
+          showBreakConnection={showBreakConnection}
+          stringOverrides={stringOverrides?.linkedAccounts}
+          plaidHostedLinkConfig={plaidHostedLinkConfig}
+        />
+        <FilteredBankTransactions
+          showCustomerVendor={showCustomerVendor}
+          showDescriptions={showDescriptions}
+          showReceiptUploads={showReceiptUploads}
+          showTags={showTags}
+          showTooltips={showTooltips}
+          showUploadOptions={showUploadOptions}
+          mobileComponent={mobileComponent}
+          mode={mode}
+          stringOverrides={stringOverrides?.bankTransactions}
+          renderInAppLink={renderInAppLink}
+          showCategorizationRules={showCategorizationRules}
+        />
+      </BankAccountsFilterStoreProvider>
     </View>
+  )
+}
+
+type FilteredBankTransactionsProps = {
+  showCustomerVendor?: boolean
+  showDescriptions?: boolean
+  showReceiptUploads?: boolean
+  showTags?: boolean
+  showTooltips?: boolean
+  showUploadOptions?: boolean
+  mobileComponent?: MobileComponentType
+  mode?: BankTransactionsMode
+  stringOverrides?: BankTransactionsStringOverrides
+  renderInAppLink?: (details: LinkingMetadata) => ReactNode
+  showCategorizationRules?: boolean
+}
+
+const FilteredBankTransactions = (props: FilteredBankTransactionsProps) => {
+  const selectedBankAccountIds = useSelectedBankAccountIds()
+
+  const filters = useMemo(
+    () => (selectedBankAccountIds.length ? { bankAccountIds: selectedBankAccountIds } : undefined),
+    [selectedBankAccountIds],
+  )
+
+  return (
+    <BankTransactions
+      asWidget
+      filters={filters}
+      {...props}
+    />
   )
 }

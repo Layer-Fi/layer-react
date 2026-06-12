@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { getBankAccountInstitution, isAllExternalAccountsUserCreatedCustom } from '@utils/bankAccount'
+import { useBankAccountFilterActions, useIsBankAccountFilterActive, useSelectedBankAccountIds } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { OpeningBalanceModalContext } from '@contexts/OpeningBalanceModalContext/OpeningBalanceModalContext'
@@ -63,6 +64,11 @@ export const LinkedAccountItemThumb = ({
   const { setAccountsToAddOpeningBalanceInModal } = useContext(OpeningBalanceModalContext)
   const { environment } = useEnvironment()
   const [isUnlinkConfirmationModalOpen, setIsUnlinkConfirmationModalOpen] = useState(false)
+
+  const isFilterActive = useIsBankAccountFilterActive()
+  const selectedBankAccountIds = useSelectedBankAccountIds()
+  const { toggleBankAccountId } = useBankAccountFilterActions()
+  const isFilterSelected = selectedBankAccountIds.includes(bankAccount.id)
 
   const plaidAccount = getPlaidAccount(bankAccount)
   const repairInfo = getConnectionRepairInfo(bankAccount)
@@ -192,6 +198,9 @@ export const LinkedAccountItemThumb = ({
         bankAccount={bankAccount}
         asWidget={asWidget}
         showLedgerBalance={showLedgerBalance}
+        isFilterSelectable={isFilterActive}
+        isFilterSelected={isFilterSelected}
+        onToggleFilter={() => toggleBankAccountId(bankAccount.id)}
         slots={{
           Pill: pillConfig
             ? <LinkedAccountPill label={pillConfig.text} items={pillConfig.config} />
