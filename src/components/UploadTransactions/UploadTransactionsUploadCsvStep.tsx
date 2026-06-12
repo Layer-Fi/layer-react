@@ -7,11 +7,11 @@ import type { CustomAccount } from '@internal-types/customAccounts'
 import { humanizeEnum } from '@utils/format'
 import { type CustomAccountParseCsvResponse, useCustomAccountParseCsv } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
 import { useCustomAccounts } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
+import { SubmitButton } from '@ui/Button/SubmitButton'
 import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
 import { CreatableComboBox } from '@ui/ComboBox/CreatableComboBox'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Label, P, Span } from '@ui/Typography/Text'
-import { SubmitButton } from '@components/Button/SubmitButton'
 import { CopyTemplateHeadersButtonGroup } from '@components/CsvUpload/CopyTemplateHeadersButtonGroup'
 import { CsvUpload } from '@components/CsvUpload/CsvUpload'
 import { DownloadCsvTemplateButton } from '@components/CsvUpload/DownloadCsvTemplateButton'
@@ -180,7 +180,6 @@ export function UploadTransactionsUploadCsvStep(
                 <DownloadCsvTemplateButton
                   fileName='upload_transactions.csv'
                   csvProps={{ headers: allHeaders, rows: templateExampleTransactions }}
-                  className='Layer__upload-transactions__template-section__button-row-item'
                 >
                   {t('upload:action.download_template', 'Download template')}
                 </DownloadCsvTemplateButton>

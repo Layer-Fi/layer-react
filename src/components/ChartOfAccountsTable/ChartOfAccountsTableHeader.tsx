@@ -2,9 +2,9 @@ import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
-import { Button } from '@components/Button/Button'
 import { AccountBalancesDownloadButton } from '@components/ChartOfAccounts/download/AccountBalancesDownloadButton'
 import { type ChartOfAccountsTableStringOverrides } from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
 import { ExpandableDataTableToggleButton } from '@components/ExpandableDataTable/ExpandableDataTableToggleButton'
@@ -39,6 +39,7 @@ export const ChartOfAccountsTableHeader = ({
 }: ChartOfAccountsTableHeaderProps) => {
   const { t } = useTranslation()
   const { isDesktop } = useSizeClass()
+  const addAccountLabel = stringOverrides?.addAccountButtonText || t('chartOfAccounts:action.add_account', 'Add Account')
 
   return (
     <>
@@ -72,13 +73,11 @@ export const ChartOfAccountsTableHeader = ({
             />
             {showAddAccountButton && (
               <Button
-                onClick={() => onAddAccount()}
-                iconOnly={!isDesktop}
-                leftIcon={
-                  !isDesktop && <CirclePlus size={14} />
-                }
+                onPress={() => onAddAccount()}
+                icon={!isDesktop}
+                aria-label={!isDesktop ? addAccountLabel : undefined}
               >
-                {stringOverrides?.addAccountButtonText || t('chartOfAccounts:action.add_account', 'Add Account')}
+                {isDesktop ? addAccountLabel : <CirclePlus size={14} />}
               </Button>
             )}
           </HeaderCol>

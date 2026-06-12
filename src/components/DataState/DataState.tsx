@@ -1,11 +1,11 @@
 import { type ReactNode } from 'react'
 import classNames from 'classnames'
-import { CircleCheckBig, Loader, OctagonAlert, RefreshCcw } from 'lucide-react'
+import { CircleCheckBig, OctagonAlert, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
-import { Button, ButtonVariant } from '@components/Button/Button'
 
 import './dataState.scss'
 
@@ -107,20 +107,13 @@ export const DataState = ({
       {onRefresh && (
         <span className='Layer__data-state__btn'>
           <Button
-            variant={ButtonVariant.secondary}
-            rightIcon={
-              isLoading
-                ? (
-                  <Loader size={14} className='Layer__anim--rotating' />
-                )
-                : (
-                  <RefreshCcw size={12} />
-                )
-            }
-            onClick={onRefresh}
-            disabled={isLoading}
+            variant='outlined'
+            onPress={onRefresh}
+            isDisabled={isLoading}
+            isPending={isLoading}
           >
             {t('common:action.refresh_label', 'Refresh')}
+            <RefreshCcw size={12} />
           </Button>
         </span>
       )}

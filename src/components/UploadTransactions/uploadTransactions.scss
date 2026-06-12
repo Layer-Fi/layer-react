@@ -30,7 +30,8 @@
     .Layer__upload-transactions__template-section__button-row {
       flex-direction: column;
 
-      >.Layer__upload-transactions__template-section__button-row-item {
+      >.Layer__upload-transactions__template-section__button-row-item,
+      >.Layer__UI__Button {
         width: 100%;
       }
     }
@@ -40,7 +41,7 @@
     .Layer__upload-transactions__confirmation-step__button-row {
       flex-direction: column;
 
-      >.Layer__upload-transactions__confirmation-step__button-row-item {
+      >.Layer__UI__Button {
         width: 100%;
       }
     }

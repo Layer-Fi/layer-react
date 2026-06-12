@@ -16,6 +16,8 @@ import { useBulkSelectionActions, useCountSelectedIds, useIdIsSelected } from '@
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
+import { Button } from '@ui/Button/Button'
+import { SubmitAction } from '@ui/Button/SubmitButton'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { VStack } from '@ui/Stack/Stack'
 import { HStack } from '@ui/Stack/Stack'
@@ -26,10 +28,9 @@ import { type BankTransactionCategoryComboBoxOption } from '@components/BankTran
 import {
   type BankTransactionCTAStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
+import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankTransactionsSubmitButton'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
-import { IconButton } from '@components/Button/IconButton'
-import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { IconBox } from '@components/IconBox/IconBox'
 
@@ -101,18 +102,16 @@ export const BankTransactionRow = ({
   }, [open, isExpandedRowValid, selectedOption, saveBankTransactionRow, bankTransaction, onBankTransactionSaveSuccess])
 
   const submitButton = useMemo(() => (
-    <SubmitButton
-      onClick={() => {
+    <BankTransactionsSubmitButton
+      onPress={() => {
         if (!isProcessing) {
           void save()
         }
       }}
-      className={isError ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
       processing={isProcessing}
-      active={open}
       disabled={selectedOption === null || isBulkSelectionActive}
       action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-      withRetry
+      active={open}
       error={isError ? t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.') : undefined}
     >
       {isError
@@ -120,7 +119,7 @@ export const BankTransactionRow = ({
         : displayAsCategorized
           ? stringOverrides?.updateButtonText ?? t('common:action.update_label', 'Update')
           : stringOverrides?.approveButtonText ?? t('common:action.confirm_label', 'Confirm')}
-    </SubmitButton>
+    </BankTransactionsSubmitButton>
   ), [
     displayAsCategorized,
     isBulkSelectionActive,
@@ -257,17 +256,17 @@ export const BankTransactionRow = ({
                     <BankTransactionsProcessingInfo />
                   </VStack>
                 )}
-                <IconButton
-                  onClick={toggleOpen}
-                  className='Layer__bank-transaction-row__expand-button'
-                  active={open}
-                  icon={(
-                    <ChevronDownFill
-                      className={`Layer__chevron ${open ? 'Layer__chevron__up' : 'Layer__chevron__down'
-                      }`}
-                    />
-                  )}
-                />
+                <Button
+                  variant='ghost'
+                  icon
+                  onPress={toggleOpen}
+                  aria-label={t('common:action.toggle_details', 'Toggle details')}
+                >
+                  <ChevronDownFill
+                    className={`Layer__chevron ${open ? 'Layer__chevron__up' : 'Layer__chevron__down'
+                    }`}
+                  />
+                </Button>
               </HStack>
             )
             : (
@@ -296,17 +295,17 @@ export const BankTransactionRow = ({
                   </VStack>
                 )}
                 {!isBeingRemoved && (
-                  <IconButton
-                    onClick={toggleOpen}
-                    className='Layer__bank-transaction-row__expand-button'
-                    active={open}
-                    icon={(
-                      <ChevronDownFill
-                        className={`Layer__chevron ${open ? 'Layer__chevron__up' : 'Layer__chevron__down'
-                        }`}
-                      />
-                    )}
-                  />
+                  <Button
+                    variant='ghost'
+                    icon
+                    onPress={toggleOpen}
+                    aria-label={t('common:action.toggle_details', 'Toggle details')}
+                  >
+                    <ChevronDownFill
+                      className={`Layer__chevron ${open ? 'Layer__chevron__up' : 'Layer__chevron__down'
+                      }`}
+                    />
+                  </Button>
                 )}
               </HStack>
             )}

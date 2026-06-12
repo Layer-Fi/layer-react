@@ -1,8 +1,7 @@
-import { CloudDownload } from 'lucide-react'
+import { CloudDownload, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { Button, type ButtonProps, ButtonVariant } from '@components/Button/Button'
-import { RetryButton } from '@components/Button/RetryButton'
+import { Button, type ButtonProps } from '@ui/Button/Button'
 
 interface DownloadButtonProps {
   onClick?: () => void | Promise<void>
@@ -13,7 +12,6 @@ interface DownloadButtonProps {
   retryText?: string
   errorText?: string
   tooltip?: ButtonProps['tooltip']
-  variant?: ButtonVariant
   disabled?: boolean
 }
 
@@ -26,7 +24,6 @@ export const DownloadButton = ({
   text,
   retryText,
   errorText,
-  variant = ButtonVariant.secondary,
   disabled = false,
 }: DownloadButtonProps) => {
   const { t } = useTranslation()
@@ -36,29 +33,32 @@ export const DownloadButton = ({
 
   if (requestFailed) {
     return (
-      <RetryButton
-        onClick={() => void onClick?.()}
-        className='Layer__download-retry-btn'
-        error={displayErrorText}
-        disabled={isDownloading || disabled}
-        iconOnly={iconOnly}
+      <Button
+        variant='outlined'
+        onPress={() => void onClick?.()}
+        isDisabled={isDownloading || disabled}
+        icon={iconOnly}
+        aria-label={iconOnly ? displayRetryText : undefined}
+        tooltip={displayErrorText}
       >
-        {displayRetryText}
-      </RetryButton>
+        {!iconOnly && displayRetryText}
+        <RefreshCcw size={12} />
+      </Button>
     )
   }
+
   return (
     <Button
-      variant={variant}
-      rightIcon={<CloudDownload size={12} />}
-      onClick={() => void onClick?.()}
-      disabled={isDownloading || disabled}
-      iconAsPrimary={iconOnly}
-      iconOnly={iconOnly}
-      isProcessing={isDownloading}
+      variant='outlined'
+      onPress={() => void onClick?.()}
+      isDisabled={isDownloading || disabled}
+      isPending={isDownloading}
+      icon={iconOnly}
+      aria-label={iconOnly ? displayText : undefined}
       tooltip={tooltip}
     >
-      {displayText}
+      {!iconOnly && displayText}
+      <CloudDownload size={12} />
     </Button>
   )
 }

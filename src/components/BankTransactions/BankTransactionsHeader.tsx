@@ -18,6 +18,7 @@ import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/la
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+import { DownloadButton as DownloadButtonComponent } from '@ui/Button/DownloadButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Heading } from '@ui/Typography/Heading'
@@ -26,8 +27,6 @@ import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@
 import { BankTransactionsTableContent } from '@components/BankTransactions/constants'
 import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
 import { BulkActionsModule } from '@components/BulkActionsModule/BulkActionsModule'
-import { ButtonVariant } from '@components/Button/Button'
-import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
 import { Header } from '@components/Container/Header'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 import { SearchField } from '@components/SearchField/SearchField'
@@ -113,7 +112,6 @@ const DownloadButton = ({
   return (
     <>
       <DownloadButtonComponent
-        variant={ButtonVariant.secondary}
         iconOnly={iconOnly}
         onClick={handleDownloadTransactions}
         isDownloading={isMutating}

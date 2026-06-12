@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { getIncompleteTasks, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { Button } from '@components/Button/Button'
-import { TextButton } from '@components/Button/TextButton'
+import { Button } from '@ui/Button/Button'
 import { MobilePanel } from '@components/MobilePanel/MobilePanel'
 import { Pagination } from '@components/Pagination/Pagination'
 import { TasksListItem } from '@components/Tasks/TasksListItem'
@@ -46,14 +45,14 @@ export const TasksListMobile = ({
       {unresolvedTasks.length === 0 && tasksCount > 0
         ? (
           <div style={{ textAlign: 'center', padding: '12px 24px' }}>
-            <TextButton onClick={() => setShowMobilePanel(true)}>{t('bookkeeping:action.show_completed_tasks', 'Show completed tasks')}</TextButton>
+            <Button variant='text' underline onPress={() => setShowMobilePanel(true)}>{t('bookkeeping:action.show_completed_tasks', 'Show completed tasks')}</Button>
           </div>
         )
         : null}
       {unresolvedTasks.length !== 0 && tasksCount > unresolvedTasks.length
         ? (
           <div style={{ textAlign: 'center', padding: '12px 24px' }}>
-            <Button onClick={() => setShowMobilePanel(true)} fullWidth>
+            <Button onPress={() => setShowMobilePanel(true)} fullWidth>
               {t('bookkeeping:action.show_all_tasks_count', 'Show all tasks ({{tasksCount}})', { tasksCount: formatNumber(tasksCount) })}
             </Button>
           </div>

@@ -23,9 +23,8 @@
         padding-left: 0;
         margin-left: -6px;
 
-        .Layer__icon-btn {
-          height: 26px;
-          width: 26px;
+        .Layer__UI__Button {
+          --size: 26px;
 
           svg {
             height: 14px;
@@ -47,14 +46,6 @@
   display: flex;
   gap: var(--spacing-4xs);
   padding: var(--spacing-4xs);
-
-  .Layer__icon-btn.Layer__icon-btn--active {
-    background-color: var(--color-base-50);
-
-    &:hover {
-      background-color: var(--color-base-100);
-    }
-  }
 
   .Layer__file-thumb__actions__remove {
     color: var(--color-danger);

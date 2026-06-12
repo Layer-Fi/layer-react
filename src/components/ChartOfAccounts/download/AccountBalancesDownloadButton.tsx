@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { useAccountBalancesDownload } from '@hooks/api/businesses/[business-id]/ledger/balances/exports/csv/useAccountBalancesDownload'
-import { DownloadButton } from '@components/Button/DownloadButton'
+import { DownloadButton } from '@ui/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 type AccountBalancesDownloadButtonProps = {

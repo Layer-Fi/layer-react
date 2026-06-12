@@ -20,6 +20,7 @@ import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelecti
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
+import { SubmitAction } from '@ui/Button/SubmitButton'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -30,8 +31,8 @@ import {
   type BankTransactionCTAStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
+import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankTransactionsSubmitButton'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
-import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { ErrorText } from '@components/Typography/ErrorText'
 
@@ -207,13 +208,11 @@ export const BankTransactionsListItem = ({
                 isDisabled={isProcessing}
               />
             )}
-            <SubmitButton
+            <BankTransactionsSubmitButton
               disabled={isProcessing}
-              onClick={() => { void save() }}
-              className={isError ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
+              onPress={() => { void save() }}
               processing={isProcessing}
               action={!displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-              withRetry
               error={isError ? t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.') : undefined}
             >
               {isError
@@ -221,7 +220,7 @@ export const BankTransactionsListItem = ({
                 : (!displayAsCategorized
                   ? stringOverrides?.approveButtonText ?? t('common:action.approve_label', 'Approve')
                   : stringOverrides?.updateButtonText ?? t('common:action.update_label', 'Update'))}
-            </SubmitButton>
+            </BankTransactionsSubmitButton>
           </HStack>
         </div>
       )}
