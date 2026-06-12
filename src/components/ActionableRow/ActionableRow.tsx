@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react'
 import { ChevronRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@ui/Button/Button'
 import { P } from '@ui/Typography/Text'
@@ -59,6 +60,8 @@ export const ActionableRow = ({
   button,
   onClick,
 }: ActionableRowProps) => {
+  const { t } = useTranslation()
+
   return (
     <div className='Layer__actionable_row'>
       <div className='Layer__actionable_row__main'>
@@ -76,7 +79,7 @@ export const ActionableRow = ({
               variant='outlined-light'
               icon
               onPress={onClick}
-              aria-label={typeof title === 'string' ? title : undefined}
+              aria-label={typeof title === 'string' ? title : t('common:action.view_details', 'View details')}
             >
               <ChevronRight size={11} />
             </Button>

@@ -44,7 +44,7 @@ export const ReverseEntryButton = ({ onReverse, alreadyReversed }: ReverseEntryB
               ? t('generalLedger:error.operation_retry', 'Operation failed. Try again.')
               : undefined
         }
-        isDisabled={alreadyReversed}
+        isDisabled={alreadyReversed || isProcessing}
       >
         {t('generalLedger:action.reverse_entry', 'Reverse entry')}
         {isError ? <CircleAlert size={12} /> : <RefreshCcw size={12} />}
