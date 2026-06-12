@@ -84,7 +84,7 @@ export const BankTransactionsTable = ({
       <thead>
         <tr>
           {isCategorizationEnabled && (
-            <th className='Layer__bank-transactions__table-header Layer__bank-transactions__checkbox-col' style={{ padding: 0 }}>
+            <th className='Layer__bank-transactions__table-header Layer__bank-transactions__checkbox-col'>
               <span className='Layer__bank-transactions__table-cell-content'>
                 <Checkbox
                   isSelected={isAllSelected}
