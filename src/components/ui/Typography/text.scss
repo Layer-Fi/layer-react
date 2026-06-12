@@ -27,9 +27,6 @@
     color: var(--color-base-300);
   }
 
-  &[data-variant='strong'] {
-    color: var(--color-base-1000);
-  }
 
   &[data-status='error'] {
     color: var(--color-info-error);

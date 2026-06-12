@@ -20,7 +20,7 @@ export const TaskMonthTile = ({ data, onClick, active, disabled, isMobile }: Tas
       onClick={() => !disabled && onClick(new Date(data.year, data.month - 1, 1))}
       {...dataProperties}
     >
-      <P size='sm' variant='inherit'>
+      <P size='sm' status={disabled ? 'disabled' : undefined}>
         {data.monthStr}
       </P>
       {data.status && (

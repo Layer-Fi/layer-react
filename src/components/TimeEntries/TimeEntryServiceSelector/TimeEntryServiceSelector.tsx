@@ -70,7 +70,7 @@ type TimeEntryServiceSelectorProps =
   })
 
 const formatCreateLabel = (inputValue: string, t: TFunction) => (
-  <Span variant='inherit' className='Layer__TimeEntryServiceSelector__CreateLabel'>
+  <Span className='Layer__TimeEntryServiceSelector__CreateLabel'>
     <Plus size={14} aria-hidden='true' />
     {inputValue
       ? t('timeTracking:services.create_service_input_value', 'Create service "{{inputValue}}"', { inputValue })

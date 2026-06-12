@@ -59,7 +59,7 @@ export const FileThumb = ({
           {uploadPending || deletePending
             ? (
               <div className='Layer__file-thumb__details__uploading'>
-                <Span size='sm' variant='inherit'>
+                <Span size='sm' status='info'>
                   {deletePending ? 'Deleting...' : 'Uploading'}
                 </Span>
                 <Loader className='Layer__anim--rotating' size={11} />

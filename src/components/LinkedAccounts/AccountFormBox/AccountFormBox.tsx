@@ -100,9 +100,9 @@ export const AccountFormBox = ({
         <div className={`${CLASS_NAME}__details-col__details`}>
           <div className={`${CLASS_NAME}__details-col__name`}>
             <Span size='sm' variant='subtle'>{institutionName}</Span>
-            <Span size='sm' variant='strong'>{displayName}</Span>
+            <Span size='sm'>{displayName}</Span>
           </div>
-          <Span size='sm' variant='inherit'>
+          <Span size='sm' variant='placeholder'>
             •••
             {bankAccount.mask}
           </Span>

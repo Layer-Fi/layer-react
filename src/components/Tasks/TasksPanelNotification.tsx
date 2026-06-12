@@ -90,7 +90,7 @@ export const TasksPanelNotification = ({
             })
           }}
         >
-          <P size='sm' weight='bold' variant='inherit'>
+          <P size='sm' weight='bold' status='warning' invert>
             {t('bookkeeping:action.view_and_complete', 'View and complete')}
           </P>
           <CircleArrowRight size={14} />

@@ -18,7 +18,7 @@ const TasksEmptyState = () => {
       <div className='Layer__tasks-icon'>
         <Smile size={12} color='#3B9C63' />
       </div>
-      <P size='sm' variant='inherit'>
+      <P size='sm' variant='subtle'>
         {t('bookkeeping:label.pending_tasks', 'There are no pending tasks!')}
         <br />
         {' '}

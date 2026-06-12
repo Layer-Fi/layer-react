@@ -55,7 +55,7 @@ export const LinkedAccountThumb = ({
   )
 
   const bankBalance = slots.Pill ?? (
-    <Span variant='strong'>
+    <Span>
       {formatCurrencyFromCents(bankAccount.latestBalanceTimestamp?.balance)}
     </Span>
   )
@@ -124,7 +124,7 @@ export const LinkedAccountThumb = ({
                       {t('linkedAccounts:label.ledger_balance', 'Ledger balance')}
                     </Span>
                   )}
-                <MoneySpan variant='strong' amount={bankAccount.currentLedgerBalance} />
+                <MoneySpan amount={bankAccount.currentLedgerBalance} />
               </div>
             )}
           </>
