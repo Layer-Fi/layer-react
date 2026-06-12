@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { type CustomAccount, CustomAccountSubtype } from '@internal-types/customAccounts'
 import { notEmpty } from '@utils/form'
 import { translationKey } from '@utils/i18n/translationKey'
+import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { FieldError, TextField } from '@ui/Form/Form'
 import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
@@ -12,7 +13,6 @@ import { Label } from '@ui/Typography/Text'
 import { Button, ButtonVariant } from '@components/Button/Button'
 import { SubmitButton } from '@components/Button/SubmitButton'
 import { useCustomAccountForm } from '@components/CustomAccountForm/useCustomAccountForm'
-import { Select } from '@components/Input/Select'
 import { ErrorText } from '@components/Typography/ErrorText'
 
 import './customAccountForm.scss'
@@ -131,15 +131,16 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
               <Label size='sm' htmlFor='account_type' pbe='3xs'>
                 {t('generalLedger:label.account_type', 'Account type')}
               </Label>
-              <Select
+              <ComboBox
                 className='Layer__custom-account-form__input'
                 name='account_type'
                 placeholder={t('generalLedger:action.select_account_type', 'Select account type...')}
                 options={accountTypeOptions}
-                value={accountTypeOptions.find(opt => opt.value === field.state.value) || null}
-                onChange={option => field.handleChange(option?.value)}
-                isInvalid={field.state.meta.errors.length > 0}
-                errorMessage={field.state.meta.errors.join(', ')}
+                selectedValue={accountTypeOptions.find(opt => opt.value === field.state.value) ?? null}
+                onSelectedValueChange={option => field.handleChange(option?.value)}
+                isClearable={false}
+                isError={field.state.meta.errors.length > 0}
+                slots={{ ErrorMessage: field.state.meta.errors.join(', ') }}
               />
             </VStack>
           )}

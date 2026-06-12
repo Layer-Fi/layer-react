@@ -8,6 +8,7 @@ import { useComboBoxSubcomponents } from '@ui/ComboBox/useComboBoxSubcomponents'
 
 export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends boolean>({
   className,
+  name,
   options,
   groups,
   onInputValueChange,
@@ -29,6 +30,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
 }: Pick<
   BaseComboBoxProps<T>,
   | 'className'
+  | 'name'
   | 'options'
   | 'groups'
   | 'onInputValueChange'
@@ -84,6 +86,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   const selectProps = useMemo(() => ({
     inputId: effectiveInputId,
     className,
+    name,
     options: options ?? groups,
     onInputChange: onInputValueChange,
     placeholder,
@@ -119,6 +122,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     isMutating,
     isReadOnly,
     isSearchable,
+    name,
     onInputValueChange,
     options,
     placeholder,
