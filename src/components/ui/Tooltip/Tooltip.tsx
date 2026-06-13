@@ -21,10 +21,10 @@ export type TooltipCapableComponentProps = {
 }
 
 export interface TooltipOptions {
-  initialOpen?: boolean
+  isInitiallyOpen?: boolean
   placement?: Placement
-  open?: boolean
-  disabled?: boolean
+  isOpen?: boolean
+  isDisabled?: boolean
   onOpenChange?: (open: boolean) => void
   offset?: number
   shift?: { padding?: number }
@@ -91,7 +91,7 @@ export const TooltipContent = forwardRef<
 
   const dataProperties = toDataProperties({ 'word-break': wordBreak })
 
-  if (!context.open || context.disabled) return null
+  if (!context.open || context.isDisabled) return null
 
   return (
     <FloatingPortal>

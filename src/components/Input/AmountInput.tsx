@@ -42,7 +42,7 @@ export const AmountInput = ({
   )
 
   return (
-    <Tooltip disabled={!isInvalid || !errorMessage}>
+    <Tooltip isDisabled={!isInvalid || !errorMessage}>
       <TooltipTrigger className='Layer__input-tooltip'>
         <CurrencyInput
           {...props}

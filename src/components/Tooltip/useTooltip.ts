@@ -15,10 +15,10 @@ import {
 } from '@floating-ui/react'
 
 export interface TooltipOptions {
-  initialOpen?: boolean
+  isInitiallyOpen?: boolean
   placement?: Placement
-  open?: boolean
-  disabled?: boolean
+  isOpen?: boolean
+  isDisabled?: boolean
   onOpenChange?: (open: boolean) => void
   offset?: number
   shift?: { padding?: number }
@@ -39,22 +39,22 @@ export const useTooltipContext = () => {
 }
 
 export const useTooltip = ({
-  initialOpen = false,
+  isInitiallyOpen = false,
   placement = 'top',
-  open: controlledOpen,
+  isOpen: controlledOpen,
   onOpenChange: setControlledOpen,
-  disabled,
+  isDisabled,
   offset: offsetProp = 5,
   shift: shiftProp = { padding: 5 },
 }: TooltipOptions = {}) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = useState(initialOpen)
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(isInitiallyOpen)
 
   const open = controlledOpen ?? uncontrolledOpen
   const setOpen = setControlledOpen ?? setUncontrolledOpen
 
   const data = useFloating({
     placement,
-    open: disabled ? false : open,
+    open: isDisabled ? false : open,
     onOpenChange: setOpen,
     whileElementsMounted: autoUpdate,
     middleware: [
@@ -97,10 +97,10 @@ export const useTooltip = ({
       setOpen,
       isMounted,
       styles,
-      disabled,
+      isDisabled,
       ...interactions,
       ...data,
     }),
-    [open, setOpen, isMounted, styles, disabled, interactions, data],
+    [open, setOpen, isMounted, styles, isDisabled, interactions, data],
   )
 }
