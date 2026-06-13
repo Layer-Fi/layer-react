@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { DataStateContainer } from '@components/DataStateContainer/DataStateContainer'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { Panel } from '@components/Panel/Panel'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
@@ -81,7 +82,7 @@ const Components = ({
 
   if (!isLoading && isError) {
     return (
-      <div className='Layer__table-state-container'>
+      <DataStateContainer>
         <DataState
           status={DataStateStatus.failed}
           title={t('common:error.something_went_wrong', 'Something went wrong')}
@@ -89,7 +90,7 @@ const Components = ({
           onRefresh={() => refetch()}
           isLoading={isValidating}
         />
-      </div>
+      </DataStateContainer>
     )
   }
 
