@@ -63,7 +63,7 @@ export const TooltipTrigger = forwardRef<
         ...props,
         ...children.props,
         'className': classNames(className, (children.props as { className?: string }).className),
-        'data-state': context.open ? 'open' : 'closed',
+        'data-state': context.isOpen ? 'open' : 'closed',
         'data-word-break': wordBreak,
       }),
     )
@@ -72,7 +72,7 @@ export const TooltipTrigger = forwardRef<
   return (
     <HStack
       ref={ref}
-      data-state={context.open ? 'open' : 'closed'}
+      data-state={context.isOpen ? 'open' : 'closed'}
       className={classNames('Layer__UI__TooltipTrigger', className)}
       {...context.getReferenceProps(props)}
     >
@@ -91,7 +91,7 @@ export const TooltipContent = forwardRef<
 
   const dataProperties = toDataProperties({ 'word-break': wordBreak })
 
-  if (!context.open || context.isDisabled) return null
+  if (!context.isOpen || context.isDisabled) return null
 
   return (
     <FloatingPortal>

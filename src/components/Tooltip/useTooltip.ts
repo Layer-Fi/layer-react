@@ -41,21 +41,21 @@ export const useTooltipContext = () => {
 export const useTooltip = ({
   isInitiallyOpen = false,
   placement = 'top',
-  isOpen: controlledOpen,
-  onOpenChange: setControlledOpen,
+  isOpen: isControlledOpen,
+  onOpenChange: setIsControlledOpen,
   isDisabled,
   offset: offsetProp = 5,
   shift: shiftProp = { padding: 5 },
 }: TooltipOptions = {}) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = useState(isInitiallyOpen)
+  const [isUncontrolledOpen, setIsUncontrolledOpen] = useState(isInitiallyOpen)
 
-  const open = controlledOpen ?? uncontrolledOpen
-  const setOpen = setControlledOpen ?? setUncontrolledOpen
+  const isOpen = isControlledOpen ?? isUncontrolledOpen
+  const setIsOpen = setIsControlledOpen ?? setIsUncontrolledOpen
 
   const data = useFloating({
     placement,
-    open: isDisabled ? false : open,
-    onOpenChange: setOpen,
+    open: isDisabled ? false : isOpen,
+    onOpenChange: setIsOpen,
     whileElementsMounted: autoUpdate,
     middleware: [
       offset(offsetProp),
@@ -72,10 +72,10 @@ export const useTooltip = ({
 
   const hover = useHover(context, {
     move: false,
-    enabled: controlledOpen == null,
+    enabled: isControlledOpen == null,
   })
   const focus = useFocus(context, {
-    enabled: controlledOpen == null,
+    enabled: isControlledOpen == null,
   })
   const dismiss = useDismiss(context)
   const role = useRole(context, { role: 'tooltip' })
@@ -93,14 +93,14 @@ export const useTooltip = ({
 
   return useMemo(
     () => ({
-      open,
-      setOpen,
+      isOpen,
+      setIsOpen,
       isMounted,
       styles,
       isDisabled,
       ...interactions,
       ...data,
     }),
-    [open, setOpen, isMounted, styles, isDisabled, interactions, data],
+    [isOpen, setIsOpen, isMounted, styles, isDisabled, interactions, data],
   )
 }
