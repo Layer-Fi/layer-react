@@ -135,10 +135,6 @@
   border: 1px solid var(--border-color);
   background: var(--color-base-0);
 
-  &.Layer__integrations-quickbooks-item-thumb {
-    box-shadow: none;
-  }
-
   &.--show-ledger-balance {
     height: 154px;
   }
