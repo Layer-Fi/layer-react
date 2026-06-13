@@ -8,8 +8,6 @@ import { MobilePanel } from '@components/MobilePanel/MobilePanel'
 import { Pagination } from '@components/Pagination/Pagination'
 import { TasksListItem } from '@components/Tasks/TasksListItem'
 
-import './tasksList.scss'
-
 const MOBILE_SHOW_UNRESOLVED_TASKS_COUNT = 2
 
 type TasksListMobileProps = {
