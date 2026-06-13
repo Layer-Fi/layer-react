@@ -1,0 +1,10 @@
+.Layer__ProfitAndLossChartLegend {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  list-style: none;
+}

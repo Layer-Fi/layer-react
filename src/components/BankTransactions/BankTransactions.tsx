@@ -51,6 +51,8 @@ import { Loader } from '@components/Loader/Loader'
 import { Pagination } from '@components/Pagination/Pagination'
 import { SuggestedCategorizationRuleUpdatesDialog } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDialog'
 
+import './bankTransactions.scss'
+
 import { BankTransactionsListWithEmptyStates } from './BankTransactionsTableEmptyState'
 
 const COMPONENT_NAME = 'bank-transactions'

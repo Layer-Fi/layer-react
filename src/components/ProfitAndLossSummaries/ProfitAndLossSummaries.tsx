@@ -20,6 +20,8 @@ import {
 import { ProfitAndLossSummariesSummary } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesSummary'
 import { TransactionsToReview } from '@views/AccountingOverview/internal/TransactionsToReview'
 
+import './profitAndLossSummaries.scss'
+
 export interface ProfitAndLossSummariesStringOverrides {
   revenueLabel?: string
   expensesLabel?: string

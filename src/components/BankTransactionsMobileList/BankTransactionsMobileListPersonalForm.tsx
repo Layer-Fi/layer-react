@@ -112,9 +112,9 @@ export const BankTransactionsMobileListPersonalForm = ({
       />
       <div
         className={classNames(
-          'Layer__bank-transaction-mobile-list-item__receipts',
+          'Layer__BankTransactionsMobileListItem__Receipts',
           hasReceipts(bankTransaction)
-            ? 'Layer__bank-transaction-mobile-list-item__actions--with-receipts'
+            ? 'Layer__BankTransactionsMobileListItem__Receipts--WithReceipts'
             : undefined,
         )}
       >

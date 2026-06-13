@@ -32,6 +32,8 @@ import { ReportsTableErrorState } from '@components/ReportsTableState/ReportsTab
 import { ReportsTableLoader } from '@components/ReportsTableState/ReportsTableLoader'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
+import './profitAndLossCompareTable.scss'
+
 interface ProfitAndLossCompareTableProps {
   stringOverrides?: ProfitAndLossTableStringOverrides
 }

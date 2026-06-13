@@ -59,18 +59,3 @@
   gap: var(--spacing-sm);
   align-items: center;
 }
-
-.Layer__header__actions {
-  display: flex;
-  gap: var(--spacing-sm);
-  align-items: center;
-  justify-content: space-between;
-}
-
-.Layer__error-boundary {
-  padding: var(--spacing-xl);
-
-  .Layer__data-state__text > .Layer__Span:last-child {
-    margin-bottom: 0;
-  }
-}

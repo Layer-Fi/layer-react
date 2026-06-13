@@ -15,6 +15,8 @@ import { type ProfitAndLossSummariesStringOverrides } from '@components/ProfitAn
 import { type ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
 import { ProfitAndLossTableWithProvider } from '@components/ProfitAndLossTable/ProfitAndLossTableWithProvider'
 
+import './profitAndLossView.scss'
+
 const COMPONENT_NAME = 'profit-and-loss'
 
 export interface ProfitAndLossViewProps {

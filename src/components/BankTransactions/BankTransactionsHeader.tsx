@@ -33,6 +33,8 @@ import { SearchField } from '@components/SearchField/SearchField'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
 import InvisibleDownload from '@components/utility/InvisibleDownload'
 
+import './bankTransactionsHeader.scss'
+
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
   asWidget?: boolean

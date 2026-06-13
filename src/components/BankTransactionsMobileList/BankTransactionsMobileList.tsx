@@ -10,6 +10,8 @@ import {
   useTransactionToOpen,
 } from '@components/BankTransactionsMobileList/TransactionToOpenContext'
 
+import './bankTransactionsMobileList.scss'
+
 export interface BankTransactionsMobileListProps {
   bankTransactions?: BankTransaction[]
   initialLoad?: boolean
@@ -44,7 +46,7 @@ export const BankTransactionsMobileList = ({
         bulkActionsEnabled={bulkActionsEnabled}
         onBulkActionsToggle={setBulkActionsEnabled}
       />
-      <ul className='Layer__bank-transactions__mobile-list'>
+      <ul className='Layer__BankTransactionsMobileList'>
         {bankTransactions?.map(
           (bankTransaction: BankTransaction, index: number) => (
             <BankTransactionsMobileListItem

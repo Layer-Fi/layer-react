@@ -1,0 +1,13 @@
+.Layer__EntryDetailHeader--VisibleOnLarge {
+  display: none;
+}
+
+@container (min-width: 1024px) {
+  .Layer__EntryDetailHeader--HiddenOnLarge {
+    display: none;
+  }
+
+  .Layer__EntryDetailHeader--VisibleOnLarge {
+    display: flex;
+  }
+}

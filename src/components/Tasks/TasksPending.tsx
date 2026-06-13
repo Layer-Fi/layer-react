@@ -12,6 +12,8 @@ import { P } from '@ui/Typography/Text'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import { BookkeepingStatusDescription } from '@components/BookkeepingStatus/BookkeepingStatusDescription'
 
+import './tasksPending.scss'
+
 const TASKS_CHARTS_COLORS = {
   done: '#3B9C63',
   pending: '#DFA000',

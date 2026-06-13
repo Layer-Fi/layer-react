@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { P } from '@ui/Typography/Text'
 import { IconBox } from '@components/IconBox/IconBox'
 
+import './profitAndLossChartStateCard.scss'
+
 export const ProfitAndLossChartStateCard = () => {
   const { t } = useTranslation()
   return (

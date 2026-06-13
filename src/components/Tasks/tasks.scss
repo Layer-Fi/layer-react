@@ -1,0 +1,12 @@
+.Layer__tasks {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden auto;
+  max-height: calc(100vh - 2 * var(--spacing-lg));
+}
+
+.Layer__tasks__content {
+  min-height: 0;
+  opacity: 1;
+  transition: opacity 0.2s ease-out;
+}
