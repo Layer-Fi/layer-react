@@ -10,13 +10,13 @@ import { Button } from '@ui/Button/Button'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 type UnifiedReportDownloadButtonProps = {
-  iconOnly?: boolean
+  icon?: boolean
 }
 
-export function UnifiedReportDownloadButton({ iconOnly }: UnifiedReportDownloadButtonProps) {
+export function UnifiedReportDownloadButton({ icon }: UnifiedReportDownloadButtonProps) {
   const { t } = useTranslation()
   const { isDesktop } = useSizeClass()
-  const resolvedIconOnly = iconOnly ?? !isDesktop
+  const resolvedIcon = icon ?? !isDesktop
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
 
   const { trigger, isMutating, isError } = useUnifiedReportExcel({
@@ -48,10 +48,10 @@ export function UnifiedReportDownloadButton({ iconOnly }: UnifiedReportDownloadB
         onPress={onPress}
         isPending={isMutating}
         isDisabled={isMutating}
-        icon={resolvedIconOnly}
-        aria-label={resolvedIconOnly ? buttonText : undefined}
+        icon={resolvedIcon}
+        aria-label={resolvedIcon ? buttonText : undefined}
       >
-        {!resolvedIconOnly && buttonText}
+        {!resolvedIcon && buttonText}
         {isError ? <RefreshCcw size={12} /> : <CloudDownload size={16} /> }
       </Button>
       <InvisibleDownload ref={invisibleDownloadRef} />

@@ -69,7 +69,7 @@ export const ChartOfAccountsTableHeader = ({
               onChange={onSearchChange}
             />
             <AccountBalancesDownloadButton
-              iconOnly={!isDesktop}
+              icon={!isDesktop}
             />
             {showAddAccountButton && (
               <Button

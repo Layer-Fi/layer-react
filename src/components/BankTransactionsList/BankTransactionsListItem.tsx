@@ -209,9 +209,9 @@ export const BankTransactionsListItem = ({
               />
             )}
             <BankTransactionsSubmitButton
-              disabled={isProcessing}
+              isDisabled={isProcessing}
               onPress={() => { void save() }}
-              processing={isProcessing}
+              isPending={isProcessing}
               action={!displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
               error={isError ? t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.') : undefined}
             >

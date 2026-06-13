@@ -132,7 +132,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
           )}
           <SubmitButton
             type='submit'
-            processing={isSubmitting}
+            isPending={isSubmitting}
             noIcon={!isSubmitting}
             withRetry
             error={submitError}

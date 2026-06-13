@@ -192,10 +192,10 @@ export function UploadTransactionsUploadCsvStep(
               <Spacer />
               <SubmitButton
                 tooltip={(selectedFile && !hasSelectedAccount) ? t('upload:action.select_account_label', 'Select an account') : null}
-                disabled={!hasSelectedAccount || !selectedFile}
-                processing={isParsingCsv}
+                isDisabled={!hasSelectedAccount || !selectedFile}
+                isPending={isParsingCsv}
                 error={hasParseCsvError}
-                onClick={onClickContinue}
+                onPress={onClickContinue}
                 withRetry
                 noIcon={!isParsingCsv}
               >

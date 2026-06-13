@@ -8,8 +8,8 @@ import './bankTransactionsSubmitButton.scss'
 type BankTransactionsSubmitButtonProps = {
   children: ReactNode
   onPress: () => void
-  processing?: boolean
-  disabled?: boolean
+  isPending?: boolean
+  isDisabled?: boolean
   error?: string
   action?: SubmitAction
   active?: boolean
@@ -18,8 +18,8 @@ type BankTransactionsSubmitButtonProps = {
 export const BankTransactionsSubmitButton = ({
   children,
   onPress,
-  processing,
-  disabled,
+  isPending,
+  isDisabled,
   error,
   action = SubmitAction.SAVE,
   active,
@@ -31,9 +31,9 @@ export const BankTransactionsSubmitButton = ({
       <SubmitButton
         iconBox
         withRetry
-        onClick={onPress}
-        processing={processing}
-        disabled={disabled}
+        onPress={onPress}
+        isPending={isPending}
+        isDisabled={isDisabled}
         error={error}
         action={action}
       >

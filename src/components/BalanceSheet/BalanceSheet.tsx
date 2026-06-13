@@ -120,7 +120,7 @@ const BalanceSheetView = ({
                     {isMobileView && <ReportsMobileSelectionTrigger />}
                     <BalanceSheetDownloadButton
                       effectiveDate={effectiveDate}
-                      iconOnly={isMobileView}
+                      icon={isMobileView}
                     />
                   </HStack>
                 </Stack>

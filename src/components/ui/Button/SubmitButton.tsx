@@ -7,10 +7,10 @@ import { ButtonIconBox } from '@ui/Button/ButtonIconBox'
 
 export interface SubmitButtonProps {
   children?: ReactNode
-  onClick?: ButtonProps['onClick']
+  onPress?: ButtonProps['onPress']
   type?: ButtonProps['type']
-  processing?: boolean
-  disabled?: boolean
+  isPending?: boolean
+  isDisabled?: boolean
   error?: boolean | string
   action?: SubmitAction
   noIcon?: boolean
@@ -67,8 +67,8 @@ const withRenderedIcon = ({
 }
 
 export const SubmitButton = ({
-  processing,
-  disabled,
+  isPending,
+  isDisabled,
   error,
   children,
   action = SubmitAction.SAVE,
@@ -76,7 +76,7 @@ export const SubmitButton = ({
   iconBox,
   tooltip,
   withRetry,
-  onClick,
+  onPress,
   type,
 }: SubmitButtonProps) => {
   const { t } = useTranslation()
@@ -85,10 +85,10 @@ export const SubmitButton = ({
     return (
       <Button
         variant='outlined'
-        onClick={onClick}
+        onPress={onPress}
         type={type}
-        isDisabled={processing || disabled}
-        isPending={processing}
+        isDisabled={isPending || isDisabled}
+        isPending={isPending}
         tooltip={typeof error === 'string' ? error : t('common:error.something_went_wrong', 'Something went wrong')}
       >
         {children}
@@ -99,10 +99,10 @@ export const SubmitButton = ({
 
   return (
     <Button
-      onClick={onClick}
+      onPress={onPress}
       type={type}
-      isDisabled={processing || disabled}
-      isPending={processing}
+      isDisabled={isPending || isDisabled}
+      isPending={isPending}
       tooltip={typeof error === 'string' ? error : tooltip}
     >
       {children}

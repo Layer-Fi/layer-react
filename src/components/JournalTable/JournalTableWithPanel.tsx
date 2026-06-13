@@ -75,7 +75,7 @@ export const JournalTableWithPanel = ({
           </HeaderCol>
           <HeaderCol>
             <JournalEntriesDownloadButton
-              iconOnly={['mobile', 'tablet'].includes(view)}
+              icon={['mobile', 'tablet'].includes(view)}
             />
             <Button
               onPress={() => toCreateEntry()}

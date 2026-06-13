@@ -14,13 +14,13 @@ import type { ProfitAndLossDownloadButtonStringOverrides } from '@components/Pro
 export interface ProfitAndLossReportDownloadButtonProps {
   stringOverrides?: ProfitAndLossDownloadButtonStringOverrides
   moneyFormat?: MoneyFormat
-  iconOnly?: boolean
+  icon?: boolean
 }
 
 export const ProfitAndLossFullReportDownloadButton = ({
   stringOverrides,
   moneyFormat,
-  iconOnly,
+  icon,
 }: ProfitAndLossReportDownloadButtonProps) => {
   const { t } = useTranslation()
   const { dateRange, tagFilter } = useContext(ProfitAndLossContext)
@@ -79,9 +79,9 @@ export const ProfitAndLossFullReportDownloadButton = ({
 
   return (
     <DownloadButtonComponent
-      iconOnly={iconOnly}
-      onClick={handleClick}
-      isDownloading={isDownloading}
+      icon={icon}
+      onPress={() => { void handleClick() }}
+      isPending={isDownloading}
       requestFailed={requestFailed}
       text={stringOverrides?.downloadButtonText || t('common:action.download_label', 'Download')}
       retryText={stringOverrides?.retryButtonText || t('common:action.retry_label', 'Retry')}

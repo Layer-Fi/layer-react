@@ -97,9 +97,9 @@ const BaseConfirmationModalContent = memo(function BaseConfirmationModalContent(
             {cancelButtonLabel}
           </Button>
           <SubmitButton
-            onClick={onClickConfirm}
-            processing={isProcessing}
-            disabled={confirmDisabled}
+            onPress={onClickConfirm}
+            isPending={isProcessing}
+            isDisabled={confirmDisabled}
             error={error ? errorText : undefined}
             withRetry
             noIcon={!isProcessing}

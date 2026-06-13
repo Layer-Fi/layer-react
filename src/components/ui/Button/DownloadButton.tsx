@@ -4,27 +4,27 @@ import { useTranslation } from 'react-i18next'
 import { Button, type ButtonProps } from '@ui/Button/Button'
 
 interface DownloadButtonProps {
-  onClick?: () => void | Promise<void>
-  iconOnly?: boolean
-  isDownloading?: boolean
+  onPress?: ButtonProps['onPress']
+  icon?: boolean
+  isPending?: boolean
   requestFailed?: boolean
   text?: string
   retryText?: string
   errorText?: string
   tooltip?: ButtonProps['tooltip']
-  disabled?: boolean
+  isDisabled?: boolean
 }
 
 export const DownloadButton = ({
-  iconOnly,
-  onClick,
-  isDownloading,
+  icon,
+  onPress,
+  isPending,
   requestFailed,
   tooltip,
   text,
   retryText,
   errorText,
-  disabled = false,
+  isDisabled = false,
 }: DownloadButtonProps) => {
   const { t } = useTranslation()
   const displayText = text ?? t('common:action.download_label', 'Download')
@@ -35,13 +35,13 @@ export const DownloadButton = ({
     return (
       <Button
         variant='outlined'
-        onPress={() => void onClick?.()}
-        isDisabled={isDownloading || disabled}
-        icon={iconOnly}
-        aria-label={iconOnly ? displayRetryText : undefined}
+        onPress={onPress}
+        isDisabled={isPending || isDisabled}
+        icon={icon}
+        aria-label={icon ? displayRetryText : undefined}
         tooltip={displayErrorText}
       >
-        {!iconOnly && displayRetryText}
+        {!icon && displayRetryText}
         <RefreshCcw size={12} />
       </Button>
     )
@@ -50,14 +50,14 @@ export const DownloadButton = ({
   return (
     <Button
       variant='outlined'
-      onPress={() => void onClick?.()}
-      isDisabled={isDownloading || disabled}
-      isPending={isDownloading}
-      icon={iconOnly}
-      aria-label={iconOnly ? displayText : undefined}
+      onPress={onPress}
+      isDisabled={isPending || isDisabled}
+      isPending={isPending}
+      icon={icon}
+      aria-label={icon ? displayText : undefined}
       tooltip={tooltip}
     >
-      {!iconOnly && displayText}
+      {!icon && displayText}
       <CloudDownload size={12} />
     </Button>
   )
