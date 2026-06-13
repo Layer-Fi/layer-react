@@ -32,7 +32,7 @@ export const BankTransactionsProcessingInfo = ({ showAsBadge = false }: BankTran
 
   return (
     <Tooltip offset={12}>
-      <TooltipTrigger><BookkeepingStatus status={BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER} text={t('common:state.processing', 'Processing')} /></TooltipTrigger>
+      <TooltipTrigger variant='fit-content'><BookkeepingStatus status={BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER} text={t('common:state.processing', 'Processing')} /></TooltipTrigger>
       <TooltipContent>
         {tooltipContent}
       </TooltipContent>

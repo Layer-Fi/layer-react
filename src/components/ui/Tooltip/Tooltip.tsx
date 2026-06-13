@@ -43,16 +43,19 @@ export const Tooltip = ({
   )
 }
 
-export type TooltipTriggerProps = { children: ReactNode } & { asChild?: boolean, wordBreak?: 'break-all', className?: string }
+export type TooltipTriggerVariant = 'fit-content' | 'truncate'
+export type TooltipTriggerProps = { children: ReactNode } & { asChild?: boolean, wordBreak?: 'break-all', className?: string, variant?: TooltipTriggerVariant }
 export const TooltipTrigger = forwardRef<
   HTMLElement,
   TooltipTriggerProps
->(function TooltipTrigger({ children, asChild = false, wordBreak, className, ...props }, propRef) {
+>(function TooltipTrigger({ children, asChild = false, wordBreak, className, variant, ...props }, propRef) {
   const context = useTooltipContext()
   const childrenRef = (isValidElement(children) && 'ref' in children)
     ? children.ref as Ref<unknown>
     : null
   const ref = useMergeRefs([context.refs.setReference, propRef, childrenRef])
+
+  const dataProperties = toDataProperties({ variant })
 
   if (asChild && isValidElement(children)) {
     return cloneElement(
@@ -74,6 +77,7 @@ export const TooltipTrigger = forwardRef<
       ref={ref}
       data-state={context.isOpen ? 'open' : 'closed'}
       className={classNames('Layer__UI__TooltipTrigger', className)}
+      {...dataProperties}
       {...context.getReferenceProps(props)}
     >
       {children}

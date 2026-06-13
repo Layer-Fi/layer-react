@@ -65,7 +65,7 @@ export function CheckboxWithTooltip({ tooltip, ...props }: CheckboxWithTooltipPr
   return (
     <div className='Layer__checkbox-wrapper'>
       <Tooltip isDisabled={!tooltip}>
-        <TooltipTrigger className='Layer__input-tooltip'>
+        <TooltipTrigger variant='fit-content'>
           <Checkbox {...props} />
         </TooltipTrigger>
         <TooltipContent>{tooltip}</TooltipContent>

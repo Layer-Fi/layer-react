@@ -190,7 +190,7 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
       const dataPropertiesWithEllipsis = { ...dataProperties, 'data-with-tooltip': true }
       return (
         <Tooltip isDisabled={!isTruncated}>
-          <TooltipTrigger>
+          <TooltipTrigger variant='truncate'>
             <BaseSpan
               dataProperties={dataPropertiesWithEllipsis}
               restProps={restProps}

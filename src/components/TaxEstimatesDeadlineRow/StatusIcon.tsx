@@ -31,7 +31,7 @@ export const StatusIcon = ({ status }: { status: TaxOverviewDeadlineStatus }) =>
 
   return (
     <Tooltip>
-      <TooltipTrigger asChild>
+      <TooltipTrigger variant='fit-content'>
         <Span
           nonAria
           className={`Layer__TaxOverview__AmountIcon Layer__TaxOverview__AmountIcon--${tone}`}
