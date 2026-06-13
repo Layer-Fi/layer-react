@@ -77,7 +77,7 @@ export const MatchForm = ({
               setSelectedMatch(suggestedMatch)
             }}
           >
-            <div className='Layer__nowrap Layer__MatchForm__Table__date'>
+            <div className='Layer__MatchForm__Table__date'>
               <span>
                 {formatDate(suggestedMatch.details.date)}
               </span>

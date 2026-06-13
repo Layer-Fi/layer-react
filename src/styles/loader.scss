@@ -63,6 +63,20 @@
   border-radius: 4px;
 }
 
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.Layer__anim--rotating {
+  animation: rotating 2s linear infinite;
+}
+
 @keyframes shine {
   to {
     background-position-x: -200%;
