@@ -11,6 +11,8 @@ import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/la
 import { TaskMonthTile } from '@components/Tasks/TaskMonthTile'
 import { type MonthData } from '@components/Tasks/types'
 
+import './tasksMonthSelector.scss'
+
 function useActiveYearBookkeepingPeriods() {
   const { date } = useGlobalDate()
   const { data } = useBookkeepingPeriods()

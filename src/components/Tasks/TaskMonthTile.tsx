@@ -3,6 +3,8 @@ import { P } from '@ui/Typography/Text'
 import { TaskStatusBadge } from '@components/Tasks/TaskStatusBadge'
 import { type MonthData } from '@components/Tasks/types'
 
+import './taskMonthTile.scss'
+
 export type TaskMonthTileProps = {
   data: MonthData
   active?: boolean
