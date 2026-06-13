@@ -1,0 +1,12 @@
+.Layer__bank-transactions__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-bottom: var(--spacing-lg);
+}
+
+.Layer__bank-transactions__list-header {
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--table-bg);
+  color: var(--color-base-700);
+}

@@ -1,34 +1,3 @@
-.Layer__bank-transactions {
-  max-width: var(--max-component-width);
-  padding-bottom: var(--spacing-lg);
-
-  .Layer__bank-transactions__table-wrapper {
-    overflow: auto;
-    max-width: var(--max-component-width);
-    margin-bottom: var(--spacing-lg);
-  }
-}
-
-.Layer__bank-transactions__list-loader {
-  width: 100%;
-  padding: var(--spacing-lg) var(--spacing-md);
-}
-
-.Layer__bank-transaction-row {
-  transition: all var(--transition-speed) ease-in-out;
-  opacity: 0.3;
-
-  &.initial-load {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-
-  &.show {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
 .Layer__bank-transaction-row:first-child .Layer__bank-transactions__table-cell {
   border-top-width: 0;
 }
@@ -171,29 +140,6 @@
 .Layer__bank-transaction-list-item:hover {
   background-color: var(--bg-element-focus);
   transition: background-color var(--transition-speed) ease-in-out;
-}
-
-.Layer__bank-transaction-row__actions-cell {
-  width: 0%;
-  border-left: 1px solid var(--border-color);
-  transition: border 5s ease-out;
-}
-
-.Layer__bank-transaction-row__actions-cell--open {
-  border-left: 1px solid transparent;
-}
-
-.Layer__bank-transactions__list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  margin-bottom: var(--spacing-lg);
-}
-
-.Layer__bank-transactions__list-header {
-  border-bottom: 1px solid var(--border-color);
-  background-color: var(--table-bg);
-  color: var(--color-base-700);
 }
 
 .Layer__bank-transactions__table .Layer__bank-transactions__table-header.Layer__bank-transactions__documents-col {
@@ -339,16 +285,6 @@
   .Layer__bank-transactions__tx-col {
     text-overflow: ellipsis;
   }
-}
-
-.Layer__bank-transaction-row.Layer__bank-transaction-row--expanded {
-  td {
-    vertical-align: top;
-  }
-}
-
-.Layer__bank-transaction-row__expanded-td {
-  padding: 0;
 }
 
 @container (max-width: 1108px) and (min-width: 701px) {

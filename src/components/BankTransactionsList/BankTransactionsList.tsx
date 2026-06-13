@@ -12,6 +12,8 @@ import {
 } from '@components/BankTransactions/BankTransactions'
 import { BankTransactionsListItem } from '@components/BankTransactionsList/BankTransactionsListItem'
 
+import './bankTransactionsList.scss'
+
 interface BankTransactionsListProps {
   bankTransactions?: BankTransaction[]
   stringOverrides?: BankTransactionCTAStringOverrides
