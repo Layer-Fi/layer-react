@@ -136,8 +136,7 @@
 }
 
 .Layer__bank-transaction-row:hover,
-.Layer__bank-transaction-row:hover .Layer__bank-transactions__table-cell,
-.Layer__bank-transaction-list-item:hover {
+.Layer__bank-transaction-row:hover .Layer__bank-transactions__table-cell {
   background-color: var(--bg-element-focus);
   transition: background-color var(--transition-speed) ease-in-out;
 }

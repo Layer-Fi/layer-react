@@ -1,3 +1,8 @@
+.Layer__bank-transaction-list-item:hover {
+  background-color: var(--bg-element-focus);
+  transition: background-color var(--transition-speed) ease-in-out;
+}
+
 .Layer__bank-transaction-list-item {
   display: flex;
   flex-direction: column;
