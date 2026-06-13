@@ -11,8 +11,6 @@ import { Pagination } from '@components/Pagination/Pagination'
 import { TasksListItem } from '@components/Tasks/TasksListItem'
 import { TasksListMobile } from '@components/Tasks/TasksListMobile'
 
-import './tasksList.scss'
-
 const TasksEmptyState = () => {
   const { t } = useTranslation()
   return (

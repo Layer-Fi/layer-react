@@ -17,6 +17,8 @@ import { TextArea } from '@ui/Input/TextArea'
 import { P } from '@ui/Typography/Text'
 import { FileInput } from '@components/Input/FileInput'
 
+import './tasksListItem.scss'
+
 type TasksListItemProps = {
   task: UserVisibleTask
   defaultOpen: boolean
