@@ -108,11 +108,12 @@ export const BankTransactionRow = ({
           void save()
         }
       }}
-      processing={isProcessing}
-      disabled={selectedOption === null || isBulkSelectionActive}
+      isPending={isProcessing}
+      isDisabled={selectedOption === null || isBulkSelectionActive}
       action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-      active={open}
-      error={isError ? t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.') : undefined}
+      isActive={open}
+      isError={isError}
+      errorMessage={t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
     >
       {isError
         ? t('common:action.retry_label', 'Retry')

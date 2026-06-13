@@ -98,13 +98,13 @@ function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
 
 const DownloadButton = ({
   downloadButtonTextOverride,
-  iconOnly,
-  disabled,
+  icon,
+  isDisabled,
   isListView = false,
 }: {
   downloadButtonTextOverride?: string
-  iconOnly?: boolean
-  disabled?: boolean
+  icon?: boolean
+  isDisabled?: boolean
   isListView?: boolean
 }) => {
   const { handleDownloadTransactions, invisibleDownloadRef, isMutating, error } = useHandleDownloadTransactions({ isListView })
@@ -112,12 +112,12 @@ const DownloadButton = ({
   return (
     <>
       <DownloadButtonComponent
-        iconOnly={iconOnly}
-        onClick={handleDownloadTransactions}
-        isDownloading={isMutating}
+        icon={icon}
+        onPress={handleDownloadTransactions}
+        isPending={isMutating}
         requestFailed={Boolean(error)}
         text={downloadButtonTextOverride}
-        disabled={disabled}
+        isDisabled={isDisabled}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>
@@ -328,8 +328,8 @@ export const BankTransactionsHeader = ({
         <HStack slot='download-upload' justify='center' gap='xs'>
           <DownloadButton
             downloadButtonTextOverride={stringOverrides?.downloadButton}
-            iconOnly={isListView}
-            disabled={showBulkActions}
+            icon={isListView}
+            isDisabled={showBulkActions}
             isListView={isListView}
           />
           <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />

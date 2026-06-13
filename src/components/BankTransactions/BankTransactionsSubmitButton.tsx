@@ -1,40 +1,39 @@
 import { type ReactNode } from 'react'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { SubmitAction, SubmitButton } from '@ui/Button/SubmitButton'
+import { SubmitAction, SubmitButton, type SubmitButtonProps } from '@ui/Button/SubmitButton'
 
 import './bankTransactionsSubmitButton.scss'
 
-type BankTransactionsSubmitButtonProps = {
-  children: ReactNode
-  onPress: () => void
-  processing?: boolean
-  disabled?: boolean
-  error?: string
-  action?: SubmitAction
-  active?: boolean
-}
+type BankTransactionsSubmitButtonProps =
+  Pick<SubmitButtonProps, 'isPending' | 'isDisabled' | 'isError' | 'errorMessage' | 'action'> & {
+    children: ReactNode
+    onPress: SubmitButtonProps['onPress']
+    isActive?: boolean
+  }
 
 export const BankTransactionsSubmitButton = ({
   children,
   onPress,
-  processing,
-  disabled,
-  error,
+  isPending,
+  isDisabled,
+  isError,
+  errorMessage,
   action = SubmitAction.SAVE,
-  active,
+  isActive,
 }: BankTransactionsSubmitButtonProps) => {
-  const dataProperties = toDataProperties({ active, error: Boolean(error) })
+  const dataProperties = toDataProperties({ active: isActive, error: isError })
 
   return (
     <span className='Layer__BankTransactionsSubmitButton' {...dataProperties}>
       <SubmitButton
         iconBox
         withRetry
-        onClick={onPress}
-        processing={processing}
-        disabled={disabled}
-        error={error}
+        onPress={onPress}
+        isPending={isPending}
+        isDisabled={isDisabled}
+        isError={isError}
+        errorMessage={errorMessage}
         action={action}
       >
         {children}

@@ -1,4 +1,4 @@
-import { type ChangeEvent, useRef } from 'react'
+import { type ChangeEvent, type ReactNode, useRef } from 'react'
 import { CloudUpload } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -7,10 +7,10 @@ import { Button } from '@ui/Button/Button'
 export interface FileInputProps {
   text?: string
   onUpload?: (files: File[]) => void
-  disabled?: boolean
+  isDisabled?: boolean
   secondary?: boolean
-  iconOnly?: boolean
-  icon?: React.ReactNode
+  icon?: boolean
+  slots?: { Icon?: ReactNode }
   allowMultipleUploads?: boolean
   accept?: string
 }
@@ -18,10 +18,10 @@ export interface FileInputProps {
 export const FileInput = ({
   text,
   onUpload,
-  disabled = false,
+  isDisabled = false,
   secondary,
-  iconOnly = false,
-  icon,
+  icon = false,
+  slots,
   allowMultipleUploads = false,
   accept,
 }: FileInputProps) => {
@@ -46,7 +46,7 @@ export const FileInput = ({
   if (secondary) {
     return (
       <>
-        <Button variant='text' underline onPress={onClick} isDisabled={disabled}>
+        <Button variant='text' underline onPress={onClick} isDisabled={isDisabled}>
           {buttonText}
         </Button>
         <input
@@ -66,12 +66,12 @@ export const FileInput = ({
       <Button
         onPress={onClick}
         variant='outlined'
-        isDisabled={disabled}
-        icon={iconOnly}
-        aria-label={iconOnly ? buttonText : undefined}
+        isDisabled={isDisabled}
+        icon={icon}
+        aria-label={icon ? buttonText : undefined}
       >
-        {!iconOnly && buttonText}
-        {icon ?? <CloudUpload size={18} />}
+        {!icon && buttonText}
+        {slots?.Icon ?? <CloudUpload size={18} />}
       </Button>
       <input
         type='file'
