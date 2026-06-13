@@ -85,7 +85,7 @@ const StatementOfCashFlowView = ({
                     <CashflowStatementDownloadButton
                       startDate={dateRange.startDate}
                       endDate={dateRange.endDate}
-                      iconOnly={isMobileView}
+                      icon={isMobileView}
                     />
                   </HStack>
                 </Stack>

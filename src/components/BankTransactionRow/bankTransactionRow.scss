@@ -14,3 +14,38 @@
   overflow: hidden;
   width: 100%;
 }
+
+.Layer__bank-transaction-row {
+  transition: all var(--transition-speed) ease-in-out;
+  opacity: 0.3;
+
+  &.initial-load {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  &.show {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.Layer__bank-transaction-row__actions-cell {
+  width: 0%;
+  border-left: 1px solid var(--border-color);
+  transition: border 5s ease-out;
+}
+
+.Layer__bank-transaction-row__actions-cell--open {
+  border-left: 1px solid transparent;
+}
+
+.Layer__bank-transaction-row.Layer__bank-transaction-row--expanded {
+  td {
+    vertical-align: top;
+  }
+}
+
+.Layer__bank-transaction-row__expanded-td {
+  padding: 0;
+}

@@ -9,6 +9,8 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { P } from '@ui/Typography/Text'
 
+import './tasksPanelNotification.scss'
+
 type TasksPanelNotificationProps = {
   onClickReconnectAccounts?: () => void
 }

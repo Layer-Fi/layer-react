@@ -3,6 +3,8 @@ import classNames from 'classnames'
 
 import { Heading } from '@ui/Typography/Heading'
 
+import './viewHeader.scss'
+
 export interface ViewHeaderProps {
   title?: string
   className?: string

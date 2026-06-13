@@ -176,7 +176,7 @@ export const BankTransactionsMobileListItem = ({
 
   const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
 
-  const className = 'Layer__bank-transaction-mobile-list-item'
+  const className = 'Layer__BankTransactionsMobileListItem'
   const openClassName = open ? `${className}--expanded` : ''
   const rowClassName = classNames(
     className,
@@ -206,11 +206,7 @@ export const BankTransactionsMobileListItem = ({
                 <Span ellipsis>
                   {bankTransaction.counterpartyName ?? bankTransaction.description}
                 </Span>
-                {inAppLink && (
-                  <Span className='Layer__BankTransactionsMobileListItem__CategorizedValue'>
-                    {inAppLink}
-                  </Span>
-                )}
+                {inAppLink}
                 <HStack gap='2xs' align='center'>
                   <Span size='sm' ellipsis>
                     <Span ellipsis size='sm'>

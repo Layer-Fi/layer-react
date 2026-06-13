@@ -7,11 +7,12 @@ import { ButtonIconBox } from '@ui/Button/ButtonIconBox'
 
 export interface SubmitButtonProps {
   children?: ReactNode
-  onClick?: ButtonProps['onClick']
+  onPress?: ButtonProps['onPress']
   type?: ButtonProps['type']
-  processing?: boolean
-  disabled?: boolean
-  error?: boolean | string
+  isPending?: boolean
+  isDisabled?: boolean
+  isError?: boolean
+  errorMessage?: string
   action?: SubmitAction
   noIcon?: boolean
   iconBox?: true
@@ -26,11 +27,11 @@ export enum SubmitAction {
 }
 
 const buildIcon = ({
-  error,
+  isError,
   action,
   noIcon,
 }: {
-  error?: boolean | string
+  isError?: boolean
   action: SubmitAction
   noIcon?: boolean
 }) => {
@@ -38,7 +39,7 @@ const buildIcon = ({
     return null
   }
 
-  if (error) {
+  if (isError) {
     return <CircleAlert size={14} />
   }
 
@@ -67,29 +68,30 @@ const withRenderedIcon = ({
 }
 
 export const SubmitButton = ({
-  processing,
-  disabled,
-  error,
+  isPending,
+  isDisabled,
+  isError,
+  errorMessage,
   children,
   action = SubmitAction.SAVE,
   noIcon,
   iconBox,
   tooltip,
   withRetry,
-  onClick,
+  onPress,
   type,
 }: SubmitButtonProps) => {
   const { t } = useTranslation()
 
-  if (withRetry && error) {
+  if (withRetry && isError) {
     return (
       <Button
         variant='outlined'
-        onClick={onClick}
+        onPress={onPress}
         type={type}
-        isDisabled={processing || disabled}
-        isPending={processing}
-        tooltip={typeof error === 'string' ? error : t('common:error.something_went_wrong', 'Something went wrong')}
+        isDisabled={isPending || isDisabled}
+        isPending={isPending}
+        tooltip={errorMessage ?? t('common:error.something_went_wrong', 'Something went wrong')}
       >
         {children}
         <RefreshCcw size={12} />
@@ -99,14 +101,14 @@ export const SubmitButton = ({
 
   return (
     <Button
-      onClick={onClick}
+      onPress={onPress}
       type={type}
-      isDisabled={processing || disabled}
-      isPending={processing}
-      tooltip={typeof error === 'string' ? error : tooltip}
+      isDisabled={isPending || isDisabled}
+      isPending={isPending}
+      tooltip={isError ? (errorMessage ?? tooltip) : tooltip}
     >
       {children}
-      {withRenderedIcon({ error, action, noIcon, iconBox })}
+      {withRenderedIcon({ isError, action, noIcon, iconBox })}
     </Button>
   )
 }

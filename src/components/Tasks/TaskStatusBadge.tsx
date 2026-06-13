@@ -11,6 +11,8 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 
+import './taskStatusBadge.scss'
+
 type TaskStatusBadgeProps = {
   status: BookkeepingPeriod['status']
   tasksCount?: number

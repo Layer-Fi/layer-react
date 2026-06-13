@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { Legend } from 'recharts'
 
 import { translationKey } from '@utils/i18n/translationKey'
+import { STRIPE_PATTERN_DARK_FILL } from '@components/ProfitAndLossChart/ProfitAndLossChartPatternDefs'
 
-import { STRIPE_PATTERN_DARK_FILL } from './ProfitAndLossChartPatternDefs'
+import './profitAndLossChartLegend.scss'
 
 const LEGEND_ENTRY_CONFIG = [
   { ...translationKey('common:label.revenue', 'Revenue'), type: 'circle', id: 'IncomeLegend' },
@@ -30,7 +31,7 @@ const LegendIcon = ({ fill }: { fill?: string }) => (
 
 const renderLegendContent = (payload: { value: string, type: string, id: string }[]) => {
   return (
-    <ul className='Layer__chart-legend-list'>
+    <ul className='Layer__ProfitAndLossChartLegend'>
       {payload.map((entry, idx) => (
         <li
           key={`legend-item-${idx}`}

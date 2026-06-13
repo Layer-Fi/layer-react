@@ -18,6 +18,8 @@ import { TasksPending } from '@components/Tasks/TasksPending'
 import { TasksYearsTabs } from '@components/Tasks/TasksYearsTabs'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
+import './tasks.scss'
+
 const TasksOnboardingEmptyState = () => {
   const { t } = useTranslation()
   return (

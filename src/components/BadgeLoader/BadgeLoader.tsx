@@ -1,5 +1,8 @@
 import { type ReactNode } from 'react'
 import { Check, CircleAlert, Loader, X } from 'lucide-react'
+
+import './badgeLoader.scss'
+
 export interface BadgeLoaderProps {
   children?: ReactNode
   size?: number

@@ -12,13 +12,13 @@ import InvisibleDownload, { useInvisibleDownload } from '@components/utility/Inv
 type ProfitAndLossDetailLinesDownloadButtonProps = {
   pnlStructureLineItemName: string
   stringOverrides?: ProfitAndLossDownloadButtonStringOverrides
-  iconOnly?: boolean
+  icon?: boolean
 }
 
 export function ProfitAndLossDetailLinesDownloadButton({
   pnlStructureLineItemName,
   stringOverrides,
-  iconOnly,
+  icon,
 }: ProfitAndLossDetailLinesDownloadButtonProps) {
   const { t } = useTranslation()
   const { businessId } = useLayerContext()
@@ -42,9 +42,9 @@ export function ProfitAndLossDetailLinesDownloadButton({
   return (
     <>
       <DownloadButton
-        iconOnly={iconOnly}
-        onClick={() => { void trigger() }}
-        isDownloading={isMutating}
+        icon={icon}
+        onPress={() => { void trigger() }}
+        isPending={isMutating}
         requestFailed={Boolean(error)}
         text={stringOverrides?.downloadButtonText || t('common:action.download_label', 'Download')}
         retryText={stringOverrides?.retryButtonText || t('common:action.retry_label', 'Retry')}

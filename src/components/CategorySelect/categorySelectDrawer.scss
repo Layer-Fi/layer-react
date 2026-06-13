@@ -1,0 +1,9 @@
+.Layer__CategorySelectDrawer__ListContainer {
+  height: 100%;
+  padding-inline: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+}
+
+.Layer__CategorySelectDrawer__List {
+  overflow-y: auto;
+}

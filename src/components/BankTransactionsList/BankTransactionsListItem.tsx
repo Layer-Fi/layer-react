@@ -18,7 +18,6 @@ import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibili
 import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import ChevronDownFill from '@icons/ChevronDownFill'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { SubmitAction } from '@ui/Button/SubmitButton'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
@@ -33,8 +32,11 @@ import {
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
 import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankTransactionsSubmitButton'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
+import { Chevron } from '@components/Chevron/Chevron'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { ErrorText } from '@components/Typography/ErrorText'
+
+import './bankTransactionsListItem.scss'
 
 type BankTransactionsListItemProps = {
   index: number
@@ -139,11 +141,7 @@ export const BankTransactionsListItem = ({
             !isDesktop && 'Layer__bank-transaction-row__expand-button--mobile',
           )}
         >
-          <ChevronDownFill
-            className={`Layer__chevron ${
-              openExpandedRow ? 'Layer__chevron__up' : 'Layer__chevron__down'
-            }`}
-          />
+          <Chevron open={openExpandedRow} />
         </div>
       </span>
       <HStack className='Layer__bank-transaction-list-item__body'>
@@ -209,11 +207,12 @@ export const BankTransactionsListItem = ({
               />
             )}
             <BankTransactionsSubmitButton
-              disabled={isProcessing}
+              isDisabled={isProcessing}
               onPress={() => { void save() }}
-              processing={isProcessing}
+              isPending={isProcessing}
               action={!displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-              error={isError ? t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.') : undefined}
+              isError={isError}
+              errorMessage={t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
             >
               {isError
                 ? t('common:action.retry_label', 'Retry')

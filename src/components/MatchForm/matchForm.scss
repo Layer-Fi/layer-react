@@ -35,6 +35,7 @@
     box-sizing: border-box;
     width: 120px;
     padding: var(--spacing-xs) var(--spacing-sm);
+    white-space: nowrap;
   }
 
   .Layer__MatchForm__Table__amount {

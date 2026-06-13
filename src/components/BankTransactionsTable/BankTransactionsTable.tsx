@@ -16,6 +16,8 @@ import { BankTransactionsTableEmptyState } from '@components/BankTransactions/Ba
 import { BankTransactionsLoader } from '@components/BankTransactionsLoader/BankTransactionsLoader'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
 
+import './bankTransactionsTable.scss'
+
 export interface BankTransactionsTableStringOverrides {
   dateColumnHeaderText?: string
   transactionColumnHeaderText?: string

@@ -106,7 +106,7 @@ export const ProfitAndLossReport = ({
                 <ProfitAndLossDownloadButton
                   stringOverrides={stringOverrides?.downloadButton}
                   moneyFormat={csvMoneyFormat}
-                  iconOnly={isMobileView}
+                  icon={isMobileView}
                 />
               </HStack>
             </Stack>

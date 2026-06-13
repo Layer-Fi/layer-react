@@ -189,9 +189,9 @@ export const BankTransactionsMobileListSplitForm = ({
       />
       <div
         className={classNames(
-          'Layer__bank-transaction-mobile-list-item__receipts',
+          'Layer__BankTransactionsMobileListItem__Receipts',
           hasReceipts(bankTransaction)
-            ? 'Layer__bank-transaction-mobile-list-item__actions--with-receipts'
+            ? 'Layer__BankTransactionsMobileListItem__Receipts--WithReceipts'
             : undefined,
         )}
       >
@@ -209,8 +209,8 @@ export const BankTransactionsMobileListSplitForm = ({
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
             text={t('bankTransactions:action.upload_receipt', 'Upload receipt')}
-            iconOnly={true}
-            icon={<Paperclip size={20} />}
+            icon
+            slots={{ Icon: <Paperclip size={20} /> }}
             accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
           />
         )}

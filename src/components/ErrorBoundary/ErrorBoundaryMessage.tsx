@@ -2,10 +2,12 @@ import { useTranslation } from 'react-i18next'
 
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
+import './errorBoundaryMessage.scss'
+
 export const ErrorBoundaryMessage = () => {
   const { t } = useTranslation()
   return (
-    <div className='Layer__component Layer__component-container Layer__error-boundary'>
+    <div className='Layer__component Layer__component-container Layer__ErrorBoundaryMessage'>
       <DataState
         status={DataStateStatus.failed}
         title={t('common:error.something_went_wrong', 'Something went wrong')}

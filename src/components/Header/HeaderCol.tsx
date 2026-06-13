@@ -3,6 +3,8 @@ import classNames from 'classnames'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 
+import './headerCol.scss'
+
 interface HeaderColProps {
   className?: string
   style?: CSSProperties
@@ -15,7 +17,7 @@ export const HeaderCol = ({ className, children, style, noPadding = false, fluid
   const dataProperties = toDataProperties({ 'no-padding': noPadding, fluid })
 
   return (
-    <div {...dataProperties} className={classNames('Layer__header__col', className)} style={style}>
+    <div {...dataProperties} className={classNames('Layer__HeaderCol', className)} style={style}>
       {children}
     </div>
   )
