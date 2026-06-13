@@ -4,6 +4,12 @@
     flex-direction: column;
   }
 
+  &__ProfitAndLossHeader {
+    padding-block-start: var(--spacing-lg);
+    padding-block-end: 0;
+    padding-inline: var(--spacing-lg);
+  }
+
   &__ProfitAndLossCharts {
     max-inline-size: 1406px;
   }

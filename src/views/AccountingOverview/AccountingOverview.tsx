@@ -13,6 +13,7 @@ import { HeaderRow } from '@components/Header/HeaderRow'
 import { Onboarding } from '@components/Onboarding/Onboarding'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossHeader } from '@components/ProfitAndLossHeader/ProfitAndLossHeader'
 import { ProfitAndLossOverviewDetailedCharts } from '@components/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
 import {
   ProfitAndLossSummaries,
@@ -115,8 +116,8 @@ export const AccountingOverview = ({
           className='Layer__AccountingOverview__ProfitAndLossContainer'
           asWidget
         >
-          <ProfitAndLoss.Header
-            text={stringOverrides?.header || t('common:label.profit_loss', 'Profit & Loss')}
+          <ProfitAndLossHeader
+            stringOverrides={{ title: stringOverrides?.header }}
             className='Layer__AccountingOverview__ProfitAndLossHeader'
             trailingContent={<PnlLegend direction='row' />}
           />

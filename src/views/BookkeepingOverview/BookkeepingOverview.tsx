@@ -15,6 +15,7 @@ import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossHeader } from '@components/ProfitAndLossHeader/ProfitAndLossHeader'
 import { ProfitAndLossOverviewDetailedCharts } from '@components/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
 import { type ProfitAndLossSummariesStringOverrides } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
@@ -181,10 +182,11 @@ export const BookkeepingOverview = ({
               zIndex: 2,
             }}
           >
-            <ProfitAndLoss.Header
-              text={stringOverrides?.profitAndLoss?.header || t('common:label.profit_loss', 'Profit & Loss')}
+            <ProfitAndLossHeader
+              stringOverrides={{ title: stringOverrides?.profitAndLoss?.header }}
               withStatus
               trailingContent={<PnlLegend direction='row' />}
+              className='Layer__BookkeepingOverview__ProfitAndLossHeader'
             />
             <VStack pb='md' pi='md' fluid>
               <ProfitAndLoss.Summaries
