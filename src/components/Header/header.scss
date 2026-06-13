@@ -1,18 +1,18 @@
-.Layer__header {
+.Layer__HeaderContainer {
   display: flex;
   flex-direction: column;
   width: 100%;
+}
 
-  &--sticky {
-    position: sticky;
-    z-index: 10;
-    top: 0;
-    background: var(--color-base-0);
-    backdrop-filter: blur(6px);
-  }
+.Layer__HeaderContainer--Sticky {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  background: var(--color-base-0);
+  backdrop-filter: blur(6px);
+}
 
-  &--top-rounded {
-    border-top-left-radius: var(--border-radius-sm);
-    border-top-right-radius: var(--border-radius-sm);
-  }
+.Layer__HeaderContainer--Rounded {
+  border-top-left-radius: var(--border-radius-sm);
+  border-top-right-radius: var(--border-radius-sm);
 }

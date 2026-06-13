@@ -16,7 +16,7 @@ export const HeaderRow = ({ className, children, direction, style }: HeaderRowPr
   const dataProps = toDataProperties({ direction })
 
   return (
-    <div {...dataProps} className={classNames('Layer__header__row', className)} style={style}>
+    <div {...dataProps} className={classNames('Layer__HeaderRow', className)} style={style}>
       {children}
     </div>
   )

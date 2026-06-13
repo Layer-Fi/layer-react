@@ -20,9 +20,9 @@ export interface HeaderProps {
 const Header = forwardRef<HTMLElement | HTMLDivElement, HeaderProps>(
   ({ className, children, style, sticky, asHeader, rounded }, ref) => {
     const baseClassName = classNames(
-      'Layer__header',
-      sticky && 'Layer__header--sticky',
-      rounded && 'Layer__header--top-rounded',
+      'Layer__HeaderContainer',
+      sticky && 'Layer__HeaderContainer--Sticky',
+      rounded && 'Layer__HeaderContainer--Rounded',
       className,
     )
 
