@@ -117,7 +117,7 @@ export function UploadTransactionsValidateCsvStep(
           ? (
             <SubmitButton
               isPending={isMutating}
-              error={!!uploadTransactionsError}
+              isError={!!uploadTransactionsError}
               onPress={onClickUploadTransactions}
               action={SubmitAction.UPLOAD}
               withRetry

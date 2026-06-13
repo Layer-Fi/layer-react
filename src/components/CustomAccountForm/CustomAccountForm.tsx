@@ -135,7 +135,8 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
             isPending={isSubmitting}
             noIcon={!isSubmitting}
             withRetry
-            error={submitError}
+            isError={Boolean(submitError)}
+            errorMessage={submitError ?? undefined}
           >
             {submitError
               ? t('common:action.retry_label', 'Retry')

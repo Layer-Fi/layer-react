@@ -100,7 +100,8 @@ const BaseConfirmationModalContent = memo(function BaseConfirmationModalContent(
             onPress={onClickConfirm}
             isPending={isProcessing}
             isDisabled={confirmDisabled}
-            error={error ? errorText : undefined}
+            isError={Boolean(error)}
+            errorMessage={errorText}
             withRetry
             noIcon={!isProcessing}
           >

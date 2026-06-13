@@ -11,7 +11,8 @@ export interface SubmitButtonProps {
   type?: ButtonProps['type']
   isPending?: boolean
   isDisabled?: boolean
-  error?: boolean | string
+  isError?: boolean
+  errorMessage?: string
   action?: SubmitAction
   noIcon?: boolean
   iconBox?: true
@@ -26,11 +27,11 @@ export enum SubmitAction {
 }
 
 const buildIcon = ({
-  error,
+  isError,
   action,
   noIcon,
 }: {
-  error?: boolean | string
+  isError?: boolean
   action: SubmitAction
   noIcon?: boolean
 }) => {
@@ -38,7 +39,7 @@ const buildIcon = ({
     return null
   }
 
-  if (error) {
+  if (isError) {
     return <CircleAlert size={14} />
   }
 
@@ -69,7 +70,8 @@ const withRenderedIcon = ({
 export const SubmitButton = ({
   isPending,
   isDisabled,
-  error,
+  isError,
+  errorMessage,
   children,
   action = SubmitAction.SAVE,
   noIcon,
@@ -81,7 +83,7 @@ export const SubmitButton = ({
 }: SubmitButtonProps) => {
   const { t } = useTranslation()
 
-  if (withRetry && error) {
+  if (withRetry && isError) {
     return (
       <Button
         variant='outlined'
@@ -89,7 +91,7 @@ export const SubmitButton = ({
         type={type}
         isDisabled={isPending || isDisabled}
         isPending={isPending}
-        tooltip={typeof error === 'string' ? error : t('common:error.something_went_wrong', 'Something went wrong')}
+        tooltip={errorMessage ?? t('common:error.something_went_wrong', 'Something went wrong')}
       >
         {children}
         <RefreshCcw size={12} />
@@ -103,10 +105,10 @@ export const SubmitButton = ({
       type={type}
       isDisabled={isPending || isDisabled}
       isPending={isPending}
-      tooltip={typeof error === 'string' ? error : tooltip}
+      tooltip={isError ? (errorMessage ?? tooltip) : tooltip}
     >
       {children}
-      {withRenderedIcon({ error, action, noIcon, iconBox })}
+      {withRenderedIcon({ isError, action, noIcon, iconBox })}
     </Button>
   )
 }
