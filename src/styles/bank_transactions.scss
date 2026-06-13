@@ -600,68 +600,6 @@
   }
 }
 
-.Layer__bank-transaction-mobile-list-item__description {
-  padding: var(--spacing-md) 0;
-  border-top: 1px solid var(--border-color);
-}
-
-.Layer__bank-transaction-mobile-list-item__description__label {
-  margin-bottom: var(--spacing-2xs);
-  color: var(--color-base-500);
-}
-
-.Layer__bank-transaction-mobile-list-item__match-item {
-  display: flex;
-  gap: var(--spacing-sm);
-  align-items: center;
-  width: 100%;
-  padding: var(--spacing-xs);
-  border-bottom: 1px solid var(--color-base-50);
-
-  .Layer__bank-transaction-mobile-list-item__match-item__name {
-    color: var(--color-base-500);
-  }
-
-  .Layer__bank-transaction-mobile-list-item__match-item__heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .Layer__bank-transaction-mobile-list-item__match-item__col-status {
-    display: flex;
-    justify-content: flex-end;
-    width: 24px;
-    min-width: 24px;
-  }
-}
-
-.Layer__bank-transaction-mobile-list-item__match-item.Layer__bank-transaction-mobile-list-item__match-item--selected {
-  background: var(--color-base-100);
-
-  .Layer__bank-transaction-mobile-list-item__match-item__name {
-    color: var(--color-base-1000);
-  }
-}
-
-.Layer__bank-transaction-mobile-list-item__actions--with-receipts {
-  & .Layer__file-upload {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-  }
-
-  .Layer__file-upload > .Layer__P {
-    color: var(--color-base-500);
-  }
-}
-
-.Layer__bank-transaction-mobile-list-item__actions {
-  display: flex;
-  gap: var(--spacing-md);
-}
-
 @container (max-width: 500px) {
   .Layer__bank-transaction-list-item__expanded-row {
     input,
