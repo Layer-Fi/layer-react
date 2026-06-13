@@ -1,0 +1,58 @@
+.Layer__linked-accounts__options {
+  position: relative;
+  display: flex;
+
+  &.--hide-ledger-balance {
+    position: relative;
+    display: block;
+  }
+
+  &:hover .Layer__linked-accounts__options-overlay {
+    opacity: 1;
+    touch-action: auto;
+
+    .Layer__linked-accounts__options-overlay-button {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .Layer__linked-accounts__options-overlay {
+    position: absolute;
+    z-index: 99;
+    top: var(--spacing-2xs);
+    right: var(--spacing-2xs);
+    display: flex;
+    justify-content: flex-end;
+    height: 54px;
+    width: 74px;
+    border-top-right-radius: var(--border-radius-sm);
+    background:
+      linear-gradient(
+        270deg,
+        var(--color-base-50) 1.52%,
+        color-mix(in srgb, var(--color-base-50) 0%, transparent) 99.75%
+      );
+    opacity: 0;
+    touch-action: none;
+    transition: 0.15s all ease-out;
+
+    .Layer__linked-accounts__options-overlay-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 24px;
+      width: 24px;
+      border-radius: var(--spacing-2xs);
+      border: none;
+      box-shadow:
+        0 0 8px 0
+        var(--base-transparent-12);
+      margin: var(--spacing-xs);
+      background: var(--color-base-0);
+      cursor: pointer;
+      color: var(--color-base-1000);
+      transform: translate3d(5px, -5px, 0);
+      transition: 0.15s all ease-out;
+    }
+  }
+}

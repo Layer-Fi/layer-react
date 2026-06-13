@@ -1,0 +1,57 @@
+.Layer__linked-accounts__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  align-items: stretch;
+  padding: var(--spacing-lg);
+
+  @media screen and (width <= 650px) {
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    overflow-y: hidden;
+  }
+}
+
+.Layer__linked-accounts__header + .Layer__linked-accounts__list {
+  padding-top: 0;
+}
+
+.Layer__linked-accounts__new-account {
+  box-sizing: border-box;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 136px;
+
+  min-width: 286px;
+  max-width: 272px;
+  padding: var(--spacing-2xs);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--base-transparent-1);
+  cursor: pointer;
+  color: var(--color-base-700);
+  transition: all 0.15s ease-out;
+
+  &.--as-widget {
+    min-height: 90px;
+  }
+
+  &.--show-ledger-balance {
+    min-height: 156px;
+  }
+
+  &:hover {
+    background: var(--base-transparent-2);
+  }
+
+  &.--disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+
+    &:hover {
+      background: var(--base-transparent-1);
+    }
+  }
+}

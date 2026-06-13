@@ -3,6 +3,8 @@ import { EllipsisVertical } from 'lucide-react'
 
 import { HoverMenu, type HoverMenuProps } from '@components/HoverMenu/HoverMenu'
 
+import './linkedAccountOptions.scss'
+
 interface LinkedAccountOptionsProps extends HoverMenuProps {
   showLedgerBalance?: boolean
 }

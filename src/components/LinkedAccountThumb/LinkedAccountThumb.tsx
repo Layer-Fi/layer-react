@@ -9,6 +9,8 @@ import { VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 
+import './linkedAccountThumb.scss'
+
 export interface LinkedAccountThumbProps {
   bankAccount: BankAccount
   asWidget?: boolean
