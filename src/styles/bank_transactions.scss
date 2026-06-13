@@ -9,61 +9,9 @@
   }
 }
 
-.Layer__bank-transactions__header--mobile .Layer__syncing-component {
-  padding: 0 var(--spacing-xs);
-  border-width: 0;
-  margin-left: 0;
-}
-
 .Layer__bank-transactions__list-loader {
   width: 100%;
   padding: var(--spacing-lg) var(--spacing-md);
-}
-
-.Layer__bank-transactions__loader-row {
-  padding: var(--spacing-xs) var(--spacing-md);
-}
-
-.Layer__bank-transactions__header {
-  position: sticky;
-  z-index: 1;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-  align-items: stretch;
-  width: 100%;
-}
-
-.Layer__bank-transactions__header__content {
-  display: flex;
-  gap: var(--spacing-lg);
-  align-items: center;
-  justify-content: space-between;
-  min-height: 40px;
-}
-
-.Layer__bank-transactions__header.Layer__bank-transactions__header--mobile {
-  background-color: transparent;
-}
-
-.Layer__bank-transactions__header.Layer__bank-transactions__header--mobile,
-.Layer__bank-transactions__header.Layer__bank-transactions__header--with-date-picker {
-  flex-direction: column;
-
-  .Layer__bank-transactions__header__content {
-    padding-left: var(--spacing-3xs);
-  }
-}
-
-.Layer__bank-transactions__header--with-date-picker.Layer__bank-transactions__header--mobile .Layer__MonthPicker__InputGroup {
-  margin-right: 4px;
-}
-
-.Layer__bank-transactions__header__search-and-menu {
-  > :first-child {
-    flex: 1;
-  }
 }
 
 .Layer__bank-transaction-row {
@@ -225,52 +173,14 @@
   transition: background-color var(--transition-speed) ease-in-out;
 }
 
-.Layer__bank-transaction-list-item__content {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-  min-width: 40rem;
-  max-width: 76rem;
-
-  @container (max-width: 768px) {
-    min-width: 30rem;
-  }
-}
-
 .Layer__bank-transaction-row__actions-cell {
   width: 0%;
   border-left: 1px solid var(--border-color);
   transition: border 5s ease-out;
 }
 
-.Layer__bank-transaction-row__expand-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 2.25rem;
-  width: 2.25rem;
-
-  &:hover {
-    cursor: pointer;
-  }
-}
-
-.Layer__bank-transaction-row__expand-button--mobile {
-  width: fit-content;
-  vertical-align: middle;
-  min-width: unset;
-}
-
 .Layer__bank-transaction-row__actions-cell--open {
   border-left: 1px solid transparent;
-}
-
-.Layer__bank-transaction-row__actions-container {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: flex-end;
 }
 
 .Layer__bank-transactions__list {
@@ -284,116 +194,6 @@
   border-bottom: 1px solid var(--border-color);
   background-color: var(--table-bg);
   color: var(--color-base-700);
-}
-
-.Layer__bank-transaction-list-item {
-  display: flex;
-  flex-direction: column;
-  border-bottom: 1px solid var(--border-color);
-  transform: scale(0.92);
-  opacity: 0;
-  transition: all var(--transition-speed) ease-in-out;
-
-  &.show {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  .Layer__bank-transaction-list-item__base-row {
-    justify-content: flex-end;
-    max-height: 60px;
-    opacity: 1;
-    transition:
-      max-height 350ms ease-out,
-      opacity 200ms ease-out;
-
-    .Layer__tooltip-trigger {
-      padding: 0;
-    }
-  }
-
-  .Layer__bank-transaction-list-item__expanded-row {
-    overflow: hidden;
-  }
-}
-
-.Layer__bank-transaction-list-item.Layer__bank-transaction-list-item--expanded {
-  background: var(--bg-element-focus);
-
-  .Layer__bank-transaction-list-item__base-row {
-    z-index: -1;
-    max-height: 0;
-    padding: 0;
-    opacity: 0;
-  }
-
-  .Layer__bank-transaction-list-item__expanded-row {
-    max-height: unset;
-  }
-}
-
-.Layer__bank-transaction-list-item__base-row {
-  box-sizing: border-box;
-  display: flex;
-  gap: var(--spacing-sm);
-  align-items: center;
-  padding: var(--spacing-md);
-
-  .Layer__category-menu {
-    width: 100%;
-  }
-
-  .Layer__tooltip-trigger {
-    flex: 0;
-  }
-}
-
-.Layer__bank-transaction-list-item__heading {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--spacing-md);
-  padding-bottom: var(--spacing-sm);
-  font-size: var(--text-sm);
-  color: var(--color-base-700);
-
-  .Layer__bank-transaction-list-item__heading-separator {
-    display: block;
-    height: 9px;
-    width: 1px;
-    background: var(--color-base-200);
-  }
-
-  .Layer__bank-transaction-list-item__heading__main {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-  }
-}
-
-.Layer__bank-transaction-list-item__body {
-  justify-content: space-between;
-  width: 100%;
-  padding: var(--spacing-sm) var(--spacing-md);
-  color: var(--text-color-primary);
-}
-
-.Layer__bank-transaction-list-item__body__name {
-  max-width: 70%;
-}
-
-.Layer__bank-transaction-list-item__processing-info {
-  box-sizing: border-box;
-  display: flex;
-  gap: var(--spacing-3xs);
-  width: 100%;
-  padding: var(--spacing-xs) var(--spacing-md);
-  color: var(--text-color-primary);
-
-  .Layer__tooltip-trigger {
-    flex: 0 auto;
-  }
 }
 
 .Layer__bank-transactions__table .Layer__bank-transactions__table-header.Layer__bank-transactions__documents-col {
@@ -569,50 +369,6 @@
           rgb(255 255 255 / 100%) 120%
         );
       content: '';
-    }
-  }
-}
-
-@container (max-width: 1400px) {
-  .Layer__bank-transactions__header {
-    row-gap: var(--spacing-sm);
-    padding-top: var(--spacing-md);
-    padding-right: var(--spacing-md);
-    padding-left: var(--spacing-md);
-  }
-}
-
-@container (max-width: 760px) {
-  .Layer__bank-transactions__header {
-    position: sticky;
-    z-index: 2;
-    top: 0;
-    border-top-left-radius: var(--border-radius-sm);
-    border-top-right-radius: var(--border-radius-sm);
-    box-shadow: 0 -1px 0 0 rgb(23 51 45 / 16%) inset;
-    background-color: var(--table-bg);
-  }
-
-  .Layer__bank-transactions__header.Layer__bank-transactions__header--mobile {
-    padding-block-end: var(--spacing-sm);
-    padding-inline: 0;
-    box-shadow: none;
-  }
-}
-
-@container (max-width: 500px) {
-  .Layer__bank-transaction-list-item__expanded-row {
-    input,
-    .Layer__category-menu {
-      font-size: var(--text-xs);
-    }
-
-    .Layer__select .Layer__select__control {
-      min-height: 32px;
-    }
-
-    .Layer__select__indicator {
-      padding: var(--spacing-3xs);
     }
   }
 }

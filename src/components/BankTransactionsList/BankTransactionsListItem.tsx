@@ -36,6 +36,8 @@ import { Chevron } from '@components/Chevron/Chevron'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { ErrorText } from '@components/Typography/ErrorText'
 
+import './bankTransactionsListItem.scss'
+
 type BankTransactionsListItemProps = {
   index: number
   bankTransaction: BankTransaction
