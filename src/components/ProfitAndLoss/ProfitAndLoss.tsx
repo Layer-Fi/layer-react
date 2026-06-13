@@ -9,7 +9,6 @@ import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLo
 import { Container } from '@components/Container/Container'
 import { ProfitAndLossChart } from '@components/ProfitAndLossChart/ProfitAndLossChart'
 import { ProfitAndLossDetailedCharts } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
-import { ProfitAndLossHeader } from '@components/ProfitAndLossHeader/ProfitAndLossHeader'
 import { ProfitAndLossReport } from '@components/ProfitAndLossReport/ProfitAndLossReport'
 import { ProfitAndLossSummaries } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 
@@ -52,7 +51,6 @@ ProfitAndLoss.Chart = ProfitAndLossChart
 ProfitAndLoss.Summaries = ProfitAndLossSummaries
 ProfitAndLoss.DetailedCharts = ProfitAndLossDetailedCharts
 
-ProfitAndLoss.Header = ProfitAndLossHeader
 ProfitAndLoss.Report = ProfitAndLossReport
 
 export { ProfitAndLoss }

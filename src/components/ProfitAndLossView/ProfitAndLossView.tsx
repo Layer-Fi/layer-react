@@ -9,6 +9,7 @@ import { Panel } from '@components/Panel/Panel'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { ProfitAndLossDetailedCharts } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossHeader } from '@components/ProfitAndLossHeader/ProfitAndLossHeader'
 import { type ProfitAndLossSummariesStringOverrides } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { type ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
 import { ProfitAndLossTableWithProvider } from '@components/ProfitAndLossTable/ProfitAndLossTableWithProvider'
@@ -48,7 +49,6 @@ const ProfitAndLossPanel = ({
   stringOverrides,
   ...props
 }: ProfitAndLossViewPanelProps) => {
-  const { t } = useTranslation()
   const { sidebarScope } = useContext(ProfitAndLossContext)
 
   return (
@@ -61,8 +61,8 @@ const ProfitAndLossPanel = ({
       sidebarIsOpen={Boolean(sidebarScope)}
       parentRef={containerRef}
     >
-      <ProfitAndLoss.Header
-        text={stringOverrides?.header || t('common:label.profit_loss', 'Profit & Loss')}
+      <ProfitAndLossHeader
+        stringOverrides={{ title: stringOverrides?.header }}
         className={`Layer__${COMPONENT_NAME}__header`}
       />
 

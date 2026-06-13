@@ -1,5 +1,6 @@
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { type BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { useBookkeepingStatusConfig } from '@components/BookkeepingStatus/useBookkeepingStatusConfig'
 
@@ -21,7 +22,7 @@ export const BookkeepingStatus = ({ status, text, monthNumber, iconOnly }: Bookk
   const dataProperties = toDataProperties({ status: statusConfig.color })
 
   return (
-    <span className='Layer__bookkeeping-status' {...dataProperties}>
+    <HStack className='Layer__bookkeeping-status' gap='3xs' align='center' {...dataProperties}>
       <span className='Layer__bookkeeping-status__icon-wrapper' data-status={statusConfig.color}>
         {statusConfig.icon}
       </span>
@@ -30,6 +31,6 @@ export const BookkeepingStatus = ({ status, text, monthNumber, iconOnly }: Bookk
           {text ?? statusConfig.label}
         </Span>
       )}
-    </span>
+    </HStack>
   )
 }
