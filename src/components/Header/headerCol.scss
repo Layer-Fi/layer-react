@@ -1,16 +1,18 @@
-.Layer__header__col {
-  box-sizing: border-box;
-  display: flex;
-  gap: var(--spacing-sm);
-  align-items: center;
-  min-height: 68px;
+.Layer__header {
+  &__col {
+    box-sizing: border-box;
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+    min-height: 68px;
 
-  &[data-no-padding='true'] {
-    padding-right: 0;
-    padding-left: 0;
-  }
+    &[data-no-padding='true'] {
+      padding-right: 0;
+      padding-left: 0;
+    }
 
-  &[data-fluid='true'] {
-    flex: 1 1;
+    &[data-fluid='true'] {
+      flex: 1 1;
+    }
   }
 }

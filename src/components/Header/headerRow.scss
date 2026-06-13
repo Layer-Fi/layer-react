@@ -1,29 +1,31 @@
-.Layer__header__row {
-  box-sizing: border-box;
-  display: flex;
-  gap: var(--spacing-sm);
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0 var(--spacing-md);
-  border-bottom: 1px solid var(--border-color);
+.Layer__header {
+  &__row {
+    box-sizing: border-box;
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
 
-  &[data-direction='col'] {
-    flex-direction: column;
-    gap: var(--spacing-md);
-    align-items: flex-start;
-    padding-top: var(--spacing-md);
-    padding-bottom: var(--spacing-md);
+    &[data-direction='col'] {
+      flex-direction: column;
+      gap: var(--spacing-md);
+      align-items: flex-start;
+      padding-top: var(--spacing-md);
+      padding-bottom: var(--spacing-md);
 
-    .Layer__header__col {
-      min-height: 36px;
-      width: 100%;
-      padding-top: 0;
-      padding-bottom: 0;
+      .Layer__header__col {
+        min-height: 36px;
+        width: 100%;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
     }
-  }
 
-  @container (min-width: 1400px) {
-    padding: 0 var(--spacing-xl);
+    @container (min-width: 1400px) {
+      padding: 0 var(--spacing-xl);
+    }
   }
 }
