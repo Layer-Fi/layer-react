@@ -1,0 +1,11 @@
+.Layer__skeleton-loader__row {
+  height: 63px;
+  padding: 0 var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.Layer__skeleton-loader__row__group {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
