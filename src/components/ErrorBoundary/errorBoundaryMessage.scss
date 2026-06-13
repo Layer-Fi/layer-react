@@ -1,0 +1,7 @@
+.Layer__ErrorBoundary {
+  padding: var(--spacing-xl);
+
+  .Layer__data-state__text > .Layer__Span:last-child {
+    margin-bottom: 0;
+  }
+}
