@@ -72,10 +72,6 @@
   overflow: hidden;
   cursor: pointer;
 
-  .Layer__tooltip-trigger {
-    padding-top: 0;
-  }
-
   & > div {
     display: flex;
     align-items: center;
@@ -203,15 +199,12 @@
     display: flex;
     justify-content: space-between;
     width: 100% !important;
+    white-space: nowrap;
   }
 
   .Layer__MatchForm__Table__desc {
     gap: var(--spacing-sm);
     justify-content: space-between;
-
-    & > .Layer__UI__tooltip-trigger:first-child {
-      width: calc(100% - 220px);
-    }
 
     & > span:nth-child(2) {
       flex: 0;

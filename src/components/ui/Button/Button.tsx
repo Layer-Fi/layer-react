@@ -116,9 +116,7 @@ const Button = forwardRef<
       <TooltipTrigger asChild>
         {button}
       </TooltipTrigger>
-      <TooltipContent>
-        <span className='Layer__UI__tooltip-content--text'>{tooltip}</span>
-      </TooltipContent>
+      <TooltipContent>{tooltip}</TooltipContent>
     </Tooltip>
   )
 })

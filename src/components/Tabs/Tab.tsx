@@ -1,7 +1,7 @@
 import { type ChangeEvent, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 
 interface TabProps {
   checked: boolean
@@ -33,8 +33,8 @@ export const Tab = ({
 
   if (disabled) {
     return (
-      <DeprecatedTooltip>
-        <DeprecatedTooltipTrigger>
+      <Tooltip>
+        <TooltipTrigger>
           <label className='Layer__tabs-option' data-checked={checked}>
             <input
               type='radio'
@@ -53,11 +53,11 @@ export const Tab = ({
               {badge}
             </span>
           </label>
-        </DeprecatedTooltipTrigger>
-        <DeprecatedTooltipContent className='Layer__tooltip'>
+        </TooltipTrigger>
+        <TooltipContent>
           {disabledMessageText}
-        </DeprecatedTooltipContent>
-      </DeprecatedTooltip>
+        </TooltipContent>
+      </Tooltip>
     )
   }
 

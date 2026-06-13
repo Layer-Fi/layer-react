@@ -1,7 +1,7 @@
 import { type MouseEventHandler, type ReactNode } from 'react'
 import classNames from 'classnames'
 
-import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 
 import './badge.scss'
 
@@ -73,10 +73,10 @@ export const Badge = ({
 
   if (tooltip) {
     return (
-      <DeprecatedTooltip offset={12}>
-        <DeprecatedTooltipTrigger>{content}</DeprecatedTooltipTrigger>
-        <DeprecatedTooltipContent className='Layer__tooltip'>{tooltip}</DeprecatedTooltipContent>
-      </DeprecatedTooltip>
+      <Tooltip offset={12}>
+        <TooltipTrigger>{content}</TooltipTrigger>
+        <TooltipContent>{tooltip}</TooltipContent>
+      </Tooltip>
     )
   }
 

@@ -179,7 +179,7 @@ BaseSpan.displayName = 'BaseSpan'
 export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & TextStyleProps & TooltipCapableComponentProps>>(
   function Span(props, forwardedRef) {
     const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
-    const { className, tooltipContentWidth = 'md' } = props
+    const { className } = props
 
     const internalRef = useRef<HTMLSpanElement | null>(null)
     const isTruncated = useTruncationDetection(internalRef, { checkFirstChild: true })
@@ -189,8 +189,8 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
     if (props.withTooltip) {
       const dataPropertiesWithEllipsis = { ...dataProperties, 'data-with-tooltip': true }
       return (
-        <Tooltip disabled={!isTruncated}>
-          <TooltipTrigger>
+        <Tooltip isDisabled={!isTruncated}>
+          <TooltipTrigger variant='truncate'>
             <BaseSpan
               dataProperties={dataPropertiesWithEllipsis}
               restProps={restProps}
@@ -202,10 +202,8 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
               {children}
             </BaseSpan>
           </TooltipTrigger>
-          <TooltipContent width={tooltipContentWidth}>
-            <span className='Layer__UI__tooltip-content--text'>
-              {children}
-            </span>
+          <TooltipContent>
+            {children}
           </TooltipContent>
         </Tooltip>
       )

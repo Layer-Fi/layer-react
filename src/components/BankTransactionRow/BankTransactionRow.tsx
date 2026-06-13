@@ -243,7 +243,7 @@ export const BankTransactionRow = ({
         >
           {open
             ? (
-              <HStack pie='md' gap='md' justify='end' className='Layer__bank-transaction-row__category-open'>
+              <HStack pie='md' gap='md' align='center' justify='end' className='Layer__bank-transaction-row__category-open'>
                 {isError
                   && (
                     <Span status='error'>
@@ -268,7 +268,7 @@ export const BankTransactionRow = ({
               </HStack>
             )
             : (
-              <HStack pi='md' gap='md' className='Layer__bank-transaction-row__category-hstack'>
+              <HStack pi='md' gap='md' align='center' className='Layer__bank-transaction-row__category-hstack'>
                 {isCategorizationEnabled && !displayAsCategorized && (
                   <BankTransactionCategoryComboBox
                     bankTransaction={bankTransaction}
