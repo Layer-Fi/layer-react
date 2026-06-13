@@ -21,7 +21,7 @@ export const LinkAccountDemoTooltip = ({ active, asChild = false, children }: Li
       <TooltipTrigger asChild={asChild}>
         {children}
       </TooltipTrigger>
-      <TooltipContent width='sm'>
+      <TooltipContent>
         {t(
           'linkedAccounts:tooltip.cannot_link_demo_business',
           'Account linking is not available for demo businesses. This is a sample business that uses example data instead of real bank connections.',

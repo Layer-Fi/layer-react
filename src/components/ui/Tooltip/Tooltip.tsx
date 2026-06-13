@@ -18,7 +18,6 @@ import './tooltip.scss'
 
 export type TooltipCapableComponentProps = {
   withTooltip?: boolean
-  tooltipContentWidth?: 'sm' | 'md'
 }
 
 export interface TooltipOptions {
@@ -61,9 +60,9 @@ export const TooltipTrigger = forwardRef<
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       context.getReferenceProps({
         ref,
-        className,
         ...props,
         ...children.props,
+        'className': classNames(className, (children.props as { className?: string }).className),
         'data-state': context.open ? 'open' : 'closed',
         'data-word-break': wordBreak,
       }),
@@ -82,15 +81,15 @@ export const TooltipTrigger = forwardRef<
   )
 })
 
-  type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style'> & { width?: 'sm' | 'md', wordBreak?: 'break-all' }
+  type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style' | 'className'> & { wordBreak?: 'break-all' }
 export const TooltipContent = forwardRef<
   HTMLDivElement,
   TooltipContentProps
->(function TooltipContent({ className, width, wordBreak, ...props }, propRef) {
+>(function TooltipContent({ wordBreak, ...props }, propRef) {
   const context = useTooltipContext()
   const ref = useMergeRefs([context.refs.setFloating, propRef])
 
-  const dataProperties = toDataProperties({ width, 'word-break': wordBreak })
+  const dataProperties = toDataProperties({ 'word-break': wordBreak })
 
   if (!context.open || context.disabled) return null
 
@@ -98,7 +97,7 @@ export const TooltipContent = forwardRef<
     <FloatingPortal>
       <div
         ref={ref}
-        className={classNames('Layer__UI__Tooltip', className)}
+        className='Layer__UI__Tooltip'
         style={{
           ...context.floatingStyles,
         }}

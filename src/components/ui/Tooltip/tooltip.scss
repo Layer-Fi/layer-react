@@ -1,10 +1,10 @@
 .Layer__UI__Tooltip {
-  z-index: 50;
+  z-index: 100;
 }
 
 .Layer__UI__TooltipContent {
   box-sizing: border-box;
-  max-width: 20rem;
+  max-width: min(20rem, 90vw);
   padding: var(--spacing-2xs) var(--spacing-sm);
   border-radius: var(--border-radius-2xs);
   background: var(--color-base-1000);
@@ -16,4 +16,8 @@
   text-align: justify;
   color: var(--color-base-300);
   overflow-wrap: break-word;
+}
+
+.Layer__UI__TooltipTrigger {
+  overflow: hidden;
 }

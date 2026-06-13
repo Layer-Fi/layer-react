@@ -179,7 +179,7 @@ BaseSpan.displayName = 'BaseSpan'
 export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & TextStyleProps & TooltipCapableComponentProps>>(
   function Span(props, forwardedRef) {
     const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
-    const { className, tooltipContentWidth = 'md' } = props
+    const { className } = props
 
     const internalRef = useRef<HTMLSpanElement | null>(null)
     const isTruncated = useTruncationDetection(internalRef, { checkFirstChild: true })
@@ -202,7 +202,7 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
               {children}
             </BaseSpan>
           </TooltipTrigger>
-          <TooltipContent width={tooltipContentWidth}>
+          <TooltipContent>
             {children}
           </TooltipContent>
         </Tooltip>

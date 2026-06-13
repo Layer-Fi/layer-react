@@ -25,7 +25,7 @@ export const DatePickerInput = ({ errorText, variant, onClick, isReadOnly }: Dat
         <TooltipTrigger>
           <FieldError><TriangleAlert size={18} /></FieldError>
         </TooltipTrigger>
-        <TooltipContent width='md'>
+        <TooltipContent>
           {errorText}
         </TooltipContent>
       </Tooltip>
