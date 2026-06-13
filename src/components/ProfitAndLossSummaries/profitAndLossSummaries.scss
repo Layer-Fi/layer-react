@@ -1,0 +1,7 @@
+@forward './internal/profitAndLossSummariesList';
+@forward './internal/profitAndLossSummariesSummary';
+
+.Layer__ProfitAndLossSummaries {
+  display: grid;
+  container-type: inline-size;
+}

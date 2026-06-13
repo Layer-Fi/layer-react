@@ -9,7 +9,7 @@ import { Span } from '@ui/Typography/Text'
 import { ProfitAndLossSummariesHeading } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesHeading'
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
-import './profit_and_loss_summaries_summary.scss'
+import './profitAndLossSummariesSummary.scss'
 
 const CHART_AREA_CLASS_NAME = 'Layer__ProfitAndLossSummariesSummaryChartArea'
 

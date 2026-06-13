@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Legend } from 'recharts'
 
 import { translationKey } from '@utils/i18n/translationKey'
-
-import { STRIPE_PATTERN_DARK_FILL } from './ProfitAndLossChartPatternDefs'
+import { STRIPE_PATTERN_DARK_FILL } from '@components/ProfitAndLossChart/ProfitAndLossChartPatternDefs'
 
 import './profitAndLossChartLegend.scss'
 

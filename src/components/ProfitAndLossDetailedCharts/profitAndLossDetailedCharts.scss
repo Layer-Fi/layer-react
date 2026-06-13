@@ -6,3 +6,106 @@
     outline: none;
   }
 }
+
+.Layer__ProfitAndLossDetailedCharts__DatePickerHeader--tablet {
+  display: none;
+}
+
+.Layer__profit-and-loss-detailed-charts {
+  width: 100%;
+  border-radius: var(--border-radius-sm);
+  background: var(--color-base-0);
+
+  .Layer__DetailedChart {
+    width: 100%;
+  }
+
+  .Layer__DetailedChart__container {
+    box-sizing: border-box;
+    height: 280px;
+    width: 100%;
+    padding-top: var(--spacing-2xl);
+    padding-right: var(--spacing-md);
+    padding-bottom: var(--spacing-lg);
+    padding-left: var(--spacing-md);
+  }
+
+  .Layer__profit-and-loss-detailed-charts__empty-chart {
+    box-sizing: border-box;
+    height: 280px;
+    width: 100%;
+    padding-top: var(--spacing-2xl);
+    padding-right: var(--spacing-md);
+    padding-bottom: var(--spacing-lg);
+    padding-left: var(--spacing-md);
+  }
+
+  .Layer__profit-and-loss-detailed-charts__empty-chart-content {
+    height: 100%;
+  }
+
+  .Layer__profit-and-loss-detailed-charts__empty-chart-icon {
+    color: var(--color-base-400);
+  }
+}
+
+@container (max-width: 1023px) {
+  .Layer__profit-and-loss-detailed-charts {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+@container (max-width: 1023px) and (min-width: 768px) {
+  .Layer__ProfitAndLossDetailedCharts__DatePickerHeader--tablet {
+    display: flex;
+  }
+
+  .Layer__profit-and-loss-detailed-charts {
+    .Layer__profit-and-loss-detailed-charts__content {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .Layer__DetailedChart {
+        display: flex;
+        flex-direction: column;
+
+        max-width: 300px;
+      }
+
+      .Layer__DetailedChart__container {
+        max-width: 300px;
+      }
+
+      .Layer__profit-and-loss-detailed-charts__empty-chart {
+        max-width: 300px;
+      }
+    }
+
+    .Layer__profit-and-loss-detailed-charts__table-wrapper {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+  }
+}
+
+@container (max-width: 767px) {
+  .Layer__profit-and-loss-detailed-charts {
+    .Layer__profit-and-loss-detailed-charts__content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .Layer__profit-and-loss-detailed-charts__table-wrapper {
+      width: 100%;
+      padding-inline: var(--spacing-md);
+
+      .Layer__Span {
+        margin: 0 1rem;
+      }
+    }
+  }
+}
