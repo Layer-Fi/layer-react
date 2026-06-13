@@ -13,6 +13,8 @@ import { LinkedAccountsConfirmationModal } from '@components/LinkedAccounts/Conf
 import { LinkAccountDemoTooltip } from '@components/LinkedAccounts/LinkAccountDemoTooltip'
 import { LinkedAccountItemThumb } from '@components/LinkedAccounts/LinkedAccountItemThumb'
 
+import './linkedAccountsContent.scss'
+
 interface LinkedAccountsDataProps {
   asWidget?: boolean
   showLedgerBalance?: boolean

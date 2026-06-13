@@ -1,0 +1,26 @@
+.Layer__linked-accounts {
+  box-sizing: border-box;
+  z-index: 1;
+  overflow: visible;
+  min-height: 150px;
+  max-width: var(--max-component-width);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.Layer__linked-accounts .Layer__data-state {
+  padding: var(--spacing-md);
+  padding-top: 0;
+}
+
+.Layer__linked-accounts__header {
+  position: sticky;
+  left: 0;
+  padding: var(--spacing-lg);
+}
+
+.Layer__linked-accounts__loader-container {
+  min-height: 120px;
+}

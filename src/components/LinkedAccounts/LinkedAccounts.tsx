@@ -14,6 +14,8 @@ import { LinkedAccountsContent } from '@components/LinkedAccounts/LinkedAccounts
 import { OpeningBalanceModal } from '@components/LinkedAccounts/OpeningBalanceModal/OpeningBalanceModal'
 import { Loader } from '@components/Loader/Loader'
 
+import './linkedAccounts.scss'
+
 const COMPONENT_NAME = 'linked-accounts'
 
 export interface LinkedAccountsProps {
