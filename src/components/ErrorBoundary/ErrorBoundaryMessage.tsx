@@ -7,7 +7,7 @@ import './errorBoundaryMessage.scss'
 export const ErrorBoundaryMessage = () => {
   const { t } = useTranslation()
   return (
-    <div className='Layer__component Layer__component-container Layer__ErrorBoundary'>
+    <div className='Layer__component Layer__component-container Layer__ErrorBoundaryMessage'>
       <DataState
         status={DataStateStatus.failed}
         title={t('common:error.something_went_wrong', 'Something went wrong')}
