@@ -13,6 +13,8 @@ import { BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
 import { ProfitAndLossSummariesHeading } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesHeading'
 
+import './transactionsToReview.scss'
+
 const CLASS_NAME = 'Layer__TransactionsToReview'
 
 type TransactionsToReviewProps = {

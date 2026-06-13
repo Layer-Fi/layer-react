@@ -1,7 +1,6 @@
 @forward './variables';
 @forward './internal_variables';
 @forward './global';
-@forward './animations';
 @forward './charts';
 @forward './component';
 @forward './header';
@@ -18,7 +17,4 @@
 @forward './profit_and_loss';
 @forward './profit_and_loss_detailed_charts';
 @forward './tooltip';
-@forward './accounting_overview';
-@forward './bookkeeping_overview';
-@forward './reports';
 @import 'https://rsms.me/inter/inter.css';
