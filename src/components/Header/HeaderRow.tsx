@@ -3,6 +3,8 @@ import classNames from 'classnames'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 
+import './headerRow.scss'
+
 interface HeaderRowProps {
   className?: string
   style?: CSSProperties

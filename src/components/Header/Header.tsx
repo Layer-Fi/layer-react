@@ -6,6 +6,8 @@ import {
 } from 'react'
 import classNames from 'classnames'
 
+import './header.scss'
+
 export interface HeaderProps {
   className?: string
   style?: CSSProperties

@@ -3,6 +3,8 @@ import classNames from 'classnames'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 
+import './headerCol.scss'
+
 interface HeaderColProps {
   className?: string
   style?: CSSProperties
