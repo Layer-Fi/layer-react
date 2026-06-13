@@ -11,8 +11,8 @@ import ReactSelect, {
 } from 'react-select'
 
 import ChevronDownFill from '@icons/ChevronDownFill'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { SelectMenuPortal } from '@components/Input/SelectMenuPortal'
-import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
 export interface SelectProps<T> {
   name?: string
@@ -61,8 +61,8 @@ export const MultiSelect = <T,>({
   ), [])
 
   return (
-    <DeprecatedTooltip disabled={!isInvalid || !errorMessage}>
-      <DeprecatedTooltipTrigger className='Layer__input-tooltip'>
+    <Tooltip disabled={!isInvalid || !errorMessage}>
+      <TooltipTrigger className='Layer__input-tooltip'>
         <ReactSelect<T, true>
           inputId={inputId}
           name={name}
@@ -83,8 +83,8 @@ export const MultiSelect = <T,>({
           isDisabled={disabled}
           isMulti={true}
         />
-      </DeprecatedTooltipTrigger>
-      <DeprecatedTooltipContent className='Layer__tooltip'>{errorMessage}</DeprecatedTooltipContent>
-    </DeprecatedTooltip>
+      </TooltipTrigger>
+      <TooltipContent>{errorMessage}</TooltipContent>
+    </Tooltip>
   )
 }

@@ -22,12 +22,10 @@ export const LinkAccountDemoTooltip = ({ active, asChild = false, children }: Li
         {children}
       </TooltipTrigger>
       <TooltipContent width='sm'>
-        <span className='Layer__UI__tooltip-content--text'>
-          {t(
-            'linkedAccounts:tooltip.cannot_link_demo_business',
-            'Account linking is not available for demo businesses. This is a sample business that uses example data instead of real bank connections.',
-          )}
-        </span>
+        {t(
+          'linkedAccounts:tooltip.cannot_link_demo_business',
+          'Account linking is not available for demo businesses. This is a sample business that uses example data instead of real bank connections.',
+        )}
       </TooltipContent>
     </Tooltip>
   )

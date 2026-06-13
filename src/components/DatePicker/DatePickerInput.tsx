@@ -7,7 +7,7 @@ import { FieldError } from '@ui/Form/Form'
 import { InputGroup } from '@ui/Input/InputGroup'
 import { PickerDropdownIndicator } from '@ui/PickerDropdownIndicator/PickerDropdownIndicator'
 import { HStack } from '@ui/Stack/Stack'
-import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 
 type DatePickerInputProps = {
   errorText?: string | null
@@ -21,14 +21,14 @@ export const DatePickerInput = ({ errorText, variant, onClick, isReadOnly }: Dat
     if (variant === 'mobile' || !errorText) return null
 
     return (
-      <DeprecatedTooltip offset={12}>
-        <DeprecatedTooltipTrigger>
+      <Tooltip offset={12}>
+        <TooltipTrigger>
           <FieldError><TriangleAlert size={18} /></FieldError>
-        </DeprecatedTooltipTrigger>
-        <DeprecatedTooltipContent className='Layer__tooltip' width='md'>
+        </TooltipTrigger>
+        <TooltipContent width='md'>
           {errorText}
-        </DeprecatedTooltipContent>
-      </DeprecatedTooltip>
+        </TooltipContent>
+      </Tooltip>
     )
   }, [errorText, variant])
 

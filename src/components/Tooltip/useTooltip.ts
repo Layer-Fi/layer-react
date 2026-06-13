@@ -1,4 +1,5 @@
 import { createContext, useContext, useMemo, useState } from 'react'
+import type { Placement } from '@floating-ui/react'
 import {
   autoUpdate,
   flip,
@@ -13,7 +14,15 @@ import {
   useTransitionStyles,
 } from '@floating-ui/react'
 
-import { type TooltipOptions } from '@components/Tooltip/Tooltip'
+export interface TooltipOptions {
+  initialOpen?: boolean
+  placement?: Placement
+  open?: boolean
+  disabled?: boolean
+  onOpenChange?: (open: boolean) => void
+  offset?: number
+  shift?: { padding?: number }
+}
 
 export type ContextType = ReturnType<typeof useTooltip> | null
 

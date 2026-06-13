@@ -306,10 +306,6 @@
     transition:
       max-height 350ms ease-out,
       opacity 200ms ease-out;
-
-    .Layer__tooltip-trigger {
-      padding: 0;
-    }
   }
 
   .Layer__bank-transaction-list-item__expanded-row {
@@ -341,10 +337,6 @@
 
   .Layer__category-menu {
     width: 100%;
-  }
-
-  .Layer__tooltip-trigger {
-    flex: 0;
   }
 }
 
@@ -390,10 +382,6 @@
   width: 100%;
   padding: var(--spacing-xs) var(--spacing-md);
   color: var(--text-color-primary);
-
-  .Layer__tooltip-trigger {
-    flex: 0 auto;
-  }
 }
 
 .Layer__bank-transactions__table .Layer__bank-transactions__table-header.Layer__bank-transactions__documents-col {

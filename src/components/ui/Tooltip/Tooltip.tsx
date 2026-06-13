@@ -44,11 +44,11 @@ export const Tooltip = ({
   )
 }
 
-export type TooltipTriggerProps = { children: ReactNode } & { asChild?: boolean, wordBreak?: 'break-all' }
+export type TooltipTriggerProps = { children: ReactNode } & { asChild?: boolean, wordBreak?: 'break-all', className?: string }
 export const TooltipTrigger = forwardRef<
   HTMLElement,
   TooltipTriggerProps
->(function TooltipTrigger({ children, asChild = false, wordBreak, ...props }, propRef) {
+>(function TooltipTrigger({ children, asChild = false, wordBreak, className, ...props }, propRef) {
   const context = useTooltipContext()
   const childrenRef = (isValidElement(children) && 'ref' in children)
     ? children.ref as Ref<unknown>
@@ -61,6 +61,7 @@ export const TooltipTrigger = forwardRef<
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       context.getReferenceProps({
         ref,
+        className,
         ...props,
         ...children.props,
         'data-state': context.open ? 'open' : 'closed',
@@ -73,7 +74,7 @@ export const TooltipTrigger = forwardRef<
     <HStack
       ref={ref}
       data-state={context.open ? 'open' : 'closed'}
-      className='Layer__UI__tooltip-trigger'
+      className={classNames('Layer__UI__TooltipTrigger', className)}
       {...context.getReferenceProps(props)}
     >
       {children}
@@ -97,15 +98,15 @@ export const TooltipContent = forwardRef<
     <FloatingPortal>
       <div
         ref={ref}
-        className={classNames('Layer__UI__tooltip', className)}
+        className={classNames('Layer__UI__Tooltip', className)}
         style={{
           ...context.floatingStyles,
         }}
         {...dataProperties}
         {...context.getFloatingProps(props)}
       >
-        <div className='Layer__UI__tooltip-content' style={{ ...context.styles }}>
-          {props.children}
+        <div className='Layer__UI__TooltipContent' style={{ ...context.styles }}>
+          <span className='Layer__UI__TooltipContent__Text'>{props.children}</span>
         </div>
       </div>
     </FloatingPortal>

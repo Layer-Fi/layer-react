@@ -40,9 +40,7 @@ export const StatusIcon = ({ status }: { status: TaxOverviewDeadlineStatus }) =>
         </Span>
       </TooltipTrigger>
       <TooltipContent>
-        <Span className='Layer__UI__tooltip-content--text'>
-          {label}
-        </Span>
+        {label}
       </TooltipContent>
     </Tooltip>
   )

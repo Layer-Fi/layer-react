@@ -203,9 +203,7 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
             </BaseSpan>
           </TooltipTrigger>
           <TooltipContent width={tooltipContentWidth}>
-            <span className='Layer__UI__tooltip-content--text'>
-              {children}
-            </span>
+            {children}
           </TooltipContent>
         </Tooltip>
       )

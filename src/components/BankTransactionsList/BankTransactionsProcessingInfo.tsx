@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 
 import { BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { HStack } from '@ui/Stack/Stack'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
-import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
 import './bankTransactionsProcessingInfo.scss'
 interface BankTransactionsProcessingInfoProps {
@@ -31,11 +31,11 @@ export const BankTransactionsProcessingInfo = ({ showAsBadge = false }: BankTran
   }
 
   return (
-    <DeprecatedTooltip offset={12}>
-      <DeprecatedTooltipTrigger><BookkeepingStatus status={BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER} text={t('common:state.processing', 'Processing')} /></DeprecatedTooltipTrigger>
-      <DeprecatedTooltipContent className='Layer__tooltip' width='md'>
+    <Tooltip offset={12}>
+      <TooltipTrigger><BookkeepingStatus status={BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER} text={t('common:state.processing', 'Processing')} /></TooltipTrigger>
+      <TooltipContent width='md'>
         {tooltipContent}
-      </DeprecatedTooltipContent>
-    </DeprecatedTooltip>
+      </TooltipContent>
+    </Tooltip>
   )
 }

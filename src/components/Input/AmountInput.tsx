@@ -5,8 +5,8 @@ import { type IntlShape, useIntl } from 'react-intl'
 
 import { transformCurrencyValue } from '@utils/i18n/number/currency'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { getCurrencyFormatConfig } from '@components/Input/amountInputUtils'
-import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
 
 export interface AmountInputProps extends Omit<CurrencyInputProps, 'onChange' | 'placeholder'> {
   onChange?: (value?: string) => void
@@ -42,8 +42,8 @@ export const AmountInput = ({
   )
 
   return (
-    <DeprecatedTooltip disabled={!isInvalid || !errorMessage}>
-      <DeprecatedTooltipTrigger className='Layer__input-tooltip'>
+    <Tooltip disabled={!isInvalid || !errorMessage}>
+      <TooltipTrigger className='Layer__input-tooltip'>
         <CurrencyInput
           {...props}
           {...currencyFormatConfig}
@@ -56,8 +56,8 @@ export const AmountInput = ({
           onValueChange={onChange}
           className={currencyInputClassName}
         />
-      </DeprecatedTooltipTrigger>
-      <DeprecatedTooltipContent className='Layer__tooltip'>{errorMessage}</DeprecatedTooltipContent>
-    </DeprecatedTooltip>
+      </TooltipTrigger>
+      <TooltipContent>{errorMessage}</TooltipContent>
+    </Tooltip>
   )
 }

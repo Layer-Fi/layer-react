@@ -1,26 +1,19 @@
-.Layer__UI__tooltip {
+.Layer__UI__Tooltip {
   z-index: 50;
 }
 
-.Layer__UI__tooltip-content {
+.Layer__UI__TooltipContent {
   box-sizing: border-box;
-  display: block;
   max-width: 20rem;
   padding: var(--spacing-2xs) var(--spacing-sm);
   border-radius: var(--border-radius-2xs);
   background: var(--color-base-1000);
 }
 
-.Layer__UI__tooltip-content > .Layer__UI__tooltip-content--text {
+.Layer__UI__TooltipContent__Text {
   display: block;
   font-size: var(--text-sm);
   text-align: justify;
   color: var(--color-base-300);
   overflow-wrap: break-word;
-  white-space: normal;
-}
-
-.Layer__UI__tooltip-trigger {
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
