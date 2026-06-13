@@ -46,6 +46,13 @@
   margin-left: 0;
 }
 
+.Layer__bank-transactions__header--mobile .Layer__syncing-component.Layer__syncing-component--with-border {
+  padding: 0;
+  padding-left: var(--spacing-sm);
+  border-width: 0;
+  margin-left: 0;
+}
+
 @container (max-width: 1400px) {
   .Layer__bank-transactions__header {
     row-gap: var(--spacing-sm);

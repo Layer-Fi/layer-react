@@ -7,6 +7,8 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { SmallLoader } from '@components/Loader/SmallLoader'
 
+import './syncingComponent.scss'
+
 interface SyncingComponentProps {
   titleVariant?: 'default' | 'historical'
   onRefresh?: () => void
