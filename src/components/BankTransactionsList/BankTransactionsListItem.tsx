@@ -18,7 +18,6 @@ import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibili
 import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import ChevronDownFill from '@icons/ChevronDownFill'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { SubmitAction } from '@ui/Button/SubmitButton'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
@@ -33,6 +32,7 @@ import {
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
 import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankTransactionsSubmitButton'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
+import { Chevron } from '@components/Chevron/Chevron'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { ErrorText } from '@components/Typography/ErrorText'
 
@@ -139,11 +139,7 @@ export const BankTransactionsListItem = ({
             !isDesktop && 'Layer__bank-transaction-row__expand-button--mobile',
           )}
         >
-          <ChevronDownFill
-            className={`Layer__chevron ${
-              openExpandedRow ? 'Layer__chevron__up' : 'Layer__chevron__down'
-            }`}
-          />
+          <Chevron open={openExpandedRow} />
         </div>
       </span>
       <HStack className='Layer__bank-transaction-list-item__body'>
