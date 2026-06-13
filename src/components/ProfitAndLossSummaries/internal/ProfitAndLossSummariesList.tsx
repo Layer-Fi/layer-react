@@ -2,6 +2,8 @@ import { type PropsWithChildren, useMemo } from 'react'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 
+import './profitAndLossSummariesList.scss'
+
 const LIST_ITEM_CLASS_NAME = 'Layer__ProfitAndLossSummariesListItem'
 
 type ProfitAndLossSummariesListItemProps = PropsWithChildren<{
