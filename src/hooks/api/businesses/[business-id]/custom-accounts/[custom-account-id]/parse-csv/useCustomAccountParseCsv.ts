@@ -1,6 +1,7 @@
 import { pipe, Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
+import { PreviewCellSchema, type PreviewCsv, PreviewRowSchema } from '@schemas/csvUpload'
 import type { CustomAccountTransactionRow, RawCustomTransaction } from '@schemas/customAccounts'
 import { type APIError } from '@utils/api/apiError'
 import { postWithFormData } from '@utils/api/authenticatedHttp'
@@ -8,24 +9,13 @@ import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import type { PreviewCsv } from '@components/CsvUpload/types'
 
 type CustomAccountParseCsvArgs = {
   file: File
   customAccountId: string
 }
 
-const PreviewCellSchema = <Value extends Schema.Schema.Any>(parsed: Value) =>
-  Schema.Struct({
-    raw: Schema.String,
-    parsed,
-    isValid: pipe(
-      Schema.propertySignature(Schema.Boolean),
-      Schema.fromKey('is_valid'),
-    ),
-  })
-
-const PreviewRowSchema = Schema.Struct({
+const TransactionPreviewRowSchema = PreviewRowSchema({
   date: PreviewCellSchema(Schema.String),
   description: PreviewCellSchema(Schema.String),
   amount: PreviewCellSchema(Schema.Number),
@@ -34,11 +24,6 @@ const PreviewRowSchema = Schema.Struct({
   ),
   referenceNumber: Schema.optional(PreviewCellSchema(Schema.NullOr(Schema.String))).pipe(
     Schema.fromKey('reference_number'),
-  ),
-  row: Schema.Number,
-  isValid: pipe(
-    Schema.propertySignature(Schema.Boolean),
-    Schema.fromKey('is_valid'),
   ),
 })
 
@@ -53,7 +38,7 @@ const ParseCsvResponseSchema = Schema.Struct({
     Schema.fromKey('is_valid'),
   ),
   newTransactionsPreview: pipe(
-    Schema.propertySignature(Schema.Array(PreviewRowSchema)),
+    Schema.propertySignature(Schema.Array(TransactionPreviewRowSchema)),
     Schema.fromKey('new_transactions_preview'),
   ),
   newTransactionsRequest: pipe(
