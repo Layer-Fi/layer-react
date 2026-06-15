@@ -1,76 +1,16 @@
 import { useCallback, useRef, useState } from 'react'
 import classNames from 'classnames'
-import type { TFunction } from 'i18next'
-import { CloudUpload, FileSpreadsheet, X } from 'lucide-react'
+import { CloudUpload } from 'lucide-react'
 import { type FileRejection, useDropzone } from 'react-dropzone'
 import { Trans, useTranslation } from 'react-i18next'
 
-import { Button } from '@ui/Button/Button'
-import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
+import { CsvUploadFileRow } from '@components/CsvUpload/CsvUploadFileRow'
+import { validateCsvFile } from '@components/CsvUpload/validateCsvFile'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
 import './csvUpload.scss'
-
-const VALID_EXTENSIONS = ['.csv']
-const VALID_FILE_TYPES = ['text/csv', 'text/plain', 'application/vnd.ms-excel']
-const MAX_FILE_SIZE = 2 * 1024 * 1024
-
-const validateCsvFile = (file: File, t: TFunction) => {
-  const isValidExtension = VALID_EXTENSIONS.some(ext =>
-    file.name.toLowerCase().endsWith(ext),
-  )
-
-  if (!isValidExtension) {
-    return t('upload:validation.file_extension_must_end_in_csv', 'File extension must end in .csv')
-  }
-
-  if (file.type && !VALID_FILE_TYPES.includes(file.type)) {
-    return t('upload:validation.file_type_invalid', 'Invalid file type: {{type}}', { type: file.type })
-  }
-
-  if (file.size > MAX_FILE_SIZE) {
-    return t('upload:validation.file_exceeds_size_limit', 'File exceeds the size limit of 2MB')
-  }
-
-  return null
-}
-
-type FileRowProps = {
-  file: File
-  onClearFile: () => void
-  asDropTarget?: boolean
-}
-
-const FileRow = ({ file, onClearFile, asDropTarget }: FileRowProps) => {
-  if (asDropTarget) {
-    return (
-      <VStack className='Layer__csv-upload__file-row Layer__csv-upload__file-row--drop-target'>
-        <HStack>
-          <Spacer />
-          <Button variant='ghost' inset icon onClick={onClearFile}>
-            <X size={16} />
-          </Button>
-        </HStack>
-        <HStack align='center' justify='center' gap='xs'>
-          <FileSpreadsheet size={24} />
-          <P size='md'>{file.name}</P>
-        </HStack>
-      </VStack>
-    )
-  }
-
-  return (
-    <HStack align='center' gap='xs' className='Layer__csv-upload__file-row'>
-      <FileSpreadsheet size={24} />
-      <P size='md'>{file.name}</P>
-      <Spacer />
-      <Button variant='ghost' inset icon onClick={onClearFile}>
-        <X size={16} />
-      </Button>
-    </HStack>
-  )
-}
 
 type CsvUploadProps = {
   file: File | null
@@ -83,18 +23,10 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
-  const handleBrowseClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleBrowseClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     fileInputRef.current?.click()
-  }
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (!files || files.length === 0) return
-
-    const fileArray = Array.from(files)
-    onDrop(fileArray)
-  }
+  }, [])
 
   const onDrop = useCallback(
     ([firstFile, ...restFiles]: File[], rejections: FileRejection[] = []) => {
@@ -124,6 +56,14 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
     [onFileSelected, t],
   )
 
+  const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+
+    const fileArray = Array.from(files)
+    onDrop(fileArray)
+  }, [onDrop])
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
@@ -132,7 +72,7 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
   })
 
   if (file && replaceDropTarget) {
-    return <FileRow file={file} onClearFile={() => onFileSelected(null)} asDropTarget />
+    return <CsvUploadFileRow file={file} onClearFile={() => onFileSelected(null)} asDropTarget />
   }
 
   return (
@@ -172,7 +112,7 @@ export const CsvUpload = ({ file, onFileSelected, replaceDropTarget = false }: C
           />
         )}
       </VStack>
-      {file && <FileRow file={file} onClearFile={() => onFileSelected(null)} />}
+      {file && <CsvUploadFileRow file={file} onClearFile={() => onFileSelected(null)} />}
     </VStack>
   )
 }

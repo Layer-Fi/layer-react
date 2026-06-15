@@ -7,6 +7,8 @@ import { type PreviewCell, type PreviewCsv, type PreviewRow } from '@schemas/csv
 import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { VirtualizedDataTable } from '@components/VirtualizedDataTable/VirtualizedDataTable'
 
+import './validateCsvTable.scss'
+
 const ROW_HEIGHT = 52
 const MAX_NUM_ROWS = 8
 const TABLE_HEIGHT = ROW_HEIGHT * (MAX_NUM_ROWS + 1) - 1

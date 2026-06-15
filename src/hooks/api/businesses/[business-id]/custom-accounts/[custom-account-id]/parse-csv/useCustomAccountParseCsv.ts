@@ -18,11 +18,13 @@ type CustomAccountParseCsvArgs = {
 const TransactionPreviewRowSchema = PreviewRowSchema({
   date: PreviewCellSchema(Schema.String),
   description: PreviewCellSchema(Schema.String),
-  amount: PreviewCellSchema(Schema.Number),
-  externalId: Schema.optional(PreviewCellSchema(Schema.NullishOr(Schema.String))).pipe(
+  amount: Schema.NullishOr(PreviewCellSchema(Schema.Number)),
+  externalId: pipe(
+    Schema.propertySignature(Schema.NullishOr(PreviewCellSchema(Schema.String))),
     Schema.fromKey('external_id'),
   ),
-  referenceNumber: Schema.optional(PreviewCellSchema(Schema.NullishOr(Schema.String))).pipe(
+  referenceNumber: pipe(
+    Schema.propertySignature(Schema.NullishOr(PreviewCellSchema(Schema.String))),
     Schema.fromKey('reference_number'),
   ),
 })
@@ -31,7 +33,8 @@ const TransactionPreviewRowSchema = PreviewRowSchema({
  * The full parse-csv response is validated. `newTransactionsRequest` is a
  * server-built request body that is forwarded verbatim (snake_case) to the
  * create-transactions endpoint, so only its outer `{ transactions: [...] }`
- * shape is validated while the inner transaction objects are left opaque.
+ * shape is validated while the inner transaction objects are left opaque. It
+ * is null when the uploaded CSV is invalid (no request to build).
  */
 const ParseCsvResponseSchema = Schema.Struct({
   isValid: pipe(
@@ -43,9 +46,9 @@ const ParseCsvResponseSchema = Schema.Struct({
     Schema.fromKey('new_transactions_preview'),
   ),
   newTransactionsRequest: pipe(
-    Schema.propertySignature(Schema.Struct({
-      transactions: Schema.Array(Schema.Unknown),
-    })),
+    Schema.propertySignature(
+      Schema.NullishOr(Schema.Struct({ transactions: Schema.Array(Schema.Unknown) })),
+    ),
     Schema.fromKey('new_transactions_request'),
   ),
   invalidTransactionsCount: pipe(

@@ -1,0 +1,68 @@
+.Layer__CsvUpload__Table__wrapper {
+  border-radius: var(--border-radius-3xs);
+  border: 1px solid var(--border-color);
+  outline-offset: 1px;
+
+  .Layer__UI__VirtualizedTable__container {
+    border-radius: inherit;
+  }
+
+  .Layer__UI__VirtualizedTable__header {
+    background-color: var(--bg-subtle);
+  }
+
+  .Layer__UI__VirtualizedTable__header > tr {
+    display: grid;
+  }
+
+  .Layer__UI__VirtualizedTable__header > tr,
+  .Layer__UI__VirtualizedTable__row {
+    grid-template-columns: 68px;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+  }
+
+  .Layer__UI__Table-Column,
+  .Layer__UI__Table-Cell {
+    border-left: 1px solid var(--border-color);
+
+    &:first-child {
+      padding-left: 0;
+      border-left: none;
+    }
+  }
+
+  .Layer__UI__Table-Column {
+    padding: 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .Layer__UI__Table-Row .Layer__UI__Table-Cell:has(.Layer__CsvUpload__Table__cell-content--row-error) {
+    background-color: var(--color-info-error-bg);
+  }
+}
+
+.Layer__CsvUpload__Table__header-cell-content {
+  padding: var(--spacing-sm) var(--spacing-md);
+
+  &--row {
+    margin-left: auto;
+  }
+}
+
+.Layer__CsvUpload__Table__cell-content {
+  display: block;
+  align-content: center;
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  &--error {
+    color: var(--color-info-error-fg);
+  }
+
+  &--row {
+    text-align: end;
+  }
+}

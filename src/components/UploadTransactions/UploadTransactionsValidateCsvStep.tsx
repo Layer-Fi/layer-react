@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransactionDataOnly } from '@schemas/bankTransactions/bankTransactionDataOnly'
 import { type PreviewCsv } from '@schemas/csvUpload'
 import { type CustomAccountTransactionRow } from '@schemas/customAccounts'
 import { DateFormat } from '@utils/i18n/date/patterns'
@@ -23,7 +23,7 @@ interface UploadTransactionsValidateCsvStepProps {
   parseCsvResponse: CustomAccountParseCsvResponse | null
   selectedAccountId?: string
   onSelectFile: (file: File | null) => void
-  onUploadTransactionsSuccess: (transactions: BankTransaction[]) => void
+  onUploadTransactionsSuccess: (transactions: BankTransactionDataOnly[]) => void
 }
 
 const generateDynamicHeaders = (

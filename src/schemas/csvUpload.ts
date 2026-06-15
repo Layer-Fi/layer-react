@@ -25,7 +25,7 @@ export const PreviewRowSchema = <Cells extends Schema.Struct.Fields>(cells: Cell
   })
 
 export type PreviewRow<T extends { [K in keyof T]: string | number | null | undefined }> = {
-  readonly [K in keyof T]: PreviewCell<T[K]>
+  readonly [K in keyof T]?: PreviewCell<T[K]> | null
 } & {
   readonly row: number
   readonly isValid: boolean
