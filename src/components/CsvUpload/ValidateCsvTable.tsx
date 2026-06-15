@@ -66,7 +66,7 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
 
           let value: string | number | null | undefined = field?.raw
           const isValid = field && field.isValid
-          if (isValid) {
+          if (isValid && field.parsed != null) {
             const formatter = formatters?.[key]
             value = formatter ? formatter(field.parsed) : field.parsed
           }

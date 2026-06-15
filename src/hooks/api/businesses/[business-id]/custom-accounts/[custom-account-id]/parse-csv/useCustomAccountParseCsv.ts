@@ -19,18 +19,19 @@ const TransactionPreviewRowSchema = PreviewRowSchema({
   date: PreviewCellSchema(Schema.String),
   description: PreviewCellSchema(Schema.String),
   amount: PreviewCellSchema(Schema.Number),
-  externalId: Schema.optional(PreviewCellSchema(Schema.NullOr(Schema.String))).pipe(
+  externalId: Schema.optional(PreviewCellSchema(Schema.NullishOr(Schema.String))).pipe(
     Schema.fromKey('external_id'),
   ),
-  referenceNumber: Schema.optional(PreviewCellSchema(Schema.NullOr(Schema.String))).pipe(
+  referenceNumber: Schema.optional(PreviewCellSchema(Schema.NullishOr(Schema.String))).pipe(
     Schema.fromKey('reference_number'),
   ),
 })
 
 /**
- * The full parse-csv response is validated, except `newTransactionsRequest`,
- * which is a server-built request body that is forwarded verbatim (snake_case)
- * to the create-transactions endpoint, so it is left as an opaque passthrough.
+ * The full parse-csv response is validated. `newTransactionsRequest` is a
+ * server-built request body that is forwarded verbatim (snake_case) to the
+ * create-transactions endpoint, so only its outer `{ transactions: [...] }`
+ * shape is validated while the inner transaction objects are left opaque.
  */
 const ParseCsvResponseSchema = Schema.Struct({
   isValid: pipe(
@@ -42,7 +43,9 @@ const ParseCsvResponseSchema = Schema.Struct({
     Schema.fromKey('new_transactions_preview'),
   ),
   newTransactionsRequest: pipe(
-    Schema.propertySignature(Schema.Unknown),
+    Schema.propertySignature(Schema.Struct({
+      transactions: Schema.Array(Schema.Unknown),
+    })),
     Schema.fromKey('new_transactions_request'),
   ),
   invalidTransactionsCount: pipe(

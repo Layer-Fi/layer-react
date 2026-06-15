@@ -3,7 +3,7 @@ import { pipe, Schema } from 'effect'
 export const PreviewCellSchema = <Value extends Schema.Schema.Any>(parsed: Value) =>
   Schema.Struct({
     raw: Schema.String,
-    parsed,
+    parsed: Schema.NullishOr(parsed),
     isValid: pipe(
       Schema.propertySignature(Schema.Boolean),
       Schema.fromKey('is_valid'),
