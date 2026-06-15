@@ -1,8 +1,8 @@
 import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
-import type { RawCustomTransaction } from '@internal-types/customAccounts'
-import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
+import { BankTransactionDataOnlySchema } from '@schemas/bankTransactions/bankTransactionDataOnly'
+import type { RawCustomTransaction } from '@schemas/customAccounts'
 import { type APIError } from '@utils/api/apiError'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
@@ -19,7 +19,7 @@ type CreateCustomAccountTransactionsArgs = CreateCustomAccountTransactionsBody &
 }
 
 const CreateCustomAccountTransactionsResponseSchema = Schema.Struct({
-  data: Schema.Array(BankTransactionSchema),
+  data: Schema.Array(BankTransactionDataOnlySchema),
 })
 
 type CreateCustomAccountTransactionsResponse = typeof CreateCustomAccountTransactionsResponseSchema.Type

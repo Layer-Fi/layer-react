@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
-import { type CustomAccount, CustomAccountSubtype, CustomAccountType } from '@internal-types/customAccounts'
+import { type CustomAccount, CustomAccountSubtype, CustomAccountType } from '@schemas/customAccounts'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { useCreateCustomAccount } from '@hooks/api/businesses/[business-id]/custom-accounts/useCreateCustomAccount'
 import { useAppForm } from '@hooks/features/forms/useForm'

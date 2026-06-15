@@ -4,6 +4,8 @@ import { CopyIcon } from 'lucide-react'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 
+import './copyTemplateHeadersButtonGroup.scss'
+
 const copyTextToClipboard = (text: string) => {
   navigator.clipboard.writeText(text).catch(() => {})
 }

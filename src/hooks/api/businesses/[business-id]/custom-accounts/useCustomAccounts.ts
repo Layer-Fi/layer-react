@@ -1,12 +1,25 @@
+import { pipe, Schema } from 'effect'
 import useSWR from 'swr'
 
-import { mapRawCustomAccountToCustomAccount, type RawCustomAccount } from '@internal-types/customAccounts'
+import { CustomAccountSchema } from '@schemas/customAccounts'
 import { get } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const CUSTOM_ACCOUNTS_TAG_KEY = '#custom-accounts'
+
+const GetCustomAccountsResponseSchema = Schema.Struct({
+  data: Schema.Struct({
+    type: Schema.Literal('Custom_Accounts'),
+    customAccounts: pipe(
+      Schema.propertySignature(Schema.Array(CustomAccountSchema)),
+      Schema.fromKey('custom_accounts'),
+    ),
+  }),
+})
+
+type GetCustomAccountsResponseEncoded = typeof GetCustomAccountsResponseSchema.Encoded
 
 function buildKey({
   access_token: accessToken,
@@ -31,12 +44,7 @@ function buildKey({
 }
 
 const getCustomAccounts = get<
-  {
-    data: {
-      type: 'Custom_Accounts'
-      custom_accounts: RawCustomAccount[]
-    }
-  },
+  GetCustomAccountsResponseEncoded,
   {
     businessId: string
     userCreated?: boolean
@@ -70,6 +78,8 @@ export function useCustomAccounts({ userCreated }: useCustomAccountsParams = {})
       {
         params: { businessId, userCreated },
       },
-    )().then(({ data }) => data?.custom_accounts.map(account => mapRawCustomAccountToCustomAccount(account))),
+    )()
+      .then(Schema.decodeUnknownPromise(GetCustomAccountsResponseSchema))
+      .then(({ data }) => data.customAccounts),
   )
 }

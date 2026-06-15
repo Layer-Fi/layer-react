@@ -1,8 +1,9 @@
 import { useCallback } from 'react'
+import { Schema } from 'effect'
 import { useSWRConfig } from 'swr'
 import useSWRMutation from 'swr/mutation'
 
-import { mapRawCustomAccountToCustomAccount, type RawCustomAccount } from '@internal-types/customAccounts'
+import { CustomAccountSchema, type RawCustomAccount } from '@schemas/customAccounts'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
@@ -22,8 +23,12 @@ type CreateCustomAccountBody = Pick<
   | 'user_created'
 >
 
+const CreateCustomAccountResponseSchema = Schema.Struct({
+  data: CustomAccountSchema,
+})
+
 const createCustomAccount = post<
-  { data: RawCustomAccount },
+  typeof CreateCustomAccountResponseSchema.Encoded,
   CreateCustomAccountBody,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/custom-accounts`)
@@ -68,7 +73,9 @@ export function useCreateCustomAccount() {
         params: { businessId },
         body,
       },
-    ).then(({ data }) => mapRawCustomAccountToCustomAccount(data)),
+    )
+      .then(Schema.decodeUnknownPromise(CreateCustomAccountResponseSchema))
+      .then(({ data }) => data),
     {
       revalidate: false,
     },

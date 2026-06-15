@@ -3,7 +3,7 @@ import type { TFunction } from 'i18next'
 import { Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { CustomAccount } from '@internal-types/customAccounts'
+import type { CustomAccount } from '@schemas/customAccounts'
 import { humanizeEnum } from '@utils/format'
 import { type CustomAccountParseCsvResponse, useCustomAccountParseCsv } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
 import { useCustomAccounts } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'

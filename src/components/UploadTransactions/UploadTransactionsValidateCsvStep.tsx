@@ -3,8 +3,9 @@ import classNames from 'classnames'
 import { RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
-import { type CustomAccountTransactionRow } from '@internal-types/customAccounts'
+import { type BankTransactionDataOnly } from '@schemas/bankTransactions/bankTransactionDataOnly'
+import { type PreviewCsv } from '@schemas/csvUpload'
+import { type CustomAccountTransactionRow } from '@schemas/customAccounts'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import type { CustomAccountParseCsvResponse } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
 import { useCreateCustomAccountTransactions } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/useCreateCustomAccountTransactions'
@@ -13,7 +14,6 @@ import { Button } from '@ui/Button/Button'
 import { SubmitAction, SubmitButton } from '@ui/Button/SubmitButton'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
-import { type PreviewCsv } from '@components/CsvUpload/types'
 import { ValidateCsvTable } from '@components/CsvUpload/ValidateCsvTable'
 import { Separator } from '@components/Separator/Separator'
 import { templateHeaders } from '@components/UploadTransactions/template'
@@ -23,24 +23,24 @@ interface UploadTransactionsValidateCsvStepProps {
   parseCsvResponse: CustomAccountParseCsvResponse | null
   selectedAccountId?: string
   onSelectFile: (file: File | null) => void
-  onUploadTransactionsSuccess: (transactions: BankTransaction[]) => void
+  onUploadTransactionsSuccess: (transactions: BankTransactionDataOnly[]) => void
 }
 
 const generateDynamicHeaders = (
   transactionsPreview: PreviewCsv<CustomAccountTransactionRow>,
 ) => {
   const hasExternalId = transactionsPreview.some(transaction =>
-    transaction.external_id?.parsed != null,
+    transaction.externalId?.parsed != null,
   )
   const hasReferenceNumber = transactionsPreview.some(transaction =>
-    transaction.reference_number?.parsed != null,
+    transaction.referenceNumber?.parsed != null,
   )
   return {
     hasExternalId,
     hasReferenceNumber,
     headers: {
-      ...(hasExternalId && { external_id: 'External ID' }),
-      ...(hasReferenceNumber && { reference_number: 'Reference No.' }),
+      ...(hasExternalId && { externalId: 'External ID' }),
+      ...(hasReferenceNumber && { referenceNumber: 'Reference No.' }),
       ...templateHeaders,
     },
   }
@@ -65,11 +65,11 @@ export function UploadTransactionsValidateCsvStep(
   }, [onSelectFile, previous])
 
   const {
-    is_valid: isValidCsv,
-    new_transactions_preview: transactionsPreview,
-    new_transactions_request: transactionsRequest,
-    invalid_transactions_count: invalidTransactionsCount,
-    total_transactions_count: totalTransactionsCount,
+    isValid: isValidCsv,
+    newTransactionsPreview: transactionsPreview,
+    newTransactionsRequest: transactionsRequest,
+    invalidTransactionsCount,
+    totalTransactionsCount,
   } = parseCsvResponse!
 
   const { headers: dynamicHeaders, hasExternalId, hasReferenceNumber } = generateDynamicHeaders(transactionsPreview)

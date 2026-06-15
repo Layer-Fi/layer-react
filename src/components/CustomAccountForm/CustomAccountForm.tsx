@@ -1,7 +1,7 @@
 import { type FormEvent, useCallback, useEffect, useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type CustomAccount, CustomAccountSubtype } from '@internal-types/customAccounts'
+import { type CustomAccount, CustomAccountSubtype } from '@schemas/customAccounts'
 import { notEmpty } from '@utils/form'
 import { translationKey } from '@utils/i18n/translationKey'
 import { Button } from '@ui/Button/Button'
