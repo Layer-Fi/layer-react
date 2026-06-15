@@ -34,7 +34,7 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
   const sortedData = useMemo<DataRow<T>[]>(
     () => [...data]
       .sort((a, b) => {
-        if (a.is_valid !== b.is_valid) return a.is_valid ? 1 : -1
+        if (a.isValid !== b.isValid) return a.isValid ? 1 : -1
         return a.row - b.row
       })
       .map(row => ({ ...row, id: String(row.row) })),
@@ -50,7 +50,7 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
           <span className={classNames(
             'Layer__CsvUpload__Table__cell-content',
             'Layer__CsvUpload__Table__cell-content--row',
-            !row.original.is_valid && 'Layer__CsvUpload__Table__cell-content--row-error',
+            !row.original.isValid && 'Layer__CsvUpload__Table__cell-content--row-error',
           )}
           >
             {row.original.row}
@@ -65,7 +65,7 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
           const field = row.original[key] as PreviewCell<T[typeof key]>
 
           let value: string | number | null | undefined = field?.raw
-          const isValid = field && field.is_valid
+          const isValid = field && field.isValid
           if (isValid) {
             const formatter = formatters?.[key]
             value = formatter ? formatter(field.parsed) : field.parsed
@@ -73,7 +73,7 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
           return (
             <span className={classNames(
               'Layer__CsvUpload__Table__cell-content',
-              !row.original.is_valid && 'Layer__CsvUpload__Table__cell-content--row-error',
+              !row.original.isValid && 'Layer__CsvUpload__Table__cell-content--row-error',
               !isValid && 'Layer__CsvUpload__Table__cell-content--error',
             )}
             >

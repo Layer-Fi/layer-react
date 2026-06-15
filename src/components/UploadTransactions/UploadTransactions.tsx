@@ -78,7 +78,7 @@ export function UploadTransactions({ onComplete }: UploadTransactionsProps) {
   const [selectedAccount, setSelectedAccount] = useState<AccountOption | null>(null)
   const [file, setFile] = useState<File | null>(null)
   const [parseCsvResponse, setParseCsvResponse] = useState<CustomAccountParseCsvResponse | null>(null)
-  const isValid = parseCsvResponse?.is_valid
+  const isValid = parseCsvResponse?.isValid
   const [uploadedTransactionsCount, setUploadedTransactionsCount] = useState(0)
   const onSelectAccount = useCallback((account: AccountOption | null) => {
     setSelectedAccount(account)

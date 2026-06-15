@@ -1,8 +1,8 @@
 import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
-import type { RawCustomTransaction } from '@internal-types/customAccounts'
 import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
+import type { RawCustomTransaction } from '@schemas/customAccounts'
 import { type APIError } from '@utils/api/apiError'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
