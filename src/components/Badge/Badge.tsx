@@ -27,8 +27,8 @@ export interface BadgeProps {
   tooltip?: ReactNode
   size?: BadgeSize
   variant?: BadgeVariant
-  hoverable?: boolean
   iconOnly?: boolean
+  iconPosition?: 'left' | 'right'
 }
 
 export const Badge = ({
@@ -38,13 +38,12 @@ export const Badge = ({
   tooltip,
   size = BadgeSize.MEDIUM,
   variant = BadgeVariant.DEFAULT,
-  hoverable = false,
   iconOnly = false,
+  iconPosition = 'left',
 }: BadgeProps) => {
   const baseProps = {
     className: classNames(
       'Layer__badge',
-      hoverable && !tooltip ? 'Layer__badge--with-hover' : '',
       onClick || tooltip ? 'Layer__badge--clickable' : '',
       iconOnly ? 'Layer__badge--icon-only' : '',
       `Layer__badge--${size}`,
@@ -56,8 +55,9 @@ export const Badge = ({
 
   let content = (
     <>
-      {icon}
+      {iconPosition === 'left' && icon}
       {children}
+      {iconPosition === 'right' && icon}
     </>
   )
 

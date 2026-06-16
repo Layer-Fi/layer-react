@@ -1,0 +1,14 @@
+.Layer__BaseSummariesBreakdownFooter {
+  display: flex;
+  flex-direction: column;
+  padding-block: var(--spacing-4xs);
+  padding-inline: var(--spacing-sm);
+  border-top: 1px solid var(--color-base-200);
+
+  @container (48rem <= width <= 60rem) {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    align-items: center;
+    border-top: none;
+  }
+}

@@ -4,6 +4,8 @@ import { DEFAULT_TYPE_COLOR_MAPPING, type TypeColorMapping } from '@components/D
 
 export const UNCATEGORIZED_TYPES = ['UNCATEGORIZED_INFLOWS', 'UNCATEGORIZED_OUTFLOWS']
 
+export const UNCATEGORIZED_CHART_COLOR = '#EEEEF0'
+
 export const isLineItemUncategorized = (item: PnlChartLineItem) => {
   return UNCATEGORIZED_TYPES.includes(item.name)
 }
@@ -41,7 +43,7 @@ export const mapTypesToColors = <T extends PnlChartLineItem>(
 
     if (isLineItemUncategorized(lineItem)) {
       mapping[key] = {
-        color: '#EEEEF0',
+        color: UNCATEGORIZED_CHART_COLOR,
         opacity: 1,
       }
       return
