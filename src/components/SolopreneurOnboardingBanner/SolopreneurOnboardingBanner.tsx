@@ -18,6 +18,7 @@ import './solopreneurOnboardingBanner.scss'
 
 enum OnboardingBannerState {
   Loading = 'Loading',
+  HostedLinkError = 'HostedLinkError',
   NoBankAccountsLinked = 'NoBankAccountsLinked',
   NoTaxProfile = 'NoTaxProfile',
   Onboarded = 'Onboarded',
@@ -25,15 +26,21 @@ enum OnboardingBannerState {
 
 const getOnboardingBannerState = ({
   isLoading,
+  isHostedLinkError,
   hasLinkedAccounts,
   hasSavedTaxProfile,
   isTaxEstimatesEnabled,
 }: {
   isLoading: boolean
+  isHostedLinkError: boolean
   hasLinkedAccounts: boolean
   hasSavedTaxProfile: boolean
   isTaxEstimatesEnabled: boolean
 }) => {
+  if (isHostedLinkError) {
+    return OnboardingBannerState.HostedLinkError
+  }
+
   if (isLoading) {
     return OnboardingBannerState.Loading
   }
@@ -74,28 +81,15 @@ const NoTaxProfileBanner = ({ onSetupTaxProfile }: Pick<SolopreneurOnboardingBan
 }
 
 function SolopreneurOnboardingBannerInternal({ onSetupTaxProfile }: Pick<SolopreneurOnboardingBannerProps, 'onSetupTaxProfile'>) {
-  const { isHostedLinkError, addConnection } = useContext(LinkedAccountsContext)
-  const { t } = useTranslation()
   const state = useSolopreneurOnboardingBannerState()
-
-  if (isHostedLinkError) {
-    const RetryButton = (
-      <LayerButton variant='outlined' onPress={() => { void addConnection('PLAID') }}>
-        {t('common:action.try_again', 'Try again')}
-      </LayerButton>
-    )
-    return (
-      <HStack className='Layer__SolopreneurLayout__OnboardingBanner'>
-        <HostedLinkErrorBanner slots={{ Button: RetryButton }} />
-      </HStack>
-    )
-  }
 
   if (state === OnboardingBannerState.Loading || state === OnboardingBannerState.Onboarded) {
     return null
   }
+
   return (
     <HStack className='Layer__SolopreneurLayout__OnboardingBanner'>
+      {state === OnboardingBannerState.HostedLinkError && <HostedLinkErrorBanner showRetryButton />}
       {state === OnboardingBannerState.NoBankAccountsLinked && <NoBankAccountsLinkedBanner />}
       {state === OnboardingBannerState.NoTaxProfile && <NoTaxProfileBanner onSetupTaxProfile={onSetupTaxProfile} />}
     </HStack>
@@ -117,22 +111,25 @@ export function SolopreneurOnboardingBanner({ onSetupTaxProfile, plaidHostedLink
 const useSolopreneurOnboardingBannerState = () => {
   const { businessId } = useLayerContext()
   const { data: accountingConfiguration, isLoading: isAccountingConfigLoading } = useAccountingConfiguration({ businessId })
-  const { data: linkedAccounts, isLoading: isLinkedAccountsLoading, loadingStatus: linkedAccountsLoadingStatus } = useContext(LinkedAccountsContext)
+  const {
+    data: linkedAccounts,
+    isLoading: isLinkedAccountsLoading,
+    loadingStatus: linkedAccountsLoadingStatus,
+    isHostedLinkError,
+  } = useContext(LinkedAccountsContext)
   const { data: taxProfile, isLoading: isTaxProfileLoading } = useTaxProfile()
 
   const isTaxEstimatesEnabled = !!accountingConfiguration?.enableTaxEstimates
 
-  const isLoading =
-  isLinkedAccountsLoading
-  || isAccountingConfigLoading
-  || (isTaxEstimatesEnabled && isTaxProfileLoading)
-  || linkedAccountsLoadingStatus === 'loading'
-  || linkedAccountsLoadingStatus === 'initial'
+  const isLoading = isLinkedAccountsLoading
+    || isAccountingConfigLoading
+    || (isTaxEstimatesEnabled && isTaxProfileLoading)
+    || linkedAccountsLoadingStatus === 'loading'
+    || linkedAccountsLoadingStatus === 'initial'
 
-  const hasLinkedAccounts =
-Array.isArray(linkedAccounts) && linkedAccounts.length > 0
+  const hasLinkedAccounts = Array.isArray(linkedAccounts) && linkedAccounts.length > 0
 
   const hasSavedTaxProfile = taxProfile?.userHasSavedTaxProfile === true
 
-  return getOnboardingBannerState({ isLoading, hasLinkedAccounts, hasSavedTaxProfile, isTaxEstimatesEnabled })
+  return getOnboardingBannerState({ isLoading, isHostedLinkError, hasLinkedAccounts, hasSavedTaxProfile, isTaxEstimatesEnabled })
 }
