@@ -1,8 +1,22 @@
-.Layer__ProfitAndLossSummariesSummaryChartArea {
+.Layer__ProfitAndLossSummariesSummary {
+  display: flex;
+  flex-direction: column;
+}
+
+.Layer__ProfitAndLossSummariesSummary--cashflow {
+  @container (48rem <= width <= 60rem) {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    column-gap: 1rem;
+  }
+}
+
+.Layer__ProfitAndLossSummariesSummary__ChartArea {
   border-radius: var(--border-radius-xs);
   background: var(--color-base-50);
 }
 
-.Layer__ProfitAndLossSummariesSummary {
-  min-height: 40px;
+.Layer__ProfitAndLossSummariesSummary__Summary {
+  min-height: 52px;
+  padding: var(--spacing-3xs);
 }

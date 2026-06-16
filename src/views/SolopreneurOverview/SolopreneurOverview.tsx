@@ -3,6 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { type SummaryCardInteractionProps, type SummaryCardStringOverrides } from '@ui/SummaryCard/useSummaryCardSlots'
+import {
+  CashflowSummaries,
+  type CashflowSummariesStringOverrides,
+} from '@components/CashflowSummaries/CashflowSummaries'
 import { ExpensesSummaryCard } from '@components/ExpensesSummaryCard/ExpensesSummaryCard'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { Header } from '@components/Header/Header'
@@ -10,10 +14,6 @@ import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
 import { MileageTrackingSummary } from '@components/MileageTrackingSummary/MileageTrackingSummary'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
-import {
-  ProfitAndLossSummaries,
-  type ProfitAndLossSummariesStringOverrides,
-} from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { ProfitAndLossSummaryCard } from '@components/ProfitAndLossSummaryCard/ProfitAndLossSummaryCard'
 import { SolopreneurOnboardingBanner } from '@components/SolopreneurOnboardingBanner/SolopreneurOnboardingBanner'
 import {
@@ -26,7 +26,7 @@ import './solopreneurOverview.scss'
 
 interface SolopreneurOverviewStringOverrides {
   title?: string
-  profitAndLossSummaries?: ProfitAndLossSummariesStringOverrides
+  cashflowSummaries?: CashflowSummariesStringOverrides
   summaryCards?: {
     profitAndLoss?: SummaryCardStringOverrides
     expenses?: SummaryCardStringOverrides
@@ -39,7 +39,7 @@ interface SolopreneurOverviewInteractionProps {
   banner?: {
     onSetupTaxProfile?: () => void
   }
-  profitAndLossSummaries?: {
+  cashflowSummaries?: {
     onTransactionsToReviewClick?: () => void
   }
   summaryCards?: {
@@ -86,10 +86,10 @@ export const SolopreneurOverview = ({
           onSetupTaxProfile={interactionProps?.banner?.onSetupTaxProfile}
           plaidHostedLinkConfig={plaidHostedLinkConfig}
         />
-        <ProfitAndLossSummaries
-          stringOverrides={stringOverrides?.profitAndLossSummaries}
+        <CashflowSummaries
+          stringOverrides={stringOverrides?.cashflowSummaries}
           chartColorsList={chartColorsList}
-          onTransactionsToReviewClick={interactionProps?.profitAndLossSummaries?.onTransactionsToReviewClick}
+          onTransactionsToReviewClick={interactionProps?.cashflowSummaries?.onTransactionsToReviewClick}
         />
         <div className='Layer__SolopreneurOverview__Grid'>
           <ProfitAndLossSummaryCard
