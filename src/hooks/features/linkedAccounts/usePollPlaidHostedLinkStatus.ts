@@ -1,7 +1,9 @@
 import { useCallback, useRef } from 'react'
+import { type SWRConfiguration } from 'swr'
 
 import type { Awaitable } from '@internal-types/utility/promises'
 import { type ApiPlaidHostedLinkStatus, PlaidHostedLinkState } from '@schemas/linkedAccounts/plaid'
+import { APIError } from '@utils/api/apiError'
 import { usePlaidHostedLinkStatus } from '@hooks/api/businesses/[business-id]/plaid/hosted-link'
 
 const POLL_INTERVAL_MS = 2000
@@ -17,6 +19,9 @@ const TERMINAL_STATES: ReadonlySet<PlaidHostedLinkState> = new Set([
 const isTerminal = (state: PlaidHostedLinkState | undefined) =>
   state !== undefined && TERMINAL_STATES.has(state)
 
+const isFatalError = (error: unknown) =>
+  error instanceof APIError && error.code != null && error.code >= 400 && error.code < 500
+
 type UsePollPlaidHostedLinkStatusOptions = {
   onSuccess: () => Awaitable<void>
   enabled: boolean
@@ -24,14 +29,10 @@ type UsePollPlaidHostedLinkStatusOptions = {
 
 export function usePollPlaidHostedLinkStatus({ onSuccess, enabled }: UsePollPlaidHostedLinkStatusOptions) {
   const hasStoppedPollingRef = useRef(false)
-  const pollingDeadlineRef = useRef<number | null>(null)
+  const pollingDeadlineRef = useRef(Date.now() + MAX_POLL_DURATION_MS)
   const hasFiredOnSuccessRef = useRef(false)
 
   const getRefreshInterval = useCallback((latestData?: ApiPlaidHostedLinkStatus) => {
-    if (pollingDeadlineRef.current === null) {
-      pollingDeadlineRef.current = Date.now() + MAX_POLL_DURATION_MS
-    }
-
     if (hasStoppedPollingRef.current) {
       return 0
     }
@@ -44,6 +45,24 @@ export function usePollPlaidHostedLinkStatus({ onSuccess, enabled }: UsePollPlai
     return POLL_INTERVAL_MS
   }, [])
 
+  const onErrorRetry = useCallback<NonNullable<SWRConfiguration<ApiPlaidHostedLinkStatus>['onErrorRetry']>>(
+    (error, _key, _config, revalidate, { retryCount }) => {
+      if (hasStoppedPollingRef.current) {
+        return
+      }
+
+      if (isFatalError(error) || Date.now() >= pollingDeadlineRef.current) {
+        hasStoppedPollingRef.current = true
+        return
+      }
+
+      setTimeout(() => {
+        void revalidate({ retryCount })
+      }, POLL_INTERVAL_MS)
+    },
+    [],
+  )
+
   const onPollSuccess = useCallback((latestData?: ApiPlaidHostedLinkStatus) => {
     if (latestData?.state === PlaidHostedLinkState.SUCCEEDED && !hasFiredOnSuccessRef.current) {
       hasFiredOnSuccessRef.current = true
@@ -52,7 +71,7 @@ export function usePollPlaidHostedLinkStatus({ onSuccess, enabled }: UsePollPlai
   }, [onSuccess])
 
   const { data } = usePlaidHostedLinkStatus(
-    { refreshInterval: getRefreshInterval, onSuccess: onPollSuccess },
+    { refreshInterval: getRefreshInterval, onErrorRetry, onSuccess: onPollSuccess },
     enabled,
   )
 
