@@ -8,6 +8,7 @@ import { usePlaidHostedLinkStatus } from '@hooks/api/businesses/[business-id]/pl
 
 const POLL_INTERVAL_MS = 2000
 const MAX_POLL_DURATION_MS = 2 * 60 * 1000
+const MAX_ERROR_RETRIES = 3
 
 const TERMINAL_STATES: ReadonlySet<PlaidHostedLinkState> = new Set([
   PlaidHostedLinkState.SUCCEEDED,
@@ -29,15 +30,13 @@ type UsePollPlaidHostedLinkStatusOptions = {
 
 export function usePollPlaidHostedLinkStatus({ onSuccess, enabled }: UsePollPlaidHostedLinkStatusOptions) {
   const hasStoppedPollingRef = useRef(false)
-  const pollingDeadlineRef = useRef(Date.now() + MAX_POLL_DURATION_MS)
+  const pollingEndTimestampRef = useRef(Date.now() + MAX_POLL_DURATION_MS)
   const hasFiredOnSuccessRef = useRef(false)
 
   const getRefreshInterval = useCallback((latestData?: ApiPlaidHostedLinkStatus) => {
-    if (hasStoppedPollingRef.current) {
-      return 0
-    }
+    if (hasStoppedPollingRef.current) return 0
 
-    if (isTerminal(latestData?.state) || Date.now() >= pollingDeadlineRef.current) {
+    if (isTerminal(latestData?.state) || Date.now() >= pollingEndTimestampRef.current) {
       hasStoppedPollingRef.current = true
       return 0
     }
@@ -47,11 +46,12 @@ export function usePollPlaidHostedLinkStatus({ onSuccess, enabled }: UsePollPlai
 
   const onErrorRetry = useCallback<NonNullable<SWRConfiguration<ApiPlaidHostedLinkStatus>['onErrorRetry']>>(
     (error, _key, _config, revalidate, { retryCount }) => {
-      if (hasStoppedPollingRef.current) {
-        return
-      }
+      if (hasStoppedPollingRef.current) return
 
-      if (isFatalError(error) || Date.now() >= pollingDeadlineRef.current) {
+      const isAtMaxRetries = retryCount >= MAX_ERROR_RETRIES
+      const isPastPollingDeadline = Date.now() >= pollingEndTimestampRef.current
+
+      if (isFatalError(error) || isAtMaxRetries || isPastPollingDeadline) {
         hasStoppedPollingRef.current = true
         return
       }
