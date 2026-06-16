@@ -33,10 +33,8 @@ export function usePollPlaidHostedLinkStatus({ onSuccess, enabled }: UsePollPlai
   const pollingEndTimestampRef = useRef(Date.now() + MAX_POLL_DURATION_MS)
   const hasFiredOnSuccessRef = useRef(false)
 
-  const getRefreshInterval = useCallback((latestData?: ApiPlaidHostedLinkStatus) => {
-    if (hasStoppedPollingRef.current) return 0
-
-    if (isTerminal(latestData?.state) || Date.now() >= pollingEndTimestampRef.current) {
+  const getRefreshInterval = useCallback(() => {
+    if (hasStoppedPollingRef.current || Date.now() >= pollingEndTimestampRef.current) {
       hasStoppedPollingRef.current = true
       return 0
     }
@@ -64,11 +62,17 @@ export function usePollPlaidHostedLinkStatus({ onSuccess, enabled }: UsePollPlai
   )
 
   const onPollSuccess = useCallback((latestData?: ApiPlaidHostedLinkStatus) => {
-    if (latestData?.state !== PlaidHostedLinkState.SUCCEEDED || hasFiredOnSuccessRef.current) return
+    const state = latestData?.state
 
-    void Promise.resolve(onSuccess()).then(() => {
-      hasFiredOnSuccessRef.current = true
-    })
+    if (isTerminal(state)) {
+      hasStoppedPollingRef.current = true
+    }
+
+    if (state === PlaidHostedLinkState.SUCCEEDED && !hasFiredOnSuccessRef.current) {
+      void Promise.resolve(onSuccess()).then(() => {
+        hasFiredOnSuccessRef.current = true
+      })
+    }
   }, [onSuccess])
 
   const { data } = usePlaidHostedLinkStatus(
