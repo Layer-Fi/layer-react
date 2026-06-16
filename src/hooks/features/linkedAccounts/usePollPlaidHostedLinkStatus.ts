@@ -64,10 +64,11 @@ export function usePollPlaidHostedLinkStatus({ onSuccess, enabled }: UsePollPlai
   )
 
   const onPollSuccess = useCallback((latestData?: ApiPlaidHostedLinkStatus) => {
-    if (latestData?.state === PlaidHostedLinkState.SUCCEEDED && !hasFiredOnSuccessRef.current) {
+    if (latestData?.state !== PlaidHostedLinkState.SUCCEEDED || hasFiredOnSuccessRef.current) return
+
+    void Promise.resolve(onSuccess()).then(() => {
       hasFiredOnSuccessRef.current = true
-      void onSuccess()
-    }
+    })
   }, [onSuccess])
 
   const { data } = usePlaidHostedLinkStatus(
