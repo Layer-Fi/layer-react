@@ -1,10 +1,14 @@
-import { useContext } from 'react'
+import { type ReactNode, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Banner } from '@ui/Banner/Banner'
 
-export function HostedLinkErrorBanner() {
+type HostedLinkErrorBannerProps = {
+  slots?: { Button?: ReactNode }
+}
+
+export function HostedLinkErrorBanner({ slots }: HostedLinkErrorBannerProps = {}) {
   const { t } = useTranslation()
   const { isHostedLinkError } = useContext(LinkedAccountsContext)
 
@@ -18,6 +22,7 @@ export function HostedLinkErrorBanner() {
         'linkedAccounts:error.hosted_link_failed_description',
         'We couldn’t finish linking your account. Please try again.',
       )}
+      slots={slots}
     />
   )
 }

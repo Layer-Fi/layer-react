@@ -74,13 +74,19 @@ const NoTaxProfileBanner = ({ onSetupTaxProfile }: Pick<SolopreneurOnboardingBan
 }
 
 function SolopreneurOnboardingBannerInternal({ onSetupTaxProfile }: Pick<SolopreneurOnboardingBannerProps, 'onSetupTaxProfile'>) {
-  const { isHostedLinkError } = useContext(LinkedAccountsContext)
+  const { isHostedLinkError, addConnection } = useContext(LinkedAccountsContext)
+  const { t } = useTranslation()
   const state = useSolopreneurOnboardingBannerState()
 
   if (isHostedLinkError) {
+    const RetryButton = (
+      <LayerButton variant='outlined' onPress={() => { void addConnection('PLAID') }}>
+        {t('common:action.try_again', 'Try again')}
+      </LayerButton>
+    )
     return (
       <HStack className='Layer__SolopreneurLayout__OnboardingBanner'>
-        <HostedLinkErrorBanner />
+        <HostedLinkErrorBanner slots={{ Button: RetryButton }} />
       </HStack>
     )
   }

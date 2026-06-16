@@ -57,8 +57,10 @@ export type PlaidHostedLinkParams = typeof PlaidHostedLinkConfigSchema.Type
 
 export type PlaidHostedLinkConfig = PlaidHostedLinkParams & {
   /**
-   * Navigates the customer platform to the Plaid Hosted Link URL. The link
-   * flow continues on a Plaid-owned page and returns via `completionRedirectUri`.
+   * Navigates the customer platform to the Plaid Hosted Link URL, returning via
+   * `completionRedirectUri`. The return must reload the page: status is polled
+   * only while mounted, so the remount is what signals the user came back and
+   * restarts polling. Without it, a completed or failed link may go undetected.
    */
   navigateToHostedLink: (hostedLinkUrl: string) => Awaitable<void>
 }
