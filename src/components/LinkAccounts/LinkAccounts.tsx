@@ -7,6 +7,7 @@ import { getAccountsNeedingConfirmation } from '@utils/bankAccount'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Heading } from '@ui/Typography/Heading'
+import { HostedLinkErrorBanner } from '@components/LinkedAccounts/HostedLinkErrorBanner'
 import { LinkAccountsConfirmationStep } from '@components/LinkAccounts/LinkAccountsConfirmationStep'
 import { LinkAccountsLinkStep } from '@components/LinkAccounts/LinkAccountsLinkStep'
 import { Wizard } from '@components/Wizard/Wizard'
@@ -42,9 +43,12 @@ function LinkAccountsContent({
     <section className='Layer__link-accounts Layer__component'>
       <Wizard
         Header={(
-          <Heading>
-            {t('linkedAccounts:label.link_bank_accounts_and_credit_cards', 'Link your bank accounts and credit cards')}
-          </Heading>
+          <>
+            <Heading>
+              {t('linkedAccounts:label.link_bank_accounts_and_credit_cards', 'Link your bank accounts and credit cards')}
+            </Heading>
+            <HostedLinkErrorBanner />
+          </>
         )}
         Footer={null}
         onComplete={onComplete}

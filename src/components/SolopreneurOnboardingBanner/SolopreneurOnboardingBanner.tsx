@@ -12,6 +12,7 @@ import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAcc
 import { Banner } from '@ui/Banner/Banner'
 import { Button as LayerButton } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
+import { HostedLinkErrorBanner } from '@components/LinkedAccounts/HostedLinkErrorBanner'
 
 import './solopreneurOnboardingBanner.scss'
 
@@ -73,7 +74,17 @@ const NoTaxProfileBanner = ({ onSetupTaxProfile }: Pick<SolopreneurOnboardingBan
 }
 
 function SolopreneurOnboardingBannerInternal({ onSetupTaxProfile }: Pick<SolopreneurOnboardingBannerProps, 'onSetupTaxProfile'>) {
+  const { isHostedLinkError } = useContext(LinkedAccountsContext)
   const state = useSolopreneurOnboardingBannerState()
+
+  if (isHostedLinkError) {
+    return (
+      <HStack className='Layer__SolopreneurLayout__OnboardingBanner'>
+        <HostedLinkErrorBanner />
+      </HStack>
+    )
+  }
+
   if (state === OnboardingBannerState.Loading || state === OnboardingBannerState.Onboarded) {
     return null
   }

@@ -2,7 +2,6 @@ import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type OnboardingStep } from '@internal-types/layerContext'
-import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Container } from '@components/Container/Container'
@@ -10,7 +9,6 @@ import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPick
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
-import { Onboarding } from '@components/Onboarding/Onboarding'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossHeader } from '@components/ProfitAndLossHeader/ProfitAndLossHeader'
@@ -35,14 +33,13 @@ interface AccountingOverviewStringOverrides {
 }
 
 export interface AccountingOverviewProps {
-  /**
-   * @deprecated Use `stringOverrides.title` instead
-   */
+  /** @deprecated Use `stringOverrides.title` instead */
   title?: string
   showTitle?: boolean
+  /** @deprecated The Onboarding component has been removed; this prop no longer does anything. */
   enableOnboarding?: boolean
+  /** @deprecated The Onboarding component has been removed; this prop no longer does anything. */
   onboardingStepOverride?: OnboardingStep
-  plaidHostedLinkConfig?: PlaidHostedLinkConfig
   onTransactionsToReviewClick?: () => void
   middleBanner?: ReactNode
   chartColorsList?: string[]
@@ -60,9 +57,6 @@ export interface AccountingOverviewProps {
 export const AccountingOverview = ({
   title,
   showTitle = true,
-  enableOnboarding = false,
-  onboardingStepOverride = undefined,
-  plaidHostedLinkConfig,
   onTransactionsToReviewClick,
   middleBanner,
   chartColorsList,
@@ -98,13 +92,6 @@ export const AccountingOverview = ({
           </Header>
         )}
       >
-        {enableOnboarding && (
-          <Onboarding
-            onTransactionsToReviewClick={onTransactionsToReviewClick}
-            onboardingStepOverride={onboardingStepOverride}
-            plaidHostedLinkConfig={plaidHostedLinkConfig}
-          />
-        )}
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}
           chartColorsList={chartColorsList}

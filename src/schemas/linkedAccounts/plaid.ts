@@ -1,6 +1,7 @@
 import { pipe, Schema } from 'effect'
 
 import type { Awaitable } from '@internal-types/utility/promises'
+import { createTransformedEnumSchema } from '@schemas/utils'
 
 export const HostedLinkParamsSchema = Schema.Struct({
   completionRedirectUri: Schema.optional(Schema.String).pipe(
@@ -86,6 +87,29 @@ const decodeCreatePlaidLinkParamsFromHostedLinkConfig = Schema.decodeSync(
 export function toCreatePlaidLinkParams(config?: PlaidHostedLinkConfig): CreatePlaidLinkParams {
   return config ? decodeCreatePlaidLinkParamsFromHostedLinkConfig(config) : {}
 }
+
+export enum PlaidHostedLinkState {
+  CREATED = 'CREATED',
+  PROCESSING = 'PROCESSING',
+  SUCCEEDED = 'SUCCEEDED',
+  EXITED = 'EXITED',
+  FAILED = 'FAILED',
+  UNKNOWN = 'UNKNOWN',
+}
+
+const PlaidHostedLinkStateEnumSchema = Schema.Enums(PlaidHostedLinkState)
+
+export const TransformedPlaidHostedLinkStateSchema = createTransformedEnumSchema(
+  PlaidHostedLinkStateEnumSchema,
+  PlaidHostedLinkState,
+  PlaidHostedLinkState.UNKNOWN,
+)
+
+export const ApiPlaidHostedLinkStatusSchema = Schema.Struct({
+  state: TransformedPlaidHostedLinkStateSchema,
+})
+
+export type ApiPlaidHostedLinkStatus = typeof ApiPlaidHostedLinkStatusSchema.Type
 
 export const ApiLinkTokenSchema = Schema.Struct({
   type: Schema.Literal('Link_Token'),
