@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { type SWRConfiguration } from 'swr'
 
 import type { Awaitable } from '@internal-types/utility/promises'
@@ -75,10 +75,15 @@ export function usePollPlaidHostedLinkStatus({ onSuccess, enabled }: UsePollPlai
     }
   }, [onSuccess])
 
-  const { data } = usePlaidHostedLinkStatus(
+  const { data, mutate } = usePlaidHostedLinkStatus(
     { refreshInterval: getRefreshInterval, onErrorRetry, onSuccess: onPollSuccess },
     enabled,
   )
+
+  // Clear a previous session's cached status; polling fetches the current one.
+  useEffect(() => {
+    void mutate(undefined, { revalidate: false })
+  }, [mutate])
 
   return {
     isFailed: data?.state === PlaidHostedLinkState.FAILED,
