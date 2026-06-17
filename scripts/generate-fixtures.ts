@@ -43,6 +43,14 @@ async function main() {
 
   for (const generatorFile of generatorFiles) {
     const domain = path.basename(path.dirname(generatorFile))
+
+    // domain becomes an export name and import path in the generated module.
+    if (!/^[A-Za-z_$][\w$]*$/.test(domain)) {
+      throw new Error(
+        `Fixture folder "${domain}" must be a valid identifier (it becomes the exported const name).`,
+      )
+    }
+
     const generatorModule = (await import(generatorFile)) as {
       generator?: () => unknown[]
     }

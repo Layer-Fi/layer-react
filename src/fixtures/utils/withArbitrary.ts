@@ -13,14 +13,21 @@ export type ArbitraryAnnotation = () => (
 type FieldAst = SchemaAST.AST | Schema.PropertySignatureTransformation
 
 /*
- * Add an `arbitrary` annotation to a field's *value* schema (it has no effect on
- * the `propertySignature`/`fromKey` wrapper). The field's type and key are kept,
- * so a schema's `fields` can be re-annotated without redeclaring them.
+ * Add an `arbitrary` annotation to a field's *value* schema. The field's value
+ * type and key are kept, so a required schema field can be re-annotated without
+ * redeclaring it.
+ *
+ * Optional fields and defaults aren't rebuilt, so it rejects them rather than
+ * silently dropping that metadata.
  */
 export function withArbitrary<F>(field: F, arbitrary: ArbitraryAnnotation): F {
   const ast = (field as { readonly ast: FieldAst }).ast
 
   if (ast._tag === 'PropertySignatureTransformation') {
+    if (ast.to.isOptional || ast.to.defaultValue !== undefined) {
+      throw new Error('withArbitrary supports only required fields without defaults')
+    }
+
     const property = Schema.propertySignature(
       Schema.make(ast.to.type).annotations({ arbitrary }),
     )

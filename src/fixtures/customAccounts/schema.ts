@@ -1,9 +1,9 @@
-import { type FastCheck, Schema } from 'effect'
+import { Arbitrary, type FastCheck, Schema } from 'effect'
 
 import {
   CustomAccountSchema,
   CustomAccountSubtype,
-  CustomAccountType,
+  getCustomAccountTypeFromSubtype,
 } from '@schemas/customAccounts'
 
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
@@ -19,7 +19,7 @@ const isoTimestampArbitrary = (fc: typeof FastCheck) =>
 
 const fields = CustomAccountSchema.fields
 
-const CustomAccountArbitrarySchema = Schema.Struct({
+const base = Schema.Struct({
   ...fields,
   externalId: withArbitrary(fields.externalId, () => fc =>
     fc.oneof(
@@ -46,8 +46,6 @@ const CustomAccountArbitrarySchema = Schema.Struct({
       'Capital One',
       'American Express',
     )),
-  accountType: withArbitrary(fields.accountType, () => fc =>
-    fc.constantFrom(...Object.values(CustomAccountType))),
   accountSubtype: withArbitrary(fields.accountSubtype, () => fc =>
     fc.constantFrom(...Object.values(CustomAccountSubtype))),
   createdAt: withArbitrary(fields.createdAt, () => isoTimestampArbitrary),
@@ -57,6 +55,32 @@ const CustomAccountArbitrarySchema = Schema.Struct({
       { arbitrary: fc.constant(null), weight: 9 },
       { arbitrary: isoTimestampArbitrary(fc), weight: 1 },
     )),
+})
+
+const baseArbitrary = Arbitrary.make(base)
+
+export const CustomAccountArbitrarySchema = base.annotations({
+  arbitrary: () => () =>
+    baseArbitrary.map((account): typeof base.Type => {
+      // Timestamps are sampled independently; order them so a row never updates
+      // before it was created, nor archives before its last update. ISO-8601 UTC
+      // strings sort chronologically, so a plain sort suffices.
+      const [createdAt, updatedAt] = [account.createdAt, account.updatedAt].sort()
+      const archivedAt =
+        account.archivedAt == null
+          ? account.archivedAt
+          : [updatedAt, account.archivedAt].sort().at(-1)
+
+      return {
+        ...account,
+        createdAt,
+        updatedAt,
+        archivedAt,
+        accountType: getCustomAccountTypeFromSubtype(
+          account.accountSubtype as CustomAccountSubtype,
+        ),
+      }
+    }),
 })
 
 export const schema = CustomAccountArbitrarySchema
