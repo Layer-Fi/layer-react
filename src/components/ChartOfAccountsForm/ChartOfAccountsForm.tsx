@@ -133,7 +133,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
               data={data}
               value={field.state.value}
               onChange={onChangeParent}
-              error={field.state.meta.errors[0] as string | undefined}
+              error={field.state.meta.errors[0]}
               inline={inline}
             />
           )}
@@ -170,7 +170,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
                   value={field.state.value}
                   onChange={value => field.handleChange(value as LedgerAccountType | null)}
                   isDisabled={isEdit || parent !== null}
-                  error={field.state.meta.errors[0] as string | undefined}
+                  error={field.state.meta.errors[0]}
                   inline={inline}
                 />
               )}
@@ -187,7 +187,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
                   type={type}
                   value={field.state.value}
                   onChange={field.handleChange}
-                  error={field.state.meta.errors[0] as string | undefined}
+                  error={field.state.meta.errors[0]}
                   inline={inline}
                 />
               )}
@@ -201,7 +201,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
               label={stringOverrides?.normalityLabel || t('common:label.normality', 'Normality')}
               value={field.state.value}
               onChange={value => field.handleChange(value as LedgerEntryDirection | null)}
-              error={field.state.meta.errors[0] as string | undefined}
+              error={field.state.meta.errors[0]}
               inline={inline}
             />
           )}

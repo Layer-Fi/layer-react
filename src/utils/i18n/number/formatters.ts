@@ -1,14 +1,11 @@
-import type { IntlShape } from 'react-intl'
+import type { FormatNumberOptions, IntlShape } from 'react-intl'
 
 import { getCurrencyForLocale } from '@utils/i18n/number/currency'
-import {
-  type NumberInput,
-  toLocalizedNumber,
-} from '@utils/i18n/number/input'
+import { type NumberInput, toLocalizedNumber } from '@utils/i18n/number/input'
 
-type CurrencyFormatOptions = Pick<Intl.NumberFormatOptions, 'signDisplay' | 'useGrouping'>
-type NumberFormatOptions = Pick<Intl.NumberFormatOptions, 'minimumFractionDigits' | 'maximumFractionDigits' | 'compactDisplay' | 'notation' | 'useGrouping'>
-type PercentFormatOptions = Pick<Intl.NumberFormatOptions, 'minimumFractionDigits' | 'maximumFractionDigits'>
+type CurrencyFormatOptions = Pick<FormatNumberOptions, 'signDisplay' | 'useGrouping'>
+type NumberFormatOptions = Pick<FormatNumberOptions, 'minimumFractionDigits' | 'maximumFractionDigits' | 'compactDisplay' | 'notation' | 'useGrouping'>
+type PercentFormatOptions = Pick<FormatNumberOptions, 'minimumFractionDigits' | 'maximumFractionDigits'>
 
 export type CurrencyFormatFn = (value: NumberInput, options?: CurrencyFormatOptions) => string
 export type NumberFormatFn = (value: NumberInput, options?: NumberFormatOptions) => string

@@ -82,7 +82,7 @@ export const TagDimensionCombobox = ({
         valueDisplayName: option.valueDisplayName,
         archivedAt: option.archivedAt,
         _local: { isOptimistic: false },
-      } as Tag
+      }
     }
 
     onValueChange(nextTag)
