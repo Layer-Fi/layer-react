@@ -14,6 +14,7 @@ import { useUnlinkPlaidItem } from '@hooks/api/businesses/[business-id]/plaid/it
 import { useCreatePlaidLink } from '@hooks/api/businesses/[business-id]/plaid/link'
 import { useCreatePlaidUpdateModeLink } from '@hooks/api/businesses/[business-id]/plaid/update-mode-link'
 import { type LinkMode, usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
+import { usePollPlaidHostedLinkStatus } from '@hooks/features/linkedAccounts/usePollPlaidHostedLinkStatus'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 type UseLinkedAccountsOptions = {
@@ -27,6 +28,7 @@ type UseLinkedAccounts = (options?: UseLinkedAccountsOptions) => {
   isValidating: boolean
   isLinking: boolean
   error: unknown
+  isHostedLinkError: boolean
   addConnection: (source: AccountSource) => Promise<void>
   removeConnection: (source: AccountSource, sourceId: string) => Promise<void>
   repairConnection: (source: AccountSource, sourceId: string) => Promise<void>
@@ -108,6 +110,11 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ plaidHostedLinkConfig } =
     linkMode,
     setLinkMode,
     onSuccess: refetchAccounts,
+  })
+
+  const { isFailed: isHostedLinkError } = usePollPlaidHostedLinkStatus({
+    onSuccess: refetchAccounts,
+    enabled: plaidHostedLinkConfig != null,
   })
 
   /**
@@ -245,6 +252,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ plaidHostedLinkConfig } =
     isValidating,
     isLinking,
     error: responseError,
+    isHostedLinkError,
     addConnection,
     removeConnection,
     repairConnection,

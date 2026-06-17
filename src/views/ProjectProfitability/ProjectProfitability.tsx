@@ -136,7 +136,6 @@ export const ProjectProfitabilityView = ({
               stringOverrides={{ header: t('common:label.project_overview', 'Project Overview') }}
               tagFilter={tagFilter ? tagFilter : undefined}
               onTransactionsToReviewClick={() => setActiveTab('transactions')}
-              enableOnboarding={false}
               showTitle={false}
             />
           )}

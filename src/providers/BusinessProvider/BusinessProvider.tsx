@@ -7,7 +7,6 @@ import {
   LayerContextActionName as Action,
   type LayerContextValues,
   type LayerThemeConfig,
-  type OnboardingStep,
 } from '@internal-types/layerContext'
 import { errorHandler, type LayerError } from '@utils/api/errorHandler'
 import { buildColorsPalette } from '@utils/colors'
@@ -26,7 +25,6 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   switch (action.type) {
     case Action.setBusiness:
     case Action.setTheme:
-    case Action.setOnboardingStep:
     case Action.setColors:
       return { ...state, ...action.payload }
     case Action.setToast:
@@ -204,12 +202,9 @@ export const BusinessProvider = ({
 
   const { data: accountingConfiguration } = useAccountingConfiguration({ businessId })
 
-  const setOnboardingStep = useCallback((value: OnboardingStep) =>
-    dispatch({
-      type: Action.setOnboardingStep,
-      payload: { onboardingStep: value },
-    }),
-  [])
+  // Deprecated no-op: onboardingStep no longer drives any UI now that the
+  // Onboarding component has been removed.
+  const setOnboardingStep = useCallback(() => {}, [])
 
   return (
     <LayerContext.Provider

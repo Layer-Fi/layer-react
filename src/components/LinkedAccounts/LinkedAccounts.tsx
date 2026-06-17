@@ -6,10 +6,12 @@ import { AccountConfirmationStoreProvider } from '@providers/AccountConfirmation
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { OpeningBalanceModalProvider } from '@providers/OpeningBalanceModalProvider/OpeningBalanceModalProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Container } from '@components/Container/Container'
 import { Header } from '@components/Container/Header'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { HostedLinkErrorBanner } from '@components/LinkedAccounts/HostedLinkErrorBanner'
 import { LinkedAccountsContent } from '@components/LinkedAccounts/LinkedAccountsContent'
 import { OpeningBalanceModal } from '@components/LinkedAccounts/OpeningBalanceModal/OpeningBalanceModal'
 import { Loader } from '@components/Loader/Loader'
@@ -65,6 +67,10 @@ export const LinkedAccountsComponent = ({
           {stringOverrides?.title || t('linkedAccounts:label.linked_accounts', 'Linked Accounts')}
         </Heading>
       </Header>
+
+      <HStack pi='lg'>
+        <HostedLinkErrorBanner />
+      </HStack>
 
       {isLoading && (
         <div className='Layer__linked-accounts__loader-container'>
