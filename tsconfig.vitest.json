@@ -8,8 +8,8 @@
     "src/**/*.test.tsx",
     "src/**/*.spec.ts",
     "src/**/*.spec.tsx",
-    "test/**/*.ts",
-    "test/**/*.tsx",
+    "src/msw/**/*.ts",
+    "src/msw/**/*.tsx",
     "vite.config.ts",
     "vitest.config.ts",
     "vitest.setup.ts"

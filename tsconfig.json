@@ -53,10 +53,15 @@
       "@views/*": ["./src/views/*"],
       "@icons/*": ["./src/icons/*"],
       "@assets/*": ["./src/assets/*"],
-      "@msw/*": ["./test/msw/*"]
+      "@msw/*": ["./src/msw/*"]
     }
   },
 
   "include": ["src/**/*.tsx", "src/**/*.ts", "src/**/*.d.ts"],
-  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.spec.ts", "src/**/*.spec.tsx"]
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx"
+  ]
 }

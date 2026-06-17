@@ -124,7 +124,13 @@ export default tsEslint.config(
   },
   {
     files: ['src/**/*.{ts,tsx}'],
-    ignores: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'src/**/*.spec.ts', 'src/**/*.spec.tsx'],
+    ignores: [
+      'src/**/*.test.ts',
+      'src/**/*.test.tsx',
+      'src/**/*.spec.ts',
+      'src/**/*.spec.tsx',
+      'src/msw/**/*',
+    ],
     rules: {
       'no-restricted-imports': ['error', { patterns: ['*.css', '@msw/*'] }],
     },
@@ -172,7 +178,6 @@ export default tsEslint.config(
             '^(?:type:)?@assets/',
           ],
           [
-            // Test resources and fixtures
             '^(?:type:)?@msw/',
           ],
           [
