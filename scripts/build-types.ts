@@ -2,12 +2,7 @@ import { execSync } from 'node:child_process'
 import { rmSync } from 'node:fs'
 import path from 'node:path'
 
-/**
- * Internal build step: produce the bundled type declarations (dist/index.d.ts).
- *
- * Invoked only via `npm run build:types`. The individual steps below are
- * intentionally NOT exposed as npm scripts so the build surface stays small.
- */
+/** Builds the bundled type declarations (dist/index.d.ts). Run via `npm run build:types`. */
 
 const env = {
   ...process.env,
@@ -15,11 +10,12 @@ const env = {
 }
 const run = (command: string) => execSync(command, { stdio: 'inherit', env })
 
-// 1. Emit per-file .d.ts into dist/.types (incremental disabled for idempotency).
+// Emit per-file .d.ts. tsconfig.dts.json keeps `incremental: false` so this
+// re-emits every run — step 4 deletes the output, which a cached run would skip.
 run('tsc -p tsconfig.dts.json')
-// 2. Rewrite tsconfig path aliases to relative paths so rollup can resolve them.
+// Rewrite path aliases to relative paths so rollup can resolve them.
 run('tsc-alias -p tsconfig.dts.json')
-// 3. Roll the per-file declarations up into a single dist/index.d.ts.
+// Bundle the per-file declarations into a single dist/index.d.ts.
 run('rollup -c rollup.dts.config.mjs')
-// 4. Drop the temporary per-file output.
+// Drop the temporary per-file output.
 rmSync('dist/.types', { recursive: true, force: true })
