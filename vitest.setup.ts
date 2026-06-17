@@ -1,8 +1,12 @@
 import { cleanup } from '@testing-library/react'
-import { afterEach } from 'vitest'
+import { afterAll, afterEach, beforeAll } from 'vitest'
 
 import '@testing-library/jest-dom/vitest'
+import { server } from './test/msw/node'
 
-afterEach(() => {
-  cleanup()
-})
+beforeAll(() => server.listen())
+
+afterEach(() => cleanup())
+afterEach(() => server.resetHandlers())
+
+afterAll(() => server.close())

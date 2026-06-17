@@ -88,12 +88,6 @@ export default tsEslint.config(
     },
   },
   {
-    files: ['**/*.ts', '**/*.tsx'],
-    rules: {
-      'no-restricted-imports': ['error', { patterns: ['*.css'] }],
-    },
-  },
-  {
     files: ['**/*.{ts,tsx,js,jsx}'],
     plugins: { import: pluginImport },
     settings: { 'import/resolver': { typescript: true, node: true } },
@@ -113,6 +107,7 @@ export default tsEslint.config(
           '@views/',
           '@icons/',
           '@assets/',
+          '@msw/',
         ],
         },
       ],
@@ -125,6 +120,13 @@ export default tsEslint.config(
         prefer: 'type-imports',
         fixStyle: 'inline-type-imports',
       }],
+    },
+  },
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'src/**/*.spec.ts', 'src/**/*.spec.tsx'],
+    rules: {
+      'no-restricted-imports': ['error', { patterns: ['*.css', '@msw/*'] }],
     },
   },
   {
@@ -168,6 +170,10 @@ export default tsEslint.config(
 
             // Static resources
             '^(?:type:)?@assets/',
+          ],
+          [
+            // Test resources and fixtures
+            '^(?:type:)?@msw/',
           ],
           [
             // Styles

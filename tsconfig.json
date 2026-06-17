@@ -40,20 +40,20 @@
     "jsx": "react-jsx",                       /* Specify what JSX code is generated. */
 
     /* Path Aliases */
-    "baseUrl": ".",
     "paths": {
-      "@ui/*": ["src/components/ui/*"],
-      "@blocks/*": ["src/components/blocks/*"],
-      "@components/*": ["src/components/*"],
-      "@contexts/*": ["src/contexts/*"],
-      "@hooks/*": ["src/hooks/*"],
-      "@providers/*": ["src/providers/*"],
-      "@utils/*": ["src/utils/*"],
-      "@internal-types/*": ["src/types/*"],
-      "@schemas/*": ["src/schemas/*"],
-      "@views/*": ["src/views/*"],
-      "@icons/*": ["src/icons/*"],
-      "@assets/*": ["src/assets/*"]
+      "@ui/*": ["./src/components/ui/*"],
+      "@blocks/*": ["./src/components/blocks/*"],
+      "@components/*": ["./src/components/*"],
+      "@contexts/*": ["./src/contexts/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@providers/*": ["./src/providers/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@internal-types/*": ["./src/types/*"],
+      "@schemas/*": ["./src/schemas/*"],
+      "@views/*": ["./src/views/*"],
+      "@icons/*": ["./src/icons/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@msw/*": ["./test/msw/*"]
     }
   },
 
