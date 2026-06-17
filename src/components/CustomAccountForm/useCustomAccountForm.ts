@@ -2,25 +2,10 @@ import { useState } from 'react'
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
-import { type CustomAccount, CustomAccountSubtype, CustomAccountType } from '@schemas/customAccounts'
-import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { type CustomAccount, type CustomAccountSubtype, getCustomAccountTypeFromSubtype } from '@schemas/customAccounts'
 import { useCreateCustomAccount } from '@hooks/api/businesses/[business-id]/custom-accounts/useCreateCustomAccount'
 import { useAppForm } from '@hooks/features/forms/useForm'
 
-export const getCustomAccountTypeFromSubtype = (subtype: CustomAccountSubtype): CustomAccountType => {
-  switch (subtype) {
-    case CustomAccountSubtype.CHECKING:
-    case CustomAccountSubtype.SAVINGS:
-      return CustomAccountType.DEPOSITORY
-    case CustomAccountSubtype.CREDIT_CARD:
-      return CustomAccountType.CREDIT
-    default:
-      unsafeAssertUnreachable({
-        value: subtype,
-        message: 'Unexpected custom account subtype',
-      })
-  }
-}
 type CustomAccountFormData = {
   account_name?: string
   institution_name?: string

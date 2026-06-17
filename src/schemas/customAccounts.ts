@@ -1,6 +1,7 @@
 import { pipe, Schema } from 'effect'
 
 import { Direction } from '@internal-types/general'
+import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 
 export enum CustomAccountSubtype {
   CHECKING = 'CHECKING',
@@ -15,6 +16,25 @@ export enum CustomAccountType {
 
 export const CustomAccountSubtypeSchema = Schema.Enums(CustomAccountSubtype)
 export const CustomAccountTypeSchema = Schema.Enums(CustomAccountType)
+
+// Each subtype belongs to exactly one type. This is the single source of truth
+// for that mapping (the form and fixtures both rely on it).
+export const getCustomAccountTypeFromSubtype = (
+  subtype: CustomAccountSubtype,
+): CustomAccountType => {
+  switch (subtype) {
+    case CustomAccountSubtype.CHECKING:
+    case CustomAccountSubtype.SAVINGS:
+      return CustomAccountType.DEPOSITORY
+    case CustomAccountSubtype.CREDIT_CARD:
+      return CustomAccountType.CREDIT
+    default:
+      unsafeAssertUnreachable({
+        value: subtype,
+        message: 'Unexpected custom account subtype',
+      })
+  }
+}
 
 export const CustomAccountSchema = Schema.Struct({
   id: Schema.UUID,
