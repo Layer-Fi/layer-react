@@ -11,7 +11,7 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort'
 
 export default tsEslint.config(
   {
-    ignores: ['dist/**', 'node_modules/**', 'vite/**', 'scripts/**', '.vim_backups/**', '.claude/**'],
+    ignores: ['dist/**', 'node_modules/**', 'vite/**', 'scripts/**', '.vim_backups/**', '.claude/**', '**/*.gen.ts'],
   },
   js.configs.recommended,
   ...tsEslint.configs.recommendedTypeChecked,
@@ -108,6 +108,7 @@ export default tsEslint.config(
           '@icons/',
           '@assets/',
           '@msw/',
+          '@fixtures/',
         ],
         },
       ],
@@ -130,9 +131,10 @@ export default tsEslint.config(
       'src/**/*.spec.ts',
       'src/**/*.spec.tsx',
       'src/msw/**/*',
+      'src/fixtures/**/*',
     ],
     rules: {
-      'no-restricted-imports': ['error', { patterns: ['*.css', '@msw/*'] }],
+      'no-restricted-imports': ['error', { patterns: ['*.css', '@msw/*', '@fixtures/*'] }],
     },
   },
   {
@@ -178,7 +180,9 @@ export default tsEslint.config(
             '^(?:type:)?@assets/',
           ],
           [
+            // Test resources and fixtures
             '^(?:type:)?@msw/',
+            '^(?:type:)?@fixtures/',
           ],
           [
             // Styles

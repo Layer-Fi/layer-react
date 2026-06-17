@@ -27,6 +27,8 @@
     "dev": "npm run dev:js & npm run dev:types",
     "dev:js": "vite build --mode esm --watch",
     "dev:types": "tsx scripts/dev-types.ts",
+    "fixtures:generate": "tsx scripts/generate-fixtures.ts",
+    "fixtures:check": "tsx scripts/generate-fixtures.ts --check",
     "lint": "eslint . && stylelint '**/*.{css,scss}'",
     "lint:eslint": "eslint .",
     "lint:fix": "eslint . --fix && stylelint '**/*.{css,scss}' --fix",

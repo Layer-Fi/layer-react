@@ -57,7 +57,8 @@
       "@views/*": ["./src/views/*"],
       "@icons/*": ["./src/icons/*"],
       "@assets/*": ["./src/assets/*"],
-      "@msw/*": ["./src/msw/*"]
+      "@msw/*": ["./src/msw/*"],
+      "@fixtures/*": ["./src/fixtures/*"],
     }
   },
 
