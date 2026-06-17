@@ -23,9 +23,6 @@ type CreateMockEndpointConfig<TOverride, TBody extends JsonBodyType> = {
  * - `handler` is registered once in `handlers.ts` and serves the default payload.
  * - `mock(override)` returns a runtime handler for `server.use(...)` so a single
  *   test can swap the payload without touching the global handler list.
- *
- * The helper is transport-only: callers own the response shape in `resolve`,
- * which keeps domain concerns (envelopes, schema encoding, fixtures) out here.
  */
 export function createMockEndpoint<TOverride, TBody extends JsonBodyType>({
   method,
