@@ -12,6 +12,7 @@ import {
   type NoticeProps,
   type OptionProps,
   type PlaceholderProps,
+  type SelectComponentsConfig,
   type SingleValueProps,
 } from 'react-select'
 
@@ -239,7 +240,7 @@ export function useComboBoxSubcomponents<T extends ComboBoxOption, IsMulti exten
   placeholder,
   slots,
   displayDisabledAsSelected,
-}: UseComboBoxSubcomponentsParams<T>) {
+}: UseComboBoxSubcomponentsParams<T>): SelectComponentsConfig<T, IsMulti, GroupBase<T>> {
   const { EmptyMessage, SingleValue, GroupHeading, Option } = slots ?? {}
 
   const ClearIndicatorRef = useRef(buildCustomClearIndicator<T, IsMulti>())

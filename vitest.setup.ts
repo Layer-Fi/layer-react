@@ -1,8 +1,14 @@
 import { cleanup } from '@testing-library/react'
-import { afterEach } from 'vitest'
+import { afterAll, afterEach, beforeAll } from 'vitest'
 
 import '@testing-library/jest-dom/vitest'
+import { server } from './src/msw/node'
 
-afterEach(() => {
-  cleanup()
-})
+const MSW_CONFIG = { onUnhandledRequest: 'error' as const }
+
+beforeAll(() => server.listen(MSW_CONFIG))
+
+afterEach(() => cleanup())
+afterEach(() => server.resetHandlers())
+
+afterAll(() => server.close())

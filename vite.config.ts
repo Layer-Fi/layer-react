@@ -24,7 +24,7 @@ export default defineConfig(({ mode, command }) => {
       react(),
       isESM && !isWatch
         ? dts({
-          tsconfigPath: './tsconfig.json',
+          tsconfigPath: './tsconfig.build.json',
           bundleTypes: true,
           outDirs: path.resolve(__dirname, OUT_DIR),
         })
