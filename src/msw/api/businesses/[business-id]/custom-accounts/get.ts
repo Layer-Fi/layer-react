@@ -14,9 +14,16 @@ const toResponse = (customAccounts: readonly CustomAccount[]) =>
     custom_accounts: customAccounts.map(account => encodeCustomAccount(account)),
   })
 
-export const get = createMockEndpoint({
+export const get = createMockEndpoint<readonly CustomAccount[], ReturnType<typeof toResponse>>({
   method: 'get',
   path: '*/v1/businesses/:businessId/custom-accounts',
-  resolve: (customAccounts: readonly CustomAccount[] = defaultCustomAccounts) =>
-    toResponse(customAccounts),
+  resolve: ({ override: customAccounts = defaultCustomAccounts, request }) => {
+    // Mirror the real endpoint: `?user_created=` filters the result set.
+    const userCreated = new URL(request.url).searchParams.get('user_created')
+    const filtered = userCreated === null
+      ? customAccounts
+      : customAccounts.filter(account => account.userCreated === (userCreated === 'true'))
+
+    return toResponse(filtered)
+  },
 })
