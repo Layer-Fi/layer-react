@@ -1,7 +1,6 @@
 import path from 'node:path'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
-import dts from 'vite-plugin-dts'
 
 import { bundleCss } from './vite/plugins/bundleCss'
 import { cleanupBuild } from './vite/plugins/cleanupBuild'
@@ -22,13 +21,6 @@ export default defineConfig(({ mode, command }) => {
 
     plugins: [
       react(),
-      isESM && !isWatch
-        ? dts({
-          tsconfigPath: './tsconfig.build.json',
-          bundleTypes: true,
-          outDirs: path.resolve(__dirname, OUT_DIR),
-        })
-        : null,
       isESM ? bundleCss() : null,
       (isWatch || isCJS) ? cleanupBuild() : null,
     ].filter(Boolean),

@@ -155,7 +155,7 @@ export const BankTransactionCategoryComboBox = ({
   const handleSelectedValueChange = useCallback((value: BankTransactionCategoryComboBoxOption | null) => {
     if (!includeSuggestedMatches) {
       if (value !== null && isSuggestedMatchAsOption(value)) return
-      const onSelectedValueChangeWithoutMatches = onSelectedValueChange as (nextValue: BankTransactionNonSuggestedMatchOption | null) => void
+      const onSelectedValueChangeWithoutMatches = onSelectedValueChange
       onSelectedValueChangeWithoutMatches(value)
       return
     }

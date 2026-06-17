@@ -1,4 +1,4 @@
-import { APIError, type APIErrorMessage } from '@utils/api/apiError'
+import { APIError } from '@utils/api/apiError'
 import { reportError } from '@utils/api/errorHandler'
 import { DEFAULT_LOCALE, type SupportedLocale } from '@utils/i18n/supportedLocale'
 import type { ParameterValues } from '@utils/request/toDefinedSearchParameters'
@@ -158,7 +158,7 @@ const handleResponse = async <Return>(res: Response) => {
     const apiError = new APIError(
       'Errors in the API response.',
       res.status,
-      ((parsedResponse as FailedAPIResponse).errors ?? []) as APIErrorMessage[],
+      ((parsedResponse as FailedAPIResponse).errors ?? []),
     )
     throw apiError
   }

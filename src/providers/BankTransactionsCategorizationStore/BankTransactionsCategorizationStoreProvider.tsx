@@ -66,7 +66,7 @@ const updateCategorizationProperty = <K extends keyof BankTransactionCategorizat
   value: BankTransactionCategorization[K],
 ) => {
   const current = categorizations.get(id) ?? DEFAULT_CATEGORIZATION
-  const merged = { ...current, [key]: value } as BankTransactionCategorization
+  const merged = { ...current, [key]: value }
   const shouldWrite = current[key] !== merged[key]
 
   if (!shouldWrite) return { categorizations }

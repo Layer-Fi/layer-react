@@ -140,7 +140,7 @@ export const useAugmentedBankTransactions = (
       return rawResponseData
         ?.map(x => x?.data)
         .flat()
-        .filter(x => !!x) as unknown as BankTransaction[]
+        .filter(x => !!x)
     }
 
     return undefined
