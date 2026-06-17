@@ -38,6 +38,9 @@ export default tsEslint.config(
           allowDefaultProject: [
             'eslint.config.mjs',
             'i18next.config.ts',
+            'vite.config.ts',
+            'vitest.config.ts',
+            'vitest.setup.ts',
             '*.js',
             '*.cjs',
             '*.mjs',

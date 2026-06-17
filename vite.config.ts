@@ -1,10 +1,11 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import dts from 'vite-plugin-dts'
 import path from 'node:path'
-import { bundleCss } from './plugins/bundleCss'
-import { cleanupBuild } from './plugins/cleanupBuild'
-import { buildExternalDeps, OUT_DIR } from './utils'
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+import dts from 'vite-plugin-dts'
+
+import { bundleCss } from './vite/plugins/bundleCss'
+import { cleanupBuild } from './vite/plugins/cleanupBuild'
+import { buildExternalDeps, OUT_DIR } from './vite/utils'
 
 export default defineConfig(({ mode, command }) => {
   const isESM = mode === 'esm'
@@ -23,10 +24,10 @@ export default defineConfig(({ mode, command }) => {
       react(),
       isESM && !isWatch
         ? dts({
-            tsconfigPath: './tsconfig.json',
-            bundleTypes: true,
-            outDirs: path.resolve(__dirname, `../${OUT_DIR}`),
-          })
+          tsconfigPath: './tsconfig.json',
+          bundleTypes: true,
+          outDirs: path.resolve(__dirname, OUT_DIR),
+        })
         : null,
       isESM ? bundleCss() : null,
       (isWatch || isCJS) ? cleanupBuild() : null,
@@ -45,20 +46,20 @@ export default defineConfig(({ mode, command }) => {
              * the CSS for the individual components. This means individual component styles will
              * will be prioritized over global styles.
              */
-            styles: path.resolve(__dirname, '../src/styles/index.scss'),
-            index: path.resolve(__dirname, '../src/index.tsx'),
+            styles: path.resolve(__dirname, 'src/styles/index.scss'),
+            index: path.resolve(__dirname, 'src/index.tsx'),
           },
           formats: ['es'],
         }
         : {
-          entry: path.resolve(__dirname, '../src/index.tsx'),
+          entry: path.resolve(__dirname, 'src/index.tsx'),
           formats: ['cjs'],
           fileName: () => 'index.cjs',
         },
       rolldownOptions: {
         external: externalDeps,
         output: {
-          dir: path.resolve(__dirname, `../${OUT_DIR}/${mode}`),
+          dir: path.resolve(__dirname, `${OUT_DIR}/${mode}`),
           entryFileNames: isESM
             ? chunk => (chunk.name === 'styles' ? 'styles.mjs' : 'index.mjs')
             : 'index.cjs',
@@ -66,7 +67,7 @@ export default defineConfig(({ mode, command }) => {
           exports: isCJS ? 'named' : undefined,
         },
       },
-      outDir: path.resolve(__dirname, `../${OUT_DIR}`),
+      outDir: path.resolve(__dirname, OUT_DIR),
       target: 'es2016',
       emptyOutDir: isESM && !isWatch,
     },
