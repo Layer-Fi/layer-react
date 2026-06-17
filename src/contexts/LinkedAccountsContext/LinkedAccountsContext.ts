@@ -11,6 +11,7 @@ export const LinkedAccountsContext = createContext<LinkedAccountsContextType>({
   isLinking: false,
   error: undefined,
   isHostedLinkError: false,
+  isHostedLinkProcessing: false,
   addConnection: () => Promise.resolve(),
   removeConnection: () => Promise.resolve(),
   repairConnection: () => Promise.resolve(),

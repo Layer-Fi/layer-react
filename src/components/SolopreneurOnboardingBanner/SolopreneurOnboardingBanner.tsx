@@ -12,13 +12,13 @@ import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAcc
 import { Banner } from '@ui/Banner/Banner'
 import { Button as LayerButton } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
-import { HostedLinkErrorBanner } from '@components/LinkedAccounts/HostedLinkErrorBanner'
+import { HostedLinkStatusBanner } from '@components/LinkedAccounts/HostedLinkStatusBanner'
 
 import './solopreneurOnboardingBanner.scss'
 
 enum OnboardingBannerState {
   Loading = 'Loading',
-  HostedLinkError = 'HostedLinkError',
+  HostedLinkStatus = 'HostedLinkStatus',
   NoBankAccountsLinked = 'NoBankAccountsLinked',
   NoTaxProfile = 'NoTaxProfile',
   Onboarded = 'Onboarded',
@@ -27,18 +27,20 @@ enum OnboardingBannerState {
 const getOnboardingBannerState = ({
   isLoading,
   isHostedLinkError,
+  isHostedLinkProcessing,
   hasLinkedAccounts,
   hasSavedTaxProfile,
   isTaxEstimatesEnabled,
 }: {
   isLoading: boolean
   isHostedLinkError: boolean
+  isHostedLinkProcessing: boolean
   hasLinkedAccounts: boolean
   hasSavedTaxProfile: boolean
   isTaxEstimatesEnabled: boolean
 }) => {
-  if (isHostedLinkError) {
-    return OnboardingBannerState.HostedLinkError
+  if (isHostedLinkError || isHostedLinkProcessing) {
+    return OnboardingBannerState.HostedLinkStatus
   }
 
   if (isLoading) {
@@ -89,7 +91,7 @@ function SolopreneurOnboardingBannerInternal({ onSetupTaxProfile }: Pick<Solopre
 
   return (
     <HStack className='Layer__SolopreneurLayout__OnboardingBanner'>
-      {state === OnboardingBannerState.HostedLinkError && <HostedLinkErrorBanner showRetryButton />}
+      {state === OnboardingBannerState.HostedLinkStatus && <HostedLinkStatusBanner showRetryButton />}
       {state === OnboardingBannerState.NoBankAccountsLinked && <NoBankAccountsLinkedBanner />}
       {state === OnboardingBannerState.NoTaxProfile && <NoTaxProfileBanner onSetupTaxProfile={onSetupTaxProfile} />}
     </HStack>
@@ -116,6 +118,7 @@ const useSolopreneurOnboardingBannerState = () => {
     isLoading: isLinkedAccountsLoading,
     loadingStatus: linkedAccountsLoadingStatus,
     isHostedLinkError,
+    isHostedLinkProcessing,
   } = useContext(LinkedAccountsContext)
   const { data: taxProfile, isLoading: isTaxProfileLoading } = useTaxProfile()
 
@@ -131,5 +134,5 @@ const useSolopreneurOnboardingBannerState = () => {
 
   const hasSavedTaxProfile = taxProfile?.userHasSavedTaxProfile === true
 
-  return getOnboardingBannerState({ isLoading, isHostedLinkError, hasLinkedAccounts, hasSavedTaxProfile, isTaxEstimatesEnabled })
+  return getOnboardingBannerState({ isLoading, isHostedLinkError, isHostedLinkProcessing, hasLinkedAccounts, hasSavedTaxProfile, isTaxEstimatesEnabled })
 }

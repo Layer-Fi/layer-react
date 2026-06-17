@@ -29,6 +29,7 @@ type UseLinkedAccounts = (options?: UseLinkedAccountsOptions) => {
   isLinking: boolean
   error: unknown
   isHostedLinkError: boolean
+  isHostedLinkProcessing: boolean
   addConnection: (source: AccountSource) => Promise<void>
   removeConnection: (source: AccountSource, sourceId: string) => Promise<void>
   repairConnection: (source: AccountSource, sourceId: string) => Promise<void>
@@ -112,7 +113,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ plaidHostedLinkConfig } =
     onSuccess: refetchAccounts,
   })
 
-  const { isFailed: isHostedLinkError } = usePollPlaidHostedLinkStatus({
+  const { isFailed: isHostedLinkError, isProcessing: isHostedLinkProcessing } = usePollPlaidHostedLinkStatus({
     onSuccess: refetchAccounts,
     enabled: plaidHostedLinkConfig != null,
   })
@@ -253,6 +254,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ plaidHostedLinkConfig } =
     isLinking,
     error: responseError,
     isHostedLinkError,
+    isHostedLinkProcessing,
     addConnection,
     removeConnection,
     repairConnection,

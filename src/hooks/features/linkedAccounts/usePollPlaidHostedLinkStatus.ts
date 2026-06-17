@@ -88,5 +88,8 @@ export function usePollPlaidHostedLinkStatus({ onSuccess, enabled }: UsePollPlai
 
   return {
     isFailed: data?.state === PlaidHostedLinkState.FAILED,
+    isProcessing:
+      data?.state === PlaidHostedLinkState.CREATED
+      || data?.state === PlaidHostedLinkState.PROCESSING,
   }
 }

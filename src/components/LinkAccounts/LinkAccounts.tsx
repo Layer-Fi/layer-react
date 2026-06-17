@@ -9,7 +9,7 @@ import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAcc
 import { Heading } from '@ui/Typography/Heading'
 import { LinkAccountsConfirmationStep } from '@components/LinkAccounts/LinkAccountsConfirmationStep'
 import { LinkAccountsLinkStep } from '@components/LinkAccounts/LinkAccountsLinkStep'
-import { HostedLinkErrorBanner } from '@components/LinkedAccounts/HostedLinkErrorBanner'
+import { HostedLinkStatusBanner } from '@components/LinkedAccounts/HostedLinkStatusBanner'
 import { Wizard } from '@components/Wizard/Wizard'
 
 import './linkAccounts.scss'
@@ -47,7 +47,7 @@ function LinkAccountsContent({
             <Heading>
               {t('linkedAccounts:label.link_bank_accounts_and_credit_cards', 'Link your bank accounts and credit cards')}
             </Heading>
-            <HostedLinkErrorBanner />
+            <HostedLinkStatusBanner />
           </>
         )}
         Footer={null}

@@ -11,7 +11,7 @@ import { Heading } from '@ui/Typography/Heading'
 import { Container } from '@components/Container/Container'
 import { Header } from '@components/Container/Header'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { HostedLinkErrorBanner } from '@components/LinkedAccounts/HostedLinkErrorBanner'
+import { HostedLinkStatusBanner } from '@components/LinkedAccounts/HostedLinkStatusBanner'
 import { LinkedAccountsContent } from '@components/LinkedAccounts/LinkedAccountsContent'
 import { OpeningBalanceModal } from '@components/LinkedAccounts/OpeningBalanceModal/OpeningBalanceModal'
 import { Loader } from '@components/Loader/Loader'
@@ -69,7 +69,7 @@ export const LinkedAccountsComponent = ({
       </Header>
 
       <HStack pi='lg'>
-        <HostedLinkErrorBanner />
+        <HostedLinkStatusBanner />
       </HStack>
 
       {isLoading && (
