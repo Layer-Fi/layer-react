@@ -91,6 +91,7 @@ export function toCreatePlaidLinkParams(config?: PlaidHostedLinkConfig): CreateP
 }
 
 export enum PlaidHostedLinkState {
+  NOT_STARTED = 'NOT_STARTED',
   CREATED = 'CREATED',
   PROCESSING = 'PROCESSING',
   SUCCEEDED = 'SUCCEEDED',

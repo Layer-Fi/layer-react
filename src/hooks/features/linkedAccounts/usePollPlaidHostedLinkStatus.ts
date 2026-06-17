@@ -11,6 +11,7 @@ const MAX_POLL_DURATION_MS = 2 * 60 * 1000
 const MAX_ERROR_RETRIES = 3
 
 const TERMINAL_STATES: ReadonlySet<PlaidHostedLinkState> = new Set([
+  PlaidHostedLinkState.NOT_STARTED,
   PlaidHostedLinkState.SUCCEEDED,
   PlaidHostedLinkState.EXITED,
   PlaidHostedLinkState.FAILED,
