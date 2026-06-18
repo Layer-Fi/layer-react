@@ -9,10 +9,7 @@ import { customAccounts as defaultCustomAccounts } from '@fixtures/generated/cus
 const encodeCustomAccount = Schema.encodeSync(CustomAccountSchema)
 
 const toResponse = (customAccounts: readonly CustomAccount[]) =>
-  apiData({
-    type: 'Custom_Accounts' as const,
-    custom_accounts: customAccounts.map(account => encodeCustomAccount(account)),
-  })
+  apiData({ custom_accounts: customAccounts.map(account => encodeCustomAccount(account)) })
 
 export const get = createMockEndpoint<readonly CustomAccount[], ReturnType<typeof toResponse>>({
   method: 'get',
