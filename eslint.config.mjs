@@ -109,6 +109,7 @@ export default tsEslint.config(
           '@assets/',
           '@msw/',
           '@fixtures/',
+          '@test-utils/',
         ],
         },
       ],
@@ -132,9 +133,10 @@ export default tsEslint.config(
       'src/**/*.spec.tsx',
       'src/msw/**/*',
       'src/fixtures/**/*',
+      'src/test-utils/**/*',
     ],
     rules: {
-      'no-restricted-imports': ['error', { patterns: ['*.css', '@msw/*', '@fixtures/*'] }],
+      'no-restricted-imports': ['error', { patterns: ['*.css', '@msw/*', '@fixtures/*', '@test-utils/*'] }],
     },
   },
   {
@@ -183,6 +185,7 @@ export default tsEslint.config(
             // Test resources and fixtures
             '^(?:type:)?@msw/',
             '^(?:type:)?@fixtures/',
+            '^(?:type:)?@test-utils/',
           ],
           [
             // Styles
