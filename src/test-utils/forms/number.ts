@@ -1,11 +1,17 @@
-import { setTextBoxValue } from '@test-utils/forms/textBox'
 import { type FormFillerContext, type NumberFillArgs } from '@test-utils/forms/types'
 
-export function createNumberFiller(context: FormFillerContext) {
-  return async (args: NumberFillArgs) => {
-    const input = await setTextBoxValue(context, args)
+export function createNumberFiller({ ui, user }: FormFillerContext) {
+  return async ({ field, value }: NumberFillArgs) => {
+    const input = ui.getByRole('spinbutton', { name: field })
 
-    await context.user.tab()
+    await user.clear(input)
+
+    const textValue = String(value)
+    if (textValue !== '') {
+      await user.type(input, textValue)
+    }
+
+    await user.tab()
 
     return input
   }
