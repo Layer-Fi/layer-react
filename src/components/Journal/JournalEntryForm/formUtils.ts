@@ -27,7 +27,7 @@ export function isLineItemBlank(lineItem: JournalEntryFormLineItem): boolean {
   const hasCustomer = Boolean(lineItem.customer)
   const hasVendor = Boolean(lineItem.vendor)
   const hasTags = lineItem.tags.length > 0
-  const hasExternalId = Boolean(lineItem.externalId?.trim())
+  const hasExternalId = Boolean(lineItem.externalId)
 
   return !hasAccount && !hasAmount && !hasMemo && !hasCustomer && !hasVendor && !hasTags && !hasExternalId
 }
