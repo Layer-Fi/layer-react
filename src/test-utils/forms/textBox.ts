@@ -1,13 +1,8 @@
-import { type FieldName, type FormFillerContext } from '@test-utils/forms/types'
-
-type TextBoxFillArgs = {
-  field: FieldName
-  value: number | string
-}
+import { type FormFillerContext, type TextFillArgs } from '@test-utils/forms/types'
 
 export const setTextBoxValue = async (
   { ui, user }: FormFillerContext,
-  { field, value }: TextBoxFillArgs,
+  { field, value }: TextFillArgs,
 ) => {
   const input = ui.getByRole('textbox', { name: field })
 
