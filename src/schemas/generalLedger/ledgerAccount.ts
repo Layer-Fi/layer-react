@@ -139,7 +139,7 @@ const nestedChartAccountFields = {
   ),
   name: Schema.String,
   stableName: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('stable_name'),
   ),
   accountNumber: pipe(
