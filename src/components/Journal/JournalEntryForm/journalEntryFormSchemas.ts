@@ -114,8 +114,8 @@ export const ApiLineItemSchema = Schema.Struct({
   account: SingleChartAccountSchema,
   amount: Schema.Number,
   direction: LedgerEntryDirectionSchema,
-  customer: Schema.NullOr(CustomerSchema),
-  vendor: Schema.NullOr(VendorSchema),
+  customer: Schema.NullishOr(CustomerSchema),
+  vendor: Schema.NullishOr(VendorSchema),
   entryAt: pipe(
     Schema.propertySignature(Schema.Date),
     Schema.fromKey('entry_at'),
@@ -125,11 +125,11 @@ export const ApiLineItemSchema = Schema.Struct({
     Schema.fromKey('createdAt'),
   ),
   entryReversalOf: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.UUID)),
+    Schema.propertySignature(Schema.NullishOr(Schema.UUID)),
     Schema.fromKey('entry_reversal_of'),
   ),
   entryReversedBy: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.UUID)),
+    Schema.propertySignature(Schema.NullishOr(Schema.UUID)),
     Schema.fromKey('entry_reversed_by'),
   ),
 })
@@ -137,18 +137,18 @@ export const ApiLineItemSchema = Schema.Struct({
 export const ApiCustomJournalEntryLineItemSchema = Schema.Struct({
   id: Schema.UUID,
   externalId: pipe(
-    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('external_id'),
   ),
-  memo: Schema.optional(Schema.NullOr(Schema.String)),
+  memo: Schema.NullishOr(Schema.String),
   lineItemId: pipe(
     Schema.propertySignature(Schema.UUID),
     Schema.fromKey('line_item_id'),
   ),
-  customer: Schema.NullOr(CustomerSchema),
-  vendor: Schema.NullOr(VendorSchema),
+  customer: Schema.NullishOr(CustomerSchema),
+  vendor: Schema.NullishOr(VendorSchema),
   transactionTags: pipe(
-    Schema.optional(Schema.Array(TransactionTagSchema)),
+    Schema.propertySignature(Schema.NullishOr(Schema.Array(TransactionTagSchema))),
     Schema.fromKey('transaction_tags'),
   ),
 })
@@ -167,16 +167,16 @@ export const ApiLedgerEntrySchema = Schema.Struct({
     Schema.fromKey('ledger_id'),
   ),
   entryNumber: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.Number)),
+    Schema.propertySignature(Schema.NullishOr(Schema.Number)),
     Schema.fromKey('entry_number'),
   ),
-  agent: Schema.NullOr(Schema.String),
+  agent: Schema.NullishOr(Schema.String),
   entryType: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('entry_type'),
   ),
-  customer: Schema.NullOr(Schema.Unknown),
-  vendor: Schema.NullOr(Schema.Unknown),
+  customer: Schema.NullishOr(Schema.Unknown),
+  vendor: Schema.NullishOr(Schema.Unknown),
   createdAt: pipe(
     Schema.propertySignature(Schema.Date),
     Schema.fromKey('date'),
@@ -186,11 +186,11 @@ export const ApiLedgerEntrySchema = Schema.Struct({
     Schema.fromKey('entry_at'),
   ),
   reversalOfId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.UUID)),
+    Schema.propertySignature(Schema.NullishOr(Schema.UUID)),
     Schema.fromKey('reversal_of_id'),
   ),
   reversalId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.UUID)),
+    Schema.propertySignature(Schema.NullishOr(Schema.UUID)),
     Schema.fromKey('reversal_id'),
   ),
   lineItems: pipe(
@@ -201,10 +201,10 @@ export const ApiLedgerEntrySchema = Schema.Struct({
     Schema.propertySignature(Schema.Array(Schema.Unknown)),
     Schema.fromKey('transaction_tags'),
   ),
-  memo: Schema.NullOr(Schema.String),
-  metadata: Schema.NullOr(Schema.Unknown),
+  memo: Schema.NullishOr(Schema.String),
+  metadata: Schema.NullishOr(Schema.Unknown),
   referenceNumber: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('reference_number'),
   ),
 })
@@ -212,7 +212,7 @@ export const ApiLedgerEntrySchema = Schema.Struct({
 export const ApiCustomJournalEntryWithEntrySchema = Schema.Struct({
   id: Schema.UUID,
   externalId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('external_id'),
   ),
   createdBy: pipe(
@@ -224,8 +224,8 @@ export const ApiCustomJournalEntryWithEntrySchema = Schema.Struct({
     Schema.propertySignature(Schema.UUID),
     Schema.fromKey('entry_id'),
   ),
-  customer: Schema.NullOr(CustomerSchema),
-  vendor: Schema.NullOr(VendorSchema),
+  customer: Schema.NullishOr(CustomerSchema),
+  vendor: Schema.NullishOr(VendorSchema),
   lineItems: pipe(
     Schema.propertySignature(Schema.Array(ApiCustomJournalEntryLineItemSchema)),
     Schema.fromKey('line_items'),
@@ -235,9 +235,9 @@ export const ApiCustomJournalEntryWithEntrySchema = Schema.Struct({
     Schema.propertySignature(Schema.Array(Schema.Unknown)),
     Schema.fromKey('transaction_tags'),
   ),
-  metadata: Schema.NullOr(Schema.Unknown),
+  metadata: Schema.NullishOr(Schema.Unknown),
   referenceNumber: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('reference_number'),
   ),
 })
