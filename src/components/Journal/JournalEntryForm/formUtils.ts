@@ -103,7 +103,7 @@ export function convertJournalEntryFormToParams(form: JournalEntryForm): CreateC
   return {
     ...(form.externalId && { externalId: form.externalId }),
     entryAt: form.entryAt.toDate(),
-    createdBy: form.createdBy,
+    createdBy: form.createdBy.trim(),
     memo: form.memo.trim(),
     ...(form.customer?.id && { customerId: form.customer.id }),
     ...(form.customer?.externalId && { customerExternalId: form.customer.externalId }),
