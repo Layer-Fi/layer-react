@@ -1,3 +1,7 @@
 import { type RequestHandler } from 'msw'
 
-export const handlers: RequestHandler[] = []
+import { get as getCustomAccounts } from '@msw/api/businesses/[business-id]/custom-accounts/get'
+
+export const handlers: RequestHandler[] = [
+  getCustomAccounts.handler,
+]

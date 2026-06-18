@@ -11,7 +11,6 @@ export const CUSTOM_ACCOUNTS_TAG_KEY = '#custom-accounts'
 
 const GetCustomAccountsResponseSchema = Schema.Struct({
   data: Schema.Struct({
-    type: Schema.Literal('Custom_Accounts'),
     customAccounts: pipe(
       Schema.propertySignature(Schema.Array(CustomAccountSchema)),
       Schema.fromKey('custom_accounts'),
