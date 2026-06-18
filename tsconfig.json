@@ -59,6 +59,7 @@
       "@assets/*": ["./src/assets/*"],
       "@msw/*": ["./src/msw/*"],
       "@fixtures/*": ["./src/fixtures/*"],
+      "@test-utils/*": ["./src/test-utils/*"],
     }
   },
 
