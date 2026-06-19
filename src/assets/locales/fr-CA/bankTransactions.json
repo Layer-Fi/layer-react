@@ -24,6 +24,7 @@
     "split_label": "Répartir",
     "split_number_label": "Ventilation no {{number}}",
     "split_transaction": "Répartir la transaction",
+    "toggle_details": "",
     "uncategorize_all": "Tout décatégoriser",
     "upload_receipt": "Téléverser un reçu",
     "upload_transactions_manually": "Importer les transactions manuellement"
