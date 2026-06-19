@@ -42,7 +42,7 @@ export function CashflowSummaries({
         <BaseSummariesBreakdownFooter
           isLoading={isLoading}
           categorized={{
-            label: t('common:label.categorized_revenue', 'Categorized revenue'),
+            label: t('overview:label.categorized_revenue', 'Categorized revenue'),
             amount: categorized,
             swatchColor: categorizedSwatchColor,
           }}
@@ -60,7 +60,7 @@ export function CashflowSummaries({
         <BaseSummariesBreakdownFooter
           isLoading={isLoading}
           categorized={{
-            label: t('common:label.categorized_expenses', 'Categorized expenses'),
+            label: t('overview:label.categorized_expenses', 'Categorized expenses'),
             amount: categorized,
             swatchColor: categorizedSwatchColor,
           }}
@@ -73,12 +73,12 @@ export function CashflowSummaries({
       ),
     },
     net: {
-      label: stringOverrides?.netCashFlowLabel || t('common:label.net_cash_flow', 'Net cash flow'),
+      label: stringOverrides?.netCashFlowLabel || t('overview:label.net_cash_flow', 'Net cash flow'),
       renderFooter: ({ categorized }, isLoading) => (
         <CashflowSummariesNetCashflowFooter
           isLoading={isLoading}
           categorized={{
-            label: t('common:label.categorized_net_profit', 'Categorized net profit'),
+            label: t('overview:label.categorized_net_profit', 'Categorized net profit'),
             amount: categorized,
           }}
           onTransactionsToReviewClick={onTransactionsToReviewClick}
