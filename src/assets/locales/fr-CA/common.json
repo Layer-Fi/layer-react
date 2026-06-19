@@ -35,11 +35,11 @@
     "submit_label": "Soumettre",
     "toggle_bulk_actions": "Afficher/masquer les actions groupées",
     "toggle_section": "Afficher/masquer {{name}}",
-    "try_again": "",
+    "try_again": "Réessayer",
     "uncategorize": "Retirer la catégorie",
     "update_label": "Mettre à jour",
     "upload_label": "Téléverser",
-    "view_details": "",
+    "view_details": "Voir les détails",
     "view_label": "Voir"
   },
   "empty": {
