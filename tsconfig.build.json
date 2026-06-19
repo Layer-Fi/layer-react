@@ -8,7 +8,8 @@
     "incremental": true,
     "tsBuildInfoFile": "./dist/.cache/tsconfig.build.tsbuildinfo",
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "types": []
   },
   "exclude": [
     "src/**/*.test.ts",

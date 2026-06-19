@@ -7,11 +7,11 @@ import { server } from './src/msw/node'
 const MSW_CONFIG = { onUnhandledRequest: 'error' as const }
 
 const stubResizeObserver = () => {
-  vi.stubGlobal('ResizeObserver', vi.fn(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  })))
+  vi.stubGlobal('ResizeObserver', class ResizeObserver {
+    observe = vi.fn()
+    unobserve = vi.fn()
+    disconnect = vi.fn()
+  })
 }
 
 beforeAll(() => stubResizeObserver())

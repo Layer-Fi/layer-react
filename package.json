@@ -37,7 +37,7 @@
     "prepack": "npm run typecheck && npm run build:clean",
     "prepare": "husky",
     "test": "vitest",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.vitest.json"
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
