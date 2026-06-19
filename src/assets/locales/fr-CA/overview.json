@@ -3,6 +3,10 @@
   "label": {
     "accounting_overview": "Aperçu comptable",
     "bookkeeping_overview": "Aperçu de la tenue de livres",
+    "categorized_expenses": "",
+    "categorized_net_profit": "",
+    "categorized_revenue": "",
+    "net_cash_flow": "",
     "vs_comparison_month": "c. {{comparisonMonth}}"
   }
 }

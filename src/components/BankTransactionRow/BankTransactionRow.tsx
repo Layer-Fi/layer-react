@@ -261,7 +261,7 @@ export const BankTransactionRow = ({
                   variant='ghost'
                   icon
                   onPress={toggleOpen}
-                  aria-label={t('common:action.toggle_details', 'Toggle details')}
+                  aria-label={t('bankTransactions:action.toggle_details', 'Toggle details')}
                 >
                   <Chevron open={open} />
                 </Button>
@@ -297,7 +297,7 @@ export const BankTransactionRow = ({
                     variant='ghost'
                     icon
                     onPress={toggleOpen}
-                    aria-label={t('common:action.toggle_details', 'Toggle details')}
+                    aria-label={t('bankTransactions:action.toggle_details', 'Toggle details')}
                   >
                     <Chevron open={open} />
                   </Button>

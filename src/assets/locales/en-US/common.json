@@ -11,7 +11,6 @@
     "close_label": "Close",
     "collapse_all": "Collapse All",
     "confirm_label": "Confirm",
-    "connect_label": "Connect",
     "continue_label": "Continue",
     "create_label": "Create",
     "delete_label": "Delete",
@@ -23,7 +22,6 @@
     "edit_label": "Edit",
     "expand_all": "Expand All",
     "link_label": "Link",
-    "manage_label": "Manage",
     "post_label": "Post",
     "reactivate_label": "Reactivate",
     "recategorize": "Recategorize",
@@ -37,9 +35,11 @@
     "submit_label": "Submit",
     "toggle_bulk_actions": "Toggle bulk actions",
     "toggle_section": "Toggle {{name}}",
+    "try_again": "Try again",
     "uncategorize": "Uncategorize",
     "update_label": "Update",
     "upload_label": "Upload",
+    "view_details": "View details",
     "view_label": "View"
   },
   "empty": {
