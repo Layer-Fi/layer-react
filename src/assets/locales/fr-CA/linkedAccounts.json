@@ -23,9 +23,6 @@
     "unlink_accounts_under_connection": "Dissocier tous les comptes de cette connexion",
     "unlink_accounts_under_institution_name": "Dissocier tous les comptes de cette connexion à {{institutionName}}"
   },
-  "empty": {
-    "no_accounts_connected": "Aucun compte connecté"
-  },
   "error": {
     "break_connection": "Nous n’avons pas pu réinitialiser cette connexion. Veuillez réessayer.",
     "confirm_account": "Nous n’avons pas pu confirmer votre compte. Veuillez réessayer.",
@@ -33,6 +30,8 @@
     "connect_account": "Nous n’avons pas pu connecter votre compte. Veuillez réessayer.",
     "delete_account_check_connection": "La suppression a échoué. Veuillez vérifier votre connexion et réessayer dans quelques secondes.",
     "exclude_account": "Nous n’avons pas pu exclure votre compte. Veuillez réessayer.",
+    "hosted_link_failed_description": "Nous n’avons pas pu terminer la liaison de votre compte. Veuillez réessayer.",
+    "hosted_link_failed_title": "Échec de la connexion",
     "load_accounts": "Échec du chargement des comptes",
     "remove_connection": "Nous n’avons pas pu supprimer cette connexion. Veuillez réessayer.",
     "repair_connection": "Nous n’avons pas pu réparer la connexion Plaid avec votre compte. Veuillez réessayer.",
@@ -42,7 +41,6 @@
   },
   "label": {
     "account_and_unmatched_transactions_deleted": "Ce compte et toutes les transactions non appariées seront supprimés.",
-    "account_linked_successfully": "Compte lié avec succès",
     "account_stops_syncing_new_data": "Ce compte cessera de synchroniser les nouvelles données, et toutes les transactions non appariées seront supprimées.",
     "accounts_successfully_linked": "Comptes liés avec succès",
     "bank_balance": "Solde bancaire",
@@ -50,13 +48,11 @@
     "confirm_business_accounts": "Confirmer les comptes",
     "confirm_remove_accounts_for_institution": "Veuillez confirmer que vous souhaitez supprimer tous les comptes appartenant à cette institution",
     "confirm_remove_accounts_for_institution_name": "Veuillez confirmer que vous souhaitez supprimer tous les comptes appartenant à {{institutionName}}",
-    "connect_accounts": "Connecter des comptes",
     "connect_bank_accounts_and_credit_cards": "Connectez vos comptes bancaires et vos cartes de crédit pour importer automatiquement vos transactions d’entreprise.",
     "data_is_syncing": "Les données sont en cours de synchronisation",
     "deselect_unused_accounts": "Veuillez désélectionner tous les comptes que vous n’utilisez pas pour votre entreprise.",
     "found_accounts_count_one": "Nous avons trouvé {{displayCount}} compte",
     "found_accounts_count_other": "Nous avons trouvé {{displayCount}} comptes",
-    "import_data_simple_integration": "Importez des données grâce à une intégration simple.",
     "ledger_balance": "Solde du grand livre",
     "link_bank_accounts_and_credit_cards": "Liez vos comptes bancaires et vos cartes de crédit",
     "link_more_accounts_any_time": "Vous pouvez lier d’autres comptes en tout temps à partir de la section Activité bancaire",
@@ -74,7 +70,6 @@
     "no_data_sync_until_confirm": "Aucune donnée ne sera synchronisée tant que vous n’aurez pas confirmé.",
     "opening_balance": "Solde d'ouverture",
     "opening_date": "Date d'ouverture",
-    "populate_accounting_dashboard_three_steps": "Remplissez votre tableau de bord comptable en 3 étapes",
     "remove_unused_accounts_next_step": "Vous aurez la possibilité de supprimer les comptes que vous n’utilisez pas pour votre entreprise à l’étape suivante.",
     "select_accounts_use_one": "Nous avons récupéré le compte ci-dessous de votre institution. Désélectionnez-le si vous ne souhaitez pas le connecter.",
     "select_accounts_use_other": "Nous avons récupéré les comptes ci-dessous de votre institution. Désélectionnez ceux que vous ne souhaitez pas connecter."
