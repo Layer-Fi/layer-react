@@ -3,6 +3,10 @@
   "label": {
     "accounting_overview": "Aperçu comptable",
     "bookkeeping_overview": "Aperçu de la tenue de livres",
+    "categorized_expenses": "Dépenses catégorisées",
+    "categorized_net_profit": "Bénéfice net catégorisé",
+    "categorized_revenue": "Revenus catégorisés",
+    "net_cash_flow": "Flux de trésorerie net",
     "vs_comparison_month": "c. {{comparisonMonth}}"
   }
 }
