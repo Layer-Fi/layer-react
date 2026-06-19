@@ -1,17 +1,17 @@
 import { useCashflowStatementDownload } from '@hooks/api/businesses/[business-id]/reports/cashflow-statement/exports/csv/useCashflowStatementDownload'
-import { DownloadButton } from '@components/Button/DownloadButton'
+import { DownloadButton } from '@ui/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 type CashflowStatementDownloadButtonProps = {
   startDate: Date
   endDate: Date
-  iconOnly?: boolean
+  icon?: boolean
 }
 
 export function CashflowStatementDownloadButton({
   startDate,
   endDate,
-  iconOnly,
+  icon,
 }: CashflowStatementDownloadButtonProps) {
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -24,9 +24,9 @@ export function CashflowStatementDownloadButton({
   return (
     <>
       <DownloadButton
-        iconOnly={iconOnly}
-        onClick={() => { void trigger() }}
-        isDownloading={isMutating}
+        icon={icon}
+        onPress={() => { void trigger() }}
+        isPending={isMutating}
         requestFailed={Boolean(error)}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />

@@ -4,9 +4,13 @@
     "esModuleInterop": true,                  /* Emit additional JavaScript to ease support for importing CommonJS modules. */
     "skipLibCheck": true,                     /* Skip type checking all .d.ts files. */
     "target": "es2022",                       /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
+    "rootDir": "./src",
     "allowJs": false,                         /* Disallow JavaScript files from being imported. */
     "resolveJsonModule": true,                /* Enable importing .json files. */
     "moduleDetection": "force",               /* Treat all files as modules, regardless of content. */
+    "types": ["@testing-library/jest-dom/vitest"],
+    "noUncheckedSideEffectImports": true,
+    "libReplacement": false,
 
     // Uncomment and resolve ASAP
     // "isolatedModules": true,               /* Ensure that each file can be safely transpiled without relying on other imports. */
@@ -40,20 +44,22 @@
     "jsx": "react-jsx",                       /* Specify what JSX code is generated. */
 
     /* Path Aliases */
-    "baseUrl": ".",
     "paths": {
-      "@ui/*": ["src/components/ui/*"],
-      "@blocks/*": ["src/components/blocks/*"],
-      "@components/*": ["src/components/*"],
-      "@contexts/*": ["src/contexts/*"],
-      "@hooks/*": ["src/hooks/*"],
-      "@providers/*": ["src/providers/*"],
-      "@utils/*": ["src/utils/*"],
-      "@internal-types/*": ["src/types/*"],
-      "@schemas/*": ["src/schemas/*"],
-      "@views/*": ["src/views/*"],
-      "@icons/*": ["src/icons/*"],
-      "@assets/*": ["src/assets/*"]
+      "@ui/*": ["./src/components/ui/*"],
+      "@blocks/*": ["./src/components/blocks/*"],
+      "@components/*": ["./src/components/*"],
+      "@contexts/*": ["./src/contexts/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@providers/*": ["./src/providers/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@internal-types/*": ["./src/types/*"],
+      "@schemas/*": ["./src/schemas/*"],
+      "@views/*": ["./src/views/*"],
+      "@icons/*": ["./src/icons/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@msw/*": ["./src/msw/*"],
+      "@fixtures/*": ["./src/fixtures/*"],
+      "@test-utils/*": ["./src/test-utils/*"],
     }
   },
 

@@ -35,6 +35,7 @@
     box-sizing: border-box;
     width: 120px;
     padding: var(--spacing-xs) var(--spacing-sm);
+    white-space: nowrap;
   }
 
   .Layer__MatchForm__Table__amount {
@@ -62,23 +63,6 @@
     padding: var(--spacing-xs) var(--spacing-sm);
     white-space: nowrap;
     text-overflow: ellipsis;
-
-    .Layer__tooltip-trigger {
-      display: flex;
-    }
-
-    .Layer__MatchForm__Table__desc-tooltip {
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-      max-width: 100%;
-    }
-  }
-
-  .Layer__text--error {
-    padding: var(--spacing-2xs) 0;
-    padding-bottom: var(--spacing-md);
-    margin: 0;
   }
 }
 
@@ -87,10 +71,6 @@
   align-items: stretch;
   overflow: hidden;
   cursor: pointer;
-
-  .Layer__tooltip-trigger {
-    padding-top: 0;
-  }
 
   & > div {
     display: flex;
@@ -219,15 +199,12 @@
     display: flex;
     justify-content: space-between;
     width: 100% !important;
+    white-space: nowrap;
   }
 
   .Layer__MatchForm__Table__desc {
     gap: var(--spacing-sm);
     justify-content: space-between;
-
-    & > span:first-child {
-      width: calc(100% - 220px);
-    }
 
     & > span:nth-child(2) {
       flex: 0;

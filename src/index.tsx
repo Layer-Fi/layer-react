@@ -4,12 +4,8 @@
 ==========================================================
 */
 
-/* ------------------ Onboarding ------------------ */
-export { Onboarding } from './components/Onboarding/Onboarding'
-
 /* ------------------ Bank Accounts & Transactions ------------------ */
 export { BankTransactions } from './components/BankTransactions/BankTransactions'
-export { Integrations } from './components/Integrations/Integrations'
 export { LinkedAccounts } from './components/LinkedAccounts/LinkedAccounts'
 
 /* ------------------ Reporting ------------------ */

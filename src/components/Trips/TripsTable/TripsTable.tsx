@@ -4,7 +4,7 @@ import type { TFunction } from 'i18next'
 import { Edit, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type Trip, type TripPurpose } from '@schemas/trip'
+import { type Trip } from '@schemas/trip'
 import { formatCalendarDate } from '@utils/time/timeUtils'
 import { getVehicleDisplayName } from '@utils/vehicles'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -73,7 +73,7 @@ const getColumnConfig = (
   {
     id: TripColumns.Purpose,
     header: t('common:label.purpose', 'Purpose'),
-    cell: (row: TripsRowType) => getPurposeLabel(row.original.purpose as TripPurpose, t),
+    cell: (row: TripsRowType) => getPurposeLabel(row.original.purpose, t),
   },
   {
     id: TripColumns.Address,

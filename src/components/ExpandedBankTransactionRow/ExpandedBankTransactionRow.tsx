@@ -33,6 +33,8 @@ import {
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useBankTransactionTagVisibility } from '@contexts/BankTransactionTagVisibilityContext/BankTransactionTagVisibilityContext'
 import { Button } from '@ui/Button/Button'
+import { Input } from '@ui/Input/Input'
+import { InputGroup } from '@ui/Input/InputGroup'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
 import { Span } from '@ui/Typography/Text'
@@ -40,10 +42,8 @@ import { BankTransactionCategoryComboBox } from '@components/BankTransactionCate
 import { useBankTransactionCustomerVendorVisibility } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorVisibilityProvider'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { TextButton } from '@components/Button/TextButton'
 import { CustomerVendorSelector } from '@components/CustomerVendorSelector/CustomerVendorSelector'
 import { AmountInput } from '@components/Input/AmountInput'
-import { Input } from '@components/Input/Input'
 import { MatchForm } from '@components/MatchForm/MatchForm'
 import { Separator } from '@components/Separator/Separator'
 import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
@@ -343,23 +343,26 @@ export const ExpandedBankTransactionRow = ({
                         )}
                       >
                         {effectiveSplits.length > 1 && (
-                          <Input
-                            disabled={true}
-                            leftText={t('common:label.total', 'Total')}
-                            inputMode='numeric'
-                            value={formatCurrencyFromCents(effectiveSplits.reduce((x, { amount }) => x + amount, 0))}
-                          />
+                          <InputGroup
+                            className='Layer__expanded-bank-transaction-row__total-input'
+                            leadingText={t('common:label.total', 'Total')}
+                          >
+                            <Input
+                              inset
+                              disabled={true}
+                              inputMode='numeric'
+                              value={formatCurrencyFromCents(effectiveSplits.reduce((x, { amount }) => x + amount, 0))}
+                            />
+                          </InputGroup>
                         )}
                         {isCategorizationEnabled
                           ? (
                             <div className='Layer__expanded-bank-transaction-row__splits-buttons'>
                               {effectiveSplits.length > 1
                                 ? (
-                                  <TextButton
-                                    onClick={addSplit}
-                                  >
+                                  <Button variant='text' underline onPress={addSplit}>
                                     {t('bankTransactions:action.add_new_split', 'Add new split')}
-                                  </TextButton>
+                                  </Button>
                                 )
                                 : (
                                   <Button

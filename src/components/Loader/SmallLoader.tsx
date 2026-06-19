@@ -1,5 +1,7 @@
 import { Loader } from 'lucide-react'
 
+import './smallLoader.scss'
+
 export interface SmallLoaderProps {
   size?: number
 }

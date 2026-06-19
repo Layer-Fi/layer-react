@@ -2,10 +2,10 @@ import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
+import { BackButton } from '@ui/Button/BackButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { BackButton } from '@components/Button/BackButton'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
@@ -22,7 +22,7 @@ export const LedgerAccountPanelHeader = ({ onClose }: LedgerAccountHeaderProps) 
     <Header>
       <HeaderRow>
         <HeaderCol>
-          <BackButton onClick={onClose} />
+          <BackButton onPress={onClose} />
           <VStack align='start'>
             <Span weight='bold'>{selectedAccount?.name ?? ''}</Span>
             <HStack gap='xs' align='center'>

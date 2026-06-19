@@ -2,8 +2,7 @@
 .Layer__Portal,
 .Layer__view,
 .Layer__select__menu-portal,
-.Layer__tooltip,
-.Layer__UI__tooltip,
+.Layer__UI__Tooltip,
 .Layer__toasts-container,
 .Layer__drawer,
 .Layer__variables,
@@ -99,8 +98,6 @@
   --text-xl: 20px;
   --text-heading: 24px;
   --text-heading-secondary: 20px;
-  --text-heading-page: var(--text-heading);
-  --text-heading-view: var(--text-heading-secondary);
   --text-heading-2xs: 12px;
   --text-heading-xs: 14px;
   --text-heading-sm: 16px;
@@ -211,8 +208,7 @@
   .Layer__Portal,
   .Layer__view,
   .Layer__select__menu-portal,
-  .Layer__tooltip,
-  .Layer__UI__tooltip,
+  .Layer__UI__Tooltip,
   .Layer__toasts-container,
   .Layer__drawer,
   .Layer__variables,

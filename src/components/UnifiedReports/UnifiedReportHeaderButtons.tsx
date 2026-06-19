@@ -26,8 +26,8 @@ export const UnifiedReportHeaderButtons = ({ variant }: UnifiedReportHeaderButto
       })}
     >
       {isMobile && <ReportsMobileSelectionDrawer />}
-      <ExpandableDataTableToggleButton iconOnly={isMobile} />
-      <UnifiedReportDownloadButton iconOnly={isMobile} />
+      <ExpandableDataTableToggleButton icon={isMobile} />
+      <UnifiedReportDownloadButton icon={isMobile} />
     </HStack>
   )
 }

@@ -1,13 +1,15 @@
 import { createContext, type ReactNode, useCallback, useState } from 'react'
 
-import { type TableContextProps } from '@internal-types/table'
+export interface TableContextProps {
+  expandedRows: string[]
+  setExpandedRows: (rowKey: string) => void
+  expandAllRows: (rowKeys: string[]) => void
+}
 
 const defaultValue: TableContextProps = {
   expandedRows: [],
   setExpandedRows: () => {},
   expandAllRows: () => {},
-  expandedAllRows: false,
-  setExpandedAllRows: () => {},
 }
 
 export const TableContext = createContext<TableContextProps>(defaultValue)
@@ -18,7 +20,6 @@ interface TableProviderProps {
 
 export const TableProvider: React.FC<TableProviderProps> = ({ children }) => {
   const [expandedRows, setExpandedRowsState] = useState<string[]>([])
-  const [expandedAllRows, setExpandedAllRows] = useState(false)
 
   const toggleRow = useCallback((rowKey: string) => {
     setExpandedRowsState((prevRows) => {
@@ -41,8 +42,6 @@ export const TableProvider: React.FC<TableProviderProps> = ({ children }) => {
     expandedRows,
     setExpandedRows: toggleRow,
     expandAllRows,
-    expandedAllRows,
-    setExpandedAllRows,
   }
 
   return (

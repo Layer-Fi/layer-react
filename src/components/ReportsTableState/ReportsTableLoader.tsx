@@ -1,11 +1,5 @@
-import { useTranslation } from 'react-i18next'
-
-import { TableCellAlign } from '@internal-types/table'
+import { ReportsTable, ReportsTableHeader } from '@components/ReportsTable/ReportsTable'
 import { SkeletonTableLoader } from '@components/SkeletonTableLoader/SkeletonTableLoader'
-import { Table } from '@components/Table/Table'
-import { TableCell } from '@components/TableCell/TableCell'
-import { TableHead } from '@components/TableHead/TableHead'
-import { TableRow } from '@components/TableRow/TableRow'
 
 type ReportsTableLoaderProps = {
   typeColumnHeader?: string
@@ -18,21 +12,13 @@ export const ReportsTableLoader = ({
   totalColumnHeader,
   showHeader = true,
 }: ReportsTableLoaderProps) => {
-  const { t } = useTranslation()
-  const typeColumnHeaderText = typeColumnHeader ?? t('common:label.type', 'Type')
-  const totalColumnHeaderText = totalColumnHeader ?? t('common:label.total', 'Total')
-
   return (
-    <Table borderCollapse='collapse'>
+    <ReportsTable>
       {showHeader && (
-        <TableHead>
-          <TableRow rowKey='report-table-loader-header' isHeadRow>
-            <TableCell isHeaderCell>{typeColumnHeaderText}</TableCell>
-            <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
-              {totalColumnHeaderText}
-            </TableCell>
-          </TableRow>
-        </TableHead>
+        <ReportsTableHeader
+          typeColumnHeader={typeColumnHeader}
+          totalColumnHeader={totalColumnHeader}
+        />
       )}
       <SkeletonTableLoader
         rows={6}
@@ -41,6 +27,6 @@ export const ReportsTableLoader = ({
           { colSpan: 1, parts: 2 },
         ]}
       />
-    </Table>
+    </ReportsTable>
   )
 }

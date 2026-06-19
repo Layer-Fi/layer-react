@@ -7,6 +7,8 @@ import {
 } from '@ui/Table/Table'
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
+import './dataTableSkeleton.scss'
+
 type DataTableSkeletonProps = {
   nonAria: boolean
   numColumns: number
@@ -50,7 +52,7 @@ export const DataTableSkeleton = ({ numColumns, nonAria }: DataTableSkeletonProp
               ? (rowIndex - 2) * 10
               : 0
             return (
-              <Cell key={`loading-${rowIndex}-${column.index}`} className='Layer__skeleton-loader__row' nonAria={nonAria}>
+              <Cell key={`loading-${rowIndex}-${column.index}`} className='Layer__DataTableSkeleton__Cell' nonAria={nonAria}>
                 <SkeletonLoader width={`${100 - trim}%`} height='20px' />
               </Cell>
             )

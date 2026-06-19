@@ -100,7 +100,7 @@ export function useUpsertTimeEntry(props: UseUpsertTimeEntryProps) {
 
       return updateTimeEntry(apiUrl, accessToken, {
         params: { businessId, timeEntryId },
-        body: body as UpdateTimeEntryBody,
+        body: body,
       }).then(Schema.decodeUnknownPromise(UpsertTimeEntryReturnSchema))
     },
     {

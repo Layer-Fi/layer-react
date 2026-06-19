@@ -30,6 +30,7 @@ export type ComboBoxSlots<T extends ComboBoxOption> = {
 
 export type BaseComboBoxProps<T extends ComboBoxOption> = {
   className?: string
+  name?: string
 
   onInputValueChange?: (value: string) => void
 

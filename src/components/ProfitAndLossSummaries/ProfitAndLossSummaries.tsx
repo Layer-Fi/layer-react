@@ -1,23 +1,10 @@
-import { type ReactNode, useContext, useMemo } from 'react'
-import { sub } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
-import { DateFormat } from '@utils/i18n/date/patterns'
-import { calculatePercentageChange } from '@utils/percentageChange'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
-import { useProfitAndLossSummaries } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-summaries/useProfitAndLossSummaries'
-import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import {
-  ProfitAndLossSummariesList,
-  ProfitAndLossSummariesListItem,
-} from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesList'
-import {
-  ProfitAndLossSummariesMiniChart,
-  toMiniChartData,
-} from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesMiniChart'
-import { ProfitAndLossSummariesSummary } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesSummary'
+  SummariesContent,
+  type SummariesTiles,
+} from '@components/ProfitAndLossSummaries/internal/SummariesContent'
 import { TransactionsToReview } from '@views/AccountingOverview/internal/TransactionsToReview'
 
 export interface ProfitAndLossSummariesStringOverrides {
@@ -26,14 +13,12 @@ export interface ProfitAndLossSummariesStringOverrides {
   netProfitLabel?: string
 }
 
-const SECTION_CLASS_NAME = 'Layer__ProfitAndLossSummaries'
-const SECTION_CLASS_NAMES = `${SECTION_CLASS_NAME} Layer__component`
-
-type CommonProfitAndLossSummariesProps = {
+type ProfitAndLossSummariesProps = {
   actionable?: boolean
   stringOverrides?: ProfitAndLossSummariesStringOverrides
   chartColorsList?: string[]
   variants?: Variants
+  onTransactionsToReviewClick?: () => void
   /**
    * @deprecated Use `stringOverrides.revenueLabel` instead
    */
@@ -44,170 +29,41 @@ type CommonProfitAndLossSummariesProps = {
   vertical?: boolean
 }
 
-type Internal_ProfitAndLossSummariesProps = CommonProfitAndLossSummariesProps & {
-  slots?: {
-    unstable_AdditionalListItems?: [ReactNode]
-  }
-}
-
-function Internal_ProfitAndLossSummaries({
+export function ProfitAndLossSummaries({
   actionable = false,
   revenueLabel,
   stringOverrides,
   chartColorsList,
-  slots,
   variants,
-}: Internal_ProfitAndLossSummariesProps) {
-  const { t } = useTranslation()
-  const { formatDate } = useIntlFormatter()
-  const {
-    data,
-    isLoading,
-    setSidebarScope,
-    sidebarScope,
-  } = useContext(ProfitAndLossContext)
-
-  const { startDate, endDate: _endDate } = useGlobalDateRange({ dateSelectionMode: 'month' })
-
-  const previousMonthStart = sub(startDate, { months: 1 })
-  const { data: previousData } = useProfitAndLossSummaries({
-    startYear: previousMonthStart.getFullYear(),
-    startMonth: previousMonthStart.getMonth() + 1,
-    endYear: previousMonthStart.getFullYear(),
-    endMonth: previousMonthStart.getMonth() + 1,
-  })
-
-  const { revenueChartData, expensesChartData } = useMemo(
-    () => ({
-      revenueChartData: toMiniChartData({ scope: 'revenue', data }),
-      expensesChartData: toMiniChartData({ scope: 'expenses', data }),
-    }),
-    [data],
-  )
-
-  const effectiveData = useMemo(
-    () => data ?? { income: { value: 0 }, netProfit: 0 },
-    [data],
-  )
-
-  const comparisonData = useMemo(() => {
-    const previousMonthData = previousData?.months?.[0]
-
-    if (!previousMonthData) {
-      return null
-    }
-
-    const currentRevenue = effectiveData.income.value ?? 0
-    const previousRevenue = previousMonthData.income ?? 0
-    const currentExpenses = (effectiveData.income.value ?? 0) - effectiveData.netProfit
-    const previousExpenses = previousMonthData.totalExpenses ?? 0
-
-    const currentNetProfit = effectiveData.netProfit ?? 0
-    const previousNetProfit = previousMonthData.netProfit ?? 0
-
-    return {
-      revenuePercentChange: calculatePercentageChange(currentRevenue, previousRevenue),
-      expensesPercentChange: calculatePercentageChange(currentExpenses, previousExpenses),
-      netProfitPercentChange: calculatePercentageChange(currentNetProfit, previousNetProfit),
-      comparisonMonth: formatDate(previousMonthStart, DateFormat.MonthShort),
-    }
-  }, [effectiveData, formatDate, previousData, previousMonthStart])
-
-  const {
-    revenuePercentChange = null,
-    expensesPercentChange = null,
-    netProfitPercentChange = null,
-    comparisonMonth = null,
-  } = comparisonData ?? {}
-
-  const { unstable_AdditionalListItems = [] } = slots ?? {}
-  const listItemCount = unstable_AdditionalListItems.length + 3
-
-  return (
-    <section className={SECTION_CLASS_NAMES}>
-      <ProfitAndLossSummariesList itemCount={listItemCount}>
-        <ProfitAndLossSummariesListItem
-          isActive={sidebarScope === 'revenue'}
-          onClick={actionable ? () => setSidebarScope('revenue') : undefined}
-        >
-          <ProfitAndLossSummariesSummary
-            label={stringOverrides?.revenueLabel || revenueLabel || t('common:label.revenue', 'Revenue')}
-            amount={effectiveData.income.value ?? 0}
-            isLoading={isLoading}
-            percentChange={revenuePercentChange}
-            comparisonMonth={comparisonMonth ?? undefined}
-            slots={{
-              Chart: (
-                <ProfitAndLossSummariesMiniChart
-                  data={revenueChartData}
-                  chartColorsList={chartColorsList}
-                  variants={variants}
-                />
-              ),
-            }}
-            variants={variants}
-          />
-        </ProfitAndLossSummariesListItem>
-        <ProfitAndLossSummariesListItem
-          isActive={sidebarScope === 'expenses'}
-          onClick={actionable ? () => setSidebarScope('expenses') : undefined}
-        >
-          <ProfitAndLossSummariesSummary
-            label={stringOverrides?.expensesLabel || t('common:label.expenses', 'Expenses')}
-            amount={(effectiveData?.income?.value ?? 0) - effectiveData.netProfit}
-            isLoading={isLoading}
-            percentChange={expensesPercentChange}
-            comparisonMonth={comparisonMonth ?? undefined}
-            isExpense
-            slots={{
-              Chart: (
-                <ProfitAndLossSummariesMiniChart
-                  data={expensesChartData}
-                  chartColorsList={chartColorsList}
-                  variants={variants}
-                />
-              ),
-            }}
-            variants={variants}
-          />
-        </ProfitAndLossSummariesListItem>
-        <ProfitAndLossSummariesListItem>
-          <ProfitAndLossSummariesSummary
-            label={stringOverrides?.netProfitLabel || t('common:label.net_profit', 'Net Profit')}
-            amount={data?.netProfit ?? 0}
-            variants={variants}
-            isLoading={isLoading}
-            percentChange={netProfitPercentChange}
-            comparisonMonth={comparisonMonth ?? undefined}
-          />
-        </ProfitAndLossSummariesListItem>
-        {unstable_AdditionalListItems.map((item, index) => (
-          <ProfitAndLossSummariesListItem key={index}>
-            {item}
-          </ProfitAndLossSummariesListItem>
-        ))}
-      </ProfitAndLossSummariesList>
-    </section>
-  )
-}
-
-type ProfitAndLossSummariesProps = CommonProfitAndLossSummariesProps & {
-  onTransactionsToReviewClick?: () => void
-}
-
-export function ProfitAndLossSummaries({
   onTransactionsToReviewClick,
-  ...restProps
 }: ProfitAndLossSummariesProps) {
+  const { t } = useTranslation()
+
+  const tiles: SummariesTiles = {
+    revenue: {
+      label: stringOverrides?.revenueLabel || revenueLabel || t('common:label.revenue', 'Revenue'),
+    },
+    expenses: {
+      label: stringOverrides?.expensesLabel || t('common:label.expenses', 'Expenses'),
+    },
+    net: {
+      label: stringOverrides?.netProfitLabel || t('common:label.net_profit', 'Net Profit'),
+    },
+  }
+
   return (
-    <Internal_ProfitAndLossSummaries
-      {...restProps}
+    <SummariesContent
+      mode='profitAndLoss'
+      tiles={tiles}
+      actionable={actionable}
+      chartColorsList={chartColorsList}
+      variants={variants}
       slots={{
         unstable_AdditionalListItems: onTransactionsToReviewClick
           ? [
             <TransactionsToReview
               key='transactions-to-review'
-              variants={restProps.variants}
+              variants={variants}
               onClick={onTransactionsToReviewClick}
             />,
           ]

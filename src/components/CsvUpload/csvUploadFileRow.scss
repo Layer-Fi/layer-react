@@ -1,0 +1,11 @@
+.Layer__csv-upload__file-row {
+  height: 2rem;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-3xs);
+  border: 1px solid var(--color-base-300);
+  background: var(--color-base-100);
+}
+
+.Layer__csv-upload__file-row--drop-target {
+  height: 6rem;
+}

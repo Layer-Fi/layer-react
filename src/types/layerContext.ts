@@ -10,6 +10,7 @@ export type LayerContextValues = {
   business?: Business
   theme?: LayerThemeConfig
   colors: ColorsPalette
+  /** @deprecated No longer used; the Onboarding component that consumed this has been removed. */
   onboardingStep?: OnboardingStep
   toasts: (ToastProps & { isExiting: boolean })[]
   eventCallbacks?: EventCallbacks
@@ -29,6 +30,7 @@ export type LayerContextHelpers = {
   setDarkColor: (color?: ColorConfig) => void
   setTextColor: (color?: ColorConfig) => void
   setColors: (colors?: LayerThemeConfigColors) => void
+  /** @deprecated No longer used; the Onboarding component that consumed this has been removed. */
   setOnboardingStep: (value: OnboardingStep) => void
   addToast: (toast: ToastProps) => void
   removeToast: (toast: ToastProps) => void
@@ -84,6 +86,7 @@ export interface LayerThemeConfig {
   colors?: LayerThemeConfigColors
 }
 
+/** @deprecated No longer used; the Onboarding component that consumed this has been removed. */
 export type OnboardingStep = undefined | 'connectAccount' | 'complete'
 
 export enum LayerContextActionName {

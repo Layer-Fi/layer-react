@@ -21,6 +21,8 @@ import { View } from '@components/View/View'
 import { ReportsToggle } from '@views/Reports/ReportsToggle'
 import type { TimeRangePickerConfig } from '@views/Reports/reportTypes'
 
+import './reports.scss'
+
 export interface ReportsStringOverrides {
   title?: string
   downloadButton?: ProfitAndLossDownloadButtonStringOverrides

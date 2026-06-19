@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 
+import './tasksHeader.scss'
+
 export const TasksHeader = ({
   tasksHeader,
 }: {

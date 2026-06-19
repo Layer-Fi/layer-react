@@ -1,6 +1,8 @@
 import classNames from 'classnames'
 import type { PropsWithChildren } from 'react'
 
+import './skeletonLoader.scss'
+
 export interface SkeletonLoaderProps {
   width?: string
   height?: string

@@ -9,7 +9,6 @@ import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { TextSize } from '@components/Typography/Text'
 import { useVehicleForm } from '@components/VehicleManagement/VehicleForm/useVehicleForm'
 
 import './vehicleForm.scss'
@@ -46,7 +45,7 @@ export const VehicleForm = (props: VehicleFormProps) => {
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize={TextSize.md}
+                  titleSize='md'
                   inline
                 />
               </HStack>

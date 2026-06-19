@@ -1,5 +1,7 @@
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
+import './skeletonTableLoader.scss'
+
 interface SkeletonTableLoaderProps {
   rows: number
   cols: Array<{

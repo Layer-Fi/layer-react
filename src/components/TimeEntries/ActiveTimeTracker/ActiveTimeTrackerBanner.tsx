@@ -84,7 +84,7 @@ export const ActiveTimeTrackerBanner = ({ activeEntry, timerDisplayValue }: Acti
           <form.Subscribe selector={s => s.values.selectedServiceId}>
             {selectedServiceId => (
               <Button
-                variant='outlined-light'
+                variant='outlined'
                 onPress={actions.completeTimer}
                 isDisabled={state.isCancelling || state.isStopping || state.isUpdating || !selectedServiceId}
               >

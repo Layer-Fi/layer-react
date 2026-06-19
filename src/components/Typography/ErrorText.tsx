@@ -1,7 +1,7 @@
-import { Text, type TextProps } from '@components/Typography/Text'
+import { type PropsWithChildren } from 'react'
 
-export type ErrorTextProps = TextProps
+import { P, type TextStyleProps } from '@ui/Typography/Text'
 
-export const ErrorText = ({ className, ...props }: ErrorTextProps) => (
-  <Text {...props} status='error' className={className} />
-)
+export type ErrorTextProps = PropsWithChildren<Omit<TextStyleProps, 'className' | 'status'>>
+
+export const ErrorText = (props: ErrorTextProps) => <P {...props} status='error' />

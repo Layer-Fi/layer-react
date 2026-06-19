@@ -17,7 +17,7 @@ export function usePaginatedList<T>({ data, pageSize, initialPage = 0, onSetPage
     return data.slice(
       effectivePageIndex * pageSize,
       (effectivePageIndex + 1) * pageSize,
-    ) as ReadonlyArray<T>
+    )
   }, [data, effectivePageIndex, pageSize])
 
   const setPage = useCallback((pageIndex: number) => {

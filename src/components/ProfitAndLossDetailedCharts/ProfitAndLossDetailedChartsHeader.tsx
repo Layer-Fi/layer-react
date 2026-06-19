@@ -1,13 +1,12 @@
 import classNames from 'classnames'
-import { XIcon } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { Button } from '@ui/Button/Button'
+import { BackButton } from '@ui/Button/BackButton'
+import { CloseButton as UICloseButton } from '@ui/Button/CloseButton'
 import { VStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
-import { BackButton } from '@components/Button/BackButton'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
 import './profitAndLossDetailedChartsHeader.scss'
@@ -21,9 +20,9 @@ type HeaderTitleProps = {
 
 const HeaderTitle = ({ title, dateLabel, isTablet, showDatePicker }: HeaderTitleProps) => (
   <VStack className='Layer__ProfitAndLossDetailedChartsHeader__head'>
-    <Span size='lg' weight='bold'>
+    <Heading level={3} size='sm'>
       {title}
-    </Span>
+    </Heading>
     <Span
       size='sm'
       variant={isTablet ? undefined : 'subtle'}
@@ -43,24 +42,13 @@ enum CloseButtonVariant {
 type CloseButtonProps = {
   variant: CloseButtonVariant
   onClose: () => void
-  ariaLabel: string
 }
-const CloseButton = ({ variant, onClose, ariaLabel }: CloseButtonProps) => {
+const CloseButton = ({ variant, onClose }: CloseButtonProps) => {
   if (variant === CloseButtonVariant.BackButton) {
-    return <BackButton onClick={onClose} aria-label={ariaLabel} />
+    return <BackButton onPress={onClose} />
   }
 
-  return (
-    <Button
-      icon
-      inset
-      variant='outlined'
-      onPress={onClose}
-      aria-label={ariaLabel}
-    >
-      <XIcon />
-    </Button>
-  )
+  return <UICloseButton onPress={onClose} />
 }
 
 type ProfitAndLossDetailedChartsHeaderProps = {
@@ -80,7 +68,6 @@ export const ProfitAndLossDetailedChartsHeader = ({
   showDatePicker = false,
   onClose,
 }: ProfitAndLossDetailedChartsHeaderProps) => {
-  const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
   const isTablet = mode === 'tablet'
 
@@ -94,7 +81,6 @@ export const ProfitAndLossDetailedChartsHeader = ({
   const closeButtonProps: CloseButtonProps = {
     variant: isTablet ? CloseButtonVariant.BackButton : CloseButtonVariant.OutlinedIconButton,
     onClose,
-    ariaLabel: t('common:action.close_label', 'Close'),
   }
 
   return (

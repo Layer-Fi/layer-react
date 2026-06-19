@@ -7,6 +7,7 @@ import { type MoneyFormat } from '@internal-types/general'
 import { translationKey } from '@utils/i18n/translationKey'
 import { type PnlTagFilter } from '@hooks/features/profitAndLoss/useProfitAndLoss'
 import type { DateSelectionMode } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { HStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactions } from '@components/BankTransactions/BankTransactions'
 import { Container } from '@components/Container/Container'
@@ -99,7 +100,7 @@ export const ProjectProfitabilityView = ({
       showHeader={showTitle}
       viewClassName='Layer__project-view'
     >
-      <div className='Layer__component Layer__header__actions'>
+      <HStack className='Layer__component' gap='sm' align='center' justify='space-between'>
         <div className='Layer__component'>
           <Toggle
             ariaLabel={t('common:label.project_view', 'Project view')}
@@ -127,7 +128,7 @@ export const ProjectProfitabilityView = ({
             setPnlTagFilter(getTagFilter(selectedOption))
           }}
         />
-      </div>
+      </HStack>
       <Container name='project'>
         <>
           {activeTab === 'overview' && (
@@ -135,7 +136,6 @@ export const ProjectProfitabilityView = ({
               stringOverrides={{ header: t('common:label.project_overview', 'Project Overview') }}
               tagFilter={tagFilter ? tagFilter : undefined}
               onTransactionsToReviewClick={() => setActiveTab('transactions')}
-              enableOnboarding={false}
               showTitle={false}
             />
           )}

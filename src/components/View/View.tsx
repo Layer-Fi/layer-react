@@ -6,6 +6,8 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Panel } from '@components/Panel/Panel'
 import { ViewHeader } from '@components/ViewHeader/ViewHeader'
 
+import './view.scss'
+
 export interface ViewProps {
   children: ReactNode
   title?: string

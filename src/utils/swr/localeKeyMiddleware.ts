@@ -24,6 +24,6 @@ export const useLocalizedKey = () => {
 
   return useCallback(<Key extends Record<string, unknown>>(key: Key | null | undefined) => {
     if (!key) return
-    return { ...key, _locale: locale as string }
+    return { ...key, _locale: locale }
   }, [locale])
 }

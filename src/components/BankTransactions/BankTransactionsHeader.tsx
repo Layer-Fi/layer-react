@@ -18,21 +18,22 @@ import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/la
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+import { DownloadButton as DownloadButtonComponent } from '@ui/Button/DownloadButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
+import { Heading } from '@ui/Typography/Heading'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
 import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
 import { BankTransactionsTableContent } from '@components/BankTransactions/constants'
 import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
 import { BulkActionsModule } from '@components/BulkActionsModule/BulkActionsModule'
-import { ButtonVariant } from '@components/Button/Button'
-import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
 import { Header } from '@components/Container/Header'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 import { SearchField } from '@components/SearchField/SearchField'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
-import { Heading, HeadingSize } from '@components/Typography/Heading'
 import InvisibleDownload from '@components/utility/InvisibleDownload'
+
+import './bankTransactionsHeader.scss'
 
 export interface BankTransactionsHeaderProps {
   shiftStickyHeader: number
@@ -99,13 +100,13 @@ function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
 
 const DownloadButton = ({
   downloadButtonTextOverride,
-  iconOnly,
-  disabled,
+  icon,
+  isDisabled,
   isListView = false,
 }: {
   downloadButtonTextOverride?: string
-  iconOnly?: boolean
-  disabled?: boolean
+  icon?: boolean
+  isDisabled?: boolean
   isListView?: boolean
 }) => {
   const { handleDownloadTransactions, invisibleDownloadRef, isMutating, error } = useHandleDownloadTransactions({ isListView })
@@ -113,13 +114,12 @@ const DownloadButton = ({
   return (
     <>
       <DownloadButtonComponent
-        variant={ButtonVariant.secondary}
-        iconOnly={iconOnly}
-        onClick={handleDownloadTransactions}
-        isDownloading={isMutating}
+        icon={icon}
+        onPress={handleDownloadTransactions}
+        isPending={isMutating}
         requestFailed={Boolean(error)}
         text={downloadButtonTextOverride}
-        disabled={disabled}
+        isDisabled={isDisabled}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>
@@ -128,7 +128,6 @@ const DownloadButton = ({
 
 export const BankTransactionsHeader = ({
   shiftStickyHeader,
-  asWidget,
   tableContentMode,
   stringOverrides,
   isSyncing,
@@ -177,10 +176,7 @@ export const BankTransactionsHeader = ({
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
       <HStack align='center'>
-        <Heading
-          className='Layer__bank-transactions__title'
-          size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
-        >
+        <Heading level={3} size='sm'>
           {stringOverrides?.header || t('common:label.transactions', 'Transactions')}
         </Heading>
         {isSyncing && (
@@ -205,7 +201,6 @@ export const BankTransactionsHeader = ({
   ), [
     t,
     activationDate,
-    asWidget,
     isSyncing,
     isListView,
     monthPickerDate,
@@ -335,8 +330,8 @@ export const BankTransactionsHeader = ({
         <HStack slot='download-upload' justify='center' gap='xs'>
           <DownloadButton
             downloadButtonTextOverride={stringOverrides?.downloadButton}
-            iconOnly={isListView}
-            disabled={showBulkActions}
+            icon={isListView}
+            isDisabled={showBulkActions}
             isListView={isListView}
           />
           <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />

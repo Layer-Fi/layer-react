@@ -4,8 +4,10 @@ import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { IconButton } from '@components/Button/IconButton'
+import { Button } from '@ui/Button/Button'
 import { SmallLoader } from '@components/Loader/SmallLoader'
+
+import './syncingComponent.scss'
 
 interface SyncingComponentProps {
   titleVariant?: 'default' | 'historical'
@@ -80,7 +82,9 @@ export const SyncingComponent = ({
             <SmallLoader />
           )
           : (
-            <IconButton icon={<RefreshCcw size={18} />} onClick={handleRefresh} />
+            <Button variant='ghost' icon onPress={handleRefresh} aria-label={t('common:action.refresh_label', 'Refresh')}>
+              <RefreshCcw size={18} />
+            </Button>
           )}
       </div>
       {!hideContent && (

@@ -12,8 +12,8 @@ export const createTransformedEnumSchema = <T extends Record<string, string>>(
     {
       strict: false,
       decode: (input) => {
-        if (Object.values(enumObject).includes(input as T[keyof T])) {
-          return input as T[keyof T]
+        if (Object.values(enumObject).includes(input)) {
+          return input
         }
         return defaultValue
       },

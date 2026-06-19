@@ -1,0 +1,29 @@
+.Layer__tasks-month-selector__month {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 32px;
+  padding: 0 var(--spacing-sm);
+  border-radius: var(--border-radius-xs);
+  box-shadow: 0 1px 2px 0 var(--base-transparent-6), 0 0 0 1px var(--color-base-300);
+  background: var(--color-base-0);
+  cursor: pointer;
+  container-type: inline-size;
+
+  &[data-active] {
+    box-shadow: 0 0 0 1px var(--color-base-800), 0 0 0 3px var(--color-base-300);
+  }
+
+  &[data-disabled] {
+    cursor: not-allowed;
+  }
+
+  &:hover {
+    box-shadow: 0 0 0 1px var(--color-base-500), 0 0 0 3px var(--color-base-300);
+  }
+
+  .Layer__P {
+    min-width: 24px;
+  }
+}

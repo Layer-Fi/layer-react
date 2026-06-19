@@ -6,13 +6,17 @@ import { AccountConfirmationStoreProvider } from '@providers/AccountConfirmation
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { OpeningBalanceModalProvider } from '@providers/OpeningBalanceModalProvider/OpeningBalanceModalProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { HStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
 import { Container } from '@components/Container/Container'
 import { Header } from '@components/Container/Header'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { HostedLinkErrorBanner } from '@components/LinkedAccounts/HostedLinkErrorBanner'
 import { LinkedAccountsContent } from '@components/LinkedAccounts/LinkedAccountsContent'
 import { OpeningBalanceModal } from '@components/LinkedAccounts/OpeningBalanceModal/OpeningBalanceModal'
 import { Loader } from '@components/Loader/Loader'
-import { Heading, HeadingSize } from '@components/Typography/Heading'
+
+import './linkedAccounts.scss'
 
 const COMPONENT_NAME = 'linked-accounts'
 
@@ -59,13 +63,14 @@ export const LinkedAccountsComponent = ({
   return (
     <Container name={COMPONENT_NAME} elevated={elevated}>
       <Header className='Layer__linked-accounts__header'>
-        <Heading
-          className='Layer__linked-accounts__title'
-          size={HeadingSize.secondary}
-        >
+        <Heading level={3} size='sm'>
           {stringOverrides?.title || t('linkedAccounts:label.linked_accounts', 'Linked Accounts')}
         </Heading>
       </Header>
+
+      <HStack pi='lg'>
+        <HostedLinkErrorBanner />
+      </HStack>
 
       {isLoading && (
         <div className='Layer__linked-accounts__loader-container'>

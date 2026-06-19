@@ -7,7 +7,7 @@ import {
 } from 'react-aria-components/Checkbox'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { withRenderProp } from '@components/utility/withRenderProp'
 
 import './checkbox.scss'
@@ -64,12 +64,12 @@ export function Checkbox({ children, className, variant = 'default', size = 'sm'
 export function CheckboxWithTooltip({ tooltip, ...props }: CheckboxWithTooltipProps) {
   return (
     <div className='Layer__checkbox-wrapper'>
-      <DeprecatedTooltip disabled={!tooltip}>
-        <DeprecatedTooltipTrigger className='Layer__input-tooltip'>
+      <Tooltip isDisabled={!tooltip}>
+        <TooltipTrigger variant='fit-content'>
           <Checkbox {...props} />
-        </DeprecatedTooltipTrigger>
-        <DeprecatedTooltipContent className='Layer__tooltip'>{tooltip}</DeprecatedTooltipContent>
-      </DeprecatedTooltip>
+        </TooltipTrigger>
+        <TooltipContent>{tooltip}</TooltipContent>
+      </Tooltip>
     </div>
   )
 }

@@ -1,8 +1,10 @@
 import classNames from 'classnames'
 import { CopyIcon } from 'lucide-react'
 
+import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
-import { Button, ButtonVariant } from '@components/Button/Button'
+
+import './copyTemplateHeadersButtonGroup.scss'
 
 const copyTextToClipboard = (text: string) => {
   navigator.clipboard.writeText(text).catch(() => {})
@@ -19,11 +21,11 @@ export const CopyTemplateHeadersButtonGroup = ({ headers, className }: CopyTempl
       {Object.keys(headers).map(key => (
         <Button
           key={key}
-          onClick={() => copyTextToClipboard(headers[key])}
-          rightIcon={<CopyIcon strokeWidth={1} size={12} />}
-          variant={ButtonVariant.secondary}
+          onPress={() => copyTextToClipboard(headers[key])}
+          variant='outlined'
         >
           {headers[key]}
+          <CopyIcon strokeWidth={1} size={12} />
         </Button>
       ))}
     </HStack>

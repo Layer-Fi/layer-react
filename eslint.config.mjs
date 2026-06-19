@@ -11,7 +11,7 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort'
 
 export default tsEslint.config(
   {
-    ignores: ['dist/**', 'node_modules/**', 'vite/**', 'scripts/**', '.vim_backups/**'],
+    ignores: ['dist/**', 'node_modules/**', 'vite/**', 'scripts/**', '.vim_backups/**', '.claude/**', '**/*.gen.ts'],
   },
   js.configs.recommended,
   ...tsEslint.configs.recommendedTypeChecked,
@@ -38,6 +38,9 @@ export default tsEslint.config(
           allowDefaultProject: [
             'eslint.config.mjs',
             'i18next.config.ts',
+            'vite.config.ts',
+            'vitest.config.ts',
+            'vitest.setup.ts',
             '*.js',
             '*.cjs',
             '*.mjs',
@@ -85,12 +88,6 @@ export default tsEslint.config(
     },
   },
   {
-    files: ['**/*.ts', '**/*.tsx'],
-    rules: {
-      'no-restricted-imports': ['error', { patterns: ['*.css'] }],
-    },
-  },
-  {
     files: ['**/*.{ts,tsx,js,jsx}'],
     plugins: { import: pluginImport },
     settings: { 'import/resolver': { typescript: true, node: true } },
@@ -110,6 +107,9 @@ export default tsEslint.config(
           '@views/',
           '@icons/',
           '@assets/',
+          '@msw/',
+          '@fixtures/',
+          '@test-utils/',
         ],
         },
       ],
@@ -122,6 +122,21 @@ export default tsEslint.config(
         prefer: 'type-imports',
         fixStyle: 'inline-type-imports',
       }],
+    },
+  },
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: [
+      'src/**/*.test.ts',
+      'src/**/*.test.tsx',
+      'src/**/*.spec.ts',
+      'src/**/*.spec.tsx',
+      'src/msw/**/*',
+      'src/fixtures/**/*',
+      'src/test-utils/**/*',
+    ],
+    rules: {
+      'no-restricted-imports': ['error', { patterns: ['*.css', '@msw/*', '@fixtures/*', '@test-utils/*'] }],
     },
   },
   {
@@ -165,6 +180,12 @@ export default tsEslint.config(
 
             // Static resources
             '^(?:type:)?@assets/',
+          ],
+          [
+            // Test resources and fixtures
+            '^(?:type:)?@msw/',
+            '^(?:type:)?@fixtures/',
+            '^(?:type:)?@test-utils/',
           ],
           [
             // Styles

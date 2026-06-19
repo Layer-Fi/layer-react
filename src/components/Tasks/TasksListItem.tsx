@@ -12,10 +12,10 @@ import { useSubmitUserResponseForTask } from '@hooks/api/businesses/[business-id
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import ChevronDownFill from '@icons/ChevronDownFill'
-import { Button, ButtonVariant } from '@components/Button/Button'
+import { Button } from '@ui/Button/Button'
+import { TextArea } from '@ui/Input/TextArea'
+import { P } from '@ui/Typography/Text'
 import { FileInput } from '@components/Input/FileInput'
-import { Textarea } from '@components/Textarea/Textarea'
-import { Text, TextSize } from '@components/Typography/Text'
 
 type TasksListItemProps = {
   task: UserVisibleTask
@@ -103,15 +103,14 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
           return (
             <>
               <Button
-                variant={ButtonVariant.secondary}
-                onClick={() => setSelectedFiles(undefined)}
+                variant='outlined'
+                onPress={() => setSelectedFiles(undefined)}
               >
                 {t('common:action.cancel_label', 'Cancel')}
               </Button>
               <Button
-                variant={ButtonVariant.primary}
-                onClick={() => void submit()}
-                disabled={isUploadingDocuments}
+                onPress={() => void submit()}
+                isDisabled={isUploadingDocuments}
               >
                 {t('common:action.submit_label', 'Submit')}
               </Button>
@@ -123,8 +122,8 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
         if (task.userResponse && task.userResponse != userResponse) {
           return (
             <Button
-              variant={ButtonVariant.secondary}
-              onClick={() => {
+              variant='outlined'
+              onPress={() => {
                 void handleUpdateTaskUploadDescription({
                   taskId: task.id,
                   description: userResponse,
@@ -138,8 +137,8 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
         else {
           return (
             <Button
-              variant={ButtonVariant.secondary}
-              onClick={() => {
+              variant='outlined'
+              onPress={() => {
                 void handleDeleteUploadsOnTask({
                   taskId: task.id,
                 })
@@ -166,7 +165,7 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
             <div className='Layer__tasks-list-item__head-info__status'>
               {getIconForTask(task)}
             </div>
-            <Text size={TextSize.md}>{task.title}</Text>
+            <P variant='inherit'>{task.title}</P>
           </div>
           <ChevronDownFill
             size={16}
@@ -178,8 +177,8 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
         </div>
         <div className={taskBodyClassName}>
           <div className='Layer__tasks-list-item__body-info'>
-            <Text size={TextSize.sm}>{task.question}</Text>
-            <Textarea
+            <P size='sm' variant='inherit'>{task.question}</P>
+            <TextArea
               value={userResponse}
               placeholder={task.userResponseType === TaskUserResponseType.UploadDocument ? t('bookkeeping:label.optional_description', 'Optional description') : ''}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -213,13 +212,13 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
                 ? uploadDocumentAction
                 : (
                   <Button
-                    disabled={
+                    isDisabled={
                       isSubmittingResponse
                       || userResponse.length === 0
                       || userResponse === task.userResponse
                     }
-                    variant={ButtonVariant.secondary}
-                    onClick={() => {
+                    variant='outlined'
+                    onPress={() => {
                       void handleSubmitUserResponseForTask({ taskId: task.id, userResponse })
                         .then(() => {
                           setIsOpen(false)

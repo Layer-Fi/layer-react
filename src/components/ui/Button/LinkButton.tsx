@@ -27,6 +27,7 @@ export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
     href,
     target,
     rel,
+    underline,
     ...restProps
   }, ref) {
     const dataProperties = toDataProperties({
@@ -37,6 +38,7 @@ export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
       variant,
       'full-width': fullWidth,
       flex,
+      underline,
     })
 
     const effectiveTarget = external ? '_blank' : target

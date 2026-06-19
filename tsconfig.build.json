@@ -8,6 +8,16 @@
     "incremental": true,
     "tsBuildInfoFile": "./dist/.cache/tsconfig.build.tsbuildinfo",
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "types": []
   },
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx",
+    "src/fixtures/**/*",
+    "src/msw/**/*",
+    "src/test-utils/**/*"
+  ]
 }

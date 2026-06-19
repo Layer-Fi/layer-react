@@ -8,34 +8,4 @@
     gap: var(--spacing-3xs);
     align-items: center;
   }
-
-  &[data-status='overdue'] {
-    .Layer__due-status__title {
-      color: var(--color-info-error);
-    }
-  }
-
-  &[data-status='today'] {
-    .Layer__due-status__title {
-      color: var(--color-info-warning);
-    }
-  }
-
-  &[data-status='paid'] {
-    .Layer__due-status__title {
-      color: var(--color-info-success);
-    }
-  }
-
-  &[data-status='soon'] {
-    .Layer__due-status__title {
-      color: var(--color-base-800);
-    }
-  }
-
-  &[data-status='before'] {
-    .Layer__due-status__title {
-      color: var(--color-base-800);
-    }
-  }
 }

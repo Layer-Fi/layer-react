@@ -1,12 +1,13 @@
 import { type ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
 
+import { BackButton } from '@ui/Button/BackButton'
+import { CloseButton } from '@ui/Button/CloseButton'
 import { Heading } from '@ui/Typography/Heading'
-import { BackButton } from '@components/Button/BackButton'
-import { CloseButton } from '@components/Button/CloseButton'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
+
+import './entryDetailHeader.scss'
 
 interface EntryDetailHeaderProps {
   onClose: () => void
@@ -14,20 +15,18 @@ interface EntryDetailHeaderProps {
 }
 
 export const EntryDetailHeader = ({ onClose, title }: EntryDetailHeaderProps) => {
-  const { t } = useTranslation()
-
   return (
     <Header>
       <HeaderRow>
-        <HeaderCol className='Layer__hidden-lg Layer__hidden-xl'>
-          <BackButton onClick={onClose} />
+        <HeaderCol className='Layer__EntryDetailHeader--HiddenOnLarge'>
+          <BackButton onPress={onClose} />
           <Heading size='sm'>{title}</Heading>
         </HeaderCol>
-        <HeaderCol className='Layer__show-lg Layer__show-xl'>
+        <HeaderCol className='Layer__EntryDetailHeader--VisibleOnLarge'>
           <Heading size='sm'>{title}</Heading>
         </HeaderCol>
-        <HeaderCol className='Layer__show-lg Layer__show-xl'>
-          <CloseButton onClick={onClose} aria-label={t('common:action.close_label', 'Close')} />
+        <HeaderCol className='Layer__EntryDetailHeader--VisibleOnLarge'>
+          <CloseButton onPress={onClose} />
         </HeaderCol>
       </HeaderRow>
     </Header>

@@ -1,7 +1,9 @@
 import { type ReactNode } from 'react'
 import classNames from 'classnames'
 
-import { Heading } from '@components/Typography/Heading'
+import { Heading } from '@ui/Typography/Heading'
+
+import './viewHeader.scss'
 
 export interface ViewHeaderProps {
   title?: string
@@ -14,7 +16,7 @@ export const ViewHeader = ({ title, className, children }: ViewHeaderProps) => {
     <div className={classNames('Layer__view-header', className)}>
       <div className='Layer__view-header__content'>
         {title && (
-          <Heading className='Layer__view-header__title'>{title}</Heading>
+          <Heading level={2} size='lg'>{title}</Heading>
         )}
         {children && (
           <div className='Layer__view-header__children'>{children}</div>

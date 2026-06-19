@@ -14,8 +14,9 @@ import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibili
 import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import ChevronDownFill from '@icons/ChevronDownFill'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
+import { Button } from '@ui/Button/Button'
+import { SubmitAction } from '@ui/Button/SubmitButton'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { VStack } from '@ui/Stack/Stack'
 import { HStack } from '@ui/Stack/Stack'
@@ -26,13 +27,12 @@ import { type BankTransactionCategoryComboBoxOption } from '@components/BankTran
 import {
   type BankTransactionCTAStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
+import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankTransactionsSubmitButton'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
-import { IconButton } from '@components/Button/IconButton'
-import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
+import { Chevron } from '@components/Chevron/Chevron'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { IconBox } from '@components/IconBox/IconBox'
-import { Text, TextSize } from '@components/Typography/Text'
 
 import './bankTransactionRow.scss'
 
@@ -102,26 +102,25 @@ export const BankTransactionRow = ({
   }, [open, isExpandedRowValid, selectedOption, saveBankTransactionRow, bankTransaction, onBankTransactionSaveSuccess])
 
   const submitButton = useMemo(() => (
-    <SubmitButton
-      onClick={() => {
+    <BankTransactionsSubmitButton
+      onPress={() => {
         if (!isProcessing) {
           void save()
         }
       }}
-      className={isError ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
-      processing={isProcessing}
-      active={open}
-      disabled={selectedOption === null || isBulkSelectionActive}
+      isPending={isProcessing}
+      isDisabled={selectedOption === null || isBulkSelectionActive}
       action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-      withRetry
-      error={isError ? t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.') : undefined}
+      isActive={open}
+      isError={isError}
+      errorMessage={t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
     >
       {isError
         ? t('common:action.retry_label', 'Retry')
         : displayAsCategorized
           ? stringOverrides?.updateButtonText ?? t('common:action.update_label', 'Update')
           : stringOverrides?.approveButtonText ?? t('common:action.confirm_label', 'Confirm')}
-    </SubmitButton>
+    </BankTransactionsSubmitButton>
   ), [
     displayAsCategorized,
     isBulkSelectionActive,
@@ -159,8 +158,8 @@ export const BankTransactionRow = ({
     <>
       <AnimatedPresenceElement as='tr' variant='fade' isOpen={!isBeingRemoved} motionKey={bankTransaction.id} className={rowClassName} onClick={toggleOpen}>
         {isCategorizationEnabled && (
-          <td className='Layer__table-cell Layer__bank-transactions__checkbox-col' onClick={preventRowExpansion}>
-            <span className='Layer__table-cell-content'>
+          <td className='Layer__bank-transactions__table-cell Layer__bank-transactions__checkbox-col' onClick={preventRowExpansion}>
+            <span className='Layer__bank-transactions__table-cell-content'>
               <Checkbox
                 isSelected={isTransactionSelected}
                 onChange={(selected) => {
@@ -176,27 +175,25 @@ export const BankTransactionRow = ({
           </td>
         )}
         <td
-          className='Layer__table-cell Layer__bank-transaction-table__date-col'
+          className='Layer__bank-transactions__table-cell Layer__bank-transaction-table__date-col'
         >
-          <span className='Layer__table-cell-content'>
-            <Span>
-              {formatDate(bankTransaction.date)}
-            </Span>
+          <span className='Layer__bank-transactions__table-cell-content'>
+            <Span>{formatDate(bankTransaction.date)}</Span>
           </span>
         </td>
         <td
-          className='Layer__table-cell Layer__bank-transactions__tx-col'
+          className='Layer__bank-transactions__table-cell Layer__bank-transactions__tx-col'
         >
-          <span className='Layer__table-cell-content'>
+          <span className='Layer__bank-transactions__table-cell-content'>
             <Span withTooltip>
               {bankTransaction.counterpartyName ?? bankTransaction.description}
             </Span>
           </span>
         </td>
         <td
-          className='Layer__table-cell Layer__bank-transactions__account-col'
+          className='Layer__bank-transactions__table-cell Layer__bank-transactions__account-col'
         >
-          <span className='Layer__table-cell-content'>
+          <span className='Layer__bank-transactions__table-cell-content'>
             <VStack align='start'>
               <Span ellipsis>
                 {bankTransaction.accountName}
@@ -211,7 +208,7 @@ export const BankTransactionRow = ({
           </span>
         </td>
         <td
-          className={`Layer__table-cell Layer__table-cell__amount-col Layer__bank-transactions__amount-col Layer__table-cell--amount ${className}__table-cell--amount-${isCredit(bankTransaction) ? 'credit' : 'debit'
+          className={`Layer__bank-transactions__table-cell Layer__bank-transactions__amount-col Layer__bank-transactions__table-cell--amount ${className}__table-cell--amount-${isCredit(bankTransaction) ? 'credit' : 'debit'
           }`}
           {...showReceiptDataProperties}
         >
@@ -219,16 +216,16 @@ export const BankTransactionRow = ({
             <MoneySpan
               amount={bankTransaction.amount}
               displayPlusSign={isCredit(bankTransaction)}
-              className='Layer__table-cell-content'
+              className='Layer__bank-transactions__table-cell-content'
             />
           </VStack>
         </td>
         <td
-          className='Layer__table-cell Layer__bank-transactions__documents-col'
+          className='Layer__bank-transactions__table-cell Layer__bank-transactions__documents-col'
           {...showReceiptDataProperties}
         >
           {showReceiptUploads && bankTransaction.documentIds?.length > 0 && (
-            <span className='Layer__table-cell-content'>
+            <span className='Layer__bank-transactions__table-cell-content'>
               <IconBox>
                 <File size={12} />
               </IconBox>
@@ -237,8 +234,8 @@ export const BankTransactionRow = ({
         </td>
         <td
           className={classNames(
-            'Layer__table-cell',
-            'Layer__table-cell__category-col',
+            'Layer__bank-transactions__table-cell',
+            'Layer__bank-transactions__category-col',
             `${className}__actions-cell`,
             `${className}__actions-cell--${open ? 'open' : 'close'}`,
           )}
@@ -246,17 +243,13 @@ export const BankTransactionRow = ({
         >
           {open
             ? (
-              <HStack pie='md' gap='md' justify='end' className='Layer__bank-transaction-row__category-open'>
+              <HStack pie='md' gap='md' align='center' justify='end' className='Layer__bank-transaction-row__category-open'>
                 {isError
                   && (
-                    <Text
-                      as='span'
-                      size={TextSize.md}
-                      className='Layer__unsaved-info'
-                    >
-                      <span>{t('common:state.unsaved', 'Unsaved')}</span>
+                    <Span status='error'>
+                      {t('common:state.unsaved', 'Unsaved')}
                       <CircleAlert size={12} />
-                    </Text>
+                    </Span>
                   )}
                 {isCategorizationEnabled && submitButton}
                 {!isCategorizationEnabled && !displayAsCategorized && (
@@ -264,21 +257,18 @@ export const BankTransactionRow = ({
                     <BankTransactionsProcessingInfo />
                   </VStack>
                 )}
-                <IconButton
-                  onClick={toggleOpen}
-                  className='Layer__bank-transaction-row__expand-button'
-                  active={open}
-                  icon={(
-                    <ChevronDownFill
-                      className={`Layer__chevron ${open ? 'Layer__chevron__up' : 'Layer__chevron__down'
-                      }`}
-                    />
-                  )}
-                />
+                <Button
+                  variant='ghost'
+                  icon
+                  onPress={toggleOpen}
+                  aria-label={t('bankTransactions:action.toggle_details', 'Toggle details')}
+                >
+                  <Chevron open={open} />
+                </Button>
               </HStack>
             )
             : (
-              <HStack pi='md' gap='md' className='Layer__bank-transaction-row__category-hstack'>
+              <HStack pi='md' gap='md' align='center' className='Layer__bank-transaction-row__category-hstack'>
                 {isCategorizationEnabled && !displayAsCategorized && (
                   <BankTransactionCategoryComboBox
                     bankTransaction={bankTransaction}
@@ -303,17 +293,14 @@ export const BankTransactionRow = ({
                   </VStack>
                 )}
                 {!isBeingRemoved && (
-                  <IconButton
-                    onClick={toggleOpen}
-                    className='Layer__bank-transaction-row__expand-button'
-                    active={open}
-                    icon={(
-                      <ChevronDownFill
-                        className={`Layer__chevron ${open ? 'Layer__chevron__up' : 'Layer__chevron__down'
-                        }`}
-                      />
-                    )}
-                  />
+                  <Button
+                    variant='ghost'
+                    icon
+                    onPress={toggleOpen}
+                    aria-label={t('bankTransactions:action.toggle_details', 'Toggle details')}
+                  >
+                    <Chevron open={open} />
+                  </Button>
                 )}
               </HStack>
             )}

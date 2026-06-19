@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { CircleAlert, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { Button, ButtonVariant } from '@components/Button/Button'
+import { Button } from '@ui/Button/Button'
 
 import './reverseEntryButton.scss'
 
@@ -34,10 +34,9 @@ export const ReverseEntryButton = ({ onReverse, alreadyReversed }: ReverseEntryB
   return (
     <div className='Layer__LedgerEntryDetails__Reverse'>
       <Button
-        rightIcon={isError ? <CircleAlert size={12} /> : <RefreshCcw size={12} />}
-        variant={ButtonVariant.secondary}
-        onClick={isProcessing ? () => {} : handleClick}
-        isProcessing={isProcessing}
+        variant='outlined'
+        onPress={() => { void handleClick() }}
+        isPending={isProcessing}
         tooltip={
           alreadyReversed
             ? t('generalLedger:label.entry_reversed', 'This entry has already been reversed')
@@ -45,9 +44,10 @@ export const ReverseEntryButton = ({ onReverse, alreadyReversed }: ReverseEntryB
               ? t('generalLedger:error.operation_retry', 'Operation failed. Try again.')
               : undefined
         }
-        disabled={alreadyReversed}
+        isDisabled={alreadyReversed || isProcessing}
       >
         {t('generalLedger:action.reverse_entry', 'Reverse entry')}
+        {isError ? <CircleAlert size={12} /> : <RefreshCcw size={12} />}
       </Button>
     </div>
   )

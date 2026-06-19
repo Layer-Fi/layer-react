@@ -18,8 +18,8 @@ import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibili
 import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import ChevronDownFill from '@icons/ChevronDownFill'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
+import { SubmitAction } from '@ui/Button/SubmitButton'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -30,10 +30,13 @@ import {
   type BankTransactionCTAStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
+import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankTransactionsSubmitButton'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
-import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
+import { Chevron } from '@components/Chevron/Chevron'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { ErrorText } from '@components/Typography/ErrorText'
+
+import './bankTransactionsListItem.scss'
 
 type BankTransactionsListItemProps = {
   index: number
@@ -138,11 +141,7 @@ export const BankTransactionsListItem = ({
             !isDesktop && 'Layer__bank-transaction-row__expand-button--mobile',
           )}
         >
-          <ChevronDownFill
-            className={`Layer__chevron ${
-              openExpandedRow ? 'Layer__chevron__up' : 'Layer__chevron__down'
-            }`}
-          />
+          <Chevron open={openExpandedRow} />
         </div>
       </span>
       <HStack className='Layer__bank-transaction-list-item__body'>
@@ -207,21 +206,20 @@ export const BankTransactionsListItem = ({
                 isDisabled={isProcessing}
               />
             )}
-            <SubmitButton
-              disabled={isProcessing}
-              onClick={() => { void save() }}
-              className={isError ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
-              processing={isProcessing}
+            <BankTransactionsSubmitButton
+              isDisabled={isProcessing}
+              onPress={() => { void save() }}
+              isPending={isProcessing}
               action={!displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-              withRetry
-              error={isError ? t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.') : undefined}
+              isError={isError}
+              errorMessage={t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
             >
               {isError
                 ? t('common:action.retry_label', 'Retry')
                 : (!displayAsCategorized
                   ? stringOverrides?.approveButtonText ?? t('common:action.approve_label', 'Approve')
                   : stringOverrides?.updateButtonText ?? t('common:action.update_label', 'Update'))}
-            </SubmitButton>
+            </BankTransactionsSubmitButton>
           </HStack>
         </div>
       )}

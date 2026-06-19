@@ -4,14 +4,18 @@ import { useTranslation } from 'react-i18next'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { DataStateContainer } from '@components/DataStateContainer/DataStateContainer'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { Panel } from '@components/Panel/Panel'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { ProfitAndLossDetailedCharts } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossHeader } from '@components/ProfitAndLossHeader/ProfitAndLossHeader'
 import { type ProfitAndLossSummariesStringOverrides } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { type ProfitAndLossTableStringOverrides } from '@components/ProfitAndLossTable/ProfitAndLossTableComponent'
 import { ProfitAndLossTableWithProvider } from '@components/ProfitAndLossTable/ProfitAndLossTableWithProvider'
+
+import './profitAndLossView.scss'
 
 const COMPONENT_NAME = 'profit-and-loss'
 
@@ -48,7 +52,6 @@ const ProfitAndLossPanel = ({
   stringOverrides,
   ...props
 }: ProfitAndLossViewPanelProps) => {
-  const { t } = useTranslation()
   const { sidebarScope } = useContext(ProfitAndLossContext)
 
   return (
@@ -61,10 +64,9 @@ const ProfitAndLossPanel = ({
       sidebarIsOpen={Boolean(sidebarScope)}
       parentRef={containerRef}
     >
-      <ProfitAndLoss.Header
-        text={stringOverrides?.header || t('common:label.profit_loss', 'Profit & Loss')}
+      <ProfitAndLossHeader
+        stringOverrides={{ title: stringOverrides?.header }}
         className={`Layer__${COMPONENT_NAME}__header`}
-        headingClassName='Layer__profit-and-loss__title'
       />
 
       <Components stringOverrides={stringOverrides} {...props} />
@@ -82,7 +84,7 @@ const Components = ({
 
   if (!isLoading && isError) {
     return (
-      <div className='Layer__table-state-container'>
+      <DataStateContainer>
         <DataState
           status={DataStateStatus.failed}
           title={t('common:error.something_went_wrong', 'Something went wrong')}
@@ -90,7 +92,7 @@ const Components = ({
           onRefresh={() => refetch()}
           isLoading={isValidating}
         />
-      </div>
+      </DataStateContainer>
     )
   }
 

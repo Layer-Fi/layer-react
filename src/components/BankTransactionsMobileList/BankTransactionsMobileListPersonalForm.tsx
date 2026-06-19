@@ -112,9 +112,9 @@ export const BankTransactionsMobileListPersonalForm = ({
       />
       <div
         className={classNames(
-          'Layer__bank-transaction-mobile-list-item__receipts',
+          'Layer__BankTransactionsMobileListItem__Receipts',
           hasReceipts(bankTransaction)
-            ? 'Layer__bank-transaction-mobile-list-item__actions--with-receipts'
+            ? 'Layer__BankTransactionsMobileListItem__Receipts--WithReceipts'
             : undefined,
         )}
       >
@@ -132,8 +132,8 @@ export const BankTransactionsMobileListPersonalForm = ({
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
             text={t('bankTransactions:action.upload_receipt', 'Upload receipt')}
-            iconOnly={true}
-            icon={<Paperclip size={20} />}
+            icon
+            slots={{ Icon: <Paperclip size={20} /> }}
             accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
           />
         )}
@@ -156,7 +156,7 @@ export const BankTransactionsMobileListPersonalForm = ({
       </HStack>
       {isErrorCategorizing && showRetry
         ? (
-          <ErrorText>
+          <ErrorText size='sm' align='center' pb='sm'>
             {t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
           </ErrorText>
         )

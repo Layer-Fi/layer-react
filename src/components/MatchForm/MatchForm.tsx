@@ -6,9 +6,9 @@ import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
+import { Span } from '@ui/Typography/Text'
 import { MatchBadge } from '@components/BankTransactionRow/MatchBadge'
 import { ErrorText } from '@components/Typography/ErrorText'
-import { Text, TextUseTooltip } from '@components/Typography/Text'
 
 import './matchForm.scss'
 
@@ -77,19 +77,13 @@ export const MatchForm = ({
               setSelectedMatch(suggestedMatch)
             }}
           >
-            <div className='Layer__nowrap Layer__MatchForm__Table__date'>
+            <div className='Layer__MatchForm__Table__date'>
               <span>
                 {formatDate(suggestedMatch.details.date)}
               </span>
             </div>
             <div className='Layer__MatchForm__Table__desc'>
-              <Text
-                className='Layer__MatchForm__Table__desc-tooltip'
-                withDeprecatedTooltip={TextUseTooltip.whenTruncated}
-                as='span'
-              >
-                {suggestedMatch.details.description}
-              </Text>
+              <Span withTooltip>{suggestedMatch.details.description}</Span>
             </div>
             <div className='Layer__MatchForm__Table__amount'>
               {formatCurrencyFromCents(suggestedMatch.details.amount)}
@@ -116,7 +110,7 @@ export const MatchForm = ({
           </div>
         )
       })}
-      {matchFormError && <ErrorText>{matchFormError}</ErrorText>}
+      {matchFormError && <ErrorText pbs='2xs' pbe='md'>{matchFormError}</ErrorText>}
     </div>
   )
 }

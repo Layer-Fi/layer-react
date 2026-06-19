@@ -2,8 +2,9 @@ import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
-import { Button } from '@components/Button/Button'
+import { Heading } from '@ui/Typography/Heading'
 import { AccountBalancesDownloadButton } from '@components/ChartOfAccounts/download/AccountBalancesDownloadButton'
 import { type ChartOfAccountsTableStringOverrides } from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
 import { ExpandableDataTableToggleButton } from '@components/ExpandableDataTable/ExpandableDataTableToggleButton'
@@ -12,7 +13,6 @@ import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
 import { SearchField } from '@components/SearchField/SearchField'
-import { Heading, HeadingSize } from '@components/Typography/Heading'
 
 import './chartOfAccountsTableHeader.scss'
 
@@ -39,15 +39,14 @@ export const ChartOfAccountsTableHeader = ({
 }: ChartOfAccountsTableHeaderProps) => {
   const { t } = useTranslation()
   const { isDesktop } = useSizeClass()
+  const addAccountLabel = stringOverrides?.addAccountButtonText || t('chartOfAccounts:action.add_account', 'Add Account')
 
   return (
     <>
       <Header asHeader rounded>
         <HeaderRow>
           <HeaderCol>
-            <Heading
-              size={asWidget ? HeadingSize.view : HeadingSize.primary}
-            >
+            <Heading level={asWidget ? 3 : 2} size={asWidget ? 'md' : 'lg'}>
               {stringOverrides?.headerText || t('chartOfAccounts:label.chart_of_accounts', 'Chart of Accounts')}
             </Heading>
           </HeaderCol>
@@ -56,18 +55,12 @@ export const ChartOfAccountsTableHeader = ({
       <Header sticky>
         <HeaderRow>
           <HeaderCol>
-            <Heading
-              size={HeadingSize.secondary}
-            >
-              {withDateControl || withExpandAllButton
-                ? (
-                  <HStack align='center' gap='xs'>
-                    {withDateControl && <GlobalMonthPicker />}
-                    {withExpandAllButton && <ExpandableDataTableToggleButton />}
-                  </HStack>
-                )
-                : null}
-            </Heading>
+            {(withDateControl || withExpandAllButton) && (
+              <HStack align='center' gap='xs'>
+                {withDateControl && <GlobalMonthPicker />}
+                {withExpandAllButton && <ExpandableDataTableToggleButton />}
+              </HStack>
+            )}
           </HeaderCol>
           <HeaderCol className='Layer__chart-of-accounts__actions'>
             <SearchField
@@ -76,17 +69,15 @@ export const ChartOfAccountsTableHeader = ({
               onChange={onSearchChange}
             />
             <AccountBalancesDownloadButton
-              iconOnly={!isDesktop}
+              icon={!isDesktop}
             />
             {showAddAccountButton && (
               <Button
-                onClick={() => onAddAccount()}
-                iconOnly={!isDesktop}
-                leftIcon={
-                  !isDesktop && <CirclePlus size={14} />
-                }
+                onPress={() => onAddAccount()}
+                icon={!isDesktop}
+                aria-label={!isDesktop ? addAccountLabel : undefined}
               >
-                {stringOverrides?.addAccountButtonText || t('chartOfAccounts:action.add_account', 'Add Account')}
+                {isDesktop ? addAccountLabel : <CirclePlus size={14} />}
               </Button>
             )}
           </HeaderCol>

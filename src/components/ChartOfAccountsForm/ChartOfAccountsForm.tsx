@@ -1,18 +1,19 @@
 import { useCallback, useContext, useEffect, useMemo } from 'react'
-import { AlertTriangle, X } from 'lucide-react'
+import { AlertTriangle } from 'lucide-react'
 import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type LedgerAccountType, type LedgerEntryDirection, type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { UpsertLedgerAccountMode } from '@hooks/api/businesses/[business-id]/ledger/accounts/useUpsertLedgerAccount'
-import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
+import { CloseButton } from '@ui/Button/CloseButton'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { AccountSubtypeComboBox } from '@components/ChartOfAccountsForm/AccountSubtypeComboBox'
 import { AccountTypeComboBox } from '@components/ChartOfAccountsForm/AccountTypeComboBox'
@@ -21,7 +22,6 @@ import { NormalityComboBox } from '@components/ChartOfAccountsForm/NormalityComb
 import { ParentComboBox } from '@components/ChartOfAccountsForm/ParentComboBox'
 import { useChartOfAccountsForm } from '@components/ChartOfAccountsForm/useChartOfAccountsForm'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { TextSize } from '@components/Typography/Text'
 
 import './chartOfAccountsForm.scss'
 
@@ -55,7 +55,6 @@ type ChartOfAccountsFormContentProps = ChartOfAccountsFormContentMode & {
 const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
   const { onCancel, stringOverrides } = props
   const { t } = useTranslation()
-  const { formatCurrencyFromCents } = useIntlFormatter()
   const { data } = useContext(ChartOfAccountsContext)
   const { accountingConfiguration } = useLayerContext()
   const enableAccountNumbers = !!accountingConfiguration?.enableAccountNumbers
@@ -99,14 +98,12 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
   return (
     <Form className='Layer__ChartOfAccountsForm' onSubmit={blockNativeOnSubmit}>
       <HStack className='Layer__ChartOfAccountsForm__Header' justify='space-between' align='center' gap='md'>
-        <Heading level={2} size='sm'>
+        <Heading level={3} size='sm'>
           {isEdit
             ? stringOverrides?.editModeHeader || t('chartOfAccounts:action.edit_account', 'Edit Account')
             : stringOverrides?.createModeHeader || t('chartOfAccounts:action.add_new_account', 'Add New Account')}
         </Heading>
-        <Button variant='outlined' icon onPress={onCancel} aria-label={cancelLabel}>
-          <X size={16} />
-        </Button>
+        <CloseButton onPress={onCancel} aria-label={cancelLabel} />
       </HStack>
 
       {submitError && (
@@ -115,7 +112,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
             icon={<AlertTriangle size={16} />}
             status={DataStateStatus.failed}
             title={submitError}
-            titleSize={TextSize.md}
+            titleSize='md'
             inline
           />
         </HStack>
@@ -124,7 +121,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
       {account && (
         <HStack className='Layer__ChartOfAccountsForm__EditEntry' justify='space-between' align='center' gap='md'>
           <Span weight='bold'>{account.name}</Span>
-          <Span weight='bold'>{formatCurrencyFromCents(account.balance)}</Span>
+          <MoneySpan weight='bold' amount={account.balance} />
         </HStack>
       )}
 
@@ -136,7 +133,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
               data={data}
               value={field.state.value}
               onChange={onChangeParent}
-              error={field.state.meta.errors[0] as string | undefined}
+              error={field.state.meta.errors[0]}
               inline={inline}
             />
           )}
@@ -173,7 +170,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
                   value={field.state.value}
                   onChange={value => field.handleChange(value as LedgerAccountType | null)}
                   isDisabled={isEdit || parent !== null}
-                  error={field.state.meta.errors[0] as string | undefined}
+                  error={field.state.meta.errors[0]}
                   inline={inline}
                 />
               )}
@@ -190,7 +187,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
                   type={type}
                   value={field.state.value}
                   onChange={field.handleChange}
-                  error={field.state.meta.errors[0] as string | undefined}
+                  error={field.state.meta.errors[0]}
                   inline={inline}
                 />
               )}
@@ -204,7 +201,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
               label={stringOverrides?.normalityLabel || t('common:label.normality', 'Normality')}
               value={field.state.value}
               onChange={value => field.handleChange(value as LedgerEntryDirection | null)}
-              error={field.state.meta.errors[0] as string | undefined}
+              error={field.state.meta.errors[0]}
               inline={inline}
             />
           )}

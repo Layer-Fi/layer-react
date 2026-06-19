@@ -1,57 +1,9 @@
 import { useMemo } from 'react'
 import { Cell, Pie, PieChart } from 'recharts'
 
-import type { ProfitAndLoss } from '@schemas/reports/profitAndLoss'
-import {
-  collectExpensesItems,
-  collectRevenueItems,
-  type PnlChartLineItem,
-} from '@utils/profitAndLossUtils'
+import { type PnlChartLineItem } from '@utils/profitAndLossUtils'
 import { type Variants } from '@utils/styleUtils/sizeVariants'
-import type { Scope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
 import { mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/utils'
-
-const CHART_PLACEHOLDER: Array<PnlChartLineItem> = [{
-  name: 'placeholder',
-  displayName: 'placeholder',
-  isContra: false,
-  value: 1,
-  type: 'placeholder',
-  share: 1,
-  lineItems: [],
-}]
-
-export function toMiniChartData({
-  scope,
-  data,
-}: {
-  scope: Scope
-  data?: ProfitAndLoss
-}) {
-  if (!data) {
-    return CHART_PLACEHOLDER
-  }
-
-  let items: PnlChartLineItem[] = []
-
-  switch (scope) {
-    case 'revenue':
-      items = collectRevenueItems(data)
-      break
-    default:
-      items = collectExpensesItems(data)
-  }
-
-  if (
-    !items
-    || items.length === 0
-    || !items.find(x => Math.abs(x.value) !== 0)
-  ) {
-    return CHART_PLACEHOLDER
-  }
-
-  return items.slice()
-}
 
 type ProfitAndLossMiniChartProps = {
   data: PnlChartLineItem[]

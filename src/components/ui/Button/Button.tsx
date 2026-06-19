@@ -1,4 +1,4 @@
-import { forwardRef, type PropsWithChildren } from 'react'
+import { forwardRef, type PropsWithChildren, type ReactNode } from 'react'
 import {
   Button as ReactAriaButton,
   type ButtonProps as ReactAriaButtonProps,
@@ -6,6 +6,7 @@ import {
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { withRenderProp } from '@components/utility/withRenderProp'
 
 import './button.scss'
@@ -34,7 +35,7 @@ function ButtonTransparentContent({ children }: PropsWithChildren) {
   )
 }
 
-export type ButtonVariant = 'solid' | 'ghost' | 'outlined' | 'outlined-light' | 'text' | 'branded'
+export type ButtonVariant = 'solid' | 'ghost' | 'outlined' | 'text' | 'branded'
 export type ButtonSize = 'md'
 
 export type ButtonStyleProps = {
@@ -45,6 +46,8 @@ export type ButtonStyleProps = {
   variant?: ButtonVariant
   fullWidth?: boolean
   flex?: boolean
+  tooltip?: ReactNode
+  underline?: true
 }
 
 export type ButtonProps = Omit<ReactAriaButtonProps, 'className'> & ButtonStyleProps
@@ -62,6 +65,8 @@ const Button = forwardRef<
     variant = 'solid',
     fullWidth = false,
     flex = false,
+    tooltip,
+    underline,
     ...restProps
   },
   ref,
@@ -75,9 +80,10 @@ const Button = forwardRef<
     variant,
     'full-width': fullWidth,
     flex,
+    underline,
   })
 
-  return (
+  const button = (
     <ReactAriaButton
       {...restProps}
       {...dataProperties}
@@ -99,6 +105,19 @@ const Button = forwardRef<
         return node
       })}
     </ReactAriaButton>
+  )
+
+  if (tooltip == null) {
+    return button
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        {button}
+      </TooltipTrigger>
+      <TooltipContent>{tooltip}</TooltipContent>
+    </Tooltip>
   )
 })
 Button.displayName = 'Button'

@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransactionDataOnly } from '@schemas/bankTransactions/bankTransactionDataOnly'
 import { type CustomAccountParseCsvResponse } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
 import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { Heading } from '@ui/Typography/Heading'
@@ -78,7 +78,7 @@ export function UploadTransactions({ onComplete }: UploadTransactionsProps) {
   const [selectedAccount, setSelectedAccount] = useState<AccountOption | null>(null)
   const [file, setFile] = useState<File | null>(null)
   const [parseCsvResponse, setParseCsvResponse] = useState<CustomAccountParseCsvResponse | null>(null)
-  const isValid = parseCsvResponse?.is_valid
+  const isValid = parseCsvResponse?.isValid
   const [uploadedTransactionsCount, setUploadedTransactionsCount] = useState(0)
   const onSelectAccount = useCallback((account: AccountOption | null) => {
     setSelectedAccount(account)
@@ -100,7 +100,7 @@ export function UploadTransactions({ onComplete }: UploadTransactionsProps) {
     setParseCsvResponse(parseCsvResponse)
   }, [])
 
-  const onUploadTransactionsSuccess = useCallback((txns: BankTransaction[]) => {
+  const onUploadTransactionsSuccess = useCallback((txns: BankTransactionDataOnly[]) => {
     setUploadedTransactionsCount(txns.length)
   }, [])
 

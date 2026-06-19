@@ -1,4 +1,4 @@
-import i18next from 'i18next'
+import i18next, { type i18n } from 'i18next'
 import Pseudo from 'i18next-pseudo'
 
 import { pseudoOptions } from '@utils/i18n/pseudoConfig'
@@ -17,7 +17,7 @@ const isPseudoEnabled = () => {
 // A private i18next instance owned by Layer. We intentionally do not use the default singleton
 // (`import i18next from 'i18next'`) so we can't inadvertently share state or event subscriptions
 // with a customer platform's application's own react-i18next setup.
-const layerI18n = i18next.createInstance()
+const layerI18n: i18n = i18next.createInstance()
 
 export const initI18n = (locale: SupportedLocale) => {
   if (layerI18n.isInitialized) return

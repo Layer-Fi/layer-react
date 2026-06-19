@@ -1,3 +1,5 @@
+import './profitAndLossChartPatternDefs.scss'
+
 export const STRIPE_PATTERN_ID = 'layer-bar-stripe-pattern'
 export const STRIPE_PATTERN_DARK_ID = 'layer-bar-stripe-pattern-dark'
 

@@ -18,14 +18,13 @@ import './tooltip.scss'
 
 export type TooltipCapableComponentProps = {
   withTooltip?: boolean
-  tooltipContentWidth?: 'sm' | 'md'
 }
 
 export interface TooltipOptions {
-  initialOpen?: boolean
+  isInitiallyOpen?: boolean
   placement?: Placement
-  open?: boolean
-  disabled?: boolean
+  isOpen?: boolean
+  isDisabled?: boolean
   onOpenChange?: (open: boolean) => void
   offset?: number
   shift?: { padding?: number }
@@ -44,16 +43,19 @@ export const Tooltip = ({
   )
 }
 
-export type TooltipTriggerProps = { children: ReactNode } & { asChild?: boolean, wordBreak?: 'break-all' }
+export type TooltipTriggerVariant = 'fit-content' | 'truncate'
+export type TooltipTriggerProps = { children: ReactNode } & { asChild?: boolean, wordBreak?: 'break-all', className?: string, variant?: TooltipTriggerVariant }
 export const TooltipTrigger = forwardRef<
   HTMLElement,
   TooltipTriggerProps
->(function TooltipTrigger({ children, asChild = false, wordBreak, ...props }, propRef) {
+>(function TooltipTrigger({ children, asChild = false, wordBreak, className, variant, ...props }, propRef) {
   const context = useTooltipContext()
   const childrenRef = (isValidElement(children) && 'ref' in children)
     ? children.ref as Ref<unknown>
     : null
   const ref = useMergeRefs([context.refs.setReference, propRef, childrenRef])
+
+  const dataProperties = toDataProperties({ variant })
 
   if (asChild && isValidElement(children)) {
     return cloneElement(
@@ -63,7 +65,8 @@ export const TooltipTrigger = forwardRef<
         ref,
         ...props,
         ...children.props,
-        'data-state': context.open ? 'open' : 'closed',
+        'className': classNames(className, (children.props as { className?: string }).className),
+        'data-state': context.isOpen ? 'open' : 'closed',
         'data-word-break': wordBreak,
       }),
     )
@@ -72,8 +75,9 @@ export const TooltipTrigger = forwardRef<
   return (
     <HStack
       ref={ref}
-      data-state={context.open ? 'open' : 'closed'}
-      className='Layer__UI__tooltip-trigger'
+      data-state={context.isOpen ? 'open' : 'closed'}
+      className={classNames('Layer__UI__TooltipTrigger', className)}
+      {...dataProperties}
       {...context.getReferenceProps(props)}
     >
       {children}
@@ -81,31 +85,31 @@ export const TooltipTrigger = forwardRef<
   )
 })
 
-  type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style'> & { width?: 'sm' | 'md', wordBreak?: 'break-all' }
+  type TooltipContentProps = Omit<HTMLProps<HTMLDivElement>, 'style' | 'className'> & { wordBreak?: 'break-all' }
 export const TooltipContent = forwardRef<
   HTMLDivElement,
   TooltipContentProps
->(function TooltipContent({ className, width, wordBreak, ...props }, propRef) {
+>(function TooltipContent({ wordBreak, ...props }, propRef) {
   const context = useTooltipContext()
   const ref = useMergeRefs([context.refs.setFloating, propRef])
 
-  const dataProperties = toDataProperties({ width, 'word-break': wordBreak })
+  const dataProperties = toDataProperties({ 'word-break': wordBreak })
 
-  if (!context.open || context.disabled) return null
+  if (!context.isOpen || context.isDisabled) return null
 
   return (
     <FloatingPortal>
       <div
         ref={ref}
-        className={classNames('Layer__UI__tooltip', className)}
+        className='Layer__UI__Tooltip'
         style={{
           ...context.floatingStyles,
         }}
         {...dataProperties}
         {...context.getFloatingProps(props)}
       >
-        <div className='Layer__UI__tooltip-content' style={{ ...context.styles }}>
-          {props.children}
+        <div className='Layer__UI__TooltipContent' style={{ ...context.styles }}>
+          <span className='Layer__UI__TooltipContent__Text'>{props.children}</span>
         </div>
       </div>
     </FloatingPortal>

@@ -105,8 +105,8 @@ export const BankTransactionsMobileListMatchForm = ({
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
             text={t('bankTransactions:action.upload_receipt', 'Upload receipt')}
-            iconOnly={true}
-            icon={<Paperclip size={20} />}
+            icon
+            slots={{ Icon: <Paperclip size={20} /> }}
             accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
           />
         )}
@@ -126,10 +126,10 @@ export const BankTransactionsMobileListMatchForm = ({
           </Button>
         )}
       </HStack>
-      {formError && <ErrorText>{formError}</ErrorText>}
+      {formError && <ErrorText size='sm' align='center' pb='sm'>{formError}</ErrorText>}
       {isErrorMatching
         && (
-          <ErrorText>
+          <ErrorText size='sm' align='center' pb='sm'>
             {t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
           </ErrorText>
         )}

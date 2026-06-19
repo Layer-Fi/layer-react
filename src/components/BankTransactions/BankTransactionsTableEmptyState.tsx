@@ -1,4 +1,4 @@
-import { type PropsWithChildren, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { Inbox, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -6,6 +6,7 @@ import { DisplayState } from '@internal-types/bankTransactions'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { DataStateContainer } from '@components/DataStateContainer/DataStateContainer'
 
 type BankTransactionsTableEmptyStatesProps = {
   isEmpty: boolean
@@ -14,12 +15,6 @@ type BankTransactionsTableEmptyStatesProps = {
     List: ReactNode
   }
 }
-
-const DataStateContainer = ({ children }: PropsWithChildren) => (
-  <div className='Layer__table-state-container'>
-    {children}
-  </div>
-)
 
 export const BankTransactionsTableEmptyState = () => {
   const { t } = useTranslation()
