@@ -1,10 +1,18 @@
 name: i18n - Sync French Translations
 
-# When English source strings change on main, push them to Crowdin, run fr-CA
-# pre-translation, download the result, and open/update the French translations PR.
-# Manual runs default to download-only for pulling upstream Crowdin translation edits.
-# The merge helper keeps the PR scoped to existing fr-CA keys so Crowdin exports
-# cannot introduce new French manifest keys.
+# Sync fr-CA translations through Crowdin after English sources change.
+#
+# On en-US changes merged to main:
+# upload sources -> pre-translate fr-CA (TM, then optional AI)
+# -> download fr-CA -> keep existing fr-CA keys only
+# -> open/update one PR with fr-CA translation value changes.
+#
+# Manual runs default to download-only for pulling upstream Crowdin edits.
+# Set pretranslate=true to run the full upload/pre-translate/download flow.
+#
+# Secrets:  CROWDIN_PROJECT_ID, CROWDIN_PERSONAL_TOKEN
+# Variable: CROWDIN_AI_PROMPT_ID (optional) — adds an AI pre-translation pass
+#           for strings that still have no fr-CA translation.
 
 on:
   workflow_dispatch:
