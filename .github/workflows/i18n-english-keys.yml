@@ -46,10 +46,12 @@ jobs:
           echo "No English translation key changes."
           exit 0
         fi
-        BR="i18n/english-keys-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-        git checkout -b "$BR"
+        BR=i18n/english-keys
+        git checkout -B "$BR"
         git commit -m "i18n: collect English translation keys"
-        git push origin "$BR"
-        gh pr create --base main --head "$BR" \
-          --title "i18n: collect English keys" \
-          --body "Collected English translation keys from source with i18next-cli extract."
+        git push -f origin "$BR"
+        if [ -z "$(gh pr list --head "$BR" --state open --json number --jq '.[0].number // empty')" ]; then
+          gh pr create --base main --head "$BR" \
+            --title "i18n: collect English keys" \
+            --body "Collected English translation keys from source with i18next-cli extract."
+        fi
