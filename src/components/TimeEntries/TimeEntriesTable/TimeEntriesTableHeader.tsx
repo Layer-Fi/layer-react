@@ -30,7 +30,7 @@ export const TimeEntriesTableHeader = () => {
           onPress={onStartTimer}
           isDisabled={isStartTimerDisabled}
         >
-          {t('timeTracking:action.start_timer', 'Start timer')}
+          {t('timeTracking:action.start_timer', 'Start Timer')}
           <Clock3 size={16} />
         </Button>
       )}
