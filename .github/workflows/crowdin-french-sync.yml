@@ -79,7 +79,7 @@ jobs:
         CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
-    - name: Drop new fr-CA keys from Crowdin export
+    - name: Keep existing fr-CA keys only
       run: node scripts/i18next/mergeExistingTranslations.mjs "$RUNNER_TEMP/fr-CA-before-crowdin" src/assets/locales/fr-CA
 
     - name: Open French translations PR

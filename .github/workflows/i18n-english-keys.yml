@@ -1,4 +1,4 @@
-name: i18n - Collect English Keys
+name: i18n - Extract English Keys
 
 on:
   workflow_dispatch:
@@ -37,7 +37,7 @@ jobs:
     - name: Extract English translation keys
       run: npx i18next-cli extract --sync-primary
 
-    - name: Open English keys PR
+    - name: Open English manifest PR
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
@@ -48,10 +48,10 @@ jobs:
         fi
         BR=i18n/english-keys
         git checkout -B "$BR"
-        git commit -m "i18n: collect English translation keys"
+        git commit -m "i18n: extract English translation keys"
         git push -f origin "$BR"
         if [ -z "$(gh pr list --head "$BR" --state open --json number --jq '.[0].number // empty')" ]; then
           gh pr create --base main --head "$BR" \
-            --title "i18n: collect English keys" \
-            --body "Collected English translation keys from source with i18next-cli extract."
+            --title "i18n: extract English keys" \
+            --body "Extracted English translation keys from source with i18next-cli extract."
         fi
