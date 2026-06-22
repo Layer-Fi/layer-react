@@ -1,7 +1,7 @@
 {
   "action": {
     "create_rule": "Create Rule",
-    "delete_rule": "Delete rule",
+    "delete_rule": "Delete Rule",
     "dont_ask_again": "Don’t ask again",
     "edit_rule": "Edit Rule",
     "no_decide_each_time": "No, I’ll decide each time",

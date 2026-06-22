@@ -23,7 +23,7 @@
     "no_tax_details": "No tax details",
     "no_tax_details_description": "No tax details found",
     "no_tax_estimates_summary": "Get started with your tax estimates",
-    "no_tax_estimates_summary_description": "Start by importing and categorizing your bank transactions",
+    "no_tax_estimates_summary_description": "Start by importing and categorizing your bank transactions.",
     "no_tax_payments_to_display": "There are no tax payments to display.",
     "tax_due_is_negative_or_zero": "No taxes owed this year",
     "tax_due_is_negative_or_zero_description": "Your deductible losses exceed your income for this period, bringing your tax liability to zero.",

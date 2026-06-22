@@ -1,13 +1,13 @@
 {
   "action": {
-    "add_entry": "Add Entry",
+    "add_entry": "Add time entry",
     "cancel_timer": "Cancel",
     "complete_timer": "Complete",
     "delete_entry": "Delete Entry",
     "discard_timer": "Discard Timer",
     "edit_entry": "Edit Entry",
     "save_entry": "Save Entry",
-    "start_timer": "Start Timer",
+    "start_timer": "Start timer",
     "view_entry": "View Entry"
   },
   "empty": {

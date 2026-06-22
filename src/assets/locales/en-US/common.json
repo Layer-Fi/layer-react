@@ -46,7 +46,7 @@
     "results": "No results found"
   },
   "error": {
-    "couldnt_load_data": "We couldn’t load your data.",
+    "couldnt_load_data": "We couldn't load your data.",
     "download_failed_check_connection": "Download failed. Check connection and retry in a few seconds.",
     "load_options": "Failed to load options",
     "please_try_again": "Please try again.",
@@ -90,7 +90,7 @@
     "expenses": "Expenses",
     "gross_profit": "Gross Profit",
     "hide_details": "Hide details",
-    "id": "Id",
+    "id": "ID",
     "keep_editing": "Keep editing",
     "liabilities": "Liabilities",
     "loading": "Loading...",
