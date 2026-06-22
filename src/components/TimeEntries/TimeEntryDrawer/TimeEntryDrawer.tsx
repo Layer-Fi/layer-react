@@ -56,7 +56,7 @@ export const TimeEntryDrawer = () => {
   const hasEntry = selectedEntry !== null
   const isLocked = !!selectedEntry?.invoiceLineItem
   const isReadOnly = isLocked || (!isEditMode && hasEntry && (isMobile || isTablet))
-  const title = selectedEntry ? t('timeTracking:label.entry_details', 'Time entry details') : t('timeTracking:action.add_entry', 'Add time entry')
+  const title = selectedEntry ? t('timeTracking:label.entry_details', 'Time entry details') : t('timeTracking:action.add_time_entry', 'Add time entry')
   const invoicedLabel = t('timeTracking:label.invoiced', 'Invoiced')
 
   const handleOpenChange = useCallback((nextIsOpen: boolean) => {
