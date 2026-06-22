@@ -54,7 +54,6 @@ jobs:
       if: ${{ github.event_name == 'push' || inputs.pretranslate }}
       uses: crowdin/github-action@v2
       with:
-        user: auto
         upload_sources: true
         upload_translations: false
         download_translations: false
@@ -68,7 +67,6 @@ jobs:
       if: ${{ github.event_name == 'push' || inputs.pretranslate }}
       uses: crowdin/github-action@v2
       with:
-        user: auto
         command: pre-translate
         command_args: -l fr-CA --method tm --translate-untranslated-only
       env:
@@ -89,7 +87,6 @@ jobs:
       if: ${{ github.event_name == 'push' || inputs.pretranslate }}
       uses: crowdin/github-action@v2
       with:
-        user: auto
         command: pre-translate
         command_args: -l fr-CA --method ai --ai-prompt ${{ vars.CROWDIN_AI_PROMPT_ID }} --translate-untranslated-only
       env:
@@ -102,7 +99,6 @@ jobs:
     - name: Download fr-CA translations
       uses: crowdin/github-action@v2
       with:
-        user: auto
         upload_sources: false
         upload_translations: false
         download_translations: true
@@ -118,6 +114,7 @@ jobs:
       run: |
         ls -ld src/assets/locales/fr-CA
         find src/assets/locales/fr-CA -maxdepth 1 -type f -exec ls -l {} +
+        sudo chown -R "$USER:$(id -gn)" src/assets/locales/fr-CA
         chmod -R u+rwX src/assets/locales/fr-CA
         ls -ld src/assets/locales/fr-CA
         find src/assets/locales/fr-CA -maxdepth 1 -type f -exec ls -l {} +
