@@ -1,24 +1,23 @@
-name: i18n - Download French Translations
+name: i18n - Sync French Translations
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows:
-      - i18n - Upload Sources to Crowdin
-    types:
-      - completed
+  push:
+    branches:
+      - main
+    paths:
+      - src/assets/locales/en-US/**
 
 permissions:
   contents: write
   pull-requests: write
 
 concurrency:
-  group: i18n-crowdin-download
+  group: i18n-french-sync
   cancel-in-progress: false
 
 jobs:
-  download:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+  sync:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,6 +30,37 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+    - name: Upload sources to Crowdin
+      uses: crowdin/github-action@v2
+      with:
+        upload_sources: true
+        upload_translations: false
+        download_translations: false
+        create_pull_request: false
+        push_translations: false
+      env:
+        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+    - name: Pre-translate fr-CA from translation memory
+      uses: crowdin/github-action@v2
+      with:
+        command: pre-translate
+        command_args: -l fr-CA --method tm --translate-untranslated-only
+      env:
+        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+    - name: Pre-translate fr-CA with AI
+      if: ${{ vars.CROWDIN_AI_PROMPT_ID != '' }}
+      uses: crowdin/github-action@v2
+      with:
+        command: pre-translate
+        command_args: -l fr-CA --method ai --ai-prompt ${{ vars.CROWDIN_AI_PROMPT_ID }} --translate-untranslated-only
+      env:
+        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
     - name: Snapshot current fr-CA manifest
       run: cp -R src/assets/locales/fr-CA "$RUNNER_TEMP/fr-CA-before-crowdin"
