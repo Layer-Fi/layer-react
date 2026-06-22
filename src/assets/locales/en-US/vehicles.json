@@ -32,7 +32,7 @@
     "enter_vin": "Enter VIN",
     "license_plate": "License plate",
     "make_model": "Make and model",
-    "unnamed_vehicle": "Unnamed Vehicle",
+    "unnamed_vehicle": "Unnamed vehicle",
     "vehicle": "Vehicle",
     "vehicle_name_hidden_from_active_list": "{{vehicleName}} will be hidden from your active vehicles list. You can reactivate it at any time.",
     "vehicle_name_restored_to_active_list": "{{vehicleName}} will be restored to your active vehicles list and available for tracking trips.",
