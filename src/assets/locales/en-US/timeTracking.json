@@ -1,7 +1,6 @@
 {
   "action": {
     "add_entry": "Add Entry",
-    "add_time_entry": "Add time entry",
     "cancel_timer": "Cancel",
     "complete_timer": "Complete",
     "delete_entry": "Delete Entry",
@@ -38,6 +37,7 @@
   "label": {
     "active": "Active",
     "add_memo": "Add memo",
+    "add_time_entry": "Add time entry",
     "additional_time_tracking_actions": "Additional time tracking actions",
     "all_customers": "All Customers",
     "all_services": "All Services",
