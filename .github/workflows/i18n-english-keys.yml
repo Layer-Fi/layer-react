@@ -50,11 +50,12 @@ jobs:
           exit 0
         fi
         BR=i18n/english-keys
+        VERSION=$(node -p "require('./package.json').version")
         git checkout -B "$BR"
         git commit -m "i18n: extract English translation keys"
         git push -f origin "$BR"
         if [ -z "$(gh pr list --head "$BR" --state open --json number --jq '.[0].number // empty')" ]; then
           gh pr create --base main --head "$BR" \
-            --title "i18n: extract English keys" \
-            --body "Extracted English translation keys from source with i18next-cli extract."
+            --title "i18n: extract English keys for v$VERSION" \
+            --body "Extracted English translation keys from source with i18next-cli extract for @layerfi/components v$VERSION."
         fi

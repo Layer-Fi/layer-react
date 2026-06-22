@@ -97,11 +97,12 @@ jobs:
           exit 0
         fi
         BR=i18n/crowdin-fr-ca
+        VERSION=$(node -p "require('./package.json').version")
         git checkout -B "$BR"
         git commit -m "i18n: update fr-CA translations"
         git push -f origin "$BR"
         if [ -z "$(gh pr list --head "$BR" --state open --json number --jq '.[0].number // empty')" ]; then
           gh pr create --base main --head "$BR" \
-            --title "i18n: update fr-CA translations" \
-            --body "Downloaded new fr-CA translations from Crowdin."
+            --title "i18n: update fr-CA translations for v$VERSION" \
+            --body "Downloaded new fr-CA translations from Crowdin for @layerfi/components v$VERSION."
         fi
