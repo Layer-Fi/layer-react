@@ -11,8 +11,7 @@ name: i18n - Sync French Translations
 # Set pretranslate=true to run the full upload/pre-translate/download flow.
 #
 # Secrets:  CROWDIN_PROJECT_ID, CROWDIN_PERSONAL_TOKEN
-# Variable: CROWDIN_AI_PROMPT_ID (optional) — adds an AI pre-translation pass
-#           for strings that still have no fr-CA translation.
+# Variable: CROWDIN_AI_PROMPT_ID — required for full pre-translation runs.
 
 on:
   workflow_dispatch:
@@ -55,6 +54,7 @@ jobs:
       if: ${{ github.event_name == 'push' || inputs.pretranslate }}
       uses: crowdin/github-action@v2
       with:
+        user: auto
         upload_sources: true
         upload_translations: false
         download_translations: false
@@ -68,16 +68,28 @@ jobs:
       if: ${{ github.event_name == 'push' || inputs.pretranslate }}
       uses: crowdin/github-action@v2
       with:
+        user: auto
         command: pre-translate
         command_args: -l fr-CA --method tm --translate-untranslated-only
       env:
         CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
+    - name: Require Crowdin AI prompt
+      if: ${{ github.event_name == 'push' || inputs.pretranslate }}
+      env:
+        CROWDIN_AI_PROMPT_ID: ${{ vars.CROWDIN_AI_PROMPT_ID }}
+      run: |
+        if [ -z "$CROWDIN_AI_PROMPT_ID" ]; then
+          echo "::error::Set repository variable CROWDIN_AI_PROMPT_ID to run AI pre-translation."
+          exit 1
+        fi
+
     - name: Pre-translate fr-CA with AI
-      if: ${{ (github.event_name == 'push' || inputs.pretranslate) && vars.CROWDIN_AI_PROMPT_ID != '' }}
+      if: ${{ github.event_name == 'push' || inputs.pretranslate }}
       uses: crowdin/github-action@v2
       with:
+        user: auto
         command: pre-translate
         command_args: -l fr-CA --method ai --ai-prompt ${{ vars.CROWDIN_AI_PROMPT_ID }} --translate-untranslated-only
       env:
@@ -90,6 +102,7 @@ jobs:
     - name: Download fr-CA translations
       uses: crowdin/github-action@v2
       with:
+        user: auto
         upload_sources: false
         upload_translations: false
         download_translations: true
@@ -100,6 +113,14 @@ jobs:
       env:
         CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+    - name: Normalize downloaded fr-CA file permissions
+      run: |
+        ls -ld src/assets/locales/fr-CA
+        find src/assets/locales/fr-CA -maxdepth 1 -type f -exec ls -l {} +
+        chmod -R u+rwX src/assets/locales/fr-CA
+        ls -ld src/assets/locales/fr-CA
+        find src/assets/locales/fr-CA -maxdepth 1 -type f -exec ls -l {} +
 
     - name: Keep existing fr-CA keys only
       run: node scripts/i18next/mergeExistingTranslations.mjs "$RUNNER_TEMP/fr-CA-before-crowdin" src/assets/locales/fr-CA
