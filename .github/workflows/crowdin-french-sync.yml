@@ -109,17 +109,26 @@ jobs:
         GH_TOKEN: ${{ github.token }}
       run: |
         git add src/assets/locales/fr-CA
-        if git diff --cached --quiet; then
-          echo "No new fr-CA translations."
-          exit 0
-        fi
         BR=i18n/crowdin-fr-ca
         VERSION=$(node -p "require('./package.json').version")
+        if git diff --cached --quiet; then
+          echo "No new fr-CA translations."
+          echo "No fr-CA translation changes for v$VERSION." >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+        fi
         git checkout -B "$BR"
         git commit -m "i18n: update fr-CA translations"
         git push -f origin "$BR"
-        if [ -z "$(gh pr list --head "$BR" --state open --json number --jq '.[0].number // empty')" ]; then
+        PR_NUMBER=$(gh pr list --head "$BR" --state open --json number --jq '.[0].number // empty')
+        if [ -z "$PR_NUMBER" ]; then
           gh pr create --base main --head "$BR" \
             --title "i18n: update fr-CA translations for v$VERSION" \
             --body "Downloaded new fr-CA translations from Crowdin for @layerfi/components v$VERSION."
+          PR_NUMBER=$(gh pr list --head "$BR" --state open --json number --jq '.[0].number // empty')
+        else
+          gh pr edit "$PR_NUMBER" \
+            --title "i18n: update fr-CA translations for v$VERSION" \
+            --body "Downloaded new fr-CA translations from Crowdin for @layerfi/components v$VERSION."
         fi
+        PR_URL=$(gh pr view "$PR_NUMBER" --json url --jq '.url')
+        echo "[fr-CA translations PR for v$VERSION]($PR_URL)" >> "$GITHUB_STEP_SUMMARY"
