@@ -1,0 +1,64 @@
+name: i18n - Extract English Keys
+
+# Collect English source keys from code into a stable PR (run manually).
+#
+# extract en-US keys -> open/update one PR with src/assets/locales/en-US only.
+#
+# French is intentionally excluded from extraction; fr-CA is managed by Crowdin.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: i18n-english-keys
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: main
+        fetch-depth: 0
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Configure git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+    - name: Extract English translation keys
+      run: npx i18next-cli extract --sync-primary
+
+    - name: Open English manifest PR
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        git add src/assets/locales/en-US
+        if git diff --cached --quiet; then
+          echo "No English translation key changes."
+          exit 0
+        fi
+        BR=i18n/english-keys
+        VERSION=$(node -p "require('./package.json').version")
+        git checkout -B "$BR"
+        git commit -m "i18n: extract English translation keys"
+        git push -f origin "$BR"
+        if [ -z "$(gh pr list --head "$BR" --state open --json number --jq '.[0].number // empty')" ]; then
+          gh pr create --base main --head "$BR" \
+            --title "i18n: extract English keys for v$VERSION" \
+            --body "Extracted English translation keys from source with i18next-cli extract for @layerfi/components v$VERSION."
+        fi

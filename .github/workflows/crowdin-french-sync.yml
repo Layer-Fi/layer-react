@@ -1,0 +1,125 @@
+name: i18n - Sync French Translations
+
+# Sync fr-CA translations through Crowdin after English sources change.
+#
+# On en-US changes merged to main:
+# upload sources -> pre-translate fr-CA (TM, then optional AI)
+# -> download fr-CA -> keep existing fr-CA keys only
+# -> open/update one PR with fr-CA translation value changes.
+#
+# Manual runs default to download-only for pulling upstream Crowdin edits.
+# Set pretranslate=true to run the full upload/pre-translate/download flow.
+#
+# Secrets:  CROWDIN_PROJECT_ID, CROWDIN_PERSONAL_TOKEN
+# Variable: CROWDIN_AI_PROMPT_ID (optional) — adds an AI pre-translation pass
+#           for strings that still have no fr-CA translation.
+
+on:
+  workflow_dispatch:
+    inputs:
+      pretranslate:
+        description: Upload English sources and run fr-CA pretranslation before downloading
+        required: true
+        default: false
+        type: boolean
+  push:
+    branches:
+      - main
+    paths:
+      - src/assets/locales/en-US/**
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: i18n-french-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: main
+        fetch-depth: 0
+
+    - name: Configure git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+    - name: Upload sources to Crowdin
+      if: ${{ github.event_name == 'push' || inputs.pretranslate }}
+      uses: crowdin/github-action@v2
+      with:
+        upload_sources: true
+        upload_translations: false
+        download_translations: false
+        create_pull_request: false
+        push_translations: false
+      env:
+        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+    - name: Pre-translate fr-CA from translation memory
+      if: ${{ github.event_name == 'push' || inputs.pretranslate }}
+      uses: crowdin/github-action@v2
+      with:
+        command: pre-translate
+        command_args: -l fr-CA --method tm --translate-untranslated-only
+      env:
+        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+    - name: Pre-translate fr-CA with AI
+      if: ${{ (github.event_name == 'push' || inputs.pretranslate) && vars.CROWDIN_AI_PROMPT_ID != '' }}
+      uses: crowdin/github-action@v2
+      with:
+        command: pre-translate
+        command_args: -l fr-CA --method ai --ai-prompt ${{ vars.CROWDIN_AI_PROMPT_ID }} --translate-untranslated-only
+      env:
+        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+    - name: Snapshot current fr-CA manifest
+      run: cp -R src/assets/locales/fr-CA "$RUNNER_TEMP/fr-CA-before-crowdin"
+
+    - name: Download fr-CA translations
+      uses: crowdin/github-action@v2
+      with:
+        upload_sources: false
+        upload_translations: false
+        download_translations: true
+        download_language: fr-CA
+        skip_untranslated_strings: true
+        create_pull_request: false
+        push_translations: false
+      env:
+        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+    - name: Keep existing fr-CA keys only
+      run: node scripts/i18next/mergeExistingTranslations.mjs "$RUNNER_TEMP/fr-CA-before-crowdin" src/assets/locales/fr-CA
+
+    - name: Open French translations PR
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        git add src/assets/locales/fr-CA
+        if git diff --cached --quiet; then
+          echo "No new fr-CA translations."
+          exit 0
+        fi
+        BR=i18n/crowdin-fr-ca
+        VERSION=$(node -p "require('./package.json').version")
+        git checkout -B "$BR"
+        git commit -m "i18n: update fr-CA translations"
+        git push -f origin "$BR"
+        if [ -z "$(gh pr list --head "$BR" --state open --json number --jq '.[0].number // empty')" ]; then
+          gh pr create --base main --head "$BR" \
+            --title "i18n: update fr-CA translations for v$VERSION" \
+            --body "Downloaded new fr-CA translations from Crowdin for @layerfi/components v$VERSION."
+        fi
