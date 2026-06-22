@@ -60,14 +60,17 @@ jobs:
         git push -f origin "$BR"
         PR_NUMBER=$(gh pr list --head "$BR" --state open --json number --jq '.[0].number // empty')
         if [ -z "$PR_NUMBER" ]; then
-          gh pr create --base main --head "$BR" \
+          PR_URL=$(gh pr create --base main --head "$BR" \
             --title "i18n: extract English keys for v$VERSION" \
-            --body "Extracted English translation keys from source with i18next-cli extract for @layerfi/components v$VERSION."
-          PR_NUMBER=$(gh pr list --head "$BR" --state open --json number --jq '.[0].number // empty')
+            --body "Extracted English translation keys from source with i18next-cli extract for @layerfi/components v$VERSION.")
         else
           gh pr edit "$PR_NUMBER" \
             --title "i18n: extract English keys for v$VERSION" \
             --body "Extracted English translation keys from source with i18next-cli extract for @layerfi/components v$VERSION."
+          PR_URL=$(gh pr view "$PR_NUMBER" --json url --jq '.url')
         fi
-        PR_URL=$(gh pr view "$PR_NUMBER" --json url --jq '.url')
+        if [ -z "$PR_URL" ]; then
+          echo "::error::Unable to resolve English keys PR URL."
+          exit 1
+        fi
         echo "[English keys PR for v$VERSION]($PR_URL)" >> "$GITHUB_STEP_SUMMARY"
