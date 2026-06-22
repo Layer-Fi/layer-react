@@ -2,11 +2,18 @@ name: i18n - Sync French Translations
 
 # When English source strings change on main, push them to Crowdin, run fr-CA
 # pre-translation, download the result, and open/update the French translations PR.
+# Manual runs default to download-only for pulling upstream Crowdin translation edits.
 # The merge helper keeps the PR scoped to existing fr-CA keys so Crowdin exports
 # cannot introduce new French manifest keys.
 
 on:
   workflow_dispatch:
+    inputs:
+      pretranslate:
+        description: Upload English sources and run fr-CA pretranslation before downloading
+        required: true
+        default: false
+        type: boolean
   push:
     branches:
       - main
@@ -37,6 +44,7 @@ jobs:
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
     - name: Upload sources to Crowdin
+      if: ${{ github.event_name == 'push' || inputs.pretranslate }}
       uses: crowdin/github-action@v2
       with:
         upload_sources: true
@@ -49,6 +57,7 @@ jobs:
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
     - name: Pre-translate fr-CA from translation memory
+      if: ${{ github.event_name == 'push' || inputs.pretranslate }}
       uses: crowdin/github-action@v2
       with:
         command: pre-translate
@@ -58,7 +67,7 @@ jobs:
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
     - name: Pre-translate fr-CA with AI
-      if: ${{ vars.CROWDIN_AI_PROMPT_ID != '' }}
+      if: ${{ (github.event_name == 'push' || inputs.pretranslate) && vars.CROWDIN_AI_PROMPT_ID != '' }}
       uses: crowdin/github-action@v2
       with:
         command: pre-translate
