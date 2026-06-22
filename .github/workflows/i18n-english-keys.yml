@@ -1,5 +1,8 @@
 name: i18n - Extract English Keys
 
+# Manually collect new English source strings from code into a stable PR.
+# This workflow only updates src/assets/locales/en-US; French is handled by Crowdin.
+
 on:
   workflow_dispatch:
 

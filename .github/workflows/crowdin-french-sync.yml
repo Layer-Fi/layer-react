@@ -1,5 +1,10 @@
 name: i18n - Sync French Translations
 
+# When English source strings change on main, push them to Crowdin, run fr-CA
+# pre-translation, download the result, and open/update the French translations PR.
+# The merge helper keeps the PR scoped to existing fr-CA keys so Crowdin exports
+# cannot introduce new French manifest keys.
+
 on:
   workflow_dispatch:
   push:
