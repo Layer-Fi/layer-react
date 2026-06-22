@@ -48,17 +48,29 @@ jobs:
         GH_TOKEN: ${{ github.token }}
       run: |
         git add src/assets/locales/en-US
-        if git diff --cached --quiet; then
-          echo "No English translation key changes."
-          exit 0
-        fi
         BR=i18n/english-keys
         VERSION=$(node -p "require('./package.json').version")
+        if git diff --cached --quiet; then
+          echo "No English translation key changes."
+          echo "No English translation key changes for v$VERSION." >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+        fi
         git checkout -B "$BR"
         git commit -m "i18n: extract English translation keys"
         git push -f origin "$BR"
-        if [ -z "$(gh pr list --head "$BR" --state open --json number --jq '.[0].number // empty')" ]; then
-          gh pr create --base main --head "$BR" \
+        PR_NUMBER=$(gh pr list --head "$BR" --state open --json number --jq '.[0].number // empty')
+        if [ -z "$PR_NUMBER" ]; then
+          PR_URL=$(gh pr create --base main --head "$BR" \
+            --title "i18n: extract English keys for v$VERSION" \
+            --body "Extracted English translation keys from source with i18next-cli extract for @layerfi/components v$VERSION.")
+        else
+          gh pr edit "$PR_NUMBER" \
             --title "i18n: extract English keys for v$VERSION" \
             --body "Extracted English translation keys from source with i18next-cli extract for @layerfi/components v$VERSION."
+          PR_URL=$(gh pr view "$PR_NUMBER" --json url --jq '.url')
         fi
+        if [ -z "$PR_URL" ]; then
+          echo "::error::Unable to resolve English keys PR URL."
+          exit 1
+        fi
+        echo "[English keys PR for v$VERSION]($PR_URL)" >> "$GITHUB_STEP_SUMMARY"
