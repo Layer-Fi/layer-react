@@ -1,9 +1,12 @@
 name: i18n - Download French Translations
 
 on:
-  repository_dispatch:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - i18n - Upload Sources to Crowdin
     types:
-      - crowdin-fr-ca-translations
+      - completed
 
 permissions:
   contents: write
@@ -15,6 +18,7 @@ concurrency:
 
 jobs:
   download:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
