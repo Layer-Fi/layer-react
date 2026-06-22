@@ -110,8 +110,14 @@ jobs:
         CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
-    - name: Make downloaded fr-CA files writable
-      run: chmod -R u+rwX src/assets/locales/fr-CA
+    - name: Normalize downloaded fr-CA file permissions
+      run: |
+        ls -ld src/assets/locales/fr-CA
+        find src/assets/locales/fr-CA -maxdepth 1 -type f -exec ls -l {} +
+        sudo chown -R "$USER:$(id -gn)" src/assets/locales/fr-CA
+        chmod -R u+rwX src/assets/locales/fr-CA
+        ls -ld src/assets/locales/fr-CA
+        find src/assets/locales/fr-CA -maxdepth 1 -type f -exec ls -l {} +
 
     - name: Keep existing fr-CA keys only
       run: node scripts/i18next/mergeExistingTranslations.mjs "$RUNNER_TEMP/fr-CA-before-crowdin" src/assets/locales/fr-CA
