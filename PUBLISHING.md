@@ -68,3 +68,46 @@ want, as that is considered "prerelease".
 
 NOTE: The `version` field of package.json must be incremented in at least one of these
 numbers in order to publish a new version.
+
+## Linear Release Sync
+
+Releases are tracked in Linear via a continuous pipeline. Two complementary GitHub workflows
+keep a release's scope — and therefore its changelog — complete:
+
+- **`linear-release.yml`** (push to `main`): runs `linear/linear-release-action sync`, which
+  scans the merge commits and asks Linear to resolve each PR number back to its linked issues,
+  attaching them to the in-progress release.
+- **`linear-pr-sync.yml`** (PR merged to `main`): runs `scripts/linear/sync-pr-to-linear.mjs`.
+  It guarantees every merged PR is *linked to a Linear issue* — creating one in **Done** if the
+  PR referenced none — so the sync above can pull it into scope. A PR with no Linear issue would
+  otherwise be invisible to the release.
+
+How `linear-pr-sync` decides:
+
+1. If an issue is already linked to the PR URL (`attachmentsForURL`), or the PR
+   title/branch/body names a real `ABC-123`, the PR is left mapped to that issue — only the PR
+   attachment is ensured. Human-created links are respected, not relabeled.
+2. Otherwise it looks at the **issues already in the in-progress release** and asks Claude
+   (Haiku) whether this PR is part of the same change as one of them:
+   - **Yes** → the PR is attached to that issue, so related PRs (e.g. several commits in an
+     ongoing "API hardening" effort) collapse to **one release-notes line**.
+   - **No / uncertain** → a new issue is created in Done, labeled from the PR title prefix
+     (`fix:`→Bug, `feat:`→Feature, `refactor:`/`chore:`/`ci:`/…→Improvement, `i18n:`→i18n,
+     `docs:`→Docs, else Uncategorized). The classifier biases toward "new" — a spare issue is
+     cheap to merge in Linear, a wrong grouping corrupts the notes.
+
+Either way the PR is attached and the issue id is commented back on the PR. The candidate set
+is just whatever is already in the release — no theme config to maintain; groupings emerge.
+
+### Required configuration
+
+- Secret **`LINEAR_API_KEY`** — a Linear personal API key (GraphQL). This is *separate* from
+  `LINEAR_ACCESS_KEY` (the release-action pipeline key, which cannot run arbitrary GraphQL). To
+  attribute auto-created issues to a bot instead of a person, swap in a Linear OAuth access
+  token (the script auto-detects `lin_oauth_*` and sends it as a Bearer token).
+- Secret **`ANTHROPIC_API_KEY`** — for the add-vs-create classifier (Claude Haiku; ~half a cent
+  per PR with no explicit link).
+- Variable **`LINEAR_TEAM_KEY`** — the team key (e.g. `ENG`) that owns auto-created issues.
+
+Set `LINEAR_DRY_RUN=1` to skip Linear writes (the read-only release query and the classifier
+still run, and the intended mutations are logged).

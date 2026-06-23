@@ -1,0 +1,42 @@
+name: Linear PR Sync — issue per merge
+
+# On every merged PR to main, guarantee the PR maps to a Linear issue (creating one in Done if
+# none exists) and link the PR to it. The link is what `linear-release.yml sync` follows to pull
+# the PR into the release scope — so this is what keeps a release's scope (and its changelog)
+# complete, including PRs that never referenced a Linear issue.
+#
+# Runs alongside linear-release.yml (push to main): this ensures the issue exists + is linked;
+# that workflow attaches it to the in-progress release.
+#
+# Requires secrets LINEAR_API_KEY (Linear personal API key, GraphQL) and ANTHROPIC_API_KEY
+# (the add-vs-create classifier), plus repo variable LINEAR_TEAM_KEY (team key that owns
+# auto-created issues, e.g. "ENG").
+
+on:
+  pull_request:
+    types: [ closed ]
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pull-requests: write   # to comment the created issue id back on the PR
+
+jobs:
+  sync:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+
+    - name: Sync PR to Linear
+      run: node scripts/linear/sync-pr-to-linear.mjs
+      env:
+        LINEAR_API_KEY: ${{ secrets.LINEAR_API_KEY }}
+        LINEAR_TEAM_KEY: ${{ vars.LINEAR_TEAM_KEY }}
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        GH_TOKEN: ${{ github.token }}
