@@ -21,6 +21,12 @@
     grid-template-columns: auto 1fr;
   }
 
+  & > .Layer__Checkbox {
+    grid-area: selection;
+    align-self: center;
+    padding-inline: var(--spacing-md) var(--spacing-2xs);
+  }
+
   &__Content {
     grid-area: content;
     padding: var(--spacing-sm);
