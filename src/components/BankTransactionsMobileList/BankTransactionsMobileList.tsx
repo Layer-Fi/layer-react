@@ -44,20 +44,20 @@ export const BankTransactionsMobileList = ({
     [bankTransactions],
   )
 
-  const exitingKeys = useMemo(
-    () => new Set(
-      shouldHideAfterCategorize
-        ? bankTransactions?.filter(tx => tx.recentlyCategorized).map(tx => tx.id)
-        : [],
-    ),
-    [bankTransactions, shouldHideAfterCategorize],
-  )
+  const exitingKeys = useMemo(() => {
+    if (!shouldHideAfterCategorize || !bankTransactions) {
+      return new Set<string>()
+    }
+    return new Set(bankTransactions.filter(tx => tx.recentlyCategorized).map(tx => tx.id))
+  }, [bankTransactions, shouldHideAfterCategorize])
 
   const bulkSelectionProps = useMobileListBulkSelection(orderedIds, { enabled: bulkActionsEnabled })
 
+  const firstId = orderedIds[0]
+
   const { expandedKeys, open, close, toggle, closeAll, openNext } =
     useMobileListExpansion(orderedIds, {
-      defaultExpandedIds: orderedIds[0] ? [orderedIds[0]] : undefined,
+      defaultExpandedIds: firstId ? [firstId] : undefined,
     })
 
   useEffect(() => {
@@ -70,11 +70,10 @@ export const BankTransactionsMobileList = ({
     if (bulkActionsEnabled) {
       closeAll()
     }
-    else if (orderedIds[0]) {
-      open(orderedIds[0])
+    else if (firstId) {
+      open(firstId)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bulkActionsEnabled])
+  }, [bulkActionsEnabled, firstId, closeAll, open])
 
   const onClickItem = useCallback(
     (bankTransaction: BankTransaction) => toggle(bankTransaction.id),

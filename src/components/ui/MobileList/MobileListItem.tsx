@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { composeRenderProps } from 'react-aria-components/composeRenderProps'
 import { GridListItem } from 'react-aria-components/GridList'
 
+import { AnimatedElement } from '@ui/AnimatedElement/AnimatedElement'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 
@@ -41,7 +42,7 @@ export const MobileListItem = <TData extends { id: string }>({
       {composeRenderProps(children, (children, { selectionMode, selectionBehavior }) => (
         <AnimatedPresenceElement
           variant='fade'
-          isOpen={!isExiting}
+          isPresent={!isExiting}
           motionKey={item.id}
           className={classNames(
             'Layer__MobileListItem',
@@ -56,19 +57,20 @@ export const MobileListItem = <TData extends { id: string }>({
             {children}
           </div>
           {renderExpandedContent && (
-            <AnimatedPresenceElement
+            <AnimatedElement
               variant='expand'
-              isOpen={isExpanded}
-              motionKey={`${item.id}--expanded`}
+              isVisible={isExpanded}
               className='Layer__MobileListItem__Expanded'
+              // Prevent clicking on expansion from closing the row
+              onClick={event => event.stopPropagation()}
             >
               {renderExpandedContent(item)}
-            </AnimatedPresenceElement>
+            </AnimatedElement>
           )}
           {renderFooter && (
             <AnimatedPresenceElement
               variant='expand'
-              isOpen={!isExpanded}
+              isPresent={!isExpanded}
               motionKey={`${item.id}--footer`}
               className='Layer__MobileListItem__Footer'
             >

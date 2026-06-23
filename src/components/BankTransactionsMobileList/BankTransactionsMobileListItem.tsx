@@ -50,11 +50,13 @@ export const BankTransactionsMobileListItem = ({
     if (bankTransaction.recentlyCategorized && !shouldHideAfterCategorize) {
       onClose(bankTransaction.id)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    bankTransaction.id,
     bankTransaction.recentlyCategorized,
     bankTransaction.match,
     bankTransaction.category,
+    shouldHideAfterCategorize,
+    onClose,
   ])
 
   const inAppLink = useMemo(() => {

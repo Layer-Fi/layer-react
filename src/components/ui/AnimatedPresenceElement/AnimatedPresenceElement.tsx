@@ -12,7 +12,7 @@ type AnimatedPresenceElementProps<T extends ValidHTMLElement = 'div'> = Omit<HTM
   as?: T
   children: ReactNode
   variant: AnimationVariant
-  isOpen?: boolean
+  isPresent?: boolean
   slotProps?: {
     AnimatePresence?: { initial?: boolean, mode?: AnimatePresenceMode, onExitComplete?: () => void }
   }
@@ -24,7 +24,7 @@ function AnimatedPresenceElementInner<T extends ValidHTMLElement = 'div'>(
     as,
     children,
     variant,
-    isOpen,
+    isPresent,
     slotProps = { AnimatePresence: { initial: false } },
     motionKey,
     ...props
@@ -36,7 +36,7 @@ function AnimatedPresenceElementInner<T extends ValidHTMLElement = 'div'>(
 
   return (
     <AnimatePresence {...slotProps.AnimatePresence}>
-      {isOpen && (
+      {isPresent && (
         <MotionComponent
           ref={ref}
           key={motionKey}
