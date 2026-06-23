@@ -28,6 +28,8 @@ interface MobileListBaseProps<TData> {
   renderFooter?: (item: TData, state: { isExpanded: boolean }) => React.ReactNode
   renderExpandedContent?: (item: TData) => React.ReactNode
   expandedKeys?: Set<string>
+  exitingKeys?: Set<string>
+  onRemoveItem?: (item: TData) => void
   onClickItem?: (item: TData) => void
   variant?: MobileListVariant
 }
@@ -67,6 +69,8 @@ export const MobileList = <TData extends { id: string }>({
   renderFooter,
   renderExpandedContent,
   expandedKeys,
+  exitingKeys,
+  onRemoveItem,
   onClickItem,
   isLoading,
   isError,
@@ -83,6 +87,24 @@ export const MobileList = <TData extends { id: string }>({
 
   const resolvedSelectionBehavior = resolvedSelectionMode === 'none' ? 'toggle' : undefined
 
+  const renderRow = useCallback((item: TData) => {
+    const isExpanded = expandedKeys?.has(item.id) ?? false
+    return (
+      <MobileListItem
+        key={item.id}
+        item={item}
+        onClickItem={onClickItem}
+        renderFooter={renderFooter}
+        renderExpandedContent={renderExpandedContent}
+        isExpanded={isExpanded}
+        isExiting={exitingKeys?.has(item.id) ?? false}
+        onExitComplete={onRemoveItem}
+      >
+        {renderItem(item, { isExpanded })}
+      </MobileListItem>
+    )
+  }, [exitingKeys, expandedKeys, onClickItem, onRemoveItem, renderExpandedContent, renderFooter, renderItem])
+
   const renderEmptyState = useCallback(() => {
     return <EmptyState />
   }, [EmptyState])
@@ -93,22 +115,6 @@ export const MobileList = <TData extends { id: string }>({
 
   if (isError) {
     return <ErrorState />
-  }
-
-  const renderRow = (item: TData) => {
-    const isExpanded = expandedKeys?.has(item.id) ?? false
-    return (
-      <MobileListItem
-        key={item.id}
-        item={item}
-        onClickItem={onClickItem}
-        renderFooter={renderFooter}
-        renderExpandedContent={renderExpandedContent}
-        isExpanded={isExpanded}
-      >
-        {renderItem(item, { isExpanded })}
-      </MobileListItem>
-    )
   }
 
   return (

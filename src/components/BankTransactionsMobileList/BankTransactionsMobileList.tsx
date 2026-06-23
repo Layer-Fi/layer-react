@@ -5,6 +5,7 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useMobileListBulkSelection } from '@providers/BulkSelectionStore/useMobileListBulkSelection'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { MobileList } from '@ui/MobileList/MobileList'
 import { useMobileListExpansion } from '@ui/MobileList/useMobileListExpansion'
 import { VStack } from '@ui/Stack/Stack'
@@ -37,11 +38,21 @@ export const BankTransactionsMobileList = ({
   const [bulkActionsEnabled, setBulkActionsEnabled] = useState(false)
 
   const { clearSelection } = useBulkSelectionActions()
+  const { shouldHideAfterCategorize, removeAfterCategorize } = useBankTransactionsContext()
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
   const orderedIds = useMemo(
     () => bankTransactions?.map(tx => tx.id) ?? [],
     [bankTransactions],
+  )
+
+  const exitingKeys = useMemo(
+    () => new Set(
+      shouldHideAfterCategorize
+        ? bankTransactions?.filter(tx => tx.recentlyCategorized).map(tx => tx.id)
+        : [],
+    ),
+    [bankTransactions, shouldHideAfterCategorize],
   )
 
   const bulkSelectionProps = useMobileListBulkSelection(orderedIds, { enabled: bulkActionsEnabled })
@@ -81,16 +92,23 @@ export const BankTransactionsMobileList = ({
           bankTransaction={bankTransaction}
           initialLoad={initialLoad}
           onClose={close}
-          onRemove={openNext}
         />
       )
     },
-    [orderedIds, initialLoad, close, openNext],
+    [orderedIds, initialLoad, close],
+  )
+
+  const onRemoveItem = useCallback(
+    (bankTransaction: BankTransaction) => {
+      removeAfterCategorize([bankTransaction.id])
+      openNext(bankTransaction.id)
+    },
+    [removeAfterCategorize, openNext],
   )
 
   const renderFooter = useCallback(
-    (bankTransaction: BankTransaction, { isExpanded }: { isExpanded: boolean }) => (
-      <BankTransactionsMobileListItemFooter bankTransaction={bankTransaction} isExpanded={isExpanded} />
+    (bankTransaction: BankTransaction) => (
+      <BankTransactionsMobileListItemFooter bankTransaction={bankTransaction} />
     ),
     [],
   )
@@ -126,6 +144,8 @@ export const BankTransactionsMobileList = ({
           renderFooter={renderFooter}
           renderExpandedContent={renderExpandedContent}
           expandedKeys={expandedKeys}
+          exitingKeys={exitingKeys}
+          onRemoveItem={onRemoveItem}
           onClickItem={bulkActionsEnabled ? undefined : onClickItem}
           {...bulkSelectionProps}
         />

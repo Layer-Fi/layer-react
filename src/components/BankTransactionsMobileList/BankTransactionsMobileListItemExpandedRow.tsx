@@ -1,4 +1,4 @@
-import { type Key, useMemo, useState } from 'react'
+import { type Key, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
@@ -53,7 +53,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
     [t],
   )
 
-  const onChangePurpose = (key: Key) => {
+  const onChangePurpose = useCallback((key: Key) => {
     const nextPurpose = key as Purpose
     const isCurrentlySplit = !!selectedCategorization?.category && isSplitAsOption(selectedCategorization.category)
 
@@ -65,19 +65,18 @@ export const BankTransactionsMobileListItemExpandedRow = ({
 
     setTransactionSelectionVariant(bankTransaction.id, nextVariant)
     setPurpose(nextPurpose)
-  }
+  }, [bankTransaction, selectedCategorization.category, setTransactionSelectionVariant])
 
   return (
-    <VStack pi='md' gap='md' pbs='4xs' pbe='md'>
-      {showCategorization
-        && (
-          <Toggle
-            ariaLabel={t('common:label.purpose', 'Purpose')}
-            options={purposeToggleOptions}
-            selectedKey={purpose}
-            onSelectionChange={onChangePurpose}
-          />
-        )}
+    <VStack pi='sm' gap='md' pbs='4xs' pbe='sm'>
+      {showCategorization && (
+        <Toggle
+          ariaLabel={t('common:label.purpose', 'Purpose')}
+          options={purposeToggleOptions}
+          selectedKey={purpose}
+          onSelectionChange={onChangePurpose}
+        />
+      )}
       <BankTransactionsMobileForms
         isOpen={isOpen}
         purpose={purpose}

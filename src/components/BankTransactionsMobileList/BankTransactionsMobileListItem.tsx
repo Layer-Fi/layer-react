@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback, useEffect, useMemo } from 'react'
+import { type ReactNode, useEffect, useMemo } from 'react'
 import classNames from 'classnames'
 import { File } from 'lucide-react'
 
@@ -6,11 +6,9 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
 import { hasReceipts, isCategorized, isCredit } from '@utils/bankTransactions/shared'
-import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { type LinkingMetadata, useInAppLinkContext } from '@contexts/InAppLinkContext'
-import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
@@ -22,7 +20,6 @@ export interface BankTransactionsMobileListItemProps {
   bankTransaction: BankTransaction
   initialLoad?: boolean
   onClose: (id: string) => void
-  onRemove: (id: string) => void
 }
 
 const getInAppLink = (
@@ -44,7 +41,6 @@ export const BankTransactionsMobileListItem = ({
   bankTransaction,
   initialLoad,
   onClose,
-  onRemove,
 }: BankTransactionsMobileListItemProps) => {
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
 
@@ -52,12 +48,7 @@ export const BankTransactionsMobileListItem = ({
 
   const { renderInAppLink } = useInAppLinkContext()
 
-  const handleRemove = useCallback(
-    () => onRemove(bankTransaction.id),
-    [onRemove, bankTransaction.id],
-  )
-
-  const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction, onRemove: handleRemove })
+  const isBeingRemoved = bankTransaction.recentlyCategorized && shouldHideAfterCategorize
 
   const displayAsCategorized = isBeingRemoved ? false : categorized
 
@@ -82,43 +73,35 @@ export const BankTransactionsMobileListItem = ({
   const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
 
   return (
-    <AnimatedPresenceElement
-      variant='fade'
-      isOpen={!isBeingRemoved}
-      motionKey={bankTransaction.id}
+    <HStack
+      gap='sm'
+      justify='space-between'
+      className={classNames('Layer__BankTransactionsMobileListItem', isVisible && 'show')}
     >
-      <VStack
-        className={classNames('Layer__BankTransactionsMobileListItem', isVisible && 'show')}
-      >
-        <HStack gap='sm' justify='space-between'>
-          <HStack align='center' overflow='hidden'>
-            <VStack align='start' gap='3xs' overflow='hidden'>
-              <Span ellipsis>
-                {bankTransaction.counterpartyName ?? bankTransaction.description}
-              </Span>
-              {inAppLink}
-              <HStack gap='2xs' align='center' overflow='hidden'>
-                <Span ellipsis size='sm'>
-                  {bankTransaction.accountInstitution?.name && `${bankTransaction.accountInstitution.name} — `}
-                  {bankTransaction.accountName}
-                  {bankTransaction.accountMask && ` ${bankTransaction.accountMask}`}
-                </Span>
-                {hasReceipts(bankTransaction) ? <File size={12} /> : null}
-              </HStack>
-            </VStack>
-          </HStack>
-          <BankTransactionsAmountDate
-            amount={bankTransaction.amount}
-            date={bankTransaction.date}
-            slotProps={{
-              MoneySpan: {
-                size: 'md',
-                displayPlusSign: isCredit(bankTransaction),
-              },
-            }}
-          />
+      <VStack align='start' gap='3xs' overflow='hidden'>
+        <Span ellipsis>
+          {bankTransaction.counterpartyName ?? bankTransaction.description}
+        </Span>
+        {inAppLink}
+        <HStack gap='2xs' align='center' overflow='hidden'>
+          <Span ellipsis size='sm'>
+            {bankTransaction.accountInstitution?.name && `${bankTransaction.accountInstitution.name} — `}
+            {bankTransaction.accountName}
+            {bankTransaction.accountMask && ` ${bankTransaction.accountMask}`}
+          </Span>
+          {hasReceipts(bankTransaction) ? <File size={12} /> : null}
         </HStack>
       </VStack>
-    </AnimatedPresenceElement>
+      <BankTransactionsAmountDate
+        amount={bankTransaction.amount}
+        date={bankTransaction.date}
+        slotProps={{
+          MoneySpan: {
+            size: 'md',
+            displayPlusSign: isCredit(bankTransaction),
+          },
+        }}
+      />
+    </HStack>
   )
 }

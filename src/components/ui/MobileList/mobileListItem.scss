@@ -12,8 +12,7 @@
   border: 1px solid var(--border-color);
   background-color: var(--color-base-0);
 
-  &[data-selection-mode='multiple'],
-  &[data-selection-mode='single'] {
+  &--selectable {
     grid-template-areas:
       'selection content'
       'expanded expanded'
@@ -21,7 +20,7 @@
     grid-template-columns: auto minmax(0, 1fr);
   }
 
-  & .Layer__Checkbox {
+  & > .Layer__Checkbox {
     grid-area: selection;
     align-self: center;
     padding-inline-start: var(--spacing-sm);
@@ -39,6 +38,7 @@
 
   &__Footer {
     grid-area: footer;
+    overflow: hidden;
   }
 
   [data-variant='compact'] & {

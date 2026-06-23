@@ -22,7 +22,7 @@ export const MatchFormMobileItem = ({ match, bankTransaction, inAppLink }: Match
       key={match.id}
       textValue={match.details.description}
     >
-      <HStack pi='md' gap='md' justify='space-between'>
+      <HStack pi='sm' pb='xs' gap='md' justify='space-between'>
         <HStack align='center'>
           <Checkbox
             slot='selection'
@@ -41,13 +41,7 @@ export const MatchFormMobileItem = ({ match, bankTransaction, inAppLink }: Match
             DateTime: { size: 'xs' },
           }}
         />
-        {inAppLink && (
-          <HStack align='center'>
-            <Span size='sm'>
-              {inAppLink}
-            </Span>
-          </HStack>
-        )}
+        {inAppLink}
       </HStack>
     </GridListItem>
   )

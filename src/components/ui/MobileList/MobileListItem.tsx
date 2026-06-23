@@ -1,4 +1,5 @@
 import { type PropsWithChildren, type ReactNode, useCallback } from 'react'
+import classNames from 'classnames'
 import { composeRenderProps } from 'react-aria-components/composeRenderProps'
 import { GridListItem } from 'react-aria-components/GridList'
 
@@ -13,6 +14,8 @@ type MobileListItemProps<TData> = PropsWithChildren<{
   renderFooter?: (item: TData, state: { isExpanded: boolean }) => ReactNode
   renderExpandedContent?: (item: TData) => ReactNode
   isExpanded?: boolean
+  isExiting?: boolean
+  onExitComplete?: (item: TData) => void
 }>
 
 export const MobileListItem = <TData extends { id: string }>({
@@ -22,20 +25,30 @@ export const MobileListItem = <TData extends { id: string }>({
   renderFooter,
   renderExpandedContent,
   isExpanded = false,
+  isExiting = false,
+  onExitComplete,
 }: MobileListItemProps<TData>) => {
   const onAction = useCallback(() => {
     onClickItem?.(item)
   }, [item, onClickItem])
 
+  const handleExitComplete = useCallback(() => {
+    onExitComplete?.(item)
+  }, [onExitComplete, item])
+
   return (
-    <GridListItem
-      key={item.id}
-      id={item.id}
-      onAction={onAction}
-      className='Layer__MobileListItem'
-    >
+    <GridListItem key={item.id} id={item.id} onAction={onAction}>
       {composeRenderProps(children, (children, { selectionMode, selectionBehavior }) => (
-        <>
+        <AnimatedPresenceElement
+          variant='fade'
+          isOpen={!isExiting}
+          motionKey={item.id}
+          className={classNames(
+            'Layer__MobileListItem',
+            selectionMode !== 'none' && 'Layer__MobileListItem--selectable',
+          )}
+          slotProps={{ AnimatePresence: { initial: false, onExitComplete: handleExitComplete } }}
+        >
           {selectionMode !== 'none' && selectionBehavior === 'toggle' && (
             <Checkbox slot='selection' size='md' />
           )}
@@ -53,11 +66,16 @@ export const MobileListItem = <TData extends { id: string }>({
             </AnimatedPresenceElement>
           )}
           {renderFooter && (
-            <div className='Layer__MobileListItem__Footer'>
+            <AnimatedPresenceElement
+              variant='expand'
+              isOpen={!isExpanded}
+              motionKey={`${item.id}--footer`}
+              className='Layer__MobileListItem__Footer'
+            >
               {renderFooter(item, { isExpanded })}
-            </div>
+            </AnimatedPresenceElement>
           )}
-        </>
+        </AnimatedPresenceElement>
       ))}
     </GridListItem>
   )

@@ -35,10 +35,7 @@ export const BankTransactionsMobileBulkActionsHeader = ({
       pi='sm'
       pb='xs'
     >
-      <HStack
-        align='center'
-        gap='xs'
-      >
+      <HStack align='center' gap='xs'>
         {bulkActionsEnabled && (
           <>
             <Checkbox

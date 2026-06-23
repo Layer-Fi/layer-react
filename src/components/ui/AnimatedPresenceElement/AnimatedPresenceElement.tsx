@@ -14,7 +14,7 @@ type AnimatedPresenceElementProps<T extends ValidHTMLElement = 'div'> = Omit<HTM
   variant: AnimationVariant
   isOpen?: boolean
   slotProps?: {
-    AnimatePresence?: { initial?: boolean, mode?: AnimatePresenceMode }
+    AnimatePresence?: { initial?: boolean, mode?: AnimatePresenceMode, onExitComplete?: () => void }
   }
   motionKey: Key
 }
