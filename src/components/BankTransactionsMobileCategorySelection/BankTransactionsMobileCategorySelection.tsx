@@ -99,7 +99,7 @@ export const BankTransactionsMobileCategorySelection = ({
   }, [bankTransaction.id, setTransactionTaxCodeSelection])
 
   return (
-    <VStack gap='sm'>
+    <VStack gap='3xs'>
       <Span size='sm' weight='bold'>
         {t('bankTransactions:action.select_category', 'Select category')}
       </Span>

@@ -90,6 +90,7 @@ export const BankTransactionsMobileListItem = ({
             size: 'md',
             displayPlusSign: isCredit(bankTransaction),
           },
+          Stack: { gap: '3xs' },
         }}
       />
     </HStack>

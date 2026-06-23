@@ -22,7 +22,7 @@ export const MatchFormMobileItem = ({ match, bankTransaction, inAppLink }: Match
       key={match.id}
       textValue={match.details.description}
     >
-      <HStack pi='sm' pb='xs' gap='md' justify='space-between'>
+      <HStack pi='sm' pb='xs' gap='md' justify='space-between' align='center'>
         <HStack align='center'>
           <Checkbox
             slot='selection'

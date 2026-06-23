@@ -69,7 +69,7 @@ export const BankTransactionsMobileListMatchForm = ({
   }, [showCategorization, selectedMatchId, bankTransaction, t, onMatchSubmit])
 
   return (
-    <VStack gap='sm'>
+    <VStack gap='3xs'>
       <Span size='sm' weight='bold'>
         {t('bankTransactions:label.find_match', 'Find Match')}
       </Span>
