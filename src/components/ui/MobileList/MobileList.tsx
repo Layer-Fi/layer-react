@@ -24,8 +24,10 @@ interface MobileListBaseProps<TData> {
     EmptyState: React.FC
     ErrorState: React.FC
   }
-  renderItem: (item: TData) => React.ReactNode
+  renderItem: (item: TData, state: { isExpanded: boolean }) => React.ReactNode
   renderFooter?: (item: TData) => React.ReactNode
+  renderExpandedContent?: (item: TData) => React.ReactNode
+  expandedKeys?: Set<string>
   onClickItem?: (item: TData) => void
   variant?: MobileListVariant
 }
@@ -63,6 +65,8 @@ export const MobileList = <TData extends { id: string }>({
   slots,
   renderItem,
   renderFooter,
+  renderExpandedContent,
+  expandedKeys,
   onClickItem,
   isLoading,
   isError,
@@ -91,11 +95,21 @@ export const MobileList = <TData extends { id: string }>({
     return <ErrorState />
   }
 
-  const renderRow = (item: TData) => (
-    <MobileListItem key={item.id} item={item} onClickItem={onClickItem} renderFooter={renderFooter}>
-      {renderItem(item)}
-    </MobileListItem>
-  )
+  const renderRow = (item: TData) => {
+    const isExpanded = expandedKeys?.has(item.id) ?? false
+    return (
+      <MobileListItem
+        key={item.id}
+        item={item}
+        onClickItem={onClickItem}
+        renderFooter={renderFooter}
+        renderExpandedContent={renderExpandedContent}
+        isExpanded={isExpanded}
+      >
+        {renderItem(item, { isExpanded })}
+      </MobileListItem>
+    )
+  }
 
   return (
     <GridList

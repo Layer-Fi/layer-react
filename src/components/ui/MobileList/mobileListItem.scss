@@ -2,6 +2,7 @@
   display: grid;
   grid-template-areas:
     'content'
+    'expanded'
     'footer';
   grid-template-columns: 1fr;
   overflow: hidden;
@@ -15,6 +16,7 @@
   &[data-selection-mode='single'] {
     grid-template-areas:
       'selection content'
+      'expanded expanded'
       'footer footer';
     grid-template-columns: auto 1fr;
   }
@@ -22,6 +24,11 @@
   &__Content {
     grid-area: content;
     padding: var(--spacing-sm);
+  }
+
+  &__Expanded {
+    grid-area: expanded;
+    overflow: hidden;
   }
 
   &__Footer {

@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useMobileListBulkSelection } from '@providers/BulkSelectionStore/useMobileListBulkSelection'
+import { MobileList } from '@ui/MobileList/MobileList'
+import { useMobileListExpansion } from '@ui/MobileList/useMobileListExpansion'
 import { BankTransactionsMobileBulkActionsHeader } from '@components/BankTransactionsMobileList/BankTransactionsMobileBulkActionsHeader'
 import { BankTransactionsMobileListItem } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItem'
-import {
-  TransactionToOpenContext,
-  useTransactionToOpen,
-} from '@components/BankTransactionsMobileList/TransactionToOpenContext'
+import { BankTransactionsMobileListItemExpandedRow } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
 
 import './bankTransactionsMobileList.scss'
 
@@ -21,6 +22,10 @@ export interface BankTransactionsMobileListProps {
   showTooltips: boolean
 }
 
+const EmptyState = () => null
+const ErrorState = () => null
+const LIST_SLOTS = { EmptyState, ErrorState }
+
 export const BankTransactionsMobileList = ({
   bankTransactions,
   initialLoad,
@@ -28,10 +33,23 @@ export const BankTransactionsMobileList = ({
   showReceiptUploads,
   showTooltips,
 }: BankTransactionsMobileListProps) => {
-  const transactionToOpenContextData = useTransactionToOpen()
+  const { t } = useTranslation()
   const [bulkActionsEnabled, setBulkActionsEnabled] = useState(false)
+
   const { clearSelection } = useBulkSelectionActions()
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
+
+  const orderedIds = useMemo(
+    () => bankTransactions?.map(tx => tx.id) ?? [],
+    [bankTransactions],
+  )
+
+  const bulkSelectionProps = useMobileListBulkSelection(orderedIds, { enabled: bulkActionsEnabled })
+
+  const { expandedKeys, open, close, toggle, closeAll, openNext } =
+    useMobileListExpansion(orderedIds, {
+      defaultExpandedIds: orderedIds[0] ? [orderedIds[0]] : undefined,
+    })
 
   useEffect(() => {
     if (!bulkActionsEnabled) {
@@ -39,30 +57,72 @@ export const BankTransactionsMobileList = ({
     }
   }, [bulkActionsEnabled, clearSelection])
 
+  useEffect(() => {
+    if (bulkActionsEnabled) {
+      closeAll()
+    }
+    else if (orderedIds[0]) {
+      open(orderedIds[0])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bulkActionsEnabled])
+
+  const onClickItem = useCallback(
+    (bankTransaction: BankTransaction) => toggle(bankTransaction.id),
+    [toggle],
+  )
+
+  const renderItem = useCallback(
+    (bankTransaction: BankTransaction, { isExpanded }: { isExpanded: boolean }) => {
+      const index = orderedIds.indexOf(bankTransaction.id)
+      return (
+        <BankTransactionsMobileListItem
+          index={index < 0 ? 0 : index}
+          bankTransaction={bankTransaction}
+          isExpanded={isExpanded}
+          initialLoad={initialLoad}
+          onClose={close}
+          onRemove={openNext}
+        />
+      )
+    },
+    [orderedIds, initialLoad, close, openNext],
+  )
+
+  const renderExpandedContent = useCallback(
+    (bankTransaction: BankTransaction) => (
+      <BankTransactionsMobileListItemExpandedRow
+        bankTransaction={bankTransaction}
+        isOpen={expandedKeys.has(bankTransaction.id)}
+        showDescriptions={showDescriptions}
+        showReceiptUploads={showReceiptUploads}
+        showTooltips={showTooltips}
+      />
+    ),
+    [expandedKeys, showDescriptions, showReceiptUploads, showTooltips],
+  )
+
   return (
-    <TransactionToOpenContext.Provider value={transactionToOpenContextData}>
+    <>
       <BankTransactionsMobileBulkActionsHeader
         bankTransactions={bankTransactions}
         bulkActionsEnabled={bulkActionsEnabled}
         onBulkActionsToggle={setBulkActionsEnabled}
       />
-      <ul className='Layer__BankTransactionsMobileList'>
-        {bankTransactions?.map(
-          (bankTransaction: BankTransaction, index: number) => (
-            <BankTransactionsMobileListItem
-              key={bankTransaction.id}
-              index={index}
-              bankTransaction={bankTransaction}
-              initialLoad={initialLoad}
-              isFirstItem={index == 0}
-              bulkActionsEnabled={bulkActionsEnabled}
-              showDescriptions={showDescriptions}
-              showReceiptUploads={showReceiptUploads}
-              showTooltips={showTooltips}
-            />
-          ),
-        )}
-      </ul>
-    </TransactionToOpenContext.Provider>
+      <div className='Layer__BankTransactionsMobileList'>
+        <MobileList
+          ariaLabel={t('bankTransactions:label.transactions', 'Transactions')}
+          data={bankTransactions}
+          isLoading={false}
+          isError={false}
+          slots={LIST_SLOTS}
+          renderItem={renderItem}
+          renderExpandedContent={renderExpandedContent}
+          expandedKeys={expandedKeys}
+          onClickItem={bulkActionsEnabled ? undefined : onClickItem}
+          {...bulkSelectionProps}
+        />
+      </div>
+    </>
   )
 }
