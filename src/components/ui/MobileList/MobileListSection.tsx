@@ -9,7 +9,7 @@ type MobileListSectionProps<TData extends { id: string }> = {
   label: string
   items: ReadonlyArray<TData>
   renderItem: (item: TData, state: { isExpanded: boolean }) => React.ReactNode
-  renderFooter?: (item: TData) => React.ReactNode
+  renderFooter?: (item: TData, state: { isExpanded: boolean }) => React.ReactNode
   onClickItem?: (item: TData) => void
 }
 

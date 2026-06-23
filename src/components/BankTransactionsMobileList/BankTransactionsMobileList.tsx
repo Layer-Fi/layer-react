@@ -10,6 +10,7 @@ import { useMobileListExpansion } from '@ui/MobileList/useMobileListExpansion'
 import { BankTransactionsMobileBulkActionsHeader } from '@components/BankTransactionsMobileList/BankTransactionsMobileBulkActionsHeader'
 import { BankTransactionsMobileListItem } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItem'
 import { BankTransactionsMobileListItemExpandedRow } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
+import { BankTransactionsMobileListItemFooter } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemFooter'
 
 import './bankTransactionsMobileList.scss'
 
@@ -73,13 +74,12 @@ export const BankTransactionsMobileList = ({
   )
 
   const renderItem = useCallback(
-    (bankTransaction: BankTransaction, { isExpanded }: { isExpanded: boolean }) => {
+    (bankTransaction: BankTransaction) => {
       const index = orderedIds.indexOf(bankTransaction.id)
       return (
         <BankTransactionsMobileListItem
           index={index < 0 ? 0 : index}
           bankTransaction={bankTransaction}
-          isExpanded={isExpanded}
           initialLoad={initialLoad}
           onClose={close}
           onRemove={openNext}
@@ -87,6 +87,13 @@ export const BankTransactionsMobileList = ({
       )
     },
     [orderedIds, initialLoad, close, openNext],
+  )
+
+  const renderFooter = useCallback(
+    (bankTransaction: BankTransaction, { isExpanded }: { isExpanded: boolean }) => (
+      <BankTransactionsMobileListItemFooter bankTransaction={bankTransaction} isExpanded={isExpanded} />
+    ),
+    [],
   )
 
   const renderExpandedContent = useCallback(
@@ -117,6 +124,7 @@ export const BankTransactionsMobileList = ({
           isError={false}
           slots={LIST_SLOTS}
           renderItem={renderItem}
+          renderFooter={renderFooter}
           renderExpandedContent={renderExpandedContent}
           expandedKeys={expandedKeys}
           onClickItem={bulkActionsEnabled ? undefined : onClickItem}

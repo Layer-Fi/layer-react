@@ -25,7 +25,7 @@ interface MobileListBaseProps<TData> {
     ErrorState: React.FC
   }
   renderItem: (item: TData, state: { isExpanded: boolean }) => React.ReactNode
-  renderFooter?: (item: TData) => React.ReactNode
+  renderFooter?: (item: TData, state: { isExpanded: boolean }) => React.ReactNode
   renderExpandedContent?: (item: TData) => React.ReactNode
   expandedKeys?: Set<string>
   onClickItem?: (item: TData) => void

@@ -9,21 +9,17 @@ import { hasReceipts, isCategorized, isCredit } from '@utils/bankTransactions/sh
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { type LinkingMetadata, useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
-import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
-import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 
 import './bankTransactionsMobileListItem.scss'
 
 export interface BankTransactionsMobileListItemProps {
   index: number
   bankTransaction: BankTransaction
-  isExpanded: boolean
   initialLoad?: boolean
   onClose: (id: string) => void
   onRemove: (id: string) => void
@@ -46,7 +42,6 @@ const getInAppLink = (
 export const BankTransactionsMobileListItem = ({
   index,
   bankTransaction,
-  isExpanded,
   initialLoad,
   onClose,
   onRemove,
@@ -54,7 +49,6 @@ export const BankTransactionsMobileListItem = ({
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
 
   const categorized = isCategorized(bankTransaction)
-  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
   const { renderInAppLink } = useInAppLinkContext()
 
@@ -132,11 +126,6 @@ export const BankTransactionsMobileListItem = ({
             }}
           />
         </HStack>
-        {!isExpanded && (
-          !isCategorizationEnabled && !displayAsCategorized
-            ? <BankTransactionsProcessingInfo showAsBadge />
-            : <BankTransactionsListItemCategory bankTransaction={bankTransaction} mobile />
-        )}
       </VStack>
     </AnimatedPresenceElement>
   )

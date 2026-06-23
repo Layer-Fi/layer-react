@@ -10,7 +10,7 @@ import './mobileListItem.scss'
 type MobileListItemProps<TData> = PropsWithChildren<{
   item: TData
   onClickItem?: (item: TData) => void
-  renderFooter?: (item: TData) => ReactNode
+  renderFooter?: (item: TData, state: { isExpanded: boolean }) => ReactNode
   renderExpandedContent?: (item: TData) => ReactNode
   isExpanded?: boolean
 }>
@@ -54,7 +54,7 @@ export const MobileListItem = <TData extends { id: string }>({
           )}
           {renderFooter && (
             <div className='Layer__MobileListItem__Footer'>
-              {renderFooter(item)}
+              {renderFooter(item, { isExpanded })}
             </div>
           )}
         </>
