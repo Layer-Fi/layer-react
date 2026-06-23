@@ -7,12 +7,11 @@ import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelec
 import { useMobileListBulkSelection } from '@providers/BulkSelectionStore/useMobileListBulkSelection'
 import { MobileList } from '@ui/MobileList/MobileList'
 import { useMobileListExpansion } from '@ui/MobileList/useMobileListExpansion'
+import { VStack } from '@ui/Stack/Stack'
 import { BankTransactionsMobileBulkActionsHeader } from '@components/BankTransactionsMobileList/BankTransactionsMobileBulkActionsHeader'
 import { BankTransactionsMobileListItem } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItem'
 import { BankTransactionsMobileListItemExpandedRow } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
 import { BankTransactionsMobileListItemFooter } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemFooter'
-
-import './bankTransactionsMobileList.scss'
 
 export interface BankTransactionsMobileListProps {
   bankTransactions?: BankTransaction[]
@@ -116,7 +115,7 @@ export const BankTransactionsMobileList = ({
         bulkActionsEnabled={bulkActionsEnabled}
         onBulkActionsToggle={setBulkActionsEnabled}
       />
-      <div className='Layer__BankTransactionsMobileList'>
+      <VStack pbs='sm'>
         <MobileList
           ariaLabel={t('bankTransactions:label.transactions', 'Transactions')}
           data={bankTransactions}
@@ -130,7 +129,7 @@ export const BankTransactionsMobileList = ({
           onClickItem={bulkActionsEnabled ? undefined : onClickItem}
           {...bulkSelectionProps}
         />
-      </div>
+      </VStack>
     </>
   )
 }

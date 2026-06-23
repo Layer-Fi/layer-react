@@ -1,5 +1,5 @@
 import { DateFormat } from '@utils/i18n/date/patterns'
-import { HStack, VStack } from '@ui/Stack/Stack'
+import { VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { DateTime } from '@components/DateTime/DateTime'
 
@@ -14,18 +14,8 @@ interface BankTransactionsAmountDateProps {
 
 export const BankTransactionsAmountDate = ({ amount, date, slotProps }: BankTransactionsAmountDateProps) => {
   return (
-    <VStack
-      align='end'
-      gap='3xs'
-      pb='sm'
-    >
-      <HStack>
-        <MoneySpan
-          amount={amount}
-          {...slotProps?.MoneySpan}
-        />
-      </HStack>
-
+    <VStack align='end' gap='3xs'>
+      <MoneySpan amount={amount} {...slotProps?.MoneySpan} />
       <DateTime
         valueAsDate={date}
         dateFormat={DateFormat.MonthDayShort}

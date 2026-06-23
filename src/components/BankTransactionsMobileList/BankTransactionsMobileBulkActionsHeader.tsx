@@ -32,7 +32,7 @@ export const BankTransactionsMobileBulkActionsHeader = ({
       gap='md'
       align='center'
       justify='space-between'
-      pi='md'
+      pi='sm'
       pb='xs'
     >
       <HStack
@@ -48,9 +48,7 @@ export const BankTransactionsMobileBulkActionsHeader = ({
               onChange={onHeaderCheckboxChange}
               aria-label={t('bankTransactions:label.select_all_transactions', 'Select all transactions on this page')}
             />
-            <Span
-              size='md'
-            >
+            <Span size='md'>
               {t('common:label.select_all', 'Select all')}
             </Span>
           </>

@@ -68,7 +68,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
   }
 
   return (
-    <VStack pi='md' gap='md' pbe='md'>
+    <VStack pi='md' gap='md' pbs='4xs' pbe='md'>
       {showCategorization
         && (
           <Toggle

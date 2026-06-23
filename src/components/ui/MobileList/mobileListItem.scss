@@ -21,10 +21,10 @@
     grid-template-columns: auto 1fr;
   }
 
-  & > .Layer__Checkbox {
+  & .Layer__Checkbox {
     grid-area: selection;
     align-self: center;
-    padding-inline: var(--spacing-md) var(--spacing-2xs);
+    padding-inline-start: var(--spacing-sm);
   }
 
   &__Content {

@@ -90,26 +90,18 @@ export const BankTransactionsMobileListItem = ({
       <VStack
         className={classNames('Layer__BankTransactionsMobileListItem', isVisible && 'show')}
       >
-        <HStack gap='sm' justify='space-between' pie='md'>
+        <HStack gap='sm' justify='space-between'>
           <HStack align='center' overflow='hidden'>
-            <VStack
-              align='start'
-              gap='3xs'
-              className='Layer__BankTransactionsMobileListItem__HeadingContentLeft'
-              pi='md'
-              pb='sm'
-            >
+            <VStack align='start' gap='3xs' overflow='hidden'>
               <Span ellipsis>
                 {bankTransaction.counterpartyName ?? bankTransaction.description}
               </Span>
               {inAppLink}
-              <HStack gap='2xs' align='center'>
-                <Span size='sm' ellipsis>
-                  <Span ellipsis size='sm'>
-                    {bankTransaction.accountInstitution?.name && `${bankTransaction.accountInstitution.name} — `}
-                    {bankTransaction.accountName}
-                    {bankTransaction.accountMask && ` ${bankTransaction.accountMask}`}
-                  </Span>
+              <HStack gap='2xs' align='center' overflow='hidden'>
+                <Span ellipsis size='sm'>
+                  {bankTransaction.accountInstitution?.name && `${bankTransaction.accountInstitution.name} — `}
+                  {bankTransaction.accountName}
+                  {bankTransaction.accountMask && ` ${bankTransaction.accountMask}`}
                 </Span>
                 {hasReceipts(bankTransaction) ? <File size={12} /> : null}
               </HStack>
