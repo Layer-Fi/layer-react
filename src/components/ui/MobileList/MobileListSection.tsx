@@ -8,8 +8,8 @@ import './mobileListSection.scss'
 type MobileListSectionProps<TData extends { id: string }> = {
   label: string
   items: ReadonlyArray<TData>
-  renderItem: (item: TData, state: { isExpanded: boolean }) => React.ReactNode
-  renderFooter?: (item: TData, state: { isExpanded: boolean }) => React.ReactNode
+  renderItem: (item: TData) => React.ReactNode
+  renderFooter?: (item: TData) => React.ReactNode
   onClickItem?: (item: TData) => void
 }
 
@@ -34,7 +34,7 @@ export const MobileListSection = <TData extends { id: string }>({
         onClickItem={onClickItem}
         renderFooter={renderFooter}
       >
-        {renderItem(item, { isExpanded: false })}
+        {renderItem(item)}
       </MobileListItem>
     ))}
   </GridListSection>

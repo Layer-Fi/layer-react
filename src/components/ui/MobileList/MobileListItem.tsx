@@ -12,7 +12,7 @@ import './mobileListItem.scss'
 type MobileListItemProps<TData> = PropsWithChildren<{
   item: TData
   onClickItem?: (item: TData) => void
-  renderFooter?: (item: TData, state: { isExpanded: boolean }) => ReactNode
+  renderFooter?: (item: TData) => ReactNode
   renderExpandedContent?: (item: TData) => ReactNode
   isExpanded?: boolean
   isExiting?: boolean
@@ -74,7 +74,7 @@ export const MobileListItem = <TData extends { id: string }>({
               motionKey={`${item.id}--footer`}
               className='Layer__MobileListItem__Footer'
             >
-              {renderFooter(item, { isExpanded })}
+              {renderFooter(item)}
             </AnimatedPresenceElement>
           )}
         </AnimatedPresenceElement>

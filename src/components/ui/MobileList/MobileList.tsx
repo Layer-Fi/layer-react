@@ -24,8 +24,8 @@ interface MobileListBaseProps<TData> {
     EmptyState: React.FC
     ErrorState: React.FC
   }
-  renderItem: (item: TData, state: { isExpanded: boolean }) => React.ReactNode
-  renderFooter?: (item: TData, state: { isExpanded: boolean }) => React.ReactNode
+  renderItem: (item: TData) => React.ReactNode
+  renderFooter?: (item: TData) => React.ReactNode
   renderExpandedContent?: (item: TData) => React.ReactNode
   expandedKeys?: Set<string>
   exitingKeys?: Set<string>
@@ -88,7 +88,6 @@ export const MobileList = <TData extends { id: string }>({
   const resolvedSelectionBehavior = resolvedSelectionMode === 'none' ? 'toggle' : undefined
 
   const renderRow = useCallback((item: TData) => {
-    const isExpanded = expandedKeys?.has(item.id) ?? false
     return (
       <MobileListItem
         key={item.id}
@@ -96,11 +95,11 @@ export const MobileList = <TData extends { id: string }>({
         onClickItem={onClickItem}
         renderFooter={renderFooter}
         renderExpandedContent={renderExpandedContent}
-        isExpanded={isExpanded}
+        isExpanded={expandedKeys?.has(item.id) ?? false}
         isExiting={exitingKeys?.has(item.id) ?? false}
         onExitComplete={onRemoveItem}
       >
-        {renderItem(item, { isExpanded })}
+        {renderItem(item)}
       </MobileListItem>
     )
   }, [exitingKeys, expandedKeys, onClickItem, onRemoveItem, renderExpandedContent, renderFooter, renderItem])
