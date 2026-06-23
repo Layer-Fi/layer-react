@@ -1,12 +1,10 @@
 import { type ReactNode, useEffect, useMemo } from 'react'
-import classNames from 'classnames'
 import { File } from 'lucide-react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
 import { hasReceipts, isCategorized, isCredit } from '@utils/bankTransactions/shared'
-import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { type LinkingMetadata, useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -16,9 +14,7 @@ import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTra
 import './bankTransactionsMobileListItem.scss'
 
 export interface BankTransactionsMobileListItemProps {
-  index: number
   bankTransaction: BankTransaction
-  initialLoad?: boolean
   onClose: (id: string) => void
 }
 
@@ -37,9 +33,7 @@ const getInAppLink = (
 }
 
 export const BankTransactionsMobileListItem = ({
-  index,
   bankTransaction,
-  initialLoad,
   onClose,
 }: BankTransactionsMobileListItemProps) => {
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
@@ -70,14 +64,8 @@ export const BankTransactionsMobileListItem = ({
     return getInAppLink(bankTransaction, renderInAppLink)
   }, [displayAsCategorized, bankTransaction, renderInAppLink])
 
-  const { isVisible } = useDelayedVisibility({ delay: index * 20, initialVisibility: Boolean(initialLoad) })
-
   return (
-    <HStack
-      gap='sm'
-      justify='space-between'
-      className={classNames('Layer__BankTransactionsMobileListItem', isVisible && 'show')}
-    >
+    <HStack gap='sm' justify='space-between'>
       <VStack align='start' gap='3xs' overflow='hidden'>
         <Span ellipsis>
           {bankTransaction.counterpartyName ?? bankTransaction.description}

@@ -16,7 +16,6 @@ import { BankTransactionsMobileListItemFooter } from '@components/BankTransactio
 
 export interface BankTransactionsMobileListProps {
   bankTransactions?: BankTransaction[]
-  initialLoad?: boolean
 
   showDescriptions: boolean
   showReceiptUploads: boolean
@@ -29,7 +28,6 @@ const LIST_SLOTS = { EmptyState, ErrorState }
 
 export const BankTransactionsMobileList = ({
   bankTransactions,
-  initialLoad,
   showDescriptions,
   showReceiptUploads,
   showTooltips,
@@ -84,18 +82,10 @@ export const BankTransactionsMobileList = ({
   )
 
   const renderItem = useCallback(
-    (bankTransaction: BankTransaction) => {
-      const index = orderedIds.indexOf(bankTransaction.id)
-      return (
-        <BankTransactionsMobileListItem
-          index={index < 0 ? 0 : index}
-          bankTransaction={bankTransaction}
-          initialLoad={initialLoad}
-          onClose={close}
-        />
-      )
-    },
-    [orderedIds, initialLoad, close],
+    (bankTransaction: BankTransaction) => (
+      <BankTransactionsMobileListItem bankTransaction={bankTransaction} onClose={close} />
+    ),
+    [close],
   )
 
   const onRemoveItem = useCallback(

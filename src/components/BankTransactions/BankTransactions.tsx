@@ -37,6 +37,7 @@ import {
   BankTransactionsHeader,
   type BankTransactionsHeaderStringOverrides,
 } from '@components/BankTransactions/BankTransactionsHeader'
+import { BankTransactionsListWithEmptyStates } from '@components/BankTransactions/BankTransactionsTableEmptyState'
 import { BankTransactionsTableContent, type MobileComponentType } from '@components/BankTransactions/constants'
 import { BankTransactionsList } from '@components/BankTransactionsList/BankTransactionsList'
 import { BankTransactionsMobileList } from '@components/BankTransactionsMobileList/BankTransactionsMobileList'
@@ -52,8 +53,6 @@ import { Pagination } from '@components/Pagination/Pagination'
 import { SuggestedCategorizationRuleUpdatesDialog } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDialog'
 
 import './bankTransactions.scss'
-
-import { BankTransactionsListWithEmptyStates } from './BankTransactionsTableEmptyState'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -301,7 +300,6 @@ const BankTransactionsTableView = ({
       <BankTransactionsList
         bankTransactions={bankTransactions}
         stringOverrides={stringOverrides?.bankTransactionCTAs}
-
         showDescriptions={showDescriptions}
         showReceiptUploads={showReceiptUploads}
         showTooltips={showTooltips}
