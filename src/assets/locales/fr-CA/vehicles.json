@@ -44,8 +44,8 @@
     "reactivate_vehicle": "Réactiver ce véhicule?"
   },
   "validation": {
-    "make_model_required": "Le champ Marque et modèle est obligatoire.",
-    "year_range": "L’année doit se situer entre 1900 et {{maxYear}}.",
+    "make_model_required": "Les champs marque et modèle sont obligatoires.",
+    "year_range": "L’année doit être comprise entre 1900 et {{maxYear}}.",
     "year_required": "Le champ Année est obligatoire."
   }
 }

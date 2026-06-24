@@ -55,7 +55,7 @@
   "label": {
     "actionable_count_transactions_will_be_confirmed_one": "{{displayActionableCount}} du {{displayCount}} transaction sera confirmée.",
     "actionable_count_transactions_will_be_confirmed_other": "{{displayActionableCount}} des {{displayCount}} transactions seront confirmées.",
-    "additional_bank_transaction_actions": "Actions supplémentaires pour les transactions bancaires",
+    "additional_bank_transaction_actions": "Actions supplémentaires pour les opérations bancaires",
     "affected_transaction_display": "Il n’y a aucune transaction concernée à afficher",
     "affected_transactions": "Transactions concernées",
     "all_categories_uppercase": "TOUTES LES CATÉGORIES",

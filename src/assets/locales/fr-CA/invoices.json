@@ -9,7 +9,7 @@
     "record_payment": "Enregistrer le paiement",
     "refund_invoice": "Rembourser la facture",
     "reset_invoice": "Réinitialiser la facture",
-    "reset_to_saved": "Remettre au statut enregistré",
+    "reset_to_saved": "Revenir au statut enregistré",
     "view_invoice": "Voir la facture",
     "void_invoice_label": "Annuler la facture",
     "write_off": "Passer en perte",

@@ -32,7 +32,7 @@
     "tasks": "Tâches",
     "team_review_and_categorize_transaction": "Notre équipe examinera et catégorisera cette transaction. Nous vous contacterons si nous avons des questions à son sujet.",
     "uploaded_files": "Fichiers téléversés :",
-    "working_on_books_no_action_needed": "Nous travaillons sur vos livres de {{monthName}}. Aucune action n'est requise de votre part pour le moment.",
+    "working_on_books_no_action_needed": "Nous travaillons sur vos livres de {{monthName}}. Aucune action de votre part n'est requise pour le moment.",
     "working_on_books_please_complete_tasks_one": "Nous travaillons sur votre tenue de livres de {{monthName}}. Veuillez terminer la {{displayCount}} tâche en attente.",
     "working_on_books_please_complete_tasks_other": "Nous travaillons sur votre tenue de livres de {{monthName}}. Veuillez terminer les {{displayCount}} tâches en attente."
   },
