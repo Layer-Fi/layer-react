@@ -87,11 +87,7 @@ export function PaginatedTable<TData extends { id: string }>({
   const table = useReactTable<TData>({
     data: data ?? [],
     columns: columnDefs,
-    state: {
-      pagination,
-      columnPinning,
-      ...rowSelectionState,
-    },
+    state: { pagination, columnPinning, ...rowSelectionState },
     onPaginationChange: (updaterOrValue) => {
       const newPagination =
       typeof updaterOrValue === 'function'

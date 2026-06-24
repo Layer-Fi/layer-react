@@ -60,9 +60,7 @@ const withRenderedIcon = ({
   iconBox,
   ...iconProps
 }: Parameters<typeof buildIcon>[0] & { isPending?: boolean, iconBox?: true }) => {
-  if (iconProps.noIcon) {
-    return null
-  }
+  if (iconProps.noIcon) return null
 
   if (isPending && iconBox) {
     return <ButtonIconBox><LoadingSpinner size={16} /></ButtonIconBox>
