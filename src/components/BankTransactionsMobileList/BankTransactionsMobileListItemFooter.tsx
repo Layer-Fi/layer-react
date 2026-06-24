@@ -18,7 +18,7 @@ export const BankTransactionsMobileListItemFooter = ({
   const isBeingRemoved = bankTransaction.recentlyCategorized && shouldHideAfterCategorize
   const displayAsCategorized = isBeingRemoved ? false : isCategorized(bankTransaction)
 
-  return !isCategorizationEnabled && !displayAsCategorized
-    ? <BankTransactionsProcessingInfo showAsBadge />
-    : <BankTransactionsListItemCategory bankTransaction={bankTransaction} mobile categorized={displayAsCategorized} />
+  return isCategorizationEnabled || displayAsCategorized
+    ? <BankTransactionsListItemCategory bankTransaction={bankTransaction} mobile categorized={displayAsCategorized} />
+    : <BankTransactionsProcessingInfo showAsBadge />
 }
