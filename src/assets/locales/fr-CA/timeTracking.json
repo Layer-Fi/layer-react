@@ -64,8 +64,8 @@
     "zero_minutes": "0 min"
   },
   "prompt": {
-    "delete_entry": "Supprimer l'entrée",
-    "discard_timer": "Annuler le minuteur"
+    "delete_entry": "Supprimer l'entrée?",
+    "discard_timer": "Annuler le minuteur?"
   },
   "services": {
     "add": "Ajouter",
