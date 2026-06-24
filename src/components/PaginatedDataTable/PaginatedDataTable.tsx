@@ -1,4 +1,4 @@
-import { type MutableRefObject, useCallback, useEffect, useMemo, useState } from 'react'
+import { type MutableRefObject, useCallback, useMemo, useState } from 'react'
 import {
   getCoreRowModel,
   getExpandedRowModel,
@@ -56,14 +56,6 @@ export function PaginatedTable<TData extends { id: string }>({
   const { pageSize = 20, hasMore, fetchMore, initialPage = 0, onSetPage, autoResetPageIndexRef } = paginationProps
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: initialPage, pageSize })
-
-  useEffect(() => {
-    setPagination(current => (
-      current.pageIndex === initialPage && current.pageSize === pageSize
-        ? current
-        : { pageIndex: initialPage, pageSize }
-    ))
-  }, [initialPage, pageSize])
 
   const columnDefs = useMemo(() => {
     return getColumnDefsWithSelection(columnConfig, selectionProps)
