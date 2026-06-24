@@ -172,7 +172,6 @@ export const BankTransactionsListItem = ({
         <AnimatedPresenceElement variant='expand' isPresent={openExpandedRow} motionKey={`${bankTransaction.id}--expanded`}>
           <ExpandedBankTransactionRow
             bankTransaction={bankTransaction}
-            categorized={displayAsCategorized}
             asListItem
             showDescriptions={showDescriptions}
             showReceiptUploads={showReceiptUploads}

@@ -70,7 +70,6 @@ export interface DocumentWithStatus {
 type ExpandedBankTransactionRowProps = {
   bankTransaction: BankTransaction
   asListItem?: boolean
-  categorized?: boolean
 
   showDescriptions: boolean
   showReceiptUploads: boolean

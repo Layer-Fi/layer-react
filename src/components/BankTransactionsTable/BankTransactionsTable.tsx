@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, DisplayState } from '@internal-types/bankTransactions'
 import { Alignment } from '@schemas/reports/unifiedReport'
-import { isCategorized, isCredit } from '@utils/bankTransactions/shared'
+import { isCredit } from '@utils/bankTransactions/shared'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBulkSelectionActions, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -257,7 +257,6 @@ export const BankTransactionsTable = ({
     render: row => (
       <ExpandedBankTransactionRow
         bankTransaction={row.original}
-        categorized={isCategorized(row.original)}
         showDescriptions={showDescriptions}
         showReceiptUploads={showReceiptUploads}
         showTooltips={showTooltips}

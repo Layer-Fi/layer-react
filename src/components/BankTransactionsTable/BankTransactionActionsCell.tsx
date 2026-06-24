@@ -116,7 +116,7 @@ export const BankTransactionActionsCell = ({
         }
       }}
       isPending={isProcessing}
-      isDisabled={selectedOption === null || isBulkSelectionActive}
+      isDisabled={selectedOption === null || isBulkSelectionActive || isBeingRemoved}
       action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
       isActive={isOpen}
       isError={isError}
@@ -183,7 +183,7 @@ export const BankTransactionActionsCell = ({
             onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
               setTransactionCategorization(bankTransaction.id, selectedCategory)
             }}
-            isDisabled={isProcessing}
+            isDisabled={isProcessing || isBeingRemoved}
           />
           {submitButton}
           {expandButton}

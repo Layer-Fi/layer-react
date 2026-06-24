@@ -105,7 +105,7 @@
     }
 
     &.Layer__BankTransactionRow--expanded .Layer__UI__Table-Cell,
-    :hover .Layer__UI__Table-Cell {
+    &:hover .Layer__UI__Table-Cell {
       background-color: var(--bg-element-focus);
     }
 
