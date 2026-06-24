@@ -72,6 +72,17 @@
     min-width: 0;
   }
 
+  .Layer__UI__Table-Cell,
+  .Layer__UI__Table-Column {
+    &:first-child {
+      padding-inline-start: var(--spacing-lg);
+    }
+
+    &:last-child {
+      padding-inline-end: var(--spacing-lg);
+    }
+  }
+
   .Layer__UI__Table-Column__BankTransactionsTable--Account,
   .Layer__UI__Table-Cell__BankTransactionsTable--Account {
     width: 18rem;
