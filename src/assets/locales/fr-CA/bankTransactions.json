@@ -91,7 +91,7 @@
     "this_will_confirm_count_transactions_one": "Cette action confirmera {{displayCount}} transaction.",
     "this_will_confirm_count_transactions_other": "Cette action confirmera {{displayCount}} transactions.",
     "to_review": "À examiner",
-    "transaction_action": "Action de la transaction",
+    "transaction_action": "Catégoriser ou apparier la transaction",
     "transaction_source": "Source de la transaction",
     "transactions_to_review": "Transactions à examiner",
     "transfer": "Virement",

@@ -91,7 +91,7 @@
     "this_will_confirm_count_transactions_one": "This will confirm {{displayCount}} transaction.",
     "this_will_confirm_count_transactions_other": "This will confirm {{displayCount}} transactions.",
     "to_review": "To Review",
-    "transaction_action": "Transaction action",
+    "transaction_action": "Categorize or match transaction",
     "transaction_source": "Transaction source",
     "transactions_to_review": "Transactions to review",
     "transfer": "Transfer",
