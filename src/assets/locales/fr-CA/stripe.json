@@ -3,7 +3,7 @@
     "connect_stripe_label": "Connecter Stripe"
   },
   "error": {
-    "stripe_sent_misconfigured_link": "Stripe a envoyé un lien d’intégration de compte Connect mal configuré. Veuillez réessayer.",
+    "stripe_sent_misconfigured_link": "Stripe a envoyé un lien d'intégration du compte Connect mal configuré. Veuillez réessayer.",
     "unable_to_connect_to_stripe": "Impossible de se connecter à Stripe. Veuillez réessayer."
   },
   "label": {

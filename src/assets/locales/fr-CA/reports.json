@@ -5,8 +5,8 @@
   "empty": {
     "no_detail_lines_found": "Aucune ligne de détail trouvée",
     "no_detail_lines_pnl_item": "Il n’y a aucune ligne de détail pour cet élément de l’état des résultats",
-    "no_rows_found": "Aucune ligne trouvée",
-    "report_has_no_rows": "Ce rapport ne contient aucune ligne."
+    "no_rows_found": "Aucun poste trouvé",
+    "report_has_no_rows": "Ce rapport ne contient aucun poste."
   },
   "error": {
     "couldnt_load_report": "Nous n’avons pas pu charger votre rapport",
@@ -17,8 +17,8 @@
     "load_reports_navigation": "Une erreur s’est produite lors du chargement de cette navigation. Veuillez réessayer."
   },
   "label": {
-    "accrual": "Comptabilité d'exercice",
-    "adjustments_net_income": "Ajustements au bénéfice net",
+    "accrual": "Comptabilité d’exercice",
+    "adjustments_net_income": "Ajustements au résultat net",
     "assets": "Actifs",
     "balance_sheet": "Bilan",
     "cash": "Comptabilité de caisse",
@@ -29,9 +29,9 @@
     "cost_goods_sold": "Coût des marchandises vendues",
     "financing_activities": "Activités de financement",
     "group": "Grouper par",
-    "income": "Produits",
+    "income": "Revenus",
     "investing_activities": "Activités d’investissement",
-    "liabilities_equity": "Passif et capitaux propres",
+    "liabilities_equity": "Passifs et capitaux propres",
     "line_item_name_detail_lines": "Lignes de détail de {{lineItemName}}",
     "net_cash_increase_period": "Augmentation nette de la trésorerie pour la période",
     "net_profit": "Bénéfice net",
