@@ -30,7 +30,7 @@
     "vendors": "Fournisseurs"
   },
   "validation": {
-    "either_individual_required": "Le nom de la personne ou le nom de l’entreprise est obligatoire.",
-    "email_required": "Le courriel est un champ obligatoire."
+    "either_individual_required": "Le nom de la personne ou le nom de l’entreprise est requis.",
+    "email_required": "L’adresse courriel est obligatoire."
   }
 }

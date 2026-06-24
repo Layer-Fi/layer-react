@@ -46,14 +46,14 @@
     "results": "Aucun résultat trouvé"
   },
   "error": {
-    "couldnt_load_data": "Nous n’avons pas pu charger vos données.",
+    "couldnt_load_data": "Nous n’avons pas réussi à récupérer vos données.",
     "download_failed_check_connection": "Le téléchargement a échoué. Vérifiez votre connexion et réessayez dans quelques secondes.",
     "load_options": "Le chargement des options a échoué",
     "please_try_again": "Veuillez réessayer.",
     "please_try_again_later": "Veuillez réessayer plus tard",
     "saving": "Erreur lors de l’enregistrement",
-    "something_went_wrong": "Un problème est survenu",
-    "something_went_wrong_please_try_again": "Un problème est survenu. Veuillez réessayer.",
+    "something_went_wrong": "Une erreur s’est produite",
+    "something_went_wrong_please_try_again": "Une erreur s’est produite. Veuillez réessayer.",
     "submit_failed_check_connection": "L’envoi a échoué. Veuillez vérifier votre connexion et réessayer.",
     "try_to_refresh_page": "Essayez d’actualiser la page."
   },
