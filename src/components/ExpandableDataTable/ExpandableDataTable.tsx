@@ -9,16 +9,12 @@ import { Button as ReactAriaButton } from 'react-aria-components/Button'
 
 import { HStack } from '@ui/Stack/Stack'
 import {
-  getColumnDefs,
-  getColumnPinning,
-  isLeafColumn,
-  type NestedColumnConfig,
-} from '@components/DataTable/columnUtils'
-import {
   type BaseDataTableProps,
   type ClickableRowProps,
   DataTable,
 } from '@components/DataTable/DataTable'
+import { getColumnDefs, isLeafColumn, type NestedColumnConfig } from '@components/DataTable/utils/column/nesting'
+import { getColumnPinning } from '@components/DataTable/utils/column/pinning'
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { ExpandButton } from '@components/ExpandButton/ExpandButton'
 

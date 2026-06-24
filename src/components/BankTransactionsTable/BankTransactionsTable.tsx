@@ -1,20 +1,35 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
+import type { OnChangeFn, Row, RowSelectionState } from '@tanstack/react-table'
+import classNames from 'classnames'
+import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, DisplayState } from '@internal-types/bankTransactions'
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { useBankTransactionsTableCheckboxState } from '@hooks/features/bankTransactions/useBankTransactionsTableCheckboxState'
+import { Alignment } from '@schemas/reports/unifiedReport'
+import { isCategorized, isCredit } from '@utils/bankTransactions/shared'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useBulkSelectionActions, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import { Checkbox } from '@ui/Checkbox/Checkbox'
-import { BankTransactionRow } from '@components/BankTransactionRow/BankTransactionRow'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { Span } from '@ui/Typography/Text'
 import {
   type BankTransactionsStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
 import { BankTransactionsTableEmptyState } from '@components/BankTransactions/BankTransactionsTableEmptyState'
-import { BankTransactionsLoader } from '@components/BankTransactionsLoader/BankTransactionsLoader'
-import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
+import { BankTransactionAccountCell } from '@components/BankTransactionsTable/BankTransactionAccountCell'
+import { BankTransactionActionsCell } from '@components/BankTransactionsTable/BankTransactionActionsCell'
+import { BankTransactionDescriptionCell } from '@components/BankTransactionsTable/BankTransactionDescriptionCell'
+import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { DataStateContainer } from '@components/DataStateContainer/DataStateContainer'
+import type { ClickableRowProps } from '@components/DataTable/DataTable'
+import type { ColumnConfig } from '@components/DataTable/utils/column'
+import type { DataTableExpandedRowProps } from '@components/DataTable/utils/rows/expandedRows'
+import type { DataTableSelectionProps } from '@components/DataTable/utils/rows/selection'
+import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
+import { PaginatedTable, type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
+import { SimpleDataTable } from '@components/SimpleDataTable/SimpleDataTable'
 
 import './bankTransactionsTable.scss'
 
@@ -36,13 +51,128 @@ interface BankTransactionsTableProps {
   showTooltips: boolean
 
   stringOverrides?: BankTransactionsStringOverrides
-  isSyncing?: boolean
-  page?: number
-  lastPage?: boolean
+  isMonthlyViewMode: boolean
+  paginationProps: TablePaginationProps
+}
+
+const COMPONENT_NAME = 'BankTransactionsTable'
+
+enum BankTransactionColumns {
+  Date = 'Date',
+  Transaction = 'Transaction',
+  Account = 'Account',
+  Amount = 'Amount',
+  Category = 'Category',
+}
+
+type BankTransactionRowType = Row<BankTransaction>
+
+const BankTransactionsTableErrorState = () => {
+  const { t } = useTranslation()
+
+  return (
+    <DataStateContainer>
+      <DataState
+        status={DataStateStatus.failed}
+        title={t('common:error.something_went_wrong', 'Something went wrong')}
+        description={t('bankTransactions:error.couldnt_load_transactions', 'We couldn’t load your transactions')}
+        spacing
+      />
+    </DataStateContainer>
+  )
+}
+
+const BankTransactionDateCell = ({ bankTransaction }: { bankTransaction: BankTransaction }) => {
+  const { formatDate } = useIntlFormatter()
+
+  return <Span>{formatDate(bankTransaction.date)}</Span>
+}
+
+const BankTransactionAmountCell = ({ bankTransaction }: { bankTransaction: BankTransaction }) => (
+  <MoneySpan amount={bankTransaction.amount} displayPlusSign={isCredit(bankTransaction)} />
+)
+
+type GetColumnConfigParams = {
+  display: DisplayState
+  isCategorizationEnabled: boolean
+  isExpandedRowValid: (id: string) => boolean
+  showReceiptUploads: boolean
+  stringOverrides?: BankTransactionsStringOverrides
+  t: TFunction
+}
+
+const getColumnConfig = ({
+  display,
+  isCategorizationEnabled,
+  isExpandedRowValid,
+  showReceiptUploads,
+  stringOverrides,
+  t,
+}: GetColumnConfigParams): ColumnConfig<BankTransaction> => [
+  {
+    id: BankTransactionColumns.Date,
+    header: stringOverrides?.transactionsTable?.dateColumnHeaderText || t('common:label.date', 'Date'),
+    cell: (row: BankTransactionRowType) => <BankTransactionDateCell bankTransaction={row.original} />,
+    isRowHeader: true,
+  },
+  {
+    id: BankTransactionColumns.Transaction,
+    header: stringOverrides?.transactionsTable?.transactionColumnHeaderText
+      || t('common:label.transaction', 'Transaction'),
+    cell: (row: BankTransactionRowType) => (
+      <BankTransactionDescriptionCell
+        bankTransaction={row.original}
+        showReceiptUploads={showReceiptUploads}
+      />
+    ),
+  },
+  {
+    id: BankTransactionColumns.Account,
+    header: stringOverrides?.transactionsTable?.accountColumnHeaderText
+      || t('common:label.account', 'Account'),
+    cell: (row: BankTransactionRowType) => <BankTransactionAccountCell bankTransaction={row.original} />,
+  },
+  {
+    id: BankTransactionColumns.Amount,
+    header: stringOverrides?.transactionsTable?.amountColumnHeaderText
+      || t('common:label.amount', 'Amount'),
+    alignment: Alignment.Right,
+    pinning: 'right',
+    cell: (row: BankTransactionRowType) => (
+      <BankTransactionAmountCell bankTransaction={row.original} />
+    ),
+  },
+  {
+    id: BankTransactionColumns.Category,
+    header: isCategorizationEnabled && display !== DisplayState.categorized
+      ? (stringOverrides?.transactionsTable?.categorizeColumnHeaderText
+        || t('common:action.categorize', 'Categorize'))
+      : (stringOverrides?.transactionsTable?.categoryColumnHeaderText
+        || t('common:label.category', 'Category')),
+    pinning: 'right',
+    preventRowClick: true,
+    cell: (row: BankTransactionRowType) => (
+      <BankTransactionActionsCell
+        row={row}
+        isExpandedRowValid={isExpandedRowValid(row.original.id)}
+        stringOverrides={stringOverrides?.bankTransactionCTAs}
+      />
+    ),
+  },
+]
+
+const getRowSelectionState = (selectedIds: Set<string>): RowSelectionState => {
+  const rowSelection: RowSelectionState = {}
+
+  selectedIds.forEach((id) => {
+    rowSelection[id] = true
+  })
+
+  return rowSelection
 }
 
 export const BankTransactionsTable = ({
-  isLoading,
+  isLoading = false,
   bankTransactions,
 
   showDescriptions,
@@ -50,128 +180,128 @@ export const BankTransactionsTable = ({
   showTooltips,
 
   stringOverrides,
-  isSyncing = false,
-  page,
-  lastPage,
+  isMonthlyViewMode,
+  paginationProps,
 }: BankTransactionsTableProps) => {
   const { t } = useTranslation()
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
-  const { mutate, display } = useBankTransactionsContext()
-  const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
+  const { display, shouldHideAfterCategorize } = useBankTransactionsContext()
+  const { selectedIds } = useSelectedIds()
+  const { selectMultiple, deselectMultiple } = useBulkSelectionActions()
+  const [expandedRowValidity, setExpandedRowValidity] = useState<Record<string, boolean>>({})
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
-  const isEmpty = (bankTransactions?.length ?? 0) === 0
+  const rowSelection = useMemo(() => getRowSelectionState(selectedIds), [selectedIds])
 
-  const showReceiptColumn =
-  (showReceiptUploads
-    && bankTransactions?.some(
-      transaction => transaction.documentIds?.length > 0,
-    ))
-    ?? false
+  const onRowSelectionChange = useCallback<OnChangeFn<RowSelectionState>>((updaterOrValue) => {
+    const nextSelection =
+      typeof updaterOrValue === 'function'
+        ? updaterOrValue(rowSelection)
+        : updaterOrValue
 
-  const showReceiptDataProperties = useMemo(
-    () => toDataProperties({ 'show-receipt-upload-column': showReceiptColumn }),
-    [showReceiptColumn],
+    const addedIds = Object.keys(nextSelection).filter(id => nextSelection[id] && !rowSelection[id])
+    const removedIds = Object.keys(rowSelection).filter(id => rowSelection[id] && !nextSelection[id])
+
+    if (addedIds.length > 0) {
+      selectMultiple(addedIds)
+    }
+    if (removedIds.length > 0) {
+      deselectMultiple(removedIds)
+    }
+  }, [deselectMultiple, rowSelection, selectMultiple])
+
+  const selectionProps = useMemo<DataTableSelectionProps<BankTransaction> | undefined>(() => {
+    if (!isCategorizationEnabled) return undefined
+
+    return {
+      rowSelection,
+      onRowSelectionChange,
+      selectAllAriaLabel: t('bankTransactions:label.select_all_transactions', 'Select all transactions on this page'),
+      getRowSelectionAriaLabel: () => t('bankTransactions:label.select_transaction', 'Select transaction'),
+    }
+  }, [isCategorizationEnabled, onRowSelectionChange, rowSelection, t])
+
+  const onExpandedRowValidityChange = useCallback((id: string, isValid: boolean) => {
+    setExpandedRowValidity((current) => {
+      if (current[id] === isValid) return current
+      return {
+        ...current,
+        [id]: isValid,
+      }
+    })
+  }, [])
+
+  const isExpandedRowValid = useCallback(
+    (id: string) => expandedRowValidity[id] ?? true,
+    [expandedRowValidity],
   )
 
-  const onRefresh = useCallback(() => {
-    void mutate()
-  }, [mutate])
+  const columnConfig = useMemo(() => getColumnConfig({
+    display,
+    isCategorizationEnabled,
+    isExpandedRowValid,
+    showReceiptUploads,
+    stringOverrides,
+    t,
+  }), [
+    display,
+    isCategorizationEnabled,
+    isExpandedRowValid,
+    showReceiptUploads,
+    stringOverrides,
+    t,
+  ])
 
-  return (
-    <table
-      width='100%'
-      className='Layer__bank-transactions__table'
-    >
-      <thead>
-        <tr>
-          {isCategorizationEnabled && (
-            <th className='Layer__bank-transactions__table-header Layer__bank-transactions__checkbox-col'>
-              <span className='Layer__bank-transactions__table-cell-content'>
-                <Checkbox
-                  isSelected={isAllSelected}
-                  isIndeterminate={isPartiallySelected}
-                  onChange={onHeaderCheckboxChange}
-                  aria-label={t('bankTransactions:label.select_all_transactions', 'Select all transactions on this page')}
-                />
-              </span>
-            </th>
-          )}
-          <th className='Layer__bank-transactions__table-header Layer__bank-transactions__date-col'>
-            {stringOverrides?.transactionsTable?.dateColumnHeaderText || t('common:label.date', 'Date')}
-          </th>
-          <th className='Layer__bank-transactions__table-header Layer__bank-transactions__tx-col'>
-            {stringOverrides?.transactionsTable?.transactionColumnHeaderText
-              || t('common:label.transaction', 'Transaction')}
-          </th>
-          <th className='Layer__bank-transactions__table-header Layer__bank-transactions__account-col'>
-            {stringOverrides?.transactionsTable?.accountColumnHeaderText
-              || t('common:label.account', 'Account')}
-          </th>
-          <th
-            className='Layer__bank-transactions__table-header Layer__bank-transactions__table-cell--amount Layer__bank-transactions__amount-col'
-            {...showReceiptDataProperties}
-          >
-            {stringOverrides?.transactionsTable?.amountColumnHeaderText
-              || t('common:label.amount', 'Amount')}
-          </th>
-          <th
-            className='Layer__bank-transactions__table-header Layer__bank-transactions__documents-col'
-            {...showReceiptDataProperties}
-          />
-          {isCategorizationEnabled && display !== DisplayState.categorized
-            ? (
-              <th className='Layer__bank-transactions__table-header Layer__bank-transactions__table-header--primary Layer__bank-transactions__category-col'>
-                {stringOverrides?.transactionsTable?.categorizeColumnHeaderText
-                  || t('common:action.categorize', 'Categorize')}
-              </th>
-            )
-            : (
-              <th className='Layer__bank-transactions__table-header Layer__bank-transactions__category-col'>
-                {stringOverrides?.transactionsTable?.categoryColumnHeaderText
-                  || t('common:label.category', 'Category')}
-              </th>
-            )}
-        </tr>
-      </thead>
-      {isLoading && <BankTransactionsLoader />}
-      <tbody>
-        {!isLoading && isEmpty && (
-          <tr>
-            <td colSpan={isCategorizationEnabled ? 7 : 6}>
-              <BankTransactionsTableEmptyState />
-            </td>
-          </tr>
-        )}
-        {!isLoading
-          && bankTransactions?.map(
-            (bankTransaction: BankTransaction, index: number) => (
-              <BankTransactionRow
-                key={bankTransaction.id}
-                index={index}
-                bankTransaction={bankTransaction}
-                showDescriptions={showDescriptions}
-                showReceiptUploads={showReceiptUploads}
-                showReceiptUploadColumn={showReceiptColumn}
-                showTooltips={showTooltips}
-                stringOverrides={stringOverrides?.bankTransactionCTAs}
-              />
-            ),
-          )}
-        {isSyncing && (lastPage || (isEmpty && page === 1))
-          ? (
-            <tr>
-              <td colSpan={3}>
-                <SyncingComponent
-                  titleVariant='historical'
-                  timeSync={5}
-                  onRefresh={onRefresh}
-                />
-              </td>
-            </tr>
-          )
-          : null}
-      </tbody>
-    </table>
-  )
+  const expandedRowProps = useMemo<DataTableExpandedRowProps<BankTransaction>>(() => ({
+    getRowCanExpand: () => true,
+    render: row => (
+      <ExpandedBankTransactionRow
+        bankTransaction={row.original}
+        categorized={isCategorized(row.original)}
+        showDescriptions={showDescriptions}
+        showReceiptUploads={showReceiptUploads}
+        showTooltips={showTooltips}
+        onValidityChange={isValid => onExpandedRowValidityChange(row.original.id, isValid)}
+      />
+    ),
+  }), [
+    onExpandedRowValidityChange,
+    showDescriptions,
+    showReceiptUploads,
+    showTooltips,
+  ])
+
+  const withClickableRow = useMemo<ClickableRowProps<BankTransaction>>(() => ({
+    isRowClickable: () => true,
+    onRowClick: row => row.toggleExpanded(),
+  }), [])
+
+  const getRowClassName = useCallback((row: BankTransactionRowType) => (
+    classNames(
+      'Layer__BankTransactionRow',
+      row.getIsExpanded() && 'Layer__BankTransactionRow--expanded',
+      row.original.recentlyCategorized && shouldHideAfterCategorize && 'Layer__BankTransactionRow--removing',
+    )
+  ), [shouldHideAfterCategorize])
+
+  const tableProps = {
+    ariaLabel: t('bankTransactions:label.bank_transactions', 'Bank transactions'),
+    data: bankTransactions,
+    isLoading,
+    isError: false,
+    columnConfig,
+    componentName: COMPONENT_NAME,
+    slots: {
+      EmptyState: BankTransactionsTableEmptyState,
+      ErrorState: BankTransactionsTableErrorState,
+    },
+    withClickableRow,
+    getRowClassName,
+    selectionProps,
+    expandedRowProps,
+  }
+
+  return isMonthlyViewMode
+    ? <SimpleDataTable {...tableProps} />
+    : <PaginatedTable {...tableProps} paginationProps={paginationProps} />
 }

@@ -14,7 +14,6 @@ import { useGetBankTransactionMatchOrCategoryWithDefault } from '@hooks/features
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
 import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
@@ -39,7 +38,6 @@ import { ErrorText } from '@components/Typography/ErrorText'
 import './bankTransactionsListItem.scss'
 
 type BankTransactionsListItemProps = {
-  index: number
   bankTransaction: BankTransaction
   stringOverrides?: BankTransactionCTAStringOverrides
 
@@ -49,7 +47,6 @@ type BankTransactionsListItemProps = {
 }
 
 export const BankTransactionsListItem = ({
-  index,
   bankTransaction,
   stringOverrides,
 
@@ -71,13 +68,8 @@ export const BankTransactionsListItem = ({
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
   const categorized = isCategorized(bankTransaction)
-
   const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction })
-
-  // Keep showing as uncategorized during removal animation to prevent UI flashing
   const displayAsCategorized = isBeingRemoved ? false : categorized
-
-  const { isVisible } = useDelayedVisibility({ delay: index * 80 })
 
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
@@ -107,7 +99,6 @@ export const BankTransactionsListItem = ({
   const rowClassName = classNames(
     'Layer__bank-transaction-list-item',
     openExpandedRow ? openClassName : '',
-    isVisible ? 'show' : '',
   )
 
   return (
@@ -181,7 +172,6 @@ export const BankTransactionsListItem = ({
         <AnimatedPresenceElement variant='expand' isPresent={openExpandedRow} motionKey={`${bankTransaction.id}--expanded`}>
           <ExpandedBankTransactionRow
             bankTransaction={bankTransaction}
-            isOpen={openExpandedRow}
             categorized={displayAsCategorized}
             asListItem
             showDescriptions={showDescriptions}

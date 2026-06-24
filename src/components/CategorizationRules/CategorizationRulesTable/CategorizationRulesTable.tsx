@@ -10,7 +10,7 @@ import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
 import { ResolvedCategoryName } from '@components/CategorizationRules/ResolvedCategoryName'
 import { getCategorizationRuleAmountLabel, getCategorizationRuleCounterpartyLabel, getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
-import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
+import type { ColumnConfig } from '@components/DataTable/utils/column'
 import { PaginatedTable, type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
 import './categorizationRulesTable.scss'
@@ -52,7 +52,7 @@ export const CategorizationRulesTable = ({
 }: CategorizationRulesTableProps) => {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
-  const columnConfig: NestedColumnConfig<CategorizationRule> = useMemo(() => [
+  const columnConfig: ColumnConfig<CategorizationRule> = useMemo(() => [
     {
       id: CategorizationRuleColumns.Counterparty,
       header: t('common:label.counterparty', 'Counterparty'),

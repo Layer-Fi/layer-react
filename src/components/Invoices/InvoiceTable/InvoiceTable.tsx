@@ -16,8 +16,8 @@ import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
-import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { DataTableHeader } from '@components/DataTable/DataTableHeader'
+import type { ColumnConfig } from '@components/DataTable/utils/column'
 import { InvoiceStatusCell } from '@components/Invoices/InvoiceStatusCell/InvoiceStatusCell'
 import { useInvoiceStatusOptions } from '@components/Invoices/utils/invoiceFilters'
 import { PaginatedTable } from '@components/PaginatedDataTable/PaginatedDataTable'
@@ -83,7 +83,7 @@ type InvoiceRowType = Row<Invoice>
 const getColumnConfig = (
   onViewInvoice: (invoice: Invoice) => void,
   t: TFunction,
-): NestedColumnConfig<Invoice> => [
+): ColumnConfig<Invoice> => [
   {
     id: InvoiceColumns.SentAt,
     header: t('invoices:label.created_date', 'Created Date'),

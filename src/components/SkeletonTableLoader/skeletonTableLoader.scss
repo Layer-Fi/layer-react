@@ -1,5 +1,5 @@
 .Layer__skeleton-loader__row {
-  height: 63px;
+  height: var(--data-table-row-height, 3.25rem);
   padding: 0 var(--spacing-md);
   border-bottom: 1px solid var(--border-color);
 }

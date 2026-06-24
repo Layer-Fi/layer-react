@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Button, type ButtonProps } from '@ui/Button/Button'
 import { ButtonIconBox } from '@ui/Button/ButtonIconBox'
+import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 
 export interface SubmitButtonProps {
   children?: ReactNode
@@ -55,9 +56,18 @@ const buildIcon = ({
 }
 
 const withRenderedIcon = ({
+  isPending,
   iconBox,
   ...iconProps
-}: Parameters<typeof buildIcon>[0] & { iconBox?: true }) => {
+}: Parameters<typeof buildIcon>[0] & { isPending?: boolean, iconBox?: true }) => {
+  if (iconProps.noIcon) {
+    return null
+  }
+
+  if (isPending && iconBox) {
+    return <ButtonIconBox><LoadingSpinner size={16} /></ButtonIconBox>
+  }
+
   const icon = buildIcon(iconProps)
 
   if (icon && iconBox) {
@@ -82,6 +92,7 @@ export const SubmitButton = ({
   type,
 }: SubmitButtonProps) => {
   const { t } = useTranslation()
+  const shouldRenderPendingInIconBox = isPending && iconBox && !noIcon
 
   if (withRetry && isError) {
     return (
@@ -90,11 +101,13 @@ export const SubmitButton = ({
         onPress={onPress}
         type={type}
         isDisabled={isPending || isDisabled}
-        isPending={isPending}
+        isPending={shouldRenderPendingInIconBox ? false : isPending}
         tooltip={errorMessage ?? t('common:error.something_went_wrong', 'Something went wrong')}
       >
         {children}
-        <RefreshCcw size={12} />
+        {shouldRenderPendingInIconBox
+          ? <ButtonIconBox><LoadingSpinner size={16} /></ButtonIconBox>
+          : <RefreshCcw size={12} />}
       </Button>
     )
   }
@@ -104,11 +117,11 @@ export const SubmitButton = ({
       onPress={onPress}
       type={type}
       isDisabled={isPending || isDisabled}
-      isPending={isPending}
+      isPending={shouldRenderPendingInIconBox ? false : isPending}
       tooltip={isError ? (errorMessage ?? tooltip) : tooltip}
     >
       {children}
-      {withRenderedIcon({ isError, action, noIcon, iconBox })}
+      {withRenderedIcon({ isPending, isError, action, noIcon, iconBox })}
     </Button>
   )
 }

@@ -217,7 +217,7 @@ const BankTransactionsTableView = ({
     if (!isOpen) setRuleSuggestion(null)
   }, [setRuleSuggestion])
 
-  const bankTransactions = useMemo(() => {
+  const currentPageBankTransactions = useMemo(() => {
     if (isMonthlyViewMode) return data
 
     const firstPageIndex = (currentPage - 1) * pageSize
@@ -248,27 +248,40 @@ const BankTransactionsTableView = ({
     }
   })
 
-  const isLastPage =
-    data
-    && !hasMore
-    && Math.ceil((data?.length || 0) / pageSize) === currentPage
-
   const tableContentMode = listView && mobileComponent === 'mobileList'
     ? BankTransactionsTableContent.MobileList
     : listView
       ? BankTransactionsTableContent.List
       : BankTransactionsTableContent.Table
 
+  const handlePageChange = useCallback((page: number) => {
+    if (page === currentPage) return
+
+    emitLayerEvent({
+      type: LayerEventType.TransactionsPageChanged,
+      version: 1,
+      payload: { page },
+    })
+    setCurrentPage(page)
+  }, [currentPage, emitLayerEvent, setCurrentPage])
+
+  const tablePaginationProps = useMemo(() => ({
+    initialPage: currentPage - 1,
+    onSetPage: (pageIndex: number) => handlePageChange(pageIndex + 1),
+    pageSize,
+    hasMore,
+    fetchMore,
+  }), [currentPage, fetchMore, handlePageChange, hasMore, pageSize])
+
   const BankTransactionsTableViewContent = useMemo(() => {
     return (
-      <div className='Layer__bank-transactions__table-wrapper'>
+      <div className='Layer__BankTransactions__TableWrapper'>
         <BankTransactionsTable
           isLoading={isLoading}
-          isSyncing={isSyncing}
-          bankTransactions={bankTransactions}
-          page={currentPage}
+          bankTransactions={data}
           stringOverrides={stringOverrides}
-          lastPage={isLastPage}
+          isMonthlyViewMode={isMonthlyViewMode}
+          paginationProps={tablePaginationProps}
           showDescriptions={showDescriptions}
           showReceiptUploads={showReceiptUploads}
           showTooltips={showTooltips}
@@ -276,15 +289,14 @@ const BankTransactionsTableView = ({
       </div>
     )
   }, [
-    bankTransactions,
-    currentPage,
-    isLastPage,
+    data,
     isLoading,
-    isSyncing,
+    isMonthlyViewMode,
     showDescriptions,
     showReceiptUploads,
     showTooltips,
     stringOverrides,
+    tablePaginationProps,
   ])
 
   const BankTransactionsListLoader = useMemo(() => {
@@ -298,25 +310,25 @@ const BankTransactionsTableView = ({
   const BankTransactionsListView = useMemo(() => {
     return (
       <BankTransactionsList
-        bankTransactions={bankTransactions}
+        bankTransactions={currentPageBankTransactions}
         stringOverrides={stringOverrides?.bankTransactionCTAs}
         showDescriptions={showDescriptions}
         showReceiptUploads={showReceiptUploads}
         showTooltips={showTooltips}
       />
     )
-  }, [bankTransactions, stringOverrides?.bankTransactionCTAs, showDescriptions, showReceiptUploads, showTooltips])
+  }, [currentPageBankTransactions, stringOverrides?.bankTransactionCTAs, showDescriptions, showReceiptUploads, showTooltips])
 
   const BankTransactionsMobileListView = useMemo(() => {
     return (
       <BankTransactionsMobileList
-        bankTransactions={bankTransactions}
+        bankTransactions={currentPageBankTransactions}
         showDescriptions={showDescriptions}
         showReceiptUploads={showReceiptUploads}
         showTooltips={showTooltips}
       />
     )
-  }, [bankTransactions, showDescriptions, showReceiptUploads, showTooltips])
+  }, [currentPageBankTransactions, showDescriptions, showReceiptUploads, showTooltips])
 
   const slots = useMemo(() => {
     switch (tableContentMode) {
@@ -350,18 +362,7 @@ const BankTransactionsTableView = ({
 
   const isEmpty = tableContentMode === BankTransactionsTableContent.Table
     ? false
-    : (bankTransactions?.length ?? 0) === 0
-
-  const handlePageChange = useCallback((page: number) => {
-    if (page === currentPage) return
-
-    emitLayerEvent({
-      type: LayerEventType.TransactionsPageChanged,
-      version: 1,
-      payload: { page },
-    })
-    setCurrentPage(page)
-  }, [currentPage, emitLayerEvent, setCurrentPage])
+    : (currentPageBankTransactions?.length ?? 0) === 0
 
   return (
     <Container
@@ -401,7 +402,7 @@ const BankTransactionsTableView = ({
         variant={tableContentMode === BankTransactionsTableContent.MobileList ? 'drawer' : 'modal'}
       />
 
-      {!isMonthlyViewMode && !isLoading && (
+      {tableContentMode !== BankTransactionsTableContent.Table && !isMonthlyViewMode && !isLoading && (
         <HStack justify='end'>
           <Pagination
             currentPage={currentPage}

@@ -7,14 +7,6 @@
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid var(--border-color);
-  transform: scale(0.92);
-  opacity: 0;
-  transition: all var(--transition-speed) ease-in-out;
-
-  &.show {
-    opacity: 1;
-    transform: scale(1);
-  }
 
   .Layer__bank-transaction-list-item__expanded-row {
     overflow: hidden;
