@@ -54,6 +54,6 @@
   "validation": {
     "amount_min_greater_than_max": "Le montant minimal doit être inférieur ou égal au montant maximal.",
     "category_required": "La catégorie est obligatoire.",
-    "counterparty_required": "La contrepartie est requise."
+    "counterparty_required": "La contrepartie est obligatoire."
   }
 }
