@@ -224,9 +224,7 @@ export const BankTransactionsListItem = ({
         </div>
       )}
       {!openExpandedRow && displayAsCategorized && (
-        <BankTransactionsListItemCategory
-          bankTransaction={bankTransaction}
-        />
+        <BankTransactionsListItemCategory bankTransaction={bankTransaction} categorized />
       )}
       {isError
         && (
