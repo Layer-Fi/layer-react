@@ -111,7 +111,7 @@ export const BankTransactionsListItem = ({
   )
 
   return (
-    <AnimatedPresenceElement as='li' variant='fade' isOpen={!isBeingRemoved} motionKey={bankTransaction.id} className={rowClassName} onClick={toggleExpandedRow}>
+    <AnimatedPresenceElement as='li' variant='fade' isPresent={!isBeingRemoved} motionKey={bankTransaction.id} className={rowClassName} onClick={toggleExpandedRow}>
       <span className='Layer__bank-transaction-list-item__heading'>
         <div className='Layer__bank-transaction-list-item__heading__main'>
           <Span ellipsis size='sm'>
@@ -178,7 +178,7 @@ export const BankTransactionsListItem = ({
           </span>
         )}
       <span className='Layer__bank-transaction-list-item__expanded-row' onClick={preventRowExpansion}>
-        <AnimatedPresenceElement variant='expand' isOpen={openExpandedRow} motionKey={`${bankTransaction.id}--expanded`}>
+        <AnimatedPresenceElement variant='expand' isPresent={openExpandedRow} motionKey={`${bankTransaction.id}--expanded`}>
           <ExpandedBankTransactionRow
             bankTransaction={bankTransaction}
             isOpen={openExpandedRow}
@@ -224,9 +224,7 @@ export const BankTransactionsListItem = ({
         </div>
       )}
       {!openExpandedRow && displayAsCategorized && (
-        <BankTransactionsListItemCategory
-          bankTransaction={bankTransaction}
-        />
+        <BankTransactionsListItemCategory bankTransaction={bankTransaction} categorized />
       )}
       {isError
         && (

@@ -156,7 +156,7 @@ export const BankTransactionRow = ({
 
   return (
     <>
-      <AnimatedPresenceElement as='tr' variant='fade' isOpen={!isBeingRemoved} motionKey={bankTransaction.id} className={rowClassName} onClick={toggleOpen}>
+      <AnimatedPresenceElement as='tr' variant='fade' isPresent={!isBeingRemoved} motionKey={bankTransaction.id} className={rowClassName} onClick={toggleOpen}>
         {isCategorizationEnabled && (
           <td className='Layer__bank-transactions__table-cell Layer__bank-transactions__checkbox-col' onClick={preventRowExpansion}>
             <span className='Layer__bank-transactions__table-cell-content'>
@@ -308,7 +308,7 @@ export const BankTransactionRow = ({
       </AnimatedPresenceElement>
       <tr>
         <td colSpan={colSpan} className='Layer__bank-transaction-row__expanded-td'>
-          <AnimatedPresenceElement variant='expand' isOpen={open} motionKey={`${bankTransaction.id}--expanded`}>
+          <AnimatedPresenceElement variant='expand' isPresent={open} motionKey={`${bankTransaction.id}--expanded`}>
             <ExpandedBankTransactionRow
               bankTransaction={bankTransaction}
               categorized={displayAsCategorized}
