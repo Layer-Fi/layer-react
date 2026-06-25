@@ -73,19 +73,17 @@ export const BankTransactionsList = ({
         </HStack>
       )}
       <ul className='Layer__bank-transactions__list'>
-        {displayedBankTransactions?.map(
-          (bankTransaction: BankTransaction) => (
-            <BankTransactionsListItem
-              key={bankTransaction.id}
-              bankTransaction={bankTransaction}
-              stringOverrides={stringOverrides}
+        {displayedBankTransactions?.map((bankTransaction: BankTransaction) => (
+          <BankTransactionsListItem
+            key={bankTransaction.id}
+            bankTransaction={bankTransaction}
+            stringOverrides={stringOverrides}
 
-              showDescriptions={showDescriptions}
-              showReceiptUploads={showReceiptUploads}
-              showTooltips={showTooltips}
-            />
-          ),
-        )}
+            showDescriptions={showDescriptions}
+            showReceiptUploads={showReceiptUploads}
+            showTooltips={showTooltips}
+          />
+        ))}
       </ul>
       {!isMonthlyViewMode && (
         <HStack justify='end'>

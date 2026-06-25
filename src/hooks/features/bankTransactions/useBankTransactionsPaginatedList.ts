@@ -13,13 +13,7 @@ export const useBankTransactionsPaginatedList = ({
   isMonthlyViewMode,
   paginationProps,
 }: UseBankTransactionsPaginatedListParams) => {
-  const {
-    pageIndex,
-    onPageIndexChange,
-    pageSize = 20,
-    hasMore,
-    fetchMore,
-  } = paginationProps
+  const { pageIndex, onPageIndexChange, pageSize = 20, hasMore, fetchMore } = paginationProps
 
   const { onPageChange, pageItems, pageIndex: currentPageIndex } = usePaginatedList({
     data: bankTransactions ?? [],
@@ -28,13 +22,9 @@ export const useBankTransactionsPaginatedList = ({
     onPageIndexChange: isMonthlyViewMode ? undefined : onPageIndexChange,
   })
 
-  const displayedBankTransactions = isMonthlyViewMode
-    ? bankTransactions
-    : pageItems
-
   return {
     currentPageIndex,
-    displayedBankTransactions,
+    displayedBankTransactions: isMonthlyViewMode ? bankTransactions : pageItems,
     fetchMore,
     hasMore,
     onPageChange,

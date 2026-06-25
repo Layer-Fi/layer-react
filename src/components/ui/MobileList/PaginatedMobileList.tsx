@@ -15,14 +15,7 @@ export const PaginatedMobileList = <TData extends { id: string }>(
   props: PaginatedMobileListProps<TData>,
 ) => {
   const { data, paginationProps, ...listProps } = props
-  const {
-    pageIndex,
-    onPageIndexChange,
-    pageSize = 20,
-    hasMore,
-    fetchMore,
-    autoResetPageIndexRef,
-  } = paginationProps
+  const { pageIndex, onPageIndexChange, pageSize = 20, hasMore, fetchMore, autoResetPageIndexRef } = paginationProps
 
   const { onPageChange, pageItems, pageIndex: currentPageIndex } = usePaginatedList({
     autoResetPageIndexRef,

@@ -7,9 +7,8 @@ type UsePaginationStateProps = {
   autoResetPageIndexRef?: MutableRefObject<boolean>
 }
 
-const clampPageIndex = (pageIndex: number, pageCount: number) => {
-  return Math.max(0, Math.min(pageIndex, pageCount - 1))
-}
+const clampPageIndex = (pageIndex: number, pageCount: number) =>
+  Math.max(0, Math.min(pageIndex, pageCount - 1))
 
 export function usePaginationState({
   autoResetPageIndexRef,
@@ -41,9 +40,7 @@ export function usePaginationState({
       return
     }
 
-    if (requestedPageIndex === effectivePageIndex) {
-      return
-    }
+    if (requestedPageIndex === effectivePageIndex) return
 
     if (isPaginationControlled) {
       onPageIndexChange?.(effectivePageIndex)

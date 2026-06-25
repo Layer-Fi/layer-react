@@ -18,11 +18,7 @@ export function usePaginatedList<T>({
   onPageIndexChange,
 }: UsePaginatedListProps<T>) {
   const pageCount = Math.max(0, Math.ceil(data.length / pageSize))
-  const {
-    onPageChange,
-    pageIndex: currentPageIndex,
-    setPage,
-  } = usePaginationState({
+  const paginationState = usePaginationState({
     autoResetPageIndexRef,
     pageCount,
     pageIndex,
@@ -31,16 +27,14 @@ export function usePaginatedList<T>({
 
   const pageItems = useMemo(() => {
     return data.slice(
-      currentPageIndex * pageSize,
-      (currentPageIndex + 1) * pageSize,
+      paginationState.pageIndex * pageSize,
+      (paginationState.pageIndex + 1) * pageSize,
     )
-  }, [currentPageIndex, data, pageSize])
+  }, [data, pageSize, paginationState.pageIndex])
 
   return {
-    onPageChange,
+    ...paginationState,
     pageCount,
-    pageIndex: currentPageIndex,
     pageItems,
-    setPage,
   }
 }
