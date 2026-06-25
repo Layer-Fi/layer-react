@@ -92,11 +92,7 @@ export const useBankTransactionsFilters = ({
   }, [])
 
   return useMemo(
-    () => ({
-      filters,
-      setFilters,
-      dateFilterMode,
-    }),
+    () => ({ filters, setFilters, dateFilterMode }),
     [filters, setFilters, dateFilterMode],
   )
 }
