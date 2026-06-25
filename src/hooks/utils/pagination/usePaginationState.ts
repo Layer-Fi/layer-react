@@ -1,6 +1,6 @@
 import { type MutableRefObject, useCallback, useEffect, useState } from 'react'
 
-import { clampPageIndex } from '@hooks/utils/pagination/getPageItems'
+import { clampPageIndex } from '@hooks/utils/pagination/utils'
 
 type UsePaginationStateProps = {
   pageCount: number

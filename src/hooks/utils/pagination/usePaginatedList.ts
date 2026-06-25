@@ -1,7 +1,7 @@
 import { type MutableRefObject, useMemo } from 'react'
 
-import { getPageCount, getPageItems } from '@hooks/utils/pagination/getPageItems'
 import { usePaginationState } from '@hooks/utils/pagination/usePaginationState'
+import { getPageCount, getPageItems } from '@hooks/utils/pagination/utils'
 
 type UsePaginatedListProps<T> = {
   data: ReadonlyArray<T>
