@@ -27,8 +27,8 @@ export const BankTransactionsPaginatedList = ({
     onPageIndexChange: isMonthlyViewMode ? undefined : onPageIndexChange,
   })
 
-  const isEmpty = (bankTransactions?.length ?? 0) === 0
-  const showPagination = !isMonthlyViewMode && !isLoading && !isError && !isEmpty
+  const totalCount = bankTransactions?.length ?? 0
+  const showPagination = !isMonthlyViewMode && !isLoading && !isError && totalCount > 0
 
   return (
     <>
@@ -36,7 +36,7 @@ export const BankTransactionsPaginatedList = ({
       {showPagination && (
         <Pagination
           currentPage={currentPageIndex + 1}
-          totalCount={bankTransactions?.length ?? 0}
+          totalCount={totalCount}
           pageSize={pageSize}
           onPageChange={onPageChange}
           fetchMore={fetchMore}
