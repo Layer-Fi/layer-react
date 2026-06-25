@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { endOfMonth, startOfMonth } from 'date-fns'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@utils/bankTransactions/shared'
 import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
-import { useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 
@@ -91,13 +90,6 @@ export const useBankTransactionsFilters = ({
       ...newFilters,
     }))
   }, [])
-
-  const { setCurrentBankTransactionsPage: setCurrentPage } = useCurrentBankTransactionsPage()
-
-  // Reset page to 1 when any of the filters changes
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [filters, setCurrentPage])
 
   return useMemo(
     () => ({

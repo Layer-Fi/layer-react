@@ -10,27 +10,35 @@ import { Span } from '@ui/Typography/Text'
 import {
   type BankTransactionCTAStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
+import { BankTransactionsPaginatedList } from '@components/BankTransactions/BankTransactionsPaginatedList'
 import { BankTransactionsListItem } from '@components/BankTransactionsList/BankTransactionsListItem'
+import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
 import './bankTransactionsList.scss'
 
 interface BankTransactionsListProps {
   bankTransactions?: BankTransaction[]
   stringOverrides?: BankTransactionCTAStringOverrides
+  isMonthlyViewMode: boolean
+  paginationProps: TablePaginationProps
 
   showDescriptions: boolean
   showReceiptUploads: boolean
   showTooltips: boolean
 }
 
-export const BankTransactionsList = ({
+type BankTransactionsListContentProps = Pick<
+  BankTransactionsListProps,
+  'bankTransactions' | 'stringOverrides' | 'showDescriptions' | 'showReceiptUploads' | 'showTooltips'
+>
+
+const BankTransactionsListContent = ({
   bankTransactions,
   stringOverrides,
-
   showDescriptions,
   showReceiptUploads,
   showTooltips,
-}: BankTransactionsListProps) => {
+}: BankTransactionsListContentProps) => {
   const { t } = useTranslation()
   const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
@@ -53,20 +61,35 @@ export const BankTransactionsList = ({
         </HStack>
       )}
       <ul className='Layer__bank-transactions__list'>
-        {bankTransactions?.map(
-          (bankTransaction: BankTransaction) => (
-            <BankTransactionsListItem
-              key={bankTransaction.id}
-              bankTransaction={bankTransaction}
-              stringOverrides={stringOverrides}
+        {bankTransactions?.map((bankTransaction: BankTransaction) => (
+          <BankTransactionsListItem
+            key={bankTransaction.id}
+            bankTransaction={bankTransaction}
+            stringOverrides={stringOverrides}
 
-              showDescriptions={showDescriptions}
-              showReceiptUploads={showReceiptUploads}
-              showTooltips={showTooltips}
-            />
-          ),
-        )}
+            showDescriptions={showDescriptions}
+            showReceiptUploads={showReceiptUploads}
+            showTooltips={showTooltips}
+          />
+        ))}
       </ul>
     </>
   )
 }
+
+export const BankTransactionsList = ({
+  bankTransactions,
+  isMonthlyViewMode,
+  paginationProps,
+  ...contentProps
+}: BankTransactionsListProps) => (
+  <BankTransactionsPaginatedList
+    bankTransactions={bankTransactions}
+    isMonthlyViewMode={isMonthlyViewMode}
+    paginationProps={paginationProps}
+  >
+    {displayedTransactions => (
+      <BankTransactionsListContent bankTransactions={displayedTransactions} {...contentProps} />
+    )}
+  </BankTransactionsPaginatedList>
+)

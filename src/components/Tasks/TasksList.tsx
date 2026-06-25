@@ -89,13 +89,9 @@ export const TasksList = ({ pageSize = 8, mobile }: TasksListProps) => {
       })
   }, [activePeriod?.tasks])
 
-  const { pageItems, pageIndex, setPage } = usePaginatedList({ data: sortedTasks, pageSize })
+  const { onPageChange, pageItems, pageIndex } = usePaginatedList({ data: sortedTasks, pageSize })
 
   const indexFirstIncomplete = pageItems?.findIndex(task => isIncompleteTask(task))
-
-  const onPageChange = useCallback((pageNumber: number) => {
-    setPage(pageNumber - 1)
-  }, [setPage])
 
   if (mobile) {
     return (
@@ -105,7 +101,7 @@ export const TasksList = ({ pageSize = 8, mobile }: TasksListProps) => {
         indexFirstIncomplete={indexFirstIncomplete}
         currentPage={pageIndex + 1}
         pageSize={pageSize}
-        setCurrentPage={pageNumber => setPage(pageNumber - 1)}
+        setCurrentPage={onPageChange}
       />
     )
   }
