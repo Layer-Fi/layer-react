@@ -27,8 +27,8 @@ export const BankTransactionsPaginatedList = ({
     onPageIndexChange: isMonthlyViewMode ? undefined : onPageIndexChange,
   })
 
-  const isEmpty = (bankTransactions?.length ?? 0) > 0
-  const showPagination = !isMonthlyViewMode && !isLoading && !isError && isEmpty
+  const isEmpty = (bankTransactions?.length ?? 0) === 0
+  const showPagination = !isMonthlyViewMode && !isLoading && !isError && !isEmpty
 
   return (
     <>
