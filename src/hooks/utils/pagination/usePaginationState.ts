@@ -8,7 +8,7 @@ type UsePaginationStateProps = {
   pageIndex?: number
   onPageIndexChange?: (pageIndex: number, source: PaginationChangeSource) => void
   autoResetPageIndexRef?: MutableRefObject<boolean>
-  data: unknown[]
+  data: readonly unknown[]
 }
 
 export function usePaginationState({

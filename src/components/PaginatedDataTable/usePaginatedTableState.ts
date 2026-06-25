@@ -22,7 +22,7 @@ export function usePaginatedTableState({
 
   const requestedPageIndex = pageIndex ?? uncontrolledPagination.pageIndex
   const maxPageIndex = pageSize > 0
-    ? Math.max(0, Math.ceil(data?.length ?? 0 / pageSize) - 1)
+    ? Math.max(0, Math.ceil((data?.length ?? 0) / pageSize) - 1)
     : 0
   const effectivePageIndex = data === undefined
     ? requestedPageIndex
@@ -33,7 +33,6 @@ export function usePaginatedTableState({
     pageSize,
   }), [effectivePageIndex, pageSize])
 
-  // If the data changes, clamp down the page to the highest possible.
   useEffect(() => {
     if (requestedPageIndex === effectivePageIndex) return
 
@@ -44,6 +43,10 @@ export function usePaginatedTableState({
     }
   }, [effectivePageIndex, isPaginationControlled, onPageIndexChange, requestedPageIndex])
 
+  const changePaginationSource = useCallback((source: PaginationChangeSource) => {
+    paginationChangeSourceRef.current = source
+  }, [])
+
   const onPaginationChange = useCallback<OnChangeFn<PaginationState>>((updaterOrValue) => {
     const nextPagination =
       typeof updaterOrValue === 'function'
@@ -51,15 +54,12 @@ export function usePaginatedTableState({
         : updaterOrValue
 
     onPageIndexChange?.(nextPagination.pageIndex, paginationChangeSourceRef.current)
+    changePaginationSource(PaginationChangeSource.Sync)
 
     if (!isPaginationControlled) {
       setUncontrolledPagination(nextPagination)
     }
-  }, [isPaginationControlled, onPageIndexChange, pagination])
-
-  const changePaginationSource = useCallback((source: PaginationChangeSource) => {
-    paginationChangeSourceRef.current = source
-  }, [])
+  }, [changePaginationSource, isPaginationControlled, onPageIndexChange, pagination])
 
   return { changePaginationSource, onPaginationChange, pagination }
 }

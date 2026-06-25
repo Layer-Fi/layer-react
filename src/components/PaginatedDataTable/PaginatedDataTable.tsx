@@ -106,7 +106,6 @@ export function PaginatedTable<TData extends { id: string }>({
 
     changePaginationSource(PaginationChangeSource.User)
     table.setPageIndex(nextPageIndex)
-    changePaginationSource(PaginationChangeSource.Sync)
   }, [changePaginationSource, table])
 
   const headerGroups = table.getHeaderGroups()
