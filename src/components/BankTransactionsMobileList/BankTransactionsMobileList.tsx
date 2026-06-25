@@ -20,15 +20,11 @@ export interface BankTransactionsMobileListProps {
   bankTransactions?: BankTransaction[]
   isMonthlyViewMode: boolean
   paginationProps: TablePaginationProps
-
-  showDescriptions: boolean
-  showReceiptUploads: boolean
-  showTooltips: boolean
 }
 
 type BankTransactionsMobileListContentProps = Pick<
   BankTransactionsMobileListProps,
-  'bankTransactions' | 'showDescriptions' | 'showReceiptUploads' | 'showTooltips'
+  'bankTransactions'
 >
 
 const EmptyState = () => null
@@ -37,9 +33,6 @@ const LIST_SLOTS = { EmptyState, ErrorState }
 
 const BankTransactionsMobileListContent = ({
   bankTransactions,
-  showDescriptions,
-  showReceiptUploads,
-  showTooltips,
 }: BankTransactionsMobileListContentProps) => {
   const { t } = useTranslation()
   const [bulkActionsEnabled, setBulkActionsEnabled] = useState(false)
@@ -117,12 +110,9 @@ const BankTransactionsMobileListContent = ({
       <BankTransactionsMobileListItemExpandedRow
         bankTransaction={bankTransaction}
         isOpen={expandedKeys.has(bankTransaction.id)}
-        showDescriptions={showDescriptions}
-        showReceiptUploads={showReceiptUploads}
-        showTooltips={showTooltips}
       />
     ),
-    [expandedKeys, showDescriptions, showReceiptUploads, showTooltips],
+    [expandedKeys],
   )
 
   return (

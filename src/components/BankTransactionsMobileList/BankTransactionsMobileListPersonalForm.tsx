@@ -8,6 +8,7 @@ import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { hasReceipts, isCategorized, isCredit } from '@utils/bankTransactions/shared'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibilityStore/BankTransactionsFeatureVisibilityStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
@@ -20,8 +21,6 @@ import { LegacyPersonalCategories, PersonalStableName } from './constants'
 
 interface BankTransactionsMobileListPersonalFormProps {
   bankTransaction: BankTransaction
-  showReceiptUploads?: boolean
-  showDescriptions?: boolean
   showCategorization?: boolean
 }
 
@@ -58,11 +57,10 @@ const isAlreadyAssigned = (bankTransaction: BankTransaction) => {
 
 export const BankTransactionsMobileListPersonalForm = ({
   bankTransaction,
-  showReceiptUploads,
-  showDescriptions,
   showCategorization,
 }: BankTransactionsMobileListPersonalFormProps) => {
   const { t } = useTranslation()
+  const showReceiptUploads = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ReceiptUploads)
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const {
@@ -105,7 +103,6 @@ export const BankTransactionsMobileListPersonalForm = ({
     <VStack gap='sm'>
       <BankTransactionFormFields
         bankTransaction={bankTransaction}
-        showDescriptions={showDescriptions}
         hideCustomerVendor
         hideTags
         isMobile

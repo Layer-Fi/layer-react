@@ -13,6 +13,7 @@ import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import {
   useBankTransactionsCategorizationActions,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibilityStore/BankTransactionsFeatureVisibilityStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -25,18 +26,15 @@ import { ErrorText } from '@components/Typography/ErrorText'
 
 interface BankTransactionsMobileListMatchFormProps {
   bankTransaction: BankTransaction
-  showReceiptUploads?: boolean
-  showDescriptions?: boolean
   showCategorization?: boolean
 }
 
 export const BankTransactionsMobileListMatchForm = ({
   bankTransaction,
-  showReceiptUploads,
-  showDescriptions,
   showCategorization,
 }: BankTransactionsMobileListMatchFormProps) => {
   const { t } = useTranslation()
+  const showReceiptUploads = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ReceiptUploads)
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const {
@@ -87,7 +85,6 @@ export const BankTransactionsMobileListMatchForm = ({
       />
       <BankTransactionFormFields
         bankTransaction={bankTransaction}
-        showDescriptions={showDescriptions}
         hideCustomerVendor
         hideTags
         isMobile

@@ -19,6 +19,7 @@ import { useAutoResetPageIndex } from '@hooks/utils/pagination/useAutoResetPageI
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
 import { BankTransactionsCategorizationStoreProvider } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { BankTransactionsFeatureVisibilityStoreProvider } from '@providers/BankTransactionsFeatureVisibilityStore/BankTransactionsFeatureVisibilityStoreProvider'
 import { BankTransactionsProvider } from '@providers/BankTransactionsProvider/BankTransactionsProvider'
 import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState, useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { BulkSelectionStoreProvider } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -29,11 +30,9 @@ import {
 } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { BankTransactionsIsCategorizationEnabledProvider } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import { BankTransactionTagVisibilityProvider } from '@contexts/BankTransactionTagVisibilityContext/BankTransactionTagVisibilityContext'
 import { CategorizationRulesContext, CategorizationRulesProvider } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { MobileListSkeleton } from '@ui/MobileList/MobileListSkeleton'
-import { BankTransactionCustomerVendorVisibilityProvider } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorVisibilityProvider'
 import {
   BankTransactionsHeader,
   type BankTransactionsHeaderStringOverrides,
@@ -103,22 +102,32 @@ export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
   onError?: (error: LayerError) => void
 }
 
-type BankTransactionsTableViewProps = Omit<BankTransactionsProps, 'filters' | 'categorizeView'>
+type BankTransactionsTableViewProps = Pick<
+  BankTransactionsProps,
+  'asWidget' | 'pageSize' | 'mobileComponent' | 'hideHeader' | 'collapseHeader' | 'stringOverrides'
+>
 
 export const BankTransactions = ({
   onError,
-  showTags = false,
-  showCustomerVendor = false,
   monthlyView = false,
   applyGlobalDateRange = false,
   mode,
   renderInAppLink,
   filters,
-  ...restProps
+  categorizeView: _categorizeView,
+
+  asWidget,
+  pageSize,
+  mobileComponent,
+  hideHeader,
+  collapseHeader,
+  stringOverrides,
+
+  ...featureVisibility
 }: BankTransactionsWithErrorProps) => {
-  usePreloadTagDimensions({ isEnabled: showTags })
-  usePreloadCustomers({ isEnabled: showCustomerVendor })
-  usePreloadVendors({ isEnabled: showCustomerVendor })
+  usePreloadTagDimensions({ isEnabled: featureVisibility.showTags })
+  usePreloadCustomers({ isEnabled: featureVisibility.showCustomerVendor })
+  usePreloadVendors({ isEnabled: featureVisibility.showCustomerVendor })
   usePreloadCategories()
 
   return (
@@ -132,17 +141,22 @@ export const BankTransactions = ({
                 applyGlobalDateRange={applyGlobalDateRange}
                 filters={filters}
               >
-                <BankTransactionTagVisibilityProvider showTags={showTags}>
-                  <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
-                    <InAppLinkProvider renderInAppLink={renderInAppLink}>
-                      <BulkSelectionStoreProvider>
-                        <BankTransactionsCategorizationStoreProvider>
-                          <BankTransactionsContent {...restProps} />
-                        </BankTransactionsCategorizationStoreProvider>
-                      </BulkSelectionStoreProvider>
-                    </InAppLinkProvider>
-                  </BankTransactionCustomerVendorVisibilityProvider>
-                </BankTransactionTagVisibilityProvider>
+                <BankTransactionsFeatureVisibilityStoreProvider {...featureVisibility}>
+                  <InAppLinkProvider renderInAppLink={renderInAppLink}>
+                    <BulkSelectionStoreProvider>
+                      <BankTransactionsCategorizationStoreProvider>
+                        <BankTransactionsContent
+                          asWidget={asWidget}
+                          pageSize={pageSize}
+                          mobileComponent={mobileComponent}
+                          hideHeader={hideHeader}
+                          collapseHeader={collapseHeader}
+                          stringOverrides={stringOverrides}
+                        />
+                      </BankTransactionsCategorizationStoreProvider>
+                    </BulkSelectionStoreProvider>
+                  </InAppLinkProvider>
+                </BankTransactionsFeatureVisibilityStoreProvider>
               </BankTransactionsProvider>
             </BankTransactionsRouteStoreProvider>
           </CategorizationRulesProvider>
@@ -164,17 +178,10 @@ const BankTransactionsTableView = ({
   asWidget = false,
   pageSize = 20,
 
-  showDescriptions = true,
-  showReceiptUploads = true,
-  showTooltips = false,
-  showUploadOptions = false,
-  showStatusToggle = true,
-
   mobileComponent,
   hideHeader = false,
   collapseHeader = false,
   stringOverrides,
-  showCategorizationRules = false,
 }: BankTransactionsTableViewProps) => {
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
@@ -271,9 +278,6 @@ const BankTransactionsTableView = ({
           stringOverrides={stringOverrides}
           isMonthlyViewMode={isMonthlyViewMode}
           paginationProps={tablePaginationProps}
-          showDescriptions={showDescriptions}
-          showReceiptUploads={showReceiptUploads}
-          showTooltips={showTooltips}
         />
       </div>
     )
@@ -281,9 +285,6 @@ const BankTransactionsTableView = ({
     data,
     isLoading,
     isMonthlyViewMode,
-    showDescriptions,
-    showReceiptUploads,
-    showTooltips,
     stringOverrides,
     tablePaginationProps,
   ])
@@ -303,12 +304,9 @@ const BankTransactionsTableView = ({
         stringOverrides={stringOverrides?.bankTransactionCTAs}
         isMonthlyViewMode={isMonthlyViewMode}
         paginationProps={tablePaginationProps}
-        showDescriptions={showDescriptions}
-        showReceiptUploads={showReceiptUploads}
-        showTooltips={showTooltips}
       />
     )
-  }, [data, isMonthlyViewMode, stringOverrides?.bankTransactionCTAs, showDescriptions, showReceiptUploads, showTooltips, tablePaginationProps])
+  }, [data, isMonthlyViewMode, stringOverrides?.bankTransactionCTAs, tablePaginationProps])
 
   const BankTransactionsMobileListView = useMemo(() => {
     return (
@@ -316,12 +314,9 @@ const BankTransactionsTableView = ({
         bankTransactions={data}
         isMonthlyViewMode={isMonthlyViewMode}
         paginationProps={tablePaginationProps}
-        showDescriptions={showDescriptions}
-        showReceiptUploads={showReceiptUploads}
-        showTooltips={showTooltips}
       />
     )
-  }, [data, isMonthlyViewMode, showDescriptions, showReceiptUploads, showTooltips, tablePaginationProps])
+  }, [data, isMonthlyViewMode, tablePaginationProps])
 
   const slots = useMemo(() => {
     switch (tableContentMode) {
@@ -379,10 +374,7 @@ const BankTransactionsTableView = ({
           tableContentMode={tableContentMode}
           stringOverrides={stringOverrides?.bankTransactionsHeader}
           isSyncing={isSyncing}
-          withUploadMenu={showUploadOptions}
           collapseHeader={collapseHeader}
-          showStatusToggle={showStatusToggle}
-          showCategorizationRules={showCategorizationRules}
         />
       )}
 

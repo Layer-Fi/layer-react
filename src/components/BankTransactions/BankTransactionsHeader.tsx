@@ -13,6 +13,7 @@ import { useBusinessActivationDate } from '@hooks/features/business/useBusinessA
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibilityStore/BankTransactionsFeatureVisibilityStoreProvider'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
@@ -41,10 +42,7 @@ export interface BankTransactionsHeaderProps {
   tableContentMode: BankTransactionsTableContent
   isSyncing?: boolean
   stringOverrides?: BankTransactionsHeaderStringOverrides
-  withUploadMenu?: boolean
-  showStatusToggle?: boolean
   collapseHeader?: boolean
-  showCategorizationRules?: boolean
 }
 
 export interface BankTransactionsHeaderStringOverrides {
@@ -131,13 +129,13 @@ export const BankTransactionsHeader = ({
   tableContentMode,
   stringOverrides,
   isSyncing,
-  withUploadMenu,
-  showStatusToggle,
   collapseHeader,
-  showCategorizationRules = false,
 }: BankTransactionsHeaderProps) => {
   const { t } = useTranslation()
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
+  const withUploadMenu = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.UploadOptions)
+  const showStatusToggle = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.StatusToggle)
+  const showCategorizationRules = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.CategorizationRules)
   const activationDate = useBusinessActivationDate()
   const { display } = useBankTransactionsContext()
   const {

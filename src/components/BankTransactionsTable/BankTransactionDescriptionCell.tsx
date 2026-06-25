@@ -1,6 +1,7 @@
 import { File } from 'lucide-react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibilityStore/BankTransactionsFeatureVisibilityStoreProvider'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { IconBox } from '@components/IconBox/IconBox'
@@ -9,13 +10,12 @@ import './bankTransactionDescriptionCell.scss'
 
 type BankTransactionDescriptionCellProps = {
   bankTransaction: BankTransaction
-  showReceiptUploads: boolean
 }
 
 export const BankTransactionDescriptionCell = ({
   bankTransaction,
-  showReceiptUploads,
 }: BankTransactionDescriptionCellProps) => {
+  const showReceiptUploads = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ReceiptUploads)
   const hasReceipt = showReceiptUploads && bankTransaction.documentIds?.length > 0
 
   return (

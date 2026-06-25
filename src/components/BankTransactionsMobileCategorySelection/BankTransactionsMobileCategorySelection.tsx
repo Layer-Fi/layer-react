@@ -7,6 +7,7 @@ import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibilityStore/BankTransactionsFeatureVisibilityStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { isPlaceholderAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
@@ -24,16 +25,15 @@ import { buildCategoryOptions, buildInitialSessionCategoriesMap } from './utils'
 
 interface BankTransactionsMobileCategorySelectionProps {
   bankTransaction: BankTransaction
-  showTooltips?: boolean
   isSubmitting?: boolean
 }
 
 export const BankTransactionsMobileCategorySelection = ({
   bankTransaction,
-  showTooltips = false,
   isSubmitting = false,
 }: BankTransactionsMobileCategorySelectionProps) => {
   const { t } = useTranslation()
+  const showTooltips = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.Tooltips)
   const { setTransactionCategorySelection, setTransactionTaxCodeSelection } = useBankTransactionsCategorizationActions()
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)

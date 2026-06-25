@@ -40,19 +40,11 @@ import './bankTransactionsListItem.scss'
 type BankTransactionsListItemProps = {
   bankTransaction: BankTransaction
   stringOverrides?: BankTransactionCTAStringOverrides
-
-  showDescriptions: boolean
-  showReceiptUploads: boolean
-  showTooltips: boolean
 }
 
 export const BankTransactionsListItem = ({
   bankTransaction,
   stringOverrides,
-
-  showDescriptions,
-  showReceiptUploads,
-  showTooltips,
 }: BankTransactionsListItemProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
@@ -173,10 +165,6 @@ export const BankTransactionsListItem = ({
           <ExpandedBankTransactionRow
             bankTransaction={bankTransaction}
             asListItem
-            showDescriptions={showDescriptions}
-            showReceiptUploads={showReceiptUploads}
-            showTooltips={showTooltips}
-
             variant='list'
             onValidityChange={setIsExpandedRowValid}
           />

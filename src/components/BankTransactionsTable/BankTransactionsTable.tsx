@@ -46,10 +46,6 @@ interface BankTransactionsTableProps {
   bankTransactions?: BankTransaction[]
   isLoading?: boolean
 
-  showDescriptions: boolean
-  showReceiptUploads: boolean
-  showTooltips: boolean
-
   stringOverrides?: BankTransactionsStringOverrides
   isMonthlyViewMode: boolean
   paginationProps: TablePaginationProps
@@ -96,7 +92,6 @@ type GetColumnConfigParams = {
   display: DisplayState
   isCategorizationEnabled: boolean
   isExpandedRowValid: (id: string) => boolean
-  showReceiptUploads: boolean
   stringOverrides?: BankTransactionsStringOverrides
   t: TFunction
 }
@@ -105,7 +100,6 @@ const getColumnConfig = ({
   display,
   isCategorizationEnabled,
   isExpandedRowValid,
-  showReceiptUploads,
   stringOverrides,
   t,
 }: GetColumnConfigParams): ColumnConfig<BankTransaction> => [
@@ -119,12 +113,7 @@ const getColumnConfig = ({
     id: BankTransactionColumns.Transaction,
     header: stringOverrides?.transactionsTable?.transactionColumnHeaderText
       || t('common:label.transaction', 'Transaction'),
-    cell: (row: BankTransactionRowType) => (
-      <BankTransactionDescriptionCell
-        bankTransaction={row.original}
-        showReceiptUploads={showReceiptUploads}
-      />
-    ),
+    cell: (row: BankTransactionRowType) => <BankTransactionDescriptionCell bankTransaction={row.original} />,
   },
   {
     id: BankTransactionColumns.Account,
@@ -138,9 +127,7 @@ const getColumnConfig = ({
       || t('common:label.amount', 'Amount'),
     alignment: Alignment.Right,
     pinning: 'right',
-    cell: (row: BankTransactionRowType) => (
-      <BankTransactionAmountCell bankTransaction={row.original} />
-    ),
+    cell: (row: BankTransactionRowType) => <BankTransactionAmountCell bankTransaction={row.original} />,
   },
   {
     id: BankTransactionColumns.Category,
@@ -174,11 +161,6 @@ const getRowSelectionState = (selectedIds: Set<string>): RowSelectionState => {
 export const BankTransactionsTable = ({
   isLoading = false,
   bankTransactions,
-
-  showDescriptions,
-  showReceiptUploads,
-  showTooltips,
-
   stringOverrides,
   isMonthlyViewMode,
   paginationProps,
@@ -240,14 +222,12 @@ export const BankTransactionsTable = ({
     display,
     isCategorizationEnabled,
     isExpandedRowValid,
-    showReceiptUploads,
     stringOverrides,
     t,
   }), [
     display,
     isCategorizationEnabled,
     isExpandedRowValid,
-    showReceiptUploads,
     stringOverrides,
     t,
   ])
@@ -257,17 +237,11 @@ export const BankTransactionsTable = ({
     render: row => (
       <ExpandedBankTransactionRow
         bankTransaction={row.original}
-        showDescriptions={showDescriptions}
-        showReceiptUploads={showReceiptUploads}
-        showTooltips={showTooltips}
         onValidityChange={isValid => onExpandedRowValidityChange(row.original.id, isValid)}
       />
     ),
   }), [
     onExpandedRowValidityChange,
-    showDescriptions,
-    showReceiptUploads,
-    showTooltips,
   ])
 
   const withClickableRow = useMemo<ClickableRowProps<BankTransaction>>(() => ({

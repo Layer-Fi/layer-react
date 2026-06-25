@@ -21,23 +21,16 @@ interface BankTransactionsListProps {
   stringOverrides?: BankTransactionCTAStringOverrides
   isMonthlyViewMode: boolean
   paginationProps: TablePaginationProps
-
-  showDescriptions: boolean
-  showReceiptUploads: boolean
-  showTooltips: boolean
 }
 
 type BankTransactionsListContentProps = Pick<
   BankTransactionsListProps,
-  'bankTransactions' | 'stringOverrides' | 'showDescriptions' | 'showReceiptUploads' | 'showTooltips'
+  'bankTransactions' | 'stringOverrides'
 >
 
 const BankTransactionsListContent = ({
   bankTransactions,
   stringOverrides,
-  showDescriptions,
-  showReceiptUploads,
-  showTooltips,
 }: BankTransactionsListContentProps) => {
   const { t } = useTranslation()
   const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
@@ -66,10 +59,6 @@ const BankTransactionsListContent = ({
             key={bankTransaction.id}
             bankTransaction={bankTransaction}
             stringOverrides={stringOverrides}
-
-            showDescriptions={showDescriptions}
-            showReceiptUploads={showReceiptUploads}
-            showTooltips={showTooltips}
           />
         ))}
       </ul>

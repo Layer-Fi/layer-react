@@ -30,8 +30,8 @@ import {
   BankTransactionSelectionVariant,
   useBankTransactionsCategorizationActions,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibilityStore/BankTransactionsFeatureVisibilityStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import { useBankTransactionTagVisibility } from '@contexts/BankTransactionTagVisibilityContext/BankTransactionTagVisibilityContext'
 import { Button } from '@ui/Button/Button'
 import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
@@ -39,7 +39,6 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { useBankTransactionCustomerVendorVisibility } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorVisibilityProvider'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { CustomerVendorSelector } from '@components/CustomerVendorSelector/CustomerVendorSelector'
@@ -71,10 +70,6 @@ type ExpandedBankTransactionRowProps = {
   bankTransaction: BankTransaction
   asListItem?: boolean
 
-  showDescriptions: boolean
-  showReceiptUploads: boolean
-  showTooltips: boolean
-
   variant?: 'list' | 'row'
   onValidityChange?: (isValid: boolean) => void
 }
@@ -82,8 +77,6 @@ type ExpandedBankTransactionRowProps = {
 export const ExpandedBankTransactionRow = ({
   bankTransaction,
   asListItem = false,
-  showDescriptions,
-  showReceiptUploads,
   variant = 'row',
   onValidityChange,
 }: ExpandedBankTransactionRowProps) => {
@@ -98,9 +91,9 @@ export const ExpandedBankTransactionRow = ({
   const { trigger: removeTagFromBankTransaction } = useRemoveTagFromBankTransaction({ bankTransactionId: bankTransaction.id })
   const { trigger: setMetadataOnBankTransaction } = useSetMetadataOnBankTransaction({ bankTransactionId: bankTransaction.id })
 
-  // Get visibility settings for tags and customer/vendor
-  const { showTags } = useBankTransactionTagVisibility()
-  const { showCustomerVendor } = useBankTransactionCustomerVendorVisibility()
+  const showTags = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.Tags)
+  const showCustomerVendor = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.CustomerVendor)
+  const showReceiptUploads = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ReceiptUploads)
 
   const [matchFormError, setMatchFormError] = useState<string | undefined>()
   const bodyRef = useRef<HTMLDivElement>(null)
@@ -371,7 +364,6 @@ export const ExpandedBankTransactionRow = ({
             <VStack pis='md' className='Layer__ExpandedBankTransactionRow__Description'>
               <BankTransactionFormFields
                 bankTransaction={bankTransaction}
-                showDescriptions={showDescriptions}
                 hideTags={purpose === BankTransactionSelectionVariant.CATEGORY}
                 hideCustomerVendor={purpose === BankTransactionSelectionVariant.CATEGORY}
               />
