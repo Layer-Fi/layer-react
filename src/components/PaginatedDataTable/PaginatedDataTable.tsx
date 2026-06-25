@@ -1,9 +1,8 @@
-import { type MutableRefObject, useCallback, useMemo, useRef, useState } from 'react'
+import { type MutableRefObject, useCallback, useMemo } from 'react'
 import {
   getCoreRowModel,
   getExpandedRowModel,
   getPaginationRowModel,
-  type PaginationState,
   type Row,
   useReactTable,
 } from '@tanstack/react-table'
@@ -15,6 +14,7 @@ import { type ColumnConfig } from '@components/DataTable/utils/column'
 import { getColumnPinning } from '@components/DataTable/utils/column/pinning'
 import { type DataTableExpandedRowProps } from '@components/DataTable/utils/rows/expandedRows'
 import { type DataTableSelectionProps, getColumnDefsWithSelection, getRowSelectionState } from '@components/DataTable/utils/rows/selection'
+import { usePaginatedTableState } from '@components/PaginatedDataTable/usePaginatedTableState'
 import { Pagination } from '@components/Pagination/Pagination'
 
 import './paginatedDataTable.scss'
@@ -56,15 +56,12 @@ export function PaginatedTable<TData extends { id: string }>({
   expandedRowProps,
 }: PaginatedTableProps<TData>) {
   const { pageSize = 20, hasMore, fetchMore, pageIndex, onPageIndexChange, autoResetPageIndexRef } = paginationProps
-  const isPaginationControlled = pageIndex !== undefined
-  const paginationChangeSourceRef = useRef(PaginationChangeSource.Sync)
-
-  const [uncontrolledPagination, setUncontrolledPagination] = useState<PaginationState>({ pageIndex: 0, pageSize })
-  const pagination = useMemo<PaginationState>(() => (
-    pageIndex !== undefined
-      ? { pageIndex, pageSize }
-      : uncontrolledPagination
-  ), [pageIndex, pageSize, uncontrolledPagination])
+  const { changePaginationSource, onPaginationChange, pagination } = usePaginatedTableState({
+    pageIndex,
+    pageSize,
+    onPageIndexChange,
+    data,
+  })
 
   const columnDefs = useMemo(() => {
     return getColumnDefsWithSelection(columnConfig, selectionProps)
@@ -89,14 +86,7 @@ export function PaginatedTable<TData extends { id: string }>({
     data: data ?? [],
     columns: columnDefs,
     state: { pagination, columnPinning, ...rowSelectionState },
-    onPaginationChange: (updaterOrValue) => {
-      const newPagination =
-      typeof updaterOrValue === 'function'
-        ? updaterOrValue(pagination)
-        : updaterOrValue
-      onPageIndexChange?.(newPagination.pageIndex, paginationChangeSourceRef.current)
-      if (!isPaginationControlled) setUncontrolledPagination(newPagination)
-    },
+    onPaginationChange,
     onRowSelectionChange: selectionProps?.onRowSelectionChange,
     enableRowSelection: selectionProps?.enableRowSelection ?? !!selectionProps,
     getRowCanExpand: expandedRowProps?.getRowCanExpand,
@@ -110,10 +100,14 @@ export function PaginatedTable<TData extends { id: string }>({
   const { rows } = table.getRowModel()
 
   const onPageChange = useCallback((page: number) => {
-    paginationChangeSourceRef.current = PaginationChangeSource.User
-    table.setPageIndex(page - 1)
-    paginationChangeSourceRef.current = PaginationChangeSource.Sync
-  }, [table])
+    const nextPageIndex = page - 1
+
+    if (nextPageIndex === table.getState().pagination.pageIndex) return
+
+    changePaginationSource(PaginationChangeSource.User)
+    table.setPageIndex(nextPageIndex)
+    changePaginationSource(PaginationChangeSource.Sync)
+  }, [changePaginationSource, table])
 
   const headerGroups = table.getHeaderGroups()
   const numColumns = table.getVisibleLeafColumns().length
