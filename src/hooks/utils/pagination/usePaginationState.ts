@@ -1,14 +1,13 @@
 import { type MutableRefObject, useCallback, useEffect, useState } from 'react'
 
+import { clampPageIndex } from '@hooks/utils/pagination/getPageItems'
+
 type UsePaginationStateProps = {
   pageCount: number
   pageIndex?: number
   onPageIndexChange?: (pageIndex: number) => void
   autoResetPageIndexRef?: MutableRefObject<boolean>
 }
-
-const clampPageIndex = (pageIndex: number, pageCount: number) =>
-  Math.max(0, Math.min(pageIndex, pageCount - 1))
 
 export function usePaginationState({
   autoResetPageIndexRef,
@@ -19,10 +18,10 @@ export function usePaginationState({
   const [internalPageIndex, setInternalPageIndex] = useState(0)
   const isPaginationControlled = pageIndex !== undefined
   const requestedPageIndex = pageIndex ?? internalPageIndex
-  const effectivePageIndex = clampPageIndex(requestedPageIndex, pageCount)
+  const effectivePageIndex = clampPageIndex({ pageCount, pageIndex: requestedPageIndex })
 
   const setPage = useCallback((pageIndex: number) => {
-    const nextPageIndex = clampPageIndex(pageIndex, pageCount)
+    const nextPageIndex = clampPageIndex({ pageCount, pageIndex })
 
     if (!isPaginationControlled) {
       setInternalPageIndex(nextPageIndex)
@@ -57,9 +56,5 @@ export function usePaginationState({
     setPage,
   ])
 
-  return {
-    onPageChange,
-    pageIndex: effectivePageIndex,
-    setPage,
-  }
+  return { onPageChange, pageIndex: effectivePageIndex, setPage }
 }

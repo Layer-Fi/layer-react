@@ -1,5 +1,6 @@
 import { type MutableRefObject, useMemo } from 'react'
 
+import { getPageCount, getPageItems } from '@hooks/utils/pagination/getPageItems'
 import { usePaginationState } from '@hooks/utils/pagination/usePaginationState'
 
 type UsePaginatedListProps<T> = {
@@ -17,7 +18,7 @@ export function usePaginatedList<T>({
   pageIndex,
   onPageIndexChange,
 }: UsePaginatedListProps<T>) {
-  const pageCount = Math.max(0, Math.ceil(data.length / pageSize))
+  const pageCount = getPageCount({ itemCount: data.length, pageSize })
   const paginationState = usePaginationState({
     autoResetPageIndexRef,
     pageCount,
@@ -26,10 +27,7 @@ export function usePaginatedList<T>({
   })
 
   const pageItems = useMemo(() => {
-    return data.slice(
-      paginationState.pageIndex * pageSize,
-      (paginationState.pageIndex + 1) * pageSize,
-    )
+    return getPageItems({ data, pageIndex: paginationState.pageIndex, pageSize })
   }, [data, pageSize, paginationState.pageIndex])
 
   return {

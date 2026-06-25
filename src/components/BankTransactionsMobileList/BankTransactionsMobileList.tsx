@@ -2,15 +2,14 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { useBankTransactionsPaginatedList } from '@hooks/features/bankTransactions/useBankTransactionsPaginatedList'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useMobileListBulkSelection } from '@providers/BulkSelectionStore/useMobileListBulkSelection'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { MobileList } from '@ui/MobileList/MobileList'
-import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
 import { useMobileListExpansion } from '@ui/MobileList/useMobileListExpansion'
 import { VStack } from '@ui/Stack/Stack'
+import { BankTransactionsPaginatedList } from '@components/BankTransactions/BankTransactionsPaginatedList'
 import { BankTransactionsMobileBulkActionsHeader } from '@components/BankTransactionsMobileList/BankTransactionsMobileBulkActionsHeader'
 import { BankTransactionsMobileListItem } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItem'
 import { BankTransactionsMobileListItemExpandedRow } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
@@ -27,42 +26,40 @@ export interface BankTransactionsMobileListProps {
   showTooltips: boolean
 }
 
+type BankTransactionsMobileListContentProps = Pick<
+  BankTransactionsMobileListProps,
+  'bankTransactions' | 'showDescriptions' | 'showReceiptUploads' | 'showTooltips'
+>
+
 const EmptyState = () => null
 const ErrorState = () => null
 const LIST_SLOTS = { EmptyState, ErrorState }
 
-export const BankTransactionsMobileList = ({
+const BankTransactionsMobileListContent = ({
   bankTransactions,
-  isMonthlyViewMode,
-  paginationProps,
   showDescriptions,
   showReceiptUploads,
   showTooltips,
-}: BankTransactionsMobileListProps) => {
+}: BankTransactionsMobileListContentProps) => {
   const { t } = useTranslation()
   const [bulkActionsEnabled, setBulkActionsEnabled] = useState(false)
 
   const { clearSelection } = useBulkSelectionActions()
   const { shouldHideAfterCategorize, removeAfterCategorize } = useBankTransactionsContext()
-  const { displayedBankTransactions } = useBankTransactionsPaginatedList({
-    bankTransactions,
-    isMonthlyViewMode,
-    paginationProps,
-  })
 
-  useUpsertBankTransactionsDefaultCategories(displayedBankTransactions)
+  useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
   const orderedIds = useMemo(
-    () => displayedBankTransactions?.map(tx => tx.id) ?? [],
-    [displayedBankTransactions],
+    () => bankTransactions?.map(tx => tx.id) ?? [],
+    [bankTransactions],
   )
 
   const exitingKeys = useMemo(() => {
-    if (!shouldHideAfterCategorize || !displayedBankTransactions) {
+    if (!shouldHideAfterCategorize || !bankTransactions) {
       return new Set<string>()
     }
-    return new Set(displayedBankTransactions.filter(tx => tx.recentlyCategorized).map(tx => tx.id))
-  }, [displayedBankTransactions, shouldHideAfterCategorize])
+    return new Set(bankTransactions.filter(tx => tx.recentlyCategorized).map(tx => tx.id))
+  }, [bankTransactions, shouldHideAfterCategorize])
 
   const bulkSelectionProps = useMobileListBulkSelection(orderedIds, { enabled: bulkActionsEnabled })
 
@@ -147,20 +144,30 @@ export const BankTransactionsMobileList = ({
   return (
     <>
       <BankTransactionsMobileBulkActionsHeader
-        bankTransactions={displayedBankTransactions}
+        bankTransactions={bankTransactions}
         bulkActionsEnabled={bulkActionsEnabled}
         onBulkActionsToggle={setBulkActionsEnabled}
       />
       <VStack pbs='sm'>
-        {isMonthlyViewMode
-          ? <MobileList {...mobileListProps} />
-          : (
-            <PaginatedMobileList
-              {...mobileListProps}
-              paginationProps={paginationProps}
-            />
-          )}
+        <MobileList {...mobileListProps} />
       </VStack>
     </>
   )
 }
+
+export const BankTransactionsMobileList = ({
+  bankTransactions,
+  isMonthlyViewMode,
+  paginationProps,
+  ...contentProps
+}: BankTransactionsMobileListProps) => (
+  <BankTransactionsPaginatedList
+    bankTransactions={bankTransactions}
+    isMonthlyViewMode={isMonthlyViewMode}
+    paginationProps={paginationProps}
+  >
+    {displayedTransactions => (
+      <BankTransactionsMobileListContent bankTransactions={displayedTransactions} {...contentProps} />
+    )}
+  </BankTransactionsPaginatedList>
+)
