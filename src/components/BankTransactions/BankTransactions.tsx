@@ -14,6 +14,7 @@ import { usePreloadTagDimensions } from '@hooks/api/businesses/[business-id]/tag
 import { usePreloadVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
+import { PaginationChangeSource } from '@hooks/utils/pagination/types'
 import { useAutoResetPageIndex } from '@hooks/utils/pagination/useAutoResetPageIndex'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
@@ -236,22 +237,21 @@ const BankTransactionsTableView = ({
       ? BankTransactionsTableContent.List
       : BankTransactionsTableContent.Table
 
-  const handlePageChange = useCallback((pageIndex: number) => {
+  const handlePageChange = useCallback((pageIndex: number, source: PaginationChangeSource) => {
     const page = pageIndex + 1
 
     if (page === currentPage) return
 
     setCurrentPage(page)
 
-    const isAutoReset = autoResetPageIndexRef.current && page === 1
-    if (!isAutoReset) {
+    if (source === PaginationChangeSource.User) {
       emitLayerEvent({
         type: LayerEventType.TransactionsPageChanged,
         version: 1,
         payload: { page },
       })
     }
-  }, [autoResetPageIndexRef, currentPage, emitLayerEvent, setCurrentPage])
+  }, [currentPage, emitLayerEvent, setCurrentPage])
 
   const tablePaginationProps = useMemo(() => ({
     pageIndex: currentPage - 1,

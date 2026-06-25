@@ -125,22 +125,6 @@ const BankTransactionsMobileListContent = ({
     [expandedKeys, showDescriptions, showReceiptUploads, showTooltips],
   )
 
-  const mobileListProps = {
-    ariaLabel: t('bankTransactions:label.transactions', 'Transactions'),
-    data: bankTransactions,
-    isLoading: false,
-    isError: false,
-    slots: LIST_SLOTS,
-    renderItem,
-    renderFooter,
-    renderExpandedContent,
-    expandedKeys,
-    exitingKeys,
-    onRemoveItem,
-    onClickItem: bulkActionsEnabled ? undefined : onClickItem,
-    ...bulkSelectionProps,
-  }
-
   return (
     <>
       <BankTransactionsMobileBulkActionsHeader
@@ -149,7 +133,21 @@ const BankTransactionsMobileListContent = ({
         onBulkActionsToggle={setBulkActionsEnabled}
       />
       <VStack pbs='sm'>
-        <MobileList {...mobileListProps} />
+        <MobileList
+          ariaLabel={t('bankTransactions:label.transactions', 'Transactions')}
+          data={bankTransactions}
+          isLoading={false}
+          isError={false}
+          slots={LIST_SLOTS}
+          renderItem={renderItem}
+          renderFooter={renderFooter}
+          renderExpandedContent={renderExpandedContent}
+          expandedKeys={expandedKeys}
+          exitingKeys={exitingKeys}
+          onRemoveItem={onRemoveItem}
+          onClickItem={bulkActionsEnabled ? undefined : onClickItem}
+          {...bulkSelectionProps}
+        />
       </VStack>
     </>
   )

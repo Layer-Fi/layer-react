@@ -1,4 +1,4 @@
-import { type MutableRefObject, useCallback, useMemo, useState } from 'react'
+import { type MutableRefObject, useCallback, useMemo, useRef, useState } from 'react'
 import {
   getCoreRowModel,
   getExpandedRowModel,
@@ -8,6 +8,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 
+import { PaginationChangeSource } from '@hooks/utils/pagination/types'
 import { VStack } from '@ui/Stack/Stack'
 import { type BaseDataTableProps, type ClickableRowProps, DataTable } from '@components/DataTable/DataTable'
 import { type ColumnConfig } from '@components/DataTable/utils/column'
@@ -20,7 +21,7 @@ import './paginatedDataTable.scss'
 
 export interface TablePaginationProps {
   pageIndex?: number
-  onPageIndexChange?: (pageIndex: number) => void
+  onPageIndexChange?: (pageIndex: number, source: PaginationChangeSource) => void
   pageSize?: number
   hasMore?: boolean
   fetchMore?: () => void
@@ -56,6 +57,7 @@ export function PaginatedTable<TData extends { id: string }>({
 }: PaginatedTableProps<TData>) {
   const { pageSize = 20, hasMore, fetchMore, pageIndex, onPageIndexChange, autoResetPageIndexRef } = paginationProps
   const isPaginationControlled = pageIndex !== undefined
+  const paginationChangeSourceRef = useRef(PaginationChangeSource.Sync)
 
   const [uncontrolledPagination, setUncontrolledPagination] = useState<PaginationState>({ pageIndex: 0, pageSize })
   const pagination = useMemo<PaginationState>(() => (
@@ -92,7 +94,7 @@ export function PaginatedTable<TData extends { id: string }>({
       typeof updaterOrValue === 'function'
         ? updaterOrValue(pagination)
         : updaterOrValue
-      onPageIndexChange?.(newPagination.pageIndex)
+      onPageIndexChange?.(newPagination.pageIndex, paginationChangeSourceRef.current)
       if (!isPaginationControlled) setUncontrolledPagination(newPagination)
     },
     onRowSelectionChange: selectionProps?.onRowSelectionChange,
@@ -108,7 +110,9 @@ export function PaginatedTable<TData extends { id: string }>({
   const { rows } = table.getRowModel()
 
   const onPageChange = useCallback((page: number) => {
+    paginationChangeSourceRef.current = PaginationChangeSource.User
     table.setPageIndex(page - 1)
+    paginationChangeSourceRef.current = PaginationChangeSource.Sync
   }, [table])
 
   const headerGroups = table.getHeaderGroups()
