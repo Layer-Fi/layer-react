@@ -1,37 +1,44 @@
-import { type ReactNode } from 'react'
+import { type ReactNode, useMemo } from 'react'
 
+import { BankTransactionsDateFilterMode } from '@utils/bankTransactions/shared'
 import { useAugmentedBankTransactions } from '@hooks/features/bankTransactions/useAugmentedBankTransactions'
+import { useBankTransactionsPagination } from '@hooks/features/bankTransactions/useBankTransactionsPagination'
 import { BankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import {
-  BankTransactionsFiltersContext,
-} from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
-import { useBankTransactionsFilters, type useBankTransactionsFiltersParams } from '@contexts/BankTransactionsFiltersContext/useBankTransactionsFilters'
+import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 
-interface BankTransactionsProviderProps extends useBankTransactionsFiltersParams {
+interface BankTransactionsProviderProps {
   children: ReactNode
+  pageSize?: number
 }
 
 export const BankTransactionsProvider = ({
   children,
-  scope,
-  monthlyView,
-  applyGlobalDateRange,
-  filters,
+  pageSize = 20,
 }: BankTransactionsProviderProps) => {
-  const filtersContextValue = useBankTransactionsFilters({
-    scope,
-    monthlyView,
-    applyGlobalDateRange,
+  const { filters, dateFilterMode } = useBankTransactionsFiltersContext()
+
+  const bankTransactionsData = useAugmentedBankTransactions({ filters })
+  const { data, hasMore, fetchMore } = bankTransactionsData
+
+  const isMonthlyViewMode = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
+
+  const paginationProps = useBankTransactionsPagination({
+    data,
+    hasMore,
+    fetchMore,
     filters,
+    pageSize,
   })
 
-  const bankTransactionsContextData = useAugmentedBankTransactions({ filters: filtersContextValue.filters })
+  const bankTransactionsContextData = useMemo(() => ({
+    ...bankTransactionsData,
+    isMonthlyViewMode,
+    paginationProps,
+  }), [bankTransactionsData, isMonthlyViewMode, paginationProps])
 
   return (
-    <BankTransactionsFiltersContext.Provider value={filtersContextValue}>
-      <BankTransactionsContext.Provider value={bankTransactionsContextData}>
-        {children}
-      </BankTransactionsContext.Provider>
-    </BankTransactionsFiltersContext.Provider>
+    <BankTransactionsContext.Provider value={bankTransactionsContextData}>
+      {children}
+    </BankTransactionsContext.Provider>
   )
 }

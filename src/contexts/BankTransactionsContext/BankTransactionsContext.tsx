@@ -2,8 +2,12 @@ import { createContext, useContext } from 'react'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { type useAugmentedBankTransactions } from '@hooks/features/bankTransactions/useAugmentedBankTransactions'
+import { type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
-export type BankTransactionsContextType = ReturnType<typeof useAugmentedBankTransactions>
+export type BankTransactionsContextType = ReturnType<typeof useAugmentedBankTransactions> & {
+  isMonthlyViewMode: boolean
+  paginationProps: TablePaginationProps
+}
 
 export const BankTransactionsContext =
   createContext<BankTransactionsContextType>({
@@ -19,6 +23,8 @@ export const BankTransactionsContext =
     hasMore: false,
     mutate: () => Promise.resolve(undefined),
     useBankTransactionsOptions: {},
+    isMonthlyViewMode: false,
+    paginationProps: {},
   })
 
 export const useBankTransactionsContext = () =>

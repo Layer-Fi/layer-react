@@ -149,9 +149,7 @@ export const useAugmentedBankTransactions = (
   const filteredData = useMemo(() => {
     let filtered = data
 
-    if (!filtered) {
-      return
-    }
+    if (!filtered) return
 
     if (filters?.categorizationStatus) {
       filtered = applyCategorizationStatusFilter(
