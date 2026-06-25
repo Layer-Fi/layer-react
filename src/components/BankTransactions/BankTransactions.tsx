@@ -170,13 +170,13 @@ const BankTransactionsContent = (props: BankTransactionsTableViewProps) => {
 }
 
 type BankTransactionsTableContentViewProps = {
-  tableContentMode: BankTransactionsTableContent
+  content: BankTransactionsTableContent
 }
 
 const BankTransactionsTableContentView = ({
-  tableContentMode,
+  content,
 }: BankTransactionsTableContentViewProps) => {
-  switch (tableContentMode) {
+  switch (content) {
     case BankTransactionsTableContent.Table:
       return <BankTransactionsTable />
     case BankTransactionsTableContent.List:
@@ -185,8 +185,8 @@ const BankTransactionsTableContentView = ({
       return <BankTransactionsMobileList />
     default:
       return unsafeAssertUnreachable({
-        value: tableContentMode,
-        message: 'Unexpected table view content mode',
+        value: content,
+        message: 'Unexpected table view content',
       })
   }
 }
@@ -273,7 +273,7 @@ const BankTransactionsTableView = ({
         />
       )}
 
-      <BankTransactionsTableContentView tableContentMode={tableContentMode} />
+      <BankTransactionsTableContentView content={tableContentMode} />
 
       <SuggestedCategorizationRuleUpdatesDialog
         isOpen={!!ruleSuggestion}
