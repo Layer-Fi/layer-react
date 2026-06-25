@@ -1,0 +1,12 @@
+@use '../../views/TaxEstimates/breakpoints' as tb;
+
+.Layer__TaxPayments__Wrapper {
+  overflow: hidden;
+  border-radius: var(--border-radius-sm);
+}
+
+@include tb.tax-detail-narrow {
+  .Layer__TaxPayments__Wrapper {
+    border: 1px solid var(--border-color);
+  }
+}
