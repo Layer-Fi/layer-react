@@ -192,7 +192,7 @@ export const useAugmentedBankTransactions = (
 
   const shouldHideAfterCategorize = filters?.categorizationStatus === DisplayState.review
 
-  const removeAfterCategorize = (transactionIds: string[]) => {
+  const removeAfterCategorize = useCallback((transactionIds: string[]) => {
     if (shouldHideAfterCategorize) {
       const updatedData = rawResponseData?.map(page => ({
         ...page,
@@ -200,7 +200,7 @@ export const useAugmentedBankTransactions = (
       }))
       void mutate(updatedData, { revalidate: false })
     }
-  }
+  }, [shouldHideAfterCategorize, rawResponseData, mutate])
 
   const fetchMore = useCallback(() => {
     if (hasMore) {
@@ -264,7 +264,7 @@ export const useAugmentedBankTransactions = (
     eventCallbacks?.onTransactionsFetched?.()
   })
 
-  return {
+  return useMemo(() => ({
     data: filteredData,
     isLoading,
     isValidating,
@@ -277,5 +277,18 @@ export const useAugmentedBankTransactions = (
     fetchMore,
     hasMore,
     mutate,
-  }
+  }), [
+    filteredData,
+    isLoading,
+    isValidating,
+    isError,
+    updateLocalBankTransactions,
+    shouldHideAfterCategorize,
+    removeAfterCategorize,
+    useBankTransactionsOptions,
+    display,
+    fetchMore,
+    hasMore,
+    mutate,
+  ])
 }

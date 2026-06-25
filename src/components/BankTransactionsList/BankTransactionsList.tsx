@@ -21,25 +21,11 @@ const BankTransactionsListLoader = () => (
   </div>
 )
 
-type BankTransactionsListContainerProps = PropsWithChildren<{
-  bankTransactions?: BankTransaction[]
-}>
-
-const BankTransactionsListContainer = ({
-  bankTransactions,
-  children,
-}: BankTransactionsListContainerProps) => {
-  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
-
-  return (
-    <>
-      {isCategorizationEnabled && <BankTransactionsListSelectAllHeader bankTransactions={bankTransactions} />}
-      <ul className='Layer__bank-transactions__list'>
-        {children}
-      </ul>
-    </>
-  )
-}
+const BankTransactionsListContainer = ({ children }: PropsWithChildren) => (
+  <ul className='Layer__bank-transactions__list'>
+    {children}
+  </ul>
+)
 
 type BankTransactionsListContentProps = {
   bankTransactions?: BankTransaction[]
@@ -49,26 +35,31 @@ const BankTransactionsListContent = ({
   bankTransactions,
 }: BankTransactionsListContentProps) => {
   const { isLoading, isError } = useBankTransactionsContext()
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
+  const showSelectAllHeader =
+    isCategorizationEnabled && !isLoading && !isError && (bankTransactions?.length ?? 0) > 0
+
   return (
-    <ConditionalList
-      list={bankTransactions ?? EMPTY_ARRAY}
-      isLoading={isLoading}
-      isError={isError}
-      Loading={<BankTransactionsListLoader />}
-      Error={<BankTransactionsErrorState />}
-      Empty={<BankTransactionsEmptyState />}
-      Container={({ children }) => (
-        <BankTransactionsListContainer bankTransactions={bankTransactions}>
-          {children}
-        </BankTransactionsListContainer>
+    <>
+      {showSelectAllHeader && (
+        <BankTransactionsListSelectAllHeader bankTransactions={bankTransactions} />
       )}
-    >
-      {({ item }) => (
-        <BankTransactionsListItem key={item.id} bankTransaction={item} />
-      )}
-    </ConditionalList>
+      <ConditionalList
+        list={bankTransactions ?? EMPTY_ARRAY}
+        isLoading={isLoading}
+        isError={isError}
+        Loading={<BankTransactionsListLoader />}
+        Error={<BankTransactionsErrorState />}
+        Empty={<BankTransactionsEmptyState />}
+        Container={BankTransactionsListContainer}
+      >
+        {({ item }) => (
+          <BankTransactionsListItem key={item.id} bankTransaction={item} />
+        )}
+      </ConditionalList>
+    </>
   )
 }
 
