@@ -25,18 +25,11 @@ const PURPOSE_TOGGLE_CONFIG = [
 export interface BankTransactionsMobileListItemExpandedRowProps {
   bankTransaction: BankTransaction
   isOpen?: boolean
-
-  showDescriptions: boolean
-  showReceiptUploads: boolean
-  showTooltips: boolean
 }
 
 export const BankTransactionsMobileListItemExpandedRow = ({
   bankTransaction,
   isOpen,
-  showDescriptions,
-  showReceiptUploads,
-  showTooltips,
 }: BankTransactionsMobileListItemExpandedRowProps) => {
   const { t } = useTranslation()
   const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
@@ -82,9 +75,6 @@ export const BankTransactionsMobileListItemExpandedRow = ({
         purpose={purpose}
         bankTransaction={bankTransaction}
         showCategorization={showCategorization}
-        showDescriptions={showDescriptions}
-        showReceiptUploads={showReceiptUploads}
-        showTooltips={showTooltips}
       />
     </VStack>
 

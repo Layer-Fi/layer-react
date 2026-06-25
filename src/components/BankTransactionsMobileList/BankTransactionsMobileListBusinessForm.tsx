@@ -9,6 +9,7 @@ import { resolveCategoryTaxCode } from '@utils/bankTransactions/taxCode'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
@@ -20,19 +21,14 @@ import { ErrorText } from '@components/Typography/ErrorText'
 interface BankTransactionsMobileListBusinessFormProps {
   bankTransaction: BankTransaction
   showCategorization?: boolean
-  showDescriptions: boolean
-  showReceiptUploads: boolean
-  showTooltips: boolean
 }
 
 export const BankTransactionsMobileListBusinessForm = ({
   bankTransaction,
   showCategorization,
-  showDescriptions,
-  showReceiptUploads,
-  showTooltips,
 }: BankTransactionsMobileListBusinessFormProps) => {
   const { t } = useTranslation()
+  const showReceiptUploads = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ReceiptUploads)
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const {
@@ -80,13 +76,11 @@ export const BankTransactionsMobileListBusinessForm = ({
         {showCategorization && (
           <BankTransactionsMobileCategorySelection
             bankTransaction={bankTransaction}
-            showTooltips={showTooltips}
             isSubmitting={isCategorizing}
           />
         )}
         <BankTransactionFormFields
           bankTransaction={bankTransaction}
-          showDescriptions={showDescriptions}
           hideCustomerVendor
           hideTags
           isMobile

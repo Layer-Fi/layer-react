@@ -10,17 +10,11 @@ import { BankTransactionsMobileListSplitForm } from '@components/BankTransaction
 
 interface BankTransactionsMobileListSplitAndMatchFormProps {
   bankTransaction: BankTransaction
-  showTooltips: boolean
   showCategorization?: boolean
-  showReceiptUploads?: boolean
-  showDescriptions?: boolean
 }
 
 export const BankTransactionsMobileListSplitAndMatchForm = ({
   bankTransaction,
-  showTooltips,
-  showReceiptUploads,
-  showDescriptions,
   showCategorization,
 }: BankTransactionsMobileListSplitAndMatchFormProps) => {
   const { t } = useTranslation()
@@ -35,17 +29,12 @@ export const BankTransactionsMobileListSplitAndMatchForm = ({
       {variant === BankTransactionSelectionVariant.CATEGORY && (
         <BankTransactionsMobileListSplitForm
           bankTransaction={bankTransaction}
-          showTooltips={showTooltips}
-          showReceiptUploads={showReceiptUploads}
-          showDescriptions={showDescriptions}
           showCategorization={showCategorization}
         />
       )}
       {variant === BankTransactionSelectionVariant.MATCH && (
         <BankTransactionsMobileListMatchForm
           bankTransaction={bankTransaction}
-          showReceiptUploads={showReceiptUploads}
-          showDescriptions={showDescriptions}
           showCategorization={showCategorization}
         />
       )}

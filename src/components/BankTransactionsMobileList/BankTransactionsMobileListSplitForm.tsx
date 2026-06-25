@@ -12,6 +12,7 @@ import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOp
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { Button } from '@ui/Button/Button'
 import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
@@ -30,20 +31,16 @@ import './bankTransactionsMobileListSplitForm.scss'
 
 interface BankTransactionsMobileListSplitFormProps {
   bankTransaction: BankTransaction
-  showTooltips: boolean
   showCategorization?: boolean
-  showReceiptUploads?: boolean
-  showDescriptions?: boolean
 }
 
 export const BankTransactionsMobileListSplitForm = ({
   bankTransaction,
-  showTooltips,
   showCategorization,
-  showReceiptUploads,
-  showDescriptions,
 }: BankTransactionsMobileListSplitFormProps) => {
   const { t } = useTranslation()
+  const showTooltips = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.Tooltips)
+  const showReceiptUploads = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ReceiptUploads)
   const { formatCurrencyFromCents } = useIntlFormatter()
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
   const totalInputId = useId()
@@ -182,7 +179,6 @@ export const BankTransactionsMobileListSplitForm = ({
       )}
       <BankTransactionFormFields
         bankTransaction={bankTransaction}
-        showDescriptions={showDescriptions}
         hideCustomerVendor
         hideTags
         isMobile

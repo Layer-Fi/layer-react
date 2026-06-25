@@ -11,18 +11,12 @@ interface BankTransactionsMobileFormsProps {
   bankTransaction: BankTransaction
 
   showCategorization?: boolean
-  showDescriptions: boolean
-  showReceiptUploads: boolean
-  showTooltips: boolean
 }
 
 export const BankTransactionsMobileForms = ({
   purpose,
   bankTransaction,
-  showTooltips,
   showCategorization,
-  showReceiptUploads,
-  showDescriptions,
   isOpen,
 }: BankTransactionsMobileFormsProps) => {
   const getContent = () => {
@@ -32,17 +26,12 @@ export const BankTransactionsMobileForms = ({
           <BankTransactionsMobileListBusinessForm
             bankTransaction={bankTransaction}
             showCategorization={showCategorization}
-            showTooltips={showTooltips}
-            showReceiptUploads={showReceiptUploads}
-            showDescriptions={showDescriptions}
           />
         )
       case Purpose.personal:
         return (
           <BankTransactionsMobileListPersonalForm
             bankTransaction={bankTransaction}
-            showReceiptUploads={showReceiptUploads}
-            showDescriptions={showDescriptions}
             showCategorization={showCategorization}
           />
         )
@@ -51,9 +40,6 @@ export const BankTransactionsMobileForms = ({
           <BankTransactionsMobileListSplitAndMatchForm
             bankTransaction={bankTransaction}
             showCategorization={showCategorization}
-            showTooltips={showTooltips}
-            showReceiptUploads={showReceiptUploads}
-            showDescriptions={showDescriptions}
           />
         )
       default:
