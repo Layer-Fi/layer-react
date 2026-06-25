@@ -19,8 +19,8 @@ import { Pagination } from '@components/Pagination/Pagination'
 import './paginatedDataTable.scss'
 
 export interface TablePaginationProps {
-  initialPage?: number
-  onSetPage?: (page: number) => void
+  pageIndex?: number
+  onPageIndexChange?: (pageIndex: number) => void
   pageSize?: number
   hasMore?: boolean
   fetchMore?: () => void
@@ -53,9 +53,15 @@ export function PaginatedTable<TData extends { id: string }>({
   selectionProps,
   expandedRowProps,
 }: PaginatedTableProps<TData>) {
-  const { pageSize = 20, hasMore, fetchMore, initialPage = 0, onSetPage, autoResetPageIndexRef } = paginationProps
+  const { pageSize = 20, hasMore, fetchMore, pageIndex, onPageIndexChange, autoResetPageIndexRef } = paginationProps
+  const isPaginationControlled = pageIndex !== undefined
 
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: initialPage, pageSize })
+  const [uncontrolledPagination, setUncontrolledPagination] = useState<PaginationState>({ pageIndex: 0, pageSize })
+  const pagination = useMemo<PaginationState>(() => (
+    pageIndex !== undefined
+      ? { pageIndex, pageSize }
+      : uncontrolledPagination
+  ), [pageIndex, pageSize, uncontrolledPagination])
 
   const columnDefs = useMemo(() => {
     return getColumnDefsWithSelection(columnConfig, selectionProps)
@@ -73,7 +79,7 @@ export function PaginatedTable<TData extends { id: string }>({
 
   const dependencies = useMemo(
     () => [pagination.pageIndex, pagination.pageSize],
-    [pagination],
+    [pagination.pageIndex, pagination.pageSize],
   )
 
   const table = useReactTable<TData>({
@@ -85,8 +91,8 @@ export function PaginatedTable<TData extends { id: string }>({
       typeof updaterOrValue === 'function'
         ? updaterOrValue(pagination)
         : updaterOrValue
-      onSetPage?.(newPagination.pageIndex)
-      setPagination(newPagination)
+      onPageIndexChange?.(newPagination.pageIndex)
+      if (!isPaginationControlled) setUncontrolledPagination(newPagination)
     },
     onRowSelectionChange: selectionProps?.onRowSelectionChange,
     enableRowSelection: selectionProps?.enableRowSelection ?? !!selectionProps,

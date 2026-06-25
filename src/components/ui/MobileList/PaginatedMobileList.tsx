@@ -17,9 +17,21 @@ export const PaginatedMobileList = <TData extends { id: string }>(
   props: PaginatedMobileListProps<TData>,
 ) => {
   const { data, paginationProps, ...listProps } = props
-  const { initialPage = 0, onSetPage, pageSize = 20, hasMore, fetchMore, autoResetPageIndexRef } = paginationProps
+  const {
+    pageIndex,
+    onPageIndexChange,
+    pageSize = 20,
+    hasMore,
+    fetchMore,
+    autoResetPageIndexRef,
+  } = paginationProps
 
-  const { pageItems, pageIndex, setPage } = usePaginatedList({ data: data ?? EMPTY_ARRAY, pageSize, initialPage, onSetPage })
+  const { pageItems, pageIndex: currentPageIndex, setPage } = usePaginatedList({
+    data: data ?? EMPTY_ARRAY,
+    pageSize,
+    pageIndex,
+    onPageIndexChange,
+  })
 
   const onPageChange = useCallback((page: number) => {
     setPage(page - 1)
@@ -36,7 +48,7 @@ export const PaginatedMobileList = <TData extends { id: string }>(
       <MobileList {...listProps} data={pageItems} />
       {!listProps.isError && !listProps.isLoading && (
         <Pagination
-          currentPage={pageIndex + 1}
+          currentPage={currentPageIndex + 1}
           onPageChange={onPageChange}
           pageSize={pageSize}
           totalCount={data?.length ?? 0}

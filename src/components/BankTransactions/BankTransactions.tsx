@@ -266,8 +266,8 @@ const BankTransactionsTableView = ({
   }, [currentPage, emitLayerEvent, setCurrentPage])
 
   const tablePaginationProps = useMemo(() => ({
-    initialPage: currentPage - 1,
-    onSetPage: (pageIndex: number) => handlePageChange(pageIndex + 1),
+    pageIndex: currentPage - 1,
+    onPageIndexChange: (pageIndex: number) => handlePageChange(pageIndex + 1),
     pageSize,
     hasMore,
     fetchMore,
