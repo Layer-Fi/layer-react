@@ -45,6 +45,7 @@ export function PaginatedTable<TData extends { id: string }>({
   columnConfig,
   componentName,
   ariaLabel,
+  className,
   paginationProps,
   slots,
   withClickableRow,
@@ -123,6 +124,7 @@ export function PaginatedTable<TData extends { id: string }>({
         isError={isError}
         dependencies={dependencies}
         componentName={componentName}
+        className={className}
         slots={slots}
         headerGroups={headerGroups}
         withClickableRow={withClickableRow}

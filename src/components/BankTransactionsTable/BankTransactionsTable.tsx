@@ -19,7 +19,7 @@ import {
 } from '@components/BankTransactions/BankTransactions'
 import { BankTransactionsTableEmptyState } from '@components/BankTransactions/BankTransactionsTableEmptyState'
 import { BankTransactionAccountCell } from '@components/BankTransactionsTable/BankTransactionAccountCell'
-import { BankTransactionActionsCell } from '@components/BankTransactionsTable/BankTransactionActionsCell'
+import { BankTransactionCategoryCell } from '@components/BankTransactionsTable/BankTransactionCategoryCell'
 import { BankTransactionDescriptionCell } from '@components/BankTransactionsTable/BankTransactionDescriptionCell'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { DataStateContainer } from '@components/DataStateContainer/DataStateContainer'
@@ -152,7 +152,7 @@ const getColumnConfig = ({
     pinning: 'right',
     preventRowClick: true,
     cell: (row: BankTransactionRowType) => (
-      <BankTransactionActionsCell
+      <BankTransactionCategoryCell
         row={row}
         isExpandedRowValid={isExpandedRowValid(row.original.id)}
         stringOverrides={stringOverrides?.bankTransactionCTAs}
@@ -278,13 +278,17 @@ export const BankTransactionsTable = ({
   const getRowClassName = useCallback((row: BankTransactionRowType) => (
     classNames(
       'Layer__BankTransactionRow',
-      row.getIsExpanded() && 'Layer__BankTransactionRow--expanded',
-      row.original.recentlyCategorized && shouldHideAfterCategorize && 'Layer__BankTransactionRow--removing',
+      'Layer__bank-transaction-row',
+      row.getIsExpanded() && 'Layer__BankTransactionRow--Expanded',
+      row.getIsExpanded() && 'Layer__bank-transaction-row--expanded',
+      row.original.recentlyCategorized && shouldHideAfterCategorize && 'Layer__BankTransactionRow--Removing',
+      row.original.recentlyCategorized && shouldHideAfterCategorize && 'Layer__bank-transaction-row--removing',
     )
   ), [shouldHideAfterCategorize])
 
   const tableProps = {
     ariaLabel: t('bankTransactions:label.bank_transactions', 'Bank transactions'),
+    className: 'Layer__bank-transactions__table',
     data: bankTransactions,
     isLoading,
     isError: false,

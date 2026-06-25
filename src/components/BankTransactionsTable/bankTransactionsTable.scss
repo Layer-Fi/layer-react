@@ -105,7 +105,7 @@
       background-color 300ms ease-in-out,
       opacity 300ms ease-in-out;
 
-    &.Layer__BankTransactionRow--removing {
+    &.Layer__BankTransactionRow--Removing {
       opacity: 0;
     }
 
@@ -115,7 +115,7 @@
       transition: background-color 300ms ease-out;
     }
 
-    &.Layer__BankTransactionRow--expanded .Layer__UI__Table-Cell,
+    &.Layer__BankTransactionRow--Expanded .Layer__UI__Table-Cell,
     &:hover .Layer__UI__Table-Cell {
       background-color: var(--bg-element-focus);
     }

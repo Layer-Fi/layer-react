@@ -28,6 +28,7 @@ export interface BaseDataTableProps {
   ariaLabel: string
   isLoading: boolean
   isError: boolean
+  className?: string
   slots: {
     EmptyState: React.FC
     ErrorState: React.FC
@@ -53,6 +54,7 @@ export const DataTable = <TData extends object>({
   isError,
   componentName,
   ariaLabel,
+  className,
   slots,
   dependencies,
   data,
@@ -138,6 +140,7 @@ export const DataTable = <TData extends object>({
           `Layer__UI__Table__${componentName}`,
           `Layer__UI__Table__${componentName}--${numColumns}Columns`,
           isShowingFallbackRows && `Layer__UI__Table__${componentName}--fallbackRows`,
+          className,
         )}
         nonAria={nonAria}
       >

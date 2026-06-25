@@ -25,58 +25,58 @@ import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
 import { Chevron } from '@components/Chevron/Chevron'
 
-type BankTransactionActionsCellProps = {
+type BankTransactionCategoryCellProps = {
   row: Row<BankTransaction>
   isExpandedRowValid: boolean
   stringOverrides?: BankTransactionCTAStringOverrides
 }
 
-type BankTransactionActionsCellContainerProps = PropsWithChildren<{
+type BankTransactionCategoryCellContainerProps = PropsWithChildren<{
   className?: string
 }> & Partial<StackProps>
 
-enum BankTransactionActionsCellCase {
+enum BankTransactionCategoryCellCase {
   Categorized = 'Categorized',
   Categorization = 'Categorization',
   ExpandedCategorization = 'ExpandedCategorization',
   Processing = 'Processing',
 }
 
-type GetBankTransactionActionsCellCaseParams = {
+type GetBankTransactionCategoryCellCaseParams = {
   isOpen: boolean
   isCategorizationEnabled: boolean
   displayAsCategorized: boolean
 }
 
-const BankTransactionActionsCellContainer = ({
+const BankTransactionCategoryCellContainer = ({
   children,
   className,
   ...restProps
-}: BankTransactionActionsCellContainerProps) => (
+}: BankTransactionCategoryCellContainerProps) => (
   <HStack gap='md' align='center' justify='end' fluid {...restProps} className={className}>
     {children}
   </HStack>
 )
 
-const getBankTransactionActionsCellCase = ({
+const getBankTransactionCategoryCellCase = ({
   isOpen,
   isCategorizationEnabled,
   displayAsCategorized,
-}: GetBankTransactionActionsCellCaseParams) => {
+}: GetBankTransactionCategoryCellCaseParams) => {
   if (isCategorizationEnabled) {
-    if (isOpen) return BankTransactionActionsCellCase.ExpandedCategorization
-    if (!displayAsCategorized) return BankTransactionActionsCellCase.Categorization
-    return BankTransactionActionsCellCase.Categorized
+    if (isOpen) return BankTransactionCategoryCellCase.ExpandedCategorization
+    if (!displayAsCategorized) return BankTransactionCategoryCellCase.Categorization
+    return BankTransactionCategoryCellCase.Categorized
   }
-  if (!displayAsCategorized) return BankTransactionActionsCellCase.Processing
-  return BankTransactionActionsCellCase.Categorized
+  if (!displayAsCategorized) return BankTransactionCategoryCellCase.Processing
+  return BankTransactionCategoryCellCase.Categorized
 }
 
-export const BankTransactionActionsCell = ({
+export const BankTransactionCategoryCell = ({
   row,
   isExpandedRowValid,
   stringOverrides,
-}: BankTransactionActionsCellProps) => {
+}: BankTransactionCategoryCellProps) => {
   const { t } = useTranslation()
   const bankTransaction = row.original
   const isOpen = row.getIsExpanded()
@@ -141,16 +141,16 @@ export const BankTransactionActionsCell = ({
     </Button>
   )
 
-  const cellCase = getBankTransactionActionsCellCase({
+  const cellCase = getBankTransactionCategoryCellCase({
     isOpen,
     isCategorizationEnabled,
     displayAsCategorized,
   })
 
   switch (cellCase) {
-    case BankTransactionActionsCellCase.ExpandedCategorization:
+    case BankTransactionCategoryCellCase.ExpandedCategorization:
       return (
-        <BankTransactionActionsCellContainer>
+        <BankTransactionCategoryCellContainer>
           {isError && (
             <Span status='error'>
               {t('common:state.unsaved', 'Unsaved')}
@@ -159,11 +159,11 @@ export const BankTransactionActionsCell = ({
           )}
           {submitButton}
           {expandButton}
-        </BankTransactionActionsCellContainer>
+        </BankTransactionCategoryCellContainer>
       )
-    case BankTransactionActionsCellCase.Categorized:
+    case BankTransactionCategoryCellCase.Categorized:
       return (
-        <BankTransactionActionsCellContainer
+        <BankTransactionCategoryCellContainer
           justify='space-between'
           className='Layer__BankTransactionRow__CategoryCellContent'
         >
@@ -172,11 +172,11 @@ export const BankTransactionActionsCell = ({
             className='Layer__BankTransactionRow__Category'
           />
           {expandButton}
-        </BankTransactionActionsCellContainer>
+        </BankTransactionCategoryCellContainer>
       )
-    case BankTransactionActionsCellCase.Categorization:
+    case BankTransactionCategoryCellCase.Categorization:
       return (
-        <BankTransactionActionsCellContainer justify='space-between'>
+        <BankTransactionCategoryCellContainer justify='space-between'>
           <BankTransactionCategoryComboBox
             bankTransaction={bankTransaction}
             selectedValue={selectedOption}
@@ -187,14 +187,14 @@ export const BankTransactionActionsCell = ({
           />
           {submitButton}
           {expandButton}
-        </BankTransactionActionsCellContainer>
+        </BankTransactionCategoryCellContainer>
       )
-    case BankTransactionActionsCellCase.Processing:
+    case BankTransactionCategoryCellCase.Processing:
       return (
-        <BankTransactionActionsCellContainer justify='space-between'>
+        <BankTransactionCategoryCellContainer justify='space-between'>
           <BankTransactionsProcessingInfo />
           {expandButton}
-        </BankTransactionActionsCellContainer>
+        </BankTransactionCategoryCellContainer>
       )
   }
 }

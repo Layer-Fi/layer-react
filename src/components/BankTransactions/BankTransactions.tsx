@@ -275,7 +275,7 @@ const BankTransactionsTableView = ({
 
   const BankTransactionsTableViewContent = useMemo(() => {
     return (
-      <div className='Layer__BankTransactions__TableWrapper'>
+      <div className='Layer__bank-transactions__table-wrapper Layer__BankTransactions__TableWrapper'>
         <BankTransactionsTable
           isLoading={isLoading}
           bankTransactions={data}
