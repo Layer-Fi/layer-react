@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { type OnChangeFn, type PaginationState } from '@tanstack/react-table'
 
 import { PaginationChangeSource } from '@hooks/utils/pagination/types'
+import { clampPageIndex, getPageCount } from '@hooks/utils/pagination/utils'
 
 type UsePaginatedTableStateParams = {
   pageIndex?: number
@@ -21,12 +22,10 @@ export function usePaginatedTableState({
   const [uncontrolledPagination, setUncontrolledPagination] = useState<PaginationState>({ pageIndex: 0, pageSize })
 
   const requestedPageIndex = pageIndex ?? uncontrolledPagination.pageIndex
-  const maxPageIndex = pageSize > 0
-    ? Math.max(0, Math.ceil((data?.length ?? 0) / pageSize) - 1)
-    : 0
+  const pageCount = getPageCount({ itemCount: data?.length ?? 0, pageSize })
   const effectivePageIndex = data === undefined
     ? requestedPageIndex
-    : Math.min(requestedPageIndex, maxPageIndex)
+    : clampPageIndex({ pageCount, pageIndex: requestedPageIndex })
 
   const pagination = useMemo<PaginationState>(() => ({
     pageIndex: effectivePageIndex,
