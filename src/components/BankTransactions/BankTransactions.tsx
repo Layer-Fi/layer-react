@@ -1,5 +1,4 @@
 import { type ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { debounce } from 'lodash-es'
 
 import type { LayerError } from '@utils/api/errorHandler'
 import { isAnyBankAccountSyncing } from '@utils/bankAccount'
@@ -226,21 +225,9 @@ const BankTransactionsTableView = ({
     if (!isOpen) setRuleSuggestion(null)
   }, [setRuleSuggestion])
 
-  const [shiftStickyHeader, setShiftStickyHeader] = useState(0)
-  const debounceShiftStickyHeader = debounce(setShiftStickyHeader, 500)
   const [listView, setListView] = useState(false)
 
   const containerRef = useElementSize<HTMLDivElement>((size) => {
-    if (size.height >= 90) {
-      const newShift = -Math.floor(size.height / 2) + 6
-      if (newShift !== shiftStickyHeader) {
-        void debounceShiftStickyHeader(newShift)
-      }
-    }
-    else if (size?.height > 0 && shiftStickyHeader !== 0) {
-      void debounceShiftStickyHeader(0)
-    }
-
     if (size.width > BREAKPOINTS.TABLET && listView) {
       setListView(false)
     }
@@ -265,7 +252,6 @@ const BankTransactionsTableView = ({
     >
       {!hideHeader && (
         <BankTransactionsHeader
-          shiftStickyHeader={shiftStickyHeader}
           asWidget={asWidget}
           tableContentMode={tableContentMode}
           isSyncing={isSyncing}

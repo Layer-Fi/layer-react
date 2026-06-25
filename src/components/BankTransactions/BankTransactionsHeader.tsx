@@ -38,7 +38,6 @@ import InvisibleDownload from '@components/utility/InvisibleDownload'
 import './bankTransactionsHeader.scss'
 
 export interface BankTransactionsHeaderProps {
-  shiftStickyHeader: number
   asWidget?: boolean
   tableContentMode: BankTransactionsTableContent
   isSyncing?: boolean
@@ -125,7 +124,6 @@ const DownloadButton = ({
 }
 
 export const BankTransactionsHeader = ({
-  shiftStickyHeader,
   tableContentMode,
   isSyncing,
   collapseHeader,
@@ -177,13 +175,7 @@ export const BankTransactionsHeader = ({
         <Heading level={3} size='sm'>
           {stringOverrides?.header || t('common:label.transactions', 'Transactions')}
         </Heading>
-        {isSyncing && (
-          <SyncingComponent
-            timeSync={5}
-            inProgress={true}
-            hideContent={isListView}
-          />
-        )}
+        {isSyncing && <SyncingComponent timeSync={5} inProgress hideContent={isListView} />}
       </HStack>
       {withDatePicker && monthPickerDate && (
         <MonthPicker
@@ -267,7 +259,6 @@ export const BankTransactionsHeader = ({
           withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
           isMobileList && 'Layer__bank-transactions__header--mobile',
         )}
-        style={{ top: shiftStickyHeader }}
       >
         <VStack gap='xs'>
           {headerTopRow}
@@ -311,7 +302,6 @@ export const BankTransactionsHeader = ({
         'Layer__bank-transactions__header',
         withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
       )}
-      style={{ top: shiftStickyHeader }}
     >
       {!collapseHeader && headerTopRow}
 
