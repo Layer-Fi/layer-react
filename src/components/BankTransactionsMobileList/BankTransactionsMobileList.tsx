@@ -108,13 +108,17 @@ const BankTransactionsMobileListContent = ({
     [expandedKeys],
   )
 
+  const hasTransactions = (bankTransactions?.length ?? 0) > 0
+
   return (
     <>
-      <BankTransactionsMobileBulkActionsHeader
-        bankTransactions={bankTransactions}
-        bulkActionsEnabled={bulkActionsEnabled}
-        onBulkActionsToggle={setBulkActionsEnabled}
-      />
+      {!isLoading && !isError && hasTransactions && (
+        <BankTransactionsMobileBulkActionsHeader
+          bankTransactions={bankTransactions}
+          bulkActionsEnabled={bulkActionsEnabled}
+          onBulkActionsToggle={setBulkActionsEnabled}
+        />
+      )}
       <VStack pbs='sm'>
         <MobileList
           ariaLabel={t('bankTransactions:label.transactions', 'Transactions')}

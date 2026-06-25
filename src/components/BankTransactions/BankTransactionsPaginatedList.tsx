@@ -16,7 +16,7 @@ const EMPTY_ARRAY = [] as const
 export const BankTransactionsPaginatedList = ({
   children,
 }: BankTransactionsPaginatedListProps) => {
-  const { data: bankTransactions, isMonthlyViewMode, paginationProps } = useBankTransactionsContext()
+  const { data: bankTransactions, isLoading, isError, isMonthlyViewMode, paginationProps } = useBankTransactionsContext()
 
   const { pageIndex, onPageIndexChange, pageSize = 20, hasMore, fetchMore, autoResetPageIndexRef } = paginationProps
   const { onPageChange, pageItems, pageIndex: currentPageIndex } = usePaginatedList({
@@ -27,10 +27,12 @@ export const BankTransactionsPaginatedList = ({
     onPageIndexChange: isMonthlyViewMode ? undefined : onPageIndexChange,
   })
 
+  const showPagination = !isMonthlyViewMode && !isLoading && !isError && (bankTransactions?.length ?? 0) > 0
+
   return (
     <>
       {children(isMonthlyViewMode ? bankTransactions : pageItems)}
-      {!isMonthlyViewMode && (
+      {showPagination && (
         <Pagination
           currentPage={currentPageIndex + 1}
           totalCount={bankTransactions?.length ?? 0}
