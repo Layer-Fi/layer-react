@@ -3,15 +3,21 @@ import { useCallback, useMemo, useState } from 'react'
 type UsePaginatedListProps<T> = {
   data: ReadonlyArray<T>
   pageSize: number
-  initialPage?: number
-  onSetPage?: (page: number) => void
+  pageIndex?: number
+  onPageIndexChange?: (pageIndex: number) => void
 }
 
-export function usePaginatedList<T>({ data, pageSize, initialPage = 0, onSetPage }: UsePaginatedListProps<T>) {
-  const [internalPageIndex, setInternalPageIndex] = useState(initialPage)
+export function usePaginatedList<T>({
+  data,
+  pageSize,
+  pageIndex,
+  onPageIndexChange,
+}: UsePaginatedListProps<T>) {
+  const [internalPageIndex, setInternalPageIndex] = useState(0)
+  const isPaginationControlled = pageIndex !== undefined
 
   const pageCount = Math.max(0, Math.ceil(data.length / pageSize))
-  const effectivePageIndex = Math.max(0, Math.min(internalPageIndex, pageCount - 1))
+  const effectivePageIndex = Math.max(0, Math.min(pageIndex ?? internalPageIndex, pageCount - 1))
 
   const pageItems = useMemo(() => {
     return data.slice(
@@ -23,9 +29,9 @@ export function usePaginatedList<T>({ data, pageSize, initialPage = 0, onSetPage
   const setPage = useCallback((pageIndex: number) => {
     const clampedPageIndex = Math.max(0, Math.min(pageIndex, pageCount - 1))
 
-    setInternalPageIndex(clampedPageIndex)
-    onSetPage?.(clampedPageIndex)
-  }, [onSetPage, pageCount])
+    if (!isPaginationControlled) setInternalPageIndex(clampedPageIndex)
+    onPageIndexChange?.(clampedPageIndex)
+  }, [isPaginationControlled, onPageIndexChange, pageCount])
 
   return {
     pageCount,

@@ -14,7 +14,7 @@ import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAcc
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
+import type { ColumnConfig } from '@components/DataTable/utils/column'
 import { PaginatedTable, type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
 import './ledgerAccountLineItemsTable.scss'
@@ -48,7 +48,7 @@ const getColumnConfig = (
   stringOverrides: LedgerAccountLineItemsTableStringOverrides | undefined,
   formatDate: ReturnType<typeof useIntlFormatter>['formatDate'],
   t: TFunction,
-): NestedColumnConfig<LedgerAccountLineItem> => [
+): ColumnConfig<LedgerAccountLineItem> => [
   {
     id: LedgerAccountLineItemColumns.Date,
     header: stringOverrides?.dateColumnHeader ?? t('common:label.date', 'Date'),

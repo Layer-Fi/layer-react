@@ -459,8 +459,6 @@ The full list of variables is listed in the [`variables.css`](https://github.com
 
 --badge-border-radius: var(--border-radius-sm);
 
---table-bg: var(--color-white);
-
 --tooltip-color: var(--color-white);
 --tooltip-bg-color: var(--color-base-800);
 

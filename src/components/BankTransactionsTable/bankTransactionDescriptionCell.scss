@@ -1,0 +1,14 @@
+.Layer__BankTransactionDescriptionCell {
+  width: 100%;
+  min-width: 0;
+
+  > .Layer__UI__TooltipTrigger {
+    flex: 1 1 0%;
+    min-width: 0;
+  }
+
+  .Layer__IconBox {
+    flex: none;
+    background-color: var(--color-base-100);
+  }
+}

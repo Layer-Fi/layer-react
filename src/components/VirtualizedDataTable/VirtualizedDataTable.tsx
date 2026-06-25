@@ -12,7 +12,7 @@ import classNames from 'classnames'
 import { type Alignment } from '@schemas/reports/unifiedReport'
 import { HStack } from '@ui/Stack/Stack'
 import { Cell, Column as TableColumn, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
-import { getColumnDefs, type NestedColumnConfig } from '@components/DataTable/columnUtils'
+import { type ColumnConfig, getColumnDefs } from '@components/DataTable/utils/column'
 import { Loader } from '@components/Loader/Loader'
 
 import './virtualizedDataTable.scss'
@@ -22,6 +22,7 @@ declare module '@tanstack/react-table' {
   interface ColumnMeta<TData extends RowData, TValue> {
     isRowHeader: boolean
     alignment?: Alignment
+    preventRowClick?: boolean
   }
 }
 
@@ -35,7 +36,7 @@ const CSS_PREFIX = 'Layer__UI__VirtualizedTable'
 const EMPTY_ARRAY: never[] = []
 
 export interface VirtualizedDataTableProps<TData extends { id: string }> {
-  columnConfig: NestedColumnConfig<TData>
+  columnConfig: ColumnConfig<TData>
   data: TData[] | undefined
   componentName: string
   ariaLabel: string

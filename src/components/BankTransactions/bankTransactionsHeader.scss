@@ -7,6 +7,7 @@
   gap: var(--spacing-xs);
   align-items: stretch;
   width: 100%;
+  padding-block-start: var(--spacing-md);
 }
 
 .Layer__bank-transactions__header__content {
@@ -53,15 +54,6 @@
   margin-left: 0;
 }
 
-@container (max-width: 1400px) {
-  .Layer__bank-transactions__header {
-    row-gap: var(--spacing-sm);
-    padding-top: var(--spacing-md);
-    padding-right: var(--spacing-md);
-    padding-left: var(--spacing-md);
-  }
-}
-
 @container (max-width: 760px) {
   .Layer__bank-transactions__header {
     position: sticky;
@@ -69,8 +61,7 @@
     top: 0;
     border-top-left-radius: var(--border-radius-sm);
     border-top-right-radius: var(--border-radius-sm);
-    box-shadow: 0 -1px 0 0 rgb(23 51 45 / 16%) inset;
-    background-color: var(--table-bg);
+    background-color: var(--color-base-0);
   }
 
   .Layer__bank-transactions__header.Layer__bank-transactions__header--mobile {

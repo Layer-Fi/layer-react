@@ -11,7 +11,7 @@
   }
 }
 
-.Layer__bank-transaction-row:hover .Layer__BankTransactionsSubmitButton:not([data-error]) {
+.Layer__BankTransactionRow:hover .Layer__BankTransactionsSubmitButton:not([data-error]) {
   .Layer__UI__Button:not([data-disabled]) {
     background-color: var(--btn-bg-color-hover);
     color: var(--btn-color-hover);

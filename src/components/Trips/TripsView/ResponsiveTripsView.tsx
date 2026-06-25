@@ -89,8 +89,8 @@ export const ResponsiveTripsView = () => {
   }, [])
 
   const paginationProps = useMemo(() => ({
-    initialPage: currentTripsPage,
-    onSetPage: setCurrentTripsPage,
+    pageIndex: currentTripsPage,
+    onPageIndexChange: setCurrentTripsPage,
     pageSize: 20,
     hasMore,
     fetchMore,

@@ -118,8 +118,8 @@ export const ResponsiveCategorizationRulesView = () => {
   }, [hasMore, setSize, size])
 
   const paginationProps = useMemo(() => ({
-    initialPage: currentPage,
-    onSetPage: setCurrentPage,
+    pageIndex: currentPage,
+    onPageIndexChange: setCurrentPage,
     pageSize: 10,
     hasMore,
     fetchMore,

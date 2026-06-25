@@ -40,13 +40,7 @@ export const BankTransactionsList = ({
   return (
     <>
       {isCategorizationEnabled && (
-        <HStack
-          gap='md'
-          pi='md'
-          pb='md'
-          align='center'
-          className='Layer__bank-transactions__list-header'
-        >
+        <HStack gap='md' pi='md' pb='md' align='center'>
           <Checkbox
             isSelected={isAllSelected}
             isIndeterminate={isPartiallySelected}
@@ -60,10 +54,9 @@ export const BankTransactionsList = ({
       )}
       <ul className='Layer__bank-transactions__list'>
         {bankTransactions?.map(
-          (bankTransaction: BankTransaction, index: number) => (
+          (bankTransaction: BankTransaction) => (
             <BankTransactionsListItem
               key={bankTransaction.id}
-              index={index}
               bankTransaction={bankTransaction}
               stringOverrides={stringOverrides}
 
