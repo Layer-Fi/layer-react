@@ -19,6 +19,7 @@ export function usePaginationState({
   const isPaginationControlled = pageIndex !== undefined
   const requestedPageIndex = pageIndex ?? internalPageIndex
   const effectivePageIndex = clampPageIndex({ pageCount, pageIndex: requestedPageIndex })
+  const shouldResetPageIndex = autoResetPageIndexRef?.current === true
 
   const setPage = useCallback((pageIndex: number) => {
     const nextPageIndex = clampPageIndex({ pageCount, pageIndex })
@@ -34,7 +35,7 @@ export function usePaginationState({
   }, [setPage])
 
   useEffect(() => {
-    if (autoResetPageIndexRef?.current) {
+    if (shouldResetPageIndex) {
       setPage(0)
       return
     }
@@ -48,12 +49,12 @@ export function usePaginationState({
       setInternalPageIndex(effectivePageIndex)
     }
   }, [
-    autoResetPageIndexRef,
     effectivePageIndex,
     isPaginationControlled,
     onPageIndexChange,
     requestedPageIndex,
     setPage,
+    shouldResetPageIndex,
   ])
 
   return { onPageChange, pageIndex: effectivePageIndex, setPage }

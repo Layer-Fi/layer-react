@@ -14,6 +14,7 @@ import { usePreloadTagDimensions } from '@hooks/api/businesses/[business-id]/tag
 import { usePreloadVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
+import { useAutoResetPageIndex } from '@hooks/utils/pagination/useAutoResetPageIndex'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
 import { BankTransactionsCategorizationStoreProvider } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
@@ -177,13 +178,14 @@ const BankTransactionsTableView = ({
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
 
-  const { dateFilterMode } = useBankTransactionsFiltersContext()
+  const { dateFilterMode, filters } = useBankTransactionsFiltersContext()
   const isMonthlyViewMode = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
 
   const { currentBankTransactionsPage: currentPage, setCurrentBankTransactionsPage: setCurrentPage } = useCurrentBankTransactionsPage()
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BankTransactions)
 
   const { data, isLoading, display, hasMore, fetchMore } = useBankTransactionsContext()
+  const autoResetPageIndexRef = useAutoResetPageIndex(filters, data)
 
   const { setRuleSuggestion, ruleSuggestion } = useContext(CategorizationRulesContext)
 
@@ -234,24 +236,31 @@ const BankTransactionsTableView = ({
       ? BankTransactionsTableContent.List
       : BankTransactionsTableContent.Table
 
-  const handlePageChange = useCallback((page: number) => {
+  const handlePageChange = useCallback((pageIndex: number) => {
+    const page = pageIndex + 1
+
     if (page === currentPage) return
 
-    emitLayerEvent({
-      type: LayerEventType.TransactionsPageChanged,
-      version: 1,
-      payload: { page },
-    })
     setCurrentPage(page)
-  }, [currentPage, emitLayerEvent, setCurrentPage])
+
+    const isAutoReset = autoResetPageIndexRef.current && page === 1
+    if (!isAutoReset) {
+      emitLayerEvent({
+        type: LayerEventType.TransactionsPageChanged,
+        version: 1,
+        payload: { page },
+      })
+    }
+  }, [autoResetPageIndexRef, currentPage, emitLayerEvent, setCurrentPage])
 
   const tablePaginationProps = useMemo(() => ({
     pageIndex: currentPage - 1,
-    onPageIndexChange: (pageIndex: number) => handlePageChange(pageIndex + 1),
+    onPageIndexChange: handlePageChange,
     pageSize,
     hasMore,
     fetchMore,
-  }), [currentPage, fetchMore, handlePageChange, hasMore, pageSize])
+    autoResetPageIndexRef,
+  }), [autoResetPageIndexRef, currentPage, fetchMore, handlePageChange, hasMore, pageSize])
 
   const BankTransactionsTableViewContent = useMemo(() => {
     return (
