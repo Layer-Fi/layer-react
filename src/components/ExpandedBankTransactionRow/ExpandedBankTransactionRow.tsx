@@ -30,7 +30,7 @@ import {
   BankTransactionSelectionVariant,
   useBankTransactionsCategorizationActions,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibilityStore/BankTransactionsFeatureVisibilityStoreProvider'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { Button } from '@ui/Button/Button'
 import { Input } from '@ui/Input/Input'

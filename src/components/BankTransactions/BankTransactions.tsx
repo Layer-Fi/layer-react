@@ -19,7 +19,7 @@ import { useAutoResetPageIndex } from '@hooks/utils/pagination/useAutoResetPageI
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
 import { BankTransactionsCategorizationStoreProvider } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import { BankTransactionsFeatureVisibilityStoreProvider } from '@providers/BankTransactionsFeatureVisibilityStore/BankTransactionsFeatureVisibilityStoreProvider'
+import { BankTransactionsFeatureVisibilityProvider } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { BankTransactionsProvider } from '@providers/BankTransactionsProvider/BankTransactionsProvider'
 import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState, useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { BulkSelectionStoreProvider } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -141,7 +141,7 @@ export const BankTransactions = ({
                 applyGlobalDateRange={applyGlobalDateRange}
                 filters={filters}
               >
-                <BankTransactionsFeatureVisibilityStoreProvider {...featureVisibility}>
+                <BankTransactionsFeatureVisibilityProvider {...featureVisibility}>
                   <InAppLinkProvider renderInAppLink={renderInAppLink}>
                     <BulkSelectionStoreProvider>
                       <BankTransactionsCategorizationStoreProvider>
@@ -156,7 +156,7 @@ export const BankTransactions = ({
                       </BankTransactionsCategorizationStoreProvider>
                     </BulkSelectionStoreProvider>
                   </InAppLinkProvider>
-                </BankTransactionsFeatureVisibilityStoreProvider>
+                </BankTransactionsFeatureVisibilityProvider>
               </BankTransactionsProvider>
             </BankTransactionsRouteStoreProvider>
           </CategorizationRulesProvider>

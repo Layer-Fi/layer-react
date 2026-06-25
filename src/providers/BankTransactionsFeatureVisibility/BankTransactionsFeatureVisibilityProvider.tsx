@@ -1,6 +1,4 @@
-import { createContext, type PropsWithChildren, useContext, useEffect, useState } from 'react'
-import { createStore, useStore } from 'zustand'
-import { shallow } from 'zustand/shallow'
+import { createContext, type PropsWithChildren, useContext, useRef } from 'react'
 
 export enum BankTransactionsFeature {
   CategorizationRules = 'showCategorizationRules',
@@ -41,38 +39,35 @@ function resolveFeatureVisibility(
   return resolved
 }
 
-const BankTransactionsFeatureVisibilityStoreContext = createContext(
-  createStore<BankTransactionsFeatureVisibility>(() => DEFAULT_FEATURE_VISIBILITY),
+const BankTransactionsFeatureVisibilityContext = createContext<BankTransactionsFeatureVisibility>(
+  DEFAULT_FEATURE_VISIBILITY,
 )
 
 export function useIsBankTransactionsFeatureEnabled(feature: BankTransactionsFeature) {
-  const store = useContext(BankTransactionsFeatureVisibilityStoreContext)
-  return useStore(store, state => state[feature])
+  return useContext(BankTransactionsFeatureVisibilityContext)[feature]
 }
 
-type BankTransactionsFeatureVisibilityStoreProviderProps = PropsWithChildren<
+type BankTransactionsFeatureVisibilityProviderProps = PropsWithChildren<
   Partial<BankTransactionsFeatureVisibility>
 >
 
-export function BankTransactionsFeatureVisibilityStoreProvider({
+export function BankTransactionsFeatureVisibilityProvider({
   children,
   ...overrides
-}: BankTransactionsFeatureVisibilityStoreProviderProps) {
-  const [store] = useState(() =>
-    createStore<BankTransactionsFeatureVisibility>(() => resolveFeatureVisibility(overrides)),
-  )
+}: BankTransactionsFeatureVisibilityProviderProps) {
+  const next = resolveFeatureVisibility(overrides)
+  const valueRef = useRef(next)
 
-  useEffect(() => {
-    store.setState((prev) => {
-      const next = resolveFeatureVisibility(overrides)
+  const hasChanged = Object.values(BankTransactionsFeature)
+    .some(feature => valueRef.current[feature] !== next[feature])
 
-      return shallow(prev, next) ? prev : next
-    })
-  }, [store, overrides])
+  if (hasChanged) {
+    valueRef.current = next
+  }
 
   return (
-    <BankTransactionsFeatureVisibilityStoreContext.Provider value={store}>
+    <BankTransactionsFeatureVisibilityContext.Provider value={valueRef.current}>
       {children}
-    </BankTransactionsFeatureVisibilityStoreContext.Provider>
+    </BankTransactionsFeatureVisibilityContext.Provider>
   )
 }

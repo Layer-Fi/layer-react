@@ -13,7 +13,7 @@ import { useBusinessActivationDate } from '@hooks/features/business/useBusinessA
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibilityStore/BankTransactionsFeatureVisibilityStoreProvider'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'

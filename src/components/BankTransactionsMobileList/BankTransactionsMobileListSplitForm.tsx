@@ -12,7 +12,7 @@ import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOp
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
-import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibilityStore/BankTransactionsFeatureVisibilityStoreProvider'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { Button } from '@ui/Button/Button'
 import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'

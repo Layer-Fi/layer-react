@@ -1,7 +1,7 @@
 import { File } from 'lucide-react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibilityStore/BankTransactionsFeatureVisibilityStoreProvider'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { IconBox } from '@components/IconBox/IconBox'
