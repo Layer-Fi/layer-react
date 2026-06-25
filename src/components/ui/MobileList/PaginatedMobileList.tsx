@@ -1,5 +1,3 @@
-import { useCallback, useEffect } from 'react'
-
 import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
 import { MobileList, type MobileListProps } from '@ui/MobileList/MobileList'
 import { VStack } from '@ui/Stack/Stack'
@@ -26,22 +24,13 @@ export const PaginatedMobileList = <TData extends { id: string }>(
     autoResetPageIndexRef,
   } = paginationProps
 
-  const { pageItems, pageIndex: currentPageIndex, setPage } = usePaginatedList({
+  const { onPageChange, pageItems, pageIndex: currentPageIndex } = usePaginatedList({
+    autoResetPageIndexRef,
     data: data ?? EMPTY_ARRAY,
     pageSize,
     pageIndex,
     onPageIndexChange,
   })
-
-  const onPageChange = useCallback((page: number) => {
-    setPage(page - 1)
-  }, [setPage])
-
-  useEffect(() => {
-    if (autoResetPageIndexRef?.current) {
-      setPage(0)
-    }
-  }, [autoResetPageIndexRef, data, setPage])
 
   return (
     <VStack>

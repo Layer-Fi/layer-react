@@ -1,41 +1,45 @@
-import { useCallback, useMemo, useState } from 'react'
+import { type MutableRefObject, useMemo } from 'react'
+
+import { usePaginationState } from '@hooks/utils/pagination/usePaginationState'
 
 type UsePaginatedListProps<T> = {
   data: ReadonlyArray<T>
   pageSize: number
   pageIndex?: number
   onPageIndexChange?: (pageIndex: number) => void
+  autoResetPageIndexRef?: MutableRefObject<boolean>
 }
 
 export function usePaginatedList<T>({
+  autoResetPageIndexRef,
   data,
   pageSize,
   pageIndex,
   onPageIndexChange,
 }: UsePaginatedListProps<T>) {
-  const [internalPageIndex, setInternalPageIndex] = useState(0)
-  const isPaginationControlled = pageIndex !== undefined
-
   const pageCount = Math.max(0, Math.ceil(data.length / pageSize))
-  const effectivePageIndex = Math.max(0, Math.min(pageIndex ?? internalPageIndex, pageCount - 1))
+  const {
+    onPageChange,
+    pageIndex: currentPageIndex,
+    setPage,
+  } = usePaginationState({
+    autoResetPageIndexRef,
+    pageCount,
+    pageIndex,
+    onPageIndexChange,
+  })
 
   const pageItems = useMemo(() => {
     return data.slice(
-      effectivePageIndex * pageSize,
-      (effectivePageIndex + 1) * pageSize,
+      currentPageIndex * pageSize,
+      (currentPageIndex + 1) * pageSize,
     )
-  }, [data, effectivePageIndex, pageSize])
-
-  const setPage = useCallback((pageIndex: number) => {
-    const clampedPageIndex = Math.max(0, Math.min(pageIndex, pageCount - 1))
-
-    if (!isPaginationControlled) setInternalPageIndex(clampedPageIndex)
-    onPageIndexChange?.(clampedPageIndex)
-  }, [isPaginationControlled, onPageIndexChange, pageCount])
+  }, [currentPageIndex, data, pageSize])
 
   return {
+    onPageChange,
     pageCount,
-    pageIndex: effectivePageIndex,
+    pageIndex: currentPageIndex,
     pageItems,
     setPage,
   }

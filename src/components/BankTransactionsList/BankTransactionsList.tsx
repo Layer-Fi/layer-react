@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
+import { useBankTransactionsPaginatedList } from '@hooks/features/bankTransactions/useBankTransactionsPaginatedList'
 import { useBankTransactionsTableCheckboxState } from '@hooks/features/bankTransactions/useBankTransactionsTableCheckboxState'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
@@ -11,12 +12,16 @@ import {
   type BankTransactionCTAStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
 import { BankTransactionsListItem } from '@components/BankTransactionsList/BankTransactionsListItem'
+import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
+import { Pagination } from '@components/Pagination/Pagination'
 
 import './bankTransactionsList.scss'
 
 interface BankTransactionsListProps {
   bankTransactions?: BankTransaction[]
   stringOverrides?: BankTransactionCTAStringOverrides
+  isMonthlyViewMode: boolean
+  paginationProps: TablePaginationProps
 
   showDescriptions: boolean
   showReceiptUploads: boolean
@@ -26,14 +31,29 @@ interface BankTransactionsListProps {
 export const BankTransactionsList = ({
   bankTransactions,
   stringOverrides,
+  isMonthlyViewMode,
+  paginationProps,
 
   showDescriptions,
   showReceiptUploads,
   showTooltips,
 }: BankTransactionsListProps) => {
   const { t } = useTranslation()
-  const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
-  useUpsertBankTransactionsDefaultCategories(bankTransactions)
+  const {
+    currentPageIndex,
+    displayedBankTransactions,
+    fetchMore,
+    hasMore,
+    onPageChange,
+    pageSize,
+  } = useBankTransactionsPaginatedList({
+    bankTransactions,
+    isMonthlyViewMode,
+    paginationProps,
+  })
+
+  const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions: displayedBankTransactions })
+  useUpsertBankTransactionsDefaultCategories(displayedBankTransactions)
 
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
@@ -53,7 +73,7 @@ export const BankTransactionsList = ({
         </HStack>
       )}
       <ul className='Layer__bank-transactions__list'>
-        {bankTransactions?.map(
+        {displayedBankTransactions?.map(
           (bankTransaction: BankTransaction) => (
             <BankTransactionsListItem
               key={bankTransaction.id}
@@ -67,6 +87,18 @@ export const BankTransactionsList = ({
           ),
         )}
       </ul>
+      {!isMonthlyViewMode && (
+        <HStack justify='end'>
+          <Pagination
+            currentPage={currentPageIndex + 1}
+            totalCount={bankTransactions?.length || 0}
+            pageSize={pageSize}
+            onPageChange={onPageChange}
+            fetchMore={fetchMore}
+            hasMore={hasMore}
+          />
+        </HStack>
+      )}
     </>
   )
 }

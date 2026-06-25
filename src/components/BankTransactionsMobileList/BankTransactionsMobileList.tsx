@@ -2,20 +2,25 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
+import { useBankTransactionsPaginatedList } from '@hooks/features/bankTransactions/useBankTransactionsPaginatedList'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useMobileListBulkSelection } from '@providers/BulkSelectionStore/useMobileListBulkSelection'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { MobileList } from '@ui/MobileList/MobileList'
+import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
 import { useMobileListExpansion } from '@ui/MobileList/useMobileListExpansion'
 import { VStack } from '@ui/Stack/Stack'
 import { BankTransactionsMobileBulkActionsHeader } from '@components/BankTransactionsMobileList/BankTransactionsMobileBulkActionsHeader'
 import { BankTransactionsMobileListItem } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItem'
 import { BankTransactionsMobileListItemExpandedRow } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
 import { BankTransactionsMobileListItemFooter } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemFooter'
+import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
 export interface BankTransactionsMobileListProps {
   bankTransactions?: BankTransaction[]
+  isMonthlyViewMode: boolean
+  paginationProps: TablePaginationProps
 
   showDescriptions: boolean
   showReceiptUploads: boolean
@@ -28,6 +33,8 @@ const LIST_SLOTS = { EmptyState, ErrorState }
 
 export const BankTransactionsMobileList = ({
   bankTransactions,
+  isMonthlyViewMode,
+  paginationProps,
   showDescriptions,
   showReceiptUploads,
   showTooltips,
@@ -37,19 +44,25 @@ export const BankTransactionsMobileList = ({
 
   const { clearSelection } = useBulkSelectionActions()
   const { shouldHideAfterCategorize, removeAfterCategorize } = useBankTransactionsContext()
-  useUpsertBankTransactionsDefaultCategories(bankTransactions)
+  const { displayedBankTransactions } = useBankTransactionsPaginatedList({
+    bankTransactions,
+    isMonthlyViewMode,
+    paginationProps,
+  })
+
+  useUpsertBankTransactionsDefaultCategories(displayedBankTransactions)
 
   const orderedIds = useMemo(
-    () => bankTransactions?.map(tx => tx.id) ?? [],
-    [bankTransactions],
+    () => displayedBankTransactions?.map(tx => tx.id) ?? [],
+    [displayedBankTransactions],
   )
 
   const exitingKeys = useMemo(() => {
-    if (!shouldHideAfterCategorize || !bankTransactions) {
+    if (!shouldHideAfterCategorize || !displayedBankTransactions) {
       return new Set<string>()
     }
-    return new Set(bankTransactions.filter(tx => tx.recentlyCategorized).map(tx => tx.id))
-  }, [bankTransactions, shouldHideAfterCategorize])
+    return new Set(displayedBankTransactions.filter(tx => tx.recentlyCategorized).map(tx => tx.id))
+  }, [displayedBankTransactions, shouldHideAfterCategorize])
 
   const bulkSelectionProps = useMobileListBulkSelection(orderedIds, { enabled: bulkActionsEnabled })
 
@@ -115,29 +128,38 @@ export const BankTransactionsMobileList = ({
     [expandedKeys, showDescriptions, showReceiptUploads, showTooltips],
   )
 
+  const mobileListProps = {
+    ariaLabel: t('bankTransactions:label.transactions', 'Transactions'),
+    data: bankTransactions,
+    isLoading: false,
+    isError: false,
+    slots: LIST_SLOTS,
+    renderItem,
+    renderFooter,
+    renderExpandedContent,
+    expandedKeys,
+    exitingKeys,
+    onRemoveItem,
+    onClickItem: bulkActionsEnabled ? undefined : onClickItem,
+    ...bulkSelectionProps,
+  }
+
   return (
     <>
       <BankTransactionsMobileBulkActionsHeader
-        bankTransactions={bankTransactions}
+        bankTransactions={displayedBankTransactions}
         bulkActionsEnabled={bulkActionsEnabled}
         onBulkActionsToggle={setBulkActionsEnabled}
       />
       <VStack pbs='sm'>
-        <MobileList
-          ariaLabel={t('bankTransactions:label.transactions', 'Transactions')}
-          data={bankTransactions}
-          isLoading={false}
-          isError={false}
-          slots={LIST_SLOTS}
-          renderItem={renderItem}
-          renderFooter={renderFooter}
-          renderExpandedContent={renderExpandedContent}
-          expandedKeys={expandedKeys}
-          exitingKeys={exitingKeys}
-          onRemoveItem={onRemoveItem}
-          onClickItem={bulkActionsEnabled ? undefined : onClickItem}
-          {...bulkSelectionProps}
-        />
+        {isMonthlyViewMode
+          ? <MobileList {...mobileListProps} />
+          : (
+            <PaginatedMobileList
+              {...mobileListProps}
+              paginationProps={paginationProps}
+            />
+          )}
       </VStack>
     </>
   )

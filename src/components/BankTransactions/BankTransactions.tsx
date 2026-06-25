@@ -31,7 +31,6 @@ import { BankTransactionTagVisibilityProvider } from '@contexts/BankTransactionT
 import { CategorizationRulesContext, CategorizationRulesProvider } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { MobileListSkeleton } from '@ui/MobileList/MobileListSkeleton'
-import { HStack } from '@ui/Stack/Stack'
 import { BankTransactionCustomerVendorVisibilityProvider } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorVisibilityProvider'
 import {
   BankTransactionsHeader,
@@ -49,7 +48,6 @@ import { ResponsiveCategorizationRulesView } from '@components/CategorizationRul
 import { Container } from '@components/Container/Container'
 import { ErrorBoundary } from '@components/ErrorBoundary/ErrorBoundary'
 import { Loader } from '@components/Loader/Loader'
-import { Pagination } from '@components/Pagination/Pagination'
 import { SuggestedCategorizationRuleUpdatesDialog } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDialog'
 
 import './bankTransactions.scss'
@@ -203,27 +201,9 @@ const BankTransactionsTableView = ({
     }
   }, [isMonthlyViewMode, isVisible, isLoading, hasMore, fetchMore])
 
-  // Adjust current page to last page if total page count < current page
-  useEffect(() => {
-    if (isMonthlyViewMode || !data?.length || pageSize <= 0) return
-
-    const maxPage = Math.ceil(data.length / pageSize)
-    if (maxPage > 0 && currentPage > maxPage) {
-      setCurrentPage(maxPage)
-    }
-  }, [isMonthlyViewMode, data?.length, pageSize, currentPage, setCurrentPage])
-
   const handleRuleSuggestionOpenChange = useCallback((isOpen: boolean) => {
     if (!isOpen) setRuleSuggestion(null)
   }, [setRuleSuggestion])
-
-  const currentPageBankTransactions = useMemo(() => {
-    if (isMonthlyViewMode) return data
-
-    const firstPageIndex = (currentPage - 1) * pageSize
-    const lastPageIndex = firstPageIndex + pageSize
-    return data?.slice(firstPageIndex, lastPageIndex)
-  }, [currentPage, data, isMonthlyViewMode, pageSize])
 
   const [shiftStickyHeader, setShiftStickyHeader] = useState(0)
   const debounceShiftStickyHeader = debounce(setShiftStickyHeader, 500)
@@ -310,25 +290,29 @@ const BankTransactionsTableView = ({
   const BankTransactionsListView = useMemo(() => {
     return (
       <BankTransactionsList
-        bankTransactions={currentPageBankTransactions}
+        bankTransactions={data}
         stringOverrides={stringOverrides?.bankTransactionCTAs}
+        isMonthlyViewMode={isMonthlyViewMode}
+        paginationProps={tablePaginationProps}
         showDescriptions={showDescriptions}
         showReceiptUploads={showReceiptUploads}
         showTooltips={showTooltips}
       />
     )
-  }, [currentPageBankTransactions, stringOverrides?.bankTransactionCTAs, showDescriptions, showReceiptUploads, showTooltips])
+  }, [data, isMonthlyViewMode, stringOverrides?.bankTransactionCTAs, showDescriptions, showReceiptUploads, showTooltips, tablePaginationProps])
 
   const BankTransactionsMobileListView = useMemo(() => {
     return (
       <BankTransactionsMobileList
-        bankTransactions={currentPageBankTransactions}
+        bankTransactions={data}
+        isMonthlyViewMode={isMonthlyViewMode}
+        paginationProps={tablePaginationProps}
         showDescriptions={showDescriptions}
         showReceiptUploads={showReceiptUploads}
         showTooltips={showTooltips}
       />
     )
-  }, [currentPageBankTransactions, showDescriptions, showReceiptUploads, showTooltips])
+  }, [data, isMonthlyViewMode, showDescriptions, showReceiptUploads, showTooltips, tablePaginationProps])
 
   const slots = useMemo(() => {
     switch (tableContentMode) {
@@ -362,7 +346,7 @@ const BankTransactionsTableView = ({
 
   const isEmpty = tableContentMode === BankTransactionsTableContent.Table
     ? false
-    : (currentPageBankTransactions?.length ?? 0) === 0
+    : (data?.length ?? 0) === 0
 
   return (
     <Container
@@ -401,19 +385,6 @@ const BankTransactionsTableView = ({
         ruleSuggestion={ruleSuggestion}
         variant={tableContentMode === BankTransactionsTableContent.MobileList ? 'drawer' : 'modal'}
       />
-
-      {tableContentMode !== BankTransactionsTableContent.Table && !isMonthlyViewMode && !isLoading && (
-        <HStack justify='end'>
-          <Pagination
-            currentPage={currentPage}
-            totalCount={data?.length || 0}
-            pageSize={pageSize}
-            onPageChange={handlePageChange}
-            fetchMore={fetchMore}
-            hasMore={hasMore}
-          />
-        </HStack>
-      )}
 
       {isMonthlyViewMode ? <div ref={scrollPaginationRef} /> : null}
     </Container>
