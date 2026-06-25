@@ -26,11 +26,6 @@ const DEFAULT_FEATURE_VISIBILITY: BankTransactionsFeatureVisibility = {
   [BankTransactionsFeature.UploadOptions]: false,
 }
 
-/**
- * Resolves the full visibility record from a set of overrides, reading only the
- * known feature keys (from the enum) and falling back to defaults. Unknown keys
- * on `overrides` are ignored, so it's safe to spread a wider props object in.
- */
 function resolveFeatureVisibility(
   overrides: Partial<BankTransactionsFeatureVisibility>,
 ): BankTransactionsFeatureVisibility {
