@@ -11,7 +11,9 @@ import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bank
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBulkSelectionActions, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+import { useBankTransactionsPaginationContext } from '@contexts/BankTransactionsPaginationContext/BankTransactionsPaginationContext'
 import { useBankTransactionsStringOverrides } from '@contexts/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
@@ -139,9 +141,9 @@ export const BankTransactionsTable = () => {
     isLoading,
     isError,
     data: bankTransactions,
-    isMonthlyViewMode,
-    paginationProps,
   } = useBankTransactionsContext()
+  const { isMonthlyViewMode } = useBankTransactionsFiltersContext()
+  const paginationProps = useBankTransactionsPaginationContext()
   const { selectedIds } = useSelectedIds()
   const { selectMultiple, deselectMultiple } = useBulkSelectionActions()
   const [expandedRowValidity, setExpandedRowValidity] = useState<Record<string, boolean>>({})

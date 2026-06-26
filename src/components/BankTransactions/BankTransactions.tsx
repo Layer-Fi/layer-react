@@ -2,7 +2,7 @@ import { type ReactNode, useCallback, useContext, useEffect, useMemo, useRef, us
 
 import type { LayerError } from '@utils/api/errorHandler'
 import { isAnyBankAccountSyncing } from '@utils/bankAccount'
-import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@utils/bankTransactions/shared'
+import { type BankTransactionFilters } from '@utils/bankTransactions/shared'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { usePreloadCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
@@ -14,6 +14,7 @@ import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
 import { BankTransactionsCategorizationStoreProvider } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { BankTransactionsFeatureVisibilityProvider } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
+import { BankTransactionsPaginationProvider } from '@providers/BankTransactionsProvider/BankTransactionsPaginationProvider'
 import { BankTransactionsProvider } from '@providers/BankTransactionsProvider/BankTransactionsProvider'
 import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { BulkSelectionStoreProvider } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -133,23 +134,25 @@ export const BankTransactions = ({
                 applyGlobalDateRange={applyGlobalDateRange}
                 filters={filters}
               >
-                <BankTransactionsProvider pageSize={pageSize}>
-                  <BankTransactionsFeatureVisibilityProvider {...featureVisibility}>
-                    <BankTransactionsStringOverridesProvider stringOverrides={stringOverrides}>
-                      <InAppLinkProvider renderInAppLink={renderInAppLink}>
-                        <BulkSelectionStoreProvider>
-                          <BankTransactionsCategorizationStoreProvider>
-                            <BankTransactionsContent
-                              asWidget={asWidget}
-                              mobileComponent={mobileComponent}
-                              hideHeader={hideHeader}
-                              collapseHeader={collapseHeader}
-                            />
-                          </BankTransactionsCategorizationStoreProvider>
-                        </BulkSelectionStoreProvider>
-                      </InAppLinkProvider>
-                    </BankTransactionsStringOverridesProvider>
-                  </BankTransactionsFeatureVisibilityProvider>
+                <BankTransactionsProvider>
+                  <BankTransactionsPaginationProvider pageSize={pageSize}>
+                    <BankTransactionsFeatureVisibilityProvider {...featureVisibility}>
+                      <BankTransactionsStringOverridesProvider stringOverrides={stringOverrides}>
+                        <InAppLinkProvider renderInAppLink={renderInAppLink}>
+                          <BulkSelectionStoreProvider>
+                            <BankTransactionsCategorizationStoreProvider>
+                              <BankTransactionsContent
+                                asWidget={asWidget}
+                                mobileComponent={mobileComponent}
+                                hideHeader={hideHeader}
+                                collapseHeader={collapseHeader}
+                              />
+                            </BankTransactionsCategorizationStoreProvider>
+                          </BulkSelectionStoreProvider>
+                        </InAppLinkProvider>
+                      </BankTransactionsStringOverridesProvider>
+                    </BankTransactionsFeatureVisibilityProvider>
+                  </BankTransactionsPaginationProvider>
                 </BankTransactionsProvider>
               </BankTransactionsFiltersProvider>
             </BankTransactionsRouteStoreProvider>
@@ -200,8 +203,7 @@ const BankTransactionsTableView = ({
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
 
-  const { dateFilterMode } = useBankTransactionsFiltersContext()
-  const isMonthlyViewMode = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
+  const { isMonthlyViewMode } = useBankTransactionsFiltersContext()
 
   const { isLoading, hasMore, fetchMore } = useBankTransactionsContext()
 

@@ -91,8 +91,10 @@ export const useBankTransactionsFilters = ({
     }))
   }, [])
 
+  const isMonthlyViewMode = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
+
   return useMemo(
-    () => ({ filters, setFilters, dateFilterMode }),
-    [filters, setFilters, dateFilterMode],
+    () => ({ filters, setFilters, dateFilterMode, isMonthlyViewMode }),
+    [filters, setFilters, dateFilterMode, isMonthlyViewMode],
   )
 }
