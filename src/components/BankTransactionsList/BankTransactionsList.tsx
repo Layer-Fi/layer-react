@@ -1,84 +1,70 @@
-import { useTranslation } from 'react-i18next'
+import { type PropsWithChildren } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { useBankTransactionsTableCheckboxState } from '@hooks/features/bankTransactions/useBankTransactionsTableCheckboxState'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import { Checkbox } from '@ui/Checkbox/Checkbox'
-import { HStack } from '@ui/Stack/Stack'
-import { Span } from '@ui/Typography/Text'
-import {
-  type BankTransactionCTAStringOverrides,
-} from '@components/BankTransactions/BankTransactions'
 import { BankTransactionsPaginatedList } from '@components/BankTransactions/BankTransactionsPaginatedList'
+import { BankTransactionsEmptyState, BankTransactionsErrorState } from '@components/BankTransactions/BankTransactionsTableEmptyState'
 import { BankTransactionsListItem } from '@components/BankTransactionsList/BankTransactionsListItem'
-import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
+import { BankTransactionsListSelectAllHeader } from '@components/BankTransactionsList/BankTransactionsListSelectAllHeader'
+import { Loader } from '@components/Loader/Loader'
+import { ConditionalList } from '@components/utility/ConditionalList'
 
 import './bankTransactionsList.scss'
 
-interface BankTransactionsListProps {
-  bankTransactions?: BankTransaction[]
-  stringOverrides?: BankTransactionCTAStringOverrides
-  isMonthlyViewMode: boolean
-  paginationProps: TablePaginationProps
-}
+const EMPTY_ARRAY = [] as const
 
-type BankTransactionsListContentProps = Pick<
-  BankTransactionsListProps,
-  'bankTransactions' | 'stringOverrides'
->
+const BankTransactionsListLoader = () => (
+  <div className='Layer__bank-transactions__list-loader'>
+    <Loader />
+  </div>
+)
+
+const BankTransactionsListContainer = ({ children }: PropsWithChildren) => (
+  <ul className='Layer__bank-transactions__list'>
+    {children}
+  </ul>
+)
+
+type BankTransactionsListContentProps = {
+  bankTransactions?: BankTransaction[]
+}
 
 const BankTransactionsListContent = ({
   bankTransactions,
-  stringOverrides,
 }: BankTransactionsListContentProps) => {
-  const { t } = useTranslation()
-  const { isAllSelected, isPartiallySelected, onHeaderCheckboxChange } = useBankTransactionsTableCheckboxState({ bankTransactions })
+  const { isLoading, isError } = useBankTransactionsContext()
+  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
-  const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
+  const showSelectAllHeader =
+    isCategorizationEnabled && !isLoading && !isError && (bankTransactions?.length ?? 0) > 0
 
   return (
     <>
-      {isCategorizationEnabled && (
-        <HStack gap='md' pi='md' pb='md' align='center'>
-          <Checkbox
-            isSelected={isAllSelected}
-            isIndeterminate={isPartiallySelected}
-            onChange={onHeaderCheckboxChange}
-            aria-label={t('bankTransactions:label.select_all_transactions', 'Select all transactions on this page')}
-          />
-          <Span size='sm'>
-            {t('common:label.select_all', 'Select all')}
-          </Span>
-        </HStack>
+      {showSelectAllHeader && (
+        <BankTransactionsListSelectAllHeader bankTransactions={bankTransactions} />
       )}
-      <ul className='Layer__bank-transactions__list'>
-        {bankTransactions?.map((bankTransaction: BankTransaction) => (
-          <BankTransactionsListItem
-            key={bankTransaction.id}
-            bankTransaction={bankTransaction}
-            stringOverrides={stringOverrides}
-          />
-        ))}
-      </ul>
+      <ConditionalList
+        list={bankTransactions ?? EMPTY_ARRAY}
+        isLoading={isLoading}
+        isError={isError}
+        Loading={<BankTransactionsListLoader />}
+        Error={<BankTransactionsErrorState />}
+        Empty={<BankTransactionsEmptyState />}
+        Container={BankTransactionsListContainer}
+      >
+        {({ item }) => (
+          <BankTransactionsListItem key={item.id} bankTransaction={item} />
+        )}
+      </ConditionalList>
     </>
   )
 }
 
-export const BankTransactionsList = ({
-  bankTransactions,
-  isMonthlyViewMode,
-  paginationProps,
-  ...contentProps
-}: BankTransactionsListProps) => (
-  <BankTransactionsPaginatedList
-    bankTransactions={bankTransactions}
-    isMonthlyViewMode={isMonthlyViewMode}
-    paginationProps={paginationProps}
-  >
-    {displayedTransactions => (
-      <BankTransactionsListContent bankTransactions={displayedTransactions} {...contentProps} />
-    )}
+export const BankTransactionsList = () => (
+  <BankTransactionsPaginatedList>
+    {displayedTransactions => <BankTransactionsListContent bankTransactions={displayedTransactions} />}
   </BankTransactionsPaginatedList>
 )

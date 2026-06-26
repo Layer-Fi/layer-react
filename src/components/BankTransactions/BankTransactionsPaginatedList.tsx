@@ -2,26 +2,26 @@ import type { ReactNode } from 'react'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
-import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
+import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
+import { useBankTransactionsPaginationContext } from '@contexts/BankTransactionsPaginationContext/BankTransactionsPaginationContext'
 import { Pagination } from '@components/Pagination/Pagination'
 
 type RenderBankTransactionsList = (bankTransactions?: BankTransaction[]) => ReactNode
 
 type BankTransactionsPaginatedListProps = {
-  bankTransactions?: BankTransaction[]
   children: RenderBankTransactionsList
-  isMonthlyViewMode: boolean
-  paginationProps: TablePaginationProps
 }
 
 const EMPTY_ARRAY = [] as const
 
 export const BankTransactionsPaginatedList = ({
-  bankTransactions,
   children,
-  isMonthlyViewMode,
-  paginationProps,
 }: BankTransactionsPaginatedListProps) => {
+  const { data: bankTransactions, isLoading, isError } = useBankTransactionsContext()
+  const { isMonthlyViewMode } = useBankTransactionsFiltersContext()
+  const paginationProps = useBankTransactionsPaginationContext()
+
   const { pageIndex, onPageIndexChange, pageSize = 20, hasMore, fetchMore, autoResetPageIndexRef } = paginationProps
   const { onPageChange, pageItems, pageIndex: currentPageIndex } = usePaginatedList({
     autoResetPageIndexRef: isMonthlyViewMode ? undefined : autoResetPageIndexRef,
@@ -31,13 +31,16 @@ export const BankTransactionsPaginatedList = ({
     onPageIndexChange: isMonthlyViewMode ? undefined : onPageIndexChange,
   })
 
+  const totalCount = bankTransactions?.length ?? 0
+  const showPagination = !isMonthlyViewMode && !isLoading && !isError && totalCount > 0
+
   return (
     <>
       {children(isMonthlyViewMode ? bankTransactions : pageItems)}
-      {!isMonthlyViewMode && (
+      {showPagination && (
         <Pagination
           currentPage={currentPageIndex + 1}
-          totalCount={bankTransactions?.length ?? 0}
+          totalCount={totalCount}
           pageSize={pageSize}
           onPageChange={onPageChange}
           fetchMore={fetchMore}

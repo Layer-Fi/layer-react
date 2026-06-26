@@ -10,25 +10,18 @@ import { MobileList } from '@ui/MobileList/MobileList'
 import { useMobileListExpansion } from '@ui/MobileList/useMobileListExpansion'
 import { VStack } from '@ui/Stack/Stack'
 import { BankTransactionsPaginatedList } from '@components/BankTransactions/BankTransactionsPaginatedList'
+import { BankTransactionsEmptyState, BankTransactionsErrorState } from '@components/BankTransactions/BankTransactionsTableEmptyState'
 import { BankTransactionsMobileBulkActionsHeader } from '@components/BankTransactionsMobileList/BankTransactionsMobileBulkActionsHeader'
 import { BankTransactionsMobileListItem } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItem'
 import { BankTransactionsMobileListItemExpandedRow } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
 import { BankTransactionsMobileListItemFooter } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemFooter'
-import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
-export interface BankTransactionsMobileListProps {
+type BankTransactionsMobileListContentProps = {
   bankTransactions?: BankTransaction[]
-  isMonthlyViewMode: boolean
-  paginationProps: TablePaginationProps
 }
 
-type BankTransactionsMobileListContentProps = Pick<
-  BankTransactionsMobileListProps,
-  'bankTransactions'
->
-
-const EmptyState = () => null
-const ErrorState = () => null
+const EmptyState = () => <BankTransactionsEmptyState />
+const ErrorState = () => <BankTransactionsErrorState />
 const LIST_SLOTS = { EmptyState, ErrorState }
 
 const BankTransactionsMobileListContent = ({
@@ -38,7 +31,7 @@ const BankTransactionsMobileListContent = ({
   const [bulkActionsEnabled, setBulkActionsEnabled] = useState(false)
 
   const { clearSelection } = useBulkSelectionActions()
-  const { shouldHideAfterCategorize, removeAfterCategorize } = useBankTransactionsContext()
+  const { shouldHideAfterCategorize, removeAfterCategorize, isLoading, isError } = useBankTransactionsContext()
 
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
@@ -115,19 +108,23 @@ const BankTransactionsMobileListContent = ({
     [expandedKeys],
   )
 
+  const hasTransactions = (bankTransactions?.length ?? 0) > 0
+
   return (
     <>
-      <BankTransactionsMobileBulkActionsHeader
-        bankTransactions={bankTransactions}
-        bulkActionsEnabled={bulkActionsEnabled}
-        onBulkActionsToggle={setBulkActionsEnabled}
-      />
+      {!isLoading && !isError && hasTransactions && (
+        <BankTransactionsMobileBulkActionsHeader
+          bankTransactions={bankTransactions}
+          bulkActionsEnabled={bulkActionsEnabled}
+          onBulkActionsToggle={setBulkActionsEnabled}
+        />
+      )}
       <VStack pbs='sm'>
         <MobileList
           ariaLabel={t('bankTransactions:label.transactions', 'Transactions')}
           data={bankTransactions}
-          isLoading={false}
-          isError={false}
+          isLoading={isLoading}
+          isError={isError}
           slots={LIST_SLOTS}
           renderItem={renderItem}
           renderFooter={renderFooter}
@@ -143,19 +140,10 @@ const BankTransactionsMobileListContent = ({
   )
 }
 
-export const BankTransactionsMobileList = ({
-  bankTransactions,
-  isMonthlyViewMode,
-  paginationProps,
-  ...contentProps
-}: BankTransactionsMobileListProps) => (
-  <BankTransactionsPaginatedList
-    bankTransactions={bankTransactions}
-    isMonthlyViewMode={isMonthlyViewMode}
-    paginationProps={paginationProps}
-  >
+export const BankTransactionsMobileList = () => (
+  <BankTransactionsPaginatedList>
     {displayedTransactions => (
-      <BankTransactionsMobileListContent bankTransactions={displayedTransactions} {...contentProps} />
+      <BankTransactionsMobileListContent bankTransactions={displayedTransactions} />
     )}
   </BankTransactionsPaginatedList>
 )

@@ -19,6 +19,7 @@ import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/la
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+import { useBankTransactionsStringOverrides } from '@contexts/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
 import { DownloadButton as DownloadButtonComponent } from '@ui/Button/DownloadButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
@@ -37,11 +38,9 @@ import InvisibleDownload from '@components/utility/InvisibleDownload'
 import './bankTransactionsHeader.scss'
 
 export interface BankTransactionsHeaderProps {
-  shiftStickyHeader: number
   asWidget?: boolean
   tableContentMode: BankTransactionsTableContent
   isSyncing?: boolean
-  stringOverrides?: BankTransactionsHeaderStringOverrides
   collapseHeader?: boolean
 }
 
@@ -125,13 +124,12 @@ const DownloadButton = ({
 }
 
 export const BankTransactionsHeader = ({
-  shiftStickyHeader,
   tableContentMode,
-  stringOverrides,
   isSyncing,
   collapseHeader,
 }: BankTransactionsHeaderProps) => {
   const { t } = useTranslation()
+  const { bankTransactionsHeader: stringOverrides } = useBankTransactionsStringOverrides()
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const withUploadMenu = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.UploadOptions)
   const showStatusToggle = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.StatusToggle)
@@ -177,13 +175,7 @@ export const BankTransactionsHeader = ({
         <Heading level={3} size='sm'>
           {stringOverrides?.header || t('common:label.transactions', 'Transactions')}
         </Heading>
-        {isSyncing && (
-          <SyncingComponent
-            timeSync={5}
-            inProgress={true}
-            hideContent={isListView}
-          />
-        )}
+        {isSyncing && <SyncingComponent timeSync={5} inProgress hideContent={isListView} />}
       </HStack>
       {withDatePicker && monthPickerDate && (
         <MonthPicker
@@ -267,7 +259,6 @@ export const BankTransactionsHeader = ({
           withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
           isMobileList && 'Layer__bank-transactions__header--mobile',
         )}
-        style={{ top: shiftStickyHeader }}
       >
         <VStack gap='xs'>
           {headerTopRow}
@@ -311,7 +302,6 @@ export const BankTransactionsHeader = ({
         'Layer__bank-transactions__header',
         withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
       )}
-      style={{ top: shiftStickyHeader }}
     >
       {!collapseHeader && headerTopRow}
 

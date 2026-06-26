@@ -11,15 +11,13 @@ import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useS
 import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+import { useBankTransactionsStringOverrides } from '@contexts/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
 import { Button } from '@ui/Button/Button'
 import { SubmitAction } from '@ui/Button/SubmitButton'
 import { HStack, type StackProps } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import {
-  type BankTransactionCTAStringOverrides,
-} from '@components/BankTransactions/BankTransactions'
 import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankTransactionsSubmitButton'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
@@ -28,7 +26,6 @@ import { Chevron } from '@components/Chevron/Chevron'
 type BankTransactionCategoryCellProps = {
   row: Row<BankTransaction>
   isExpandedRowValid: boolean
-  stringOverrides?: BankTransactionCTAStringOverrides
 }
 
 type BankTransactionCategoryCellContainerProps = PropsWithChildren<{
@@ -75,9 +72,9 @@ const getBankTransactionCategoryCellCase = ({
 export const BankTransactionCategoryCell = ({
   row,
   isExpandedRowValid,
-  stringOverrides,
 }: BankTransactionCategoryCellProps) => {
   const { t } = useTranslation()
+  const { bankTransactionCTAs: stringOverrides } = useBankTransactionsStringOverrides()
   const bankTransaction = row.original
   const isOpen = row.getIsExpanded()
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
