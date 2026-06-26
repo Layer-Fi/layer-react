@@ -7,54 +7,15 @@ import {
 import { Direction } from '@internal-types/general'
 import { type TagFilterInput } from '@internal-types/tags'
 import { isAnyBankAccountSyncing } from '@utils/bankAccount'
-import { type BankTransactionFilters, filterVisibility, type NumericRangeFilter } from '@utils/bankTransactions/shared'
+import { type BankTransactionFilters } from '@utils/bankTransactions/shared'
 import { useBankTransactions, type UseBankTransactionsOptions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
+import { useFilterBankTransactions } from '@hooks/features/bankTransactions/useFilterBankTransactions'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { CategorizationRulesContext } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const INITIAL_POLL_INTERVAL_MS = 1000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
-
-const applyAccountFilter = (
-  data?: BankTransaction[],
-  filter?: string[],
-) => data?.filter(x => filter && x.sourceAccountId != null && filter.includes(x.sourceAccountId))
-
-const applyCategorizationStatusFilter = (
-  data?: BankTransaction[],
-  filter?: DisplayState,
-) => {
-  if (!filter) return data
-
-  return data?.filter(
-    tx =>
-      filterVisibility(filter, tx)
-      || filter === DisplayState.all
-      || (filter === DisplayState.review && tx.recentlyCategorized)
-      || (filter === DisplayState.categorized && tx.recentlyCategorized),
-  )
-}
-
-const applyAmountFilter = (
-  data?: BankTransaction[],
-  filter?: NumericRangeFilter,
-) => {
-  return data?.filter((x) => {
-    if ((filter?.min || filter?.min === 0)
-      && (filter?.max || filter?.max === 0)) {
-      return x.amount >= filter.min * 100 && x.amount <= filter.max * 100
-    }
-
-    if (filter?.min || filter?.min === 0) {
-      return x.amount >= filter.min * 100
-    }
-
-    if (filter?.max || filter?.max === 0) {
-      return x.amount <= filter.max * 100
-    }
-  })
-}
 
 const tagFilterToQueryString = (tagFilter: TagFilterInput): string => {
   if (tagFilter != 'None' && tagFilter.tagValues.length > 0) {
@@ -146,28 +107,7 @@ export const useAugmentedBankTransactions = (
     return undefined
   }, [rawResponseData])
 
-  const filteredData = useMemo(() => {
-    let filtered = data
-
-    if (!filtered) return
-
-    if (filters?.categorizationStatus) {
-      filtered = applyCategorizationStatusFilter(
-        filtered,
-        filters.categorizationStatus,
-      )
-    }
-
-    if (filters?.amount?.min || filters?.amount?.max) {
-      filtered = applyAmountFilter(filtered, filters.amount)
-    }
-
-    if (filters?.account) {
-      filtered = applyAccountFilter(filtered, filters.account)
-    }
-
-    return filtered
-  }, [filters, data])
+  const filteredData = useFilterBankTransactions({ data, filters })
 
   const updateLocalBankTransactions = useCallback((newBankTransactions: BankTransaction[]) => {
     const transactionsById = new Map(
