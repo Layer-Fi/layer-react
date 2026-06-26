@@ -21,13 +21,12 @@ const applyAmountFilter = (data: BankTransaction[], filter: NumericRangeFilter) 
     && (filter.max === undefined || x.amount <= filter.max * 100),
   )
 
-export const useFilterBankTransactions = ({
-  data,
-  filters,
-}: {
+type UseFilterBankTransactionsOptions = {
   data?: BankTransaction[]
   filters?: BankTransactionFilters
-}) => {
+}
+
+export const useFilterBankTransactions = ({ data, filters }: UseFilterBankTransactionsOptions) => {
   return useMemo(() => {
     if (!data) return
 
