@@ -14,6 +14,7 @@ import { GlobalDateStoreProvider } from '@providers/GlobalDateStore/GlobalDateSt
 import { LayerI18nProvider } from '@providers/I18nProvider/LayerI18nProvider'
 import { StaleLocaleCacheInvalidator } from '@providers/I18nProvider/StaleLocaleCacheInvalidator'
 import type { LayerEvent } from '@providers/LayerProvider/layerEvents'
+import { BankAccountsProvider } from '@contexts/BankAccountsContext/BankAccountsContext'
 
 export type EventCallbacks = {
   onEvent?: (event: LayerEvent) => void
@@ -78,7 +79,9 @@ export const LayerProvider = ({
             businessAccessToken={businessAccessToken}
           >
             <GlobalDateStoreProvider>
-              <BusinessProvider {...restProps} />
+              <BankAccountsProvider>
+                <BusinessProvider {...restProps} />
+              </BankAccountsProvider>
             </GlobalDateStoreProvider>
           </AuthInputProvider>
         </EnvironmentInputProvider>

@@ -39,7 +39,7 @@ function useBankAccountsPollingConfig() {
 
   return usePollingConfig<BankAccount[]>({
     shouldContinue,
-    shouldResetPollingDeadline: hasNewSyncingAccounts,
+    shouldRestartPolling: hasNewSyncingAccounts,
     intervalMs: BANK_ACCOUNTS_POLL_INTERVAL_MS,
     maxDurationMs: BANK_ACCOUNTS_MAX_POLL_STALL_MS,
   })

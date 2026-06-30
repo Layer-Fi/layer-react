@@ -15,7 +15,6 @@ import { useBusiness } from '@hooks/api/businesses/[business-id]/useBusiness'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { type LayerEvent } from '@providers/LayerProvider/layerEvents'
 import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
-import { BankAccountsProvider } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { LayerContext } from '@contexts/LayerContext/LayerContext'
 import { type ToastProps, ToastsContainer } from '@components/Toast/Toast'
 
@@ -226,9 +225,7 @@ export const BusinessProvider = ({
         dateRange,
       }}
     >
-      <BankAccountsProvider>
-        {children}
-      </BankAccountsProvider>
+      {children}
       <ToastsContainer />
     </LayerContext.Provider>
   )

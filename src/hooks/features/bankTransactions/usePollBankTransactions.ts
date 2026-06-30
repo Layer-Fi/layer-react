@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
 import { type SWRInfiniteKeyedMutator } from 'swr/infinite'
 
@@ -34,6 +34,9 @@ export function usePollBankTransactions({
   const previousBankAccountsRef = useRef(bankAccounts)
   const hasReceivedTransactionsRef = useRef(false)
   const stallDeadlineRef = useRef(isSyncing ? Date.now() + MAX_POLL_STALL_MS : null)
+  // Part of the SWR key: bumping it restarts the poll after the stall deadline
+  // stopped it, since refreshInterval alone won't resume a halted SWR loop.
+  const [restartNonce, setRestartNonce] = useState(0)
 
   const intervalMs = useCallback(() => {
     if (stallDeadlineRef.current != null && Date.now() >= stallDeadlineRef.current) {
@@ -64,7 +67,7 @@ export function usePollBankTransactions({
    * stale transactions to force a refresh.
    */
   useSWR(
-    isSyncing ? [BANK_TRANSACTIONS_SYNC_POLL_KEY, useBankTransactionsOptions] : null,
+    isSyncing ? [BANK_TRANSACTIONS_SYNC_POLL_KEY, useBankTransactionsOptions, restartNonce] : null,
     onPoll,
     {
       refreshInterval: intervalMs,
@@ -78,7 +81,14 @@ export function usePollBankTransactions({
 
   useEffect(() => {
     if (hasNewSyncingAccounts(previousBankAccountsRef.current, bankAccounts)) {
+      // If the stall deadline already lapsed, refreshInterval returned 0 and the
+      // poll stopped; bump the key's nonce to restart it. Otherwise it's still
+      // polling, so just extend the deadline.
+      const wasStalled = stallDeadlineRef.current != null && Date.now() >= stallDeadlineRef.current
+
       stallDeadlineRef.current = Date.now() + MAX_POLL_STALL_MS
+
+      if (wasStalled) setRestartNonce(nonce => nonce + 1)
     }
 
     if (wasSyncingRef.current && !isSyncing) {

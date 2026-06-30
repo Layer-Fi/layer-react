@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { type SWRConfiguration } from 'swr'
 
 import type { Awaitable } from '@internal-types/utility/promises'
@@ -10,10 +10,8 @@ const DEFAULT_MAX_ERROR_RETRIES = 3
 
 type UsePollingConfigOptions<TData> = {
   shouldContinue: (nextData: TData | undefined) => boolean
-  /** Gates the one-shot `onComplete`. Defaults to `!shouldContinue`. */
   shouldComplete?: (nextData: TData) => boolean
-  /** Resets the `maxDurationMs` deadline when true, turning it into a stall timeout. */
-  shouldResetPollingDeadline?: (previousTData: TData | undefined, nextData: TData) => boolean
+  shouldRestartPolling?: (previousData: TData | undefined, nextData: TData) => boolean
   onPoll?: (nextData: TData) => Awaitable<void>
   onComplete?: (nextData: TData) => Awaitable<void>
   isFatalError?: (error: unknown) => boolean
@@ -25,7 +23,7 @@ type UsePollingConfigOptions<TData> = {
 export function usePollingConfig<TData>({
   shouldContinue,
   shouldComplete,
-  shouldResetPollingDeadline,
+  shouldRestartPolling,
   onPoll,
   onComplete,
   isFatalError,
@@ -40,6 +38,14 @@ export function usePollingConfig<TData>({
   const hasCompletedRef = useRef(false)
   const previousDataRef = useRef<TData>()
   const pollingEndTimestampRef = useRef(Date.now() + maxDurationMs)
+  /*
+   * SWR's polling loop, once `refreshInterval` returns 0, only restarts when the
+   * polling effect re-runs — i.e. when `refreshInterval`'s identity changes (its
+   * deps are [refreshInterval, ...], not the fetched data). This nonce is a
+   * dependency of `refreshInterval`, so bumping it forces that re-run to revive a
+   * halted session (see onSuccess).
+   */
+  const [restartNonce, setRestartNonce] = useState(0)
 
   const getInterval = useCallback(
     () => (typeof intervalMs === 'function' ? intervalMs() : intervalMs),
@@ -49,11 +55,13 @@ export function usePollingConfig<TData>({
   const restartPolling = useCallback(() => {
     phaseRef.current = PollingPhase.Active
     hasCompletedRef.current = false
-    previousDataRef.current = undefined
     pollingEndTimestampRef.current = Date.now() + maxDurationMs
   }, [maxDurationMs])
 
   const refreshInterval = useCallback((nextData?: TData) => {
+    // Read so this callback's identity tracks restartNonce (see its declaration).
+    void restartNonce
+
     if (!shouldContinue(nextData)) {
       phaseRef.current = PollingPhase.Idle
       return 0
@@ -69,7 +77,7 @@ export function usePollingConfig<TData>({
     }
 
     return getInterval()
-  }, [getInterval, restartPolling, shouldContinue])
+  }, [getInterval, restartPolling, shouldContinue, restartNonce])
 
   const onErrorRetry = useCallback<NonNullable<SWRConfiguration<TData>['onErrorRetry']>>(
     (error, _key, _config, revalidate, { retryCount }) => {
@@ -93,7 +101,17 @@ export function usePollingConfig<TData>({
   const onSuccess = useCallback((nextData: TData) => {
     void onPoll?.(nextData)
 
-    if (isActive(phaseRef) && shouldResetPollingDeadline?.(previousDataRef.current, nextData)) {
+    const hasProgress = shouldRestartPolling
+      ? shouldRestartPolling(previousDataRef.current, nextData)
+      : !shouldContinue(previousDataRef.current) && shouldContinue(nextData)
+
+    const shouldRestart = (isIdle(phaseRef) && shouldContinue(nextData)) || (isStopped(phaseRef) && hasProgress)
+
+    if (shouldRestart) {
+      restartPolling()
+      setRestartNonce(nonce => nonce + 1)
+    }
+    else if (isActive(phaseRef) && hasProgress) {
       pollingEndTimestampRef.current = Date.now() + maxDurationMs
     }
 
@@ -104,7 +122,7 @@ export function usePollingConfig<TData>({
       hasCompletedRef.current = true
       void onComplete?.(nextData)
     }
-  }, [onPoll, onComplete, shouldContinue, shouldComplete, shouldResetPollingDeadline, maxDurationMs])
+  }, [onPoll, onComplete, restartPolling, shouldContinue, shouldComplete, shouldRestartPolling, maxDurationMs])
 
   return useMemo(
     () => ({ refreshInterval, onErrorRetry, onSuccess }),

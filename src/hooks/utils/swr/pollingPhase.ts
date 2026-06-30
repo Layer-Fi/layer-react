@@ -2,16 +2,18 @@ import { type MutableRefObject } from 'react'
 
 export enum PollingPhase {
   /**
-   * Not polling. Entered whenever `shouldContinue` is false (a natural pause).
-   * The next time `shouldContinue` is true, a fresh session starts.
+   * Not polling because `shouldContinue` is false (a natural pause, or the initial
+   * state). Restarts as soon as `shouldContinue` is true again — at mount via
+   * `refreshInterval`, or once the loop has died via `onSuccess`.
    */
   Idle = 'idle',
   /** Actively polling on the configured interval. */
   Active = 'active',
   /**
-   * Halted by the max-duration deadline, the error-retry max count, or a fatal error,
-   * while `shouldContinue` still wants to continue. No restart until `shouldContinue`
-   * goes false, returning the phase to `Idle`.
+   * Halted by the max-duration/error cap while `shouldContinue` was still true. Stays
+   * here until a poll reports fresh progress (`shouldRestartPolling`, defaulting to a
+   * `shouldContinue` rising edge); a session that merely still wants to continue does
+   * not revive it, so the cap holds for a genuinely stuck poll.
    */
   Stopped = 'stopped',
 }
