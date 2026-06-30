@@ -11,7 +11,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 const INITIAL_POLL_INTERVAL_MS = 2000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
 const MAX_POLL_STALL_MS = 15 * 60 * 1000
-const BANK_TRANSACTIONS_SYNC_POLL_KEY = 'bank-transactions-sync-poll'
+const BANK_TRANSACTIONS_SYNC_POLL_KEY = '#bank-transactions-sync-poll'
 
 type UsePollBankTransactionsParams = {
   data: Array<GetBankTransactionsReturn> | undefined
