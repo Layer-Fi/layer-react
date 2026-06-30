@@ -52,12 +52,7 @@ export const LinkedAccountsComponent = ({
   stringOverrides,
 }: LinkedAccountsProps) => {
   const { t } = useTranslation()
-  const {
-    isLoading,
-    isError,
-    isValidating,
-    refetch,
-  } = useBankAccountsContext()
+  const { isLoading, isError, isValidating, refetch } = useBankAccountsContext()
 
   return (
     <Container name={COMPONENT_NAME} elevated={elevated}>

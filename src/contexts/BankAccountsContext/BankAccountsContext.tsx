@@ -12,18 +12,20 @@ type BankAccountsContextValue = Pick<
   | 'isError'
   | 'isLoading'
   | 'isSyncing'
+  | 'isValidating'
   | 'loadingStatus'
   | 'refetch'
 >
 
 const BankAccountsContext = createContext<BankAccountsContextValue>({
   data: undefined,
+  disconnectedAccountsRequiringNotification: 0,
   isLoading: false,
   isError: false,
-  refetch: () => Promise.resolve(undefined),
-  disconnectedAccountsRequiringNotification: 0,
   isSyncing: false,
+  isValidating: false,
   loadingStatus: 'initial',
+  refetch: () => Promise.resolve(undefined),
 })
 
 function useBankAccountsPollingConfig() {
@@ -46,6 +48,7 @@ export function BankAccountsProvider({ children }: PropsWithChildren) {
     isError,
     isLoading,
     isSyncing,
+    isValidating,
     loadingStatus,
     refetch,
   } = useListBankAccounts(pollingConfig)
@@ -56,6 +59,7 @@ export function BankAccountsProvider({ children }: PropsWithChildren) {
     isError,
     isLoading,
     isSyncing,
+    isValidating,
     loadingStatus,
     refetch,
   }), [
@@ -65,6 +69,7 @@ export function BankAccountsProvider({ children }: PropsWithChildren) {
     isLoading,
     isSyncing,
     loadingStatus,
+    isValidating,
     refetch,
   ])
 
