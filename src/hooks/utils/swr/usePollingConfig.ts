@@ -2,35 +2,43 @@ import { useCallback, useMemo, useRef } from 'react'
 import { type SWRConfiguration } from 'swr'
 
 import type { Awaitable } from '@internal-types/utility/promises'
+import { isActive, isIdle, isStopped, PollingPhase } from '@hooks/utils/swr/pollingPhase'
 
 const DEFAULT_POLL_INTERVAL_MS = 2000
 const DEFAULT_MAX_POLL_DURATION_MS = 2 * 60 * 1000
 const DEFAULT_MAX_ERROR_RETRIES = 3
 
-type UsePollingConfigOptions<Data> = {
-  shouldContinue: (latestData: Data | undefined) => boolean
-  onPoll?: (latestData: Data) => Awaitable<void>
-  onComplete?: (latestData: Data) => Awaitable<void>
+type UsePollingConfigOptions<TData> = {
+  shouldContinue: (nextData: TData | undefined) => boolean
+  /** Gates the one-shot `onComplete`. Defaults to `!shouldContinue`. */
+  shouldComplete?: (nextData: TData) => boolean
+  /** Resets the `maxDurationMs` deadline when true, turning it into a stall timeout. */
+  shouldResetPollingDeadline?: (previousTData: TData | undefined, nextData: TData) => boolean
+  onPoll?: (nextData: TData) => Awaitable<void>
+  onComplete?: (nextData: TData) => Awaitable<void>
   isFatalError?: (error: unknown) => boolean
   intervalMs?: number | (() => number)
   maxDurationMs?: number
   maxErrorRetries?: number
 }
 
-export function usePollingConfig<Data>({
+export function usePollingConfig<TData>({
   shouldContinue,
+  shouldComplete,
+  shouldResetPollingDeadline,
   onPoll,
   onComplete,
   isFatalError,
   intervalMs = DEFAULT_POLL_INTERVAL_MS,
   maxDurationMs = DEFAULT_MAX_POLL_DURATION_MS,
   maxErrorRetries = DEFAULT_MAX_ERROR_RETRIES,
-}: UsePollingConfigOptions<Data>): Pick<
-    SWRConfiguration<Data>,
+}: UsePollingConfigOptions<TData>): Pick<
+    SWRConfiguration<TData>,
   'refreshInterval' | 'onErrorRetry' | 'onSuccess'
   > {
-  const hasStoppedPollingRef = useRef(false)
+  const phaseRef = useRef<PollingPhase>(PollingPhase.Idle)
   const hasCompletedRef = useRef(false)
+  const previousDataRef = useRef<TData>()
   const pollingEndTimestampRef = useRef(Date.now() + maxDurationMs)
 
   const getInterval = useCallback(
@@ -38,26 +46,40 @@ export function usePollingConfig<Data>({
     [intervalMs],
   )
 
-  const refreshInterval = useCallback((latestData?: Data) => {
-    if (hasStoppedPollingRef.current) return 0
+  const restartPolling = useCallback(() => {
+    phaseRef.current = PollingPhase.Active
+    hasCompletedRef.current = false
+    previousDataRef.current = undefined
+    pollingEndTimestampRef.current = Date.now() + maxDurationMs
+  }, [maxDurationMs])
 
-    if (Date.now() >= pollingEndTimestampRef.current) {
-      hasStoppedPollingRef.current = true
+  const refreshInterval = useCallback((nextData?: TData) => {
+    if (!shouldContinue(nextData)) {
+      phaseRef.current = PollingPhase.Idle
       return 0
     }
 
-    return shouldContinue(latestData) ? getInterval() : 0
-  }, [getInterval, shouldContinue])
+    if (isIdle(phaseRef)) restartPolling()
 
-  const onErrorRetry = useCallback<NonNullable<SWRConfiguration<Data>['onErrorRetry']>>(
+    if (isStopped(phaseRef)) return 0
+
+    if (Date.now() >= pollingEndTimestampRef.current) {
+      phaseRef.current = PollingPhase.Stopped
+      return 0
+    }
+
+    return getInterval()
+  }, [getInterval, restartPolling, shouldContinue])
+
+  const onErrorRetry = useCallback<NonNullable<SWRConfiguration<TData>['onErrorRetry']>>(
     (error, _key, _config, revalidate, { retryCount }) => {
-      if (hasStoppedPollingRef.current) return
+      if (isStopped(phaseRef)) return
 
       const isAtMaxRetries = retryCount >= maxErrorRetries
       const isPastPollingDeadline = Date.now() >= pollingEndTimestampRef.current
 
       if (isFatalError?.(error) || isAtMaxRetries || isPastPollingDeadline) {
-        hasStoppedPollingRef.current = true
+        phaseRef.current = PollingPhase.Stopped
         return
       }
 
@@ -68,14 +90,21 @@ export function usePollingConfig<Data>({
     [getInterval, isFatalError, maxErrorRetries],
   )
 
-  const onSuccess = useCallback((latestData: Data) => {
-    void onPoll?.(latestData)
+  const onSuccess = useCallback((nextData: TData) => {
+    void onPoll?.(nextData)
 
-    if (!hasCompletedRef.current && !shouldContinue(latestData)) {
-      hasCompletedRef.current = true
-      void onComplete?.(latestData)
+    if (isActive(phaseRef) && shouldResetPollingDeadline?.(previousDataRef.current, nextData)) {
+      pollingEndTimestampRef.current = Date.now() + maxDurationMs
     }
-  }, [onPoll, onComplete, shouldContinue])
+
+    previousDataRef.current = nextData
+
+    const completed = shouldComplete ? shouldComplete(nextData) : !shouldContinue(nextData)
+    if (!hasCompletedRef.current && completed) {
+      hasCompletedRef.current = true
+      void onComplete?.(nextData)
+    }
+  }, [onPoll, onComplete, shouldContinue, shouldComplete, shouldResetPollingDeadline, maxDurationMs])
 
   return useMemo(
     () => ({ refreshInterval, onErrorRetry, onSuccess }),

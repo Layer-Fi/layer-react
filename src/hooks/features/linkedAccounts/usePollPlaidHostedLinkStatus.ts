@@ -31,15 +31,15 @@ export function usePollPlaidHostedLinkStatus({ onSuccess, enabled }: UsePollPlai
     [],
   )
 
-  const onComplete = useCallback((latestData: ApiPlaidHostedLinkStatus) => {
-    if (latestData.state === PlaidHostedLinkState.SUCCEEDED) {
-      return onSuccess()
-    }
-  }, [onSuccess])
+  const shouldComplete = useCallback(
+    (latestData: ApiPlaidHostedLinkStatus) => latestData.state === PlaidHostedLinkState.SUCCEEDED,
+    [],
+  )
 
   const pollingConfig = usePollingConfig<ApiPlaidHostedLinkStatus>({
     shouldContinue,
-    onComplete,
+    shouldComplete,
+    onComplete: onSuccess,
     isFatalError,
   })
 

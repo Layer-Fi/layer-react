@@ -1,7 +1,7 @@
 import { createContext, type PropsWithChildren, useCallback, useContext, useMemo } from 'react'
 
 import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
-import { isAnyBankAccountSyncing } from '@utils/bankAccount'
+import { hasNewSyncingAccounts, isAnyBankAccountSyncing } from '@utils/bankAccount'
 import { type ListBankAccountsSWRResponse, useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { usePollingConfig } from '@hooks/utils/swr/usePollingConfig'
 
@@ -16,6 +16,9 @@ type BankAccountsContextValue = Pick<
   | 'loadingStatus'
   | 'refetch'
 >
+
+const BANK_ACCOUNTS_POLL_INTERVAL_MS = 5 * 1000
+const BANK_ACCOUNTS_MAX_POLL_STALL_MS = 15 * 60 * 1000
 
 const BankAccountsContext = createContext<BankAccountsContextValue>({
   data: undefined,
@@ -36,7 +39,9 @@ function useBankAccountsPollingConfig() {
 
   return usePollingConfig<BankAccount[]>({
     shouldContinue,
-    maxDurationMs: Number.POSITIVE_INFINITY,
+    shouldResetPollingDeadline: hasNewSyncingAccounts,
+    intervalMs: BANK_ACCOUNTS_POLL_INTERVAL_MS,
+    maxDurationMs: BANK_ACCOUNTS_MAX_POLL_STALL_MS,
   })
 }
 
