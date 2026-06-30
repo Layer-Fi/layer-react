@@ -4,17 +4,12 @@ import { type useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 
 export type LinkedAccountsContextType = ReturnType<typeof useLinkedAccounts>
 export const LinkedAccountsContext = createContext<LinkedAccountsContextType>({
-  data: undefined,
-  isLoading: false,
-  loadingStatus: 'initial',
-  isValidating: false,
   isLinking: false,
-  error: undefined,
   isHostedLinkError: false,
   addConnection: () => Promise.resolve(),
   removeConnection: () => Promise.resolve(),
   repairConnection: () => Promise.resolve(),
-  refetchAccounts: () => Promise.resolve(),
+  refetchAccountsAndTransactions: () => Promise.resolve(),
   unlinkBankAccount: () => Promise.resolve(),
   excludeAccount: () => Promise.resolve(),
   confirmAccount: () => Promise.resolve(),

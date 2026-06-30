@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useContext, useMemo } from 'react'
 
 import {
   type BankTransaction,
@@ -6,16 +6,11 @@ import {
 } from '@internal-types/bankTransactions'
 import { Direction } from '@internal-types/general'
 import { type TagFilterInput } from '@internal-types/tags'
-import { isAnyBankAccountSyncing } from '@utils/bankAccount'
 import { type BankTransactionFilters } from '@utils/bankTransactions/shared'
 import { useBankTransactions, type UseBankTransactionsOptions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useFilterBankTransactions } from '@hooks/features/bankTransactions/useFilterBankTransactions'
-import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { usePollBankTransactions } from '@hooks/features/bankTransactions/usePollBankTransactions'
 import { CategorizationRulesContext } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-
-const INITIAL_POLL_INTERVAL_MS = 1000
-const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
 
 const tagFilterToQueryString = (tagFilter: TagFilterInput): string => {
   if (tagFilter != 'None' && tagFilter.tagValues.length > 0) {
@@ -24,25 +19,6 @@ const tagFilterToQueryString = (tagFilter: TagFilterInput): string => {
     )}&`
   }
   return ''
-}
-
-function useTriggerOnChange(
-  data: BankTransaction[] | undefined,
-  anyAccountSyncing: boolean,
-  callback: (data: BankTransaction[] | undefined) => void,
-) {
-  const prevDataRef = useRef<BankTransaction[]>()
-
-  useEffect(() => {
-    if (
-      anyAccountSyncing
-      && prevDataRef.current !== undefined
-      && prevDataRef.current !== data
-    ) {
-      callback(data)
-    }
-    prevDataRef.current = data
-  }, [data, anyAccountSyncing, callback])
 }
 
 export function bankTransactionFiltersToHookOptions(
@@ -73,8 +49,6 @@ export type UseAugmentedBankTransactionsWithFiltersParams = {
 export const useAugmentedBankTransactions = (
   params: UseAugmentedBankTransactionsWithFiltersParams,
 ) => {
-  const { eventCallbacks } = useLayerContext()
-
   const { setRuleSuggestion } = useContext(CategorizationRulesContext)
 
   const { filters } = params
@@ -88,13 +62,14 @@ export const useAugmentedBankTransactions = (
   const {
     data: rawResponseData,
     isLoading,
-    isValidating,
     isError,
     mutate,
     size,
     setSize,
     hasMore,
   } = useBankTransactions(useBankTransactionsOptions)
+
+  usePollBankTransactions({ mutate, useBankTransactionsOptions })
 
   const data: BankTransaction[] | undefined = useMemo(() => {
     if (rawResponseData && rawResponseData.length > 0) {
@@ -148,66 +123,9 @@ export const useAugmentedBankTransactions = (
     }
   }, [hasMore, setSize, size])
 
-  const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
-  const anyAccountSyncing = useMemo(
-    () => isAnyBankAccountSyncing(linkedAccounts ?? []),
-    [linkedAccounts],
-  )
-
-  const [pollIntervalMs, setPollIntervalMs] = useState(
-    INITIAL_POLL_INTERVAL_MS,
-  )
-
-  const transactionsNotSynced = useMemo(
-    () =>
-      isLoading === false
-      && anyAccountSyncing
-      && (!data || data?.length === 0),
-    [data, anyAccountSyncing, isLoading],
-  )
-
-  const intervalIdRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
-
-  // calling `void mutate()` directly in the `setInterval` didn't trigger actual request to API.
-  // But it works when called from `useEffect`
-  const [refreshTrigger, setRefreshTrigger] = useState(-1)
-  useEffect(() => {
-    if (refreshTrigger !== -1) {
-      void mutate()
-      void refetchAccounts()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refreshTrigger])
-
-  useEffect(() => {
-    if (anyAccountSyncing) {
-      intervalIdRef.current = setInterval(() => {
-        setRefreshTrigger(Math.random())
-      }, pollIntervalMs)
-    }
-    else {
-      if (intervalIdRef.current) {
-        clearInterval(intervalIdRef.current)
-      }
-    }
-
-    return () => {
-      if (intervalIdRef.current) {
-        clearInterval(intervalIdRef.current)
-      }
-    }
-  }, [anyAccountSyncing, transactionsNotSynced, pollIntervalMs])
-
-  useTriggerOnChange(data, anyAccountSyncing, (_) => {
-    clearInterval(intervalIdRef.current)
-    setPollIntervalMs(POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS)
-    eventCallbacks?.onTransactionsFetched?.()
-  })
-
   return useMemo(() => ({
     data: filteredData,
     isLoading,
-    isValidating,
     isError,
     updateLocalBankTransactions,
     shouldHideAfterCategorize,
@@ -220,7 +138,6 @@ export const useAugmentedBankTransactions = (
   }), [
     filteredData,
     isLoading,
-    isValidating,
     isError,
     updateLocalBankTransactions,
     shouldHideAfterCategorize,

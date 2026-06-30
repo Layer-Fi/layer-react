@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { Schema } from 'effect'
 import { debounce } from 'lodash-es'
-import useSWRInfinite from 'swr/infinite'
+import useSWRInfinite, { type SWRInfiniteConfiguration } from 'swr/infinite'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
@@ -147,7 +147,7 @@ export function useBankTransactions({
   startDate,
   endDate,
   tagFilterQueryString,
-}: UseBankTransactionsOptions) {
+}: UseBankTransactionsOptions, config?: SWRInfiniteConfiguration<GetBankTransactionsReturn>) {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
@@ -200,6 +200,7 @@ export function useBankTransactions({
       keepPreviousData: true,
       revalidateFirstPage: false,
       initialSize: 1,
+      ...config,
     },
   )
 

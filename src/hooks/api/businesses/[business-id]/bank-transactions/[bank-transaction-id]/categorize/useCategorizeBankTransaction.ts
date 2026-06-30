@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import { useSWRConfig } from 'swr'
 import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
 import useSWRMutation from 'swr/mutation'
 
@@ -9,8 +8,6 @@ import { type CategoryUpdate, type CategoryUpdateEncoded, encodeCategoryUpdate }
 import { put } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { type GetBankTransactionsReturn } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
@@ -69,7 +66,6 @@ export function useCategorizeBankTransaction() {
   const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
-  const { mutate } = useSWRConfig()
 
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
   const { useBankTransactionsOptions } = useBankTransactionsContext()
@@ -111,18 +107,13 @@ export function useCategorizeBankTransaction() {
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      void mutate(key => withSWRKeyTags(
-        key,
-        ({ tags }) => tags.includes(BANK_ACCOUNTS_TAG_KEY),
-      ))
-
       void forceReloadBackgroundBankTransactions(useBankTransactionsOptions)
 
       void debouncedInvalidateProfitAndLoss()
 
       return triggerResult
     },
-    [originalTrigger, mutate, forceReloadBackgroundBankTransactions, useBankTransactionsOptions, debouncedInvalidateProfitAndLoss],
+    [originalTrigger, forceReloadBackgroundBankTransactions, useBankTransactionsOptions, debouncedInvalidateProfitAndLoss],
   )
 
   return new Proxy(mutationResponse, {
