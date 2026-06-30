@@ -23,7 +23,7 @@ const BankAccountsContext = createContext<BankAccountsContextValue>({
 
 function useBankAccountsPollingConfig() {
   const shouldContinue = useCallback(
-    (accounts: BankAccount[] | undefined) => accounts === undefined || isAnyBankAccountSyncing(accounts),
+    (accounts: BankAccount[] | undefined) => accounts !== undefined && isAnyBankAccountSyncing(accounts),
     [],
   )
 
