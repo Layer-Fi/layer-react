@@ -47,7 +47,7 @@ export function usePollPlaidHostedLinkStatus({ onSuccess, enabled }: UsePollPlai
 
   // Clear a previous session's cached status; polling fetches the current one.
   useEffect(() => {
-    void mutate(undefined, { revalidate: false })
+    void mutate(undefined, { revalidate: true })
   }, [mutate])
 
   return {
