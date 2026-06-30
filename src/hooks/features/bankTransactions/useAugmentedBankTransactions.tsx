@@ -10,6 +10,7 @@ import { type BankTransactionFilters } from '@utils/bankTransactions/shared'
 import { useBankTransactions, type UseBankTransactionsOptions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useFilterBankTransactions } from '@hooks/features/bankTransactions/useFilterBankTransactions'
 import { usePollBankTransactions } from '@hooks/features/bankTransactions/usePollBankTransactions'
+import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { CategorizationRulesContext } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 
 const tagFilterToQueryString = (tagFilter: TagFilterInput): string => {
@@ -42,25 +43,20 @@ export function bankTransactionFiltersToHookOptions(
   }
 }
 
-export type UseAugmentedBankTransactionsWithFiltersParams = {
-  filters: BankTransactionFilters
-}
-
-export const useAugmentedBankTransactions = (
-  params: UseAugmentedBankTransactionsWithFiltersParams,
-) => {
+export const useAugmentedBankTransactions = () => {
   const { setRuleSuggestion } = useContext(CategorizationRulesContext)
-
-  const { filters } = params
+  const { filters } = useBankTransactionsFiltersContext()
 
   const display = filters?.categorizationStatus ?? DisplayState.categorized
+  const shouldHideAfterCategorize = display === DisplayState.review
+
   const useBankTransactionsOptions = useMemo(
     () => bankTransactionFiltersToHookOptions(filters),
     [filters],
   )
 
   const {
-    data: rawResponseData,
+    data,
     isLoading,
     isError,
     mutate,
@@ -69,20 +65,14 @@ export const useAugmentedBankTransactions = (
     hasMore,
   } = useBankTransactions(useBankTransactionsOptions)
 
-  usePollBankTransactions({ mutate, useBankTransactionsOptions })
+  usePollBankTransactions({ data, mutate, useBankTransactionsOptions })
 
-  const data: BankTransaction[] | undefined = useMemo(() => {
-    if (rawResponseData && rawResponseData.length > 0) {
-      return rawResponseData
-        ?.map(x => x?.data)
-        .flat()
-        .filter(x => !!x)
-    }
+  const bankTransactions: BankTransaction[] | undefined = useMemo(
+    () => data?.flatMap(({ data }) => data),
+    [data],
+  )
 
-    return undefined
-  }, [rawResponseData])
-
-  const filteredData = useFilterBankTransactions({ data, filters })
+  const filteredBankTransactions = useFilterBankTransactions({ data: bankTransactions, filters })
 
   const updateLocalBankTransactions = useCallback((newBankTransactions: BankTransaction[]) => {
     const transactionsById = new Map(
@@ -95,7 +85,7 @@ export const useAugmentedBankTransactions = (
       }
     }
 
-    const updatedData = rawResponseData?.map(page => ({
+    const updatedData = data?.map(page => ({
       ...page,
       data: page.data?.map(bt =>
         transactionsById.get(bt.id) ?? bt,
@@ -103,19 +93,17 @@ export const useAugmentedBankTransactions = (
     }))
 
     void mutate(updatedData, { revalidate: false })
-  }, [rawResponseData, mutate, setRuleSuggestion])
-
-  const shouldHideAfterCategorize = filters?.categorizationStatus === DisplayState.review
+  }, [data, mutate, setRuleSuggestion])
 
   const removeAfterCategorize = useCallback((transactionIds: string[]) => {
     if (shouldHideAfterCategorize) {
-      const updatedData = rawResponseData?.map(page => ({
+      const updatedData = data?.map(page => ({
         ...page,
         data: page.data?.filter(bt => !transactionIds.includes(bt.id)),
       }))
       void mutate(updatedData, { revalidate: false })
     }
-  }, [shouldHideAfterCategorize, rawResponseData, mutate])
+  }, [shouldHideAfterCategorize, data, mutate])
 
   const fetchMore = useCallback(() => {
     if (hasMore) {
@@ -124,7 +112,7 @@ export const useAugmentedBankTransactions = (
   }, [hasMore, setSize, size])
 
   return useMemo(() => ({
-    data: filteredData,
+    data: filteredBankTransactions,
     isLoading,
     isError,
     updateLocalBankTransactions,
@@ -136,7 +124,7 @@ export const useAugmentedBankTransactions = (
     hasMore,
     mutate,
   }), [
-    filteredData,
+    filteredBankTransactions,
     isLoading,
     isError,
     updateLocalBankTransactions,
