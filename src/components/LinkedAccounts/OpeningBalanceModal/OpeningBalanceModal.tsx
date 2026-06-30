@@ -6,12 +6,12 @@ import { useIntl } from 'react-intl'
 import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { getActivationDate } from '@utils/business'
 import { toLocalizedCents } from '@utils/i18n/number/input'
-import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import {
   type OpeningBalanceAPIResponseResult,
   type OpeningBalanceData,
   useBulkSetOpeningBalanceAndDate,
 } from '@hooks/legacy/useUpdateOpeningBalanceAndDate'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { OpeningBalanceModalContext } from '@contexts/OpeningBalanceModalContext/OpeningBalanceModalContext'
 import { Button } from '@ui/Button/Button'
@@ -67,10 +67,8 @@ function LinkedAccountsOpeningBalanceModalContent({
   const { t } = useTranslation()
   const intl = useIntl()
   const { business } = useLayerContext()
-  const { refetchAccounts } = useLinkedAccounts()
+  const { refetch } = useBankAccountsContext()
 
-  // Mark if any data has been successfully saved with API
-  // so the refetchAccounts should be called on onClose
   const [touched, setTouched] = useState(false)
   const [results, setResults] = useState<ResultsState>({})
 
@@ -109,7 +107,7 @@ function LinkedAccountsOpeningBalanceModalContent({
 
         setTouched(true)
         if (responses.every(x => x.status === 'fulfilled')) {
-          await refetchAccounts()
+          await refetch()
           onClose()
         }
       },
@@ -117,7 +115,7 @@ function LinkedAccountsOpeningBalanceModalContent({
 
   const handleDismiss = () => {
     if (touched) {
-      void refetchAccounts()
+      void refetch()
     }
 
     onClose()

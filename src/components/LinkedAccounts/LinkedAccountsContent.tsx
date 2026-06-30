@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { HStack } from '@ui/Stack/Stack'
@@ -29,7 +30,8 @@ export const LinkedAccountsContent = ({
   showBreakConnection,
 }: LinkedAccountsDataProps) => {
   const { t } = useTranslation()
-  const { data, addConnection } = useContext(LinkedAccountsContext)
+  const { data } = useBankAccountsContext()
+  const { addConnection } = useContext(LinkedAccountsContext)
   const { business } = useLayerContext()
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.LinkedAccounts)
   const isDemoBusiness = business?.isDemo ?? false

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { getBankAccountDisplayName, getBankAccountInstitution } from '@utils/bankAccount'
 import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Button } from '@ui/Button/Button'
@@ -25,14 +26,8 @@ import { useWizard } from '@components/Wizard/Wizard'
 export function LinkAccountsLinkStep() {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
-  const {
-    data,
-    loadingStatus,
-    isLinking,
-    error,
-    refetchAccounts,
-    addConnection,
-  } = useContext(LinkedAccountsContext)
+  const { isLinking, addConnection } = useContext(LinkedAccountsContext)
+  const { data, isError, refetch, loadingStatus } = useBankAccountsContext()
   const { business } = useLayerContext()
   const isDemoBusiness = business?.isDemo ?? false
 
@@ -103,13 +98,13 @@ export function LinkAccountsLinkStep() {
             </VStack>
           </ElevatedLoadingSpinnerContainer>
         )}
-        isError={Boolean(error)}
+        isError={isError}
         Error={(
           <DataState
             status={DataStateStatus.failed}
             title={t('linkedAccounts:error.load_accounts', 'Failed to load accounts')}
             description={t('common:error.please_try_again_later', 'Please try again later')}
-            onRefresh={() => { void refetchAccounts() }}
+            onRefresh={() => { void refetch() }}
           />
         )}
         isLoading={loadingStatus === 'loading' || loadingStatus === 'initial'}

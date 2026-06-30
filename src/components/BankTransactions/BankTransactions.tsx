@@ -1,7 +1,6 @@
-import { type ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { type ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react'
 
 import type { LayerError } from '@utils/api/errorHandler'
-import { isAnyBankAccountSyncing } from '@utils/bankAccount'
 import { type BankTransactionFilters } from '@utils/bankTransactions/shared'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
@@ -9,7 +8,6 @@ import { usePreloadCategories } from '@hooks/api/businesses/[business-id]/catego
 import { usePreloadCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { usePreloadTagDimensions } from '@hooks/api/businesses/[business-id]/tags/dimensions/useTagDimensions'
 import { usePreloadVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
-import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
 import { BankTransactionsCategorizationStoreProvider } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
@@ -19,6 +17,7 @@ import { BankTransactionsPaginationProvider } from '@providers/BankTransactionsP
 import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { BulkSelectionStoreProvider } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { type BankTransactionsMode, LegacyModeProvider } from '@providers/LegacyModeProvider/LegacyModeProvider'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import {
   useBankTransactionsContext,
 } from '@contexts/BankTransactionsContext/BankTransactionsContext'
@@ -206,15 +205,9 @@ const BankTransactionsTableView = ({
   const { isMonthlyViewMode } = useBankTransactionsFiltersContext()
 
   const { isLoading, hasMore, fetchMore } = useBankTransactionsContext()
+  const { isSyncing } = useBankAccountsContext()
 
   const { setRuleSuggestion, ruleSuggestion } = useContext(CategorizationRulesContext)
-
-  const { data: linkedAccounts } = useLinkedAccounts()
-
-  const isSyncing = useMemo(
-    () => isAnyBankAccountSyncing(linkedAccounts ?? []),
-    [linkedAccounts],
-  )
 
   useEffect(() => {
     // Fetch more when the user scrolls to the bottom of the page

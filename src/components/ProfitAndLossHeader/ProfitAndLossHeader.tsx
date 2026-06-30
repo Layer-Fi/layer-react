@@ -1,9 +1,8 @@
-import { type ReactNode, useMemo } from 'react'
+import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { isAnyBankAccountSyncing } from '@utils/bankAccount'
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
-import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
@@ -32,15 +31,10 @@ export const ProfitAndLossHeader = ({
   trailingContent,
 }: ProfitAndLossHeaderProps) => {
   const { t } = useTranslation()
-  const { data: linkedAccounts } = useLinkedAccounts()
+  const { isSyncing } = useBankAccountsContext()
 
   const { activePeriod } = useActiveBookkeepingPeriod()
   const activePeriodStatus = activePeriod?.status
-
-  const isSyncing = useMemo(
-    () => isAnyBankAccountSyncing(linkedAccounts ?? []),
-    [linkedAccounts],
-  )
 
   return (
     <Header className={className}>

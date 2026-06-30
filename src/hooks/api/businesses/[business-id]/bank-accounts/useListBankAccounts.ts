@@ -1,8 +1,10 @@
 import { Schema } from 'effect'
-import useSWR from 'swr'
+import useSWR, { type SWRConfiguration } from 'swr'
 
+import { type LoadedStatus } from '@internal-types/general'
 import { type BankAccount, BankAccountSchema } from '@schemas/bankAccounts/bankAccount'
 import { get } from '@utils/api/authenticatedHttp'
+import { isAnyBankAccountSyncing } from '@utils/bankAccount'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -52,9 +54,23 @@ export class ListBankAccountsSWRResponse extends SWRQueryResult<BankAccount[]> {
   get disconnectedAccountsRequiringNotification() {
     return (this.data ?? []).filter(requiresNotification).length
   }
+
+  get isSyncing() {
+    return isAnyBankAccountSyncing(this.data ?? [])
+  }
+
+  get loadingStatus(): LoadedStatus {
+    if (this.isLoading) {
+      return 'loading'
+    }
+
+    return this.data !== undefined || this.isError ? 'complete' : 'initial'
+  }
 }
 
-export function useListBankAccounts(): ListBankAccountsSWRResponse {
+export function useListBankAccounts(
+  config?: SWRConfiguration<BankAccount[]>,
+): ListBankAccountsSWRResponse {
   const { businessId } = useLayerContext()
   const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
@@ -75,6 +91,7 @@ export function useListBankAccounts(): ListBankAccountsSWRResponse {
     )()
       .then(Schema.decodeUnknownPromise(ListBankAccountsResponseSchema))
       .then(({ data }) => [...data]),
+    config,
   )
 
   return new ListBankAccountsSWRResponse(swrResponse)

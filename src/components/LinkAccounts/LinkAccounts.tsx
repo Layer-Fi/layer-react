@@ -1,11 +1,10 @@
-import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { Awaitable } from '@internal-types/utility/promises'
 import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
 import { getAccountsNeedingConfirmation } from '@utils/bankAccount'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { Heading } from '@ui/Typography/Heading'
 import { LinkAccountsConfirmationStep } from '@components/LinkAccounts/LinkAccountsConfirmationStep'
 import { LinkAccountsLinkStep } from '@components/LinkAccounts/LinkAccountsLinkStep'
@@ -31,7 +30,7 @@ function LinkAccountsContent({
   onComplete,
 }: LinkAccountsProps) {
   const { t } = useTranslation()
-  const { data: linkedAccounts, loadingStatus } = useContext(LinkedAccountsContext)
+  const { data: linkedAccounts, loadingStatus } = useBankAccountsContext()
 
   const linkedAccountsNeedingConfirmation = linkedAccounts
     ? getAccountsNeedingConfirmation(linkedAccounts)
