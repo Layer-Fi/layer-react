@@ -1,50 +1,51 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { Schema } from 'effect'
-import { debounce } from 'lodash-es'
 import useSWRInfinite from 'swr/infinite'
 
-import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
-import { type LedgerEntry, LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
+import { type SortOrder } from '@internal-types/utility/pagination'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
+import { LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
+import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const LIST_LEDGER_ENTRIES_TAG_KEY = '#list-ledger-entries'
 
-type GetLedgerEntriesParams = {
-  businessId: string
-  sort_by?: 'entry_at' | 'entry_number' | 'created_at'
-  sort_order?: 'ASC' | 'ASCENDING' | 'DESC' | 'DESCENDING' | 'DES'
-  cursor?: string
-  limit?: number
-  show_total_count?: boolean
+export enum LedgerEntriesSortBy {
+  EntryAt = 'entry_at',
+  EntryNumber = 'entry_number',
+  CreatedAt = 'created_at',
 }
 
-const ListLedgerEntriesResponseSchema = Schema.Struct({
-  data: Schema.Array(LedgerEntrySchema),
-  meta: Schema.optional(Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  })),
-})
+type GetLedgerEntriesParams = {
+  businessId: string
+  sortBy?: LedgerEntriesSortBy
+  sortOrder?: SortOrder
+  cursor?: string
+  limit?: number
+  showTotalCount?: boolean
+}
+
+const ListLedgerEntriesResponseSchema = PaginatedResponseSchema(LedgerEntrySchema)
 
 export type ListLedgerEntriesReturn = typeof ListLedgerEntriesResponseSchema.Type
 
 export const listLedgerEntries = get<
   typeof ListLedgerEntriesResponseSchema.Encoded,
   GetLedgerEntriesParams
->(({ businessId, sort_by, sort_order, cursor, limit, show_total_count }) => {
+>(({ businessId, sortBy, sortOrder, cursor, limit, showTotalCount }) => {
   const parameters = toDefinedSearchParameters({
-    sort_by,
-    sort_order,
+    sortBy,
+    sortOrder,
     cursor,
     limit,
-    show_total_count,
+    showTotalCount,
   })
 
   return `/v1/businesses/${businessId}/ledger/entries?${parameters}`
@@ -56,18 +57,18 @@ function keyLoader(
     access_token: accessToken,
     apiUrl,
     businessId,
-    sort_by,
-    sort_order,
+    sortBy,
+    sortOrder,
     limit,
-    show_total_count,
+    showTotalCount,
   }: {
     access_token?: string
     apiUrl?: string
     businessId: string
-    sort_by?: 'entry_at' | 'entry_number' | 'created_at'
-    sort_order?: 'ASC' | 'ASCENDING' | 'DESC' | 'DESCENDING' | 'DES'
+    sortBy?: LedgerEntriesSortBy
+    sortOrder?: SortOrder
     limit?: number
-    show_total_count?: boolean
+    showTotalCount?: boolean
   },
 ) {
   if (accessToken && apiUrl) {
@@ -76,27 +77,27 @@ function keyLoader(
       apiUrl,
       businessId,
       cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
-      sort_by,
-      sort_order,
+      sortBy,
+      sortOrder,
       limit,
-      show_total_count,
+      showTotalCount,
       tags: [LIST_LEDGER_ENTRIES_TAG_KEY],
     } as const
   }
 }
 
 export type UseListLedgerEntriesOptions = {
-  sort_by?: 'entry_at' | 'entry_number' | 'created_at'
-  sort_order?: 'ASC' | 'ASCENDING' | 'DESC' | 'DESCENDING' | 'DES'
+  sortBy?: LedgerEntriesSortBy
+  sortOrder?: SortOrder
   limit?: number
-  show_total_count?: boolean
+  showTotalCount?: boolean
 }
 
 export function useListLedgerEntries({
-  sort_by,
-  sort_order,
+  sortBy,
+  sortOrder,
   limit,
-  show_total_count,
+  showTotalCount,
 }: UseListLedgerEntriesOptions = {}) {
   const withLocale = useLocalizedKey()
   const { businessId } = useLayerContext()
@@ -110,10 +111,10 @@ export function useListLedgerEntries({
         ...auth,
         apiUrl,
         businessId,
-        sort_by,
-        sort_order,
+        sortBy,
+        sortOrder,
         limit,
-        show_total_count,
+        showTotalCount,
       },
     )),
     ({
@@ -121,21 +122,21 @@ export function useListLedgerEntries({
       apiUrl,
       businessId,
       cursor,
-      sort_by,
-      sort_order,
+      sortBy,
+      sortOrder,
       limit,
-      show_total_count,
+      showTotalCount,
     }) => listLedgerEntries(
       apiUrl,
       accessToken,
       {
         params: {
           businessId,
-          sort_by,
-          sort_order,
+          sortBy,
+          sortOrder,
           cursor,
           limit,
-          show_total_count,
+          showTotalCount,
         },
       },
     )().then(Schema.decodeUnknownPromise(ListLedgerEntriesResponseSchema)),
@@ -148,64 +149,16 @@ export function useListLedgerEntries({
 
   usePreserveInfiniteSize(swrResponse)
 
-  return new SWRInfiniteResult(swrResponse)
-}
-
-const INVALIDATION_DEBOUNCE_OPTIONS = {
-  wait: 1000,
-  maxWait: 3000,
+  return useSWRInfiniteResult(swrResponse)
 }
 
 export function useLedgerEntriesCacheActions() {
-  const { invalidate, forceReload } = useGlobalCacheActions()
-
-  const invalidateLedgerEntries = useCallback(
-    () => invalidate(({ tags }) => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY)),
-    [invalidate],
-  )
+  const { forceReload } = useGlobalCacheActions()
 
   const forceReloadLedgerEntries = useCallback(
     () => forceReload(({ tags }) => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY)),
     [forceReload],
   )
 
-  const debouncedInvalidateLedgerEntries = useMemo(
-    () => debounce(
-      invalidateLedgerEntries,
-      INVALIDATION_DEBOUNCE_OPTIONS.wait,
-      {
-        maxWait: INVALIDATION_DEBOUNCE_OPTIONS.maxWait,
-        trailing: true,
-      },
-    ),
-    [invalidateLedgerEntries],
-  )
-
-  return {
-    invalidateLedgerEntries,
-    debouncedInvalidateLedgerEntries,
-    forceReloadLedgerEntries,
-  }
-}
-
-export function useLedgerEntriesOptimisticUpdater() {
-  const { optimisticUpdate } = useGlobalCacheActions()
-
-  const optimisticallyUpdateLedgerEntries = useCallback(
-    (
-      transformJournalEntry: (entry: LedgerEntry) => LedgerEntry,
-    ) =>
-      optimisticUpdate<ListLedgerEntriesReturn>(
-        ({ tags }) => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY),
-        (currentData) => {
-          return {
-            ...currentData,
-            data: currentData.data.map(entry => transformJournalEntry(entry)),
-          }
-        },
-      ),
-    [optimisticUpdate],
-  )
-
-  return { optimisticallyUpdateLedgerEntries }
+  return { forceReloadLedgerEntries }
 }

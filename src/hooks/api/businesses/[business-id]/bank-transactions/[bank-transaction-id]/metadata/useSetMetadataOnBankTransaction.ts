@@ -5,6 +5,7 @@ import { type CustomerSchema } from '@schemas/customer'
 import { type VendorSchema } from '@schemas/vendor'
 import { patch } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useMinMutatingMutation } from '@hooks/utils/swr/useMinMutatingMutation'
@@ -147,16 +148,7 @@ export function useSetMetadataOnBankTransaction({
     ],
   )
 
-  const baseProxiedResponse = new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  const baseProxiedResponse = withStableTrigger(mutationResponse, stableProxiedTrigger)
 
   return useMinMutatingMutation({ swrMutationResponse: baseProxiedResponse })
 }

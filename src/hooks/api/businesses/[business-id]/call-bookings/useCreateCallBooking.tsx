@@ -10,6 +10,7 @@ import {
 import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useCallBookingsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -82,16 +83,7 @@ export function useCreateCallBooking() {
     [originalTrigger, forceReloadCallBookings],
   )
 
-  const proxiedMutationResponse = new Proxy(rawMutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  const proxiedMutationResponse = withStableTrigger(rawMutationResponse, stableProxiedTrigger)
 
   return new SWRMutationResult(proxiedMutationResponse)
 }

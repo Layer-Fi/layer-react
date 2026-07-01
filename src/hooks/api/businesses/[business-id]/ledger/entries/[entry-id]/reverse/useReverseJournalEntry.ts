@@ -1,18 +1,21 @@
 import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
-import { del } from '@utils/api/authenticatedHttp'
+import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
-import { useLedgerBalancesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/balances/useLedgerBalances'
 import { useLedgerEntriesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
+import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-const deleteAccountFromLedger = del<
-  Record<string, never>,
-  { accountId: string, businessId: string }
->(({ businessId, accountId }) => `/v1/businesses/${businessId}/ledger/accounts/${accountId}`)
+const REVERSE_JOURNAL_ENTRY_TAG_KEY = '#reverse-journal-entry'
+
+const reverseJournalEntry = post<Record<never, never>>(
+  ({ businessId, entryId }) =>
+    `/v1/businesses/${businessId}/ledger/entries/${entryId}/reverse`,
+)
 
 function buildKey({
   access_token: accessToken,
@@ -28,15 +31,19 @@ function buildKey({
       accessToken,
       apiUrl,
       businessId,
-      tags: ['#delete-account-from-ledger'],
+      tags: [REVERSE_JOURNAL_ENTRY_TAG_KEY],
     } as const
   }
 }
 
-export function useDeleteAccountFromLedger() {
+export const useReverseJournalEntry = () => {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
+
+  const { forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
+  const { invalidate } = useGlobalCacheActions()
 
   const mutationResponse = useSWRMutation(
     () => withLocale(buildKey({
@@ -45,14 +52,10 @@ export function useDeleteAccountFromLedger() {
     })),
     (
       { accessToken, apiUrl, businessId },
-      { arg: { accountId } }: { arg: { accountId: string } },
-    ) => deleteAccountFromLedger(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId, accountId },
-      },
-    ),
+      { arg: entryId }: { arg: string },
+    ) => reverseJournalEntry(apiUrl, accessToken, {
+      params: { businessId, entryId },
+    }),
     {
       revalidate: false,
       throwOnError: true,
@@ -61,19 +64,19 @@ export function useDeleteAccountFromLedger() {
 
   const { trigger: originalTrigger } = mutationResponse
 
-  const { invalidateLedgerBalances } = useLedgerBalancesCacheActions()
-  const { forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
-
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
+      const result = await originalTrigger(...triggerParameters)
 
-      void invalidateLedgerBalances()
       void forceReloadLedgerEntries()
+      void debouncedInvalidateProfitAndLoss()
 
-      return triggerResult
+      void invalidate(({ tags }) => tags.includes('#balance-sheet'))
+      void invalidate(({ tags }) => tags.includes('#statement-of-cash-flow'))
+
+      return result
     },
-    [originalTrigger, invalidateLedgerBalances, forceReloadLedgerEntries],
+    [originalTrigger, forceReloadLedgerEntries, debouncedInvalidateProfitAndLoss, invalidate],
   )
 
   return withStableTrigger(mutationResponse, stableProxiedTrigger)

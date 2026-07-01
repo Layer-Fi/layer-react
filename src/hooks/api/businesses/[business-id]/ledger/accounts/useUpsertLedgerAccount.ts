@@ -7,6 +7,7 @@ import { type UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLed
 import { post, put } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useLedgerBalancesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/balances/useLedgerBalances'
 import { useLedgerEntriesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -120,14 +121,5 @@ export const useUpsertLedgerAccount = (props: UseUpsertLedgerAccountProps) => {
     [originalTrigger, invalidateLedgerBalances, forceReloadLedgerEntries],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

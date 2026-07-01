@@ -7,6 +7,7 @@ import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/co
 import { get } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -98,13 +99,5 @@ export function useInvoicePdfDownload({
     [originalTrigger],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      return Reflect.get(target, prop) as unknown
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

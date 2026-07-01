@@ -6,6 +6,7 @@ import { type Split } from '@internal-types/bankTransactions'
 import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -211,16 +212,7 @@ export const useBulkMatchOrCategorize = () => {
     [originalTrigger, forceReloadBankTransactions, debouncedInvalidateProfitAndLoss, eventCallbacks],
   )
 
-  const proxiedResponse = new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  const proxiedResponse = withStableTrigger(mutationResponse, stableProxiedTrigger)
 
   return {
     ...proxiedResponse,

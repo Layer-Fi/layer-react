@@ -2,14 +2,14 @@ import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
-import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type Trip, TripSchema } from '@schemas/trip'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
+import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -22,12 +22,7 @@ export type ListTripsFilterParams = {
   year?: number
 }
 
-const ListTripsResponseSchema = Schema.Struct({
-  data: Schema.Array(TripSchema),
-  meta: Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  }),
-})
+const ListTripsResponseSchema = PaginatedResponseSchema(TripSchema)
 type ListTripsResponse = typeof ListTripsResponseSchema.Type
 
 function keyLoader(
@@ -119,7 +114,7 @@ export function useListTrips(filterParams: ListTripsFilterParams = {}) {
 
   usePreserveInfiniteSize(swrResponse)
 
-  return new SWRInfiniteResult(swrResponse)
+  return useSWRInfiniteResult(swrResponse)
 }
 
 const withUpdatedTrip = (updated: Trip) =>

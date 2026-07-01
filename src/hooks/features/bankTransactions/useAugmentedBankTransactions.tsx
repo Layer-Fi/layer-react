@@ -57,6 +57,7 @@ export const useAugmentedBankTransactions = () => {
 
   const {
     data,
+    flattenedData: bankTransactions,
     isLoading,
     isError,
     mutate,
@@ -66,11 +67,6 @@ export const useAugmentedBankTransactions = () => {
   } = useBankTransactions(useBankTransactionsOptions)
 
   usePollBankTransactions({ data, mutate, useBankTransactionsOptions })
-
-  const bankTransactions: BankTransaction[] | undefined = useMemo(
-    () => data?.flatMap(({ data }) => data),
-    [data],
-  )
 
   const filteredBankTransactions = useFilterBankTransactions({ data: bankTransactions, filters })
 

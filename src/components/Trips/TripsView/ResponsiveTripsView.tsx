@@ -66,18 +66,8 @@ export const ResponsiveTripsView = () => {
     ...(purposeFilter !== TripPurposeFilterValue.All && { purpose: purposeFilter }),
   }), [query, selectedVehicle, purposeFilter, selectedYear])
 
-  const { data, isLoading, isError, size, setSize } = useListTrips(filterParams)
-  const trips = useMemo(() => data?.flatMap(({ data }) => data), [data])
+  const { data, flattenedData: trips, isLoading, isError, hasMore, fetchMore } = useListTrips(filterParams)
   const autoResetPageIndexRef = useAutoResetPageIndex(filterParams, data)
-
-  const paginationMeta = data?.[data.length - 1]?.meta.pagination
-  const hasMore = paginationMeta?.hasMore
-
-  const fetchMore = useCallback(() => {
-    if (hasMore) {
-      void setSize(size + 1)
-    }
-  }, [hasMore, setSize, size])
 
   const onViewOrUpsertTrip = useCallback((trip: Trip | null) => {
     setSelectedTrip(trip)

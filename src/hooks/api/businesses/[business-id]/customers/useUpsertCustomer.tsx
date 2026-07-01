@@ -6,6 +6,7 @@ import { CustomerSchema, type UpsertCustomerEncoded } from '@schemas/customer'
 import { patch, post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { CUSTOMERS_TAG_KEY, useCustomersGlobalCacheActions } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -179,14 +180,5 @@ export const useUpsertCustomer = (props: UseUpsertCustomerProps) => {
     [originalTrigger, mode, patchCustomerByKey, forceReloadInvoices, forceReloadCustomers],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

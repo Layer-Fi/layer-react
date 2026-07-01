@@ -6,6 +6,7 @@ import { type TagDimensionSchema, TagDimensionStrictnessSchema } from '@schemas/
 import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { TAG_DIMENSIONS_TAG_KEY } from '@hooks/api/businesses/[business-id]/tags/dimensions/useTagDimensions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -91,14 +92,5 @@ export function useCreateTagDimension() {
     ],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

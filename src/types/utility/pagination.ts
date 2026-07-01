@@ -1,5 +1,3 @@
-import { pipe, Schema } from 'effect'
-
 export enum SortOrder {
   ASC = 'ASC',
   DESC = 'DESC',
@@ -32,19 +30,3 @@ export type PaginationParams = {
 export function getNextSortOrder(currentSortOrder: SortOrder): SortOrder {
   return currentSortOrder === SortOrder.ASC || currentSortOrder === SortOrder.ASCENDING ? SortOrder.DESC : SortOrder.ASC
 }
-
-export const PaginatedResponseMetaSchema = Schema.Struct({
-  cursor: Schema.NullishOr(Schema.String),
-
-  hasMore: pipe(
-    Schema.propertySignature(Schema.Boolean),
-    Schema.fromKey('has_more'),
-  ),
-
-  totalCount: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.Number)),
-    Schema.fromKey('total_count'),
-  ),
-})
-
-export type PaginatedResponseMeta = typeof PaginatedResponseMetaSchema.Type

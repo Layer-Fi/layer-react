@@ -4,24 +4,19 @@ import { debounce } from 'lodash-es'
 import useSWRInfinite, { type SWRInfiniteConfiguration } from 'swr/infinite'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
 import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
+import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-const GetBankTransactionsResponseSchema = Schema.Struct({
-  data: Schema.Array(BankTransactionSchema),
-  meta: Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  }),
-})
+const GetBankTransactionsResponseSchema = PaginatedResponseSchema(BankTransactionSchema)
 
 export type GetBankTransactionsReturn = typeof GetBankTransactionsResponseSchema.Type
 
@@ -88,14 +83,6 @@ const keyMatchesParams = createKeyMatcher<BankTransactionsKey, UseBankTransactio
   { key: 'tagFilterQueryString' },
 ])
 
-class BankTransactionsSWRResponse extends SWRInfiniteResult<GetBankTransactionsReturn> {
-  get hasMore() {
-    return this.data && this.data.length > 0
-      ? this.data[this.data.length - 1].meta.pagination.hasMore
-      : false
-  }
-}
-
 export type UseBankTransactionsOptions = {
   categorized?: boolean
   direction?: 'INFLOW' | 'OUTFLOW'
@@ -129,7 +116,7 @@ function keyLoader(
       apiUrl,
       businessId,
       categorized,
-      cursor: previousPageData?.meta.pagination.cursor ?? undefined,
+      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
       direction,
       query,
       startDate,
@@ -206,7 +193,7 @@ export function useBankTransactions({
 
   usePreserveInfiniteSize(swrResponse)
 
-  return new BankTransactionsSWRResponse(swrResponse)
+  return useSWRInfiniteResult(swrResponse)
 }
 
 const INVALIDATION_DEBOUNCE_OPTIONS = {

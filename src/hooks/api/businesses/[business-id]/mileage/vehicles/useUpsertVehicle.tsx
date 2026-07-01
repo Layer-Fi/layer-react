@@ -6,6 +6,7 @@ import { type UpsertVehicleEncoded, VehicleSchema } from '@schemas/vehicle'
 import { patch, post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useTripsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/trips/useListTrips'
 import { useVehiclesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -179,14 +180,5 @@ export const useUpsertVehicle = (props: UseUpsertVehicleProps) => {
     [originalTrigger, mode, patchVehicleByKey, forceReloadTrips, forceReloadVehicles],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

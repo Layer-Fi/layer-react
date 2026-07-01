@@ -2,14 +2,15 @@ import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
-import { PaginatedResponseMetaSchema, type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
+import { type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import { type CategorizationRule, CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
+import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -33,24 +34,9 @@ type ListCategorizationRulesOptions = ListCategorizationRulesFilterParams & Pagi
 
 type ListCategorizationRulesParams = ListCategorizationRulesBaseParams & ListCategorizationRulesOptions
 
-const ListCategorizationRulesReturnSchema = Schema.Struct({
-  data: Schema.Array(CategorizationRuleSchema),
-  meta: Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  }),
-})
+const ListCategorizationRulesReturnSchema = PaginatedResponseSchema(CategorizationRuleSchema)
 
 type ListCategorizationRulesReturn = typeof ListCategorizationRulesReturnSchema.Type
-
-class ListCategorizationRulesSWRResponse extends SWRInfiniteResult<ListCategorizationRulesReturn> {
-  get paginationMeta() {
-    return this.data && this.data.length > 0 ? this.data[this.data.length - 1].meta.pagination : undefined
-  }
-
-  get hasMore() {
-    return this.paginationMeta?.hasMore
-  }
-}
 
 export const listCategorizationRules = get<
   ListCategorizationRulesReturn,
@@ -168,7 +154,7 @@ export function useListCategorizationRules({
 
   usePreserveInfiniteSize(swrResponse)
 
-  return new ListCategorizationRulesSWRResponse(swrResponse)
+  return useSWRInfiniteResult(swrResponse)
 }
 
 const withUpdatedCategorizationRule = (updated: CategorizationRule) =>

@@ -1,16 +1,8 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 
+import { SortOrder } from '@internal-types/utility/pagination'
 import { type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
-import { post } from '@utils/api/authenticatedHttp'
-import { type ListLedgerEntriesReturn, useListLedgerEntries } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-
-const reverseJournalEntry = post<Record<never, never>>(
-  ({ businessId, entryId }) =>
-    `/v1/businesses/${businessId}/ledger/entries/${entryId}/reverse`,
-)
+import { LedgerEntriesSortBy, type ListLedgerEntriesReturn, useListLedgerEntries } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
 
 type UseJournal = () => {
   data: ReadonlyArray<LedgerEntry> | undefined
@@ -21,65 +13,26 @@ type UseJournal = () => {
   selectedEntryId?: string
   setSelectedEntryId: (id?: string) => void
   closeSelectedEntry: () => void
-  reverseEntry: (entryId: string) => ReturnType<typeof reverseJournalEntry>
   hasMore: boolean
   fetchMore: () => void
 }
 
 export const useJournal: UseJournal = () => {
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
-
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
 
   const {
-    data: paginatedData,
+    flattenedData: data,
     isLoading,
     isValidating,
     isError,
-    mutate,
-    size,
-    setSize,
-  } = useListLedgerEntries({
-    sort_by: 'entry_at',
-    sort_order: 'DESC',
-    limit: 150,
-  })
-
-  const data = useMemo(() => {
-    if (!paginatedData) return undefined
-
-    return paginatedData.flatMap(page => page.data)
-  }, [paginatedData])
-
-  const hasMore = useMemo(() => {
-    if (paginatedData && paginatedData.length > 0) {
-      const lastPage = paginatedData[paginatedData.length - 1]
-      return Boolean(
-        lastPage.meta?.pagination.cursor
-        && lastPage.meta?.pagination.hasMore,
-      )
-    }
-    return false
-  }, [paginatedData])
-
-  const fetchMore = useCallback(() => {
-    if (hasMore) {
-      void setSize(size + 1)
-    }
-  }, [hasMore, setSize, size])
-
-  const refetch = useCallback(() => mutate(), [mutate])
+    refetch,
+    hasMore,
+    fetchMore,
+  } = useListLedgerEntries({ sortBy: LedgerEntriesSortBy.EntryAt, sortOrder: SortOrder.DESC, limit: 150 })
 
   const closeSelectedEntry = useCallback(() => {
     setSelectedEntryId(undefined)
   }, [])
-
-  const reverseEntry = useCallback(async (entryId: string) =>
-    reverseJournalEntry(apiUrl, auth?.access_token, {
-      params: { businessId, entryId },
-    }), [apiUrl, auth?.access_token, businessId])
 
   return {
     data,
@@ -90,7 +43,6 @@ export const useJournal: UseJournal = () => {
     selectedEntryId,
     setSelectedEntryId,
     closeSelectedEntry,
-    reverseEntry,
     hasMore,
     fetchMore,
   }

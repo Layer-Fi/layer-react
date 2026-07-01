@@ -1,22 +1,17 @@
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
-import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { VendorSchema } from '@schemas/vendor'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
+import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-const ListVendorsRawResultSchema = Schema.Struct({
-  data: Schema.Array(VendorSchema),
-  meta: Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  }),
-})
+const ListVendorsRawResultSchema = PaginatedResponseSchema(VendorSchema)
 type ListVendorsRawResult = typeof ListVendorsRawResultSchema.Type
 
 type ListVendorsBaseParams = {
@@ -74,7 +69,7 @@ function keyLoader(
       accessToken,
       apiUrl,
       businessId,
-      cursor: previousPageData?.meta.pagination.cursor ?? undefined,
+      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
       query,
       tags: [VENDORS_TAG_KEY],
     } as const
@@ -128,7 +123,7 @@ export function useListVendors({ query, isEnabled = true }: UseListVendorsParame
 
   usePreserveInfiniteSize(swrResponse)
 
-  return new SWRInfiniteResult(swrResponse)
+  return useSWRInfiniteResult(swrResponse)
 }
 
 export function usePreloadVendors(parameters?: UseListVendorsParameters) {

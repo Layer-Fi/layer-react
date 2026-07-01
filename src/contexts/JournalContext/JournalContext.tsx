@@ -11,7 +11,6 @@ export const JournalContext = createContext<JournalContextType>({
   refetch: () => Promise.resolve(undefined),
   setSelectedEntryId: () => {},
   closeSelectedEntry: () => {},
-  reverseEntry: () => Promise.resolve({}),
   hasMore: false,
   fetchMore: () => {},
 })
