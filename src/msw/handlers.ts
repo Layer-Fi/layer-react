@@ -1,6 +1,7 @@
 import { type RequestHandler } from 'msw'
 
 import { get as getAccountingConfiguration } from '@msw/api/businesses/[business-id]/accounting-config/get'
+import { get as getBankAccounts } from '@msw/api/businesses/[business-id]/bank-accounts/get'
 import { get as getCustomAccounts } from '@msw/api/businesses/[business-id]/custom-accounts/get'
 import { post as postCustomAccount } from '@msw/api/businesses/[business-id]/custom-accounts/post'
 import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
@@ -10,6 +11,7 @@ export const handlers: RequestHandler[] = [
   postOAuthToken.handler,
   getBusiness.handler,
   getAccountingConfiguration.handler,
+  getBankAccounts.handler,
   getCustomAccounts.handler,
   postCustomAccount.handler,
 ]
