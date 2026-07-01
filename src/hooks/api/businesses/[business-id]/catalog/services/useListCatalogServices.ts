@@ -33,17 +33,10 @@ export type UseListCatalogServicesOptions = {
   isEnabled?: boolean
 }
 
-export class ListCatalogServicesSWRResponse extends SWRQueryResult<ListCatalogServicesResponse> {
-  get error(): unknown {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return this.swrResponse.error
-  }
-}
-
 export function useListCatalogServices({
   allowArchived,
   isEnabled = true,
-}: UseListCatalogServicesOptions = {}): ListCatalogServicesSWRResponse {
+}: UseListCatalogServicesOptions = {}): SWRQueryResult<ListCatalogServicesResponse> {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
@@ -64,7 +57,7 @@ export function useListCatalogServices({
     )().then(Schema.decodeUnknownPromise(ListCatalogServicesResponseSchema)),
   )
 
-  return new ListCatalogServicesSWRResponse(response)
+  return new SWRQueryResult(response)
 }
 
 export const useCatalogServicesGlobalCacheActions = createInfiniteQueryGlobalCacheActions<

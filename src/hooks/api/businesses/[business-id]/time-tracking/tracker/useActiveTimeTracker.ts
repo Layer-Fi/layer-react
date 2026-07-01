@@ -28,14 +28,7 @@ const getActiveTimeTracker = get<
 
 const buildKey = createBuildKey<{ businessId: string }>([ACTIVE_TIME_TRACKER_TAG_KEY])
 
-export class ActiveTimeTrackerSWRResponse extends SWRQueryResult<TimeEntry | null> {
-  get error(): unknown {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return this.swrResponse.error
-  }
-}
-
-export function useActiveTimeTracker(): ActiveTimeTrackerSWRResponse {
+export function useActiveTimeTracker(): SWRQueryResult<TimeEntry | null> {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
@@ -56,7 +49,7 @@ export function useActiveTimeTracker(): ActiveTimeTrackerSWRResponse {
       .then(({ data }) => data.timeEntry ?? null),
   )
 
-  return new ActiveTimeTrackerSWRResponse(response)
+  return new SWRQueryResult(response)
 }
 
 export const useActiveTimeTrackerGlobalCacheActions = createResourceGlobalCacheActions<TimeEntry | null>(ACTIVE_TIME_TRACKER_TAG_KEY)
