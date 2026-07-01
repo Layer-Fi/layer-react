@@ -63,14 +63,13 @@ export function useListCategorizationRules({
   limit,
   showTotalCount = true,
 }: ListCategorizationRulesOptions = {}) {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWRInfinite(
     (_index, previousPageData: ListCategorizationRulesReturn | null) => withLocale(keyLoader(
       previousPageData,
       {
         ...auth,
-        apiUrl,
         businessId,
         externalIds,
         includeArchived,

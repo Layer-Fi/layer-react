@@ -62,14 +62,13 @@ export function useListCounterparties({
   limit,
   showTotalCount = true,
 }: ListCounterpartiesOptions = {}) {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWRInfinite(
     (_index, previousPageData: ListCounterpartiesReturn | null) => withLocale(keyLoader(
       previousPageData,
       {
         ...auth,
-        apiUrl,
         businessId,
         externalIds,
         q,

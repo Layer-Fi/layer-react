@@ -19,12 +19,11 @@ const getLedgerAccountsEntry = get<typeof LedgerAccountsEntryResponseSchema.Enco
 const buildKey = createBuildKey<{ businessId: string, entryId?: string }>([LEDGER_ACCOUNTS_ENTRY_TAG_KEY])
 
 export function useLedgerAccountsEntry({ entryId }: { entryId?: string }) {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWR(() =>
     withLocale(buildKey({
       ...auth,
-      apiUrl,
       businessId,
       entryId,
       isEnabled: Boolean(entryId),

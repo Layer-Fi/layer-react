@@ -34,12 +34,11 @@ export function useBalanceSheet({
 }: {
   effectiveDate?: Date
 }) {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const response = useSWR(
     () => withLocale(buildKey({
       ...auth,
-      apiUrl,
       businessId,
       effectiveDate,
     })),

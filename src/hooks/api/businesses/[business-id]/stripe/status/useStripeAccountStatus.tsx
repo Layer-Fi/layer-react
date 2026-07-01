@@ -17,12 +17,11 @@ const getStripeAccountStatus = get<
 >(({ businessId }) => `/v1/businesses/${businessId}/stripe/status`)
 
 export function useStripeAccountStatus() {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const response = useSWR(
     () => withLocale(buildKey({
       ...auth,
-      apiUrl,
       businessId,
     })),
     ({ accessToken, apiUrl, businessId }) => getStripeAccountStatus(

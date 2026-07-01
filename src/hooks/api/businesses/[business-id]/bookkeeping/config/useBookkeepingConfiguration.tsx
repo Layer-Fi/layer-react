@@ -31,11 +31,10 @@ const getBookkeepingConfiguration = get<
 })
 
 export function useBookkeepingConfiguration() {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const queryKey = withLocale(buildKey({
     ...auth,
-    apiUrl,
     businessId,
   }))
 

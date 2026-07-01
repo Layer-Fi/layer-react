@@ -22,12 +22,11 @@ type UseTagDimensionByKeyParameters = {
 }
 
 export function useTagDimensionByKey({ isEnabled = true, dimensionKey }: UseTagDimensionByKeyParameters) {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWR(
     () => withLocale(buildKey({
       ...auth,
-      apiUrl,
       isEnabled,
       businessId,
       dimensionKey,

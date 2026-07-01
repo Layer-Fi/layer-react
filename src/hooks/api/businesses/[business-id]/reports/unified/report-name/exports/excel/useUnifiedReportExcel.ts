@@ -38,7 +38,7 @@ type UseUnifiedReportExcelOptions = {
 }
 
 export function useUnifiedReportExcel({ onSuccess }: UseUnifiedReportExcelOptions = {}) {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const params = useUnifiedReportParams()
 
   const buildKey = createBuildKey<{ businessId: string } & UnifiedReportParams>(
@@ -47,7 +47,7 @@ export function useUnifiedReportExcel({ onSuccess }: UseUnifiedReportExcelOption
 
   const rawMutationResponse = useSWRMutation(
     () => params
-      ? withLocale(buildKey({ ...auth, apiUrl, businessId, ...params }))
+      ? withLocale(buildKey({ ...auth, businessId, ...params }))
       : null,
     ({ accessToken, apiUrl, businessId, tags, ...restParams }) =>
       getUnifiedReportExcel(apiUrl, accessToken, {

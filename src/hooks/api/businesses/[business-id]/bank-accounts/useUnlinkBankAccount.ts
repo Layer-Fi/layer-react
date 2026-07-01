@@ -22,12 +22,11 @@ const unlinkBankAccount = del<
 const buildKey = createBuildKey<{ businessId: string }>([UNLINK_BANK_ACCOUNT_TAG_KEY])
 
 export function useUnlinkBankAccount() {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
-      access_token: auth?.access_token,
-      apiUrl,
+      ...auth,
       businessId,
     })),
     ({ accessToken, apiUrl, businessId }, { arg: bankAccountId }: { arg: string }) =>

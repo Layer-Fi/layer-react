@@ -34,12 +34,11 @@ export function useProfitAndLossComparisonReport({
   tagFilters,
   reportingBasis,
 }: UseProfitAndLossComparisonReportProps) {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const response = useSWR(
     () => withLocale(buildKey({
       ...auth,
-      apiUrl,
       businessId,
       periods,
       tagFilters,

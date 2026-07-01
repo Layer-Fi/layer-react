@@ -38,12 +38,11 @@ const createStripeConnectAccountLink = post<
 const buildKey = createBuildKey<{ businessId: string }>([STRIPE_CONNECT_ACCOUNT_LINK_TAG_KEY])
 
 export function useStripeConnectAccountLink() {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
       ...auth,
-      apiUrl,
       businessId,
     })),
     ({ accessToken, apiUrl, businessId }) => {

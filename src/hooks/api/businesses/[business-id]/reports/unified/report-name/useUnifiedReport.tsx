@@ -21,7 +21,7 @@ const getUnifiedReport = get<
 })
 
 export function useUnifiedReport() {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const params = useUnifiedReportParams()
 
   const buildKey = createBuildKey<{ businessId: string } & UnifiedReportParams>(
@@ -30,7 +30,7 @@ export function useUnifiedReport() {
 
   const swrResponse = useSWR(
     () => params
-      ? withLocale(buildKey({ ...auth, apiUrl, businessId, ...params }))
+      ? withLocale(buildKey({ ...auth, businessId, ...params }))
       : null,
     ({ accessToken, apiUrl, businessId, tags, ...restParams }) => getUnifiedReport(apiUrl, accessToken, {
       params: { businessId, ...restParams },

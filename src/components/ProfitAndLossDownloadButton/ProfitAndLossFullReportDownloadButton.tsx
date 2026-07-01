@@ -26,7 +26,7 @@ export const ProfitAndLossFullReportDownloadButton = ({
     ProfitAndLossComparisonContext,
   )
 
-  const { businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { businessId, auth } = useBuildKeyInputs()
 
   const [requestFailed, setRequestFailed] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
@@ -40,10 +40,11 @@ export const ProfitAndLossFullReportDownloadButton = ({
     : undefined
 
   const handleClick = async () => {
+    if (!auth) return
     setIsDownloading(true)
     const getProfitAndLossExcelCall = getProfitAndLossExcel(
-      apiUrl,
-      auth?.access_token,
+      auth.apiUrl,
+      auth.access_token,
       {
         businessId,
         moneyFormat,

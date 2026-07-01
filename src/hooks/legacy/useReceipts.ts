@@ -113,7 +113,7 @@ export const useReceipts: UseReceipts = ({
 }: UseReceiptsProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
-  const { businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { businessId, auth } = useBuildKeyInputs()
   const { updateLocalBankTransactions } = useBankTransactionsContext()
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BankTransactions)
 
@@ -129,9 +129,11 @@ export const useReceipts: UseReceipts = ({
   }, [isActive])
 
   const fetchDocuments = async () => {
+    if (!auth) return
+
     const listBankTransactionDocumentsCall = listBankTransactionDocuments(
-      apiUrl,
-      auth?.access_token,
+      auth.apiUrl,
+      auth.access_token,
       {
         params: {
           businessId: businessId,
@@ -153,6 +155,8 @@ export const useReceipts: UseReceipts = ({
   }
 
   const uploadReceipt = async (file: File) => {
+    if (!auth) return
+
     emitLayerEvent({
       type: LayerEventType.TransactionReceiptUploadClicked,
       version: 1,
@@ -200,8 +204,8 @@ export const useReceipts: UseReceipts = ({
     try {
       setReceiptUrls(prev => [...prev, newReceipt])
       const uploadDocument = uploadBankTransactionDocument(
-        apiUrl,
-        auth?.access_token,
+        auth.apiUrl,
+        auth.access_token,
       )
       const result = await uploadDocument({
         businessId: businessId,
@@ -242,7 +246,7 @@ export const useReceipts: UseReceipts = ({
   }
 
   const archiveDocument = async (document: DocumentWithStatus) => {
-    if (!document.id) return
+    if (!document.id || !auth) return
 
     try {
       if (document.error) {
@@ -261,7 +265,7 @@ export const useReceipts: UseReceipts = ({
             return url
           }),
         )
-        await archiveBankTransactionDocument(apiUrl, auth?.access_token, {
+        await archiveBankTransactionDocument(auth.apiUrl, auth.access_token, {
           params: {
             businessId: businessId,
             bankTransactionId: bankTransaction.id,

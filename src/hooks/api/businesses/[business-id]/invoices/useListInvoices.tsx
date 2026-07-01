@@ -75,14 +75,13 @@ export function useListInvoices({
   limit,
   showTotalCount = true,
 }: ListInvoicesOptions = {}) {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWRInfinite(
     (_index, previousPageData: ListInvoicesReturn | null) => withLocale(keyLoader(
       previousPageData,
       {
         ...auth,
-        apiUrl,
         businessId,
         showSalesReceipts,
         status,

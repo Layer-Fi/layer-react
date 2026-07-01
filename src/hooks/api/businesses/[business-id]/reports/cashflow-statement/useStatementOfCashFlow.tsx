@@ -37,12 +37,11 @@ export function useStatementOfCashFlow({
   startDate?: Date
   endDate?: Date
 }) {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const response = useSWR(
     withLocale(buildKey({
       ...auth,
-      apiUrl,
       businessId,
       startDate,
       endDate,

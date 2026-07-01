@@ -89,14 +89,13 @@ export function useListLedgerAccountLines({
   limit,
   show_total_count,
 }: UseListLedgerAccountLinesOptions) {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWRInfinite(
     (_index, previousPageData: ListLedgerAccountLinesReturn | null) => withLocale(keyLoader(
       previousPageData,
       {
         ...auth,
-        apiUrl,
         businessId,
         accountId,
         include_entries_before_activation,

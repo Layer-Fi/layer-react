@@ -213,7 +213,7 @@ export function useProfitAndLossComparison({
     }
   }
 
-  const { businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { businessId, auth } = useBuildKeyInputs()
 
   const periods = compareModeActive
     ? preparePeriodsBody(dateRange, comparePeriods, comparisonPeriodMode)
@@ -232,9 +232,11 @@ export function useProfitAndLossComparison({
     dateRange: DateRange,
     moneyFormat?: MoneyFormat,
   ) => {
+    if (!auth) return Promise.resolve<{ data?: S3PresignedUrl, error?: unknown }>({})
+
     const periods = preparePeriodsBody(dateRange, comparePeriods, comparisonPeriodMode)
     const tagFilters = prepareFiltersBody(selectedCompareOptions)
-    return profitAndLossComparisonCsv(apiUrl, auth?.access_token, {
+    return profitAndLossComparisonCsv(auth.apiUrl, auth.access_token, {
       params: {
         businessId,
         moneyFormat,

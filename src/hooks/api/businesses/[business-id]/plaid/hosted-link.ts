@@ -27,10 +27,10 @@ export function usePlaidHostedLinkStatus(
   config?: SWRConfiguration<ApiPlaidHostedLinkStatus>,
   enabled = false,
 ) {
-  const { businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWR(
-    () => buildKey({ ...auth, apiUrl, businessId, isEnabled: enabled }),
+    () => buildKey({ ...auth, businessId, isEnabled: enabled }),
     ({ accessToken, apiUrl, businessId }) =>
       getPlaidHostedLinkStatus(apiUrl, accessToken, { params: { businessId } })()
         .then(Schema.decodeUnknownPromise(PlaidHostedLinkStatusResponseSchema))

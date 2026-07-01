@@ -22,11 +22,10 @@ const getAccountingConfiguration = get<{ data: AccountingConfigurationSchemaType
 )
 
 export function useAccountingConfiguration({ businessId }: GetAccountingConfigurationParams) {
-  const { apiUrl, auth } = useBuildKeyInputs()
+  const { auth } = useBuildKeyInputs()
 
   const queryKey = buildKey({
     ...auth,
-    apiUrl,
     businessId,
   })
 

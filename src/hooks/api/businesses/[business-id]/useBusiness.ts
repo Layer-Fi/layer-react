@@ -16,10 +16,10 @@ const getBusiness = get<{ data: Business }>(
 const buildKey = createBuildKey<{ businessId: string }>([BUSINESS_TAG_KEY])
 
 export function useBusiness({ businessId }: { businessId: string }) {
-  const { apiUrl, auth } = useBuildKeyInputs()
+  const { auth } = useBuildKeyInputs()
 
   const swrResponse = useSWR(
-    () => buildKey({ ...auth, apiUrl, businessId }),
+    () => buildKey({ ...auth, businessId }),
     ({ accessToken, apiUrl, businessId }) =>
       getBusiness(apiUrl, accessToken, { params: { businessId } })()
         .then(Schema.decodeUnknownPromise(BusinessResponseSchema)),

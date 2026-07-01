@@ -45,12 +45,11 @@ export function useProfitAndLossDetailLines({
   reportingBasis,
   pnlStructure,
 }: PnlDetailLinesBaseParams & PnlDetailLinesFilterParams) {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWR(
     () => withLocale(keyLoader({
       ...auth,
-      apiUrl,
       businessId,
       startDate,
       endDate,

@@ -24,10 +24,10 @@ type UseTagDimensionsParameters = {
 }
 
 export function useTagDimensions({ isEnabled = true }: UseTagDimensionsParameters = {}) {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWR(
-    () => withLocale(buildKey({ ...auth, apiUrl, businessId, isEnabled })),
+    () => withLocale(buildKey({ ...auth, businessId, isEnabled })),
     ({ accessToken, apiUrl, businessId }) => getTagDimensions(
       apiUrl,
       accessToken,

@@ -22,12 +22,11 @@ const createTagValueDefinition = post<
 >(({ businessId, dimensionId }) => `/v1/businesses/${businessId}/tags/dimensions/${dimensionId}/values`)
 
 export function useCreateTagDimension() {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const mutationResponse = useSWRMutation(
     () => withLocale(buildKey({
       ...auth,
-      apiUrl,
       businessId,
     })),
     (

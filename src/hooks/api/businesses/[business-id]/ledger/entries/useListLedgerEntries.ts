@@ -66,14 +66,13 @@ export function useListLedgerEntries({
   limit,
   showTotalCount,
 }: UseListLedgerEntriesOptions = {}) {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWRInfinite(
     (_index, previousPageData: ListLedgerEntriesReturn | null) => withLocale(keyLoader(
       previousPageData,
       {
         ...auth,
-        apiUrl,
         businessId,
         sortBy,
         sortOrder,

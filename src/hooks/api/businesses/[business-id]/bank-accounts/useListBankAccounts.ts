@@ -48,13 +48,12 @@ export class ListBankAccountsSWRResponse extends SWRQueryResult<BankAccount[]> {
 export function useListBankAccounts(
   config?: SWRConfiguration<BankAccount[]>,
 ): ListBankAccountsSWRResponse {
-  const { businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWR(
     () =>
       buildKey({
         ...auth,
-        apiUrl,
         businessId,
       }),
     ({ accessToken, apiUrl, businessId }) => listBankAccounts(

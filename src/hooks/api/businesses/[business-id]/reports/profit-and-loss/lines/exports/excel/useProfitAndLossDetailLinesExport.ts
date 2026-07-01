@@ -43,12 +43,11 @@ export function useProfitAndLossDetailLinesExport({
   pnlStructure,
   onSuccess,
 }: UseProfitAndLossDetailLinesExportOptions) {
-  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   return useSWRMutation(
     () => withLocale(buildKey({
       ...auth,
-      apiUrl,
       businessId,
       startDate,
       endDate,
