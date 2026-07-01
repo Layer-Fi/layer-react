@@ -54,7 +54,7 @@ export const DateSelectionComboBox = ({ showLabel = false }: { showLabel?: boole
 
   const inputId = useId()
 
-  const label = t('reports:label.report_period', 'Report period')
+  const label = t('reports:label.time_period', 'Time period')
   const additionalAriaProps = !showLabel && { 'aria-label': label }
 
   return (

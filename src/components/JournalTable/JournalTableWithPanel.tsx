@@ -3,6 +3,7 @@ import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type View } from '@internal-types/general'
+import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { Button } from '@ui/Button/Button'
@@ -10,15 +11,17 @@ import { Heading } from '@ui/Typography/Heading'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
+import { GlobalDateRangeSelection } from '@components/DateSelection/GlobalDateRangeSelection'
 import { JournalEntriesDownloadButton } from '@components/Journal/download/JournalEntriesDownloadButton'
 import { JournalSidebar } from '@components/JournalSidebar/JournalSidebar'
 import { JournalTable } from '@components/JournalTable/JournalTable'
 import { Panel } from '@components/Panel/Panel'
 
-const COMPONENT_NAME = 'journal-table'
+import './journalTableWithPanel.scss'
 
 export interface JournalTableStringOverrides {
   componentTitle?: string
+  /** @deprecated No longer used. */
   componentSubtitle?: string
   addEntryButton?: string
   idColumnHeader?: string
@@ -41,19 +44,21 @@ export const JournalTableWithPanel = ({
 }) => {
   const { t } = useTranslation()
   const { toCreateEntry } = useJournalNavigation()
+  const { headerRef, isCompact } = useReportsCompactHeader()
   const addEntryLabel = stringOverrides?.addEntryButton || t('generalLedger:action.add_entry', 'Add Entry')
 
   const { selectedEntryId } = useContext(JournalContext)
 
   return (
     <Panel
-      className={`Layer__${COMPONENT_NAME}`}
+      className={`Layer__JournalTableWithPanel`}
       sidebar={<JournalSidebar parentRef={containerRef} />}
       sidebarIsOpen={Boolean(selectedEntryId && selectedEntryId !== 'new')}
       parentRef={containerRef}
     >
       <Header
-        className={`Layer__${COMPONENT_NAME}__header`}
+        ref={headerRef}
+        className={`Layer__JournalTableWithPanel__Header`}
         asHeader
         sticky
         rounded
@@ -62,15 +67,6 @@ export const JournalTableWithPanel = ({
           <HeaderCol>
             <Heading level={2} size='md'>
               {stringOverrides?.componentTitle || t('generalLedger:label.journal', 'Journal')}
-            </Heading>
-          </HeaderCol>
-        </HeaderRow>
-      </Header>
-      <Header>
-        <HeaderRow>
-          <HeaderCol>
-            <Heading level={3} size='sm'>
-              {stringOverrides?.componentSubtitle || t('generalLedger:label.entries', 'Entries')}
             </Heading>
           </HeaderCol>
           <HeaderCol>
@@ -86,8 +82,12 @@ export const JournalTableWithPanel = ({
             </Button>
           </HeaderCol>
         </HeaderRow>
+        <HeaderRow className='Layer__JournalTableWithPanel__FiltersRow'>
+          <HeaderCol className='Layer__JournalTableWithPanel__FiltersCol'>
+            <GlobalDateRangeSelection showLabels={true} isCompact={isCompact} />
+          </HeaderCol>
+        </HeaderRow>
       </Header>
-
       <JournalTable stringOverrides={stringOverrides} />
     </Panel>
   )
