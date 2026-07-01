@@ -1,7 +1,8 @@
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
-import { PaginatedResponseMetaSchema, type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
+import { type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { BankTransactionCounterpartySchema } from '@schemas/bankTransactions/base'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
@@ -31,12 +32,7 @@ type ListCounterpartiesOptions = ListCounterpartiesFilterParams & PaginationPara
 
 type ListCounterpartiesParams = ListCounterpartiesBaseParams & ListCounterpartiesOptions
 
-const ListCounterpartiesReturnSchema = Schema.Struct({
-  data: Schema.Array(BankTransactionCounterpartySchema),
-  meta: Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  }),
-})
+const ListCounterpartiesReturnSchema = PaginatedResponseSchema(BankTransactionCounterpartySchema)
 
 type ListCounterpartiesReturn = typeof ListCounterpartiesReturnSchema.Type
 

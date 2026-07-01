@@ -2,7 +2,8 @@ import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
-import { PaginatedResponseMetaSchema, type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
+import { type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type CategorizationRule, CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
@@ -33,12 +34,7 @@ type ListCategorizationRulesOptions = ListCategorizationRulesFilterParams & Pagi
 
 type ListCategorizationRulesParams = ListCategorizationRulesBaseParams & ListCategorizationRulesOptions
 
-const ListCategorizationRulesReturnSchema = Schema.Struct({
-  data: Schema.Array(CategorizationRuleSchema),
-  meta: Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  }),
-})
+const ListCategorizationRulesReturnSchema = PaginatedResponseSchema(CategorizationRuleSchema)
 
 type ListCategorizationRulesReturn = typeof ListCategorizationRulesReturnSchema.Type
 

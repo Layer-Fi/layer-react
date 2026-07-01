@@ -2,7 +2,8 @@ import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
-import { PaginatedResponseMetaSchema, type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
+import { type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type Invoice, InvoiceSchema, type InvoiceStatus } from '@schemas/invoices/invoice'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
@@ -36,12 +37,7 @@ type ListInvoicesOptions = ListInvoicesFilterParams & PaginationParams & SortPar
 
 type ListInvoicesParams = ListInvoicesBaseParams & ListInvoicesOptions
 
-const ListInvoicesReturnSchema = Schema.Struct({
-  data: Schema.Array(InvoiceSchema),
-  meta: Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  }),
-})
+const ListInvoicesReturnSchema = PaginatedResponseSchema(InvoiceSchema)
 
 type ListInvoicesReturn = typeof ListInvoicesReturnSchema.Type
 

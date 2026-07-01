@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
-import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
@@ -25,12 +25,7 @@ type GetLedgerEntriesParams = {
   show_total_count?: boolean
 }
 
-const ListLedgerEntriesResponseSchema = Schema.Struct({
-  data: Schema.Array(LedgerEntrySchema),
-  meta: Schema.optional(Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  })),
-})
+const ListLedgerEntriesResponseSchema = PaginatedResponseSchema(LedgerEntrySchema)
 
 export type ListLedgerEntriesReturn = typeof ListLedgerEntriesResponseSchema.Type
 

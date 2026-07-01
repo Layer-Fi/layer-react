@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
-import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { VendorSchema } from '@schemas/vendor'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
@@ -11,12 +11,7 @@ import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-const ListVendorsRawResultSchema = Schema.Struct({
-  data: Schema.Array(VendorSchema),
-  meta: Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  }),
-})
+const ListVendorsRawResultSchema = PaginatedResponseSchema(VendorSchema)
 type ListVendorsRawResult = typeof ListVendorsRawResultSchema.Type
 
 type ListVendorsBaseParams = {

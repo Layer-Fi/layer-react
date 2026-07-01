@@ -4,7 +4,7 @@ import { debounce } from 'lodash-es'
 import useSWRInfinite, { type SWRInfiniteConfiguration } from 'swr/infinite'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
@@ -16,12 +16,7 @@ import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-const GetBankTransactionsResponseSchema = Schema.Struct({
-  data: Schema.Array(BankTransactionSchema),
-  meta: Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  }),
-})
+const GetBankTransactionsResponseSchema = PaginatedResponseSchema(BankTransactionSchema)
 
 export type GetBankTransactionsReturn = typeof GetBankTransactionsResponseSchema.Type
 

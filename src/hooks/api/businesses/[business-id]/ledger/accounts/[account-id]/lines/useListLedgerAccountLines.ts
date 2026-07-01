@@ -3,7 +3,7 @@ import { Schema } from 'effect'
 import { debounce } from 'lodash-es'
 import useSWRInfinite from 'swr/infinite'
 
-import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type LedgerAccountLineItem, LedgerAccountLineItemSchema } from '@schemas/generalLedger/ledgerEntry'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
@@ -31,12 +31,7 @@ type GetLedgerAccountLinesParams = {
   show_total_count?: boolean
 }
 
-const ListLedgerAccountLinesResponseSchema = Schema.Struct({
-  data: Schema.Array(LedgerAccountLineItemSchema),
-  meta: Schema.optional(Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  })),
-})
+const ListLedgerAccountLinesResponseSchema = PaginatedResponseSchema(LedgerAccountLineItemSchema)
 
 export type ListLedgerAccountLinesReturn = typeof ListLedgerAccountLinesResponseSchema.Type
 

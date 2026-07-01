@@ -3,7 +3,7 @@ import { formatISO } from 'date-fns'
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
-import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
@@ -29,12 +29,7 @@ export type ListTimeEntriesFilterParams = {
   sortOrder?: 'ASC' | 'DESC'
 }
 
-const ListTimeEntriesResponseSchema = Schema.Struct({
-  data: Schema.Array(TimeEntrySchema),
-  meta: Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  }),
-})
+const ListTimeEntriesResponseSchema = PaginatedResponseSchema(TimeEntrySchema)
 type ListTimeEntriesResponse = typeof ListTimeEntriesResponseSchema.Type
 
 function keyLoader(
