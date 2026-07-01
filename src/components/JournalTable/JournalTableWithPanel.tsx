@@ -3,10 +3,12 @@ import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type View } from '@internal-types/general'
+import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { Button } from '@ui/Button/Button'
 import { Heading } from '@ui/Typography/Heading'
+import { LedgerDateRangeSelection } from '@components/DateSelection/LedgerDateRangeSelection'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
@@ -45,6 +47,7 @@ export const JournalTableWithPanel = ({
   const addEntryLabel = stringOverrides?.addEntryButton || t('generalLedger:action.add_entry', 'Add Entry')
 
   const { selectedEntryId } = useContext(JournalContext)
+  const { startDate, endDate } = useLedgerDateRange({ dateSelectionMode: 'full' })
 
   return (
     <Panel
@@ -67,6 +70,8 @@ export const JournalTableWithPanel = ({
           </HeaderCol>
           <HeaderCol>
             <JournalEntriesDownloadButton
+              startDate={startDate}
+              endDate={endDate}
               icon={['mobile', 'tablet'].includes(view)}
             />
             <Button
@@ -76,6 +81,13 @@ export const JournalTableWithPanel = ({
             >
               {view === 'mobile' ? <CirclePlus size={14} /> : addEntryLabel}
             </Button>
+          </HeaderCol>
+        </HeaderRow>
+      </Header>
+      <Header sticky>
+        <HeaderRow>
+          <HeaderCol>
+            <LedgerDateRangeSelection showLabels />
           </HeaderCol>
         </HeaderRow>
       </Header>

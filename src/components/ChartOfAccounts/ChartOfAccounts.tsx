@@ -3,6 +3,7 @@ import { type ReactNode, useContext } from 'react'
 import { useChartOfAccounts } from '@hooks/legacy/useChartOfAccounts'
 import { useLedgerAccounts } from '@hooks/legacy/useLedgerAccounts'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
+import { LedgerDateStoreProvider } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
@@ -29,6 +30,18 @@ export interface ChartOfAccountsProps {
 }
 
 export const ChartOfAccounts = (props: ChartOfAccountsProps) => {
+  return (
+    <LedgerDateStoreProvider>
+      <ChartOfAccountsInner {...props} />
+    </LedgerDateStoreProvider>
+  )
+}
+
+/**
+ * Chart of Accounts without its own ledger date store — rendered by views
+ * (e.g. GeneralLedgerView) that provide a shared LedgerDateStoreProvider.
+ */
+export const ChartOfAccountsInner = (props: ChartOfAccountsProps) => {
   const chartOfAccountsContextData = useChartOfAccounts({
     withDates: props.withDateControl,
   })

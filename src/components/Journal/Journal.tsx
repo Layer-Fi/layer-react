@@ -3,6 +3,7 @@ import { type ReactNode } from 'react'
 import { useChartOfAccounts } from '@hooks/legacy/useChartOfAccounts'
 import { useJournal } from '@hooks/legacy/useJournal'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
+import { LedgerDateStoreProvider } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { JournalRoute, JournalStoreProvider, useJournalRouteState } from '@providers/JournalStore/JournalStoreProvider'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
@@ -26,6 +27,18 @@ export interface JournalProps {
 }
 
 export const Journal = (props: JournalProps) => {
+  return (
+    <LedgerDateStoreProvider>
+      <JournalInner {...props} />
+    </LedgerDateStoreProvider>
+  )
+}
+
+/**
+ * Journal without its own ledger date store — rendered by views (e.g.
+ * GeneralLedgerView) that provide a shared LedgerDateStoreProvider.
+ */
+export const JournalInner = (props: JournalProps) => {
   const JournalContextData = useJournal()
   const AccountsContextData = useChartOfAccounts()
   return (

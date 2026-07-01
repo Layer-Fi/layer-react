@@ -2,12 +2,13 @@ import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { Heading } from '@ui/Typography/Heading'
 import { AccountBalancesDownloadButton } from '@components/ChartOfAccounts/download/AccountBalancesDownloadButton'
 import { type ChartOfAccountsTableStringOverrides } from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
+import { LedgerDateRangeSelection } from '@components/DateSelection/LedgerDateRangeSelection'
 import { ExpandableDataTableToggleButton } from '@components/ExpandableDataTable/ExpandableDataTableToggleButton'
-import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
@@ -39,6 +40,7 @@ export const ChartOfAccountsTableHeader = ({
   const { t } = useTranslation()
   const { isDesktop } = useSizeClass()
   const addAccountLabel = stringOverrides?.addAccountButtonText || t('chartOfAccounts:action.add_account', 'Add Account')
+  const { startDate, endDate } = useLedgerDateRange({ dateSelectionMode: 'full' })
 
   return (
     <>
@@ -52,6 +54,8 @@ export const ChartOfAccountsTableHeader = ({
           <HeaderCol>
             {withExpandAllButton && <ExpandableDataTableToggleButton />}
             <AccountBalancesDownloadButton
+              startDate={withDateControl ? startDate : undefined}
+              endDate={withDateControl ? endDate : undefined}
               icon={!isDesktop}
             />
             {showAddAccountButton && (
@@ -69,7 +73,7 @@ export const ChartOfAccountsTableHeader = ({
       <Header sticky>
         <HeaderRow>
           <HeaderCol>
-            {withDateControl && <GlobalMonthPicker />}
+            {withDateControl && <LedgerDateRangeSelection showLabels />}
           </HeaderCol>
           <HeaderCol className='Layer__chart-of-accounts__actions'>
             <SearchField
