@@ -4,6 +4,7 @@ import type { SWRInfiniteResponse } from 'swr/infinite'
 import type { SWRMutationResponse } from 'swr/mutation'
 
 import type { PaginatedResponse } from '@schemas/common/pagination'
+import { hasMorePages } from '@utils/swr/hasMorePages'
 
 export class SWRQueryResult<T> {
   protected swrResponse: SWRResponse<T>
@@ -41,10 +42,16 @@ export type FlattenedData<T> = T extends { data: ReadonlyArray<infer E> } ? Arra
 
 export class SWRInfiniteResult<T extends PaginatedResponse<unknown>> {
   protected swrResponse: SWRInfiniteResponse<T>
+  private readonly fetchMoreFn: () => void
   private readonly flattenedDataValue: FlattenedData<T> | undefined
 
-  constructor(swrResponse: SWRInfiniteResponse<T>, flattenedData: FlattenedData<T> | undefined) {
+  constructor(
+    swrResponse: SWRInfiniteResponse<T>,
+    fetchMore: () => void,
+    flattenedData: FlattenedData<T> | undefined,
+  ) {
     this.swrResponse = swrResponse
+    this.fetchMoreFn = fetchMore
     this.flattenedDataValue = flattenedData
   }
 
@@ -57,20 +64,11 @@ export class SWRInfiniteResult<T extends PaginatedResponse<unknown>> {
   }
 
   get hasMore() {
-    const pages: ReadonlyArray<PaginatedResponse<unknown>> | undefined = this.swrResponse.data
-    if (!pages || pages.length === 0) {
-      return false
-    }
-    const pagination = pages[pages.length - 1].meta?.pagination
-    return Boolean(pagination?.hasMore && pagination.cursor)
+    return hasMorePages(this.swrResponse.data)
   }
 
   get fetchMore() {
-    return () => {
-      if (this.hasMore) {
-        void this.setSize(this.size + 1)
-      }
-    }
+    return this.fetchMoreFn
   }
 
   get isLoading() {
