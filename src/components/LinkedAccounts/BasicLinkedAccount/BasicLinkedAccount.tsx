@@ -1,7 +1,7 @@
 import { Landmark } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
 
-import type { ExternalAccountConnection } from '@schemas/bankAccounts/bankAccount'
+import type { ExternalAccountConnection } from '@schemas/bankAccounts/externalAccountConnection'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
