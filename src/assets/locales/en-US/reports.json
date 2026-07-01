@@ -39,13 +39,13 @@
     "other_outflows": "Other Outflows",
     "profit_before_taxes": "Profit Before Taxes",
     "profit_loss_detail_report": "Profit and Loss Detail Report",
-    "report_period": "Report period",
     "report_type": "Report type",
     "reporting_basis": "Reporting basis",
     "reports": "Reports",
     "reports_navigation": "Reports navigation",
     "select_report": "Select report",
     "switch_report": "Switch report",
+    "time_period": "Time period",
     "total_display_name": "Total of {{displayName}}"
   }
 }
