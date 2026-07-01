@@ -19,6 +19,7 @@ const COMPONENT_NAME = 'journal-table'
 
 export interface JournalTableStringOverrides {
   componentTitle?: string
+  /** @deprecated The sub-header row was removed; this override no longer renders. */
   componentSubtitle?: string
   addEntryButton?: string
   idColumnHeader?: string
@@ -62,15 +63,6 @@ export const JournalTableWithPanel = ({
           <HeaderCol>
             <Heading level={2} size='md'>
               {stringOverrides?.componentTitle || t('generalLedger:label.journal', 'Journal')}
-            </Heading>
-          </HeaderCol>
-        </HeaderRow>
-      </Header>
-      <Header>
-        <HeaderRow>
-          <HeaderCol>
-            <Heading level={3} size='sm'>
-              {stringOverrides?.componentSubtitle || t('generalLedger:label.entries', 'Entries')}
             </Heading>
           </HeaderCol>
           <HeaderCol>
