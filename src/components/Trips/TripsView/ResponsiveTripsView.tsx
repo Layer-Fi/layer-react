@@ -4,7 +4,6 @@ import { Car } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { Trip } from '@schemas/trip'
-import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useListTrips } from '@hooks/api/businesses/[business-id]/mileage/trips/useListTrips'
 import { useAutoResetPageIndex } from '@hooks/utils/pagination/useAutoResetPageIndex'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
@@ -17,8 +16,10 @@ import { TripPurposeFilterValue } from '@components/Trips/TripPurposeToggle/Trip
 import { TripsMobileList } from '@components/Trips/TripsMobileList/TripsMobileList'
 import { TripsTable } from '@components/Trips/TripsTable/TripsTable'
 
+const MIN_WIDTH_NEEDED_FOR_DESKTOP_PX = 1024
+
 const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
-  width < BREAKPOINTS.TABLET ? 'Mobile' : 'Desktop'
+  width < MIN_WIDTH_NEEDED_FOR_DESKTOP_PX ? 'Mobile' : 'Desktop'
 
 const TripsViewEmptyState = () => {
   const { t } = useTranslation()
