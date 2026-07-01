@@ -72,7 +72,7 @@ function keyLoader(
       accessToken,
       apiUrl,
       businessId,
-      cursor: previousPageData?.meta.pagination.cursor ?? undefined,
+      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
       query,
       tags: [CUSTOMERS_TAG_KEY],
     } as const

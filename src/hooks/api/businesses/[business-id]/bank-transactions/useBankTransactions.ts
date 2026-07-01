@@ -116,7 +116,7 @@ function keyLoader(
       apiUrl,
       businessId,
       categorized,
-      cursor: previousPageData?.meta.pagination.cursor ?? undefined,
+      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
       direction,
       query,
       startDate,

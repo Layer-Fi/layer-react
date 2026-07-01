@@ -20,9 +20,9 @@ export const PaginatedResponseSchema = <A, I, R>(
 ) =>
   Schema.Struct({
     data: Schema.Array(dataSchema),
-    meta: Schema.Struct({
+    meta: Schema.optional(Schema.Struct({
       pagination: PaginatedResponseMetaSchema,
-    }),
+    })),
   })
 
 export type PaginatedResponse<A> = Schema.Schema.Type<
