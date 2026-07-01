@@ -4,12 +4,9 @@ import useSWRMutation from 'swr/mutation'
 import { type TagValueDefinitionSchema } from '@schemas/tag'
 import { post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useTagDimensionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/tags/dimensions/useTagDimensions'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const CREATE_TAG_VALUE_DEFINITION_TAG_KEY = '#create-tag-value-definition'
 
@@ -25,10 +22,7 @@ const createTagValueDefinition = post<
 >(({ businessId, dimensionId }) => `/v1/businesses/${businessId}/tags/dimensions/${dimensionId}/values`)
 
 export function useCreateTagDimension() {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { apiUrl } = useEnvironment()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
 
   const mutationResponse = useSWRMutation(
     () => withLocale(buildKey({

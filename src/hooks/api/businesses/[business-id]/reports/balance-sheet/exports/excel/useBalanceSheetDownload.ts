@@ -5,10 +5,8 @@ import type { Awaitable } from '@internal-types/utility/promises'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import type { GetBalanceSheetParams } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/useBalanceSheet'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const getBalanceSheetExcel = get<
   { data: S3PresignedUrl },
@@ -34,9 +32,7 @@ export function useBalanceSheetDownload({
   effectiveDate,
   onSuccess,
 }: UseBalanceSheetOptions) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   return useSWRMutation(
     () => withLocale(buildKey({

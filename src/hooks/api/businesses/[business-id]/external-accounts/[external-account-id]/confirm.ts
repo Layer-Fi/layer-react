@@ -4,11 +4,9 @@ import useSWRMutation from 'swr/mutation'
 import type { OneOf } from '@internal-types/utility/oneOf'
 import { post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const CONFIRM_EXTERNAL_ACCOUNT_TAG_KEY = '#confirm-external-account'
 
@@ -34,9 +32,7 @@ type ConfirmExternalAccountArg = {
 const buildKey = createBuildKey<{ businessId: string }>([CONFIRM_EXTERNAL_ACCOUNT_TAG_KEY])
 
 export function useConfirmExternalAccount() {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({

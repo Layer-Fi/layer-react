@@ -13,10 +13,8 @@ import { type ReadonlyArrayWithAtLeastOne } from '@utils/array/getArrayWithAtLea
 import { range } from '@utils/array/range'
 import { toLocalDateString } from '@utils/time/timeUtils'
 import { useProfitAndLossComparisonReport } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-comparison/useProfitAndLossComparisonReport'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 
 function prepareFiltersBody(compareOptions: TagComparisonOption[]): ReadonlyArrayWithAtLeastOne<ProfitAndLossComparisonTags> | undefined {
@@ -215,9 +213,7 @@ export function useProfitAndLossComparison({
     }
   }
 
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
+  const { businessId, apiUrl, auth } = useBuildKeyInputs()
 
   const periods = compareModeActive
     ? preparePeriodsBody(dateRange, comparePeriods, comparisonPeriodMode)

@@ -5,9 +5,7 @@ import type { Awaitable } from '@internal-types/utility/promises'
 import { type APIError } from '@utils/api/apiError'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const getJournalEntriesCSV = get<{ data: S3PresignedUrl }>(
   ({ businessId }) => `/v1/businesses/${businessId}/ledger/entries/exports/csv`,
@@ -34,9 +32,7 @@ export function useJournalEntriesDownload({
   endCutoff,
   onSuccess,
 }: UseJournalEntriesDownloadOptions) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   return useSWRMutation<
     unknown,

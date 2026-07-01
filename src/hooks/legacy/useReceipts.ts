@@ -8,12 +8,10 @@ import { type Awaitable } from '@internal-types/utility/promises'
 import { get, post, postWithFormData } from '@utils/api/authenticatedHttp'
 import { hasReceipts } from '@utils/bankTransactions/shared'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
-import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { type DocumentWithStatus } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 
 const listBankTransactionDocuments = get<{
@@ -115,9 +113,7 @@ export const useReceipts: UseReceipts = ({
 }: UseReceiptsProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
+  const { businessId, apiUrl, auth } = useBuildKeyInputs()
   const { updateLocalBankTransactions } = useBankTransactionsContext()
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BankTransactions)
 

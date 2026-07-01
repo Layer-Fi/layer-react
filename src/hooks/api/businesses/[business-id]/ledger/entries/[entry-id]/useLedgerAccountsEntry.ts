@@ -4,11 +4,8 @@ import useSWR from 'swr'
 import { LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 export const LEDGER_ACCOUNTS_ENTRY_TAG_KEY = '#ledger-accounts-entry'
 
@@ -22,10 +19,7 @@ const getLedgerAccountsEntry = get<typeof LedgerAccountsEntryResponseSchema.Enco
 const buildKey = createBuildKey<{ businessId: string, entryId?: string }>([LEDGER_ACCOUNTS_ENTRY_TAG_KEY])
 
 export function useLedgerAccountsEntry({ entryId }: { entryId?: string }) {
-  const withLocale = useLocalizedKey()
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
+  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWR(() =>
     withLocale(buildKey({

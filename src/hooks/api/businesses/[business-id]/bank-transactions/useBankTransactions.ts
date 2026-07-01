@@ -11,12 +11,10 @@ import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParamet
 import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const GetBankTransactionsResponseSchema = PaginatedResponseSchema(BankTransactionSchema)
 
@@ -107,15 +105,13 @@ export function useBankTransactions({
   endDate,
   tagFilterQueryString,
 }: UseBankTransactionsOptions, config?: SWRInfiniteConfiguration<GetBankTransactionsReturn>) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWRInfinite(
     (_index, previousPageData: GetBankTransactionsReturn | null) => withLocale(keyLoader(
       previousPageData,
       {
-        ...data,
+        ...auth,
         businessId,
         categorized,
         direction,

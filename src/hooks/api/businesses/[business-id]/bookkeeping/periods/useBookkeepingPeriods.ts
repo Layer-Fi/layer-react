@@ -8,13 +8,11 @@ import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepin
 import { isActiveBookkeepingPeriod } from '@utils/bookkeeping/periods/getFilteredBookkeepingPeriods'
 import { getUserVisibleTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import {
   BOOKKEEPING_TAG_KEY,
   useBookkeepingStatus,
 } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 export enum BookkeepingPeriodStatus {
   BOOKKEEPING_NOT_ACTIVE = 'BOOKKEEPING_NOT_ACTIVE',
@@ -73,9 +71,7 @@ export const BOOKKEEPING_PERIODS_TAG_KEY = '#bookkeeping-periods'
 const buildKey = createBuildKey<{ businessId: string }>([BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY])
 
 export function useBookkeepingPeriods() {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const { data, isLoading: isLoadingBookkeepingStatus } = useBookkeepingStatus()
   const isActiveOrPaused = data ? isActiveOrPausedBookkeepingStatus(data.status) : false

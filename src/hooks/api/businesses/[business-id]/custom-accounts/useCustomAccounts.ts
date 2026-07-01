@@ -4,9 +4,7 @@ import useSWR from 'swr'
 import { CustomAccountSchema } from '@schemas/customAccounts'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 export const CUSTOM_ACCOUNTS_TAG_KEY = '#custom-accounts'
 
@@ -42,13 +40,11 @@ type useCustomAccountsParams = {
   userCreated?: boolean
 }
 export function useCustomAccounts({ userCreated }: useCustomAccountsParams = {}) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   return useSWR(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
       userCreated,
     })),

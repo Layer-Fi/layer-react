@@ -5,11 +5,8 @@ import { type ProfitAndLossComparison, type ProfitAndLossComparisonRequestBody }
 import { post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 export const PNL_COMPARISON_REPORT_TAG_KEY = '#profit-and-loss-comparison-report'
 
@@ -37,14 +34,11 @@ export function useProfitAndLossComparisonReport({
   tagFilters,
   reportingBasis,
 }: UseProfitAndLossComparisonReportProps) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
+  const { withLocale, businessId, apiUrl, auth } = useBuildKeyInputs()
 
   const response = useSWR(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       apiUrl,
       businessId,
       periods,

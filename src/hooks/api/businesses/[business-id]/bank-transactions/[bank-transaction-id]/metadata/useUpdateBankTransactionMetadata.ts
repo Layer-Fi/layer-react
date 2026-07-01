@@ -6,13 +6,11 @@ import type { BankTransactionMetadata } from '@internal-types/bankTransactions'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { put } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { GET_BANK_TRANSACTION_METADATA_TAG_KEY } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useBankTransactionsMetadata'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const updateBankTransactionMetadata = put<
   { data: BankTransactionMetadata, errors: unknown },
@@ -29,9 +27,7 @@ const UPDATE_BANK_TRANSACTION_METADATA_TAG_KEY = '#update-bank-transaction-metad
 const buildKey = createBuildKey<{ businessId: string, bankTransactionId: string }>([UPDATE_BANK_TRANSACTION_METADATA_TAG_KEY])
 
 export function useUpdateBankTransactionMetadata({ bankTransactionId, onSuccess }: { bankTransactionId: string, onSuccess?: () => Awaitable<unknown> }) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const { mutate } = useSWRConfig()
 
   const rawMutationResponse = useSWRMutation(

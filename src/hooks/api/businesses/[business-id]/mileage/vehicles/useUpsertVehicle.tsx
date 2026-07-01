@@ -5,13 +5,11 @@ import useSWRMutation from 'swr/mutation'
 import { type UpsertVehicleEncoded, VehicleSchema } from '@schemas/vehicle'
 import { patch, post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useTripsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/trips/useListTrips'
 import { useVehiclesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const UPSERT_VEHICLE_TAG_KEY = '#upsert-vehicle'
 
@@ -106,16 +104,14 @@ type UseUpsertVehicleProps =
   | { mode: UpsertVehicleMode.Update, vehicleId: string }
 
 export const useUpsertVehicle = (props: UseUpsertVehicleProps) => {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const { mode } = props
   const vehicleId = mode === UpsertVehicleMode.Update ? props.vehicleId : undefined
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
       vehicleId,
     })),

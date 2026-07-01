@@ -5,12 +5,10 @@ import { type CustomerSchema } from '@schemas/customer'
 import { type VendorSchema } from '@schemas/vendor'
 import { patch } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useAuth } from '@hooks/utils/auth/useAuth'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 import { useMinMutatingMutation } from '@hooks/utils/swr/useMinMutatingMutation'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY = '#set-metadata-on-bank-transaction'
 
@@ -45,13 +43,11 @@ type UseSetMetadataOnBankTransactionParameters = {
 export function useSetMetadataOnBankTransaction({
   bankTransactionId,
 }: UseSetMetadataOnBankTransactionParameters) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const mutationResponse = useSWRMutation(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
       bankTransactionId,
     })),

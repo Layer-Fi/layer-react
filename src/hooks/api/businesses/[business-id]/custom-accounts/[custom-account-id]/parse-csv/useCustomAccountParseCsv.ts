@@ -6,10 +6,8 @@ import type { CustomAccountTransactionRow, RawCustomTransaction } from '@schemas
 import { type APIError } from '@utils/api/apiError'
 import { postWithFormData } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 type CustomAccountParseCsvArgs = {
   file: File
@@ -96,9 +94,7 @@ const parseCsv = (baseUrl: string, accessToken: string, {
 }
 
 export function useCustomAccountParseCsv() {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   return useSWRMutation<
     CustomAccountParseCsvResponse,
@@ -108,7 +104,7 @@ export function useCustomAccountParseCsv() {
   >
       (
       () => withLocale(buildKey({
-        ...data,
+        ...auth,
         businessId,
       })),
       (

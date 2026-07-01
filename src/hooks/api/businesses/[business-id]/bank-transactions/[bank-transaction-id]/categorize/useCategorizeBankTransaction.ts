@@ -7,15 +7,13 @@ import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction
 import { type CategoryUpdate, type CategoryUpdateEncoded, encodeCategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { put } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { type GetBankTransactionsReturn } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
-import { useAuth } from '@hooks/utils/auth/useAuth'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const CATEGORIZE_BANK_TRANSACTION_TAG = '#categorize-bank-transaction'
 
@@ -48,9 +46,7 @@ export type UseCategorizeBankTransactionOptions = {
 }
 
 export function useCategorizeBankTransaction() {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
   const { useBankTransactionsOptions } = useBankTransactionsContext()
