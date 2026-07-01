@@ -5,7 +5,7 @@ import { AccountingConfigurationSchema, type AccountingConfigurationSchemaType }
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 
 export const ACCOUNTING_CONFIGURATION_TAG_KEY = '#accounting-configuration'
 
@@ -22,7 +22,7 @@ const getAccountingConfiguration = get<{ data: AccountingConfigurationSchemaType
 )
 
 export function useAccountingConfiguration({ businessId }: GetAccountingConfigurationParams) {
-  const { auth } = useBuildKeyInputs()
+  const { data: auth } = useAuth()
 
   const queryKey = buildKey({
     ...auth,

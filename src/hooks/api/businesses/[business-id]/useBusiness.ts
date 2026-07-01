@@ -5,7 +5,7 @@ import { type Business, BusinessResponseSchema } from '@schemas/business'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { useAuth } from '@hooks/utils/auth/useAuth'
 
 export const BUSINESS_TAG_KEY = '#business'
 
@@ -16,7 +16,7 @@ const getBusiness = get<{ data: Business }>(
 const buildKey = createBuildKey<{ businessId: string }>([BUSINESS_TAG_KEY])
 
 export function useBusiness({ businessId }: { businessId: string }) {
-  const { auth } = useBuildKeyInputs()
+  const { data: auth } = useAuth()
 
   const swrResponse = useSWR(
     () => buildKey({ ...auth, businessId }),
