@@ -17,7 +17,7 @@ import { JournalSidebar } from '@components/JournalSidebar/JournalSidebar'
 import { JournalTable } from '@components/JournalTable/JournalTable'
 import { Panel } from '@components/Panel/Panel'
 
-const COMPONENT_NAME = 'journal-table'
+import './journalTableWithPanel.scss'
 
 export interface JournalTableStringOverrides {
   componentTitle?: string
@@ -51,13 +51,14 @@ export const JournalTableWithPanel = ({
 
   return (
     <Panel
-      className={`Layer__${COMPONENT_NAME}`}
+      className={`Layer__JournalTableWithPanel`}
       sidebar={<JournalSidebar parentRef={containerRef} />}
       sidebarIsOpen={Boolean(selectedEntryId && selectedEntryId !== 'new')}
       parentRef={containerRef}
     >
       <Header
-        className={`Layer__${COMPONENT_NAME}__header`}
+        ref={headerRef}
+        className={`Layer__JournalTableWithPanel__Header`}
         asHeader
         sticky
         rounded
@@ -67,13 +68,6 @@ export const JournalTableWithPanel = ({
             <Heading level={2} size='md'>
               {stringOverrides?.componentTitle || t('generalLedger:label.journal', 'Journal')}
             </Heading>
-          </HeaderCol>
-        </HeaderRow>
-      </Header>
-      <Header ref={headerRef}>
-        <HeaderRow>
-          <HeaderCol>
-            <GlobalDateRangeSelection isCompact={isCompact} />
           </HeaderCol>
           <HeaderCol>
             <JournalEntriesDownloadButton
@@ -88,8 +82,12 @@ export const JournalTableWithPanel = ({
             </Button>
           </HeaderCol>
         </HeaderRow>
+        <HeaderRow className='Layer__JournalTableWithPanel__FiltersRow'>
+          <HeaderCol className='Layer__JournalTableWithPanel__FiltersCol'>
+            <GlobalDateRangeSelection showLabels={true} isCompact={isCompact} />
+          </HeaderCol>
+        </HeaderRow>
       </Header>
-
       <JournalTable stringOverrides={stringOverrides} />
     </Panel>
   )

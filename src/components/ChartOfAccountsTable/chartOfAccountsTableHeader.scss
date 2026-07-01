@@ -1,3 +1,11 @@
+.Layer__chart-of-accounts__filters-row {
+  padding-bottom: var(--spacing-xs);
+
+  .Layer__HeaderCol {
+    align-items: flex-end;
+  }
+}
+
 .Layer__chart-of-accounts__actions {
   .Layer__SearchField {
     width: 15rem;
