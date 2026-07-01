@@ -60,7 +60,7 @@ export const useReactivateVehicle = ({ vehicleId }: UseReactivateVehicleProps) =
 
   const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
-  const { patchVehicleByKey } = useVehiclesGlobalCacheActions()
+  const { patchByKey: patchVehicleByKey } = useVehiclesGlobalCacheActions()
 
   const originalTrigger = mutationResponse.trigger
 

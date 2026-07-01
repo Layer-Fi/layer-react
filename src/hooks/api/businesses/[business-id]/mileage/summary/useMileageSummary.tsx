@@ -1,13 +1,12 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
 import { type MileageSummary, MileageSummarySchema } from '@schemas/mileage'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -42,15 +41,4 @@ export function useMileageSummary() {
   return new SWRQueryResult(response)
 }
 
-export const useMileageSummaryGlobalCacheActions = () => {
-  const { invalidate } = useGlobalCacheActions()
-
-  const invalidateMileageSummary = useCallback(
-    () => invalidate(
-      ({ tags }) => tags.includes(MILEAGE_SUMMARY_TAG_KEY),
-    ),
-    [invalidate],
-  )
-
-  return { invalidateMileageSummary }
-}
+export const useMileageSummaryGlobalCacheActions = createResourceGlobalCacheActions<MileageSummary>(MILEAGE_SUMMARY_TAG_KEY)

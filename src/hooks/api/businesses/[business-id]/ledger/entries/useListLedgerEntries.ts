@@ -1,15 +1,14 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
 import { type SortOrder } from '@internal-types/utility/pagination'
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
-import { LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
+import { type LedgerEntry, LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
+import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -123,13 +122,4 @@ export function useListLedgerEntries({
   return useSWRInfiniteResult(swrResponse)
 }
 
-export function useLedgerEntriesCacheActions() {
-  const { forceReload } = useGlobalCacheActions()
-
-  const forceReloadLedgerEntries = useCallback(
-    () => forceReload(({ tags }) => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { forceReloadLedgerEntries }
-}
+export const useLedgerEntriesCacheActions = createInfiniteQueryGlobalCacheActions<LedgerEntry>(LIST_LEDGER_ENTRIES_TAG_KEY)

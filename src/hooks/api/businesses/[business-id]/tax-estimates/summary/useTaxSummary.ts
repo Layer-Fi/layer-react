@@ -1,15 +1,14 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
 import type { ReportingBasis } from '@internal-types/general'
-import { type TaxSummaryResponse, TaxSummaryResponseSchema } from '@schemas/taxEstimates/summary'
+import { type TaxSummary, type TaxSummaryResponse, TaxSummaryResponseSchema } from '@schemas/taxEstimates/summary'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -76,13 +75,6 @@ export function useTaxSummary({ year, reportingBasis, fullYearProjection, enable
   return new SWRQueryResult(swrResponse)
 }
 
-export function useTaxSummaryGlobalCacheActions() {
-  const { forceReload } = useGlobalCacheActions()
-
-  const forceReloadTaxSummary = useCallback(
-    () => forceReload(({ tags }) => tags.includes(TAX_SUMMARY_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { forceReloadTaxSummary }
-}
+export const useTaxSummaryGlobalCacheActions = createResourceGlobalCacheActions<
+  TaxSummary
+>(TAX_SUMMARY_TAG_KEY)

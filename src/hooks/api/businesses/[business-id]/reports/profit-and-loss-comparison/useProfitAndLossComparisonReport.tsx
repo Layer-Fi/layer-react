@@ -1,13 +1,12 @@
-import { useCallback } from 'react'
 import useSWR from 'swr'
 
 import { type ReportingBasis } from '@internal-types/general'
 import { type ProfitAndLossComparison, type ProfitAndLossComparisonRequestBody } from '@internal-types/profitAndLoss'
 import { post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -70,15 +69,4 @@ export function useProfitAndLossComparisonReport({
   return new SWRQueryResult(response)
 }
 
-export const useProfitAndLossComparisonReportCacheActions = () => {
-  const { invalidate } = useGlobalCacheActions()
-
-  const invalidateProfitAndLossComparisonReport = useCallback(
-    () => invalidate(
-      ({ tags }) => tags.includes(PNL_COMPARISON_REPORT_TAG_KEY),
-    ),
-    [invalidate],
-  )
-
-  return { invalidateProfitAndLossComparisonReport }
-}
+export const useProfitAndLossComparisonReportCacheActions = createResourceGlobalCacheActions<ProfitAndLossComparison>(PNL_COMPARISON_REPORT_TAG_KEY)

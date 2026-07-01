@@ -30,7 +30,7 @@ export function useCreateCallBooking() {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
-  const { forceReloadCallBookings } = useCallBookingsGlobalCacheActions()
+  const { forceReload: forceReloadCallBookings } = useCallBookingsGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({

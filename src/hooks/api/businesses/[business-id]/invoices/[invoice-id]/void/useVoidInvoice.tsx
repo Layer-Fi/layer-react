@@ -59,8 +59,8 @@ export const useVoidInvoice = ({ invoiceId }: UseVoidInvoiceProps) => {
 
   const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
-  const { patchInvoiceByKey } = useInvoicesGlobalCacheActions()
-  const { forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()
+  const { patchByKey: patchInvoiceByKey } = useInvoicesGlobalCacheActions()
+  const { forceReload: forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()
 
   const originalTrigger = mutationResponse.trigger
 

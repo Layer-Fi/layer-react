@@ -29,6 +29,11 @@ export class SWRQueryResult<T> {
     return this.swrResponse.error !== undefined
   }
 
+  get error(): unknown {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this.swrResponse.error
+  }
+
   get mutate() {
     return this.swrResponse.mutate
   }

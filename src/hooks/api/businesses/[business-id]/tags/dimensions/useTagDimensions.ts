@@ -1,9 +1,10 @@
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { TagDimensionSchema } from '@schemas/tag'
+import { type TagDimension, TagDimensionSchema } from '@schemas/tag'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -53,6 +54,8 @@ export function useTagDimensions({ isEnabled = true }: UseTagDimensionsParameter
 
   return new SWRQueryResult(swrResponse)
 }
+
+export const useTagDimensionsGlobalCacheActions = createResourceGlobalCacheActions<ReadonlyArray<TagDimension>>(TAG_DIMENSIONS_TAG_KEY)
 
 export function usePreloadTagDimensions(parameters?: UseTagDimensionsParameters) {
   /*

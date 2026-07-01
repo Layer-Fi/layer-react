@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
@@ -6,9 +5,9 @@ import { type ProfitAndLossSummaries, type ProfitAndLossSummariesRequestParams, 
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -76,15 +75,4 @@ export function useProfitAndLossSummaries({
   return new SWRQueryResult(response)
 }
 
-export const useProfitAndLossSummariesCacheActions = () => {
-  const { invalidate } = useGlobalCacheActions()
-
-  const invalidateProfitAndLossSummaries = useCallback(
-    () => invalidate(
-      ({ tags }) => tags.includes(PNL_SUMMARIES_TAG_KEY),
-    ),
-    [invalidate],
-  )
-
-  return { invalidateProfitAndLossSummaries }
-}
+export const useProfitAndLossSummariesCacheActions = createResourceGlobalCacheActions<ProfitAndLossSummaries>(PNL_SUMMARIES_TAG_KEY)

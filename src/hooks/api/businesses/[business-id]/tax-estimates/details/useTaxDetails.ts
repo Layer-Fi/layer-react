@@ -1,15 +1,14 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
 import type { ReportingBasis } from '@internal-types/general'
-import { type TaxDetailsResponse, TaxDetailsResponseSchema } from '@schemas/taxEstimates/details'
+import { type TaxDetails, type TaxDetailsResponse, TaxDetailsResponseSchema } from '@schemas/taxEstimates/details'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -74,13 +73,4 @@ export function useTaxDetails({ year, reportingBasis, fullYearProjection }: UseT
   return new SWRQueryResult(swrResponse)
 }
 
-export function useTaxDetailsGlobalCacheActions() {
-  const { forceReload } = useGlobalCacheActions()
-
-  const forceReloadTaxDetails = useCallback(
-    () => forceReload(({ tags }) => tags.includes(TAX_DETAILS_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { forceReloadTaxDetails }
-}
+export const useTaxDetailsGlobalCacheActions = createResourceGlobalCacheActions<TaxDetails>(TAX_DETAILS_TAG_KEY)

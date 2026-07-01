@@ -139,8 +139,8 @@ export const useUpsertCustomer = (props: UseUpsertCustomerProps) => {
 
   const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
-  const { patchCustomerByKey, forceReloadCustomers } = useCustomersGlobalCacheActions()
-  const { forceReloadInvoices } = useInvoicesGlobalCacheActions()
+  const { patchByKey: patchCustomerByKey, forceReload: forceReloadCustomers } = useCustomersGlobalCacheActions()
+  const { forceReload: forceReloadInvoices } = useInvoicesGlobalCacheActions()
 
   const originalTrigger = mutationResponse.trigger
 

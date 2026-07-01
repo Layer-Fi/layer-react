@@ -1,14 +1,13 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { TimeEntrySummarySchema } from '@schemas/timeTracking'
+import { type TimeEntrySummary, TimeEntrySummarySchema } from '@schemas/timeTracking'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -66,15 +65,6 @@ export function useTimeTrackingSummary(filterParams: TimeTrackingSummaryFilterPa
   return new SWRQueryResult(response)
 }
 
-export const useTimeTrackingSummaryGlobalCacheActions = () => {
-  const { invalidate } = useGlobalCacheActions()
-
-  const invalidateTimeTrackingSummary = useCallback(
-    () => invalidate(
-      ({ tags }) => tags.includes(TIME_TRACKING_SUMMARY_TAG_KEY),
-    ),
-    [invalidate],
-  )
-
-  return { invalidateTimeTrackingSummary }
-}
+export const useTimeTrackingSummaryGlobalCacheActions = createResourceGlobalCacheActions<
+  TimeEntrySummary
+>(TIME_TRACKING_SUMMARY_TAG_KEY)

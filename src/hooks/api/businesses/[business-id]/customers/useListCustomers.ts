@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
@@ -7,8 +6,8 @@ import { type Customer, CustomerSchema } from '@schemas/customer'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
+import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -111,33 +110,4 @@ export function usePreloadCustomers(parameters?: UseListCustomersParams) {
   useListCustomers(parameters)
 }
 
-const withUpdatedCustomer = (updated: Customer) =>
-  (customer: Customer): Customer => customer.id === updated.id ? updated : customer
-
-export function useCustomersGlobalCacheActions() {
-  const { patchCache, forceReload } = useGlobalCacheActions()
-
-  const patchCustomerByKey = useCallback((updatedCustomer: Customer) =>
-    patchCache<ListCustomersRawResult[] | ListCustomersRawResult | undefined>(
-      ({ tags }) => tags.includes(CUSTOMERS_TAG_KEY),
-      (currentData) => {
-        const iterateOverPage = (page: ListCustomersRawResult): ListCustomersRawResult => ({
-          ...page,
-          data: page.data.map(withUpdatedCustomer(updatedCustomer)),
-        })
-
-        return Array.isArray(currentData)
-          ? currentData.map(iterateOverPage)
-          : currentData
-      },
-    ),
-  [patchCache],
-  )
-
-  const forceReloadCustomers = useCallback(
-    () => forceReload(({ tags }) => tags.includes(CUSTOMERS_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { patchCustomerByKey, forceReloadCustomers }
-}
+export const useCustomersGlobalCacheActions = createInfiniteQueryGlobalCacheActions<Customer>(CUSTOMERS_TAG_KEY)

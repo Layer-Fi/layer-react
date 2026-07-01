@@ -46,9 +46,9 @@ export function useUpsertTaxProfile({ mode }: UseUpsertTaxProfileProps) {
   const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
-  const { patchTaxProfile } = useTaxProfileGlobalCacheActions()
-  const { forceReloadTaxPayments } = useTaxPaymentsGlobalCacheActions()
-  const { forceReloadTaxDetails } = useTaxDetailsGlobalCacheActions()
+  const { overwriteCache: overwriteTaxProfile } = useTaxProfileGlobalCacheActions()
+  const { forceReload: forceReloadTaxPayments } = useTaxPaymentsGlobalCacheActions()
+  const { forceReload: forceReloadTaxDetails } = useTaxDetailsGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
@@ -77,13 +77,13 @@ export function useUpsertTaxProfile({ mode }: UseUpsertTaxProfileProps) {
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      void patchTaxProfile(triggerResult.data)
+      void overwriteTaxProfile(triggerResult.data)
       void forceReloadTaxPayments()
       void forceReloadTaxDetails()
 
       return triggerResult
     },
-    [forceReloadTaxDetails, forceReloadTaxPayments, originalTrigger, patchTaxProfile],
+    [forceReloadTaxDetails, forceReloadTaxPayments, originalTrigger, overwriteTaxProfile],
   )
 
   return withStableTrigger(mutationResponse, stableProxiedTrigger)

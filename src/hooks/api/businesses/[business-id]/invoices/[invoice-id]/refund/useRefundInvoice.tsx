@@ -72,8 +72,8 @@ export const useRefundInvoice = ({ invoiceId }: UseRefundInvoiceProps) => {
 
   const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
-  const { patchInvoiceWithTransformation } = useInvoicesGlobalCacheActions()
-  const { forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()
+  const { patchByTransformation: patchInvoiceWithTransformation } = useInvoicesGlobalCacheActions()
+  const { forceReload: forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()
 
   const originalTrigger = mutationResponse.trigger
 

@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
@@ -8,8 +7,8 @@ import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
+import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -126,33 +125,4 @@ export function useListCategorizationRules({
   return useSWRInfiniteResult(swrResponse)
 }
 
-const withUpdatedCategorizationRule = (updated: CategorizationRule) =>
-  (rule: CategorizationRule): CategorizationRule => rule.id === updated.id ? updated : rule
-
-export function useCategorizationRulesGlobalCacheActions() {
-  const { patchCache, forceReload } = useGlobalCacheActions()
-
-  const patchCategorizationRuleByKey = useCallback((updatedCategorizationRule: CategorizationRule) =>
-    patchCache<ListCategorizationRulesReturn[] | ListCategorizationRulesReturn | undefined>(
-      ({ tags }) => tags.includes(LIST_CATEGORIZATION_RULES_TAG_KEY),
-      (currentData) => {
-        const iterateOverPage = (page: ListCategorizationRulesReturn): ListCategorizationRulesReturn => ({
-          ...page,
-          data: page.data.map(withUpdatedCategorizationRule(updatedCategorizationRule)),
-        })
-
-        return Array.isArray(currentData)
-          ? currentData.map(iterateOverPage)
-          : currentData
-      },
-    ),
-  [patchCache],
-  )
-
-  const forceReloadCategorizationRules = useCallback(
-    () => forceReload(({ tags }) => tags.includes(LIST_CATEGORIZATION_RULES_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { patchCategorizationRuleByKey, forceReloadCategorizationRules }
-}
+export const useCategorizationRulesGlobalCacheActions = createInfiniteQueryGlobalCacheActions<CategorizationRule>(LIST_CATEGORIZATION_RULES_TAG_KEY)

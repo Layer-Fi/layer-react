@@ -12,10 +12,10 @@ const INVALIDATE_DEBOUNCE_OPTIONS = {
 }
 
 export const useProfitAndLossGlobalInvalidator = () => {
-  const { invalidateProfitAndLossReport } = useProfitAndLossReportCacheActions()
-  const { invalidateProfitAndLossComparisonReport } = useProfitAndLossComparisonReportCacheActions()
-  const { invalidateProfitAndLossSummaries } = useProfitAndLossSummariesCacheActions()
-  const { invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
+  const { invalidate: invalidateProfitAndLossReport } = useProfitAndLossReportCacheActions()
+  const { invalidate: invalidateProfitAndLossComparisonReport } = useProfitAndLossComparisonReportCacheActions()
+  const { invalidate: invalidateProfitAndLossSummaries } = useProfitAndLossSummariesCacheActions()
+  const { invalidate: invalidatePnlDetailLines } = usePnlDetailLinesInvalidator()
 
   const invalidateProfitAndLoss = useCallback(async () => {
     await invalidateProfitAndLossReport()

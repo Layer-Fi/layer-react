@@ -8,10 +8,7 @@ import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
-import {
-  CATALOG_SERVICES_TAG_KEY,
-  useCatalogServicesGlobalCacheActions,
-} from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
+import { useCatalogServicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -30,13 +27,13 @@ const createCatalogService = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/catalog/services`)
 
-const buildKey = createBuildKey<{ businessId: string }>([CREATE_CATALOG_SERVICE_TAG_KEY, CATALOG_SERVICES_TAG_KEY])
+const buildKey = createBuildKey<{ businessId: string }>([CREATE_CATALOG_SERVICE_TAG_KEY])
 
 export function useCreateCatalogService() {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
-  const { forceReloadCatalogServices } = useCatalogServicesGlobalCacheActions()
+  const { forceReload: forceReloadCatalogServices } = useCatalogServicesGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({

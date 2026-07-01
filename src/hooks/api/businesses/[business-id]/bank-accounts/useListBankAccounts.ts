@@ -30,11 +30,6 @@ const listBankAccounts = get<
 const buildKey = createBuildKey<{ businessId: string }>([BANK_ACCOUNTS_TAG_KEY])
 
 export class ListBankAccountsSWRResponse extends SWRQueryResult<BankAccount[]> {
-  get error(): unknown {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return this.swrResponse.error
-  }
-
   get disconnectedAccountsRequiringNotification() {
     return (this.data ?? []).filter(requiresNotification).length
   }

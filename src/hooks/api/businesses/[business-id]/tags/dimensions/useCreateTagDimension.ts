@@ -6,9 +6,8 @@ import { type TagDimensionSchema, TagDimensionStrictnessSchema } from '@schemas/
 import { post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
-import { TAG_DIMENSIONS_TAG_KEY } from '@hooks/api/businesses/[business-id]/tags/dimensions/useTagDimensions'
+import { useTagDimensionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/tags/dimensions/useTagDimensions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -58,7 +57,7 @@ export function useCreateTagDimension() {
     ),
   )
 
-  const { invalidate } = useGlobalCacheActions()
+  const { invalidate: invalidateTagDimensions } = useTagDimensionsGlobalCacheActions()
 
   const { trigger: originalTrigger } = mutationResponse
 
@@ -66,12 +65,12 @@ export function useCreateTagDimension() {
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      await invalidate(({ tags }) => tags.includes(TAG_DIMENSIONS_TAG_KEY))
+      await invalidateTagDimensions()
 
       return triggerResult
     },
     [
-      invalidate,
+      invalidateTagDimensions,
       originalTrigger,
     ],
   )

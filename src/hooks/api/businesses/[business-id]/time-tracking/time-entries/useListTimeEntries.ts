@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
@@ -7,8 +6,8 @@ import { type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
+import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -124,33 +123,4 @@ export function useListTimeEntries(filterParams: ListTimeEntriesFilterParams = {
   return useSWRInfiniteResult(swrResponse)
 }
 
-const withUpdatedTimeEntry = (updated: TimeEntry) =>
-  (entry: TimeEntry): TimeEntry => entry.id === updated.id ? updated : entry
-
-export function useTimeEntriesGlobalCacheActions() {
-  const { patchCache, forceReload } = useGlobalCacheActions()
-
-  const patchTimeEntryByKey = useCallback((updatedEntry: TimeEntry) =>
-    patchCache<ListTimeEntriesResponse[] | ListTimeEntriesResponse | undefined>(
-      ({ tags }) => tags.includes(LIST_TIME_ENTRIES_TAG_KEY),
-      (currentData) => {
-        const iterateOverPage = (page: ListTimeEntriesResponse): ListTimeEntriesResponse => ({
-          ...page,
-          data: page.data.map(withUpdatedTimeEntry(updatedEntry)),
-        })
-
-        return Array.isArray(currentData)
-          ? currentData.map(iterateOverPage)
-          : currentData
-      },
-    ),
-  [patchCache],
-  )
-
-  const forceReloadTimeEntries = useCallback(
-    () => forceReload(({ tags }) => tags.includes(LIST_TIME_ENTRIES_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { patchTimeEntryByKey, forceReloadTimeEntries }
-}
+export const useTimeEntriesGlobalCacheActions = createInfiniteQueryGlobalCacheActions<TimeEntry>(LIST_TIME_ENTRIES_TAG_KEY)

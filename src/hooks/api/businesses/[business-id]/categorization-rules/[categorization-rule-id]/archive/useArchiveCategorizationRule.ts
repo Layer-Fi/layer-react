@@ -30,7 +30,7 @@ export function useArchiveCategorizationRule() {
   const withLocale = useLocalizedKey()
   const { data: auth } = useAuth()
   const { businessId } = useLayerContext()
-  const { forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
+  const { forceReload: forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
 
   const mutationResponse = useSWRMutation(
     () => withLocale(buildKey({

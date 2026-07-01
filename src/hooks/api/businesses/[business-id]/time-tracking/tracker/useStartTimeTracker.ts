@@ -34,7 +34,7 @@ export const useStartTimeTracker = () => {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
-  const { invalidateActiveTimeTracker } = useActiveTimeTrackerGlobalCacheActions()
+  const { invalidate: invalidateActiveTimeTracker } = useActiveTimeTrackerGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({

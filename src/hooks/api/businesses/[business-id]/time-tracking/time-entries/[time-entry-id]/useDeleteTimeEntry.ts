@@ -59,8 +59,8 @@ export const useDeleteTimeEntry = ({ timeEntryId }: UseDeleteTimeEntryProps) => 
 
   const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
-  const { forceReloadTimeEntries } = useTimeEntriesGlobalCacheActions()
-  const { invalidateTimeTrackingSummary } = useTimeTrackingSummaryGlobalCacheActions()
+  const { forceReload: forceReloadTimeEntries } = useTimeEntriesGlobalCacheActions()
+  const { invalidate: invalidateTimeTrackingSummary } = useTimeTrackingSummaryGlobalCacheActions()
   const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(

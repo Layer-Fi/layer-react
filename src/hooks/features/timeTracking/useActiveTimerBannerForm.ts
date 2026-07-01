@@ -35,7 +35,7 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
     mode: UpsertTimeEntryMode.Update,
     timeEntryId: activeEntry.id,
   })
-  const { invalidateActiveTimeTracker } = useActiveTimeTrackerGlobalCacheActions()
+  const { invalidate: invalidateActiveTimeTracker } = useActiveTimeTrackerGlobalCacheActions()
 
   const defaultValues = useMemo<ActiveTimerDraft>(() => getDraftFromEntry(activeEntry), [activeEntry])
 

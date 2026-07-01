@@ -1,13 +1,12 @@
-import { useCallback } from 'react'
 import { pipe, Schema } from 'effect'
 import useSWR from 'swr'
 
 import { type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -29,14 +28,7 @@ const getActiveTimeTracker = get<
 
 const buildKey = createBuildKey<{ businessId: string }>([ACTIVE_TIME_TRACKER_TAG_KEY])
 
-export class ActiveTimeTrackerSWRResponse extends SWRQueryResult<TimeEntry | null> {
-  get error(): unknown {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return this.swrResponse.error
-  }
-}
-
-export function useActiveTimeTracker(): ActiveTimeTrackerSWRResponse {
+export function useActiveTimeTracker(): SWRQueryResult<TimeEntry | null> {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
@@ -57,16 +49,7 @@ export function useActiveTimeTracker(): ActiveTimeTrackerSWRResponse {
       .then(({ data }) => data.timeEntry ?? null),
   )
 
-  return new ActiveTimeTrackerSWRResponse(response)
+  return new SWRQueryResult(response)
 }
 
-export function useActiveTimeTrackerGlobalCacheActions() {
-  const { invalidate } = useGlobalCacheActions()
-
-  const invalidateActiveTimeTracker = useCallback(
-    () => invalidate(({ tags }) => tags.includes(ACTIVE_TIME_TRACKER_TAG_KEY)),
-    [invalidate],
-  )
-
-  return { invalidateActiveTimeTracker }
-}
+export const useActiveTimeTrackerGlobalCacheActions = createResourceGlobalCacheActions<TimeEntry | null>(ACTIVE_TIME_TRACKER_TAG_KEY)
