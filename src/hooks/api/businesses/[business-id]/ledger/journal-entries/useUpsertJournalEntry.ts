@@ -5,8 +5,9 @@ import useSWRMutation from 'swr/mutation'
 import { post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useLedgerEntriesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
+import { useBalanceSheetGlobalCacheActions } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/useBalanceSheet'
+import { useStatementOfCashFlowGlobalCacheActions } from '@hooks/api/businesses/[business-id]/reports/cashflow-statement/useStatementOfCashFlow'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -47,9 +48,10 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
   }
 
   // Cache invalidation hooks
-  const { forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
+  const { forceReload: forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
-  const { invalidate } = useGlobalCacheActions()
+  const { invalidate: invalidateBalanceSheet } = useBalanceSheetGlobalCacheActions()
+  const { invalidate: invalidateStatementOfCashFlow } = useStatementOfCashFlowGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
@@ -80,12 +82,12 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
       void debouncedInvalidateProfitAndLoss()
 
       // Invalidate balance sheet and cash flow statement caches
-      void invalidate(({ tags }) => tags.includes('#balance-sheet'))
-      void invalidate(({ tags }) => tags.includes('#statement-of-cash-flow'))
+      void invalidateBalanceSheet()
+      void invalidateStatementOfCashFlow()
 
       return result
     },
-    [rawMutationResponse, forceReloadLedgerEntries, debouncedInvalidateProfitAndLoss, invalidate],
+    [rawMutationResponse, forceReloadLedgerEntries, debouncedInvalidateProfitAndLoss, invalidateBalanceSheet, invalidateStatementOfCashFlow],
   )
 
   return {

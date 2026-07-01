@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
@@ -6,9 +5,9 @@ import { type Vehicle, VehicleSchema } from '@schemas/vehicle'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -69,31 +68,4 @@ export function useListVehicles({ allowArchived }: { allowArchived?: boolean } =
   return new ListVehiclesSWRResponse(response)
 }
 
-const withUpdatedVehicle = (updated: Vehicle) =>
-  (vehicle: Vehicle): Vehicle => vehicle.id === updated.id ? updated : vehicle
-
-export function useVehiclesGlobalCacheActions() {
-  const { patchCache, forceReload } = useGlobalCacheActions()
-
-  const patchVehicleByKey = useCallback((updatedVehicle: Vehicle) =>
-    patchCache<ListVehiclesResponse | undefined>(
-      ({ tags }) => tags.includes(VEHICLES_TAG_KEY),
-      (currentData) => {
-        if (!currentData) return currentData
-
-        return {
-          ...currentData,
-          data: currentData.data.map(withUpdatedVehicle(updatedVehicle)),
-        }
-      },
-    ),
-  [patchCache],
-  )
-
-  const forceReloadVehicles = useCallback(
-    () => forceReload(({ tags }) => tags.includes(VEHICLES_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { patchVehicleByKey, forceReloadVehicles }
-}
+export const useVehiclesGlobalCacheActions = createInfiniteQueryGlobalCacheActions<Vehicle>(VEHICLES_TAG_KEY)

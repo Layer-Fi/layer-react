@@ -139,8 +139,8 @@ export const useUpsertVehicle = (props: UseUpsertVehicleProps) => {
 
   const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
-  const { patchVehicleByKey, forceReloadVehicles } = useVehiclesGlobalCacheActions()
-  const { forceReloadTrips } = useTripsGlobalCacheActions()
+  const { patchByKey: patchVehicleByKey, forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()
+  const { forceReload: forceReloadTrips } = useTripsGlobalCacheActions()
 
   const originalTrigger = mutationResponse.trigger
 

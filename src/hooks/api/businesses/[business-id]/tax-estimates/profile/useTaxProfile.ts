@@ -1,13 +1,12 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
 import { type TaxProfile, type TaxProfileResponse, TaxProfileResponseSchema } from '@schemas/taxEstimates/profile'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -42,17 +41,4 @@ export function useTaxProfile() {
   return new SWRQueryResult(swrResponse)
 }
 
-export function useTaxProfileGlobalCacheActions() {
-  const { patchCache } = useGlobalCacheActions()
-
-  const patchTaxProfile = useCallback(
-    (updatedProfile: TaxProfile) =>
-      patchCache<TaxProfile>(
-        ({ tags }) => tags.includes(TAX_PROFILE_TAG_KEY),
-        () => updatedProfile,
-      ),
-    [patchCache],
-  )
-
-  return { patchTaxProfile }
-}
+export const useTaxProfileGlobalCacheActions = createResourceGlobalCacheActions<TaxProfile>(TAX_PROFILE_TAG_KEY)

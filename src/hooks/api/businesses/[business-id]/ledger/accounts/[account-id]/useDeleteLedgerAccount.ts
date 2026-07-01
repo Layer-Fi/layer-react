@@ -45,8 +45,8 @@ export function useDeleteAccountFromLedger() {
 
   const { trigger: originalTrigger } = mutationResponse
 
-  const { invalidateLedgerBalances } = useLedgerBalancesCacheActions()
-  const { forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
+  const { invalidate: invalidateLedgerBalances } = useLedgerBalancesCacheActions()
+  const { forceReload: forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {

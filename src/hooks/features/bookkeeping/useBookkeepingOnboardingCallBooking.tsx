@@ -19,7 +19,7 @@ const getUuidFromCalendlyUri = (uri: string) => {
 
 export const useBookkeepingOnboardingCallBooking = () => {
   const { data: bookkeepingStatus } = useBookkeepingStatus()
-  const { forceReloadBookkeepingStatus } = useBookkeepingStatusGlobalCacheActions()
+  const { forceReload: forceReloadBookkeepingStatus } = useBookkeepingStatusGlobalCacheActions()
   const { trigger: createCallBooking } = useCreateCallBooking()
   const { data: callBookings, isError, isLoading } = useCallBookings({ limit: 1 })
 

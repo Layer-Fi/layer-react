@@ -1,15 +1,12 @@
-import { useCallback, useMemo } from 'react'
 import { Schema } from 'effect'
-import { debounce } from 'lodash-es'
 import useSWRInfinite from 'swr/infinite'
 
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
-import { type LedgerAccountLineItem, LedgerAccountLineItemSchema } from '@schemas/generalLedger/ledgerEntry'
+import { LedgerAccountLineItemSchema } from '@schemas/generalLedger/ledgerEntry'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -162,57 +159,4 @@ export function useListLedgerAccountLines({
   usePreserveInfiniteSize(swrResponse)
 
   return useSWRInfiniteResult(swrResponse)
-}
-
-const INVALIDATION_DEBOUNCE_OPTIONS = {
-  wait: 1000,
-  maxWait: 3000,
-}
-
-export function useLedgerAccountLinesInvalidator() {
-  const { invalidate } = useGlobalCacheActions()
-
-  const invalidateLedgerAccountLines = useCallback(
-    () => invalidate(({ tags }) => tags.includes(LIST_LEDGER_ACCOUNT_LINES_TAG_KEY)),
-    [invalidate],
-  )
-
-  const debouncedInvalidateLedgerAccountLines = useMemo(
-    () => debounce(
-      invalidateLedgerAccountLines,
-      INVALIDATION_DEBOUNCE_OPTIONS.wait,
-      {
-        maxWait: INVALIDATION_DEBOUNCE_OPTIONS.maxWait,
-        trailing: true,
-      },
-    ),
-    [invalidateLedgerAccountLines],
-  )
-
-  return {
-    invalidateLedgerAccountLines,
-    debouncedInvalidateLedgerAccountLines,
-  }
-}
-
-export function useLedgerAccountLinesOptimisticUpdater() {
-  const { optimisticUpdate } = useGlobalCacheActions()
-
-  const optimisticallyUpdateLedgerAccountLines = useCallback(
-    (
-      transformLineItem: (lineItem: LedgerAccountLineItem) => LedgerAccountLineItem,
-    ) =>
-      optimisticUpdate<ListLedgerAccountLinesReturn>(
-        ({ tags }) => tags.includes(LIST_LEDGER_ACCOUNT_LINES_TAG_KEY),
-        (currentData) => {
-          return {
-            ...currentData,
-            data: currentData.data.map(line => transformLineItem(line)),
-          }
-        },
-      ),
-    [optimisticUpdate],
-  )
-
-  return { optimisticallyUpdateLedgerAccountLines }
 }

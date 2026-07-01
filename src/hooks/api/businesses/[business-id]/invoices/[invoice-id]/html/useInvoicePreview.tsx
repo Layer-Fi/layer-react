@@ -1,11 +1,9 @@
-import { useCallback } from 'react'
 import useSWR from 'swr'
 
 import { getText } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -41,19 +39,6 @@ export function useInvoicePreview({ invoiceId }: UseInvoicePreviewProps) {
   )
 
   return new SWRQueryResult(response)
-}
-
-export const useInvoicePreviewCacheActions = () => {
-  const { forceReload } = useGlobalCacheActions()
-
-  const forceReloadInvoicePreview = useCallback(
-    () => forceReload(
-      ({ tags }) => tags.includes(INVOICE_PREVIEW_TAG_KEY),
-    ),
-    [forceReload],
-  )
-
-  return { forceReloadInvoicePreview }
 }
 
 export function usePreloadInvoicePreview(props: UseInvoicePreviewProps) {

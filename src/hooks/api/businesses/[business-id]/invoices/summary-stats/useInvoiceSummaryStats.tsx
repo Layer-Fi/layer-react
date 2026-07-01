@@ -1,13 +1,12 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
 import { type InvoiceSummaryStatsResponse, InvoiceSummaryStatsResponseSchema } from '@schemas/invoices/invoice'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -42,15 +41,4 @@ export function useInvoiceSummaryStats() {
   return new SWRQueryResult(response)
 }
 
-export const useInvoiceSummaryStatsCacheActions = () => {
-  const { forceReload } = useGlobalCacheActions()
-
-  const forceReloadInvoiceSummaryStats = useCallback(
-    () => forceReload(
-      ({ tags }) => tags.includes(INVOICE_SUMMARY_STATS_TAG_KEY),
-    ),
-    [forceReload],
-  )
-
-  return { forceReloadInvoiceSummaryStats }
-}
+export const useInvoiceSummaryStatsCacheActions = createResourceGlobalCacheActions<InvoiceSummaryStatsResponse>(INVOICE_SUMMARY_STATS_TAG_KEY)

@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
@@ -6,9 +5,9 @@ import { type ProfitAndLoss, type ProfitAndLossReportRequestParams, ProfitAndLos
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -62,15 +61,4 @@ export function useProfitAndLossReport({ startDate, endDate, tagKey, tagValues, 
   return new SWRQueryResult(response)
 }
 
-export const useProfitAndLossReportCacheActions = () => {
-  const { invalidate } = useGlobalCacheActions()
-
-  const invalidateProfitAndLossReport = useCallback(
-    () => invalidate(
-      ({ tags }) => tags.includes(PNL_REPORT_TAG_KEY),
-    ),
-    [invalidate],
-  )
-
-  return { invalidateProfitAndLossReport }
-}
+export const useProfitAndLossReportCacheActions = createResourceGlobalCacheActions<ProfitAndLoss>(PNL_REPORT_TAG_KEY)

@@ -1,15 +1,14 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
 import type { ReportingBasis } from '@internal-types/general'
-import { type TaxPaymentsResponse, TaxPaymentsResponseSchema } from '@schemas/taxEstimates/payments'
+import { type TaxPaymentRow, type TaxPaymentsResponse, TaxPaymentsResponseSchema } from '@schemas/taxEstimates/payments'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -74,13 +73,6 @@ export function useTaxPayments({ year, reportingBasis, fullYearProjection }: Use
   return new SWRQueryResult(swrResponse)
 }
 
-export function useTaxPaymentsGlobalCacheActions() {
-  const { forceReload } = useGlobalCacheActions()
-
-  const forceReloadTaxPayments = useCallback(
-    () => forceReload(({ tags }) => tags.includes(TAX_PAYMENTS_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { forceReloadTaxPayments }
-}
+export const useTaxPaymentsGlobalCacheActions = createResourceGlobalCacheActions<
+  TaxPaymentRow[]
+>(TAX_PAYMENTS_TAG_KEY)

@@ -49,7 +49,7 @@ export function useUpsertCategorizationRule() {
   const { businessId } = useLayerContext()
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
-  const { forceReloadCategorizationRules, patchCategorizationRuleByKey } = useCategorizationRulesGlobalCacheActions()
+  const { forceReload: forceReloadCategorizationRules, patchByKey: patchCategorizationRuleByKey } = useCategorizationRulesGlobalCacheActions()
 
   const mutationResponse = useSWRMutation(
     () => withLocale(buildKey({

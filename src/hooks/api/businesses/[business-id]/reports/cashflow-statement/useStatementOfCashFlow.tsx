@@ -5,6 +5,7 @@ import type { StatementOfCashFlow } from '@internal-types/statementOfCashFlow'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -28,7 +29,9 @@ const getStatementOfCashFlow = get<
   },
 )
 
-const buildKey = createBuildKey<{ businessId: string, startDate: Date, endDate: Date }>(['#statement-of-cash-flow'])
+export const STATEMENT_OF_CASH_FLOW_TAG_KEY = '#statement-of-cash-flow'
+
+const buildKey = createBuildKey<{ businessId: string, startDate: Date, endDate: Date }>([STATEMENT_OF_CASH_FLOW_TAG_KEY])
 
 export function useStatementOfCashFlow({
   startDate = startOfMonth(new Date()),
@@ -64,3 +67,5 @@ export function useStatementOfCashFlow({
 
   return new SWRQueryResult(response)
 }
+
+export const useStatementOfCashFlowGlobalCacheActions = createResourceGlobalCacheActions<StatementOfCashFlow>(STATEMENT_OF_CASH_FLOW_TAG_KEY)

@@ -5,6 +5,7 @@ import type { BalanceSheet } from '@internal-types/balanceSheet'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -27,7 +28,9 @@ const getBalanceSheet = get<
   },
 )
 
-const buildKey = createBuildKey<{ businessId: string, effectiveDate: Date }>(['#balance-sheet'])
+export const BALANCE_SHEET_TAG_KEY = '#balance-sheet'
+
+const buildKey = createBuildKey<{ businessId: string, effectiveDate: Date }>([BALANCE_SHEET_TAG_KEY])
 
 export function useBalanceSheet({
   effectiveDate = endOfDay(new Date()),
@@ -60,3 +63,5 @@ export function useBalanceSheet({
 
   return new SWRQueryResult(response)
 }
+
+export const useBalanceSheetGlobalCacheActions = createResourceGlobalCacheActions<BalanceSheet>(BALANCE_SHEET_TAG_KEY)

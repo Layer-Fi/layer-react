@@ -9,6 +9,7 @@ import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
+import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -172,17 +173,15 @@ const INVALIDATION_DEBOUNCE_OPTIONS = {
   maxWait: 3000,
 }
 
-type BankTransactionsInvalidateOptions = {
-  withPrecedingOptimisticUpdate?: boolean
-}
+const useBankTransactionsBaseGlobalCacheActions = createInfiniteQueryGlobalCacheActions<BankTransaction>(BANK_TRANSACTIONS_TAG_KEY)
 
 export const useBankTransactionsGlobalCacheActions = () => {
-  const { invalidate, optimisticUpdate, forceReload } = useGlobalCacheActions()
-
-  const forceReloadBankTransactions = useCallback(
-    () => forceReload(({ tags }) => tags.includes(BANK_TRANSACTIONS_TAG_KEY)),
-    [forceReload],
-  )
+  const {
+    invalidate: invalidateBankTransactions,
+    forceReload: forceReloadBankTransactions,
+    optimisticallyUpdate: optimisticallyUpdateBankTransactions,
+  } = useBankTransactionsBaseGlobalCacheActions()
+  const { forceReload } = useGlobalCacheActions()
 
   const forceReloadBackgroundBankTransactions = useCallback(
     (currentParams: UseBankTransactionsOptions) =>
@@ -196,14 +195,6 @@ export const useBankTransactionsGlobalCacheActions = () => {
     [forceReload],
   )
 
-  const invalidateBankTransactions = useCallback(
-    (invalidateOptions?: BankTransactionsInvalidateOptions) => invalidate(
-      ({ tags }) => tags.includes(BANK_TRANSACTIONS_TAG_KEY),
-      invalidateOptions,
-    ),
-    [invalidate],
-  )
-
   const debouncedInvalidateBankTransactions = useMemo(
     () => debounce(
       invalidateBankTransactions,
@@ -214,38 +205,6 @@ export const useBankTransactionsGlobalCacheActions = () => {
       },
     ),
     [invalidateBankTransactions],
-  )
-
-  const optimisticallyUpdateBankTransactions = useCallback(
-    (
-      transformTransaction: (txn: BankTransaction) => BankTransaction,
-    ) =>
-      optimisticUpdate<
-        Array<GetBankTransactionsReturn> | GetBankTransactionsReturn
-      >(
-        ({ tags }) => tags.includes(BANK_TRANSACTIONS_TAG_KEY),
-        (currentData) => {
-          const iterateOverPage = (page: GetBankTransactionsReturn) => {
-            return {
-              ...page,
-              data: page.data.map(txn => transformTransaction(txn)),
-            }
-          }
-
-          if (Array.isArray(currentData)) {
-            return currentData.map(iterateOverPage)
-          }
-
-          /*
-           * The cache contains entries for both the single page and the list of page entries.
-           *
-           * To avoid duplicated work, we intentionally do not apply any transformation to
-           * the single page.
-           */
-          return currentData
-        },
-      ),
-    [optimisticUpdate],
   )
 
   return {

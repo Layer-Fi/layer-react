@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
@@ -7,8 +6,8 @@ import { type Trip, TripSchema } from '@schemas/trip'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
+import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -88,33 +87,4 @@ export function useListTrips(filterParams: ListTripsFilterParams = {}) {
   return useSWRInfiniteResult(swrResponse)
 }
 
-const withUpdatedTrip = (updated: Trip) =>
-  (trip: Trip): Trip => trip.id === updated.id ? updated : trip
-
-export function useTripsGlobalCacheActions() {
-  const { patchCache, forceReload } = useGlobalCacheActions()
-
-  const patchTripByKey = useCallback((updatedTrip: Trip) =>
-    patchCache<ListTripsResponse[] | ListTripsResponse | undefined>(
-      ({ tags }) => tags.includes(LIST_TRIPS_TAG_KEY),
-      (currentData) => {
-        const iterateOverPage = (page: ListTripsResponse): ListTripsResponse => ({
-          ...page,
-          data: page.data.map(withUpdatedTrip(updatedTrip)),
-        })
-
-        return Array.isArray(currentData)
-          ? currentData.map(iterateOverPage)
-          : currentData
-      },
-    ),
-  [patchCache],
-  )
-
-  const forceReloadTrips = useCallback(
-    () => forceReload(({ tags }) => tags.includes(LIST_TRIPS_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { patchTripByKey, forceReloadTrips }
-}
+export const useTripsGlobalCacheActions = createInfiniteQueryGlobalCacheActions<Trip>(LIST_TRIPS_TAG_KEY)

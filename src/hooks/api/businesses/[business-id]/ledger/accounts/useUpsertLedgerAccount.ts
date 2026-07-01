@@ -85,8 +85,8 @@ export const useUpsertLedgerAccount = (props: UseUpsertLedgerAccountProps) => {
 
   const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
-  const { invalidateLedgerBalances } = useLedgerBalancesCacheActions()
-  const { forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
+  const { invalidate: invalidateLedgerBalances } = useLedgerBalancesCacheActions()
+  const { forceReload: forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
 
   const originalTrigger = mutationResponse.trigger
 

@@ -93,8 +93,8 @@ export function useUpsertTimeEntry(props: UseUpsertTimeEntryProps) {
 
   const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
-  const { patchTimeEntryByKey, forceReloadTimeEntries } = useTimeEntriesGlobalCacheActions()
-  const { invalidateTimeTrackingSummary } = useTimeTrackingSummaryGlobalCacheActions()
+  const { patchByKey: patchTimeEntryByKey, forceReload: forceReloadTimeEntries } = useTimeEntriesGlobalCacheActions()
+  const { invalidate: invalidateTimeTrackingSummary } = useTimeTrackingSummaryGlobalCacheActions()
 
   const originalTrigger = mutationResponse.trigger
 

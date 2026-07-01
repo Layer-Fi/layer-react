@@ -53,9 +53,9 @@ export const useDeleteTrip = ({ tripId }: UseDeleteTripProps) => {
 
   const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
-  const { forceReloadTrips } = useTripsGlobalCacheActions()
-  const { forceReloadVehicles } = useVehiclesGlobalCacheActions()
-  const { invalidateMileageSummary } = useMileageSummaryGlobalCacheActions()
+  const { forceReload: forceReloadTrips } = useTripsGlobalCacheActions()
+  const { forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()
+  const { invalidate: invalidateMileageSummary } = useMileageSummaryGlobalCacheActions()
 
   const originalTrigger = mutationResponse.trigger
 

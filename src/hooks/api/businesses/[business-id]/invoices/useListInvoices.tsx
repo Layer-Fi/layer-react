@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
@@ -8,8 +7,8 @@ import { type Invoice, InvoiceSchema, type InvoiceStatus } from '@schemas/invoic
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
+import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -147,55 +146,4 @@ export function useListInvoices({
   return useSWRInfiniteResult(swrResponse)
 }
 
-const withUpdatedInvoice = (updated: Invoice) =>
-  (inv: Invoice): Invoice => inv.id === updated.id ? updated : inv
-
-export function useInvoicesGlobalCacheActions() {
-  const { invalidate, patchCache, forceReload } = useGlobalCacheActions()
-
-  const invalidateInvoices = useCallback(
-    () => invalidate(({ tags }) => tags.includes(LIST_INVOICES_TAG_KEY)),
-    [invalidate],
-  )
-
-  const patchInvoiceByKey = useCallback((updatedInvoice: Invoice) =>
-    patchCache<ListInvoicesReturn[] | ListInvoicesReturn | undefined>(
-      ({ tags }) => tags.includes(LIST_INVOICES_TAG_KEY),
-      (currentData) => {
-        const iterateOverPage = (page: ListInvoicesReturn): ListInvoicesReturn => ({
-          ...page,
-          data: page.data.map(withUpdatedInvoice(updatedInvoice)),
-        })
-
-        return Array.isArray(currentData)
-          ? currentData.map(iterateOverPage)
-          : currentData
-      },
-    ),
-  [patchCache],
-  )
-
-  const patchInvoiceWithTransformation = useCallback((transformation: (invoice: Invoice) => Invoice) =>
-    patchCache<ListInvoicesReturn[] | ListInvoicesReturn | undefined>(
-      ({ tags }) => tags.includes(LIST_INVOICES_TAG_KEY),
-      (currentData) => {
-        const iterateOverPage = (page: ListInvoicesReturn): ListInvoicesReturn => ({
-          ...page,
-          data: page.data.map(transformation),
-        })
-
-        return Array.isArray(currentData)
-          ? currentData.map(iterateOverPage)
-          : currentData
-      },
-    ),
-  [patchCache],
-  )
-
-  const forceReloadInvoices = useCallback(
-    () => forceReload(({ tags }) => tags.includes(LIST_INVOICES_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { invalidateInvoices, patchInvoiceByKey, patchInvoiceWithTransformation, forceReloadInvoices }
-}
+export const useInvoicesGlobalCacheActions = createInfiniteQueryGlobalCacheActions<Invoice>(LIST_INVOICES_TAG_KEY)

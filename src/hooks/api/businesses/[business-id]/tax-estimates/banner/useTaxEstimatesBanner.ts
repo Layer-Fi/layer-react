@@ -1,15 +1,14 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
 import type { ReportingBasis } from '@internal-types/general'
-import { type TaxEstimatesBannerResponse, TaxEstimatesBannerResponseSchema } from '@schemas/taxEstimates/banner'
+import { type TaxEstimatesBanner, type TaxEstimatesBannerResponse, TaxEstimatesBannerResponseSchema } from '@schemas/taxEstimates/banner'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -78,13 +77,6 @@ export function useTaxEstimatesBanner({ year, reportingBasis, fullYearProjection
   return new SWRQueryResult(swrResponse)
 }
 
-export function useTaxEstimatesBannerGlobalCacheActions() {
-  const { forceReload } = useGlobalCacheActions()
-
-  const forceReloadTaxEstimatesBanner = useCallback(
-    () => forceReload(({ tags }) => tags.includes(TAX_ESTIMATES_BANNER_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { forceReloadTaxEstimatesBanner }
-}
+export const useTaxEstimatesBannerGlobalCacheActions = createResourceGlobalCacheActions<
+  TaxEstimatesBanner
+>(TAX_ESTIMATES_BANNER_TAG_KEY)

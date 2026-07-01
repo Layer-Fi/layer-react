@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
@@ -6,13 +5,12 @@ import { type CatalogService, CatalogServiceSchema } from '@schemas/catalogServi
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-export const CATALOG_SERVICES_TAG_KEY = '#catalog-services'
 const LIST_CATALOG_SERVICES_TAG_KEY = '#list-catalog-services'
 
 const ListCatalogServicesResponseSchema = Schema.Struct({
@@ -20,7 +18,7 @@ const ListCatalogServicesResponseSchema = Schema.Struct({
 })
 type ListCatalogServicesResponse = typeof ListCatalogServicesResponseSchema.Type
 
-const buildKey = createBuildKey<{ businessId: string, allowArchived?: boolean }>([CATALOG_SERVICES_TAG_KEY, LIST_CATALOG_SERVICES_TAG_KEY])
+const buildKey = createBuildKey<{ businessId: string, allowArchived?: boolean }>([LIST_CATALOG_SERVICES_TAG_KEY])
 
 const listCatalogServices = get<
   typeof ListCatalogServicesResponseSchema.Encoded,
@@ -69,33 +67,6 @@ export function useListCatalogServices({
   return new ListCatalogServicesSWRResponse(response)
 }
 
-export const useCatalogServicesGlobalCacheActions = () => {
-  const { patchCache, forceReload } = useGlobalCacheActions()
-
-  const patchCatalogServiceByKey = useCallback((updatedService: CatalogService) =>
-    patchCache<ListCatalogServicesResponse | undefined>(
-      ({ tags }) => tags.includes(LIST_CATALOG_SERVICES_TAG_KEY),
-      (currentData) => {
-        if (!currentData) {
-          return currentData
-        }
-
-        return {
-          ...currentData,
-          data: currentData.data.map(service => service.id === updatedService.id ? updatedService : service),
-        }
-      },
-    ),
-  [patchCache],
-  )
-
-  const forceReloadCatalogServices = useCallback(
-    () => forceReload(({ tags }) => tags.includes(CATALOG_SERVICES_TAG_KEY)),
-    [forceReload],
-  )
-
-  return {
-    patchCatalogServiceByKey,
-    forceReloadCatalogServices,
-  }
-}
+export const useCatalogServicesGlobalCacheActions = createInfiniteQueryGlobalCacheActions<
+  CatalogService
+>(LIST_CATALOG_SERVICES_TAG_KEY)

@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect/index'
 import useSWR from 'swr'
 
@@ -6,9 +5,9 @@ import { LedgerBalancesSchema, type LedgerBalancesSchemaType } from '@schemas/ge
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -57,20 +56,4 @@ export function useLedgerBalances(withDates?: boolean, startDate?: Date, endDate
   return new SWRQueryResult(response)
 }
 
-export function useLedgerBalancesCacheActions() {
-  const { invalidate, forceReload } = useGlobalCacheActions()
-
-  const invalidateLedgerBalances = useCallback(
-    () => invalidate(({ tags }) => tags.includes(LEDGER_BALANCES_TAG_KEY)),
-    [invalidate],
-  )
-
-  const forceReloadLedgerBalances = useCallback(
-    () => forceReload(({ tags }) => tags.includes(LEDGER_BALANCES_TAG_KEY)),
-    [forceReload],
-  )
-
-  return {
-    invalidateLedgerBalances, forceReloadLedgerBalances,
-  }
-}
+export const useLedgerBalancesCacheActions = createResourceGlobalCacheActions<LedgerBalancesSchemaType>(LEDGER_BALANCES_TAG_KEY)

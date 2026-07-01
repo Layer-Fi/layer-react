@@ -8,10 +8,7 @@ import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
-import {
-  CATALOG_SERVICES_TAG_KEY,
-  useCatalogServicesGlobalCacheActions,
-} from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
+import { useCatalogServicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -30,7 +27,7 @@ const updateCatalogService = patch<
   { businessId: string, serviceId: string }
 >(({ businessId, serviceId }) => `/v1/businesses/${businessId}/catalog/services/${serviceId}`)
 
-const buildKey = createBuildKey<{ businessId: string, serviceId: string }>([UPDATE_CATALOG_SERVICE_TAG_KEY, CATALOG_SERVICES_TAG_KEY])
+const buildKey = createBuildKey<{ businessId: string, serviceId: string }>([UPDATE_CATALOG_SERVICE_TAG_KEY])
 
 type UseUpdateCatalogServiceProps = {
   serviceId: string
@@ -40,7 +37,7 @@ export function useUpdateCatalogService({ serviceId }: UseUpdateCatalogServicePr
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
-  const { patchCatalogServiceByKey } = useCatalogServicesGlobalCacheActions()
+  const { patchByKey: patchCatalogServiceByKey } = useCatalogServicesGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({

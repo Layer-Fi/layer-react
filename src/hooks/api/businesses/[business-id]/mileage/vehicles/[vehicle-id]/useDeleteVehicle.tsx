@@ -51,7 +51,7 @@ export const useDeleteVehicle = ({ vehicleId }: UseDeleteVehicleProps) => {
 
   const mutationResponse = new SWRMutationResult(rawMutationResponse)
 
-  const { forceReloadVehicles } = useVehiclesGlobalCacheActions()
+  const { forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()
 
   const originalTrigger = mutationResponse.trigger
 

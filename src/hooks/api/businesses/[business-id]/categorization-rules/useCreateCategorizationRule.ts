@@ -36,7 +36,7 @@ export function useCreateCategorizationRule() {
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
-  const { forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
+  const { forceReload: forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
 
   const mutationResponse = useSWRMutation(
     () => withLocale(buildKey({

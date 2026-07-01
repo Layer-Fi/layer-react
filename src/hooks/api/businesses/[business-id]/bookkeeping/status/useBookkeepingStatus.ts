@@ -1,11 +1,10 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { BookkeepingStatus, BookkeepingStatusResponseSchema } from '@schemas/bookkeepingStatus'
+import { BookkeepingStatus, type BookkeepingStatusData, BookkeepingStatusResponseSchema } from '@schemas/bookkeepingStatus'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLegacyMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -43,16 +42,7 @@ export function useBookkeepingStatus() {
   )
 }
 
-export function useBookkeepingStatusGlobalCacheActions() {
-  const { forceReload } = useGlobalCacheActions()
-
-  const forceReloadBookkeepingStatus = useCallback(
-    () => forceReload(({ tags }) => tags.includes(BOOKKEEPING_STATUS_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { forceReloadBookkeepingStatus }
-}
+export const useBookkeepingStatusGlobalCacheActions = createResourceGlobalCacheActions<BookkeepingStatusData>(BOOKKEEPING_STATUS_TAG_KEY)
 
 export function useEffectiveBookkeepingStatus(): BookkeepingStatus {
   const { overrideMode } = useLegacyMode()

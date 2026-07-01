@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
@@ -7,9 +6,9 @@ import { type PnlDetailLineSchema, PnlDetailLinesDataSchema } from '@schemas/rep
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -99,16 +98,7 @@ export function useProfitAndLossDetailLines({
   return new SWRQueryResult(swrResponse)
 }
 
-export function usePnlDetailLinesInvalidator() {
-  const { invalidate } = useGlobalCacheActions()
-
-  const invalidatePnlDetailLines = useCallback(
-    () => invalidate(({ tags }) => tags.includes(LIST_PNL_DETAIL_LINES_TAG_KEY)),
-    [invalidate],
-  )
-
-  return { invalidatePnlDetailLines }
-}
+export const usePnlDetailLinesInvalidator = createResourceGlobalCacheActions<PnlDetailLinesReturn>(LIST_PNL_DETAIL_LINES_TAG_KEY)
 
 export type GetProfitAndLossDetailLinesParams = {
   businessId: string
