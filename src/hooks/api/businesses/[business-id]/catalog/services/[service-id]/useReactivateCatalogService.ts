@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { CatalogServiceSchema } from '@schemas/catalogService'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -26,27 +27,7 @@ const reactivateCatalogService = post<ReactivateCatalogServiceResponse>(
     `/v1/businesses/${businessId}/catalog/services/${serviceId}/reactivate`,
 )
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  serviceId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  serviceId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      serviceId,
-      tags: [REACTIVATE_CATALOG_SERVICE_TAG_KEY, CATALOG_SERVICES_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, serviceId: string }>([REACTIVATE_CATALOG_SERVICE_TAG_KEY, CATALOG_SERVICES_TAG_KEY])
 
 type UseReactivateCatalogServiceProps = {
   serviceId: string

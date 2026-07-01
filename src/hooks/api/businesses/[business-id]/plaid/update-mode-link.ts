@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { ApiLinkTokenSchema } from '@schemas/linkedAccounts/plaid'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -27,24 +28,7 @@ const createPlaidUpdateModeLink = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/plaid/update-mode-link`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [CREATE_PLAID_UPDATE_MODE_LINK_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([CREATE_PLAID_UPDATE_MODE_LINK_TAG_KEY])
 
 export function useCreatePlaidUpdateModeLink() {
   const withLocale = useLocalizedKey()

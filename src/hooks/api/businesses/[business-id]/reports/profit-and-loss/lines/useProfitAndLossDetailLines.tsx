@@ -6,6 +6,7 @@ import { type ReportingBasis } from '@internal-types/general'
 import { type PnlDetailLineSchema, PnlDetailLinesDataSchema } from '@schemas/reports/profitAndLoss'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -38,38 +39,7 @@ type PnlDetailLinesParams = PnlDetailLinesBaseParams & PnlDetailLinesFilterParam
 export type PnlDetailLine = typeof PnlDetailLineSchema.Type
 export type PnlDetailLinesReturn = typeof PnlDetailLinesDataSchema.Type
 
-function keyLoader(
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    startDate,
-    endDate,
-    pnlStructureLineItemName,
-    tagFilter,
-    reportingBasis,
-    pnlStructure,
-  }: {
-    access_token?: string
-    apiUrl?: string
-  } & PnlDetailLinesParams,
-) {
-  if (accessToken && apiUrl && businessId && startDate && endDate && pnlStructureLineItemName) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      startDate,
-      endDate,
-      pnlStructureLineItemName,
-      tagFilter,
-      reportingBasis,
-      pnlStructure,
-      tags: [LIST_PNL_DETAIL_LINES_TAG_KEY],
-    } as const
-  }
-  return null
-}
+const keyLoader = createBuildKey<PnlDetailLinesParams>([LIST_PNL_DETAIL_LINES_TAG_KEY])
 
 export function useProfitAndLossDetailLines({
   startDate,
@@ -95,6 +65,7 @@ export function useProfitAndLossDetailLines({
       tagFilter,
       reportingBasis,
       pnlStructure,
+      isEnabled: Boolean(startDate && endDate && pnlStructureLineItemName),
     })),
     ({
       accessToken,

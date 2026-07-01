@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -18,27 +19,7 @@ const deleteTimeEntry = del<
   { businessId: string, timeEntryId: string }
 >(({ businessId, timeEntryId }) => `/v1/businesses/${businessId}/time-tracking/time-entries/${timeEntryId}`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  timeEntryId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  timeEntryId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      timeEntryId,
-      tags: [DELETE_TIME_ENTRY_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, timeEntryId: string }>([DELETE_TIME_ENTRY_TAG_KEY])
 
 type UseDeleteTimeEntryProps = {
   timeEntryId: string | undefined

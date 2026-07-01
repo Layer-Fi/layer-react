@@ -6,6 +6,7 @@ import { BankTransactionCounterpartySchema } from '@schemas/bankTransactions/bas
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
@@ -54,39 +55,7 @@ export const listCounterparties = get<
   return parameters ? `${baseUrl}?${parameters}` : baseUrl
 })
 
-function keyLoader(
-  previousPageData: ListCounterpartiesReturn | null,
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    externalIds,
-    q,
-    sortBy,
-    sortOrder,
-    limit,
-    showTotalCount,
-  }: {
-    access_token?: string
-    apiUrl?: string
-  } & Omit<ListCounterpartiesParams, 'cursor'>,
-) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      externalIds,
-      q,
-      cursor: previousPageData?.meta?.pagination.cursor,
-      sortBy,
-      sortOrder,
-      limit,
-      showTotalCount,
-      tags: [LIST_COUNTERPARTIES_TAG_KEY],
-    } as const
-  }
-}
+const keyLoader = createInfiniteKeyLoader<Omit<ListCounterpartiesParams, 'cursor'>, ListCounterpartiesReturn>([LIST_COUNTERPARTIES_TAG_KEY])
 
 export function useListCounterparties({
   externalIds,

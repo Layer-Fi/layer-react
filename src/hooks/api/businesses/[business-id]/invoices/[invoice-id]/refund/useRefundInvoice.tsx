@@ -5,6 +5,7 @@ import useSWRMutation from 'swr/mutation'
 import { type CreateCustomerRefundSchema, CustomerRefundSchema } from '@schemas/invoices/customerRefund'
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -29,27 +30,7 @@ const refundInvoice = post<
   { businessId: string, invoiceId: string }
 >(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/refund`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  invoiceId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  invoiceId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      invoiceId,
-      tags: [REFUND_INVOICE_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, invoiceId: string }>([REFUND_INVOICE_TAG_KEY])
 
 export const updateInvoiceWithRefund = (invoice: Invoice): Invoice => {
   return { ...invoice, status: InvoiceStatus.Refunded }

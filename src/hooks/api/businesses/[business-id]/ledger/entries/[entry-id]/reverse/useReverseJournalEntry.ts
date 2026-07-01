@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -17,24 +18,7 @@ const reverseJournalEntry = post<Record<never, never>>(
     `/v1/businesses/${businessId}/ledger/entries/${entryId}/reverse`,
 )
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [REVERSE_JOURNAL_ENTRY_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([REVERSE_JOURNAL_ENTRY_TAG_KEY])
 
 export const useReverseJournalEntry = () => {
   const withLocale = useLocalizedKey()

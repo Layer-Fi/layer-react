@@ -3,6 +3,7 @@ import useSWR from 'swr'
 
 import { type StripeAccountStatusResponse, StripeAccountStatusResponseSchema } from '@schemas/stripeAccountStatus'
 import { get } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -11,24 +12,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const STRIPE_ACCOUNT_STATUS_TAG_KEY = '#stripe-account-status'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [STRIPE_ACCOUNT_STATUS_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([STRIPE_ACCOUNT_STATUS_TAG_KEY])
 
 const getStripeAccountStatus = get<
   { data: StripeAccountStatusResponse },

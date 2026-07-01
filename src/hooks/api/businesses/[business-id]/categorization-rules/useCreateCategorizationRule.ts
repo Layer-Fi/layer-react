@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { CategorizationRuleSchema, type CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
@@ -14,24 +15,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const CREATE_CATEGORIZATION_RULE_TAG = '#create-categorization-rule'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [CREATE_CATEGORIZATION_RULE_TAG],
-    }
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([CREATE_CATEGORIZATION_RULE_TAG])
 
 const CreateCategorizationRuleReturnSchema = Schema.Struct({
   data: CategorizationRuleSchema,

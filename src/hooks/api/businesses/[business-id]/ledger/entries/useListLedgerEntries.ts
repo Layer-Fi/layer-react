@@ -7,6 +7,7 @@ import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
@@ -51,40 +52,10 @@ export const listLedgerEntries = get<
   return `/v1/businesses/${businessId}/ledger/entries?${parameters}`
 })
 
-function keyLoader(
-  previousPageData: ListLedgerEntriesReturn | null,
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    sortBy,
-    sortOrder,
-    limit,
-    showTotalCount,
-  }: {
-    access_token?: string
-    apiUrl?: string
-    businessId: string
-    sortBy?: LedgerEntriesSortBy
-    sortOrder?: SortOrder
-    limit?: number
-    showTotalCount?: boolean
-  },
-) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
-      sortBy,
-      sortOrder,
-      limit,
-      showTotalCount,
-      tags: [LIST_LEDGER_ENTRIES_TAG_KEY],
-    } as const
-  }
-}
+const keyLoader = createInfiniteKeyLoader<
+  UseListLedgerEntriesOptions & { businessId: string },
+  ListLedgerEntriesReturn
+>([LIST_LEDGER_ENTRIES_TAG_KEY])
 
 export type UseListLedgerEntriesOptions = {
   sortBy?: LedgerEntriesSortBy

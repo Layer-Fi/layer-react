@@ -7,6 +7,7 @@ import { get } from '@utils/api/authenticatedHttp'
 import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
 import { isActiveBookkeepingPeriod } from '@utils/bookkeeping/periods/getFilteredBookkeepingPeriods'
 import { getUserVisibleTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import {
   BOOKKEEPING_TAG_KEY,
@@ -69,26 +70,7 @@ const getBookkeepingPeriods = get<
 
 export const BOOKKEEPING_PERIODS_TAG_KEY = '#bookkeeping-periods'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  isActiveOrPaused,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  isActiveOrPaused: boolean
-}) {
-  if (accessToken && apiUrl && isActiveOrPaused) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY])
 
 export function useBookkeepingPeriods() {
   const withLocale = useLocalizedKey()
@@ -102,7 +84,7 @@ export function useBookkeepingPeriods() {
     () => withLocale(buildKey({
       ...auth,
       businessId,
-      isActiveOrPaused,
+      isEnabled: isActiveOrPaused,
     })),
     ({ accessToken, apiUrl, businessId }) => getBookkeepingPeriods(
       apiUrl,

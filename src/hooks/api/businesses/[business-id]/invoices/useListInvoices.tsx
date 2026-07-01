@@ -7,6 +7,7 @@ import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type Invoice, InvoiceSchema, type InvoiceStatus } from '@schemas/invoices/invoice'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
@@ -62,45 +63,10 @@ export const listInvoices = get<
   return parameters ? `${baseUrl}?${parameters}` : baseUrl
 })
 
-function keyLoader(
-  previousPageData: ListInvoicesReturn | null,
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    showSalesReceipts,
-    status,
-    query,
-    dueAtStart,
-    dueAtEnd,
-    sortBy,
-    sortOrder,
-    limit,
-    showTotalCount,
-  }: {
-    access_token?: string
-    apiUrl?: string
-  } & Omit<ListInvoicesParams, 'cursor'>,
-) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      showSalesReceipts,
-      status,
-      query,
-      dueAtStart,
-      dueAtEnd,
-      cursor: previousPageData?.meta?.pagination.cursor,
-      sortBy,
-      sortOrder,
-      limit,
-      showTotalCount,
-      tags: [LIST_INVOICES_TAG_KEY],
-    } as const
-  }
-}
+const keyLoader = createInfiniteKeyLoader<
+  Omit<ListInvoicesParams, 'cursor'>,
+  ListInvoicesReturn
+>([LIST_INVOICES_TAG_KEY])
 
 export function useListInvoices({
   status,

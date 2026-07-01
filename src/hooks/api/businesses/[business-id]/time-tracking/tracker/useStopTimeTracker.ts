@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { type StopTrackerEncoded } from '@schemas/timeTracking'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -30,24 +31,7 @@ const stopTimeTracker = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/time-tracking/tracker/stop`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [STOP_TIME_TRACKER_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([STOP_TIME_TRACKER_TAG_KEY])
 
 export const useStopTimeTracker = () => {
   const withLocale = useLocalizedKey()

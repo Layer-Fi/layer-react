@@ -5,6 +5,7 @@ import useSWRMutation from 'swr/mutation'
 import type { BankTransactionMetadata } from '@internal-types/bankTransactions'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { put } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -25,27 +26,7 @@ export type UpdateBankTransactionMetadataBody = { memo: string }
 
 const UPDATE_BANK_TRANSACTION_METADATA_TAG_KEY = '#update-bank-transaction-metadata'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  bankTransactionId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  bankTransactionId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      bankTransactionId,
-      tags: [UPDATE_BANK_TRANSACTION_METADATA_TAG_KEY],
-    }
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, bankTransactionId: string }>([UPDATE_BANK_TRANSACTION_METADATA_TAG_KEY])
 
 export function useUpdateBankTransactionMetadata({ bankTransactionId, onSuccess }: { bankTransactionId: string, onSuccess?: () => Awaitable<unknown> }) {
   const withLocale = useLocalizedKey()

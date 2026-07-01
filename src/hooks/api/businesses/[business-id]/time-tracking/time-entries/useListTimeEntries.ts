@@ -1,5 +1,4 @@
 import { useCallback } from 'react'
-import { formatISO } from 'date-fns'
 import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
@@ -7,6 +6,7 @@ import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
@@ -32,58 +32,10 @@ export type ListTimeEntriesFilterParams = {
 const ListTimeEntriesResponseSchema = PaginatedResponseSchema(TimeEntrySchema)
 type ListTimeEntriesResponse = typeof ListTimeEntriesResponseSchema.Type
 
-function keyLoader(
-  previousPageData: ListTimeEntriesResponse | null,
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    customerId,
-    serviceId,
-    startDate,
-    endDate,
-    includeDeleted,
-    status,
-    billable,
-    hasCustomer,
-    sortBy,
-    sortOrder,
-  }: {
-    access_token?: string
-    apiUrl?: string
-    businessId: string
-    customerId?: string
-    serviceId?: string
-    startDate?: Date
-    endDate?: Date
-    includeDeleted?: boolean
-    status?: 'ACTIVE' | 'COMPLETED' | 'RECORDED'
-    billable?: boolean
-    hasCustomer?: boolean
-    sortBy?: string
-    sortOrder?: 'ASC' | 'DESC'
-  },
-) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      cursor: previousPageData?.meta?.pagination.cursor,
-      customerId,
-      serviceId,
-      startDate: startDate ? formatISO(startDate, { representation: 'date' }) : undefined,
-      endDate: endDate ? formatISO(endDate, { representation: 'date' }) : undefined,
-      includeDeleted,
-      status,
-      billable,
-      hasCustomer,
-      sortBy,
-      sortOrder,
-      tags: [LIST_TIME_ENTRIES_TAG_KEY],
-    } as const
-  }
-}
+const keyLoader = createInfiniteKeyLoader<
+  { businessId: string } & ListTimeEntriesFilterParams,
+  ListTimeEntriesResponse
+>([LIST_TIME_ENTRIES_TAG_KEY])
 
 const listTimeEntries = get<
   typeof ListTimeEntriesResponseSchema.Encoded,
@@ -93,8 +45,8 @@ const listTimeEntries = get<
     limit?: number
     customerId?: string
     serviceId?: string
-    startDate?: string
-    endDate?: string
+    startDate?: Date
+    endDate?: Date
     includeDeleted?: boolean
     status?: 'ACTIVE' | 'COMPLETED' | 'RECORDED'
     billable?: boolean

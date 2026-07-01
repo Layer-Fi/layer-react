@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { TripSchema, type UpsertTripEncoded } from '@schemas/trip'
 import { patch, post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -34,27 +35,7 @@ const updateTrip = patch<
   { businessId: string, tripId: string }
 >(({ businessId, tripId }) => `/v1/businesses/${businessId}/mileage/trips/${tripId}`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  tripId = undefined,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  tripId?: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tripId,
-      tags: [UPSERT_TRIP_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, tripId?: string }>([UPSERT_TRIP_TAG_KEY])
 
 const UpsertTripReturnSchema = Schema.Struct({
   data: TripSchema,

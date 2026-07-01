@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import { type ProfitAndLoss, type ProfitAndLossReportRequestParams, ProfitAndLossReportSchema } from '@schemas/reports/profitAndLoss'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -13,35 +14,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const PNL_REPORT_TAG_KEY = '#profit-and-loss-report'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  startDate,
-  endDate,
-  tagKey,
-  tagValues,
-  reportingBasis,
-  includeUncategorized,
-}: {
-  access_token?: string
-  apiUrl?: string
-} & ProfitAndLossReportRequestParams) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      startDate,
-      endDate,
-      tagKey,
-      tagValues,
-      reportingBasis,
-      includeUncategorized,
-      tags: [PNL_REPORT_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<ProfitAndLossReportRequestParams>([PNL_REPORT_TAG_KEY])
 
 const getProfitAndLoss = get<
   { data: ProfitAndLoss },

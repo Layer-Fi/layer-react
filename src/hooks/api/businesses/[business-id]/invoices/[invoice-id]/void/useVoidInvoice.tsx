@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { InvoiceSchema } from '@schemas/invoices/invoice'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -26,27 +27,7 @@ const voidInvoice = post<
   { businessId: string, invoiceId: string }
 >(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/void`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  invoiceId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  invoiceId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      invoiceId,
-      tags: [VOID_INVOICE_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, invoiceId: string }>([VOID_INVOICE_TAG_KEY])
 
 type UseVoidInvoiceProps = { invoiceId: string }
 

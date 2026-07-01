@@ -7,6 +7,7 @@ import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type LedgerAccountLineItem, LedgerAccountLineItemSchema } from '@schemas/generalLedger/ledgerEntry'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
@@ -66,55 +67,10 @@ export const listLedgerAccountLines = get<
   return `/v1/businesses/${businessId}/ledger/accounts/${accountId}/lines?${parameters}`
 })
 
-function keyLoader(
-  previousPageData: ListLedgerAccountLinesReturn | null,
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    accountId,
-    include_entries_before_activation,
-    include_child_account_lines,
-    start_date,
-    end_date,
-    sort_by,
-    sort_order,
-    limit,
-    show_total_count,
-  }: {
-    access_token?: string
-    apiUrl?: string
-    businessId: string
-    accountId: string
-    include_entries_before_activation?: boolean
-    include_child_account_lines?: boolean
-    start_date?: string
-    end_date?: string
-    sort_by?: 'entry_at' | 'entry_number' | 'created_at'
-    sort_order?: 'ASC' | 'ASCENDING' | 'DESC' | 'DESCENDING' | 'DES'
-    limit?: number
-    show_total_count?: boolean
-  },
-) {
-  if (accessToken && apiUrl && accountId) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      accountId,
-      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
-      include_entries_before_activation,
-      include_child_account_lines,
-      start_date,
-      end_date,
-      sort_by,
-      sort_order,
-      limit,
-      show_total_count,
-      tags: [LIST_LEDGER_ACCOUNT_LINES_TAG_KEY],
-    } as const
-  }
-}
+const keyLoader = createInfiniteKeyLoader<
+  UseListLedgerAccountLinesOptions & { businessId: string },
+  ListLedgerAccountLinesReturn
+>([LIST_LEDGER_ACCOUNT_LINES_TAG_KEY])
 
 export type UseListLedgerAccountLinesOptions = {
   accountId: string
@@ -160,6 +116,7 @@ export function useListLedgerAccountLines({
         sort_order,
         limit,
         show_total_count,
+        isEnabled: Boolean(accountId),
       },
     )),
     ({

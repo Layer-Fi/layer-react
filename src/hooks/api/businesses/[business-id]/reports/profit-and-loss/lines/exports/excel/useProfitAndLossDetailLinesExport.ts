@@ -4,6 +4,7 @@ import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { type GetProfitAndLossDetailLinesParams, type PnlDetailLinesBaseParams, type PnlDetailLinesFilterParams } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/lines/useProfitAndLossDetailLines'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -30,36 +31,7 @@ const getProfitAndLossDetailLinesExcel = (apiUrl: string, accessToken: string | 
   )(apiUrl, accessToken, { params: { businessId } })
 }
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  startDate,
-  endDate,
-  pnlStructureLineItemName,
-  tagFilter,
-  reportingBasis,
-  pnlStructure,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-} & PnlDetailLinesBaseParams & PnlDetailLinesFilterParams) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      startDate,
-      endDate,
-      pnlStructureLineItemName,
-      tagFilter,
-      reportingBasis,
-      pnlStructure,
-      tags: ['#pnl-detail-lines', '#exports', '#excel'],
-    }
-  }
-}
+const buildKey = createBuildKey<{ businessId: string } & PnlDetailLinesBaseParams & PnlDetailLinesFilterParams>(['#pnl-detail-lines', '#exports', '#excel'])
 
 type UseProfitAndLossDetailLinesExportOptions = PnlDetailLinesBaseParams & PnlDetailLinesFilterParams & {
   onSuccess?: (url: S3PresignedUrl) => Awaitable<unknown>

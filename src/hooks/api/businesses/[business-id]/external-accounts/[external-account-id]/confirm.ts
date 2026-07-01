@@ -3,6 +3,7 @@ import useSWRMutation from 'swr/mutation'
 
 import type { OneOf } from '@internal-types/utility/oneOf'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -30,24 +31,7 @@ type ConfirmExternalAccountArg = {
   body?: ConfirmAccountBodyStrict
 }
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [CONFIRM_EXTERNAL_ACCOUNT_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([CONFIRM_EXTERNAL_ACCOUNT_TAG_KEY])
 
 export function useConfirmExternalAccount() {
   const withLocale = useLocalizedKey()

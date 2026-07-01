@@ -4,6 +4,7 @@ import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { type APIError } from '@utils/api/apiError'
 import { get } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -12,30 +13,7 @@ const getJournalEntriesCSV = get<{ data: S3PresignedUrl }>(
   ({ businessId }) => `/v1/businesses/${businessId}/ledger/entries/exports/csv`,
 )
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  startCutoff,
-  endCutoff,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  startCutoff?: Date
-  endCutoff?: Date
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      startCutoff,
-      endCutoff,
-      tags: ['#journal-entries', '#exports', '#csv'],
-    }
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, startCutoff?: Date, endCutoff?: Date }>(['#journal-entries', '#exports', '#csv'])
 
 type UseJournalEntriesDownloadOptions = {
   startCutoff?: Date
@@ -47,8 +25,8 @@ type MutationParams = () => {
   accessToken: string
   apiUrl: string
   businessId: string
-  startCutoff: Date | undefined
-  endCutoff: Date | undefined
+  startCutoff?: Date
+  endCutoff?: Date
 } | undefined
 
 export function useJournalEntriesDownload({

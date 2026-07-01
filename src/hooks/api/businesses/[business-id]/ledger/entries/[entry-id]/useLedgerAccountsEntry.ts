@@ -3,6 +3,7 @@ import useSWR from 'swr'
 
 import { LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
 import { get } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -18,27 +19,7 @@ const getLedgerAccountsEntry = get<typeof LedgerAccountsEntryResponseSchema.Enco
     `/v1/businesses/${businessId}/ledger/entries/${entryId}`,
 )
 
-function buildKey({
-  accessToken,
-  apiUrl,
-  businessId,
-  entryId,
-}: {
-  accessToken?: string
-  apiUrl: string
-  businessId: string
-  entryId?: string
-}) {
-  if (!accessToken || !entryId) return null
-
-  return {
-    accessToken,
-    apiUrl,
-    businessId,
-    entryId,
-    tags: [LEDGER_ACCOUNTS_ENTRY_TAG_KEY],
-  } as const
-}
+const buildKey = createBuildKey<{ businessId: string, entryId?: string }>([LEDGER_ACCOUNTS_ENTRY_TAG_KEY])
 
 export function useLedgerAccountsEntry({ entryId }: { entryId?: string }) {
   const withLocale = useLocalizedKey()
@@ -48,10 +29,11 @@ export function useLedgerAccountsEntry({ entryId }: { entryId?: string }) {
 
   const swrResponse = useSWR(() =>
     withLocale(buildKey({
-      accessToken: auth?.access_token,
+      ...auth,
       apiUrl,
       businessId,
       entryId,
+      isEnabled: Boolean(entryId),
     })),
   ({ accessToken, apiUrl, businessId, entryId }) =>
     getLedgerAccountsEntry(apiUrl, accessToken, {

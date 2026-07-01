@@ -4,6 +4,7 @@ import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import type { GetBalanceSheetParams } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/useBalanceSheet'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -22,27 +23,7 @@ const getBalanceSheetExcel = get<
 
 const DOWNLOAD_BALANCE_SHEET_TAG_KEY = '#download-balance-sheet'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  effectiveDate,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  effectiveDate: Date
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      effectiveDate,
-      tags: [DOWNLOAD_BALANCE_SHEET_TAG_KEY],
-    }
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, effectiveDate: Date }>([DOWNLOAD_BALANCE_SHEET_TAG_KEY])
 
 type UseBalanceSheetOptions = {
   effectiveDate: Date

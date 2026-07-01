@@ -4,6 +4,7 @@ import useSWR from 'swr'
 import { type ReportingBasis } from '@internal-types/general'
 import { type ProfitAndLossComparison, type ProfitAndLossComparisonRequestBody } from '@internal-types/profitAndLoss'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -20,29 +21,7 @@ type ProfitAndLossComparisonRequestParams = {
   reportingBasis?: ReportingBasis
 }
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  periods,
-  tagFilters,
-  reportingBasis,
-}: {
-  access_token?: string
-  apiUrl?: string
-} & ProfitAndLossComparisonRequestParams) {
-  if (accessToken && apiUrl && periods) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      periods,
-      tagFilters,
-      reportingBasis,
-      tags: [PNL_COMPARISON_REPORT_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<ProfitAndLossComparisonRequestParams>([PNL_COMPARISON_REPORT_TAG_KEY])
 
 const compareProfitAndLoss = post<
   { data?: ProfitAndLossComparison },
@@ -72,6 +51,7 @@ export function useProfitAndLossComparisonReport({
       periods,
       tagFilters,
       reportingBasis,
+      isEnabled: Boolean(periods),
     })),
     ({ accessToken, apiUrl, businessId }) => compareProfitAndLoss(
       apiUrl,

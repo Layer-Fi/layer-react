@@ -4,6 +4,7 @@ import useSWR from 'swr'
 import { UnifiedReportSchema } from '@schemas/reports/unifiedReport'
 import { get } from '@utils/api/authenticatedHttp'
 import { type QueryParams, toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -12,28 +13,6 @@ import { type UnifiedReportControlParams, type UnifiedReportParams, useUnifiedRe
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const getTag = (report: string) => `#unified-${report}-report`
-
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  params,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  params: UnifiedReportParams | null
-}) {
-  if (!params || !accessToken || !apiUrl) return
-
-  return {
-    accessToken,
-    apiUrl,
-    businessId,
-    ...params,
-    tags: [getTag(params.route)],
-  } as const
-}
 
 const getUnifiedReport = get<
   { data: unknown },
@@ -51,13 +30,14 @@ export function useUnifiedReport() {
   const { businessId } = useLayerContext()
   const params = useUnifiedReportParams()
 
+  const buildKey = createBuildKey<{ businessId: string } & UnifiedReportParams>(
+    params ? [getTag(params.route)] : [],
+  )
+
   const swrResponse = useSWR(
-    () => withLocale(buildKey({
-      ...auth,
-      apiUrl,
-      businessId,
-      params,
-    })),
+    () => params
+      ? withLocale(buildKey({ ...auth, apiUrl, businessId, ...params }))
+      : null,
     ({ accessToken, apiUrl, businessId, tags, ...restParams }) => getUnifiedReport(apiUrl, accessToken, {
       params: { businessId, ...restParams },
     })().then(({ data }) => Schema.decodeUnknownPromise(UnifiedReportSchema)(data)),

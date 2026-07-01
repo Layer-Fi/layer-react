@@ -8,6 +8,7 @@ import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -69,6 +70,20 @@ const getBankTransactions = get<
 
 export const BANK_TRANSACTIONS_TAG_KEY = '#bank-transactions'
 
+export type UseBankTransactionsOptions = {
+  categorized?: boolean
+  direction?: 'INFLOW' | 'OUTFLOW'
+  query?: string
+  startDate?: Date
+  endDate?: Date
+  tagFilterQueryString?: string
+}
+
+const keyLoader = createInfiniteKeyLoader<
+  UseBankTransactionsOptions & { businessId: string },
+  GetBankTransactionsReturn
+>([BANK_TRANSACTIONS_TAG_KEY])
+
 export type BankTransactionsKey = NonNullable<ReturnType<typeof keyLoader>>
 
 const compareDates = (a: unknown, b: unknown) =>
@@ -82,50 +97,6 @@ const keyMatchesParams = createKeyMatcher<BankTransactionsKey, UseBankTransactio
   { key: 'endDate', compare: compareDates },
   { key: 'tagFilterQueryString' },
 ])
-
-export type UseBankTransactionsOptions = {
-  categorized?: boolean
-  direction?: 'INFLOW' | 'OUTFLOW'
-  query?: string
-  startDate?: Date
-  endDate?: Date
-  tagFilterQueryString?: string
-}
-
-function keyLoader(
-  previousPageData: GetBankTransactionsReturn | null,
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    categorized,
-    direction,
-    query,
-    startDate,
-    endDate,
-    tagFilterQueryString,
-  }: UseBankTransactionsOptions & {
-    access_token?: string
-    apiUrl?: string
-    businessId: string
-  },
-) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      categorized,
-      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
-      direction,
-      query,
-      startDate,
-      endDate,
-      tagFilterQueryString,
-      tags: [BANK_TRANSACTIONS_TAG_KEY],
-    } as const
-  }
-}
 
 export function useBankTransactions({
   categorized,

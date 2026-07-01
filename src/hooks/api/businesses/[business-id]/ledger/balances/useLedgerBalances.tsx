@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import { LedgerBalancesSchema, type LedgerBalancesSchemaType } from '@schemas/generalLedger/ledgerAccount'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -27,30 +28,7 @@ const getLedgerAccountBalances = get<{ data: LedgerBalancesSchemaType }, GetLedg
   },
 )
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  startDate,
-  endDate,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  startDate?: Date
-  endDate?: Date
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      startDate,
-      endDate,
-      tags: [LEDGER_BALANCES_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, startDate?: Date, endDate?: Date }>([LEDGER_BALANCES_TAG_KEY])
 
 export function useLedgerBalances(withDates?: boolean, startDate?: Date, endDate?: Date) {
   const withLocale = useLocalizedKey()

@@ -5,6 +5,7 @@ import useSWRMutation from 'swr/mutation'
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { type InvoicePayment, InvoicePaymentSchema, type UpsertDedicatedInvoicePaymentSchema } from '@schemas/invoices/invoicePayment'
 import { post, put } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -34,30 +35,7 @@ const updateDedicatedInvoicePayment = put<
   { businessId: string, invoiceId: string, invoicePaymentId: string }
 >(({ businessId, invoiceId, invoicePaymentId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/payment/${invoicePaymentId}`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  invoiceId,
-  invoicePaymentId = undefined,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  invoiceId: string
-  invoicePaymentId?: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      invoiceId,
-      invoicePaymentId,
-      tags: [UPSERT_INVOICE_PAYMENT_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, invoiceId: string, invoicePaymentId?: string }>([UPSERT_INVOICE_PAYMENT_TAG_KEY])
 
 const UpsertDedicatedInvoicePaymentReturnSchema = Schema.Struct({
   data: InvoicePaymentSchema,

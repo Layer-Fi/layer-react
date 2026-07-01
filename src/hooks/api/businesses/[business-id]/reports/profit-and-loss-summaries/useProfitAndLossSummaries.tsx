@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import { type ProfitAndLossSummaries, type ProfitAndLossSummariesRequestParams, ProfitAndLossSummariesSchema } from '@schemas/reports/profitAndLoss'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -13,37 +14,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const PNL_SUMMARIES_TAG_KEY = '#profit-and-loss-summaries'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  startMonth,
-  startYear,
-  endMonth,
-  endYear,
-  tagKey,
-  tagValues,
-  reportingBasis,
-}: {
-  access_token?: string
-  apiUrl?: string
-} & ProfitAndLossSummariesRequestParams) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      startMonth,
-      startYear,
-      endMonth,
-      endYear,
-      tagKey,
-      tagValues,
-      reportingBasis,
-      tags: [PNL_SUMMARIES_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<ProfitAndLossSummariesRequestParams>([PNL_SUMMARIES_TAG_KEY])
 
 const getProfitAndLossSummaries = get<
   { data: ProfitAndLossSummaries },

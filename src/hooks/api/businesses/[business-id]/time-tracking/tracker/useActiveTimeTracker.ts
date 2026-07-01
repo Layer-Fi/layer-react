@@ -4,6 +4,7 @@ import useSWR from 'swr'
 
 import { type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking'
 import { get } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -26,24 +27,7 @@ const getActiveTimeTracker = get<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/time-tracking/tracker/active`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [ACTIVE_TIME_TRACKER_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([ACTIVE_TIME_TRACKER_TAG_KEY])
 
 export class ActiveTimeTrackerSWRResponse extends SWRQueryResult<TimeEntry | null> {
   get error(): unknown {

@@ -1,6 +1,7 @@
 import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -21,24 +22,7 @@ const unlinkBankAccount = del<
     `/v1/businesses/${businessId}/bank-accounts/${bankAccountId}`,
 )
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [UNLINK_BANK_ACCOUNT_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([UNLINK_BANK_ACCOUNT_TAG_KEY])
 
 export function useUnlinkBankAccount() {
   const withLocale = useLocalizedKey()

@@ -6,6 +6,7 @@ import {
   InvoicePaymentMethodsResponseSchema,
 } from '@schemas/invoices/invoicePaymentMethod'
 import { get } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -13,33 +14,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const INVOICE_PAYMENT_METHODS_TAG_KEY = '#invoice-payment-methods'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  isEnabled,
-  invoiceId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  isEnabled: boolean
-  invoiceId: string | null
-}) {
-  if (!isEnabled) {
-    return
-  }
-
-  if (accessToken && apiUrl && invoiceId) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      invoiceId,
-      tags: [INVOICE_PAYMENT_METHODS_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, invoiceId: string }>([INVOICE_PAYMENT_METHODS_TAG_KEY])
 
 const getInvoicePaymentMethods = get<
   InvoicePaymentMethodsResponse,
@@ -63,8 +38,8 @@ export function useInvoicePaymentMethods({
     () => withLocale(buildKey({
       ...data,
       businessId,
-      isEnabled,
       invoiceId,
+      isEnabled: isEnabled && Boolean(invoiceId),
     })),
     ({ accessToken, apiUrl, businessId, invoiceId }) => getInvoicePaymentMethods(
       apiUrl,

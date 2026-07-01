@@ -6,6 +6,7 @@ import useSWRMutation from 'swr/mutation'
 import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 import { type CategoryUpdate, type CategoryUpdateEncoded, encodeCategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { put } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -34,24 +35,7 @@ const categorizeBankTransaction = put<
     `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/categorize`,
 )
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [CATEGORIZE_BANK_TRANSACTION_TAG],
-    }
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([CATEGORIZE_BANK_TRANSACTION_TAG])
 
 type CategorizeBankTransactionArgs = CategoryUpdate & {
   bankTransactionId: string

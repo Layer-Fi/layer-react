@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/common/s3PresignedUrl'
 import { get } from '@utils/api/authenticatedHttp'
 import { type QueryParams, toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -35,28 +36,6 @@ const UnifiedReportExcelReturnSchema = Schema.Struct({
   data: S3PresignedUrlSchema,
 })
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  params,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  params: UnifiedReportParams | null
-}) {
-  if (!params || !accessToken || !apiUrl) return
-
-  return {
-    accessToken,
-    apiUrl,
-    businessId,
-    ...params,
-    tags: [getTag(params.route)],
-  }
-}
-
 type UseUnifiedReportExcelOptions = {
   onSuccess?: (url: S3PresignedUrlSchemaType) => Promise<void> | void
 }
@@ -68,13 +47,14 @@ export function useUnifiedReportExcel({ onSuccess }: UseUnifiedReportExcelOption
   const { businessId } = useLayerContext()
   const params = useUnifiedReportParams()
 
+  const buildKey = createBuildKey<{ businessId: string } & UnifiedReportParams>(
+    params ? [getTag(params.route)] : [],
+  )
+
   const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      apiUrl,
-      businessId,
-      params,
-    })),
+    () => params
+      ? withLocale(buildKey({ ...auth, apiUrl, businessId, ...params }))
+      : null,
     ({ accessToken, apiUrl, businessId, tags, ...restParams }) =>
       getUnifiedReportExcel(apiUrl, accessToken, {
         params: { businessId, ...restParams },

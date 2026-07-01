@@ -5,6 +5,7 @@ import type { ReportingBasis } from '@internal-types/general'
 import { type TaxOverviewApiResponse, TaxOverviewApiResponseSchema } from '@schemas/taxEstimates/overview'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -35,39 +36,12 @@ const getTaxOverview = get<TaxOverviewApiResponse, GetTaxOverviewParams>(
   },
 )
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  year,
-  reportingBasis,
-  fullYearProjection,
-  enabled = true,
-}: {
-  access_token?: string
-  apiUrl?: string
+const buildKey = createBuildKey<{
   businessId: string
   year: number
   reportingBasis?: TaxReportingBasis
   fullYearProjection?: boolean
-  enabled?: boolean
-}) {
-  if (!enabled) {
-    return
-  }
-
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      year,
-      reportingBasis,
-      fullYearProjection,
-      tags: [TAX_OVERVIEW_TAG_KEY],
-    } as const
-  }
-}
+}>([TAX_OVERVIEW_TAG_KEY])
 
 export function useTaxOverview({ year, reportingBasis, fullYearProjection, enabled = true }: UseTaxOverviewOptions) {
   const withLocale = useLocalizedKey()
@@ -81,7 +55,7 @@ export function useTaxOverview({ year, reportingBasis, fullYearProjection, enabl
       year,
       reportingBasis,
       fullYearProjection,
-      enabled,
+      isEnabled: enabled,
     })),
     async ({ accessToken, apiUrl, businessId, year, reportingBasis, fullYearProjection }) => {
       return getTaxOverview(

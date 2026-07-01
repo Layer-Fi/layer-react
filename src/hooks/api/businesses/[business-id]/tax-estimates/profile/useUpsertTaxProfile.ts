@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { type TaxProfileRequest, type TaxProfileResponse, TaxProfileResponseSchema } from '@schemas/taxEstimates/profile'
 import { patch, post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -32,24 +33,7 @@ export const updateTaxProfile = patch<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/tax-estimates/profile`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [UPSERT_TAX_PROFILE_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([UPSERT_TAX_PROFILE_TAG_KEY])
 
 function getRequestFn(mode: UpsertTaxProfileMode) {
   return mode === UpsertTaxProfileMode.Update ? updateTaxProfile : createTaxProfile

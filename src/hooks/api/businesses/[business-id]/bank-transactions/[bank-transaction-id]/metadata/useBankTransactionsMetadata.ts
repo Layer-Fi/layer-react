@@ -2,6 +2,7 @@ import useSWR from 'swr'
 
 import { type BankTransaction, type BankTransactionMetadata } from '@internal-types/bankTransactions'
 import { get } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -16,27 +17,7 @@ const getBankTransactionMetadata = get<{
 
 export const GET_BANK_TRANSACTION_METADATA_TAG_KEY = '#bank-transaction-metadata'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  bankTransactionId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  bankTransactionId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      bankTransactionId,
-      tags: [GET_BANK_TRANSACTION_METADATA_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, bankTransactionId: string }>([GET_BANK_TRANSACTION_METADATA_TAG_KEY])
 
 export function useBankTransactionMetadata({ bankTransactionId }: { bankTransactionId: BankTransaction['id'] }) {
   const withLocale = useLocalizedKey()

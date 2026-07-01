@@ -4,6 +4,7 @@ import type { S3PresignedUrl } from '@internal-types/general'
 import { type APIError } from '@utils/api/apiError'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import type { UseBankTransactionsOptions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -47,25 +48,7 @@ const getBankTransactionsExcel = get<
   return `/v1/businesses/${businessId}/reports/transactions/exports/excel?${parameters}`
 })
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-},
-) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: ['#bank-transactions-download-excel'],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>(['#bank-transactions-download-excel'])
 
 type UseBankTransactionsDownloadOptions = UseBankTransactionsOptions
 

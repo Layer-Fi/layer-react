@@ -4,6 +4,7 @@ import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import type { GetStatementOfCashFlowParams } from '@hooks/api/businesses/[business-id]/reports/cashflow-statement/useStatementOfCashFlow'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -22,30 +23,7 @@ const getCashflowStatementCSV = get<
 
 const DOWNLOAD_CASHFLOW_STATEMENT_TAG_KEY = '#download-cashflow-statement'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  startDate,
-  endDate,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  startDate: Date
-  endDate: Date
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      startDate,
-      endDate,
-      tags: [DOWNLOAD_CASHFLOW_STATEMENT_TAG_KEY],
-    }
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, startDate: Date, endDate: Date }>([DOWNLOAD_CASHFLOW_STATEMENT_TAG_KEY])
 
 type UseCashflowStatementDownloadOptions = {
   startDate: Date

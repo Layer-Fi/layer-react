@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
@@ -33,24 +34,7 @@ const bulkCategorize = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/bulk-categorize`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [BULK_CATEGORIZE_BANK_TRANSACTIONS_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([BULK_CATEGORIZE_BANK_TRANSACTIONS_TAG_KEY])
 
 export const useBulkCategorize = () => {
   const withLocale = useLocalizedKey()

@@ -4,33 +4,14 @@ import useSWR from 'swr'
 import { type CategoriesListMode, CategoryListSchema, type NestedCategorization } from '@schemas/categorization'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const CATEGORIES_TAG_KEY = '#categories'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  mode,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  mode?: CategoriesListMode
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      mode,
-      tags: [CATEGORIES_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, mode?: CategoriesListMode }>([CATEGORIES_TAG_KEY])
 
 export const getCategories = get<
   {
