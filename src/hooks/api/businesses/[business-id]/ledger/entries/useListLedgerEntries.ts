@@ -1,10 +1,9 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { Schema } from 'effect'
-import { debounce } from 'lodash-es'
 import useSWRInfinite from 'swr/infinite'
 
 import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
-import { type LedgerEntry, LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
+import { LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
@@ -151,61 +150,13 @@ export function useListLedgerEntries({
   return new SWRInfiniteResult(swrResponse)
 }
 
-const INVALIDATION_DEBOUNCE_OPTIONS = {
-  wait: 1000,
-  maxWait: 3000,
-}
-
 export function useLedgerEntriesCacheActions() {
-  const { invalidate, forceReload } = useGlobalCacheActions()
-
-  const invalidateLedgerEntries = useCallback(
-    () => invalidate(({ tags }) => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY)),
-    [invalidate],
-  )
+  const { forceReload } = useGlobalCacheActions()
 
   const forceReloadLedgerEntries = useCallback(
     () => forceReload(({ tags }) => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY)),
     [forceReload],
   )
 
-  const debouncedInvalidateLedgerEntries = useMemo(
-    () => debounce(
-      invalidateLedgerEntries,
-      INVALIDATION_DEBOUNCE_OPTIONS.wait,
-      {
-        maxWait: INVALIDATION_DEBOUNCE_OPTIONS.maxWait,
-        trailing: true,
-      },
-    ),
-    [invalidateLedgerEntries],
-  )
-
-  return {
-    invalidateLedgerEntries,
-    debouncedInvalidateLedgerEntries,
-    forceReloadLedgerEntries,
-  }
-}
-
-export function useLedgerEntriesOptimisticUpdater() {
-  const { optimisticUpdate } = useGlobalCacheActions()
-
-  const optimisticallyUpdateLedgerEntries = useCallback(
-    (
-      transformJournalEntry: (entry: LedgerEntry) => LedgerEntry,
-    ) =>
-      optimisticUpdate<ListLedgerEntriesReturn>(
-        ({ tags }) => tags.includes(LIST_LEDGER_ENTRIES_TAG_KEY),
-        (currentData) => {
-          return {
-            ...currentData,
-            data: currentData.data.map(entry => transformJournalEntry(entry)),
-          }
-        },
-      ),
-    [optimisticUpdate],
-  )
-
-  return { optimisticallyUpdateLedgerEntries }
+  return { forceReloadLedgerEntries }
 }
