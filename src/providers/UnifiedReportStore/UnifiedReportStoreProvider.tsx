@@ -19,7 +19,7 @@ import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/ta
 import type { QueryParams } from '@utils/request/toDefinedSearchParameters'
 import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/config/useReportConfig'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
-import { type DateSelectionMode, useGlobalDate, useGlobalDateRange } from '@providers/DateStore/GlobalDateStore/GlobalDateStoreProvider'
+import { type DateSelectionMode, useGlobalDate, useGlobalDateRange } from '@providers/DateStore/GlobalDateStoreProvider'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 
 type DetailReportConfig = {

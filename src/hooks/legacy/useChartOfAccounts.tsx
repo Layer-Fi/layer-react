@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { useLedgerBalances } from '@hooks/api/businesses/[business-id]/ledger/balances/useLedgerBalances'
-import { useGlobalDateRange } from '@providers/DateStore/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDateRange } from '@providers/DateStore/GlobalDateStoreProvider'
 
 type Props = {
   withDates?: boolean
