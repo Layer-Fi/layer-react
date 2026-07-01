@@ -3,13 +3,11 @@ import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useTimeTrackingSummaryGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
 import { useTimeEntriesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useListTimeEntries'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const DELETE_TIME_ENTRY_TAG_KEY = '#delete-time-entry'
 
@@ -26,9 +24,7 @@ type UseDeleteTimeEntryProps = {
 }
 
 export const useDeleteTimeEntry = ({ timeEntryId }: UseDeleteTimeEntryProps) => {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const rawMutationResponse = useSWRMutation(
     () => {
@@ -37,7 +33,7 @@ export const useDeleteTimeEntry = ({ timeEntryId }: UseDeleteTimeEntryProps) => 
       }
 
       return withLocale(buildKey({
-        ...data,
+        ...auth,
         businessId,
         timeEntryId,
       }))

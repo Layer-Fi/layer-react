@@ -6,11 +6,9 @@ import { VendorSchema } from '@schemas/vendor'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const ListVendorsRawResultSchema = PaginatedResponseSchema(VendorSchema)
 type ListVendorsRawResult = typeof ListVendorsRawResultSchema.Type
@@ -56,15 +54,13 @@ type UseListVendorsParameters = {
 }
 
 export function useListVendors({ query, isEnabled = true }: UseListVendorsParameters = {}) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWRInfinite(
     (_index, previousPageData: ListVendorsRawResult | null) => withLocale(keyLoader(
       previousPageData,
       {
-        ...data,
+        ...auth,
         businessId,
         query,
         isEnabled,

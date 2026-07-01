@@ -5,14 +5,12 @@ import useSWRMutation from 'swr/mutation'
 import { MatchSchema } from '@schemas/bankTransactions/match'
 import { put } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
-import { useAuth } from '@hooks/utils/auth/useAuth'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type MatchBankTransactionBody = {
   match_id: string
@@ -44,9 +42,7 @@ type MatchBankTransactionArgs = MatchBankTransactionBody & {
 }
 
 export function useMatchBankTransaction() {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
   const { useBankTransactionsOptions } = useBankTransactionsContext()

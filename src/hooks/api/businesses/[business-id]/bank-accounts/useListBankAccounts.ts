@@ -7,9 +7,7 @@ import { get } from '@utils/api/authenticatedHttp'
 import { isAnyBankAccountSyncing } from '@utils/bankAccount'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 export const BANK_ACCOUNTS_TAG_KEY = '#bank-accounts'
 
@@ -50,15 +48,12 @@ export class ListBankAccountsSWRResponse extends SWRQueryResult<BankAccount[]> {
 export function useListBankAccounts(
   config?: SWRConfiguration<BankAccount[]>,
 ): ListBankAccountsSWRResponse {
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
+  const { businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWR(
     () =>
       buildKey({
         ...auth,
-        apiUrl,
         businessId,
       }),
     ({ accessToken, apiUrl, businessId }) => listBankAccounts(

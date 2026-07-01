@@ -6,13 +6,11 @@ import { SingleChartAccountSchema } from '@schemas/generalLedger/ledgerAccount'
 import { type UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLedgerAccount'
 import { post, put } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useLedgerBalancesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/balances/useLedgerBalances'
 import { useLedgerEntriesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const UPSERT_LEDGER_ACCOUNT_TAG_KEY = '#upsert-ledger-account'
 
@@ -48,16 +46,14 @@ type UseUpsertLedgerAccountProps =
   | { mode: UpsertLedgerAccountMode.Update, accountId: string }
 
 export const useUpsertLedgerAccount = (props: UseUpsertLedgerAccountProps) => {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const { mode } = props
   const accountId = mode === UpsertLedgerAccountMode.Update ? props.accountId : undefined
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
       accountId,
     })),

@@ -5,13 +5,11 @@ import useSWRMutation from 'swr/mutation'
 import { CustomerSchema, type UpsertCustomerEncoded } from '@schemas/customer'
 import { patch, post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { CUSTOMERS_TAG_KEY, useCustomersGlobalCacheActions } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const UPSERT_CUSTOMER_TAG_KEY = '#upsert-customer'
 
@@ -106,16 +104,14 @@ type UseUpsertCustomerProps =
   | { mode: UpsertCustomerMode.Update, customerId: string }
 
 export const useUpsertCustomer = (props: UseUpsertCustomerProps) => {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const { mode } = props
   const customerId = mode === UpsertCustomerMode.Update ? props.customerId : undefined
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
       customerId,
     })),

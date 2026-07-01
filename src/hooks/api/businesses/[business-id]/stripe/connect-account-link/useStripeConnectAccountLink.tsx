@@ -3,11 +3,8 @@ import useSWRMutation from 'swr/mutation'
 
 import { post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const STRIPE_CONNECT_ACCOUNT_LINK_TAG_KEY = '#stripe-connect-account-link'
 
@@ -41,15 +38,11 @@ const createStripeConnectAccountLink = post<
 const buildKey = createBuildKey<{ businessId: string }>([STRIPE_CONNECT_ACCOUNT_LINK_TAG_KEY])
 
 export function useStripeConnectAccountLink() {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
-      ...data,
-      apiUrl,
+      ...auth,
       businessId,
     })),
     ({ accessToken, apiUrl, businessId }) => {

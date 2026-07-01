@@ -3,9 +3,7 @@ import useSWRMutation from 'swr/mutation'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 type UpdateBankAccountOpeningBalanceBody = {
   effective_at: string
@@ -91,9 +89,7 @@ export function useBulkSetOpeningBalanceAndDate(
   data: OpeningBalanceData[],
   { onSuccess }: { onSuccess: (results: OpeningBalanceAPIResponseResult[]) => Awaitable<void> },
 ) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const validate = ({ openingBalance, openingDate, isDateInvalid }: OpeningBalanceData) => {
     const errors: string[] = []

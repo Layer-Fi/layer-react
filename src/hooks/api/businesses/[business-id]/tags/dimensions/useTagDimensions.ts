@@ -5,11 +5,8 @@ import { type TagDimension, TagDimensionSchema } from '@schemas/tag'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 export const TAG_DIMENSIONS_TAG_KEY = '#tag-dimensions'
 
@@ -27,13 +24,10 @@ type UseTagDimensionsParameters = {
 }
 
 export function useTagDimensions({ isEnabled = true }: UseTagDimensionsParameters = {}) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { apiUrl } = useEnvironment()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWR(
-    () => withLocale(buildKey({ ...auth, apiUrl, businessId, isEnabled })),
+    () => withLocale(buildKey({ ...auth, businessId, isEnabled })),
     ({ accessToken, apiUrl, businessId }) => getTagDimensions(
       apiUrl,
       accessToken,

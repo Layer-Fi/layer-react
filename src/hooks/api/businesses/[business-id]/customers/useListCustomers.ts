@@ -7,11 +7,9 @@ import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const ListCustomersRawResultSchema = PaginatedResponseSchema(CustomerSchema)
 type ListCustomersRawResult = typeof ListCustomersRawResultSchema.Type
@@ -58,15 +56,13 @@ type UseListCustomersParams = {
 }
 
 export function useListCustomers({ query, isEnabled = true }: UseListCustomersParams = {}) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWRInfinite(
     (_index, previousPageData: ListCustomersRawResult | null) => withLocale(keyLoader(
       previousPageData,
       {
-        ...data,
+        ...auth,
         businessId,
         query,
         isEnabled,

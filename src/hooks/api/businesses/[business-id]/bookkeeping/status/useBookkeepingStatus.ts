@@ -5,9 +5,8 @@ import { BookkeepingStatus, type BookkeepingStatusData, BookkeepingStatusRespons
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { useAuth } from '@hooks/utils/auth/useAuth'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 import { useLegacyMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export { BookkeepingStatus }
 
@@ -24,8 +23,7 @@ export const BOOKKEEPING_STATUS_TAG_KEY = '#bookkeeping-status'
 const buildKey = createBuildKey<{ businessId: string }>([BOOKKEEPING_TAG_KEY, BOOKKEEPING_STATUS_TAG_KEY])
 
 export function useBookkeepingStatus() {
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
+  const { businessId, auth } = useBuildKeyInputs()
 
   return useSWR(
     () => buildKey({

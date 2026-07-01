@@ -4,11 +4,10 @@ import useSWRMutation from 'swr/mutation'
 
 import { post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
-import { useAuth } from '@hooks/utils/auth/useAuth'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-uncategorize-bank-transactions'
@@ -31,16 +30,15 @@ const bulkUncategorize = post<
 const buildKey = createBuildKey<{ businessId: string }>([BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY])
 
 export const useBulkUncategorize = () => {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId, eventCallbacks } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
+  const { eventCallbacks } = useLayerContext()
 
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const mutationResponse = useSWRMutation(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
     })),
     (
