@@ -61,7 +61,8 @@ export class SWRInfiniteResult<T extends PaginatedResponse<unknown>> {
     if (!pages || pages.length === 0) {
       return false
     }
-    return pages[pages.length - 1].meta?.pagination.hasMore ?? false
+    const pagination = pages[pages.length - 1].meta?.pagination
+    return Boolean(pagination?.hasMore && pagination.cursor)
   }
 
   get fetchMore() {
