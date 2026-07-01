@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react'
 
+import { SortOrder } from '@internal-types/utility/pagination'
 import { type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
 import { post } from '@utils/api/authenticatedHttp'
-import { type ListLedgerEntriesReturn, useListLedgerEntries } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
+import { LedgerEntriesSortBy, type ListLedgerEntriesReturn, useListLedgerEntries } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -41,7 +42,7 @@ export const useJournal: UseJournal = () => {
     refetch,
     hasMore,
     fetchMore,
-  } = useListLedgerEntries({ sort_by: 'entry_at', sort_order: 'DESC', limit: 150 })
+  } = useListLedgerEntries({ sortBy: LedgerEntriesSortBy.EntryAt, sortOrder: SortOrder.DESC, limit: 150 })
 
   const closeSelectedEntry = useCallback(() => {
     setSelectedEntryId(undefined)
