@@ -51,10 +51,8 @@ export function createInfiniteQueryGlobalCacheActions<TItem extends { id: string
       data: page.data.map(transformItem),
     })
 
-    return (currentData?: CachedList) => {
-      if (currentData === undefined) {
-        return currentData
-      }
+    return (currentData?: CachedList | null) => {
+      if (currentData === null || currentData === undefined) return currentData
 
       return Array.isArray(currentData)
         ? currentData.map(transformPage)
@@ -77,7 +75,7 @@ export function createInfiniteQueryGlobalCacheActions<TItem extends { id: string
 
     const patchByTransformation = useCallback(
       (transformItem: (item: TItem) => TItem, options?: PatchOptions) =>
-        patchCache<CachedList | undefined>(matchesTag, buildInfiniteQueryTransform(transformItem), options),
+        patchCache<CachedList | null | undefined>(matchesTag, buildInfiniteQueryTransform(transformItem), options),
       [patchCache],
     )
 
@@ -92,7 +90,7 @@ export function createInfiniteQueryGlobalCacheActions<TItem extends { id: string
 
     const optimisticallyUpdate = useCallback(
       (transformItem: (item: TItem) => TItem) =>
-        optimisticUpdate<CachedList | undefined>(matchesTag, buildInfiniteQueryTransform(transformItem)),
+        optimisticUpdate<CachedList | null | undefined>(matchesTag, buildInfiniteQueryTransform(transformItem)),
       [optimisticUpdate],
     )
 
