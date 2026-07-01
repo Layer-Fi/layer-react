@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import { type Vehicle, VehicleSchema } from '@schemas/vehicle'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -33,27 +34,7 @@ const listVehicles = get<
 
 export const VEHICLES_TAG_KEY = '#list-vehicles'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  allowArchived,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  allowArchived?: boolean
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      allowArchived,
-      tags: [VEHICLES_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, allowArchived?: boolean }>([VEHICLES_TAG_KEY])
 
 class ListVehiclesSWRResponse extends SWRQueryResult<ListVehiclesResponse> {
   // @ts-expect-error override narrows return type to unwrap nested data

@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { TimeEntrySchema, type UpsertTimeEntryEncoded } from '@schemas/timeTracking'
 import { patch, post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -35,27 +36,7 @@ const updateTimeEntry = patch<
   { businessId: string, timeEntryId: string }
 >(({ businessId, timeEntryId }) => `/v1/businesses/${businessId}/time-tracking/time-entries/${timeEntryId}`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  timeEntryId = undefined,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  timeEntryId?: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      timeEntryId,
-      tags: [UPSERT_TIME_ENTRY_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, timeEntryId?: string }>([UPSERT_TIME_ENTRY_TAG_KEY])
 
 const UpsertTimeEntryReturnSchema = Schema.Struct({
   data: TimeEntrySchema,

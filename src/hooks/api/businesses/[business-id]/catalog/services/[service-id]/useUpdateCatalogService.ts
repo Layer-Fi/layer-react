@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { CatalogServiceSchema, type UpdateCatalogServiceEncoded } from '@schemas/catalogService'
 import { patch } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -29,27 +30,7 @@ const updateCatalogService = patch<
   { businessId: string, serviceId: string }
 >(({ businessId, serviceId }) => `/v1/businesses/${businessId}/catalog/services/${serviceId}`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  serviceId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  serviceId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      serviceId,
-      tags: [UPDATE_CATALOG_SERVICE_TAG_KEY, CATALOG_SERVICES_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, serviceId: string }>([UPDATE_CATALOG_SERVICE_TAG_KEY, CATALOG_SERVICES_TAG_KEY])
 
 type UseUpdateCatalogServiceProps = {
   serviceId: string

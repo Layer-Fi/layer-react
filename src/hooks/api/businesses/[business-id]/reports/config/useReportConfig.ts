@@ -3,6 +3,7 @@ import useSWR from 'swr'
 
 import { type ReportConfigResponse, ReportConfigResponseSchema } from '@schemas/reports/reportConfig'
 import { get } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -18,24 +19,7 @@ const getReportConfig = get<ReportConfigResponse, GetReportConfigParams>(
   ({ businessId }) => `/v1/businesses/${businessId}/reports/config`,
 )
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [REPORT_CONFIG_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([REPORT_CONFIG_TAG_KEY])
 
 export function useReportConfig() {
   const withLocale = useLocalizedKey()

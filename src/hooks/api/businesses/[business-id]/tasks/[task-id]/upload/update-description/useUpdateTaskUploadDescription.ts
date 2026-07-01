@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import type { BusinessTaskEncoded } from '@schemas/businessTasks/businessTask'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
@@ -28,24 +29,7 @@ const updateTaskUploadsDescription = post<
     `/v1/businesses/${businessId}/tasks/${taskId}/upload/update-description`,
 )
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: ['#update-task-upload-description'],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>(['#update-task-upload-description'])
 
 type UseUpdateTaskUploadDescriptionArg = {
   taskId: string

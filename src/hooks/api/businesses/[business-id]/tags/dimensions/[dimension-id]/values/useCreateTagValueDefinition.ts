@@ -3,6 +3,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { type TagValueDefinitionSchema } from '@schemas/tag'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -13,24 +14,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const CREATE_TAG_VALUE_DEFINITION_TAG_KEY = '#create-tag-value-definition'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [CREATE_TAG_VALUE_DEFINITION_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([CREATE_TAG_VALUE_DEFINITION_TAG_KEY])
 
 const createTagValueDefinition = post<
   { data: typeof TagValueDefinitionSchema.Encoded },

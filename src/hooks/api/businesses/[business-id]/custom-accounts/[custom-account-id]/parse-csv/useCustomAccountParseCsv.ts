@@ -5,6 +5,7 @@ import { PreviewCellSchema, type PreviewCsv, PreviewRowSchema } from '@schemas/c
 import type { CustomAccountTransactionRow, RawCustomTransaction } from '@schemas/customAccounts'
 import { type APIError } from '@utils/api/apiError'
 import { postWithFormData } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -69,24 +70,7 @@ export type CustomAccountParseCsvResponse = {
   totalTransactionsCount: number
 }
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [`${CUSTOM_ACCOUNTS_TAG_KEY}:parse-csv`],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([`${CUSTOM_ACCOUNTS_TAG_KEY}:parse-csv`])
 
 const parseCsv = (baseUrl: string, accessToken: string, {
   businessId,

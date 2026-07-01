@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { MatchSchema } from '@schemas/bankTransactions/match'
 import { put } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -36,24 +37,7 @@ const matchBankTransaction = put<
 
 const MATCH_BANK_TRANSACTION_TAG = '#match-bank-transaction'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [MATCH_BANK_TRANSACTION_TAG],
-    }
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([MATCH_BANK_TRANSACTION_TAG])
 
 type MatchBankTransactionArgs = MatchBankTransactionBody & {
   bankTransactionId: string

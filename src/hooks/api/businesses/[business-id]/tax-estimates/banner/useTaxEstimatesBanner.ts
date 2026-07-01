@@ -6,6 +6,7 @@ import type { ReportingBasis } from '@internal-types/general'
 import { type TaxEstimatesBannerResponse, TaxEstimatesBannerResponseSchema } from '@schemas/taxEstimates/banner'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -36,33 +37,12 @@ const getTaxEstimatesBanner = get<TaxEstimatesBannerResponse, GetTaxEstimatesBan
   },
 )
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  year,
-  reportingBasis,
-  fullYearProjection,
-}: {
-  access_token?: string
-  apiUrl?: string
+const buildKey = createBuildKey<{
   businessId: string
   year: number
   reportingBasis?: TaxReportingBasis
   fullYearProjection?: boolean
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      year,
-      reportingBasis,
-      fullYearProjection,
-      tags: [TAX_ESTIMATES_BANNER_TAG_KEY],
-    } as const
-  }
-}
+}>([TAX_ESTIMATES_BANNER_TAG_KEY])
 
 export function useTaxEstimatesBanner({ year, reportingBasis, fullYearProjection }: UseTaxEstimatesBannerOptions) {
   const withLocale = useLocalizedKey()

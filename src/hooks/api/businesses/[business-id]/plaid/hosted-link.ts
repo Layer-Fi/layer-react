@@ -6,6 +6,7 @@ import {
   ApiPlaidHostedLinkStatusSchema,
 } from '@schemas/linkedAccounts/plaid'
 import { get } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
@@ -22,26 +23,7 @@ const getPlaidHostedLinkStatus = get<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/plaid/hosted-link`)
 
-function buildKey({
-  accessToken,
-  apiUrl,
-  businessId,
-  enabled,
-}: {
-  accessToken?: string
-  apiUrl: string
-  businessId: string
-  enabled: boolean
-}) {
-  if (!enabled || !accessToken) return null
-
-  return {
-    accessToken,
-    apiUrl,
-    businessId,
-    tags: [PLAID_HOSTED_LINK_TAG_KEY],
-  } as const
-}
+const buildKey = createBuildKey<{ businessId: string }>([PLAID_HOSTED_LINK_TAG_KEY])
 
 export function usePlaidHostedLinkStatus(
   config?: SWRConfiguration<ApiPlaidHostedLinkStatus>,
@@ -52,7 +34,7 @@ export function usePlaidHostedLinkStatus(
   const { businessId } = useLayerContext()
 
   const swrResponse = useSWR(
-    () => buildKey({ accessToken: auth?.access_token, apiUrl, businessId, enabled }),
+    () => buildKey({ ...auth, apiUrl, businessId, isEnabled: enabled }),
     ({ accessToken, apiUrl, businessId }) =>
       getPlaidHostedLinkStatus(apiUrl, accessToken, { params: { businessId } })()
         .then(Schema.decodeUnknownPromise(PlaidHostedLinkStatusResponseSchema))

@@ -5,6 +5,7 @@ import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { VendorSchema } from '@schemas/vendor'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
@@ -44,37 +45,10 @@ const listVendors = get<
 
 export const VENDORS_TAG_KEY = '#vendors'
 
-function keyLoader(
-  previousPageData: ListVendorsRawResult | null,
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    query,
-    isEnabled,
-  }: {
-    access_token?: string
-    apiUrl?: string
-    businessId: string
-    query?: string
-    isEnabled?: boolean
-  },
-) {
-  if (!isEnabled) {
-    return
-  }
-
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
-      query,
-      tags: [VENDORS_TAG_KEY],
-    } as const
-  }
-}
+const keyLoader = createInfiniteKeyLoader<
+  { businessId: string, query?: string },
+  ListVendorsRawResult
+>([VENDORS_TAG_KEY])
 
 type UseListVendorsParameters = {
   query?: string

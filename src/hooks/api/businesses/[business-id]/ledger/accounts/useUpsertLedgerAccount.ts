@@ -5,6 +5,7 @@ import useSWRMutation from 'swr/mutation'
 import { SingleChartAccountSchema } from '@schemas/generalLedger/ledgerAccount'
 import { type UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLedgerAccount'
 import { post, put } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -34,27 +35,7 @@ const updateLedgerAccount = put<
   { businessId: string, accountId: string }
 >(({ businessId, accountId }) => `/v1/businesses/${businessId}/ledger/accounts/${accountId}`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  accountId = undefined,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  accountId?: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      accountId,
-      tags: [UPSERT_LEDGER_ACCOUNT_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, accountId?: string }>([UPSERT_LEDGER_ACCOUNT_TAG_KEY])
 
 const UpsertLedgerAccountReturnSchema = Schema.Struct({
   data: SingleChartAccountSchema,

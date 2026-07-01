@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { CustomerSchema, type UpsertCustomerEncoded } from '@schemas/customer'
 import { patch, post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -33,27 +34,7 @@ const updateCustomer = patch<
   { businessId: string, customerId: string }
 >(({ businessId, customerId }) => `/v1/businesses/${businessId}/customers/${customerId}`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  customerId = undefined,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  customerId?: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      customerId,
-      tags: [UPSERT_CUSTOMER_TAG_KEY, CUSTOMERS_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, customerId?: string }>([UPSERT_CUSTOMER_TAG_KEY, CUSTOMERS_TAG_KEY])
 
 const UpsertCustomerReturnSchema = Schema.Struct({
   data: CustomerSchema,

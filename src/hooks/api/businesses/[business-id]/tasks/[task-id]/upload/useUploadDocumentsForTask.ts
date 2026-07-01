@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import type { FileMetadata } from '@internal-types/fileUpload'
 import { postWithFormData } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
@@ -41,24 +42,7 @@ function completeTaskWithUpload(
   )
 }
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: ['#use-upload-documents-for-task'],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>(['#use-upload-documents-for-task'])
 
 type UseUploadDocumentsForTaskArg = {
   taskId: string

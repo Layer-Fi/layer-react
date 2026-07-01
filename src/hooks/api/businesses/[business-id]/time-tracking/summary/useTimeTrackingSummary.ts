@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
-import { formatISO } from 'date-fns'
 import { Schema } from 'effect'
 import useSWR from 'swr'
 
 import { TimeEntrySummarySchema } from '@schemas/timeTracking'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -25,36 +25,11 @@ export type TimeTrackingSummaryFilterParams = {
   endDate?: Date
 }
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  customerId,
-  serviceId,
-  startDate,
-  endDate,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-} & TimeTrackingSummaryFilterParams) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      customerId,
-      serviceId,
-      startDate: startDate ? formatISO(startDate, { representation: 'date' }) : undefined,
-      endDate: endDate ? formatISO(endDate, { representation: 'date' }) : undefined,
-      tags: [TIME_TRACKING_SUMMARY_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string } & TimeTrackingSummaryFilterParams>([TIME_TRACKING_SUMMARY_TAG_KEY])
 
 const getTimeTrackingSummary = get<
   typeof TimeTrackingSummaryResponseSchema.Encoded,
-  { businessId: string, customerId?: string, serviceId?: string, startDate?: string, endDate?: string }
+  { businessId: string } & TimeTrackingSummaryFilterParams
 >(({ businessId, customerId, serviceId, startDate, endDate }) => {
   const parameters = toDefinedSearchParameters({
     customerId,

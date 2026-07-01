@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import { type CatalogService, CatalogServiceSchema } from '@schemas/catalogService'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -19,33 +20,7 @@ const ListCatalogServicesResponseSchema = Schema.Struct({
 })
 type ListCatalogServicesResponse = typeof ListCatalogServicesResponseSchema.Type
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  allowArchived,
-  isEnabled = true,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  allowArchived?: boolean
-  isEnabled?: boolean
-}) {
-  if (!isEnabled) {
-    return
-  }
-
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      allowArchived,
-      tags: [CATALOG_SERVICES_TAG_KEY, LIST_CATALOG_SERVICES_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, allowArchived?: boolean }>([CATALOG_SERVICES_TAG_KEY, LIST_CATALOG_SERVICES_TAG_KEY])
 
 const listCatalogServices = get<
   typeof ListCatalogServicesResponseSchema.Encoded,

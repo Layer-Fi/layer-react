@@ -5,6 +5,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { CustomAccountSchema, type RawCustomAccount } from '@schemas/customAccounts'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
@@ -34,24 +35,7 @@ const createCustomAccount = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/custom-accounts`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [`${CUSTOM_ACCOUNTS_TAG_KEY}:create`],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([`${CUSTOM_ACCOUNTS_TAG_KEY}:create`])
 
 export function useCreateCustomAccount() {
   const withLocale = useLocalizedKey()

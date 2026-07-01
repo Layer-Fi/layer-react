@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 import { type CustomerSchema } from '@schemas/customer'
 import { type VendorSchema } from '@schemas/vendor'
 import { patch } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
@@ -13,27 +14,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY = '#set-metadata-on-bank-transaction'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  bankTransactionId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  bankTransactionId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      bankTransactionId,
-      tags: [SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, bankTransactionId: string }>([SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY])
 
 type SetMetadataOnBankTransactionBody = {
   vendor_id: string | null

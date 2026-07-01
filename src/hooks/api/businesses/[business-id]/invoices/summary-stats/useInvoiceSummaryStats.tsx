@@ -4,6 +4,7 @@ import useSWR from 'swr'
 
 import { type InvoiceSummaryStatsResponse, InvoiceSummaryStatsResponseSchema } from '@schemas/invoices/invoice'
 import { get } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
@@ -12,24 +13,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const INVOICE_SUMMARY_STATS_TAG_KEY = '#invoices-summary-stats'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [INVOICE_SUMMARY_STATS_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([INVOICE_SUMMARY_STATS_TAG_KEY])
 
 const getInvoiceSummaryStats = get<
   { data: InvoiceSummaryStatsResponse },

@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -18,27 +19,7 @@ const deleteTrip = del<
   { businessId: string, tripId: string }
 >(({ businessId, tripId }) => `/v1/businesses/${businessId}/mileage/trips/${tripId}`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  tripId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  tripId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tripId,
-      tags: [DELETE_TRIP_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, tripId: string }>([DELETE_TRIP_TAG_KEY])
 
 type UseDeleteTripProps = {
   tripId: string

@@ -6,6 +6,7 @@ import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type Trip, TripSchema } from '@schemas/trip'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
@@ -25,40 +26,10 @@ export type ListTripsFilterParams = {
 const ListTripsResponseSchema = PaginatedResponseSchema(TripSchema)
 type ListTripsResponse = typeof ListTripsResponseSchema.Type
 
-function keyLoader(
-  previousPageData: ListTripsResponse | null,
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    query,
-    vehicleId,
-    purpose,
-    year,
-  }: {
-    access_token?: string
-    apiUrl?: string
-    businessId: string
-    query?: string
-    vehicleId?: string
-    purpose?: string
-    year?: number
-  },
-) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
-      query,
-      vehicleId,
-      purpose,
-      year,
-      tags: [LIST_TRIPS_TAG_KEY],
-    } as const
-  }
-}
+const keyLoader = createInfiniteKeyLoader<
+  ListTripsFilterParams & { businessId: string },
+  ListTripsResponse
+>([LIST_TRIPS_TAG_KEY])
 
 const listTrips = get<
   typeof ListTripsResponseSchema.Encoded,

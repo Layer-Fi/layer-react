@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { VehicleSchema } from '@schemas/vehicle'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -25,27 +26,7 @@ const reactivateVehicle = post<
   { businessId: string, vehicleId: string }
 >(({ businessId, vehicleId }) => `/v1/businesses/${businessId}/mileage/vehicles/${vehicleId}/reactivate`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  vehicleId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  vehicleId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      vehicleId,
-      tags: [REACTIVATE_VEHICLE_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, vehicleId: string }>([REACTIVATE_VEHICLE_TAG_KEY])
 
 type UseReactivateVehicleProps = {
   vehicleId: string

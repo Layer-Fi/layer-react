@@ -15,6 +15,7 @@ import {
 } from '@schemas/callBooking'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
@@ -44,31 +45,12 @@ const listCallBookings = get<
   return `/v1/businesses/${businessId}/call-bookings?${parameters}`
 })
 
-function keyLoader(
-  previousPageData: ListCallBookingsResponse | null,
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    limit,
-  }: {
-    access_token?: string
-    apiUrl?: string
-    businessId: string
-    limit?: number
-  },
-) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
-      limit,
-      tags: [CALL_BOOKINGS_TAG_KEY],
-    } as const
-  }
-}
+export const CALL_BOOKINGS_TAG_KEY = '#call-bookings'
+
+const keyLoader = createInfiniteKeyLoader<
+  { businessId: string, limit?: number },
+  ListCallBookingsResponse
+>([CALL_BOOKINGS_TAG_KEY])
 
 export function useCallBookings({ limit }: { limit?: number } = {}) {
   const withLocale = useLocalizedKey()
@@ -106,8 +88,6 @@ export function useCallBookings({ limit }: { limit?: number } = {}) {
 
   return useSWRInfiniteResult(swrResponse)
 }
-
-export const CALL_BOOKINGS_TAG_KEY = '#call-bookings'
 
 export function useCallBookingsGlobalCacheActions() {
   const { forceReload } = useGlobalCacheActions()

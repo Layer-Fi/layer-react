@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { InvoiceSchema, type UpsertInvoiceSchema } from '@schemas/invoices/invoice'
 import { patch, post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -33,27 +34,7 @@ const updateInvoice = patch<
   { businessId: string, invoiceId: string }
 >(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  invoiceId = undefined,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  invoiceId?: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      invoiceId,
-      tags: [UPSERT_INVOICE_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, invoiceId?: string }>([UPSERT_INVOICE_TAG_KEY])
 
 const UpsertInvoiceReturnSchema = Schema.Struct({
   data: InvoiceSchema,

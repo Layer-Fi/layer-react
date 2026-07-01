@@ -3,6 +3,7 @@ import useSWR from 'swr'
 
 import { CustomAccountSchema } from '@schemas/customAccounts'
 import { get } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -20,27 +21,7 @@ const GetCustomAccountsResponseSchema = Schema.Struct({
 
 type GetCustomAccountsResponseEncoded = typeof GetCustomAccountsResponseSchema.Encoded
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  userCreated,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  userCreated?: boolean
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      userCreated,
-      tags: [CUSTOM_ACCOUNTS_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, userCreated?: boolean }>([CUSTOM_ACCOUNTS_TAG_KEY])
 
 const getCustomAccounts = get<
   GetCustomAccountsResponseEncoded,

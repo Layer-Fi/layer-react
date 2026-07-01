@@ -4,6 +4,7 @@ import useSWR from 'swr'
 import { type CatalogService, CatalogServiceSchema } from '@schemas/catalogService'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { CATALOG_SERVICES_TAG_KEY } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
@@ -26,36 +27,11 @@ const getCatalogService = get<
   return query ? `${baseUrl}?${query}` : baseUrl
 })
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  serviceId,
-  allowArchived,
-  isEnabled,
-}: {
-  access_token?: string
-  apiUrl?: string
+const buildKey = createBuildKey<{
   businessId: string
   serviceId: string
   allowArchived?: boolean
-  isEnabled: boolean
-}) {
-  if (!isEnabled) {
-    return
-  }
-
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      serviceId,
-      allowArchived,
-      tags: [GET_CATALOG_SERVICE_TAG_KEY, CATALOG_SERVICES_TAG_KEY],
-    } as const
-  }
-}
+}>([GET_CATALOG_SERVICE_TAG_KEY, CATALOG_SERVICES_TAG_KEY])
 
 type UseGetCatalogServiceParameters = {
   serviceId: string

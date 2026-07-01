@@ -8,6 +8,7 @@ import {
   type CreateCallBookingBodyEncoded,
 } from '@schemas/callBooking'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -23,24 +24,7 @@ const createCallBooking = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/call-bookings`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [CREATE_CALL_BOOKING_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([CREATE_CALL_BOOKING_TAG_KEY])
 
 export function useCreateCallBooking() {
   const withLocale = useLocalizedKey()

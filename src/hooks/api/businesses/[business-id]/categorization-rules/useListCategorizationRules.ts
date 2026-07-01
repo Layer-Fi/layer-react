@@ -7,6 +7,7 @@ import { type CategorizationRule, CategorizationRuleSchema } from '@schemas/bank
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
@@ -56,39 +57,7 @@ export const listCategorizationRules = get<
   return parameters ? `${baseUrl}?${parameters}` : baseUrl
 })
 
-function keyLoader(
-  previousPageData: ListCategorizationRulesReturn | null,
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    externalIds,
-    includeArchived,
-    sortBy,
-    sortOrder,
-    limit,
-    showTotalCount,
-  }: {
-    access_token?: string
-    apiUrl?: string
-  } & Omit<ListCategorizationRulesParams, 'cursor'>,
-) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      externalIds,
-      includeArchived,
-      cursor: previousPageData?.meta?.pagination.cursor,
-      sortBy,
-      sortOrder,
-      limit,
-      showTotalCount,
-      tags: [LIST_CATEGORIZATION_RULES_TAG_KEY],
-    } as const
-  }
-}
+const keyLoader = createInfiniteKeyLoader<Omit<ListCategorizationRulesParams, 'cursor'>, ListCategorizationRulesReturn>([LIST_CATEGORIZATION_RULES_TAG_KEY])
 
 export function useListCategorizationRules({
   externalIds,

@@ -3,6 +3,7 @@ import useSWR from 'swr'
 
 import { TagDimensionSchema } from '@schemas/tag'
 import { get } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -11,33 +12,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const TAG_DIMENSION_BY_KEY_TAG_KEY = '#tag-dimension-by-key'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  isEnabled,
-  dimensionKey,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  isEnabled: boolean
-  dimensionKey: string
-}) {
-  if (!isEnabled) {
-    return
-  }
-
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      dimensionKey,
-      tags: [TAG_DIMENSION_BY_KEY_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, dimensionKey: string }>([TAG_DIMENSION_BY_KEY_TAG_KEY])
 
 const getTagDimensionByKey = get<
   { data: unknown },

@@ -4,6 +4,7 @@ import useSWR from 'swr'
 
 import { BookkeepingStatus, BookkeepingStatusResponseSchema } from '@schemas/bookkeepingStatus'
 import { get } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLegacyMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
@@ -21,24 +22,7 @@ const getBookkeepingStatus = get<
 export const BOOKKEEPING_TAG_KEY = '#bookkeeping'
 export const BOOKKEEPING_STATUS_TAG_KEY = '#bookkeeping-status'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_STATUS_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([BOOKKEEPING_TAG_KEY, BOOKKEEPING_STATUS_TAG_KEY])
 
 export function useBookkeepingStatus() {
   const { data: auth } = useAuth()

@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -9,24 +10,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const REJECT_CATEGORIZATION_RULE_SUGGESTION_TAG = '#reject-categorization-rule-suggestion'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [REJECT_CATEGORIZATION_RULE_SUGGESTION_TAG],
-    }
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([REJECT_CATEGORIZATION_RULE_SUGGESTION_TAG])
 
 export const rejectCategorizationRulesUpdateSuggestion = del<never>(
   ({ businessId, suggestionId }) =>

@@ -8,6 +8,7 @@ import {
   type PatchCategorizationRuleSchema,
 } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { patch, post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
@@ -18,24 +19,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const UPSERT_CATEGORIZATION_RULE_TAG = '#upsert-categorization-rule'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [UPSERT_CATEGORIZATION_RULE_TAG],
-    }
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([UPSERT_CATEGORIZATION_RULE_TAG])
 
 const UpsertCategorizationRuleReturnSchema = Schema.Struct({
   data: CategorizationRuleSchema,

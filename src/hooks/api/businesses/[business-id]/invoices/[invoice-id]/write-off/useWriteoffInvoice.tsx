@@ -5,6 +5,7 @@ import useSWRMutation from 'swr/mutation'
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { type CreateInvoiceWriteoff, CreateInvoiceWriteoffSchema, InvoiceWriteoffSchema } from '@schemas/invoices/invoiceWriteoff'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -21,30 +22,7 @@ const writeoffInvoice = post<
   { businessId: string, invoiceId: string }
 >(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/write-off`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  invoiceId,
-  invoiceWriteoffId = undefined,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  invoiceId: string
-  invoiceWriteoffId?: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      invoiceId,
-      invoiceWriteoffId,
-      tags: [CREATE_INVOICE_WRITEOFF_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, invoiceId: string, invoiceWriteoffId?: string }>([CREATE_INVOICE_WRITEOFF_TAG_KEY])
 
 const WriteoffInvoiceReturnSchema = Schema.Struct({
   data: InvoiceWriteoffSchema,

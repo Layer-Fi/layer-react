@@ -6,6 +6,7 @@ import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type Customer, CustomerSchema } from '@schemas/customer'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
@@ -47,37 +48,10 @@ const listCustomers = get<
 
 export const CUSTOMERS_TAG_KEY = '#customers'
 
-function keyLoader(
-  previousPageData: ListCustomersRawResult | null,
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    query,
-    isEnabled,
-  }: {
-    access_token?: string
-    apiUrl?: string
-    businessId: string
-    query?: string
-    isEnabled?: boolean
-  },
-) {
-  if (!isEnabled) {
-    return
-  }
-
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
-      query,
-      tags: [CUSTOMERS_TAG_KEY],
-    } as const
-  }
-}
+const keyLoader = createInfiniteKeyLoader<
+  { businessId: string, query?: string },
+  ListCustomersRawResult
+>([CUSTOMERS_TAG_KEY])
 
 type UseListCustomersParams = {
   query?: string

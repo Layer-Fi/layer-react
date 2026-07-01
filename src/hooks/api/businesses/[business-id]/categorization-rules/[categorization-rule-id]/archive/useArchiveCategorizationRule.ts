@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useCategorizationRulesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/categorization-rules/useListCategorizationRules'
@@ -12,24 +13,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const ARCHIVE_CATEGORIZATION_RULE_TAG = '#archive-categorization-rule'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [ARCHIVE_CATEGORIZATION_RULE_TAG],
-    }
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([ARCHIVE_CATEGORIZATION_RULE_TAG])
 
 const ArchiveCategorizationRuleReturnSchema = Schema.Struct({
   data: CategorizationRuleSchema,

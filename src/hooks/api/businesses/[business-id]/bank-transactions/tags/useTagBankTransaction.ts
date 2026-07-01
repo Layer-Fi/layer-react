@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import type { TransactionTagEncoded } from '@schemas/tag'
 import { post } from '@utils/api/authenticatedHttp'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import {
@@ -37,27 +38,7 @@ const tagBankTransaction = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/tags`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  bankTransactionId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  bankTransactionId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      bankTransactionId,
-      tags: [TAG_BANK_TRANSACTION_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string, bankTransactionId: string }>([TAG_BANK_TRANSACTION_TAG_KEY])
 
 type TagBankTransactionArg = {
   key: string

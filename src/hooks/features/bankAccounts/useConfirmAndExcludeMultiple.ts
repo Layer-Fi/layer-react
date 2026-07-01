@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
 import type { Awaitable } from '@internal-types/utility/promises'
+import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -12,24 +13,7 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type AccountConfirmExcludeFormState = Record<string, boolean>
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: ['#bulk-confirm', '#bulk-exclude'],
-    }
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>(['#bulk-confirm', '#bulk-exclude'])
 
 export function useConfirmAndExcludeMultiple({ onSuccess }: { onSuccess?: () => Awaitable<unknown> }) {
   const withLocale = useLocalizedKey()
