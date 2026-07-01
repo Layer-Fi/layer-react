@@ -27,6 +27,8 @@ type GetLedgerEntriesParams = {
   cursor?: string
   limit?: number
   showTotalCount?: boolean
+  startDate?: Date
+  endDate?: Date
 }
 
 const ListLedgerEntriesResponseSchema = PaginatedResponseSchema(LedgerEntrySchema)
@@ -36,13 +38,15 @@ export type ListLedgerEntriesReturn = typeof ListLedgerEntriesResponseSchema.Typ
 export const listLedgerEntries = get<
   typeof ListLedgerEntriesResponseSchema.Encoded,
   GetLedgerEntriesParams
->(({ businessId, sortBy, sortOrder, cursor, limit, showTotalCount }) => {
+>(({ businessId, sortBy, sortOrder, cursor, limit, showTotalCount, startDate, endDate }) => {
   const parameters = toDefinedSearchParameters({
     sortBy,
     sortOrder,
     cursor,
     limit,
     showTotalCount,
+    startDate,
+    endDate,
   })
 
   return `/v1/businesses/${businessId}/ledger/entries?${parameters}`
@@ -58,6 +62,8 @@ export type UseListLedgerEntriesOptions = {
   sortOrder?: SortOrder
   limit?: number
   showTotalCount?: boolean
+  startDate?: Date
+  endDate?: Date
 }
 
 export function useListLedgerEntries({
@@ -65,6 +71,8 @@ export function useListLedgerEntries({
   sortOrder,
   limit,
   showTotalCount,
+  startDate,
+  endDate,
 }: UseListLedgerEntriesOptions = {}) {
   const { withLocale, businessId, auth } = useBuildKeyInputs()
 
@@ -78,6 +86,8 @@ export function useListLedgerEntries({
         sortOrder,
         limit,
         showTotalCount,
+        startDate,
+        endDate,
       },
     )),
     ({
@@ -89,6 +99,8 @@ export function useListLedgerEntries({
       sortOrder,
       limit,
       showTotalCount,
+      startDate,
+      endDate,
     }) => listLedgerEntries(
       apiUrl,
       accessToken,
@@ -100,6 +112,8 @@ export function useListLedgerEntries({
           cursor,
           limit,
           showTotalCount,
+          startDate,
+          endDate,
         },
       },
     )().then(Schema.decodeUnknownPromise(ListLedgerEntriesResponseSchema)),

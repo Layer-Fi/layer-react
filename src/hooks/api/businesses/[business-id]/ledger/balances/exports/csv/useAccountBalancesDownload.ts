@@ -3,24 +3,35 @@ import useSWRMutation from 'swr/mutation'
 import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { get } from '@utils/api/authenticatedHttp'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
-const getLedgerAccountBalancesCSV = get<{ data: S3PresignedUrl }>(
-  ({ businessId }) => `/v1/businesses/${businessId}/ledger/balances/exports/csv`,
+type GetLedgerAccountBalancesCSVParams = {
+  businessId: string
+  startDate?: Date
+  endDate?: Date
+}
+
+const getLedgerAccountBalancesCSV = get<{ data: S3PresignedUrl }, GetLedgerAccountBalancesCSVParams>(
+  ({ businessId, startDate, endDate }) => {
+    const parameters = toDefinedSearchParameters({ startDate, endDate })
+
+    return `/v1/businesses/${businessId}/ledger/balances/exports/csv?${parameters}`
+  },
 )
 
-const buildKey = createBuildKey<{ businessId: string, startCutoff?: Date, endCutoff?: Date }>(['#account-balances', '#exports', '#csv'])
+const buildKey = createBuildKey<{ businessId: string, startDate?: Date, endDate?: Date }>(['#account-balances', '#exports', '#csv'])
 
 type UseAccountBalancesDownloadOptions = {
-  startCutoff?: Date
-  endCutoff?: Date
+  startDate?: Date
+  endDate?: Date
   onSuccess?: (url: S3PresignedUrl) => Awaitable<unknown>
 }
 
 export function useAccountBalancesDownload({
-  startCutoff,
-  endCutoff,
+  startDate,
+  endDate,
   onSuccess,
 }: UseAccountBalancesDownloadOptions) {
   const { withLocale, businessId, auth } = useBuildKeyInputs()
@@ -29,17 +40,17 @@ export function useAccountBalancesDownload({
     () => withLocale(buildKey({
       ...auth,
       businessId,
-      startCutoff,
-      endCutoff,
+      startDate,
+      endDate,
     })),
-    ({ accessToken, apiUrl, businessId, startCutoff, endCutoff }) => getLedgerAccountBalancesCSV(
+    ({ accessToken, apiUrl, businessId, startDate, endDate }) => getLedgerAccountBalancesCSV(
       apiUrl,
       accessToken,
       {
         params: {
           businessId,
-          startCutoff: startCutoff?.toISOString(),
-          endCutoff: endCutoff?.toISOString(),
+          startDate,
+          endDate,
         },
       })().then(({ data }) => {
       if (onSuccess) {

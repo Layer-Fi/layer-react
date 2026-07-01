@@ -5,22 +5,22 @@ import { DownloadButton } from '@ui/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 type AccountBalancesDownloadButtonProps = {
-  startCutoff?: Date
-  endCutoff?: Date
+  startDate?: Date
+  endDate?: Date
   icon?: boolean
 }
 
 export function AccountBalancesDownloadButton({
-  startCutoff,
-  endCutoff,
+  startDate,
+  endDate,
   icon,
 }: AccountBalancesDownloadButtonProps) {
   const { t } = useTranslation()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { trigger, isMutating, error } = useAccountBalancesDownload({
-    startCutoff,
-    endCutoff,
+    startDate,
+    endDate,
     onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
   })
 

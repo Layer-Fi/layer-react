@@ -4,18 +4,29 @@ import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { type APIError } from '@utils/api/apiError'
 import { get } from '@utils/api/authenticatedHttp'
+import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
-const getJournalEntriesCSV = get<{ data: S3PresignedUrl }>(
-  ({ businessId }) => `/v1/businesses/${businessId}/ledger/entries/exports/csv`,
+type GetJournalEntriesCSVParams = {
+  businessId: string
+  startDate?: Date
+  endDate?: Date
+}
+
+const getJournalEntriesCSV = get<{ data: S3PresignedUrl }, GetJournalEntriesCSVParams>(
+  ({ businessId, startDate, endDate }) => {
+    const parameters = toDefinedSearchParameters({ startDate, endDate })
+
+    return `/v1/businesses/${businessId}/ledger/entries/exports/csv?${parameters}`
+  },
 )
 
-const buildKey = createBuildKey<{ businessId: string, startCutoff?: Date, endCutoff?: Date }>(['#journal-entries', '#exports', '#csv'])
+const buildKey = createBuildKey<{ businessId: string, startDate?: Date, endDate?: Date }>(['#journal-entries', '#exports', '#csv'])
 
 type UseJournalEntriesDownloadOptions = {
-  startCutoff?: Date
-  endCutoff?: Date
+  startDate?: Date
+  endDate?: Date
   onSuccess?: (url: S3PresignedUrl) => Awaitable<unknown>
 }
 
@@ -23,13 +34,13 @@ type MutationParams = () => {
   accessToken: string
   apiUrl: string
   businessId: string
-  startCutoff?: Date
-  endCutoff?: Date
+  startDate?: Date
+  endDate?: Date
 } | undefined
 
 export function useJournalEntriesDownload({
-  startCutoff,
-  endCutoff,
+  startDate,
+  endDate,
   onSuccess,
 }: UseJournalEntriesDownloadOptions) {
   const { withLocale, businessId, auth } = useBuildKeyInputs()
@@ -42,17 +53,17 @@ export function useJournalEntriesDownload({
     () => withLocale(buildKey({
       ...auth,
       businessId,
-      startCutoff,
-      endCutoff,
+      startDate,
+      endDate,
     })),
-    ({ accessToken, apiUrl, businessId, startCutoff, endCutoff }) => getJournalEntriesCSV(
+    ({ accessToken, apiUrl, businessId, startDate, endDate }) => getJournalEntriesCSV(
       apiUrl,
       accessToken,
       {
         params: {
           businessId,
-          startCutoff: startCutoff?.toISOString(),
-          endCutoff: endCutoff?.toISOString(),
+          startDate,
+          endDate,
         },
       })().then(({ data }) => {
       if (onSuccess) {
