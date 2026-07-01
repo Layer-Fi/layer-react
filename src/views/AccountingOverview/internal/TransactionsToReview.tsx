@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useProfitAndLossSummaries } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-summaries/useProfitAndLossSummaries'
-import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDateRange } from '@providers/DateStore/GlobalDateStore/GlobalDateStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { type StackProps, VStack } from '@ui/Stack/Stack'
 import { Badge } from '@components/Badge/Badge'
