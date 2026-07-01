@@ -2,13 +2,13 @@ import { Schema } from 'effect'
 import useSWRInfinite from 'swr/infinite'
 
 import { type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
-import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { BankTransactionCounterpartySchema } from '@schemas/bankTransactions/base'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
+import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -35,16 +35,6 @@ type ListCounterpartiesParams = ListCounterpartiesBaseParams & ListCounterpartie
 const ListCounterpartiesReturnSchema = PaginatedResponseSchema(BankTransactionCounterpartySchema)
 
 type ListCounterpartiesReturn = typeof ListCounterpartiesReturnSchema.Type
-
-class ListCounterpartiesSWRResponse extends SWRInfiniteResult<ListCounterpartiesReturn> {
-  get paginationMeta() {
-    return this.data && this.data.length > 0 ? this.data[this.data.length - 1].meta.pagination : undefined
-  }
-
-  get hasMore() {
-    return this.paginationMeta?.hasMore
-  }
-}
 
 export const listCounterparties = get<
   ListCounterpartiesReturn,
@@ -162,5 +152,5 @@ export function useListCounterparties({
 
   usePreserveInfiniteSize(swrResponse)
 
-  return new ListCounterpartiesSWRResponse(swrResponse)
+  return useSWRInfiniteResult(swrResponse)
 }

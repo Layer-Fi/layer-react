@@ -106,16 +106,9 @@ export const ResponsiveCategorizationRulesView = () => {
     return flattenCategories(categories)
   }, [categories])
 
-  const { data, hasMore, isLoading: rulesAreLoading, isError, size, setSize } = useListCategorizationRules({})
-  const categorizationRules = useMemo(() => data?.flatMap(({ data }) => data), [data])
+  const { flattenedData: categorizationRules, hasMore, isLoading: rulesAreLoading, isError, fetchMore } = useListCategorizationRules({})
 
   const { currentCategorizationRulesPage: currentPage, setCurrentCategorizationRulesPage: setCurrentPage } = useSetCurrentCategorizationRulesPage()
-
-  const fetchMore = useCallback(() => {
-    if (hasMore) {
-      void setSize(size + 1)
-    }
-  }, [hasMore, setSize, size])
 
   const paginationProps = useMemo(() => ({
     pageIndex: currentPage,
@@ -141,7 +134,7 @@ export const ResponsiveCategorizationRulesView = () => {
     }
   }, [t, addToast, archiveCategorizationRuleTrigger, selectedRule?.id])
 
-  const isLoading = data === undefined || rulesAreLoading || categoriesAreLoading
+  const isLoading = categorizationRules === undefined || rulesAreLoading || categoriesAreLoading
   const { toBankTransactionsTable } = useBankTransactionsNavigation()
 
   const DesktopHeader = useCallback(

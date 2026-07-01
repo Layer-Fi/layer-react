@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import { type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
 import { post } from '@utils/api/authenticatedHttp'
@@ -34,43 +34,14 @@ export const useJournal: UseJournal = () => {
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
 
   const {
-    data: paginatedData,
+    flattenedData: data,
     isLoading,
     isValidating,
     isError,
-    mutate,
-    size,
-    setSize,
-  } = useListLedgerEntries({
-    sort_by: 'entry_at',
-    sort_order: 'DESC',
-    limit: 150,
-  })
-
-  const data = useMemo(() => {
-    if (!paginatedData) return undefined
-
-    return paginatedData.flatMap(page => page.data)
-  }, [paginatedData])
-
-  const hasMore = useMemo(() => {
-    if (paginatedData && paginatedData.length > 0) {
-      const lastPage = paginatedData[paginatedData.length - 1]
-      return Boolean(
-        lastPage.meta?.pagination.cursor
-        && lastPage.meta?.pagination.hasMore,
-      )
-    }
-    return false
-  }, [paginatedData])
-
-  const fetchMore = useCallback(() => {
-    if (hasMore) {
-      void setSize(size + 1)
-    }
-  }, [hasMore, setSize, size])
-
-  const refetch = useCallback(() => mutate(), [mutate])
+    refetch,
+    hasMore,
+    fetchMore,
+  } = useListLedgerEntries({ sort_by: 'entry_at', sort_order: 'DESC', limit: 150 })
 
   const closeSelectedEntry = useCallback(() => {
     setSelectedEntryId(undefined)

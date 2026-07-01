@@ -53,7 +53,7 @@ export function Tasks({
 }: TasksProps) {
   const { t } = useTranslation()
   const { data, isLoading } = useBookkeepingPeriods()
-  const { data: callBookings, isLoading: isLoadingCallBookings } = useCallBookings()
+  const { flattenedData: callBookings, isLoading: isLoadingCallBookings } = useCallBookings()
   const { isMobile } = useSizeClass()
 
   const tasksState: TasksState = useMemo(() => {
@@ -63,8 +63,9 @@ export function Tasks({
 
     const hasBookkeepingTasks = (data?.length ?? 0) > 0 && data?.some(period => period.tasks.length > 0)
 
-    const hasOnboardingCallBooking = callBookings?.some(callBooking =>
-      callBooking.data.some(callBooking => callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING)) ?? false
+    const hasOnboardingCallBooking = callBookings?.some(
+      callBooking => callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING,
+    ) ?? false
 
     if (hasOnboardingCallBooking && !hasBookkeepingTasks) {
       return 'onboarding'

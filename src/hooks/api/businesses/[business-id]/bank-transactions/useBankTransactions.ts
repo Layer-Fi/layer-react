@@ -4,15 +4,15 @@ import { debounce } from 'lodash-es'
 import useSWRInfinite, { type SWRInfiniteConfiguration } from 'swr/infinite'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
+import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -82,14 +82,6 @@ const keyMatchesParams = createKeyMatcher<BankTransactionsKey, UseBankTransactio
   { key: 'endDate', compare: compareDates },
   { key: 'tagFilterQueryString' },
 ])
-
-class BankTransactionsSWRResponse extends SWRInfiniteResult<GetBankTransactionsReturn> {
-  get hasMore() {
-    return this.data && this.data.length > 0
-      ? this.data[this.data.length - 1].meta.pagination.hasMore
-      : false
-  }
-}
 
 export type UseBankTransactionsOptions = {
   categorized?: boolean
@@ -201,7 +193,7 @@ export function useBankTransactions({
 
   usePreserveInfiniteSize(swrResponse)
 
-  return new BankTransactionsSWRResponse(swrResponse)
+  return useSWRInfiniteResult(swrResponse)
 }
 
 const INVALIDATION_DEBOUNCE_OPTIONS = {

@@ -7,9 +7,9 @@ import { type Customer, CustomerSchema } from '@schemas/customer'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
+import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -84,14 +84,7 @@ type UseListCustomersParams = {
   isEnabled?: boolean
 }
 
-export class ListCustomersSWRResponse extends SWRInfiniteResult<ListCustomersRawResult> {
-  get error(): unknown {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return this.swrResponse.error
-  }
-}
-
-export function useListCustomers({ query, isEnabled = true }: UseListCustomersParams = {}): ListCustomersSWRResponse {
+export function useListCustomers({ query, isEnabled = true }: UseListCustomersParams = {}) {
   const withLocale = useLocalizedKey()
   const { data } = useAuth()
   const { businessId } = useLayerContext()
@@ -133,7 +126,7 @@ export function useListCustomers({ query, isEnabled = true }: UseListCustomersPa
 
   usePreserveInfiniteSize(swrResponse)
 
-  return new ListCustomersSWRResponse(swrResponse)
+  return useSWRInfiniteResult(swrResponse)
 }
 
 export function usePreloadCustomers(parameters?: UseListCustomersParams) {

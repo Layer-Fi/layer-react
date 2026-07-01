@@ -79,34 +79,32 @@ export function CustomerVendorSelector({
     : searchQuery
 
   const {
-    data: customerPages,
+    flattenedData: customers,
     isLoading: isLoadingCustomers,
     isError: isErrorLoadingCustomers,
   } = useListCustomers({ query: effectiveSearchQuery })
   const {
-    data: vendorPages,
+    flattenedData: vendors,
     isLoading: isLoadingVendors,
     isError: isErrorLoadingVendors,
   } = useListVendors({ query: effectiveSearchQuery })
 
   const groups = useMemo(
     () => {
-      const customersSection = customerPages
+      const customersSection = customers
         ? {
           label: t('customerVendor:label.customers', 'Customers'),
           id: 'CUSTOMER',
-          options: customerPages
-            .flatMap(({ data }) => data)
+          options: customers
             .map(customer => new CustomerVendorAsOption({ ...customer, customerVendorType: 'CUSTOMER' })),
         } as const
         : null
 
-      const vendorsSection = vendorPages
+      const vendorsSection = vendors
         ? {
           label: t('customerVendor:label.vendors', 'Vendors'),
           id: 'VENDOR',
-          options: vendorPages
-            .flatMap(({ data }) => data)
+          options: vendors
             .map(vendor => new CustomerVendorAsOption({ ...vendor, customerVendorType: 'VENDOR' })),
         } as const
         : null
@@ -118,11 +116,7 @@ export function CustomerVendorSelector({
             && section.options.length > 0,
         )
     },
-    [
-      t,
-      customerPages,
-      vendorPages,
-    ],
+    [t, customers, vendors],
   )
 
   const selectedCustomerVendorId = selectedCustomerVendor?.id
@@ -206,8 +200,8 @@ export function CustomerVendorSelector({
 
   const isError = isErrorLoadingCustomers || isErrorLoadingVendors
 
-  const isLoadingCustomersWithoutFallback = isLoadingCustomers && !customerPages
-  const isLoadingVendorsWithoutFallback = isLoadingVendors && !vendorPages
+  const isLoadingCustomersWithoutFallback = isLoadingCustomers && !customers
+  const isLoadingVendorsWithoutFallback = isLoadingVendors && !vendors
 
   const isLoadingWithoutFallback = isLoadingCustomersWithoutFallback || isLoadingVendorsWithoutFallback
 

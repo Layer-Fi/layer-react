@@ -6,8 +6,8 @@ import { VendorSchema } from '@schemas/vendor'
 import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
+import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -123,7 +123,7 @@ export function useListVendors({ query, isEnabled = true }: UseListVendorsParame
 
   usePreserveInfiniteSize(swrResponse)
 
-  return new SWRInfiniteResult(swrResponse)
+  return useSWRInfiniteResult(swrResponse)
 }
 
 export function usePreloadVendors(parameters?: UseListVendorsParameters) {

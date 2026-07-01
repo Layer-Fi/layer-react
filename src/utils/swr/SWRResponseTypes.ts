@@ -3,6 +3,8 @@ import type { Key } from 'swr'
 import type { SWRInfiniteResponse } from 'swr/infinite'
 import type { SWRMutationResponse } from 'swr/mutation'
 
+import type { PaginatedResponse } from '@schemas/common/pagination'
+
 export class SWRQueryResult<T> {
   protected swrResponse: SWRResponse<T>
 
@@ -35,15 +37,39 @@ export class SWRQueryResult<T> {
   }
 }
 
-export class SWRInfiniteResult<T> {
-  protected swrResponse: SWRInfiniteResponse<T>
+export type FlattenedData<T> = T extends { data: ReadonlyArray<infer E> } ? Array<E> : never
 
-  constructor(swrResponse: SWRInfiniteResponse<T>) {
+export class SWRInfiniteResult<T extends PaginatedResponse<unknown>> {
+  protected swrResponse: SWRInfiniteResponse<T>
+  private readonly flattenedDataValue: FlattenedData<T> | undefined
+
+  constructor(swrResponse: SWRInfiniteResponse<T>, flattenedData: FlattenedData<T> | undefined) {
     this.swrResponse = swrResponse
+    this.flattenedDataValue = flattenedData
   }
 
   get data() {
     return this.swrResponse.data
+  }
+
+  get flattenedData() {
+    return this.flattenedDataValue
+  }
+
+  get hasMore() {
+    const pages: ReadonlyArray<PaginatedResponse<unknown>> | undefined = this.swrResponse.data
+    if (!pages || pages.length === 0) {
+      return false
+    }
+    return pages[pages.length - 1].meta?.pagination.hasMore ?? false
+  }
+
+  get fetchMore() {
+    return () => {
+      if (this.hasMore) {
+        void this.setSize(this.size + 1)
+      }
+    }
   }
 
   get isLoading() {
@@ -56,6 +82,11 @@ export class SWRInfiniteResult<T> {
 
   get isError() {
     return this.swrResponse.error !== undefined
+  }
+
+  get error(): unknown {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this.swrResponse.error
   }
 
   get mutate() {
