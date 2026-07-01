@@ -6,6 +6,7 @@ import { type TaxProfileRequest, type TaxProfileResponse, TaxProfileResponseSche
 import { patch, post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useTaxDetailsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/tax-estimates/details/useTaxDetails'
 import { useTaxPaymentsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/tax-estimates/payments/useTaxPayments'
 import { useTaxProfileGlobalCacheActions } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
@@ -101,14 +102,5 @@ export function useUpsertTaxProfile({ mode }: UseUpsertTaxProfileProps) {
     [forceReloadTaxDetails, forceReloadTaxPayments, originalTrigger, patchTaxProfile],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

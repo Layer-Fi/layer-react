@@ -6,6 +6,7 @@ import { CatalogServiceSchema } from '@schemas/catalogService'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import {
   CATALOG_SERVICES_TAG_KEY,
   useCatalogServicesGlobalCacheActions,
@@ -88,14 +89,5 @@ export function useArchiveCatalogService({ serviceId }: UseArchiveCatalogService
     [originalTrigger, forceReloadCatalogServices],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

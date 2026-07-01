@@ -6,6 +6,7 @@ import useSWRMutation from 'swr/mutation'
 import { CustomAccountSchema, type RawCustomAccount } from '@schemas/customAccounts'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
@@ -101,14 +102,5 @@ export function useCreateCustomAccount() {
     ],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

@@ -7,6 +7,7 @@ import type { Awaitable } from '@internal-types/utility/promises'
 import { put } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { GET_BANK_TRANSACTION_METADATA_TAG_KEY } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useBankTransactionsMetadata'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -100,14 +101,5 @@ export function useUpdateBankTransactionMetadata({ bankTransactionId, onSuccess 
     ],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

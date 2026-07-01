@@ -7,6 +7,7 @@ import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -108,14 +109,5 @@ export const useRefundInvoice = ({ invoiceId }: UseRefundInvoiceProps) => {
     [originalTrigger, patchInvoiceWithTransformation, applyRefundToInvoice, forceReloadInvoiceSummaryStats],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

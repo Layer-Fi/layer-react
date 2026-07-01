@@ -5,6 +5,7 @@ import useSWRMutation from 'swr/mutation'
 import { CategorizationRuleSchema, type CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useCategorizationRulesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/categorization-rules/useListCategorizationRules'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
@@ -93,14 +94,5 @@ export function useCreateCategorizationRule() {
     [originalTrigger, forceReloadBankTransactions, forceReloadCategorizationRules, debouncedInvalidateProfitAndLoss],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

@@ -3,6 +3,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -117,14 +118,5 @@ export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTag
     ],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

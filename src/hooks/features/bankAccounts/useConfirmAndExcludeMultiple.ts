@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { confirmExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/confirm'
 import { excludeExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/exclude'
 import { useAuth } from '@hooks/utils/auth/useAuth'
@@ -76,14 +77,5 @@ export function useConfirmAndExcludeMultiple({ onSuccess }: { onSuccess?: () => 
     [originalTrigger],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

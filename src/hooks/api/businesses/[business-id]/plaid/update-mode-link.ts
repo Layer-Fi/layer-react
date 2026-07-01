@@ -6,6 +6,7 @@ import { ApiLinkTokenSchema } from '@schemas/linkedAccounts/plaid'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
@@ -84,14 +85,5 @@ export function useCreatePlaidUpdateModeLink() {
     [originalTrigger],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

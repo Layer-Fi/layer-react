@@ -4,6 +4,7 @@ import useSWRMutation from 'swr/mutation'
 import { del } from '@utils/api/authenticatedHttp'
 import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useVehiclesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -84,14 +85,5 @@ export const useDeleteVehicle = ({ vehicleId }: UseDeleteVehicleProps) => {
     [originalTrigger, forceReloadVehicles],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }
