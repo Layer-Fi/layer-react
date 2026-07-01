@@ -1,9 +1,5 @@
-import classNames from 'classnames'
-
-import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
-import { GlobalDateRangePicker } from '@components/GlobalDateRangePicker/GlobalDateRangePicker'
-
-import './globalDateRangeSelection.scss'
+import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
+import { DateRangeSelection } from '@components/DateSelection/DateRangeSelection'
 
 type GlobalDateRangeSelectionProps = {
   showLabels?: boolean
@@ -11,14 +7,16 @@ type GlobalDateRangeSelectionProps = {
 }
 
 export const GlobalDateRangeSelection = ({ showLabels = false, isCompact = false }: GlobalDateRangeSelectionProps) => {
+  const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode: 'full' })
+  const { setDateRange } = useGlobalDateRangeActions()
+
   return (
-    <div
-      className={classNames('Layer__GlobalDateRangeSelection', {
-        'Layer__GlobalDateRangeSelection--compact': isCompact,
-      })}
-    >
-      <DateSelectionComboBox showLabel={showLabels} />
-      <GlobalDateRangePicker showLabels={showLabels} />
-    </div>
+    <DateRangeSelection
+      startDate={startDate}
+      endDate={endDate}
+      setDateRange={setDateRange}
+      showLabels={showLabels}
+      isCompact={isCompact}
+    />
   )
 }
