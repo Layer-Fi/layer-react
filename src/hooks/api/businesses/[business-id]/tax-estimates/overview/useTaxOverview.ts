@@ -6,15 +6,11 @@ import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 const TAX_OVERVIEW_TAG_KEY = '#tax-overview'
 type TaxReportingBasis = Exclude<ReportingBasis, 'CASH_COLLECTED'>
 
-type UseTaxOverviewOptions = {
+type GetTaxOverviewParams = {
+  businessId: string
   year: number
   reportingBasis?: TaxReportingBasis
   fullYearProjection?: boolean
-  enabled?: boolean
-}
-
-type GetTaxOverviewParams = Omit<UseTaxOverviewOptions, 'enabled'> & {
-  businessId: string
 }
 
 const getTaxOverview = getWithQuery<
@@ -30,18 +26,9 @@ const getTaxOverview = getWithQuery<
   }),
 )
 
-const useTaxOverviewQuery = createQueryHook({
+export const useTaxOverview = createQueryHook({
   tags: [TAX_OVERVIEW_TAG_KEY],
   request: getTaxOverview,
   schema: TaxOverviewApiResponseSchema,
   select: ({ data }) => data,
 })
-
-export function useTaxOverview({ year, reportingBasis, fullYearProjection, enabled = true }: UseTaxOverviewOptions) {
-  return useTaxOverviewQuery({
-    year,
-    reportingBasis,
-    fullYearProjection,
-    isEnabled: enabled,
-  })
-}

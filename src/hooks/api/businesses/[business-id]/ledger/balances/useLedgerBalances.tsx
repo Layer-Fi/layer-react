@@ -23,18 +23,11 @@ const getLedgerAccountBalances = getWithQuery<
   ({ businessId }) => `/v1/businesses/${businessId}/ledger/balances`,
 )
 
-const useLedgerBalancesQuery = createQueryHook({
+export const useLedgerBalances = createQueryHook({
   tags: [LEDGER_BALANCES_TAG_KEY],
   request: getLedgerAccountBalances,
   schema: LedgerBalancesResponseSchema,
   select: ({ data }) => data,
 })
-
-export function useLedgerBalances(withDates?: boolean, startDate?: Date, endDate?: Date) {
-  return useLedgerBalancesQuery({
-    startDate: withDates ? startDate : undefined,
-    endDate: withDates ? endDate : undefined,
-  })
-}
 
 export const useLedgerBalancesCacheActions = createResourceGlobalCacheActions<LedgerBalancesSchemaType>(LEDGER_BALANCES_TAG_KEY)

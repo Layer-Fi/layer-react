@@ -54,32 +54,13 @@ const listProfitAndLossDetailLines = getWithQuery<
   }),
 )
 
-const useProfitAndLossDetailLinesQuery = createQueryHook({
+export const useProfitAndLossDetailLines = createQueryHook({
   tags: [LIST_PNL_DETAIL_LINES_TAG_KEY],
   request: listProfitAndLossDetailLines,
   schema: PnlDetailLinesResponseSchema,
   select: ({ data }) => data,
   swrOptions: { keepPreviousData: true },
 })
-
-export function useProfitAndLossDetailLines({
-  startDate,
-  endDate,
-  pnlStructureLineItemName,
-  tagFilter,
-  reportingBasis,
-  pnlStructure,
-}: PnlDetailLinesBaseParams & PnlDetailLinesFilterParams) {
-  return useProfitAndLossDetailLinesQuery({
-    startDate,
-    endDate,
-    pnlStructureLineItemName,
-    tagFilter,
-    reportingBasis,
-    pnlStructure,
-    isEnabled: Boolean(startDate && endDate && pnlStructureLineItemName),
-  })
-}
 
 export const usePnlDetailLinesInvalidator = createResourceGlobalCacheActions<PnlDetailLinesReturn>(LIST_PNL_DETAIL_LINES_TAG_KEY)
 

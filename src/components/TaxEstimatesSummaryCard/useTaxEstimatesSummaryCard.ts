@@ -20,7 +20,7 @@ export const useTaxEstimatesSummaryCard = () => {
   const { fullYearProjection } = useFullYearProjection()
   const { t } = useTranslation()
   const { isDesktop, isMobile } = useSizeClass()
-  const { data: taxSummaryData, isLoading, isError } = useTaxSummary({ year, fullYearProjection, enabled: true })
+  const { data: taxSummaryData, isLoading, isError } = useTaxSummary({ year, fullYearProjection })
 
   const shortenedDisplayName = useCallback((type: TaxSummarySectionType) => {
     if (type === 'federal') return t('taxEstimates:label.federal', 'Federal')

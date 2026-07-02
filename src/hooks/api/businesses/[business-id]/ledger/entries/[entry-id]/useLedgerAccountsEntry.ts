@@ -21,15 +21,8 @@ const getLedgerAccountsEntry = getWithQuery<
   ({ businessId, entryId }) => `/v1/businesses/${businessId}/ledger/entries/${entryId}`,
 )
 
-const useLedgerAccountsEntryQuery = createQueryHook({
+export const useLedgerAccountsEntry = createQueryHook({
   tags: [LEDGER_ACCOUNTS_ENTRY_TAG_KEY],
   request: getLedgerAccountsEntry,
   schema: LedgerAccountsEntryResponseSchema,
 })
-
-export function useLedgerAccountsEntry({ entryId }: { entryId?: string }) {
-  return useLedgerAccountsEntryQuery({
-    entryId,
-    isEnabled: Boolean(entryId),
-  })
-}

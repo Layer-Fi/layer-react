@@ -7,15 +7,11 @@ import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 const TAX_SUMMARY_TAG_KEY = '#tax-summary'
 type TaxReportingBasis = Exclude<ReportingBasis, 'CASH_COLLECTED'>
 
-type UseTaxSummaryOptions = {
+type GetTaxSummaryParams = {
+  businessId: string
   year: number
   reportingBasis?: TaxReportingBasis
   fullYearProjection?: boolean
-  enabled?: boolean
-}
-
-type GetTaxSummaryParams = Omit<UseTaxSummaryOptions, 'enabled'> & {
-  businessId: string
 }
 
 const getTaxSummary = getWithQuery<
@@ -31,21 +27,12 @@ const getTaxSummary = getWithQuery<
   }),
 )
 
-const useTaxSummaryQuery = createQueryHook({
+export const useTaxSummary = createQueryHook({
   tags: [TAX_SUMMARY_TAG_KEY],
   request: getTaxSummary,
   schema: TaxSummaryResponseSchema,
   select: ({ data }) => data,
 })
-
-export function useTaxSummary({ year, reportingBasis, fullYearProjection, enabled = true }: UseTaxSummaryOptions) {
-  return useTaxSummaryQuery({
-    year,
-    reportingBasis,
-    fullYearProjection,
-    isEnabled: enabled,
-  })
-}
 
 export const useTaxSummaryGlobalCacheActions = createResourceGlobalCacheActions<
   TaxSummary

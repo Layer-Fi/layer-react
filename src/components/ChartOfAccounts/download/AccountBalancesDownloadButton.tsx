@@ -21,7 +21,9 @@ export function AccountBalancesDownloadButton({
   const { trigger, isMutating, error } = useAccountBalancesDownload({
     startDate,
     endDate,
-    onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
+    swrOptions: {
+      onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
+    },
   })
 
   return (

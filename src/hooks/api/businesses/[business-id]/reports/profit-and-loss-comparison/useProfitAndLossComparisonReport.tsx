@@ -45,7 +45,7 @@ const requestProfitAndLossComparison: MutationRequest<
   },
 )
 
-const useProfitAndLossComparisonReportQuery = createQueryHook({
+export const useProfitAndLossComparisonReport = createQueryHook({
   tags: [PNL_COMPARISON_REPORT_TAG_KEY],
   request: postAsQuery(
     requestProfitAndLossComparison,
@@ -58,20 +58,5 @@ const useProfitAndLossComparisonReportQuery = createQueryHook({
   schema: ProfitAndLossComparisonResponseSchema,
   select: ({ data }) => data,
 })
-
-type UseProfitAndLossComparisonReportProps = Omit<ProfitAndLossComparisonRequestParams, 'businessId'>
-
-export function useProfitAndLossComparisonReport({
-  periods,
-  tagFilters,
-  reportingBasis,
-}: UseProfitAndLossComparisonReportProps) {
-  return useProfitAndLossComparisonReportQuery({
-    periods,
-    tagFilters,
-    reportingBasis,
-    isEnabled: Boolean(periods),
-  })
-}
 
 export const useProfitAndLossComparisonReportCacheActions = createResourceGlobalCacheActions<ProfitAndLossComparison>(PNL_COMPARISON_REPORT_TAG_KEY)

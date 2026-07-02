@@ -1,5 +1,4 @@
 import type { S3PresignedUrl } from '@internal-types/general'
-import type { Awaitable } from '@internal-types/utility/promises'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import type { MutationRequest } from '@utils/api/postAsQuery'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
@@ -25,7 +24,7 @@ const requestJournalEntriesCSV: MutationRequest<
 > = (baseUrl, accessToken, options) =>
   getJournalEntriesCSV(baseUrl, accessToken, { params: options?.params })()
 
-const useJournalEntriesDownloadMutation = createMutationHook({
+export const useJournalEntriesDownload = createMutationHook({
   tags: ['#journal-entries', '#exports', '#csv'],
   request: requestJournalEntriesCSV,
   keyParams: ['startDate', 'endDate'],
@@ -33,21 +32,3 @@ const useJournalEntriesDownloadMutation = createMutationHook({
   select: ({ data }) => data,
   swrOptions: { throwOnError: false },
 })
-
-type UseJournalEntriesDownloadOptions = {
-  startDate?: Date
-  endDate?: Date
-  onSuccess?: (url: S3PresignedUrl) => Awaitable<unknown>
-}
-
-export function useJournalEntriesDownload({
-  startDate,
-  endDate,
-  onSuccess,
-}: UseJournalEntriesDownloadOptions) {
-  return useJournalEntriesDownloadMutation({
-    startDate,
-    endDate,
-    swrOptions: { onSuccess },
-  })
-}
