@@ -20,12 +20,12 @@ type QueryHookOptions = {
 export function createQueryHook<
   TParams extends BusinessScopedParams,
   TEncoded,
-  TDecoded,
+  TDecoded = TEncoded,
   TData = TDecoded,
 >(config: {
   tags: ReadonlyArray<string>
   request: AuthenticatedRequest<TEncoded, TParams>
-  schema: Schema.Schema<TDecoded, TEncoded>
+  schema?: Schema.Schema<TDecoded, TEncoded>
   select?: (decoded: TDecoded) => TData
   swrOptions?: SWRConfiguration
   isLocalized?: boolean

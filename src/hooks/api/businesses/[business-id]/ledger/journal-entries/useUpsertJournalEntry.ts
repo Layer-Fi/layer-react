@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 
 import { post } from '@utils/api/authenticatedHttp'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useLedgerEntriesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
 import { useBalanceSheetGlobalCacheActions } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/useBalanceSheet'
 import { useStatementOfCashFlowGlobalCacheActions } from '@hooks/api/businesses/[business-id]/reports/cashflow-statement/useStatementOfCashFlow'
@@ -48,10 +49,11 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
   const { invalidate: invalidateStatementOfCashFlow } = useStatementOfCashFlowGlobalCacheActions()
 
   const rawMutationResponse = useCreateJournalEntry()
+  const { trigger: originalTrigger } = rawMutationResponse
 
-  const trigger = useCallback(
+  const stableProxiedTrigger = useCallback(
     async (body: UpsertJournalEntryBody) => {
-      const result = await rawMutationResponse.trigger(body)
+      const result = await originalTrigger(body)
 
       // Invalidate all relevant caches after successful journal entry creation
       void forceReloadLedgerEntries()
@@ -63,13 +65,8 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
 
       return result
     },
-    [rawMutationResponse, forceReloadLedgerEntries, debouncedInvalidateProfitAndLoss, invalidateBalanceSheet, invalidateStatementOfCashFlow],
+    [originalTrigger, forceReloadLedgerEntries, debouncedInvalidateProfitAndLoss, invalidateBalanceSheet, invalidateStatementOfCashFlow],
   )
 
-  return {
-    trigger,
-    data: rawMutationResponse.data,
-    isError: rawMutationResponse.isError,
-    isMutating: rawMutationResponse.isMutating,
-  }
+  return withStableTrigger(rawMutationResponse, stableProxiedTrigger)
 }

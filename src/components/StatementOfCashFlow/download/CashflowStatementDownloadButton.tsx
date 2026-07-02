@@ -14,11 +14,12 @@ export function CashflowStatementDownloadButton({
   icon,
 }: CashflowStatementDownloadButtonProps) {
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { trigger, isMutating, error } = useCashflowStatementDownload({
+  const { trigger, isMutating, isError } = useCashflowStatementDownload({
     startDate,
     endDate,
-    onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
+    swrOptions: {
+      onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
+    },
   })
 
   return (
@@ -27,7 +28,7 @@ export function CashflowStatementDownloadButton({
         icon={icon}
         onPress={() => { void trigger() }}
         isPending={isMutating}
-        requestFailed={Boolean(error)}
+        requestFailed={isError}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>

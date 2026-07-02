@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 
 import { BankTransactionDataOnlySchema } from '@schemas/bankTransactions/bankTransactionDataOnly'
@@ -28,7 +27,7 @@ const createCustomAccountTransactions = post<
   `/v1/businesses/${businessId}/custom-accounts/${customAccountId}/transactions`,
 )
 
-const useCreateCustomAccountTransactionsMutation = createMutationHook({
+export const useCreateCustomAccountTransactions = createMutationHook({
   tags: [`${CUSTOM_ACCOUNTS_TAG_KEY}:create-transactions`],
   request: createCustomAccountTransactions,
   argToParams: ({ customAccountId }: CreateCustomAccountTransactionsArgs) => ({ customAccountId }),
@@ -36,24 +35,3 @@ const useCreateCustomAccountTransactionsMutation = createMutationHook({
   schema: CreateCustomAccountTransactionsResponseSchema,
   swrOptions: { throwOnError: false },
 })
-
-export function useCreateCustomAccountTransactions() {
-  const mutationResponse = useCreateCustomAccountTransactionsMutation()
-  const { trigger: originalTrigger } = mutationResponse
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-      return triggerResult
-    },
-    [originalTrigger],
-  )
-
-  return {
-    trigger: stableProxiedTrigger,
-    data: mutationResponse.data,
-    error: mutationResponse.error,
-    isError: mutationResponse.isError,
-    isMutating: mutationResponse.isMutating,
-  }
-}

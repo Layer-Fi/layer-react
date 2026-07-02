@@ -1,38 +1,23 @@
-import useSWR from 'swr'
+import { Schema } from 'effect'
 
 import { getText } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const INVOICE_PREVIEW_TAG_KEY = '#invoices-preview'
-
-const buildKey = createBuildKey<{ businessId: string, invoiceId: string }>([INVOICE_PREVIEW_TAG_KEY])
 
 const getInvoicePreview = getText<{ businessId: string, invoiceId: string }>(
   ({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/html`,
 )
 
-const fetchInvoicePreview = createKeyedFetcher(getInvoicePreview)
-
 type UseInvoicePreviewProps = {
   invoiceId: string
 }
-export function useInvoicePreview({ invoiceId }: UseInvoicePreviewProps) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
-  const response = useSWR(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      invoiceId,
-    })),
-    fetchInvoicePreview,
-  )
-
-  return new SWRQueryResult(response)
-}
+export const useInvoicePreview = createQueryHook({
+  tags: [INVOICE_PREVIEW_TAG_KEY],
+  request: getInvoicePreview,
+  schema: Schema.String,
+})
 
 export function usePreloadInvoicePreview(props: UseInvoicePreviewProps) {
   /*

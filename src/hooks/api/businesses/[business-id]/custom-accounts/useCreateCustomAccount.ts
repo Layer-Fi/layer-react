@@ -4,6 +4,7 @@ import { useSWRConfig } from 'swr'
 import { CustomAccountSchema, type RawCustomAccount } from '@schemas/customAccounts'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
@@ -58,10 +59,5 @@ export function useCreateCustomAccount() {
     ],
   )
 
-  return {
-    trigger: stableProxiedTrigger,
-    data: mutationResponse.data,
-    isError: mutationResponse.isError,
-    isMutating: mutationResponse.isMutating,
-  }
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

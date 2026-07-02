@@ -3,7 +3,7 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { useUpsertCategorizationRule } from '@hooks/api/businesses/[business-id]/categorization-rules/useUpsertCategorizationRule'
+import { UpsertCategorizationRuleMode, useUpsertCategorizationRule } from '@hooks/api/businesses/[business-id]/categorization-rules/useUpsertCategorizationRule'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import {
   type CategorizationRuleFormState,
@@ -22,7 +22,11 @@ type UseCategorizationRuleFormProps = {
 export const useCategorizationRuleForm = ({ formState, onSuccess }: UseCategorizationRuleFormProps) => {
   const { t } = useTranslation()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
-  const { trigger: upsertCategorizationRule } = useUpsertCategorizationRule()
+  const { trigger: upsertCategorizationRule } = useUpsertCategorizationRule(
+    formState.mode === 'edit'
+      ? { mode: UpsertCategorizationRuleMode.Update, categorizationRuleId: formState.rule.id }
+      : { mode: UpsertCategorizationRuleMode.Create },
+  )
 
   const formDefaults = useMemo(
     () => getCategorizationRuleFormDefaultValues(formState),
@@ -35,15 +39,8 @@ export const useCategorizationRuleForm = ({ formState, onSuccess }: UseCategoriz
   const onSubmit = useCallback(async ({ value }: { value: CategorizationRuleFormValues }) => {
     try {
       const result = formState.mode === 'edit'
-        ? await upsertCategorizationRule({
-          mode: 'update',
-          categorizationRuleId: formState.rule.id,
-          body: convertFormToPatchBody(value),
-        })
-        : await upsertCategorizationRule({
-          mode: 'create',
-          body: convertFormToCreateBody(value),
-        })
+        ? await upsertCategorizationRule(convertFormToPatchBody(value))
+        : await upsertCategorizationRule(convertFormToCreateBody(value))
 
       setSubmitError(undefined)
       onSuccess(result)

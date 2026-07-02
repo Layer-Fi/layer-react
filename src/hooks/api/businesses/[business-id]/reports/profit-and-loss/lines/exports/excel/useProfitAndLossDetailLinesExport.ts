@@ -1,19 +1,17 @@
-import useSWRMutation from 'swr/mutation'
-
 import type { S3PresignedUrl } from '@internal-types/general'
-import type { Awaitable } from '@internal-types/utility/promises'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
+import type { MutationRequest } from '@utils/api/postAsQuery'
 import { type PnlDetailLinesBaseParams, type PnlDetailLinesFilterParams } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/lines/useProfitAndLossDetailLines'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+
+type PnlDetailLinesExportParams = PnlDetailLinesBaseParams & PnlDetailLinesFilterParams
 
 const getProfitAndLossDetailLinesExcel = getWithQuery<
   {
     data?: S3PresignedUrl
     error?: unknown
   },
-  PnlDetailLinesBaseParams & PnlDetailLinesFilterParams
+  PnlDetailLinesExportParams
 >(
   ['businessId'],
   ({ businessId }) => `/v1/businesses/${businessId}/reports/profit-and-loss/lines/exports/excel`,
@@ -28,44 +26,18 @@ const getProfitAndLossDetailLinesExcel = getWithQuery<
   }),
 )
 
-const fetchProfitAndLossDetailLinesExcel = createKeyedFetcher(getProfitAndLossDetailLinesExcel)
+const requestProfitAndLossDetailLinesExcel: MutationRequest<
+  { data?: S3PresignedUrl, error?: unknown },
+  Record<string, unknown>,
+  PnlDetailLinesExportParams
+> = (baseUrl, accessToken, options) =>
+  getProfitAndLossDetailLinesExcel(baseUrl, accessToken, { params: options?.params })()
 
-const buildKey = createBuildKey<PnlDetailLinesBaseParams & PnlDetailLinesFilterParams>(['#pnl-detail-lines', '#exports', '#excel'])
-
-type UseProfitAndLossDetailLinesExportOptions = PnlDetailLinesBaseParams & PnlDetailLinesFilterParams & {
-  onSuccess?: (url: S3PresignedUrl) => Awaitable<unknown>
-}
-
-export function useProfitAndLossDetailLinesExport({
-  startDate,
-  endDate,
-  pnlStructureLineItemName,
-  tagFilter,
-  reportingBasis,
-  pnlStructure,
-  onSuccess,
-}: UseProfitAndLossDetailLinesExportOptions) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  return useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      startDate,
-      endDate,
-      pnlStructureLineItemName,
-      tagFilter,
-      reportingBasis,
-      pnlStructure,
-    })),
-    key => fetchProfitAndLossDetailLinesExcel(key).then(({ data }) => {
-      if (onSuccess && data) {
-        return onSuccess(data)
-      }
-    }),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
-}
+export const useProfitAndLossDetailLinesExport = createMutationHook({
+  tags: ['#pnl-detail-lines', '#exports', '#excel'],
+  request: requestProfitAndLossDetailLinesExcel,
+  keyParams: ['startDate', 'endDate', 'pnlStructureLineItemName', 'tagFilter', 'reportingBasis', 'pnlStructure'],
+  argToBody: (_arg: undefined) => undefined,
+  select: ({ data }) => data,
+  swrOptions: { throwOnError: false },
+})

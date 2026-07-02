@@ -7,6 +7,7 @@ import {
 } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patch, post } from '@utils/api/authenticatedHttp'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useCategorizationRulesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/categorization-rules/useListCategorizationRules'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
@@ -14,24 +15,32 @@ import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const UPSERT_CATEGORIZATION_RULE_TAG = '#upsert-categorization-rule'
 
+export enum UpsertCategorizationRuleMode {
+  Create = 'Create',
+  Update = 'Update',
+}
+
 const UpsertCategorizationRuleReturnSchema = UnwrappedDataResponseSchema(CategorizationRuleSchema)
 
 type UpsertCategorizationRuleReturnEncoded = typeof UpsertCategorizationRuleReturnSchema.Encoded
 type CreateCategorizationRuleBody = typeof CreateCategorizationRuleSchema.Encoded
 type PatchCategorizationRuleBody = typeof PatchCategorizationRuleSchema.Encoded
 
-export type UpsertCategorizationRuleArg =
-  | { mode: 'create', body: CreateCategorizationRuleBody }
-  | { mode: 'update', categorizationRuleId: string, body: PatchCategorizationRuleBody }
+/*
+ * Create and patch accept different fields; the shared body type keeps both mutations'
+ * triggers call-compatible so the mode-selected response can back `withStableTrigger`.
+ * Callers pass the body matching the mode the hook was created with.
+ */
+type UpsertCategorizationRuleBody = CreateCategorizationRuleBody | PatchCategorizationRuleBody
 
-const createCategorizationRule = post<UpsertCategorizationRuleReturnEncoded, CreateCategorizationRuleBody>(
+const createCategorizationRule = post<UpsertCategorizationRuleReturnEncoded, UpsertCategorizationRuleBody>(
   ({ businessId }) =>
     `/v1/businesses/${businessId}/categorization-rules`,
 )
 
 const updateCategorizationRule = patch<
   UpsertCategorizationRuleReturnEncoded,
-  PatchCategorizationRuleBody,
+  UpsertCategorizationRuleBody,
   { businessId: string, categorizationRuleId: string }
 >(
   ({ businessId, categorizationRuleId }) =>
@@ -45,32 +54,41 @@ const useCreateCategorizationRuleMutation = createMutationHook({
   swrOptions: { throwOnError: true },
 })
 
-type UpdateCategorizationRuleArg = { categorizationRuleId: string, body: PatchCategorizationRuleBody }
-
 const useUpdateCategorizationRuleMutation = createMutationHook({
   tags: [UPSERT_CATEGORIZATION_RULE_TAG],
   request: updateCategorizationRule,
-  argToParams: ({ categorizationRuleId }: UpdateCategorizationRuleArg) => ({ categorizationRuleId }),
-  argToBody: ({ body }: UpdateCategorizationRuleArg) => body,
+  keyParams: ['categorizationRuleId'],
   schema: UpsertCategorizationRuleReturnSchema,
   swrOptions: { throwOnError: true },
 })
 
-export function useUpsertCategorizationRule() {
+type UseUpsertCategorizationRuleProps =
+  | { mode: UpsertCategorizationRuleMode.Create }
+  | { mode: UpsertCategorizationRuleMode.Update, categorizationRuleId: string }
+
+export function useUpsertCategorizationRule(props: UseUpsertCategorizationRuleProps) {
+  const { mode } = props
+  const categorizationRuleId = mode === UpsertCategorizationRuleMode.Update ? props.categorizationRuleId : undefined
+
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
   const { forceReload: forceReloadCategorizationRules, patchByKey: patchCategorizationRuleByKey } = useCategorizationRulesGlobalCacheActions()
 
   const createResponse = useCreateCategorizationRuleMutation()
-  const updateResponse = useUpdateCategorizationRuleMutation()
+  const updateResponse = useUpdateCategorizationRuleMutation({
+    categorizationRuleId: categorizationRuleId ?? '',
+    isEnabled: categorizationRuleId !== undefined,
+  })
+
+  const mutationResponse = mode === UpsertCategorizationRuleMode.Create ? createResponse : updateResponse
 
   const { trigger: createTrigger } = createResponse
   const { trigger: updateTrigger } = updateResponse
 
   const stableProxiedTrigger = useCallback(
-    async (arg: UpsertCategorizationRuleArg) => {
-      if (arg.mode === 'create') {
-        const triggerResult = await createTrigger(arg.body)
+    async (body: UpsertCategorizationRuleBody) => {
+      if (mode === UpsertCategorizationRuleMode.Create) {
+        const triggerResult = await createTrigger(body)
 
         void forceReloadCategorizationRules()
         void forceReloadBankTransactions()
@@ -79,10 +97,7 @@ export function useUpsertCategorizationRule() {
         return triggerResult
       }
 
-      const triggerResult = await updateTrigger({
-        categorizationRuleId: arg.categorizationRuleId,
-        body: arg.body,
-      })
+      const triggerResult = await updateTrigger(body)
 
       if (triggerResult) {
         void patchCategorizationRuleByKey(triggerResult)
@@ -90,16 +105,16 @@ export function useUpsertCategorizationRule() {
 
       return triggerResult
     },
-    [createTrigger, updateTrigger, forceReloadCategorizationRules, forceReloadBankTransactions, debouncedInvalidateProfitAndLoss, patchCategorizationRuleByKey],
+    [
+      mode,
+      createTrigger,
+      updateTrigger,
+      forceReloadCategorizationRules,
+      forceReloadBankTransactions,
+      debouncedInvalidateProfitAndLoss,
+      patchCategorizationRuleByKey,
+    ],
   )
 
-  const mutationResponse = updateResponse.isMutating ? updateResponse : createResponse
-
-  return {
-    trigger: stableProxiedTrigger,
-    data: mutationResponse.data,
-    isMutating: mutationResponse.isMutating,
-    error: mutationResponse.error,
-    isError: mutationResponse.isError,
-  }
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }
