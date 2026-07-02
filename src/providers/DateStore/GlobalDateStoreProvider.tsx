@@ -1,13 +1,10 @@
 import { type PropsWithChildren } from 'react'
 
-import { type DateRange, makeDateStore } from '@providers/DateStore/makeDateStore'
+import { makeDateStore } from '@providers/DateStore/internal/dateStoreFactory'
+import type { DateRange } from '@providers/DateStore/internal/types'
 
-export {
-  clampToAfterActivationDate,
-  clampToPresentOrPast,
-  type DateRange,
-  type DateSelectionMode,
-} from '@providers/DateStore/makeDateStore'
+export { clampToAfterActivationDate, clampToPresentOrPast } from '@providers/DateStore/internal/dateStoreUtils'
+export type { DateRange, DateSelectionMode } from '@providers/DateStore/internal/types'
 
 export type GlobalDateState = DateRange
 
