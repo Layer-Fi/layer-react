@@ -1,7 +1,7 @@
 import { type ReportingBasis } from '@internal-types/general'
 import { type ProfitAndLossComparison, type ProfitAndLossComparisonRequestBody } from '@internal-types/profitAndLoss'
 import { post } from '@utils/api/authenticatedHttp'
-import { type MutationRequest, postAsQuery } from '@utils/api/postAsQuery'
+import { type MutationRequest, postAsQuery } from '@utils/api/getAsMutation'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 

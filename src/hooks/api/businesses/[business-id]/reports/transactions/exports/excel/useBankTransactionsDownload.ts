@@ -1,12 +1,8 @@
-import useSWRMutation from 'swr/mutation'
-
 import type { S3PresignedUrl } from '@internal-types/general'
-import { type APIError } from '@utils/api/apiError'
+import { getAsMutation } from '@utils/api/getAsMutation'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
 import type { UseBankTransactionsOptions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 type GetBankTransactionsExportParams = {
   businessId: string
@@ -38,29 +34,15 @@ const getBankTransactionsExcel = getWithQuery<
   }),
 )
 
-const fetchBankTransactionsExcel = createKeyedFetcher(getBankTransactionsExcel)
-
-const buildKey = createBuildKey<{ businessId: string }>(['#bank-transactions-download-excel'])
+const requestBankTransactionsExcel = getAsMutation(getBankTransactionsExcel)
 
 type UseBankTransactionsDownloadOptions = UseBankTransactionsOptions
 
-export function useBankTransactionsDownload() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  return useSWRMutation<
-    S3PresignedUrl,
-    APIError,
-    () => ReturnType<typeof buildKey>,
-    UseBankTransactionsDownloadOptions>(
-      () => withLocale(buildKey({
-        ...auth,
-        businessId,
-      })),
-      (key, { arg }: { arg: UseBankTransactionsDownloadOptions }) =>
-        fetchBankTransactionsExcel({ ...key, ...arg }).then(({ data }) => data),
-      {
-        revalidate: false,
-        throwOnError: false,
-      },
-      )
-}
+export const useBankTransactionsDownload = createMutationHook({
+  tags: ['#bank-transactions-download-excel'],
+  request: requestBankTransactionsExcel,
+  argToParams: (arg: UseBankTransactionsDownloadOptions) => arg,
+  argToBody: () => undefined,
+  select: ({ data }: { data: S3PresignedUrl }) => data,
+  swrOptions: { throwOnError: false },
+})

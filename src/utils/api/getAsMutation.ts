@@ -6,10 +6,6 @@ export type MutationRequest<TReturn, TBody, TParams> = (
   options?: { params?: TParams, body?: TBody },
 ) => Promise<TReturn>
 
-/*
- * Adapts a POST-backed read endpoint into the thunk shape `createKeyedFetcher` and the
- * query hook factories expect, deriving the request body from the params.
- */
 export function postAsQuery<TReturn, TBody, TParams>(
   request: MutationRequest<TReturn, TBody, TParams>,
   toBody: (params: TParams) => TBody,
@@ -22,8 +18,12 @@ export function postAsQuery<TReturn, TBody, TParams>(
 }
 
 /*
- * Adapts a GET-backed request into the shape `createMutationHook` expects, for
- * endpoints (e.g. report exports) that are triggered imperatively rather than on render.
+ * Adapts a GET-shaped endpoint that semantically acts (e.g. report exports that generate
+ * a file and mint a fresh presigned URL per call) into the mutation pipeline, so it only
+ * runs on `trigger()` and is never cached or revalidated.
+ *
+ * Assign the result to a `const` before passing it to `createMutationHook`; inlined in the
+ * config object, TypeScript fails to infer the factory's type params from it.
  */
 export function getAsMutation<TReturn, TParams>(
   request: AuthenticatedRequest<TReturn, TParams>,

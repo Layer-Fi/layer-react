@@ -1,6 +1,6 @@
 import type { S3PresignedUrl } from '@internal-types/general'
+import { getAsMutation } from '@utils/api/getAsMutation'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { getAsMutation } from '@utils/api/postAsQuery'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 type GetJournalEntriesCSVParams = {

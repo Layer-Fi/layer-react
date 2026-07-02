@@ -1,6 +1,6 @@
 import type { S3PresignedUrl } from '@internal-types/general'
+import { getAsMutation } from '@utils/api/getAsMutation'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { getAsMutation } from '@utils/api/postAsQuery'
 import { type PnlDetailLinesBaseParams, type PnlDetailLinesFilterParams } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/lines/useProfitAndLossDetailLines'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 

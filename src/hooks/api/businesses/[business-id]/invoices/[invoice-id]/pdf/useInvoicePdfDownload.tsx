@@ -2,7 +2,7 @@ import type { Awaitable } from '@internal-types/utility/promises'
 import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/common/s3PresignedUrl'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { getAsMutation } from '@utils/api/postAsQuery'
+import { getAsMutation } from '@utils/api/getAsMutation'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const InvoicePdfReturnSchema = UnwrappedDataResponseSchema(S3PresignedUrlSchema)

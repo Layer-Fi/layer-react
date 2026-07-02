@@ -50,7 +50,8 @@ type UseSetMetadataOnBankTransactionParameters = {
 export function useSetMetadataOnBankTransaction({
   bankTransactionId,
 }: UseSetMetadataOnBankTransactionParameters) {
-  const mutationResponse = useSetMetadataOnBankTransactionMutation({ bankTransactionId })
+  const rawMutationResponse = useSetMetadataOnBankTransactionMutation({ bankTransactionId })
+  const mutationResponse = useMinMutatingMutation({ swrMutationResponse: rawMutationResponse })
 
   const { debouncedInvalidateBankTransactions, optimisticallyUpdateBankTransactions } = useBankTransactionsGlobalCacheActions()
 
@@ -103,7 +104,5 @@ export function useSetMetadataOnBankTransaction({
     ],
   )
 
-  const baseProxiedResponse = withStableTrigger(mutationResponse, stableProxiedTrigger)
-
-  return useMinMutatingMutation({ swrMutationResponse: baseProxiedResponse })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }
