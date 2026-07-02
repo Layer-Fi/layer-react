@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 
 import { TimeEntrySchema, type UpsertTimeEntryEncoded } from '@schemas/timeTracking'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patch, post } from '@utils/api/authenticatedHttp'
 import type { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -20,9 +20,7 @@ type CreateTimeEntryBody = UpsertTimeEntryEncoded
 type UpdateTimeEntryBody = Partial<UpsertTimeEntryEncoded>
 type UpsertTimeEntryBody = CreateTimeEntryBody | UpdateTimeEntryBody
 
-const UpsertTimeEntryReturnSchema = Schema.Struct({
-  data: TimeEntrySchema,
-})
+const UpsertTimeEntryReturnSchema = UnwrappedDataResponseSchema(TimeEntrySchema)
 
 type UpsertTimeEntryReturn = typeof UpsertTimeEntryReturnSchema.Type
 type UpsertTimeEntryReturnEncoded = typeof UpsertTimeEntryReturnSchema.Encoded
@@ -85,7 +83,7 @@ export function useUpsertTimeEntry(props: UseUpsertTimeEntryProps) {
       const triggerResult = await originalTrigger(...triggerParameters)
 
       if (mode === UpsertTimeEntryMode.Update) {
-        void patchTimeEntryByKey(triggerResult.data)
+        void patchTimeEntryByKey(triggerResult)
       }
       else {
         void forceReloadTimeEntries()

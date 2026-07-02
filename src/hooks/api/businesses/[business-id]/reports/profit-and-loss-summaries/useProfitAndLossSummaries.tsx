@@ -1,7 +1,7 @@
-import { Schema } from 'effect'
 import useSWR from 'swr'
 
 import { type ProfitAndLossSummaries, type ProfitAndLossSummariesRequestParams, ProfitAndLossSummariesSchema } from '@schemas/reports/profitAndLoss'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
@@ -13,9 +13,7 @@ export const PNL_SUMMARIES_TAG_KEY = '#profit-and-loss-summaries'
 
 const buildKey = createBuildKey<ProfitAndLossSummariesRequestParams>([PNL_SUMMARIES_TAG_KEY])
 
-const ProfitAndLossSummariesResponseSchema = Schema.Struct({
-  data: ProfitAndLossSummariesSchema,
-})
+const ProfitAndLossSummariesResponseSchema = UnwrappedDataResponseSchema(ProfitAndLossSummariesSchema)
 
 const getProfitAndLossSummaries = getWithQuery<
   typeof ProfitAndLossSummariesResponseSchema.Encoded,
@@ -42,7 +40,7 @@ export function useProfitAndLossSummaries({
       businessId,
       ...params,
     })),
-    key => fetchProfitAndLossSummaries(key).then(({ data }) => data),
+    key => fetchProfitAndLossSummaries(key),
     { keepPreviousData },
   )
 

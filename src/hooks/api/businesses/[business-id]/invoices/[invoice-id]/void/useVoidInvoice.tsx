@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 
 import { InvoiceSchema } from '@schemas/invoices/invoice'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
@@ -10,9 +10,7 @@ import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const VOID_INVOICE_TAG_KEY = '#void-invoice'
 
-const VoidInvoiceReturnSchema = Schema.Struct({
-  data: InvoiceSchema,
-})
+const VoidInvoiceReturnSchema = UnwrappedDataResponseSchema(InvoiceSchema)
 
 const voidInvoice = post<
   typeof VoidInvoiceReturnSchema.Encoded,
@@ -43,7 +41,7 @@ export const useVoidInvoice = ({ invoiceId }: UseVoidInvoiceProps) => {
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      void patchInvoiceByKey(triggerResult.data)
+      void patchInvoiceByKey(triggerResult)
 
       void forceReloadInvoiceSummaryStats()
 

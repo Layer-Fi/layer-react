@@ -1,14 +1,15 @@
 import { Schema } from 'effect'
 
 import { type CategoriesListMode, CategoryListSchema } from '@schemas/categorization'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const CATEGORIES_TAG_KEY = '#categories'
 
-const CategoriesResponseSchema = Schema.Struct({
-  data: CategoryListSchema.pipe(Schema.pluck('categories')),
-})
+const CategoriesResponseSchema = UnwrappedDataResponseSchema(
+  CategoryListSchema.pipe(Schema.pluck('categories')),
+)
 
 type GetCategoriesParams = {
   businessId: string
@@ -30,7 +31,7 @@ type UseCategoriesOptions = {
 export const useCategories = createQueryHook({
   tags: [CATEGORIES_TAG_KEY],
   request: getCategories,
-  schema: CategoriesResponseSchema.pipe(Schema.pluck('data')),
+  schema: CategoriesResponseSchema,
 })
 
 export function usePreloadCategories(options?: UseCategoriesOptions) {

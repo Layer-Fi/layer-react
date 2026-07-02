@@ -1,15 +1,16 @@
 import { Schema } from 'effect'
 
 import { type CatalogService, CatalogServiceSchema } from '@schemas/catalogService'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 const LIST_CATALOG_SERVICES_TAG_KEY = '#list-catalog-services'
 
-const ListCatalogServicesResponseSchema = Schema.Struct({
-  data: Schema.Array(CatalogServiceSchema),
-})
+const ListCatalogServicesResponseSchema = UnwrappedDataResponseSchema(
+  Schema.Array(CatalogServiceSchema),
+)
 
 type ListCatalogServicesParams = {
   businessId: string

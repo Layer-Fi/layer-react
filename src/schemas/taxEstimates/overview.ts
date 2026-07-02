@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { createTransformedEnumSchema } from '@schemas/utils'
+import { createTransformedEnumSchema, UnwrappedDataResponseSchema } from '@schemas/utils'
 
 import { type TaxSummarySectionType } from './summary'
 
@@ -41,9 +41,7 @@ const TaxOverviewApiDataSchema = Schema.Struct({
 
 export type TaxOverviewApiData = typeof TaxOverviewApiDataSchema.Type
 
-export const TaxOverviewApiResponseSchema = Schema.Struct({
-  data: TaxOverviewApiDataSchema,
-})
+export const TaxOverviewApiResponseSchema = UnwrappedDataResponseSchema(TaxOverviewApiDataSchema)
 
 export type TaxOverviewApiResponse = typeof TaxOverviewApiResponseSchema.Type
 

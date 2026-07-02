@@ -32,7 +32,7 @@ export const useTripForm = (props: UseTripFormProps) => {
       const result = await upsertTrip(upsertTripRequest)
 
       setSubmitError(undefined)
-      onSuccess(result.data)
+      onSuccess(result)
     }
     catch (e) {
       console.error(e)

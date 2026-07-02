@@ -1,11 +1,10 @@
-import { Schema } from 'effect'
-
 import {
   type BookkeepingConfiguration,
-  BookkeepingConfigurationResponseSchema,
+  BookkeepingConfigurationSchema,
   BookkeepingStatus,
   TransactionTaggingStrategy,
 } from '@schemas/bookkeepingConfiguration'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
@@ -18,6 +17,8 @@ type GetBookkeepingConfigurationParams = {
   businessId: string
 }
 
+const BookkeepingConfigurationResponseSchema = UnwrappedDataResponseSchema(BookkeepingConfigurationSchema)
+
 const getBookkeepingConfiguration = get<
   typeof BookkeepingConfigurationResponseSchema.Encoded,
   GetBookkeepingConfigurationParams
@@ -28,5 +29,5 @@ const getBookkeepingConfiguration = get<
 export const useBookkeepingConfiguration = createQueryHook({
   tags: [BOOKKEEPING_CONFIGURATION_TAG_KEY],
   request: getBookkeepingConfiguration,
-  schema: BookkeepingConfigurationResponseSchema.pipe(Schema.pluck('data')),
+  schema: BookkeepingConfigurationResponseSchema,
 })

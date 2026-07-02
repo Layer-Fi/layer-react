@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 
 import { CatalogServiceSchema, type UpdateCatalogServiceEncoded } from '@schemas/catalogService'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patch } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useCatalogServicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
@@ -11,9 +11,7 @@ const UPDATE_CATALOG_SERVICE_TAG_KEY = '#update-catalog-service'
 
 type UpdateCatalogServiceBody = UpdateCatalogServiceEncoded
 
-const UpdateCatalogServiceResponseSchema = Schema.Struct({
-  data: CatalogServiceSchema,
-})
+const UpdateCatalogServiceResponseSchema = UnwrappedDataResponseSchema(CatalogServiceSchema)
 
 const updateCatalogService = patch<
   typeof UpdateCatalogServiceResponseSchema.Encoded,
@@ -42,7 +40,7 @@ export function useUpdateCatalogService({ serviceId }: UseUpdateCatalogServicePr
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
-      void patchCatalogServiceByKey(triggerResult.data)
+      void patchCatalogServiceByKey(triggerResult)
       return triggerResult
     },
     [originalTrigger, patchCatalogServiceByKey],

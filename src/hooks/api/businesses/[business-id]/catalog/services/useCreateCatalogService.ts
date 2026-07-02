@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 
 import { CatalogServiceSchema, type CreateCatalogServiceEncoded } from '@schemas/catalogService'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useCatalogServicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
@@ -11,9 +11,7 @@ const CREATE_CATALOG_SERVICE_TAG_KEY = '#create-catalog-service'
 
 type CreateCatalogServiceBody = CreateCatalogServiceEncoded
 
-const CreateCatalogServiceResponseSchema = Schema.Struct({
-  data: CatalogServiceSchema,
-})
+const CreateCatalogServiceResponseSchema = UnwrappedDataResponseSchema(CatalogServiceSchema)
 
 const createCatalogService = post<
   typeof CreateCatalogServiceResponseSchema.Encoded,

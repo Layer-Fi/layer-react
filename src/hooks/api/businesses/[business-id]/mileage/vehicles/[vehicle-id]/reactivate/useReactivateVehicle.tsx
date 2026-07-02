@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { VehicleSchema } from '@schemas/vehicle'
 import { post } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -9,9 +9,7 @@ import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const REACTIVATE_VEHICLE_TAG_KEY = '#reactivate-vehicle'
 
-const ReactivateVehicleReturnSchema = Schema.Struct({
-  data: VehicleSchema,
-})
+const ReactivateVehicleReturnSchema = UnwrappedDataResponseSchema(VehicleSchema)
 
 const reactivateVehicle = post<
   typeof ReactivateVehicleReturnSchema.Encoded,
@@ -43,7 +41,7 @@ export const useReactivateVehicle = ({ vehicleId }: UseReactivateVehicleProps) =
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      void patchVehicleByKey(triggerResult.data)
+      void patchVehicleByKey(triggerResult)
 
       return triggerResult
     },

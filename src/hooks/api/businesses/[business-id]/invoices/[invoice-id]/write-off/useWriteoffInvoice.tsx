@@ -3,6 +3,7 @@ import { Schema } from 'effect'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { type CreateInvoiceWriteoff, CreateInvoiceWriteoffSchema, InvoiceWriteoffSchema } from '@schemas/invoices/invoiceWriteoff'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
@@ -11,9 +12,7 @@ import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const CREATE_INVOICE_WRITEOFF_TAG_KEY = '#writeoff-invoice'
 
-const WriteoffInvoiceReturnSchema = Schema.Struct({
-  data: InvoiceWriteoffSchema,
-})
+const WriteoffInvoiceReturnSchema = UnwrappedDataResponseSchema(InvoiceWriteoffSchema)
 
 const writeoffInvoice = post<
   typeof WriteoffInvoiceReturnSchema.Encoded,

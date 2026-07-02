@@ -43,7 +43,7 @@ export const useCustomerForm = (props: UseCustomerFormProps) => {
       const result = await upsertCustomer(upsertCustomerRequest)
 
       setSubmitError(undefined)
-      onSuccess(result.data)
+      onSuccess(result)
     }
     catch (e) {
       console.error(e)

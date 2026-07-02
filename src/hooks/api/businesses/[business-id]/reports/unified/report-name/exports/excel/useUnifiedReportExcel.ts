@@ -1,7 +1,7 @@
-import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/common/s3PresignedUrl'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { type QueryParams } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
@@ -19,9 +19,7 @@ type GetUnifiedReportExcelParams = {
   route: string
 } & UnifiedReportControlParams & QueryParams
 
-const UnifiedReportExcelReturnSchema = Schema.Struct({
-  data: S3PresignedUrlSchema,
-})
+const UnifiedReportExcelReturnSchema = UnwrappedDataResponseSchema(S3PresignedUrlSchema)
 
 const getUnifiedReportExcel = getWithQuery<
   typeof UnifiedReportExcelReturnSchema.Encoded,
@@ -52,7 +50,7 @@ export function useUnifiedReportExcel({ onSuccess }: UseUnifiedReportExcelOption
       ? withLocale(buildKey({ ...auth, businessId, ...params }))
       : null,
     key => fetchUnifiedReportExcel(key)
-      .then(async ({ data }) => {
+      .then(async (data) => {
         if (onSuccess) await onSuccess(data)
         return data
       }),

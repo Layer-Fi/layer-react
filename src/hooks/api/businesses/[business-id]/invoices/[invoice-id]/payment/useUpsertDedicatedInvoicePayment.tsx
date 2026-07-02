@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { type InvoicePayment, InvoicePaymentSchema, type UpsertDedicatedInvoicePaymentSchema } from '@schemas/invoices/invoicePayment'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post, put } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
@@ -18,9 +18,7 @@ export enum UpsertDedicatedInvoicePaymentMode {
 
 type UpsertDedicatedInvoicePaymentBody = typeof UpsertDedicatedInvoicePaymentSchema.Encoded
 
-const UpsertDedicatedInvoicePaymentReturnSchema = Schema.Struct({
-  data: InvoicePaymentSchema,
-})
+const UpsertDedicatedInvoicePaymentReturnSchema = UnwrappedDataResponseSchema(InvoicePaymentSchema)
 
 type UpsertDedicatedInvoicePaymentReturnEncoded = typeof UpsertDedicatedInvoicePaymentReturnSchema.Encoded
 
@@ -104,7 +102,7 @@ export const useUpsertDedicatedInvoicePayment = (props: UseUpsertDedicatedInvoic
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      void patchInvoiceWithTransformation(applyPaymentToInvoice(triggerResult.data))
+      void patchInvoiceWithTransformation(applyPaymentToInvoice(triggerResult))
 
       void forceReloadInvoiceSummaryStats()
 

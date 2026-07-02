@@ -1,12 +1,11 @@
-import { Schema } from 'effect'
-
 import { LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const LEDGER_ACCOUNTS_ENTRY_TAG_KEY = '#ledger-accounts-entry'
 
-const LedgerAccountsEntryResponseSchema = Schema.Struct({ data: LedgerEntrySchema })
+const LedgerAccountsEntryResponseSchema = UnwrappedDataResponseSchema(LedgerEntrySchema)
 
 type GetLedgerAccountsEntryParams = {
   businessId: string

@@ -1,5 +1,3 @@
-import { Schema } from 'effect'
-
 import type { ReportingBasis } from '@internal-types/general'
 import { type TaxPaymentRow, TaxPaymentsResponseSchema } from '@schemas/taxEstimates/payments'
 import { getWithQuery } from '@utils/api/getWithQuery'
@@ -31,7 +29,7 @@ const getTaxPayments = getWithQuery<
 export const useTaxPayments = createQueryHook({
   tags: [TAX_PAYMENTS_TAG_KEY],
   request: getTaxPayments,
-  schema: TaxPaymentsResponseSchema.pipe(Schema.pluck('data')),
+  schema: TaxPaymentsResponseSchema,
   select: ({ data }) => data,
 })
 

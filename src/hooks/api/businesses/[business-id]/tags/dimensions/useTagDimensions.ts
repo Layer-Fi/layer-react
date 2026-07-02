@@ -1,6 +1,7 @@
 import { Schema } from 'effect'
 
 import { type TagDimension, TagDimensionSchema } from '@schemas/tag'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
@@ -9,11 +10,11 @@ export const TAG_DIMENSIONS_TAG_KEY = '#tag-dimensions'
 
 const TagDimensionsListSchema = Schema.Array(TagDimensionSchema)
 
-const TagDimensionsResponseSchema = Schema.Struct({
-  data: Schema.Struct({
+const TagDimensionsResponseSchema = UnwrappedDataResponseSchema(
+  Schema.Struct({
     dimensions: TagDimensionsListSchema,
   }).pipe(Schema.pluck('dimensions')),
-})
+)
 
 const getTagDimensions = get<
   typeof TagDimensionsResponseSchema.Encoded,
@@ -27,7 +28,7 @@ type UseTagDimensionsParameters = {
 export const useTagDimensions = createQueryHook({
   tags: [TAG_DIMENSIONS_TAG_KEY],
   request: getTagDimensions,
-  schema: TagDimensionsResponseSchema.pipe(Schema.pluck('data')),
+  schema: TagDimensionsResponseSchema,
 })
 
 export const useTagDimensionsGlobalCacheActions = createResourceGlobalCacheActions<ReadonlyArray<TagDimension>>(TAG_DIMENSIONS_TAG_KEY)

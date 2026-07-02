@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import type { Awaitable } from '@internal-types/utility/promises'
 import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/common/s3PresignedUrl'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
@@ -11,9 +11,7 @@ import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
-const InvoicePdfReturnSchema = Schema.Struct({
-  data: S3PresignedUrlSchema,
-})
+const InvoicePdfReturnSchema = UnwrappedDataResponseSchema(S3PresignedUrlSchema)
 
 const getInvoicePdf = get<
   typeof InvoicePdfReturnSchema.Encoded,
@@ -48,7 +46,7 @@ export function useInvoicePdfDownload({
       invoiceId,
     })),
     key => fetchInvoicePdf(key)
-      .then(async ({ data }) => {
+      .then(async (data) => {
         if (onSuccess) {
           await onSuccess(data)
         }

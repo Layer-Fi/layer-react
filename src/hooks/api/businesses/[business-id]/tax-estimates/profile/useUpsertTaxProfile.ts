@@ -62,7 +62,7 @@ export function useUpsertTaxProfile({ mode }: UseUpsertTaxProfileProps) {
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      void overwriteTaxProfile(triggerResult.data)
+      void overwriteTaxProfile(triggerResult)
       void forceReloadTaxPayments()
       void forceReloadTaxDetails()
 

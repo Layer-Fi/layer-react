@@ -1,7 +1,7 @@
-import { Schema } from 'effect'
 import useSWR from 'swr'
 
 import { AccountingConfigurationSchema } from '@schemas/accountingConfiguration'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
@@ -16,9 +16,7 @@ type GetAccountingConfigurationParams = {
 
 const buildKey = createBuildKey<{ businessId: string }>([ACCOUNTING_CONFIGURATION_TAG_KEY])
 
-const GetAccountingConfigurationResponseSchema = Schema.Struct({
-  data: AccountingConfigurationSchema,
-})
+const GetAccountingConfigurationResponseSchema = UnwrappedDataResponseSchema(AccountingConfigurationSchema)
 
 const getAccountingConfiguration = get<
   typeof GetAccountingConfigurationResponseSchema.Encoded,
@@ -31,20 +29,14 @@ const getAccountingConfiguration = get<
 
 const fetchAccountingConfiguration = createKeyedFetcher(
   getAccountingConfiguration,
-  GetAccountingConfigurationResponseSchema.pipe(Schema.pluck('data')),
+  GetAccountingConfigurationResponseSchema,
 )
 
 export function useAccountingConfiguration({ businessId }: GetAccountingConfigurationParams) {
   const { data: auth } = useAuth()
 
-  const queryKey = buildKey({
-    ...auth,
-    businessId,
-  })
+  const queryKey = buildKey({ ...auth, businessId })
+  const response = useSWR(() => queryKey, fetchAccountingConfiguration)
 
-  const response = useSWR(
-    () => queryKey,
-    fetchAccountingConfiguration,
-  )
   return new SWRQueryResult(response)
 }

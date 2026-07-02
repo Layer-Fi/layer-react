@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 
 import { MatchSchema } from '@schemas/bankTransactions/match'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { put } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
@@ -14,9 +14,7 @@ export type MatchBankTransactionBody = {
   type: 'Confirm_Match'
 }
 
-const MatchBankTransactionResponseSchema = Schema.Struct({
-  data: MatchSchema,
-})
+const MatchBankTransactionResponseSchema = UnwrappedDataResponseSchema(MatchSchema)
 
 const matchBankTransaction = put<
   typeof MatchBankTransactionResponseSchema.Encoded,
@@ -41,7 +39,7 @@ const useMatchBankTransactionMutation = createMutationHook({
   request: matchBankTransaction,
   argToParams: ({ bankTransactionId }: MatchBankTransactionArgs) => ({ bankTransactionId }),
   argToBody: ({ bankTransactionId: _bankTransactionId, ...body }: MatchBankTransactionArgs) => body,
-  schema: MatchBankTransactionResponseSchema.pipe(Schema.pluck('data')),
+  schema: MatchBankTransactionResponseSchema,
   swrOptions: { throwOnError: true },
 })
 

@@ -40,7 +40,7 @@ export const useTaxProfileForm = ({ taxProfile, onSuccess }: UseTaxProfileFormPr
 
       setSubmitError(undefined)
       setSubmitSuccess(t('taxEstimates:label.tax_profile_saved', 'Tax profile saved'))
-      onSuccess?.(result.data)
+      onSuccess?.(result)
     }
     catch (e) {
       console.error(e)

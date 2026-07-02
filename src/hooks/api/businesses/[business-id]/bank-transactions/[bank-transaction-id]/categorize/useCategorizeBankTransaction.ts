@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
 
 import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 import { type CategoryUpdate, type CategoryUpdateEncoded, encodeCategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { put } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { type GetBankTransactionsReturn } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
@@ -14,9 +14,7 @@ import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/Ba
 
 const CATEGORIZE_BANK_TRANSACTION_TAG = '#categorize-bank-transaction'
 
-const CategorizeBankTransactionResponseSchema = Schema.Struct({
-  data: BankTransactionSchema,
-})
+const CategorizeBankTransactionResponseSchema = UnwrappedDataResponseSchema(BankTransactionSchema)
 
 const categorizeBankTransaction = put<
   typeof CategorizeBankTransactionResponseSchema.Encoded,
@@ -46,7 +44,7 @@ const useCategorizeBankTransactionMutation = createMutationHook({
   argToParams: ({ bankTransactionId }: CategorizeBankTransactionArgs) => ({ bankTransactionId }),
   argToBody: ({ bankTransactionId: _bankTransactionId, ...rest }: CategorizeBankTransactionArgs) =>
     encodeCategoryUpdate(rest),
-  schema: CategorizeBankTransactionResponseSchema.pipe(Schema.pluck('data')),
+  schema: CategorizeBankTransactionResponseSchema,
   swrOptions: { throwOnError: true },
 })
 

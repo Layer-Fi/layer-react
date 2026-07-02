@@ -1,5 +1,3 @@
-import { Schema } from 'effect'
-
 import type { ReportingBasis } from '@internal-types/general'
 import { TaxOverviewApiResponseSchema } from '@schemas/taxEstimates/overview'
 import { getWithQuery } from '@utils/api/getWithQuery'
@@ -31,5 +29,5 @@ const getTaxOverview = getWithQuery<
 export const useTaxOverview = createQueryHook({
   tags: [TAX_OVERVIEW_TAG_KEY],
   request: getTaxOverview,
-  schema: TaxOverviewApiResponseSchema.pipe(Schema.pluck('data')),
+  schema: TaxOverviewApiResponseSchema,
 })

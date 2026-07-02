@@ -1,15 +1,12 @@
-import { Schema } from 'effect'
-
 import { type InvoiceSummaryStatsResponse, InvoiceSummaryStatsResponseSchema } from '@schemas/invoices/invoice'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const INVOICE_SUMMARY_STATS_TAG_KEY = '#invoices-summary-stats'
 
-const InvoiceSummaryStatsReturnSchema = Schema.Struct({
-  data: InvoiceSummaryStatsResponseSchema,
-})
+const InvoiceSummaryStatsReturnSchema = UnwrappedDataResponseSchema(InvoiceSummaryStatsResponseSchema)
 
 const getInvoiceSummaryStats = get<
   typeof InvoiceSummaryStatsReturnSchema.Encoded,
@@ -19,7 +16,7 @@ const getInvoiceSummaryStats = get<
 export const useInvoiceSummaryStats = createQueryHook({
   tags: [INVOICE_SUMMARY_STATS_TAG_KEY],
   request: getInvoiceSummaryStats,
-  schema: InvoiceSummaryStatsReturnSchema.pipe(Schema.pluck('data')),
+  schema: InvoiceSummaryStatsReturnSchema,
 })
 
 export const useInvoiceSummaryStatsCacheActions = createResourceGlobalCacheActions<InvoiceSummaryStatsResponse>(INVOICE_SUMMARY_STATS_TAG_KEY)

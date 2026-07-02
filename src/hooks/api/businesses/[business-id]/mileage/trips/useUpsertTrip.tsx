@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 
 import { TripSchema, type UpsertTripEncoded } from '@schemas/trip'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patch, post } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useMileageSummaryGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/summary/useMileageSummary'
@@ -18,9 +18,7 @@ export enum UpsertTripMode {
 
 type UpsertTripBody = UpsertTripEncoded
 
-const UpsertTripReturnSchema = Schema.Struct({
-  data: TripSchema,
-})
+const UpsertTripReturnSchema = UnwrappedDataResponseSchema(TripSchema)
 
 type UpsertTripReturnEncoded = typeof UpsertTripReturnSchema.Encoded
 
@@ -83,7 +81,7 @@ export const useUpsertTrip = (props: UseUpsertTripProps) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
       if (mode === UpsertTripMode.Update) {
-        void patchTripByKey(triggerResult.data)
+        void patchTripByKey(triggerResult)
       }
       else {
         void forceReloadTrips()

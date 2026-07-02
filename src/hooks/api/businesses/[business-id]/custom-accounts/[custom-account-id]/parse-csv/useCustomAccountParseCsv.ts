@@ -2,6 +2,7 @@ import { pipe, Schema } from 'effect'
 
 import { PreviewCellSchema, type PreviewCsv, PreviewRowSchema } from '@schemas/csvUpload'
 import type { CustomAccountTransactionRow, RawCustomTransaction } from '@schemas/customAccounts'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { postWithFormData } from '@utils/api/authenticatedHttp'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
@@ -57,9 +58,7 @@ const ParseCsvResponseSchema = Schema.Struct({
   ),
 })
 
-const ParseCsvReturnSchema = Schema.Struct({
-  data: ParseCsvResponseSchema,
-})
+const ParseCsvReturnSchema = UnwrappedDataResponseSchema(ParseCsvResponseSchema)
 
 export type CustomAccountParseCsvResponse = {
   isValid: boolean
@@ -104,7 +103,7 @@ export const useCustomAccountParseCsv = createMutationHook({
   argToParams: ({ customAccountId }: CustomAccountParseCsvArgs) => ({ customAccountId }),
   argToBody: ({ file }: CustomAccountParseCsvArgs) => ({ file }),
   schema: ParseCsvReturnSchema,
-  select: ({ data }): CustomAccountParseCsvResponse => ({
+  select: (data): CustomAccountParseCsvResponse => ({
     isValid: data.isValid,
     newTransactionsPreview: data.newTransactionsPreview,
     newTransactionsRequest: data.newTransactionsRequest as { transactions: RawCustomTransaction[] },

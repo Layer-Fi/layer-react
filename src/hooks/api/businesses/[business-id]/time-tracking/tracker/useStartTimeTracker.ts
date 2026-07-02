@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 
 import { type StartTrackerEncoded, TimeEntrySchema } from '@schemas/timeTracking'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useActiveTimeTrackerGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useActiveTimeTracker'
@@ -11,9 +11,7 @@ const START_TIME_TRACKER_TAG_KEY = '#start-time-tracker'
 
 type StartTimeTrackerBody = StartTrackerEncoded
 
-const StartTimeTrackerResponseSchema = Schema.Struct({
-  data: TimeEntrySchema,
-})
+const StartTimeTrackerResponseSchema = UnwrappedDataResponseSchema(TimeEntrySchema)
 
 const startTimeTracker = post<
   typeof StartTimeTrackerResponseSchema.Encoded,

@@ -1,7 +1,7 @@
 import { type TaxPaymentsResponse } from '@schemas/taxEstimates/payments'
 
 export interface CommonTaxPaymentsListProps {
-  data: TaxPaymentsResponse['data']['data'] | undefined
+  data: TaxPaymentsResponse['data'] | undefined
   isLoading: boolean
   isError: boolean
   slots: {

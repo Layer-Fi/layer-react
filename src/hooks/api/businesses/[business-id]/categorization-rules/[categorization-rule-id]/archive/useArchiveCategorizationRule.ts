@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect/index'
 
 import { CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useCategorizationRulesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/categorization-rules/useListCategorizationRules'
@@ -9,9 +9,7 @@ import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const ARCHIVE_CATEGORIZATION_RULE_TAG = '#archive-categorization-rule'
 
-const ArchiveCategorizationRuleReturnSchema = Schema.Struct({
-  data: CategorizationRuleSchema,
-})
+const ArchiveCategorizationRuleReturnSchema = UnwrappedDataResponseSchema(CategorizationRuleSchema)
 
 export const archiveCategorizationRule = post<
   typeof ArchiveCategorizationRuleReturnSchema.Encoded,

@@ -1,43 +1,35 @@
-import useSWR from 'swr'
+import { Schema } from 'effect'
 
-import { type BankTransaction, type BankTransactionMetadata } from '@internal-types/bankTransactions'
+import { type BankTransactionMetadata } from '@internal-types/bankTransactions'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { createKeyedFetcher, type SWRKeyContext } from '@utils/swr/createKeyedFetcher'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
-type GetBankTransactionMetadataParams = {
-  businessId: string
-  bankTransactionId: string
-}
+export const GET_BANK_TRANSACTION_METADATA_TAG_KEY = '#bank-transaction-metadata'
+
+const BankTransactionMetadataSchema = Schema.Struct({
+  memo: Schema.NullishOr(Schema.String),
+})
+
+const GetBankTransactionMetadataResponseSchema = UnwrappedDataResponseSchema(BankTransactionMetadataSchema)
 
 const getBankTransactionMetadata = get<
+  typeof GetBankTransactionMetadataResponseSchema.Encoded,
   {
-    data: BankTransactionMetadata
-    errors: unknown
-  },
-  GetBankTransactionMetadataParams
+    businessId: string
+    bankTransactionId: string
+  }
 >(
   ({ businessId, bankTransactionId }) =>
     `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/metadata`,
 )
 
-const fetchBankTransactionMetadata = createKeyedFetcher(getBankTransactionMetadata)
+export const useBankTransactionMetadata = createQueryHook({
+  tags: [GET_BANK_TRANSACTION_METADATA_TAG_KEY],
+  request: getBankTransactionMetadata,
+  schema: GetBankTransactionMetadataResponseSchema,
+})
 
-export const GET_BANK_TRANSACTION_METADATA_TAG_KEY = '#bank-transaction-metadata'
-
-const buildKey = createBuildKey<{ businessId: string, bankTransactionId: string }>([GET_BANK_TRANSACTION_METADATA_TAG_KEY])
-
-export function useBankTransactionMetadata({ bankTransactionId }: { bankTransactionId: BankTransaction['id'] }) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  return useSWR(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      bankTransactionId,
-    })),
-    (key: SWRKeyContext & GetBankTransactionMetadataParams) =>
-      fetchBankTransactionMetadata(key).then(({ data }) => data),
-  )
-}
+export const useBankTransactionMetadataGlobalCacheActions =
+  createResourceGlobalCacheActions<BankTransactionMetadata>(GET_BANK_TRANSACTION_METADATA_TAG_KEY)

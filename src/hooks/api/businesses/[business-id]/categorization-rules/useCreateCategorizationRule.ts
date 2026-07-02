@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect/index'
 
 import { CategorizationRuleSchema, type CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
@@ -11,9 +11,7 @@ import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const CREATE_CATEGORIZATION_RULE_TAG = '#create-categorization-rule'
 
-const CreateCategorizationRuleReturnSchema = Schema.Struct({
-  data: CategorizationRuleSchema,
-})
+const CreateCategorizationRuleReturnSchema = UnwrappedDataResponseSchema(CategorizationRuleSchema)
 
 type CreateCategorizationRuleBody = typeof CreateCategorizationRuleSchema.Encoded
 

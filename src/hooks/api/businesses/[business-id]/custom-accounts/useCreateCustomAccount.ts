@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 import { useSWRConfig } from 'swr'
 
 import { CustomAccountSchema, type RawCustomAccount } from '@schemas/customAccounts'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
@@ -20,9 +20,7 @@ type CreateCustomAccountBody = Pick<
   | 'user_created'
 >
 
-const CreateCustomAccountResponseSchema = Schema.Struct({
-  data: CustomAccountSchema,
-})
+const CreateCustomAccountResponseSchema = UnwrappedDataResponseSchema(CustomAccountSchema)
 
 const createCustomAccount = post<
   typeof CreateCustomAccountResponseSchema.Encoded,
@@ -44,7 +42,7 @@ export function useCreateCustomAccount() {
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const { data } = await originalTrigger(...triggerParameters)
+      const data = await originalTrigger(...triggerParameters)
 
       void mutate(key => withSWRKeyTags(
         key,
@@ -62,7 +60,7 @@ export function useCreateCustomAccount() {
 
   return {
     trigger: stableProxiedTrigger,
-    data: mutationResponse.data?.data,
+    data: mutationResponse.data,
     isError: mutationResponse.isError,
     isMutating: mutationResponse.isMutating,
   }

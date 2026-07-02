@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 
 import { type CreateCustomerRefundSchema, CustomerRefundSchema } from '@schemas/invoices/customerRefund'
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
@@ -11,9 +11,7 @@ import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const REFUND_INVOICE_TAG_KEY = '#refund-invoice'
 
-const RefundInvoiceReturnSchema = Schema.Struct({
-  data: CustomerRefundSchema,
-})
+const RefundInvoiceReturnSchema = UnwrappedDataResponseSchema(CustomerRefundSchema)
 
 const refundInvoice = post<
   typeof RefundInvoiceReturnSchema.Encoded,

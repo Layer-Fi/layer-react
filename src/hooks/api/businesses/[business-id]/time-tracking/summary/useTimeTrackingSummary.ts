@@ -1,13 +1,10 @@
-import { Schema } from 'effect'
-
 import { type TimeEntrySummary, TimeEntrySummarySchema } from '@schemas/timeTracking'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
-const TimeTrackingSummaryResponseSchema = Schema.Struct({
-  data: TimeEntrySummarySchema,
-})
+const TimeTrackingSummaryResponseSchema = UnwrappedDataResponseSchema(TimeEntrySummarySchema)
 
 export const TIME_TRACKING_SUMMARY_TAG_KEY = '#time-tracking-summary'
 
@@ -31,7 +28,7 @@ const getTimeTrackingSummary = getWithQuery<
 export const useTimeTrackingSummary = createQueryHook({
   tags: [TIME_TRACKING_SUMMARY_TAG_KEY],
   request: getTimeTrackingSummary,
-  schema: TimeTrackingSummaryResponseSchema.pipe(Schema.pluck('data')),
+  schema: TimeTrackingSummaryResponseSchema,
 })
 
 export const useTimeTrackingSummaryGlobalCacheActions = createResourceGlobalCacheActions<

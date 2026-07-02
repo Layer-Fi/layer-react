@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { Schema } from 'effect'
 
 import { type StopTrackerEncoded } from '@schemas/timeTracking'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useTimeTrackingSummaryGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
@@ -11,11 +12,11 @@ import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const STOP_TIME_TRACKER_TAG_KEY = '#stop-time-tracker'
 
-const StopTimeTrackerResponseSchema = Schema.Struct({
-  data: Schema.Struct({
+const StopTimeTrackerResponseSchema = UnwrappedDataResponseSchema(
+  Schema.Struct({
     id: Schema.UUID,
   }),
-})
+)
 
 type StopTimeTrackerBody = StopTrackerEncoded
 

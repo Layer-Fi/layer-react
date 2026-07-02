@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect/index'
 
 import {
   CategorizationRuleSchema,
   type CreateCategorizationRuleSchema,
   type PatchCategorizationRuleSchema,
 } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patch, post } from '@utils/api/authenticatedHttp'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useCategorizationRulesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/categorization-rules/useListCategorizationRules'
@@ -14,9 +14,7 @@ import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const UPSERT_CATEGORIZATION_RULE_TAG = '#upsert-categorization-rule'
 
-const UpsertCategorizationRuleReturnSchema = Schema.Struct({
-  data: CategorizationRuleSchema,
-})
+const UpsertCategorizationRuleReturnSchema = UnwrappedDataResponseSchema(CategorizationRuleSchema)
 
 type UpsertCategorizationRuleReturnEncoded = typeof UpsertCategorizationRuleReturnSchema.Encoded
 type CreateCategorizationRuleBody = typeof CreateCategorizationRuleSchema.Encoded
@@ -87,7 +85,7 @@ export function useUpsertCategorizationRule() {
       })
 
       if (triggerResult) {
-        void patchCategorizationRuleByKey(triggerResult.data)
+        void patchCategorizationRuleByKey(triggerResult)
       }
 
       return triggerResult

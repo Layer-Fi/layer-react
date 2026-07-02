@@ -1,7 +1,6 @@
-import { Schema } from 'effect'
-
 import { type ReportingBasis } from '@internal-types/general'
 import { type PnlDetailLineSchema, PnlDetailLinesDataSchema } from '@schemas/reports/profitAndLoss'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
@@ -33,9 +32,7 @@ type PnlDetailLinesParams = PnlDetailLinesBaseParams & PnlDetailLinesFilterParam
 export type PnlDetailLine = typeof PnlDetailLineSchema.Type
 export type PnlDetailLinesReturn = typeof PnlDetailLinesDataSchema.Type
 
-const PnlDetailLinesResponseSchema = Schema.Struct({
-  data: PnlDetailLinesDataSchema,
-})
+const PnlDetailLinesResponseSchema = UnwrappedDataResponseSchema(PnlDetailLinesDataSchema)
 
 const listProfitAndLossDetailLines = getWithQuery<
   typeof PnlDetailLinesResponseSchema.Encoded,
@@ -57,7 +54,7 @@ const listProfitAndLossDetailLines = getWithQuery<
 export const useProfitAndLossDetailLines = createQueryHook({
   tags: [LIST_PNL_DETAIL_LINES_TAG_KEY],
   request: listProfitAndLossDetailLines,
-  schema: PnlDetailLinesResponseSchema.pipe(Schema.pluck('data')),
+  schema: PnlDetailLinesResponseSchema,
   swrOptions: { keepPreviousData: true },
 })
 

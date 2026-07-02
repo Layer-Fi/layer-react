@@ -74,7 +74,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
 
   return {
     data,
-    entryData: entryData?.data,
+    entryData,
     isLoading: shouldFetch ? paginationIsLoading : false,
     isLoadingEntry,
     isValidating: shouldFetch ? paginationIsValidating : false,

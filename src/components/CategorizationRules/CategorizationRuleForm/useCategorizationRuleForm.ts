@@ -46,7 +46,7 @@ export const useCategorizationRuleForm = ({ formState, onSuccess }: UseCategoriz
         })
 
       setSubmitError(undefined)
-      onSuccess(result.data)
+      onSuccess(result)
     }
     catch (e) {
       console.error(e)

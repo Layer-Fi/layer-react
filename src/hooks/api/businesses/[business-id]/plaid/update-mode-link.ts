@@ -1,20 +1,11 @@
-import { Schema } from 'effect'
-
 import { ApiLinkTokenSchema } from '@schemas/linkedAccounts/plaid'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const CREATE_PLAID_UPDATE_MODE_LINK_TAG_KEY = '#create-plaid-update-mode-link'
 
-const CreatePlaidUpdateModeLinkResponseSchema = Schema.transform(
-  Schema.Struct({ data: ApiLinkTokenSchema }),
-  Schema.typeSchema(ApiLinkTokenSchema),
-  {
-    strict: true,
-    decode: ({ data }) => data,
-    encode: data => ({ data }),
-  },
-)
+const CreatePlaidUpdateModeLinkResponseSchema = UnwrappedDataResponseSchema(ApiLinkTokenSchema)
 
 type CreatePlaidUpdateModeLinkBody = {
   plaid_item_id: string

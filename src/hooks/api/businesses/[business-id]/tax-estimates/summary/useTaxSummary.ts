@@ -1,5 +1,3 @@
-import { Schema } from 'effect'
-
 import type { ReportingBasis } from '@internal-types/general'
 import { type TaxSummary, TaxSummaryResponseSchema } from '@schemas/taxEstimates/summary'
 import { getWithQuery } from '@utils/api/getWithQuery'
@@ -32,7 +30,7 @@ const getTaxSummary = getWithQuery<
 export const useTaxSummary = createQueryHook({
   tags: [TAX_SUMMARY_TAG_KEY],
   request: getTaxSummary,
-  schema: TaxSummaryResponseSchema.pipe(Schema.pluck('data')),
+  schema: TaxSummaryResponseSchema,
 })
 
 export const useTaxSummaryGlobalCacheActions = createResourceGlobalCacheActions<

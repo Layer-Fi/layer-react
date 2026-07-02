@@ -1,5 +1,6 @@
 import { pipe, Schema } from 'effect'
 
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
@@ -20,30 +21,18 @@ const StripeConnectAccountLinkDataSchema = Schema.Struct({
   ),
 })
 
-const StripeConnectAccountLinkResponseSchema = Schema.Struct({
-  data: StripeConnectAccountLinkDataSchema,
-})
-
-const StripeConnectAccountLinkSchema = Schema.transform(
-  StripeConnectAccountLinkResponseSchema,
-  Schema.typeSchema(StripeConnectAccountLinkDataSchema),
-  {
-    strict: true,
-    decode: ({ data }) => data,
-    encode: data => ({ data }),
-  },
-)
+const StripeConnectAccountLinkSchema = UnwrappedDataResponseSchema(StripeConnectAccountLinkDataSchema)
 
 type StripeConnectAccountLinkResponse = typeof StripeConnectAccountLinkDataSchema.Type
 
 const createStripeConnectAccountLink = post<
-  typeof StripeConnectAccountLinkResponseSchema.Encoded,
+  typeof StripeConnectAccountLinkSchema.Encoded,
   never,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/stripe/connect-account-link`)
 
 export const useStripeConnectAccountLink = createMutationHook<
-  typeof StripeConnectAccountLinkResponseSchema.Encoded,
+  typeof StripeConnectAccountLinkSchema.Encoded,
   never,
   { businessId: string },
   StripeConnectAccountLinkResponse,

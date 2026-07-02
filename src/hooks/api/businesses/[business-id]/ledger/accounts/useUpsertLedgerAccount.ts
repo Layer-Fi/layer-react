@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 
 import { SingleChartAccountSchema } from '@schemas/generalLedger/ledgerAccount'
 import { type UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLedgerAccount'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post, put } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useLedgerBalancesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/balances/useLedgerBalances'
@@ -18,9 +18,7 @@ export enum UpsertLedgerAccountMode {
 
 type UpsertLedgerAccountBody = typeof UpsertLedgerAccountSchema.Encoded
 
-const UpsertLedgerAccountReturnSchema = Schema.Struct({
-  data: SingleChartAccountSchema,
-})
+const UpsertLedgerAccountReturnSchema = UnwrappedDataResponseSchema(SingleChartAccountSchema)
 
 type UpsertLedgerAccountReturnEncoded = typeof UpsertLedgerAccountReturnSchema.Encoded
 

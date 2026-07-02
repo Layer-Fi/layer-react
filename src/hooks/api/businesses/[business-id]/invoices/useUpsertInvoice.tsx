@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 
 import { InvoiceSchema, type UpsertInvoiceSchema } from '@schemas/invoices/invoice'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patch, post } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
@@ -17,9 +17,7 @@ export enum UpsertInvoiceMode {
 
 type UpsertInvoiceBody = typeof UpsertInvoiceSchema.Encoded
 
-const UpsertInvoiceReturnSchema = Schema.Struct({
-  data: InvoiceSchema,
-})
+const UpsertInvoiceReturnSchema = UnwrappedDataResponseSchema(InvoiceSchema)
 
 type UpsertInvoiceReturnEncoded = typeof UpsertInvoiceReturnSchema.Encoded
 
@@ -87,7 +85,7 @@ export const useUpsertInvoice = (props: UseUpsertInvoiceProps) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
       if (mode === UpsertInvoiceMode.Update) {
-        void patchInvoiceByKey(triggerResult.data)
+        void patchInvoiceByKey(triggerResult)
       }
       else {
         void forceReloadInvoices()

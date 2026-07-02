@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 
 import { CustomerSchema, type UpsertCustomerEncoded } from '@schemas/customer'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patch, post } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { CUSTOMERS_TAG_KEY, useCustomersGlobalCacheActions } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
@@ -17,9 +17,7 @@ export enum UpsertCustomerMode {
 
 type UpsertCustomerBody = UpsertCustomerEncoded
 
-const UpsertCustomerReturnSchema = Schema.Struct({
-  data: CustomerSchema,
-})
+const UpsertCustomerReturnSchema = UnwrappedDataResponseSchema(CustomerSchema)
 
 type UpsertCustomerReturnEncoded = typeof UpsertCustomerReturnSchema.Encoded
 
@@ -74,7 +72,7 @@ export const useUpsertCustomer = (props: UseUpsertCustomerProps) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
       if (mode === UpsertCustomerMode.Update) {
-        void patchCustomerByKey(triggerResult.data)
+        void patchCustomerByKey(triggerResult)
         void forceReloadInvoices()
       }
       else {

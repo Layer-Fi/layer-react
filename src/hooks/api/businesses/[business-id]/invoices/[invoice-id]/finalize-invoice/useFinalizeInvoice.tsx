@@ -4,6 +4,7 @@ import { useSWRConfig } from 'swr'
 
 import { InvoiceSchema } from '@schemas/invoices/invoice'
 import { InvoicePaymentMethodsSchema } from '@schemas/invoices/invoicePaymentMethod'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { put } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
@@ -26,14 +27,14 @@ export const FinalizeInvoiceBodySchema = Schema.extend(
 export type FinalizeInvoiceBody = typeof FinalizeInvoiceBodySchema.Type
 export type FinalizeInvoiceBodyEncoded = typeof FinalizeInvoiceBodySchema.Encoded
 
-export const FinalizeInvoiceResponseSchema = Schema.Struct({
-  data: Schema.extend(
+export const FinalizeInvoiceResponseSchema = UnwrappedDataResponseSchema(
+  Schema.extend(
     InvoicePaymentMethodsSchema,
     Schema.Struct({
       invoice: InvoiceSchema,
     }),
   ),
-})
+)
 
 export const finalizeInvoice = put<
   typeof FinalizeInvoiceResponseSchema.Encoded,
@@ -67,7 +68,7 @@ export function useFinalizeInvoice({ invoiceId }: UseFinalizeInvoiceProps) {
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      void patchInvoiceByKey(triggerResult.data.invoice)
+      void patchInvoiceByKey(triggerResult.invoice)
 
       void forceReloadInvoiceSummaryStats()
 

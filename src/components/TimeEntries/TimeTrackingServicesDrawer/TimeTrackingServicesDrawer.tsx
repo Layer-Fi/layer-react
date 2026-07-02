@@ -202,7 +202,7 @@ function ArchivedServicesContent({ isEnabled, formatHourly, onRestore }: Archive
   })
 
   const archivedServices = useMemo(
-    () => (data?.data ?? []).filter(s => s.archivedAt != null),
+    () => (data ?? []).filter(s => s.archivedAt != null),
     [data],
   )
 
@@ -302,7 +302,7 @@ export function TimeTrackingServicesDrawer({
     setIsRestoreOpen(true)
   }, [])
 
-  const activeServices = useMemo(() => data?.data ?? [], [data])
+  const activeServices = useMemo(() => data ?? [], [data])
   const showCreateForm = isAdding || (!isLoading && !isError && activeServices.length === 0)
   const showAddButton = !showCreateForm && activeServices.length > 0
 

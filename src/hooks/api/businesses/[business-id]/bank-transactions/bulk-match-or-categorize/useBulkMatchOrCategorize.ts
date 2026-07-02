@@ -180,12 +180,7 @@ export const useBulkMatchOrCategorize = () => {
   const proxiedResponse = withStableTrigger(mutationResponse, stableProxiedTrigger)
 
   return {
-    data: proxiedResponse.data,
-    trigger: proxiedResponse.trigger,
-    isMutating: proxiedResponse.isMutating,
-    error: proxiedResponse.error,
-    isError: proxiedResponse.isError,
-    reset: proxiedResponse.reset,
+    ...proxiedResponse,
     buildTransactionsPayload,
   }
 }

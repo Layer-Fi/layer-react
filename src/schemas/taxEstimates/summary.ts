@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { createTransformedEnumSchema } from '@schemas/utils'
+import { createTransformedEnumSchema, UnwrappedDataResponseSchema } from '@schemas/utils'
 
 const TaxSummarySectionTypeSchema = Schema.Literal('federal', 'state')
 
@@ -56,8 +56,6 @@ const TaxSummarySchema = Schema.Struct({
 
 export type TaxSummary = typeof TaxSummarySchema.Type
 
-export const TaxSummaryResponseSchema = Schema.Struct({
-  data: TaxSummarySchema,
-})
+export const TaxSummaryResponseSchema = UnwrappedDataResponseSchema(TaxSummarySchema)
 
 export type TaxSummaryResponse = typeof TaxSummaryResponseSchema.Type

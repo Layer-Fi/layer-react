@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { type UpsertVehicleEncoded, VehicleSchema } from '@schemas/vehicle'
 import { patch, post } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -17,9 +17,7 @@ export enum UpsertVehicleMode {
 
 type UpsertVehicleBody = UpsertVehicleEncoded
 
-const UpsertVehicleReturnSchema = Schema.Struct({
-  data: VehicleSchema,
-})
+const UpsertVehicleReturnSchema = UnwrappedDataResponseSchema(VehicleSchema)
 
 type UpsertVehicleReturnEncoded = typeof UpsertVehicleReturnSchema.Encoded
 
@@ -76,7 +74,7 @@ export const useUpsertVehicle = (props: UseUpsertVehicleProps) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
       if (mode === UpsertVehicleMode.Update) {
-        void patchVehicleByKey(triggerResult.data)
+        void patchVehicleByKey(triggerResult)
         void forceReloadTrips()
       }
       else {

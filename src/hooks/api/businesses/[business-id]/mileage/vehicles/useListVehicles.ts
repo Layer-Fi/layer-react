@@ -1,5 +1,6 @@
 import { Schema } from 'effect'
 
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { type Vehicle, VehicleSchema } from '@schemas/vehicle'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
@@ -10,9 +11,7 @@ type ListVehiclesParams = {
   allowArchived?: boolean
 }
 
-const ListVehiclesResponseSchema = Schema.Struct({
-  data: Schema.Array(VehicleSchema),
-})
+const ListVehiclesResponseSchema = UnwrappedDataResponseSchema(Schema.Array(VehicleSchema))
 
 const listVehicles = getWithQuery<
   typeof ListVehiclesResponseSchema.Encoded,
@@ -27,7 +26,7 @@ export const VEHICLES_TAG_KEY = '#list-vehicles'
 export const useListVehicles = createQueryHook({
   tags: [VEHICLES_TAG_KEY],
   request: listVehicles,
-  schema: ListVehiclesResponseSchema.pipe(Schema.pluck('data')),
+  schema: ListVehiclesResponseSchema,
 })
 
 export const useVehiclesGlobalCacheActions = createInfiniteQueryGlobalCacheActions<Vehicle>(VEHICLES_TAG_KEY)

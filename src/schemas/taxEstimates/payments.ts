@@ -1,5 +1,7 @@
 import { pipe, Schema } from 'effect'
 
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
+
 const taxPaymentBreakdownFields = {
   rowKey: pipe(
     Schema.propertySignature(Schema.String),
@@ -46,11 +48,11 @@ const TaxPaymentsRowSchema = Schema.Struct({
 
 export type TaxPaymentRow = typeof TaxPaymentsRowSchema.Type
 
-export const TaxPaymentsResponseSchema = Schema.Struct({
-  data: Schema.Struct({
+export const TaxPaymentsResponseSchema = UnwrappedDataResponseSchema(
+  Schema.Struct({
     type: Schema.Literal('US_Tax_Payments'),
     data: Schema.Array(TaxPaymentsRowSchema),
   }),
-})
+)
 
 export type TaxPaymentsResponse = typeof TaxPaymentsResponseSchema.Type

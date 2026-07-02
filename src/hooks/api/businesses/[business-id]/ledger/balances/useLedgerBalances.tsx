@@ -1,6 +1,5 @@
-import { Schema } from 'effect/index'
-
 import { LedgerBalancesSchema, type LedgerBalancesSchemaType } from '@schemas/generalLedger/ledgerAccount'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
@@ -13,7 +12,7 @@ type GetLedgerAccountBalancesParams = {
   endDate?: Date
 }
 
-const LedgerBalancesResponseSchema = Schema.Struct({ data: LedgerBalancesSchema })
+const LedgerBalancesResponseSchema = UnwrappedDataResponseSchema(LedgerBalancesSchema)
 
 const getLedgerAccountBalances = getWithQuery<
   typeof LedgerBalancesResponseSchema.Encoded,
@@ -26,7 +25,7 @@ const getLedgerAccountBalances = getWithQuery<
 export const useLedgerBalances = createQueryHook({
   tags: [LEDGER_BALANCES_TAG_KEY],
   request: getLedgerAccountBalances,
-  schema: LedgerBalancesResponseSchema.pipe(Schema.pluck('data')),
+  schema: LedgerBalancesResponseSchema,
 })
 
 export const useLedgerBalancesCacheActions = createResourceGlobalCacheActions<LedgerBalancesSchemaType>(LEDGER_BALANCES_TAG_KEY)

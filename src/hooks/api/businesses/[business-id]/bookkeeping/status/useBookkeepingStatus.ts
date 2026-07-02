@@ -1,12 +1,13 @@
-import { Schema } from 'effect'
-
-import { BookkeepingStatus, type BookkeepingStatusData, BookkeepingStatusResponseSchema } from '@schemas/bookkeepingStatus'
+import { BookkeepingStatus, type BookkeepingStatusData, BookkeepingStatusDataSchema } from '@schemas/bookkeepingStatus'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { useLegacyMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
 
 export { BookkeepingStatus }
+
+const BookkeepingStatusResponseSchema = UnwrappedDataResponseSchema(BookkeepingStatusDataSchema)
 
 const getBookkeepingStatus = get<
   typeof BookkeepingStatusResponseSchema.Encoded,
@@ -21,7 +22,7 @@ export const BOOKKEEPING_STATUS_TAG_KEY = '#bookkeeping-status'
 export const useBookkeepingStatus = createQueryHook({
   tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_STATUS_TAG_KEY],
   request: getBookkeepingStatus,
-  schema: BookkeepingStatusResponseSchema.pipe(Schema.pluck('data')),
+  schema: BookkeepingStatusResponseSchema,
   isLocalized: false,
 })
 

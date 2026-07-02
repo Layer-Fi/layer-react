@@ -3,6 +3,7 @@ import { Schema } from 'effect'
 
 import { BankTransactionDataOnlySchema } from '@schemas/bankTransactions/bankTransactionDataOnly'
 import type { RawCustomTransaction } from '@schemas/customAccounts'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
@@ -15,9 +16,9 @@ type CreateCustomAccountTransactionsArgs = CreateCustomAccountTransactionsBody &
   customAccountId: string
 }
 
-const CreateCustomAccountTransactionsResponseSchema = Schema.Struct({
-  data: Schema.Array(BankTransactionDataOnlySchema),
-})
+const CreateCustomAccountTransactionsResponseSchema = UnwrappedDataResponseSchema(
+  Schema.Array(BankTransactionDataOnlySchema),
+)
 
 const createCustomAccountTransactions = post<
   typeof CreateCustomAccountTransactionsResponseSchema.Encoded,
@@ -43,14 +44,14 @@ export function useCreateCustomAccountTransactions() {
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
-      return triggerResult?.data
+      return triggerResult
     },
     [originalTrigger],
   )
 
   return {
     trigger: stableProxiedTrigger,
-    data: mutationResponse.data?.data,
+    data: mutationResponse.data,
     error: mutationResponse.error,
     isError: mutationResponse.isError,
     isMutating: mutationResponse.isMutating,

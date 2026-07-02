@@ -1,19 +1,20 @@
 import { pipe, Schema } from 'effect'
 
 import { CustomAccountSchema } from '@schemas/customAccounts'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const CUSTOM_ACCOUNTS_TAG_KEY = '#custom-accounts'
 
-const GetCustomAccountsResponseSchema = Schema.Struct({
-  data: Schema.Struct({
-    customAccounts: pipe(
-      Schema.propertySignature(Schema.Array(CustomAccountSchema)),
-      Schema.fromKey('custom_accounts'),
-    ),
-  }),
+const CustomAccountsDataSchema = Schema.Struct({
+  customAccounts: pipe(
+    Schema.propertySignature(Schema.Array(CustomAccountSchema)),
+    Schema.fromKey('custom_accounts'),
+  ),
 })
+
+const GetCustomAccountsResponseSchema = UnwrappedDataResponseSchema(CustomAccountsDataSchema)
 
 type GetCustomAccountsParams = {
   businessId: string
@@ -31,6 +32,6 @@ const getCustomAccounts = getWithQuery<
 export const useCustomAccounts = createQueryHook({
   tags: [CUSTOM_ACCOUNTS_TAG_KEY],
   request: getCustomAccounts,
-  schema: GetCustomAccountsResponseSchema.pipe(Schema.pluck('data')),
+  schema: GetCustomAccountsResponseSchema,
   select: ({ customAccounts }) => customAccounts,
 })

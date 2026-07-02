@@ -1,12 +1,10 @@
 import { useCallback } from 'react'
-import { useSWRConfig } from 'swr'
 
 import type { BankTransactionMetadata } from '@internal-types/bankTransactions'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { put } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
-import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { GET_BANK_TRANSACTION_METADATA_TAG_KEY } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useBankTransactionsMetadata'
+import { useBankTransactionMetadataGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useBankTransactionsMetadata'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const updateBankTransactionMetadata = put<
@@ -31,7 +29,7 @@ const useUpdateBankTransactionMetadataMutation = createMutationHook({
 })
 
 export function useUpdateBankTransactionMetadata({ bankTransactionId, onSuccess }: { bankTransactionId: string, onSuccess?: () => Awaitable<unknown> }) {
-  const { mutate } = useSWRConfig()
+  const { invalidate: invalidateBankTransactionMetadata } = useBankTransactionMetadataGlobalCacheActions()
 
   const mutationResponse = useUpdateBankTransactionMetadataMutation({
     bankTransactionId,
@@ -44,17 +42,11 @@ export function useUpdateBankTransactionMetadata({ bankTransactionId, onSuccess 
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      void mutate(key => withSWRKeyTags(
-        key,
-        ({ tags }) => tags.includes(GET_BANK_TRANSACTION_METADATA_TAG_KEY),
-      ))
+      void invalidateBankTransactionMetadata()
 
       return triggerResult
     },
-    [
-      originalTrigger,
-      mutate,
-    ],
+    [originalTrigger, invalidateBankTransactionMetadata],
   )
 
   return withStableTrigger(mutationResponse, stableProxiedTrigger)

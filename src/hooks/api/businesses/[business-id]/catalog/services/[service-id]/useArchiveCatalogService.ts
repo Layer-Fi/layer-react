@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
 
 import { CatalogServiceSchema } from '@schemas/catalogService'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useCatalogServicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
@@ -9,9 +9,7 @@ import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const ARCHIVE_CATALOG_SERVICE_TAG_KEY = '#archive-catalog-service'
 
-const ArchiveCatalogServiceResponseSchema = Schema.Struct({
-  data: CatalogServiceSchema,
-})
+const ArchiveCatalogServiceResponseSchema = UnwrappedDataResponseSchema(CatalogServiceSchema)
 
 const archiveCatalogService = post<
   typeof ArchiveCatalogServiceResponseSchema.Encoded,

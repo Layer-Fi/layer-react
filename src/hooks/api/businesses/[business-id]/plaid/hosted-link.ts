@@ -1,10 +1,10 @@
-import { Schema } from 'effect'
 import useSWR, { type SWRConfiguration } from 'swr'
 
 import {
   type ApiPlaidHostedLinkStatus,
   ApiPlaidHostedLinkStatusSchema,
 } from '@schemas/linkedAccounts/plaid'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
@@ -13,9 +13,9 @@ import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 export const PLAID_HOSTED_LINK_TAG_KEY = '#plaid-hosted-link'
 
-const PlaidHostedLinkStatusResponseSchema = Schema.Struct({
-  data: ApiPlaidHostedLinkStatusSchema,
-})
+const PlaidHostedLinkStatusResponseSchema = UnwrappedDataResponseSchema(
+  ApiPlaidHostedLinkStatusSchema,
+)
 
 const getPlaidHostedLinkStatus = get<
   typeof PlaidHostedLinkStatusResponseSchema.Encoded,
@@ -37,7 +37,7 @@ export function usePlaidHostedLinkStatus(
 
   const swrResponse = useSWR(
     () => buildKey({ ...auth, businessId, isEnabled: enabled }),
-    key => fetchPlaidHostedLinkStatus(key).then(({ data }) => data),
+    key => fetchPlaidHostedLinkStatus(key),
     config,
   )
 

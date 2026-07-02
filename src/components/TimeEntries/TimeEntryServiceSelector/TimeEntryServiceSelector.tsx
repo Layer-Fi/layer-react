@@ -102,7 +102,7 @@ export function TimeEntryServiceSelector({
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
   const serviceOptions = useMemo<ServiceAsOption[]>(
-    () => servicesResponse?.data.map(service => new ServiceAsOption(service, t)) ?? [],
+    () => servicesResponse?.map(service => new ServiceAsOption(service, t)) ?? [],
     [servicesResponse, t],
   )
 
