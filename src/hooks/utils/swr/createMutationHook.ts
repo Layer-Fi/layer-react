@@ -1,21 +1,25 @@
 import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
+import type { MutationRequest } from '@utils/api/postAsQuery'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 type BusinessScopedParams = { businessId: string }
 
-type MutationRequest<TReturn, TBody, TParams> = (
-  baseUrl: string,
-  accessToken: string | undefined,
-  options?: { params?: TParams, body?: TBody },
-) => Promise<TReturn>
+type MutationSWROptions<TData> = {
+  revalidate?: boolean
+  throwOnError?: boolean
+  onSuccess?: (data: TData) => void
+  onError?: (error: unknown) => void
+}
 
 /*
  * Business-scoped `useSWRMutation` hook factory. The trigger argument is the request body
  * by default; `argToBody`/`argToParams` split it when parts belong in the URL instead.
+ * `keyParams` names the request params that scope the SWR key (and mutation state) to an
+ * entity; the returned hook takes them alongside `isEnabled` and per-call `swrOptions`.
  */
 export function createMutationHook<
   TEncoded,
@@ -23,48 +27,65 @@ export function createMutationHook<
   TParams extends BusinessScopedParams = BusinessScopedParams,
   TDecoded = TEncoded,
   TArg = TBody,
+  const TKeyKeys extends ReadonlyArray<Exclude<keyof TParams, 'businessId'>> = readonly [],
+  TData = TDecoded,
 >(config: {
   tags: ReadonlyArray<string>
   request: MutationRequest<TEncoded, TBody, TParams>
-  argToParams?: (arg: TArg) => Omit<TParams, 'businessId'>
-  argToBody?: (arg: TArg) => TBody | undefined
+  keyParams?: TKeyKeys
+  argToParams?: (arg: TArg, keyParams: BusinessScopedParams & Pick<TParams, TKeyKeys[number]>) => Partial<Omit<TParams, 'businessId'>>
+  argToBody?: (arg: TArg, keyParams: BusinessScopedParams & Pick<TParams, TKeyKeys[number]>) => TBody | undefined
   schema?: Schema.Schema<TDecoded, TEncoded>
-  swrOptions?: { revalidate?: boolean, throwOnError?: boolean }
+  select?: (decoded: TDecoded) => TData
+  swrOptions?: MutationSWROptions<TData>
   isLocalized?: boolean
 }) {
-  const { tags, request, argToParams, argToBody, schema, swrOptions, isLocalized = true } = config
+  const { tags, request, argToParams, argToBody, schema, select, swrOptions, isLocalized = true } = config
 
-  const buildKey = createBuildKey<BusinessScopedParams>(tags)
+  type KeyParams = BusinessScopedParams & Pick<TParams, TKeyKeys[number]>
 
-  return function useMutation() {
+  const buildKey = createBuildKey<KeyParams>(tags)
+
+  type UseMutationOptions = Pick<TParams, TKeyKeys[number]> & {
+    isEnabled?: boolean
+    swrOptions?: MutationSWROptions<TData>
+  }
+
+  return function useMutation(options?: UseMutationOptions) {
     const { withLocale, businessId, auth } = useBuildKeyInputs()
+
+    const { swrOptions: callSwrOptions, ...keyInputs } = options ?? ({} as UseMutationOptions)
 
     const rawMutationResponse = useSWRMutation(
       () => {
-        const key = buildKey({ ...auth, businessId })
+        const key = buildKey({ ...auth, businessId, ...keyInputs } as Parameters<typeof buildKey>[0])
         return isLocalized ? withLocale(key) : key
       },
       (
-        { accessToken, apiUrl, businessId }: { accessToken: string, apiUrl: string, businessId: string },
+        key: { accessToken: string, apiUrl: string } & KeyParams,
         { arg }: { arg: TArg },
-      ): Promise<TDecoded> => {
+      ): Promise<TData> => {
+        const { accessToken, apiUrl, ...rest } = key
+        const keyParams = rest as unknown as KeyParams
+
         const response = request(apiUrl, accessToken, {
           params: {
-            businessId,
-            ...(argToParams ? argToParams(arg) : undefined),
+            ...keyParams,
+            ...(argToParams ? argToParams(arg, keyParams) : undefined),
           } as TParams,
-          body: argToBody ? argToBody(arg) : arg as unknown as TBody,
+          body: argToBody ? argToBody(arg, keyParams) : arg as unknown as TBody,
         })
 
-        if (schema) {
-          return response.then(Schema.decodeUnknownPromise(schema))
-        }
+        const decoded = schema
+          ? response.then(Schema.decodeUnknownPromise(schema))
+          : response as Promise<unknown> as Promise<TDecoded>
 
-        return response as Promise<unknown> as Promise<TDecoded>
+        return select ? decoded.then(select) : decoded as Promise<unknown> as Promise<TData>
       },
       {
         revalidate: false,
         ...swrOptions,
+        ...callSwrOptions,
       },
     )
 
