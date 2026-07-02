@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react'
-import { Schema } from 'effect'
 import { debounce } from 'lodash-es'
 import useSWRInfinite, { type SWRInfiniteConfiguration } from 'swr/infinite'
 
@@ -10,6 +9,7 @@ import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
@@ -35,7 +35,7 @@ type GetBankTransactionsPaginatedParams = {
 }
 
 const getBankTransactions = get<
-  Record<string, unknown>,
+  typeof GetBankTransactionsResponseSchema.Encoded,
   GetBankTransactionsPaginatedParams
 >(
   ({
@@ -79,9 +79,11 @@ export type UseBankTransactionsOptions = {
 }
 
 const keyLoader = createInfiniteKeyLoader<
-  UseBankTransactionsOptions & { businessId: string },
+  UseBankTransactionsOptions & { businessId: string, limit?: number },
   GetBankTransactionsReturn
 >([BANK_TRANSACTIONS_TAG_KEY])
+
+const fetchBankTransactions = createKeyedFetcher(getBankTransactions, GetBankTransactionsResponseSchema)
 
 export type BankTransactionsKey = NonNullable<ReturnType<typeof keyLoader>>
 
@@ -119,38 +121,10 @@ export function useBankTransactions({
         startDate,
         endDate,
         tagFilterQueryString,
+        limit: 200,
       },
     )),
-    ({
-      accessToken,
-      apiUrl,
-      businessId,
-      categorized,
-      cursor,
-      direction,
-      query,
-      startDate,
-      endDate,
-      tagFilterQueryString,
-    }: NonNullable<ReturnType<typeof keyLoader>>) => {
-      return getBankTransactions(
-        apiUrl,
-        accessToken,
-        {
-          params: {
-            businessId,
-            categorized,
-            cursor,
-            direction,
-            limit: 200,
-            query,
-            startDate,
-            endDate,
-            tagFilterQueryString,
-          },
-        },
-      )().then(Schema.decodeUnknownPromise(GetBankTransactionsResponseSchema))
-    },
+    fetchBankTransactions,
     {
       keepPreviousData: true,
       revalidateFirstPage: false,

@@ -2,9 +2,9 @@ import useSWRMutation from 'swr/mutation'
 
 import type { S3PresignedUrl } from '@internal-types/general'
 import { type APIError } from '@utils/api/apiError'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
 import type { UseBankTransactionsOptions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
@@ -20,20 +20,13 @@ type GetBankTransactionsExportParams = {
   sortBy?: string
 }
 
-const getBankTransactionsExcel = get<
+const getBankTransactionsExcel = getWithQuery<
   { data: S3PresignedUrl },
   GetBankTransactionsExportParams
->(({
-  businessId,
-  categorized,
-  direction,
-  query,
-  startDate,
-  endDate,
-  sortBy = 'date',
-  sortOrder = 'DESC',
-}: GetBankTransactionsExportParams) => {
-  const parameters = toDefinedSearchParameters({
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/transactions/exports/excel`,
+  ({ categorized, direction, query, startDate, endDate, sortBy = 'date', sortOrder = 'DESC' }) => ({
     categorized,
     direction,
     q: query,
@@ -41,10 +34,10 @@ const getBankTransactionsExcel = get<
     endDate,
     sortBy,
     sortOrder,
-  })
+  }),
+)
 
-  return `/v1/businesses/${businessId}/reports/transactions/exports/excel?${parameters}`
-})
+const fetchBankTransactionsExcel = createKeyedFetcher(getBankTransactionsExcel)
 
 const buildKey = createBuildKey<{ businessId: string }>(['#bank-transactions-download-excel'])
 
@@ -62,38 +55,8 @@ export function useBankTransactionsDownload() {
         ...auth,
         businessId,
       })),
-      (
-        {
-          accessToken,
-          apiUrl,
-          businessId,
-        },
-        {
-          arg: {
-            categorized,
-            direction,
-            query,
-            startDate,
-            endDate,
-            tagFilterQueryString,
-          },
-        }: { arg: UseBankTransactionsDownloadOptions },
-      ) =>
-        getBankTransactionsExcel(
-          apiUrl,
-          accessToken,
-          {
-            params: {
-              businessId,
-              categorized,
-              query,
-              direction,
-              startDate,
-              endDate,
-              tagFilterQueryString,
-            },
-          },
-        )().then(({ data }) => data),
+      (key, { arg }: { arg: UseBankTransactionsDownloadOptions }) =>
+        fetchBankTransactionsExcel({ ...key, ...arg }).then(({ data }) => data),
       {
         revalidate: false,
         throwOnError: false,

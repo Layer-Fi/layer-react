@@ -2,6 +2,7 @@ import useSWR from 'swr'
 
 import { getText } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
@@ -12,6 +13,8 @@ const buildKey = createBuildKey<{ businessId: string, invoiceId: string }>([INVO
 const getInvoicePreview = getText<{ businessId: string, invoiceId: string }>(
   ({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/html`,
 )
+
+const fetchInvoicePreview = createKeyedFetcher(getInvoicePreview)
 
 type UseInvoicePreviewProps = {
   invoiceId: string
@@ -25,13 +28,7 @@ export function useInvoicePreview({ invoiceId }: UseInvoicePreviewProps) {
       businessId,
       invoiceId,
     })),
-    ({ accessToken, apiUrl, businessId, invoiceId }) => getInvoicePreview(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId, invoiceId },
-      },
-    )(),
+    fetchInvoicePreview,
   )
 
   return new SWRQueryResult(response)

@@ -2,10 +2,10 @@ import { endOfDay } from 'date-fns'
 import useSWR from 'swr'
 
 import type { BalanceSheet } from '@internal-types/balanceSheet'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
@@ -14,20 +14,19 @@ export type GetBalanceSheetParams = {
   effectiveDate: Date
 }
 
-const getBalanceSheet = get<
+const getBalanceSheet = getWithQuery<
   { data: BalanceSheet },
   GetBalanceSheetParams
 >(
-  ({ businessId, effectiveDate }) => {
-    const parameters = toDefinedSearchParameters({ effectiveDate })
-
-    return `/v1/businesses/${businessId}/reports/balance-sheet?${parameters}`
-  },
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/balance-sheet`,
 )
+
+const fetchBalanceSheet = createKeyedFetcher(getBalanceSheet)
 
 export const BALANCE_SHEET_TAG_KEY = '#balance-sheet'
 
-const buildKey = createBuildKey<{ businessId: string, effectiveDate: Date }>([BALANCE_SHEET_TAG_KEY])
+const buildKey = createBuildKey<GetBalanceSheetParams>([BALANCE_SHEET_TAG_KEY])
 
 export function useBalanceSheet({
   effectiveDate = endOfDay(new Date()),
@@ -42,16 +41,7 @@ export function useBalanceSheet({
       businessId,
       effectiveDate,
     })),
-    ({ accessToken, apiUrl, businessId, effectiveDate }) => getBalanceSheet(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          effectiveDate,
-        },
-      },
-    )().then(({ data }) => data),
+    key => fetchBalanceSheet(key).then(({ data }) => data),
   )
 
   return new SWRQueryResult(response)

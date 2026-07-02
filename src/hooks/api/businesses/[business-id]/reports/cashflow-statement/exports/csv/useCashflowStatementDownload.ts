@@ -2,26 +2,25 @@ import useSWRMutation from 'swr/mutation'
 
 import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
 import type { GetStatementOfCashFlowParams } from '@hooks/api/businesses/[business-id]/reports/cashflow-statement/useStatementOfCashFlow'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
-const getCashflowStatementCSV = get<
+const getCashflowStatementCSV = getWithQuery<
   { data: S3PresignedUrl },
   GetStatementOfCashFlowParams
 >(
-  ({ businessId, startDate, endDate }) => {
-    const parameters = toDefinedSearchParameters({ startDate, endDate })
-
-    return `/v1/businesses/${businessId}/reports/cashflow-statement/exports/csv?${parameters}`
-  },
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/cashflow-statement/exports/csv`,
 )
+
+const fetchCashflowStatementCSV = createKeyedFetcher(getCashflowStatementCSV)
 
 const DOWNLOAD_CASHFLOW_STATEMENT_TAG_KEY = '#download-cashflow-statement'
 
-const buildKey = createBuildKey<{ businessId: string, startDate: Date, endDate: Date }>([DOWNLOAD_CASHFLOW_STATEMENT_TAG_KEY])
+const buildKey = createBuildKey<GetStatementOfCashFlowParams>([DOWNLOAD_CASHFLOW_STATEMENT_TAG_KEY])
 
 type UseCashflowStatementDownloadOptions = {
   startDate: Date
@@ -43,16 +42,7 @@ export function useCashflowStatementDownload({
       startDate,
       endDate,
     })),
-    ({ accessToken, apiUrl, businessId, startDate, endDate }) => getCashflowStatementCSV(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          startDate,
-          endDate,
-        },
-      })().then(({ data }) => {
+    key => fetchCashflowStatementCSV(key).then(({ data }) => {
       if (onSuccess) {
         return onSuccess(data)
       }

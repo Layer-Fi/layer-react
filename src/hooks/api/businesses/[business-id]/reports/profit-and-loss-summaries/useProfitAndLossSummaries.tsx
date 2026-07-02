@@ -2,10 +2,10 @@ import { Schema } from 'effect'
 import useSWR from 'swr'
 
 import { type ProfitAndLossSummaries, type ProfitAndLossSummariesRequestParams, ProfitAndLossSummariesSchema } from '@schemas/reports/profitAndLoss'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
@@ -13,36 +13,26 @@ export const PNL_SUMMARIES_TAG_KEY = '#profit-and-loss-summaries'
 
 const buildKey = createBuildKey<ProfitAndLossSummariesRequestParams>([PNL_SUMMARIES_TAG_KEY])
 
-const getProfitAndLossSummaries = get<
-  { data: ProfitAndLossSummaries },
+const ProfitAndLossSummariesResponseSchema = Schema.Struct({
+  data: ProfitAndLossSummariesSchema,
+})
+
+const getProfitAndLossSummaries = getWithQuery<
+  typeof ProfitAndLossSummariesResponseSchema.Encoded,
   ProfitAndLossSummariesRequestParams
 >(
-  ({
-    businessId,
-    startYear,
-    startMonth,
-    endYear,
-    endMonth,
-    tagKey,
-    tagValues,
-    reportingBasis,
-  }) => {
-    const parameters = toDefinedSearchParameters({ startYear, startMonth, endYear, endMonth, tagKey, tagValues, reportingBasis })
-    return `/v1/businesses/${businessId}/reports/profit-and-loss-summaries?${parameters}`
-  })
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/profit-and-loss-summaries`,
+)
+
+const fetchProfitAndLossSummaries = createKeyedFetcher(getProfitAndLossSummaries, ProfitAndLossSummariesResponseSchema)
 
 type UseProfitAndLossSummariesProps = Omit<ProfitAndLossSummariesRequestParams, 'businessId'> & {
   keepPreviousData?: boolean
 }
 export function useProfitAndLossSummaries({
-  startYear,
-  startMonth,
-  endYear,
-  endMonth,
-  tagKey,
-  tagValues,
-  reportingBasis,
   keepPreviousData,
+  ...params
 }: UseProfitAndLossSummariesProps) {
   const { withLocale, businessId, auth } = useBuildKeyInputs()
 
@@ -50,21 +40,9 @@ export function useProfitAndLossSummaries({
     () => withLocale(buildKey({
       ...auth,
       businessId,
-      startYear,
-      startMonth,
-      endYear,
-      endMonth,
-      tagKey,
-      tagValues,
-      reportingBasis,
+      ...params,
     })),
-    ({ accessToken, apiUrl, businessId }) => getProfitAndLossSummaries(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId, startYear, startMonth, endYear, endMonth, tagKey, tagValues, reportingBasis },
-      },
-    )().then(({ data }) => Schema.decodeUnknownPromise(ProfitAndLossSummariesSchema)(data)),
+    key => fetchProfitAndLossSummaries(key).then(({ data }) => data),
     { keepPreviousData },
   )
 

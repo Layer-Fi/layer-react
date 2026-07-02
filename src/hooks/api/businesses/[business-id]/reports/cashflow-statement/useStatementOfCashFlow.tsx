@@ -2,10 +2,10 @@ import { endOfMonth, startOfMonth } from 'date-fns'
 import useSWR from 'swr'
 
 import type { StatementOfCashFlow } from '@internal-types/statementOfCashFlow'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
@@ -15,20 +15,19 @@ export type GetStatementOfCashFlowParams = {
   endDate: Date
 }
 
-const getStatementOfCashFlow = get<
+const getStatementOfCashFlow = getWithQuery<
   { data: StatementOfCashFlow },
   GetStatementOfCashFlowParams
 >(
-  ({ businessId, startDate, endDate }) => {
-    const parameters = toDefinedSearchParameters({ startDate, endDate })
-
-    return `/v1/businesses/${businessId}/reports/cashflow-statement?${parameters}`
-  },
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/cashflow-statement`,
 )
+
+const fetchStatementOfCashFlow = createKeyedFetcher(getStatementOfCashFlow)
 
 export const STATEMENT_OF_CASH_FLOW_TAG_KEY = '#statement-of-cash-flow'
 
-const buildKey = createBuildKey<{ businessId: string, startDate: Date, endDate: Date }>([STATEMENT_OF_CASH_FLOW_TAG_KEY])
+const buildKey = createBuildKey<GetStatementOfCashFlowParams>([STATEMENT_OF_CASH_FLOW_TAG_KEY])
 
 export function useStatementOfCashFlow({
   startDate = startOfMonth(new Date()),
@@ -46,16 +45,7 @@ export function useStatementOfCashFlow({
       startDate,
       endDate,
     })),
-    ({ apiUrl, accessToken, startDate, endDate }) => getStatementOfCashFlow(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          startDate,
-          endDate,
-        },
-      })().then(({ data }) => data),
+    key => fetchStatementOfCashFlow(key).then(({ data }) => data),
   )
 
   return new SWRQueryResult(response)

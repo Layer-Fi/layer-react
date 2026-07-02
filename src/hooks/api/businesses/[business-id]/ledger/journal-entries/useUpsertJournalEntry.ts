@@ -1,15 +1,12 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
 
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { useLedgerEntriesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
 import { useBalanceSheetGlobalCacheActions } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/useBalanceSheet'
 import { useStatementOfCashFlowGlobalCacheActions } from '@hooks/api/businesses/[business-id]/reports/cashflow-statement/useStatementOfCashFlow'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
-import { type JournalEntryReturn, JournalEntryReturnSchema, type UpsertJournalEntrySchema } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { JournalEntryReturnSchema, type UpsertJournalEntrySchema } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
 
 const UPSERT_JOURNAL_ENTRY_TAG_KEY = '#upsert-journal-entry'
 
@@ -20,23 +17,24 @@ export enum UpsertJournalEntryMode {
 
 type UpsertJournalEntryBody = typeof UpsertJournalEntrySchema.Encoded
 
-type UpsertJournalEntryReturn = JournalEntryReturn
-
 const createJournalEntry = post<
-  UpsertJournalEntryReturn,
+  typeof JournalEntryReturnSchema.Encoded,
   UpsertJournalEntryBody,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/ledger/journal-entries`)
 
-const buildKey = createBuildKey<{ businessId: string }>([UPSERT_JOURNAL_ENTRY_TAG_KEY])
+const useCreateJournalEntry = createMutationHook({
+  tags: [UPSERT_JOURNAL_ENTRY_TAG_KEY],
+  request: createJournalEntry,
+  schema: JournalEntryReturnSchema,
+  swrOptions: { throwOnError: true },
+})
 
 type UseUpsertJournalEntryProps =
   | { mode: UpsertJournalEntryMode.Create }
   | { mode: UpsertJournalEntryMode.Update, journalEntryId: string }
 
 export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
   const { mode } = props
   // For now, we only support create mode since the API doesn't have an update endpoint
   if (mode === UpsertJournalEntryMode.Update) {
@@ -49,25 +47,7 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
   const { invalidate: invalidateBalanceSheet } = useBalanceSheetGlobalCacheActions()
   const { invalidate: invalidateStatementOfCashFlow } = useStatementOfCashFlowGlobalCacheActions()
 
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: body }: { arg: UpsertJournalEntryBody },
-    ) => {
-      return createJournalEntry(apiUrl, accessToken, {
-        params: { businessId },
-        body,
-      }).then(Schema.decodeUnknownPromise(JournalEntryReturnSchema))
-    },
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
+  const rawMutationResponse = useCreateJournalEntry()
 
   const trigger = useCallback(
     async (body: UpsertJournalEntryBody) => {
@@ -89,7 +69,7 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
   return {
     trigger,
     data: rawMutationResponse.data,
-    isError: !!rawMutationResponse.error,
+    isError: rawMutationResponse.isError,
     isMutating: rawMutationResponse.isMutating,
   }
 }

@@ -1,40 +1,26 @@
 import { Schema } from 'effect'
-import useSWR from 'swr'
 
 import { type MileageSummary, MileageSummarySchema } from '@schemas/mileage'
 import { get } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const MILEAGE_SUMMARY_TAG_KEY = '#mileage-summary'
 
-const buildKey = createBuildKey<{ businessId: string }>([MILEAGE_SUMMARY_TAG_KEY])
+const MileageSummaryResponseSchema = Schema.Struct({
+  data: MileageSummarySchema,
+})
 
 const getMileageSummary = get<
-  { data: MileageSummary },
+  typeof MileageSummaryResponseSchema.Encoded,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/mileage/summary`)
 
-export function useMileageSummary() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const response = useSWR(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-    })),
-    ({ accessToken, apiUrl, businessId }) => getMileageSummary(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-      },
-    )().then(({ data }) => Schema.decodeUnknownPromise(MileageSummarySchema)(data)),
-  )
-
-  return new SWRQueryResult(response)
-}
+export const useMileageSummary = createQueryHook({
+  tags: [MILEAGE_SUMMARY_TAG_KEY],
+  request: getMileageSummary,
+  schema: MileageSummaryResponseSchema,
+  select: ({ data }) => data,
+})
 
 export const useMileageSummaryGlobalCacheActions = createResourceGlobalCacheActions<MileageSummary>(MILEAGE_SUMMARY_TAG_KEY)

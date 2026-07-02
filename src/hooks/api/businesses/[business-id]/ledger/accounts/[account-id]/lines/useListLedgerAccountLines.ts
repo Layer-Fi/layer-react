@@ -1,14 +1,7 @@
-import { Schema } from 'effect'
-import useSWRInfinite from 'swr/infinite'
-
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { LedgerAccountLineItemSchema } from '@schemas/generalLedger/ledgerEntry'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
-import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
-import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 export const LIST_LEDGER_ACCOUNT_LINES_TAG_KEY = '#list-ledger-account-lines'
 
@@ -30,41 +23,13 @@ const ListLedgerAccountLinesResponseSchema = PaginatedResponseSchema(LedgerAccou
 
 export type ListLedgerAccountLinesReturn = typeof ListLedgerAccountLinesResponseSchema.Type
 
-export const listLedgerAccountLines = get<
+export const listLedgerAccountLines = getWithQuery<
   typeof ListLedgerAccountLinesResponseSchema.Encoded,
   GetLedgerAccountLinesParams
->(({
-  businessId,
-  accountId,
-  include_entries_before_activation,
-  include_child_account_lines,
-  start_date,
-  end_date,
-  sort_by,
-  sort_order,
-  cursor,
-  limit,
-  show_total_count,
-}) => {
-  const parameters = toDefinedSearchParameters({
-    include_entries_before_activation,
-    include_child_account_lines,
-    start_date,
-    end_date,
-    sort_by,
-    sort_order,
-    cursor,
-    limit,
-    show_total_count,
-  })
-
-  return `/v1/businesses/${businessId}/ledger/accounts/${accountId}/lines?${parameters}`
-})
-
-const keyLoader = createInfiniteKeyLoader<
-  UseListLedgerAccountLinesOptions & { businessId: string },
-  ListLedgerAccountLinesReturn
->([LIST_LEDGER_ACCOUNT_LINES_TAG_KEY])
+>(
+  ['businessId', 'accountId'],
+  ({ businessId, accountId }) => `/v1/businesses/${businessId}/ledger/accounts/${accountId}/lines`,
+)
 
 export type UseListLedgerAccountLinesOptions = {
   accountId: string
@@ -78,78 +43,15 @@ export type UseListLedgerAccountLinesOptions = {
   show_total_count?: boolean
 }
 
-export function useListLedgerAccountLines({
-  accountId,
-  include_entries_before_activation,
-  include_child_account_lines,
-  start_date,
-  end_date,
-  sort_by,
-  sort_order,
-  limit,
-  show_total_count,
-}: UseListLedgerAccountLinesOptions) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
+const useListLedgerAccountLinesQuery = createInfiniteQueryHook({
+  tags: [LIST_LEDGER_ACCOUNT_LINES_TAG_KEY],
+  request: listLedgerAccountLines,
+  schema: ListLedgerAccountLinesResponseSchema,
+})
 
-  const swrResponse = useSWRInfinite(
-    (_index, previousPageData: ListLedgerAccountLinesReturn | null) => withLocale(keyLoader(
-      previousPageData,
-      {
-        ...auth,
-        businessId,
-        accountId,
-        include_entries_before_activation,
-        include_child_account_lines,
-        start_date,
-        end_date,
-        sort_by,
-        sort_order,
-        limit,
-        show_total_count,
-        isEnabled: Boolean(accountId),
-      },
-    )),
-    ({
-      accessToken,
-      apiUrl,
-      businessId,
-      accountId,
-      cursor,
-      include_entries_before_activation,
-      include_child_account_lines,
-      start_date,
-      end_date,
-      sort_by,
-      sort_order,
-      limit,
-      show_total_count,
-    }) => listLedgerAccountLines(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          accountId,
-          cursor,
-          include_entries_before_activation,
-          include_child_account_lines,
-          start_date,
-          end_date,
-          sort_by,
-          sort_order,
-          limit,
-          show_total_count,
-        },
-      },
-    )().then(Schema.decodeUnknownPromise(ListLedgerAccountLinesResponseSchema)),
-    {
-      keepPreviousData: true,
-      revalidateFirstPage: false,
-      initialSize: 1,
-    },
-  )
-
-  usePreserveInfiniteSize(swrResponse)
-
-  return useSWRInfiniteResult(swrResponse)
+export function useListLedgerAccountLines(options: UseListLedgerAccountLinesOptions) {
+  return useListLedgerAccountLinesQuery({
+    ...options,
+    isEnabled: Boolean(options.accountId),
+  })
 }

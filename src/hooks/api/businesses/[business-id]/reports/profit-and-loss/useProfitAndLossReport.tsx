@@ -1,60 +1,29 @@
 import { Schema } from 'effect'
-import useSWR from 'swr'
 
 import { type ProfitAndLoss, type ProfitAndLossReportRequestParams, ProfitAndLossReportSchema } from '@schemas/reports/profitAndLoss'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { createBuildKey } from '@utils/swr/createBuildKey'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const PNL_REPORT_TAG_KEY = '#profit-and-loss-report'
 
-const buildKey = createBuildKey<ProfitAndLossReportRequestParams>([PNL_REPORT_TAG_KEY])
+const ProfitAndLossReportResponseSchema = Schema.Struct({
+  data: ProfitAndLossReportSchema,
+})
 
-const getProfitAndLoss = get<
-  { data: ProfitAndLoss },
+const getProfitAndLoss = getWithQuery<
+  typeof ProfitAndLossReportResponseSchema.Encoded,
   ProfitAndLossReportRequestParams
 >(
-  ({
-    businessId,
-    startDate,
-    endDate,
-    tagKey,
-    tagValues,
-    reportingBasis,
-    includeUncategorized,
-  }) => {
-    const parameters = toDefinedSearchParameters({ startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized })
-    return `/v1/businesses/${businessId}/reports/profit-and-loss?${parameters}`
-  })
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/profit-and-loss`,
+)
 
-type UseProfitAndLossReportProps = Omit<ProfitAndLossReportRequestParams, 'businessId'>
-export function useProfitAndLossReport({ startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized }: UseProfitAndLossReportProps) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const response = useSWR(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      startDate,
-      endDate,
-      tagKey,
-      tagValues,
-      reportingBasis,
-      includeUncategorized,
-    })),
-    ({ accessToken, apiUrl, businessId }) => getProfitAndLoss(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId, startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized },
-      },
-    )().then(({ data }) => Schema.decodeUnknownPromise(ProfitAndLossReportSchema)(data)),
-  )
-
-  return new SWRQueryResult(response)
-}
+export const useProfitAndLossReport = createQueryHook({
+  tags: [PNL_REPORT_TAG_KEY],
+  request: getProfitAndLoss,
+  schema: ProfitAndLossReportResponseSchema,
+  select: ({ data }) => data,
+})
 
 export const useProfitAndLossReportCacheActions = createResourceGlobalCacheActions<ProfitAndLoss>(PNL_REPORT_TAG_KEY)

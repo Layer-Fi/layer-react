@@ -2,9 +2,10 @@ import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/common/s3PresignedUrl'
-import { get } from '@utils/api/authenticatedHttp'
-import { type QueryParams, toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { type QueryParams } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 import {
@@ -18,20 +19,21 @@ type GetUnifiedReportExcelParams = {
   route: string
 } & UnifiedReportControlParams & QueryParams
 
-const getUnifiedReportExcel = get<
-  { data: S3PresignedUrlSchemaType },
-  GetUnifiedReportExcelParams
->(({ businessId, route, ...restParams }) => {
-  const parameters = toDefinedSearchParameters({ ...restParams })
-
-  return `/v1/businesses/${businessId}/reports/unified/${route}/exports/excel?${parameters}`
-})
-
-const getTag = (report: string) => `#unified-${report}-report-excel`
-
 const UnifiedReportExcelReturnSchema = Schema.Struct({
   data: S3PresignedUrlSchema,
 })
+
+const getUnifiedReportExcel = getWithQuery<
+  typeof UnifiedReportExcelReturnSchema.Encoded,
+  GetUnifiedReportExcelParams
+>(
+  ['businessId', 'route'],
+  ({ businessId, route }) => `/v1/businesses/${businessId}/reports/unified/${route}/exports/excel`,
+)
+
+const fetchUnifiedReportExcel = createKeyedFetcher(getUnifiedReportExcel, UnifiedReportExcelReturnSchema)
+
+const getTag = (report: string) => `#unified-${report}-report-excel`
 
 type UseUnifiedReportExcelOptions = {
   onSuccess?: (url: S3PresignedUrlSchemaType) => Promise<void> | void
@@ -49,15 +51,11 @@ export function useUnifiedReportExcel({ onSuccess }: UseUnifiedReportExcelOption
     () => params
       ? withLocale(buildKey({ ...auth, businessId, ...params }))
       : null,
-    ({ accessToken, apiUrl, businessId, tags, ...restParams }) =>
-      getUnifiedReportExcel(apiUrl, accessToken, {
-        params: { businessId, ...restParams },
-      })()
-        .then(Schema.decodeUnknownPromise(UnifiedReportExcelReturnSchema))
-        .then(async ({ data }) => {
-          if (onSuccess) await onSuccess(data)
-          return data
-        }),
+    key => fetchUnifiedReportExcel(key)
+      .then(async ({ data }) => {
+        if (onSuccess) await onSuccess(data)
+        return data
+      }),
     { revalidate: false, throwOnError: false },
   )
 
