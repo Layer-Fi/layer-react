@@ -3,12 +3,10 @@ import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useLedgerBalancesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/balances/useLedgerBalances'
 import { useLedgerEntriesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const deleteAccountFromLedger = del<
   Record<string, never>,
@@ -18,13 +16,11 @@ const deleteAccountFromLedger = del<
 const buildKey = createBuildKey<{ businessId: string }>(['#delete-account-from-ledger'])
 
 export function useDeleteAccountFromLedger() {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const mutationResponse = useSWRMutation(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
     })),
     (

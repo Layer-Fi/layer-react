@@ -5,13 +5,11 @@ import useSWRMutation from 'swr/mutation'
 import { InvoiceSchema, type UpsertInvoiceSchema } from '@schemas/invoices/invoice'
 import { patch, post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const UPSERT_INVOICE_TAG_KEY = '#upsert-invoice'
 
@@ -106,16 +104,14 @@ type UseUpsertInvoiceProps =
   | { mode: UpsertInvoiceMode.Update, invoiceId: string }
 
 export const useUpsertInvoice = (props: UseUpsertInvoiceProps) => {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const { mode } = props
   const invoiceId = mode === UpsertInvoiceMode.Update ? props.invoiceId : undefined
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
       invoiceId,
     })),

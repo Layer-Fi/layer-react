@@ -3,9 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type MoneyFormat } from '@internal-types/general'
 import { getProfitAndLossExcel } from '@hooks/legacy/useDownloadProfitAndLoss'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { DownloadButton as DownloadButtonComponent } from '@ui/Button/DownloadButton'
@@ -28,9 +26,7 @@ export const ProfitAndLossFullReportDownloadButton = ({
     ProfitAndLossComparisonContext,
   )
 
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
+  const { businessId, auth } = useBuildKeyInputs()
 
   const [requestFailed, setRequestFailed] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
@@ -44,10 +40,11 @@ export const ProfitAndLossFullReportDownloadButton = ({
     : undefined
 
   const handleClick = async () => {
+    if (!auth) return
     setIsDownloading(true)
     const getProfitAndLossExcelCall = getProfitAndLossExcel(
-      apiUrl,
-      auth?.access_token,
+      auth.apiUrl,
+      auth.access_token,
       {
         businessId,
         moneyFormat,

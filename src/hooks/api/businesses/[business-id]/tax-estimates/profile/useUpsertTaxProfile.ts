@@ -5,14 +5,12 @@ import useSWRMutation from 'swr/mutation'
 import { type TaxProfileRequest, type TaxProfileResponse, TaxProfileResponseSchema } from '@schemas/taxEstimates/profile'
 import { patch, post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useTaxDetailsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/tax-estimates/details/useTaxDetails'
 import { useTaxPaymentsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/tax-estimates/payments/useTaxPayments'
 import { useTaxProfileGlobalCacheActions } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const UPSERT_TAX_PROFILE_TAG_KEY = '#upsert-tax-profile'
 
@@ -43,9 +41,7 @@ type UseUpsertTaxProfileProps = {
   mode: UpsertTaxProfileMode
 }
 export function useUpsertTaxProfile({ mode }: UseUpsertTaxProfileProps) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const { overwriteCache: overwriteTaxProfile } = useTaxProfileGlobalCacheActions()
   const { forceReload: forceReloadTaxPayments } = useTaxPaymentsGlobalCacheActions()
   const { forceReload: forceReloadTaxDetails } = useTaxDetailsGlobalCacheActions()

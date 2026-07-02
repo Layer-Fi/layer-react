@@ -16,11 +16,9 @@ import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 export type { CallBooking, CreateCallBookingBody }
 export { CallBookingPurpose, CallBookingState, CallBookingType }
@@ -52,9 +50,7 @@ const keyLoader = createInfiniteKeyLoader<
 >([CALL_BOOKINGS_TAG_KEY])
 
 export function useCallBookings({ limit }: { limit?: number } = {}) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWRInfinite(
     (_index, previousPageData: ListCallBookingsResponse | null) => withLocale(keyLoader(

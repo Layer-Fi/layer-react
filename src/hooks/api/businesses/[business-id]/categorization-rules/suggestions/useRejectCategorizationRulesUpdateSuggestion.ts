@@ -3,10 +3,8 @@ import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const REJECT_CATEGORIZATION_RULE_SUGGESTION_TAG = '#reject-categorization-rule-suggestion'
 
@@ -18,9 +16,7 @@ export const rejectCategorizationRulesUpdateSuggestion = del<never>(
 )
 
 export function useRejectCategorizationRulesUpdateSuggestion() {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const mutationResponse = useSWRMutation(
     () => withLocale(buildKey({

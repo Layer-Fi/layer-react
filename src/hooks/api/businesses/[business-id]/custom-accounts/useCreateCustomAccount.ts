@@ -6,13 +6,11 @@ import useSWRMutation from 'swr/mutation'
 import { CustomAccountSchema, type RawCustomAccount } from '@schemas/customAccounts'
 import { post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 type CreateCustomAccountBody = Pick<
   RawCustomAccount,
@@ -38,14 +36,12 @@ const createCustomAccount = post<
 const buildKey = createBuildKey<{ businessId: string }>([`${CUSTOM_ACCOUNTS_TAG_KEY}:create`])
 
 export function useCreateCustomAccount() {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const { mutate } = useSWRConfig()
 
   const mutationResponse = useSWRMutation(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
     })),
     (

@@ -4,9 +4,7 @@ import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const getLedgerAccountBalancesCSV = get<{ data: S3PresignedUrl }>(
   ({ businessId }) => `/v1/businesses/${businessId}/ledger/balances/exports/csv`,
@@ -25,9 +23,7 @@ export function useAccountBalancesDownload({
   endCutoff,
   onSuccess,
 }: UseAccountBalancesDownloadOptions) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   return useSWRMutation(
     () => withLocale(buildKey({

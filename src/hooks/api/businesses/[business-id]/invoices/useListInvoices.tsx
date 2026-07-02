@@ -8,12 +8,9 @@ import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
 import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 export const LIST_INVOICES_TAG_KEY = '#list-invoices'
 
@@ -78,17 +75,13 @@ export function useListInvoices({
   limit,
   showTotalCount = true,
 }: ListInvoicesOptions = {}) {
-  const withLocale = useLocalizedKey()
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWRInfinite(
     (_index, previousPageData: ListInvoicesReturn | null) => withLocale(keyLoader(
       previousPageData,
       {
         ...auth,
-        apiUrl,
         businessId,
         showSalesReceipts,
         status,

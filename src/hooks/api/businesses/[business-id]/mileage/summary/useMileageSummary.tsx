@@ -5,10 +5,8 @@ import { type MileageSummary, MileageSummarySchema } from '@schemas/mileage'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 export const MILEAGE_SUMMARY_TAG_KEY = '#mileage-summary'
 
@@ -20,13 +18,11 @@ const getMileageSummary = get<
 >(({ businessId }) => `/v1/businesses/${businessId}/mileage/summary`)
 
 export function useMileageSummary() {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const response = useSWR(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
     })),
     ({ accessToken, apiUrl, businessId }) => getMileageSummary(

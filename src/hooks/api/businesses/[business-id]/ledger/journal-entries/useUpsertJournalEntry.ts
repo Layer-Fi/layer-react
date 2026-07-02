@@ -4,13 +4,11 @@ import useSWRMutation from 'swr/mutation'
 
 import { post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useLedgerEntriesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
 import { useBalanceSheetGlobalCacheActions } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/useBalanceSheet'
 import { useStatementOfCashFlowGlobalCacheActions } from '@hooks/api/businesses/[business-id]/reports/cashflow-statement/useStatementOfCashFlow'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 import { type JournalEntryReturn, JournalEntryReturnSchema, type UpsertJournalEntrySchema } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
 
 const UPSERT_JOURNAL_ENTRY_TAG_KEY = '#upsert-journal-entry'
@@ -37,9 +35,7 @@ type UseUpsertJournalEntryProps =
   | { mode: UpsertJournalEntryMode.Update, journalEntryId: string }
 
 export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const { mode } = props
   // For now, we only support create mode since the API doesn't have an update endpoint
@@ -55,7 +51,7 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
     })),
     (

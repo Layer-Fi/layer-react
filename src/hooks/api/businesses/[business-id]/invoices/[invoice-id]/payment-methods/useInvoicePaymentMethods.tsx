@@ -7,10 +7,8 @@ import {
 } from '@schemas/invoices/invoicePaymentMethod'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 export const INVOICE_PAYMENT_METHODS_TAG_KEY = '#invoice-payment-methods'
 
@@ -30,13 +28,11 @@ export function useInvoicePaymentMethods({
   invoiceId,
   isEnabled = true,
 }: UseInvoicePaymentMethodsProps) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const response = useSWR(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
       invoiceId,
       isEnabled: isEnabled && Boolean(invoiceId),

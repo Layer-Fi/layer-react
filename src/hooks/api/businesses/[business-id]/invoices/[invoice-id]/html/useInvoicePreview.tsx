@@ -2,10 +2,8 @@ import useSWR from 'swr'
 
 import { getText } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 export const INVOICE_PREVIEW_TAG_KEY = '#invoices-preview'
 
@@ -19,13 +17,11 @@ type UseInvoicePreviewProps = {
   invoiceId: string
 }
 export function useInvoicePreview({ invoiceId }: UseInvoicePreviewProps) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const response = useSWR(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
       invoiceId,
     })),

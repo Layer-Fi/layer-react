@@ -7,15 +7,13 @@ import { InvoiceSchema } from '@schemas/invoices/invoice'
 import { InvoicePaymentMethodsSchema } from '@schemas/invoices/invoicePaymentMethod'
 import { put } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { INVOICE_PAYMENT_METHODS_TAG_KEY } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/useInvoicePaymentMethods'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const FINALIZE_INVOICE_TAG_KEY = '#finalize-invoice'
 
@@ -55,14 +53,12 @@ type UseFinalizeInvoiceProps = {
 }
 
 export function useFinalizeInvoice({ invoiceId }: UseFinalizeInvoiceProps) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const { mutate } = useSWRConfig()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
       invoiceId,
     })),

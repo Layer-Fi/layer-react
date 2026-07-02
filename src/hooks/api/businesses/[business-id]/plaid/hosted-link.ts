@@ -8,9 +8,7 @@ import {
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 export const PLAID_HOSTED_LINK_TAG_KEY = '#plaid-hosted-link'
 
@@ -29,12 +27,10 @@ export function usePlaidHostedLinkStatus(
   config?: SWRConfiguration<ApiPlaidHostedLinkStatus>,
   enabled = false,
 ) {
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
+  const { businessId, auth } = useBuildKeyInputs()
 
   const swrResponse = useSWR(
-    () => buildKey({ ...auth, apiUrl, businessId, isEnabled: enabled }),
+    () => buildKey({ ...auth, businessId, isEnabled: enabled }),
     ({ accessToken, apiUrl, businessId }) =>
       getPlaidHostedLinkStatus(apiUrl, accessToken, { params: { businessId } })()
         .then(Schema.decodeUnknownPromise(PlaidHostedLinkStatusResponseSchema))

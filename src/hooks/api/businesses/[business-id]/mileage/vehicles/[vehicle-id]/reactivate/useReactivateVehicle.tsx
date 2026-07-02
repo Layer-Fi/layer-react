@@ -5,12 +5,10 @@ import useSWRMutation from 'swr/mutation'
 import { VehicleSchema } from '@schemas/vehicle'
 import { post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useVehiclesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const REACTIVATE_VEHICLE_TAG_KEY = '#reactivate-vehicle'
 
@@ -33,13 +31,11 @@ type UseReactivateVehicleProps = {
 }
 
 export const useReactivateVehicle = ({ vehicleId }: UseReactivateVehicleProps) => {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
       vehicleId,
     })),

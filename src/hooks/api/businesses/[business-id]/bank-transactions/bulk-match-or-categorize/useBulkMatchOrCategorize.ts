@@ -6,11 +6,10 @@ import { type Split } from '@internal-types/bankTransactions'
 import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
-import { useAuth } from '@hooks/utils/auth/useAuth'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 import { type BankTransactionCategorization, BankTransactionSelectionVariant, DEFAULT_CATEGORIZATION, useGetAllBankTransactionsCategorizations } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -143,9 +142,8 @@ const bulkMatchOrCategorize = post<
 const buildKey = createBuildKey<{ businessId: string }>([BULK_MATCH_OR_CATEGORIZE_TAG])
 
 export const useBulkMatchOrCategorize = () => {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId, eventCallbacks } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
+  const { eventCallbacks } = useLayerContext()
   const { selectedIds } = useSelectedIds()
   const { categorizations } = useGetAllBankTransactionsCategorizations()
 
@@ -159,7 +157,7 @@ export const useBulkMatchOrCategorize = () => {
 
   const mutationResponse = useSWRMutation(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
     })),
     (

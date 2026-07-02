@@ -6,11 +6,8 @@ import { get } from '@utils/api/authenticatedHttp'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 export type GetBalanceSheetParams = {
   businessId: string
@@ -37,15 +34,11 @@ export function useBalanceSheet({
 }: {
   effectiveDate?: Date
 }) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { apiUrl } = useEnvironment()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const response = useSWR(
     () => withLocale(buildKey({
       ...auth,
-      apiUrl,
       businessId,
       effectiveDate,
     })),

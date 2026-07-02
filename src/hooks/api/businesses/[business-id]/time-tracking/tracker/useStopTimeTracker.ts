@@ -5,14 +5,12 @@ import useSWRMutation from 'swr/mutation'
 import { type StopTrackerEncoded } from '@schemas/timeTracking'
 import { post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useTimeTrackingSummaryGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
 import { useTimeEntriesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useListTimeEntries'
 import { useActiveTimeTrackerGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useActiveTimeTracker'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const STOP_TIME_TRACKER_TAG_KEY = '#stop-time-tracker'
 
@@ -34,16 +32,14 @@ const stopTimeTracker = post<
 const buildKey = createBuildKey<{ businessId: string }>([STOP_TIME_TRACKER_TAG_KEY])
 
 export const useStopTimeTracker = () => {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const { forceReload: forceReloadTimeEntries } = useTimeEntriesGlobalCacheActions()
   const { invalidate: invalidateTimeTrackingSummary } = useTimeTrackingSummaryGlobalCacheActions()
   const { invalidate: invalidateActiveTimeTracker } = useActiveTimeTrackerGlobalCacheActions()
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
     })),
     ({ accessToken, apiUrl, businessId }, { arg: body }: { arg: StopTimeTrackerBody }) => stopTimeTracker(

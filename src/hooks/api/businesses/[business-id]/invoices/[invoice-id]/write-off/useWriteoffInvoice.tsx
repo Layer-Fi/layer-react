@@ -6,13 +6,11 @@ import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { type CreateInvoiceWriteoff, CreateInvoiceWriteoffSchema, InvoiceWriteoffSchema } from '@schemas/invoices/invoiceWriteoff'
 import { post } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 const CREATE_INVOICE_WRITEOFF_TAG_KEY = '#writeoff-invoice'
 
@@ -38,9 +36,7 @@ export const updateInvoiceWithWriteoff = (invoice: Invoice): Invoice => {
 
 type UseWriteoffInvoiceProps = { invoiceId: string }
 export const useWriteoffInvoice = ({ invoiceId }: UseWriteoffInvoiceProps) => {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+  const { withLocale, businessId, auth } = useBuildKeyInputs()
 
   const applyWriteoffToInvoice = useCallback(() =>
     (invoice: Invoice) => {
@@ -50,7 +46,7 @@ export const useWriteoffInvoice = ({ invoiceId }: UseWriteoffInvoiceProps) => {
 
   const rawMutationResponse = useSWRMutation(
     () => withLocale(buildKey({
-      ...data,
+      ...auth,
       businessId,
       invoiceId,
     })),
