@@ -1,16 +1,13 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
 
 import { type CreateCustomerRefundSchema, CustomerRefundSchema } from '@schemas/invoices/customerRefund'
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const REFUND_INVOICE_TAG_KEY = '#refund-invoice'
 
@@ -18,17 +15,19 @@ const RefundInvoiceReturnSchema = Schema.Struct({
   data: CustomerRefundSchema,
 })
 
-type RefundInvoiceBody = typeof CreateCustomerRefundSchema.Encoded
-
-type RefundInvoiceReturn = typeof RefundInvoiceReturnSchema.Type
-
 const refundInvoice = post<
-  RefundInvoiceReturn,
+  typeof RefundInvoiceReturnSchema.Encoded,
   typeof CreateCustomerRefundSchema.Encoded,
   { businessId: string, invoiceId: string }
 >(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/refund`)
 
-const buildKey = createBuildKey<{ businessId: string, invoiceId: string }>([REFUND_INVOICE_TAG_KEY])
+const useRefundInvoiceMutation = createMutationHook({
+  tags: [REFUND_INVOICE_TAG_KEY],
+  request: refundInvoice,
+  keyParams: ['invoiceId'],
+  schema: RefundInvoiceReturnSchema,
+  swrOptions: { throwOnError: true },
+})
 
 export const updateInvoiceWithRefund = (invoice: Invoice): Invoice => {
   return { ...invoice, status: InvoiceStatus.Refunded }
@@ -36,37 +35,13 @@ export const updateInvoiceWithRefund = (invoice: Invoice): Invoice => {
 
 type UseRefundInvoiceProps = { invoiceId: string }
 export const useRefundInvoice = ({ invoiceId }: UseRefundInvoiceProps) => {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
   const applyRefundToInvoice = useCallback(() =>
     (invoice: Invoice) => {
       if (invoice.id !== invoiceId) return invoice
       return updateInvoiceWithRefund(invoice)
     }, [invoiceId])
 
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      invoiceId,
-    })),
-    (
-      { accessToken, apiUrl, businessId, invoiceId },
-      { arg: body }: { arg: RefundInvoiceBody },
-    ) => {
-      return refundInvoice(
-        apiUrl,
-        accessToken,
-        { params: { businessId, invoiceId }, body },
-      ).then(Schema.decodeUnknownPromise(RefundInvoiceReturnSchema))
-    },
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
+  const mutationResponse = useRefundInvoiceMutation({ invoiceId })
 
   const { patchByTransformation: patchInvoiceWithTransformation } = useInvoicesGlobalCacheActions()
   const { forceReload: forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()

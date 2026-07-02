@@ -6,22 +6,25 @@ import type { Awaitable } from '@internal-types/utility/promises'
 import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/common/s3PresignedUrl'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
+const InvoicePdfReturnSchema = Schema.Struct({
+  data: S3PresignedUrlSchema,
+})
+
 const getInvoicePdf = get<
-  { data: S3PresignedUrlSchemaType },
+  typeof InvoicePdfReturnSchema.Encoded,
   { businessId: string, invoiceId: string }
 >(
   ({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/pdf`,
 )
 
-const DOWNLOAD_INVOICE_PDF_TAG_KEY = '#download-invoice-pdf'
+const fetchInvoicePdf = createKeyedFetcher(getInvoicePdf, InvoicePdfReturnSchema)
 
-const InvoicePdfReturnSchema = Schema.Struct({
-  data: S3PresignedUrlSchema,
-})
+const DOWNLOAD_INVOICE_PDF_TAG_KEY = '#download-invoice-pdf'
 
 const buildKey = createBuildKey<{ businessId: string, invoiceId: string }>([DOWNLOAD_INVOICE_PDF_TAG_KEY])
 
@@ -44,17 +47,7 @@ export function useInvoicePdfDownload({
       businessId,
       invoiceId,
     })),
-    ({ accessToken, apiUrl, businessId, invoiceId }) => getInvoicePdf(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          invoiceId,
-        },
-      },
-    )()
-      .then(Schema.decodeUnknownPromise(InvoicePdfReturnSchema))
+    key => fetchInvoicePdf(key)
       .then(async ({ data }) => {
         if (onSuccess) {
           await onSuccess(data)

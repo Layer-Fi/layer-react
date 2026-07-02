@@ -9,7 +9,6 @@ import type { PnlDetailLine } from '@hooks/api/businesses/[business-id]/reports/
 import { useProfitAndLossDetailLines } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/lines/useProfitAndLossDetailLines'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -91,7 +90,6 @@ export const ProfitAndLossDetailReport = ({
 }: ProfitAndLossDetailReportProps) => {
   const { t } = useTranslation()
   const { formatDateRange } = useIntlFormatter()
-  const { businessId } = useLayerContext()
   const { tagFilter, dateRange } = useContext(ProfitAndLossContext)
   const [selectedSource, setSelectedSource] = useState<LedgerEntrySourceType | null>(null)
 
@@ -111,11 +109,11 @@ export const ProfitAndLossDetailReport = ({
   }, [breadcrumbPath, lineItemName])
 
   const { data, isLoading, isError } = useProfitAndLossDetailLines({
-    businessId,
     startDate: dateRange.startDate,
     endDate: dateRange.endDate,
     pnlStructureLineItemName: lineItemName,
     tagFilter,
+    isEnabled: Boolean(dateRange.startDate && dateRange.endDate && lineItemName),
   })
 
   const handleSourceClick = useCallback((source: LedgerEntrySourceType) => {

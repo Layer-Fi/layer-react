@@ -1,57 +1,44 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
 
 import { CatalogServiceSchema } from '@schemas/catalogService'
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useCatalogServicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const ARCHIVE_CATALOG_SERVICE_TAG_KEY = '#archive-catalog-service'
 
 const ArchiveCatalogServiceResponseSchema = Schema.Struct({
   data: CatalogServiceSchema,
 })
-type ArchiveCatalogServiceResponse = typeof ArchiveCatalogServiceResponseSchema.Type
 
-const archiveCatalogService = post<ArchiveCatalogServiceResponse>(
+const archiveCatalogService = post<
+  typeof ArchiveCatalogServiceResponseSchema.Encoded,
+  Record<string, unknown>,
+  { businessId: string, serviceId: string }
+>(
   ({ businessId, serviceId }) =>
     `/v1/businesses/${businessId}/catalog/services/${serviceId}/archive`,
 )
 
-const buildKey = createBuildKey<{ businessId: string, serviceId: string }>([ARCHIVE_CATALOG_SERVICE_TAG_KEY])
+const useArchiveCatalogServiceMutation = createMutationHook({
+  tags: [ARCHIVE_CATALOG_SERVICE_TAG_KEY],
+  request: archiveCatalogService,
+  keyParams: ['serviceId'],
+  argToBody: (_arg: never) => undefined,
+  schema: ArchiveCatalogServiceResponseSchema,
+  swrOptions: { throwOnError: true },
+})
 
 type UseArchiveCatalogServiceProps = {
   serviceId: string
 }
 
 export function useArchiveCatalogService({ serviceId }: UseArchiveCatalogServiceProps) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const { forceReload: forceReloadCatalogServices } = useCatalogServicesGlobalCacheActions()
 
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      serviceId,
-    })),
-    ({ accessToken, apiUrl, businessId, serviceId: sid }) => archiveCatalogService(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId, serviceId: sid },
-      },
-    ).then(Schema.decodeUnknownPromise(ArchiveCatalogServiceResponseSchema)),
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
+  const mutationResponse = useArchiveCatalogServiceMutation({ serviceId })
   const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(

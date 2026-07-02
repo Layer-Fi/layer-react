@@ -1,59 +1,36 @@
 import { useCallback } from 'react'
-import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useTimeTrackingSummaryGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
 import { useTimeEntriesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useListTimeEntries'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const DELETE_TIME_ENTRY_TAG_KEY = '#delete-time-entry'
 
 const deleteTimeEntry = del<
   Record<string, never>,
   Record<string, never>,
-  { businessId: string, timeEntryId: string }
+  { businessId: string, timeEntryId?: string }
 >(({ businessId, timeEntryId }) => `/v1/businesses/${businessId}/time-tracking/time-entries/${timeEntryId}`)
 
-const buildKey = createBuildKey<{ businessId: string, timeEntryId: string }>([DELETE_TIME_ENTRY_TAG_KEY])
+const useDeleteTimeEntryMutation = createMutationHook({
+  tags: [DELETE_TIME_ENTRY_TAG_KEY],
+  request: deleteTimeEntry,
+  keyParams: ['timeEntryId'],
+  argToBody: (_arg: never) => undefined,
+  swrOptions: { throwOnError: true },
+})
 
 type UseDeleteTimeEntryProps = {
   timeEntryId: string | undefined
 }
 
 export const useDeleteTimeEntry = ({ timeEntryId }: UseDeleteTimeEntryProps) => {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const rawMutationResponse = useSWRMutation(
-    () => {
-      if (!timeEntryId) {
-        return undefined
-      }
-
-      return withLocale(buildKey({
-        ...auth,
-        businessId,
-        timeEntryId,
-      }))
-    },
-    (
-      { accessToken, apiUrl, businessId, timeEntryId },
-    ) => {
-      return deleteTimeEntry(
-        apiUrl,
-        accessToken,
-        { params: { businessId, timeEntryId } },
-      )
-    },
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
+  const mutationResponse = useDeleteTimeEntryMutation({
+    timeEntryId,
+    isEnabled: Boolean(timeEntryId),
+  })
 
   const { forceReload: forceReloadTimeEntries } = useTimeEntriesGlobalCacheActions()
   const { invalidate: invalidateTimeTrackingSummary } = useTimeTrackingSummaryGlobalCacheActions()

@@ -1,5 +1,4 @@
 import { Schema } from 'effect'
-import useSWR from 'swr'
 
 import {
   type BookkeepingConfiguration,
@@ -8,9 +7,7 @@ import {
   TransactionTaggingStrategy,
 } from '@schemas/bookkeepingConfiguration'
 import { get } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export type { BookkeepingConfiguration }
 export { BookkeepingStatus, TransactionTaggingStrategy }
@@ -21,34 +18,15 @@ type GetBookkeepingConfigurationParams = {
   businessId: string
 }
 
-const buildKey = createBuildKey<{ businessId: string }>([BOOKKEEPING_CONFIGURATION_TAG_KEY])
-
 const getBookkeepingConfiguration = get<
-  Record<string, unknown>,
+  typeof BookkeepingConfigurationResponseSchema.Encoded,
   GetBookkeepingConfigurationParams
 >(({ businessId }) => {
   return `/v1/businesses/${businessId}/bookkeeping/config`
 })
 
-export function useBookkeepingConfiguration() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const queryKey = withLocale(buildKey({
-    ...auth,
-    businessId,
-  }))
-
-  const response = useSWR(
-    () => queryKey,
-    ({ accessToken, apiUrl, businessId }) =>
-      getBookkeepingConfiguration(apiUrl, accessToken, {
-        params: {
-          businessId,
-        },
-      })()
-        .then(Schema.decodeUnknownPromise(BookkeepingConfigurationResponseSchema))
-        .then(({ data }) => data),
-  )
-
-  return new SWRQueryResult(response)
-}
+export const useBookkeepingConfiguration = createQueryHook({
+  tags: [BOOKKEEPING_CONFIGURATION_TAG_KEY],
+  request: getBookkeepingConfiguration,
+  schema: BookkeepingConfigurationResponseSchema.pipe(Schema.pluck('data')),
+})

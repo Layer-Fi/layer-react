@@ -7,6 +7,7 @@ import {
 } from '@schemas/linkedAccounts/plaid'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
@@ -17,11 +18,16 @@ const PlaidHostedLinkStatusResponseSchema = Schema.Struct({
 })
 
 const getPlaidHostedLinkStatus = get<
-  { data: ApiPlaidHostedLinkStatus },
+  typeof PlaidHostedLinkStatusResponseSchema.Encoded,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/plaid/hosted-link`)
 
 const buildKey = createBuildKey<{ businessId: string }>([PLAID_HOSTED_LINK_TAG_KEY])
+
+const fetchPlaidHostedLinkStatus = createKeyedFetcher(
+  getPlaidHostedLinkStatus,
+  PlaidHostedLinkStatusResponseSchema,
+)
 
 export function usePlaidHostedLinkStatus(
   config?: SWRConfiguration<ApiPlaidHostedLinkStatus>,
@@ -31,10 +37,7 @@ export function usePlaidHostedLinkStatus(
 
   const swrResponse = useSWR(
     () => buildKey({ ...auth, businessId, isEnabled: enabled }),
-    ({ accessToken, apiUrl, businessId }) =>
-      getPlaidHostedLinkStatus(apiUrl, accessToken, { params: { businessId } })()
-        .then(Schema.decodeUnknownPromise(PlaidHostedLinkStatusResponseSchema))
-        .then(({ data }) => data),
+    key => fetchPlaidHostedLinkStatus(key).then(({ data }) => data),
     config,
   )
 

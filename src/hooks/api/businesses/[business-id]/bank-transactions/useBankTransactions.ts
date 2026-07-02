@@ -1,71 +1,18 @@
 import { useCallback, useMemo } from 'react'
-import { Schema } from 'effect'
 import { debounce } from 'lodash-es'
-import useSWRInfinite, { type SWRInfiniteConfiguration } from 'swr/infinite'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
 import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
-import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 const GetBankTransactionsResponseSchema = PaginatedResponseSchema(BankTransactionSchema)
 
 export type GetBankTransactionsReturn = typeof GetBankTransactionsResponseSchema.Type
-
-type GetBankTransactionsPaginatedParams = {
-  businessId: string
-  categorized?: boolean
-  direction?: 'INFLOW' | 'OUTFLOW'
-  query?: string
-  startDate?: Date
-  endDate?: Date
-  tagFilterQueryString?: string
-  sortOrder?: 'ASC' | 'DESC'
-  sortBy?: string
-  cursor?: string
-  limit?: number
-}
-
-const getBankTransactions = get<
-  Record<string, unknown>,
-  GetBankTransactionsPaginatedParams
->(
-  ({
-    businessId,
-    cursor,
-    categorized,
-    direction,
-    limit,
-    query,
-    startDate,
-    endDate,
-    sortBy = 'date',
-    sortOrder = 'DESC',
-    tagFilterQueryString,
-  }: GetBankTransactionsPaginatedParams) => {
-    const parameters = toDefinedSearchParameters({
-      cursor,
-      categorized,
-      direction,
-      q: query,
-      startDate,
-      endDate,
-      sortBy,
-      sortOrder,
-      limit,
-    })
-
-    return `/v1/businesses/${businessId}/bank-transactions?${parameters}${tagFilterQueryString ? `&${tagFilterQueryString}` : ''}`
-  },
-)
 
 export const BANK_TRANSACTIONS_TAG_KEY = '#bank-transactions'
 
@@ -75,15 +22,66 @@ export type UseBankTransactionsOptions = {
   query?: string
   startDate?: Date
   endDate?: Date
-  tagFilterQueryString?: string
+  tagKey?: string
+  tagValues?: string
 }
 
-const keyLoader = createInfiniteKeyLoader<
-  UseBankTransactionsOptions & { businessId: string },
-  GetBankTransactionsReturn
->([BANK_TRANSACTIONS_TAG_KEY])
+type GetBankTransactionsPaginatedParams = UseBankTransactionsOptions & {
+  businessId: string
+  sortOrder?: 'ASC' | 'DESC'
+  sortBy?: string
+  cursor?: string
+  limit?: number
+}
 
-export type BankTransactionsKey = NonNullable<ReturnType<typeof keyLoader>>
+const getBankTransactions = getWithQuery<
+  typeof GetBankTransactionsResponseSchema.Encoded,
+  GetBankTransactionsPaginatedParams
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/bank-transactions`,
+  ({
+    cursor,
+    categorized,
+    direction,
+    query,
+    startDate,
+    endDate,
+    sortBy = 'date',
+    sortOrder = 'DESC',
+    limit,
+    tagKey,
+    tagValues,
+  }) => ({
+    cursor,
+    categorized,
+    direction,
+    q: query,
+    startDate,
+    endDate,
+    sortBy,
+    sortOrder,
+    limit,
+    tagKey,
+    tagValues,
+  }),
+)
+
+export const useBankTransactions = createInfiniteQueryHook({
+  tags: [BANK_TRANSACTIONS_TAG_KEY],
+  request: getBankTransactions,
+  schema: GetBankTransactionsResponseSchema,
+  keyDefaults: { limit: 200 },
+})
+
+export type BankTransactionsKey = UseBankTransactionsOptions & {
+  accessToken: string
+  apiUrl: string
+  businessId: string
+  cursor?: string
+  limit?: number
+  tags: ReadonlyArray<string>
+}
 
 const compareDates = (a: unknown, b: unknown) =>
   (a as Date | undefined)?.getTime() === (b as Date | undefined)?.getTime()
@@ -94,75 +92,9 @@ const keyMatchesParams = createKeyMatcher<BankTransactionsKey, UseBankTransactio
   { key: 'query' },
   { key: 'startDate', compare: compareDates },
   { key: 'endDate', compare: compareDates },
-  { key: 'tagFilterQueryString' },
+  { key: 'tagKey' },
+  { key: 'tagValues' },
 ])
-
-export function useBankTransactions({
-  categorized,
-  direction,
-  query,
-  startDate,
-  endDate,
-  tagFilterQueryString,
-}: UseBankTransactionsOptions, config?: SWRInfiniteConfiguration<GetBankTransactionsReturn>) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const swrResponse = useSWRInfinite(
-    (_index, previousPageData: GetBankTransactionsReturn | null) => withLocale(keyLoader(
-      previousPageData,
-      {
-        ...auth,
-        businessId,
-        categorized,
-        direction,
-        query,
-        startDate,
-        endDate,
-        tagFilterQueryString,
-      },
-    )),
-    ({
-      accessToken,
-      apiUrl,
-      businessId,
-      categorized,
-      cursor,
-      direction,
-      query,
-      startDate,
-      endDate,
-      tagFilterQueryString,
-    }: NonNullable<ReturnType<typeof keyLoader>>) => {
-      return getBankTransactions(
-        apiUrl,
-        accessToken,
-        {
-          params: {
-            businessId,
-            categorized,
-            cursor,
-            direction,
-            limit: 200,
-            query,
-            startDate,
-            endDate,
-            tagFilterQueryString,
-          },
-        },
-      )().then(Schema.decodeUnknownPromise(GetBankTransactionsResponseSchema))
-    },
-    {
-      keepPreviousData: true,
-      revalidateFirstPage: false,
-      initialSize: 1,
-      ...config,
-    },
-  )
-
-  usePreserveInfiniteSize(swrResponse)
-
-  return useSWRInfiniteResult(swrResponse)
-}
 
 const INVALIDATION_DEBOUNCE_OPTIONS = {
   wait: 1000,

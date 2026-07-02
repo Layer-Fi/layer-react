@@ -1,12 +1,11 @@
-import useSWR from 'swr'
+import { Schema } from 'effect'
 
 import { type ReportingBasis } from '@internal-types/general'
 import { type ProfitAndLossComparison, type ProfitAndLossComparisonRequestBody } from '@internal-types/profitAndLoss'
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
+import { type MutationRequest, postAsQuery } from '@utils/api/postAsQuery'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const PNL_COMPARISON_REPORT_TAG_KEY = '#profit-and-loss-comparison-report'
 
@@ -17,49 +16,46 @@ type ProfitAndLossComparisonRequestParams = {
   reportingBasis?: ReportingBasis
 }
 
-const buildKey = createBuildKey<ProfitAndLossComparisonRequestParams>([PNL_COMPARISON_REPORT_TAG_KEY])
+const ProfitAndLossComparisonFromSelf = Schema.declare(
+  (input: unknown): input is ProfitAndLossComparison => typeof input === 'object' && input !== null,
+)
+
+const ProfitAndLossComparisonResponseSchema = Schema.Struct({
+  data: Schema.optional(ProfitAndLossComparisonFromSelf),
+})
 
 const compareProfitAndLoss = post<
-  { data?: ProfitAndLossComparison },
+  typeof ProfitAndLossComparisonResponseSchema.Encoded,
   ProfitAndLossComparisonRequestBody
 >(
   ({ businessId }) =>
     `/v1/businesses/${businessId}/reports/profit-and-loss-comparison`,
 )
 
-type UseProfitAndLossComparisonReportProps = Omit<ProfitAndLossComparisonRequestParams, 'businessId'>
+const requestProfitAndLossComparison: MutationRequest<
+  typeof ProfitAndLossComparisonResponseSchema.Encoded,
+  ProfitAndLossComparisonRequestBody,
+  ProfitAndLossComparisonRequestParams
+> = (baseUrl, accessToken, options) => compareProfitAndLoss(
+  baseUrl,
+  accessToken,
+  {
+    params: options?.params && { businessId: options.params.businessId },
+    body: options?.body,
+  },
+)
 
-export function useProfitAndLossComparisonReport({
-  periods,
-  tagFilters,
-  reportingBasis,
-}: UseProfitAndLossComparisonReportProps) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const response = useSWR(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      periods,
-      tagFilters,
-      reportingBasis,
-      isEnabled: Boolean(periods),
-    })),
-    ({ accessToken, apiUrl, businessId }) => compareProfitAndLoss(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-        body: {
-          periods: periods!,
-          tag_filters: tagFilters,
-          reporting_basis: reportingBasis,
-        },
-      },
-    ).then(({ data }) => data),
-  )
-
-  return new SWRQueryResult(response)
-}
+export const useProfitAndLossComparisonReport = createQueryHook({
+  tags: [PNL_COMPARISON_REPORT_TAG_KEY],
+  request: postAsQuery(
+    requestProfitAndLossComparison,
+    ({ periods, tagFilters, reportingBasis }) => ({
+      periods: periods!,
+      tag_filters: tagFilters,
+      reporting_basis: reportingBasis,
+    }),
+  ),
+  schema: ProfitAndLossComparisonResponseSchema.pipe(Schema.pluck('data')),
+})
 
 export const useProfitAndLossComparisonReportCacheActions = createResourceGlobalCacheActions<ProfitAndLossComparison>(PNL_COMPARISON_REPORT_TAG_KEY)

@@ -6,6 +6,7 @@ import { type BankAccount, BankAccountSchema } from '@schemas/bankAccounts/bankA
 import { get } from '@utils/api/authenticatedHttp'
 import { isAnyBankAccountSyncing } from '@utils/bankAccount'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createKeyedFetcher, type SWRKeyContext } from '@utils/swr/createKeyedFetcher'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
@@ -19,11 +20,13 @@ const requiresNotification = (bankAccount: BankAccount): boolean =>
   bankAccount.isDisconnected && bankAccount.notifyWhenDisconnected
 
 const listBankAccounts = get<
-  Record<string, unknown>,
+  typeof ListBankAccountsResponseSchema.Encoded,
   {
     businessId: string
   }
 >(({ businessId }) => `/v1/businesses/${businessId}/bank-accounts`)
+
+const fetchBankAccounts = createKeyedFetcher(listBankAccounts, ListBankAccountsResponseSchema)
 
 const buildKey = createBuildKey<{ businessId: string }>([BANK_ACCOUNTS_TAG_KEY])
 
@@ -56,15 +59,8 @@ export function useListBankAccounts(
         ...auth,
         businessId,
       }),
-    ({ accessToken, apiUrl, businessId }) => listBankAccounts(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-      },
-    )()
-      .then(Schema.decodeUnknownPromise(ListBankAccountsResponseSchema))
-      .then(({ data }) => [...data]),
+    (key: SWRKeyContext & { businessId: string }) =>
+      fetchBankAccounts(key).then(({ data }) => [...data]),
     config,
   )
 

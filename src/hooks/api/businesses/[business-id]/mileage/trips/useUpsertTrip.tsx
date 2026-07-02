@@ -1,16 +1,13 @@
 import { useCallback } from 'react'
-import { Effect, Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
+import { Schema } from 'effect'
 
 import { TripSchema, type UpsertTripEncoded } from '@schemas/trip'
 import { patch, post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useMileageSummaryGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/summary/useMileageSummary'
 import { useTripsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/trips/useListTrips'
 import { useVehiclesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const UPSERT_TRIP_TAG_KEY = '#upsert-trip'
 
@@ -21,120 +18,59 @@ export enum UpsertTripMode {
 
 type UpsertTripBody = UpsertTripEncoded
 
-const createTrip = post<
-  UpsertTripReturn,
-  UpsertTripBody,
-  { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/mileage/trips`)
-
-const updateTrip = patch<
-  UpsertTripReturn,
-  UpsertTripBody,
-  { businessId: string, tripId: string }
->(({ businessId, tripId }) => `/v1/businesses/${businessId}/mileage/trips/${tripId}`)
-
-const buildKey = createBuildKey<{ businessId: string, tripId?: string }>([UPSERT_TRIP_TAG_KEY])
-
 const UpsertTripReturnSchema = Schema.Struct({
   data: TripSchema,
 })
 
-type UpsertTripReturn = typeof UpsertTripReturnSchema.Type
+type UpsertTripReturnEncoded = typeof UpsertTripReturnSchema.Encoded
 
-const CreateParamsSchema = Schema.Struct({
-  businessId: Schema.String,
-})
+const createTrip = post<UpsertTripReturnEncoded, UpsertTripBody>(
+  ({ businessId }) => `/v1/businesses/${businessId}/mileage/trips`,
+)
 
-const UpdateParamsSchema = Schema.Struct({
-  businessId: Schema.String,
-  tripId: Schema.String,
-})
+const updateTrip = patch<
+  UpsertTripReturnEncoded,
+  UpsertTripBody,
+  { businessId: string, tripId: string }
+>(
+  ({ businessId, tripId }) => `/v1/businesses/${businessId}/mileage/trips/${tripId}`,
+)
 
-export type CreateParams = typeof CreateParamsSchema.Type
-export type UpdateParams = typeof UpdateParamsSchema.Type
+export type CreateParams = { readonly businessId: string }
+export type UpdateParams = { readonly businessId: string, readonly tripId: string }
 
 export type UpsertParams = CreateParams | UpdateParams
 
-type RequestArgs = {
-  apiUrl: string
-  accessToken: string
-  body: UpsertTripBody
-}
+const useCreateTrip = createMutationHook({
+  tags: [UPSERT_TRIP_TAG_KEY],
+  request: createTrip,
+  schema: UpsertTripReturnSchema,
+  swrOptions: { throwOnError: true },
+})
 
-type UpsertRequestFn = (args: RequestArgs) => Promise<UpsertTripReturn>
-
-const isParamsValidForMode = <M extends UpsertTripMode>(
-  mode: M,
-  params: unknown,
-): params is M extends UpsertTripMode.Update ? UpdateParams : CreateParams => {
-  if (mode === UpsertTripMode.Update) {
-    return Effect.runSync(Effect.either(Schema.decodeUnknown(UpdateParamsSchema)(params)))._tag === 'Right'
-  }
-
-  if (mode === UpsertTripMode.Create) {
-    return Effect.runSync(Effect.either(Schema.decodeUnknown(CreateParamsSchema)(params)))._tag === 'Right'
-  }
-
-  return false
-}
-
-function getRequestFn(
-  mode: UpsertTripMode,
-  params: UpsertParams,
-): UpsertRequestFn {
-  if (mode === UpsertTripMode.Update) {
-    if (!isParamsValidForMode(UpsertTripMode.Update, params)) {
-      throw new Error('Invalid params for update mode')
-    }
-
-    return ({ apiUrl, accessToken, body }: { apiUrl: string, accessToken: string, body: UpsertTripBody }) =>
-      updateTrip(apiUrl, accessToken, { params, body })
-  }
-  else {
-    if (!isParamsValidForMode(UpsertTripMode.Create, params)) {
-      throw new Error('Invalid params for create mode')
-    }
-
-    return ({ apiUrl, accessToken, body }: { apiUrl: string, accessToken: string, body: UpsertTripBody }) =>
-      createTrip(apiUrl, accessToken, { params, body })
-  }
-}
+const useUpdateTrip = createMutationHook({
+  tags: [UPSERT_TRIP_TAG_KEY],
+  request: updateTrip,
+  keyParams: ['tripId'],
+  schema: UpsertTripReturnSchema,
+  swrOptions: { throwOnError: true },
+})
 
 type UseUpsertTripProps =
   | { mode: UpsertTripMode.Create }
   | { mode: UpsertTripMode.Update, tripId: string }
 
 export const useUpsertTrip = (props: UseUpsertTripProps) => {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
   const { mode } = props
   const tripId = mode === UpsertTripMode.Update ? props.tripId : undefined
 
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      tripId,
-    })),
-    (
-      { accessToken, apiUrl, businessId, tripId },
-      { arg: body }: { arg: UpsertTripBody },
-    ) => {
-      const request = getRequestFn(mode, { businessId, tripId })
+  const createResponse = useCreateTrip()
+  const updateResponse = useUpdateTrip({
+    tripId: tripId ?? '',
+    isEnabled: tripId !== undefined,
+  })
 
-      return request({
-        apiUrl,
-        accessToken,
-        body,
-      }).then(Schema.decodeUnknownPromise(UpsertTripReturnSchema))
-    },
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
+  const mutationResponse = mode === UpsertTripMode.Create ? createResponse : updateResponse
 
   const { patchByKey: patchTripByKey, forceReload: forceReloadTrips } = useTripsGlobalCacheActions()
   const { forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()

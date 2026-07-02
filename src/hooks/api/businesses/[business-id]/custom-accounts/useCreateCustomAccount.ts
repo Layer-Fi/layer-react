@@ -1,16 +1,13 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
 import { useSWRConfig } from 'swr'
-import useSWRMutation from 'swr/mutation'
 
 import { CustomAccountSchema, type RawCustomAccount } from '@schemas/customAccounts'
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { BANK_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 type CreateCustomAccountBody = Pick<
   RawCustomAccount,
@@ -33,40 +30,21 @@ const createCustomAccount = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/custom-accounts`)
 
-const buildKey = createBuildKey<{ businessId: string }>([`${CUSTOM_ACCOUNTS_TAG_KEY}:create`])
+const useCreateCustomAccountMutation = createMutationHook({
+  tags: [`${CUSTOM_ACCOUNTS_TAG_KEY}:create`],
+  request: createCustomAccount,
+  schema: CreateCustomAccountResponseSchema,
+})
 
 export function useCreateCustomAccount() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const { mutate } = useSWRConfig()
 
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: body }: { arg: CreateCustomAccountBody },
-    ) => createCustomAccount(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-        body,
-      },
-    )
-      .then(Schema.decodeUnknownPromise(CreateCustomAccountResponseSchema))
-      .then(({ data }) => data),
-    {
-      revalidate: false,
-    },
-  )
-
+  const mutationResponse = useCreateCustomAccountMutation()
   const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
+      const { data } = await originalTrigger(...triggerParameters)
 
       void mutate(key => withSWRKeyTags(
         key,
@@ -74,7 +52,7 @@ export function useCreateCustomAccount() {
           || tags.includes(BANK_ACCOUNTS_TAG_KEY),
       ))
 
-      return triggerResult
+      return data
     },
     [
       originalTrigger,
@@ -82,5 +60,10 @@ export function useCreateCustomAccount() {
     ],
   )
 
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
+  return {
+    trigger: stableProxiedTrigger,
+    data: mutationResponse.data?.data,
+    isError: mutationResponse.isError,
+    isMutating: mutationResponse.isMutating,
+  }
 }

@@ -1,9 +1,10 @@
-import { Schema } from 'effect/index'
+import { Schema } from 'effect'
 import useSWR from 'swr'
 
-import { AccountingConfigurationSchema, type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
+import { AccountingConfigurationSchema } from '@schemas/accountingConfiguration'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
 import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 
@@ -15,10 +16,22 @@ type GetAccountingConfigurationParams = {
 
 const buildKey = createBuildKey<{ businessId: string }>([ACCOUNTING_CONFIGURATION_TAG_KEY])
 
-const getAccountingConfiguration = get<{ data: AccountingConfigurationSchemaType }, GetAccountingConfigurationParams>(
+const GetAccountingConfigurationResponseSchema = Schema.Struct({
+  data: AccountingConfigurationSchema,
+})
+
+const getAccountingConfiguration = get<
+  typeof GetAccountingConfigurationResponseSchema.Encoded,
+  GetAccountingConfigurationParams
+>(
   ({ businessId }) => {
     return `/v1/businesses/${businessId}/accounting-config`
   },
+)
+
+const fetchAccountingConfiguration = createKeyedFetcher(
+  getAccountingConfiguration,
+  GetAccountingConfigurationResponseSchema.pipe(Schema.pluck('data')),
 )
 
 export function useAccountingConfiguration({ businessId }: GetAccountingConfigurationParams) {
@@ -31,15 +44,7 @@ export function useAccountingConfiguration({ businessId }: GetAccountingConfigur
 
   const response = useSWR(
     () => queryKey,
-    ({ accessToken, apiUrl, businessId }) => getAccountingConfiguration(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-        },
-      },
-    )().then(({ data }) => Schema.decodeUnknownPromise(AccountingConfigurationSchema)(data)),
+    fetchAccountingConfiguration,
   )
   return new SWRQueryResult(response)
 }

@@ -1,50 +1,38 @@
 import { useCallback } from 'react'
-import useSWRMutation from 'swr/mutation'
 
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useLedgerEntriesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
 import { useBalanceSheetGlobalCacheActions } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/useBalanceSheet'
 import { useStatementOfCashFlowGlobalCacheActions } from '@hooks/api/businesses/[business-id]/reports/cashflow-statement/useStatementOfCashFlow'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const REVERSE_JOURNAL_ENTRY_TAG_KEY = '#reverse-journal-entry'
 
-const reverseJournalEntry = post<Record<never, never>>(
-  ({ businessId, entryId }) =>
-    `/v1/businesses/${businessId}/ledger/entries/${entryId}/reverse`,
-)
+const reverseJournalEntry = post<
+  Record<never, never>,
+  Record<string, never>,
+  { businessId: string, entryId: string }
+>(({ businessId, entryId }) => `/v1/businesses/${businessId}/ledger/entries/${entryId}/reverse`)
 
-const buildKey = createBuildKey<{ businessId: string }>([REVERSE_JOURNAL_ENTRY_TAG_KEY])
+const useReverseJournalEntryMutation = createMutationHook({
+  tags: [REVERSE_JOURNAL_ENTRY_TAG_KEY],
+  request: reverseJournalEntry,
+  argToParams: (entryId: string) => ({ entryId }),
+  argToBody: () => undefined,
+  swrOptions: { throwOnError: true },
+})
 
 export const useReverseJournalEntry = () => {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
   const { forceReload: forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
   const { invalidate: invalidateBalanceSheet } = useBalanceSheetGlobalCacheActions()
   const { invalidate: invalidateStatementOfCashFlow } = useStatementOfCashFlowGlobalCacheActions()
 
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: entryId }: { arg: string },
-    ) => reverseJournalEntry(apiUrl, accessToken, {
-      params: { businessId, entryId },
-    }),
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
+  const mutationResponse = useReverseJournalEntryMutation()
 
-  const { trigger: originalTrigger } = mutationResponse
+  const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {

@@ -1,12 +1,6 @@
-import { useCallback } from 'react'
-import useSWRMutation from 'swr/mutation'
-
 import type { OneOf } from '@internal-types/utility/oneOf'
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const EXCLUDE_EXTERNAL_ACCOUNT_TAG_KEY = '#exclude-external-account'
 
@@ -29,38 +23,9 @@ type ExcludeExternalAccountArg = {
   body?: ExcludeAccountBodyStrict
 }
 
-const buildKey = createBuildKey<{ businessId: string }>([EXCLUDE_EXTERNAL_ACCOUNT_TAG_KEY])
-
-export function useExcludeExternalAccount() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      access_token: auth?.access_token,
-      apiUrl: auth?.apiUrl,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: { accountId, body } }: { arg: ExcludeExternalAccountArg },
-    ) => excludeExternalAccount(apiUrl, accessToken, {
-      params: { businessId, accountId },
-      body,
-    }),
-    {
-      revalidate: false,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
-
-  const { trigger: originalTrigger } = mutationResponse
-
-  const stableProxiedTrigger = useCallback(
-    (...triggerParameters: Parameters<typeof originalTrigger>) =>
-      originalTrigger(...triggerParameters),
-    [originalTrigger],
-  )
-
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
-}
+export const useExcludeExternalAccount = createMutationHook({
+  tags: [EXCLUDE_EXTERNAL_ACCOUNT_TAG_KEY],
+  request: excludeExternalAccount,
+  argToParams: ({ accountId }: ExcludeExternalAccountArg) => ({ accountId }),
+  argToBody: ({ body }: ExcludeExternalAccountArg) => body,
+})

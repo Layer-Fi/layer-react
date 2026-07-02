@@ -8,6 +8,7 @@ import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepin
 import { isActiveBookkeepingPeriod } from '@utils/bookkeeping/periods/getFilteredBookkeepingPeriods'
 import { getUserVisibleTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
 import {
   BOOKKEEPING_TAG_KEY,
   useBookkeepingStatus,
@@ -60,11 +61,13 @@ const BookkeepingPeriodsResponseSchema = Schema.Struct({
 })
 
 const getBookkeepingPeriods = get<
-  Record<string, unknown>,
+  typeof BookkeepingPeriodsResponseSchema.Encoded,
   { businessId: string }
 >(({ businessId }) => {
   return `/v1/businesses/${businessId}/bookkeeping/periods`
 })
+
+const fetchBookkeepingPeriods = createKeyedFetcher(getBookkeepingPeriods, BookkeepingPeriodsResponseSchema)
 
 export const BOOKKEEPING_PERIODS_TAG_KEY = '#bookkeeping-periods'
 
@@ -82,22 +85,16 @@ export function useBookkeepingPeriods() {
       businessId,
       isEnabled: isActiveOrPaused,
     })),
-    ({ accessToken, apiUrl, businessId }) => getBookkeepingPeriods(
-      apiUrl,
-      accessToken,
-      { params: { businessId } },
-    )()
-      .then(Schema.decodeUnknownPromise(BookkeepingPeriodsResponseSchema))
-      .then(
-        ({ data: { periods } }) =>
-          periods
-            .map(period => ({
-              ...period,
-              status: constrainToKnownBookkeepingPeriodStatus(period.status),
-              tasks: getUserVisibleTasks(period.tasks),
-            }))
-            .filter(period => isActiveBookkeepingPeriod(period)),
-      ),
+    key => fetchBookkeepingPeriods(key).then(
+      ({ data: { periods } }) =>
+        periods
+          .map(period => ({
+            ...period,
+            status: constrainToKnownBookkeepingPeriodStatus(period.status),
+            tasks: getUserVisibleTasks(period.tasks),
+          }))
+          .filter(period => isActiveBookkeepingPeriod(period)),
+    ),
   )
 
   return new Proxy(swrResponse, {

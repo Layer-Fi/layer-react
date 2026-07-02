@@ -1,63 +1,44 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect/index'
-import useSWRMutation from 'swr/mutation'
 
 import { CategorizationRuleSchema, type CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useCategorizationRulesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/categorization-rules/useListCategorizationRules'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const CREATE_CATEGORIZATION_RULE_TAG = '#create-categorization-rule'
-
-const buildKey = createBuildKey<{ businessId: string }>([CREATE_CATEGORIZATION_RULE_TAG])
 
 const CreateCategorizationRuleReturnSchema = Schema.Struct({
   data: CategorizationRuleSchema,
 })
 
-type CreateCategorizationRuleReturn = typeof CreateCategorizationRuleReturnSchema.Type
 type CreateCategorizationRuleBody = typeof CreateCategorizationRuleSchema.Encoded
 
-const createCategorizationRule = post<CreateCategorizationRuleReturn, CreateCategorizationRuleBody>(
+const createCategorizationRule = post<
+  typeof CreateCategorizationRuleReturnSchema.Encoded,
+  CreateCategorizationRuleBody,
+  { businessId: string }
+>(
   ({ businessId }) =>
     `/v1/businesses/${businessId}/categorization-rules`,
 )
 
+const useCreateCategorizationRuleMutation = createMutationHook({
+  tags: [CREATE_CATEGORIZATION_RULE_TAG],
+  request: createCategorizationRule,
+  schema: CreateCategorizationRuleReturnSchema,
+})
+
 export function useCreateCategorizationRule() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
   const { forceReload: forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
 
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      access_token: auth?.access_token,
-      apiUrl: auth?.apiUrl,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: { ...body } }: { arg: CreateCategorizationRuleBody },
-    ) => createCategorizationRule(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-        },
-        body,
-      },
-    ).then(Schema.decodeUnknownPromise(CreateCategorizationRuleReturnSchema)),
-    {
-      revalidate: false,
-    },
-  )
-
+  const mutationResponse = useCreateCategorizationRuleMutation()
   const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(

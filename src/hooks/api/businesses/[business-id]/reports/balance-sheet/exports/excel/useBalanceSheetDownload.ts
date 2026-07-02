@@ -2,26 +2,25 @@ import useSWRMutation from 'swr/mutation'
 
 import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
 import type { GetBalanceSheetParams } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/useBalanceSheet'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
-const getBalanceSheetExcel = get<
+const getBalanceSheetExcel = getWithQuery<
   { data: S3PresignedUrl },
   GetBalanceSheetParams
 >(
-  ({ businessId, effectiveDate }) => {
-    const parameters = toDefinedSearchParameters({ effectiveDate })
-
-    return `/v1/businesses/${businessId}/reports/balance-sheet/exports/excel?${parameters}`
-  },
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/balance-sheet/exports/excel`,
 )
+
+const fetchBalanceSheetExcel = createKeyedFetcher(getBalanceSheetExcel)
 
 const DOWNLOAD_BALANCE_SHEET_TAG_KEY = '#download-balance-sheet'
 
-const buildKey = createBuildKey<{ businessId: string, effectiveDate: Date }>([DOWNLOAD_BALANCE_SHEET_TAG_KEY])
+const buildKey = createBuildKey<GetBalanceSheetParams>([DOWNLOAD_BALANCE_SHEET_TAG_KEY])
 
 type UseBalanceSheetOptions = {
   effectiveDate: Date
@@ -40,15 +39,7 @@ export function useBalanceSheetDownload({
       businessId,
       effectiveDate,
     })),
-    ({ accessToken, apiUrl, businessId, effectiveDate }) => getBalanceSheetExcel(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          effectiveDate,
-        },
-      })().then(({ data }) => {
+    key => fetchBalanceSheetExcel(key).then(({ data }) => {
       if (onSuccess) {
         return onSuccess(data)
       }
