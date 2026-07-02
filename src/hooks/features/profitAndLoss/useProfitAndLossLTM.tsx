@@ -73,7 +73,7 @@ export const useProfitAndLossLTM = ({ tagFilter, reportingBasis, chartWindow }: 
     tagKey: tagFilter?.key,
     tagValues: tagFilter?.values?.join(','),
     reportingBasis,
-    keepPreviousData: true,
+    swrOptions: { keepPreviousData: true },
   })
 
   const [delayedMonths, setDelayedMonths] = useState(data?.months)

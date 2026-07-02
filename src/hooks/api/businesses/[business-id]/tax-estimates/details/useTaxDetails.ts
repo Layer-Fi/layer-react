@@ -1,29 +1,18 @@
-import type { ReportingBasis } from '@internal-types/general'
 import { type TaxDetails, TaxDetailsResponseSchema } from '@schemas/taxEstimates/details'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { type TaxEstimatesRequestParams, toTaxEstimatesQuery } from '@hooks/api/businesses/[business-id]/tax-estimates/taxEstimatesParams'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 const TAX_DETAILS_TAG_KEY = '#tax-details'
 
-type GetTaxDetailsParams = {
-  businessId: string
-  year: number
-  reportingBasis?: ReportingBasis
-  fullYearProjection?: boolean
-}
-
 const getTaxDetails = getWithQuery<
   typeof TaxDetailsResponseSchema.Encoded,
-  GetTaxDetailsParams
+  TaxEstimatesRequestParams
 >(
   ['businessId'],
   ({ businessId }) => `/v1/businesses/${businessId}/tax-estimates/details`,
-  ({ year, reportingBasis, fullYearProjection }) => ({
-    year,
-    reporting_basis: reportingBasis,
-    full_year_projection: fullYearProjection,
-  }),
+  toTaxEstimatesQuery,
 )
 
 export const useTaxDetails = createQueryHook({

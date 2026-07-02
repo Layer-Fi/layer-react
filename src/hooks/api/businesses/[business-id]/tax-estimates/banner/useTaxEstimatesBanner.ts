@@ -1,30 +1,18 @@
-import type { ReportingBasis } from '@internal-types/general'
 import { type TaxEstimatesBanner, TaxEstimatesBannerResponseSchema } from '@schemas/taxEstimates/banner'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { type TaxEstimatesRequestParams, toTaxEstimatesQuery } from '@hooks/api/businesses/[business-id]/tax-estimates/taxEstimatesParams'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 const TAX_ESTIMATES_BANNER_TAG_KEY = '#tax-estimates-banner'
-type TaxReportingBasis = Exclude<ReportingBasis, 'CASH_COLLECTED'>
-
-type GetTaxEstimatesBannerParams = {
-  businessId: string
-  year: number
-  reportingBasis?: TaxReportingBasis
-  fullYearProjection?: boolean
-}
 
 const getTaxEstimatesBanner = getWithQuery<
   typeof TaxEstimatesBannerResponseSchema.Encoded,
-  GetTaxEstimatesBannerParams
+  TaxEstimatesRequestParams
 >(
   ['businessId'],
   ({ businessId }) => `/v1/businesses/${businessId}/tax-estimates/banner`,
-  ({ year, reportingBasis, fullYearProjection }) => ({
-    year,
-    reporting_basis: reportingBasis,
-    full_year_projection: fullYearProjection,
-  }),
+  toTaxEstimatesQuery,
 )
 
 export const useTaxEstimatesBanner = createQueryHook({

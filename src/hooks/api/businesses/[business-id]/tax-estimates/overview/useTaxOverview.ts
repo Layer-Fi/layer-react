@@ -1,29 +1,17 @@
-import type { ReportingBasis } from '@internal-types/general'
 import { TaxOverviewApiResponseSchema } from '@schemas/taxEstimates/overview'
 import { getWithQuery } from '@utils/api/getWithQuery'
+import { type TaxEstimatesRequestParams, toTaxEstimatesQuery } from '@hooks/api/businesses/[business-id]/tax-estimates/taxEstimatesParams'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 const TAX_OVERVIEW_TAG_KEY = '#tax-overview'
-type TaxReportingBasis = Exclude<ReportingBasis, 'CASH_COLLECTED'>
-
-type GetTaxOverviewParams = {
-  businessId: string
-  year: number
-  reportingBasis?: TaxReportingBasis
-  fullYearProjection?: boolean
-}
 
 const getTaxOverview = getWithQuery<
   typeof TaxOverviewApiResponseSchema.Encoded,
-  GetTaxOverviewParams
+  TaxEstimatesRequestParams
 >(
   ['businessId'],
   ({ businessId }) => `/v1/businesses/${businessId}/tax-estimates/overview`,
-  ({ year, reportingBasis, fullYearProjection }) => ({
-    year,
-    reporting_basis: reportingBasis,
-    full_year_projection: fullYearProjection,
-  }),
+  toTaxEstimatesQuery,
 )
 
 export const useTaxOverview = createQueryHook({
