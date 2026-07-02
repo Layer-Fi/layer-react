@@ -7,7 +7,7 @@ import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 export const CATEGORIES_TAG_KEY = '#categories'
 
 const CategoriesResponseSchema = Schema.Struct({
-  data: CategoryListSchema,
+  data: CategoryListSchema.pipe(Schema.pluck('categories')),
 })
 
 type GetCategoriesParams = {
@@ -30,8 +30,7 @@ type UseCategoriesOptions = {
 export const useCategories = createQueryHook({
   tags: [CATEGORIES_TAG_KEY],
   request: getCategories,
-  schema: CategoriesResponseSchema,
-  select: ({ data }) => data.categories,
+  schema: CategoriesResponseSchema.pipe(Schema.pluck('data')),
 })
 
 export function usePreloadCategories(options?: UseCategoriesOptions) {

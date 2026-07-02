@@ -1,3 +1,5 @@
+import { Schema } from 'effect'
+
 import type { ReportingBasis } from '@internal-types/general'
 import { type TaxDetails, TaxDetailsResponseSchema } from '@schemas/taxEstimates/details'
 import { getWithQuery } from '@utils/api/getWithQuery'
@@ -29,8 +31,7 @@ const getTaxDetails = getWithQuery<
 export const useTaxDetails = createQueryHook({
   tags: [TAX_DETAILS_TAG_KEY],
   request: getTaxDetails,
-  schema: TaxDetailsResponseSchema,
-  select: ({ data }) => data,
+  schema: TaxDetailsResponseSchema.pipe(Schema.pluck('data')),
 })
 
 export const useTaxDetailsGlobalCacheActions = createResourceGlobalCacheActions<TaxDetails>(TAX_DETAILS_TAG_KEY)

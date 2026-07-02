@@ -23,8 +23,7 @@ type UseTagDimensionByKeyParameters = {
 export const useTagDimensionByKey = createQueryHook({
   tags: [TAG_DIMENSION_BY_KEY_TAG_KEY],
   request: getTagDimensionByKey,
-  schema: TagDimensionByKeyResponseSchema,
-  select: ({ data }) => data,
+  schema: TagDimensionByKeyResponseSchema.pipe(Schema.pluck('data')),
 })
 
 export function usePreloadTagDimensionByKey(parameters: UseTagDimensionByKeyParameters) {

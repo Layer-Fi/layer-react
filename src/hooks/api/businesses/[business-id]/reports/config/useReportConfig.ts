@@ -1,3 +1,5 @@
+import { Schema } from 'effect'
+
 import { ReportConfigResponseSchema } from '@schemas/reports/reportConfig'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
@@ -19,6 +21,5 @@ const getReportConfig = getWithQuery<
 export const useReportConfig = createQueryHook({
   tags: [REPORT_CONFIG_TAG_KEY],
   request: getReportConfig,
-  schema: ReportConfigResponseSchema,
-  select: ({ data }) => data,
+  schema: ReportConfigResponseSchema.pipe(Schema.pluck('data')),
 })

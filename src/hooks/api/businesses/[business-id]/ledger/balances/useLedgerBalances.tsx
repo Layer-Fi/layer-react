@@ -26,8 +26,7 @@ const getLedgerAccountBalances = getWithQuery<
 export const useLedgerBalances = createQueryHook({
   tags: [LEDGER_BALANCES_TAG_KEY],
   request: getLedgerAccountBalances,
-  schema: LedgerBalancesResponseSchema,
-  select: ({ data }) => data,
+  schema: LedgerBalancesResponseSchema.pipe(Schema.pluck('data')),
 })
 
 export const useLedgerBalancesCacheActions = createResourceGlobalCacheActions<LedgerBalancesSchemaType>(LEDGER_BALANCES_TAG_KEY)

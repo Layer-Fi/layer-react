@@ -27,8 +27,7 @@ export const VEHICLES_TAG_KEY = '#list-vehicles'
 export const useListVehicles = createQueryHook({
   tags: [VEHICLES_TAG_KEY],
   request: listVehicles,
-  schema: ListVehiclesResponseSchema,
-  select: ({ data }) => data,
+  schema: ListVehiclesResponseSchema.pipe(Schema.pluck('data')),
 })
 
 export const useVehiclesGlobalCacheActions = createInfiniteQueryGlobalCacheActions<Vehicle>(VEHICLES_TAG_KEY)

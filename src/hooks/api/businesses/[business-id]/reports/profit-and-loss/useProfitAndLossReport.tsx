@@ -22,8 +22,7 @@ const getProfitAndLoss = getWithQuery<
 export const useProfitAndLossReport = createQueryHook({
   tags: [PNL_REPORT_TAG_KEY],
   request: getProfitAndLoss,
-  schema: ProfitAndLossReportResponseSchema,
-  select: ({ data }) => data,
+  schema: ProfitAndLossReportResponseSchema.pipe(Schema.pluck('data')),
 })
 
 export const useProfitAndLossReportCacheActions = createResourceGlobalCacheActions<ProfitAndLoss>(PNL_REPORT_TAG_KEY)

@@ -31,6 +31,6 @@ const getCustomAccounts = getWithQuery<
 export const useCustomAccounts = createQueryHook({
   tags: [CUSTOM_ACCOUNTS_TAG_KEY],
   request: getCustomAccounts,
-  schema: GetCustomAccountsResponseSchema,
-  select: ({ data }) => data.customAccounts,
+  schema: GetCustomAccountsResponseSchema.pipe(Schema.pluck('data')),
+  select: ({ customAccounts }) => customAccounts,
 })

@@ -31,8 +31,7 @@ const getTimeTrackingSummary = getWithQuery<
 export const useTimeTrackingSummary = createQueryHook({
   tags: [TIME_TRACKING_SUMMARY_TAG_KEY],
   request: getTimeTrackingSummary,
-  schema: TimeTrackingSummaryResponseSchema,
-  select: ({ data }) => data,
+  schema: TimeTrackingSummaryResponseSchema.pipe(Schema.pluck('data')),
 })
 
 export const useTimeTrackingSummaryGlobalCacheActions = createResourceGlobalCacheActions<

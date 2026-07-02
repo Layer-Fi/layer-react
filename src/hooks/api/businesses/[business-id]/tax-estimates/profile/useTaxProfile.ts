@@ -1,3 +1,5 @@
+import { Schema } from 'effect'
+
 import { type TaxProfile, TaxProfileResponseSchema } from '@schemas/taxEstimates/profile'
 import { get } from '@utils/api/authenticatedHttp'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
@@ -17,8 +19,7 @@ export const getTaxProfile = get<
 export const useTaxProfile = createQueryHook({
   tags: [TAX_PROFILE_TAG_KEY],
   request: getTaxProfile,
-  schema: TaxProfileResponseSchema,
-  select: ({ data }) => data,
+  schema: TaxProfileResponseSchema.pipe(Schema.pluck('data')),
 })
 
 export const useTaxProfileGlobalCacheActions = createResourceGlobalCacheActions<TaxProfile>(TAX_PROFILE_TAG_KEY)

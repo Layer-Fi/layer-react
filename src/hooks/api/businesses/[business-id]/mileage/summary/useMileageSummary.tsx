@@ -19,8 +19,7 @@ const getMileageSummary = get<
 export const useMileageSummary = createQueryHook({
   tags: [MILEAGE_SUMMARY_TAG_KEY],
   request: getMileageSummary,
-  schema: MileageSummaryResponseSchema,
-  select: ({ data }) => data,
+  schema: MileageSummaryResponseSchema.pipe(Schema.pluck('data')),
 })
 
 export const useMileageSummaryGlobalCacheActions = createResourceGlobalCacheActions<MileageSummary>(MILEAGE_SUMMARY_TAG_KEY)

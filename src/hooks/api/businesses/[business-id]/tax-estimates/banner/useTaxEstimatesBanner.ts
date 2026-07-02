@@ -1,3 +1,5 @@
+import { Schema } from 'effect'
+
 import type { ReportingBasis } from '@internal-types/general'
 import { type TaxEstimatesBanner, TaxEstimatesBannerResponseSchema } from '@schemas/taxEstimates/banner'
 import { getWithQuery } from '@utils/api/getWithQuery'
@@ -30,8 +32,7 @@ const getTaxEstimatesBanner = getWithQuery<
 export const useTaxEstimatesBanner = createQueryHook({
   tags: [TAX_ESTIMATES_BANNER_TAG_KEY],
   request: getTaxEstimatesBanner,
-  schema: TaxEstimatesBannerResponseSchema,
-  select: ({ data }) => data,
+  schema: TaxEstimatesBannerResponseSchema.pipe(Schema.pluck('data')),
 })
 
 export const useTaxEstimatesBannerGlobalCacheActions = createResourceGlobalCacheActions<

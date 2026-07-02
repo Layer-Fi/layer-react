@@ -1,3 +1,5 @@
+import { Schema } from 'effect'
+
 import { BookkeepingStatus, type BookkeepingStatusData, BookkeepingStatusResponseSchema } from '@schemas/bookkeepingStatus'
 import { get } from '@utils/api/authenticatedHttp'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
@@ -19,8 +21,7 @@ export const BOOKKEEPING_STATUS_TAG_KEY = '#bookkeeping-status'
 export const useBookkeepingStatus = createQueryHook({
   tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_STATUS_TAG_KEY],
   request: getBookkeepingStatus,
-  schema: BookkeepingStatusResponseSchema,
-  select: ({ data }) => data,
+  schema: BookkeepingStatusResponseSchema.pipe(Schema.pluck('data')),
   isLocalized: false,
 })
 

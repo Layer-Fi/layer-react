@@ -1,3 +1,5 @@
+import { Schema } from 'effect'
+
 import {
   type BookkeepingConfiguration,
   BookkeepingConfigurationResponseSchema,
@@ -26,6 +28,5 @@ const getBookkeepingConfiguration = get<
 export const useBookkeepingConfiguration = createQueryHook({
   tags: [BOOKKEEPING_CONFIGURATION_TAG_KEY],
   request: getBookkeepingConfiguration,
-  schema: BookkeepingConfigurationResponseSchema,
-  select: ({ data }) => data,
+  schema: BookkeepingConfigurationResponseSchema.pipe(Schema.pluck('data')),
 })

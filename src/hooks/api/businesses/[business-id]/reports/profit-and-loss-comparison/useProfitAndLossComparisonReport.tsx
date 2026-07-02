@@ -55,8 +55,7 @@ export const useProfitAndLossComparisonReport = createQueryHook({
       reporting_basis: reportingBasis,
     }),
   ),
-  schema: ProfitAndLossComparisonResponseSchema,
-  select: ({ data }) => data,
+  schema: ProfitAndLossComparisonResponseSchema.pipe(Schema.pluck('data')),
 })
 
 export const useProfitAndLossComparisonReportCacheActions = createResourceGlobalCacheActions<ProfitAndLossComparison>(PNL_COMPARISON_REPORT_TAG_KEY)

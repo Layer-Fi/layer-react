@@ -1,3 +1,5 @@
+import { Schema } from 'effect'
+
 import { StripeAccountStatusResponseSchema } from '@schemas/stripeAccountStatus'
 import { get } from '@utils/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
@@ -12,6 +14,5 @@ const getStripeAccountStatus = get<
 export const useStripeAccountStatus = createQueryHook({
   tags: [STRIPE_ACCOUNT_STATUS_TAG_KEY],
   request: getStripeAccountStatus,
-  schema: StripeAccountStatusResponseSchema,
-  select: ({ data }) => data,
+  schema: StripeAccountStatusResponseSchema.pipe(Schema.pluck('data')),
 })

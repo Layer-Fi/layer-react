@@ -57,8 +57,7 @@ const listProfitAndLossDetailLines = getWithQuery<
 export const useProfitAndLossDetailLines = createQueryHook({
   tags: [LIST_PNL_DETAIL_LINES_TAG_KEY],
   request: listProfitAndLossDetailLines,
-  schema: PnlDetailLinesResponseSchema,
-  select: ({ data }) => data,
+  schema: PnlDetailLinesResponseSchema.pipe(Schema.pluck('data')),
   swrOptions: { keepPreviousData: true },
 })
 

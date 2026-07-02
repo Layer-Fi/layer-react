@@ -12,7 +12,7 @@ const TagDimensionsListSchema = Schema.Array(TagDimensionSchema)
 const TagDimensionsResponseSchema = Schema.Struct({
   data: Schema.Struct({
     dimensions: TagDimensionsListSchema,
-  }),
+  }).pipe(Schema.pluck('dimensions')),
 })
 
 const getTagDimensions = get<
@@ -27,8 +27,7 @@ type UseTagDimensionsParameters = {
 export const useTagDimensions = createQueryHook({
   tags: [TAG_DIMENSIONS_TAG_KEY],
   request: getTagDimensions,
-  schema: TagDimensionsResponseSchema,
-  select: ({ data }) => data.dimensions,
+  schema: TagDimensionsResponseSchema.pipe(Schema.pluck('data')),
 })
 
 export const useTagDimensionsGlobalCacheActions = createResourceGlobalCacheActions<ReadonlyArray<TagDimension>>(TAG_DIMENSIONS_TAG_KEY)

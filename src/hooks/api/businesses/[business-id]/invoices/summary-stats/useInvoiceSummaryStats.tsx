@@ -19,8 +19,7 @@ const getInvoiceSummaryStats = get<
 export const useInvoiceSummaryStats = createQueryHook({
   tags: [INVOICE_SUMMARY_STATS_TAG_KEY],
   request: getInvoiceSummaryStats,
-  schema: InvoiceSummaryStatsReturnSchema,
-  select: ({ data }) => data,
+  schema: InvoiceSummaryStatsReturnSchema.pipe(Schema.pluck('data')),
 })
 
 export const useInvoiceSummaryStatsCacheActions = createResourceGlobalCacheActions<InvoiceSummaryStatsResponse>(INVOICE_SUMMARY_STATS_TAG_KEY)
