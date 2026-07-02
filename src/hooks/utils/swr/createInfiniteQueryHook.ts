@@ -10,7 +10,10 @@ import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 type BusinessScopedParams = { businessId: string }
 
-type InfiniteQueryHookOptions = { isEnabled?: boolean }
+type InfiniteQueryHookOptions = {
+  isEnabled?: boolean
+  swrOptions?: SWRInfiniteConfiguration
+}
 
 /*
  * Business-scoped cursor-paginated `useSWRInfinite` hook factory; `businessId`, `cursor`,
@@ -37,6 +40,8 @@ export function createInfiniteQueryHook<
   return function useInfiniteQuery(params?: Omit<TParams, 'businessId' | 'cursor'> & InfiniteQueryHookOptions) {
     const { withLocale, businessId, auth } = useBuildKeyInputs()
 
+    const { swrOptions: callSwrOptions, ...keyInputs } = params ?? ({} as InfiniteQueryHookOptions)
+
     const swrResponse = useSWRInfinite<TDecoded>(
       (_index: number, previousPageData: TDecoded | null) => {
         const key = keyLoader(
@@ -45,7 +50,7 @@ export function createInfiniteQueryHook<
             ...auth,
             businessId,
             ...keyDefaults,
-            ...params,
+            ...keyInputs,
           } as Parameters<typeof keyLoader>[1],
         )
 
@@ -57,6 +62,7 @@ export function createInfiniteQueryHook<
         revalidateFirstPage: false,
         initialSize: 1,
         ...swrOptions,
+        ...callSwrOptions,
       },
     )
 

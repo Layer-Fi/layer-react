@@ -15,7 +15,8 @@ type GetBankTransactionsExportParams = {
   query?: string
   startDate?: Date
   endDate?: Date
-  tagFilterQueryString?: string
+  tagKey?: string
+  tagValues?: string
   sortOrder?: 'ASC' | 'DESC'
   sortBy?: string
 }

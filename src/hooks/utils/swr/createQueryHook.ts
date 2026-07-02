@@ -8,7 +8,10 @@ import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 type BusinessScopedParams = { businessId: string }
 
-type QueryHookOptions = { isEnabled?: boolean }
+type QueryHookOptions = {
+  isEnabled?: boolean
+  swrOptions?: SWRConfiguration
+}
 
 /*
  * Business-scoped `useSWR` hook factory; `businessId`, auth, and locale are injected,
@@ -45,18 +48,20 @@ export function createQueryHook<
   return function useQuery(params?: Omit<TParams, 'businessId'> & QueryHookOptions) {
     const { withLocale, businessId, auth } = useBuildKeyInputs()
 
+    const { swrOptions: callSwrOptions, ...keyInputs } = params ?? ({} as QueryHookOptions)
+
     const swrResponse = useSWR<TData>(
       () => {
         const key = buildKey({
           ...auth,
           businessId,
-          ...params,
+          ...keyInputs,
         } as Parameters<typeof buildKey>[0])
 
         return isLocalized ? withLocale(key) : key
       },
       fetcher,
-      swrOptions,
+      { ...swrOptions, ...callSwrOptions },
     )
 
     return new SWRQueryResult(swrResponse)
