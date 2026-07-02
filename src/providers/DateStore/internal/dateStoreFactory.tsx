@@ -5,7 +5,7 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { createStore, type StoreApi, useStore } from 'zustand'
+import { createStore, useStore } from 'zustand'
 
 import { useStoreWithDateSelected } from '@utils/zustand/useStoreWithDateSelected'
 import {
@@ -26,15 +26,6 @@ function resolveInitialRange({
 }: MakeDateStoreOptions): DateRange {
   const { startDate, endDate } = rangeForPreset(initialDatePreset)
   return getDateRange({ mode: 'full', startDate, endDate })
-}
-
-/*
- * The sentinel range is only used for the fallback provider for date store hooks rendered outside an official provider.
- * A date control instantiated with January 1970 (the unix epoch) is the signature of a date store hook rendered outside its provider.
- */
-export const FALLBACK_SENTINEL_RANGE: DateRange = {
-  startDate: new Date(1970, 0, 1),
-  endDate: new Date(1970, 0, 31, 23, 59, 59, 999),
 }
 
 function buildDateStore(initialRange: DateRange) {
@@ -83,26 +74,14 @@ function buildDateStore(initialRange: DateRange) {
 }
 
 export function makeDateStore(options: MakeDateStoreOptions = {}) {
-  const createStoreInstance = () => buildDateStore(resolveInitialRange(options))
-  const DateStoreContext = createContext<StoreApi<DateStore> | null>(null)
-
-  const fallbackStore = buildDateStore(FALLBACK_SENTINEL_RANGE)
-  let hasWarnedAboutMissingProvider = false
-
-  function useDateStore() {
-    const store = useContext(DateStoreContext)
-    if (store !== null) return store
-
-    if (!hasWarnedAboutMissingProvider) {
-      hasWarnedAboutMissingProvider = true
-      console.warn('A date store hook was used outside its provider. Dates will display as January 1970.')
-    }
-
-    return fallbackStore
-  }
+  // In intended usages of this function, the context default is completely shadowed by the provider-scoped context.
+  // The sole purpose of the default context is to ensure that hooks rendered outside a Provider still work: they silently share this
+  // default store instead of a provider-scoped one.
+  // This unsupported edge case is kept crash-free on purpose.
+  const DateStoreContext = createContext(buildDateStore(resolveInitialRange(options)))
 
   function useDate({ dateSelectionMode = 'full' }: { dateSelectionMode?: DateSelectionMode } = {}) {
-    const store = useDateStore()
+    const store = useContext(DateStoreContext)
 
     const rawDate = useStoreWithDateSelected(store, ({ endDate }) => endDate)
 
@@ -113,7 +92,7 @@ export function makeDateStore(options: MakeDateStoreOptions = {}) {
   }
 
   function useDateActions() {
-    const store = useDateStore()
+    const store = useContext(DateStoreContext)
 
     const setDate = useStore(store, ({ actions }) => actions.setDate)
 
@@ -121,7 +100,7 @@ export function makeDateStore(options: MakeDateStoreOptions = {}) {
   }
 
   function useDateRange({ dateSelectionMode }: { dateSelectionMode: DateSelectionMode }) {
-    const store = useDateStore()
+    const store = useContext(DateStoreContext)
 
     const rawStartDate = useStoreWithDateSelected(store, ({ startDate }) => startDate)
     const rawEndDate = useStoreWithDateSelected(store, ({ endDate }) => endDate)
@@ -135,7 +114,7 @@ export function makeDateStore(options: MakeDateStoreOptions = {}) {
   }
 
   function useDateRangeActions() {
-    const store = useDateStore()
+    const store = useContext(DateStoreContext)
 
     const setDateRange = useStore(store, ({ actions }) => actions.setDateRange)
     const setMonth = useStore(store, ({ actions }) => actions.setMonth)
@@ -149,7 +128,7 @@ export function makeDateStore(options: MakeDateStoreOptions = {}) {
   }
 
   function usePeriodAlignedActions() {
-    const store = useDateStore()
+    const store = useContext(DateStoreContext)
 
     const setMonthByPeriod = useStore(store, ({ actions }) => actions.setMonthByPeriod)
 
@@ -157,7 +136,7 @@ export function makeDateStore(options: MakeDateStoreOptions = {}) {
   }
 
   function Provider({ children }: PropsWithChildren) {
-    const [store] = useState(createStoreInstance)
+    const [store] = useState(() => buildDateStore(resolveInitialRange(options)))
 
     return (
       <DateStoreContext.Provider value={store}>

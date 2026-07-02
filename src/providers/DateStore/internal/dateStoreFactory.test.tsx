@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react'
 import { addMonths, endOfDay, endOfMonth, startOfMonth, startOfYear, subMonths } from 'date-fns'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { FALLBACK_SENTINEL_RANGE, makeDateStore, type MakeDateStoreOptions } from '@providers/DateStore/internal/dateStoreFactory'
+import { makeDateStore, type MakeDateStoreOptions } from '@providers/DateStore/internal/dateStoreFactory'
 import { DatePreset } from '@components/DateSelection/utils'
 
 const NOW = new Date(2026, 5, 15, 12, 0, 0)
@@ -124,17 +124,5 @@ describe('makeDateStore', () => {
 
     expect(first.current.fullRange.startDate).toEqual(FULL_MONTH_OF_THREE_MONTHS_BEFORE_NOW.startDate)
     expect(second.current).toEqual(CURRENT_MONTH_TO_DATE)
-  })
-
-  it('falls back to the January 1970 sentinel range and warns when used outside a provider', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-
-    const { useDateRange } = makeDateStore()
-    const { result } = renderHook(() => useDateRange({ dateSelectionMode: 'full' }))
-
-    expect(result.current).toEqual(FALLBACK_SENTINEL_RANGE)
-    expect(warn).toHaveBeenCalledTimes(1)
-
-    warn.mockRestore()
   })
 })
