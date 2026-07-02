@@ -49,31 +49,17 @@ export type UpdateParams = {
 
 export type UpsertParams = CreateParams | UpdateParams
 
-type UpsertDedicatedInvoicePaymentParams = { businessId: string, invoiceId: string, invoicePaymentId?: string }
-
-const upsertDedicatedInvoicePayment = (
-  baseUrl: string,
-  accessToken: string | undefined,
-  options?: { params?: UpsertDedicatedInvoicePaymentParams, body?: UpsertDedicatedInvoicePaymentBody },
-): Promise<UpsertDedicatedInvoicePaymentReturnEncoded> => {
-  const { params, body } = options ?? {}
-
-  if (params?.invoicePaymentId !== undefined) {
-    return updateDedicatedInvoicePayment(baseUrl, accessToken, {
-      params: { businessId: params.businessId, invoiceId: params.invoiceId, invoicePaymentId: params.invoicePaymentId },
-      body,
-    })
-  }
-
-  return createDedicatedInvoicePayment(baseUrl, accessToken, {
-    params: params && { businessId: params.businessId, invoiceId: params.invoiceId },
-    body,
-  })
-}
-
-const useUpsertDedicatedInvoicePaymentMutation = createMutationHook({
+const useCreateDedicatedInvoicePayment = createMutationHook({
   tags: [UPSERT_INVOICE_PAYMENT_TAG_KEY],
-  request: upsertDedicatedInvoicePayment,
+  request: createDedicatedInvoicePayment,
+  keyParams: ['invoiceId'],
+  schema: UpsertDedicatedInvoicePaymentReturnSchema,
+  swrOptions: { throwOnError: true },
+})
+
+const useUpdateDedicatedInvoicePayment = createMutationHook({
+  tags: [UPSERT_INVOICE_PAYMENT_TAG_KEY],
+  request: updateDedicatedInvoicePayment,
   keyParams: ['invoiceId', 'invoicePaymentId'],
   schema: UpsertDedicatedInvoicePaymentReturnSchema,
   swrOptions: { throwOnError: true },
@@ -100,7 +86,14 @@ export const useUpsertDedicatedInvoicePayment = (props: UseUpsertDedicatedInvoic
       return updateInvoiceWithPayment(invoice, invoicePayment)
     }, [invoiceId])
 
-  const mutationResponse = useUpsertDedicatedInvoicePaymentMutation({ invoiceId, invoicePaymentId })
+  const createResponse = useCreateDedicatedInvoicePayment({ invoiceId })
+  const updateResponse = useUpdateDedicatedInvoicePayment({
+    invoiceId,
+    invoicePaymentId: invoicePaymentId ?? '',
+    isEnabled: invoicePaymentId !== undefined,
+  })
+
+  const mutationResponse = mode === UpsertDedicatedInvoicePaymentMode.Create ? createResponse : updateResponse
 
   const { patchByTransformation: patchInvoiceWithTransformation } = useInvoicesGlobalCacheActions()
   const { forceReload: forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()

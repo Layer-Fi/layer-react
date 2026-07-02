@@ -46,31 +46,16 @@ export type UpdateParams = {
 
 export type UpsertParams = CreateParams | UpdateParams
 
-type UpsertInvoiceParams = { businessId: string, invoiceId?: string }
-
-const upsertInvoice = (
-  baseUrl: string,
-  accessToken: string | undefined,
-  options?: { params?: UpsertInvoiceParams, body?: UpsertInvoiceBody },
-): Promise<UpsertInvoiceReturnEncoded> => {
-  const { params, body } = options ?? {}
-
-  if (params?.invoiceId !== undefined) {
-    return updateInvoice(baseUrl, accessToken, {
-      params: { businessId: params.businessId, invoiceId: params.invoiceId },
-      body,
-    })
-  }
-
-  return createInvoice(baseUrl, accessToken, {
-    params: params && { businessId: params.businessId },
-    body,
-  })
-}
-
-const useUpsertInvoiceMutation = createMutationHook({
+const useCreateInvoice = createMutationHook({
   tags: [UPSERT_INVOICE_TAG_KEY],
-  request: upsertInvoice,
+  request: createInvoice,
+  schema: UpsertInvoiceReturnSchema,
+  swrOptions: { throwOnError: true },
+})
+
+const useUpdateInvoice = createMutationHook({
+  tags: [UPSERT_INVOICE_TAG_KEY],
+  request: updateInvoice,
   keyParams: ['invoiceId'],
   schema: UpsertInvoiceReturnSchema,
   swrOptions: { throwOnError: true },
@@ -84,7 +69,13 @@ export const useUpsertInvoice = (props: UseUpsertInvoiceProps) => {
   const { mode } = props
   const invoiceId = mode === UpsertInvoiceMode.Update ? props.invoiceId : undefined
 
-  const mutationResponse = useUpsertInvoiceMutation({ invoiceId })
+  const createResponse = useCreateInvoice()
+  const updateResponse = useUpdateInvoice({
+    invoiceId: invoiceId ?? '',
+    isEnabled: invoiceId !== undefined,
+  })
+
+  const mutationResponse = mode === UpsertInvoiceMode.Create ? createResponse : updateResponse
 
   const { patchByKey: patchInvoiceByKey, forceReload: forceReloadInvoices } = useInvoicesGlobalCacheActions()
   const { forceReload: forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()

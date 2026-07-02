@@ -33,31 +33,16 @@ const updateCustomer = patch<
   { businessId: string, customerId: string }
 >(({ businessId, customerId }) => `/v1/businesses/${businessId}/customers/${customerId}`)
 
-type UpsertCustomerParams = { businessId: string, customerId?: string }
-
-const upsertCustomer = (
-  baseUrl: string,
-  accessToken: string | undefined,
-  options?: { params?: UpsertCustomerParams, body?: UpsertCustomerBody },
-): Promise<UpsertCustomerReturnEncoded> => {
-  const { params, body } = options ?? {}
-
-  if (params?.customerId !== undefined) {
-    return updateCustomer(baseUrl, accessToken, {
-      params: { businessId: params.businessId, customerId: params.customerId },
-      body,
-    })
-  }
-
-  return createCustomer(baseUrl, accessToken, {
-    params: { businessId: params?.businessId },
-    body,
-  })
-}
-
-const useUpsertCustomerMutation = createMutationHook({
+const useCreateCustomer = createMutationHook({
   tags: [UPSERT_CUSTOMER_TAG_KEY, CUSTOMERS_TAG_KEY],
-  request: upsertCustomer,
+  request: createCustomer,
+  schema: UpsertCustomerReturnSchema,
+  swrOptions: { throwOnError: true },
+})
+
+const useUpdateCustomer = createMutationHook({
+  tags: [UPSERT_CUSTOMER_TAG_KEY, CUSTOMERS_TAG_KEY],
+  request: updateCustomer,
   keyParams: ['customerId'],
   schema: UpsertCustomerReturnSchema,
   swrOptions: { throwOnError: true },
@@ -71,7 +56,13 @@ export const useUpsertCustomer = (props: UseUpsertCustomerProps) => {
   const { mode } = props
   const customerId = mode === UpsertCustomerMode.Update ? props.customerId : undefined
 
-  const mutationResponse = useUpsertCustomerMutation({ customerId })
+  const createResponse = useCreateCustomer()
+  const updateResponse = useUpdateCustomer({
+    customerId: customerId ?? '',
+    isEnabled: customerId !== undefined,
+  })
+
+  const mutationResponse = mode === UpsertCustomerMode.Create ? createResponse : updateResponse
 
   const { patchByKey: patchCustomerByKey, forceReload: forceReloadCustomers } = useCustomersGlobalCacheActions()
   const { forceReload: forceReloadInvoices } = useInvoicesGlobalCacheActions()

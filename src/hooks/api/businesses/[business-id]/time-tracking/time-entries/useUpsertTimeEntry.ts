@@ -31,35 +31,24 @@ const createTimeEntry = post<UpsertTimeEntryReturnEncoded, CreateTimeEntryBody>(
   ({ businessId }) => `/v1/businesses/${businessId}/time-tracking/time-entries`,
 )
 
-const updateTimeEntry = patch<UpsertTimeEntryReturnEncoded, UpdateTimeEntryBody>(
+const updateTimeEntry = patch<
+  UpsertTimeEntryReturnEncoded,
+  UpdateTimeEntryBody,
+  { businessId: string, timeEntryId: string }
+>(
   ({ businessId, timeEntryId }) => `/v1/businesses/${businessId}/time-tracking/time-entries/${timeEntryId}`,
 )
 
-type UpsertTimeEntryParams = { businessId: string, timeEntryId?: string }
-
-const upsertTimeEntry = (
-  baseUrl: string,
-  accessToken: string | undefined,
-  options?: { params?: UpsertTimeEntryParams, body?: UpsertTimeEntryBody },
-): Promise<UpsertTimeEntryReturnEncoded> => {
-  const { params, body } = options ?? {}
-
-  if (params?.timeEntryId !== undefined) {
-    return updateTimeEntry(baseUrl, accessToken, {
-      params: { businessId: params.businessId, timeEntryId: params.timeEntryId },
-      body,
-    })
-  }
-
-  return createTimeEntry(baseUrl, accessToken, {
-    params: { businessId: params?.businessId },
-    body: body as CreateTimeEntryBody,
-  })
-}
-
-const useUpsertTimeEntryMutation = createMutationHook({
+const useCreateTimeEntry = createMutationHook({
   tags: [UPSERT_TIME_ENTRY_TAG_KEY],
-  request: upsertTimeEntry,
+  request: createTimeEntry,
+  schema: UpsertTimeEntryReturnSchema,
+  swrOptions: { throwOnError: true },
+})
+
+const useUpdateTimeEntry = createMutationHook({
+  tags: [UPSERT_TIME_ENTRY_TAG_KEY],
+  request: updateTimeEntry,
   keyParams: ['timeEntryId'],
   schema: UpsertTimeEntryReturnSchema,
   swrOptions: { throwOnError: true },
@@ -76,7 +65,15 @@ export function useUpsertTimeEntry(props: UseUpsertTimeEntryProps) {
   const { mode } = props
   const timeEntryId = mode === UpsertTimeEntryMode.Update ? props.timeEntryId : undefined
 
-  const mutationResponse = useUpsertTimeEntryMutation({ timeEntryId })
+  const createResponse = useCreateTimeEntry()
+  const updateResponse = useUpdateTimeEntry({
+    timeEntryId: timeEntryId ?? '',
+    isEnabled: timeEntryId !== undefined,
+  })
+
+  const mutationResponse = (
+    mode === UpsertTimeEntryMode.Create ? createResponse : updateResponse
+  ) as SWRMutationResult<UpsertTimeEntryReturn, UpsertTimeEntryBody>
 
   const { patchByKey: patchTimeEntryByKey, forceReload: forceReloadTimeEntries } = useTimeEntriesGlobalCacheActions()
   const { invalidate: invalidateTimeTrackingSummary } = useTimeTrackingSummaryGlobalCacheActions()

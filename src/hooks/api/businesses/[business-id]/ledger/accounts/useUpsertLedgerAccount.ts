@@ -34,31 +34,16 @@ const updateLedgerAccount = put<
   { businessId: string, accountId: string }
 >(({ businessId, accountId }) => `/v1/businesses/${businessId}/ledger/accounts/${accountId}`)
 
-type UpsertLedgerAccountParams = { businessId: string, accountId?: string }
-
-const upsertLedgerAccount = (
-  baseUrl: string,
-  accessToken: string | undefined,
-  options?: { params?: UpsertLedgerAccountParams, body?: UpsertLedgerAccountBody },
-): Promise<UpsertLedgerAccountReturnEncoded> => {
-  const { params, body } = options ?? {}
-
-  if (params?.accountId !== undefined) {
-    return updateLedgerAccount(baseUrl, accessToken, {
-      params: { businessId: params.businessId, accountId: params.accountId },
-      body,
-    })
-  }
-
-  return createLedgerAccount(baseUrl, accessToken, {
-    params: { businessId: params?.businessId },
-    body,
-  })
-}
-
-const useUpsertLedgerAccountMutation = createMutationHook({
+const useCreateLedgerAccount = createMutationHook({
   tags: [UPSERT_LEDGER_ACCOUNT_TAG_KEY],
-  request: upsertLedgerAccount,
+  request: createLedgerAccount,
+  schema: UpsertLedgerAccountReturnSchema,
+  swrOptions: { throwOnError: true },
+})
+
+const useUpdateLedgerAccount = createMutationHook({
+  tags: [UPSERT_LEDGER_ACCOUNT_TAG_KEY],
+  request: updateLedgerAccount,
   keyParams: ['accountId'],
   schema: UpsertLedgerAccountReturnSchema,
   swrOptions: { throwOnError: true },
@@ -72,7 +57,13 @@ export const useUpsertLedgerAccount = (props: UseUpsertLedgerAccountProps) => {
   const { mode } = props
   const accountId = mode === UpsertLedgerAccountMode.Update ? props.accountId : undefined
 
-  const mutationResponse = useUpsertLedgerAccountMutation({ accountId })
+  const createResponse = useCreateLedgerAccount()
+  const updateResponse = useUpdateLedgerAccount({
+    accountId: accountId ?? '',
+    isEnabled: accountId !== undefined,
+  })
+
+  const mutationResponse = mode === UpsertLedgerAccountMode.Create ? createResponse : updateResponse
 
   const { invalidate: invalidateLedgerBalances } = useLedgerBalancesCacheActions()
   const { forceReload: forceReloadLedgerEntries } = useLedgerEntriesCacheActions()

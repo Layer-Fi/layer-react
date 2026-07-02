@@ -27,35 +27,24 @@ const createVehicle = post<UpsertVehicleReturnEncoded, UpsertVehicleBody>(
   ({ businessId }) => `/v1/businesses/${businessId}/mileage/vehicles`,
 )
 
-const updateVehicle = patch<UpsertVehicleReturnEncoded, UpsertVehicleBody>(
+const updateVehicle = patch<
+  UpsertVehicleReturnEncoded,
+  UpsertVehicleBody,
+  { businessId: string, vehicleId: string }
+>(
   ({ businessId, vehicleId }) => `/v1/businesses/${businessId}/mileage/vehicles/${vehicleId}`,
 )
 
-type UpsertVehicleParams = { businessId: string, vehicleId?: string }
-
-const upsertVehicle = (
-  baseUrl: string,
-  accessToken: string | undefined,
-  options?: { params?: UpsertVehicleParams, body?: UpsertVehicleBody },
-): Promise<UpsertVehicleReturnEncoded> => {
-  const { params, body } = options ?? {}
-
-  if (params?.vehicleId !== undefined) {
-    return updateVehicle(baseUrl, accessToken, {
-      params: { businessId: params.businessId, vehicleId: params.vehicleId },
-      body,
-    })
-  }
-
-  return createVehicle(baseUrl, accessToken, {
-    params: { businessId: params?.businessId },
-    body,
-  })
-}
-
-const useUpsertVehicleMutation = createMutationHook({
+const useCreateVehicle = createMutationHook({
   tags: [UPSERT_VEHICLE_TAG_KEY],
-  request: upsertVehicle,
+  request: createVehicle,
+  schema: UpsertVehicleReturnSchema,
+  swrOptions: { throwOnError: true },
+})
+
+const useUpdateVehicle = createMutationHook({
+  tags: [UPSERT_VEHICLE_TAG_KEY],
+  request: updateVehicle,
   keyParams: ['vehicleId'],
   schema: UpsertVehicleReturnSchema,
   swrOptions: { throwOnError: true },
@@ -69,7 +58,13 @@ export const useUpsertVehicle = (props: UseUpsertVehicleProps) => {
   const { mode } = props
   const vehicleId = mode === UpsertVehicleMode.Update ? props.vehicleId : undefined
 
-  const mutationResponse = useUpsertVehicleMutation({ vehicleId })
+  const createResponse = useCreateVehicle()
+  const updateResponse = useUpdateVehicle({
+    vehicleId: vehicleId ?? '',
+    isEnabled: vehicleId !== undefined,
+  })
+
+  const mutationResponse = mode === UpsertVehicleMode.Create ? createResponse : updateResponse
 
   const { patchByKey: patchVehicleByKey, forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()
   const { forceReload: forceReloadTrips } = useTripsGlobalCacheActions()

@@ -28,7 +28,11 @@ const createTrip = post<UpsertTripReturnEncoded, UpsertTripBody>(
   ({ businessId }) => `/v1/businesses/${businessId}/mileage/trips`,
 )
 
-const updateTrip = patch<UpsertTripReturnEncoded, UpsertTripBody>(
+const updateTrip = patch<
+  UpsertTripReturnEncoded,
+  UpsertTripBody,
+  { businessId: string, tripId: string }
+>(
   ({ businessId, tripId }) => `/v1/businesses/${businessId}/mileage/trips/${tripId}`,
 )
 
@@ -37,31 +41,16 @@ export type UpdateParams = { readonly businessId: string, readonly tripId: strin
 
 export type UpsertParams = CreateParams | UpdateParams
 
-type UpsertTripParams = { businessId: string, tripId?: string }
-
-const upsertTrip = (
-  baseUrl: string,
-  accessToken: string | undefined,
-  options?: { params?: UpsertTripParams, body?: UpsertTripBody },
-): Promise<UpsertTripReturnEncoded> => {
-  const { params, body } = options ?? {}
-
-  if (params?.tripId !== undefined) {
-    return updateTrip(baseUrl, accessToken, {
-      params: { businessId: params.businessId, tripId: params.tripId },
-      body,
-    })
-  }
-
-  return createTrip(baseUrl, accessToken, {
-    params: { businessId: params?.businessId },
-    body,
-  })
-}
-
-const useUpsertTripMutation = createMutationHook({
+const useCreateTrip = createMutationHook({
   tags: [UPSERT_TRIP_TAG_KEY],
-  request: upsertTrip,
+  request: createTrip,
+  schema: UpsertTripReturnSchema,
+  swrOptions: { throwOnError: true },
+})
+
+const useUpdateTrip = createMutationHook({
+  tags: [UPSERT_TRIP_TAG_KEY],
+  request: updateTrip,
   keyParams: ['tripId'],
   schema: UpsertTripReturnSchema,
   swrOptions: { throwOnError: true },
@@ -75,7 +64,13 @@ export const useUpsertTrip = (props: UseUpsertTripProps) => {
   const { mode } = props
   const tripId = mode === UpsertTripMode.Update ? props.tripId : undefined
 
-  const mutationResponse = useUpsertTripMutation({ tripId })
+  const createResponse = useCreateTrip()
+  const updateResponse = useUpdateTrip({
+    tripId: tripId ?? '',
+    isEnabled: tripId !== undefined,
+  })
+
+  const mutationResponse = mode === UpsertTripMode.Create ? createResponse : updateResponse
 
   const { patchByKey: patchTripByKey, forceReload: forceReloadTrips } = useTripsGlobalCacheActions()
   const { forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()
