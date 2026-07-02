@@ -1,19 +1,22 @@
 import type { S3PresignedUrl } from '@internal-types/general'
 import type { Awaitable } from '@internal-types/utility/promises'
-import { get } from '@utils/api/authenticatedHttp'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import type { MutationRequest } from '@utils/api/postAsQuery'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 type GetAccountBalancesCSVParams = {
   businessId: string
-  startCutoff?: Date
-  endCutoff?: Date
+  startDate?: Date
+  endDate?: Date
 }
 
-const getLedgerAccountBalancesCSV = get<
+const getLedgerAccountBalancesCSV = getWithQuery<
   { data: S3PresignedUrl },
   GetAccountBalancesCSVParams
->(({ businessId }) => `/v1/businesses/${businessId}/ledger/balances/exports/csv`)
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/ledger/balances/exports/csv`,
+)
 
 const requestLedgerAccountBalancesCSV: MutationRequest<
   { data: S3PresignedUrl },
@@ -25,26 +28,26 @@ const requestLedgerAccountBalancesCSV: MutationRequest<
 const useAccountBalancesDownloadMutation = createMutationHook({
   tags: ['#account-balances', '#exports', '#csv'],
   request: requestLedgerAccountBalancesCSV,
-  keyParams: ['startCutoff', 'endCutoff'],
+  keyParams: ['startDate', 'endDate'],
   argToBody: (_arg: undefined) => undefined,
   select: ({ data }) => data,
   swrOptions: { throwOnError: false },
 })
 
 type UseAccountBalancesDownloadOptions = {
-  startCutoff?: Date
-  endCutoff?: Date
+  startDate?: Date
+  endDate?: Date
   onSuccess?: (url: S3PresignedUrl) => Awaitable<unknown>
 }
 
 export function useAccountBalancesDownload({
-  startCutoff,
-  endCutoff,
+  startDate,
+  endDate,
   onSuccess,
 }: UseAccountBalancesDownloadOptions) {
   return useAccountBalancesDownloadMutation({
-    startCutoff,
-    endCutoff,
+    startDate,
+    endDate,
     swrOptions: { onSuccess },
   })
 }
