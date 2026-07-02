@@ -1,16 +1,13 @@
 import { useCallback } from 'react'
-import { Effect, Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
+import { Schema } from 'effect'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { type InvoicePayment, InvoicePaymentSchema, type UpsertDedicatedInvoicePaymentSchema } from '@schemas/invoices/invoicePayment'
 import { post, put } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const UPSERT_INVOICE_PAYMENT_TAG_KEY = '#upsert-dedicated-invoice-payment'
 
@@ -21,64 +18,66 @@ export enum UpsertDedicatedInvoicePaymentMode {
 
 type UpsertDedicatedInvoicePaymentBody = typeof UpsertDedicatedInvoicePaymentSchema.Encoded
 
+const UpsertDedicatedInvoicePaymentReturnSchema = Schema.Struct({
+  data: InvoicePaymentSchema,
+})
+
+type UpsertDedicatedInvoicePaymentReturnEncoded = typeof UpsertDedicatedInvoicePaymentReturnSchema.Encoded
+
 const createDedicatedInvoicePayment = post<
-  UpsertDedicatedInvoicePaymentReturn,
+  UpsertDedicatedInvoicePaymentReturnEncoded,
   UpsertDedicatedInvoicePaymentBody,
   { businessId: string, invoiceId: string }
 >(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/payment/`)
 
 const updateDedicatedInvoicePayment = put<
-  UpsertDedicatedInvoicePaymentReturn,
+  UpsertDedicatedInvoicePaymentReturnEncoded,
   UpsertDedicatedInvoicePaymentBody,
   { businessId: string, invoiceId: string, invoicePaymentId: string }
 >(({ businessId, invoiceId, invoicePaymentId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/payment/${invoicePaymentId}`)
 
-const buildKey = createBuildKey<{ businessId: string, invoiceId: string, invoicePaymentId?: string }>([UPSERT_INVOICE_PAYMENT_TAG_KEY])
+export type CreateParams = {
+  readonly businessId: string
+  readonly invoiceId: string
+}
 
-const UpsertDedicatedInvoicePaymentReturnSchema = Schema.Struct({
-  data: InvoicePaymentSchema,
-})
-
-type UpsertDedicatedInvoicePaymentReturn = typeof UpsertDedicatedInvoicePaymentReturnSchema.Type
-
-const CreateParamsSchema = Schema.Struct({
-  businessId: Schema.String,
-  invoiceId: Schema.String,
-})
-
-const UpdateParamsSchema = Schema.Struct({
-  businessId: Schema.String,
-  invoiceId: Schema.String,
-  invoicePaymentId: Schema.String,
-})
-
-export type CreateParams = typeof CreateParamsSchema.Type
-export type UpdateParams = typeof UpdateParamsSchema.Type
+export type UpdateParams = {
+  readonly businessId: string
+  readonly invoiceId: string
+  readonly invoicePaymentId: string
+}
 
 export type UpsertParams = CreateParams | UpdateParams
 
-type RequestArgs = {
-  apiUrl: string
-  accessToken: string
-  body: UpsertDedicatedInvoicePaymentBody
-}
+type UpsertDedicatedInvoicePaymentParams = { businessId: string, invoiceId: string, invoicePaymentId?: string }
 
-type UpsertRequestFn = (args: RequestArgs) => Promise<UpsertDedicatedInvoicePaymentReturn>
+const upsertDedicatedInvoicePayment = (
+  baseUrl: string,
+  accessToken: string | undefined,
+  options?: { params?: UpsertDedicatedInvoicePaymentParams, body?: UpsertDedicatedInvoicePaymentBody },
+): Promise<UpsertDedicatedInvoicePaymentReturnEncoded> => {
+  const { params, body } = options ?? {}
 
-const isParamsValidForMode = <M extends UpsertDedicatedInvoicePaymentMode>(
-  mode: M,
-  params: unknown,
-): params is M extends UpsertDedicatedInvoicePaymentMode.Update ? UpdateParams : CreateParams => {
-  if (mode === UpsertDedicatedInvoicePaymentMode.Update) {
-    return Effect.runSync(Effect.either(Schema.decodeUnknown(UpdateParamsSchema)(params)))._tag === 'Right'
+  if (params?.invoicePaymentId !== undefined) {
+    return updateDedicatedInvoicePayment(baseUrl, accessToken, {
+      params: { businessId: params.businessId, invoiceId: params.invoiceId, invoicePaymentId: params.invoicePaymentId },
+      body,
+    })
   }
 
-  if (mode === UpsertDedicatedInvoicePaymentMode.Create) {
-    return Effect.runSync(Effect.either(Schema.decodeUnknown(CreateParamsSchema)(params)))._tag === 'Right'
-  }
-
-  return false
+  return createDedicatedInvoicePayment(baseUrl, accessToken, {
+    params: params && { businessId: params.businessId, invoiceId: params.invoiceId },
+    body,
+  })
 }
+
+const useUpsertDedicatedInvoicePaymentMutation = createMutationHook({
+  tags: [UPSERT_INVOICE_PAYMENT_TAG_KEY],
+  request: upsertDedicatedInvoicePayment,
+  keyParams: ['invoiceId', 'invoicePaymentId'],
+  schema: UpsertDedicatedInvoicePaymentReturnSchema,
+  swrOptions: { throwOnError: true },
+})
 
 export const updateInvoiceWithPayment = (invoice: Invoice, invoicePayment: InvoicePayment) => {
   const outstandingBalance = invoice.outstandingBalance - invoicePayment.amount
@@ -87,35 +86,11 @@ export const updateInvoiceWithPayment = (invoice: Invoice, invoicePayment: Invoi
   return { ...invoice, status, outstandingBalance }
 }
 
-function getRequestFn(
-  mode: UpsertDedicatedInvoicePaymentMode,
-  params: UpsertParams,
-): UpsertRequestFn {
-  if (mode === UpsertDedicatedInvoicePaymentMode.Update) {
-    if (!isParamsValidForMode(UpsertDedicatedInvoicePaymentMode.Update, params)) {
-      throw new Error('Invalid params for update mode')
-    }
-
-    return ({ apiUrl, accessToken, body }: { apiUrl: string, accessToken: string, body: UpsertDedicatedInvoicePaymentBody }) =>
-      updateDedicatedInvoicePayment(apiUrl, accessToken, { params, body })
-  }
-  else {
-    if (!isParamsValidForMode(UpsertDedicatedInvoicePaymentMode.Create, params)) {
-      throw new Error('Invalid params for create mode')
-    }
-
-    return ({ apiUrl, accessToken, body }: { apiUrl: string, accessToken: string, body: UpsertDedicatedInvoicePaymentBody }) =>
-      createDedicatedInvoicePayment(apiUrl, accessToken, { params, body })
-  }
-}
-
 type UseUpsertDedicatedInvoicePaymentProps =
   | { mode: UpsertDedicatedInvoicePaymentMode.Create, invoiceId: string }
   | { mode: UpsertDedicatedInvoicePaymentMode.Update, invoiceId: string, invoicePaymentId: string }
 
 export const useUpsertDedicatedInvoicePayment = (props: UseUpsertDedicatedInvoicePaymentProps) => {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
   const { mode, invoiceId } = props
   const invoicePaymentId = mode === UpsertDedicatedInvoicePaymentMode.Update ? props.invoicePaymentId : undefined
 
@@ -125,32 +100,7 @@ export const useUpsertDedicatedInvoicePayment = (props: UseUpsertDedicatedInvoic
       return updateInvoiceWithPayment(invoice, invoicePayment)
     }, [invoiceId])
 
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      invoiceId,
-      invoicePaymentId,
-    })),
-    (
-      { accessToken, apiUrl, businessId, invoiceId },
-      { arg: body }: { arg: UpsertDedicatedInvoicePaymentBody },
-    ) => {
-      const request = getRequestFn(mode, { businessId, invoiceId, invoicePaymentId })
-
-      return request({
-        apiUrl,
-        accessToken,
-        body,
-      }).then(Schema.decodeUnknownPromise(UpsertDedicatedInvoicePaymentReturnSchema))
-    },
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
+  const mutationResponse = useUpsertDedicatedInvoicePaymentMutation({ invoiceId, invoicePaymentId })
 
   const { patchByTransformation: patchInvoiceWithTransformation } = useInvoicesGlobalCacheActions()
   const { forceReload: forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()

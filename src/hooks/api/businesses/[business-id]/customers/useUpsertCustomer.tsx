@@ -1,15 +1,12 @@
 import { useCallback } from 'react'
-import { Effect, Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
+import { Schema } from 'effect'
 
 import { CustomerSchema, type UpsertCustomerEncoded } from '@schemas/customer'
 import { patch, post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { CUSTOMERS_TAG_KEY, useCustomersGlobalCacheActions } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const UPSERT_CUSTOMER_TAG_KEY = '#upsert-customer'
 
@@ -20,120 +17,61 @@ export enum UpsertCustomerMode {
 
 type UpsertCustomerBody = UpsertCustomerEncoded
 
-const createCustomer = post<
-  UpsertCustomerReturn,
-  UpsertCustomerBody,
-  { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/customers`)
+const UpsertCustomerReturnSchema = Schema.Struct({
+  data: CustomerSchema,
+})
+
+type UpsertCustomerReturnEncoded = typeof UpsertCustomerReturnSchema.Encoded
+
+const createCustomer = post<UpsertCustomerReturnEncoded, UpsertCustomerBody>(
+  ({ businessId }) => `/v1/businesses/${businessId}/customers`,
+)
 
 const updateCustomer = patch<
-  UpsertCustomerReturn,
+  UpsertCustomerReturnEncoded,
   UpsertCustomerBody,
   { businessId: string, customerId: string }
 >(({ businessId, customerId }) => `/v1/businesses/${businessId}/customers/${customerId}`)
 
-const buildKey = createBuildKey<{ businessId: string, customerId?: string }>([UPSERT_CUSTOMER_TAG_KEY, CUSTOMERS_TAG_KEY])
+type UpsertCustomerParams = { businessId: string, customerId?: string }
 
-const UpsertCustomerReturnSchema = Schema.Struct({
-  data: CustomerSchema,
-})
-type UpsertCustomerReturn = typeof UpsertCustomerReturnSchema.Type
+const upsertCustomer = (
+  baseUrl: string,
+  accessToken: string | undefined,
+  options?: { params?: UpsertCustomerParams, body?: UpsertCustomerBody },
+): Promise<UpsertCustomerReturnEncoded> => {
+  const { params, body } = options ?? {}
 
-type RequestArgs = {
-  apiUrl: string
-  accessToken: string
-  body: UpsertCustomerBody
+  if (params?.customerId !== undefined) {
+    return updateCustomer(baseUrl, accessToken, {
+      params: { businessId: params.businessId, customerId: params.customerId },
+      body,
+    })
+  }
+
+  return createCustomer(baseUrl, accessToken, {
+    params: { businessId: params?.businessId },
+    body,
+  })
 }
 
-const CreateParamsSchema = Schema.Struct({
-  businessId: Schema.UUID,
-  customerId: Schema.Undefined,
+const useUpsertCustomerMutation = createMutationHook({
+  tags: [UPSERT_CUSTOMER_TAG_KEY, CUSTOMERS_TAG_KEY],
+  request: upsertCustomer,
+  keyParams: ['customerId'],
+  schema: UpsertCustomerReturnSchema,
+  swrOptions: { throwOnError: true },
 })
-
-const UpdateParamsSchema = Schema.Struct({
-  businessId: Schema.UUID,
-  customerId: Schema.UUID,
-})
-
-type CreateParams = typeof CreateParamsSchema.Type
-type UpdateParams = typeof UpdateParamsSchema.Type
-
-type UpsertParams = CreateParams | UpdateParams
-
-type UpsertRequestFn = (args: RequestArgs) => Promise<UpsertCustomerReturn>
-
-const isParamsValidForMode = <M extends UpsertCustomerMode>(
-  mode: M,
-  params: unknown,
-): params is M extends UpsertCustomerMode.Update ? UpdateParams : CreateParams => {
-  if (mode === UpsertCustomerMode.Update) {
-    return Effect.runSync(Effect.either(Schema.decodeUnknown(UpdateParamsSchema)(params)))._tag === 'Right'
-  }
-
-  if (mode === UpsertCustomerMode.Create) {
-    return Effect.runSync(Effect.either(Schema.decodeUnknown(CreateParamsSchema)(params)))._tag === 'Right'
-  }
-
-  return false
-}
-
-function getRequestFn(
-  mode: UpsertCustomerMode,
-  params: UpsertParams,
-): UpsertRequestFn {
-  if (mode === UpsertCustomerMode.Update) {
-    if (!isParamsValidForMode(UpsertCustomerMode.Update, params)) {
-      throw new Error('Invalid params for update mode')
-    }
-
-    return ({ apiUrl, accessToken, body }: RequestArgs) =>
-      updateCustomer(apiUrl, accessToken, { params, body })
-  }
-  else {
-    if (!isParamsValidForMode(UpsertCustomerMode.Create, params)) {
-      throw new Error('Invalid params for create mode')
-    }
-
-    return ({ apiUrl, accessToken, body }: RequestArgs) =>
-      createCustomer(apiUrl, accessToken, { params, body })
-  }
-}
 
 type UseUpsertCustomerProps =
   | { mode: UpsertCustomerMode.Create }
   | { mode: UpsertCustomerMode.Update, customerId: string }
 
 export const useUpsertCustomer = (props: UseUpsertCustomerProps) => {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
   const { mode } = props
   const customerId = mode === UpsertCustomerMode.Update ? props.customerId : undefined
 
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      customerId,
-    })),
-    (
-      { accessToken, apiUrl, businessId, customerId },
-      { arg: body }: { arg: UpsertCustomerBody },
-    ) => {
-      const request = getRequestFn(mode, { businessId, customerId })
-
-      return request({
-        apiUrl,
-        accessToken,
-        body,
-      }).then(Schema.decodeUnknownPromise(UpsertCustomerReturnSchema))
-    },
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
+  const mutationResponse = useUpsertCustomerMutation({ customerId })
 
   const { patchByKey: patchCustomerByKey, forceReload: forceReloadCustomers } = useCustomersGlobalCacheActions()
   const { forceReload: forceReloadInvoices } = useInvoicesGlobalCacheActions()
