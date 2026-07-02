@@ -11,9 +11,7 @@ export const TAG_DIMENSIONS_TAG_KEY = '#tag-dimensions'
 const TagDimensionsListSchema = Schema.Array(TagDimensionSchema)
 
 const TagDimensionsResponseSchema = UnwrappedDataResponseSchema(
-  Schema.Struct({
-    dimensions: TagDimensionsListSchema,
-  }).pipe(Schema.pluck('dimensions')),
+  Schema.Struct({ dimensions: TagDimensionsListSchema }),
 )
 
 const getTagDimensions = get<
@@ -29,6 +27,7 @@ export const useTagDimensions = createQueryHook({
   tags: [TAG_DIMENSIONS_TAG_KEY],
   request: getTagDimensions,
   schema: TagDimensionsResponseSchema,
+  select: data => data.dimensions,
 })
 
 export const useTagDimensionsGlobalCacheActions = createResourceGlobalCacheActions<ReadonlyArray<TagDimension>>(TAG_DIMENSIONS_TAG_KEY)
