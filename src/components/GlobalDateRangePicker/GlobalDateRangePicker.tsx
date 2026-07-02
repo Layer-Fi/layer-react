@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useGlobalDatePickerBounds } from '@hooks/utils/dates/useGlobalDatePickerBounds'
-import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStore/GlobalDateStoreProvider'
 import { DatePicker } from '@components/DatePicker/DatePicker'
 import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 

@@ -2,7 +2,7 @@ import { useCallback, useId, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getActivationDate } from '@utils/business'
-import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStore/GlobalDateStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'

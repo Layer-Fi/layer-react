@@ -5,7 +5,7 @@ import { DateFormat } from '@utils/i18n/date/patterns'
 import { tPlural } from '@utils/i18n/plural'
 import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDatePeriodAlignedActions } from '@providers/DateStore/GlobalDateStoreProvider'
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { P } from '@ui/Typography/Text'
 
