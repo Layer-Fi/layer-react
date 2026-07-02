@@ -1,5 +1,3 @@
-import { Schema } from 'effect'
-
 import { type ReportingBasis } from '@internal-types/general'
 import { type ProfitAndLossComparison, type ProfitAndLossComparisonRequestBody } from '@internal-types/profitAndLoss'
 import { post } from '@utils/api/authenticatedHttp'
@@ -16,16 +14,12 @@ type ProfitAndLossComparisonRequestParams = {
   reportingBasis?: ReportingBasis
 }
 
-const ProfitAndLossComparisonFromSelf = Schema.declare(
-  (input: unknown): input is ProfitAndLossComparison => typeof input === 'object' && input !== null,
-)
-
-const ProfitAndLossComparisonResponseSchema = Schema.Struct({
-  data: Schema.optional(ProfitAndLossComparisonFromSelf),
-})
+type ProfitAndLossComparisonResponse = {
+  data: ProfitAndLossComparison
+}
 
 const compareProfitAndLoss = post<
-  typeof ProfitAndLossComparisonResponseSchema.Encoded,
+  ProfitAndLossComparisonResponse,
   ProfitAndLossComparisonRequestBody
 >(
   ({ businessId }) =>
@@ -33,7 +27,7 @@ const compareProfitAndLoss = post<
 )
 
 const requestProfitAndLossComparison: MutationRequest<
-  typeof ProfitAndLossComparisonResponseSchema.Encoded,
+  ProfitAndLossComparisonResponse,
   ProfitAndLossComparisonRequestBody,
   ProfitAndLossComparisonRequestParams
 > = (baseUrl, accessToken, options) => compareProfitAndLoss(
@@ -55,7 +49,7 @@ export const useProfitAndLossComparisonReport = createQueryHook({
       reporting_basis: reportingBasis,
     }),
   ),
-  schema: ProfitAndLossComparisonResponseSchema.pipe(Schema.pluck('data')),
+  select: ({ data }: ProfitAndLossComparisonResponse) => data,
 })
 
 export const useProfitAndLossComparisonReportCacheActions = createResourceGlobalCacheActions<ProfitAndLossComparison>(PNL_COMPARISON_REPORT_TAG_KEY)

@@ -20,7 +20,7 @@ export const BankTransactionsConfirmAllModal = ({ isOpen, onOpenChange, isMobile
   const { formatNumber } = useIntlFormatter()
   const { count } = useCountSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
-  const { trigger, buildTransactionsPayload } = useBulkMatchOrCategorize()
+  const { response: { trigger }, buildTransactionsPayload } = useBulkMatchOrCategorize()
   const payload = buildTransactionsPayload()
 
   const { actionableCount, skippedCount } = useMemo(() => {

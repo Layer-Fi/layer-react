@@ -1,6 +1,6 @@
 import type { S3PresignedUrl } from '@internal-types/general'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import type { MutationRequest } from '@utils/api/postAsQuery'
+import { getAsMutation } from '@utils/api/postAsQuery'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 type GetJournalEntriesCSVParams = {
@@ -17,12 +17,7 @@ const getJournalEntriesCSV = getWithQuery<
   ({ businessId }) => `/v1/businesses/${businessId}/ledger/entries/exports/csv`,
 )
 
-const requestJournalEntriesCSV: MutationRequest<
-  { data: S3PresignedUrl },
-  Record<string, unknown>,
-  GetJournalEntriesCSVParams
-> = (baseUrl, accessToken, options) =>
-  getJournalEntriesCSV(baseUrl, accessToken, { params: options?.params })()
+const requestJournalEntriesCSV = getAsMutation(getJournalEntriesCSV)
 
 export const useJournalEntriesDownload = createMutationHook({
   tags: ['#journal-entries', '#exports', '#csv'],

@@ -1,6 +1,6 @@
 import type { S3PresignedUrl } from '@internal-types/general'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import type { MutationRequest } from '@utils/api/postAsQuery'
+import { getAsMutation } from '@utils/api/postAsQuery'
 import { type PnlDetailLinesBaseParams, type PnlDetailLinesFilterParams } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/lines/useProfitAndLossDetailLines'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
@@ -26,12 +26,7 @@ const getProfitAndLossDetailLinesExcel = getWithQuery<
   }),
 )
 
-const requestProfitAndLossDetailLinesExcel: MutationRequest<
-  { data?: S3PresignedUrl, error?: unknown },
-  Record<string, unknown>,
-  PnlDetailLinesExportParams
-> = (baseUrl, accessToken, options) =>
-  getProfitAndLossDetailLinesExcel(baseUrl, accessToken, { params: options?.params })()
+const requestProfitAndLossDetailLinesExcel = getAsMutation(getProfitAndLossDetailLinesExcel)
 
 export const useProfitAndLossDetailLinesExport = createMutationHook({
   tags: ['#pnl-detail-lines', '#exports', '#excel'],

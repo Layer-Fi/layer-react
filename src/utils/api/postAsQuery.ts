@@ -20,3 +20,14 @@ export function postAsQuery<TReturn, TBody, TParams>(
       body: toBody(options?.params as TParams),
     })
 }
+
+/*
+ * Adapts a GET-backed request into the shape `createMutationHook` expects, for
+ * endpoints (e.g. report exports) that are triggered imperatively rather than on render.
+ */
+export function getAsMutation<TReturn, TParams>(
+  request: AuthenticatedRequest<TReturn, TParams>,
+): MutationRequest<TReturn, Record<string, unknown>, TParams> {
+  return (baseUrl, accessToken, options) =>
+    request(baseUrl, accessToken, { params: options?.params })()
+}

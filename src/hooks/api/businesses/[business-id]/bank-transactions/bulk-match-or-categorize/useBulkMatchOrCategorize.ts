@@ -177,15 +177,10 @@ export const useBulkMatchOrCategorize = () => {
     [originalTrigger, forceReloadBankTransactions, debouncedInvalidateProfitAndLoss, eventCallbacks],
   )
 
-  const proxiedResponse = withStableTrigger(mutationResponse, stableProxiedTrigger)
+  const response = withStableTrigger(mutationResponse, stableProxiedTrigger)
 
   return {
-    data: proxiedResponse.data,
-    trigger: proxiedResponse.trigger,
-    isMutating: proxiedResponse.isMutating,
-    error: proxiedResponse.error,
-    isError: proxiedResponse.isError,
-    reset: proxiedResponse.reset,
+    response,
     buildTransactionsPayload,
   }
 }

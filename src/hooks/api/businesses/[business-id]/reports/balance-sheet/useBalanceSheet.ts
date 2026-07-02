@@ -1,5 +1,3 @@
-import { endOfDay } from 'date-fns'
-
 import type { BalanceSheet } from '@internal-types/balanceSheet'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
@@ -20,18 +18,10 @@ const getBalanceSheet = getWithQuery<
 
 export const BALANCE_SHEET_TAG_KEY = '#balance-sheet'
 
-const useBalanceSheetQuery = createQueryHook({
+export const useBalanceSheet = createQueryHook({
   tags: [BALANCE_SHEET_TAG_KEY],
   request: getBalanceSheet,
   select: ({ data }) => data,
 })
-
-export function useBalanceSheet({
-  effectiveDate = endOfDay(new Date()),
-}: {
-  effectiveDate?: Date
-}) {
-  return useBalanceSheetQuery({ effectiveDate })
-}
 
 export const useBalanceSheetGlobalCacheActions = createResourceGlobalCacheActions<BalanceSheet>(BALANCE_SHEET_TAG_KEY)

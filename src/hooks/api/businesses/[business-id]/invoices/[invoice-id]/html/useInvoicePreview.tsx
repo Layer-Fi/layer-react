@@ -1,5 +1,3 @@
-import { Schema } from 'effect'
-
 import { getText } from '@utils/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
@@ -16,7 +14,6 @@ type UseInvoicePreviewProps = {
 export const useInvoicePreview = createQueryHook({
   tags: [INVOICE_PREVIEW_TAG_KEY],
   request: getInvoicePreview,
-  schema: Schema.String,
 })
 
 export function usePreloadInvoicePreview(props: UseInvoicePreviewProps) {
