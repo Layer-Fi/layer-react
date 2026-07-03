@@ -1,60 +1,37 @@
-import { Schema } from 'effect'
-import useSWR from 'swr'
-
 import { type CatalogService, CatalogServiceSchema } from '@schemas/catalogService'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { createBuildKey } from '@utils/swr/createBuildKey'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 const LIST_CATALOG_SERVICES_TAG_KEY = '#list-catalog-services'
 
-const ListCatalogServicesResponseSchema = Schema.Struct({
-  data: Schema.Array(CatalogServiceSchema),
-})
-type ListCatalogServicesResponse = typeof ListCatalogServicesResponseSchema.Type
+const ListCatalogServicesResultSchema = PaginatedResponseSchema(CatalogServiceSchema)
 
-const buildKey = createBuildKey<{ businessId: string, allowArchived?: boolean }>([LIST_CATALOG_SERVICES_TAG_KEY])
+type ListCatalogServicesParams = {
+  businessId: string
+  allowArchived?: boolean
+  cursor?: string
+}
 
-const listCatalogServices = get<
-  typeof ListCatalogServicesResponseSchema.Encoded,
-  { businessId: string, allowArchived?: boolean }
->(({ businessId, allowArchived }) => {
-  const parameters = toDefinedSearchParameters({ allowArchived })
-  return `/v1/businesses/${businessId}/catalog/services?${parameters}`
-})
+const listCatalogServices = getWithQuery<
+  typeof ListCatalogServicesResultSchema.Encoded,
+  ListCatalogServicesParams
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/catalog/services`,
+)
 
 export type UseListCatalogServicesOptions = {
   allowArchived?: boolean
   isEnabled?: boolean
 }
 
-export function useListCatalogServices({
-  allowArchived,
-  isEnabled = true,
-}: UseListCatalogServicesOptions = {}): SWRQueryResult<ListCatalogServicesResponse> {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const response = useSWR(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      allowArchived,
-      isEnabled,
-    })),
-    ({ accessToken, apiUrl, businessId, allowArchived: allowArchivedParam }) => listCatalogServices(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId, allowArchived: allowArchivedParam },
-      },
-    )().then(Schema.decodeUnknownPromise(ListCatalogServicesResponseSchema)),
-  )
-
-  return new SWRQueryResult(response)
-}
+export const useListCatalogServices = createInfiniteQueryHook({
+  tags: [LIST_CATALOG_SERVICES_TAG_KEY],
+  request: listCatalogServices,
+  schema: ListCatalogServicesResultSchema,
+})
 
 export const useCatalogServicesGlobalCacheActions = createInfiniteQueryGlobalCacheActions<
   CatalogService

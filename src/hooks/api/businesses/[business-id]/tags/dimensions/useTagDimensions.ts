@@ -1,53 +1,34 @@
 import { Schema } from 'effect'
-import useSWR from 'swr'
 
 import { type TagDimension, TagDimensionSchema } from '@schemas/tag'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const TAG_DIMENSIONS_TAG_KEY = '#tag-dimensions'
 
-const buildKey = createBuildKey<{ businessId: string }>([TAG_DIMENSIONS_TAG_KEY])
+const TagDimensionsListSchema = Schema.Array(TagDimensionSchema)
+
+const TagDimensionsResponseSchema = UnwrappedDataResponseSchema(
+  Schema.Struct({ dimensions: TagDimensionsListSchema }),
+)
 
 const getTagDimensions = get<
-  { data: unknown },
+  typeof TagDimensionsResponseSchema.Encoded,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/tags/dimensions`)
-
-const TagDimensionsListSchema = Schema.Array(TagDimensionSchema)
 
 type UseTagDimensionsParameters = {
   isEnabled?: boolean
 }
 
-export function useTagDimensions({ isEnabled = true }: UseTagDimensionsParameters = {}) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const swrResponse = useSWR(
-    () => withLocale(buildKey({ ...auth, businessId, isEnabled })),
-    ({ accessToken, apiUrl, businessId }) => getTagDimensions(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-        },
-      },
-    )()
-      .then(({ data }) => data)
-      .then(Schema.decodeUnknownPromise(
-        Schema.Struct({
-          dimensions: TagDimensionsListSchema,
-        }),
-      ))
-      .then(({ dimensions }) => dimensions),
-  )
-
-  return new SWRQueryResult(swrResponse)
-}
+export const useTagDimensions = createQueryHook({
+  tags: [TAG_DIMENSIONS_TAG_KEY],
+  request: getTagDimensions,
+  schema: TagDimensionsResponseSchema,
+  select: data => data.dimensions,
+})
 
 export const useTagDimensionsGlobalCacheActions = createResourceGlobalCacheActions<ReadonlyArray<TagDimension>>(TAG_DIMENSIONS_TAG_KEY)
 

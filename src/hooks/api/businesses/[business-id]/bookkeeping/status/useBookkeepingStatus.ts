@@ -1,17 +1,16 @@
-import { Schema } from 'effect'
-import useSWR from 'swr'
-
-import { BookkeepingStatus, type BookkeepingStatusData, BookkeepingStatusResponseSchema } from '@schemas/bookkeepingStatus'
+import { BookkeepingStatus, type BookkeepingStatusData, BookkeepingStatusDataSchema } from '@schemas/bookkeepingStatus'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { useLegacyMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
 
 export { BookkeepingStatus }
 
+const BookkeepingStatusResponseSchema = UnwrappedDataResponseSchema(BookkeepingStatusDataSchema)
+
 const getBookkeepingStatus = get<
-  Record<string, unknown>,
+  typeof BookkeepingStatusResponseSchema.Encoded,
   { businessId: string }
 >(({ businessId }) => {
   return `/v1/businesses/${businessId}/bookkeeping/status`
@@ -20,25 +19,12 @@ const getBookkeepingStatus = get<
 export const BOOKKEEPING_TAG_KEY = '#bookkeeping'
 export const BOOKKEEPING_STATUS_TAG_KEY = '#bookkeeping-status'
 
-const buildKey = createBuildKey<{ businessId: string }>([BOOKKEEPING_TAG_KEY, BOOKKEEPING_STATUS_TAG_KEY])
-
-export function useBookkeepingStatus() {
-  const { businessId, auth } = useBuildKeyInputs()
-
-  return useSWR(
-    () => buildKey({
-      ...auth,
-      businessId,
-    }),
-    ({ accessToken, apiUrl, businessId }) => getBookkeepingStatus(
-      apiUrl,
-      accessToken,
-      { params: { businessId } },
-    )()
-      .then(Schema.decodeUnknownPromise(BookkeepingStatusResponseSchema))
-      .then(({ data }) => data),
-  )
-}
+export const useBookkeepingStatus = createQueryHook({
+  tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_STATUS_TAG_KEY],
+  request: getBookkeepingStatus,
+  schema: BookkeepingStatusResponseSchema,
+  isLocalized: false,
+})
 
 export const useBookkeepingStatusGlobalCacheActions = createResourceGlobalCacheActions<BookkeepingStatusData>(BOOKKEEPING_STATUS_TAG_KEY)
 

@@ -1,11 +1,9 @@
 import { useCallback } from 'react'
-import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const REMOVE_TAG_FROM_BANK_TRANSACTION_TAG_KEY = '#remove-tag-from-bank-transaction'
 
@@ -16,46 +14,29 @@ type RemoveTagFromBankTransactionBody = {
 const removeTagFromBankTransaction = del<
   Record<string, never>,
   RemoveTagFromBankTransactionBody,
-  { businessId: string }
+  { businessId: string, bankTransactionId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/tags`)
-
-const buildKey = createBuildKey<{ businessId: string, bankTransactionId: string }>([REMOVE_TAG_FROM_BANK_TRANSACTION_TAG_KEY])
 
 type RemoveTagFromBankTransactionArg = {
   tagId: string
 }
+
+const useRemoveTagFromBankTransactionMutation = createMutationHook({
+  tags: [REMOVE_TAG_FROM_BANK_TRANSACTION_TAG_KEY],
+  request: removeTagFromBankTransaction,
+  keyParams: ['bankTransactionId'],
+  argToBody: ({ tagId }: RemoveTagFromBankTransactionArg) => ({
+    tag_ids: [tagId],
+  }),
+  swrOptions: { throwOnError: false },
+})
 
 type RemoveTagFromBankTransactionOptions = {
   bankTransactionId: string
 }
 
 export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTagFromBankTransactionOptions) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      bankTransactionId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: { tagId } }: { arg: RemoveTagFromBankTransactionArg },
-    ) => removeTagFromBankTransaction(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-        body: {
-          tag_ids: [tagId],
-        },
-      },
-    ),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
+  const mutationResponse = useRemoveTagFromBankTransactionMutation({ bankTransactionId })
 
   const { optimisticallyUpdateBankTransactions, debouncedInvalidateBankTransactions } = useBankTransactionsGlobalCacheActions()
 

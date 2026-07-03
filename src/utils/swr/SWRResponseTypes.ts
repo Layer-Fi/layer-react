@@ -136,4 +136,8 @@ export class SWRMutationResult<Data, ExtraArg = never> {
   get isError() {
     return this.swrResponse.error !== undefined
   }
+
+  get reset() {
+    return this.swrResponse.reset
+  }
 }

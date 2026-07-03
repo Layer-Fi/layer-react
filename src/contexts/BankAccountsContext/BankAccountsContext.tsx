@@ -1,24 +1,30 @@
 import { createContext, type PropsWithChildren, useCallback, useContext, useMemo } from 'react'
 
+import { type LoadedStatus } from '@internal-types/general'
 import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { hasNewSyncingAccounts, isAnyBankAccountSyncing } from '@utils/bankAccount'
-import { type ListBankAccountsSWRResponse, useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
+import { type SWRQueryResult } from '@utils/swr/SWRResponseTypes'
+import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { usePollingConfig } from '@hooks/utils/swr/usePollingConfig'
 
 type BankAccountsContextValue = Pick<
-  ListBankAccountsSWRResponse,
+  SWRQueryResult<BankAccount[]>,
   | 'data'
-  | 'disconnectedAccountsRequiringNotification'
   | 'isError'
   | 'isLoading'
-  | 'isSyncing'
   | 'isValidating'
-  | 'loadingStatus'
   | 'refetch'
->
+> & {
+  disconnectedAccountsRequiringNotification: number
+  isSyncing: boolean
+  loadingStatus: LoadedStatus
+}
 
 const BANK_ACCOUNTS_POLL_INTERVAL_MS = 5 * 1000
 const BANK_ACCOUNTS_MAX_POLL_STALL_MS = 15 * 60 * 1000
+
+const requiresNotification = (bankAccount: BankAccount): boolean =>
+  bankAccount.isDisconnected && bankAccount.notifyWhenDisconnected
 
 const BankAccountsContext = createContext<BankAccountsContextValue>({
   data: undefined,
@@ -49,31 +55,31 @@ export function BankAccountsProvider({ children }: PropsWithChildren) {
   const pollingConfig = useBankAccountsPollingConfig()
   const {
     data,
-    disconnectedAccountsRequiringNotification,
     isError,
     isLoading,
-    isSyncing,
     isValidating,
-    loadingStatus,
     refetch,
-  } = useListBankAccounts(pollingConfig)
+  } = useListBankAccounts({ swrOptions: pollingConfig })
 
-  const value = useMemo<BankAccountsContextValue>(() => ({
+  const value = useMemo<BankAccountsContextValue>(() => {
+    const loadingStatus: LoadedStatus = isLoading
+      ? 'loading'
+      : data !== undefined || isError ? 'complete' : 'initial'
+
+    return {
+      data,
+      disconnectedAccountsRequiringNotification: (data ?? []).filter(requiresNotification).length,
+      isError,
+      isLoading,
+      isSyncing: isAnyBankAccountSyncing(data ?? []),
+      isValidating,
+      loadingStatus,
+      refetch,
+    }
+  }, [
     data,
-    disconnectedAccountsRequiringNotification,
     isError,
     isLoading,
-    isSyncing,
-    isValidating,
-    loadingStatus,
-    refetch,
-  }), [
-    data,
-    disconnectedAccountsRequiringNotification,
-    isError,
-    isLoading,
-    isSyncing,
-    loadingStatus,
     isValidating,
     refetch,
   ])

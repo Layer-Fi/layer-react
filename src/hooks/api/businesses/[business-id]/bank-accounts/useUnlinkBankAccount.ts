@@ -1,9 +1,5 @@
-import useSWRMutation from 'swr/mutation'
-
 import { del } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const UNLINK_BANK_ACCOUNT_TAG_KEY = '#unlink-bank-account'
 
@@ -19,24 +15,9 @@ const unlinkBankAccount = del<
     `/v1/businesses/${businessId}/bank-accounts/${bankAccountId}`,
 )
 
-const buildKey = createBuildKey<{ businessId: string }>([UNLINK_BANK_ACCOUNT_TAG_KEY])
-
-export function useUnlinkBankAccount() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-    })),
-    ({ accessToken, apiUrl, businessId }, { arg: bankAccountId }: { arg: string }) =>
-      unlinkBankAccount(apiUrl, accessToken, {
-        params: { businessId, bankAccountId },
-      }),
-    {
-      revalidate: false,
-    },
-  )
-
-  return new SWRMutationResult(rawMutationResponse)
-}
+export const useUnlinkBankAccount = createMutationHook({
+  tags: [UNLINK_BANK_ACCOUNT_TAG_KEY],
+  request: unlinkBankAccount,
+  argToParams: (bankAccountId: string) => ({ bankAccountId }),
+  argToBody: () => undefined,
+})

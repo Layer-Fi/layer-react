@@ -1,60 +1,27 @@
-import { endOfDay } from 'date-fns'
-import useSWR from 'swr'
-
 import type { BalanceSheet } from '@internal-types/balanceSheet'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { createBuildKey } from '@utils/swr/createBuildKey'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export type GetBalanceSheetParams = {
   businessId: string
   effectiveDate: Date
 }
 
-const getBalanceSheet = get<
+const getBalanceSheet = getWithQuery<
   { data: BalanceSheet },
   GetBalanceSheetParams
 >(
-  ({ businessId, effectiveDate }) => {
-    const parameters = toDefinedSearchParameters({ effectiveDate })
-
-    return `/v1/businesses/${businessId}/reports/balance-sheet?${parameters}`
-  },
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/balance-sheet`,
 )
 
 export const BALANCE_SHEET_TAG_KEY = '#balance-sheet'
 
-const buildKey = createBuildKey<{ businessId: string, effectiveDate: Date }>([BALANCE_SHEET_TAG_KEY])
-
-export function useBalanceSheet({
-  effectiveDate = endOfDay(new Date()),
-}: {
-  effectiveDate?: Date
-}) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const response = useSWR(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      effectiveDate,
-    })),
-    ({ accessToken, apiUrl, businessId, effectiveDate }) => getBalanceSheet(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          effectiveDate,
-        },
-      },
-    )().then(({ data }) => data),
-  )
-
-  return new SWRQueryResult(response)
-}
+export const useBalanceSheet = createQueryHook({
+  tags: [BALANCE_SHEET_TAG_KEY],
+  request: getBalanceSheet,
+  select: ({ data }) => data,
+})
 
 export const useBalanceSheetGlobalCacheActions = createResourceGlobalCacheActions<BalanceSheet>(BALANCE_SHEET_TAG_KEY)

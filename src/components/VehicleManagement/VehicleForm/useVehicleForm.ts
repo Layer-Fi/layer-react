@@ -40,7 +40,7 @@ export const useVehicleForm = (props: UseVehicleFormProps) => {
       const result = await upsertVehicle(upsertVehicleRequest)
 
       setSubmitError(undefined)
-      onSuccess(result.data)
+      onSuccess(result)
     }
     catch (e) {
       console.error(e)

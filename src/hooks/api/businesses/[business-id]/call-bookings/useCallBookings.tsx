@@ -1,10 +1,6 @@
-import { Schema } from 'effect'
-import useSWRInfinite from 'swr/infinite'
-
 import type {
   CallBooking,
   CreateCallBookingBody,
-  ListCallBookingsResponse,
 } from '@schemas/callBooking'
 import {
   CallBookingPurpose,
@@ -12,13 +8,9 @@ import {
   CallBookingType,
   ListCallBookingsResponseSchema,
 } from '@schemas/callBooking'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
-import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 export type { CallBooking, CreateCallBookingBody }
 export { CallBookingPurpose, CallBookingState, CallBookingType }
@@ -29,59 +21,25 @@ type ListCallBookingsParams = {
   limit?: number
 }
 
-const listCallBookings = get<
-  Record<string, unknown>,
+const listCallBookings = getWithQuery<
+  typeof ListCallBookingsResponseSchema.Encoded,
   ListCallBookingsParams
->(({ businessId, cursor, limit }) => {
-  const parameters = toDefinedSearchParameters({
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/call-bookings`,
+  ({ cursor, limit }) => ({
     cursor,
     limit,
     status: 'SCHEDULED',
-  })
-
-  return `/v1/businesses/${businessId}/call-bookings?${parameters}`
-})
+  }),
+)
 
 export const CALL_BOOKINGS_TAG_KEY = '#call-bookings'
 
-const keyLoader = createInfiniteKeyLoader<
-  { businessId: string, limit?: number },
-  ListCallBookingsResponse
->([CALL_BOOKINGS_TAG_KEY])
-
-export function useCallBookings({ limit }: { limit?: number } = {}) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const swrResponse = useSWRInfinite(
-    (_index, previousPageData: ListCallBookingsResponse | null) => withLocale(keyLoader(
-      previousPageData,
-      {
-        ...auth,
-        businessId,
-        limit,
-      },
-    )),
-    ({ accessToken, apiUrl, businessId, cursor, limit }) => listCallBookings(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          cursor,
-          limit,
-        },
-      },
-    )().then(Schema.decodeUnknownPromise(ListCallBookingsResponseSchema)),
-    {
-      keepPreviousData: true,
-      revalidateFirstPage: false,
-      initialSize: 1,
-    },
-  )
-
-  usePreserveInfiniteSize(swrResponse)
-
-  return useSWRInfiniteResult(swrResponse)
-}
+export const useCallBookings = createInfiniteQueryHook({
+  tags: [CALL_BOOKINGS_TAG_KEY],
+  request: listCallBookings,
+  schema: ListCallBookingsResponseSchema,
+})
 
 export const useCallBookingsGlobalCacheActions = createInfiniteQueryGlobalCacheActions<CallBooking>(CALL_BOOKINGS_TAG_KEY)

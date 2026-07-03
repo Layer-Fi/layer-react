@@ -5,22 +5,24 @@ import { DownloadButton } from '@ui/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 type JournalEntriesDownloadButtonProps = {
-  startCutoff?: Date
-  endCutoff?: Date
+  startDate?: Date
+  endDate?: Date
   icon?: boolean
 }
 
 export function JournalEntriesDownloadButton({
-  startCutoff,
-  endCutoff,
+  startDate,
+  endDate,
   icon,
 }: JournalEntriesDownloadButtonProps) {
   const { t } = useTranslation()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
   const { trigger, isMutating, error } = useJournalEntriesDownload({
-    startCutoff,
-    endCutoff,
-    onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
+    startDate,
+    endDate,
+    swrOptions: {
+      onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
+    },
   })
 
   return (

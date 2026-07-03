@@ -1,59 +1,35 @@
-import { Schema } from 'effect'
-import useSWR from 'swr'
-
-import { type CategoriesListMode, CategoryListSchema, type NestedCategorization } from '@schemas/categorization'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { type CategoriesListMode, CategoryListSchema } from '@schemas/categorization'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const CATEGORIES_TAG_KEY = '#categories'
 
-const buildKey = createBuildKey<{ businessId: string, mode?: CategoriesListMode }>([CATEGORIES_TAG_KEY])
+const CategoriesResponseSchema = UnwrappedDataResponseSchema(CategoryListSchema)
 
-export const getCategories = get<
-  {
-    data: {
-      type: 'Category_List'
-      categories: NestedCategorization[]
-    }
-  },
-  {
-    businessId: string
-    mode?: CategoriesListMode
-  }
->(({ businessId, mode }) => {
-  const parameters = toDefinedSearchParameters({ mode })
+type GetCategoriesParams = {
+  businessId: string
+  mode?: CategoriesListMode
+}
 
-  return `/v1/businesses/${businessId}/categories?${parameters}`
-})
+export const getCategories = getWithQuery<
+  typeof CategoriesResponseSchema.Encoded,
+  GetCategoriesParams
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/categories`,
+)
 
 type UseCategoriesOptions = {
   mode?: CategoriesListMode
 }
 
-export function useCategories({ mode }: UseCategoriesOptions = {}) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  return useSWR(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      mode,
-    })),
-    ({ accessToken, apiUrl, businessId, mode }) => getCategories(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          mode,
-        },
-      })()
-      .then(({ data }) => Schema.decodeUnknownPromise(CategoryListSchema)(data))
-      .then(categoryList => categoryList.categories),
-  )
-}
+export const useCategories = createQueryHook({
+  tags: [CATEGORIES_TAG_KEY],
+  request: getCategories,
+  schema: CategoriesResponseSchema,
+  select: data => data.categories,
+})
 
 export function usePreloadCategories(options?: UseCategoriesOptions) {
   /*

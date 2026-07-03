@@ -1,15 +1,13 @@
 import { useCallback } from 'react'
 import { pipe, Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
 
 import { type Split } from '@internal-types/bankTransactions'
 import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { type BankTransactionCategorization, BankTransactionSelectionVariant, DEFAULT_CATEGORIZATION, useGetAllBankTransactionsCategorizations } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -139,10 +137,15 @@ const bulkMatchOrCategorize = post<
   },
 )
 
-const buildKey = createBuildKey<{ businessId: string }>([BULK_MATCH_OR_CATEGORIZE_TAG])
+const useBulkMatchOrCategorizeMutation = createMutationHook({
+  tags: [BULK_MATCH_OR_CATEGORIZE_TAG],
+  request: bulkMatchOrCategorize,
+  argToBody: (arg: BulkMatchOrCategorizeRequest) => Schema.encodeSync(BulkMatchOrCategorizeRequestSchema)(arg),
+  select: ({ data }) => data,
+  swrOptions: { throwOnError: true },
+})
 
 export const useBulkMatchOrCategorize = () => {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const { eventCallbacks } = useLayerContext()
   const { selectedIds } = useSelectedIds()
   const { categorizations } = useGetAllBankTransactionsCategorizations()
@@ -155,27 +158,7 @@ export const useBulkMatchOrCategorize = () => {
     return { transactions }
   }, [selectedIds, categorizations])
 
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg }: { arg: BulkMatchOrCategorizeRequest },
-    ) => bulkMatchOrCategorize(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-        body: Schema.encodeSync(BulkMatchOrCategorizeRequestSchema)(arg),
-      },
-    ).then(({ data }) => data),
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
+  const mutationResponse = useBulkMatchOrCategorizeMutation()
 
   const { trigger: originalTrigger } = mutationResponse
 
@@ -194,10 +177,10 @@ export const useBulkMatchOrCategorize = () => {
     [originalTrigger, forceReloadBankTransactions, debouncedInvalidateProfitAndLoss, eventCallbacks],
   )
 
-  const proxiedResponse = withStableTrigger(mutationResponse, stableProxiedTrigger)
+  const response = withStableTrigger(mutationResponse, stableProxiedTrigger)
 
   return {
-    ...proxiedResponse,
+    response,
     buildTransactionsPayload,
   }
 }
