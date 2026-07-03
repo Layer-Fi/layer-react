@@ -83,7 +83,7 @@ describe('createScopedDateStore', () => {
 
     act(() => {
       result.current.rangeActions.setDateRange({
-        startDate: FULL_MONTH_OF_THREE_MONTHS_BEFORE_NOW.startDate,
+        startDate: THREE_MONTHS_BEFORE_NOW,
         endDate: THREE_MONTHS_BEFORE_NOW,
       })
     })
