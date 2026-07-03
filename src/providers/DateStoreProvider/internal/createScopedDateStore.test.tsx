@@ -44,8 +44,8 @@ afterEach(() => {
 
 // Each test calls createScopedDateStore() so every test operates on isolated stores.
 function setupDateStore(options?: CreateScopedDateStoreOptions) {
-  const store = createScopedDateStore(options)
-  const { Provider, useDate, useDateActions, useDateRange, useDateRangeActions } = store
+  const dateStore = createScopedDateStore(options)
+  const { Provider, useDate, useDateActions, useDateRange, useDateRangeActions } = dateStore
 
   const { result } = renderHook(() => ({
     date: useDate(),
@@ -55,7 +55,7 @@ function setupDateStore(options?: CreateScopedDateStoreOptions) {
     rangeActions: useDateRangeActions(),
   }), { wrapper: Provider })
 
-  return { store, result }
+  return { dateStore, result }
 }
 
 describe('createScopedDateStore', () => {
@@ -111,11 +111,11 @@ describe('createScopedDateStore', () => {
   })
 
   it('isolates state between two mounted providers of the same store', () => {
-    const { store, result: first } = setupDateStore()
+    const { dateStore, result: first } = setupDateStore()
 
     const { result: second } = renderHook(
-      () => store.useDateRange({ dateSelectionMode: 'full' }),
-      { wrapper: store.Provider },
+      () => dateStore.useDateRange({ dateSelectionMode: 'full' }),
+      { wrapper: dateStore.Provider },
     )
 
     act(() => {
