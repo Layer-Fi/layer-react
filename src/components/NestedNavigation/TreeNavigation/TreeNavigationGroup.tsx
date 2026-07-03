@@ -1,7 +1,7 @@
 import { type ReactElement } from 'react'
 import { ChevronRight } from 'lucide-react'
+import { Collection as ReactAriaCollection } from 'react-aria-components'
 import { Button as ReactAriaButton } from 'react-aria-components/Button'
-import { Collection as ReactAriaCollection } from 'react-aria-components/Collection'
 
 import { HStack } from '@ui/Stack/Stack'
 import { TreeItem, TreeItemContent } from '@ui/Tree/Tree'
