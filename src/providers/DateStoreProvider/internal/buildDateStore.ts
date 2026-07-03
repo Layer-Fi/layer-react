@@ -1,7 +1,7 @@
 import { createStore } from 'zustand'
 
-import { getDateRange, withCorrectedRange } from '@providers/DateStore/internal/dateStoreUtils'
-import type { DateRange, DateStore } from '@providers/DateStore/internal/types'
+import { getDateRange, withCorrectedRange } from '@providers/DateStoreProvider/internal/dateStoreUtils'
+import type { DateRange, DateStore } from '@providers/DateStoreProvider/internal/types'
 import { DatePreset, rangeForPreset } from '@components/DateSelection/utils'
 
 export type MakeDateStoreOptions = {

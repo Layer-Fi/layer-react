@@ -14,7 +14,7 @@ import { range } from '@utils/array/range'
 import { toLocalDateString } from '@utils/time/timeUtils'
 import { useProfitAndLossComparisonReport } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-comparison/useProfitAndLossComparisonReport'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
-import { useGlobalDateRange } from '@providers/DateStore/GlobalDateStoreProvider'
+import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 
 function prepareFiltersBody(compareOptions: TagComparisonOption[]): ReadonlyArrayWithAtLeastOne<ProfitAndLossComparisonTags> | undefined {

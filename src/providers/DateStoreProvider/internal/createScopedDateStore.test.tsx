@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react'
 import { addMonths, endOfDay, endOfMonth, startOfMonth, startOfYear, subMonths } from 'date-fns'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { createScopedDateStore, type CreateScopedDateStoreOptions } from '@providers/DateStore/internal/createScopedDateStore'
+import { createScopedDateStore, type CreateScopedDateStoreOptions } from '@providers/DateStoreProvider/internal/createScopedDateStore'
 import { DatePreset } from '@components/DateSelection/utils'
 
 const NOW = new Date(2026, 5, 15, 12, 0, 0)

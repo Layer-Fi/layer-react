@@ -1,9 +1,9 @@
 import { type PropsWithChildren } from 'react'
 
-import { createScopedDateStore } from '@providers/DateStore/internal/createScopedDateStore'
+import { createScopedDateStore } from '@providers/DateStoreProvider/internal/createScopedDateStore'
 
-export { clampToAfterActivationDate, clampToPresentOrPast } from '@providers/DateStore/internal/dateStoreUtils'
-export type { DateRange, DateSelectionMode } from '@providers/DateStore/internal/types'
+export { clampToAfterActivationDate, clampToPresentOrPast } from '@providers/DateStoreProvider/internal/dateStoreUtils'
+export type { DateRange, DateSelectionMode } from '@providers/DateStoreProvider/internal/types'
 
 const {
   Provider,

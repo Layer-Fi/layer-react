@@ -2,9 +2,9 @@ import { useMemo } from 'react'
 
 import { createScopedStore } from '@utils/zustand/createScopedStore'
 import { useStoreWithDateSelected } from '@utils/zustand/useStoreWithDateSelected'
-import { buildDateStore, type MakeDateStoreOptions } from '@providers/DateStore/internal/buildDateStore'
-import { getEffectiveDateForMode, getEffectiveDateRangeForMode } from '@providers/DateStore/internal/dateStoreUtils'
-import type { DateSelectionMode } from '@providers/DateStore/internal/types'
+import { buildDateStore, type MakeDateStoreOptions } from '@providers/DateStoreProvider/internal/buildDateStore'
+import { getEffectiveDateForMode, getEffectiveDateRangeForMode } from '@providers/DateStoreProvider/internal/dateStoreUtils'
+import type { DateSelectionMode } from '@providers/DateStoreProvider/internal/types'
 
 type DateStoreApi = ReturnType<typeof buildDateStore>
 type DateStoreState = ReturnType<DateStoreApi['getState']>

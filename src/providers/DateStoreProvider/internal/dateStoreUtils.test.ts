@@ -1,7 +1,7 @@
 import { addMonths, endOfDay, endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths, subYears } from 'date-fns'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { getDateRange, withCorrectedRange } from '@providers/DateStore/internal/dateStoreUtils'
+import { getDateRange, withCorrectedRange } from '@providers/DateStoreProvider/internal/dateStoreUtils'
 
 const NOW = new Date(2026, 5, 15, 12, 0, 0)
 const ONE_MONTH_BEFORE_NOW = subMonths(NOW, 1)

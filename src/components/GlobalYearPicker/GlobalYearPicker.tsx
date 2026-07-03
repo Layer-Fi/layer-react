@@ -3,7 +3,7 @@ import { getYear } from 'date-fns'
 
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useGlobalDatePickerBounds } from '@hooks/utils/dates/useGlobalDatePickerBounds'
-import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStore/GlobalDateStoreProvider'
+import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { YearPicker } from '@components/YearPicker/YearPicker'
 
 export const GlobalYearPicker = () => {

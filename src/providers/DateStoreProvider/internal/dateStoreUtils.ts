@@ -9,7 +9,7 @@ import {
 } from 'date-fns'
 
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import type { DateRange, DateSelectionMode } from '@providers/DateStore/internal/types'
+import type { DateRange, DateSelectionMode } from '@providers/DateStoreProvider/internal/types'
 
 export function clampToAfterActivationDate(date: Date | number, activationDate: Date) {
   return max([date, activationDate])

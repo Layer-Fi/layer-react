@@ -6,8 +6,8 @@ import {
   subYears,
 } from 'date-fns'
 
-import { clampToAfterActivationDate, clampToPresentOrPast } from '@providers/DateStore/internal/dateStoreUtils'
-import type { DateRange } from '@providers/DateStore/internal/types'
+import { clampToAfterActivationDate, clampToPresentOrPast } from '@providers/DateStoreProvider/internal/dateStoreUtils'
+import type { DateRange } from '@providers/DateStoreProvider/internal/types'
 
 export enum Period {
   Month = 'Month',

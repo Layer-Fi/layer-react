@@ -1,4 +1,4 @@
-import type { DateSelectionMode } from '@providers/DateStore/GlobalDateStoreProvider'
+import type { DateSelectionMode } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { GlobalDateRangeSelection } from '@components/DateSelection/GlobalDateRangeSelection'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
