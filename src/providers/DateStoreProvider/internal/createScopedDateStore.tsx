@@ -1,13 +1,12 @@
 import { useMemo } from 'react'
 
+import type { DateSelectionMode } from '@utils/date/dateRange'
 import { createScopedStore } from '@utils/zustand/createScopedStore'
 import { useStoreWithDateSelected } from '@utils/zustand/useStoreWithDateSelected'
 import { buildDateStore, type MakeDateStoreOptions } from '@providers/DateStoreProvider/internal/buildDateStore'
 import { getEffectiveDateForMode, getEffectiveDateRangeForMode } from '@providers/DateStoreProvider/internal/dateStoreUtils'
-import type { DateSelectionMode } from '@providers/DateStoreProvider/internal/types'
 
 type DateStoreApi = ReturnType<typeof buildDateStore>
-type DateStoreState = ReturnType<DateStoreApi['getState']>
 
 export type CreateScopedDateStoreOptions = MakeDateStoreOptions & {
   storeName?: string
@@ -25,7 +24,7 @@ export function createScopedDateStore({
   storeName = 'DateStore',
   ...dateStoreOptions
 }: CreateScopedDateStoreOptions = {}) {
-  const scopedStore = createScopedStore<DateStoreState>({
+  const scopedStore = createScopedStore<DateStoreApi>({
     createStore: () => buildDateStore(dateStoreOptions),
     storeName,
   })

@@ -3,38 +3,33 @@ import {
   type PropsWithChildren,
   type ReactElement,
   useContext,
-  useRef,
 } from 'react'
-import { type StoreApi, useStore as useZustandStore } from 'zustand'
+import { type ExtractState, type StoreApi, useStore as useZustandStore } from 'zustand'
 
-type ScopedStore<TState> = {
+import { useConstant } from '@hooks/utils/react/useConstant'
+
+type StoreSelector<TStore extends StoreApi<unknown>, TSelected> = (
+  state: ExtractState<TStore>,
+) => TSelected
+
+type ScopedStore<TStore extends StoreApi<unknown>> = {
   Provider: ({ children }: PropsWithChildren) => ReactElement
-  useStoreApi: () => StoreApi<TState>
+  useStoreApi: () => TStore
   useSelector: <TSelected>(
-    selector: (state: TState) => TSelected,
+    selector: StoreSelector<TStore, TSelected>,
   ) => TSelected
 }
 
-type CreateScopedStoreOptions<TState> = {
-  createStore: () => StoreApi<TState>
+type CreateScopedStoreOptions<TStore extends StoreApi<unknown>> = {
+  createStore: () => TStore
   storeName: string
 }
 
-function useConstant<T>(createValue: () => T) {
-  const ref = useRef<T | null>(null)
-
-  if (ref.current === null) {
-    ref.current = createValue()
-  }
-
-  return ref.current
-}
-
-export function createScopedStore<TState>({
+export function createScopedStore<TStore extends StoreApi<unknown>>({
   createStore,
   storeName,
-}: CreateScopedStoreOptions<TState>): ScopedStore<TState> {
-  const StoreContext = createContext<StoreApi<TState> | null>(null)
+}: CreateScopedStoreOptions<TStore>): ScopedStore<TStore> {
+  const StoreContext = createContext<TStore | null>(null)
 
   function useStoreApi() {
     const store = useContext(StoreContext)
@@ -46,7 +41,7 @@ export function createScopedStore<TState>({
     return store
   }
 
-  function useSelector<TSelected>(selector: (state: TState) => TSelected) {
+  function useSelector<TSelected>(selector: StoreSelector<TStore, TSelected>) {
     return useZustandStore(useStoreApi(), selector)
   }
 
