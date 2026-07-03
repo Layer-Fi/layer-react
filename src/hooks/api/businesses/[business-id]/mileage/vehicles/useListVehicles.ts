@@ -1,9 +1,10 @@
+import { useCallback, useMemo } from 'react'
 import { Schema } from 'effect'
 
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { type Vehicle, VehicleSchema } from '@schemas/vehicle'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 type ListVehiclesParams = {
@@ -29,4 +30,19 @@ export const useListVehicles = createQueryHook({
   schema: ListVehiclesResponseSchema,
 })
 
-export const useVehiclesGlobalCacheActions = createInfiniteQueryGlobalCacheActions<Vehicle>(VEHICLES_TAG_KEY)
+const useVehiclesResourceCacheActions = createResourceGlobalCacheActions<ReadonlyArray<Vehicle>>(VEHICLES_TAG_KEY)
+
+export function useVehiclesGlobalCacheActions() {
+  const actions = useVehiclesResourceCacheActions()
+
+  const patchByKey = useCallback(
+    (updatedVehicle: Vehicle) =>
+      actions.patchCache(vehicles => vehicles?.map(vehicle => vehicle.id === updatedVehicle.id ? updatedVehicle : vehicle)),
+    [actions],
+  )
+
+  return useMemo(() => ({
+    ...actions,
+    patchByKey,
+  }), [actions, patchByKey])
+}

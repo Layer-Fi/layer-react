@@ -196,7 +196,7 @@ type ArchivedServicesContentProps = {
 
 function ArchivedServicesContent({ isEnabled, formatHourly, onRestore }: ArchivedServicesContentProps) {
   const { t } = useTranslation()
-  const { data, isLoading, isError } = useListCatalogServices({
+  const { flattenedData: data, isLoading, isError } = useListCatalogServices({
     allowArchived: true,
     isEnabled,
   })
@@ -261,7 +261,7 @@ export function TimeTrackingServicesDrawer({
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
   const formatHourly = useFormatHourly()
-  const { data, isLoading, isError } = useListCatalogServices()
+  const { flattenedData: data, isLoading, isError } = useListCatalogServices()
   const [tab, setTab] = useState<ServicesTab>('active')
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [isAdding, setIsAdding] = useState(false)

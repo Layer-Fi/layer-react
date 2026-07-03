@@ -94,7 +94,7 @@ export function TimeEntryServiceSelector({
 }: TimeEntryServiceSelectorProps) {
   const { t } = useTranslation()
 
-  const { data: servicesResponse, isLoading, isError, error } = useListCatalogServices({ allowArchived })
+  const { flattenedData: servicesResponse, isLoading, isError, error } = useListCatalogServices({ allowArchived })
 
   const isLoadingWithoutFallback = isLoading && !servicesResponse
   const shouldHideError = hideSpecifiedIdNotFoundError && isAPIErrorOfType(error, ApiEnumErrorType.SpecifiedIdNotFound)

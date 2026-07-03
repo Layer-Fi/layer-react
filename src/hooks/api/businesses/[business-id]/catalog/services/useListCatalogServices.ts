@@ -1,24 +1,21 @@
-import { Schema } from 'effect'
-
 import { type CatalogService, CatalogServiceSchema } from '@schemas/catalogService'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 const LIST_CATALOG_SERVICES_TAG_KEY = '#list-catalog-services'
 
-const ListCatalogServicesResponseSchema = UnwrappedDataResponseSchema(
-  Schema.Array(CatalogServiceSchema),
-)
+const ListCatalogServicesResultSchema = PaginatedResponseSchema(CatalogServiceSchema)
 
 type ListCatalogServicesParams = {
   businessId: string
   allowArchived?: boolean
+  cursor?: string
 }
 
 const listCatalogServices = getWithQuery<
-  typeof ListCatalogServicesResponseSchema.Encoded,
+  typeof ListCatalogServicesResultSchema.Encoded,
   ListCatalogServicesParams
 >(
   ['businessId'],
@@ -30,10 +27,10 @@ export type UseListCatalogServicesOptions = {
   isEnabled?: boolean
 }
 
-export const useListCatalogServices = createQueryHook({
+export const useListCatalogServices = createInfiniteQueryHook({
   tags: [LIST_CATALOG_SERVICES_TAG_KEY],
   request: listCatalogServices,
-  schema: ListCatalogServicesResponseSchema,
+  schema: ListCatalogServicesResultSchema,
 })
 
 export const useCatalogServicesGlobalCacheActions = createInfiniteQueryGlobalCacheActions<
