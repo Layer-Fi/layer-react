@@ -32,12 +32,15 @@ export const useListVehicles = createQueryHook({
 
 const useVehiclesResourceCacheActions = createResourceGlobalCacheActions<ReadonlyArray<Vehicle>>(VEHICLES_TAG_KEY)
 
+const patchVehicleById = (updatedVehicle: Vehicle) =>
+  (vehicles?: ReadonlyArray<Vehicle>) =>
+    vehicles?.map(vehicle => vehicle.id === updatedVehicle.id ? updatedVehicle : vehicle)
+
 export function useVehiclesGlobalCacheActions() {
   const actions = useVehiclesResourceCacheActions()
 
   const patchByKey = useCallback(
-    (updatedVehicle: Vehicle) =>
-      actions.patchCache(vehicles => vehicles?.map(vehicle => vehicle.id === updatedVehicle.id ? updatedVehicle : vehicle)),
+    (updatedVehicle: Vehicle) => actions.patchCache(patchVehicleById(updatedVehicle)),
     [actions],
   )
 
