@@ -1,6 +1,6 @@
 import { type PropsWithChildren } from 'react'
 
-import { makeDateStore } from '@providers/DateStore/internal/dateStoreFactory'
+import { createScopedDateStore } from '@providers/DateStore/internal/createScopedDateStore'
 
 export { clampToAfterActivationDate, clampToPresentOrPast } from '@providers/DateStore/internal/dateStoreUtils'
 export type { DateRange, DateSelectionMode } from '@providers/DateStore/internal/types'
@@ -12,7 +12,7 @@ const {
   useDateRange: useGlobalDateRange,
   useDateRangeActions: useGlobalDateRangeActions,
   usePeriodAlignedActions: useGlobalDatePeriodAlignedActions,
-} = makeDateStore()
+} = createScopedDateStore({ storeName: 'GlobalDateStore' })
 
 export {
   useGlobalDate,

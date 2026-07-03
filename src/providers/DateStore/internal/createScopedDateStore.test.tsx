@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react'
 import { addMonths, endOfDay, endOfMonth, startOfMonth, startOfYear, subMonths } from 'date-fns'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { makeDateStore, type MakeDateStoreOptions } from '@providers/DateStore/internal/dateStoreFactory'
+import { createScopedDateStore, type CreateScopedDateStoreOptions } from '@providers/DateStore/internal/createScopedDateStore'
 import { DatePreset } from '@components/DateSelection/utils'
 
 const NOW = new Date(2026, 5, 15, 12, 0, 0)
@@ -42,9 +42,9 @@ afterEach(() => {
   vi.useRealTimers()
 })
 
-// Each test calls makeDateStore() so every test operates on isolated stores.
-function setupDateStore(options?: MakeDateStoreOptions) {
-  const store = makeDateStore(options)
+// Each test calls createScopedDateStore() so every test operates on isolated stores.
+function setupDateStore(options?: CreateScopedDateStoreOptions) {
+  const store = createScopedDateStore(options)
   const { Provider, useDate, useDateActions, useDateRange, useDateRangeActions } = store
 
   const { result } = renderHook(() => ({
@@ -58,7 +58,7 @@ function setupDateStore(options?: MakeDateStoreOptions) {
   return { store, result }
 }
 
-describe('makeDateStore', () => {
+describe('createScopedDateStore', () => {
   it('initializes to the current month by default', () => {
     const { result } = setupDateStore()
 
@@ -124,5 +124,16 @@ describe('makeDateStore', () => {
 
     expect(first.current.fullRange.startDate).toEqual(FULL_MONTH_OF_THREE_MONTHS_BEFORE_NOW.startDate)
     expect(second.current).toEqual(CURRENT_MONTH_TO_DATE)
+  })
+
+  it('throws a descriptive error when a hook is used outside its provider', () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    const { useDateRange } = createScopedDateStore({ storeName: 'TestDateStore' })
+
+    expect(() => renderHook(() => useDateRange({ dateSelectionMode: 'full' })))
+      .toThrow('TestDateStore hooks must be used within TestDateStore.Provider')
+
+    consoleError.mockRestore()
   })
 })
