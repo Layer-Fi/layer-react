@@ -5,34 +5,18 @@ import { DatePreset } from '@utils/date/dateRangePresets'
 import { createScopedDateStore, type CreateScopedDateStoreOptions } from '@providers/DateStoreProvider/internal/createScopedDateStore'
 
 import { setupFakeSystemTime } from '@test-utils/fakeSystemTime'
-
-const NOW = new Date(2026, 5, 15, 12, 0, 0)
-const END_OF_TODAY = new Date(2026, 5, 15, 23, 59, 59, 999)
-
-const ONE_MONTH_BEFORE_NOW = new Date(2026, 4, 15, 12, 0, 0)
-const THREE_MONTHS_BEFORE_NOW = new Date(2026, 2, 15, 12, 0, 0)
-const FIVE_MONTHS_BEFORE_NOW = new Date(2026, 0, 15, 12, 0, 0)
-const SIX_MONTHS_AFTER_NOW = new Date(2026, 11, 15, 12, 0, 0)
-
-const CURRENT_MONTH_TO_DATE = {
-  startDate: new Date(2026, 5, 1),
-  endDate: END_OF_TODAY,
-}
-
-const CURRENT_YEAR_TO_DATE = {
-  startDate: new Date(2026, 0, 1),
-  endDate: END_OF_TODAY,
-}
-
-const FULL_MONTH_OF_THREE_MONTHS_BEFORE_NOW = {
-  startDate: new Date(2026, 2, 1),
-  endDate: new Date(2026, 2, 31, 23, 59, 59, 999),
-}
-
-const MONTH_TO_DATE_OF_ONE_MONTH_BEFORE_NOW = {
-  startDate: new Date(2026, 4, 1),
-  endDate: new Date(2026, 4, 15, 23, 59, 59, 999),
-}
+import {
+  CURRENT_MONTH_TO_DATE,
+  CURRENT_YEAR_TO_DATE,
+  END_OF_TODAY,
+  FIVE_MONTHS_BEFORE_NOW,
+  FULL_MONTH_OF_THREE_MONTHS_BEFORE_NOW,
+  MONTH_TO_DATE_OF_ONE_MONTH_BEFORE_NOW,
+  NOW,
+  ONE_MONTH_BEFORE_NOW,
+  SIX_MONTHS_AFTER_NOW,
+  THREE_MONTHS_BEFORE_NOW,
+} from '@test-utils/fixedDates'
 
 setupFakeSystemTime(NOW)
 

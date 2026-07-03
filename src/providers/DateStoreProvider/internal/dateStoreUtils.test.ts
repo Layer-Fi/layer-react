@@ -3,16 +3,16 @@ import { describe, expect, it, vi } from 'vitest'
 import { getDateRange, withCorrectedRange } from '@providers/DateStoreProvider/internal/dateStoreUtils'
 
 import { setupFakeSystemTime } from '@test-utils/fakeSystemTime'
-
-const NOW = new Date(2026, 5, 15, 12, 0, 0)
-const END_OF_TODAY = new Date(2026, 5, 15, 23, 59, 59, 999)
-
-const ONE_MONTH_BEFORE_NOW = new Date(2026, 4, 15, 12, 0, 0)
-const TWO_MONTHS_BEFORE_NOW = new Date(2026, 3, 15, 12, 0, 0)
-const THREE_MONTHS_BEFORE_NOW = new Date(2026, 2, 15, 12, 0, 0)
-const FIVE_MONTHS_BEFORE_NOW = new Date(2026, 0, 15, 12, 0, 0)
-const SIX_MONTHS_AFTER_NOW = new Date(2026, 11, 15, 12, 0, 0)
-const TWO_YEARS_BEFORE_NOW = new Date(2024, 5, 15, 12, 0, 0)
+import {
+  END_OF_TODAY,
+  FIVE_MONTHS_BEFORE_NOW,
+  NOW,
+  ONE_MONTH_BEFORE_NOW,
+  SIX_MONTHS_AFTER_NOW,
+  THREE_MONTHS_BEFORE_NOW,
+  TWO_MONTHS_BEFORE_NOW,
+  TWO_YEARS_BEFORE_NOW,
+} from '@test-utils/fixedDates'
 
 setupFakeSystemTime(NOW)
 
