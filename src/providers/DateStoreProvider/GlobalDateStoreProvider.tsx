@@ -6,26 +6,19 @@ export { clampToAfterActivationDate, clampToPresentOrPast } from '@providers/Dat
 export type { DateRange, DateSelectionMode } from '@providers/DateStoreProvider/internal/types'
 
 const {
-  Provider,
+  Provider: GlobalDateStoreProvider,
   useDate: useGlobalDate,
   useDateActions: useGlobalDateActions,
   useDateRange: useGlobalDateRange,
   useDateRangeActions: useGlobalDateRangeActions,
   usePeriodAlignedActions: useGlobalDatePeriodAlignedActions,
-} = createScopedDateStore({ storeName: 'GlobalDateStore' })
+} = makeDateStore()
 
 export {
+  GlobalDateStoreProvider,
   useGlobalDate,
   useGlobalDateActions,
   useGlobalDatePeriodAlignedActions,
   useGlobalDateRange,
   useGlobalDateRangeActions,
-}
-
-type GlobalDateStoreProviderProps = PropsWithChildren
-
-export function GlobalDateStoreProvider({
-  children,
-}: GlobalDateStoreProviderProps) {
-  return <Provider>{children}</Provider>
 }
