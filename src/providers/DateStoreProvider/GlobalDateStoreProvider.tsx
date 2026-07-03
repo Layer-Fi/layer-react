@@ -1,5 +1,3 @@
-import { type PropsWithChildren } from 'react'
-
 import { createScopedDateStore } from '@providers/DateStoreProvider/internal/createScopedDateStore'
 
 export { clampToAfterActivationDate, clampToPresentOrPast } from '@providers/DateStoreProvider/internal/dateStoreUtils'
@@ -12,7 +10,7 @@ const {
   useDateRange: useGlobalDateRange,
   useDateRangeActions: useGlobalDateRangeActions,
   usePeriodAlignedActions: useGlobalDatePeriodAlignedActions,
-} = makeDateStore()
+} = createScopedDateStore()
 
 export {
   GlobalDateStoreProvider,
