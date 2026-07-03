@@ -15,12 +15,6 @@ type MutationSWROptions<TData> = {
   onError?: (error: unknown) => void
 }
 
-/*
- * Business-scoped `useSWRMutation` hook factory. The trigger argument is the request body
- * by default; `argToBody`/`argToParams` split it when parts belong in the URL instead.
- * `keyParams` names the request params that scope the SWR key (and mutation state) to an
- * entity; the returned hook takes them alongside `isEnabled` and per-call `swrOptions`.
- */
 export function createMutationHook<
   TEncoded,
   TBody extends Record<string, unknown> = Record<string, unknown>,
@@ -30,14 +24,26 @@ export function createMutationHook<
   const TKeyKeys extends ReadonlyArray<Exclude<keyof TParams, 'businessId'>> = readonly [],
   TData = TDecoded,
 >(config: {
+  /** Marks this mutation's key so global cache actions (invalidate, patch, force-reload) can find it. */
   tags: ReadonlyArray<string>
+  /** The HTTP call to make when triggered. Receives the assembled params and body, plus the injected auth and `businessId`. */
   request: MutationRequest<TEncoded, TBody, TParams>
+  /** Params that pin the mutation to one entity (e.g. an id). Callers pass these when creating the hook, not when triggering. */
   keyParams?: TKeyKeys
+  /** Pulls URL params out of the trigger argument, for when it mixes routing info (e.g. an id) with payload. */
   argToParams?: (arg: TArg, keyParams: BusinessScopedParams & Pick<TParams, TKeyKeys[number]>) => Partial<Omit<TParams, 'businessId'>>
+  /**
+   * Builds the body from the trigger argument; without it, the whole argument is the body.
+   * `argToBody: (_arg: undefined) => undefined` makes `trigger()` take no argument and send no body.
+   */
   argToBody?: (arg: TArg, keyParams: BusinessScopedParams & Pick<TParams, TKeyKeys[number]>) => TBody | undefined
+  /** Decodes the raw response. Leave out for endpoints without a schema — the response is used as-is. */
   schema?: Schema.Schema<TDecoded, TEncoded>
+  /** Reshapes the decoded response into what `trigger` resolves with (and what `onSuccess` receives). */
   select?: (decoded: TDecoded) => TData
+  /** Default mutation behavior for every caller. A caller's own `swrOptions` win, key by key. */
   swrOptions?: MutationSWROptions<TData>
+  /** Whether the locale is part of the mutation key, mirroring the query keys it relates to. True by default. */
   isLocalized?: boolean
 }) {
   const { tags, request, argToParams, argToBody, schema, select, swrOptions, isLocalized = true } = config

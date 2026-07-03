@@ -15,21 +15,22 @@ type InfiniteQueryHookOptions = {
   swrOptions?: SWRInfiniteConfiguration
 }
 
-/*
- * Business-scoped cursor-paginated `useSWRInfinite` hook factory; `businessId`, `cursor`,
- * auth, and locale are injected, so the returned hook takes the request params minus those.
- * `keyDefaults` bakes constants (e.g. a fixed page size) into the key and the request.
- */
 export function createInfiniteQueryHook<
   TParams extends BusinessScopedParams & { cursor?: string },
   TEncoded,
   TDecoded extends PaginatedResponse<unknown>,
 >(config: {
+  /** Marks this hook's cache entries so global cache actions (invalidate, patch, force-reload) can find them. */
   tags: ReadonlyArray<string>
+  /** The HTTP call for one page. Receives the hook-call params, plus the injected auth, `businessId`, and page `cursor`. */
   request: AuthenticatedRequest<TEncoded, TParams>
+  /** Decodes one raw page; must produce a `PaginatedResponse` so the next page's cursor can be read. */
   schema: Schema.Schema<TDecoded, TEncoded>
+  /** Params fixed for every caller (e.g. a page size); baked into each page's key and request. */
   keyDefaults?: Partial<Omit<TParams, 'businessId' | 'cursor'>>
+  /** Default SWR-infinite behavior for every caller. A caller's own `swrOptions` win, key by key. */
   swrOptions?: SWRInfiniteConfiguration
+  /** Whether the locale is part of the cache key (switching locale refetches). True by default. */
   isLocalized?: boolean
 }) {
   const { tags, request, schema, keyDefaults, swrOptions, isLocalized = true } = config

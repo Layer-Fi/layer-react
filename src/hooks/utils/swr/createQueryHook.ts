@@ -13,21 +13,23 @@ type QueryHookOptions = {
   swrOptions?: SWRConfiguration
 }
 
-/*
- * Business-scoped `useSWR` hook factory; `businessId`, auth, and locale are injected,
- * so the returned hook takes the request params minus `businessId`.
- */
 export function createQueryHook<
   TParams extends BusinessScopedParams,
   TEncoded,
   TDecoded = TEncoded,
   TData = TDecoded,
 >(config: {
+  /** Marks this hook's cache entries so global cache actions (invalidate, patch, force-reload) can find them. */
   tags: ReadonlyArray<string>
+  /** The HTTP call to make. Receives every param the hook was called with, plus the injected auth and `businessId`. */
   request: AuthenticatedRequest<TEncoded, TParams>
+  /** Decodes the raw response. Leave out for endpoints without a schema — the response is used as-is. */
   schema?: Schema.Schema<TDecoded, TEncoded>
+  /** Reshapes the decoded response into the hook's `data` — e.g. unwrap an envelope or pick one field. */
   select?: (decoded: TDecoded) => TData
+  /** Default SWR behavior for every caller. A caller's own `swrOptions` win, key by key. */
   swrOptions?: SWRConfiguration
+  /** Whether the locale is part of the cache key (switching locale refetches). True by default. */
   isLocalized?: boolean
 }) {
   const { tags, request, schema, select, swrOptions, isLocalized = true } = config
