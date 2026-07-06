@@ -27,7 +27,7 @@ export const get = createMockEndpoint<readonly Customer[], ReturnType<typeof toR
       ? customers
       : customers.filter(customer =>
         [customer.individualName, customer.companyName, customer.email]
-          .some(field => field?.toLowerCase().includes(query)),
+          .some(field => field?.toLowerCase()?.includes(query) ?? false),
       )
 
     return toResponse(filtered)

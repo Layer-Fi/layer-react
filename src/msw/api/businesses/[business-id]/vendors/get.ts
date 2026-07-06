@@ -27,7 +27,7 @@ export const get = createMockEndpoint<readonly Vendor[], ReturnType<typeof toRes
       ? vendors
       : vendors.filter(vendor =>
         [vendor.individualName, vendor.companyName, vendor.email]
-          .some(field => field?.toLowerCase().includes(query)),
+          .some(field => field?.toLowerCase()?.includes(query) ?? false),
       )
 
     return toResponse(filtered)

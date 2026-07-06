@@ -4,7 +4,7 @@ import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 
 const baseVendor: Vendor = {
   id: '00000000-0000-4000-8000-000000000002',
-  externalId: 'ext_2002',
+  externalId: 'ext_20002',
   individualName: 'John Smith',
   companyName: 'Stark Industries',
   email: 'john.smith@starkindustries.test',
