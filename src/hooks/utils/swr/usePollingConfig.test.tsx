@@ -67,19 +67,19 @@ describe('usePollingConfig', () => {
       expect(callRefresh(result, PENDING)).toBe(DEFAULT_INTERVAL)
     })
 
-    it('respects a custom numeric interval', () => {
+    it('returns a numeric intervalMs override', () => {
       const { result } = renderPollingConfig({ intervalMs: 500 })
       expect(callRefresh(result, PENDING)).toBe(500)
     })
 
-    it('supports a function that computes the interval per poll', () => {
+    it('invokes a function-form intervalMs on each scheduling call', () => {
       const intervalMs = vi.fn(() => 1234)
       const { result } = renderPollingConfig({ intervalMs })
       expect(callRefresh(result, PENDING)).toBe(1234)
       expect(intervalMs).toHaveBeenCalled()
     })
 
-    it('stops polling once the max duration has elapsed', () => {
+    it('returns 0 and transitions active -> stopped once maxDurationMs elapses', () => {
       const { result } = renderPollingConfig()
 
       expect(callRefresh(result, PENDING)).toBe(DEFAULT_INTERVAL) // idle -> active, deadline set
@@ -98,7 +98,7 @@ describe('usePollingConfig', () => {
   })
 
   describe('onErrorRetry', () => {
-    it('retries after one interval while under the retry limit', () => {
+    it('schedules revalidate after one interval, preserving retryCount, while under maxErrorRetries', () => {
       const revalidate = vi.fn()
       const { result } = renderPollingConfig({ intervalMs: 500 })
 
@@ -109,7 +109,7 @@ describe('usePollingConfig', () => {
       expect(revalidate).toHaveBeenCalledWith({ retryCount: 0 })
     })
 
-    it('gives up immediately on a fatal error', () => {
+    it('stops the session without retrying when isFatalError matches', () => {
       const revalidate = vi.fn()
       const isFatalError = vi.fn(() => true)
       const { result } = renderPollingConfig({ isFatalError })
@@ -121,7 +121,7 @@ describe('usePollingConfig', () => {
       expect(callRefresh(result, PENDING)).toBe(0) // stopped
     })
 
-    it('gives up after the maximum number of retries', () => {
+    it('stops retrying once retryCount reaches maxErrorRetries', () => {
       const revalidate = vi.fn()
       const { result } = renderPollingConfig({ maxErrorRetries: 3 })
 
@@ -132,7 +132,7 @@ describe('usePollingConfig', () => {
       expect(callRefresh(result, PENDING)).toBe(0)
     })
 
-    it('gives up once the max polling duration has elapsed', () => {
+    it('stops retrying once the polling deadline has passed', () => {
       const revalidate = vi.fn()
       const { result } = renderPollingConfig()
 
@@ -143,7 +143,7 @@ describe('usePollingConfig', () => {
       expect(revalidate).not.toHaveBeenCalled()
     })
 
-    it('does nothing once polling has already stopped', () => {
+    it('is a no-op when the session is already stopped', () => {
       const revalidate = vi.fn()
       const { result } = renderPollingConfig({ isFatalError: () => true })
 
@@ -156,7 +156,7 @@ describe('usePollingConfig', () => {
   })
 
   describe('onSuccess', () => {
-    it('notifies onPoll with each successful result', () => {
+    it('invokes onPoll with every successful payload', () => {
       const onPoll = vi.fn()
       const { result } = renderPollingConfig({ onPoll })
 
@@ -214,7 +214,7 @@ describe('usePollingConfig', () => {
       expect(callRefresh(result, PENDING)).toBe(0)
     })
 
-    it('restarts a stopped session when shouldRestartPolling sees progress', () => {
+    it('revives a stopped session when shouldRestartPolling reports progress', () => {
       const shouldRestartPolling = vi.fn(
         (prev: PollData | undefined, next: PollData) => prev?.version !== next.version,
       )
@@ -325,7 +325,7 @@ describe('usePollingConfig', () => {
       expect(onComplete).toHaveBeenCalledTimes(1)
     })
 
-    it('resumes polling when a refetch finds a new pending session after the loop has died', async () => {
+    it('revives the dead SWR polling loop when a refetch surfaces a new pending session', async () => {
       let response: PollData = DONE
       const fetcher = vi.fn(() => Promise.resolve(response))
 
