@@ -21,7 +21,7 @@ import { useBusinessActivationDate } from '@hooks/features/business/useBusinessA
 import { useProfitAndLossLTM } from '@hooks/features/profitAndLoss/useProfitAndLossLTM'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useGlobalDate, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDate, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'

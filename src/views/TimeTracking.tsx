@@ -3,7 +3,7 @@ import { Briefcase, FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useActiveTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useActiveTimeTracker'
-import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { TimeTrackingServicesDrawerProvider, useTimeTrackingServicesDrawer } from '@providers/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
 import { DataTableHeaderMenu, type DataTableHeaderMenuItem } from '@components/DataTable/DataTableHeaderMenu'
 import { ActiveTimeTracker } from '@components/TimeEntries/ActiveTimeTracker/ActiveTimeTracker'
