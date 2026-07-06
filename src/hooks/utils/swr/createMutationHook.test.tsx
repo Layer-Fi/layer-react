@@ -262,20 +262,34 @@ describe('createMutationHook', () => {
     expect(factoryOnSuccess).not.toHaveBeenCalled()
   })
 
-  it('toggles isMutating across the trigger and clears state on reset', async () => {
-    const request = makeRequest(() => Promise.resolve(RAW_WIDGET))
+  it('is mutating only while the request is in flight, and reset clears state', async () => {
+    // A deferred request keeps the mutation pending so the in-flight state is observable.
+    let resolveRequest!: (widget: RawWidget) => void
+    const pending = new Promise<RawWidget>((resolve) => {
+      resolveRequest = resolve
+    })
+    const request = makeRequest(() => pending)
     const useUpsertWidget = createMutationHook<RawWidget, WidgetBody>({ tags: ['Widgets'], request })
 
     const { result } = await renderHookWithAuth(() => useUpsertWidget())
 
     expect(result.current.isMutating).toBe(false)
 
-    await act(async () => {
-      await result.current.trigger({ name: 'New Widget' })
+    // Fire without awaiting so the request stays open.
+    let triggered!: Promise<unknown>
+    act(() => {
+      triggered = result.current.trigger({ name: 'New Widget' })
     })
 
-    await waitFor(() => expect(result.current.data).toEqual(RAW_WIDGET))
+    await waitFor(() => expect(result.current.isMutating).toBe(true))
+
+    await act(async () => {
+      resolveRequest(RAW_WIDGET)
+      await triggered
+    })
+
     expect(result.current.isMutating).toBe(false)
+    expect(result.current.data).toEqual(RAW_WIDGET)
 
     act(() => result.current.reset())
 
@@ -286,8 +300,8 @@ describe('createMutationHook', () => {
     const setLocaleHeader = vi.spyOn(authenticatedHttp, 'setLocaleHeader')
 
     const localizedRequest = makeRequest(() => Promise.resolve(RAW_WIDGET))
-    const useLocalized = createMutationHook<RawWidget, WidgetBody>({ tags: ['Widgets'], request: localizedRequest })
-    const { result: localized } = await renderHookWithAuth(() => useLocalized(), { wrapper: frCaWrapper })
+    const useLocalizedMutation = createMutationHook<RawWidget, WidgetBody>({ tags: ['Widgets'], request: localizedRequest })
+    const { result: localized } = await renderHookWithAuth(() => useLocalizedMutation(), { wrapper: frCaWrapper })
     await act(async () => {
       await localized.current.trigger({ name: 'New Widget' })
     })
@@ -295,11 +309,11 @@ describe('createMutationHook', () => {
 
     setLocaleHeader.mockClear()
 
-    const plainRequest = makeRequest(() => Promise.resolve(RAW_WIDGET))
-    const usePlain = createMutationHook<RawWidget, WidgetBody>({ tags: ['Widgets'], request: plainRequest, isLocalized: false })
-    const { result: plain } = await renderHookWithAuth(() => usePlain(), { wrapper: frCaWrapper })
+    const nonLocalizedRequest = makeRequest(() => Promise.resolve(RAW_WIDGET))
+    const useNonLocalizedMutation = createMutationHook<RawWidget, WidgetBody>({ tags: ['Widgets'], request: nonLocalizedRequest, isLocalized: false })
+    const { result: nonLocalized } = await renderHookWithAuth(() => useNonLocalizedMutation(), { wrapper: frCaWrapper })
     await act(async () => {
-      await plain.current.trigger({ name: 'New Widget' })
+      await nonLocalized.current.trigger({ name: 'New Widget' })
     })
     expect(setLocaleHeader).not.toHaveBeenCalledWith(SupportedLocale.frCA)
   })
