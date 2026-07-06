@@ -1,12 +1,10 @@
 import { Schema } from 'effect'
-import { useSWRConfig } from 'swr'
 
 import { InvoiceSchema } from '@schemas/invoices/invoice'
 import { InvoicePaymentMethodsSchema } from '@schemas/invoices/invoicePaymentMethod'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { put } from '@utils/api/authenticatedHttp'
-import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { INVOICE_PAYMENT_METHODS_TAG_KEY } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/useInvoicePaymentMethods'
+import { useInvoicePaymentMethodsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/useInvoicePaymentMethods'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
@@ -47,20 +45,16 @@ export const useFinalizeInvoice = createMutationHook({
   schema: FinalizeInvoiceResponseSchema,
   swrOptions: { throwOnError: true },
   useOnTriggerSuccess: () => {
-    const { mutate } = useSWRConfig()
-
     const { patchByKey: patchInvoiceByKey } = useInvoicesGlobalCacheActions()
     const { forceReload: forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()
+    const { forceReload: forceReloadInvoicePaymentMethods } = useInvoicePaymentMethodsGlobalCacheActions()
 
     return (data) => {
       void patchInvoiceByKey(data.invoice)
 
       void forceReloadInvoiceSummaryStats()
 
-      void mutate(key => withSWRKeyTags(
-        key,
-        ({ tags }) => tags.includes(INVOICE_PAYMENT_METHODS_TAG_KEY),
-      ))
+      void forceReloadInvoicePaymentMethods()
     }
   },
 })
