@@ -31,7 +31,6 @@ const callSuccess = (result: Result, data: PollData) => {
   act(() => result.current.onSuccess?.(data, 'key', {} as never))
 }
 
-/** Invoke `onErrorRetry` with sensible defaults; overrides for retryCount. */
 const callErrorRetry = (
   result: Result,
   revalidate: ReturnType<typeof vi.fn>,
@@ -56,13 +55,13 @@ afterEach(() => {
 })
 
 describe('usePollingConfig', () => {
-  describe('session lifecycle', () => {
-    it('refreshInterval returns 0 when shouldContinue is false', () => {
+  describe('refreshInterval', () => {
+    it('returns 0 when shouldContinue is false', () => {
       const { result } = renderPollingConfig()
       expect(callRefresh(result, DONE)).toBe(0)
     })
 
-    it('transitions idle -> active and schedules polling while shouldContinue is true', () => {
+    it('transitions idle -> active and returns the default interval while shouldContinue is true', () => {
       const { result } = renderPollingConfig()
       expect(callRefresh(result, PENDING)).toBe(DEFAULT_INTERVAL)
     })
@@ -74,39 +73,7 @@ describe('usePollingConfig', () => {
       expect(callRefresh(result, undefined)).toBe(DEFAULT_INTERVAL)
     })
 
-    it('transitions active -> stopped and returns 0 once maxDurationMs elapses', () => {
-      const { result } = renderPollingConfig()
-
-      expect(callRefresh(result, PENDING)).toBe(DEFAULT_INTERVAL) // idle -> active, deadline set
-
-      vi.setSystemTime(DEFAULT_MAX_DURATION)
-      expect(callRefresh(result, PENDING)).toBe(0) // deadline reached -> stopped
-    })
-
-    it('remains stopped on subsequent calls even while shouldContinue is true', () => {
-      const { result } = renderPollingConfig()
-      callRefresh(result, PENDING)
-      vi.setSystemTime(DEFAULT_MAX_DURATION)
-      expect(callRefresh(result, PENDING)).toBe(0)
-      expect(callRefresh(result, PENDING)).toBe(0)
-    })
-
-    it('treats maxDurationMs as a hard cap by default, since still-pending polls are not progress', () => {
-      const { result } = renderPollingConfig()
-
-      callSuccess(result, { status: 'pending', version: 1 }) // active, deadline = 120000
-
-      // A steady stream of still-pending polls does not extend the deadline.
-      vi.setSystemTime(DEFAULT_MAX_DURATION - 1000)
-      callSuccess(result, { status: 'pending', version: 2 })
-
-      vi.setSystemTime(DEFAULT_MAX_DURATION)
-      expect(callRefresh(result, PENDING)).toBe(0)
-    })
-  })
-
-  describe('interval configuration', () => {
-    it('uses a numeric intervalMs override', () => {
+    it('returns a numeric intervalMs override', () => {
       const { result } = renderPollingConfig({ intervalMs: 500 })
       expect(callRefresh(result, PENDING)).toBe(500)
     })
@@ -117,9 +84,26 @@ describe('usePollingConfig', () => {
       expect(callRefresh(result, PENDING)).toBe(1234)
       expect(intervalMs).toHaveBeenCalled()
     })
+
+    it('transitions active -> stopped and returns 0 once maxDurationMs elapses', () => {
+      const { result } = renderPollingConfig()
+
+      expect(callRefresh(result, PENDING)).toBe(DEFAULT_INTERVAL)
+
+      vi.setSystemTime(DEFAULT_MAX_DURATION)
+      expect(callRefresh(result, PENDING)).toBe(0)
+    })
+
+    it('remains stopped on subsequent calls even while shouldContinue is true', () => {
+      const { result } = renderPollingConfig()
+      callRefresh(result, PENDING)
+      vi.setSystemTime(DEFAULT_MAX_DURATION)
+      expect(callRefresh(result, PENDING)).toBe(0)
+      expect(callRefresh(result, PENDING)).toBe(0)
+    })
   })
 
-  describe('error retries', () => {
+  describe('onErrorRetry', () => {
     it('schedules revalidate after one interval, preserving retryCount, while under maxErrorRetries', () => {
       const revalidate = vi.fn()
       const { result } = renderPollingConfig({ intervalMs: 500 })
@@ -149,7 +133,7 @@ describe('usePollingConfig', () => {
       vi.advanceTimersByTime(DEFAULT_INTERVAL)
 
       expect(revalidate).not.toHaveBeenCalled()
-      expect(callRefresh(result, PENDING)).toBe(0) // stopped
+      expect(callRefresh(result, PENDING)).toBe(0)
     })
 
     it('stops the session without retrying when isFatalError matches', () => {
@@ -161,7 +145,7 @@ describe('usePollingConfig', () => {
       vi.advanceTimersByTime(DEFAULT_INTERVAL)
 
       expect(revalidate).not.toHaveBeenCalled()
-      expect(callRefresh(result, PENDING)).toBe(0) // stopped
+      expect(callRefresh(result, PENDING)).toBe(0)
     })
 
     it('stops retrying once the polling deadline has passed', () => {
@@ -179,7 +163,7 @@ describe('usePollingConfig', () => {
       const revalidate = vi.fn()
       const { result } = renderPollingConfig({ isFatalError: () => true })
 
-      callErrorRetry(result, revalidate) // fatal -> stopped
+      callErrorRetry(result, revalidate)
       callErrorRetry(result, revalidate, { error: new Error('again'), retryCount: 1 })
       vi.advanceTimersByTime(DEFAULT_INTERVAL)
 
@@ -187,30 +171,37 @@ describe('usePollingConfig', () => {
     })
   })
 
-  describe('revival of a halted polling loop', () => {
-    it('restarts an idle session on success, bumping refreshInterval identity so SWR revives its polling loop', () => {
+  describe('onSuccess', () => {
+    it('invokes onPoll with every successful payload', () => {
+      const onPoll = vi.fn()
+      const { result } = renderPollingConfig({ onPoll })
+
+      callSuccess(result, PENDING)
+
+      expect(onPoll).toHaveBeenCalledWith(PENDING)
+    })
+
+    it('restarts an idle session, bumping refreshInterval identity so SWR revives its polling loop', () => {
       const { result } = renderPollingConfig()
       const before = result.current.refreshInterval
 
       callSuccess(result, PENDING)
 
-      expect(result.current.refreshInterval).not.toBe(before) // nonce bumped
-      expect(callRefresh(result, PENDING)).toBe(DEFAULT_INTERVAL) // active
+      expect(result.current.refreshInterval).not.toBe(before)
+      expect(callRefresh(result, PENDING)).toBe(DEFAULT_INTERVAL)
     })
 
     it('does not revive a stopped session when shouldContinue was already true (no rising edge)', () => {
       const { result } = renderPollingConfig()
 
-      // idle -> active via a poll, then let the deadline stop it.
       callSuccess(result, PENDING)
       vi.setSystemTime(DEFAULT_MAX_DURATION)
-      expect(callRefresh(result, PENDING)).toBe(0) // stopped
+      expect(callRefresh(result, PENDING)).toBe(0)
       const stopped = result.current.refreshInterval
 
-      // Another "still pending" poll is not progress (prev was already pending).
       callSuccess(result, PENDING)
 
-      expect(result.current.refreshInterval).toBe(stopped) // no restart
+      expect(result.current.refreshInterval).toBe(stopped)
       expect(callRefresh(result, PENDING)).toBe(0)
     })
 
@@ -219,10 +210,10 @@ describe('usePollingConfig', () => {
 
       callSuccess(result, PENDING)
       vi.setSystemTime(DEFAULT_MAX_DURATION)
-      expect(callRefresh(result, PENDING)).toBe(0) // capped -> stopped
+      expect(callRefresh(result, PENDING)).toBe(0)
 
-      callSuccess(result, DONE) // the stuck session finally terminates
-      callSuccess(result, PENDING) // a new session begins: the rising edge revives polling
+      callSuccess(result, DONE)
+      callSuccess(result, PENDING)
 
       expect(callRefresh(result, PENDING)).toBe(DEFAULT_INTERVAL)
     })
@@ -235,43 +226,44 @@ describe('usePollingConfig', () => {
 
       callSuccess(result, { status: 'pending', version: 1 })
       vi.setSystemTime(DEFAULT_MAX_DURATION)
-      expect(callRefresh(result, PENDING)).toBe(0) // stopped
+      expect(callRefresh(result, PENDING)).toBe(0)
 
       callSuccess(result, { status: 'pending', version: 2 })
 
       expect(shouldRestartPolling).toHaveBeenLastCalledWith({ status: 'pending', version: 1 }, { status: 'pending', version: 2 })
-      expect(callRefresh(result, PENDING)).toBe(DEFAULT_INTERVAL) // revived
+      expect(callRefresh(result, PENDING)).toBe(DEFAULT_INTERVAL)
     })
 
     it('extends the deadline when shouldRestartPolling reports progress while active', () => {
       const shouldRestartPolling = (prev: PollData | undefined, next: PollData) => prev?.version !== next.version
       const { result } = renderPollingConfig({ shouldRestartPolling })
 
-      callSuccess(result, { status: 'pending', version: 1 }) // active, deadline = 120000
+      callSuccess(result, { status: 'pending', version: 1 })
 
       vi.setSystemTime(DEFAULT_MAX_DURATION - 1000)
-      callSuccess(result, { status: 'pending', version: 2 }) // extends to 239000
+      callSuccess(result, { status: 'pending', version: 2 })
 
       vi.setSystemTime(DEFAULT_MAX_DURATION + 1000) // past original deadline, before extended
       expect(callRefresh(result, PENDING)).toBe(DEFAULT_INTERVAL)
     })
-  })
 
-  describe('poll and completion callbacks', () => {
-    it('invokes onPoll with every successful payload', () => {
-      const onPoll = vi.fn()
-      const { result } = renderPollingConfig({ onPoll })
+    it('treats maxDurationMs as a hard cap by default, since still-pending polls are not progress', () => {
+      const { result } = renderPollingConfig()
 
-      callSuccess(result, PENDING)
+      callSuccess(result, { status: 'pending', version: 1 })
 
-      expect(onPoll).toHaveBeenCalledWith(PENDING)
+      vi.setSystemTime(DEFAULT_MAX_DURATION - 1000)
+      callSuccess(result, { status: 'pending', version: 2 })
+
+      vi.setSystemTime(DEFAULT_MAX_DURATION)
+      expect(callRefresh(result, PENDING)).toBe(0)
     })
 
     it('calls onComplete exactly once when an active session ends (default completion)', () => {
       const onComplete = vi.fn()
       const { result } = renderPollingConfig({ onComplete })
 
-      callSuccess(result, PENDING) // start the session
+      callSuccess(result, PENDING)
       callSuccess(result, DONE)
       callSuccess(result, DONE)
 
@@ -292,11 +284,11 @@ describe('usePollingConfig', () => {
       const onComplete = vi.fn()
       const { result } = renderPollingConfig({ onComplete })
 
-      callSuccess(result, PENDING) // session 1
-      callSuccess(result, DONE) // completes (1)
+      callSuccess(result, PENDING)
+      callSuccess(result, DONE)
       expect(callRefresh(result, DONE)).toBe(0) // natural end -> idle
-      callSuccess(result, PENDING) // session 2 restarts, re-arming completion
-      callSuccess(result, DONE) // completes (2)
+      callSuccess(result, PENDING)
+      callSuccess(result, DONE)
 
       expect(onComplete).toHaveBeenCalledTimes(2)
     })
@@ -329,9 +321,18 @@ describe('usePollingConfig', () => {
 
   describe('when driving useSWR', () => {
     const INTERVAL = 1000
+    /** Mirrors DEFAULT_SWR_CONFIG's global 10-minute refresh, which LayerProvider applies app-wide. */
+    const GLOBAL_REFRESH_INTERVAL = 10 * 60 * 1000
 
+    /*
+     * The global refreshInterval is deliberately included: real consumers rely on the
+     * hook-level polling function overriding it, so every test here also defends that
+     * precedence — polls must arrive at INTERVAL, not the global cadence.
+     */
     const swrWrapper = ({ children }: PropsWithChildren) => (
-      <SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0 }}>{children}</SWRConfig>
+      <SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0, refreshInterval: GLOBAL_REFRESH_INTERVAL }}>
+        {children}
+      </SWRConfig>
     )
 
     const renderPolledSWR = (
@@ -364,7 +365,7 @@ describe('usePollingConfig', () => {
 
       renderPolledSWR('poll-lifecycle', fetcher, { onComplete })
 
-      await advance(0) // mount fetch
+      await advance(0)
       expect(fetcher).toHaveBeenCalledTimes(1)
 
       await advance(INTERVAL)
@@ -376,7 +377,6 @@ describe('usePollingConfig', () => {
       expect(onComplete).toHaveBeenCalledTimes(1)
       expect(onComplete).toHaveBeenCalledWith(DONE)
 
-      // Terminal data halts the loop: no further fetches.
       await advance(INTERVAL * 5)
       expect(fetcher).toHaveBeenCalledTimes(3)
       expect(onComplete).toHaveBeenCalledTimes(1)
@@ -409,14 +409,14 @@ describe('usePollingConfig', () => {
 
       renderPolledSWR('poll-deadline', fetcher, { maxDurationMs: INTERVAL * 3 })
 
-      await advance(0) // mount fetch
+      await advance(0)
       await advance(INTERVAL * 10)
 
       const haltedCount = fetcher.mock.calls.length
       expect(haltedCount).toBeLessThan(6) // capped well below the 10 ticks elapsed
 
       await advance(INTERVAL * 5)
-      expect(fetcher).toHaveBeenCalledTimes(haltedCount) // no further polls
+      expect(fetcher).toHaveBeenCalledTimes(haltedCount)
     })
 
     it('retries a failing fetch at the interval, then gives up after maxErrorRetries retries', async () => {
@@ -424,14 +424,14 @@ describe('usePollingConfig', () => {
 
       renderPolledSWR('poll-errors', fetcher, { maxErrorRetries: 3 })
 
-      await advance(0) // mount fetch fails
+      await advance(0)
       expect(fetcher).toHaveBeenCalledTimes(1)
 
       await advance(INTERVAL * 10)
       expect(fetcher).toHaveBeenCalledTimes(4) // initial attempt + 3 retries
 
       await advance(INTERVAL * 5)
-      expect(fetcher).toHaveBeenCalledTimes(4) // gave up
+      expect(fetcher).toHaveBeenCalledTimes(4)
     })
   })
 })
