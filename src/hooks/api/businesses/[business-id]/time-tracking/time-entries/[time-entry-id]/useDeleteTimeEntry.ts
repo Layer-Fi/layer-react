@@ -17,7 +17,7 @@ const deleteTimeEntry = del<
 const useDeleteTimeEntryMutation = createMutationHook({
   tags: [DELETE_TIME_ENTRY_TAG_KEY],
   request: deleteTimeEntry,
-  keyParams: ['timeEntryId'],
+  keyParamNames: ['timeEntryId'],
   argToBody: (_arg: never) => undefined,
   swrOptions: { throwOnError: true },
 })

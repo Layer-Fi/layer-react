@@ -47,7 +47,7 @@ const useCreateTimeEntry = createMutationHook({
 const useUpdateTimeEntry = createMutationHook({
   tags: [UPSERT_TIME_ENTRY_TAG_KEY],
   request: updateTimeEntry,
-  keyParams: ['timeEntryId'],
+  keyParamNames: ['timeEntryId'],
   schema: UpsertTimeEntryReturnSchema,
   swrOptions: { throwOnError: true },
 })

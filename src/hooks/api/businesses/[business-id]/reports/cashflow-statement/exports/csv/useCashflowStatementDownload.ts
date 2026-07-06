@@ -17,7 +17,7 @@ const requestCashflowStatementCSV = getAsMutation(getCashflowStatementCSV)
 export const useCashflowStatementDownload = createMutationHook({
   tags: ['#download-cashflow-statement'],
   request: requestCashflowStatementCSV,
-  keyParams: ['startDate', 'endDate'],
+  keyParamNames: ['startDate', 'endDate'],
   argToBody: (_arg: undefined) => undefined,
   select: ({ data }) => data,
   swrOptions: { throwOnError: false },

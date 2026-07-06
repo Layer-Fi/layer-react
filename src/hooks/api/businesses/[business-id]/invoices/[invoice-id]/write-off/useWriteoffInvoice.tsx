@@ -23,7 +23,7 @@ const writeoffInvoice = post<
 const useWriteoffInvoiceMutation = createMutationHook({
   tags: [CREATE_INVOICE_WRITEOFF_TAG_KEY],
   request: writeoffInvoice,
-  keyParams: ['invoiceId'],
+  keyParamNames: ['invoiceId'],
   argToBody: (arg: CreateInvoiceWriteoff) => Schema.encodeSync(CreateInvoiceWriteoffSchema)(arg),
   schema: WriteoffInvoiceReturnSchema,
   swrOptions: { throwOnError: true },

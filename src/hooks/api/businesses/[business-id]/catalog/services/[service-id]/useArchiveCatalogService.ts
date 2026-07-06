@@ -23,7 +23,7 @@ const archiveCatalogService = post<
 const useArchiveCatalogServiceMutation = createMutationHook({
   tags: [ARCHIVE_CATALOG_SERVICE_TAG_KEY],
   request: archiveCatalogService,
-  keyParams: ['serviceId'],
+  keyParamNames: ['serviceId'],
   argToBody: (_arg: never) => undefined,
   schema: ArchiveCatalogServiceResponseSchema,
   swrOptions: { throwOnError: true },

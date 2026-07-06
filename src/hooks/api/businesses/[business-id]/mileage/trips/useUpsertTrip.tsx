@@ -49,7 +49,7 @@ const useCreateTrip = createMutationHook({
 const useUpdateTrip = createMutationHook({
   tags: [UPSERT_TRIP_TAG_KEY],
   request: updateTrip,
-  keyParams: ['tripId'],
+  keyParamNames: ['tripId'],
   schema: UpsertTripReturnSchema,
   swrOptions: { throwOnError: true },
 })

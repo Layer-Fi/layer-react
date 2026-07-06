@@ -16,7 +16,7 @@ const deleteVehicle = del<
 const useDeleteVehicleMutation = createMutationHook({
   tags: [DELETE_VEHICLE_TAG_KEY],
   request: deleteVehicle,
-  keyParams: ['vehicleId'],
+  keyParamNames: ['vehicleId'],
   argToBody: (_arg: never) => undefined,
   swrOptions: { throwOnError: true },
 })

@@ -45,7 +45,7 @@ export const finalizeInvoice = put<
 const useFinalizeInvoiceMutation = createMutationHook({
   tags: [FINALIZE_INVOICE_TAG_KEY],
   request: finalizeInvoice,
-  keyParams: ['invoiceId'],
+  keyParamNames: ['invoiceId'],
   schema: FinalizeInvoiceResponseSchema,
   swrOptions: { throwOnError: true },
 })

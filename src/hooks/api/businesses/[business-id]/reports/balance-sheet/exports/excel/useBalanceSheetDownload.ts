@@ -17,7 +17,7 @@ const requestBalanceSheetExcel = getAsMutation(getBalanceSheetExcel)
 export const useBalanceSheetDownload = createMutationHook({
   tags: ['#download-balance-sheet'],
   request: requestBalanceSheetExcel,
-  keyParams: ['effectiveDate'],
+  keyParamNames: ['effectiveDate'],
   argToBody: (_arg: undefined) => undefined,
   select: ({ data }) => data,
   swrOptions: { throwOnError: false },

@@ -43,7 +43,7 @@ const useCreateVehicle = createMutationHook({
 const useUpdateVehicle = createMutationHook({
   tags: [UPSERT_VEHICLE_TAG_KEY],
   request: updateVehicle,
-  keyParams: ['vehicleId'],
+  keyParamNames: ['vehicleId'],
   schema: UpsertVehicleReturnSchema,
   swrOptions: { throwOnError: true },
 })

@@ -21,7 +21,7 @@ export function createMutationHook<
   TParams extends BusinessScopedParams = BusinessScopedParams,
   TDecoded = TEncoded,
   TArg = TBody,
-  const TKeyKeys extends ReadonlyArray<Exclude<keyof TParams, 'businessId'>> = readonly [],
+  const TKeyParamNames extends ReadonlyArray<Exclude<keyof TParams, 'businessId'>> = readonly [],
   TData = TDecoded,
 >(config: {
   /** Marks this mutation's key so global cache actions (invalidate, patch, force-reload) can find it. */
@@ -29,14 +29,14 @@ export function createMutationHook<
   /** The HTTP call to make when triggered. Receives the assembled params and body, plus the injected auth and `businessId`. */
   request: MutationRequest<TEncoded, TBody, TParams>
   /** Params that pin the mutation to one entity (e.g. an id). Callers pass these when creating the hook, not when triggering. */
-  keyParams?: TKeyKeys
+  keyParamNames?: TKeyParamNames
   /** Pulls URL params out of the trigger argument, for when it mixes routing info (e.g. an id) with payload. */
-  argToParams?: (arg: TArg, keyParams: BusinessScopedParams & Pick<TParams, TKeyKeys[number]>) => Partial<Omit<TParams, 'businessId'>>
+  argToParams?: (arg: TArg, keyParamValues: BusinessScopedParams & Pick<TParams, TKeyParamNames[number]>) => Partial<Omit<TParams, 'businessId'>>
   /**
    * Builds the body from the trigger argument; without it, the whole argument is the body.
    * `argToBody: (_arg: undefined) => undefined` makes `trigger()` take no argument and send no body.
    */
-  argToBody?: (arg: TArg, keyParams: BusinessScopedParams & Pick<TParams, TKeyKeys[number]>) => TBody | undefined
+  argToBody?: (arg: TArg, keyParamValues: BusinessScopedParams & Pick<TParams, TKeyParamNames[number]>) => TBody | undefined
   /** Decodes the raw response. Leave out for endpoints without a schema — the response is used as-is. */
   schema?: Schema.Schema<TDecoded, TEncoded>
   /** Reshapes the decoded response into what `trigger` resolves with (and what `onSuccess` receives). */
@@ -48,11 +48,11 @@ export function createMutationHook<
 }) {
   const { tags, request, argToParams, argToBody, schema, select, swrOptions, isLocalized = true } = config
 
-  type KeyParams = BusinessScopedParams & Pick<TParams, TKeyKeys[number]>
+  type KeyParamValues = BusinessScopedParams & Pick<TParams, TKeyParamNames[number]>
 
-  const buildKey = createBuildKey<KeyParams>(tags)
+  const buildKey = createBuildKey<KeyParamValues>(tags)
 
-  type UseMutationOptions = Pick<TParams, TKeyKeys[number]> & {
+  type UseMutationOptions = Pick<TParams, TKeyParamNames[number]> & {
     isEnabled?: boolean
     swrOptions?: MutationSWROptions<TData>
   }
@@ -68,18 +68,18 @@ export function createMutationHook<
         return isLocalized ? withLocale(key) : key
       },
       (
-        key: { accessToken: string, apiUrl: string } & KeyParams,
+        key: { accessToken: string, apiUrl: string } & KeyParamValues,
         { arg }: { arg: TArg },
       ): Promise<TData> => {
         const { accessToken, apiUrl, ...rest } = key
-        const keyParams = rest as unknown as KeyParams
+        const keyParamValues = rest as unknown as KeyParamValues
 
         const response = request(apiUrl, accessToken, {
           params: {
-            ...keyParams,
-            ...(argToParams ? argToParams(arg, keyParams) : undefined),
+            ...keyParamValues,
+            ...(argToParams ? argToParams(arg, keyParamValues) : undefined),
           } as TParams,
-          body: argToBody ? argToBody(arg, keyParams) : arg as unknown as TBody,
+          body: argToBody ? argToBody(arg, keyParamValues) : arg as unknown as TBody,
         })
 
         const decoded = schema

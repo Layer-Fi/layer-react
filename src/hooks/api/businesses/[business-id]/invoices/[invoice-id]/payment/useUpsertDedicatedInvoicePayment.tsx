@@ -50,7 +50,7 @@ export type UpsertParams = CreateParams | UpdateParams
 const useCreateDedicatedInvoicePayment = createMutationHook({
   tags: [UPSERT_INVOICE_PAYMENT_TAG_KEY],
   request: createDedicatedInvoicePayment,
-  keyParams: ['invoiceId'],
+  keyParamNames: ['invoiceId'],
   schema: UpsertDedicatedInvoicePaymentReturnSchema,
   swrOptions: { throwOnError: true },
 })
@@ -58,7 +58,7 @@ const useCreateDedicatedInvoicePayment = createMutationHook({
 const useUpdateDedicatedInvoicePayment = createMutationHook({
   tags: [UPSERT_INVOICE_PAYMENT_TAG_KEY],
   request: updateDedicatedInvoicePayment,
-  keyParams: ['invoiceId', 'invoicePaymentId'],
+  keyParamNames: ['invoiceId', 'invoicePaymentId'],
   schema: UpsertDedicatedInvoicePaymentReturnSchema,
   swrOptions: { throwOnError: true },
 })

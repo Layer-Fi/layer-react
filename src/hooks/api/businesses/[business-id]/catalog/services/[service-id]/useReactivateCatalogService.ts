@@ -23,7 +23,7 @@ const reactivateCatalogService = post<
 const useReactivateCatalogServiceMutation = createMutationHook({
   tags: [REACTIVATE_CATALOG_SERVICE_TAG_KEY],
   request: reactivateCatalogService,
-  keyParams: ['serviceId'],
+  keyParamNames: ['serviceId'],
   argToBody: (_arg: never) => undefined,
   schema: ReactivateCatalogServiceResponseSchema,
   swrOptions: { throwOnError: true },

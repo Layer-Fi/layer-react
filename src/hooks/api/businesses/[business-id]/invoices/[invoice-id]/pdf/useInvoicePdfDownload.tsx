@@ -26,7 +26,7 @@ const DOWNLOAD_INVOICE_PDF_TAG_KEY = '#download-invoice-pdf'
 const useInvoicePdfDownloadMutation = createMutationHook({
   tags: [DOWNLOAD_INVOICE_PDF_TAG_KEY],
   request: requestInvoicePdf,
-  keyParams: ['invoiceId'],
+  keyParamNames: ['invoiceId'],
   argToBody: (_arg: undefined) => undefined,
   schema: InvoicePdfReturnSchema,
   swrOptions: { throwOnError: false },

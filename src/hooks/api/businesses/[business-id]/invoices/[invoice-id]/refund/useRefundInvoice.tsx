@@ -22,7 +22,7 @@ const refundInvoice = post<
 const useRefundInvoiceMutation = createMutationHook({
   tags: [REFUND_INVOICE_TAG_KEY],
   request: refundInvoice,
-  keyParams: ['invoiceId'],
+  keyParamNames: ['invoiceId'],
   schema: RefundInvoiceReturnSchema,
   swrOptions: { throwOnError: true },
 })
