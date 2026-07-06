@@ -1,20 +1,19 @@
-import { Arbitrary, type FastCheck, Schema } from 'effect'
+import { Arbitrary, Schema } from 'effect'
 
 import { CustomerSchema } from '@schemas/customer'
 
 import { addresses } from '@fixtures/constants/personal/addresses'
-import { companyNames } from '@fixtures/constants/personal/companyNames'
-import { individualNames } from '@fixtures/constants/personal/individualNames'
-import { emailForName } from '@fixtures/utils/emailForName'
+import {
+  applyContactInvariants,
+  companyNameArbitrary,
+  contactStatusArbitrary,
+  externalIdArbitrary,
+  generatedEmailArbitrary,
+  individualNameArbitrary,
+  memoArbitrary,
+} from '@fixtures/utils/contactFields'
+import { phoneNumberArbitrary } from '@fixtures/utils/phoneNumberArbitrary'
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
-
-const nullableConstantFrom = (values: readonly string[]) => (fc: typeof FastCheck) =>
-  fc.oneof(
-    fc.constant(null),
-    fc.constantFrom(...values),
-  )
-
-const GENERATED_EMAIL = 'GENERATE'
 
 // `_local` is client-only optimistic-update state, never present on a server
 // response, so it's excluded from the wire-format fixtures entirely.
@@ -22,66 +21,30 @@ const { _local, ...fields } = CustomerSchema.fields
 
 const base = Schema.Struct({
   ...fields,
-  externalId: withArbitrary(fields.externalId, () => fc =>
-    fc.oneof(
-      fc.constant(null),
-      fc.integer({ min: 10000, max: 99999 }).map(n => `ext_${n}`),
-    )),
-  individualName: withArbitrary(fields.individualName, () => nullableConstantFrom(individualNames)),
-  companyName: withArbitrary(fields.companyName, () => nullableConstantFrom(companyNames)),
-  email: withArbitrary(fields.email, () => fc =>
-    fc.oneof(
-      fc.constant(null),
-      fc.constant(GENERATED_EMAIL),
-    )),
-  mobilePhone: withArbitrary(fields.mobilePhone, () => fc =>
-    fc.oneof(
-      fc.constant(null),
-      fc.integer({ min: 2000000000, max: 9999999999 }).map(n => `+1${n}`),
-    )),
-  officePhone: withArbitrary(fields.officePhone, () => fc =>
-    fc.oneof(
-      fc.constant(null),
-      fc.integer({ min: 2000000000, max: 9999999999 }).map(n => `+1${n}`),
-    )),
+  externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
+  individualName: withArbitrary(fields.individualName, () => individualNameArbitrary),
+  companyName: withArbitrary(fields.companyName, () => companyNameArbitrary),
+  email: withArbitrary(fields.email, () => generatedEmailArbitrary),
+  mobilePhone: withArbitrary(fields.mobilePhone, () => phoneNumberArbitrary),
+  officePhone: withArbitrary(fields.officePhone, () => phoneNumberArbitrary),
   addressString: withArbitrary(fields.addressString, () => fc =>
     fc.oneof(
       fc.constant(null),
       fc.constantFrom(...addresses),
     )),
-  status: withArbitrary(fields.status, () => fc =>
-    fc.constantFrom('ACTIVE', 'ARCHIVED')),
-  memo: withArbitrary(fields.memo, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant(null), weight: 4 },
-      {
-        arbitrary: fc.constantFrom(
-          'VIP client',
-          'Follow up next quarter',
-          'Referred by partner',
-        ),
-        weight: 1,
-      },
-    )),
+  status: withArbitrary(fields.status, () => contactStatusArbitrary),
+  memo: withArbitrary(fields.memo, () => memoArbitrary([
+    'VIP client',
+    'Follow up next quarter',
+    'Referred by partner',
+  ])),
 })
 
 const baseArbitrary = Arbitrary.make(base)
 
 export const CustomerArbitrarySchema = base.annotations({
   arbitrary: () => () =>
-    baseArbitrary.map((customer): typeof base.Type => {
-      // A customer must have at least one of individualName/companyName set,
-      // mirroring validateCustomerForm's "either" requirement.
-      const individualName = customer.individualName == null && customer.companyName == null
-        ? 'Jane Doe'
-        : customer.individualName
-
-      const email = customer.email === GENERATED_EMAIL
-        ? emailForName(individualName, customer.companyName)
-        : customer.email
-
-      return { ...customer, individualName, email }
-    }),
+    baseArbitrary.map((customer): typeof base.Type => applyContactInvariants(customer)),
 })
 
 export const schema = CustomerArbitrarySchema
