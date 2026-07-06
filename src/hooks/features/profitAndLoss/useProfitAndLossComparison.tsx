@@ -226,6 +226,7 @@ export function useProfitAndLossComparison({
     periods,
     tagFilters,
     reportingBasis,
+    isEnabled: Boolean(periods),
   })
 
   const getProfitAndLossComparisonCsv = (

@@ -1,20 +1,16 @@
 import { useCallback } from 'react'
-import { useSWRConfig } from 'swr'
-import useSWRMutation from 'swr/mutation'
 
 import type { BankTransactionMetadata } from '@internal-types/bankTransactions'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { put } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
-import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { GET_BANK_TRANSACTION_METADATA_TAG_KEY } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useBankTransactionsMetadata'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { useBankTransactionMetadataGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useBankTransactionsMetadata'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const updateBankTransactionMetadata = put<
   { data: BankTransactionMetadata, errors: unknown },
-  { memo: string }
+  { memo: string },
+  { businessId: string, bankTransactionId: string }
 >(
   ({ businessId, bankTransactionId }) =>
     `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/metadata`,
@@ -24,58 +20,33 @@ export type UpdateBankTransactionMetadataBody = { memo: string }
 
 const UPDATE_BANK_TRANSACTION_METADATA_TAG_KEY = '#update-bank-transaction-metadata'
 
-const buildKey = createBuildKey<{ businessId: string, bankTransactionId: string }>([UPDATE_BANK_TRANSACTION_METADATA_TAG_KEY])
+const useUpdateBankTransactionMetadataMutation = createMutationHook({
+  tags: [UPDATE_BANK_TRANSACTION_METADATA_TAG_KEY],
+  request: updateBankTransactionMetadata,
+  keyParams: ['bankTransactionId'],
+  select: ({ data }) => data,
+  swrOptions: { throwOnError: false },
+})
 
 export function useUpdateBankTransactionMetadata({ bankTransactionId, onSuccess }: { bankTransactionId: string, onSuccess?: () => Awaitable<unknown> }) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-  const { mutate } = useSWRConfig()
+  const { invalidate: invalidateBankTransactionMetadata } = useBankTransactionMetadataGlobalCacheActions()
 
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      access_token: auth?.access_token,
-      apiUrl: auth?.apiUrl,
-      businessId,
-      bankTransactionId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: body }: { arg: UpdateBankTransactionMetadataBody },
-    ) => updateBankTransactionMetadata(apiUrl, accessToken,
-      {
-        params: {
-          businessId,
-          bankTransactionId,
-        },
-        body,
-      },
-    ).then(({ data }) => {
-      onSuccess?.()
-      return data
-    }),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
+  const mutationResponse = useUpdateBankTransactionMetadataMutation({
+    bankTransactionId,
+    swrOptions: { onSuccess: () => { void onSuccess?.() } },
+  })
 
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
   const { trigger: originalTrigger } = mutationResponse
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      void mutate(key => withSWRKeyTags(
-        key,
-        ({ tags }) => tags.includes(GET_BANK_TRANSACTION_METADATA_TAG_KEY),
-      ))
+      void invalidateBankTransactionMetadata()
 
       return triggerResult
     },
-    [
-      originalTrigger,
-      mutate,
-    ],
+    [originalTrigger, invalidateBankTransactionMetadata],
   )
 
   return withStableTrigger(mutationResponse, stableProxiedTrigger)

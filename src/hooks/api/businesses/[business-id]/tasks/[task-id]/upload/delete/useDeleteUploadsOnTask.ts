@@ -1,14 +1,12 @@
 import { useCallback } from 'react'
 import { useSWRConfig } from 'swr'
-import useSWRMutation from 'swr/mutation'
 
 import type { BusinessTaskEncoded } from '@schemas/businessTasks/businessTask'
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { BOOKKEEPING_PERIODS_TAG_KEY } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const deleteUploadsOnTask = post<
   { data: BusinessTaskEncoded },
@@ -22,38 +20,24 @@ const deleteUploadsOnTask = post<
     `/v1/businesses/${businessId}/tasks/${taskId}/upload/delete`,
 )
 
-const buildKey = createBuildKey<{ businessId: string }>(['#delete-uploads-on-task'])
-
 type UseDeleteUploadsOnTaskArg = {
   taskId: string
 }
 
+const useDeleteUploadsOnTaskMutation = createMutationHook({
+  tags: ['#delete-uploads-on-task'],
+  request: deleteUploadsOnTask,
+  argToParams: (arg: UseDeleteUploadsOnTaskArg) => arg,
+  argToBody: () => undefined,
+  swrOptions: { throwOnError: false },
+})
+
 export function useDeleteUploadsOnTask() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const { mutate } = useSWRConfig()
 
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: { taskId } }: { arg: UseDeleteUploadsOnTaskArg },
-    ) => deleteUploadsOnTask(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId, taskId },
-      },
-    ),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
+  const mutationResponse = useDeleteUploadsOnTaskMutation()
 
-  const { trigger: originalTrigger } = mutationResponse
+  const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {

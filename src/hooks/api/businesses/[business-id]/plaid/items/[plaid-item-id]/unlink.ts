@@ -1,9 +1,5 @@
-import useSWRMutation from 'swr/mutation'
-
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const UNLINK_PLAID_ITEM_TAG_KEY = '#unlink-plaid-item'
 
@@ -16,27 +12,9 @@ const unlinkPlaidItem = post<
     `/v1/businesses/${businessId}/plaid/items/${plaidItemId}/unlink`,
 )
 
-const buildKey = createBuildKey<{ businessId: string }>([UNLINK_PLAID_ITEM_TAG_KEY])
-
-export function useUnlinkPlaidItem() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      access_token: auth?.access_token,
-      apiUrl: auth?.apiUrl,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: { plaidItemId } }: { arg: { plaidItemId: string } },
-    ) => unlinkPlaidItem(apiUrl, accessToken, {
-      params: { businessId, plaidItemId },
-    }),
-    {
-      revalidate: false,
-    },
-  )
-
-  return new SWRMutationResult(rawMutationResponse)
-}
+export const useUnlinkPlaidItem = createMutationHook({
+  tags: [UNLINK_PLAID_ITEM_TAG_KEY],
+  request: unlinkPlaidItem,
+  argToParams: ({ plaidItemId }: { plaidItemId: string }) => ({ plaidItemId }),
+  argToBody: () => undefined,
+})

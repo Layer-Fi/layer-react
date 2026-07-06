@@ -1,18 +1,17 @@
 import { Schema } from 'effect'
-import useSWR from 'swr'
 
 import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
 import { BusinessTaskSchema } from '@schemas/businessTasks/businessTask'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
 import { isActiveBookkeepingPeriod } from '@utils/bookkeeping/periods/getFilteredBookkeepingPeriods'
 import { getUserVisibleTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import {
   BOOKKEEPING_TAG_KEY,
   useBookkeepingStatus,
 } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export enum BookkeepingPeriodStatus {
   BOOKKEEPING_NOT_ACTIVE = 'BOOKKEEPING_NOT_ACTIVE',
@@ -53,14 +52,12 @@ const RawBookkeepingPeriodSchema = Schema.Struct({
 })
 type RawBookkeepingPeriod = typeof RawBookkeepingPeriodSchema.Type
 
-const BookkeepingPeriodsResponseSchema = Schema.Struct({
-  data: Schema.Struct({
-    periods: Schema.Array(RawBookkeepingPeriodSchema),
-  }),
-})
+const BookkeepingPeriodsResponseSchema = UnwrappedDataResponseSchema(Schema.Struct({
+  periods: Schema.Array(RawBookkeepingPeriodSchema),
+}))
 
 const getBookkeepingPeriods = get<
-  Record<string, unknown>,
+  typeof BookkeepingPeriodsResponseSchema.Encoded,
   { businessId: string }
 >(({ businessId }) => {
   return `/v1/businesses/${businessId}/bookkeeping/periods`
@@ -68,42 +65,30 @@ const getBookkeepingPeriods = get<
 
 export const BOOKKEEPING_PERIODS_TAG_KEY = '#bookkeeping-periods'
 
-const buildKey = createBuildKey<{ businessId: string }>([BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY])
+const useBookkeepingPeriodsQuery = createQueryHook({
+  tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY],
+  request: getBookkeepingPeriods,
+  schema: BookkeepingPeriodsResponseSchema,
+  select: ({ periods }) =>
+    periods
+      .map(period => ({
+        ...period,
+        status: constrainToKnownBookkeepingPeriodStatus(period.status),
+        tasks: getUserVisibleTasks(period.tasks),
+      }))
+      .filter(period => isActiveBookkeepingPeriod(period)),
+})
 
 export function useBookkeepingPeriods() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
   const { data, isLoading: isLoadingBookkeepingStatus } = useBookkeepingStatus()
   const isActiveOrPaused = data ? isActiveOrPausedBookkeepingStatus(data.status) : false
 
-  const swrResponse = useSWR(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      isEnabled: isActiveOrPaused,
-    })),
-    ({ accessToken, apiUrl, businessId }) => getBookkeepingPeriods(
-      apiUrl,
-      accessToken,
-      { params: { businessId } },
-    )()
-      .then(Schema.decodeUnknownPromise(BookkeepingPeriodsResponseSchema))
-      .then(
-        ({ data: { periods } }) =>
-          periods
-            .map(period => ({
-              ...period,
-              status: constrainToKnownBookkeepingPeriodStatus(period.status),
-              tasks: getUserVisibleTasks(period.tasks),
-            }))
-            .filter(period => isActiveBookkeepingPeriod(period)),
-      ),
-  )
+  const queryResult = useBookkeepingPeriodsQuery({ isEnabled: isActiveOrPaused })
 
-  return new Proxy(swrResponse, {
+  return new Proxy(queryResult, {
     get(target, prop) {
       if (prop === 'isLoading') {
-        return isLoadingBookkeepingStatus || swrResponse.isLoading
+        return isLoadingBookkeepingStatus || target.isLoading
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return

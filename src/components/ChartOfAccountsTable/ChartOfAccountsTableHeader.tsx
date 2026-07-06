@@ -41,45 +41,41 @@ export const ChartOfAccountsTableHeader = ({
   const addAccountLabel = stringOverrides?.addAccountButtonText || t('chartOfAccounts:action.add_account', 'Add Account')
 
   return (
-    <>
-      <Header asHeader rounded>
-        <HeaderRow>
-          <HeaderCol>
-            <Heading level={asWidget ? 3 : 2} size={asWidget ? 'md' : 'lg'}>
-              {stringOverrides?.headerText || t('chartOfAccounts:label.chart_of_accounts', 'Chart of Accounts')}
-            </Heading>
-          </HeaderCol>
-          <HeaderCol>
-            {withExpandAllButton && <ExpandableDataTableToggleButton />}
-            <AccountBalancesDownloadButton
+    <Header asHeader sticky rounded>
+      <HeaderRow>
+        <HeaderCol>
+          <Heading level={asWidget ? 3 : 2} size={asWidget ? 'md' : 'lg'}>
+            {stringOverrides?.headerText || t('chartOfAccounts:label.chart_of_accounts', 'Chart of Accounts')}
+          </Heading>
+        </HeaderCol>
+        <HeaderCol>
+          {withExpandAllButton && <ExpandableDataTableToggleButton />}
+          <AccountBalancesDownloadButton
+            icon={!isDesktop}
+          />
+          {showAddAccountButton && (
+            <Button
+              onPress={() => onAddAccount()}
               icon={!isDesktop}
-            />
-            {showAddAccountButton && (
-              <Button
-                onPress={() => onAddAccount()}
-                icon={!isDesktop}
-                aria-label={!isDesktop ? addAccountLabel : undefined}
-              >
-                {isDesktop ? addAccountLabel : <CirclePlus size={14} />}
-              </Button>
-            )}
-          </HeaderCol>
-        </HeaderRow>
-      </Header>
-      <Header sticky>
-        <HeaderRow>
-          <HeaderCol>
-            {withDateControl && <GlobalMonthPicker />}
-          </HeaderCol>
-          <HeaderCol className='Layer__chart-of-accounts__actions'>
-            <SearchField
-              label={t('chartOfAccounts:label.search_accounts', 'Search accounts')}
-              value={inputValue}
-              onChange={onSearchChange}
-            />
-          </HeaderCol>
-        </HeaderRow>
-      </Header>
-    </>
+              aria-label={!isDesktop ? addAccountLabel : undefined}
+            >
+              {isDesktop ? addAccountLabel : <CirclePlus size={14} />}
+            </Button>
+          )}
+        </HeaderCol>
+      </HeaderRow>
+      <HeaderRow>
+        <HeaderCol>
+          {withDateControl && <GlobalMonthPicker />}
+        </HeaderCol>
+        <HeaderCol className='Layer__chart-of-accounts__actions'>
+          <SearchField
+            label={t('chartOfAccounts:label.search_accounts', 'Search accounts')}
+            value={inputValue}
+            onChange={onSearchChange}
+          />
+        </HeaderCol>
+      </HeaderRow>
+    </Header>
   )
 }

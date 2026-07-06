@@ -13,13 +13,14 @@ import { usePollBankTransactions } from '@hooks/features/bankTransactions/usePol
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { CategorizationRulesContext } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 
-const tagFilterToQueryString = (tagFilter: TagFilterInput): string => {
+const tagFilterToParams = (tagFilter: TagFilterInput): Pick<UseBankTransactionsOptions, 'tagKey' | 'tagValues'> => {
   if (tagFilter != 'None' && tagFilter.tagValues.length > 0) {
-    return `tag_key=${tagFilter.tagKey}&tag_values=${tagFilter.tagValues.join(
-      ',',
-    )}&`
+    return {
+      tagKey: tagFilter.tagKey,
+      tagValues: tagFilter.tagValues.join(','),
+    }
   }
-  return ''
+  return {}
 }
 
 export function bankTransactionFiltersToHookOptions(
@@ -39,7 +40,7 @@ export function bankTransactionFiltersToHookOptions(
     query: filters?.query,
     startDate: filters?.dateRange?.startDate,
     endDate: filters?.dateRange?.endDate,
-    tagFilterQueryString: filters?.tagFilter ? tagFilterToQueryString(filters.tagFilter) : undefined,
+    ...(filters?.tagFilter ? tagFilterToParams(filters.tagFilter) : undefined),
   }
 }
 

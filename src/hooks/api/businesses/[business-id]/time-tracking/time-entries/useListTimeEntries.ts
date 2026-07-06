@@ -1,15 +1,8 @@
-import { Schema } from 'effect'
-import useSWRInfinite from 'swr/infinite'
-
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
-import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 export const LIST_TIME_ENTRIES_TAG_KEY = '#list-time-entries'
 
@@ -27,96 +20,26 @@ export type ListTimeEntriesFilterParams = {
 }
 
 const ListTimeEntriesResponseSchema = PaginatedResponseSchema(TimeEntrySchema)
-type ListTimeEntriesResponse = typeof ListTimeEntriesResponseSchema.Type
 
-const keyLoader = createInfiniteKeyLoader<
-  { businessId: string } & ListTimeEntriesFilterParams,
-  ListTimeEntriesResponse
->([LIST_TIME_ENTRIES_TAG_KEY])
+type ListTimeEntriesParams = {
+  businessId: string
+  cursor?: string
+  limit?: number
+} & ListTimeEntriesFilterParams
 
-const listTimeEntries = get<
+const listTimeEntries = getWithQuery<
   typeof ListTimeEntriesResponseSchema.Encoded,
-  {
-    businessId: string
-    cursor?: string | null
-    limit?: number
-    customerId?: string
-    serviceId?: string
-    startDate?: Date
-    endDate?: Date
-    includeDeleted?: boolean
-    status?: 'ACTIVE' | 'COMPLETED' | 'RECORDED'
-    billable?: boolean
-    hasCustomer?: boolean
-    sortBy?: string
-    sortOrder?: 'ASC' | 'DESC'
-  }
->(({ businessId, cursor, limit, customerId, serviceId, startDate, endDate, includeDeleted, status, billable, hasCustomer, sortBy, sortOrder }) => {
-  const parameters = toDefinedSearchParameters({
-    cursor,
-    limit,
-    customerId,
-    serviceId,
-    startDate,
-    endDate,
-    includeDeleted,
-    status,
-    billable,
-    hasCustomer,
-    sortBy,
-    sortOrder,
-  })
-  const baseUrl = `/v1/businesses/${businessId}/time-tracking/time-entries`
-  const query = parameters.toString()
-  return query ? `${baseUrl}?${query}` : baseUrl
+  ListTimeEntriesParams
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/time-tracking/time-entries`,
+)
+
+export const useListTimeEntries = createInfiniteQueryHook({
+  tags: [LIST_TIME_ENTRIES_TAG_KEY],
+  request: listTimeEntries,
+  schema: ListTimeEntriesResponseSchema,
+  keyDefaults: { limit: 200 },
 })
-
-export function useListTimeEntries(filterParams: ListTimeEntriesFilterParams = {}) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const swrResponse = useSWRInfinite(
-    (_index, previousPageData: ListTimeEntriesResponse | null) => withLocale(keyLoader(
-      previousPageData,
-      {
-        ...auth,
-        businessId,
-        ...filterParams,
-      },
-    )),
-    ({
-      accessToken, apiUrl, businessId, cursor, customerId, serviceId,
-      startDate, endDate, includeDeleted, status, billable, hasCustomer, sortBy, sortOrder,
-    }) => listTimeEntries(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          cursor,
-          limit: 200,
-          customerId,
-          serviceId,
-          startDate,
-          endDate,
-          includeDeleted,
-          status,
-          billable,
-          hasCustomer,
-          sortBy,
-          sortOrder,
-        },
-      },
-    )().then(Schema.decodeUnknownPromise(ListTimeEntriesResponseSchema)),
-    {
-      keepPreviousData: true,
-      revalidateFirstPage: false,
-      initialSize: 1,
-    },
-  )
-
-  usePreserveInfiniteSize(swrResponse)
-
-  return useSWRInfiniteResult(swrResponse)
-}
 
 export const useTimeEntriesGlobalCacheActions = createInfiniteQueryGlobalCacheActions<TimeEntry>(LIST_TIME_ENTRIES_TAG_KEY)

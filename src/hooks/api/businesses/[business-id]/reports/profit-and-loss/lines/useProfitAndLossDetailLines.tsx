@@ -1,14 +1,11 @@
-import { Schema } from 'effect'
-import useSWR from 'swr'
-
 import { type ReportingBasis } from '@internal-types/general'
 import { type PnlDetailLineSchema, PnlDetailLinesDataSchema } from '@schemas/reports/profitAndLoss'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const LIST_PNL_DETAIL_LINES_TAG_KEY = '#list-pnl-detail-lines'
 
@@ -35,61 +32,31 @@ type PnlDetailLinesParams = PnlDetailLinesBaseParams & PnlDetailLinesFilterParam
 export type PnlDetailLine = typeof PnlDetailLineSchema.Type
 export type PnlDetailLinesReturn = typeof PnlDetailLinesDataSchema.Type
 
-const keyLoader = createBuildKey<PnlDetailLinesParams>([LIST_PNL_DETAIL_LINES_TAG_KEY])
+const PnlDetailLinesResponseSchema = UnwrappedDataResponseSchema(PnlDetailLinesDataSchema)
 
-export function useProfitAndLossDetailLines({
-  startDate,
-  endDate,
-  pnlStructureLineItemName,
-  tagFilter,
-  reportingBasis,
-  pnlStructure,
-}: PnlDetailLinesBaseParams & PnlDetailLinesFilterParams) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
+const listProfitAndLossDetailLines = getWithQuery<
+  typeof PnlDetailLinesResponseSchema.Encoded,
+  PnlDetailLinesParams
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/profit-and-loss/lines`,
+  ({ startDate, endDate, pnlStructureLineItemName, tagFilter, reportingBasis, pnlStructure }) => ({
+    startDate,
+    endDate,
+    lineItemName: pnlStructureLineItemName,
+    reportingBasis,
+    tagKey: tagFilter?.key,
+    tagValues: tagFilter?.values?.join(','),
+    pnlStructure,
+  }),
+)
 
-  const swrResponse = useSWR(
-    () => withLocale(keyLoader({
-      ...auth,
-      businessId,
-      startDate,
-      endDate,
-      pnlStructureLineItemName,
-      tagFilter,
-      reportingBasis,
-      pnlStructure,
-      isEnabled: Boolean(startDate && endDate && pnlStructureLineItemName),
-    })),
-    ({
-      accessToken,
-      apiUrl,
-      businessId,
-      startDate,
-      endDate,
-      pnlStructureLineItemName,
-      tagFilter,
-      reportingBasis,
-      pnlStructure,
-    }) => getProfitAndLossDetailLines(
-      apiUrl,
-      accessToken,
-      {
-        businessId,
-        startDate,
-        endDate,
-        pnlStructureLineItemName,
-        tagKey: tagFilter?.key,
-        tagValues: tagFilter?.values?.join(','),
-        reportingBasis,
-        pnlStructure,
-      },
-    )().then(response => response.data).then(Schema.decodeUnknownPromise(PnlDetailLinesDataSchema)),
-    {
-      keepPreviousData: true,
-    },
-  )
-
-  return new SWRQueryResult(swrResponse)
-}
+export const useProfitAndLossDetailLines = createQueryHook({
+  tags: [LIST_PNL_DETAIL_LINES_TAG_KEY],
+  request: listProfitAndLossDetailLines,
+  schema: PnlDetailLinesResponseSchema,
+  swrOptions: { keepPreviousData: true },
+})
 
 export const usePnlDetailLinesInvalidator = createResourceGlobalCacheActions<PnlDetailLinesReturn>(LIST_PNL_DETAIL_LINES_TAG_KEY)
 

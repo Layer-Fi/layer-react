@@ -1,40 +1,22 @@
-import { Schema } from 'effect'
-import useSWR from 'swr'
-
 import { type InvoiceSummaryStatsResponse, InvoiceSummaryStatsResponseSchema } from '@schemas/invoices/invoice'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const INVOICE_SUMMARY_STATS_TAG_KEY = '#invoices-summary-stats'
 
-const buildKey = createBuildKey<{ businessId: string }>([INVOICE_SUMMARY_STATS_TAG_KEY])
+const InvoiceSummaryStatsReturnSchema = UnwrappedDataResponseSchema(InvoiceSummaryStatsResponseSchema)
 
 const getInvoiceSummaryStats = get<
-  { data: InvoiceSummaryStatsResponse },
+  typeof InvoiceSummaryStatsReturnSchema.Encoded,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/invoices/summary-stats`)
 
-export function useInvoiceSummaryStats() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const response = useSWR(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-    })),
-    ({ accessToken, apiUrl, businessId }) => getInvoiceSummaryStats(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-      },
-    )().then(({ data }) => Schema.decodeUnknownPromise(InvoiceSummaryStatsResponseSchema)(data)),
-  )
-
-  return new SWRQueryResult(response)
-}
+export const useInvoiceSummaryStats = createQueryHook({
+  tags: [INVOICE_SUMMARY_STATS_TAG_KEY],
+  request: getInvoiceSummaryStats,
+  schema: InvoiceSummaryStatsReturnSchema,
+})
 
 export const useInvoiceSummaryStatsCacheActions = createResourceGlobalCacheActions<InvoiceSummaryStatsResponse>(INVOICE_SUMMARY_STATS_TAG_KEY)

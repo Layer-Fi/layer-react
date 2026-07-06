@@ -1,18 +1,14 @@
 import { useCallback } from 'react'
-import useSWRMutation from 'swr/mutation'
 
 import { type CustomerSchema } from '@schemas/customer'
 import { type VendorSchema } from '@schemas/vendor'
 import { patch } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useMinMutatingMutation } from '@hooks/utils/swr/useMinMutatingMutation'
 
 const SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY = '#set-metadata-on-bank-transaction'
-
-const buildKey = createBuildKey<{ businessId: string, bankTransactionId: string }>([SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY])
 
 type SetMetadataOnBankTransactionBody = {
   vendor_id: string | null
@@ -36,6 +32,17 @@ type SetMetadataOnBankTransactionArg = {
   customer: typeof CustomerSchema.Type | null
 }
 
+const useSetMetadataOnBankTransactionMutation = createMutationHook({
+  tags: [SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY],
+  request: setMetadataOnBankTransaction,
+  keyParams: ['bankTransactionId'],
+  argToBody: ({ vendor, customer }: SetMetadataOnBankTransactionArg) => ({
+    vendor_id: vendor?.id ?? null,
+    customer_id: customer?.id ?? null,
+  }),
+  swrOptions: { throwOnError: false },
+})
+
 type UseSetMetadataOnBankTransactionParameters = {
   bankTransactionId: string
 }
@@ -43,36 +50,8 @@ type UseSetMetadataOnBankTransactionParameters = {
 export function useSetMetadataOnBankTransaction({
   bankTransactionId,
 }: UseSetMetadataOnBankTransactionParameters) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      bankTransactionId,
-    })),
-    (
-      { accessToken, apiUrl, businessId, bankTransactionId },
-      { arg: { vendor, customer } }: { arg: SetMetadataOnBankTransactionArg },
-    ) => setMetadataOnBankTransaction(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          bankTransactionId,
-        },
-        body: {
-          vendor_id: vendor?.id ?? null,
-          customer_id: customer?.id ?? null,
-        },
-      },
-    ),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
+  const rawMutationResponse = useSetMetadataOnBankTransactionMutation({ bankTransactionId })
+  const mutationResponse = useMinMutatingMutation({ swrMutationResponse: rawMutationResponse })
 
   const { debouncedInvalidateBankTransactions, optimisticallyUpdateBankTransactions } = useBankTransactionsGlobalCacheActions()
 
@@ -125,7 +104,5 @@ export function useSetMetadataOnBankTransaction({
     ],
   )
 
-  const baseProxiedResponse = withStableTrigger(mutationResponse, stableProxiedTrigger)
-
-  return useMinMutatingMutation({ swrMutationResponse: baseProxiedResponse })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

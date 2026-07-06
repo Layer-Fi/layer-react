@@ -1,67 +1,29 @@
-import useSWRMutation from 'swr/mutation'
-
 import type { S3PresignedUrl } from '@internal-types/general'
-import type { Awaitable } from '@internal-types/utility/promises'
-import { type APIError } from '@utils/api/apiError'
-import { get } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { getAsMutation } from '@utils/api/getAsMutation'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
-const getJournalEntriesCSV = get<{ data: S3PresignedUrl }>(
+type GetJournalEntriesCSVParams = {
+  businessId: string
+  startDate?: Date
+  endDate?: Date
+}
+
+const getJournalEntriesCSV = getWithQuery<
+  { data: S3PresignedUrl },
+  GetJournalEntriesCSVParams
+>(
+  ['businessId'],
   ({ businessId }) => `/v1/businesses/${businessId}/ledger/entries/exports/csv`,
 )
 
-const buildKey = createBuildKey<{ businessId: string, startCutoff?: Date, endCutoff?: Date }>(['#journal-entries', '#exports', '#csv'])
+const requestJournalEntriesCSV = getAsMutation(getJournalEntriesCSV)
 
-type UseJournalEntriesDownloadOptions = {
-  startCutoff?: Date
-  endCutoff?: Date
-  onSuccess?: (url: S3PresignedUrl) => Awaitable<unknown>
-}
-
-type MutationParams = () => {
-  accessToken: string
-  apiUrl: string
-  businessId: string
-  startCutoff?: Date
-  endCutoff?: Date
-} | undefined
-
-export function useJournalEntriesDownload({
-  startCutoff,
-  endCutoff,
-  onSuccess,
-}: UseJournalEntriesDownloadOptions) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  return useSWRMutation<
-    unknown,
-    Error | APIError,
-    MutationParams
-  >(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      startCutoff,
-      endCutoff,
-    })),
-    ({ accessToken, apiUrl, businessId, startCutoff, endCutoff }) => getJournalEntriesCSV(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          startCutoff: startCutoff?.toISOString(),
-          endCutoff: endCutoff?.toISOString(),
-        },
-      })().then(({ data }) => {
-      if (onSuccess) {
-        return onSuccess(data)
-      }
-    }),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
-}
+export const useJournalEntriesDownload = createMutationHook({
+  tags: ['#journal-entries', '#exports', '#csv'],
+  request: requestJournalEntriesCSV,
+  keyParams: ['startDate', 'endDate'],
+  argToBody: (_arg: undefined) => undefined,
+  select: ({ data }) => data,
+  swrOptions: { throwOnError: false },
+})

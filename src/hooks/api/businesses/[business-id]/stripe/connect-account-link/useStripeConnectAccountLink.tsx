@@ -1,10 +1,8 @@
 import { pipe, Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
 
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const STRIPE_CONNECT_ACCOUNT_LINK_TAG_KEY = '#stripe-connect-account-link'
 
@@ -23,40 +21,25 @@ const StripeConnectAccountLinkDataSchema = Schema.Struct({
   ),
 })
 
-const StripeConnectAccountLinkResponseSchema = Schema.Struct({
-  data: StripeConnectAccountLinkDataSchema,
-})
+const StripeConnectAccountLinkSchema = UnwrappedDataResponseSchema(StripeConnectAccountLinkDataSchema)
 
 type StripeConnectAccountLinkResponse = typeof StripeConnectAccountLinkDataSchema.Type
 
 const createStripeConnectAccountLink = post<
-  { data: StripeConnectAccountLinkResponse },
+  typeof StripeConnectAccountLinkSchema.Encoded,
   never,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/stripe/connect-account-link`)
 
-const buildKey = createBuildKey<{ businessId: string }>([STRIPE_CONNECT_ACCOUNT_LINK_TAG_KEY])
-
-export function useStripeConnectAccountLink() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-    })),
-    ({ accessToken, apiUrl, businessId }) => {
-      return createStripeConnectAccountLink(
-        apiUrl,
-        accessToken,
-        { params: { businessId } },
-      ).then(Schema.decodeUnknownPromise(StripeConnectAccountLinkResponseSchema)).then(({ data }) => data)
-    },
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  return new SWRMutationResult(rawMutationResponse)
-}
+export const useStripeConnectAccountLink = createMutationHook<
+  typeof StripeConnectAccountLinkSchema.Encoded,
+  never,
+  { businessId: string },
+  StripeConnectAccountLinkResponse,
+  never
+>({
+  tags: [STRIPE_CONNECT_ACCOUNT_LINK_TAG_KEY],
+  request: createStripeConnectAccountLink,
+  schema: StripeConnectAccountLinkSchema,
+  swrOptions: { throwOnError: true },
+})

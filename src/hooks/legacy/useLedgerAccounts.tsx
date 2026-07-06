@@ -43,6 +43,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     sort_by: 'entry_at',
     sort_order: 'DESC',
     limit: 150,
+    isEnabled: Boolean(selectedAccountId),
   })
 
   // Only use the data when accountId is available
@@ -62,7 +63,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     mutate: mutateEntryData,
     isLoading: isLoadingEntry,
     isError: isErrorEntry,
-  } = useLedgerAccountsEntry({ entryId: selectedEntryId })
+  } = useLedgerAccountsEntry({ entryId: selectedEntryId, isEnabled: Boolean(selectedEntryId) })
 
   const refetch = () => mutate()
 
@@ -73,7 +74,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
 
   return {
     data,
-    entryData: entryData?.data,
+    entryData,
     isLoading: shouldFetch ? paginationIsLoading : false,
     isLoadingEntry,
     isValidating: shouldFetch ? paginationIsValidating : false,

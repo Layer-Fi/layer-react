@@ -1,5 +1,7 @@
 import { pipe, Schema } from 'effect'
 
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
+
 export enum StripeAccountStatus {
   NotCreated = 'not_created',
   Incomplete = 'incomplete',
@@ -30,7 +32,5 @@ const StripeAccountStatusDataSchema = Schema.Struct({
   ),
 })
 
-export const StripeAccountStatusResponseSchema = Schema.Struct({
-  data: StripeAccountStatusDataSchema,
-})
+export const StripeAccountStatusResponseSchema = UnwrappedDataResponseSchema(StripeAccountStatusDataSchema)
 export type StripeAccountStatusResponse = typeof StripeAccountStatusDataSchema.Type

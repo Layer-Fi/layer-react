@@ -1,51 +1,32 @@
 import { useCallback } from 'react'
-import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useVehiclesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const DELETE_VEHICLE_TAG_KEY = '#delete-vehicle'
 
 const deleteVehicle = del<
   Record<string, never>,
+  Record<string, never>,
   { businessId: string, vehicleId: string }
 >(({ businessId, vehicleId }) => `/v1/businesses/${businessId}/mileage/vehicles/${vehicleId}`)
 
-const buildKey = createBuildKey<{ businessId: string, vehicleId: string }>([DELETE_VEHICLE_TAG_KEY])
+const useDeleteVehicleMutation = createMutationHook({
+  tags: [DELETE_VEHICLE_TAG_KEY],
+  request: deleteVehicle,
+  keyParams: ['vehicleId'],
+  argToBody: (_arg: never) => undefined,
+  swrOptions: { throwOnError: true },
+})
 
 type UseDeleteVehicleProps = {
   vehicleId: string
 }
 
 export const useDeleteVehicle = ({ vehicleId }: UseDeleteVehicleProps) => {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      vehicleId,
-    })),
-    (
-      { accessToken, apiUrl, businessId, vehicleId },
-    ) => {
-      return deleteVehicle(
-        apiUrl,
-        accessToken,
-        { params: { businessId, vehicleId } },
-      )
-    },
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
+  const mutationResponse = useDeleteVehicleMutation({ vehicleId })
 
   const { forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()
 

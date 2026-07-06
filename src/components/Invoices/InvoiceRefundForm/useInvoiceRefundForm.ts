@@ -35,7 +35,7 @@ export const useInvoiceRefundForm = ({ onSuccess, invoice }: UseInvoiceRefundFor
       const customerRefundParams = convertInvoiceRefundFormToParams(value)
       const refundInvoiceRequest = Schema.encodeUnknownSync(CreateCustomerRefundSchema)(customerRefundParams)
 
-      const { data: refund } = await refundInvoice(refundInvoiceRequest)
+      const refund = await refundInvoice(refundInvoiceRequest)
 
       setSubmitError(undefined)
       onSuccess(refund)
