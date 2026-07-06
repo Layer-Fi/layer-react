@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useGlobalDatePickerBounds } from '@hooks/utils/dates/useGlobalDatePickerBounds'
 import { type DateRange } from '@utils/date/dateRange'
+import { useGlobalDatePickerBounds } from '@hooks/utils/dates/useGlobalDatePickerBounds'
 import { DatePicker } from '@components/DatePicker/DatePicker'
 import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 
