@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { getActivationDate } from '@utils/business'
 import { DatePreset, presetForDateRange, rangeForPreset } from '@utils/date/dateRangePresets'
-import { type DateRange } from '@providers/DateStoreProvider/internal/types'
+import { type DateRange } from '@utils/date/dateRange'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'

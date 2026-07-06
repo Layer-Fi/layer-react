@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-import { type DateRange } from '@providers/DateStoreProvider/internal/types'
+import { type DateRange } from '@utils/date/dateRange'
 import { DateRangePicker } from '@components/DatePicker/DateRangePicker'
 import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
 
