@@ -321,14 +321,9 @@ describe('usePollingConfig', () => {
 
   describe('when driving useSWR', () => {
     const INTERVAL = 1000
-    /** Mirrors DEFAULT_SWR_CONFIG's global 10-minute refresh, which LayerProvider applies app-wide. */
+    /** DEFAULT_SWR_CONFIG's app-wide refresh; the hook-level polling function must override it. */
     const GLOBAL_REFRESH_INTERVAL = 10 * 60 * 1000
 
-    /*
-     * The global refreshInterval is deliberately included: real consumers rely on the
-     * hook-level polling function overriding it, so every test here also defends that
-     * precedence — polls must arrive at INTERVAL, not the global cadence.
-     */
     const swrWrapper = ({ children }: PropsWithChildren) => (
       <SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0, refreshInterval: GLOBAL_REFRESH_INTERVAL }}>
         {children}
@@ -388,18 +383,16 @@ describe('usePollingConfig', () => {
 
       const { result } = renderPolledSWR('poll-revival', fetcher)
 
-      await advance(0) // mount fetch returns done -> loop never starts
+      await advance(0)
       await advance(INTERVAL * 3)
       expect(fetcher).toHaveBeenCalledTimes(1)
 
-      // A new session begins: an external refetch observes pending data...
       response = PENDING
       await act(async () => {
         await result.current.mutate()
       })
       expect(fetcher).toHaveBeenCalledTimes(2)
 
-      // ...and the restart nonce revives SWR's polling loop.
       await advance(INTERVAL)
       expect(fetcher).toHaveBeenCalledTimes(3)
     })
