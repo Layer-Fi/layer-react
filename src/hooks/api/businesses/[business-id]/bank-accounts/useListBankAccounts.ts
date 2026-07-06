@@ -3,7 +3,7 @@ import { Schema } from 'effect'
 import { type BankAccount, BankAccountSchema } from '@schemas/bankAccounts/bankAccount'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const BANK_ACCOUNTS_TAG_KEY = '#bank-accounts'

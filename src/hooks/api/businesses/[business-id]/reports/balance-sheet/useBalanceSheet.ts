@@ -1,6 +1,6 @@
 import type { BalanceSheet } from '@internal-types/balanceSheet'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export type GetBalanceSheetParams = {

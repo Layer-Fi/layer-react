@@ -1,7 +1,7 @@
 import { type MileageSummary, MileageSummarySchema } from '@schemas/mileage'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const MILEAGE_SUMMARY_TAG_KEY = '#mileage-summary'

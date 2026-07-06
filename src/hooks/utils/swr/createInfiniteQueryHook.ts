@@ -4,9 +4,9 @@ import useSWRInfinite, { type SWRInfiniteConfiguration } from 'swr/infinite'
 import type { PaginatedResponse } from '@schemas/common/pagination'
 import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
 import { type AuthenticatedRequest, createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
-import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
-import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { usePreserveInfiniteSize } from '@hooks/utils/swr/usePreserveInfiniteSize'
+import { useSWRInfiniteResult } from '@hooks/utils/swr/useSWRInfiniteResult'
 
 type BusinessScopedParams = { businessId: string }
 

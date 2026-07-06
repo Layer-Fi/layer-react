@@ -1,7 +1,7 @@
 import { type CatalogService, CatalogServiceSchema } from '@schemas/catalogService'
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createGlobalCacheActions'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 const LIST_CATALOG_SERVICES_TAG_KEY = '#list-catalog-services'

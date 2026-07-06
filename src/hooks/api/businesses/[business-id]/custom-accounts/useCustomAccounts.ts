@@ -3,7 +3,7 @@ import { pipe, Schema } from 'effect'
 import { CustomAccountSchema } from '@schemas/customAccounts'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const CUSTOM_ACCOUNTS_TAG_KEY = '#custom-accounts'

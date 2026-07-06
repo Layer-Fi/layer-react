@@ -1,7 +1,7 @@
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createGlobalCacheActions'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 export const LIST_TIME_ENTRIES_TAG_KEY = '#list-time-entries'

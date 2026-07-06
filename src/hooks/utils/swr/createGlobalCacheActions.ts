@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { type CacheKeyInfo } from '@utils/swr/withSWRKeyTags'
+import { useGlobalCacheActions } from '@hooks/utils/swr/useGlobalCacheActions'
 
 type InvalidateOptions = { withPrecedingOptimisticUpdate?: boolean }
 type PatchOptions = { withRevalidate: boolean }

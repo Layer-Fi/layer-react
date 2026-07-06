@@ -4,7 +4,7 @@ import { Schema } from 'effect'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { type Vehicle, VehicleSchema } from '@schemas/vehicle'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 type ListVehiclesParams = {

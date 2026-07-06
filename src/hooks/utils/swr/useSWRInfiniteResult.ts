@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useRef } from 'react'
 import type { SWRInfiniteResponse } from 'swr/infinite'
 
+import { type FlattenedData, SWRInfiniteResult } from '@internal-types/swr/SWRResponseTypes'
 import type { PaginatedResponse } from '@schemas/common/pagination'
 import { hasMorePages } from '@utils/swr/hasMorePages'
-import { type FlattenedData, SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
 
 /**
  * Wraps a useSWRInfinite response in an SWRInfiniteResult, memoizing the flattened pages so
