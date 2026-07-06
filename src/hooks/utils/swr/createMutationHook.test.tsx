@@ -364,6 +364,24 @@ describe('createMutationHook', () => {
       })
     })
 
+    it('passes the pinned key params to the side-effect hook', async () => {
+      const request = makeRequest(() => Promise.resolve(RAW_WIDGET))
+      let seenKeyParams: unknown
+      const useUpsertWidget = createMutationHook<RawWidget, WidgetBody, WidgetParams, RawWidget, WidgetBody, readonly ['widgetId']>({
+        tags: ['Widgets'],
+        request,
+        keyParams: ['widgetId'],
+        useOnTriggerSuccess: (keyParamValues) => {
+          seenKeyParams = keyParamValues
+          return () => {}
+        },
+      })
+
+      await renderHookWithAuth(() => useUpsertWidget({ widgetId: 'w7' }))
+
+      expect(seenKeyParams).toEqual({ businessId: TEST_LAYER_BUSINESS_ID, widgetId: 'w7' })
+    })
+
     it('keeps trigger stable across renders while invoking the latest, unmemoized callback', async () => {
       const request = makeRequest(() => Promise.resolve(RAW_WIDGET))
       let renderLabel = 'first'

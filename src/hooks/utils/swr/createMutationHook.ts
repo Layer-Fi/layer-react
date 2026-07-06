@@ -49,15 +49,17 @@ export function createMutationHook<
   isLocalized?: boolean
   /**
    * Hook that returns a callback run after each successful trigger. Being a hook, it can read
-   * cache-action hooks and context. Its returned promise (if any) is awaited before `trigger`
-   * resolves — use `void` inside for fire-and-forget invalidation. The returned callback does
-   * not need to be memoized; `trigger` stays stable and always invokes the latest one.
+   * cache-action hooks and context; it also receives the hook's key params (e.g. a pinned id).
+   * Its returned promise (if any) is awaited before `trigger` resolves — use `void` inside for
+   * fire-and-forget invalidation. The returned callback does not need to be memoized; `trigger`
+   * stays stable and always invokes the latest one.
    */
-  useOnTriggerSuccess?: () => (data: TData, arg: TArg) => void | Promise<void>
+  useOnTriggerSuccess?: (keyParamValues: BusinessScopedParams & Pick<TParams, TKeyParamNames[number]>) => (data: TData, arg: TArg) => void | Promise<void>
 }) {
   const { tags, request, argToParams, argToBody, schema, select, swrOptions, isLocalized = true, useOnTriggerSuccess } = config
 
-  const useOnTriggerSuccessHook = useOnTriggerSuccess ?? (() => undefined)
+  const useOnTriggerSuccessHook = useOnTriggerSuccess
+    ?? ((_keyParamValues: BusinessScopedParams & Pick<TParams, TKeyParamNames[number]>) => undefined)
 
   type KeyParamValues = BusinessScopedParams & Pick<TParams, TKeyParamNames[number]>
 
@@ -107,7 +109,7 @@ export function createMutationHook<
 
     const mutationResult = new SWRMutationResult(rawMutationResponse)
 
-    const onTriggerSuccess = useOnTriggerSuccessHook()
+    const onTriggerSuccess = useOnTriggerSuccessHook({ businessId, ...keyInputs } as KeyParamValues)
 
     const onTriggerSuccessRef = useRef(onTriggerSuccess)
     useEffect(() => {
