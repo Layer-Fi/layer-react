@@ -8,6 +8,7 @@ import { get as getCustomers } from '@msw/api/businesses/[business-id]/customers
 import { patch as patchCustomer } from '@msw/api/businesses/[business-id]/customers/patch'
 import { post as postCustomer } from '@msw/api/businesses/[business-id]/customers/post'
 import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
+import { get as getVendors } from '@msw/api/businesses/[business-id]/vendors/get'
 import { post as postOAuthToken } from '@msw/api/oauth2/token/post'
 
 export const handlers: RequestHandler[] = [
@@ -20,4 +21,5 @@ export const handlers: RequestHandler[] = [
   getCustomers.handler,
   postCustomer.handler,
   patchCustomer.handler,
+  getVendors.handler,
 ]

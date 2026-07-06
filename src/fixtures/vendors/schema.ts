@@ -1,8 +1,7 @@
 import { Arbitrary, type FastCheck, Schema } from 'effect'
 
-import { CustomerSchema } from '@schemas/customer'
+import { VendorSchema } from '@schemas/vendor'
 
-import { addresses } from '@fixtures/constants/personal/addresses'
 import { companyNames } from '@fixtures/constants/personal/companyNames'
 import { individualNames } from '@fixtures/constants/personal/individualNames'
 import { emailForName } from '@fixtures/utils/emailForName'
@@ -18,7 +17,7 @@ const GENERATED_EMAIL = 'GENERATE'
 
 // `_local` is client-only optimistic-update state, never present on a server
 // response, so it's excluded from the wire-format fixtures entirely.
-const { _local, ...fields } = CustomerSchema.fields
+const { _local, ...fields } = VendorSchema.fields
 
 const base = Schema.Struct({
   ...fields,
@@ -44,11 +43,6 @@ const base = Schema.Struct({
       fc.constant(null),
       fc.integer({ min: 2000000000, max: 9999999999 }).map(n => `+1${n}`),
     )),
-  addressString: withArbitrary(fields.addressString, () => fc =>
-    fc.oneof(
-      fc.constant(null),
-      fc.constantFrom(...addresses),
-    )),
   status: withArbitrary(fields.status, () => fc =>
     fc.constantFrom('ACTIVE', 'ARCHIVED')),
   memo: withArbitrary(fields.memo, () => fc =>
@@ -56,9 +50,9 @@ const base = Schema.Struct({
       { arbitrary: fc.constant(null), weight: 4 },
       {
         arbitrary: fc.constantFrom(
-          'VIP client',
-          'Follow up next quarter',
-          'Referred by partner',
+          'Preferred supplier',
+          'Net 30 terms',
+          'Requires PO number',
         ),
         weight: 1,
       },
@@ -67,21 +61,21 @@ const base = Schema.Struct({
 
 const baseArbitrary = Arbitrary.make(base)
 
-export const CustomerArbitrarySchema = base.annotations({
+export const VendorArbitrarySchema = base.annotations({
   arbitrary: () => () =>
-    baseArbitrary.map((customer): typeof base.Type => {
-      // A customer must have at least one of individualName/companyName set,
-      // mirroring validateCustomerForm's "either" requirement.
-      const individualName = customer.individualName == null && customer.companyName == null
+    baseArbitrary.map((vendor): typeof base.Type => {
+      // A vendor must have at least one of individualName/companyName set,
+      // mirroring the same rule enforced for customers (identical shape).
+      const individualName = vendor.individualName == null && vendor.companyName == null
         ? 'Jane Doe'
-        : customer.individualName
+        : vendor.individualName
 
-      const email = customer.email === GENERATED_EMAIL
-        ? emailForName(individualName, customer.companyName)
-        : customer.email
+      const email = vendor.email === GENERATED_EMAIL
+        ? emailForName(individualName, vendor.companyName)
+        : vendor.email
 
-      return { ...customer, individualName, email }
+      return { ...vendor, individualName, email }
     }),
 })
 
-export const schema = CustomerArbitrarySchema
+export const schema = VendorArbitrarySchema
