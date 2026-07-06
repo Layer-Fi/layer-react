@@ -11,10 +11,6 @@ const frCaWrapper = ({ children }: PropsWithChildren) => (
   <LayerTestProvider locale={SupportedLocale.frCA}>{children}</LayerTestProvider>
 )
 
-const defaultWrapper = ({ children }: PropsWithChildren) => (
-  <LayerTestProvider>{children}</LayerTestProvider>
-)
-
 describe('useLocalizedKey', () => {
   it('adds the active locale to the key', () => {
     const { result } = renderHook(() => useLocalizedKey(), {
@@ -29,7 +25,7 @@ describe('useLocalizedKey', () => {
 
   it('defaults to en-US when no locale is provided', () => {
     const { result } = renderHook(() => useLocalizedKey(), {
-      wrapper: defaultWrapper,
+      wrapper: LayerTestProvider,
     })
 
     expect(result.current({ businessId: 'b1' })).toMatchObject({ _locale: SupportedLocale.enUS })

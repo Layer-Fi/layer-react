@@ -2,7 +2,7 @@ import { type SortOrder } from '@internal-types/utility/pagination'
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type LedgerEntry, LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createGlobalCacheActions'
+import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 export const LIST_LEDGER_ENTRIES_TAG_KEY = '#list-ledger-entries'

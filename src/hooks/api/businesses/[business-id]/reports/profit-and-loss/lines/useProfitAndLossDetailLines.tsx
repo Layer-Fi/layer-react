@@ -4,8 +4,8 @@ import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export const LIST_PNL_DETAIL_LINES_TAG_KEY = '#list-pnl-detail-lines'
 

@@ -6,7 +6,7 @@ import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
-import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createGlobalCacheActions'
+import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 import { useGlobalCacheActions } from '@hooks/utils/swr/useGlobalCacheActions'
 

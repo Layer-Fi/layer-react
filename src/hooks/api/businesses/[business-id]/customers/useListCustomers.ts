@@ -1,7 +1,7 @@
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type Customer, CustomerSchema } from '@schemas/customer'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createGlobalCacheActions'
+import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 const ListCustomersRawResultSchema = PaginatedResponseSchema(CustomerSchema)

@@ -1,7 +1,7 @@
 import { type TaxProfile, TaxProfileResponseSchema } from '@schemas/taxEstimates/profile'
 import { get } from '@utils/api/authenticatedHttp'
-import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export const TAX_PROFILE_TAG_KEY = '#tax-profile'
 

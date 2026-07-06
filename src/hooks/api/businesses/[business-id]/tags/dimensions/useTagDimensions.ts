@@ -3,8 +3,8 @@ import { Schema } from 'effect'
 import { type TagDimension, TagDimensionSchema } from '@schemas/tag'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export const TAG_DIMENSIONS_TAG_KEY = '#tag-dimensions'
 

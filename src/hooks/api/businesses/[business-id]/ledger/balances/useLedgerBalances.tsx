@@ -1,8 +1,8 @@
 import { LedgerBalancesSchema, type LedgerBalancesSchemaType } from '@schemas/generalLedger/ledgerAccount'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export const LEDGER_BALANCES_TAG_KEY = '#ledger-balances'
 

@@ -1,8 +1,8 @@
 import { type TimeEntrySummary, TimeEntrySummarySchema } from '@schemas/timeTracking'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 const TimeTrackingSummaryResponseSchema = UnwrappedDataResponseSchema(TimeEntrySummarySchema)
 

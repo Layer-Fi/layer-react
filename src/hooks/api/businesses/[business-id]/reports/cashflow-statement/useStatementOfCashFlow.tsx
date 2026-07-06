@@ -1,7 +1,7 @@
 import type { StatementOfCashFlow } from '@internal-types/statementOfCashFlow'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export type GetStatementOfCashFlowParams = {
   businessId: string
