@@ -3,6 +3,8 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { type AuthenticatedRequest, createKeyedFetcher, type SWRKeyContext } from '@utils/swr/createKeyedFetcher'
 
+import { getRequestOptions } from '@test-utils/getRequestOptions'
+
 type WidgetParams = { businessId: string, widgetId?: string }
 type RawWidget = { id: string, display_name: string }
 
@@ -32,7 +34,7 @@ describe('createKeyedFetcher', () => {
     expect(request).toHaveBeenCalledWith('https://api', 'tok', {
       params: { businessId: 'b1', widgetId: 'w1' },
     })
-    const params = request.mock.calls[0][2]?.params
+    const params = getRequestOptions(request)?.params
     expect(params).not.toHaveProperty('tags')
     expect(params).not.toHaveProperty('accessToken')
     expect(params).not.toHaveProperty('apiUrl')
