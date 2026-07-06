@@ -88,7 +88,6 @@ export const useUpsertDedicatedInvoicePayment = (props: UseUpsertDedicatedInvoic
   const updateResponse = useUpdateDedicatedInvoicePayment({
     invoiceId,
     invoicePaymentId: invoicePaymentId ?? '',
-    isEnabled: invoicePaymentId !== undefined,
   })
 
   const mutationResponse = mode === UpsertDedicatedInvoicePaymentMode.Create ? createResponse : updateResponse

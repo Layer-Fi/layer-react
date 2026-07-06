@@ -70,7 +70,6 @@ export const useUpsertInvoice = (props: UseUpsertInvoiceProps) => {
   const createResponse = useCreateInvoice()
   const updateResponse = useUpdateInvoice({
     invoiceId: invoiceId ?? '',
-    isEnabled: invoiceId !== undefined,
   })
 
   const mutationResponse = mode === UpsertInvoiceMode.Create ? createResponse : updateResponse

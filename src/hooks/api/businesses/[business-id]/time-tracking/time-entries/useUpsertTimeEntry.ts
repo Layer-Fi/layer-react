@@ -66,7 +66,6 @@ export function useUpsertTimeEntry(props: UseUpsertTimeEntryProps) {
   const createResponse = useCreateTimeEntry()
   const updateResponse = useUpdateTimeEntry({
     timeEntryId: timeEntryId ?? '',
-    isEnabled: timeEntryId !== undefined,
   })
 
   const mutationResponse = (

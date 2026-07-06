@@ -57,7 +57,6 @@ export const useUpsertCustomer = (props: UseUpsertCustomerProps) => {
   const createResponse = useCreateCustomer()
   const updateResponse = useUpdateCustomer({
     customerId: customerId ?? '',
-    isEnabled: customerId !== undefined,
   })
 
   const mutationResponse = mode === UpsertCustomerMode.Create ? createResponse : updateResponse

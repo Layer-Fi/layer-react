@@ -29,7 +29,6 @@ type UseDeleteTimeEntryProps = {
 export const useDeleteTimeEntry = ({ timeEntryId }: UseDeleteTimeEntryProps) => {
   const mutationResponse = useDeleteTimeEntryMutation({
     timeEntryId,
-    isEnabled: Boolean(timeEntryId),
   })
 
   const { forceReload: forceReloadTimeEntries } = useTimeEntriesGlobalCacheActions()

@@ -53,7 +53,6 @@ export function createMutationHook<
   const buildKey = createBuildKey<KeyParamValues>(tags)
 
   type UseMutationOptions = Pick<TParams, TKeyParamNames[number]> & {
-    isEnabled?: boolean
     swrOptions?: MutationSWROptions<TData>
   }
 

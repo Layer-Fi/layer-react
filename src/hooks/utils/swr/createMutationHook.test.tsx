@@ -279,19 +279,6 @@ describe('createMutationHook', () => {
     await waitFor(() => expect(result.current.data).toBeUndefined())
   })
 
-  it('cannot trigger when isEnabled is false (no key)', async () => {
-    const request = makeRequest(() => Promise.resolve(RAW_WIDGET))
-    const useUpsertWidget = createMutationHook<RawWidget, WidgetBody>({ tags: ['Widgets'], request })
-
-    const { result } = await renderHookWithAuth(() => useUpsertWidget({ isEnabled: false }))
-
-    // A disabled hook builds no key, so useSWRMutation has nothing to trigger against.
-    await act(async () => {
-      await expect(async () => result.current.trigger({ name: 'New Widget' })).rejects.toThrow(/missing key/i)
-    })
-    expect(request).not.toHaveBeenCalled()
-  })
-
   it('sends the active locale when localized and omits it when not', async () => {
     const setLocaleHeader = vi.spyOn(authenticatedHttp, 'setLocaleHeader')
 

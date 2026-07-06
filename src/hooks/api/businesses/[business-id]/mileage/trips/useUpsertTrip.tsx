@@ -65,7 +65,6 @@ export const useUpsertTrip = (props: UseUpsertTripProps) => {
   const createResponse = useCreateTrip()
   const updateResponse = useUpdateTrip({
     tripId: tripId ?? '',
-    isEnabled: tripId !== undefined,
   })
 
   const mutationResponse = mode === UpsertTripMode.Create ? createResponse : updateResponse
