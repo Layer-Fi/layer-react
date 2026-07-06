@@ -8,9 +8,9 @@ import { LayerTestProvider } from '@test-utils/LayerTestProvider'
 /**
  * Renders a hook inside `LayerTestProvider` and resolves only after auth has landed.
  */
-export async function renderHookWithAuth<Result, Props = undefined>(
-  useHook: (props: Props) => Result,
-  options?: RenderHookOptions<Props>,
+export async function renderHookWithAuth<TResult, TProps = undefined>(
+  useHook: (props: TProps) => TResult,
+  options?: RenderHookOptions<TProps>,
 ) {
   let authReady = false
 
