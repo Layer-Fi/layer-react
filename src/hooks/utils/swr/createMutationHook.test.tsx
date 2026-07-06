@@ -27,7 +27,7 @@ const WidgetSchema = Schema.Struct({
   displayName: pipe(Schema.propertySignature(Schema.String), Schema.fromKey('display_name')),
 })
 
-/** A `request` spy shaped like `MutationRequest` (not curried: returns a promise). */
+/** A `request` spy shaped like `MutationRequest`. */
 const makeRequest = <T,>(impl: () => Promise<T>) =>
   vi.fn<MutationRequest<T, WidgetBody, WidgetParams>>(() => impl())
 
