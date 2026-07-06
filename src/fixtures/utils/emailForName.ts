@@ -1,5 +1,7 @@
 const slugify = (value: string) =>
   value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // strip diacritics, e.g. "ö" -> "o"
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '.')
     .replace(/^\.+|\.+$/g, '')

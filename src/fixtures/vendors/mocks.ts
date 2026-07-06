@@ -3,15 +3,15 @@ import { type Vendor } from '@schemas/vendor'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 
 const baseVendor: Vendor = {
-  id: '00000000-0000-4000-8000-000000000001',
-  externalId: null,
-  individualName: null,
-  companyName: 'Globex LLC',
-  email: 'contact@globexllc.test',
-  mobilePhone: null,
-  officePhone: null,
+  id: '00000000-0000-4000-8000-000000000002',
+  externalId: 'ext_2002',
+  individualName: 'John Smith',
+  companyName: 'Stark Industries',
+  email: 'john.smith@starkindustries.test',
+  mobilePhone: '+15552223333',
+  officePhone: '+15554445555',
   status: 'ACTIVE',
-  memo: null,
+  memo: 'Preferred supplier',
 }
 
 export const { make: makeVendor, makeMany: makeVendors } =
