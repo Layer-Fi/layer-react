@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
-import { HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { AccountBalancesDownloadButton } from '@components/ChartOfAccounts/download/AccountBalancesDownloadButton'
 import { type ChartOfAccountsTableStringOverrides } from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
@@ -42,47 +41,41 @@ export const ChartOfAccountsTableHeader = ({
   const addAccountLabel = stringOverrides?.addAccountButtonText || t('chartOfAccounts:action.add_account', 'Add Account')
 
   return (
-    <>
-      <Header asHeader rounded>
-        <HeaderRow>
-          <HeaderCol>
-            <Heading level={asWidget ? 3 : 2} size={asWidget ? 'md' : 'lg'}>
-              {stringOverrides?.headerText || t('chartOfAccounts:label.chart_of_accounts', 'Chart of Accounts')}
-            </Heading>
-          </HeaderCol>
-        </HeaderRow>
-      </Header>
-      <Header sticky>
-        <HeaderRow>
-          <HeaderCol>
-            {(withDateControl || withExpandAllButton) && (
-              <HStack align='center' gap='xs'>
-                {withDateControl && <GlobalMonthPicker />}
-                {withExpandAllButton && <ExpandableDataTableToggleButton />}
-              </HStack>
-            )}
-          </HeaderCol>
-          <HeaderCol className='Layer__chart-of-accounts__actions'>
-            <SearchField
-              label={t('chartOfAccounts:label.search_accounts', 'Search accounts')}
-              value={inputValue}
-              onChange={onSearchChange}
-            />
-            <AccountBalancesDownloadButton
+    <Header asHeader sticky rounded>
+      <HeaderRow>
+        <HeaderCol>
+          <Heading level={asWidget ? 3 : 2} size={asWidget ? 'md' : 'lg'}>
+            {stringOverrides?.headerText || t('chartOfAccounts:label.chart_of_accounts', 'Chart of Accounts')}
+          </Heading>
+        </HeaderCol>
+        <HeaderCol>
+          {withExpandAllButton && <ExpandableDataTableToggleButton />}
+          <AccountBalancesDownloadButton
+            icon={!isDesktop}
+          />
+          {showAddAccountButton && (
+            <Button
+              onPress={() => onAddAccount()}
               icon={!isDesktop}
-            />
-            {showAddAccountButton && (
-              <Button
-                onPress={() => onAddAccount()}
-                icon={!isDesktop}
-                aria-label={!isDesktop ? addAccountLabel : undefined}
-              >
-                {isDesktop ? addAccountLabel : <CirclePlus size={14} />}
-              </Button>
-            )}
-          </HeaderCol>
-        </HeaderRow>
-      </Header>
-    </>
+              aria-label={!isDesktop ? addAccountLabel : undefined}
+            >
+              {isDesktop ? addAccountLabel : <CirclePlus size={14} />}
+            </Button>
+          )}
+        </HeaderCol>
+      </HeaderRow>
+      <HeaderRow>
+        <HeaderCol>
+          {withDateControl && <GlobalMonthPicker />}
+        </HeaderCol>
+        <HeaderCol className='Layer__chart-of-accounts__actions'>
+          <SearchField
+            label={t('chartOfAccounts:label.search_accounts', 'Search accounts')}
+            value={inputValue}
+            onChange={onSearchChange}
+          />
+        </HeaderCol>
+      </HeaderRow>
+    </Header>
   )
 }

@@ -61,12 +61,11 @@ const JournalTableView = ({
   asWidget?: boolean
   stringOverrides?: JournalStringOverrides
 }) => {
-  const { view, containerRef } = useElementViewSize<HTMLDivElement>()
+  const { containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (
     <Container name='journal' ref={containerRef} asWidget={asWidget}>
       <JournalTableWithPanel
-        view={view}
         containerRef={containerRef}
         stringOverrides={stringOverrides?.journalTable}
       />
