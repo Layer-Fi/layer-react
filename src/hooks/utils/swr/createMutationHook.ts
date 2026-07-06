@@ -67,10 +67,10 @@ export function createMutationHook<
         return isLocalized ? withLocale(key) : key
       },
       (
-        key: { accessToken: string, apiUrl: string } & KeyParamValues,
+        key: { accessToken: string, apiUrl: string, tags: ReadonlyArray<string> } & KeyParamValues,
         { arg }: { arg: TArg },
       ): Promise<TData> => {
-        const { accessToken, apiUrl, ...rest } = key
+        const { accessToken, apiUrl, tags: _tags, ...rest } = key
         const keyParamValues = rest as unknown as KeyParamValues
 
         const response = request(apiUrl, accessToken, {

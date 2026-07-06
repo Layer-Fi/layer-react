@@ -66,7 +66,7 @@ describe('createMutationHook', () => {
     expect(options?.params).toMatchObject({ businessId: TEST_LAYER_BUSINESS_ID })
   })
 
-  it('forwards tags in the request params (unlike createQueryHook, which strips them)', async () => {
+  it('strips key context (tags/auth) from the request params', async () => {
     const request = makeRequest(() => Promise.resolve(RAW_WIDGET))
     const useUpsertWidget = createMutationHook<RawWidget, WidgetBody>({ tags: ['Widgets'], request })
 
@@ -76,8 +76,11 @@ describe('createMutationHook', () => {
       await result.current.trigger({ name: 'New Widget' })
     })
 
-    // The mutation fetcher only strips accessToken/apiUrl, so `tags` reaches `request`.
-    expect(getRequestOptions(request)?.params).toHaveProperty('tags', ['Widgets'])
+    const params = getRequestOptions(request)?.params
+    expect(params).toMatchObject({ businessId: TEST_LAYER_BUSINESS_ID })
+    expect(params).not.toHaveProperty('tags')
+    expect(params).not.toHaveProperty('accessToken')
+    expect(params).not.toHaveProperty('apiUrl')
   })
 
   it('builds the body from the trigger arg with argToBody', async () => {
