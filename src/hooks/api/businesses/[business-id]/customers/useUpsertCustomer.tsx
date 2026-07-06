@@ -41,7 +41,7 @@ const useCreateCustomer = createMutationHook({
 const useUpdateCustomer = createMutationHook({
   tags: [UPSERT_CUSTOMER_TAG_KEY, CUSTOMERS_TAG_KEY],
   request: updateCustomer,
-  keyParamNames: ['customerId'],
+  keyParams: ['customerId'],
   schema: UpsertCustomerReturnSchema,
   swrOptions: { throwOnError: true },
 })

@@ -35,7 +35,7 @@ type SetMetadataOnBankTransactionArg = {
 const useSetMetadataOnBankTransactionMutation = createMutationHook({
   tags: [SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY],
   request: setMetadataOnBankTransaction,
-  keyParamNames: ['bankTransactionId'],
+  keyParams: ['bankTransactionId'],
   argToBody: ({ vendor, customer }: SetMetadataOnBankTransactionArg) => ({
     vendor_id: vendor?.id ?? null,
     customer_id: customer?.id ?? null,

@@ -18,7 +18,7 @@ const deleteTrip = del<
 const useDeleteTripMutation = createMutationHook({
   tags: [DELETE_TRIP_TAG_KEY],
   request: deleteTrip,
-  keyParamNames: ['tripId'],
+  keyParams: ['tripId'],
   argToBody: (_arg: never) => undefined,
   swrOptions: { throwOnError: true },
 })

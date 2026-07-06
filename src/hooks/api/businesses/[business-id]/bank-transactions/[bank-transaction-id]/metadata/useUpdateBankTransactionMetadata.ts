@@ -23,7 +23,7 @@ const UPDATE_BANK_TRANSACTION_METADATA_TAG_KEY = '#update-bank-transaction-metad
 const useUpdateBankTransactionMetadataMutation = createMutationHook({
   tags: [UPDATE_BANK_TRANSACTION_METADATA_TAG_KEY],
   request: updateBankTransactionMetadata,
-  keyParamNames: ['bankTransactionId'],
+  keyParams: ['bankTransactionId'],
   select: ({ data }) => data,
   swrOptions: { throwOnError: false },
 })

@@ -21,7 +21,7 @@ const voidInvoice = post<
 const useVoidInvoiceMutation = createMutationHook({
   tags: [VOID_INVOICE_TAG_KEY],
   request: voidInvoice,
-  keyParamNames: ['invoiceId'],
+  keyParams: ['invoiceId'],
   argToBody: (_arg: never) => undefined,
   schema: VoidInvoiceReturnSchema,
   swrOptions: { throwOnError: true },

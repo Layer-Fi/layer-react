@@ -21,7 +21,7 @@ const resetInvoice = post<
 const useResetInvoiceMutation = createMutationHook({
   tags: [RESET_INVOICE_TAG_KEY],
   request: resetInvoice,
-  keyParamNames: ['invoiceId'],
+  keyParams: ['invoiceId'],
   argToBody: (_arg: never) => undefined,
   schema: ResetInvoiceReturnSchema,
   swrOptions: { throwOnError: true },

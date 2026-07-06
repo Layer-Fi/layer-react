@@ -57,7 +57,7 @@ const useCreateCategorizationRuleMutation = createMutationHook({
 const useUpdateCategorizationRuleMutation = createMutationHook({
   tags: [UPSERT_CATEGORIZATION_RULE_TAG],
   request: updateCategorizationRule,
-  keyParamNames: ['categorizationRuleId'],
+  keyParams: ['categorizationRuleId'],
   schema: UpsertCategorizationRuleReturnSchema,
   swrOptions: { throwOnError: true },
 })

@@ -54,7 +54,7 @@ const useCreateInvoice = createMutationHook({
 const useUpdateInvoice = createMutationHook({
   tags: [UPSERT_INVOICE_TAG_KEY],
   request: updateInvoice,
-  keyParamNames: ['invoiceId'],
+  keyParams: ['invoiceId'],
   schema: UpsertInvoiceReturnSchema,
   swrOptions: { throwOnError: true },
 })

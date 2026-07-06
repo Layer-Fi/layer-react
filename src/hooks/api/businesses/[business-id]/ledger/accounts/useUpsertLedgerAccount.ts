@@ -42,7 +42,7 @@ const useCreateLedgerAccount = createMutationHook({
 const useUpdateLedgerAccount = createMutationHook({
   tags: [UPSERT_LEDGER_ACCOUNT_TAG_KEY],
   request: updateLedgerAccount,
-  keyParamNames: ['accountId'],
+  keyParams: ['accountId'],
   schema: UpsertLedgerAccountReturnSchema,
   swrOptions: { throwOnError: true },
 })

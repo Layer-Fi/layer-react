@@ -29,7 +29,7 @@ const requestUnifiedReportExcel = getAsMutation(getUnifiedReportExcel)
 const useUnifiedReportExcelMutation = createMutationHook({
   tags: ['#unified-report-excel'],
   request: requestUnifiedReportExcel,
-  keyParamNames: ['route'],
+  keyParams: ['route'],
   argToBody: (_arg: undefined) => undefined,
   schema: UnifiedReportExcelReturnSchema,
   swrOptions: { throwOnError: false },

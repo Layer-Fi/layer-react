@@ -22,7 +22,7 @@ const requestJournalEntriesCSV = getAsMutation(getJournalEntriesCSV)
 export const useJournalEntriesDownload = createMutationHook({
   tags: ['#journal-entries', '#exports', '#csv'],
   request: requestJournalEntriesCSV,
-  keyParamNames: ['startDate', 'endDate'],
+  keyParams: ['startDate', 'endDate'],
   argToBody: (_arg: undefined) => undefined,
   select: ({ data }) => data,
   swrOptions: { throwOnError: false },

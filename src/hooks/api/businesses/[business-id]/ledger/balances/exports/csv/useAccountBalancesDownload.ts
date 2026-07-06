@@ -22,7 +22,7 @@ const requestLedgerAccountBalancesCSV = getAsMutation(getLedgerAccountBalancesCS
 export const useAccountBalancesDownload = createMutationHook({
   tags: ['#account-balances', '#exports', '#csv'],
   request: requestLedgerAccountBalancesCSV,
-  keyParamNames: ['startDate', 'endDate'],
+  keyParams: ['startDate', 'endDate'],
   argToBody: (_arg: undefined) => undefined,
   select: ({ data }) => data,
   swrOptions: { throwOnError: false },

@@ -24,7 +24,7 @@ type RemoveTagFromBankTransactionArg = {
 const useRemoveTagFromBankTransactionMutation = createMutationHook({
   tags: [REMOVE_TAG_FROM_BANK_TRANSACTION_TAG_KEY],
   request: removeTagFromBankTransaction,
-  keyParamNames: ['bankTransactionId'],
+  keyParams: ['bankTransactionId'],
   argToBody: ({ tagId }: RemoveTagFromBankTransactionArg) => ({
     tag_ids: [tagId],
   }),

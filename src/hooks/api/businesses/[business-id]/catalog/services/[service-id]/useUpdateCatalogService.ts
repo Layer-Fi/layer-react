@@ -22,7 +22,7 @@ const updateCatalogService = patch<
 const useUpdateCatalogServiceMutation = createMutationHook({
   tags: [UPDATE_CATALOG_SERVICE_TAG_KEY],
   request: updateCatalogService,
-  keyParamNames: ['serviceId'],
+  keyParams: ['serviceId'],
   schema: UpdateCatalogServiceResponseSchema,
   swrOptions: { throwOnError: true },
 })

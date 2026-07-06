@@ -20,7 +20,7 @@ const archiveVehicle = post<
 const useArchiveVehicleMutation = createMutationHook({
   tags: [ARCHIVE_VEHICLE_TAG_KEY],
   request: archiveVehicle,
-  keyParamNames: ['vehicleId'],
+  keyParams: ['vehicleId'],
   argToBody: (_arg: never) => undefined,
   schema: ArchiveVehicleReturnSchema,
   swrOptions: { throwOnError: true },

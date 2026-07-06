@@ -31,7 +31,7 @@ const requestProfitAndLossDetailLinesExcel = getAsMutation(getProfitAndLossDetai
 export const useProfitAndLossDetailLinesExport = createMutationHook({
   tags: ['#pnl-detail-lines', '#exports', '#excel'],
   request: requestProfitAndLossDetailLinesExcel,
-  keyParamNames: ['startDate', 'endDate', 'pnlStructureLineItemName', 'tagFilter', 'reportingBasis', 'pnlStructure'],
+  keyParams: ['startDate', 'endDate', 'pnlStructureLineItemName', 'tagFilter', 'reportingBasis', 'pnlStructure'],
   argToBody: (_arg: undefined) => undefined,
   select: ({ data }) => data,
   swrOptions: { throwOnError: false },

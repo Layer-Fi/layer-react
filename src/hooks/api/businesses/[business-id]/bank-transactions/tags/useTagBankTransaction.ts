@@ -44,7 +44,7 @@ type TagBankTransactionArg = {
 const useTagBankTransactionMutation = createMutationHook({
   tags: [TAG_BANK_TRANSACTION_TAG_KEY],
   request: tagBankTransaction,
-  keyParamNames: ['bankTransactionId'],
+  keyParams: ['bankTransactionId'],
   argToBody: (
     { key, value, dimensionDisplayName, valueDisplayName }: TagBankTransactionArg,
     { bankTransactionId },

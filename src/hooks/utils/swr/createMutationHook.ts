@@ -29,7 +29,7 @@ export function createMutationHook<
   /** The HTTP call to make when triggered. Receives the assembled params and body, plus the injected auth and `businessId`. */
   request: MutationRequest<TEncoded, TBody, TParams>
   /** Params that pin the mutation to one entity (e.g. an id). Callers pass these when creating the hook, not when triggering. */
-  keyParamNames?: TKeyParamNames
+  keyParams?: TKeyParamNames
   /** Pulls URL params out of the trigger argument, for when it mixes routing info (e.g. an id) with payload. */
   argToParams?: (arg: TArg, keyParamValues: BusinessScopedParams & Pick<TParams, TKeyParamNames[number]>) => Partial<Omit<TParams, 'businessId'>>
   /**

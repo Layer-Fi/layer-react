@@ -139,12 +139,12 @@ describe('createMutationHook', () => {
     expect(getRequestOptions(request)?.body).toEqual({ name: 'New Widget' })
   })
 
-  it('pins keyParamNames from the hook options into the request params', async () => {
+  it('pins keyParams from the hook options into the request params', async () => {
     const request = makeRequest(() => Promise.resolve(RAW_WIDGET))
     const useUpsertWidget = createMutationHook<RawWidget, WidgetBody, WidgetParams, RawWidget, WidgetBody, readonly ['widgetId']>({
       tags: ['Widgets'],
       request,
-      keyParamNames: ['widgetId'],
+      keyParams: ['widgetId'],
     })
 
     const { result } = await renderHookWithAuth(() => useUpsertWidget({ widgetId: 'w7' }))

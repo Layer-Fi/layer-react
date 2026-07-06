@@ -20,7 +20,7 @@ const reactivateVehicle = post<
 const useReactivateVehicleMutation = createMutationHook({
   tags: [REACTIVATE_VEHICLE_TAG_KEY],
   request: reactivateVehicle,
-  keyParamNames: ['vehicleId'],
+  keyParams: ['vehicleId'],
   argToBody: (_arg: never) => undefined,
   schema: ReactivateVehicleReturnSchema,
   swrOptions: { throwOnError: true },
