@@ -426,5 +426,53 @@ describe('usePollingConfig', () => {
       await advance(INTERVAL * 5)
       expect(fetcher).toHaveBeenCalledTimes(4)
     })
+
+    it('recovers from a transient error and resumes polling at the interval', async () => {
+      let failuresRemaining = 1
+      const fetcher = vi.fn(() =>
+        failuresRemaining-- > 0 ? Promise.reject(new Error('boom')) : Promise.resolve(PENDING),
+      )
+
+      renderPolledSWR('poll-recovery', fetcher)
+
+      await advance(0) // mount fetch fails
+      expect(fetcher).toHaveBeenCalledTimes(1)
+
+      await advance(INTERVAL) // retry succeeds with pending data
+      expect(fetcher).toHaveBeenCalledTimes(2)
+
+      await advance(INTERVAL) // polling has resumed
+      expect(fetcher).toHaveBeenCalledTimes(3)
+    })
+
+    it('revives a cap-stopped loop only on a rising edge, not on still-pending refetches', async () => {
+      let response: PollData = PENDING
+      const fetcher = vi.fn(() => Promise.resolve(response))
+
+      const { result } = renderPolledSWR('poll-stopped-revival', fetcher, { maxDurationMs: INTERVAL * 2 })
+
+      await advance(0)
+      await advance(INTERVAL * 5) // cap halts the loop
+      const haltedCount = fetcher.mock.calls.length
+
+      await act(async () => {
+        await result.current.mutate()
+      })
+      await advance(INTERVAL * 3)
+      expect(fetcher).toHaveBeenCalledTimes(haltedCount + 1) // refetch ran, but no polling revived
+
+      response = DONE
+      await act(async () => {
+        await result.current.mutate()
+      })
+      response = PENDING
+      await act(async () => {
+        await result.current.mutate()
+      })
+      const revivedBase = fetcher.mock.calls.length
+
+      await advance(INTERVAL)
+      expect(fetcher.mock.calls.length).toBeGreaterThan(revivedBase) // rising edge restarted the loop
+    })
   })
 })
