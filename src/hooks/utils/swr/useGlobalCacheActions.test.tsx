@@ -68,7 +68,7 @@ describe('useGlobalCacheActions', () => {
     expect(mutate).toHaveBeenCalledWith('key-a', undefined, { populateCache: true, revalidate: true })
   })
 
-  it('optimisticUpdate applies the callback only to displayed data', async () => {
+  it('optimisticUpdate applies the callback only to non-nullish displayed data', async () => {
     const result = renderActions()
 
     await result.current.optimisticUpdate<{ id: string, patched?: boolean }>(
@@ -77,7 +77,7 @@ describe('useGlobalCacheActions', () => {
     )
 
     const options = mutate.mock.calls[0][2] as {
-      optimisticData: (current: unknown, displayed?: { id: string }) => unknown
+      optimisticData: (current: unknown, displayed?: { id: string } | null) => unknown
       populateCache: boolean
       revalidate: boolean
     }
@@ -85,6 +85,7 @@ describe('useGlobalCacheActions', () => {
     expect(options.revalidate).toBe(false)
     expect(options.optimisticData(undefined, { id: 'x' })).toEqual({ id: 'x', patched: true })
     expect(options.optimisticData(undefined, undefined)).toBeUndefined()
+    expect(options.optimisticData(undefined, null)).toBeNull()
   })
 
   it('does not mutate when no keys match the predicate', async () => {
