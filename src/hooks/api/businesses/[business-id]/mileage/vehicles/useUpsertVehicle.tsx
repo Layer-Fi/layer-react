@@ -1,9 +1,6 @@
-import { useCallback } from 'react'
-
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { type UpsertVehicleEncoded, VehicleSchema } from '@schemas/vehicle'
 import { patch, post } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useTripsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/trips/useListTrips'
 import { useVehiclesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
@@ -38,6 +35,13 @@ const useCreateVehicle = createMutationHook({
   request: createVehicle,
   schema: UpsertVehicleReturnSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()
+
+    return () => {
+      void forceReloadVehicles()
+    }
+  },
 })
 
 const useUpdateVehicle = createMutationHook({
@@ -46,6 +50,15 @@ const useUpdateVehicle = createMutationHook({
   keyParams: ['vehicleId'],
   schema: UpsertVehicleReturnSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { patchByKey: patchVehicleByKey } = useVehiclesGlobalCacheActions()
+    const { forceReload: forceReloadTrips } = useTripsGlobalCacheActions()
+
+    return (data) => {
+      void patchVehicleByKey(data)
+      void forceReloadTrips()
+    }
+  },
 })
 
 type UseUpsertVehicleProps =
@@ -61,29 +74,5 @@ export const useUpsertVehicle = (props: UseUpsertVehicleProps) => {
     vehicleId: vehicleId ?? '',
   })
 
-  const mutationResponse = mode === UpsertVehicleMode.Create ? createResponse : updateResponse
-
-  const { patchByKey: patchVehicleByKey, forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()
-  const { forceReload: forceReloadTrips } = useTripsGlobalCacheActions()
-
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      if (mode === UpsertVehicleMode.Update) {
-        void patchVehicleByKey(triggerResult)
-        void forceReloadTrips()
-      }
-      else {
-        void forceReloadVehicles()
-      }
-
-      return triggerResult
-    },
-    [originalTrigger, mode, patchVehicleByKey, forceReloadTrips, forceReloadVehicles],
-  )
-
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
+  return mode === UpsertVehicleMode.Create ? createResponse : updateResponse
 }

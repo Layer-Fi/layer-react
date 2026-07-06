@@ -1,9 +1,7 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 
 import { type TagDimensionSchema, TagDimensionStrictnessSchema } from '@schemas/tag'
 import { post } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useTagDimensionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/tags/dimensions/useTagDimensions'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
@@ -23,33 +21,15 @@ const createTagDimension = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/tags/dimensions`)
 
-const useCreateTagDimensionMutation = createMutationHook({
+export const useCreateTagDimension = createMutationHook({
   tags: [CREATE_TAG_DIMENSION_TAG_KEY],
   request: createTagDimension,
   argToBody: (tagDimension: typeof CreateTagDimensionBodySchema.Type) =>
     Schema.encodeSync(CreateTagDimensionBodySchema)(tagDimension),
-})
-
-export function useCreateTagDimension() {
-  const mutationResponse = useCreateTagDimensionMutation()
-
-  const { invalidate: invalidateTagDimensions } = useTagDimensionsGlobalCacheActions()
-
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
+  useOnTriggerSuccess: () => {
+    const { invalidate: invalidateTagDimensions } = useTagDimensionsGlobalCacheActions()
+    return async () => {
       await invalidateTagDimensions()
-
-      return triggerResult
-    },
-    [
-      invalidateTagDimensions,
-      originalTrigger,
-    ],
-  )
-
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
-}
+    }
+  },
+})

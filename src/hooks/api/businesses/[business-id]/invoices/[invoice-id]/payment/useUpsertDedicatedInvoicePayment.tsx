@@ -1,10 +1,7 @@
-import { useCallback } from 'react'
-
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { type InvoicePayment, InvoicePaymentSchema, type UpsertDedicatedInvoicePaymentSchema } from '@schemas/invoices/invoicePayment'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post, put } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
@@ -47,12 +44,36 @@ export type UpdateParams = {
 
 export type UpsertParams = CreateParams | UpdateParams
 
+export const updateInvoiceWithPayment = (invoice: Invoice, invoicePayment: InvoicePayment) => {
+  const outstandingBalance = invoice.outstandingBalance - invoicePayment.amount
+  const status = outstandingBalance === 0 ? InvoiceStatus.Paid : InvoiceStatus.PartiallyPaid
+
+  return { ...invoice, status, outstandingBalance }
+}
+
+const applyPaymentToInvoice = (invoiceId: string, invoicePayment: InvoicePayment) =>
+  (invoice: Invoice) => {
+    if (invoice.id !== invoiceId) return invoice
+    return updateInvoiceWithPayment(invoice, invoicePayment)
+  }
+
+const useDedicatedInvoicePaymentTriggerSuccess = ({ invoiceId }: { invoiceId: string }) => {
+  const { patchByTransformation: patchInvoiceWithTransformation } = useInvoicesGlobalCacheActions()
+  const { forceReload: forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()
+
+  return (invoicePayment: InvoicePayment) => {
+    void patchInvoiceWithTransformation(applyPaymentToInvoice(invoiceId, invoicePayment))
+    void forceReloadInvoiceSummaryStats()
+  }
+}
+
 const useCreateDedicatedInvoicePayment = createMutationHook({
   tags: [UPSERT_INVOICE_PAYMENT_TAG_KEY],
   request: createDedicatedInvoicePayment,
   keyParams: ['invoiceId'],
   schema: UpsertDedicatedInvoicePaymentReturnSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: useDedicatedInvoicePaymentTriggerSuccess,
 })
 
 const useUpdateDedicatedInvoicePayment = createMutationHook({
@@ -61,14 +82,8 @@ const useUpdateDedicatedInvoicePayment = createMutationHook({
   keyParams: ['invoiceId', 'invoicePaymentId'],
   schema: UpsertDedicatedInvoicePaymentReturnSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: useDedicatedInvoicePaymentTriggerSuccess,
 })
-
-export const updateInvoiceWithPayment = (invoice: Invoice, invoicePayment: InvoicePayment) => {
-  const outstandingBalance = invoice.outstandingBalance - invoicePayment.amount
-  const status = outstandingBalance === 0 ? InvoiceStatus.Paid : InvoiceStatus.PartiallyPaid
-
-  return { ...invoice, status, outstandingBalance }
-}
 
 type UseUpsertDedicatedInvoicePaymentProps =
   | { mode: UpsertDedicatedInvoicePaymentMode.Create, invoiceId: string }
@@ -78,37 +93,11 @@ export const useUpsertDedicatedInvoicePayment = (props: UseUpsertDedicatedInvoic
   const { mode, invoiceId } = props
   const invoicePaymentId = mode === UpsertDedicatedInvoicePaymentMode.Update ? props.invoicePaymentId : undefined
 
-  const applyPaymentToInvoice = useCallback((invoicePayment: InvoicePayment) =>
-    (invoice: Invoice) => {
-      if (invoice.id !== invoiceId) return invoice
-      return updateInvoiceWithPayment(invoice, invoicePayment)
-    }, [invoiceId])
-
   const createResponse = useCreateDedicatedInvoicePayment({ invoiceId })
   const updateResponse = useUpdateDedicatedInvoicePayment({
     invoiceId,
     invoicePaymentId: invoicePaymentId ?? '',
   })
 
-  const mutationResponse = mode === UpsertDedicatedInvoicePaymentMode.Create ? createResponse : updateResponse
-
-  const { patchByTransformation: patchInvoiceWithTransformation } = useInvoicesGlobalCacheActions()
-  const { forceReload: forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()
-
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      void patchInvoiceWithTransformation(applyPaymentToInvoice(triggerResult))
-
-      void forceReloadInvoiceSummaryStats()
-
-      return triggerResult
-    },
-    [originalTrigger, patchInvoiceWithTransformation, applyPaymentToInvoice, forceReloadInvoiceSummaryStats],
-  )
-
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
+  return mode === UpsertDedicatedInvoicePaymentMode.Create ? createResponse : updateResponse
 }
