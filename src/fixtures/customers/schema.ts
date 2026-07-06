@@ -7,12 +7,12 @@ import {
   applyContactInvariants,
   companyNameArbitrary,
   contactStatusArbitrary,
-  externalIdArbitrary,
   generatedEmailArbitrary,
   individualNameArbitrary,
   memoArbitrary,
   phoneNumberArbitrary,
 } from '@fixtures/utils/contactFields'
+import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
 
 const { _local, ...fields } = CustomerSchema.fields

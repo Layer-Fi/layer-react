@@ -26,12 +26,6 @@ const emailForName = (individualName: string | null, companyName: string | null)
   return `${local}@${domain}`
 }
 
-export const externalIdArbitrary = (fc: typeof FastCheck) =>
-  fc.oneof(
-    fc.constant(null),
-    fc.integer({ min: 10000, max: 99999 }).map(n => `ext_${n}`),
-  )
-
 export const individualNameArbitrary = nullableConstantFrom(individualNames)
 export const companyNameArbitrary = nullableConstantFrom(companyNames)
 
