@@ -1,14 +1,12 @@
 import { useCallback } from 'react'
 import { useSWRConfig } from 'swr'
-import useSWRMutation from 'swr/mutation'
 
 import type { BusinessTaskEncoded } from '@schemas/businessTasks/businessTask'
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { BOOKKEEPING_PERIODS_TAG_KEY } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 type UpdateTaskUploadsDescriptionBody = {
   type: 'FreeResponse'
@@ -27,43 +25,28 @@ const updateTaskUploadsDescription = post<
     `/v1/businesses/${businessId}/tasks/${taskId}/upload/update-description`,
 )
 
-const buildKey = createBuildKey<{ businessId: string }>(['#update-task-upload-description'])
-
 type UseUpdateTaskUploadDescriptionArg = {
   taskId: string
   description: string
 }
 
+const useUpdateTaskUploadDescriptionMutation = createMutationHook({
+  tags: ['#update-task-upload-description'],
+  request: updateTaskUploadsDescription,
+  argToParams: ({ taskId }: UseUpdateTaskUploadDescriptionArg) => ({ taskId }),
+  argToBody: ({ description }: UseUpdateTaskUploadDescriptionArg) => ({
+    type: 'FreeResponse' as const,
+    user_response: description,
+  }),
+  swrOptions: { throwOnError: false },
+})
+
 export function useUpdateTaskUploadDescription() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const { mutate } = useSWRConfig()
 
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: { taskId, description } }: { arg: UseUpdateTaskUploadDescriptionArg },
-    ) => updateTaskUploadsDescription(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId, taskId },
-        body: {
-          type: 'FreeResponse',
-          user_response: description,
-        },
-      },
-    ),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
+  const mutationResponse = useUpdateTaskUploadDescriptionMutation()
 
-  const { trigger: originalTrigger } = mutationResponse
+  const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {

@@ -2,12 +2,12 @@ import { useCallback, useId, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getActivationDate } from '@utils/business'
+import { DatePreset, presetForDateRange, rangeForPreset } from '@utils/date/dateRangePresets'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-import { DatePreset, presetForDateRange, rangeForPreset } from '@components/DateSelection/utils'
 
 type DateSelectionOption = {
   label: string

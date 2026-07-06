@@ -1,6 +1,4 @@
-export type DateSelectionMode = 'full' | 'month' | 'year'
-
-export type DateRange = { startDate: Date, endDate: Date }
+import type { DateRange } from '@utils/date/dateRange'
 
 export type DateActions = {
   setDate: (options: { date: Date }) => DateRange

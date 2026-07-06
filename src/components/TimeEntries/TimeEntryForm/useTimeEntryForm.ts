@@ -33,7 +33,7 @@ export const useTimeEntryForm = (props: UseTimeEntryFormProps) => {
       const upsertRequest = Schema.encodeUnknownSync(UpsertTimeEntrySchema)(entryParams)
       const result = await upsertTimeEntry(upsertRequest)
 
-      onSuccess(result.data)
+      onSuccess(result)
     }
     catch {
       setSubmitError(t('common:error.something_went_wrong_please_try_again', 'Something went wrong. Please try again.'))

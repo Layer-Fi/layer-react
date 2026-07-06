@@ -1,57 +1,42 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
 
 import { CatalogServiceSchema } from '@schemas/catalogService'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useCatalogServicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const REACTIVATE_CATALOG_SERVICE_TAG_KEY = '#reactivate-catalog-service'
 
-const ReactivateCatalogServiceResponseSchema = Schema.Struct({
-  data: CatalogServiceSchema,
-})
-type ReactivateCatalogServiceResponse = typeof ReactivateCatalogServiceResponseSchema.Type
+const ReactivateCatalogServiceResponseSchema = UnwrappedDataResponseSchema(CatalogServiceSchema)
 
-const reactivateCatalogService = post<ReactivateCatalogServiceResponse>(
+const reactivateCatalogService = post<
+  typeof ReactivateCatalogServiceResponseSchema.Encoded,
+  Record<string, unknown>,
+  { businessId: string, serviceId: string }
+>(
   ({ businessId, serviceId }) =>
     `/v1/businesses/${businessId}/catalog/services/${serviceId}/reactivate`,
 )
 
-const buildKey = createBuildKey<{ businessId: string, serviceId: string }>([REACTIVATE_CATALOG_SERVICE_TAG_KEY])
+const useReactivateCatalogServiceMutation = createMutationHook({
+  tags: [REACTIVATE_CATALOG_SERVICE_TAG_KEY],
+  request: reactivateCatalogService,
+  keyParams: ['serviceId'],
+  argToBody: (_arg: never) => undefined,
+  schema: ReactivateCatalogServiceResponseSchema,
+  swrOptions: { throwOnError: true },
+})
 
 type UseReactivateCatalogServiceProps = {
   serviceId: string
 }
 
 export function useReactivateCatalogService({ serviceId }: UseReactivateCatalogServiceProps) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const { forceReload: forceReloadCatalogServices } = useCatalogServicesGlobalCacheActions()
 
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      serviceId,
-    })),
-    ({ accessToken, apiUrl, businessId, serviceId: sid }) => reactivateCatalogService(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId, serviceId: sid },
-      },
-    ).then(Schema.decodeUnknownPromise(ReactivateCatalogServiceResponseSchema)),
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
+  const mutationResponse = useReactivateCatalogServiceMutation({ serviceId })
   const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(

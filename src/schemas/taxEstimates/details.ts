@@ -7,6 +7,7 @@ import {
   UnifiedCellValueUnknownSchema,
 } from '@schemas/reports/unifiedReport'
 import { TransformedTaxSummaryStateSchema } from '@schemas/taxEstimates/summary'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 
 const TaxDetailsValueSchema = Schema.Union(
   UnifiedCellValueCurrencySchema,
@@ -63,8 +64,6 @@ const TaxDetailsSchema = Schema.Struct({
 
 export type TaxDetails = typeof TaxDetailsSchema.Type
 
-export const TaxDetailsResponseSchema = Schema.Struct({
-  data: TaxDetailsSchema,
-})
+export const TaxDetailsResponseSchema = UnwrappedDataResponseSchema(TaxDetailsSchema)
 
 export type TaxDetailsResponse = typeof TaxDetailsResponseSchema.Type

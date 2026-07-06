@@ -1,100 +1,41 @@
-import { Schema } from 'effect'
-import useSWRInfinite from 'swr/infinite'
-
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { VendorSchema } from '@schemas/vendor'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
-import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
-import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 const ListVendorsRawResultSchema = PaginatedResponseSchema(VendorSchema)
-type ListVendorsRawResult = typeof ListVendorsRawResultSchema.Type
 
-type ListVendorsBaseParams = {
+type ListVendorsPaginatedParams = {
   businessId: string
-}
-type ListVendorsPaginatedParams = ListVendorsBaseParams & {
   cursor?: string
   limit?: number
   query?: string
 }
 
-const listVendors = get<
-  Record<string, unknown>,
+const listVendors = getWithQuery<
+  typeof ListVendorsRawResultSchema.Encoded,
   ListVendorsPaginatedParams
->(({
-  businessId,
-  cursor,
-  limit,
-  query,
-}) => {
-  const parameters = toDefinedSearchParameters({
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/vendors`,
+  ({ cursor, limit, query }) => ({
     cursor,
     identityStatus: 'IDENTIFIED',
     limit,
     q: query,
-  })
-
-  return `/v1/businesses/${businessId}/vendors?${parameters}`
-})
+  }),
+)
 
 export const VENDORS_TAG_KEY = '#vendors'
 
-const keyLoader = createInfiniteKeyLoader<
-  { businessId: string, query?: string },
-  ListVendorsRawResult
->([VENDORS_TAG_KEY])
+export const useListVendors = createInfiniteQueryHook({
+  tags: [VENDORS_TAG_KEY],
+  request: listVendors,
+  schema: ListVendorsRawResultSchema,
+  keyDefaults: { limit: 100 },
+})
 
-type UseListVendorsParameters = {
-  query?: string
-  isEnabled?: boolean
-}
-
-export function useListVendors({ query, isEnabled = true }: UseListVendorsParameters = {}) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const swrResponse = useSWRInfinite(
-    (_index, previousPageData: ListVendorsRawResult | null) => withLocale(keyLoader(
-      previousPageData,
-      {
-        ...auth,
-        businessId,
-        query,
-        isEnabled,
-      },
-    )),
-    ({
-      accessToken,
-      apiUrl,
-      businessId,
-      cursor,
-      query,
-    }) => listVendors(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          cursor,
-          limit: 100,
-          query,
-        },
-      },
-    )().then(Schema.decodeUnknownPromise(ListVendorsRawResultSchema)),
-    {
-      keepPreviousData: true,
-      revalidateFirstPage: false,
-      initialSize: 1,
-    },
-  )
-
-  usePreserveInfiniteSize(swrResponse)
-
-  return useSWRInfiniteResult(swrResponse)
-}
+type UseListVendorsParameters = Parameters<typeof useListVendors>[0]
 
 export function usePreloadVendors(parameters?: UseListVendorsParameters) {
   /*

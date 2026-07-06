@@ -45,9 +45,9 @@ export const useInvoiceFinalizeForm = ({
           FinalizeInvoiceBodySchema,
         )(finalizeInvoiceParams)
 
-        const { data } = await finalizeInvoice(finalizeInvoiceRequest)
+        const { invoice: finalizedInvoice } = await finalizeInvoice(finalizeInvoiceRequest)
         setSubmitError(undefined)
-        onSuccess(data.invoice)
+        onSuccess(finalizedInvoice)
       }
       catch (e) {
         console.error(e)

@@ -196,13 +196,13 @@ type ArchivedServicesContentProps = {
 
 function ArchivedServicesContent({ isEnabled, formatHourly, onRestore }: ArchivedServicesContentProps) {
   const { t } = useTranslation()
-  const { data, isLoading, isError } = useListCatalogServices({
+  const { flattenedData: data, isLoading, isError } = useListCatalogServices({
     allowArchived: true,
     isEnabled,
   })
 
   const archivedServices = useMemo(
-    () => (data?.data ?? []).filter(s => s.archivedAt != null),
+    () => (data ?? []).filter(s => s.archivedAt != null),
     [data],
   )
 
@@ -261,7 +261,7 @@ export function TimeTrackingServicesDrawer({
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
   const formatHourly = useFormatHourly()
-  const { data, isLoading, isError } = useListCatalogServices()
+  const { flattenedData: data, isLoading, isError } = useListCatalogServices()
   const [tab, setTab] = useState<ServicesTab>('active')
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [isAdding, setIsAdding] = useState(false)
@@ -302,7 +302,7 @@ export function TimeTrackingServicesDrawer({
     setIsRestoreOpen(true)
   }, [])
 
-  const activeServices = useMemo(() => data?.data ?? [], [data])
+  const activeServices = useMemo(() => data ?? [], [data])
   const showCreateForm = isAdding || (!isLoading && !isError && activeServices.length === 0)
   const showAddButton = !showCreateForm && activeServices.length > 0
 

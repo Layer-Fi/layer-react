@@ -36,7 +36,7 @@ export const useInvoicePaymentForm = (props: UseInvoicePaymentFormProps) => {
       const upsertDedicatedInvoicePaymentParams = convertInvoicePaymentFormToParams(value)
       const upsertDedicatedInvoicePaymentRequest = Schema.encodeUnknownSync(UpsertDedicatedInvoicePaymentSchema)(upsertDedicatedInvoicePaymentParams)
 
-      const { data: invoicePayment } = await upsertDedicatedInvoicePayment(upsertDedicatedInvoicePaymentRequest)
+      const invoicePayment = await upsertDedicatedInvoicePayment(upsertDedicatedInvoicePaymentRequest)
 
       setSubmitError(undefined)
       onSuccess(invoicePayment)

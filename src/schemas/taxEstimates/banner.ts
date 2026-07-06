@@ -2,7 +2,7 @@ import { pipe, Schema } from 'effect'
 
 import { CalendarDateSchema } from '@schemas/common/calendarDateFromSelf'
 import { TaxOverviewDeadlineStatus } from '@schemas/taxEstimates/overview'
-import { createTransformedEnumSchema } from '@schemas/utils'
+import { createTransformedEnumSchema, UnwrappedDataResponseSchema } from '@schemas/utils'
 
 const TransformedTaxOverviewDeadlineStatusSchema = createTransformedEnumSchema(
   Schema.Enums(TaxOverviewDeadlineStatus),
@@ -92,8 +92,6 @@ const TaxEstimatesBannerSchema = Schema.Struct({
 
 export type TaxEstimatesBanner = typeof TaxEstimatesBannerSchema.Type
 
-export const TaxEstimatesBannerResponseSchema = Schema.Struct({
-  data: TaxEstimatesBannerSchema,
-})
+export const TaxEstimatesBannerResponseSchema = UnwrappedDataResponseSchema(TaxEstimatesBannerSchema)
 
 export type TaxEstimatesBannerResponse = typeof TaxEstimatesBannerResponseSchema.Type

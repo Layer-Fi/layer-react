@@ -43,7 +43,7 @@ export function usePollPlaidHostedLinkStatus({ onSuccess, enabled }: UsePollPlai
     isFatalError,
   })
 
-  const { data, mutate } = usePlaidHostedLinkStatus(pollingConfig, enabled)
+  const { data, mutate } = usePlaidHostedLinkStatus({ isEnabled: enabled, swrOptions: pollingConfig })
 
   // Clear a previous session's cached status; polling fetches the current one.
   useEffect(() => {

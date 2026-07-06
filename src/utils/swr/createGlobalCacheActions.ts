@@ -30,11 +30,18 @@ export function createResourceGlobalCacheActions<TResource>(tagKey: string) {
       [patchCache],
     )
 
+    const patchCacheResource = useCallback(
+      (transformResource: (resource?: TResource) => TResource | undefined, options?: PatchOptions) =>
+        patchCache<TResource | undefined>(matchesTag, transformResource, options),
+      [patchCache],
+    )
+
     return useMemo(() => ({
       invalidate: invalidateResource,
       forceReload: forceReloadResource,
       overwriteCache: overwriteCacheResource,
-    }), [invalidateResource, forceReloadResource, overwriteCacheResource])
+      patchCache: patchCacheResource,
+    }), [invalidateResource, forceReloadResource, overwriteCacheResource, patchCacheResource])
   }
 }
 

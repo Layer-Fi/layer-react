@@ -2,22 +2,12 @@ import {
   endOfDay,
   endOfMonth,
   endOfYear,
-  max,
-  min,
   startOfMonth,
   startOfYear,
 } from 'date-fns'
 
+import { clampToPresentOrPast, type DateRange, type DateSelectionMode } from '@utils/date/dateRange'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import type { DateRange, DateSelectionMode } from '@providers/DateStoreProvider/internal/types'
-
-export function clampToAfterActivationDate(date: Date | number, activationDate: Date) {
-  return max([date, activationDate])
-}
-
-export function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new Date())) {
-  return min([date, cutoff])
-}
 
 type GetDateRangeOptions =
   | { mode: 'full', startDate: Date, endDate: Date }

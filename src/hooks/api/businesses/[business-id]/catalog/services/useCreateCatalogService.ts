@@ -1,59 +1,35 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
 
 import { CatalogServiceSchema, type CreateCatalogServiceEncoded } from '@schemas/catalogService'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useCatalogServicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const CREATE_CATALOG_SERVICE_TAG_KEY = '#create-catalog-service'
 
 type CreateCatalogServiceBody = CreateCatalogServiceEncoded
 
-const CreateCatalogServiceResponseSchema = Schema.Struct({
-  data: CatalogServiceSchema,
-})
-type CreateCatalogServiceResponse = typeof CreateCatalogServiceResponseSchema.Type
+const CreateCatalogServiceResponseSchema = UnwrappedDataResponseSchema(CatalogServiceSchema)
 
 const createCatalogService = post<
-  CreateCatalogServiceResponse,
+  typeof CreateCatalogServiceResponseSchema.Encoded,
   CreateCatalogServiceBody,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/catalog/services`)
 
-const buildKey = createBuildKey<{ businessId: string }>([CREATE_CATALOG_SERVICE_TAG_KEY])
+const useCreateCatalogServiceMutation = createMutationHook({
+  tags: [CREATE_CATALOG_SERVICE_TAG_KEY],
+  request: createCatalogService,
+  schema: CreateCatalogServiceResponseSchema,
+  swrOptions: { throwOnError: true },
+})
 
 export function useCreateCatalogService() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const { forceReload: forceReloadCatalogServices } = useCatalogServicesGlobalCacheActions()
 
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: body }: { arg: CreateCatalogServiceBody },
-    ) => createCatalogService(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-        body,
-      },
-    ).then(Schema.decodeUnknownPromise(CreateCatalogServiceResponseSchema)),
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
+  const mutationResponse = useCreateCatalogServiceMutation()
   const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(
