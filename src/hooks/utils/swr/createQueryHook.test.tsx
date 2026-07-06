@@ -194,31 +194,25 @@ describe('createQueryHook', () => {
     await waitFor(() => expect(request).toHaveBeenCalledTimes(2))
   })
 
-  describe('isLocalized', () => {
-    it('sends the active locale when localized (default)', async () => {
-      const setLocaleHeader = vi.spyOn(authenticatedHttp, 'setLocaleHeader')
-      const request = makeRequest(() => Promise.resolve(RAW_WIDGET))
-      const useWidget = createQueryHook<WidgetParams, RawWidget>({ tags: ['Widgets'], request })
+  it('sends the active locale when localized (default)', async () => {
+    const setLocaleHeader = vi.spyOn(authenticatedHttp, 'setLocaleHeader')
+    const localizedRequest = makeRequest(() => Promise.resolve(RAW_WIDGET))
+    const useLocalizedQuery = createQueryHook<WidgetParams, RawWidget>({ tags: ['Widgets'], request: localizedRequest })
 
-      const { result } = await renderHookWithAuth(() => useWidget(), { wrapper: frCaWrapper })
+    const { result } = await renderHookWithAuth(() => useLocalizedQuery(), { wrapper: frCaWrapper })
 
-      await waitFor(() => expect(result.current.data).toEqual(RAW_WIDGET))
-      expect(setLocaleHeader).toHaveBeenCalledWith(SupportedLocale.frCA)
-    })
+    await waitFor(() => expect(result.current.data).toEqual(RAW_WIDGET))
+    expect(setLocaleHeader).toHaveBeenCalledWith(SupportedLocale.frCA)
+  })
 
-    it('omits the locale from the key when isLocalized is false', async () => {
-      const setLocaleHeader = vi.spyOn(authenticatedHttp, 'setLocaleHeader')
-      const request = makeRequest(() => Promise.resolve(RAW_WIDGET))
-      const useWidget = createQueryHook<WidgetParams, RawWidget>({
-        tags: ['Widgets'],
-        request,
-        isLocalized: false,
-      })
+  it('omits the locale from the key when isLocalized is false', async () => {
+    const setLocaleHeader = vi.spyOn(authenticatedHttp, 'setLocaleHeader')
+    const nonLocalizedRequest = makeRequest(() => Promise.resolve(RAW_WIDGET))
+    const useNonLocalizedQuery = createQueryHook<WidgetParams, RawWidget>({ tags: ['Widgets'], request: nonLocalizedRequest, isLocalized: false })
 
-      const { result } = await renderHookWithAuth(() => useWidget(), { wrapper: frCaWrapper })
+    const { result } = await renderHookWithAuth(() => useNonLocalizedQuery(), { wrapper: frCaWrapper })
 
-      await waitFor(() => expect(result.current.data).toEqual(RAW_WIDGET))
-      expect(setLocaleHeader).not.toHaveBeenCalledWith(SupportedLocale.frCA)
-    })
+    await waitFor(() => expect(result.current.data).toEqual(RAW_WIDGET))
+    expect(setLocaleHeader).not.toHaveBeenCalledWith(SupportedLocale.frCA)
   })
 })

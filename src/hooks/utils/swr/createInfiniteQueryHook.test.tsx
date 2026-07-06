@@ -210,30 +210,34 @@ describe('createInfiniteQueryHook', () => {
     await waitFor(() => expect(result.current.isError).toBe(true))
   })
 
-  it('sends the active locale when localized and omits it when not', async () => {
+  it('sends the active locale when localized (default)', async () => {
     const setLocaleHeader = vi.spyOn(authenticatedHttp, 'setLocaleHeader')
-
     const localizedRequest = makePagedRequest()
-    const useLocalized = createInfiniteQueryHook<WidgetParams, PageEncoded, Page>({
+    const useLocalizedInfiniteQuery = createInfiniteQueryHook<WidgetParams, PageEncoded, Page>({
       tags: ['Widgets'],
       request: localizedRequest,
       schema: PageSchema,
     })
-    const { result: localized } = await renderHookWithAuth(() => useLocalized(), { wrapper: frCaWrapper })
-    await waitFor(() => expect(localized.current.data).toHaveLength(1))
+
+    const { result } = await renderHookWithAuth(() => useLocalizedInfiniteQuery(), { wrapper: frCaWrapper })
+    await waitFor(() => expect(result.current.data).toHaveLength(1))
+
     expect(setLocaleHeader).toHaveBeenCalledWith(SupportedLocale.frCA)
+  })
 
-    setLocaleHeader.mockClear()
-
-    const plainRequest = makePagedRequest()
-    const usePlain = createInfiniteQueryHook<WidgetParams, PageEncoded, Page>({
+  it('omits the locale from the key when isLocalized is false', async () => {
+    const setLocaleHeader = vi.spyOn(authenticatedHttp, 'setLocaleHeader')
+    const nonLocalizedRequest = makePagedRequest()
+    const useNonLocalizedInfiniteQuery = createInfiniteQueryHook<WidgetParams, PageEncoded, Page>({
       tags: ['Widgets'],
-      request: plainRequest,
+      request: nonLocalizedRequest,
       schema: PageSchema,
       isLocalized: false,
     })
-    const { result: plain } = await renderHookWithAuth(() => usePlain(), { wrapper: frCaWrapper })
-    await waitFor(() => expect(plain.current.data).toHaveLength(1))
+
+    const { result } = await renderHookWithAuth(() => useNonLocalizedInfiniteQuery(), { wrapper: frCaWrapper })
+    await waitFor(() => expect(result.current.data).toHaveLength(1))
+
     expect(setLocaleHeader).not.toHaveBeenCalledWith(SupportedLocale.frCA)
   })
 })

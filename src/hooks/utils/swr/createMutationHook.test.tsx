@@ -262,25 +262,29 @@ describe('createMutationHook', () => {
     expect(factoryOnSuccess).not.toHaveBeenCalled()
   })
 
-  it('sends the active locale when localized and omits it when not', async () => {
+  it('sends the active locale when localized (default)', async () => {
     const setLocaleHeader = vi.spyOn(authenticatedHttp, 'setLocaleHeader')
-
     const localizedRequest = makeRequest(() => Promise.resolve(RAW_WIDGET))
     const useLocalizedMutation = createMutationHook<RawWidget, WidgetBody>({ tags: ['Widgets'], request: localizedRequest })
-    const { result: localized } = await renderHookWithAuth(() => useLocalizedMutation(), { wrapper: frCaWrapper })
+
+    const { result } = await renderHookWithAuth(() => useLocalizedMutation(), { wrapper: frCaWrapper })
     await act(async () => {
-      await localized.current.trigger({ name: 'New Widget' })
+      await result.current.trigger({ name: 'New Widget' })
     })
+
     expect(setLocaleHeader).toHaveBeenCalledWith(SupportedLocale.frCA)
+  })
 
-    setLocaleHeader.mockClear()
-
+  it('omits the locale from the key when isLocalized is false', async () => {
+    const setLocaleHeader = vi.spyOn(authenticatedHttp, 'setLocaleHeader')
     const nonLocalizedRequest = makeRequest(() => Promise.resolve(RAW_WIDGET))
     const useNonLocalizedMutation = createMutationHook<RawWidget, WidgetBody>({ tags: ['Widgets'], request: nonLocalizedRequest, isLocalized: false })
-    const { result: nonLocalized } = await renderHookWithAuth(() => useNonLocalizedMutation(), { wrapper: frCaWrapper })
+
+    const { result } = await renderHookWithAuth(() => useNonLocalizedMutation(), { wrapper: frCaWrapper })
     await act(async () => {
-      await nonLocalized.current.trigger({ name: 'New Widget' })
+      await result.current.trigger({ name: 'New Widget' })
     })
+
     expect(setLocaleHeader).not.toHaveBeenCalledWith(SupportedLocale.frCA)
   })
 })
