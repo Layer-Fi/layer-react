@@ -1,9 +1,11 @@
+import { useCallback, useEffect, useRef } from 'react'
 import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import type { MutationRequest } from '@utils/api/getAsMutation'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 type BusinessScopedParams = { businessId: string }
@@ -45,8 +47,17 @@ export function createMutationHook<
   swrOptions?: MutationSWROptions<TData>
   /** Whether the locale is part of the mutation key, mirroring the query keys it relates to. True by default. */
   isLocalized?: boolean
+  /**
+   * Hook that returns a callback run after each successful trigger. Being a hook, it can read
+   * cache-action hooks and context. Its returned promise (if any) is awaited before `trigger`
+   * resolves — use `void` inside for fire-and-forget invalidation. The returned callback does
+   * not need to be memoized; `trigger` stays stable and always invokes the latest one.
+   */
+  useOnTriggerSuccess?: () => (data: TData, arg: TArg) => void | Promise<void>
 }) {
-  const { tags, request, argToParams, argToBody, schema, select, swrOptions, isLocalized = true } = config
+  const { tags, request, argToParams, argToBody, schema, select, swrOptions, isLocalized = true, useOnTriggerSuccess } = config
+
+  const useOnTriggerSuccessHook = useOnTriggerSuccess ?? (() => undefined)
 
   type KeyParamValues = BusinessScopedParams & Pick<TParams, TKeyParamNames[number]>
 
@@ -94,6 +105,37 @@ export function createMutationHook<
       },
     )
 
-    return new SWRMutationResult(rawMutationResponse)
+    const mutationResult = new SWRMutationResult(rawMutationResponse)
+
+    const onTriggerSuccess = useOnTriggerSuccessHook()
+
+    const onTriggerSuccessRef = useRef(onTriggerSuccess)
+    useEffect(() => {
+      onTriggerSuccessRef.current = onTriggerSuccess
+    })
+
+    const originalTrigger = mutationResult.trigger
+
+    const stableProxiedTrigger = useCallback(
+      async (...triggerParameters: Parameters<typeof originalTrigger>) => {
+        // The trigger's with/without-args union only resolves once TArg is concrete, so it is
+        // not callable here without narrowing to a single signature.
+        const trigger = originalTrigger as (...args: typeof triggerParameters) => Promise<TData>
+
+        const triggerResult = await trigger(...triggerParameters)
+
+        await onTriggerSuccessRef.current?.(triggerResult, triggerParameters[0] as TArg)
+
+        return triggerResult
+      },
+      [originalTrigger],
+    )
+
+    return useOnTriggerSuccess
+      ? withStableTrigger(
+        mutationResult,
+        stableProxiedTrigger as unknown as (...args: Parameters<typeof originalTrigger>) => ReturnType<typeof originalTrigger>,
+      )
+      : mutationResult
   }
 }
