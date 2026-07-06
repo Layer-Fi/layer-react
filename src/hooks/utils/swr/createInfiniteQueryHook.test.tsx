@@ -111,6 +111,28 @@ describe('createInfiniteQueryHook', () => {
     expect(secondPageCall).toBeDefined()
   })
 
+  it('fetchMore is a no-op on the last page', async () => {
+    const request = vi.fn<AuthenticatedRequest<PageEncoded, WidgetParams>>(
+      () => () => Promise.resolve(PAGE_TWO),
+    )
+    const useWidgets = createInfiniteQueryHook<WidgetParams, PageEncoded, Page>({
+      tags: ['Widgets'],
+      request,
+      schema: PageSchema,
+    })
+
+    const { result } = await renderHookWithAuth(() => useWidgets())
+
+    await waitFor(() => expect(result.current.data).toHaveLength(1))
+    expect(result.current.hasMore).toBe(false)
+
+    act(() => result.current.fetchMore())
+
+    // hasMorePages guards fetchMore, so the size and request count stay put.
+    expect(result.current.size).toBe(1)
+    expect(request).toHaveBeenCalledTimes(1)
+  })
+
   it('bakes keyDefaults into every page request', async () => {
     const request = makePagedRequest()
     const useWidgets = createInfiniteQueryHook<WidgetParams, PageEncoded, Page>({
