@@ -2,7 +2,6 @@ import { type FastCheck } from 'effect'
 
 import { companyNames } from '@fixtures/constants/personal/companyNames'
 import { individualNames } from '@fixtures/constants/personal/individualNames'
-import { emailForName } from '@fixtures/utils/emailForName'
 
 const nullableConstantFrom = (values: readonly string[]) => (fc: typeof FastCheck) =>
   fc.oneof(
@@ -12,10 +11,21 @@ const nullableConstantFrom = (values: readonly string[]) => (fc: typeof FastChec
 
 const GENERATED_EMAIL = 'GENERATE'
 
-// Customers and vendors share this exact "contact" shape (same field names,
-// same plausible-value generators) — one arbitrary per field, reused via
-// `withArbitrary(fields.x, () => xArbitrary)` at each call site so the field
-// types stay concrete instead of being erased through a generic wrapper.
+const slugify = (value: string) =>
+  value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '.')
+    .replace(/^\.+|\.+$/g, '')
+
+const emailForName = (individualName: string | null, companyName: string | null) => {
+  const local = individualName != null ? slugify(individualName) : 'contact'
+  const domain = companyName != null ? `${slugify(companyName).replace(/\./g, '')}.test` : 'example.com'
+
+  return `${local}@${domain}`
+}
+
 export const externalIdArbitrary = (fc: typeof FastCheck) =>
   fc.oneof(
     fc.constant(null),
@@ -25,12 +35,19 @@ export const externalIdArbitrary = (fc: typeof FastCheck) =>
 export const individualNameArbitrary = nullableConstantFrom(individualNames)
 export const companyNameArbitrary = nullableConstantFrom(companyNames)
 
-// Sampled as a sentinel here; `applyContactInvariants` replaces it with an
-// email derived from the entity's own name/company once those are final.
 export const generatedEmailArbitrary = (fc: typeof FastCheck) =>
   fc.oneof(
     fc.constant(null),
     fc.constant(GENERATED_EMAIL),
+  )
+
+export const phoneNumberArbitrary = (fc: typeof FastCheck) =>
+  fc.oneof(
+    fc.constant(null),
+    fc.tuple(
+      fc.integer({ min: 200, max: 999 }),
+      fc.integer({ min: 0, max: 99 }),
+    ).map(([areaCode, line]) => `+1${areaCode}55501${String(line).padStart(2, '0')}`),
   )
 
 export const contactStatusArbitrary = (fc: typeof FastCheck) =>
@@ -42,10 +59,6 @@ export const memoArbitrary = (options: readonly string[]) => (fc: typeof FastChe
     { arbitrary: fc.constantFrom(...options), weight: 1 },
   )
 
-// A customer/vendor must have at least one of individualName/companyName set
-// (mirrors validateCustomerForm's "either" rule), and its email — if
-// present — is derived from its own name/company rather than sampled
-// independently.
 export const applyContactInvariants = <
   T extends { individualName: string | null, companyName: string | null, email: string | null },
 >(entity: T): T => {

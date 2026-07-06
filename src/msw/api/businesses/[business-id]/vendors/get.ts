@@ -22,7 +22,6 @@ export const get = createMockEndpoint<readonly Vendor[], ReturnType<typeof toRes
   method: 'get',
   path: '*/v1/businesses/:businessId/vendors',
   resolve: ({ override: vendors = defaultVendors, request }) => {
-    // Mirror the real endpoint: `?q=` filters by name or email.
     const query = new URL(request.url).searchParams.get('q')?.toLowerCase()
     const filtered = query == null || query === ''
       ? vendors

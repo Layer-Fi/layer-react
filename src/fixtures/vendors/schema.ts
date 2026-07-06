@@ -10,12 +10,10 @@ import {
   generatedEmailArbitrary,
   individualNameArbitrary,
   memoArbitrary,
+  phoneNumberArbitrary,
 } from '@fixtures/utils/contactFields'
-import { phoneNumberArbitrary } from '@fixtures/utils/phoneNumberArbitrary'
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
 
-// `_local` is client-only optimistic-update state, never present on a server
-// response, so it's excluded from the wire-format fixtures entirely.
 const { _local, ...fields } = VendorSchema.fields
 
 const base = Schema.Struct({

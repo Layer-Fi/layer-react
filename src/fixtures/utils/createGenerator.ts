@@ -5,10 +5,6 @@ type GeneratorConfig = { numRuns: number, seed: number }
 const DEFAULT_CONFIG: GeneratorConfig = { numRuns: 10, seed: 1 }
 
 type GeneratorOptions<A> = {
-  /**
-   * When provided, rows are drawn as one batch and retried until no two share
-   * the same projected value — e.g. dedupe fixtures by display name.
-   */
   uniqueBy?: (value: A) => unknown
 }
 

@@ -22,7 +22,6 @@ export const get = createMockEndpoint<readonly Customer[], ReturnType<typeof toR
   method: 'get',
   path: '*/v1/businesses/:businessId/customers',
   resolve: ({ override: customers = defaultCustomers, request }) => {
-    // Mirror the real endpoint: `?q=` filters by name or email.
     const query = new URL(request.url).searchParams.get('q')?.toLowerCase()
     const filtered = query == null || query === ''
       ? customers
