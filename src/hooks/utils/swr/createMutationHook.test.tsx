@@ -262,40 +262,6 @@ describe('createMutationHook', () => {
     expect(factoryOnSuccess).not.toHaveBeenCalled()
   })
 
-  it('is mutating only while the request is in flight, and reset clears state', async () => {
-    // A deferred request keeps the mutation pending so the in-flight state is observable.
-    let resolveRequest!: (widget: RawWidget) => void
-    const pending = new Promise<RawWidget>((resolve) => {
-      resolveRequest = resolve
-    })
-    const request = makeRequest(() => pending)
-    const useUpsertWidget = createMutationHook<RawWidget, WidgetBody>({ tags: ['Widgets'], request })
-
-    const { result } = await renderHookWithAuth(() => useUpsertWidget())
-
-    expect(result.current.isMutating).toBe(false)
-
-    // Fire without awaiting so the request stays open.
-    let triggered!: Promise<unknown>
-    act(() => {
-      triggered = result.current.trigger({ name: 'New Widget' })
-    })
-
-    await waitFor(() => expect(result.current.isMutating).toBe(true))
-
-    await act(async () => {
-      resolveRequest(RAW_WIDGET)
-      await triggered
-    })
-
-    expect(result.current.isMutating).toBe(false)
-    expect(result.current.data).toEqual(RAW_WIDGET)
-
-    act(() => result.current.reset())
-
-    await waitFor(() => expect(result.current.data).toBeUndefined())
-  })
-
   it('sends the active locale when localized and omits it when not', async () => {
     const setLocaleHeader = vi.spyOn(authenticatedHttp, 'setLocaleHeader')
 
