@@ -1,7 +1,4 @@
-import { useCallback } from 'react'
-
 import { post } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useLedgerEntriesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
 import { useBalanceSheetGlobalCacheActions } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/useBalanceSheet'
 import { useStatementOfCashFlowGlobalCacheActions } from '@hooks/api/businesses/[business-id]/reports/cashflow-statement/useStatementOfCashFlow'
@@ -29,6 +26,22 @@ const useCreateJournalEntry = createMutationHook({
   request: createJournalEntry,
   schema: JournalEntryReturnSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { forceReload: forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
+    const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
+    const { invalidate: invalidateBalanceSheet } = useBalanceSheetGlobalCacheActions()
+    const { invalidate: invalidateStatementOfCashFlow } = useStatementOfCashFlowGlobalCacheActions()
+
+    return () => {
+      // Invalidate all relevant caches after successful journal entry creation
+      void forceReloadLedgerEntries()
+      void debouncedInvalidateProfitAndLoss()
+
+      // Invalidate balance sheet and cash flow statement caches
+      void invalidateBalanceSheet()
+      void invalidateStatementOfCashFlow()
+    }
+  },
 })
 
 type UseUpsertJournalEntryProps =
@@ -42,31 +55,5 @@ export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
     throw new Error('Update mode is not yet supported for journal entries')
   }
 
-  // Cache invalidation hooks
-  const { forceReload: forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
-  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
-  const { invalidate: invalidateBalanceSheet } = useBalanceSheetGlobalCacheActions()
-  const { invalidate: invalidateStatementOfCashFlow } = useStatementOfCashFlowGlobalCacheActions()
-
-  const rawMutationResponse = useCreateJournalEntry()
-  const { trigger: originalTrigger } = rawMutationResponse
-
-  const stableProxiedTrigger = useCallback(
-    async (body: UpsertJournalEntryBody) => {
-      const result = await originalTrigger(body)
-
-      // Invalidate all relevant caches after successful journal entry creation
-      void forceReloadLedgerEntries()
-      void debouncedInvalidateProfitAndLoss()
-
-      // Invalidate balance sheet and cash flow statement caches
-      void invalidateBalanceSheet()
-      void invalidateStatementOfCashFlow()
-
-      return result
-    },
-    [originalTrigger, forceReloadLedgerEntries, debouncedInvalidateProfitAndLoss, invalidateBalanceSheet, invalidateStatementOfCashFlow],
-  )
-
-  return withStableTrigger(rawMutationResponse, stableProxiedTrigger)
+  return useCreateJournalEntry()
 }

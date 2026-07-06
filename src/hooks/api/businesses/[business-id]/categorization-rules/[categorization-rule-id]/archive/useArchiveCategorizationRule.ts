@@ -1,9 +1,6 @@
-import { useCallback } from 'react'
-
 import { CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useCategorizationRulesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/categorization-rules/useListCategorizationRules'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
@@ -20,28 +17,17 @@ export const archiveCategorizationRule = post<
     `/v1/businesses/${businessId}/categorization-rules/${categorizationRuleId}/archive`,
 )
 
-const useArchiveCategorizationRuleMutation = createMutationHook({
+export const useArchiveCategorizationRule = createMutationHook({
   tags: [ARCHIVE_CATEGORIZATION_RULE_TAG],
   request: archiveCategorizationRule,
   argToParams: (categorizationRuleId: string) => ({ categorizationRuleId }),
   argToBody: () => undefined,
   schema: ArchiveCategorizationRuleReturnSchema,
-})
+  useOnTriggerSuccess: () => {
+    const { forceReload: forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
 
-export function useArchiveCategorizationRule() {
-  const { forceReload: forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
-
-  const mutationResponse = useArchiveCategorizationRuleMutation()
-  const { trigger: originalTrigger } = mutationResponse
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResultPromise = originalTrigger(...triggerParameters)
-      await triggerResultPromise
+    return () => {
       void forceReloadCategorizationRules()
-      return triggerResultPromise
-    }, [forceReloadCategorizationRules, originalTrigger],
-  )
-
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
-}
+    }
+  },
+})

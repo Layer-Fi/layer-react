@@ -7,6 +7,7 @@ import { get } from '@utils/api/authenticatedHttp'
 import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
 import { isActiveBookkeepingPeriod } from '@utils/bookkeeping/periods/getFilteredBookkeepingPeriods'
 import { getUserVisibleTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import {
   BOOKKEEPING_TAG_KEY,
   useBookkeepingStatus,
@@ -64,6 +65,9 @@ const getBookkeepingPeriods = get<
 })
 
 export const BOOKKEEPING_PERIODS_TAG_KEY = '#bookkeeping-periods'
+
+export const useBookkeepingPeriodsGlobalCacheActions =
+  createResourceGlobalCacheActions<ReadonlyArray<BookkeepingPeriod>>(BOOKKEEPING_PERIODS_TAG_KEY)
 
 const useBookkeepingPeriodsQuery = createQueryHook({
   tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY],

@@ -1,7 +1,4 @@
-import { useCallback } from 'react'
-
 import { del } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useVehiclesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
@@ -13,35 +10,17 @@ const deleteVehicle = del<
   { businessId: string, vehicleId: string }
 >(({ businessId, vehicleId }) => `/v1/businesses/${businessId}/mileage/vehicles/${vehicleId}`)
 
-const useDeleteVehicleMutation = createMutationHook({
+export const useDeleteVehicle = createMutationHook({
   tags: [DELETE_VEHICLE_TAG_KEY],
   request: deleteVehicle,
   keyParams: ['vehicleId'],
   argToBody: (_arg: never) => undefined,
   swrOptions: { throwOnError: true },
-})
+  useOnTriggerSuccess: () => {
+    const { forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()
 
-type UseDeleteVehicleProps = {
-  vehicleId: string
-}
-
-export const useDeleteVehicle = ({ vehicleId }: UseDeleteVehicleProps) => {
-  const mutationResponse = useDeleteVehicleMutation({ vehicleId })
-
-  const { forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()
-
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
+    return () => {
       void forceReloadVehicles()
-
-      return triggerResult
-    },
-    [originalTrigger, forceReloadVehicles],
-  )
-
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
-}
+    }
+  },
+})

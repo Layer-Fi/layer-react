@@ -1,9 +1,6 @@
-import { useCallback } from 'react'
-
 import { CatalogServiceSchema, type CreateCatalogServiceEncoded } from '@schemas/catalogService'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useCatalogServicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
@@ -19,27 +16,16 @@ const createCatalogService = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/catalog/services`)
 
-const useCreateCatalogServiceMutation = createMutationHook({
+export const useCreateCatalogService = createMutationHook({
   tags: [CREATE_CATALOG_SERVICE_TAG_KEY],
   request: createCatalogService,
   schema: CreateCatalogServiceResponseSchema,
   swrOptions: { throwOnError: true },
-})
+  useOnTriggerSuccess: () => {
+    const { forceReload: forceReloadCatalogServices } = useCatalogServicesGlobalCacheActions()
 
-export function useCreateCatalogService() {
-  const { forceReload: forceReloadCatalogServices } = useCatalogServicesGlobalCacheActions()
-
-  const mutationResponse = useCreateCatalogServiceMutation()
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
+    return () => {
       void forceReloadCatalogServices()
-      return triggerResult
-    },
-    [originalTrigger, forceReloadCatalogServices],
-  )
-
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
-}
+    }
+  },
+})

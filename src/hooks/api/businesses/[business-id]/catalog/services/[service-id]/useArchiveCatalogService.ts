@@ -1,9 +1,6 @@
-import { useCallback } from 'react'
-
 import { CatalogServiceSchema } from '@schemas/catalogService'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useCatalogServicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
@@ -20,33 +17,18 @@ const archiveCatalogService = post<
     `/v1/businesses/${businessId}/catalog/services/${serviceId}/archive`,
 )
 
-const useArchiveCatalogServiceMutation = createMutationHook({
+export const useArchiveCatalogService = createMutationHook({
   tags: [ARCHIVE_CATALOG_SERVICE_TAG_KEY],
   request: archiveCatalogService,
   keyParams: ['serviceId'],
   argToBody: (_arg: never) => undefined,
   schema: ArchiveCatalogServiceResponseSchema,
   swrOptions: { throwOnError: true },
-})
+  useOnTriggerSuccess: () => {
+    const { forceReload: forceReloadCatalogServices } = useCatalogServicesGlobalCacheActions()
 
-type UseArchiveCatalogServiceProps = {
-  serviceId: string
-}
-
-export function useArchiveCatalogService({ serviceId }: UseArchiveCatalogServiceProps) {
-  const { forceReload: forceReloadCatalogServices } = useCatalogServicesGlobalCacheActions()
-
-  const mutationResponse = useArchiveCatalogServiceMutation({ serviceId })
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
+    return () => {
       void forceReloadCatalogServices()
-      return triggerResult
-    },
-    [originalTrigger, forceReloadCatalogServices],
-  )
-
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
-}
+    }
+  },
+})
