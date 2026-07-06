@@ -45,7 +45,6 @@ export function useUnifiedReportExcel({ onSuccess }: UseUnifiedReportExcelOption
   return useUnifiedReportExcelMutation({
     ...params,
     route: params?.route ?? '',
-    isEnabled: params !== null,
     swrOptions: {
       onSuccess: (data) => { void onSuccess?.(data) },
     },

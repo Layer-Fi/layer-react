@@ -77,7 +77,6 @@ export function useUpsertCategorizationRule(props: UseUpsertCategorizationRulePr
   const createResponse = useCreateCategorizationRuleMutation()
   const updateResponse = useUpdateCategorizationRuleMutation({
     categorizationRuleId: categorizationRuleId ?? '',
-    isEnabled: categorizationRuleId !== undefined,
   })
 
   const mutationResponse = mode === UpsertCategorizationRuleMode.Create ? createResponse : updateResponse

@@ -27,13 +27,14 @@ export function UnifiedReportDownloadButton({ icon }: UnifiedReportDownloadButto
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.UnifiedReports)
 
   const onPress = () => {
-    if (report) {
-      emitLayerEvent({
-        type: LayerEventType.ReportsDownloadClicked,
-        version: 1,
-        payload: { reportKey: report.key },
-      })
-    }
+    // No active report means no export route/params — don't fire a request against an empty route.
+    if (!report) return
+
+    emitLayerEvent({
+      type: LayerEventType.ReportsDownloadClicked,
+      version: 1,
+      payload: { reportKey: report.key },
+    })
     void trigger()
   }
 
@@ -47,7 +48,7 @@ export function UnifiedReportDownloadButton({ icon }: UnifiedReportDownloadButto
         variant='outlined'
         onPress={onPress}
         isPending={isMutating}
-        isDisabled={isMutating}
+        isDisabled={isMutating || !report}
         icon={resolvedIcon}
         aria-label={resolvedIcon ? buttonText : undefined}
       >

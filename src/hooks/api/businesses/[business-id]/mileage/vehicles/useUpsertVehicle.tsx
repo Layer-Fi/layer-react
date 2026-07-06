@@ -59,7 +59,6 @@ export const useUpsertVehicle = (props: UseUpsertVehicleProps) => {
   const createResponse = useCreateVehicle()
   const updateResponse = useUpdateVehicle({
     vehicleId: vehicleId ?? '',
-    isEnabled: vehicleId !== undefined,
   })
 
   const mutationResponse = mode === UpsertVehicleMode.Create ? createResponse : updateResponse

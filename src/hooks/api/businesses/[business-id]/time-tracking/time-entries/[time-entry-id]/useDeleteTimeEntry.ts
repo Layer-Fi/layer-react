@@ -11,7 +11,7 @@ const DELETE_TIME_ENTRY_TAG_KEY = '#delete-time-entry'
 const deleteTimeEntry = del<
   Record<string, never>,
   Record<string, never>,
-  { businessId: string, timeEntryId?: string }
+  { businessId: string, timeEntryId: string }
 >(({ businessId, timeEntryId }) => `/v1/businesses/${businessId}/time-tracking/time-entries/${timeEntryId}`)
 
 const useDeleteTimeEntryMutation = createMutationHook({
@@ -23,13 +23,12 @@ const useDeleteTimeEntryMutation = createMutationHook({
 })
 
 type UseDeleteTimeEntryProps = {
-  timeEntryId: string | undefined
+  timeEntryId: string
 }
 
 export const useDeleteTimeEntry = ({ timeEntryId }: UseDeleteTimeEntryProps) => {
   const mutationResponse = useDeleteTimeEntryMutation({
     timeEntryId,
-    isEnabled: Boolean(timeEntryId),
   })
 
   const { forceReload: forceReloadTimeEntries } = useTimeEntriesGlobalCacheActions()

@@ -58,7 +58,6 @@ export const useUpsertLedgerAccount = (props: UseUpsertLedgerAccountProps) => {
   const createResponse = useCreateLedgerAccount()
   const updateResponse = useUpdateLedgerAccount({
     accountId: accountId ?? '',
-    isEnabled: accountId !== undefined,
   })
 
   const mutationResponse = mode === UpsertLedgerAccountMode.Create ? createResponse : updateResponse
