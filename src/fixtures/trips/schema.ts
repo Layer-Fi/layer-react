@@ -38,7 +38,11 @@ const base = Schema.Struct({
   distance: withArbitrary(fields.distance, () => distanceArbitrary),
   tripDate: withArbitrary(fields.tripDate, () => tripDateArbitrary),
   purpose: withArbitrary(fields.purpose, () => fc =>
-    fc.constantFrom(TripPurpose.Business, TripPurpose.Personal, TripPurpose.Unreviewed)),
+    fc.oneof(
+      { arbitrary: fc.constant(TripPurpose.Business), weight: 6 },
+      { arbitrary: fc.constant(TripPurpose.Personal), weight: 2 },
+      { arbitrary: fc.constant(TripPurpose.Unreviewed), weight: 1 },
+    )),
   startAddress: withArbitrary(fields.startAddress, () => nullableConstantFrom(addresses)),
   endAddress: withArbitrary(fields.endAddress, () => nullableConstantFrom(addresses)),
   description: withArbitrary(fields.description, () => fc =>
