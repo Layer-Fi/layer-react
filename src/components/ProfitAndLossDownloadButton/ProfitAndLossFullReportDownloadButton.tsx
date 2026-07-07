@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { type MoneyFormat } from '@internal-types/general'
 import { getProfitAndLossExcel } from '@hooks/legacy/useDownloadProfitAndLoss'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
-import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { DownloadButton as DownloadButtonComponent } from '@ui/Button/DownloadButton'
 import type { ProfitAndLossDownloadButtonStringOverrides } from '@components/ProfitAndLossDownloadButton/types'
@@ -22,9 +21,6 @@ export const ProfitAndLossFullReportDownloadButton = ({
 }: ProfitAndLossReportDownloadButtonProps) => {
   const { t } = useTranslation()
   const { dateRange, tagFilter } = useContext(ProfitAndLossContext)
-  const { getProfitAndLossComparisonCsv, comparisonConfig } = useContext(
-    ProfitAndLossComparisonContext,
-  )
 
   const { businessId, auth } = useBuildKeyInputs()
 
@@ -55,9 +51,7 @@ export const ProfitAndLossFullReportDownloadButton = ({
       },
     )
     try {
-      const result = comparisonConfig
-        ? await getProfitAndLossComparisonCsv(dateRange, moneyFormat)
-        : await getProfitAndLossExcelCall()
+      const result = await getProfitAndLossExcelCall()
       if (result?.data?.presignedUrl) {
         window.location.href = result.data.presignedUrl
         setRequestFailed(false)

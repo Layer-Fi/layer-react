@@ -6,17 +6,6 @@ export type MutationRequest<TReturn, TBody, TParams> = (
   options?: { params?: TParams, body?: TBody },
 ) => Promise<TReturn>
 
-export function postAsQuery<TReturn, TBody, TParams>(
-  request: MutationRequest<TReturn, TBody, TParams>,
-  toBody: (params: TParams) => TBody,
-): AuthenticatedRequest<TReturn, TParams> {
-  return (baseUrl, accessToken, options) => () =>
-    request(baseUrl, accessToken, {
-      params: options?.params,
-      body: toBody(options?.params as TParams),
-    })
-}
-
 /*
  * Adapts a GET-shaped endpoint that semantically acts (e.g. report exports that generate
  * a file and mint a fresh presigned URL per call) into the mutation pipeline, so it only
