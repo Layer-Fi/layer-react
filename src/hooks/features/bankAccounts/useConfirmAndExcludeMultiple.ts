@@ -1,10 +1,8 @@
-import { useCallback } from 'react'
 import useSWRMutation from 'swr/mutation'
 
 import { SWRMutationResult } from '@internal-types/swr/SWRResponseTypes'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { confirmExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/confirm'
 import { excludeExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/exclude'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
@@ -47,15 +45,5 @@ export function useConfirmAndExcludeMultiple({ onSuccess }: { onSuccess?: () => 
     },
   )
 
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
-
-  const { trigger: originalTrigger } = mutationResponse
-
-  const stableProxiedTrigger = useCallback(
-    (...triggerParameters: Parameters<typeof originalTrigger>) =>
-      originalTrigger(...triggerParameters),
-    [originalTrigger],
-  )
-
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
+  return new SWRMutationResult(rawMutationResponse)
 }

@@ -1,9 +1,6 @@
-import { useCallback } from 'react'
-
 import { CustomerSchema, type UpsertCustomerEncoded } from '@schemas/customer'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patch, post } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { CUSTOMERS_TAG_KEY, useCustomersGlobalCacheActions } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
@@ -36,6 +33,13 @@ const useCreateCustomer = createMutationHook({
   request: createCustomer,
   schema: UpsertCustomerReturnSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { forceReload: forceReloadCustomers } = useCustomersGlobalCacheActions()
+
+    return () => {
+      void forceReloadCustomers()
+    }
+  },
 })
 
 const useUpdateCustomer = createMutationHook({
@@ -44,6 +48,15 @@ const useUpdateCustomer = createMutationHook({
   keyParams: ['customerId'],
   schema: UpsertCustomerReturnSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { patchByKey: patchCustomerByKey } = useCustomersGlobalCacheActions()
+    const { forceReload: forceReloadInvoices } = useInvoicesGlobalCacheActions()
+
+    return (data) => {
+      void patchCustomerByKey(data)
+      void forceReloadInvoices()
+    }
+  },
 })
 
 type UseUpsertCustomerProps =
@@ -59,29 +72,5 @@ export const useUpsertCustomer = (props: UseUpsertCustomerProps) => {
     customerId: customerId ?? '',
   })
 
-  const mutationResponse = mode === UpsertCustomerMode.Create ? createResponse : updateResponse
-
-  const { patchByKey: patchCustomerByKey, forceReload: forceReloadCustomers } = useCustomersGlobalCacheActions()
-  const { forceReload: forceReloadInvoices } = useInvoicesGlobalCacheActions()
-
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      if (mode === UpsertCustomerMode.Update) {
-        void patchCustomerByKey(triggerResult)
-        void forceReloadInvoices()
-      }
-      else {
-        void forceReloadCustomers()
-      }
-
-      return triggerResult
-    },
-    [originalTrigger, mode, patchCustomerByKey, forceReloadInvoices, forceReloadCustomers],
-  )
-
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
+  return mode === UpsertCustomerMode.Create ? createResponse : updateResponse
 }

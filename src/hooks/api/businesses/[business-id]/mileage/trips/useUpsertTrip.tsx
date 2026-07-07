@@ -1,9 +1,6 @@
-import { useCallback } from 'react'
-
 import { TripSchema, type UpsertTripEncoded } from '@schemas/trip'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patch, post } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useMileageSummaryGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/summary/useMileageSummary'
 import { useTripsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/trips/useListTrips'
 import { useVehiclesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
@@ -44,6 +41,21 @@ const useCreateTrip = createMutationHook({
   request: createTrip,
   schema: UpsertTripReturnSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { forceReload: forceReloadTrips } = useTripsGlobalCacheActions()
+    const { forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()
+    const { invalidate: invalidateMileageSummary } = useMileageSummaryGlobalCacheActions()
+
+    return () => {
+      void forceReloadTrips()
+
+      // Creating a trip may change our ability to delete/archive the vehicle
+      void forceReloadVehicles()
+
+      // Creating a trip may change our mileage summary
+      void invalidateMileageSummary()
+    }
+  },
 })
 
 const useUpdateTrip = createMutationHook({
@@ -52,6 +64,21 @@ const useUpdateTrip = createMutationHook({
   keyParams: ['tripId'],
   schema: UpsertTripReturnSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { patchByKey: patchTripByKey } = useTripsGlobalCacheActions()
+    const { forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()
+    const { invalidate: invalidateMileageSummary } = useMileageSummaryGlobalCacheActions()
+
+    return (data) => {
+      void patchTripByKey(data)
+
+      // Updating a trip may change our ability to delete/archive the vehicle
+      void forceReloadVehicles()
+
+      // Updating a trip may change our mileage summary
+      void invalidateMileageSummary()
+    }
+  },
 })
 
 type UseUpsertTripProps =
@@ -67,35 +94,5 @@ export const useUpsertTrip = (props: UseUpsertTripProps) => {
     tripId: tripId ?? '',
   })
 
-  const mutationResponse = mode === UpsertTripMode.Create ? createResponse : updateResponse
-
-  const { patchByKey: patchTripByKey, forceReload: forceReloadTrips } = useTripsGlobalCacheActions()
-  const { forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()
-  const { invalidate: invalidateMileageSummary } = useMileageSummaryGlobalCacheActions()
-
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      if (mode === UpsertTripMode.Update) {
-        void patchTripByKey(triggerResult)
-      }
-      else {
-        void forceReloadTrips()
-      }
-
-      // Creating/updating a trip may change our ability to delete/archive the vehicle
-      void forceReloadVehicles()
-
-      // Creating/updating a trip may change our mileage summary
-      void invalidateMileageSummary()
-
-      return triggerResult
-    },
-    [originalTrigger, mode, forceReloadVehicles, invalidateMileageSummary, patchTripByKey, forceReloadTrips],
-  )
-
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
+  return mode === UpsertTripMode.Create ? createResponse : updateResponse
 }

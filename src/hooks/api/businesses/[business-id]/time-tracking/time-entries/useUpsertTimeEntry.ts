@@ -1,10 +1,7 @@
-import { useCallback } from 'react'
-
 import type { SWRMutationResult } from '@internal-types/swr/SWRResponseTypes'
 import { TimeEntrySchema, type UpsertTimeEntryEncoded } from '@schemas/timeTracking'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patch, post } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useTimeTrackingSummaryGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
 import { useTimeEntriesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useListTimeEntries'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
@@ -42,6 +39,15 @@ const useCreateTimeEntry = createMutationHook({
   request: createTimeEntry,
   schema: UpsertTimeEntryReturnSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { forceReload: forceReloadTimeEntries } = useTimeEntriesGlobalCacheActions()
+    const { invalidate: invalidateTimeTrackingSummary } = useTimeTrackingSummaryGlobalCacheActions()
+
+    return () => {
+      void forceReloadTimeEntries()
+      void invalidateTimeTrackingSummary()
+    }
+  },
 })
 
 const useUpdateTimeEntry = createMutationHook({
@@ -50,6 +56,15 @@ const useUpdateTimeEntry = createMutationHook({
   keyParams: ['timeEntryId'],
   schema: UpsertTimeEntryReturnSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { patchByKey: patchTimeEntryByKey } = useTimeEntriesGlobalCacheActions()
+    const { invalidate: invalidateTimeTrackingSummary } = useTimeTrackingSummaryGlobalCacheActions()
+
+    return (data) => {
+      void patchTimeEntryByKey(data)
+      void invalidateTimeTrackingSummary()
+    }
+  },
 })
 
 type UseUpsertTimeEntryCreateProps = { mode: UpsertTimeEntryMode.Create }
@@ -68,38 +83,9 @@ export function useUpsertTimeEntry(props: UseUpsertTimeEntryProps) {
     timeEntryId: timeEntryId ?? '',
   })
 
-  const mutationResponse = (
-    mode === UpsertTimeEntryMode.Create ? createResponse : updateResponse
-  ) as SWRMutationResult<UpsertTimeEntryReturn, UpsertTimeEntryBody>
-
-  const { patchByKey: patchTimeEntryByKey, forceReload: forceReloadTimeEntries } = useTimeEntriesGlobalCacheActions()
-  const { invalidate: invalidateTimeTrackingSummary } = useTimeTrackingSummaryGlobalCacheActions()
-
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      if (mode === UpsertTimeEntryMode.Update) {
-        void patchTimeEntryByKey(triggerResult)
-      }
-      else {
-        void forceReloadTimeEntries()
-      }
-
-      void invalidateTimeTrackingSummary()
-
-      return triggerResult
-    },
-    [originalTrigger, mode, patchTimeEntryByKey, forceReloadTimeEntries, invalidateTimeTrackingSummary],
-  )
-
-  const proxiedMutationResponse = withStableTrigger(mutationResponse, stableProxiedTrigger)
-
   if (mode === UpsertTimeEntryMode.Create) {
-    return proxiedMutationResponse as SWRMutationResult<UpsertTimeEntryReturn, CreateTimeEntryBody>
+    return createResponse
   }
 
-  return proxiedMutationResponse as SWRMutationResult<UpsertTimeEntryReturn, UpdateTimeEntryBody>
+  return updateResponse
 }

@@ -1,9 +1,6 @@
-import { useCallback } from 'react'
-
 import { CatalogServiceSchema, type UpdateCatalogServiceEncoded } from '@schemas/catalogService'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patch } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useCatalogServicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
@@ -19,32 +16,16 @@ const updateCatalogService = patch<
   { businessId: string, serviceId: string }
 >(({ businessId, serviceId }) => `/v1/businesses/${businessId}/catalog/services/${serviceId}`)
 
-const useUpdateCatalogServiceMutation = createMutationHook({
+export const useUpdateCatalogService = createMutationHook({
   tags: [UPDATE_CATALOG_SERVICE_TAG_KEY],
   request: updateCatalogService,
   keyParams: ['serviceId'],
   schema: UpdateCatalogServiceResponseSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { patchByKey: patchCatalogServiceByKey } = useCatalogServicesGlobalCacheActions()
+    return (data) => {
+      void patchCatalogServiceByKey(data)
+    }
+  },
 })
-
-type UseUpdateCatalogServiceProps = {
-  serviceId: string
-}
-
-export function useUpdateCatalogService({ serviceId }: UseUpdateCatalogServiceProps) {
-  const { patchByKey: patchCatalogServiceByKey } = useCatalogServicesGlobalCacheActions()
-
-  const mutationResponse = useUpdateCatalogServiceMutation({ serviceId })
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-      void patchCatalogServiceByKey(triggerResult)
-      return triggerResult
-    },
-    [originalTrigger, patchCatalogServiceByKey],
-  )
-
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
-}

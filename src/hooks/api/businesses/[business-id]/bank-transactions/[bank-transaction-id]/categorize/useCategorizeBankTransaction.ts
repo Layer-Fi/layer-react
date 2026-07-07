@@ -1,16 +1,12 @@
-import { useCallback } from 'react'
 import type { SWRInfiniteKeyedMutator } from 'swr/infinite'
 
 import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 import { type CategoryUpdate, type CategoryUpdateEncoded, encodeCategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { put } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
+import { useBankTransactionTriggerSuccess } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/useBankTransactionTriggerSuccess'
 import { type GetBankTransactionsReturn } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 
 const CATEGORIZE_BANK_TRANSACTION_TAG = '#categorize-bank-transaction'
 
@@ -38,7 +34,7 @@ export type UseCategorizeBankTransactionOptions = {
   >
 }
 
-const useCategorizeBankTransactionMutation = createMutationHook({
+export const useCategorizeBankTransaction = createMutationHook({
   tags: [CATEGORIZE_BANK_TRANSACTION_TAG],
   request: categorizeBankTransaction,
   argToParams: ({ bankTransactionId }: CategorizeBankTransactionArgs) => ({ bankTransactionId }),
@@ -46,29 +42,5 @@ const useCategorizeBankTransactionMutation = createMutationHook({
     encodeCategoryUpdate(rest),
   schema: CategorizeBankTransactionResponseSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: useBankTransactionTriggerSuccess,
 })
-
-export function useCategorizeBankTransaction() {
-  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
-  const { useBankTransactionsOptions } = useBankTransactionsContext()
-  const { forceReloadBackgroundBankTransactions } = useBankTransactionsGlobalCacheActions()
-
-  const mutationResponse = useCategorizeBankTransactionMutation()
-
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      void forceReloadBackgroundBankTransactions(useBankTransactionsOptions)
-
-      void debouncedInvalidateProfitAndLoss()
-
-      return triggerResult
-    },
-    [originalTrigger, forceReloadBackgroundBankTransactions, useBankTransactionsOptions, debouncedInvalidateProfitAndLoss],
-  )
-
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
-}

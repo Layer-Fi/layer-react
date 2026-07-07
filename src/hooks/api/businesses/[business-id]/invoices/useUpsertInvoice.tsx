@@ -1,9 +1,6 @@
-import { useCallback } from 'react'
-
 import { InvoiceSchema, type UpsertInvoiceSchema } from '@schemas/invoices/invoice'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patch, post } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
@@ -49,6 +46,15 @@ const useCreateInvoice = createMutationHook({
   request: createInvoice,
   schema: UpsertInvoiceReturnSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { forceReload: forceReloadInvoices } = useInvoicesGlobalCacheActions()
+    const { forceReload: forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()
+
+    return () => {
+      void forceReloadInvoices()
+      void forceReloadInvoiceSummaryStats()
+    }
+  },
 })
 
 const useUpdateInvoice = createMutationHook({
@@ -57,6 +63,15 @@ const useUpdateInvoice = createMutationHook({
   keyParams: ['invoiceId'],
   schema: UpsertInvoiceReturnSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { patchByKey: patchInvoiceByKey } = useInvoicesGlobalCacheActions()
+    const { forceReload: forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()
+
+    return (data) => {
+      void patchInvoiceByKey(data)
+      void forceReloadInvoiceSummaryStats()
+    }
+  },
 })
 
 type UseUpsertInvoiceProps =
@@ -72,30 +87,5 @@ export const useUpsertInvoice = (props: UseUpsertInvoiceProps) => {
     invoiceId: invoiceId ?? '',
   })
 
-  const mutationResponse = mode === UpsertInvoiceMode.Create ? createResponse : updateResponse
-
-  const { patchByKey: patchInvoiceByKey, forceReload: forceReloadInvoices } = useInvoicesGlobalCacheActions()
-  const { forceReload: forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()
-
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      if (mode === UpsertInvoiceMode.Update) {
-        void patchInvoiceByKey(triggerResult)
-      }
-      else {
-        void forceReloadInvoices()
-      }
-
-      void forceReloadInvoiceSummaryStats()
-
-      return triggerResult
-    },
-    [originalTrigger, mode, patchInvoiceByKey, forceReloadInvoices, forceReloadInvoiceSummaryStats],
-  )
-
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
+  return mode === UpsertInvoiceMode.Create ? createResponse : updateResponse
 }

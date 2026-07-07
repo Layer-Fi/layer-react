@@ -287,4 +287,129 @@ describe('createMutationHook', () => {
 
     expect(setLocaleHeader).not.toHaveBeenCalledWith(SupportedLocale.frCA)
   })
+
+  describe('useOnTriggerSuccess', () => {
+    it('runs the side-effect callback after a successful trigger with the selected data and arg', async () => {
+      const request = makeRequest(() => Promise.resolve(RAW_WIDGET))
+      const onTriggerSuccess = vi.fn()
+      const useUpsertWidget = createMutationHook<
+        RawWidget,
+        WidgetBody,
+        WidgetParams,
+        typeof WidgetSchema.Type,
+        WidgetBody,
+        readonly [],
+        string
+      >({
+        tags: ['Widgets'],
+        request,
+        schema: WidgetSchema,
+        select: decoded => decoded.displayName,
+        useOnTriggerSuccess: () => onTriggerSuccess,
+      })
+
+      const { result } = await renderHookWithAuth(() => useUpsertWidget())
+
+      await act(async () => {
+        await result.current.trigger({ name: 'New Widget' })
+      })
+
+      expect(onTriggerSuccess).toHaveBeenCalledTimes(1)
+      expect(onTriggerSuccess).toHaveBeenCalledWith('Widget One', { name: 'New Widget' })
+    })
+
+    it('does not run the side-effect callback when the request fails', async () => {
+      const request = makeRequest(() => Promise.reject(new Error('boom')))
+      const onTriggerSuccess = vi.fn()
+      const useUpsertWidget = createMutationHook<RawWidget, WidgetBody>({
+        tags: ['Widgets'],
+        request,
+        useOnTriggerSuccess: () => onTriggerSuccess,
+      })
+
+      const { result } = await renderHookWithAuth(() => useUpsertWidget())
+
+      await act(async () => {
+        await expect(result.current.trigger({ name: 'New Widget' })).rejects.toThrow('boom')
+      })
+
+      expect(onTriggerSuccess).not.toHaveBeenCalled()
+    })
+
+    it('awaits a promise returned by the side-effect callback before trigger resolves', async () => {
+      const request = makeRequest(() => Promise.resolve(RAW_WIDGET))
+      let resolveSideEffect: (() => void) | undefined
+      const useUpsertWidget = createMutationHook<RawWidget, WidgetBody>({
+        tags: ['Widgets'],
+        request,
+        useOnTriggerSuccess: () => () => new Promise<void>((resolve) => {
+          resolveSideEffect = resolve
+        }),
+      })
+
+      const { result } = await renderHookWithAuth(() => useUpsertWidget())
+
+      await act(async () => {
+        let triggerResolved = false
+        const triggerPromise = result.current.trigger({ name: 'New Widget' })
+        void triggerPromise.then(() => {
+          triggerResolved = true
+        })
+
+        await waitFor(() => expect(resolveSideEffect).toBeDefined())
+        expect(triggerResolved).toBe(false)
+
+        resolveSideEffect?.()
+        await triggerPromise
+      })
+    })
+
+    it('passes the pinned key params to the side-effect hook', async () => {
+      const request = makeRequest(() => Promise.resolve(RAW_WIDGET))
+      let seenKeyParams: unknown
+      const useUpsertWidget = createMutationHook<RawWidget, WidgetBody, WidgetParams, RawWidget, WidgetBody, readonly ['widgetId']>({
+        tags: ['Widgets'],
+        request,
+        keyParams: ['widgetId'],
+        useOnTriggerSuccess: (keyParamValues) => {
+          seenKeyParams = keyParamValues
+          return () => {}
+        },
+      })
+
+      await renderHookWithAuth(() => useUpsertWidget({ widgetId: 'w7' }))
+
+      expect(seenKeyParams).toEqual({ businessId: TEST_LAYER_BUSINESS_ID, widgetId: 'w7' })
+    })
+
+    it('keeps trigger stable across renders while invoking the latest, unmemoized callback', async () => {
+      const request = makeRequest(() => Promise.resolve(RAW_WIDGET))
+      let renderLabel = 'first'
+      const seenLabels: Array<string> = []
+      const useUpsertWidget = createMutationHook<RawWidget, WidgetBody>({
+        tags: ['Widgets'],
+        request,
+        useOnTriggerSuccess: () => {
+          const label = renderLabel
+          return () => {
+            seenLabels.push(label)
+          }
+        },
+      })
+
+      const { result, rerender } = await renderHookWithAuth(() => useUpsertWidget())
+      const initialTrigger = result.current.trigger
+
+      renderLabel = 'second'
+      rerender()
+
+      expect(result.current.trigger).toBe(initialTrigger)
+
+      await act(async () => {
+        await result.current.trigger({ name: 'New Widget' })
+      })
+
+      expect(seenLabels).toEqual(['second'])
+    })
+  })
 })

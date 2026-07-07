@@ -1,10 +1,7 @@
-import { useCallback } from 'react'
-
 import { SingleChartAccountSchema } from '@schemas/generalLedger/ledgerAccount'
 import { type UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLedgerAccount'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post, put } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useLedgerBalancesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/balances/useLedgerBalances'
 import { useLedgerEntriesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
@@ -32,11 +29,22 @@ const updateLedgerAccount = put<
   { businessId: string, accountId: string }
 >(({ businessId, accountId }) => `/v1/businesses/${businessId}/ledger/accounts/${accountId}`)
 
+const useLedgerAccountTriggerSuccess = () => {
+  const { invalidate: invalidateLedgerBalances } = useLedgerBalancesCacheActions()
+  const { forceReload: forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
+
+  return () => {
+    void invalidateLedgerBalances()
+    void forceReloadLedgerEntries()
+  }
+}
+
 const useCreateLedgerAccount = createMutationHook({
   tags: [UPSERT_LEDGER_ACCOUNT_TAG_KEY],
   request: createLedgerAccount,
   schema: UpsertLedgerAccountReturnSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: useLedgerAccountTriggerSuccess,
 })
 
 const useUpdateLedgerAccount = createMutationHook({
@@ -45,6 +53,7 @@ const useUpdateLedgerAccount = createMutationHook({
   keyParams: ['accountId'],
   schema: UpsertLedgerAccountReturnSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: useLedgerAccountTriggerSuccess,
 })
 
 type UseUpsertLedgerAccountProps =
@@ -60,24 +69,5 @@ export const useUpsertLedgerAccount = (props: UseUpsertLedgerAccountProps) => {
     accountId: accountId ?? '',
   })
 
-  const mutationResponse = mode === UpsertLedgerAccountMode.Create ? createResponse : updateResponse
-
-  const { invalidate: invalidateLedgerBalances } = useLedgerBalancesCacheActions()
-  const { forceReload: forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
-
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      void invalidateLedgerBalances()
-      void forceReloadLedgerEntries()
-
-      return triggerResult
-    },
-    [originalTrigger, invalidateLedgerBalances, forceReloadLedgerEntries],
-  )
-
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
+  return mode === UpsertLedgerAccountMode.Create ? createResponse : updateResponse
 }

@@ -4,13 +4,10 @@ import { pipe, Schema } from 'effect'
 import { type Split } from '@internal-types/bankTransactions'
 import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { post } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
-import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
+import { useBulkBankTransactionsTriggerSuccess } from '@hooks/api/businesses/[business-id]/bank-transactions/useBulkBankTransactionsTriggerSuccess'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { type BankTransactionCategorization, BankTransactionSelectionVariant, DEFAULT_CATEGORIZATION, useGetAllBankTransactionsCategorizations } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
@@ -143,41 +140,19 @@ const useBulkMatchOrCategorizeMutation = createMutationHook({
   argToBody: (arg: BulkMatchOrCategorizeRequest) => Schema.encodeSync(BulkMatchOrCategorizeRequestSchema)(arg),
   select: ({ data }) => data,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: useBulkBankTransactionsTriggerSuccess,
 })
 
 export const useBulkMatchOrCategorize = () => {
-  const { eventCallbacks } = useLayerContext()
   const { selectedIds } = useSelectedIds()
   const { categorizations } = useGetAllBankTransactionsCategorizations()
-
-  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
-  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const buildTransactionsPayload: () => BulkMatchOrCategorizeRequest = useCallback(() => {
     const transactions = buildBulkMatchOrCategorizePayload(selectedIds, categorizations)
     return { transactions }
   }, [selectedIds, categorizations])
 
-  const mutationResponse = useBulkMatchOrCategorizeMutation()
-
-  const { trigger: originalTrigger } = mutationResponse
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      void forceReloadBankTransactions()
-
-      void debouncedInvalidateProfitAndLoss()
-
-      eventCallbacks?.onTransactionCategorized?.()
-
-      return triggerResult
-    },
-    [originalTrigger, forceReloadBankTransactions, debouncedInvalidateProfitAndLoss, eventCallbacks],
-  )
-
-  const response = withStableTrigger(mutationResponse, stableProxiedTrigger)
+  const response = useBulkMatchOrCategorizeMutation()
 
   return {
     response,

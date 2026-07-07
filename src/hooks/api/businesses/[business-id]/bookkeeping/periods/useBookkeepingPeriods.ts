@@ -12,6 +12,7 @@ import {
   useBookkeepingStatus,
 } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export enum BookkeepingPeriodStatus {
   BOOKKEEPING_NOT_ACTIVE = 'BOOKKEEPING_NOT_ACTIVE',
@@ -64,6 +65,9 @@ const getBookkeepingPeriods = get<
 })
 
 export const BOOKKEEPING_PERIODS_TAG_KEY = '#bookkeeping-periods'
+
+export const useBookkeepingPeriodsGlobalCacheActions =
+  createResourceGlobalCacheActions<ReadonlyArray<BookkeepingPeriod>>(BOOKKEEPING_PERIODS_TAG_KEY)
 
 const useBookkeepingPeriodsQuery = createQueryHook({
   tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_PERIODS_TAG_KEY],

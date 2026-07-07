@@ -1,9 +1,6 @@
-import { useCallback } from 'react'
-
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { VehicleSchema } from '@schemas/vehicle'
 import { post } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useVehiclesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
@@ -17,36 +14,17 @@ const archiveVehicle = post<
   { businessId: string, vehicleId: string }
 >(({ businessId, vehicleId }) => `/v1/businesses/${businessId}/mileage/vehicles/${vehicleId}/archive`)
 
-const useArchiveVehicleMutation = createMutationHook({
+export const useArchiveVehicle = createMutationHook({
   tags: [ARCHIVE_VEHICLE_TAG_KEY],
   request: archiveVehicle,
   keyParams: ['vehicleId'],
   argToBody: (_arg: never) => undefined,
   schema: ArchiveVehicleReturnSchema,
   swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { patchByKey: patchVehicleByKey } = useVehiclesGlobalCacheActions()
+    return (data) => {
+      void patchVehicleByKey(data)
+    }
+  },
 })
-
-type UseArchiveVehicleProps = {
-  vehicleId: string
-}
-
-export const useArchiveVehicle = ({ vehicleId }: UseArchiveVehicleProps) => {
-  const mutationResponse = useArchiveVehicleMutation({ vehicleId })
-
-  const { patchByKey: patchVehicleByKey } = useVehiclesGlobalCacheActions()
-
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      void patchVehicleByKey(triggerResult)
-
-      return triggerResult
-    },
-    [originalTrigger, patchVehicleByKey],
-  )
-
-  return withStableTrigger(mutationResponse, stableProxiedTrigger)
-}
