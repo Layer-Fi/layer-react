@@ -10,6 +10,7 @@ const OVERSAMPLE_FACTOR = 50
 type GeneratorOptions<A> = {
   uniqueBy?: readonly ((value: A) => unknown)[]
   seed?: number
+  numRuns?: number
 }
 
 /*
@@ -22,8 +23,11 @@ export function createGenerator<A, I, R>(
   options: GeneratorOptions<A> = {},
 ) {
   const arbitrary = Arbitrary.make(schema)
-  const { uniqueBy, seed } = options
-  const defaultConfig = seed === undefined ? DEFAULT_CONFIG : { ...DEFAULT_CONFIG, seed }
+  const { uniqueBy } = options
+  const defaultConfig: GeneratorConfig = {
+    numRuns: options.numRuns ?? DEFAULT_CONFIG.numRuns,
+    seed: options.seed ?? DEFAULT_CONFIG.seed,
+  }
 
   return (overrides?: Partial<GeneratorConfig>): A[] => {
     const config = { ...defaultConfig, ...overrides }

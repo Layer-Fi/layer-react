@@ -2,21 +2,14 @@ import { Schema } from 'effect'
 
 import { type Vendor, VendorSchema } from '@schemas/vendor'
 
+import { paginatedApiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { vendors as defaultVendors } from '@fixtures/generated/vendors.gen'
 
 const encodeVendor = Schema.encodeSync(VendorSchema)
 
-const toResponse = (vendors: readonly Vendor[]) => ({
-  data: vendors.map(vendor => encodeVendor(vendor)),
-  meta: {
-    pagination: {
-      cursor: null,
-      has_more: false,
-      total_count: vendors.length,
-    },
-  },
-})
+const toResponse = (vendors: readonly Vendor[], request: Request) =>
+  paginatedApiData(vendors.map(vendor => encodeVendor(vendor)), request)
 
 export const get = createMockEndpoint<readonly Vendor[], ReturnType<typeof toResponse>>({
   method: 'get',
@@ -30,6 +23,6 @@ export const get = createMockEndpoint<readonly Vendor[], ReturnType<typeof toRes
           .some(field => field?.toLowerCase()?.includes(query) ?? false),
       )
 
-    return toResponse(filtered)
+    return toResponse(filtered, request)
   },
 })
