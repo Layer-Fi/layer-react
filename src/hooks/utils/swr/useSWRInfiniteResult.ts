@@ -22,7 +22,7 @@ export function useSWRInfiniteResult<T extends PaginatedResponse<unknown>>(
     if (hasMorePages(pagesRef.current)) {
       void setSize(size => size + 1)
     }
-  }, [setSize])
+  }, [setSize, pagesRef])
 
   const flattenedData = useMemo(
     () => pages?.flatMap(page => page.data) as FlattenedData<T> | undefined,

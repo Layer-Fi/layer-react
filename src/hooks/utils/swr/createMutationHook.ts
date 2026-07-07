@@ -128,7 +128,7 @@ export function createMutationHook<
 
         return triggerResult
       },
-      [originalTrigger],
+      [originalTrigger, onTriggerSuccessRef],
     )
 
     return useOnTriggerSuccess
