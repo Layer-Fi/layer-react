@@ -101,6 +101,7 @@ const renderFixtureModule = (
 // generated first in the same run, or they'd see one-run-stale data.
 const DOMAIN_DEPENDENCIES: Record<string, readonly string[]> = {
   trips: ['vehicles'],
+  timeEntries: ['catalogServices', 'customers'],
 }
 
 const sortByDependencies = (domains: readonly string[]): string[] => {
