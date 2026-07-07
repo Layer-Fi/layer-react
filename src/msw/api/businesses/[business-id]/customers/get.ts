@@ -2,27 +2,23 @@ import { Schema } from 'effect'
 
 import { type Customer, CustomerSchema } from '@schemas/customer'
 
+import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'
 import { paginatedApiData } from '@msw/utils/apiResponse'
+import { createListFilter, matchesQuery } from '@msw/utils/createListFilter'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { customers as defaultCustomers } from '@fixtures/generated/customers.gen'
 
 const encodeCustomer = Schema.encodeSync(CustomerSchema)
 
 const toResponse = (customers: readonly Customer[], request: Request) =>
   paginatedApiData(customers.map(customer => encodeCustomer(customer)), request)
 
+const filterCustomers = createListFilter<Customer>({
+  q: matchesQuery(customer => [customer.individualName, customer.companyName, customer.email]),
+})
+
 export const get = createMockEndpoint<readonly Customer[], ReturnType<typeof toResponse>>({
   method: 'get',
   path: '*/v1/businesses/:businessId/customers',
-  resolve: ({ override: customers = defaultCustomers, request }) => {
-    const query = new URL(request.url).searchParams.get('q')?.toLowerCase()
-    const filtered = query == null || query === ''
-      ? customers
-      : customers.filter(customer =>
-        [customer.individualName, customer.companyName, customer.email]
-          .some(field => field?.toLowerCase()?.includes(query) ?? false),
-      )
-
-    return toResponse(filtered, request)
-  },
+  resolve: ({ override: customers = customerStore.all(), request }) =>
+    toResponse(filterCustomers(customers, request), request),
 })
