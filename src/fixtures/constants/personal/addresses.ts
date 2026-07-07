@@ -1,0 +1,16 @@
+export const addresses = [
+  '123 Main St, Springfield, IL 62701',
+  '456 Market St, San Francisco, CA 94105',
+  '789 Broadway, New York, NY 10003',
+  '12 Elm St, Austin, TX 78701',
+  '55 Boylston St, Boston, MA 02116',
+  '900 Biscayne Blvd, Miami, FL 33132',
+  '200 Pike St, Seattle, WA 98101',
+  '77 Peachtree St, Atlanta, GA 30303',
+  '4400 Lemmon Ave, Dallas, TX 75219',
+  '1500 Larimer St, Denver, CO 80202',
+  '30 Rockefeller Plaza, New York, NY 10112',
+  '600 Congress Ave, Austin, TX 78701',
+  '1 Infinite Loop, Cupertino, CA 95014',
+  '221 W 6th St, Portland, OR 97209',
+] as const

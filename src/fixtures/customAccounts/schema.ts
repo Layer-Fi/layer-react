@@ -6,6 +6,9 @@ import {
   getCustomAccountTypeFromSubtype,
 } from '@schemas/customAccounts'
 
+import { accountNames } from '@fixtures/constants/bank/accountNames'
+import { institutionNames } from '@fixtures/constants/bank/institutionNames'
+import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
 
 const isoTimestampArbitrary = (fc: typeof FastCheck) =>
@@ -21,31 +24,13 @@ const fields = CustomAccountSchema.fields
 
 const base = Schema.Struct({
   ...fields,
-  externalId: withArbitrary(fields.externalId, () => fc =>
-    fc.oneof(
-      fc.constant(null),
-      fc.integer({ min: 10000, max: 99999 }).map(n => `ext_${n}`),
-    )),
+  externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
   mask: withArbitrary(fields.mask, () => fc =>
     fc.integer({ min: 0, max: 9999 }).map(n => String(n).padStart(4, '0'))),
   accountName: withArbitrary(fields.accountName, () => fc =>
-    fc.constantFrom(
-      'Primary Checking',
-      'Business Checking',
-      'Operating Account',
-      'Savings',
-      'Business Credit Card',
-      'Reserve Account',
-    )),
+    fc.constantFrom(...accountNames)),
   institutionName: withArbitrary(fields.institutionName, () => fc =>
-    fc.constantFrom(
-      'Chase',
-      'Bank of America',
-      'Wells Fargo',
-      'Citibank',
-      'Capital One',
-      'American Express',
-    )),
+    fc.constantFrom(...institutionNames)),
   accountSubtype: withArbitrary(fields.accountSubtype, () => fc =>
     fc.constantFrom(...Object.values(CustomAccountSubtype))),
   createdAt: withArbitrary(fields.createdAt, () => isoTimestampArbitrary),
