@@ -1,6 +1,5 @@
 import { type PropsWithChildren, useLayoutEffect, useState } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
-import { fn } from 'storybook/test'
 
 import { useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { TimeTracking } from '@views/TimeTracking'
@@ -38,13 +37,14 @@ const meta: Meta<TimeTrackingStoryArgs> = {
       control: 'boolean',
       description: 'Show the view title and header row',
     },
-    title: {
-      control: 'text',
-      description: 'Override the view title (stringOverrides.title)',
-    },
     showReportsAction: {
       control: 'boolean',
       description: 'Show the Reports item in the header menu',
+    },
+    title: {
+      control: 'text',
+      description: 'stringOverrides.title — leave blank to use the default',
+      table: { category: 'String overrides', defaultValue: { summary: 'Time Tracking' } },
     },
   },
   decorators: [
@@ -58,7 +58,7 @@ const meta: Meta<TimeTrackingStoryArgs> = {
     <TimeTracking
       showTitle={showTitle}
       stringOverrides={title ? { title } : undefined}
-      onReportsClick={showReportsAction ? fn() : undefined}
+      onReportsClick={showReportsAction ? () => window.alert('Reports clicked') : undefined}
     />
   ),
 }
