@@ -57,22 +57,22 @@ export function createScopedDateStore({
   function useDateRange({ dateSelectionMode }: UseDateRangeParams) {
     const store = scopedStore.useStoreApi()
 
-    const startDate = useStoreWithDateSelected(
+    const rawStartDate = useStoreWithDateSelected(
       store,
       ({ startDate }) => startDate,
     )
 
-    const endDate = useStoreWithDateSelected(
+    const rawEndDate = useStoreWithDateSelected(
       store,
       ({ endDate }) => endDate,
     )
 
     return useMemo(
       () => getEffectiveDateRangeForMode(dateSelectionMode, {
-        startDate,
-        endDate,
+        startDate: rawStartDate,
+        endDate: rawEndDate,
       }),
-      [dateSelectionMode, startDate, endDate],
+      [dateSelectionMode, rawStartDate, rawEndDate],
     )
   }
 
