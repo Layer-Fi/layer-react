@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 
 import {
   ALL_TIME_MIN_DATE,
+  clampToValidRange,
   type DatePreset,
   type DateRange,
   findMatchingPresetForDateRange,
@@ -19,6 +20,8 @@ export function useDatePresets() {
 
   return useMemo(() => ({
     activationDate,
+    clampToValidRange: (dateRange: DateRange) =>
+      clampToValidRange(dateRange, { now: new Date(), activationDate }),
     rangeForSelectablePreset: (selectedPreset: SelectableDatePreset) =>
       rangeForSelectablePreset(selectedPreset, { now: new Date(), activationDate }),
     findMatchingPresetForDateRange: (

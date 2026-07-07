@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import type { DateSelectionMode } from '@utils/date/dateRange'
 import { createScopedStore } from '@utils/zustand/createScopedStore'
 import { useStoreWithDateSelected } from '@utils/zustand/useStoreWithDateSelected'
+import { useDatePresets } from '@hooks/utils/dates/useDatePresets'
 import { buildDateStore, type MakeDateStoreOptions } from '@providers/DateStoreProvider/internal/buildDateStore'
 import { getEffectiveDateForMode, getEffectiveDateRangeForMode } from '@providers/DateStoreProvider/internal/dateStoreUtils'
 
@@ -37,12 +38,9 @@ export function createScopedDateStore({
       ({ endDate }) => endDate,
     )
 
-    // Stable per-mount "now" for clamping the projected range to today.
-    const now = useMemo(() => new Date(), [])
-
     return useMemo(
-      () => getEffectiveDateForMode(dateSelectionMode, { date: rawDate }, now),
-      [dateSelectionMode, rawDate, now],
+      () => getEffectiveDateForMode(dateSelectionMode, { date: rawDate }),
+      [dateSelectionMode, rawDate],
     )
   }
 
@@ -59,6 +57,7 @@ export function createScopedDateStore({
 
   function useDateRange({ dateSelectionMode }: UseDateRangeParams) {
     const store = scopedStore.useStoreApi()
+    const { clampToValidRange } = useDatePresets()
 
     const rawStartDate = useStoreWithDateSelected(
       store,
@@ -70,16 +69,15 @@ export function createScopedDateStore({
       ({ endDate }) => endDate,
     )
 
-    // Stable per-mount "now" for clamping the projected range to today.
-    const now = useMemo(() => new Date(), [])
-
     return useMemo(
-      () =>
-        getEffectiveDateRangeForMode(dateSelectionMode, {
+      () => {
+        const range = getEffectiveDateRangeForMode(dateSelectionMode, {
           startDate: rawStartDate,
           endDate: rawEndDate,
-        }, now),
-      [dateSelectionMode, rawStartDate, rawEndDate, now],
+        })
+        return clampToValidRange(range)
+      },
+      [dateSelectionMode, rawStartDate, rawEndDate, clampToValidRange],
     )
   }
 

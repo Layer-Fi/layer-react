@@ -43,7 +43,7 @@ type DatePresetContext = {
 
 /* Date range clamping helpers */
 
-const clampToValidRange = (range: DateRange, { now, activationDate }: DatePresetContext): DateRange => {
+export const clampToValidRange = (range: DateRange, { now, activationDate }: DatePresetContext): DateRange => {
   const rawStartDate = startOfDay(range.startDate)
   const rawEndDate = endOfDay(range.endDate)
 

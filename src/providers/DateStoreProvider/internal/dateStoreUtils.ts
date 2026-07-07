@@ -2,7 +2,6 @@ import {
   endOfDay,
   endOfMonth,
   endOfYear,
-  min,
   startOfMonth,
   startOfYear,
 } from 'date-fns'
@@ -14,24 +13,22 @@ type GetDateRangeOptions =
   | { mode: 'full', startDate: Date, endDate: Date }
   | { mode: Exclude<DateSelectionMode, 'full'>, startDate?: Date, endDate: Date }
 
-export function getDateRange(options: GetDateRangeOptions, now: Date): DateRange {
-  const cutoff = endOfDay(now)
-  const mode = options.mode
+export function getDateRange({ mode, startDate, endDate }: GetDateRangeOptions): DateRange {
   switch (mode) {
     case 'month':
       return {
-        startDate: startOfMonth(options.endDate),
-        endDate: min([endOfMonth(options.endDate), cutoff]),
+        startDate: startOfMonth(endDate),
+        endDate: endOfMonth(endDate),
       }
     case 'year':
       return {
-        startDate: startOfYear(options.endDate),
-        endDate: min([endOfYear(options.endDate), cutoff]),
+        startDate: startOfYear(endDate),
+        endDate: endOfYear(endDate),
       }
     case 'full':
       return {
-        startDate: options.startDate,
-        endDate: min([endOfDay(options.endDate), cutoff]),
+        startDate: startDate,
+        endDate: endOfDay(endDate),
       }
     default:
       unsafeAssertUnreachable({
@@ -41,26 +38,21 @@ export function getDateRange(options: GetDateRangeOptions, now: Date): DateRange
   }
 }
 
-export function withCorrectedRange<TDateRange extends DateRange, TOut>(fn: (options: TDateRange) => TOut) {
-  return (options: TDateRange) => {
-    const { startDate, endDate } = options
-
-    if (startDate > endDate) {
-      return fn({ ...options, startDate: endDate, endDate: startDate })
-    }
-
-    return fn({ ...options, startDate, endDate })
+export function correctDateRange({ startDate, endDate }: DateRange): DateRange {
+  if (startDate > endDate) {
+    return { startDate: endDate, endDate: startDate }
   }
+
+  return { startDate, endDate }
 }
 
-export function getEffectiveDateForMode(mode: DateSelectionMode, { date }: { date: Date }, now: Date): { date: Date } {
-  return { date: getDateRange({ mode, startDate: date, endDate: date }, now).endDate }
+export function getEffectiveDateForMode(mode: DateSelectionMode, { date }: { date: Date }): { date: Date } {
+  return { date: getDateRange({ mode, startDate: date, endDate: date }).endDate }
 }
 
 export function getEffectiveDateRangeForMode(
   mode: DateSelectionMode,
   { startDate, endDate }: { startDate: Date, endDate: Date },
-  now: Date,
 ): { startDate: Date, endDate: Date } {
-  return getDateRange({ mode, startDate, endDate }, now)
+  return getDateRange({ mode, startDate, endDate })
 }
