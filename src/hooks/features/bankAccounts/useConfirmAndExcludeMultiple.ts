@@ -1,8 +1,8 @@
 import useSWRMutation from 'swr/mutation'
 
+import { SWRMutationResult } from '@internal-types/swr/SWRResponseTypes'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { confirmExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/confirm'
 import { excludeExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/exclude'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'

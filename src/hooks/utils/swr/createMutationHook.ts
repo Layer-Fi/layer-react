@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
+import { SWRMutationResult } from '@internal-types/swr/SWRResponseTypes'
 import type { MutationRequest } from '@utils/api/getAsMutation'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
+import { useLatestRef } from '@hooks/utils/react/useLatestRef'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 type BusinessScopedParams = { businessId: string }
@@ -111,10 +112,7 @@ export function createMutationHook<
 
     const onTriggerSuccess = useOnTriggerSuccessHook({ businessId, ...keyInputs } as KeyParamValues)
 
-    const onTriggerSuccessRef = useRef(onTriggerSuccess)
-    useEffect(() => {
-      onTriggerSuccessRef.current = onTriggerSuccess
-    })
+    const onTriggerSuccessRef = useLatestRef(onTriggerSuccess)
 
     const originalTrigger = mutationResult.trigger
 

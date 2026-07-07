@@ -5,10 +5,10 @@ import type { BankTransaction } from '@internal-types/bankTransactions'
 import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
+import { useGlobalCacheActions } from '@hooks/utils/swr/useGlobalCacheActions'
 
 const GetBankTransactionsResponseSchema = PaginatedResponseSchema(BankTransactionSchema)
 

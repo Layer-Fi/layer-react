@@ -1,5 +1,5 @@
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useAuth } from '@hooks/utils/auth/useAuth'
+import { useLocalizedKey } from '@hooks/utils/swr/useLocalizedKey'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export function useBuildKeyInputs() {

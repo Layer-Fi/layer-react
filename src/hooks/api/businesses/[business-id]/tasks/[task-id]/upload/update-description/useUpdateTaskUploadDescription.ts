@@ -35,10 +35,10 @@ export const useUpdateTaskUploadDescription = createMutationHook({
   }),
   swrOptions: { throwOnError: false },
   useOnTriggerSuccess: () => {
-    const { forceReload: forceReloadBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
+    const { invalidate: invalidateBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
 
     return () => {
-      void forceReloadBookkeepingPeriods()
+      void invalidateBookkeepingPeriods()
     }
   },
 })

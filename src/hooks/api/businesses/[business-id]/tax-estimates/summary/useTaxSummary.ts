@@ -1,8 +1,8 @@
 import { type TaxSummary, TaxSummaryResponseSchema } from '@schemas/taxEstimates/summary'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { type TaxEstimatesRequestParams, toTaxEstimatesQuery } from '@hooks/api/businesses/[business-id]/tax-estimates/taxEstimatesParams'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 const TAX_SUMMARY_TAG_KEY = '#tax-summary'
 

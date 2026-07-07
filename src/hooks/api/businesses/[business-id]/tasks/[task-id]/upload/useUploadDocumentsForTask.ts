@@ -52,10 +52,10 @@ export const useUploadDocumentsForTask = createMutationHook({
   argToBody: ({ files, description }: UseUploadDocumentsForTaskArg) => ({ files, description }),
   swrOptions: { throwOnError: false },
   useOnTriggerSuccess: () => {
-    const { forceReload: forceReloadBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
+    const { invalidate: invalidateBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
 
     return () => {
-      void forceReloadBookkeepingPeriods()
+      void invalidateBookkeepingPeriods()
     }
   },
 })

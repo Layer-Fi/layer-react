@@ -3,8 +3,8 @@ import { pipe, Schema } from 'effect'
 import { type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export const ACTIVE_TIME_TRACKER_TAG_KEY = '#active-time-tracker'
 

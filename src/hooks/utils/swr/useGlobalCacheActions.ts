@@ -39,13 +39,10 @@ export function useGlobalCacheActions() {
     ) =>
       Promise.all(getRelevantCacheKeys<TKey>({ cache, predicate })
         .map(key => mutate(key, undefined, {
-          optimisticData: (_currentData: unknown, displayedData?: unsafe_TData) => {
-            if (displayedData) {
-              return optimisticUpdateCallback(displayedData)
-            }
-
-            return displayedData
-          },
+          optimisticData: (_currentData: unknown, displayedData?: unsafe_TData) =>
+            displayedData === undefined || displayedData === null
+              ? displayedData
+              : optimisticUpdateCallback(displayedData),
           populateCache: false,
           revalidate: false,
         },

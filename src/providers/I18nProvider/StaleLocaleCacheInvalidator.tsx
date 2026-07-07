@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
+import { useGlobalCacheActions } from '@hooks/utils/swr/useGlobalCacheActions'
 import { useLocale } from '@providers/I18nProvider/LayerI18nProvider'
 
 type CacheKeyWithLocale = {

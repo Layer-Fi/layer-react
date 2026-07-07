@@ -1,7 +1,7 @@
 import { InvoicePaymentMethodsResponseSchema } from '@schemas/invoices/invoicePaymentMethod'
 import { get } from '@utils/api/authenticatedHttp'
-import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export const INVOICE_PAYMENT_METHODS_TAG_KEY = '#invoice-payment-methods'
 
