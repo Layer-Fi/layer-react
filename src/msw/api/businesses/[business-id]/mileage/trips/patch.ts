@@ -2,7 +2,10 @@ import { Schema } from 'effect'
 
 import { type Trip, TripSchema } from '@schemas/trip'
 
+import { tripStore } from '@msw/api/businesses/[business-id]/mileage/trips/store'
+import { tripFromUpsertRequest } from '@msw/api/businesses/[business-id]/mileage/trips/tripFromUpsertRequest'
 import { apiData } from '@msw/utils/apiResponse'
+import { createEchoUpdateResolver } from '@msw/utils/createEchoResolvers'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { makeTrip } from '@fixtures/trips/mocks'
 
@@ -14,6 +17,11 @@ export const toUpdateTripResponse = (trip: Trip) =>
 export const patch = createMockEndpoint<Trip, ReturnType<typeof toUpdateTripResponse>>({
   method: 'patch',
   path: '*/v1/businesses/:businessId/mileage/trips/:tripId',
-  resolve: ({ override: trip = makeTrip(), params }) =>
-    toUpdateTripResponse({ ...trip, id: params.tripId as string }),
+  resolve: createEchoUpdateResolver({
+    idParam: 'tripId',
+    store: tripStore,
+    makeBase: id => makeTrip({ id }),
+    fromRequest: tripFromUpsertRequest,
+    toResponse: toUpdateTripResponse,
+  }),
 })

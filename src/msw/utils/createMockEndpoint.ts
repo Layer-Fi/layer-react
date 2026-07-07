@@ -1,4 +1,18 @@
-import { http, type HttpHandler, HttpResponse, type JsonBodyType, type PathParams } from 'msw'
+import { delay, http, type HttpHandler, HttpResponse, type JsonBodyType, type PathParams } from 'msw'
+
+let minimumResponseDelayMs = 0
+
+/*
+ * Makes every mock endpoint wait before responding, so loading states are
+ * visible. Off by default to keep unit tests fast; Storybook opts in.
+ */
+export const setMinimumResponseDelay = (ms: number) => {
+  minimumResponseDelayMs = ms
+}
+
+const applyMinimumResponseDelay = async () => {
+  if (minimumResponseDelayMs > 0) await delay(minimumResponseDelayMs)
+}
 
 type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'options' | 'head'
 
@@ -21,9 +35,10 @@ type CreateMockEndpointConfig<TOverride, TBody extends JsonBodyType> = {
   path: string
   /**
    * Builds the JSON response body from the request context. `override` is the
-   * value passed to `.mock(...)`, or undefined for the default handler.
+   * value passed to `.mock(...)`, or undefined for the default handler. May be
+   * async, e.g. to echo fields from the request body.
    */
-  resolve: (context: ResolveContext<TOverride>) => TBody
+  resolve: (context: ResolveContext<TOverride>) => TBody | Promise<TBody>
 }
 
 type MockOptions<TOverride> = {
@@ -51,8 +66,9 @@ export const createMockEndpoint = <TOverride, TBody extends JsonBodyType>({
       const context = { override, request, params }
 
       await onRequest?.({ ...context, request: request.clone() })
+      await applyMinimumResponseDelay()
 
-      return HttpResponse.json(resolve(context))
+      return HttpResponse.json(await resolve(context))
     })
 
   const toErrorHandler = (body: JsonBodyType, options?: MockErrorOptions<TOverride>): HttpHandler =>
@@ -61,6 +77,7 @@ export const createMockEndpoint = <TOverride, TBody extends JsonBodyType>({
       const context = { request, params }
 
       await onRequest?.({ ...context, request: request.clone() })
+      await applyMinimumResponseDelay()
 
       return HttpResponse.json(body, { status: 500, ...responseInit })
     })

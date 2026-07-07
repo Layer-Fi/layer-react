@@ -2,9 +2,9 @@ import { Schema } from 'effect'
 
 import { type Trip, type TripPurpose, TripSchema } from '@schemas/trip'
 
+import { tripStore } from '@msw/api/businesses/[business-id]/mileage/trips/store'
 import { paginatedApiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { trips as defaultTrips } from '@fixtures/generated/trips.gen'
 
 const encodeTrip = Schema.encodeSync(TripSchema)
 
@@ -14,7 +14,7 @@ const toResponse = (trips: readonly Trip[], request: Request) =>
 export const get = createMockEndpoint<readonly Trip[], ReturnType<typeof toResponse>>({
   method: 'get',
   path: '*/v1/businesses/:businessId/mileage/trips',
-  resolve: ({ override: trips = defaultTrips, request }) => {
+  resolve: ({ override: trips = tripStore.all(), request }) => {
     const url = new URL(request.url)
     const query = url.searchParams.get('q')?.toLowerCase()
     const vehicleId = url.searchParams.get('vehicle_ids')
