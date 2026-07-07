@@ -17,19 +17,13 @@ import { useBusinessActivationDate } from '@hooks/features/business/useBusinessA
 export function useDatePresets() {
   const activationDate = useBusinessActivationDate() ?? ALL_TIME_MIN_DATE
 
-  return useMemo(() => {
-    // A single "now" per activation change keeps derived ranges stable across
-    // renders. If the app later exposes "now" from a provider, read it here.
-    const context = { now: new Date(), activationDate }
-
-    return {
-      ...context,
-      rangeForSelectablePreset: (selectedPreset: SelectableDatePreset) =>
-        rangeForSelectablePreset(selectedPreset, context),
-      findMatchingPresetForDateRange: (
-        dateRange: DateRange,
-        currentPreset: DatePreset | null = null,
-      ) => findMatchingPresetForDateRange(dateRange, context, currentPreset),
-    }
-  }, [activationDate])
+  return useMemo(() => ({
+    activationDate,
+    rangeForSelectablePreset: (selectedPreset: SelectableDatePreset) =>
+      rangeForSelectablePreset(selectedPreset, { now: new Date(), activationDate }),
+    findMatchingPresetForDateRange: (
+      dateRange: DateRange,
+      currentPreset: DatePreset | null = null,
+    ) => findMatchingPresetForDateRange(dateRange, { now: new Date(), activationDate }, currentPreset),
+  }), [activationDate])
 }

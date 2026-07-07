@@ -21,12 +21,22 @@ setupFakeSystemTime(NOW)
 afterEach(() => vi.restoreAllMocks())
 
 describe('useDatePresets', () => {
-  it('sources "now" from the system clock', () => {
+  it('reads "now" at call time so ranges roll over without a re-render', () => {
     mockedUseBusinessActivationDate.mockReturnValue(undefined)
 
     const { result } = renderHook(() => useDatePresets())
 
-    expect(result.current.now).toEqual(NOW)
+    // Initial selection resolves against NOW (June 2026).
+    expect(result.current.rangeForSelectablePreset(DatePreset.ThisMonth).startDate)
+      .toEqual(startOfMonth(NOW))
+
+    // The app stays open into the next month; activationDate is unchanged, so the
+    // hook does not recompute. A later selection must still reflect the new clock.
+    const nextMonth = new Date(2026, 6, 3, 12, 0, 0)
+    vi.setSystemTime(nextMonth)
+
+    expect(result.current.rangeForSelectablePreset(DatePreset.ThisMonth).startDate)
+      .toEqual(startOfMonth(nextMonth))
   })
 
   it('exposes the business activation date when one exists', () => {
