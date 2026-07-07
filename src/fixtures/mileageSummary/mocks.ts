@@ -44,7 +44,7 @@ for (const trip of trips) {
 }
 
 const sumMonths = (months: readonly MileageMonth[], field: keyof MileageMonth) =>
-  months.reduce((total, month) => total + (month[field] as number), 0)
+  months.reduce((total, month) => total + month[field], 0)
 
 const years: MileageYear[] = Array.from(yearsByYear.entries())
   .sort(([a], [b]) => a - b)

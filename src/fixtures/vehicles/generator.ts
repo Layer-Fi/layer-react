@@ -11,7 +11,7 @@ const generateVehicles = createGenerator(schema, {
 
 const ARCHIVED_COUNT = 2
 
-export const generator: typeof generateVehicles = overrides => {
+export const generator: typeof generateVehicles = (overrides) => {
   const vehicles = generateVehicles(overrides)
 
   return vehicles.map((vehicle, index) => {
@@ -22,7 +22,7 @@ export const generator: typeof generateVehicles = overrides => {
       isPrimary: index === 0,
       archivedAt: isArchived
         ? new Date(vehicle.updatedAt.getTime() + 1000 * 60 * 60 * 24 * 30)
-        : vehicle.archivedAt,
+        : null,
     }
   })
 }

@@ -18,7 +18,7 @@ const spreadTripDate = (index: number, total: number) => {
   return new CalendarDate(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate())
 }
 
-export const generator: typeof generateTrips = overrides => {
+export const generator: typeof generateTrips = (overrides) => {
   const trips = generateTrips(overrides)
 
   return trips

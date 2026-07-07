@@ -2,7 +2,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
 import { CalendarDate } from '@internationalized/date'
-import { BigDecimal } from 'effect'
+import { BigDecimal, Schema } from 'effect'
 import fg from 'fast-glob'
 
 /*
@@ -123,7 +123,33 @@ async function main() {
       )
     }
 
+    const schemaFile = path.join(path.dirname(generatorFile), 'schema.ts')
+    const schemaModule = (await import(schemaFile)) as {
+      schema?: Schema.Schema<unknown, unknown>
+    }
+
+    if (schemaModule.schema == null) {
+      throw new Error(`src/fixtures/${domain}/schema.ts must export a \`schema\``)
+    }
+
     const rows = generatorModule.generator()
+
+    // The generated module casts rows via `as` (needed for fields like string
+    // enums, which TS treats nominally), so this is the real correctness
+    // check for the emitted data — not just a compile-time type match.
+    const validateRow = Schema.validateSync(schemaModule.schema)
+    rows.forEach((row, index) => {
+      try {
+        validateRow(row)
+      }
+      catch (error) {
+        throw new Error(
+          `src/fixtures/${domain}: generated row ${index} failed schema validation: `
+          + (error instanceof Error ? error.message : String(error)),
+        )
+      }
+    })
+
     const contents = renderFixtureModule(rows, domain)
     const outPath = path.join(outDir, `${domain}.gen.ts`)
 

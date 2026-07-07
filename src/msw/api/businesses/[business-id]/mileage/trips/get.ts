@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type Trip, TripSchema } from '@schemas/trip'
+import { type Trip, type TripPurpose, TripSchema } from '@schemas/trip'
 
 import { paginatedApiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
@@ -26,7 +26,7 @@ export const get = createMockEndpoint<readonly Trip[], ReturnType<typeof toRespo
         || [trip.startAddress, trip.endAddress, trip.description]
           .some(field => field?.toLowerCase()?.includes(query) ?? false)
       const matchesVehicle = vehicleId == null || trip.vehicle?.id === vehicleId
-      const matchesPurpose = purpose == null || trip.purpose === purpose
+      const matchesPurpose = purpose == null || trip.purpose === (purpose as TripPurpose)
       const matchesYear = year == null || trip.tripDate.year === Number(year)
 
       return matchesQuery && matchesVehicle && matchesPurpose && matchesYear
