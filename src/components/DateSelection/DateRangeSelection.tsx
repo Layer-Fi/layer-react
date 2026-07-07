@@ -4,7 +4,7 @@ import { type DateRange } from '@utils/date/dateRange'
 import { DateRangePicker } from '@components/DatePicker/DateRangePicker'
 import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
 
-import './globalDateRangeSelection.scss'
+import './dateRangeSelection.scss'
 
 type DateRangeSelectionProps = {
   dateRange: DateRange
@@ -21,8 +21,8 @@ export const DateRangeSelection = ({
 }: DateRangeSelectionProps) => {
   return (
     <div
-      className={classNames('Layer__GlobalDateRangeSelection', {
-        'Layer__GlobalDateRangeSelection--compact': isCompact,
+      className={classNames('Layer__DateRangeSelection', {
+        'Layer__DateRangeSelection--compact': isCompact,
       })}
     >
       <DateSelectionComboBox
