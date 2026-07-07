@@ -20,6 +20,8 @@ type GetLedgerEntriesParams = {
   cursor?: string
   limit?: number
   showTotalCount?: boolean
+  startDate?: Date
+  endDate?: Date
 }
 
 const ListLedgerEntriesResponseSchema = PaginatedResponseSchema(LedgerEntrySchema)
