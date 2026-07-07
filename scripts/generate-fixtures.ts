@@ -134,9 +134,7 @@ async function main() {
 
     const rows = generatorModule.generator()
 
-    // The generated module casts rows via `as` (needed for fields like string
-    // enums, which TS treats nominally), so this is the real correctness
-    // check for the emitted data — not just a compile-time type match.
+    // Stands in for the compile-time check the emitted `as` cast bypasses.
     const validateRow = Schema.validateSync(schemaModule.schema)
     rows.forEach((row, index) => {
       try {
