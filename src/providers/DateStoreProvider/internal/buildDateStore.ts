@@ -1,15 +1,14 @@
 import { createStore } from 'zustand'
 
+import type { DateRange } from '@utils/date/dateRange'
+import { DatePreset, rangeForPreset } from '@utils/date/dateRangePresets'
 import { getDateRange, withCorrectedRange } from '@providers/DateStoreProvider/internal/dateStoreUtils'
-import type { DateRange, DateStore } from '@providers/DateStoreProvider/internal/types'
-import { DatePreset, rangeForPreset } from '@components/DateSelection/utils'
+import type { DateStore } from '@providers/DateStoreProvider/internal/types'
 
 export type MakeDateStoreOptions = {
   initialDatePreset?: Exclude<DatePreset, DatePreset.Custom>
 }
 
-// Resolved when each store is created, so provider-mounted stores initialize
-// relative to their mount date.
 function resolveInitialRange({
   initialDatePreset = DatePreset.ThisMonth,
 }: MakeDateStoreOptions): DateRange {

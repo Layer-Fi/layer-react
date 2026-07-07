@@ -1,60 +1,37 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
 
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { VehicleSchema } from '@schemas/vehicle'
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useVehiclesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const ARCHIVE_VEHICLE_TAG_KEY = '#archive-vehicle'
 
-const ArchiveVehicleReturnSchema = Schema.Struct({
-  data: VehicleSchema,
-})
-
-type ArchiveVehicleReturn = typeof ArchiveVehicleReturnSchema.Type
+const ArchiveVehicleReturnSchema = UnwrappedDataResponseSchema(VehicleSchema)
 
 const archiveVehicle = post<
-  ArchiveVehicleReturn,
-  never,
+  typeof ArchiveVehicleReturnSchema.Encoded,
+  Record<string, never>,
   { businessId: string, vehicleId: string }
 >(({ businessId, vehicleId }) => `/v1/businesses/${businessId}/mileage/vehicles/${vehicleId}/archive`)
 
-const buildKey = createBuildKey<{ businessId: string, vehicleId: string }>([ARCHIVE_VEHICLE_TAG_KEY])
+const useArchiveVehicleMutation = createMutationHook({
+  tags: [ARCHIVE_VEHICLE_TAG_KEY],
+  request: archiveVehicle,
+  keyParams: ['vehicleId'],
+  argToBody: (_arg: never) => undefined,
+  schema: ArchiveVehicleReturnSchema,
+  swrOptions: { throwOnError: true },
+})
 
 type UseArchiveVehicleProps = {
   vehicleId: string
 }
 
 export const useArchiveVehicle = ({ vehicleId }: UseArchiveVehicleProps) => {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      vehicleId,
-    })),
-    (
-      { accessToken, apiUrl, businessId, vehicleId },
-    ) => {
-      return archiveVehicle(
-        apiUrl,
-        accessToken,
-        { params: { businessId, vehicleId } },
-      ).then(Schema.decodeUnknownPromise(ArchiveVehicleReturnSchema))
-    },
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
+  const mutationResponse = useArchiveVehicleMutation({ vehicleId })
 
   const { patchByKey: patchVehicleByKey } = useVehiclesGlobalCacheActions()
 
@@ -64,7 +41,7 @@ export const useArchiveVehicle = ({ vehicleId }: UseArchiveVehicleProps) => {
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      void patchVehicleByKey(triggerResult.data)
+      void patchVehicleByKey(triggerResult)
 
       return triggerResult
     },

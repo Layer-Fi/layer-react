@@ -1,15 +1,13 @@
 import { useCallback } from 'react'
-import useSWRMutation from 'swr/mutation'
 import { v4 as uuidv4 } from 'uuid'
 
 import type { TransactionTagEncoded } from '@schemas/tag'
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import {
   useBankTransactionsGlobalCacheActions,
 } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const TAG_BANK_TRANSACTION_TAG_KEY = '#tag-bank-transaction'
 
@@ -33,10 +31,8 @@ type TagBankTransactionResponse = {
 const tagBankTransaction = post<
   TagBankTransactionResponse,
   TagBankTransactionBody,
-  { businessId: string }
+  { businessId: string, bankTransactionId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/tags`)
-
-const buildKey = createBuildKey<{ businessId: string, bankTransactionId: string }>([TAG_BANK_TRANSACTION_TAG_KEY])
 
 type TagBankTransactionArg = {
   key: string
@@ -45,38 +41,26 @@ type TagBankTransactionArg = {
   valueDisplayName?: string | null
 }
 
+const useTagBankTransactionMutation = createMutationHook({
+  tags: [TAG_BANK_TRANSACTION_TAG_KEY],
+  request: tagBankTransaction,
+  keyParams: ['bankTransactionId'],
+  argToBody: (
+    { key, value, dimensionDisplayName, valueDisplayName }: TagBankTransactionArg,
+    { bankTransactionId },
+  ) => ({
+    key_values: [{ key, dimension_display_name: dimensionDisplayName, value, value_display_name: valueDisplayName }],
+    transaction_ids: [bankTransactionId],
+  }),
+  swrOptions: { throwOnError: false },
+})
+
 type TagBankTransactionOptions = {
   bankTransactionId: string
 }
 
 export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionOptions) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      bankTransactionId,
-    })),
-    (
-      { accessToken, apiUrl, businessId, bankTransactionId },
-      { arg: { key, value, dimensionDisplayName, valueDisplayName } }: { arg: TagBankTransactionArg },
-    ) => tagBankTransaction(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-        body: {
-          key_values: [{ key, dimension_display_name: dimensionDisplayName, value, value_display_name: valueDisplayName }],
-          transaction_ids: [bankTransactionId],
-        },
-      },
-    ),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
+  const mutationResponse = useTagBankTransactionMutation({ bankTransactionId })
 
   const { optimisticallyUpdateBankTransactions, debouncedInvalidateBankTransactions } = useBankTransactionsGlobalCacheActions()
 

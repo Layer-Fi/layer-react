@@ -1,16 +1,9 @@
-import { Schema } from 'effect'
-import useSWRInfinite from 'swr/infinite'
-
 import { type SortOrder } from '@internal-types/utility/pagination'
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type LedgerEntry, LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { createInfiniteKeyLoader } from '@utils/swr/createBuildKey'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
-import { useSWRInfiniteResult } from '@utils/swr/useSWRInfiniteResult'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 export const LIST_LEDGER_ENTRIES_TAG_KEY = '#list-ledger-entries'
 
@@ -35,98 +28,18 @@ const ListLedgerEntriesResponseSchema = PaginatedResponseSchema(LedgerEntrySchem
 
 export type ListLedgerEntriesReturn = typeof ListLedgerEntriesResponseSchema.Type
 
-export const listLedgerEntries = get<
+export const listLedgerEntries = getWithQuery<
   typeof ListLedgerEntriesResponseSchema.Encoded,
   GetLedgerEntriesParams
->(({ businessId, sortBy, sortOrder, cursor, limit, showTotalCount, startDate, endDate }) => {
-  const parameters = toDefinedSearchParameters({
-    sortBy,
-    sortOrder,
-    cursor,
-    limit,
-    showTotalCount,
-    startDate,
-    endDate,
-  })
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/ledger/entries`,
+)
 
-  return `/v1/businesses/${businessId}/ledger/entries?${parameters}`
+export const useListLedgerEntries = createInfiniteQueryHook({
+  tags: [LIST_LEDGER_ENTRIES_TAG_KEY],
+  request: listLedgerEntries,
+  schema: ListLedgerEntriesResponseSchema,
 })
-
-const keyLoader = createInfiniteKeyLoader<
-  UseListLedgerEntriesOptions & { businessId: string },
-  ListLedgerEntriesReturn
->([LIST_LEDGER_ENTRIES_TAG_KEY])
-
-export type UseListLedgerEntriesOptions = {
-  sortBy?: LedgerEntriesSortBy
-  sortOrder?: SortOrder
-  limit?: number
-  showTotalCount?: boolean
-  startDate?: Date
-  endDate?: Date
-}
-
-export function useListLedgerEntries({
-  sortBy,
-  sortOrder,
-  limit,
-  showTotalCount,
-  startDate,
-  endDate,
-}: UseListLedgerEntriesOptions = {}) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const swrResponse = useSWRInfinite(
-    (_index, previousPageData: ListLedgerEntriesReturn | null) => withLocale(keyLoader(
-      previousPageData,
-      {
-        ...auth,
-        businessId,
-        sortBy,
-        sortOrder,
-        limit,
-        showTotalCount,
-        startDate,
-        endDate,
-      },
-    )),
-    ({
-      accessToken,
-      apiUrl,
-      businessId,
-      cursor,
-      sortBy,
-      sortOrder,
-      limit,
-      showTotalCount,
-      startDate,
-      endDate,
-    }) => listLedgerEntries(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          sortBy,
-          sortOrder,
-          cursor,
-          limit,
-          showTotalCount,
-          startDate,
-          endDate,
-        },
-      },
-    )().then(Schema.decodeUnknownPromise(ListLedgerEntriesResponseSchema)),
-    {
-      keepPreviousData: true,
-      revalidateFirstPage: false,
-      initialSize: 1,
-    },
-  )
-
-  usePreserveInfiniteSize(swrResponse)
-
-  return useSWRInfiniteResult(swrResponse)
-}
 
 export const useLedgerEntriesCacheActions = createInfiniteQueryGlobalCacheActions<LedgerEntry>(LIST_LEDGER_ENTRIES_TAG_KEY)

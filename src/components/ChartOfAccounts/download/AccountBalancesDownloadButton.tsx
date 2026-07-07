@@ -17,11 +17,13 @@ export function AccountBalancesDownloadButton({
 }: AccountBalancesDownloadButtonProps) {
   const { t } = useTranslation()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
   const { trigger, isMutating, error } = useAccountBalancesDownload({
     startDate,
     endDate,
-    onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
+    swrOptions: {
+      onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
+    },
   })
 
   return (

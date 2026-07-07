@@ -1,7 +1,7 @@
 import { pipe, Schema } from 'effect'
 
 import { TagDimensionSchema, TagValueDefinitionSchema } from '@schemas/tag'
-import { createTransformedEnumSchema } from '@schemas/utils'
+import { createTransformedEnumSchema, UnwrappedDataResponseSchema } from '@schemas/utils'
 
 export enum ReportControl {
   Date = 'date',
@@ -64,7 +64,7 @@ export const ReportGroupSchema = Schema.Struct({
 })
 export type ReportGroup = typeof ReportGroupSchema.Type
 
-export const ReportConfigResponseSchema = Schema.Struct({
-  data: Schema.Array(ReportGroupSchema),
-})
+export const ReportConfigResponseSchema = UnwrappedDataResponseSchema(
+  Schema.Array(ReportGroupSchema),
+)
 export type ReportConfigResponse = typeof ReportConfigResponseSchema.Type

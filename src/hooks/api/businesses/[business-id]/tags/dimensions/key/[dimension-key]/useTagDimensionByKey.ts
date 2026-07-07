@@ -1,18 +1,14 @@
-import { Schema } from 'effect'
-import useSWR from 'swr'
-
 import { TagDimensionSchema } from '@schemas/tag'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const TAG_DIMENSION_BY_KEY_TAG_KEY = '#tag-dimension-by-key'
 
-const buildKey = createBuildKey<{ businessId: string, dimensionKey: string }>([TAG_DIMENSION_BY_KEY_TAG_KEY])
+const TagDimensionByKeyResponseSchema = UnwrappedDataResponseSchema(TagDimensionSchema)
 
 const getTagDimensionByKey = get<
-  { data: unknown },
+  typeof TagDimensionByKeyResponseSchema.Encoded,
   { businessId: string, dimensionKey: string }
 >(({ businessId, dimensionKey }) => `/v1/businesses/${businessId}/tags/dimensions/key/${dimensionKey}`)
 
@@ -21,31 +17,11 @@ type UseTagDimensionByKeyParameters = {
   dimensionKey: string
 }
 
-export function useTagDimensionByKey({ isEnabled = true, dimensionKey }: UseTagDimensionByKeyParameters) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const swrResponse = useSWR(
-    () => withLocale(buildKey({
-      ...auth,
-      isEnabled,
-      businessId,
-      dimensionKey,
-    })),
-    ({ accessToken, apiUrl, businessId }) => getTagDimensionByKey(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          dimensionKey,
-        },
-      },
-    )()
-      .then(({ data }) => Schema.decodeUnknownPromise(TagDimensionSchema)(data)),
-  )
-
-  return new SWRQueryResult(swrResponse)
-}
+export const useTagDimensionByKey = createQueryHook({
+  tags: [TAG_DIMENSION_BY_KEY_TAG_KEY],
+  request: getTagDimensionByKey,
+  schema: TagDimensionByKeyResponseSchema,
+})
 
 export function usePreloadTagDimensionByKey(parameters: UseTagDimensionByKeyParameters) {
   /*

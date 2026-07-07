@@ -1,67 +1,51 @@
+import { useCallback, useMemo } from 'react'
 import { Schema } from 'effect'
-import useSWR from 'swr'
 
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { type Vehicle, VehicleSchema } from '@schemas/vehicle'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { createResourceGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 type ListVehiclesParams = {
   businessId: string
   allowArchived?: boolean
 }
 
-const ListVehiclesResponseSchema = Schema.Struct({
-  data: Schema.Array(VehicleSchema),
-})
+const ListVehiclesResponseSchema = UnwrappedDataResponseSchema(Schema.Array(VehicleSchema))
 
-type ListVehiclesResponse = typeof ListVehiclesResponseSchema.Type
-type ListVehiclesResponseEncoded = typeof ListVehiclesResponseSchema.Encoded
-
-const listVehicles = get<
-  ListVehiclesResponseEncoded,
+const listVehicles = getWithQuery<
+  typeof ListVehiclesResponseSchema.Encoded,
   ListVehiclesParams
->(({ businessId, allowArchived }) => {
-  const parameters = toDefinedSearchParameters({ allowArchived })
-  return `/v1/businesses/${businessId}/mileage/vehicles?${parameters}`
-})
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/mileage/vehicles`,
+)
 
 export const VEHICLES_TAG_KEY = '#list-vehicles'
 
-const buildKey = createBuildKey<{ businessId: string, allowArchived?: boolean }>([VEHICLES_TAG_KEY])
+export const useListVehicles = createQueryHook({
+  tags: [VEHICLES_TAG_KEY],
+  request: listVehicles,
+  schema: ListVehiclesResponseSchema,
+})
 
-class ListVehiclesSWRResponse extends SWRQueryResult<ListVehiclesResponse> {
-  // @ts-expect-error override narrows return type to unwrap nested data
-  override get data() {
-    return this.swrResponse.data?.data
-  }
-}
+const useVehiclesResourceCacheActions = createResourceGlobalCacheActions<ReadonlyArray<Vehicle>>(VEHICLES_TAG_KEY)
 
-export function useListVehicles({ allowArchived }: { allowArchived?: boolean } = {}) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
+const patchVehicleById = (updatedVehicle: Vehicle) =>
+  (vehicles?: ReadonlyArray<Vehicle>) =>
+    vehicles?.map(vehicle => vehicle.id === updatedVehicle.id ? updatedVehicle : vehicle)
 
-  const response = useSWR(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      allowArchived,
-    })),
-    ({ accessToken, apiUrl, businessId, allowArchived }) => listVehicles(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          allowArchived,
-        },
-      },
-    )().then(Schema.decodeUnknownPromise(ListVehiclesResponseSchema)),
+export function useVehiclesGlobalCacheActions() {
+  const actions = useVehiclesResourceCacheActions()
+
+  const patchByKey = useCallback(
+    (updatedVehicle: Vehicle) => actions.patchCache(patchVehicleById(updatedVehicle)),
+    [actions],
   )
 
-  return new ListVehiclesSWRResponse(response)
+  return useMemo(() => ({
+    ...actions,
+    patchByKey,
+  }), [actions, patchByKey])
 }
-
-export const useVehiclesGlobalCacheActions = createInfiniteQueryGlobalCacheActions<Vehicle>(VEHICLES_TAG_KEY)

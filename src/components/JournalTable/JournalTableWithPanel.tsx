@@ -2,7 +2,7 @@ import { type RefObject, useContext } from 'react'
 import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type View } from '@internal-types/general'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { Button } from '@ui/Button/Button'
@@ -34,13 +34,12 @@ export interface JournalTableStringOverrides {
 export const JournalTableWithPanel = ({
   containerRef,
   stringOverrides,
-  view,
 }: {
-  view: View
   containerRef: RefObject<HTMLDivElement>
   stringOverrides?: JournalTableStringOverrides
 }) => {
   const { t } = useTranslation()
+  const { isDesktop } = useSizeClass()
   const { toCreateEntry } = useJournalNavigation()
   const addEntryLabel = stringOverrides?.addEntryButton || t('generalLedger:action.add_entry', 'Add Entry')
 
@@ -67,14 +66,14 @@ export const JournalTableWithPanel = ({
           </HeaderCol>
           <HeaderCol>
             <JournalEntriesDownloadButton
-              icon={['mobile', 'tablet'].includes(view)}
+              icon={!isDesktop}
             />
             <Button
               onPress={() => toCreateEntry()}
-              icon={view === 'mobile'}
-              aria-label={view === 'mobile' ? addEntryLabel : undefined}
+              icon={!isDesktop}
+              aria-label={!isDesktop ? addEntryLabel : undefined}
             >
-              {view === 'mobile' ? <CirclePlus size={14} /> : addEntryLabel}
+              {isDesktop ? addEntryLabel : <CirclePlus size={14} />}
             </Button>
           </HeaderCol>
         </HeaderRow>

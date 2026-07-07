@@ -1,41 +1,37 @@
 import classNames from 'classnames'
 
-import { type DateRange } from '@providers/DateStoreProvider/internal/types'
+import { type DateRange } from '@utils/date/dateRange'
 import { DateRangePicker } from '@components/DatePicker/DateRangePicker'
 import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
 
-import './globalDateRangeSelection.scss'
+import './dateRangeSelection.scss'
 
 type DateRangeSelectionProps = {
-  startDate: Date
-  endDate: Date
+  dateRange: DateRange
   setDateRange: (range: DateRange) => void
   showLabels?: boolean
   isCompact?: boolean
 }
 
 export const DateRangeSelection = ({
-  startDate,
-  endDate,
+  dateRange,
   setDateRange,
   showLabels = false,
   isCompact = false,
 }: DateRangeSelectionProps) => {
   return (
     <div
-      className={classNames('Layer__GlobalDateRangeSelection', {
-        'Layer__GlobalDateRangeSelection--compact': isCompact,
+      className={classNames('Layer__DateRangeSelection', {
+        'Layer__DateRangeSelection--compact': isCompact,
       })}
     >
       <DateSelectionComboBox
-        startDate={startDate}
-        endDate={endDate}
+        dateRange={dateRange}
         setDateRange={setDateRange}
         showLabel={showLabels}
       />
       <DateRangePicker
-        startDate={startDate}
-        endDate={endDate}
+        dateRange={dateRange}
         setDateRange={setDateRange}
         showLabels={showLabels}
       />

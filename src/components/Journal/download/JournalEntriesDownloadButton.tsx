@@ -20,7 +20,9 @@ export function JournalEntriesDownloadButton({
   const { trigger, isMutating, error } = useJournalEntriesDownload({
     startDate,
     endDate,
-    onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
+    swrOptions: {
+      onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
+    },
   })
 
   return (

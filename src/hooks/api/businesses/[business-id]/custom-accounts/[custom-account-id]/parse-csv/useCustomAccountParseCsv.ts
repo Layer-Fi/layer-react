@@ -1,13 +1,11 @@
 import { pipe, Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
 
 import { PreviewCellSchema, type PreviewCsv, PreviewRowSchema } from '@schemas/csvUpload'
 import type { CustomAccountTransactionRow, RawCustomTransaction } from '@schemas/customAccounts'
-import { type APIError } from '@utils/api/apiError'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { postWithFormData } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 type CustomAccountParseCsvArgs = {
   file: File
@@ -60,6 +58,8 @@ const ParseCsvResponseSchema = Schema.Struct({
   ),
 })
 
+const ParseCsvReturnSchema = UnwrappedDataResponseSchema(ParseCsvResponseSchema)
+
 export type CustomAccountParseCsvResponse = {
   isValid: boolean
   newTransactionsRequest: { transactions: RawCustomTransaction[] }
@@ -68,24 +68,28 @@ export type CustomAccountParseCsvResponse = {
   totalTransactionsCount: number
 }
 
-const buildKey = createBuildKey<{ businessId: string }>([`${CUSTOM_ACCOUNTS_TAG_KEY}:parse-csv`])
-
-const parseCsv = (baseUrl: string, accessToken: string, {
-  businessId,
-  customAccountId,
-  file,
-}: {
+type ParseCsvParams = {
   businessId: string
   customAccountId: string
+}
+
+type ParseCsvBody = {
   file: File
-}) => {
+}
+
+const parseCsv = (
+  baseUrl: string,
+  accessToken: string | undefined,
+  options?: { params?: ParseCsvParams, body?: ParseCsvBody },
+) => {
+  const { businessId, customAccountId } = options?.params ?? ({} as ParseCsvParams)
+  const { file } = options?.body ?? ({} as ParseCsvBody)
+
   const formData = new FormData()
   formData.append('file', file)
 
   const endpoint = `/v1/businesses/${businessId}/custom-accounts/${customAccountId}/parse-csv`
-  return postWithFormData<
-    { data: typeof ParseCsvResponseSchema.Encoded }
-  >(
+  return postWithFormData<typeof ParseCsvReturnSchema.Encoded>(
     endpoint,
     formData,
     baseUrl,
@@ -93,42 +97,17 @@ const parseCsv = (baseUrl: string, accessToken: string, {
   )
 }
 
-export function useCustomAccountParseCsv() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  return useSWRMutation<
-    CustomAccountParseCsvResponse,
-    APIError,
-    () => ReturnType<typeof buildKey>,
-    CustomAccountParseCsvArgs
-  >
-      (
-      () => withLocale(buildKey({
-        ...auth,
-        businessId,
-      })),
-      (
-        { accessToken, apiUrl, businessId },
-        { arg: { customAccountId, file } }: { arg: CustomAccountParseCsvArgs },
-      ) => parseCsv(
-        apiUrl,
-        accessToken,
-        {
-          businessId,
-          customAccountId,
-          file,
-        },
-      )
-        .then(({ data }) => Schema.decodeUnknownPromise(ParseCsvResponseSchema)(data))
-        .then(decoded => ({
-          isValid: decoded.isValid,
-          newTransactionsPreview: decoded.newTransactionsPreview,
-          newTransactionsRequest: decoded.newTransactionsRequest as { transactions: RawCustomTransaction[] },
-          invalidTransactionsCount: decoded.invalidTransactionsCount,
-          totalTransactionsCount: decoded.totalTransactionsCount,
-        })),
-      {
-        revalidate: false,
-      },
-      )
-}
+export const useCustomAccountParseCsv = createMutationHook({
+  tags: [`${CUSTOM_ACCOUNTS_TAG_KEY}:parse-csv`],
+  request: parseCsv,
+  argToParams: ({ customAccountId }: CustomAccountParseCsvArgs) => ({ customAccountId }),
+  argToBody: ({ file }: CustomAccountParseCsvArgs) => ({ file }),
+  schema: ParseCsvReturnSchema,
+  select: (data): CustomAccountParseCsvResponse => ({
+    isValid: data.isValid,
+    newTransactionsPreview: data.newTransactionsPreview,
+    newTransactionsRequest: data.newTransactionsRequest as { transactions: RawCustomTransaction[] },
+    invalidTransactionsCount: data.invalidTransactionsCount,
+    totalTransactionsCount: data.totalTransactionsCount,
+  }),
+})

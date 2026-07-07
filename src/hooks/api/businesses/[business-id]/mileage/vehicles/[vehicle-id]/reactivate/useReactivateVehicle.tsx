@@ -1,60 +1,37 @@
 import { useCallback } from 'react'
-import { Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
 
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { VehicleSchema } from '@schemas/vehicle'
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useVehiclesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const REACTIVATE_VEHICLE_TAG_KEY = '#reactivate-vehicle'
 
-const ReactivateVehicleReturnSchema = Schema.Struct({
-  data: VehicleSchema,
-})
-
-type ReactivateVehicleReturn = typeof ReactivateVehicleReturnSchema.Type
+const ReactivateVehicleReturnSchema = UnwrappedDataResponseSchema(VehicleSchema)
 
 const reactivateVehicle = post<
-  ReactivateVehicleReturn,
-  never,
+  typeof ReactivateVehicleReturnSchema.Encoded,
+  Record<string, never>,
   { businessId: string, vehicleId: string }
 >(({ businessId, vehicleId }) => `/v1/businesses/${businessId}/mileage/vehicles/${vehicleId}/reactivate`)
 
-const buildKey = createBuildKey<{ businessId: string, vehicleId: string }>([REACTIVATE_VEHICLE_TAG_KEY])
+const useReactivateVehicleMutation = createMutationHook({
+  tags: [REACTIVATE_VEHICLE_TAG_KEY],
+  request: reactivateVehicle,
+  keyParams: ['vehicleId'],
+  argToBody: (_arg: never) => undefined,
+  schema: ReactivateVehicleReturnSchema,
+  swrOptions: { throwOnError: true },
+})
 
 type UseReactivateVehicleProps = {
   vehicleId: string
 }
 
 export const useReactivateVehicle = ({ vehicleId }: UseReactivateVehicleProps) => {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      vehicleId,
-    })),
-    (
-      { accessToken, apiUrl, businessId, vehicleId },
-    ) => {
-      return reactivateVehicle(
-        apiUrl,
-        accessToken,
-        { params: { businessId, vehicleId } },
-      ).then(Schema.decodeUnknownPromise(ReactivateVehicleReturnSchema))
-    },
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
+  const mutationResponse = useReactivateVehicleMutation({ vehicleId })
 
   const { patchByKey: patchVehicleByKey } = useVehiclesGlobalCacheActions()
 
@@ -64,7 +41,7 @@ export const useReactivateVehicle = ({ vehicleId }: UseReactivateVehicleProps) =
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {
       const triggerResult = await originalTrigger(...triggerParameters)
 
-      void patchVehicleByKey(triggerResult.data)
+      void patchVehicleByKey(triggerResult)
 
       return triggerResult
     },

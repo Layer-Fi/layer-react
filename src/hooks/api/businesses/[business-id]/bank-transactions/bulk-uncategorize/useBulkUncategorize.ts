@@ -1,13 +1,11 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
 
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-uncategorize-bank-transactions'
@@ -27,36 +25,21 @@ const bulkUncategorize = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/bulk-uncategorize`)
 
-const buildKey = createBuildKey<{ businessId: string }>([BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY])
+const useBulkUncategorizeMutation = createMutationHook({
+  tags: [BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY],
+  request: bulkUncategorize,
+  argToBody: (arg: BulkUncategorizeRequest) => Schema.encodeSync(BulkUncategorizeRequestSchema)(arg),
+  select: ({ data }) => data,
+  swrOptions: { throwOnError: true },
+})
 
 export const useBulkUncategorize = () => {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const { eventCallbacks } = useLayerContext()
 
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg }: { arg: BulkUncategorizeRequest },
-    ) => bulkUncategorize(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-        body: Schema.encodeSync(BulkUncategorizeRequestSchema)(arg),
-      },
-    ).then(({ data }) => data),
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
+  const mutationResponse = useBulkUncategorizeMutation()
 
   const originalTrigger = mutationResponse.trigger
 

@@ -1,13 +1,11 @@
 import { Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
 
 import { BankTransactionDataOnlySchema } from '@schemas/bankTransactions/bankTransactionDataOnly'
 import type { RawCustomTransaction } from '@schemas/customAccounts'
-import { type APIError } from '@utils/api/apiError'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 type CreateCustomAccountTransactionsBody = {
   transactions: RawCustomTransaction[]
@@ -17,50 +15,23 @@ type CreateCustomAccountTransactionsArgs = CreateCustomAccountTransactionsBody &
   customAccountId: string
 }
 
-const CreateCustomAccountTransactionsResponseSchema = Schema.Struct({
-  data: Schema.Array(BankTransactionDataOnlySchema),
-})
-
-type CreateCustomAccountTransactionsResponse = typeof CreateCustomAccountTransactionsResponseSchema.Type
+const CreateCustomAccountTransactionsResponseSchema = UnwrappedDataResponseSchema(
+  Schema.Array(BankTransactionDataOnlySchema),
+)
 
 const createCustomAccountTransactions = post<
-  Record<string, unknown>,
+  typeof CreateCustomAccountTransactionsResponseSchema.Encoded,
   CreateCustomAccountTransactionsBody,
   { businessId: string, customAccountId: string }
 >(({ businessId, customAccountId }) =>
   `/v1/businesses/${businessId}/custom-accounts/${customAccountId}/transactions`,
 )
 
-const buildKey = createBuildKey<{ businessId: string }>([`${CUSTOM_ACCOUNTS_TAG_KEY}:create-transactions`])
-
-export function useCreateCustomAccountTransactions() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  return useSWRMutation<
-    CreateCustomAccountTransactionsResponse['data'],
-    APIError,
-    () => ReturnType<typeof buildKey>,
-    CreateCustomAccountTransactionsArgs>(
-      () => withLocale(buildKey({
-        ...auth,
-        businessId,
-      })),
-      (
-        { accessToken, apiUrl, businessId },
-        { arg: { customAccountId, ...body } },
-      ) =>
-        createCustomAccountTransactions(apiUrl, accessToken, {
-          params: {
-            businessId,
-            customAccountId,
-          },
-          body,
-        })
-          .then(Schema.decodeUnknownPromise(CreateCustomAccountTransactionsResponseSchema))
-          .then(({ data }) => data),
-      {
-        revalidate: false,
-        throwOnError: false,
-      },
-      )
-}
+export const useCreateCustomAccountTransactions = createMutationHook({
+  tags: [`${CUSTOM_ACCOUNTS_TAG_KEY}:create-transactions`],
+  request: createCustomAccountTransactions,
+  argToParams: ({ customAccountId }: CreateCustomAccountTransactionsArgs) => ({ customAccountId }),
+  argToBody: ({ transactions }: CreateCustomAccountTransactionsArgs) => ({ transactions }),
+  schema: CreateCustomAccountTransactionsResponseSchema,
+  swrOptions: { throwOnError: false },
+})

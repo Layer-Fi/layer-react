@@ -12,7 +12,7 @@ type GlobalDateSelectionProps = {
 }
 
 export const GlobalDateSelection = ({ showLabels = false, isCompact = false }: GlobalDateSelectionProps) => {
-  const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode: 'full' })
+  const dateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
   const { setDateRange } = useGlobalDateRangeActions()
 
   return (
@@ -22,8 +22,7 @@ export const GlobalDateSelection = ({ showLabels = false, isCompact = false }: G
       })}
     >
       <DateSelectionComboBox
-        startDate={startDate}
-        endDate={endDate}
+        dateRange={dateRange}
         setDateRange={setDateRange}
         showLabel={showLabels}
       />

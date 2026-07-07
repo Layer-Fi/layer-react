@@ -1,30 +1,34 @@
 import { useCallback } from 'react'
 import { useSWRConfig } from 'swr'
-import useSWRMutation from 'swr/mutation'
 
 import type { FileMetadata } from '@internal-types/fileUpload'
 import { postWithFormData } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
 import { BOOKKEEPING_PERIODS_TAG_KEY } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+
+type UploadDocumentsForTaskParams = {
+  businessId: string
+  taskId: string
+}
+
+type UploadDocumentsForTaskBody = {
+  files: ReadonlyArray<File>
+  description?: string
+}
 
 function completeTaskWithUpload(
   baseUrl: string,
-  accessToken: string,
-  {
-    businessId,
-    taskId,
-    files,
-    description,
-  }: {
-    businessId: string
-    taskId: string
-    files: ReadonlyArray<File>
-    description?: string
+  accessToken: string | undefined,
+  options?: {
+    params?: UploadDocumentsForTaskParams
+    body?: UploadDocumentsForTaskBody
   },
 ) {
+  const { businessId, taskId } = options?.params ?? ({} as UploadDocumentsForTaskParams)
+  const { files, description } = options?.body ?? ({} as UploadDocumentsForTaskBody)
+
   const formData = new FormData()
   files.forEach(file => formData.append('file', file))
   if (description) {
@@ -40,43 +44,26 @@ function completeTaskWithUpload(
   )
 }
 
-const buildKey = createBuildKey<{ businessId: string }>(['#use-upload-documents-for-task'])
-
 type UseUploadDocumentsForTaskArg = {
   taskId: string
   files: ReadonlyArray<File>
   description?: string
 }
 
+const useUploadDocumentsForTaskMutation = createMutationHook({
+  tags: ['#use-upload-documents-for-task'],
+  request: completeTaskWithUpload,
+  argToParams: ({ taskId }: UseUploadDocumentsForTaskArg) => ({ taskId }),
+  argToBody: ({ files, description }: UseUploadDocumentsForTaskArg) => ({ files, description }),
+  swrOptions: { throwOnError: false },
+})
+
 export function useUploadDocumentsForTask() {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const { mutate } = useSWRConfig()
 
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: { taskId, files, description } }: { arg: UseUploadDocumentsForTaskArg },
-    ) => completeTaskWithUpload(
-      apiUrl,
-      accessToken,
-      {
-        businessId,
-        taskId,
-        files,
-        description,
-      },
-    ),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
+  const mutationResponse = useUploadDocumentsForTaskMutation()
 
-  const { trigger: originalTrigger } = mutationResponse
+  const originalTrigger = mutationResponse.trigger
 
   const stableProxiedTrigger = useCallback(
     async (...triggerParameters: Parameters<typeof originalTrigger>) => {

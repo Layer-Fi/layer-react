@@ -1,65 +1,29 @@
-import useSWRMutation from 'swr/mutation'
-
 import type { S3PresignedUrl } from '@internal-types/general'
-import type { Awaitable } from '@internal-types/utility/promises'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { getAsMutation } from '@utils/api/getAsMutation'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
-type GetLedgerAccountBalancesCSVParams = {
+type GetAccountBalancesCSVParams = {
   businessId: string
   startDate?: Date
   endDate?: Date
 }
 
-const getLedgerAccountBalancesCSV = get<{ data: S3PresignedUrl }, GetLedgerAccountBalancesCSVParams>(
-  ({ businessId, startDate, endDate }) => {
-    const parameters = toDefinedSearchParameters({ startDate, endDate })
-
-    return `/v1/businesses/${businessId}/ledger/balances/exports/csv?${parameters}`
-  },
+const getLedgerAccountBalancesCSV = getWithQuery<
+  { data: S3PresignedUrl },
+  GetAccountBalancesCSVParams
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/ledger/balances/exports/csv`,
 )
 
-const buildKey = createBuildKey<{ businessId: string, startDate?: Date, endDate?: Date }>(['#account-balances', '#exports', '#csv'])
+const requestLedgerAccountBalancesCSV = getAsMutation(getLedgerAccountBalancesCSV)
 
-type UseAccountBalancesDownloadOptions = {
-  startDate?: Date
-  endDate?: Date
-  onSuccess?: (url: S3PresignedUrl) => Awaitable<unknown>
-}
-
-export function useAccountBalancesDownload({
-  startDate,
-  endDate,
-  onSuccess,
-}: UseAccountBalancesDownloadOptions) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
-
-  return useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      startDate,
-      endDate,
-    })),
-    ({ accessToken, apiUrl, businessId, startDate, endDate }) => getLedgerAccountBalancesCSV(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          startDate,
-          endDate,
-        },
-      })().then(({ data }) => {
-      if (onSuccess) {
-        return onSuccess(data)
-      }
-    }),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
-}
+export const useAccountBalancesDownload = createMutationHook({
+  tags: ['#account-balances', '#exports', '#csv'],
+  request: requestLedgerAccountBalancesCSV,
+  keyParams: ['startDate', 'endDate'],
+  argToBody: (_arg: undefined) => undefined,
+  select: ({ data }) => data,
+  swrOptions: { throwOnError: false },
+})

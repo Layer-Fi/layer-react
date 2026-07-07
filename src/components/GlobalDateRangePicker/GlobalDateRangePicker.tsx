@@ -2,13 +2,12 @@ import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateSt
 import { DateRangePicker } from '@components/DatePicker/DateRangePicker'
 
 export const GlobalDateRangePicker = ({ showLabels = false }: { showLabels?: boolean }) => {
-  const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode: 'full' })
+  const dateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
   const { setDateRange } = useGlobalDateRangeActions()
 
   return (
     <DateRangePicker
-      startDate={startDate}
-      endDate={endDate}
+      dateRange={dateRange}
       setDateRange={setDateRange}
       showLabels={showLabels}
     />

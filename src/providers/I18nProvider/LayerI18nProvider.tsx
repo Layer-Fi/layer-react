@@ -1,5 +1,5 @@
 import { createContext, type PropsWithChildren, useContext, useEffect, useRef } from 'react'
-import { I18nProvider as AriaI18nProvider } from 'react-aria-components/I18nProvider'
+import { I18nProvider as ReactAriaI18nProvider } from 'react-aria-components'
 import { I18nextProvider } from 'react-i18next'
 import { IntlProvider } from 'react-intl'
 
@@ -31,9 +31,9 @@ export function LayerI18nProvider({ children, locale = DEFAULT_LOCALE }: LayerI1
     <LocaleContext.Provider value={locale}>
       <I18nextProvider i18n={i18next}>
         <IntlProvider locale={locale} defaultLocale={DEFAULT_LOCALE} messages={EMPTY_MESSAGES}>
-          <AriaI18nProvider locale={locale}>
+          <ReactAriaI18nProvider locale={locale}>
             {children}
-          </AriaI18nProvider>
+          </ReactAriaI18nProvider>
         </IntlProvider>
       </I18nextProvider>
     </LocaleContext.Provider>

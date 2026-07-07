@@ -1,15 +1,11 @@
-import { Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
-
 import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/common/s3PresignedUrl'
-import { get } from '@utils/api/authenticatedHttp'
-import { type QueryParams, toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { getAsMutation } from '@utils/api/getAsMutation'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { type QueryParams } from '@utils/request/toDefinedSearchParameters'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import {
   type UnifiedReportControlParams,
-  type UnifiedReportParams,
   useUnifiedReportParams,
 } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 
@@ -18,19 +14,25 @@ type GetUnifiedReportExcelParams = {
   route: string
 } & UnifiedReportControlParams & QueryParams
 
-const getUnifiedReportExcel = get<
-  { data: S3PresignedUrlSchemaType },
+const UnifiedReportExcelReturnSchema = UnwrappedDataResponseSchema(S3PresignedUrlSchema)
+
+const getUnifiedReportExcel = getWithQuery<
+  typeof UnifiedReportExcelReturnSchema.Encoded,
   GetUnifiedReportExcelParams
->(({ businessId, route, ...restParams }) => {
-  const parameters = toDefinedSearchParameters({ ...restParams })
+>(
+  ['businessId', 'route'],
+  ({ businessId, route }) => `/v1/businesses/${businessId}/reports/unified/${route}/exports/excel`,
+)
 
-  return `/v1/businesses/${businessId}/reports/unified/${route}/exports/excel?${parameters}`
-})
+const requestUnifiedReportExcel = getAsMutation(getUnifiedReportExcel)
 
-const getTag = (report: string) => `#unified-${report}-report-excel`
-
-const UnifiedReportExcelReturnSchema = Schema.Struct({
-  data: S3PresignedUrlSchema,
+const useUnifiedReportExcelMutation = createMutationHook({
+  tags: ['#unified-report-excel'],
+  request: requestUnifiedReportExcel,
+  keyParams: ['route'],
+  argToBody: (_arg: undefined) => undefined,
+  schema: UnifiedReportExcelReturnSchema,
+  swrOptions: { throwOnError: false },
 })
 
 type UseUnifiedReportExcelOptions = {
@@ -38,28 +40,14 @@ type UseUnifiedReportExcelOptions = {
 }
 
 export function useUnifiedReportExcel({ onSuccess }: UseUnifiedReportExcelOptions = {}) {
-  const { withLocale, businessId, auth } = useBuildKeyInputs()
   const params = useUnifiedReportParams()
 
-  const buildKey = createBuildKey<{ businessId: string } & UnifiedReportParams>(
-    params ? [getTag(params.route)] : [],
-  )
-
-  const rawMutationResponse = useSWRMutation(
-    () => params
-      ? withLocale(buildKey({ ...auth, businessId, ...params }))
-      : null,
-    ({ accessToken, apiUrl, businessId, tags, ...restParams }) =>
-      getUnifiedReportExcel(apiUrl, accessToken, {
-        params: { businessId, ...restParams },
-      })()
-        .then(Schema.decodeUnknownPromise(UnifiedReportExcelReturnSchema))
-        .then(async ({ data }) => {
-          if (onSuccess) await onSuccess(data)
-          return data
-        }),
-    { revalidate: false, throwOnError: false },
-  )
-
-  return new SWRMutationResult(rawMutationResponse)
+  return useUnifiedReportExcelMutation({
+    ...params,
+    route: params?.route ?? '',
+    isEnabled: params !== null,
+    swrOptions: {
+      onSuccess: (data) => { void onSuccess?.(data) },
+    },
+  })
 }
