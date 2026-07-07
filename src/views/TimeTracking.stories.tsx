@@ -27,6 +27,9 @@ type TimeTrackingStoryArgs = {
 const meta: Meta<TimeTrackingStoryArgs> = {
   title: 'Views/TimeTracking',
   component: TimeTracking,
+  parameters: {
+    controls: { include: ['showTitle', 'showReportsAction', 'title'] },
+  },
   args: {
     showTitle: true,
     title: '',
