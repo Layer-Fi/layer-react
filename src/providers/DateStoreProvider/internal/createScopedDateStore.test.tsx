@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { DatePreset } from '@utils/date/dateRangePresets'
+import { DatePreset } from '@utils/date/dateRange'
 import { createScopedDateStore, type CreateScopedDateStoreOptions } from '@providers/DateStoreProvider/internal/createScopedDateStore'
 
 import { setupFakeSystemTime } from '@test-utils/fakeSystemTime'

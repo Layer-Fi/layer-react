@@ -6,7 +6,7 @@ import {
   DatePreset,
   findMatchingPresetForDateRange,
   rangeForSelectablePreset,
-} from '@utils/date/dateRangePresets'
+} from '@utils/date/dateRange'
 
 import { NOW } from '@test-utils/fixedDates'
 

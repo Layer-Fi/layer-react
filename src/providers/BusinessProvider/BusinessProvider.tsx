@@ -12,7 +12,7 @@ import {
 import { errorHandler, type LayerError } from '@utils/api/errorHandler'
 import { getActivationDate } from '@utils/business'
 import { buildColorsPalette } from '@utils/colors'
-import { ALL_TIME_MIN_DATE } from '@utils/date/dateRangePresets'
+import { ALL_TIME_MIN_DATE } from '@utils/date/dateRange'
 import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
 import { useBusiness } from '@hooks/api/businesses/[business-id]/useBusiness'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'

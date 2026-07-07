@@ -1,7 +1,6 @@
 import { createStore } from 'zustand'
 
-import type { DateRange } from '@utils/date/dateRange'
-import { ALL_TIME_MIN_DATE, DatePreset, rangeForSelectablePreset } from '@utils/date/dateRangePresets'
+import { ALL_TIME_MIN_DATE, DatePreset, type DateRange, rangeForSelectablePreset } from '@utils/date/dateRange'
 import { getDateRange, withCorrectedRange } from '@providers/DateStoreProvider/internal/dateStoreUtils'
 import type { DateStore } from '@providers/DateStoreProvider/internal/types'
 
@@ -15,11 +14,12 @@ function getInitialRange({
   // The store is built before any business context is available, so the initial
   // range uses "now" and the fixed activation fallback. Selecting a preset later
   // (via useDatePresets) recomputes with the real activation date.
+  const now = new Date()
   const { startDate, endDate } = rangeForSelectablePreset(initialDatePreset, {
-    now: new Date(),
+    now,
     activationDate: ALL_TIME_MIN_DATE,
   })
-  return getDateRange({ mode: 'full', startDate, endDate })
+  return getDateRange({ mode: 'full', startDate, endDate }, now)
 }
 
 export function buildDateStore(options: MakeDateStoreOptions = {}) {
@@ -32,22 +32,23 @@ export function buildDateStore(options: MakeDateStoreOptions = {}) {
     }
 
     const setDate = ({ date }: { date: Date }): DateRange => {
+      const now = new Date()
       // Always clamp to start of month for date.
-      const monthRange = getDateRange({ mode: 'month', endDate: date })
-      const fullRange = getDateRange({ mode: 'full', startDate: date, endDate: date })
+      const monthRange = getDateRange({ mode: 'month', endDate: date }, now)
+      const fullRange = getDateRange({ mode: 'full', startDate: date, endDate: date }, now)
       return apply({ startDate: monthRange.startDate, endDate: fullRange.endDate })
     }
 
     const setDateRange = withCorrectedRange(({ startDate, endDate }): DateRange => {
-      return apply(getDateRange({ mode: 'full', startDate, endDate }))
+      return apply(getDateRange({ mode: 'full', startDate, endDate }, new Date()))
     })
 
     const setMonth = ({ startDate }: { startDate: Date }): DateRange => {
-      return apply(getDateRange({ mode: 'month', endDate: startDate }))
+      return apply(getDateRange({ mode: 'month', endDate: startDate }, new Date()))
     }
 
     const setYear = ({ startDate }: { startDate: Date }): DateRange => {
-      return apply(getDateRange({ mode: 'year', endDate: startDate }))
+      return apply(getDateRange({ mode: 'year', endDate: startDate }, new Date()))
     }
 
     return {

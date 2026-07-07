@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
 
-import type { DateRange } from '@utils/date/dateRange'
 import {
   ALL_TIME_MIN_DATE,
   type DatePreset,
+  type DateRange,
   findMatchingPresetForDateRange,
   rangeForSelectablePreset,
   type SelectableDatePreset,
-} from '@utils/date/dateRangePresets'
+} from '@utils/date/dateRange'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 
 /**

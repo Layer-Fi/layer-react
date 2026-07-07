@@ -37,9 +37,12 @@ export function createScopedDateStore({
       ({ endDate }) => endDate,
     )
 
+    // Stable per-mount "now" for clamping the projected range to today.
+    const now = useMemo(() => new Date(), [])
+
     return useMemo(
-      () => getEffectiveDateForMode(dateSelectionMode, { date: rawDate }),
-      [dateSelectionMode, rawDate],
+      () => getEffectiveDateForMode(dateSelectionMode, { date: rawDate }, now),
+      [dateSelectionMode, rawDate, now],
     )
   }
 
@@ -67,13 +70,16 @@ export function createScopedDateStore({
       ({ endDate }) => endDate,
     )
 
+    // Stable per-mount "now" for clamping the projected range to today.
+    const now = useMemo(() => new Date(), [])
+
     return useMemo(
       () =>
         getEffectiveDateRangeForMode(dateSelectionMode, {
           startDate: rawStartDate,
           endDate: rawEndDate,
-        }),
-      [dateSelectionMode, rawStartDate, rawEndDate],
+        }, now),
+      [dateSelectionMode, rawStartDate, rawEndDate, now],
     )
   }
 

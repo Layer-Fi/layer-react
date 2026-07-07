@@ -1,8 +1,7 @@
 import { useCallback, useId, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type DateRange } from '@utils/date/dateRange'
-import { DatePreset } from '@utils/date/dateRangePresets'
+import { DatePreset, type DateRange } from '@utils/date/dateRange'
 import { useDatePresets } from '@hooks/utils/dates/useDatePresets'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'

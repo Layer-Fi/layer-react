@@ -22,7 +22,7 @@ describe('getDateRange', () => {
       mode: 'full',
       startDate: FIVE_MONTHS_BEFORE_NOW,
       endDate: SIX_MONTHS_AFTER_NOW,
-    })).toEqual({
+    }, NOW)).toEqual({
       startDate: FIVE_MONTHS_BEFORE_NOW,
       endDate: END_OF_TODAY,
     })
@@ -33,31 +33,31 @@ describe('getDateRange', () => {
       mode: 'full',
       startDate: TWO_MONTHS_BEFORE_NOW,
       endDate: ONE_MONTH_BEFORE_NOW,
-    })).toEqual({
+    }, NOW)).toEqual({
       startDate: TWO_MONTHS_BEFORE_NOW,
       endDate: new Date(2026, 4, 15, 23, 59, 59, 999),
     })
   })
 
   it('expands to the containing month in month mode, clamping the current month to today', () => {
-    expect(getDateRange({ mode: 'month', endDate: THREE_MONTHS_BEFORE_NOW })).toEqual({
+    expect(getDateRange({ mode: 'month', endDate: THREE_MONTHS_BEFORE_NOW }, NOW)).toEqual({
       startDate: new Date(2026, 2, 1),
       endDate: new Date(2026, 2, 31, 23, 59, 59, 999),
     })
 
-    expect(getDateRange({ mode: 'month', endDate: NOW })).toEqual({
+    expect(getDateRange({ mode: 'month', endDate: NOW }, NOW)).toEqual({
       startDate: new Date(2026, 5, 1),
       endDate: END_OF_TODAY,
     })
   })
 
   it('expands to the containing year in year mode, clamping the current year to today', () => {
-    expect(getDateRange({ mode: 'year', endDate: TWO_YEARS_BEFORE_NOW })).toEqual({
+    expect(getDateRange({ mode: 'year', endDate: TWO_YEARS_BEFORE_NOW }, NOW)).toEqual({
       startDate: new Date(2024, 0, 1),
       endDate: new Date(2024, 11, 31, 23, 59, 59, 999),
     })
 
-    expect(getDateRange({ mode: 'year', endDate: NOW })).toEqual({
+    expect(getDateRange({ mode: 'year', endDate: NOW }, NOW)).toEqual({
       startDate: new Date(2026, 0, 1),
       endDate: END_OF_TODAY,
     })
