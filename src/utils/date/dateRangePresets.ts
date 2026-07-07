@@ -58,9 +58,12 @@ export enum DatePreset {
   LastQuarter = 'LastQuarter',
   ThisYear = 'ThisYear',
   LastYear = 'LastYear',
+  AllTime = 'AllTime',
   Custom = 'Custom',
-
 }
+
+// Fallback lower bound for "All Time" when the business has no activation date.
+export const ALL_TIME_MIN_DATE = new Date(1970, 0, 1)
 
 const PRESET_ARGS = {
   [DatePreset.ThisMonth]: [Period.Month, 0],
@@ -69,7 +72,7 @@ const PRESET_ARGS = {
   [DatePreset.LastQuarter]: [Period.Quarter, -1],
   [DatePreset.ThisYear]: [Period.Year, 0],
   [DatePreset.LastYear]: [Period.Year, -1],
-} satisfies Record<Exclude<DatePreset, 'Custom'>, readonly [Period, number]>
+} satisfies Record<Exclude<DatePreset, 'Custom' | 'AllTime'>, readonly [Period, number]>
 
 function typedEntries<T extends Record<PropertyKey, unknown>>(obj: T) {
   return Object.entries(obj) as [keyof T, T[keyof T]][]
@@ -81,7 +84,22 @@ function fromEntriesStrict<K extends PropertyKey, V>(
   return Object.fromEntries(entries) as Record<K, V>
 }
 
-export function rangeForPreset(preset: Exclude<DatePreset, 'Custom'>, base?: Date): DateRange {
+type RangeForPresetOptions = {
+  base?: Date
+  activationDate?: Date | null
+}
+
+export function rangeForPreset(
+  preset: Exclude<DatePreset, 'Custom'>,
+  { base, activationDate }: RangeForPresetOptions = {},
+): DateRange {
+  if (preset === DatePreset.AllTime) {
+    return {
+      startDate: activationDate ?? ALL_TIME_MIN_DATE,
+      endDate: base ?? new Date(),
+    }
+  }
+
   const args = PRESET_ARGS[preset]
   const [period, offset] = args
   return rangeFor(period, offset, base)
@@ -112,13 +130,26 @@ export function presetForDateRange(input: DateRange, selectedPreset: DatePreset 
     ]),
   )
 
+  const allTimeCandidate = normalize(
+    rangeForPreset(DatePreset.AllTime, { activationDate }),
+    activationDate,
+  )
+
   if (selectedPreset !== null && selectedPreset !== DatePreset.Custom) {
-    if (sameDateRange(range, candidates[selectedPreset])) return selectedPreset
+    const selectedCandidate = selectedPreset === DatePreset.AllTime
+      ? allTimeCandidate
+      : candidates[selectedPreset]
+
+    if (sameDateRange(range, selectedCandidate)) return selectedPreset
   }
 
   for (const [preset, fixedRange] of Object.entries(candidates)) {
     if (sameDateRange(range, fixedRange)) return preset as DatePreset
   }
+
+  // Checked after the periodic presets so that, e.g., a business activated on
+  // Jan 1 doesn't have its "This Year" range reported as "All Time".
+  if (sameDateRange(range, allTimeCandidate)) return DatePreset.AllTime
 
   return null
 }
