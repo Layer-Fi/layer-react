@@ -1,9 +1,9 @@
 import { type Schema } from 'effect'
 import useSWR, { type SWRConfiguration } from 'swr'
 
+import { SWRQueryResult } from '@internal-types/swr/SWRResponseTypes'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { type AuthenticatedRequest, createKeyedFetcher, type SWRKeyContext } from '@utils/swr/createKeyedFetcher'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 type BusinessScopedParams = { businessId: string }

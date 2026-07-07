@@ -1,9 +1,9 @@
 import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
+import { SWRMutationResult } from '@internal-types/swr/SWRResponseTypes'
 import type { MutationRequest } from '@utils/api/getAsMutation'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
 type BusinessScopedParams = { businessId: string }

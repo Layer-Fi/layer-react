@@ -9,7 +9,7 @@ import {
   ListCallBookingsResponseSchema,
 } from '@schemas/callBooking'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 export type { CallBooking, CreateCallBookingBody }

@@ -2,7 +2,7 @@ import { type PaginationParams, SortOrder, type SortParams } from '@internal-typ
 import { type CategorizationRule, CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { getWithQuery } from '@utils/api/getWithQuery'
-import { createInfiniteQueryGlobalCacheActions } from '@utils/swr/createGlobalCacheActions'
+import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 export const LIST_CATEGORIZATION_RULES_TAG_KEY = '#list-categorization-rules'

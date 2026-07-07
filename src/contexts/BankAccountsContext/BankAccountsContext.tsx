@@ -1,9 +1,9 @@
 import { createContext, type PropsWithChildren, useCallback, useContext, useMemo } from 'react'
 
 import { type LoadedStatus } from '@internal-types/general'
+import { type SWRQueryResult } from '@internal-types/swr/SWRResponseTypes'
 import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { hasNewSyncingAccounts, isAnyBankAccountSyncing } from '@utils/bankAccount'
-import { type SWRQueryResult } from '@utils/swr/SWRResponseTypes'
 import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { usePollingConfig } from '@hooks/utils/swr/usePollingConfig'
 
