@@ -1,25 +1,32 @@
 import { type JsonBodyType, type PathParams } from 'msw'
 
 import { type MockStore } from '@msw/utils/createMockStore'
+import { readRequestJson } from '@msw/utils/request'
 
 type WithId = { id: string }
 
+/* Present body fields win (undefined is normalized to null); absent fields keep their base values. */
+export const createUpsertRequestEcho = <TItem>(decode: (input: unknown) => Partial<TItem>) =>
+  async (request: Request, base: TItem): Promise<TItem> => {
+    const body = decode(await readRequestJson(request))
+    const fields = Object.fromEntries(
+      Object.entries(body).map(([key, value]) => [key, value === undefined ? null : value]),
+    )
+
+    return { ...base, ...fields }
+  }
+
 type EchoResolverConfig<TItem extends WithId, TBody extends JsonBodyType> = {
-  /** Backing store the default resolver reads from and persists to. */
   store: MockStore<TItem>
-  /** Fixture factory for the base item when none exists yet (create, or update of an unknown id). */
   makeBase: (id: string) => TItem
-  /** Echoes the request body over the base item - see the per-resource `*FromUpsertRequest` helpers. */
   fromRequest: (request: Request, base: TItem) => Promise<TItem>
-  /** Wraps the item in the endpoint's response envelope. */
   toResponse: (item: TItem) => TBody
 }
 
 /*
- * Default resolvers for mutation mocks: echo the request body over a base
- * item, persist it to the resource's store (so later list responses reflect
- * the mutation), and respond with it. A test-supplied `.mock(...)` override
- * is returned as-is and never touches the store.
+ * Echo the request body over a base item, persist it to the resource's store,
+ * and respond with it. A `.mock(...)` override is returned as-is and never
+ * touches the store.
  */
 export const createEchoCreateResolver = <TItem extends WithId, TBody extends JsonBodyType>(
   { store, makeBase, fromRequest, toResponse }: EchoResolverConfig<TItem, TBody>,
@@ -43,6 +50,21 @@ export const createEchoUpdateResolver = <TItem extends WithId, TBody extends Jso
 
     const base = store.findById(id) ?? makeBase(id)
     const item = await fromRequest(request, base)
+    store.save(item)
+
+    return toResponse(item)
+  }
+
+export const createEchoTransformationResolver = <TItem extends WithId, TBody extends JsonBodyType>(
+  { store, makeBase, toResponse, idParam, transform }:
+  Omit<EchoResolverConfig<TItem, TBody>, 'fromRequest'> & { idParam: string, transform: (item: TItem) => TItem },
+) =>
+  ({ override, params }: { override?: TItem, params: PathParams }) => {
+    const id = params[idParam] as string
+
+    if (override) return toResponse(transform({ ...override, id }))
+
+    const item = transform(store.findById(id) ?? makeBase(id))
     store.save(item)
 
     return toResponse(item)

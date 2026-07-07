@@ -5,20 +5,20 @@ import '../src/styles/index.scss'
 
 import { handlers } from '../src/msw/handlers'
 import { setMinimumResponseDelay } from '../src/msw/utils/createMockEndpoint'
+import { resetMockStores } from '../src/msw/utils/createMockStore'
 import { LayerTestProvider } from '../src/test-utils/LayerTestProvider'
 
-/*
- * Every story runs against the same MSW handler tree the unit tests use, so
- * no story ever talks to a real API. Individual stories can swap payloads via
- * `parameters.msw.handlers` using each endpoint's `.mock(...)` / `.mockError(...)`.
- */
-initialize({ onUnhandledRequest: 'bypass' })
+initialize({
+  onUnhandledRequest: (request, print) => {
+    // Fail loudly on unmocked API calls; assets and Storybook's own requests pass through.
+    if (new URL(request.url).hostname.endsWith('layerfi.com')) print.error()
+  },
+})
 
-// Give every mocked endpoint a floor so loading states are visible in stories.
 setMinimumResponseDelay(250)
 
 const preview: Preview = {
-  loaders: [mswLoader],
+  loaders: [() => resetMockStores(), mswLoader],
   parameters: {
     msw: { handlers },
     layout: 'fullscreen',

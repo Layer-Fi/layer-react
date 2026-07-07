@@ -14,12 +14,6 @@ export const resetMockStores = () => {
   resetCallbacks.forEach(reset => reset())
 }
 
-/*
- * A tiny in-memory collection backing the default MSW handlers, so mutations
- * (create/update/delete) are reflected by subsequent list responses instead
- * of always serving the immutable generated fixtures. Test-supplied
- * `.mock(...)` overrides bypass the store entirely.
- */
 export const createMockStore = <TItem extends WithId>(seed: () => readonly TItem[]): MockStore<TItem> => {
   let items: readonly TItem[] = [...seed()]
 

@@ -2,10 +2,7 @@ import { delay, http, type HttpHandler, HttpResponse, type JsonBodyType, type Pa
 
 let minimumResponseDelayMs = 0
 
-/*
- * Makes every mock endpoint wait before responding, so loading states are
- * visible. Off by default to keep unit tests fast; Storybook opts in.
- */
+/** Off by default to keep unit tests fast; Storybook opts in to make loading states visible. */
 export const setMinimumResponseDelay = (ms: number) => {
   minimumResponseDelayMs = ms
 }

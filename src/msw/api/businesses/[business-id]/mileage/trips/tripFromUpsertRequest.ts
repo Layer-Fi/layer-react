@@ -12,11 +12,6 @@ const toTripPurpose = (purpose: string): TripPurpose =>
     ? purpose as TripPurpose
     : TripPurpose.Business
 
-/*
- * Builds the response trip by echoing the upsert request body over `base`, so
- * the default mock returns what the client submitted instead of an unrelated
- * fixture (which would flash stale values into the SWR cache).
- */
 export const tripFromUpsertRequest = async (request: Request, base: Trip): Promise<Trip> => {
   const body = decodeUpsertTrip(await readRequestJson(request))
 
