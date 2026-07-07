@@ -52,7 +52,7 @@ export function getEffectiveDateForMode(mode: DateSelectionMode, { date }: { dat
 
 export function getEffectiveDateRangeForMode(
   mode: DateSelectionMode,
-  { startDate, endDate }: { startDate: Date, endDate: Date },
-): { startDate: Date, endDate: Date } {
+  { startDate, endDate }: DateRange,
+): DateRange {
   return getDateRange({ mode, startDate, endDate })
 }
