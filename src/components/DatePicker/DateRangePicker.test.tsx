@@ -6,9 +6,9 @@ import { describe, expect, it, vi } from 'vitest'
 import { type DateRange } from '@utils/date/dateRange'
 import { DateRangePicker } from '@components/DatePicker/DateRangePicker'
 
-vi.mock('@hooks/utils/dates/useGlobalDatePickerBounds', () => {
+vi.mock('@hooks/utils/dates/useBusinessDatePickerBounds', () => {
   const bounds = { minDate: null, maxDate: new Date(2027, 0, 1) }
-  return { useGlobalDatePickerBounds: () => bounds }
+  return { useBusinessDatePickerBounds: () => bounds }
 })
 
 const INITIAL_RANGE: DateRange = {
