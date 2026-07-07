@@ -3,7 +3,6 @@ import { useMemo } from 'react'
 import type { DateSelectionMode } from '@utils/date/dateRange'
 import { createScopedStore } from '@utils/zustand/createScopedStore'
 import { useStoreWithDateSelected } from '@utils/zustand/useStoreWithDateSelected'
-import { useDatePresets } from '@hooks/utils/dates/useDatePresets'
 import { buildDateStore, type MakeDateStoreOptions } from '@providers/DateStoreProvider/internal/buildDateStore'
 import { getEffectiveDateForMode, getEffectiveDateRangeForMode } from '@providers/DateStoreProvider/internal/dateStoreUtils'
 
@@ -57,27 +56,23 @@ export function createScopedDateStore({
 
   function useDateRange({ dateSelectionMode }: UseDateRangeParams) {
     const store = scopedStore.useStoreApi()
-    const { clampToValidRange } = useDatePresets()
 
-    const rawStartDate = useStoreWithDateSelected(
+    const startDate = useStoreWithDateSelected(
       store,
       ({ startDate }) => startDate,
     )
 
-    const rawEndDate = useStoreWithDateSelected(
+    const endDate = useStoreWithDateSelected(
       store,
       ({ endDate }) => endDate,
     )
 
     return useMemo(
-      () => {
-        const range = getEffectiveDateRangeForMode(dateSelectionMode, {
-          startDate: rawStartDate,
-          endDate: rawEndDate,
-        })
-        return clampToValidRange(range)
-      },
-      [dateSelectionMode, rawStartDate, rawEndDate, clampToValidRange],
+      () => getEffectiveDateRangeForMode(dateSelectionMode, {
+        startDate,
+        endDate,
+      }),
+      [dateSelectionMode, startDate, endDate],
     )
   }
 

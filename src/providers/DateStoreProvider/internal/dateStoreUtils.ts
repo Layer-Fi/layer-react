@@ -6,7 +6,7 @@ import {
   startOfYear,
 } from 'date-fns'
 
-import { type DateRange, type DateSelectionMode } from '@utils/date/dateRange'
+import { clampToPresentOrPast, type DateRange, type DateSelectionMode } from '@utils/date/dateRange'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 
 type GetDateRangeOptions =
@@ -18,17 +18,17 @@ export function getDateRange({ mode, startDate, endDate }: GetDateRangeOptions):
     case 'month':
       return {
         startDate: startOfMonth(endDate),
-        endDate: endOfMonth(endDate),
+        endDate: clampToPresentOrPast(endOfMonth(endDate)),
       }
     case 'year':
       return {
         startDate: startOfYear(endDate),
-        endDate: endOfYear(endDate),
+        endDate: clampToPresentOrPast(endOfYear(endDate)),
       }
     case 'full':
       return {
         startDate: startDate,
-        endDate: endOfDay(endDate),
+        endDate: clampToPresentOrPast(endOfDay(endDate)),
       }
     default:
       unsafeAssertUnreachable({

@@ -43,15 +43,16 @@ type DatePresetContext = {
 
 /* Date range clamping helpers */
 
-export const clampToValidRange = (range: DateRange, { now, activationDate }: DatePresetContext): DateRange => {
-  const rawStartDate = startOfDay(range.startDate)
-  const rawEndDate = endOfDay(range.endDate)
+export const clampToPresentOrPast = (date: Date | number, cutoff = endOfDay(new Date())): Date =>
+  min([date, cutoff])
 
-  return {
-    startDate: max([rawStartDate, startOfDay(activationDate)]),
-    endDate: min([rawEndDate, endOfDay(now)]),
-  }
-}
+export const clampToAfterActivationDate = (date: Date | number, activationDate: Date): Date =>
+  max([date, activationDate])
+
+export const clampToValidRange = (range: DateRange, { now, activationDate }: DatePresetContext): DateRange => ({
+  startDate: clampToAfterActivationDate(startOfDay(range.startDate), startOfDay(activationDate)),
+  endDate: clampToPresentOrPast(endOfDay(range.endDate), endOfDay(now)),
+})
 
 /* Date range comparison helpers */
 

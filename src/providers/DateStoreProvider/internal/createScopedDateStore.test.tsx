@@ -1,19 +1,10 @@
 import { act, renderHook } from '@testing-library/react'
-import { startOfDay } from 'date-fns'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { DatePreset } from '@utils/date/dateRange'
 import { createScopedDateStore, type CreateScopedDateStoreOptions } from '@providers/DateStoreProvider/internal/createScopedDateStore'
 
 import { setupFakeSystemTime } from '@test-utils/fakeSystemTime'
-
-// useDateRange resolves clamping context (activation date) via useDatePresets,
-// which reads business context. Without a business, it falls back to
-// ALL_TIME_MIN_DATE, so the range is only clamped to today.
-vi.mock('@hooks/features/business/useBusinessActivationDate', () => ({
-  useBusinessActivationDate: () => undefined,
-}))
-
 import {
   CURRENT_MONTH_TO_DATE,
   CURRENT_YEAR_TO_DATE,
@@ -58,6 +49,10 @@ function setupDateStore(options?: CreateScopedDateStoreOptions) {
   }
 }
 
+// The store is context-free: it clamps the range end to today (present clamp,
+// clock only) but never bounds the start to the activation date. That start
+// bound is applied at the edges (picker bounds, preset matching), so these
+// tests need no business context.
 describe('createScopedDateStore', () => {
   it('initializes to the current month by default', () => {
     const { result } = setupDateStore()
@@ -82,7 +77,7 @@ describe('createScopedDateStore', () => {
     })
 
     expect(result.current.fullRange).toEqual({
-      startDate: startOfDay(FIVE_MONTHS_BEFORE_NOW),
+      startDate: FIVE_MONTHS_BEFORE_NOW,
       endDate: END_OF_TODAY,
     })
   })
