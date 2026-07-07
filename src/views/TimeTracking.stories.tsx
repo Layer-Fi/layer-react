@@ -2,7 +2,7 @@ import { type PropsWithChildren, useLayoutEffect, useState } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
-import { TimeTracking } from '@views/TimeTracking'
+import { TimeTracking, type TimeTrackingProps } from '@views/TimeTracking'
 
 const FIXTURE_YEAR = 2025
 
@@ -22,7 +22,7 @@ type TimeTrackingStoryArgs = {
   showTitle: boolean
   title: string
   showReportsAction: boolean
-}
+} & Pick<TimeTrackingProps, 'onReportsClick' | 'stringOverrides'>
 
 const meta: Meta<TimeTrackingStoryArgs> = {
   title: 'Views/TimeTracking',
