@@ -2,21 +2,14 @@ import { Schema } from 'effect'
 
 import { type Customer, CustomerSchema } from '@schemas/customer'
 
+import { paginatedApiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { customers as defaultCustomers } from '@fixtures/generated/customers.gen'
 
 const encodeCustomer = Schema.encodeSync(CustomerSchema)
 
-const toResponse = (customers: readonly Customer[]) => ({
-  data: customers.map(customer => encodeCustomer(customer)),
-  meta: {
-    pagination: {
-      cursor: null,
-      has_more: false,
-      total_count: customers.length,
-    },
-  },
-})
+const toResponse = (customers: readonly Customer[], request: Request) =>
+  paginatedApiData(customers.map(customer => encodeCustomer(customer)), request)
 
 export const get = createMockEndpoint<readonly Customer[], ReturnType<typeof toResponse>>({
   method: 'get',
@@ -30,6 +23,6 @@ export const get = createMockEndpoint<readonly Customer[], ReturnType<typeof toR
           .some(field => field?.toLowerCase()?.includes(query) ?? false),
       )
 
-    return toResponse(filtered)
+    return toResponse(filtered, request)
   },
 })
