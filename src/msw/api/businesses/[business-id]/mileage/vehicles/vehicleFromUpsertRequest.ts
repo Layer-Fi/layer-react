@@ -2,8 +2,8 @@ import { Schema } from 'effect'
 
 import { UpsertVehicleSchema, type Vehicle } from '@schemas/vehicle'
 
-import { createUpsertRequestEcho } from '@msw/utils/createEchoResolvers'
+import { createRequestBodyEcho } from '@msw/utils/createRequestBodyEcho'
 
-export const vehicleFromUpsertRequest = createUpsertRequestEcho<Vehicle>(
+export const vehicleFromUpsertRequest = createRequestBodyEcho<Vehicle>(
   Schema.decodeUnknownSync(UpsertVehicleSchema),
 )

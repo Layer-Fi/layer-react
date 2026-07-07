@@ -2,7 +2,7 @@ import { Schema } from 'effect'
 
 import { type CustomAccount, CustomAccountSchema } from '@schemas/customAccounts'
 
-import { createUpsertRequestEcho } from '@msw/utils/createEchoResolvers'
+import { createRequestBodyEcho } from '@msw/utils/createRequestBodyEcho'
 
 const CreateCustomAccountBodySchema = CustomAccountSchema.pick(
   'accountName',
@@ -14,6 +14,6 @@ const CreateCustomAccountBodySchema = CustomAccountSchema.pick(
   'userCreated',
 )
 
-export const customAccountFromCreateRequest = createUpsertRequestEcho<CustomAccount>(
+export const customAccountFromCreateRequest = createRequestBodyEcho<CustomAccount>(
   Schema.decodeUnknownSync(CreateCustomAccountBodySchema),
 )
