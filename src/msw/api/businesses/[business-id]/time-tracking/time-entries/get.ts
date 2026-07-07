@@ -21,7 +21,6 @@ const filterTimeEntries = createListFilter<TimeEntry>({
   status: matchesValue(entry => entry.status),
   billable: matchesBoolean(entry => entry.billable),
   has_customer: matchesBoolean(entry => entry.customer != null),
-  // Deleted entries stay hidden unless the caller opts in.
   include_deleted: requiresFlag(entry => entry.deletedAt != null),
   start_date: (entry, value) => isBlank(value) || entry.date.compare(parseDate(value)) >= 0,
   end_date: (entry, value) => isBlank(value) || entry.date.compare(parseDate(value)) <= 0,

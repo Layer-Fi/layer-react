@@ -5,10 +5,6 @@ import { fn } from 'storybook/test'
 import { useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { TimeTracking } from '@views/TimeTracking'
 
-/*
- * The committed time-entry fixtures all fall in this year, while the global
- * date store defaults to "now" - pin the year picker so stories open on data.
- */
 const FIXTURE_YEAR = 2025
 
 const PinnedFixtureYear = ({ children }: PropsWithChildren) => {
@@ -23,11 +19,6 @@ const PinnedFixtureYear = ({ children }: PropsWithChildren) => {
   return isPinned ? children : null
 }
 
-/*
- * `title` and `showReportsAction` are flat story controls mapped onto the
- * component's nested `stringOverrides` prop and optional `onReportsClick`
- * callback, so every input is a knob.
- */
 type TimeTrackingStoryArgs = {
   showTitle: boolean
   title: string

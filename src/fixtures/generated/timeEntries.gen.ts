@@ -26,15 +26,15 @@ export const timeEntries = [
       "memo": "Referred by partner"
     },
     "service": {
-      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
-      "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
+      "name": "Tax Preparation",
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
-    "status": "COMPLETED",
+    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-12-20T16:43:25.100Z"),
-    "updatedAt": new Date("2024-11-13T19:42:07.047Z"),
+    "createdAt": new Date("2020-01-01T00:00:00.011Z"),
+    "updatedAt": new Date("2021-10-11T09:40:10.848Z"),
     "deletedAt": null
   },
   {
@@ -49,16 +49,16 @@ export const timeEntries = [
     "metadata": null,
     "customer": null,
     "service": {
-      "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
-      "name": "Consulting",
-      "billableRatePerHourAmount": 23000
+      "id": "00000016-571f-3e02-8000-0002c39e6c27",
+      "name": "Personal Training",
+      "billableRatePerHourAmount": 2500
     },
     "invoiceLineItem": null,
-    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-10-11T11:00:30.373Z"),
-    "updatedAt": new Date("2025-12-31T23:59:58.978Z"),
-    "deletedAt": null
+    "createdAt": new Date("2023-02-17T17:32:45.680Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.970Z"),
+    "deletedAt": null,
+    "status": "RECORDED"
   },
   {
     "id": "ffffffe4-ffff-5fff-bfff-fff9bd77ada2",
@@ -90,8 +90,8 @@ export const timeEntries = [
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-12-05T16:43:29.133Z"),
-    "updatedAt": new Date("2024-07-30T17:01:10.931Z"),
+    "createdAt": new Date("2020-01-01T00:00:00.034Z"),
+    "updatedAt": new Date("2025-11-20T23:17:02.029Z"),
     "deletedAt": null
   },
   {
@@ -117,9 +117,9 @@ export const timeEntries = [
       "memo": "VIP client"
     },
     "service": {
-      "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
-      "name": "Bookkeeping",
-      "billableRatePerHourAmount": null
+      "id": "00000016-571f-3e02-8000-0002c39e6c27",
+      "name": "Personal Training",
+      "billableRatePerHourAmount": 2500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -150,7 +150,11 @@ export const timeEntries = [
       "status": "ACTIVE",
       "memo": null
     },
-    "service": null,
+    "service": {
+      "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
+      "name": "Tax Preparation",
+      "billableRatePerHourAmount": 5000
+    },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
@@ -181,16 +185,16 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
-      "name": "Bookkeeping",
-      "billableRatePerHourAmount": null
+      "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
+      "name": "Tax Preparation",
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
-    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.013Z"),
-    "updatedAt": new Date("2025-12-31T23:59:58.982Z"),
-    "deletedAt": null
+    "createdAt": new Date("2021-07-29T18:10:32.675Z"),
+    "updatedAt": new Date("2025-07-29T12:37:32.350Z"),
+    "deletedAt": null,
+    "status": "RECORDED"
   },
   {
     "id": "c191d948-2e88-2bea-bc87-53b5ffffffff",
@@ -215,16 +219,16 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
-      "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 25000
+      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
+      "name": "Project Management",
+      "billableRatePerHourAmount": 4000
     },
     "invoiceLineItem": null,
-    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2021-03-26T12:41:10.680Z"),
-    "updatedAt": new Date("2023-08-04T22:07:24.387Z"),
-    "deletedAt": null
+    "createdAt": new Date("2022-03-22T10:29:00.752Z"),
+    "updatedAt": new Date("2024-09-01T20:02:56.655Z"),
+    "deletedAt": null,
+    "status": "RECORDED"
   },
   {
     "id": "9b2b24b8-ffe4-5fff-851e-641af2217a9a",
@@ -238,15 +242,15 @@ export const timeEntries = [
     "metadata": null,
     "customer": null,
     "service": {
-      "id": "00000016-571f-3e02-8000-0002c39e6c27",
-      "name": "Personal Training",
-      "billableRatePerHourAmount": 2500
+      "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
+      "name": "Marketing Strategy",
+      "billableRatePerHourAmount": 25000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.010Z"),
-    "updatedAt": new Date("2020-01-01T00:00:00.019Z"),
+    "createdAt": new Date("2023-07-18T03:36:13.799Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.998Z"),
     "deletedAt": null
   },
   {
@@ -261,15 +265,15 @@ export const timeEntries = [
     "metadata": null,
     "customer": null,
     "service": {
-      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
-      "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
+      "name": "Video Editing",
+      "billableRatePerHourAmount": null
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-10-08T03:02:43.661Z"),
-    "updatedAt": new Date("2024-03-24T10:15:11.987Z"),
+    "createdAt": new Date("2021-07-19T17:43:04.182Z"),
+    "updatedAt": new Date("2024-01-28T01:31:03.814Z"),
     "deletedAt": null
   },
   {
@@ -295,15 +299,15 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "00000016-571f-3e02-8000-0002c39e6c27",
-      "name": "Personal Training",
-      "billableRatePerHourAmount": 2500
+      "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
+      "name": "Grant Writing",
+      "billableRatePerHourAmount": 6500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.022Z"),
-    "updatedAt": new Date("2022-06-16T21:49:01.930Z"),
+    "createdAt": new Date("2020-01-01T00:00:00.009Z"),
+    "updatedAt": new Date("2020-11-15T21:47:26.307Z"),
     "deletedAt": null
   },
   {
@@ -329,15 +333,15 @@ export const timeEntries = [
       "memo": "Referred by partner"
     },
     "service": {
-      "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
-      "name": "Grant Writing",
-      "billableRatePerHourAmount": 6500
+      "id": "00000016-571f-3e02-8000-0002c39e6c27",
+      "name": "Personal Training",
+      "billableRatePerHourAmount": 2500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2023-05-22T08:20:20.187Z"),
-    "updatedAt": new Date("2024-11-15T04:00:45.536Z"),
+    "createdAt": new Date("2023-11-04T11:41:27.637Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.996Z"),
     "deletedAt": null
   },
   {
@@ -363,15 +367,15 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
-      "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
+      "name": "Tax Preparation",
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.027Z"),
-    "updatedAt": new Date("2020-02-12T07:38:16.636Z"),
+    "createdAt": new Date("2023-10-20T19:08:31.479Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.975Z"),
     "deletedAt": null
   },
   {
@@ -385,7 +389,11 @@ export const timeEntries = [
     "memo": null,
     "metadata": null,
     "customer": null,
-    "service": null,
+    "service": {
+      "id": "00000016-571f-3e02-8000-0002c39e6c27",
+      "name": "Personal Training",
+      "billableRatePerHourAmount": 2500
+    },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
@@ -416,15 +424,15 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
-      "name": "Video Editing",
-      "billableRatePerHourAmount": null
+      "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
+      "name": "Marketing Strategy",
+      "billableRatePerHourAmount": 25000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2023-06-27T13:10:36.318Z"),
-    "updatedAt": new Date("2025-01-30T04:07:21.907Z"),
+    "createdAt": new Date("2020-01-01T00:00:00.002Z"),
+    "updatedAt": new Date("2024-04-12T02:09:30.338Z"),
     "deletedAt": null
   },
   {
@@ -438,7 +446,11 @@ export const timeEntries = [
     "memo": null,
     "metadata": null,
     "customer": null,
-    "service": null,
+    "service": {
+      "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
+      "name": "Marketing Strategy",
+      "billableRatePerHourAmount": 25000
+    },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
@@ -468,7 +480,11 @@ export const timeEntries = [
       "status": "ACTIVE",
       "memo": null
     },
-    "service": null,
+    "service": {
+      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
+      "name": "Project Management",
+      "billableRatePerHourAmount": 4000
+    },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
@@ -499,15 +515,15 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
-      "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
+      "name": "Video Editing",
+      "billableRatePerHourAmount": null
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2022-07-21T03:05:59.603Z"),
-    "updatedAt": new Date("2024-12-12T04:44:29.475Z"),
+    "createdAt": new Date("2022-09-25T10:07:11.801Z"),
+    "updatedAt": new Date("2025-11-11T09:22:55.741Z"),
     "deletedAt": null
   },
   {
@@ -533,15 +549,15 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
-      "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
+      "name": "Consulting",
+      "billableRatePerHourAmount": 23000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.025Z"),
-    "updatedAt": new Date("2023-01-03T04:41:39.769Z"),
+    "createdAt": new Date("2020-01-01T00:00:00.037Z"),
+    "updatedAt": new Date("2024-11-09T21:08:57.462Z"),
     "deletedAt": null
   },
   {
@@ -556,16 +572,16 @@ export const timeEntries = [
     "metadata": null,
     "customer": null,
     "service": {
-      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
-      "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
+      "name": "Video Editing",
+      "billableRatePerHourAmount": null
     },
     "invoiceLineItem": null,
+    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.005Z"),
-    "updatedAt": new Date("2022-04-09T07:33:07.044Z"),
-    "deletedAt": null,
-    "status": "RECORDED"
+    "createdAt": new Date("2021-09-24T14:55:22.436Z"),
+    "updatedAt": new Date("2023-02-26T14:40:28.028Z"),
+    "deletedAt": null
   },
   {
     "id": "00000014-0369-5026-8849-cf3fff621306",
@@ -590,15 +606,15 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "00000016-571f-3e02-8000-0002c39e6c27",
-      "name": "Personal Training",
-      "billableRatePerHourAmount": 2500
+      "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
+      "name": "Consulting",
+      "billableRatePerHourAmount": 23000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-10-16T17:37:36.671Z"),
-    "updatedAt": new Date("2022-05-04T23:46:25.232Z"),
+    "createdAt": new Date("2020-01-01T00:00:00.003Z"),
+    "updatedAt": new Date("2021-07-06T18:35:19.408Z"),
     "deletedAt": null
   },
   {
@@ -624,15 +640,15 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
-      "name": "Video Editing",
+      "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
+      "name": "Bookkeeping",
       "billableRatePerHourAmount": null
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2022-01-18T23:42:39.847Z"),
-    "updatedAt": new Date("2024-11-17T08:59:03.608Z"),
+    "createdAt": new Date("2023-02-26T21:17:03.893Z"),
+    "updatedAt": new Date("2024-10-03T08:30:58.959Z"),
     "deletedAt": null
   },
   {
@@ -665,8 +681,8 @@ export const timeEntries = [
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-10-24T18:25:03.202Z"),
-    "updatedAt": new Date("2025-07-20T13:54:16.516Z"),
+    "createdAt": new Date("2022-12-08T19:00:18.128Z"),
+    "updatedAt": new Date("2025-10-21T07:56:30.431Z"),
     "deletedAt": null
   },
   {
@@ -692,16 +708,16 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
-      "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 25000
+      "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
+      "name": "Consulting",
+      "billableRatePerHourAmount": 23000
     },
     "invoiceLineItem": null,
-    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2023-11-22T03:09:00.454Z"),
-    "updatedAt": new Date("2025-12-31T23:59:58.999Z"),
-    "deletedAt": null
+    "createdAt": new Date("2022-10-23T01:28:29.632Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.970Z"),
+    "deletedAt": null,
+    "status": "RECORDED"
   },
   {
     "id": "75be1d6e-2fc9-4057-8000-001b0000000e",
@@ -715,14 +731,14 @@ export const timeEntries = [
     "metadata": null,
     "customer": null,
     "service": {
-      "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
-      "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 25000
+      "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
+      "name": "Grant Writing",
+      "billableRatePerHourAmount": 6500
     },
     "invoiceLineItem": null,
     "stoppedAt": null,
-    "createdAt": new Date("2021-08-25T08:01:07.276Z"),
-    "updatedAt": new Date("2023-03-07T02:52:23.187Z"),
+    "createdAt": new Date("2020-01-01T00:00:00.010Z"),
+    "updatedAt": new Date("2021-03-04T06:12:43.021Z"),
     "deletedAt": null,
     "status": "RECORDED"
   },
@@ -754,11 +770,11 @@ export const timeEntries = [
       "billableRatePerHourAmount": 25000
     },
     "invoiceLineItem": null,
-    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2021-01-28T15:12:23.406Z"),
-    "updatedAt": new Date("2022-04-08T13:44:21.358Z"),
-    "deletedAt": null
+    "createdAt": new Date("2021-09-10T02:03:28.496Z"),
+    "updatedAt": new Date("2024-09-26T13:42:20.507Z"),
+    "deletedAt": null,
+    "status": "RECORDED"
   },
   {
     "id": "00000001-7540-2ba6-8000-000edc5a9467",
@@ -783,9 +799,9 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "00000016-571f-3e02-8000-0002c39e6c27",
-      "name": "Personal Training",
-      "billableRatePerHourAmount": 2500
+      "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
+      "name": "Consulting",
+      "billableRatePerHourAmount": 23000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -817,16 +833,16 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
-      "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 25000
+      "id": "00000016-571f-3e02-8000-0002c39e6c27",
+      "name": "Personal Training",
+      "billableRatePerHourAmount": 2500
     },
     "invoiceLineItem": null,
-    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-04-23T10:31:04.845Z"),
-    "updatedAt": new Date("2025-12-31T23:59:58.973Z"),
-    "deletedAt": null
+    "createdAt": new Date("2021-06-18T01:22:55.796Z"),
+    "updatedAt": new Date("2023-05-06T09:34:14.646Z"),
+    "deletedAt": null,
+    "status": "RECORDED"
   },
   {
     "id": "00000018-000d-1000-8000-001102b5888c",
@@ -851,15 +867,15 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
-      "name": "Video Editing",
-      "billableRatePerHourAmount": null
+      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
+      "name": "Project Management",
+      "billableRatePerHourAmount": 4000
     },
     "invoiceLineItem": null,
-    "status": "COMPLETED",
+    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2021-11-14T21:42:37.158Z"),
-    "updatedAt": new Date("2023-08-20T17:36:51.014Z"),
+    "createdAt": new Date("2024-08-07T23:41:51.736Z"),
+    "updatedAt": new Date("2025-02-17T06:49:07.325Z"),
     "deletedAt": null
   },
   {
@@ -885,12 +901,12 @@ export const timeEntries = [
       "memo": "VIP client"
     },
     "service": {
-      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
-      "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
+      "name": "Marketing Strategy",
+      "billableRatePerHourAmount": 25000
     },
     "invoiceLineItem": null,
-    "status": "RECORDED",
+    "status": "COMPLETED",
     "stoppedAt": null,
     "createdAt": new Date("2024-03-01T17:47:28.285Z"),
     "updatedAt": new Date("2025-12-31T23:59:58.980Z"),
@@ -918,7 +934,11 @@ export const timeEntries = [
       "status": "ACTIVE",
       "memo": null
     },
-    "service": null,
+    "service": {
+      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
+      "name": "Project Management",
+      "billableRatePerHourAmount": 4000
+    },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
@@ -949,12 +969,12 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
-      "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
+      "name": "Video Editing",
+      "billableRatePerHourAmount": null
     },
     "invoiceLineItem": null,
-    "status": "RECORDED",
+    "status": "COMPLETED",
     "stoppedAt": null,
     "createdAt": new Date("2020-01-01T00:00:00.033Z"),
     "updatedAt": new Date("2021-02-15T00:38:04.032Z"),
@@ -983,15 +1003,15 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
-      "name": "Bookkeeping",
-      "billableRatePerHourAmount": null
+      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
+      "name": "Project Management",
+      "billableRatePerHourAmount": 4000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.037Z"),
-    "updatedAt": new Date("2021-04-14T16:49:14.192Z"),
+    "createdAt": new Date("2020-06-02T02:01:50.466Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.964Z"),
     "deletedAt": null
   },
   {
@@ -1006,15 +1026,15 @@ export const timeEntries = [
     "metadata": null,
     "customer": null,
     "service": {
-      "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
-      "name": "Video Editing",
-      "billableRatePerHourAmount": null
+      "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
+      "name": "Tax Preparation",
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-10-27T09:40:11.192Z"),
-    "updatedAt": new Date("2023-05-08T13:48:46.869Z"),
+    "createdAt": new Date("2023-12-19T20:15:41.037Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.970Z"),
     "deletedAt": null
   },
   {
@@ -1045,11 +1065,11 @@ export const timeEntries = [
       "billableRatePerHourAmount": 6500
     },
     "invoiceLineItem": null,
-    "status": "RECORDED",
     "stoppedAt": null,
     "createdAt": new Date("2021-03-01T05:34:09.289Z"),
-    "updatedAt": new Date("2024-03-08T18:15:10.125Z"),
-    "deletedAt": null
+    "updatedAt": new Date("2024-01-25T23:33:38.087Z"),
+    "deletedAt": null,
+    "status": "RECORDED"
   },
   {
     "id": "2c2de7de-0001-1000-bfff-fffedf5a4878",
@@ -1074,16 +1094,16 @@ export const timeEntries = [
       "memo": "Referred by partner"
     },
     "service": {
-      "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
-      "name": "Bookkeeping",
+      "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
+      "name": "Video Editing",
       "billableRatePerHourAmount": null
     },
     "invoiceLineItem": null,
+    "status": "RECORDED",
     "stoppedAt": null,
     "createdAt": new Date("2020-01-01T00:00:00.007Z"),
-    "updatedAt": new Date("2023-05-04T18:48:26.481Z"),
-    "deletedAt": null,
-    "status": "RECORDED"
+    "updatedAt": new Date("2020-01-01T00:00:00.007Z"),
+    "deletedAt": null
   },
   {
     "id": "adab7373-0004-1000-9dce-e1d30000000a",
@@ -1097,12 +1117,12 @@ export const timeEntries = [
     "metadata": null,
     "customer": null,
     "service": {
-      "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
-      "name": "Video Editing",
+      "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
+      "name": "Bookkeeping",
       "billableRatePerHourAmount": null
     },
     "invoiceLineItem": null,
-    "status": "RECORDED",
+    "status": "COMPLETED",
     "stoppedAt": null,
     "createdAt": new Date("2020-01-01T00:00:00.026Z"),
     "updatedAt": new Date("2025-04-19T22:12:45.828Z"),
@@ -1131,9 +1151,9 @@ export const timeEntries = [
       "memo": "Referred by partner"
     },
     "service": {
-      "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
-      "name": "Consulting",
-      "billableRatePerHourAmount": 23000
+      "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
+      "name": "Marketing Strategy",
+      "billableRatePerHourAmount": 25000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1165,15 +1185,15 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
-      "name": "Tax Preparation",
-      "billableRatePerHourAmount": 5000
+      "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
+      "name": "Grant Writing",
+      "billableRatePerHourAmount": 6500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.024Z"),
-    "updatedAt": new Date("2020-12-22T08:34:56.421Z"),
+    "createdAt": new Date("2020-01-01T00:00:00.010Z"),
+    "updatedAt": new Date("2020-01-01T00:00:00.028Z"),
     "deletedAt": null
   },
   {
@@ -1199,15 +1219,15 @@ export const timeEntries = [
       "memo": "VIP client"
     },
     "service": {
-      "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
-      "name": "Grant Writing",
-      "billableRatePerHourAmount": 6500
+      "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
+      "name": "Tax Preparation",
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2025-02-01T16:16:31.671Z"),
-    "updatedAt": new Date("2025-12-31T23:59:58.973Z"),
+    "createdAt": new Date("2025-02-01T22:24:25.079Z"),
+    "updatedAt": new Date("2025-10-10T15:02:11.261Z"),
     "deletedAt": null
   },
   {
@@ -1233,15 +1253,15 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "00000016-571f-3e02-8000-0002c39e6c27",
-      "name": "Personal Training",
-      "billableRatePerHourAmount": 2500
+      "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
+      "name": "Marketing Strategy",
+      "billableRatePerHourAmount": 25000
     },
     "invoiceLineItem": null,
-    "status": "COMPLETED",
+    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.027Z"),
-    "updatedAt": new Date("2024-01-28T09:32:41.593Z"),
+    "createdAt": new Date("2020-01-01T00:00:00.004Z"),
+    "updatedAt": new Date("2023-02-07T21:53:42.109Z"),
     "deletedAt": null
   },
   {
@@ -1255,7 +1275,11 @@ export const timeEntries = [
     "memo": null,
     "metadata": null,
     "customer": null,
-    "service": null,
+    "service": {
+      "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
+      "name": "Marketing Strategy",
+      "billableRatePerHourAmount": 25000
+    },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
@@ -1286,15 +1310,15 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
-      "name": "Consulting",
-      "billableRatePerHourAmount": 23000
+      "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
+      "name": "Bookkeeping",
+      "billableRatePerHourAmount": null
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2025-10-16T00:39:03.337Z"),
-    "updatedAt": new Date("2025-12-31T23:59:58.979Z"),
+    "createdAt": new Date("2022-07-25T10:16:28.196Z"),
+    "updatedAt": new Date("2024-10-09T08:44:33.857Z"),
     "deletedAt": null
   },
   {
@@ -1309,16 +1333,16 @@ export const timeEntries = [
     "metadata": null,
     "customer": null,
     "service": {
-      "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
-      "name": "Tax Preparation",
-      "billableRatePerHourAmount": 5000
+      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
+      "name": "Project Management",
+      "billableRatePerHourAmount": 4000
     },
     "invoiceLineItem": null,
+    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.002Z"),
-    "updatedAt": new Date("2020-01-01T00:00:00.024Z"),
-    "deletedAt": null,
-    "status": "RECORDED"
+    "createdAt": new Date("2020-01-01T00:00:00.004Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.998Z"),
+    "deletedAt": null
   },
   {
     "id": "17759b57-c367-5825-a0f1-14f2ffffffe3",
@@ -1343,15 +1367,15 @@ export const timeEntries = [
       "memo": "VIP client"
     },
     "service": {
-      "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
-      "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 25000
+      "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
+      "name": "Video Editing",
+      "billableRatePerHourAmount": null
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.026Z"),
-    "updatedAt": new Date("2020-01-01T00:00:00.035Z"),
+    "createdAt": new Date("2020-01-13T06:45:38.724Z"),
+    "updatedAt": new Date("2020-07-10T04:40:36.669Z"),
     "deletedAt": null
   },
   {
@@ -1377,16 +1401,16 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
-      "name": "Tax Preparation",
-      "billableRatePerHourAmount": 5000
+      "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
+      "name": "Grant Writing",
+      "billableRatePerHourAmount": 6500
     },
     "invoiceLineItem": null,
+    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.037Z"),
-    "updatedAt": new Date("2023-08-27T10:39:23.235Z"),
-    "deletedAt": null,
-    "status": "RECORDED"
+    "createdAt": new Date("2020-01-01T00:00:00.014Z"),
+    "updatedAt": new Date("2022-08-30T17:40:31.155Z"),
+    "deletedAt": null
   },
   {
     "id": "a812c19f-44e9-2207-b5f0-99ca3582dfaf",
@@ -1410,7 +1434,11 @@ export const timeEntries = [
       "status": "ARCHIVED",
       "memo": "VIP client"
     },
-    "service": null,
+    "service": {
+      "id": "00000016-571f-3e02-8000-0002c39e6c27",
+      "name": "Personal Training",
+      "billableRatePerHourAmount": 2500
+    },
     "invoiceLineItem": null,
     "stoppedAt": null,
     "createdAt": new Date("2020-01-01T00:00:00.000Z"),
@@ -1429,7 +1457,11 @@ export const timeEntries = [
     "memo": null,
     "metadata": null,
     "customer": null,
-    "service": null,
+    "service": {
+      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
+      "name": "Project Management",
+      "billableRatePerHourAmount": 4000
+    },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
@@ -1460,9 +1492,9 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
-      "name": "Grant Writing",
-      "billableRatePerHourAmount": 6500
+      "id": "00000016-571f-3e02-8000-0002c39e6c27",
+      "name": "Personal Training",
+      "billableRatePerHourAmount": 2500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1494,9 +1526,9 @@ export const timeEntries = [
       "memo": "Referred by partner"
     },
     "service": {
-      "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
-      "name": "Tax Preparation",
-      "billableRatePerHourAmount": 5000
+      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
+      "name": "Project Management",
+      "billableRatePerHourAmount": 4000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1527,7 +1559,11 @@ export const timeEntries = [
       "status": "ACTIVE",
       "memo": null
     },
-    "service": null,
+    "service": {
+      "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
+      "name": "Consulting",
+      "billableRatePerHourAmount": 23000
+    },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
@@ -1547,16 +1583,16 @@ export const timeEntries = [
     "metadata": null,
     "customer": null,
     "service": {
-      "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
-      "name": "Bookkeeping",
-      "billableRatePerHourAmount": null
+      "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
+      "name": "Tax Preparation",
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
-    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2023-07-11T06:32:48.979Z"),
-    "updatedAt": new Date("2024-04-11T23:27:36.940Z"),
-    "deletedAt": null
+    "createdAt": new Date("2021-11-25T11:28:52.226Z"),
+    "updatedAt": new Date("2025-04-28T02:26:25.951Z"),
+    "deletedAt": null,
+    "status": "RECORDED"
   },
   {
     "id": "fffffffd-ffe8-5fff-8000-0018468f601b",
@@ -1581,15 +1617,15 @@ export const timeEntries = [
       "memo": "VIP client"
     },
     "service": {
-      "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
-      "name": "Bookkeeping",
-      "billableRatePerHourAmount": null
+      "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
+      "name": "Grant Writing",
+      "billableRatePerHourAmount": 6500
     },
     "invoiceLineItem": null,
     "status": "COMPLETED",
     "stoppedAt": null,
-    "createdAt": new Date("2023-09-07T06:19:02.391Z"),
-    "updatedAt": new Date("2025-12-31T23:59:58.972Z"),
+    "createdAt": new Date("2023-09-18T08:48:11.330Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.967Z"),
     "deletedAt": null
   },
   {
@@ -1615,15 +1651,15 @@ export const timeEntries = [
       "memo": "Referred by partner"
     },
     "service": {
-      "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
-      "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 25000
+      "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
+      "name": "Grant Writing",
+      "billableRatePerHourAmount": 6500
     },
     "invoiceLineItem": null,
-    "status": "RECORDED",
+    "status": "COMPLETED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.005Z"),
-    "updatedAt": new Date("2020-01-01T00:00:00.029Z"),
+    "createdAt": new Date("2020-01-01T00:00:00.033Z"),
+    "updatedAt": new Date("2025-03-20T03:57:59.645Z"),
     "deletedAt": null
   },
   {
@@ -1649,16 +1685,16 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "00000016-571f-3e02-8000-0002c39e6c27",
-      "name": "Personal Training",
-      "billableRatePerHourAmount": 2500
+      "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
+      "name": "Bookkeeping",
+      "billableRatePerHourAmount": null
     },
     "invoiceLineItem": null,
+    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.024Z"),
-    "updatedAt": new Date("2024-09-29T11:48:41.002Z"),
-    "deletedAt": null,
-    "status": "RECORDED"
+    "createdAt": new Date("2021-03-10T16:34:20.253Z"),
+    "updatedAt": new Date("2024-07-08T02:54:22.732Z"),
+    "deletedAt": null
   },
   {
     "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
@@ -1683,16 +1719,16 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
-      "name": "Bookkeeping",
-      "billableRatePerHourAmount": null
+      "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
+      "name": "Grant Writing",
+      "billableRatePerHourAmount": 6500
     },
     "invoiceLineItem": null,
+    "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.028Z"),
-    "updatedAt": new Date("2025-12-31T23:59:58.978Z"),
-    "deletedAt": null,
-    "status": "RECORDED"
+    "createdAt": new Date("2022-01-19T11:12:13.405Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.971Z"),
+    "deletedAt": null
   },
   {
     "id": "bac79d2d-000a-1000-91f7-448e2fd822b5",
@@ -1706,9 +1742,9 @@ export const timeEntries = [
     "metadata": null,
     "customer": null,
     "service": {
-      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
-      "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
+      "name": "Bookkeeping",
+      "billableRatePerHourAmount": null
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1729,15 +1765,15 @@ export const timeEntries = [
     "metadata": null,
     "customer": null,
     "service": {
-      "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
-      "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
+      "name": "Bookkeeping",
+      "billableRatePerHourAmount": null
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-01-01T00:00:00.023Z"),
-    "updatedAt": new Date("2025-05-09T04:22:55.568Z"),
+    "createdAt": new Date("2021-01-05T18:29:12.601Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.981Z"),
     "deletedAt": null
   },
   {
@@ -1763,12 +1799,12 @@ export const timeEntries = [
       "memo": null
     },
     "service": {
-      "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
-      "name": "Consulting",
-      "billableRatePerHourAmount": 23000
+      "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
+      "name": "Marketing Strategy",
+      "billableRatePerHourAmount": 25000
     },
     "invoiceLineItem": null,
-    "status": "RECORDED",
+    "status": "COMPLETED",
     "stoppedAt": null,
     "createdAt": new Date("2020-01-01T00:00:00.033Z"),
     "updatedAt": new Date("2025-12-31T23:59:58.984Z"),
@@ -1786,15 +1822,15 @@ export const timeEntries = [
     "metadata": null,
     "customer": null,
     "service": {
-      "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
-      "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 25000
+      "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
+      "name": "Consulting",
+      "billableRatePerHourAmount": 23000
     },
     "invoiceLineItem": null,
-    "status": "RECORDED",
+    "status": "COMPLETED",
     "stoppedAt": null,
-    "createdAt": new Date("2020-03-13T01:35:07.549Z"),
-    "updatedAt": new Date("2025-12-31T23:59:58.979Z"),
+    "createdAt": new Date("2020-01-01T00:00:00.018Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.965Z"),
     "deletedAt": null
   },
   {
@@ -1809,15 +1845,15 @@ export const timeEntries = [
     "metadata": null,
     "customer": null,
     "service": {
-      "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
-      "name": "Bookkeeping",
-      "billableRatePerHourAmount": null
+      "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
+      "name": "Tax Preparation",
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
-    "status": "COMPLETED",
     "stoppedAt": null,
-    "createdAt": new Date("2025-12-31T23:59:58.986Z"),
-    "updatedAt": new Date("2025-12-31T23:59:58.999Z"),
-    "deletedAt": null
+    "createdAt": new Date("2022-08-20T09:50:58.493Z"),
+    "updatedAt": new Date("2025-12-31T23:59:58.986Z"),
+    "deletedAt": null,
+    "status": "RECORDED"
   }
 ] as (typeof schema.Type)[]

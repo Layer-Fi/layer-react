@@ -15,6 +15,5 @@ const toResponse = (summary: TimeEntrySummary) =>
 export const get = createMockEndpoint<TimeEntrySummary, ReturnType<typeof toResponse>>({
   method: 'get',
   path: '*/v1/businesses/:businessId/time-tracking/time-entries/summary',
-  // Recomputed per request so entry mutations are reflected in the summary.
   resolve: ({ override: summary = buildTimeEntriesSummary(timeEntryStore.all()) }) => toResponse(summary),
 })

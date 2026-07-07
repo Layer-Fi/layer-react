@@ -7,18 +7,12 @@ import { catalogServiceStore } from '@msw/api/businesses/[business-id]/catalog/s
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'
 import { readRequestJson } from '@msw/utils/request'
 
-/** The lightweight service view embedded on a time entry. */
 export const toTimeEntryService = (service: CatalogService): TimeEntryService => ({
   id: service.id,
   name: service.name,
   billableRatePerHourAmount: service.billableRatePerHourAmount,
 })
 
-/*
- * Builds a stored time entry from an upsert body, resolving the referenced
- * customer and service against their stores. Any field absent from the body
- * (partial PATCH updates) falls back to the existing entry.
- */
 export const timeEntryFromUpsertRequest = async (request: Request, base: TimeEntry): Promise<TimeEntry> => {
   const body = await readRequestJson(request) as Record<string, unknown>
 

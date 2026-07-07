@@ -3,8 +3,6 @@ import { type TimeEntry, type TimeEntrySummary, type TimeEntrySummaryGroup } fro
 const MINUTES_PER_HOUR = 60
 const UNASSIGNED_SERVICE_NAME = 'Unassigned'
 
-// Billable amount for one entry, in cents: hours worked * the service's
-// per-hour rate. Non-billable entries and entries without a rate contribute 0.
 const billableAmountCents = (entry: TimeEntry): number => {
   const rate = entry.service?.billableRatePerHourAmount
   if (!entry.billable || rate == null) return 0
@@ -21,7 +19,6 @@ type MutableGroup = {
   entryCount: number
 }
 
-/** Aggregates time entries into the summary the API would compute from them. */
 export const buildTimeEntriesSummary = (entries: readonly TimeEntry[]): TimeEntrySummary => {
   const groupsByKey = new Map<string, MutableGroup>()
   let totalMinutes = 0

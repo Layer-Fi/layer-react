@@ -18,7 +18,6 @@ const FIXTURE_YEAR = 2025
 
 const COMMON_DURATIONS_MINUTES = [15, 30, 45, 60, 90, 120, 180, 240, 300, 480]
 
-// A time entry embeds a lightweight view of a service, not the full catalog row.
 const timeEntryServices = servicePool
   .filter(service => service.archivedAt == null)
   .map(service => ({
@@ -51,11 +50,7 @@ const base = Schema.Struct({
       { arbitrary: fc.constant(null), weight: 1 },
       { arbitrary: fc.constantFrom(...customerPool), weight: 3 },
     )),
-  service: withArbitrary(fields.service, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant(null), weight: 1 },
-      { arbitrary: fc.constantFrom(...timeEntryServices), weight: 6 },
-    )),
+  service: withArbitrary(fields.service, () => fc => fc.constantFrom(...timeEntryServices)),
   invoiceLineItem: withArbitrary(fields.invoiceLineItem, () => fc => fc.constant(null)),
   stoppedAt: withArbitrary(fields.stoppedAt, () => fc => fc.constant(null)),
   createdAt: withArbitrary(fields.createdAt, () => dateArbitrary),
@@ -70,7 +65,6 @@ export const TimeEntryArbitrarySchema = base.annotations({
     baseArbitrary.map((entry): typeof base.Type => {
       const [createdAt, updatedAt] = [entry.createdAt, entry.updatedAt].sort((a, b) => a.getTime() - b.getTime())
 
-      // Seed entries are never the active tracker - only start/stop produce those.
       const status = entry.status === 'COMPLETED' ? 'COMPLETED' : 'RECORDED'
 
       return { ...entry, createdAt, updatedAt, status }

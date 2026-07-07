@@ -1,10 +1,6 @@
 import { CalendarDate } from '@internationalized/date'
 import { type FastCheck } from 'effect'
 
-/*
- * A CalendarDate uniformly drawn from a single calendar year. Fixture data is
- * pinned to one year so Storybook's year picker opens on populated data.
- */
 export const calendarDateArbitrary = (year: number) => (fc: typeof FastCheck) =>
   fc.date({
     min: new Date(Date.UTC(year, 0, 1)),
