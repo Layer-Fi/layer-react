@@ -38,13 +38,28 @@ const meta: Meta<TimeTrackingStoryArgs> = {
       description: 'Show the view title and header row',
     },
     showReportsAction: {
+      name: 'onReportsClick',
       control: 'boolean',
-      description: 'Show the Reports item in the header menu',
+      description:
+        'The real prop is the `onReportsClick: () => void` callback. Toggle this on to '
+        + 'provide it (a Reports item appears in the header menu; clicking it fires the '
+        + 'callback — an alert here) or off to omit it.',
+      table: {
+        category: 'Callbacks',
+        type: { summary: '() => void' },
+      },
     },
     title: {
+      name: 'stringOverrides.title',
       control: 'text',
-      description: 'stringOverrides.title — leave blank to use the default',
-      table: { category: 'String overrides', defaultValue: { summary: 'Time Tracking' } },
+      description:
+        'The real prop is `stringOverrides?: { title?: string }`. Type a value to set '
+        + '`stringOverrides.title`, or leave it blank to omit the override and use the default.',
+      table: {
+        category: 'String overrides',
+        type: { summary: '{ title?: string }' },
+        defaultValue: { summary: 'Time Tracking' },
+      },
     },
   },
   decorators: [
