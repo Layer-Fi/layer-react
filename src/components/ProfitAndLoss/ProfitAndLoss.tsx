@@ -15,7 +15,8 @@ type Props = PropsWithChildren<{
     values: string[]
   }
   /**
-   * @deprecated The Profit & Loss comparison feature has been removed. This prop is ignored.
+   * @deprecated The Profit & Loss comparison feature has been removed and this prop is ignored.
+   * Use the `UnifiedReports` component for period/tag comparisons instead.
    */
   comparisonConfig?: unknown
   reportingBasis?: ReportingBasis
