@@ -18,18 +18,19 @@ export const post = createMockEndpoint<{ id: string }, { data: { id: string } }>
   resolve: async ({ override, request }) => {
     if (override) return apiData(override)
 
-    const body = decodeStopTracker(await readRequestJson(request))
+    decodeStopTracker(await readRequestJson(request))
     const active = findActiveTimeEntry()
     const now = new Date()
 
     if (active == null) return apiData({ id: crypto.randomUUID() })
 
-    const durationMinutes = Math.max(1, Math.round((now.getTime() - active.createdAt.getTime()) / MS_PER_MINUTE))
+    const durationMinutes = active.durationMinutes > 0
+      ? active.durationMinutes
+      : Math.max(1, Math.round((now.getTime() - active.createdAt.getTime()) / MS_PER_MINUTE))
 
     timeEntryStore.save({
       ...active,
-      status: 'COMPLETED',
-      date: body.date,
+      status: 'RECORDED',
       durationMinutes,
       stoppedAt: now,
       updatedAt: now,

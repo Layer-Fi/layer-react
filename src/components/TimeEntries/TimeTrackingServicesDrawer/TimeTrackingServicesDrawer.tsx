@@ -8,7 +8,7 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
-import { ModalCloseButton, ModalHeading } from '@ui/Modal/ModalSlots'
+import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
 import { Span } from '@ui/Typography/Text'
@@ -360,10 +360,10 @@ export function TimeTrackingServicesDrawer({
   const Header = useCallback(
     ({ close }: { close: () => void }) => (
       <VStack gap='md'>
-        <HStack gap='sm' align='center' justify='space-between'>
-          <ModalHeading>{t('timeTracking:services.title', 'Services')}</ModalHeading>
-          <ModalCloseButton onClose={close} />
-        </HStack>
+        <ModalTitleWithClose
+          heading={<ModalHeading>{t('timeTracking:services.title', 'Services')}</ModalHeading>}
+          onClose={close}
+        />
         <HStack className='Layer__TimeTrackingServicesDrawer__tabs' justify='end' fluid>
           <Toggle
             ariaLabel={t('timeTracking:services.tab_group_label', 'Service list')}

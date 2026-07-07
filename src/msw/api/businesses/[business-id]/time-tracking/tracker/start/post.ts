@@ -10,21 +10,24 @@ import { toTimeEntryService } from '@msw/api/businesses/[business-id]/time-track
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
+import { makeBusiness } from '@fixtures/business/mocks'
 
 const encodeTimeEntry = Schema.encodeSync(TimeEntrySchema)
 const decodeStartTracker = Schema.decodeUnknownSync(StartTrackerSchema)
 
 const toResponse = (entry: TimeEntry) => apiData(encodeTimeEntry(entry))
 
+const FIXTURE_YEAR = 2025
+
 const today = () => {
   const now = new Date()
-  return new CalendarDate(now.getFullYear(), now.getMonth() + 1, now.getDate())
+  return new CalendarDate(FIXTURE_YEAR, now.getMonth() + 1, now.getDate())
 }
 
 export const post = createMockEndpoint<TimeEntry, ReturnType<typeof toResponse>>({
   method: 'post',
   path: '*/v1/businesses/:businessId/time-tracking/tracker/start',
-  resolve: async ({ override, request, params }) => {
+  resolve: async ({ override, request }) => {
     if (override) return toResponse(override)
 
     const body = decodeStartTracker(await readRequestJson(request))
@@ -35,7 +38,7 @@ export const post = createMockEndpoint<TimeEntry, ReturnType<typeof toResponse>>
 
     const entry: TimeEntry = {
       id: crypto.randomUUID(),
-      businessId: params.businessId as string,
+      businessId: makeBusiness().id,
       externalId: null,
       date: today(),
       durationMinutes: 0,

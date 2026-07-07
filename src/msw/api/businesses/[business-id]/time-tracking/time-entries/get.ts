@@ -29,6 +29,10 @@ const filterTimeEntries = createListFilter<TimeEntry>({
 export const get = createMockEndpoint<readonly TimeEntry[], ReturnType<typeof toResponse>>({
   method: 'get',
   path: '*/v1/businesses/:businessId/time-tracking/time-entries',
-  resolve: ({ override: entries = timeEntryStore.all(), request }) =>
-    toResponse(filterTimeEntries(entries, request), request),
+  resolve: ({ override: entries = timeEntryStore.all(), request }) => {
+    const statusFilter = new URL(request.url).searchParams.get('status')
+    const visible = statusFilter ? entries : entries.filter(entry => entry.status !== 'ACTIVE')
+
+    return toResponse(filterTimeEntries(visible, request), request)
+  },
 })

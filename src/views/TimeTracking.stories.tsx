@@ -1,22 +1,10 @@
-import { type PropsWithChildren, useLayoutEffect, useState } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { TimeTracking, type TimeTrackingProps } from '@views/TimeTracking'
 
+import { PinnedFixtureYear } from '@test-utils/PinnedFixtureYear'
+
 const FIXTURE_YEAR = 2025
-
-const PinnedFixtureYear = ({ children }: PropsWithChildren) => {
-  const { setYear } = useGlobalDateRangeActions()
-  const [isPinned, setIsPinned] = useState(false)
-
-  useLayoutEffect(() => {
-    setYear({ startDate: new Date(FIXTURE_YEAR, 0, 1) })
-    setIsPinned(true)
-  }, [setYear])
-
-  return isPinned ? children : null
-}
 
 type TimeTrackingStoryArgs = {
   showTitle: boolean
@@ -69,7 +57,7 @@ const meta: Meta<TimeTrackingStoryArgs> = {
   },
   decorators: [
     Story => (
-      <PinnedFixtureYear>
+      <PinnedFixtureYear year={FIXTURE_YEAR}>
         <Story />
       </PinnedFixtureYear>
     ),
