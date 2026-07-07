@@ -28,7 +28,7 @@ export const timeEntries = [
     "service": {
       "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
       "name": "Tax Preparation",
-      "billableRatePerHourAmount": 5000
+      "billableRatePerHourAmount": 23000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -51,7 +51,7 @@ export const timeEntries = [
     "service": {
       "id": "00000016-571f-3e02-8000-0002c39e6c27",
       "name": "Personal Training",
-      "billableRatePerHourAmount": 2500
+      "billableRatePerHourAmount": 28500
     },
     "invoiceLineItem": null,
     "stoppedAt": null,
@@ -85,7 +85,7 @@ export const timeEntries = [
     "service": {
       "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
       "name": "Video Editing",
-      "billableRatePerHourAmount": null
+      "billableRatePerHourAmount": 4500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -119,7 +119,7 @@ export const timeEntries = [
     "service": {
       "id": "00000016-571f-3e02-8000-0002c39e6c27",
       "name": "Personal Training",
-      "billableRatePerHourAmount": 2500
+      "billableRatePerHourAmount": 28500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -153,7 +153,7 @@ export const timeEntries = [
     "service": {
       "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
       "name": "Tax Preparation",
-      "billableRatePerHourAmount": 5000
+      "billableRatePerHourAmount": 23000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -187,7 +187,7 @@ export const timeEntries = [
     "service": {
       "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
       "name": "Tax Preparation",
-      "billableRatePerHourAmount": 5000
+      "billableRatePerHourAmount": 23000
     },
     "invoiceLineItem": null,
     "stoppedAt": null,
@@ -221,7 +221,7 @@ export const timeEntries = [
     "service": {
       "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
       "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "billableRatePerHourAmount": 23500
     },
     "invoiceLineItem": null,
     "stoppedAt": null,
@@ -244,7 +244,7 @@ export const timeEntries = [
     "service": {
       "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
       "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 25000
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -267,7 +267,7 @@ export const timeEntries = [
     "service": {
       "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
       "name": "Video Editing",
-      "billableRatePerHourAmount": null
+      "billableRatePerHourAmount": 4500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -301,7 +301,7 @@ export const timeEntries = [
     "service": {
       "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
       "name": "Grant Writing",
-      "billableRatePerHourAmount": 6500
+      "billableRatePerHourAmount": 11000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -335,7 +335,7 @@ export const timeEntries = [
     "service": {
       "id": "00000016-571f-3e02-8000-0002c39e6c27",
       "name": "Personal Training",
-      "billableRatePerHourAmount": 2500
+      "billableRatePerHourAmount": 28500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -369,7 +369,7 @@ export const timeEntries = [
     "service": {
       "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
       "name": "Tax Preparation",
-      "billableRatePerHourAmount": 5000
+      "billableRatePerHourAmount": 23000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -392,7 +392,7 @@ export const timeEntries = [
     "service": {
       "id": "00000016-571f-3e02-8000-0002c39e6c27",
       "name": "Personal Training",
-      "billableRatePerHourAmount": 2500
+      "billableRatePerHourAmount": 28500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -426,7 +426,7 @@ export const timeEntries = [
     "service": {
       "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
       "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 25000
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -449,7 +449,7 @@ export const timeEntries = [
     "service": {
       "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
       "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 25000
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -483,7 +483,7 @@ export const timeEntries = [
     "service": {
       "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
       "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "billableRatePerHourAmount": 23500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -517,7 +517,7 @@ export const timeEntries = [
     "service": {
       "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
       "name": "Video Editing",
-      "billableRatePerHourAmount": null
+      "billableRatePerHourAmount": 4500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -551,7 +551,7 @@ export const timeEntries = [
     "service": {
       "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
       "name": "Consulting",
-      "billableRatePerHourAmount": 23000
+      "billableRatePerHourAmount": 13000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -574,7 +574,7 @@ export const timeEntries = [
     "service": {
       "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
       "name": "Video Editing",
-      "billableRatePerHourAmount": null
+      "billableRatePerHourAmount": 4500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -608,7 +608,7 @@ export const timeEntries = [
     "service": {
       "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
       "name": "Consulting",
-      "billableRatePerHourAmount": 23000
+      "billableRatePerHourAmount": 13000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -642,7 +642,7 @@ export const timeEntries = [
     "service": {
       "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
       "name": "Bookkeeping",
-      "billableRatePerHourAmount": null
+      "billableRatePerHourAmount": 4000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -676,7 +676,7 @@ export const timeEntries = [
     "service": {
       "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
       "name": "Bookkeeping",
-      "billableRatePerHourAmount": null
+      "billableRatePerHourAmount": 4000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -710,7 +710,7 @@ export const timeEntries = [
     "service": {
       "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
       "name": "Consulting",
-      "billableRatePerHourAmount": 23000
+      "billableRatePerHourAmount": 13000
     },
     "invoiceLineItem": null,
     "stoppedAt": null,
@@ -733,7 +733,7 @@ export const timeEntries = [
     "service": {
       "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
       "name": "Grant Writing",
-      "billableRatePerHourAmount": 6500
+      "billableRatePerHourAmount": 11000
     },
     "invoiceLineItem": null,
     "stoppedAt": null,
@@ -767,7 +767,7 @@ export const timeEntries = [
     "service": {
       "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
       "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 25000
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
     "stoppedAt": null,
@@ -801,7 +801,7 @@ export const timeEntries = [
     "service": {
       "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
       "name": "Consulting",
-      "billableRatePerHourAmount": 23000
+      "billableRatePerHourAmount": 13000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -835,7 +835,7 @@ export const timeEntries = [
     "service": {
       "id": "00000016-571f-3e02-8000-0002c39e6c27",
       "name": "Personal Training",
-      "billableRatePerHourAmount": 2500
+      "billableRatePerHourAmount": 28500
     },
     "invoiceLineItem": null,
     "stoppedAt": null,
@@ -869,7 +869,7 @@ export const timeEntries = [
     "service": {
       "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
       "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "billableRatePerHourAmount": 23500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -903,7 +903,7 @@ export const timeEntries = [
     "service": {
       "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
       "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 25000
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
     "status": "COMPLETED",
@@ -937,7 +937,7 @@ export const timeEntries = [
     "service": {
       "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
       "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "billableRatePerHourAmount": 23500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -971,7 +971,7 @@ export const timeEntries = [
     "service": {
       "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
       "name": "Video Editing",
-      "billableRatePerHourAmount": null
+      "billableRatePerHourAmount": 4500
     },
     "invoiceLineItem": null,
     "status": "COMPLETED",
@@ -1005,7 +1005,7 @@ export const timeEntries = [
     "service": {
       "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
       "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "billableRatePerHourAmount": 23500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1028,7 +1028,7 @@ export const timeEntries = [
     "service": {
       "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
       "name": "Tax Preparation",
-      "billableRatePerHourAmount": 5000
+      "billableRatePerHourAmount": 23000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1062,7 +1062,7 @@ export const timeEntries = [
     "service": {
       "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
       "name": "Grant Writing",
-      "billableRatePerHourAmount": 6500
+      "billableRatePerHourAmount": 11000
     },
     "invoiceLineItem": null,
     "stoppedAt": null,
@@ -1096,7 +1096,7 @@ export const timeEntries = [
     "service": {
       "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
       "name": "Video Editing",
-      "billableRatePerHourAmount": null
+      "billableRatePerHourAmount": 4500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1119,7 +1119,7 @@ export const timeEntries = [
     "service": {
       "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
       "name": "Bookkeeping",
-      "billableRatePerHourAmount": null
+      "billableRatePerHourAmount": 4000
     },
     "invoiceLineItem": null,
     "status": "COMPLETED",
@@ -1153,7 +1153,7 @@ export const timeEntries = [
     "service": {
       "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
       "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 25000
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1187,7 +1187,7 @@ export const timeEntries = [
     "service": {
       "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
       "name": "Grant Writing",
-      "billableRatePerHourAmount": 6500
+      "billableRatePerHourAmount": 11000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1221,7 +1221,7 @@ export const timeEntries = [
     "service": {
       "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
       "name": "Tax Preparation",
-      "billableRatePerHourAmount": 5000
+      "billableRatePerHourAmount": 23000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1255,7 +1255,7 @@ export const timeEntries = [
     "service": {
       "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
       "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 25000
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1278,7 +1278,7 @@ export const timeEntries = [
     "service": {
       "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
       "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 25000
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1312,7 +1312,7 @@ export const timeEntries = [
     "service": {
       "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
       "name": "Bookkeeping",
-      "billableRatePerHourAmount": null
+      "billableRatePerHourAmount": 4000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1335,7 +1335,7 @@ export const timeEntries = [
     "service": {
       "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
       "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "billableRatePerHourAmount": 23500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1369,7 +1369,7 @@ export const timeEntries = [
     "service": {
       "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
       "name": "Video Editing",
-      "billableRatePerHourAmount": null
+      "billableRatePerHourAmount": 4500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1403,7 +1403,7 @@ export const timeEntries = [
     "service": {
       "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
       "name": "Grant Writing",
-      "billableRatePerHourAmount": 6500
+      "billableRatePerHourAmount": 11000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1437,7 +1437,7 @@ export const timeEntries = [
     "service": {
       "id": "00000016-571f-3e02-8000-0002c39e6c27",
       "name": "Personal Training",
-      "billableRatePerHourAmount": 2500
+      "billableRatePerHourAmount": 28500
     },
     "invoiceLineItem": null,
     "stoppedAt": null,
@@ -1460,7 +1460,7 @@ export const timeEntries = [
     "service": {
       "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
       "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "billableRatePerHourAmount": 23500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1494,7 +1494,7 @@ export const timeEntries = [
     "service": {
       "id": "00000016-571f-3e02-8000-0002c39e6c27",
       "name": "Personal Training",
-      "billableRatePerHourAmount": 2500
+      "billableRatePerHourAmount": 28500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1528,7 +1528,7 @@ export const timeEntries = [
     "service": {
       "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
       "name": "Project Management",
-      "billableRatePerHourAmount": 4000
+      "billableRatePerHourAmount": 23500
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1562,7 +1562,7 @@ export const timeEntries = [
     "service": {
       "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
       "name": "Consulting",
-      "billableRatePerHourAmount": 23000
+      "billableRatePerHourAmount": 13000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1585,7 +1585,7 @@ export const timeEntries = [
     "service": {
       "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
       "name": "Tax Preparation",
-      "billableRatePerHourAmount": 5000
+      "billableRatePerHourAmount": 23000
     },
     "invoiceLineItem": null,
     "stoppedAt": null,
@@ -1619,7 +1619,7 @@ export const timeEntries = [
     "service": {
       "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
       "name": "Grant Writing",
-      "billableRatePerHourAmount": 6500
+      "billableRatePerHourAmount": 11000
     },
     "invoiceLineItem": null,
     "status": "COMPLETED",
@@ -1653,7 +1653,7 @@ export const timeEntries = [
     "service": {
       "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
       "name": "Grant Writing",
-      "billableRatePerHourAmount": 6500
+      "billableRatePerHourAmount": 11000
     },
     "invoiceLineItem": null,
     "status": "COMPLETED",
@@ -1687,7 +1687,7 @@ export const timeEntries = [
     "service": {
       "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
       "name": "Bookkeeping",
-      "billableRatePerHourAmount": null
+      "billableRatePerHourAmount": 4000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1721,7 +1721,7 @@ export const timeEntries = [
     "service": {
       "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
       "name": "Grant Writing",
-      "billableRatePerHourAmount": 6500
+      "billableRatePerHourAmount": 11000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1744,7 +1744,7 @@ export const timeEntries = [
     "service": {
       "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
       "name": "Bookkeeping",
-      "billableRatePerHourAmount": null
+      "billableRatePerHourAmount": 4000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1767,7 +1767,7 @@ export const timeEntries = [
     "service": {
       "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
       "name": "Bookkeeping",
-      "billableRatePerHourAmount": null
+      "billableRatePerHourAmount": 4000
     },
     "invoiceLineItem": null,
     "status": "RECORDED",
@@ -1801,7 +1801,7 @@ export const timeEntries = [
     "service": {
       "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
       "name": "Marketing Strategy",
-      "billableRatePerHourAmount": 25000
+      "billableRatePerHourAmount": 5000
     },
     "invoiceLineItem": null,
     "status": "COMPLETED",
@@ -1824,7 +1824,7 @@ export const timeEntries = [
     "service": {
       "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
       "name": "Consulting",
-      "billableRatePerHourAmount": 23000
+      "billableRatePerHourAmount": 13000
     },
     "invoiceLineItem": null,
     "status": "COMPLETED",
@@ -1847,7 +1847,7 @@ export const timeEntries = [
     "service": {
       "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
       "name": "Tax Preparation",
-      "billableRatePerHourAmount": 5000
+      "billableRatePerHourAmount": 23000
     },
     "invoiceLineItem": null,
     "stoppedAt": null,

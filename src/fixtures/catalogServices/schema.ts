@@ -12,11 +12,8 @@ const fields = CatalogServiceSchema.fields
 const base = Schema.Struct({
   ...fields,
   name: withArbitrary(fields.name, () => fc => fc.constantFrom(...serviceNames)),
-  billableRatePerHourAmount: withArbitrary(fields.billableRatePerHourAmount, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant(null), weight: 1 },
-      { arbitrary: centsAmountArbitrary({ minDollars: 25, maxDollars: 300, stepDollars: 5 })(fc), weight: 6 },
-    )),
+  billableRatePerHourAmount: withArbitrary(fields.billableRatePerHourAmount, () =>
+    centsAmountArbitrary({ minDollars: 25, maxDollars: 300, stepDollars: 5 })),
   archivedAt: withArbitrary(fields.archivedAt, () => fc =>
     fc.oneof(
       { arbitrary: fc.constant(null), weight: 5 },
