@@ -83,7 +83,8 @@ export function usePollingConfig<TData>({
     (error, _key, _config, revalidate, { retryCount }) => {
       if (isStopped(phaseRef)) return
 
-      const isAtMaxRetries = retryCount >= maxErrorRetries
+      // SWR passes a 1-based retryCount, so `>` yields exactly `maxErrorRetries` retries.
+      const isAtMaxRetries = retryCount > maxErrorRetries
       const isPastPollingDeadline = Date.now() >= pollingEndTimestampRef.current
 
       if (isFatalError?.(error) || isAtMaxRetries || isPastPollingDeadline) {
@@ -117,7 +118,14 @@ export function usePollingConfig<TData>({
 
     previousDataRef.current = nextData
 
-    const completed = shouldComplete ? shouldComplete(nextData) : !shouldContinue(nextData)
+    /*
+     * Default completion means an actual session ended: data that is already terminal on
+     * the first fetch (phase still Idle) is "nothing to poll", not "finished". A custom
+     * `shouldComplete` is an explicit definition of done, so it applies regardless.
+     */
+    const completed = shouldComplete
+      ? shouldComplete(nextData)
+      : !isIdle(phaseRef) && !shouldContinue(nextData)
     if (!hasCompletedRef.current && completed) {
       hasCompletedRef.current = true
       void onComplete?.(nextData)
