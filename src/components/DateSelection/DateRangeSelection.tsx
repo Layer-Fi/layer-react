@@ -7,16 +7,14 @@ import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionCo
 import './globalDateRangeSelection.scss'
 
 type DateRangeSelectionProps = {
-  startDate: Date
-  endDate: Date
+  dateRange: DateRange
   setDateRange: (range: DateRange) => void
   showLabels?: boolean
   isCompact?: boolean
 }
 
 export const DateRangeSelection = ({
-  startDate,
-  endDate,
+  dateRange,
   setDateRange,
   showLabels = false,
   isCompact = false,
@@ -28,14 +26,12 @@ export const DateRangeSelection = ({
       })}
     >
       <DateSelectionComboBox
-        startDate={startDate}
-        endDate={endDate}
+        dateRange={dateRange}
         setDateRange={setDateRange}
         showLabel={showLabels}
       />
       <DateRangePicker
-        startDate={startDate}
-        endDate={endDate}
+        dateRange={dateRange}
         setDateRange={setDateRange}
         showLabels={showLabels}
       />

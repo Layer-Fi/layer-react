@@ -1,19 +1,18 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type DateRange } from '@utils/date/dateRange'
+import { type DateRange, isSameDateRange } from '@utils/date/dateRange'
 import { useGlobalDatePickerBounds } from '@hooks/utils/dates/useGlobalDatePickerBounds'
 import { DatePicker } from '@components/DatePicker/DatePicker'
 import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
 
 type DateRangePickerProps = {
-  startDate: Date
-  endDate: Date
+  dateRange: DateRange
   setDateRange: (range: DateRange) => void
   showLabels?: boolean
 }
 
-export const DateRangePicker = ({ startDate, endDate, setDateRange, showLabels = false }: DateRangePickerProps) => {
+export const DateRangePicker = ({ dateRange, setDateRange, showLabels = false }: DateRangePickerProps) => {
   const { t } = useTranslation()
   const { minDate, maxDate } = useGlobalDatePickerBounds()
 
@@ -26,7 +25,7 @@ export const DateRangePicker = ({ startDate, endDate, setDateRange, showLabels =
     errorText: startDateErrorText,
     onBlur: onBlurStartDate,
   } = useDatePickerState({
-    date: startDate,
+    date: dateRange.startDate,
     minDate,
     maxDate,
   })
@@ -40,15 +39,23 @@ export const DateRangePicker = ({ startDate, endDate, setDateRange, showLabels =
     errorText: endDateErrorText,
     onBlur: onBlurEndDate,
   } = useDatePickerState({
-    date: endDate,
+    date: dateRange.endDate,
     minDate,
     maxDate,
   })
+
+  const dateRangeRef = useRef(dateRange)
+
+  useEffect(() => {
+    dateRangeRef.current = dateRange
+  }, [dateRange])
 
   useEffect(() => {
     if (startDateInvalid || endDateInvalid || !localStartDate || !localEndDate) return
 
     const next = { startDate: localStartDate.toDate(), endDate: localEndDate.toDate() }
+
+    if (isSameDateRange(next, dateRangeRef.current)) return
 
     setDateRange(next)
   }, [startDateInvalid, endDateInvalid, localStartDate, localEndDate, setDateRange])

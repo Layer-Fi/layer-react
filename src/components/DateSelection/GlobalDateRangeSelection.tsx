@@ -7,13 +7,12 @@ type GlobalDateRangeSelectionProps = {
 }
 
 export const GlobalDateRangeSelection = ({ showLabels = false, isCompact = false }: GlobalDateRangeSelectionProps) => {
-  const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode: 'full' })
+  const dateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
   const { setDateRange } = useGlobalDateRangeActions()
 
   return (
     <DateRangeSelection
-      startDate={startDate}
-      endDate={endDate}
+      dateRange={dateRange}
       setDateRange={setDateRange}
       showLabels={showLabels}
       isCompact={isCompact}
