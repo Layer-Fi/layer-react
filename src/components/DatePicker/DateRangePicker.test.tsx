@@ -45,16 +45,12 @@ const getDaySegment = (pickerName: string) =>
 describe('DateRangePicker', () => {
   it('does not re-render endlessly with a plain useState parent', () => {
     const onSetDateRange = vi.fn((_range: DateRange) => {
-      // Circuit-breaker so a regression fails fast instead of hanging the run
       if (onSetDateRange.mock.calls.length > 25) {
         throw new Error('render loop detected: setDateRange called more than 25 times')
       }
     })
 
     renderDateRangePicker(<PlainStateParent onSetDateRange={onSetDateRange} />)
-
-    // The picker starts in sync with the incoming range, so mounting should
-    // not push any update back to the parent.
     expect(screen.getByRole('group', { name: 'Start date' })).toBeInTheDocument()
     expect(onSetDateRange).not.toHaveBeenCalled()
   })
@@ -78,7 +74,6 @@ describe('DateRangePicker', () => {
 
     // Bump the day segment of the start date field
     const daySegment = getDaySegment('Start date')
-
     await user.click(daySegment)
     await user.keyboard('{ArrowUp}')
 
