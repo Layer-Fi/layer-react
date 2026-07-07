@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useEffect } from 'react'
+import { type PropsWithChildren, useLayoutEffect, useState } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
@@ -12,12 +12,14 @@ const FIXTURE_YEAR = 2025
 
 const PinnedFixtureYear = ({ children }: PropsWithChildren) => {
   const { setYear } = useGlobalDateRangeActions()
+  const [isPinned, setIsPinned] = useState(false)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setYear({ startDate: new Date(FIXTURE_YEAR, 0, 1) })
+    setIsPinned(true)
   }, [setYear])
 
-  return children
+  return isPinned ? children : null
 }
 
 const meta: Meta<typeof unstable_MileageTracking> = {
