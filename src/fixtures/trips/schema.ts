@@ -33,8 +33,8 @@ const base = Schema.Struct({
   ...fields,
   vehicle: withArbitrary(fields.vehicle, () => fc =>
     fc.oneof(
-      fc.constant(null),
-      vehicleArbitrary,
+      { arbitrary: fc.constant(null), weight: 1 },
+      { arbitrary: vehicleArbitrary, weight: 4 },
     )),
   externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
   distance: withArbitrary(fields.distance, () => distanceArbitrary),
