@@ -4,6 +4,7 @@ type GeneratorConfig = { numRuns: number, seed: number }
 
 const DEFAULT_CONFIG: GeneratorConfig = { numRuns: 10, seed: 1 }
 
+// Candidates to draw per requested row when deduping, before giving up and throwing.
 const OVERSAMPLE_FACTOR = 50
 
 type GeneratorOptions<A> = {
@@ -37,6 +38,8 @@ export function createGenerator<A, I, R>(
     const rows: A[] = []
 
     for (const candidate of candidates) {
+      if (rows.length === config.numRuns) break
+
       const keys = uniqueBy.map(getKey => getKey(candidate))
       const collides = keys.some((key, index) => key != null && seenByKey[index].has(key))
 
@@ -46,13 +49,14 @@ export function createGenerator<A, I, R>(
         if (key != null) seenByKey[index].add(key)
       })
       rows.push(candidate)
-
-      if (rows.length === config.numRuns) break
     }
 
     if (rows.length < config.numRuns) {
+      const distinctPerKey = seenByKey.map(seen => seen.size).join(', ')
       throw new Error(
-        `createGenerator: only found ${rows.length}/${config.numRuns} rows unique by the given key(s) after sampling ${candidateBudget} candidates — widen the underlying value pool(s) or lower numRuns.`,
+        `createGenerator: only found ${rows.length}/${config.numRuns} rows unique by the given key(s) `
+        + `after sampling ${candidateBudget} candidates (distinct values seen per key: ${distinctPerKey}). `
+        + 'Widen the underlying value pool(s) or lower numRuns.',
       )
     }
 
