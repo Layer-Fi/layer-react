@@ -36,6 +36,8 @@ const meta: Meta<TimeTrackingStoryArgs> = {
     showReportsAction: false,
   },
   argTypes: {
+    onReportsClick: { table: { disable: true } },
+    stringOverrides: { table: { disable: true } },
     showTitle: {
       control: 'boolean',
       description: 'Show the view title and header row',
