@@ -96,14 +96,52 @@ const renderFixtureModule = (
   ].join('\n')
 }
 
+// Domains that read another domain's `generated/*.gen.ts` directly at module
+// load time (e.g. trips embedding real vehicles) must have that dependency
+// generated first in the same run, or they'd see one-run-stale data.
+const DOMAIN_DEPENDENCIES: Record<string, readonly string[]> = {
+  trips: ['vehicles'],
+}
+
+const sortByDependencies = (domains: readonly string[]): string[] => {
+  const sorted: string[] = []
+  const visiting = new Set<string>()
+  const visited = new Set<string>()
+
+  const visit = (domain: string) => {
+    if (visited.has(domain)) return
+    if (visiting.has(domain)) {
+      throw new Error(`Circular fixture dependency involving "${domain}" in DOMAIN_DEPENDENCIES.`)
+    }
+
+    visiting.add(domain)
+    for (const dependency of DOMAIN_DEPENDENCIES[domain] ?? []) {
+      visit(dependency)
+    }
+    visiting.delete(domain)
+
+    visited.add(domain)
+    sorted.push(domain)
+  }
+
+  for (const domain of domains) visit(domain)
+
+  return sorted
+}
+
 async function main() {
-  const generatorFiles = fg
-    .sync('*/generator.ts', { cwd: fixturesDir, absolute: true })
-    .sort()
+  const generatorFiles = fg.sync('*/generator.ts', { cwd: fixturesDir, absolute: true })
+  const fileByDomain = new Map(generatorFiles.map(file => [path.basename(path.dirname(file)), file]))
+  const orderedDomains = sortByDependencies([...fileByDomain.keys()].sort())
+  const orderedFiles = orderedDomains.map((domain) => {
+    const file = fileByDomain.get(domain)
+    if (file == null) throw new Error(`Unexpected: no generator file found for domain "${domain}"`)
+    return file
+  })
 
   let drifted = false
 
-  for (const generatorFile of generatorFiles) {
+  for (const generatorFile of orderedFiles) {
     const domain = path.basename(path.dirname(generatorFile))
 
     // domain becomes an export name and import path in the generated module.

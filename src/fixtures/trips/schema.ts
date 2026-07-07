@@ -4,12 +4,10 @@ import { Arbitrary, BigDecimal, type FastCheck, Schema } from 'effect'
 import { TripPurpose, TripSchema } from '@schemas/trip'
 
 import { addresses } from '@fixtures/constants/personal/addresses'
+import { vehicles as vehiclePool } from '@fixtures/generated/vehicles.gen'
 import { dateArbitrary } from '@fixtures/utils/dateArbitrary'
 import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
-import { schema as vehicleSchema } from '@fixtures/vehicles/schema'
-
-const vehicleArbitrary = Arbitrary.make(vehicleSchema)
 
 const tripDateArbitrary = (fc: typeof FastCheck) =>
   fc.date({
@@ -34,7 +32,7 @@ const base = Schema.Struct({
   vehicle: withArbitrary(fields.vehicle, () => fc =>
     fc.oneof(
       { arbitrary: fc.constant(null), weight: 1 },
-      { arbitrary: vehicleArbitrary, weight: 4 },
+      { arbitrary: fc.constantFrom(...vehiclePool), weight: 4 },
     )),
   externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
   distance: withArbitrary(fields.distance, () => distanceArbitrary),
