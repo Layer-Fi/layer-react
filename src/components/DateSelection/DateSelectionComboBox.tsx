@@ -2,8 +2,8 @@ import { useCallback, useId, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getActivationDate } from '@utils/business'
+import { type DateRange } from '@utils/date/dateRange'
 import { DatePreset, presetForDateRange, rangeForPreset } from '@utils/date/dateRangePresets'
-import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
@@ -14,13 +14,16 @@ type DateSelectionOption = {
   value: DatePreset
 }
 
-export const DateSelectionComboBox = ({ showLabel = false }: { showLabel?: boolean }) => {
+type DateSelectionComboBoxProps = {
+  dateRange: DateRange
+  setDateRange: (range: DateRange) => void
+  showLabel?: boolean
+}
+
+export const DateSelectionComboBox = ({ dateRange, setDateRange, showLabel = false }: DateSelectionComboBoxProps) => {
   const { t } = useTranslation()
   const [lastPreset, setLastPreset] = useState<DatePreset | null>(null)
   const { business } = useLayerContext()
-
-  const dateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
-  const { setDateRange } = useGlobalDateRangeActions()
 
   const selectedPreset = presetForDateRange(dateRange, lastPreset, getActivationDate(business))
 

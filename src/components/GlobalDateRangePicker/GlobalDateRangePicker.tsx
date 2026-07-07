@@ -1,79 +1,15 @@
-import { useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-
-import { useGlobalDatePickerBounds } from '@hooks/utils/dates/useGlobalDatePickerBounds'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
-import { DatePicker } from '@components/DatePicker/DatePicker'
-import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
+import { DateRangePicker } from '@components/DatePicker/DateRangePicker'
 
 export const GlobalDateRangePicker = ({ showLabels = false }: { showLabels?: boolean }) => {
-  const { t } = useTranslation()
-  const { startDate: globalStartDate, endDate: globalEndDate } = useGlobalDateRange({ dateSelectionMode: 'full' })
-  const { setDateRange: setGlobalDateRange } = useGlobalDateRangeActions()
-  const { minDate, maxDate } = useGlobalDatePickerBounds()
-
-  const {
-    localDate: localStartDate,
-    onChange: onChangeStartDate,
-    minDateZdt: minStartDate,
-    maxDateZdt: maxStartDate,
-    isInvalid: startDateInvalid,
-    errorText: startDateErrorText,
-    onBlur: onBlurStartDate,
-  } = useDatePickerState({
-    date: globalStartDate,
-    minDate,
-    maxDate,
-  })
-
-  const {
-    localDate: localEndDate,
-    onChange: onChangeEndDate,
-    minDateZdt: minEndDate,
-    maxDateZdt: maxEndDate,
-    isInvalid: endDateInvalid,
-    errorText: endDateErrorText,
-    onBlur: onBlurEndDate,
-  } = useDatePickerState({
-    date: globalEndDate,
-    minDate,
-    maxDate,
-  })
-
-  useEffect(() => {
-    if (startDateInvalid || endDateInvalid || !localStartDate || !localEndDate) return
-
-    const next = { startDate: localStartDate.toDate(), endDate: localEndDate.toDate() }
-
-    setGlobalDateRange(next)
-  }, [startDateInvalid, endDateInvalid, localStartDate, localEndDate, setGlobalDateRange])
+  const dateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
+  const { setDateRange } = useGlobalDateRangeActions()
 
   return (
-    <>
-      <DatePicker
-        label={t('date:label.start_date', 'Start date')}
-        date={localStartDate}
-        onChange={onChangeStartDate}
-        minDate={minStartDate}
-        maxDate={maxStartDate}
-        isInvalid={startDateInvalid}
-        errorText={startDateErrorText}
-        onBlur={onBlurStartDate}
-        slotProps={{ Label: { size: 'sm', pbe: '3xs' } }}
-        showLabel={showLabels}
-      />
-      <DatePicker
-        label={t('date:label.end_date', 'End date')}
-        date={localEndDate}
-        onChange={onChangeEndDate}
-        minDate={minEndDate}
-        maxDate={maxEndDate}
-        isInvalid={endDateInvalid}
-        errorText={endDateErrorText}
-        onBlur={onBlurEndDate}
-        slotProps={{ Label: { size: 'sm', pbe: '3xs' } }}
-        showLabel={showLabels}
-      />
-    </>
+    <DateRangePicker
+      dateRange={dateRange}
+      setDateRange={setDateRange}
+      showLabels={showLabels}
+    />
   )
 }

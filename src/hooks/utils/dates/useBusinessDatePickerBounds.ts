@@ -3,7 +3,7 @@ import { endOfDay, startOfDay } from 'date-fns'
 
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 
-export function useGlobalDatePickerBounds(): { minDate: Date | null, maxDate: Date } {
+export function useBusinessDatePickerBounds(): { minDate: Date | null, maxDate: Date } {
   const rawActivationDate = useBusinessActivationDate()
 
   const minDate = useMemo(() => rawActivationDate ? startOfDay(rawActivationDate) : null, [rawActivationDate])

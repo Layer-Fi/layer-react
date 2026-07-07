@@ -17,7 +17,7 @@
   min-inline-size: 0;
   container: time-tracking-stats-dates / inline-size;
 
-  .Layer__GlobalDateRangeSelection {
+  .Layer__DateRangeSelection {
     inline-size: 100%;
   }
 }
@@ -96,12 +96,12 @@
     flex-basis: auto;
     inline-size: 100%;
 
-    .Layer__GlobalDateRangeSelection {
+    .Layer__DateRangeSelection {
       grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
       inline-size: 100%;
       min-inline-size: 0;
 
-      &.Layer__GlobalDateRangeSelection--mobile {
+      &.Layer__DateRangeSelection--mobile {
         grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
       }
 
@@ -113,8 +113,8 @@
 }
 
 @container time-tracking-stats (max-width: 430px) {
-  .Layer__TimeTrackingStats__DateSelection .Layer__GlobalDateRangeSelection,
-  .Layer__TimeTrackingStats__DateSelection .Layer__GlobalDateRangeSelection.Layer__GlobalDateRangeSelection--mobile {
+  .Layer__TimeTrackingStats__DateSelection .Layer__DateRangeSelection,
+  .Layer__TimeTrackingStats__DateSelection .Layer__DateRangeSelection.Layer__DateRangeSelection--mobile {
     grid-template-columns: minmax(0, 1fr);
   }
 }
