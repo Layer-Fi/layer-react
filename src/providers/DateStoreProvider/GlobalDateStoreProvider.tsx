@@ -1,7 +1,6 @@
 import { createScopedDateStore } from '@providers/DateStoreProvider/internal/createScopedDateStore'
 
 export type { DateRange, DateSelectionMode } from '@utils/date/dateRange'
-export { clampToAfterActivationDate, clampToPresentOrPast } from '@utils/date/dateRange'
 
 const {
   Provider: GlobalDateStoreProvider,

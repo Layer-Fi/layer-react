@@ -1,10 +1,9 @@
 import { useCallback, useId, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { getActivationDate } from '@utils/business'
 import { type DateRange } from '@utils/date/dateRange'
-import { DatePreset, presetForDateRange, rangeForPreset } from '@utils/date/dateRangePresets'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { DatePreset } from '@utils/date/dateRangePresets'
+import { useDatePresets } from '@hooks/utils/dates/useDatePresets'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
@@ -23,11 +22,11 @@ type DateSelectionComboBoxProps = {
 export const DateSelectionComboBox = ({ dateRange, setDateRange, showLabel = false }: DateSelectionComboBoxProps) => {
   const { t } = useTranslation()
   const [lastPreset, setLastPreset] = useState<DatePreset | null>(null)
-  const { business } = useLayerContext()
+  const { rangeForSelectablePreset, findMatchingPresetForDateRange } = useDatePresets()
 
-  const selectedPreset = presetForDateRange(dateRange, lastPreset, getActivationDate(business))
+  const derivedPresetForDateRange = findMatchingPresetForDateRange(dateRange, lastPreset)
 
-  const allOptions = useMemo<DateSelectionOption[]>(
+  const allPresetOptions = useMemo<DateSelectionOption[]>(
     () => [
       { value: DatePreset.ThisMonth, label: t('date:label.this_month', 'This Month') },
       { value: DatePreset.LastMonth, label: t('date:label.last_month', 'Last Month') },
@@ -41,8 +40,8 @@ export const DateSelectionComboBox = ({ dateRange, setDateRange, showLabel = fal
     [t],
   )
 
-  const options = allOptions.filter(o => o.value !== DatePreset.Custom)
-  const selectedOption = allOptions.find(o => o.value === (selectedPreset ?? DatePreset.Custom)) ?? null
+  const selectablePresetOptions = allPresetOptions.filter(o => o.value !== DatePreset.Custom)
+  const selectedPresetOption = allPresetOptions.find(o => o.value === (derivedPresetForDateRange ?? DatePreset.Custom)) ?? null
 
   const onSelectedValueChange = useCallback((option: DateSelectionOption | null) => {
     if (option === null) return
@@ -52,9 +51,9 @@ export const DateSelectionComboBox = ({ dateRange, setDateRange, showLabel = fal
     const nextPreset = option.value
     setLastPreset(nextPreset)
 
-    const nextRange = rangeForPreset(nextPreset, { activationDate: getActivationDate(business) })
+    const nextRange = rangeForSelectablePreset(nextPreset)
     setDateRange(nextRange)
-  }, [setDateRange, business])
+  }, [setDateRange, rangeForSelectablePreset])
 
   const inputId = useId()
 
@@ -65,9 +64,9 @@ export const DateSelectionComboBox = ({ dateRange, setDateRange, showLabel = fal
     <VStack>
       {showLabel && <Label pbe='3xs' size='sm' htmlFor={inputId}>{label}</Label>}
       <ComboBox
-        options={options}
+        options={selectablePresetOptions}
         onSelectedValueChange={onSelectedValueChange}
-        selectedValue={selectedOption}
+        selectedValue={selectedPresetOption}
         isSearchable={false}
         isClearable={false}
         inputId={inputId}

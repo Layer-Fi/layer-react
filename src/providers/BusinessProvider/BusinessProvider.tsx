@@ -1,4 +1,5 @@
 import { type PropsWithChildren, type Reducer, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
+import { isSameDay } from 'date-fns'
 
 import {
   type ColorConfig,
@@ -9,7 +10,9 @@ import {
   type LayerThemeConfig,
 } from '@internal-types/layerContext'
 import { errorHandler, type LayerError } from '@utils/api/errorHandler'
+import { getActivationDate } from '@utils/business'
 import { buildColorsPalette } from '@utils/colors'
+import { ALL_TIME_MIN_DATE } from '@utils/date/dateRangePresets'
 import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
 import { useBusiness } from '@hooks/api/businesses/[business-id]/useBusiness'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
@@ -118,6 +121,17 @@ export const BusinessProvider = ({
       payload: { business: businessData.data },
     })
   }, [businessData])
+
+  // The global date store is built before business context exists, so an
+  // "All Time" range starts at the fixed fallback minimum. Once the business
+  // loads, adopt its real activation date as the start — but only while the
+  // range is still that untouched fallback, so we never clobber a user change.
+  useEffect(() => {
+    const activationDate = getActivationDate(businessData?.data)
+    if (!activationDate || !isSameDay(globalDateRange.startDate, ALL_TIME_MIN_DATE)) return
+
+    setDateRange({ startDate: activationDate, endDate: globalDateRange.endDate })
+  }, [businessData, globalDateRange, setDateRange])
 
   const setTheme = (theme: LayerThemeConfig) => {
     dispatch({

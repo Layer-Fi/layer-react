@@ -1,27 +1,21 @@
-import { endOfMonth, endOfYear, startOfMonth, startOfYear, subDays } from 'date-fns'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { endOfDay, endOfMonth, endOfYear, startOfMonth, startOfYear, subDays } from 'date-fns'
+import { describe, expect, it } from 'vitest'
 
 import {
   ALL_TIME_MIN_DATE,
   DatePreset,
-  presetForDateRange,
-  rangeForPreset,
+  findMatchingPresetForDateRange,
+  rangeForSelectablePreset,
 } from '@utils/date/dateRangePresets'
 
-const NOW = new Date(2026, 5, 15, 12, 0, 0)
+import { NOW } from '@test-utils/fixedDates'
 
-beforeEach(() => {
-  vi.useFakeTimers()
-  vi.setSystemTime(NOW)
-})
-
-afterEach(() => {
-  vi.useRealTimers()
-})
-
-describe(rangeForPreset, () => {
+describe(rangeForSelectablePreset, () => {
   it('returns the current month for ThisMonth', () => {
-    const range = rangeForPreset(DatePreset.ThisMonth)
+    const range = rangeForSelectablePreset(DatePreset.ThisMonth, {
+      now: NOW,
+      activationDate: ALL_TIME_MIN_DATE,
+    })
 
     expect(range.startDate).toEqual(startOfMonth(NOW))
     expect(range.endDate).toEqual(endOfMonth(NOW))
@@ -30,57 +24,63 @@ describe(rangeForPreset, () => {
   it('returns activation date through now for AllTime when an activation date exists', () => {
     const activationDate = new Date(2024, 2, 10)
 
-    const range = rangeForPreset(DatePreset.AllTime, { activationDate })
+    const range = rangeForSelectablePreset(DatePreset.AllTime, { now: NOW, activationDate })
 
     expect(range.startDate).toEqual(activationDate)
-    expect(range.endDate).toEqual(NOW)
+    expect(range.endDate).toEqual(endOfDay(NOW))
   })
 
   it('falls back to the fixed minimum for AllTime without an activation date', () => {
-    const range = rangeForPreset(DatePreset.AllTime)
+    const range = rangeForSelectablePreset(DatePreset.AllTime, {
+      now: NOW,
+      activationDate: ALL_TIME_MIN_DATE,
+    })
 
     expect(range.startDate).toEqual(ALL_TIME_MIN_DATE)
-    expect(range.endDate).toEqual(NOW)
+    expect(range.endDate).toEqual(endOfDay(NOW))
   })
 })
 
-describe(presetForDateRange, () => {
+describe(findMatchingPresetForDateRange, () => {
   it('detects a year-to-date range as ThisYear', () => {
     const range = { startDate: startOfYear(NOW), endDate: endOfYear(NOW) }
 
-    expect(presetForDateRange(range)).toBe(DatePreset.ThisYear)
+    expect(findMatchingPresetForDateRange(range, { now: NOW, activationDate: ALL_TIME_MIN_DATE })).toBe(DatePreset.ThisYear)
   })
 
   it('detects an AllTime range with an activation date', () => {
     const activationDate = new Date(2024, 2, 10)
-    const range = rangeForPreset(DatePreset.AllTime, { activationDate })
+    const range = rangeForSelectablePreset(DatePreset.AllTime, { now: NOW, activationDate })
 
-    expect(presetForDateRange(range, null, activationDate)).toBe(DatePreset.AllTime)
+    expect(findMatchingPresetForDateRange(range, { now: NOW, activationDate })).toBe(DatePreset.AllTime)
   })
 
   it('detects an AllTime range without an activation date', () => {
-    const range = rangeForPreset(DatePreset.AllTime)
+    const range = rangeForSelectablePreset(DatePreset.AllTime, {
+      now: NOW,
+      activationDate: ALL_TIME_MIN_DATE,
+    })
 
-    expect(presetForDateRange(range)).toBe(DatePreset.AllTime)
+    expect(findMatchingPresetForDateRange(range, { now: NOW, activationDate: ALL_TIME_MIN_DATE })).toBe(DatePreset.AllTime)
   })
 
   it('prefers ThisYear over AllTime when the activation date is Jan 1 of this year', () => {
     const activationDate = startOfYear(NOW)
-    const range = rangeForPreset(DatePreset.AllTime, { activationDate })
+    const range = rangeForSelectablePreset(DatePreset.AllTime, { now: NOW, activationDate })
 
-    expect(presetForDateRange(range, null, activationDate)).toBe(DatePreset.ThisYear)
+    expect(findMatchingPresetForDateRange(range, { now: NOW, activationDate })).toBe(DatePreset.ThisYear)
   })
 
   it('keeps an explicitly selected AllTime sticky over an equivalent periodic preset', () => {
     const activationDate = startOfYear(NOW)
-    const range = rangeForPreset(DatePreset.AllTime, { activationDate })
+    const range = rangeForSelectablePreset(DatePreset.AllTime, { now: NOW, activationDate })
 
-    expect(presetForDateRange(range, DatePreset.AllTime, activationDate)).toBe(DatePreset.AllTime)
+    expect(findMatchingPresetForDateRange(range, { now: NOW, activationDate }, DatePreset.AllTime)).toBe(DatePreset.AllTime)
   })
 
   it('returns null for a range matching no preset', () => {
     const range = { startDate: subDays(NOW, 3), endDate: NOW }
 
-    expect(presetForDateRange(range)).toBeNull()
+    expect(findMatchingPresetForDateRange(range, { now: NOW, activationDate: ALL_TIME_MIN_DATE })).toBeNull()
   })
 })

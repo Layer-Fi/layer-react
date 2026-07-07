@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type DateRange, isSameDateRange } from '@utils/date/dateRange'
+import { type DateRange, isSameExactDateRange } from '@utils/date/dateRange'
 import { useBusinessDatePickerBounds } from '@hooks/utils/dates/useBusinessDatePickerBounds'
 import { DatePicker } from '@components/DatePicker/DatePicker'
 import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
@@ -55,7 +55,7 @@ export const DateRangePicker = ({ dateRange, setDateRange, showLabels = false }:
 
     const next = { startDate: localStartDate.toDate(), endDate: localEndDate.toDate() }
 
-    if (isSameDateRange(next, dateRangeRef.current)) return
+    if (isSameExactDateRange(next, dateRangeRef.current)) return
 
     setDateRange(next)
   }, [startDateInvalid, endDateInvalid, localStartDate, localEndDate, setDateRange])

@@ -1,7 +1,7 @@
 import { createStore } from 'zustand'
 
 import type { DateRange } from '@utils/date/dateRange'
-import { DatePreset, rangeForPreset } from '@utils/date/dateRangePresets'
+import { ALL_TIME_MIN_DATE, DatePreset, rangeForSelectablePreset } from '@utils/date/dateRangePresets'
 import { getDateRange, withCorrectedRange } from '@providers/DateStoreProvider/internal/dateStoreUtils'
 import type { DateStore } from '@providers/DateStoreProvider/internal/types'
 
@@ -9,15 +9,21 @@ export type MakeDateStoreOptions = {
   initialDatePreset?: Exclude<DatePreset, DatePreset.Custom>
 }
 
-function resolveInitialRange({
+function getInitialRange({
   initialDatePreset = DatePreset.ThisMonth,
 }: MakeDateStoreOptions): DateRange {
-  const { startDate, endDate } = rangeForPreset(initialDatePreset)
+  // The store is built before any business context is available, so the initial
+  // range uses "now" and the fixed activation fallback. Selecting a preset later
+  // (via useDatePresets) recomputes with the real activation date.
+  const { startDate, endDate } = rangeForSelectablePreset(initialDatePreset, {
+    now: new Date(),
+    activationDate: ALL_TIME_MIN_DATE,
+  })
   return getDateRange({ mode: 'full', startDate, endDate })
 }
 
 export function buildDateStore(options: MakeDateStoreOptions = {}) {
-  const initialRange = resolveInitialRange(options)
+  const initialRange = getInitialRange(options)
 
   return createStore<DateStore>((set) => {
     const apply = (next: DateRange): DateRange => {
