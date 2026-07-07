@@ -1144,7 +1144,7 @@ export const trips = [
     "description": "Airport pickup",
     "createdAt": new Date("2021-09-11T14:11:46.541Z"),
     "updatedAt": new Date("2023-08-27T04:57:22.228Z"),
-    "deletedAt": new Date("2023-08-27T04:57:22.228Z")
+    "deletedAt": null
   },
   {
     "id": "00000019-001e-1000-b52e-0af800110222",
@@ -1289,7 +1289,7 @@ export const trips = [
     "description": "Client meeting",
     "createdAt": new Date("2021-05-12T00:22:34.633Z"),
     "updatedAt": new Date("2021-07-29T12:10:53.272Z"),
-    "deletedAt": new Date("2025-03-11T20:54:11.711Z")
+    "deletedAt": null
   },
   {
     "id": "00000004-c411-598c-bd6b-84addda621b3",

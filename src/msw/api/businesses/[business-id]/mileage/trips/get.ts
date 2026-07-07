@@ -29,7 +29,7 @@ export const get = createMockEndpoint<readonly Trip[], ReturnType<typeof toRespo
       const matchesPurpose = purpose == null || trip.purpose === (purpose as TripPurpose)
       const matchesYear = year == null || trip.tripDate.year === Number(year)
 
-      return matchesQuery && matchesVehicle && matchesPurpose && matchesYear
+      return trip.deletedAt == null && matchesQuery && matchesVehicle && matchesPurpose && matchesYear
     })
 
     return toResponse(filtered, request)

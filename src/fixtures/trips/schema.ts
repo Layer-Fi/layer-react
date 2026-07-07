@@ -58,11 +58,7 @@ const base = Schema.Struct({
     )),
   createdAt: withArbitrary(fields.createdAt, () => dateArbitrary),
   updatedAt: withArbitrary(fields.updatedAt, () => dateArbitrary),
-  deletedAt: withArbitrary(fields.deletedAt, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant(null), weight: 19 },
-      { arbitrary: dateArbitrary(fc), weight: 1 },
-    )),
+  deletedAt: withArbitrary(fields.deletedAt, () => fc => fc.constant(null)),
 })
 
 const baseArbitrary = Arbitrary.make(base)
@@ -71,11 +67,8 @@ export const TripArbitrarySchema = base.annotations({
   arbitrary: () => () =>
     baseArbitrary.map((trip): typeof base.Type => {
       const [createdAt, updatedAt] = [trip.createdAt, trip.updatedAt].sort((a, b) => a.getTime() - b.getTime())
-      const deletedAt = trip.deletedAt == null
-        ? trip.deletedAt
-        : [updatedAt, trip.deletedAt].sort((a, b) => a.getTime() - b.getTime()).at(-1) ?? null
 
-      return { ...trip, createdAt, updatedAt, deletedAt }
+      return { ...trip, createdAt, updatedAt }
     }),
 })
 

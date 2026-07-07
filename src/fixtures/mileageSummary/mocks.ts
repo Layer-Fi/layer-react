@@ -28,6 +28,8 @@ const round1 = (n: number) => Math.round(n * 10) / 10
 const yearsByYear = new Map<number, Map<number, Buckets>>()
 
 for (const trip of trips) {
+  if (trip.deletedAt != null) continue
+
   const year = trip.tripDate.year
   const month = trip.tripDate.month
   const bucketName = bucketNameFor(trip.purpose)
