@@ -5,7 +5,7 @@ import { createGenerator } from '@fixtures/utils/createGenerator'
 
 const generateTrips = createGenerator(schema, {
   uniqueBy: [trip => trip.externalId],
-  numRuns: 40,
+  numRuns: 60,
 })
 
 const YEAR = 2025
