@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { DatePreset, type DateRange } from '@utils/date/dateRange'
 import { useDatePresets } from '@hooks/utils/dates/useDatePresets'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
@@ -10,6 +11,7 @@ import { Label } from '@ui/Typography/Text'
 type DateSelectionOption = {
   label: string
   value: DatePreset
+  isDisabled?: boolean
 }
 
 type DateSelectionComboBoxProps = {
@@ -20,10 +22,17 @@ type DateSelectionComboBoxProps = {
 
 export const DateSelectionComboBox = ({ dateRange, setDateRange, showLabel = false }: DateSelectionComboBoxProps) => {
   const { t } = useTranslation()
+  const { business } = useLayerContext()
   const [lastPreset, setLastPreset] = useState<DatePreset | null>(null)
   const { rangeForSelectablePreset, findMatchingPresetForDateRange } = useDatePresets()
 
   const derivedPresetForDateRange = findMatchingPresetForDateRange(dateRange, lastPreset)
+
+  // "All Time" starts at the business activation date, which is unknown until
+  // the business resolves. Disable it while loading so a selection can't land
+  // on the fallback minimum (1970); once resolved it becomes selectable and
+  // computes the correct activation-based range.
+  const isBusinessLoading = business === undefined
 
   const allPresetOptions = useMemo<DateSelectionOption[]>(
     () => [
@@ -33,10 +42,10 @@ export const DateSelectionComboBox = ({ dateRange, setDateRange, showLabel = fal
       { value: DatePreset.LastQuarter, label: t('date:label.last_quarter', 'Last Quarter') },
       { value: DatePreset.ThisYear, label: t('date:label.this_year', 'This Year') },
       { value: DatePreset.LastYear, label: t('date:label.last_year', 'Last Year') },
-      { value: DatePreset.AllTime, label: t('date:label.all_time', 'All Time') },
+      { value: DatePreset.AllTime, label: t('date:label.all_time', 'All Time'), isDisabled: isBusinessLoading },
       { value: DatePreset.Custom, label: t('date:label.custom', 'Custom') },
     ],
-    [t],
+    [t, isBusinessLoading],
   )
 
   const selectablePresetOptions = allPresetOptions.filter(o => o.value !== DatePreset.Custom)

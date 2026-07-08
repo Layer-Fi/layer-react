@@ -9,7 +9,9 @@ import {
   type LayerThemeConfig,
 } from '@internal-types/layerContext'
 import { errorHandler, type LayerError } from '@utils/api/errorHandler'
+import { getActivationDate } from '@utils/business'
 import { buildColorsPalette } from '@utils/colors'
+import { clampToValidRange } from '@utils/date/dateRange'
 import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
 import { useBusiness } from '@hooks/api/businesses/[business-id]/useBusiness'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
@@ -100,15 +102,23 @@ export const BusinessProvider = ({
     eventCallbacks: {},
   })
 
+  const { data: businessData } = useBusiness({ businessId })
+
   const globalDateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
   const { setDateRange } = useGlobalDateRangeActions()
 
-  const dateRange = useMemo(() => ({
-    range: globalDateRange,
-    setRange: setDateRange,
-  }), [globalDateRange, setDateRange])
+  // Clamp the exposed range start up to the activation date so consumers of the
+  // public `dateRange` never see a pre-activation start (e.g. the "All Time"
+  // fallback minimum). No-ops until the business — and its activation date —
+  // has resolved.
+  const dateRange = useMemo(() => {
+    const activationDate = getActivationDate(businessData?.data)
+    const range = activationDate
+      ? clampToValidRange(globalDateRange, { now: new Date(), activationDate })
+      : globalDateRange
 
-  const { data: businessData } = useBusiness({ businessId })
+    return { range, setRange: setDateRange }
+  }, [globalDateRange, setDateRange, businessData])
 
   useEffect(() => {
     if (!businessData) return
