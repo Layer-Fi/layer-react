@@ -2,7 +2,7 @@ import { Schema } from 'effect'
 
 import { type TimeEntrySummary, TimeEntrySummarySchema } from '@schemas/timeTracking'
 
-import { listTimeEntries } from '@msw/api/businesses/[business-id]/time-tracking/time-entries/get'
+import { filterTimeEntries } from '@msw/api/businesses/[business-id]/time-tracking/time-entries/get'
 import { timeEntryStore } from '@msw/api/businesses/[business-id]/time-tracking/time-entries/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
@@ -21,6 +21,6 @@ export const get = createMockEndpoint<TimeEntrySummary, ReturnType<typeof toResp
 
     const recorded = timeEntryStore.all().filter(entry => entry.status !== 'ACTIVE')
 
-    return toResponse(buildTimeEntriesSummary(listTimeEntries(recorded, request)))
+    return toResponse(buildTimeEntriesSummary(filterTimeEntries(recorded, request)))
   },
 })
