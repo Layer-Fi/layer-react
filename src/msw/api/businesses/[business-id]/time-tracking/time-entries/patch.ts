@@ -20,7 +20,7 @@ export const patch = createMockEndpoint<TimeEntry, ReturnType<typeof toUpdateTim
   resolve: createStoreUpdateResolver({
     idParam: 'timeEntryId',
     store: timeEntryStore,
-    makeBase: id => makeTimeEntry({ id }),
+    makeBase: id => makeTimeEntry({ id, service: null }),
     fromRequest: timeEntryFromUpsertRequest,
     toResponse: toUpdateTimeEntryResponse,
   }),
