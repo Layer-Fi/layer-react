@@ -8,6 +8,7 @@ import { vehicles as vehiclePool } from '@fixtures/generated/vehicles.gen'
 import { dateArbitrary } from '@fixtures/utils/dateArbitrary'
 import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/idArbitrary'
+import { nullableConstantFrom } from '@fixtures/utils/nullableConstantFromArbitrary'
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
 
 const tripDateArbitrary = (fc: typeof FastCheck) =>
@@ -23,12 +24,6 @@ const distanceArbitrary = (fc: typeof FastCheck) =>
     { arbitrary: fc.integer({ min: 201, max: 500 }), weight: 3 },
     { arbitrary: fc.integer({ min: 501, max: 1000 }), weight: 1 },
   ).map(n => BigDecimal.unsafeFromString((n / 10).toFixed(1)))
-
-const nullableConstantFrom = (values: readonly string[]) => (fc: typeof FastCheck) =>
-  fc.oneof(
-    fc.constant(null),
-    fc.constantFrom(...values),
-  )
 
 const fields = TripSchema.fields
 
@@ -51,19 +46,10 @@ const base = Schema.Struct({
     )),
   startAddress: withArbitrary(fields.startAddress, () => nullableConstantFrom(addresses)),
   endAddress: withArbitrary(fields.endAddress, () => nullableConstantFrom(addresses)),
-  description: withArbitrary(fields.description, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant(null), weight: 3 },
-      {
-        arbitrary: fc.constantFrom(
-          'Client meeting',
-          'Site visit',
-          'Airport pickup',
-          'Supply run',
-        ),
-        weight: 1,
-      },
-    )),
+  description: withArbitrary(fields.description, () => nullableConstantFrom(
+    ['Client meeting', 'Site visit', 'Airport pickup', 'Supply run'],
+    { nullWeight: 3, valueWeight: 1 },
+  )),
   createdAt: withArbitrary(fields.createdAt, () => dateArbitrary),
   updatedAt: withArbitrary(fields.updatedAt, () => dateArbitrary),
   deletedAt: withArbitrary(fields.deletedAt, () => fc => fc.constant(null)),

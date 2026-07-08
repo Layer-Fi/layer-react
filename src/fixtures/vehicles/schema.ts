@@ -6,6 +6,7 @@ import { makeBusiness } from '@fixtures/business/mocks'
 import { dateArbitrary } from '@fixtures/utils/dateArbitrary'
 import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/idArbitrary'
+import { nullableConstantFrom } from '@fixtures/utils/nullableConstantFromArbitrary'
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
 
 const BUSINESS_ID = makeBusiness().id
@@ -48,18 +49,10 @@ const base = Schema.Struct({
       fc.constant(null),
       fc.stringOf(fc.constantFrom(...VIN_CHARS.split('')), { minLength: 17, maxLength: 17 }),
     )),
-  description: withArbitrary(fields.description, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant(null), weight: 4 },
-      {
-        arbitrary: fc.constantFrom(
-          'Primary delivery vehicle',
-          'Backup fleet vehicle',
-          'Leased for sales team',
-        ),
-        weight: 1,
-      },
-    )),
+  description: withArbitrary(fields.description, () => nullableConstantFrom(
+    ['Primary delivery vehicle', 'Backup fleet vehicle', 'Leased for sales team'],
+    { nullWeight: 4, valueWeight: 1 },
+  )),
   createdAt: withArbitrary(fields.createdAt, () => dateArbitrary),
   updatedAt: withArbitrary(fields.updatedAt, () => dateArbitrary),
   deletedAt: withArbitrary(fields.deletedAt, () => fc =>

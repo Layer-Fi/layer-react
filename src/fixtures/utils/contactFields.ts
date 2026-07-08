@@ -2,12 +2,7 @@ import { type FastCheck } from 'effect'
 
 import { companyNames } from '@fixtures/constants/personal/companyNames'
 import { individualNames } from '@fixtures/constants/personal/individualNames'
-
-const nullableConstantFrom = (values: readonly string[]) => (fc: typeof FastCheck) =>
-  fc.oneof(
-    fc.constant(null),
-    fc.constantFrom(...values),
-  )
+import { nullableConstantFrom } from '@fixtures/utils/nullableConstantFromArbitrary'
 
 const GENERATED_EMAIL = 'GENERATE'
 
@@ -47,11 +42,8 @@ export const phoneNumberArbitrary = (fc: typeof FastCheck) =>
 export const contactStatusArbitrary = (fc: typeof FastCheck) =>
   fc.constantFrom('ACTIVE', 'ARCHIVED')
 
-export const memoArbitrary = (options: readonly string[]) => (fc: typeof FastCheck) =>
-  fc.oneof(
-    { arbitrary: fc.constant(null), weight: 4 },
-    { arbitrary: fc.constantFrom(...options), weight: 1 },
-  )
+export const memoArbitrary = (options: readonly string[]) =>
+  nullableConstantFrom(options, { nullWeight: 4, valueWeight: 1 })
 
 export const applyContactInvariants = <
   T extends { individualName: string | null, companyName: string | null, email: string | null },
