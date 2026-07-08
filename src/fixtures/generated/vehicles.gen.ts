@@ -78,7 +78,7 @@ export const vehicles = [
     "createdAt": new Date("2024-05-16T12:31:06.146Z"),
     "updatedAt": new Date("2025-06-27T09:26:33.846Z"),
     "deletedAt": null,
-    "archivedAt": null,
+    "archivedAt": new Date("2025-07-27T09:26:33.846Z"),
     "isPrimary": false,
     "isEligibleForDeletion": true
   }
