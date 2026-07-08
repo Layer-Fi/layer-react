@@ -6,6 +6,7 @@ import { type TimeEntry, type TimeEntryService } from '@schemas/timeTracking'
 import { catalogServiceStore } from '@msw/api/businesses/[business-id]/catalog/services/store'
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'
 import { readRequestJson } from '@msw/utils/request'
+import { resolveEmbedded } from '@msw/utils/resolveEmbedded'
 
 export const toTimeEntryService = (service: CatalogService): TimeEntryService => ({
   id: service.id,
@@ -16,20 +17,20 @@ export const toTimeEntryService = (service: CatalogService): TimeEntryService =>
 export const timeEntryFromUpsertRequest = async (request: Request, base: TimeEntry): Promise<TimeEntry> => {
   const body = await readRequestJson(request) as Record<string, unknown>
 
-  const serviceId = body.service_id as string | undefined
-  const storedService = serviceId != null ? catalogServiceStore.findById(serviceId) : undefined
-  const service: TimeEntryService | null = serviceId == null
-    ? base.service ?? null
-    : storedService != null
-      ? toTimeEntryService(storedService)
-      : { id: serviceId, name: null, billableRatePerHourAmount: null }
+  const service = resolveEmbedded(
+    body.service_id as string | null | undefined,
+    base.service ?? null,
+    (id): TimeEntryService => {
+      const stored = catalogServiceStore.findById(id)
+      return stored != null ? toTimeEntryService(stored) : { id, name: null, billableRatePerHourAmount: null }
+    },
+  )
 
-  const customerId = body.customer_id as string | null | undefined
-  const customer = customerId === undefined
-    ? base.customer
-    : customerId == null
-      ? null
-      : customerStore.findById(customerId) ?? base.customer
+  const customer = resolveEmbedded(
+    body.customer_id as string | null | undefined,
+    base.customer ?? null,
+    id => customerStore.findById(id) ?? base.customer ?? null,
+  )
 
   return {
     ...base,

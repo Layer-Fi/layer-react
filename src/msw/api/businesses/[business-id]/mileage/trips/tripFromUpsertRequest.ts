@@ -4,6 +4,7 @@ import { type Trip, TripPurpose, UpsertTripSchema } from '@schemas/trip'
 
 import { vehicleStore } from '@msw/api/businesses/[business-id]/mileage/vehicles/store'
 import { readRequestJson } from '@msw/utils/request'
+import { resolveEmbedded } from '@msw/utils/resolveEmbedded'
 
 const decodeUpsertTrip = Schema.decodeUnknownSync(UpsertTripSchema)
 
@@ -17,9 +18,11 @@ export const tripFromUpsertRequest = async (request: Request, base: Trip): Promi
 
   return {
     ...base,
-    vehicle: body.vehicleId == null
-      ? null
-      : vehicleStore.findById(body.vehicleId) ?? base.vehicle,
+    vehicle: resolveEmbedded(
+      body.vehicleId ?? null,
+      base.vehicle,
+      id => vehicleStore.findById(id) ?? base.vehicle,
+    ),
     tripDate: body.tripDate,
     distance: body.distance,
     purpose: toTripPurpose(body.purpose),
