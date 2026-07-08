@@ -2,6 +2,7 @@ import { type FastCheck } from 'effect'
 
 import { companyNames } from '@fixtures/constants/personal/companyNames'
 import { individualNames } from '@fixtures/constants/personal/individualNames'
+import { nullable } from '@fixtures/utils/arbitrary/nullable'
 import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
 
 const GENERATED_EMAIL = 'GENERATE'
@@ -24,20 +25,15 @@ const emailForName = (individualName: string | null, companyName: string | null)
 export const individualNameArbitrary = nullableConstantFrom(individualNames)
 export const companyNameArbitrary = nullableConstantFrom(companyNames)
 
-export const generatedEmailArbitrary = (fc: typeof FastCheck) =>
-  fc.oneof(
-    fc.constant(null),
-    fc.constant(GENERATED_EMAIL),
-  )
+export const generatedEmailArbitrary = nullableConstantFrom([GENERATED_EMAIL])
 
-export const phoneNumberArbitrary = (fc: typeof FastCheck) =>
-  fc.oneof(
-    fc.constant(null),
-    fc.tuple(
-      fc.integer({ min: 200, max: 999 }),
-      fc.integer({ min: 0, max: 99 }),
-    ).map(([areaCode, line]) => `+1${areaCode}55501${String(line).padStart(2, '0')}`),
-  )
+const phoneNumberValueArbitrary = (fc: typeof FastCheck) =>
+  fc.tuple(
+    fc.integer({ min: 200, max: 999 }),
+    fc.integer({ min: 0, max: 99 }),
+  ).map(([areaCode, line]) => `+1${areaCode}55501${String(line).padStart(2, '0')}`)
+
+export const phoneNumberArbitrary = nullable(phoneNumberValueArbitrary)
 
 export const contactStatusArbitrary = (fc: typeof FastCheck) =>
   fc.constantFrom('ACTIVE', 'ARCHIVED')

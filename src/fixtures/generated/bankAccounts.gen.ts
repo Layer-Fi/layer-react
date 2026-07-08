@@ -16,7 +16,7 @@ export const bankAccounts = [
         "id": "35975309-4e2e-4773-a358-6ece4da4d075",
         "externalAccountSource": "PLAID",
         "externalAccountName": "American Express Business Savings",
-        "mask": "5196",
+        "mask": "4717",
         "institution": {
           "name": "American Express",
           "logo": null
@@ -30,10 +30,10 @@ export const bankAccounts = [
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 51200
+      "balance": 1001500
     },
-    "currentLedgerBalance": 2108900,
-    "mask": "5196",
+    "currentLedgerBalance": 51200,
+    "mask": "4717",
     "notifications": []
   },
   {
@@ -50,7 +50,7 @@ export const bankAccounts = [
         "id": "d046606e-ffe6-5fff-bfff-fff500000004",
         "externalAccountSource": "PLAID",
         "externalAccountName": "American Express Business Savings",
-        "mask": "9991",
+        "mask": "3709",
         "institution": {
           "name": "American Express",
           "logo": null
@@ -64,10 +64,10 @@ export const bankAccounts = [
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 2499000
+      "balance": 1784600
     },
-    "currentLedgerBalance": 2500000,
-    "mask": "9991",
+    "currentLedgerBalance": 2498600,
+    "mask": "3709",
     "notifications": []
   },
   {
@@ -84,7 +84,7 @@ export const bankAccounts = [
         "id": "43eb3c88-9683-434c-a57a-3668100b93e1",
         "externalAccountSource": "PLAID",
         "externalAccountName": "Capital One Business Credit Card",
-        "mask": "0011",
+        "mask": "0004",
         "institution": {
           "name": "Capital One",
           "logo": null
@@ -98,10 +98,10 @@ export const bankAccounts = [
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 2498900
+      "balance": 2498800
     },
-    "currentLedgerBalance": 50000,
-    "mask": "0011",
+    "currentLedgerBalance": 2205500,
+    "mask": "0004",
     "notifications": []
   },
   {
@@ -132,9 +132,9 @@ export const bankAccounts = [
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 2097800
+      "balance": 2061500
     },
-    "currentLedgerBalance": 1723400,
+    "currentLedgerBalance": 50000,
     "mask": "6068",
     "notifications": []
   },
@@ -166,9 +166,9 @@ export const bankAccounts = [
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 829100
+      "balance": 50600
     },
-    "currentLedgerBalance": 1034400,
+    "currentLedgerBalance": 51300,
     "mask": "9994",
     "notifications": []
   }

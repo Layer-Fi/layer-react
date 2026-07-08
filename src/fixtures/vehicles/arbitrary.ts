@@ -1,5 +1,6 @@
 import { type FastCheck } from 'effect'
 
+import { nullable } from '@fixtures/utils/arbitrary/nullable'
 import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
 import { vehicleDescriptions, vehicleMakesAndModels } from '@fixtures/vehicles/constants'
 
@@ -14,11 +15,10 @@ export const licensePlateArbitrary = (fc: typeof FastCheck) =>
     fc.integer({ min: 1000, max: 9999 }),
   ).map(([letters, digits]) => `${letters}-${digits}`)
 
-export const vinArbitrary = (fc: typeof FastCheck) =>
-  fc.oneof(
-    fc.constant(null),
-    fc.stringOf(fc.constantFrom(...VIN_CHARS.split('')), { minLength: 17, maxLength: 17 }),
-  )
+const vinValueArbitrary = (fc: typeof FastCheck) =>
+  fc.stringOf(fc.constantFrom(...VIN_CHARS.split('')), { minLength: 17, maxLength: 17 })
+
+export const vinArbitrary = nullable(vinValueArbitrary)
 
 export const isEligibleForDeletionArbitrary = (fc: typeof FastCheck) =>
   fc.oneof(

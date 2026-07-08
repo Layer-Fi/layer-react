@@ -14,10 +14,9 @@ export const externalAccountConnectionSchema = Schema.Struct({
     fc.constant('PLAID')),
   externalAccountName: withArbitrary(fields.externalAccountName, () => fc =>
     fc.constantFrom(...accountNameKinds)),
-  mask: withArbitrary(fields.mask, () => fc =>
-    fc.option(maskArbitrary(fc), { nil: null })),
+  mask: withArbitrary(fields.mask, () => maskArbitrary),
   institution: withArbitrary(fields.institution, () => fc =>
-    fc.option(fc.constantFrom(...institutions), { nil: null })),
+    fc.constantFrom(...institutions)),
   notifications: withArbitrary(fields.notifications, () => fc =>
     fc.constant([])),
   connectionNeedsRepairAsOf: withArbitrary(fields.connectionNeedsRepairAsOf, () => fc =>
