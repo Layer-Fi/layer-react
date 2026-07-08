@@ -18,11 +18,9 @@ const decodeStartTracker = Schema.decodeUnknownSync(StartTrackerSchema)
 
 const toResponse = (entry: TimeEntry) => apiData(encodeTimeEntry(entry))
 
-const FIXTURE_YEAR = 2025
-
 const today = () => {
   const now = new Date()
-  return new CalendarDate(FIXTURE_YEAR, now.getMonth() + 1, now.getDate())
+  return new CalendarDate(now.getFullYear(), now.getMonth() + 1, now.getDate())
 }
 
 export const post = createMockEndpoint<TimeEntry, ReturnType<typeof toResponse>>({

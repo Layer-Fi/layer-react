@@ -18,7 +18,7 @@ export const post = createMockEndpoint<{ id: string }, { data: { id: string } }>
   resolve: async ({ override, request }) => {
     if (override) return apiData(override)
 
-    decodeStopTracker(await readRequestJson(request))
+    const body = decodeStopTracker(await readRequestJson(request))
     const active = findActiveTimeEntry()
     const now = new Date()
 
@@ -31,6 +31,7 @@ export const post = createMockEndpoint<{ id: string }, { data: { id: string } }>
     timeEntryStore.save({
       ...active,
       status: 'RECORDED',
+      date: body.date,
       durationMinutes,
       stoppedAt: now,
       updatedAt: now,
