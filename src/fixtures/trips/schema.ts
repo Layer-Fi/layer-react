@@ -1,22 +1,16 @@
-import { CalendarDate } from '@internationalized/date'
 import { Arbitrary, BigDecimal, type FastCheck, Schema } from 'effect'
 
 import { TripPurpose, TripSchema } from '@schemas/trip'
 
+import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { addresses } from '@fixtures/constants/personal/addresses'
 import { vehicles as vehiclePool } from '@fixtures/generated/vehicles.gen'
+import { calendarDateArbitrary } from '@fixtures/utils/calendarDateArbitrary'
 import { dateArbitrary } from '@fixtures/utils/dateArbitrary'
 import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/idArbitrary'
 import { nullableConstantFrom } from '@fixtures/utils/nullableConstantFromArbitrary'
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
-
-const tripDateArbitrary = (fc: typeof FastCheck) =>
-  fc.date({
-    min: new Date('2025-01-01T00:00:00Z'),
-    max: new Date('2025-12-31T23:59:59Z'),
-    noInvalidDate: true,
-  }).map(date => new CalendarDate(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate()))
 
 const distanceArbitrary = (fc: typeof FastCheck) =>
   fc.oneof(
@@ -37,7 +31,7 @@ const base = Schema.Struct({
     )),
   externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
   distance: withArbitrary(fields.distance, () => distanceArbitrary),
-  tripDate: withArbitrary(fields.tripDate, () => tripDateArbitrary),
+  tripDate: withArbitrary(fields.tripDate, () => calendarDateArbitrary(FIXTURE_YEAR)),
   purpose: withArbitrary(fields.purpose, () => fc =>
     fc.oneof(
       { arbitrary: fc.constant(TripPurpose.Business), weight: 6 },

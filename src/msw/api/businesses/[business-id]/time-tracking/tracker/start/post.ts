@@ -8,7 +8,7 @@ import { timeEntryFromUpsertRequest } from '@msw/api/businesses/[business-id]/ti
 import { findActiveTimeEntry } from '@msw/api/businesses/[business-id]/time-tracking/tracker/activeTimeEntry'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { makeBusiness } from '@fixtures/business/mocks'
+import { makeTimeEntry } from '@fixtures/timeEntries/mocks'
 
 const encodeTimeEntry = Schema.encodeSync(TimeEntrySchema)
 
@@ -21,25 +21,19 @@ const today = () => {
 
 const newActiveEntry = (): TimeEntry => {
   const now = new Date()
-  return {
+
+  return makeTimeEntry({
     id: crypto.randomUUID(),
-    businessId: makeBusiness().id,
     externalId: null,
     date: today(),
     durationMinutes: 0,
-    billable: true,
     description: null,
     memo: null,
-    metadata: null,
-    customer: null,
     service: null,
-    invoiceLineItem: null,
     status: 'ACTIVE',
-    stoppedAt: null,
     createdAt: now,
     updatedAt: now,
-    deletedAt: null,
-  }
+  })
 }
 
 export const post = createMockEndpoint<TimeEntry, ReturnType<typeof toResponse>>({

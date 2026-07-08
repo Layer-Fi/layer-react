@@ -4,8 +4,6 @@ import { unstable_MileageTracking } from '@views/MileageTracking'
 
 import { PinnedFixtureYear } from '@test-utils/PinnedFixtureYear'
 
-const FIXTURE_YEAR = 2025
-
 const meta: Meta<typeof unstable_MileageTracking> = {
   title: 'Views/MileageTracking',
   component: unstable_MileageTracking,
@@ -20,7 +18,7 @@ const meta: Meta<typeof unstable_MileageTracking> = {
   },
   decorators: [
     Story => (
-      <PinnedFixtureYear year={FIXTURE_YEAR}>
+      <PinnedFixtureYear>
         <Story />
       </PinnedFixtureYear>
     ),

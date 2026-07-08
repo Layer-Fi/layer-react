@@ -1,4 +1,5 @@
 import { schema } from '@fixtures/catalogServices/schema'
+import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { createGenerator } from '@fixtures/utils/createGenerator'
 
 const generateCatalogServices = createGenerator(schema, {
@@ -14,7 +15,7 @@ export const generator: typeof generateCatalogServices = (overrides) => {
   return services.map((service, index) => ({
     ...service,
     archivedAt: index >= services.length - ARCHIVED_COUNT
-      ? new Date('2025-06-01T00:00:00.000Z')
+      ? new Date(Date.UTC(FIXTURE_YEAR, 5, 1))
       : null,
   }))
 }

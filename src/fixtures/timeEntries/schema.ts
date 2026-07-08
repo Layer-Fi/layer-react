@@ -3,9 +3,11 @@ import { Arbitrary, Schema } from 'effect'
 import { TimeEntrySchema } from '@schemas/timeTracking'
 
 import { makeBusiness } from '@fixtures/business/mocks'
+import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { catalogServices as servicePool } from '@fixtures/generated/catalogServices.gen'
 import { customers as customerPool } from '@fixtures/generated/customers.gen'
 import { timeEntryDescriptions, timeEntryMemos } from '@fixtures/timeEntries/constants'
+import { toTimeEntryService } from '@fixtures/timeEntries/toTimeEntryService'
 import { calendarDateArbitrary } from '@fixtures/utils/calendarDateArbitrary'
 import { dateArbitrary } from '@fixtures/utils/dateArbitrary'
 import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
@@ -14,17 +16,12 @@ import { nullableConstantFrom } from '@fixtures/utils/nullableConstantFromArbitr
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
 
 const BUSINESS_ID = makeBusiness().id
-const FIXTURE_YEAR = 2025
 
 const COMMON_DURATIONS_MINUTES = [15, 30, 45, 60, 90, 120, 180, 240, 300, 480]
 
 const timeEntryServices = servicePool
   .filter(service => service.archivedAt == null)
-  .map(service => ({
-    id: service.id,
-    name: service.name,
-    billableRatePerHourAmount: service.billableRatePerHourAmount,
-  }))
+  .map(toTimeEntryService)
 
 const fields = TimeEntrySchema.fields
 

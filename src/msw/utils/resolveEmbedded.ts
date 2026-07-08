@@ -1,12 +1,12 @@
 type ResolveEmbeddedArgs<T> = {
   requestedId: string | null | undefined
-  fallback: T
+  fallback: T | null
   lookup: (id: string) => T | undefined
 }
 
-export const resolveEmbedded = <T>({ requestedId, fallback, lookup }: ResolveEmbeddedArgs<T>): T =>
+export const resolveEmbedded = <T>({ requestedId, fallback, lookup }: ResolveEmbeddedArgs<T>): T | null =>
   requestedId === undefined
     ? fallback
     : requestedId === null
-      ? (null as T)
+      ? null
       : lookup(requestedId) ?? fallback

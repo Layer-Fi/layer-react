@@ -4,8 +4,6 @@ import { TimeTracking, type TimeTrackingProps } from '@views/TimeTracking'
 
 import { PinnedFixtureYear } from '@test-utils/PinnedFixtureYear'
 
-const FIXTURE_YEAR = 2025
-
 type TimeTrackingStoryArgs = {
   showTitle: boolean
   title: string
@@ -57,7 +55,7 @@ const meta: Meta<TimeTrackingStoryArgs> = {
   },
   decorators: [
     Story => (
-      <PinnedFixtureYear year={FIXTURE_YEAR}>
+      <PinnedFixtureYear>
         <Story />
       </PinnedFixtureYear>
     ),

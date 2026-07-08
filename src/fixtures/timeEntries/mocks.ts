@@ -4,9 +4,8 @@ import { type TimeEntry } from '@schemas/timeTracking'
 
 import { makeBusiness } from '@fixtures/business/mocks'
 import { makeCatalogService } from '@fixtures/catalogServices/mocks'
+import { toTimeEntryService } from '@fixtures/timeEntries/toTimeEntryService'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
-
-const baseService = makeCatalogService()
 
 const baseTimeEntry: TimeEntry = {
   id: '00000000-0000-4000-8000-000000000701',
@@ -19,11 +18,7 @@ const baseTimeEntry: TimeEntry = {
   memo: 'Billed at standard rate',
   metadata: null,
   customer: null,
-  service: {
-    id: baseService.id,
-    name: baseService.name,
-    billableRatePerHourAmount: baseService.billableRatePerHourAmount,
-  },
+  service: toTimeEntryService(makeCatalogService()),
   invoiceLineItem: null,
   status: 'RECORDED',
   stoppedAt: null,

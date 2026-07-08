@@ -2,7 +2,9 @@ import { type PropsWithChildren, useLayoutEffect, useState } from 'react'
 
 import { useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 
-export const PinnedFixtureYear = ({ year, children }: PropsWithChildren<{ year: number }>) => {
+import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
+
+export const PinnedFixtureYear = ({ year = FIXTURE_YEAR, children }: PropsWithChildren<{ year?: number }>) => {
   const { setYear } = useGlobalDateRangeActions()
   const [isPinned, setIsPinned] = useState(false)
 
