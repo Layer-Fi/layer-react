@@ -3,6 +3,7 @@ import { Arbitrary, Schema } from 'effect'
 import { CustomerSchema } from '@schemas/customer'
 
 import { addresses } from '@fixtures/constants/personal/addresses'
+import { customerMemos } from '@fixtures/constants/personal/customerMemos'
 import {
   applyContactInvariants,
   companyNameArbitrary,
@@ -31,11 +32,7 @@ const base = Schema.Struct({
       fc.constantFrom(...addresses),
     )),
   status: withArbitrary(fields.status, () => contactStatusArbitrary),
-  memo: withArbitrary(fields.memo, () => memoArbitrary([
-    'VIP client',
-    'Follow up next quarter',
-    'Referred by partner',
-  ])),
+  memo: withArbitrary(fields.memo, () => memoArbitrary(customerMemos)),
 })
 
 const baseArbitrary = Arbitrary.make(base)
