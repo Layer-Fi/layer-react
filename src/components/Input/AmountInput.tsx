@@ -38,14 +38,14 @@ export const AmountInput = ({
   )
 
   const currencyInputClassName = classNames(
-    'Layer__input',
-    isInvalid ? 'Layer__input--error' : '',
+    'Layer__AmountInput',
+    isInvalid ? 'Layer__AmountInput--Error' : '',
     className,
   )
 
   return (
     <Tooltip isDisabled={!isInvalid || !errorMessage}>
-      <TooltipTrigger className='Layer__input-tooltip'>
+      <TooltipTrigger className='Layer__AmountInput__Tooltip'>
         <CurrencyInput
           {...props}
           {...currencyFormatConfig}

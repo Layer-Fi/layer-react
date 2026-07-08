@@ -1,4 +1,4 @@
-.Layer__input {
+.Layer__AmountInput {
   box-sizing: border-box;
   position: relative;
   max-height: 36px;
@@ -11,7 +11,7 @@
   font-family: var(--font-family);
   color: var(--color-base-1000);
 
-  &.Layer__input--error {
+  &.Layer__AmountInput--Error {
     border: 1px solid var(--color-danger);
   }
 
@@ -30,7 +30,7 @@
   }
 }
 
-.Layer__input-tooltip {
+.Layer__AmountInput__Tooltip {
   position: relative;
   flex: 0;
 }
@@ -39,7 +39,7 @@
   .Layer__view,
   .Layer__component,
   .Layer__Portal {
-    .Layer__input {
+    .Layer__AmountInput {
       height: 36px;
       font-size: 16px;
     }
