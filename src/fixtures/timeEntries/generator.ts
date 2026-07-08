@@ -9,10 +9,17 @@ const generateTimeEntries = createGenerator(schema, {
 
 const YEAR = 2025
 
+const idForIndex = (index: number) =>
+  `00000000-0000-4000-8000-${String(700000000000 + index).padStart(12, '0')}`
+
 export const generator: typeof generateTimeEntries = (overrides) => {
   const entries = generateTimeEntries(overrides)
 
   return entries
-    .map((entry, index) => ({ ...entry, date: spreadDateAcrossYear(YEAR, index, entries.length) }))
+    .map((entry, index) => ({
+      ...entry,
+      id: idForIndex(index),
+      date: spreadDateAcrossYear(YEAR, index, entries.length),
+    }))
     .sort((a, b) => b.date.compare(a.date))
 }

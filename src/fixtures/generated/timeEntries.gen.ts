@@ -4,7 +4,7 @@ import { CalendarDate } from '@internationalized/date'
 
 export const timeEntries = [
   {
-    "id": "00000001-0016-1000-8c4d-ed9d62e73622",
+    "id": "00000000-0000-4000-8000-700000000059",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 12, 25),
@@ -38,7 +38,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "43a33cd2-5be2-248d-b874-e77d00000008",
+    "id": "00000000-0000-4000-8000-700000000058",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_65603",
     "date": new CalendarDate(2025, 12, 19),
@@ -61,7 +61,7 @@ export const timeEntries = [
     "status": "RECORDED"
   },
   {
-    "id": "ffffffe4-ffff-5fff-bfff-fff9bd77ada2",
+    "id": "00000000-0000-4000-8000-700000000057",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_10008",
     "date": new CalendarDate(2025, 12, 13),
@@ -95,7 +95,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "ff242e11-4e63-39fa-8000-0014e9c8fd27",
+    "id": "00000000-0000-4000-8000-700000000056",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 12, 7),
@@ -129,7 +129,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "78686a77-c5f6-39df-8000-0011d0a45799",
+    "id": "00000000-0000-4000-8000-700000000055",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_99996",
     "date": new CalendarDate(2025, 12, 1),
@@ -163,7 +163,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "1c3b781d-d839-2133-9bb0-494cf2957cfb",
+    "id": "00000000-0000-4000-8000-700000000054",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_35209",
     "date": new CalendarDate(2025, 11, 25),
@@ -197,7 +197,7 @@ export const timeEntries = [
     "status": "RECORDED"
   },
   {
-    "id": "c191d948-2e88-2bea-bc87-53b5ffffffff",
+    "id": "00000000-0000-4000-8000-700000000053",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 11, 19),
@@ -231,7 +231,7 @@ export const timeEntries = [
     "status": "RECORDED"
   },
   {
-    "id": "9b2b24b8-ffe4-5fff-851e-641af2217a9a",
+    "id": "00000000-0000-4000-8000-700000000052",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 11, 13),
@@ -254,7 +254,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "ffffffe2-339b-3250-bfff-fff0fffffffe",
+    "id": "00000000-0000-4000-8000-700000000051",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_19923",
     "date": new CalendarDate(2025, 11, 7),
@@ -277,7 +277,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "796e1c1e-7600-1506-bdd0-9d0300000013",
+    "id": "00000000-0000-4000-8000-700000000050",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 11, 1),
@@ -311,7 +311,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "fffffff9-1cb0-189f-9b88-107b447b4a74",
+    "id": "00000000-0000-4000-8000-700000000049",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_64476",
     "date": new CalendarDate(2025, 10, 26),
@@ -345,7 +345,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "00000004-0012-1000-a340-755976c1470a",
+    "id": "00000000-0000-4000-8000-700000000048",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 10, 20),
@@ -379,7 +379,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "506ce240-12da-151e-a0f4-28070000000b",
+    "id": "00000000-0000-4000-8000-700000000047",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_10003",
     "date": new CalendarDate(2025, 10, 13),
@@ -402,7 +402,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "97e6e538-2b1b-47f0-bdb0-77adafb68a6d",
+    "id": "00000000-0000-4000-8000-700000000046",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_93814",
     "date": new CalendarDate(2025, 10, 7),
@@ -436,7 +436,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "c4615b0e-464a-221b-8000-000100000017",
+    "id": "00000000-0000-4000-8000-700000000045",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 10, 1),
@@ -459,7 +459,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "fffffff3-66b2-203c-b8f8-2b13c339d8d1",
+    "id": "00000000-0000-4000-8000-700000000044",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 9, 25),
@@ -493,7 +493,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "461d14a7-0010-1000-8000-000bc9e6c898",
+    "id": "00000000-0000-4000-8000-700000000043",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 9, 19),
@@ -527,7 +527,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "0000001b-bbae-5d06-aba8-b2f431a606e4",
+    "id": "00000000-0000-4000-8000-700000000042",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 9, 13),
@@ -561,7 +561,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "b84c60d2-5b70-5783-92c5-6f5b0000000f",
+    "id": "00000000-0000-4000-8000-700000000041",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 9, 7),
@@ -584,7 +584,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "00000014-0369-5026-8849-cf3fff621306",
+    "id": "00000000-0000-4000-8000-700000000040",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_10000",
     "date": new CalendarDate(2025, 9, 1),
@@ -618,7 +618,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "0000001e-0014-1000-8e23-366a001efe3b",
+    "id": "00000000-0000-4000-8000-700000000039",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_10004",
     "date": new CalendarDate(2025, 8, 26),
@@ -652,7 +652,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "ce51c7cd-ce76-4bf0-bfff-fff24e0b14cc",
+    "id": "00000000-0000-4000-8000-700000000038",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_34940",
     "date": new CalendarDate(2025, 8, 20),
@@ -686,7 +686,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "00000012-fff5-5fff-92a1-372d9b2ac457",
+    "id": "00000000-0000-4000-8000-700000000037",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 8, 14),
@@ -720,7 +720,7 @@ export const timeEntries = [
     "status": "RECORDED"
   },
   {
-    "id": "75be1d6e-2fc9-4057-8000-001b0000000e",
+    "id": "00000000-0000-4000-8000-700000000036",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 8, 8),
@@ -743,7 +743,7 @@ export const timeEntries = [
     "status": "RECORDED"
   },
   {
-    "id": "979a9272-0002-1000-8000-001d85091fca",
+    "id": "00000000-0000-4000-8000-700000000035",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 8, 1),
@@ -777,7 +777,7 @@ export const timeEntries = [
     "status": "RECORDED"
   },
   {
-    "id": "00000001-7540-2ba6-8000-000edc5a9467",
+    "id": "00000000-0000-4000-8000-700000000034",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_97852",
     "date": new CalendarDate(2025, 7, 26),
@@ -811,7 +811,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "4789a28c-0007-1000-8000-00097bc0d8c0",
+    "id": "00000000-0000-4000-8000-700000000033",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 7, 20),
@@ -845,7 +845,7 @@ export const timeEntries = [
     "status": "RECORDED"
   },
   {
-    "id": "00000018-000d-1000-8000-001102b5888c",
+    "id": "00000000-0000-4000-8000-700000000032",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_99994",
     "date": new CalendarDate(2025, 7, 14),
@@ -879,7 +879,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "3bd10eb1-e4bb-57e9-bfff-fffad0e7d2b4",
+    "id": "00000000-0000-4000-8000-700000000031",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_80425",
     "date": new CalendarDate(2025, 7, 8),
@@ -913,7 +913,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "0000000a-0013-1000-8000-00194bd71984",
+    "id": "00000000-0000-4000-8000-700000000030",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_99995",
     "date": new CalendarDate(2025, 7, 2),
@@ -947,7 +947,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "00000001-e668-2a1c-addb-44b3f1ec38a2",
+    "id": "00000000-0000-4000-8000-700000000029",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_93556",
     "date": new CalendarDate(2025, 6, 26),
@@ -981,7 +981,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "f1e5930d-4631-1fae-bfff-fff18ba530da",
+    "id": "00000000-0000-4000-8000-700000000028",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 6, 20),
@@ -1015,7 +1015,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "f5bf72f0-dbb2-517e-bfff-fffad4a7997a",
+    "id": "00000000-0000-4000-8000-700000000027",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_52218",
     "date": new CalendarDate(2025, 6, 14),
@@ -1038,7 +1038,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "c8a7ad11-22bd-483c-b782-598abb55a3af",
+    "id": "00000000-0000-4000-8000-700000000026",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 6, 8),
@@ -1072,7 +1072,7 @@ export const timeEntries = [
     "status": "RECORDED"
   },
   {
-    "id": "2c2de7de-0001-1000-bfff-fffedf5a4878",
+    "id": "00000000-0000-4000-8000-700000000025",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_10015",
     "date": new CalendarDate(2025, 6, 2),
@@ -1106,7 +1106,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "adab7373-0004-1000-9dce-e1d30000000a",
+    "id": "00000000-0000-4000-8000-700000000024",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 5, 27),
@@ -1129,7 +1129,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "ffffffee-ffed-5fff-b93b-00fafffffff1",
+    "id": "00000000-0000-4000-8000-700000000023",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 5, 20),
@@ -1163,7 +1163,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "967e44de-f7c8-12d0-94ee-333376ef84a7",
+    "id": "00000000-0000-4000-8000-700000000022",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_10012",
     "date": new CalendarDate(2025, 5, 14),
@@ -1197,7 +1197,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "d25bc2f7-0c4d-21ef-baab-a9b04c9131b8",
+    "id": "00000000-0000-4000-8000-700000000021",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_41074",
     "date": new CalendarDate(2025, 5, 8),
@@ -1231,7 +1231,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "3a8b4c83-001b-1000-bfff-ffec480dd7c8",
+    "id": "00000000-0000-4000-8000-700000000020",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_94063",
     "date": new CalendarDate(2025, 5, 2),
@@ -1265,7 +1265,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "fffffff5-0dd6-29e1-afc8-a60a788d396e",
+    "id": "00000000-0000-4000-8000-700000000019",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_99987",
     "date": new CalendarDate(2025, 4, 26),
@@ -1288,7 +1288,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "37b8912e-e7da-4c76-9302-508f0000000b",
+    "id": "00000000-0000-4000-8000-700000000018",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_99984",
     "date": new CalendarDate(2025, 4, 20),
@@ -1322,7 +1322,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "aa89ec8e-2820-4e09-abc3-9a9e1cbad2e8",
+    "id": "00000000-0000-4000-8000-700000000017",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_34632",
     "date": new CalendarDate(2025, 4, 14),
@@ -1345,7 +1345,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "17759b57-c367-5825-a0f1-14f2ffffffe3",
+    "id": "00000000-0000-4000-8000-700000000016",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_32580",
     "date": new CalendarDate(2025, 4, 8),
@@ -1379,7 +1379,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "77b8aa42-3b43-3fce-8c81-8709ffffffe6",
+    "id": "00000000-0000-4000-8000-700000000015",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 4, 2),
@@ -1413,7 +1413,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "a812c19f-44e9-2207-b5f0-99ca3582dfaf",
+    "id": "00000000-0000-4000-8000-700000000014",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_84835",
     "date": new CalendarDate(2025, 3, 27),
@@ -1447,7 +1447,7 @@ export const timeEntries = [
     "status": "RECORDED"
   },
   {
-    "id": "0000000b-fff1-5fff-acb3-e1eebe810ba2",
+    "id": "00000000-0000-4000-8000-700000000013",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_83494",
     "date": new CalendarDate(2025, 3, 21),
@@ -1470,7 +1470,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "f3568f9a-5bb0-4840-a3c2-c553d01d04ce",
+    "id": "00000000-0000-4000-8000-700000000012",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 3, 15),
@@ -1504,7 +1504,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "00000004-c411-598c-bd6b-84addda621b3",
+    "id": "00000000-0000-4000-8000-700000000011",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_83372",
     "date": new CalendarDate(2025, 3, 8),
@@ -1538,7 +1538,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "94fab460-02f5-5056-99a0-aa7e4fdc036f",
+    "id": "00000000-0000-4000-8000-700000000010",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_10002",
     "date": new CalendarDate(2025, 3, 2),
@@ -1572,7 +1572,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
+    "id": "00000000-0000-4000-8000-700000000009",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 2, 24),
@@ -1595,7 +1595,7 @@ export const timeEntries = [
     "status": "RECORDED"
   },
   {
-    "id": "fffffffd-ffe8-5fff-8000-0018468f601b",
+    "id": "00000000-0000-4000-8000-700000000008",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_61449",
     "date": new CalendarDate(2025, 2, 18),
@@ -1629,7 +1629,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
+    "id": "00000000-0000-4000-8000-700000000007",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 2, 12),
@@ -1663,7 +1663,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "00000016-571f-3e02-8000-0002c39e6c27",
+    "id": "00000000-0000-4000-8000-700000000006",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_99986",
     "date": new CalendarDate(2025, 2, 6),
@@ -1697,7 +1697,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
+    "id": "00000000-0000-4000-8000-700000000005",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 1, 31),
@@ -1731,7 +1731,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "bac79d2d-000a-1000-91f7-448e2fd822b5",
+    "id": "00000000-0000-4000-8000-700000000004",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_10007",
     "date": new CalendarDate(2025, 1, 25),
@@ -1754,7 +1754,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
+    "id": "00000000-0000-4000-8000-700000000003",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "date": new CalendarDate(2025, 1, 19),
@@ -1777,7 +1777,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
+    "id": "00000000-0000-4000-8000-700000000002",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_10005",
     "date": new CalendarDate(2025, 1, 13),
@@ -1811,7 +1811,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
+    "id": "00000000-0000-4000-8000-700000000001",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_10006",
     "date": new CalendarDate(2025, 1, 7),
@@ -1834,7 +1834,7 @@ export const timeEntries = [
     "deletedAt": null
   },
   {
-    "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
+    "id": "00000000-0000-4000-8000-700000000000",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": "ext_51329",
     "date": new CalendarDate(2025, 1, 1),
