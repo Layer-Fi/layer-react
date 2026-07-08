@@ -98,7 +98,7 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
     linkMode,
     setLinkMode,
     onSuccess: refetchAccountsAndTransactions,
-    onConnectionSuccess: handlePlaidConnectionSuccess,
+    onAddConnectionSuccess: handlePlaidConnectionSuccess,
   })
 
   const { isFailed: isHostedLinkError } = usePollPlaidHostedLinkStatus({

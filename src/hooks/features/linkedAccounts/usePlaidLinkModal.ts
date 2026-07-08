@@ -18,7 +18,7 @@ type UsePlaidLinkModalOptions = {
   linkMode: LinkMode
   /** Called after the connection set changes, so the caller can refresh accounts. */
   onSuccess: () => Awaitable<void>
-  onConnectionSuccess?: () => Awaitable<void>
+  onAddConnectionSuccess?: () => Awaitable<void>
   /** Updates the active link mode; reset to 'add' when a flow completes or the modal exits. */
   setLinkMode: (mode: LinkMode) => void
 }
@@ -32,7 +32,7 @@ export function usePlaidLinkModal({
   linkToken,
   linkMode,
   onSuccess,
-  onConnectionSuccess,
+  onAddConnectionSuccess,
   setLinkMode,
 }: UsePlaidLinkModalOptions) {
   const { usePlaidSandbox } = useEnvironment()
@@ -47,7 +47,7 @@ export function usePlaidLinkModal({
   const { trigger: triggerUpdateConnectionStatus } = useUpdateConnectionStatus()
 
   const [isLinking, setIsLinking] = useState(false)
-  const handleConnectionSuccess = onConnectionSuccess ?? onSuccess
+  const handleAddConnectionSuccess = onAddConnectionSuccess ?? onSuccess
 
   /**
    * When the user has finished entering credentials, send the resulting
@@ -65,7 +65,7 @@ export function usePlaidLinkModal({
       })
         .then(
           // Only refresh once the link has actually persisted.
-          () => handleConnectionSuccess(),
+          () => handleAddConnectionSuccess(),
           () => addToast({
             content: t('linkedAccounts:error.connect_account', 'We couldn’t connect your account. Please try again.'),
             type: 'error',
@@ -76,7 +76,7 @@ export function usePlaidLinkModal({
           resetAccountConfirmation()
         })
     },
-    [triggerExchangePlaidPublicToken, handleConnectionSuccess, addToast, t, preloadAccountConfirmation, resetAccountConfirmation],
+    [triggerExchangePlaidPublicToken, handleAddConnectionSuccess, addToast, t, preloadAccountConfirmation, resetAccountConfirmation],
   )
 
   const { open: plaidLinkStart, ready: plaidLinkReady } = usePlaidLink({
