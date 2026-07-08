@@ -15,7 +15,7 @@ const toResponse = (entries: readonly TimeEntry[], request: Request) =>
 
 const isBlank = (value: string | null) => value == null || value === ''
 
-const filterTimeEntries = createListFilter<TimeEntry>({
+export const filterTimeEntries = createListFilter<TimeEntry>({
   customer_id: matchesValue(entry => entry.customer?.id),
   service_id: matchesValue(entry => entry.service?.id),
   status: matchesValue(entry => entry.status),

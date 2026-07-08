@@ -7,6 +7,7 @@ import { catalogServiceStore } from '@msw/api/businesses/[business-id]/catalog/s
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'
 import { timeEntryStore } from '@msw/api/businesses/[business-id]/time-tracking/time-entries/store'
 import { toTimeEntryService } from '@msw/api/businesses/[business-id]/time-tracking/time-entries/timeEntryFromUpsertRequest'
+import { findActiveTimeEntry } from '@msw/api/businesses/[business-id]/time-tracking/tracker/activeTimeEntry'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
@@ -29,6 +30,9 @@ export const post = createMockEndpoint<TimeEntry, ReturnType<typeof toResponse>>
   path: '*/v1/businesses/:businessId/time-tracking/tracker/start',
   resolve: async ({ override, request }) => {
     if (override) return toResponse(override)
+
+    const existing = findActiveTimeEntry()
+    if (existing != null) return toResponse(existing)
 
     const body = decodeStartTracker(await readRequestJson(request))
     const now = new Date()
