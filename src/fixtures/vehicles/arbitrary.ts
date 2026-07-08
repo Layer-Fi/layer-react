@@ -1,7 +1,8 @@
 import { type FastCheck } from 'effect'
 
 import { dateArbitrary } from '@fixtures/utils/arbitrary/date'
-import { vehicleMakesAndModels } from '@fixtures/vehicles/constants'
+import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
+import { vehicleDescriptions, vehicleMakesAndModels } from '@fixtures/vehicles/constants'
 
 const VIN_CHARS = 'ABCDEFGHJKLMNPRSTUVWXYZ0123456789'
 
@@ -43,3 +44,8 @@ export const isEligibleForDeletionArbitrary = (fc: typeof FastCheck) =>
     { arbitrary: fc.constant(true), weight: 4 },
     { arbitrary: fc.constant(false), weight: 1 },
   )
+
+export const vehicleDescriptionArbitrary = nullableConstantFrom(
+  vehicleDescriptions,
+  { nullWeight: 4, valueWeight: 1 },
+)

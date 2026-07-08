@@ -5,7 +5,6 @@ import { VehicleSchema } from '@schemas/vehicle'
 import { makeBusiness } from '@fixtures/business/mocks'
 import { dateArbitrary } from '@fixtures/utils/arbitrary/date'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
-import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
 import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
 import {
   isEligibleForDeletionArbitrary,
@@ -14,9 +13,9 @@ import {
   makeAndModelArbitrary,
   vehicleArchivedAtArbitrary,
   vehicleDeletedAtArbitrary,
+  vehicleDescriptionArbitrary,
   vinArbitrary,
 } from '@fixtures/vehicles/arbitrary'
-import { vehicleDescriptions } from '@fixtures/vehicles/constants'
 
 const BUSINESS_ID = makeBusiness().id
 
@@ -31,10 +30,7 @@ const base = Schema.Struct({
   year: withArbitrary(fields.year, () => fc => fc.integer({ min: 2015, max: 2024 })),
   licensePlate: withArbitrary(fields.licensePlate, () => licensePlateArbitrary),
   vin: withArbitrary(fields.vin, () => vinArbitrary),
-  description: withArbitrary(fields.description, () => nullableConstantFrom(
-    vehicleDescriptions,
-    { nullWeight: 4, valueWeight: 1 },
-  )),
+  description: withArbitrary(fields.description, () => vehicleDescriptionArbitrary),
   createdAt: withArbitrary(fields.createdAt, () => dateArbitrary),
   updatedAt: withArbitrary(fields.updatedAt, () => dateArbitrary),
   deletedAt: withArbitrary(fields.deletedAt, () => vehicleDeletedAtArbitrary),

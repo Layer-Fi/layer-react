@@ -2,8 +2,9 @@ import { type FastCheck } from 'effect'
 
 import { catalogServices as servicePool } from '@fixtures/generated/catalogServices.gen'
 import { customers as customerPool } from '@fixtures/generated/customers.gen'
-import { commonDurationsMinutes } from '@fixtures/timeEntries/constants'
+import { commonDurationsMinutes, timeEntryDescriptions } from '@fixtures/timeEntries/constants'
 import { toTimeEntryService } from '@fixtures/timeEntries/toTimeEntryService'
+import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
 
 const timeEntryServices = servicePool
   .filter(service => service.archivedAt == null)
@@ -26,3 +27,8 @@ export const timeEntryCustomerArbitrary = (fc: typeof FastCheck) =>
 
 export const timeEntryServiceArbitrary = (fc: typeof FastCheck) =>
   fc.constantFrom(...timeEntryServices)
+
+export const timeEntryDescriptionArbitrary = nullableConstantFrom(
+  timeEntryDescriptions,
+  { nullWeight: 1, valueWeight: 3 },
+)

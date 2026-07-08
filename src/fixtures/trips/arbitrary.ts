@@ -3,6 +3,8 @@ import { BigDecimal, type FastCheck } from 'effect'
 import { TripPurpose } from '@schemas/trip'
 
 import { vehicles as vehiclePool } from '@fixtures/generated/vehicles.gen'
+import { tripDescriptions } from '@fixtures/trips/constants'
+import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
 
 export const distanceArbitrary = (fc: typeof FastCheck) =>
   fc.oneof(
@@ -23,3 +25,8 @@ export const tripPurposeArbitrary = (fc: typeof FastCheck) =>
     { arbitrary: fc.constant(TripPurpose.Personal), weight: 2 },
     { arbitrary: fc.constant(TripPurpose.Unreviewed), weight: 1 },
   )
+
+export const tripDescriptionArbitrary = nullableConstantFrom(
+  tripDescriptions,
+  { nullWeight: 3, valueWeight: 1 },
+)
