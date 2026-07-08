@@ -1,7 +1,7 @@
 import { CalendarDate } from '@internationalized/date'
 import { Schema } from 'effect'
 
-import { StartTrackerSchema, type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking'
+import { StartTrackerSchema, type TimeEntry, TimeEntrySchema, type TimeEntryService } from '@schemas/timeTracking'
 
 import { catalogServiceStore } from '@msw/api/businesses/[business-id]/catalog/services/store'
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'
@@ -11,6 +11,7 @@ import { findActiveTimeEntry } from '@msw/api/businesses/[business-id]/time-trac
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
+import { resolveEmbedded } from '@msw/utils/resolveEmbedded'
 import { makeBusiness } from '@fixtures/business/mocks'
 
 const encodeTimeEntry = Schema.encodeSync(TimeEntrySchema)
@@ -35,9 +36,6 @@ export const post = createMockEndpoint<TimeEntry, ReturnType<typeof toResponse>>
     const body = decodeStartTracker(await readRequestJson(request))
     const now = new Date()
 
-    const service = catalogServiceStore.findById(body.serviceId)
-    const customer = body.customerId != null ? customerStore.findById(body.customerId) ?? null : null
-
     const entry: TimeEntry = {
       id: crypto.randomUUID(),
       businessId: makeBusiness().id,
@@ -48,8 +46,19 @@ export const post = createMockEndpoint<TimeEntry, ReturnType<typeof toResponse>>
       description: body.description ?? null,
       memo: body.memo ?? null,
       metadata: body.metadata ?? null,
-      customer,
-      service: service == null ? null : toTimeEntryService(service),
+      customer: resolveEmbedded({
+        requestedId: body.customerId ?? null,
+        fallback: null,
+        lookup: id => customerStore.findById(id),
+      }),
+      service: resolveEmbedded({
+        requestedId: body.serviceId,
+        fallback: null,
+        lookup: (id): TimeEntryService => {
+          const stored = catalogServiceStore.findById(id)
+          return stored != null ? toTimeEntryService(stored) : { id, name: null, billableRatePerHourAmount: null }
+        },
+      }),
       invoiceLineItem: null,
       status: 'ACTIVE',
       stoppedAt: null,
