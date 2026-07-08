@@ -1,12 +1,10 @@
-import { type FastCheck, Schema } from 'effect'
+import { Schema } from 'effect'
 
 import { ExternalAccountConnectionSchema } from '@schemas/bankAccounts/externalAccountConnection'
 
 import { accountNameKinds, institutions } from '@fixtures/bankAccounts/constants'
+import { maskArbitrary } from '@fixtures/utils/arbitrary/mask'
 import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
-
-const maskArbitrary = (fc: typeof FastCheck) =>
-  fc.integer({ min: 0, max: 9999 }).map(n => String(n).padStart(4, '0'))
 
 const fields = ExternalAccountConnectionSchema.fields
 
