@@ -22,7 +22,7 @@ import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
 import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
 import { View } from '@components/View/View'
 import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
-import { type TagOption } from '@views/ProjectProfitability/ProjectProfitability'
+import { type TagOption } from '@internal-types/tags'
 
 import './bookkeepingOverview.scss'
 
@@ -81,6 +81,7 @@ export interface BookkeepingOverviewProps {
 
   chartColorsList?: string[]
   onClickReconnectAccounts?: () => void
+  /** @deprecated The Project Profitability view has been removed. */
   tagFilter?: TagOption
   /**
    * @deprecated Use `stringOverrides.title` instead

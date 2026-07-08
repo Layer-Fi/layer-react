@@ -8,6 +8,8 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { getCurrencyFormatConfig } from '@components/Input/amountInputUtils'
 
+import './amountInput.scss'
+
 export interface AmountInputProps extends Omit<CurrencyInputProps, 'onChange' | 'placeholder'> {
   onChange?: (value?: string) => void
   isInvalid?: boolean

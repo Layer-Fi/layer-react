@@ -19,7 +19,7 @@ import {
 } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
 import { View } from '@components/View/View'
-import { type TagOption } from '@views/ProjectProfitability/ProjectProfitability'
+import { type TagOption } from '@internal-types/tags'
 
 import './accountingOverview.scss'
 
@@ -44,6 +44,7 @@ export interface AccountingOverviewProps {
   middleBanner?: ReactNode
   chartColorsList?: string[]
   stringOverrides?: AccountingOverviewStringOverrides
+  /** @deprecated The Project Profitability view has been removed. */
   tagFilter?: TagOption
   slotProps?: {
     profitAndLoss?: {

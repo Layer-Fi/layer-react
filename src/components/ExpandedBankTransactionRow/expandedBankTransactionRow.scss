@@ -72,11 +72,6 @@
   }
 
   &:not(.Layer__expanded-bank-transaction-row__content-panel--active) {
-    .Layer__select .Layer__select__control {
-      overflow: hidden;
-      max-width: 0;
-    }
-
     .Layer__expanded-bank-transaction-row__table-cell--split-entry {
       overflow: hidden;
       max-width: 0;

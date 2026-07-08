@@ -1,7 +1,6 @@
 .Layer__component,
 .Layer__Portal,
 .Layer__view,
-.Layer__select__menu-portal,
 .Layer__UI__Tooltip,
 .Layer__toasts-container,
 .Layer__drawer,
@@ -134,7 +133,6 @@
   --input-border-radius: var(--border-radius-2xs);
   --input-font-size: var(--text-md);
   --input-border-color: var(--color-base-300);
-  --input-placeholder-color: var(--color-base-500);
   --label-color: var(--color-base-700);
   --btn-font-size: var(--text-md);
   --btn-border-radius: var(--border-radius-2xs);
@@ -206,7 +204,6 @@
   .Layer__component,
   .Layer__Portal,
   .Layer__view,
-  .Layer__select__menu-portal,
   .Layer__UI__Tooltip,
   .Layer__toasts-container,
   .Layer__drawer,

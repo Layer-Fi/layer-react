@@ -52,7 +52,6 @@ export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWith
 export { BookkeepingOverview } from './views/BookkeepingOverview/BookkeepingOverview'
 export { GeneralLedgerView } from './views/GeneralLedger/GeneralLedger'
 export { unstable_MileageTracking } from './views/MileageTracking'
-export { ProjectProfitabilityView } from './views/ProjectProfitability/ProjectProfitability'
 export { Reports } from './views/Reports/Reports'
 export { SolopreneurOverview } from './views/SolopreneurOverview/SolopreneurOverview'
 export { TaxEstimates } from './views/TaxEstimates/TaxEstimates'
