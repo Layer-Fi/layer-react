@@ -15,6 +15,9 @@ const toResponse = (entries: readonly TimeEntry[], request: Request) =>
 
 const isBlank = (value: string | null) => value == null || value === ''
 
+const byNewestFirst = (a: TimeEntry, b: TimeEntry) =>
+  b.date.compare(a.date) || b.createdAt.getTime() - a.createdAt.getTime()
+
 export const filterTimeEntries = createListFilter<TimeEntry>({
   customer_id: matchesValue(entry => entry.customer?.id),
   service_id: matchesValue(entry => entry.service?.id),
@@ -33,6 +36,6 @@ export const get = createMockEndpoint<readonly TimeEntry[], ReturnType<typeof to
     const statusFilter = new URL(request.url).searchParams.get('status')
     const visible = statusFilter ? entries : entries.filter(entry => entry.status !== 'ACTIVE')
 
-    return toResponse(filterTimeEntries(visible, request), request)
+    return toResponse([...filterTimeEntries(visible, request)].sort(byNewestFirst), request)
   },
 })
