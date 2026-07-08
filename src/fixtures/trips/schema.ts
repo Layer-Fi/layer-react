@@ -76,8 +76,9 @@ export const TripArbitrarySchema = base.annotations({
     baseArbitrary.map((trip): typeof base.Type => {
       const [createdAt, updatedAt] = [trip.createdAt, trip.updatedAt].sort((a, b) => a.getTime() - b.getTime())
 
+      const addressPool: readonly string[] = addresses
       const endAddress = trip.startAddress != null && trip.startAddress === trip.endAddress
-        ? addresses[(addresses.indexOf(trip.startAddress) + 1) % addresses.length]
+        ? addressPool[(addressPool.indexOf(trip.startAddress) + 1) % addressPool.length]
         : trip.endAddress
 
       return { ...trip, createdAt, updatedAt, endAddress }

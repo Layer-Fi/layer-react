@@ -21,7 +21,7 @@ export const tripFromUpsertRequest = async (request: Request, base: Trip): Promi
     vehicle: resolveEmbedded({
       requestedId: body.vehicleId ?? null,
       fallback: base.vehicle,
-      lookup: id => vehicleStore.findById(id) ?? base.vehicle,
+      lookup: id => vehicleStore.findById(id),
     }),
     tripDate: body.tripDate,
     distance: body.distance,

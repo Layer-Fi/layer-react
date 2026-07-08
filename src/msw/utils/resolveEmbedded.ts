@@ -1,7 +1,7 @@
 type ResolveEmbeddedArgs<T> = {
   requestedId: string | null | undefined
   fallback: T
-  lookup: (id: string) => T
+  lookup: (id: string) => T | undefined
 }
 
 export const resolveEmbedded = <T>({ requestedId, fallback, lookup }: ResolveEmbeddedArgs<T>): T =>
@@ -9,4 +9,4 @@ export const resolveEmbedded = <T>({ requestedId, fallback, lookup }: ResolveEmb
     ? fallback
     : requestedId === null
       ? (null as T)
-      : lookup(requestedId)
+      : lookup(requestedId) ?? fallback

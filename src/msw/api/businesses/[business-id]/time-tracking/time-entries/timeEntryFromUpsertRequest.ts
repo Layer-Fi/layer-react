@@ -29,7 +29,7 @@ export const timeEntryFromUpsertRequest = async (request: Request, base: TimeEnt
   const customer = resolveEmbedded({
     requestedId: body.customer_id as string | null | undefined,
     fallback: base.customer ?? null,
-    lookup: id => customerStore.findById(id) ?? base.customer ?? null,
+    lookup: id => customerStore.findById(id),
   })
 
   return {
