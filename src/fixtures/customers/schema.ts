@@ -14,12 +14,14 @@ import {
   phoneNumberArbitrary,
 } from '@fixtures/utils/contactFields'
 import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
+import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/idArbitrary'
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
 
 const { _local, ...fields } = CustomerSchema.fields
 
 const base = Schema.Struct({
   ...fields,
+  id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.customer)),
   externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
   individualName: withArbitrary(fields.individualName, () => individualNameArbitrary),
   companyName: withArbitrary(fields.companyName, () => companyNameArbitrary),

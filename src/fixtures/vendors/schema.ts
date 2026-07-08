@@ -12,6 +12,7 @@ import {
   phoneNumberArbitrary,
 } from '@fixtures/utils/contactFields'
 import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
+import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/idArbitrary'
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
 import { vendorMemos } from '@fixtures/vendors/constants'
 
@@ -19,6 +20,7 @@ const { _local, ...fields } = VendorSchema.fields
 
 const base = Schema.Struct({
   ...fields,
+  id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.vendor)),
   externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
   individualName: withArbitrary(fields.individualName, () => individualNameArbitrary),
   companyName: withArbitrary(fields.companyName, () => companyNameArbitrary),

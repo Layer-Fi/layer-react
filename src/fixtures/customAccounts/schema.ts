@@ -9,6 +9,7 @@ import {
 import { accountNames } from '@fixtures/constants/bank/accountNames'
 import { institutionNames } from '@fixtures/constants/bank/institutionNames'
 import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
+import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/idArbitrary'
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
 
 const isoTimestampArbitrary = (fc: typeof FastCheck) =>
@@ -24,6 +25,7 @@ const fields = CustomAccountSchema.fields
 
 const base = Schema.Struct({
   ...fields,
+  id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.customAccount)),
   externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
   mask: withArbitrary(fields.mask, () => fc =>
     fc.integer({ min: 0, max: 9999 }).map(n => String(n).padStart(4, '0'))),

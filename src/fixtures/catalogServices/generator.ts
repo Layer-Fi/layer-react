@@ -2,7 +2,7 @@ import { schema } from '@fixtures/catalogServices/schema'
 import { createGenerator } from '@fixtures/utils/createGenerator'
 
 const generateCatalogServices = createGenerator(schema, {
-  uniqueBy: [service => service.name],
+  uniqueBy: [service => service.id, service => service.name],
   numRuns: 10,
 })
 

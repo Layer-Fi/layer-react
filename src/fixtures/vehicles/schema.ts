@@ -5,6 +5,7 @@ import { VehicleSchema } from '@schemas/vehicle'
 import { makeBusiness } from '@fixtures/business/mocks'
 import { dateArbitrary } from '@fixtures/utils/dateArbitrary'
 import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
+import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/idArbitrary'
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
 
 const BUSINESS_ID = makeBusiness().id
@@ -15,6 +16,7 @@ const fields = VehicleSchema.fields
 
 const base = Schema.Struct({
   ...fields,
+  id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.vehicle)),
   businessId: withArbitrary(fields.businessId, () => fc => fc.constant(BUSINESS_ID)),
   externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
   makeAndModel: withArbitrary(fields.makeAndModel, () => fc =>

@@ -3,6 +3,7 @@ import { schema } from '@fixtures/vehicles/schema'
 
 const generateVehicles = createGenerator(schema, {
   uniqueBy: [
+    vehicle => vehicle.id,
     vehicle => vehicle.externalId,
     vehicle => vehicle.vin,
   ],

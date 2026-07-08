@@ -7,6 +7,7 @@ import { addresses } from '@fixtures/constants/personal/addresses'
 import { vehicles as vehiclePool } from '@fixtures/generated/vehicles.gen'
 import { dateArbitrary } from '@fixtures/utils/dateArbitrary'
 import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
+import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/idArbitrary'
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
 
 const tripDateArbitrary = (fc: typeof FastCheck) =>
@@ -29,6 +30,7 @@ const fields = TripSchema.fields
 
 const base = Schema.Struct({
   ...fields,
+  id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.trip)),
   vehicle: withArbitrary(fields.vehicle, () => fc =>
     fc.oneof(
       { arbitrary: fc.constant(null), weight: 1 },

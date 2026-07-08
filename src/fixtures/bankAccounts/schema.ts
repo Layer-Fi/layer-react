@@ -8,6 +8,7 @@ import { AccountInstitutionSchema } from '@schemas/common/accountInstitution'
 
 import { accountNameKinds, getAccountName, institutions } from '@fixtures/bankAccounts/constants'
 import { externalAccountConnectionSchema } from '@fixtures/bankAccounts/externalAccountConnectionSchema'
+import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/idArbitrary'
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
 
 const maskArbitrary = (fc: typeof FastCheck) =>
@@ -23,6 +24,7 @@ const fields = BankAccountSchema.fields
 
 const base = Schema.Struct({
   ...fields,
+  id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.bankAccount)),
   accountName: Schema.String.annotations({
     arbitrary: () => fc => fc.constantFrom(...accountNameKinds),
   }),

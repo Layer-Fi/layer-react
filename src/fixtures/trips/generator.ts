@@ -3,7 +3,7 @@ import { createGenerator } from '@fixtures/utils/createGenerator'
 import { spreadDateAcrossYear } from '@fixtures/utils/spreadDateAcrossYear'
 
 const generateTrips = createGenerator(schema, {
-  uniqueBy: [trip => trip.externalId],
+  uniqueBy: [trip => trip.id, trip => trip.externalId],
   numRuns: 60,
 })
 

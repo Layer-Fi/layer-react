@@ -3,110 +3,8 @@ import type { schema } from '@fixtures/bankAccounts/schema'
 
 export const bankAccounts = [
   {
-    "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
-    "accountName": "Chase Business Credit Card",
-    "institution": {
-      "name": "Chase",
-      "logo": null
-    },
-    "notifyWhenDisconnected": true,
-    "isDisconnected": false,
-    "externalAccounts": [
-      {
-        "id": "cc614286-ced7-2ce0-bfff-fff700000012",
-        "externalAccountSource": "PLAID",
-        "externalAccountName": "Chase Business Credit Card",
-        "mask": "0011",
-        "institution": {
-          "name": "Chase",
-          "logo": null
-        },
-        "notifications": [],
-        "connectionNeedsRepairAsOf": null,
-        "reconnectWithNewCredentials": false,
-        "connectionExternalId": "connection_960057",
-        "userCreated": false,
-        "isSyncing": false
-      }
-    ],
-    "latestBalanceTimestamp": {
-      "balance": 720071
-    },
-    "currentLedgerBalance": 2098846,
-    "mask": "0011",
-    "notifications": []
-  },
-  {
-    "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
-    "accountName": "Bank of America Business Checking",
-    "institution": {
-      "name": "Bank of America",
-      "logo": null
-    },
-    "notifyWhenDisconnected": true,
-    "isDisconnected": false,
-    "externalAccounts": [
-      {
-        "id": "258ed292-b683-2e20-acb2-17b16db9f668",
-        "externalAccountSource": "PLAID",
-        "externalAccountName": "Bank of America Business Checking",
-        "mask": "9988",
-        "institution": {
-          "name": "Bank of America",
-          "logo": null
-        },
-        "notifications": [],
-        "connectionNeedsRepairAsOf": null,
-        "reconnectWithNewCredentials": false,
-        "connectionExternalId": "connection_946494",
-        "userCreated": false,
-        "isSyncing": false
-      }
-    ],
-    "latestBalanceTimestamp": {
-      "balance": 2499979
-    },
-    "currentLedgerBalance": 621708,
-    "mask": "9988",
-    "notifications": []
-  },
-  {
-    "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
-    "accountName": "Capital One Business Checking",
-    "institution": {
-      "name": "Capital One",
-      "logo": null
-    },
-    "notifyWhenDisconnected": true,
-    "isDisconnected": false,
-    "externalAccounts": [
-      {
-        "id": "00000007-e048-5c5a-8000-001affffffe7",
-        "externalAccountSource": "PLAID",
-        "externalAccountName": "Capital One Business Checking",
-        "mask": "6594",
-        "institution": {
-          "name": "Capital One",
-          "logo": null
-        },
-        "notifications": [],
-        "connectionNeedsRepairAsOf": null,
-        "reconnectWithNewCredentials": false,
-        "connectionExternalId": "connection_490648",
-        "userCreated": false,
-        "isSyncing": false
-      }
-    ],
-    "latestBalanceTimestamp": {
-      "balance": 50009
-    },
-    "currentLedgerBalance": 2499991,
-    "mask": "6594",
-    "notifications": []
-  },
-  {
-    "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
-    "accountName": "American Express Business Credit Card",
+    "id": "00000001-e14c-4f0d-8f51-ecbd67728f21",
+    "accountName": "American Express Business Savings",
     "institution": {
       "name": "American Express",
       "logo": null
@@ -115,10 +13,10 @@ export const bankAccounts = [
     "isDisconnected": false,
     "externalAccounts": [
       {
-        "id": "e4be75dc-6192-4861-8c1c-3b9076d1014a",
+        "id": "35975309-4e2e-4773-a358-6ece4da4d075",
         "externalAccountSource": "PLAID",
-        "externalAccountName": "American Express Business Credit Card",
-        "mask": "0011",
+        "externalAccountName": "American Express Business Savings",
+        "mask": "9994",
         "institution": {
           "name": "American Express",
           "logo": null
@@ -126,33 +24,67 @@ export const bankAccounts = [
         "notifications": [],
         "connectionNeedsRepairAsOf": null,
         "reconnectWithNewCredentials": false,
-        "connectionExternalId": "connection_331608",
+        "connectionExternalId": "connection_249894",
         "userCreated": false,
         "isSyncing": false
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 1397906
+      "balance": 827294
     },
-    "currentLedgerBalance": 865255,
-    "mask": "0011",
+    "currentLedgerBalance": 1316001,
+    "mask": "9994",
     "notifications": []
   },
   {
-    "id": "bac79d2d-000a-1000-91f7-448e2fd822b5",
+    "id": "00000001-4b46-4097-85f0-896231804c64",
+    "accountName": "American Express Business Savings",
+    "institution": {
+      "name": "American Express",
+      "logo": null
+    },
+    "notifyWhenDisconnected": false,
+    "isDisconnected": false,
+    "externalAccounts": [
+      {
+        "id": "d046606e-ffe6-5fff-bfff-fff500000004",
+        "externalAccountSource": "PLAID",
+        "externalAccountName": "American Express Business Savings",
+        "mask": "7447",
+        "institution": {
+          "name": "American Express",
+          "logo": null
+        },
+        "notifications": [],
+        "connectionNeedsRepairAsOf": null,
+        "reconnectWithNewCredentials": false,
+        "connectionExternalId": "connection_811600",
+        "userCreated": false,
+        "isSyncing": false
+      }
+    ],
+    "latestBalanceTimestamp": {
+      "balance": 2499979
+    },
+    "currentLedgerBalance": 2499986,
+    "mask": "7447",
+    "notifications": []
+  },
+  {
+    "id": "00000001-045f-4a99-834f-2248873864e4",
     "accountName": "Capital One Business Credit Card",
     "institution": {
       "name": "Capital One",
       "logo": null
     },
-    "notifyWhenDisconnected": true,
+    "notifyWhenDisconnected": false,
     "isDisconnected": false,
     "externalAccounts": [
       {
-        "id": "00000008-ca1b-3862-8000-001500000014",
+        "id": "43eb3c88-9683-434c-a57a-3668100b93e1",
         "externalAccountSource": "PLAID",
         "externalAccountName": "Capital One Business Credit Card",
-        "mask": "0004",
+        "mask": "0003",
         "institution": {
           "name": "Capital One",
           "logo": null
@@ -160,16 +92,84 @@ export const bankAccounts = [
         "notifications": [],
         "connectionNeedsRepairAsOf": null,
         "reconnectWithNewCredentials": false,
-        "connectionExternalId": "connection_559212",
+        "connectionExternalId": "connection_444820",
         "userCreated": false,
         "isSyncing": false
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 394675
+      "balance": 1155299
     },
-    "currentLedgerBalance": 50017,
-    "mask": "0004",
+    "currentLedgerBalance": 50014,
+    "mask": "0003",
+    "notifications": []
+  },
+  {
+    "id": "00000001-a0b6-452b-8812-70c20a3e49d9",
+    "accountName": "Capital One Business Credit Card",
+    "institution": {
+      "name": "Capital One",
+      "logo": null
+    },
+    "notifyWhenDisconnected": false,
+    "isDisconnected": false,
+    "externalAccounts": [
+      {
+        "id": "5bc417dd-7d76-16e9-b88b-382e8bcdeda9",
+        "externalAccountSource": "PLAID",
+        "externalAccountName": "Capital One Business Credit Card",
+        "mask": "6390",
+        "institution": {
+          "name": "Capital One",
+          "logo": null
+        },
+        "notifications": [],
+        "connectionNeedsRepairAsOf": null,
+        "reconnectWithNewCredentials": false,
+        "connectionExternalId": "connection_383465",
+        "userCreated": false,
+        "isSyncing": false
+      }
+    ],
+    "latestBalanceTimestamp": {
+      "balance": 2467538
+    },
+    "currentLedgerBalance": 1055626,
+    "mask": "6390",
+    "notifications": []
+  },
+  {
+    "id": "00000001-d6fb-4ef5-8c75-46e387b4abad",
+    "accountName": "Chase Business Checking",
+    "institution": {
+      "name": "Chase",
+      "logo": null
+    },
+    "notifyWhenDisconnected": false,
+    "isDisconnected": false,
+    "externalAccounts": [
+      {
+        "id": "9453594d-305f-50c5-92af-87ca851fd344",
+        "externalAccountSource": "PLAID",
+        "externalAccountName": "Chase Business Checking",
+        "mask": "0007",
+        "institution": {
+          "name": "Chase",
+          "logo": null
+        },
+        "notifications": [],
+        "connectionNeedsRepairAsOf": null,
+        "reconnectWithNewCredentials": false,
+        "connectionExternalId": "connection_669682",
+        "userCreated": false,
+        "isSyncing": false
+      }
+    ],
+    "latestBalanceTimestamp": {
+      "balance": 328920
+    },
+    "currentLedgerBalance": 2499995,
+    "mask": "0007",
     "notifications": []
   }
 ] as (typeof schema.Type)[]

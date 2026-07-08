@@ -3,63 +3,63 @@ import type { schema } from '@fixtures/catalogServices/schema'
 
 export const catalogServices = [
   {
-    "id": "fbf92f4e-3364-3bff-bfff-ffff00000011",
-    "name": "Grant Writing",
-    "billableRatePerHourAmount": 11000,
-    "archivedAt": null
-  },
-  {
-    "id": "fffffffb-fffd-5fff-bfff-fffb1b2d8ac5",
-    "name": "Video Editing",
-    "billableRatePerHourAmount": 4500,
-    "archivedAt": null
-  },
-  {
-    "id": "b9058f40-fff5-5fff-bfff-fff1fad5642b",
-    "name": "Bookkeeping",
-    "billableRatePerHourAmount": 4000,
-    "archivedAt": null
-  },
-  {
-    "id": "a495d2ca-000a-1000-bfff-ffeac1844351",
-    "name": "Project Management",
-    "billableRatePerHourAmount": 23500,
-    "archivedAt": null
-  },
-  {
-    "id": "e4dfedff-25fd-2b38-a9b9-1edc50e403a3",
-    "name": "Consulting",
-    "billableRatePerHourAmount": 13000,
-    "archivedAt": null
-  },
-  {
-    "id": "00000016-571f-3e02-8000-0002c39e6c27",
-    "name": "Personal Training",
-    "billableRatePerHourAmount": 28500,
-    "archivedAt": null
-  },
-  {
-    "id": "ffffffed-ffea-5fff-9245-1cb5fffffff6",
+    "id": "00000007-e14c-4f0d-8f51-ecbd67728f21",
     "name": "Marketing Strategy",
+    "billableRatePerHourAmount": 11500,
+    "archivedAt": null
+  },
+  {
+    "id": "00000007-4b46-4097-85f0-896231804c64",
+    "name": "Graphic Design",
+    "billableRatePerHourAmount": 3500,
+    "archivedAt": null
+  },
+  {
+    "id": "00000007-045f-4a99-834f-2248873864e4",
+    "name": "Software Architecture",
+    "billableRatePerHourAmount": 10500,
+    "archivedAt": null
+  },
+  {
+    "id": "00000007-a0b6-452b-8812-70c20a3e49d9",
+    "name": "Project Management",
     "billableRatePerHourAmount": 5000,
     "archivedAt": null
   },
   {
-    "id": "91887e5c-c6c4-5cca-9651-141de9b60bc3",
-    "name": "Tax Preparation",
-    "billableRatePerHourAmount": 23000,
+    "id": "00000007-d6fb-4ef5-8c75-46e387b4abad",
+    "name": "Interior Design",
+    "billableRatePerHourAmount": 20500,
     "archivedAt": null
   },
   {
-    "id": "94fab460-02f5-5056-99a0-aa7e4fdc036f",
+    "id": "00000007-f63f-4fcb-858d-1a35ff5a6aa5",
+    "name": "Copywriting",
+    "billableRatePerHourAmount": 16000,
+    "archivedAt": null
+  },
+  {
+    "id": "00000007-ce47-433a-8943-a740f2732a3f",
+    "name": "Product Strategy",
+    "billableRatePerHourAmount": 2500,
+    "archivedAt": null
+  },
+  {
+    "id": "00000007-0351-4cfd-860c-32b0b4ffc791",
+    "name": "Financial Planning",
+    "billableRatePerHourAmount": 6500,
+    "archivedAt": null
+  },
+  {
+    "id": "00000007-c4d1-4d63-8acf-5ae99d563763",
     "name": "Brand Strategy",
-    "billableRatePerHourAmount": 3500,
+    "billableRatePerHourAmount": 5000,
     "archivedAt": new Date("2025-06-01T00:00:00.000Z")
   },
   {
-    "id": "00000004-c411-598c-bd6b-84addda621b3",
-    "name": "SEO Audit",
-    "billableRatePerHourAmount": 16500,
+    "id": "00000007-a70d-44ee-8201-7c6f5d009ee1",
+    "name": "Career Coaching",
+    "billableRatePerHourAmount": 4500,
     "archivedAt": new Date("2025-06-01T00:00:00.000Z")
   }
 ] as (typeof schema.Type)[]
