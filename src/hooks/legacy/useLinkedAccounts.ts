@@ -83,12 +83,14 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
   }, [refetch, forceReloadBankTransactions])
 
   const handlePlaidConnectionSuccess = useCallback(async () => {
-    await Promise.all([
-      refetchAccountsAndTransactions(),
-      Promise.resolve(onPlaidConnectionSuccess?.()).catch((error: unknown) => {
+    try {
+      await refetchAccountsAndTransactions()
+    }
+    finally {
+      await Promise.resolve(onPlaidConnectionSuccess?.()).catch((error: unknown) => {
         console.error('onPlaidConnectionSuccess failed', error)
-      }),
-    ])
+      })
+    }
   }, [refetchAccountsAndTransactions, onPlaidConnectionSuccess])
 
   const { isLinking } = usePlaidLinkModal({
