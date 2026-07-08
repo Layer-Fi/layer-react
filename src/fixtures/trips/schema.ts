@@ -19,8 +19,8 @@ const tripDateArbitrary = (fc: typeof FastCheck) =>
 
 const distanceArbitrary = (fc: typeof FastCheck) =>
   fc.oneof(
-    { arbitrary: fc.integer({ min: 5, max: 150 }), weight: 6 },
-    { arbitrary: fc.integer({ min: 151, max: 500 }), weight: 3 },
+    { arbitrary: fc.integer({ min: 20, max: 200 }), weight: 6 },
+    { arbitrary: fc.integer({ min: 201, max: 500 }), weight: 3 },
     { arbitrary: fc.integer({ min: 501, max: 1000 }), weight: 1 },
   ).map(n => BigDecimal.unsafeFromString((n / 10).toFixed(1)))
 
@@ -76,7 +76,11 @@ export const TripArbitrarySchema = base.annotations({
     baseArbitrary.map((trip): typeof base.Type => {
       const [createdAt, updatedAt] = [trip.createdAt, trip.updatedAt].sort((a, b) => a.getTime() - b.getTime())
 
-      return { ...trip, createdAt, updatedAt }
+      const endAddress = trip.startAddress != null && trip.startAddress === trip.endAddress
+        ? addresses[(addresses.indexOf(trip.startAddress) + 1) % addresses.length]
+        : trip.endAddress
+
+      return { ...trip, createdAt, updatedAt, endAddress }
     }),
 })
 
