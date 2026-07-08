@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type AccountSource } from '@internal-types/linkedAccounts'
+import type { Awaitable } from '@internal-types/utility/promises'
 import { type PlaidHostedLinkConfig, toCreatePlaidLinkParams } from '@schemas/linkedAccounts/plaid'
 import { useUnlinkBankAccount } from '@hooks/api/businesses/[business-id]/bank-accounts/useUnlinkBankAccount'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
@@ -17,6 +18,7 @@ import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccoun
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 type UseLinkedAccountsOptions = {
+  onPlaidConnectionSuccess?: () => Awaitable<void>
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
 }
 
@@ -55,7 +57,7 @@ const usePlaidOnlyAction = <Args extends unknown[]>(
     [operation, action],
   )
 
-export const useLinkedAccounts: UseLinkedAccounts = ({ plaidHostedLinkConfig } = {}) => {
+export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess, plaidHostedLinkConfig } = {}) => {
   const { addToast } = useLayerContext()
   const { t } = useTranslation()
 
@@ -80,16 +82,35 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ plaidHostedLinkConfig } =
     ])
   }, [refetch, forceReloadBankTransactions])
 
+  const notifyPlaidConnectionSuccess = useCallback(async () => {
+    if (!onPlaidConnectionSuccess) return
+
+    try {
+      await onPlaidConnectionSuccess()
+    }
+    catch (error) {
+      console.error('onPlaidConnectionSuccess failed', error)
+    }
+  }, [onPlaidConnectionSuccess])
+
+  const handlePlaidConnectionSuccess = useCallback(async () => {
+    await Promise.all([
+      refetchAccountsAndTransactions(),
+      notifyPlaidConnectionSuccess(),
+    ])
+  }, [refetchAccountsAndTransactions, notifyPlaidConnectionSuccess])
+
   const { isLinking } = usePlaidLinkModal({
     linkToken,
     linkMode,
     setLinkMode,
     onSuccess: refetchAccountsAndTransactions,
+    onConnectionSuccess: handlePlaidConnectionSuccess,
   })
 
   const { isFailed: isHostedLinkError } = usePollPlaidHostedLinkStatus({
     enabled: plaidHostedLinkConfig != null,
-    onSuccess: refetchAccountsAndTransactions,
+    onSuccess: handlePlaidConnectionSuccess,
   })
 
   /**
