@@ -1,11 +1,12 @@
 import { createContext, useContext } from 'react'
 
 import {
+  type LayerContextDateRange,
   type LayerContextHelpers,
   type LayerContextValues,
 } from '@internal-types/layerContext'
 
-type LayerContextShape = LayerContextValues & LayerContextHelpers
+type LayerContextShape = LayerContextValues & LayerContextHelpers & LayerContextDateRange
 
 export const LayerContext = createContext<LayerContextShape | undefined>(undefined)
 

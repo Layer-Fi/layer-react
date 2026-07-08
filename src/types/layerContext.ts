@@ -1,3 +1,4 @@
+import { type DateRange } from '@internal-types/general'
 import { type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
 import { type Business } from '@schemas/business'
 import { type LayerError } from '@utils/api/errorHandler'
@@ -14,6 +15,13 @@ export type LayerContextValues = {
   toasts: (ToastProps & { isExiting: boolean })[]
   eventCallbacks?: EventCallbacks
   accountingConfiguration?: AccountingConfigurationSchemaType
+}
+
+export type LayerContextDateRange = {
+  dateRange: {
+    range: DateRange
+    setRange: (dateRange: DateRange) => DateRange
+  }
 }
 
 export type LayerContextHelpers = {

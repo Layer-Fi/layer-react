@@ -12,6 +12,7 @@ import { errorHandler, type LayerError } from '@utils/api/errorHandler'
 import { buildColorsPalette } from '@utils/colors'
 import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
 import { useBusiness } from '@hooks/api/businesses/[business-id]/useBusiness'
+import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { type LayerEvent } from '@providers/LayerProvider/layerEvents'
 import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
 import { BankAccountsProvider } from '@contexts/BankAccountsContext/BankAccountsContext'
@@ -99,6 +100,14 @@ export const BusinessProvider = ({
     eventCallbacks: {},
   })
 
+  const globalDateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
+  const { setDateRange } = useGlobalDateRangeActions()
+
+  const dateRange = useMemo(() => ({
+    range: globalDateRange,
+    setRange: setDateRange,
+  }), [globalDateRange, setDateRange])
+
   const { data: businessData } = useBusiness({ businessId })
 
   useEffect(() => {
@@ -109,7 +118,6 @@ export const BusinessProvider = ({
       payload: { business: businessData.data },
     })
   }, [businessData])
-
   const setTheme = (theme: LayerThemeConfig) => {
     dispatch({
       type: Action.setTheme,
@@ -214,6 +222,7 @@ export const BusinessProvider = ({
         onError: (payload: LayerError) => errorHandler.onError(payload),
         eventCallbacks: stableEventCallbacks,
         accountingConfiguration,
+        dateRange,
       }}
     >
       <BankAccountsProvider>

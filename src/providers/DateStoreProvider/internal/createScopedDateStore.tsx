@@ -1,11 +1,10 @@
-import { type PropsWithChildren, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import type { DateSelectionMode } from '@utils/date/dateRange'
 import { createScopedStore } from '@utils/zustand/createScopedStore'
 import { useStoreWithDateSelected } from '@utils/zustand/useStoreWithDateSelected'
 import { buildDateStore, type MakeDateStoreOptions } from '@providers/DateStoreProvider/internal/buildDateStore'
 import { getEffectiveDateForMode, getEffectiveDateRangeForMode } from '@providers/DateStoreProvider/internal/dateStoreUtils'
-import { useSyncDateRangeWithActivation } from '@providers/DateStoreProvider/internal/useSyncDateRangeWithActivation'
 
 type DateStoreApi = ReturnType<typeof buildDateStore>
 
@@ -111,27 +110,8 @@ export function createScopedDateStore({
     )
   }
 
-  // Update the store's startDate with the business activation date once it loads.
-  function BusinessActivationDateSync() {
-    const range = useDateRange({ dateSelectionMode: 'full' })
-    const { setDateRange } = useDateRangeActions()
-
-    useSyncDateRangeWithActivation(range, setDateRange)
-
-    return null
-  }
-
-  function SyncedProvider({ children }: PropsWithChildren) {
-    return (
-      <scopedStore.Provider>
-        <BusinessActivationDateSync />
-        {children}
-      </scopedStore.Provider>
-    )
-  }
-
   return {
-    Provider: SyncedProvider,
+    Provider: scopedStore.Provider,
     useDate,
     useDateActions,
     useDateRange,
