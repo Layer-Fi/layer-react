@@ -81,7 +81,6 @@ export interface BookkeepingOverviewProps {
 
   chartColorsList?: string[]
   onClickReconnectAccounts?: () => void
-  /** @deprecated The Project Profitability view has been removed. */
   tagFilter?: TagOption
   /**
    * @deprecated Use `stringOverrides.title` instead

@@ -44,7 +44,6 @@ export interface AccountingOverviewProps {
   middleBanner?: ReactNode
   chartColorsList?: string[]
   stringOverrides?: AccountingOverviewStringOverrides
-  /** @deprecated The Project Profitability view has been removed. */
   tagFilter?: TagOption
   slotProps?: {
     profitAndLoss?: {
