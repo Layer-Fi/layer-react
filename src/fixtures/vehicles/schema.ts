@@ -3,15 +3,23 @@ import { Arbitrary, Schema } from 'effect'
 import { VehicleSchema } from '@schemas/vehicle'
 
 import { makeBusiness } from '@fixtures/business/mocks'
-import { dateArbitrary } from '@fixtures/utils/dateArbitrary'
-import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
-import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/idArbitrary'
-import { nullableConstantFrom } from '@fixtures/utils/nullableConstantFromArbitrary'
-import { withArbitrary } from '@fixtures/utils/withArbitrary'
+import { dateArbitrary } from '@fixtures/utils/arbitrary/date'
+import { externalIdArbitrary } from '@fixtures/utils/arbitrary/externalId'
+import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
+import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
+import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
+import {
+  isEligibleForDeletionArbitrary,
+  isPrimaryArbitrary,
+  licensePlateArbitrary,
+  makeAndModelArbitrary,
+  vehicleArchivedAtArbitrary,
+  vehicleDeletedAtArbitrary,
+  vinArbitrary,
+} from '@fixtures/vehicles/arbitrary'
+import { vehicleDescriptions } from '@fixtures/vehicles/constants'
 
 const BUSINESS_ID = makeBusiness().id
-
-const VIN_CHARS = 'ABCDEFGHJKLMNPRSTUVWXYZ0123456789'
 
 const fields = VehicleSchema.fields
 
@@ -20,61 +28,20 @@ const base = Schema.Struct({
   id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.vehicle)),
   businessId: withArbitrary(fields.businessId, () => fc => fc.constant(BUSINESS_ID)),
   externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
-  makeAndModel: withArbitrary(fields.makeAndModel, () => fc =>
-    fc.constantFrom(
-      'Toyota Camry',
-      'Honda CR-V',
-      'Ford F-150',
-      'Tesla Model 3',
-      'Chevrolet Silverado',
-      'Subaru Outback',
-      'Jeep Grand Cherokee',
-      'Nissan Altima',
-    )),
-  year: withArbitrary(fields.year, () => fc =>
-    fc.oneof(
-      fc.constant(null),
-      fc.integer({ min: 2015, max: 2024 }),
-    )),
-  licensePlate: withArbitrary(fields.licensePlate, () => fc =>
-    fc.oneof(
-      fc.constant(null),
-      fc.tuple(
-        fc.constantFrom('ABC', 'XYZ', 'JKL', 'QRS', 'MNO'),
-        fc.integer({ min: 1000, max: 9999 }),
-      ).map(([letters, digits]) => `${letters}-${digits}`),
-    )),
-  vin: withArbitrary(fields.vin, () => fc =>
-    fc.oneof(
-      fc.constant(null),
-      fc.stringOf(fc.constantFrom(...VIN_CHARS.split('')), { minLength: 17, maxLength: 17 }),
-    )),
+  makeAndModel: withArbitrary(fields.makeAndModel, () => makeAndModelArbitrary),
+  year: withArbitrary(fields.year, () => fc => fc.integer({ min: 2015, max: 2024 })),
+  licensePlate: withArbitrary(fields.licensePlate, () => licensePlateArbitrary),
+  vin: withArbitrary(fields.vin, () => vinArbitrary),
   description: withArbitrary(fields.description, () => nullableConstantFrom(
-    ['Primary delivery vehicle', 'Backup fleet vehicle', 'Leased for sales team'],
+    vehicleDescriptions,
     { nullWeight: 4, valueWeight: 1 },
   )),
   createdAt: withArbitrary(fields.createdAt, () => dateArbitrary),
   updatedAt: withArbitrary(fields.updatedAt, () => dateArbitrary),
-  deletedAt: withArbitrary(fields.deletedAt, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant(null), weight: 19 },
-      { arbitrary: dateArbitrary(fc), weight: 1 },
-    )),
-  archivedAt: withArbitrary(fields.archivedAt, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant(null), weight: 9 },
-      { arbitrary: dateArbitrary(fc), weight: 1 },
-    )),
-  isPrimary: withArbitrary(fields.isPrimary, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant(true), weight: 1 },
-      { arbitrary: fc.constant(false), weight: 4 },
-    )),
-  isEligibleForDeletion: withArbitrary(fields.isEligibleForDeletion, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant(true), weight: 4 },
-      { arbitrary: fc.constant(false), weight: 1 },
-    )),
+  deletedAt: withArbitrary(fields.deletedAt, () => vehicleDeletedAtArbitrary),
+  archivedAt: withArbitrary(fields.archivedAt, () => vehicleArchivedAtArbitrary),
+  isPrimary: withArbitrary(fields.isPrimary, () => isPrimaryArbitrary),
+  isEligibleForDeletion: withArbitrary(fields.isEligibleForDeletion, () => isEligibleForDeletionArbitrary),
 })
 
 const baseArbitrary = Arbitrary.make(base)

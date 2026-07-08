@@ -4,24 +4,21 @@ import { TimeEntrySchema } from '@schemas/timeTracking'
 
 import { makeBusiness } from '@fixtures/business/mocks'
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
-import { catalogServices as servicePool } from '@fixtures/generated/catalogServices.gen'
-import { customers as customerPool } from '@fixtures/generated/customers.gen'
+import {
+  billableArbitrary,
+  durationMinutesArbitrary,
+  timeEntryCustomerArbitrary,
+  timeEntryServiceArbitrary,
+} from '@fixtures/timeEntries/arbitrary'
 import { timeEntryDescriptions, timeEntryMemos } from '@fixtures/timeEntries/constants'
-import { toTimeEntryService } from '@fixtures/timeEntries/toTimeEntryService'
-import { calendarDateArbitrary } from '@fixtures/utils/calendarDateArbitrary'
-import { dateArbitrary } from '@fixtures/utils/dateArbitrary'
-import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
-import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/idArbitrary'
-import { nullableConstantFrom } from '@fixtures/utils/nullableConstantFromArbitrary'
-import { withArbitrary } from '@fixtures/utils/withArbitrary'
+import { calendarDateArbitrary } from '@fixtures/utils/arbitrary/calendarDate'
+import { dateArbitrary } from '@fixtures/utils/arbitrary/date'
+import { externalIdArbitrary } from '@fixtures/utils/arbitrary/externalId'
+import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
+import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
+import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
 
 const BUSINESS_ID = makeBusiness().id
-
-const COMMON_DURATIONS_MINUTES = [15, 30, 45, 60, 90, 120, 180, 240, 300, 480]
-
-const timeEntryServices = servicePool
-  .filter(service => service.archivedAt == null)
-  .map(toTimeEntryService)
 
 const fields = TimeEntrySchema.fields
 
@@ -31,24 +28,15 @@ const base = Schema.Struct({
   businessId: withArbitrary(fields.businessId, () => fc => fc.constant(BUSINESS_ID)),
   externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
   date: withArbitrary(fields.date, () => calendarDateArbitrary(FIXTURE_YEAR)),
-  durationMinutes: withArbitrary(fields.durationMinutes, () => fc =>
-    fc.constantFrom(...COMMON_DURATIONS_MINUTES)),
-  billable: withArbitrary(fields.billable, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant(true), weight: 4 },
-      { arbitrary: fc.constant(false), weight: 1 },
-    )),
+  durationMinutes: withArbitrary(fields.durationMinutes, () => durationMinutesArbitrary),
+  billable: withArbitrary(fields.billable, () => billableArbitrary),
   description: withArbitrary(fields.description, () =>
     nullableConstantFrom(timeEntryDescriptions, { nullWeight: 1, valueWeight: 3 })),
   memo: withArbitrary(fields.memo, () =>
     nullableConstantFrom(timeEntryMemos, { nullWeight: 3, valueWeight: 1 })),
   metadata: withArbitrary(fields.metadata, () => fc => fc.constant(null)),
-  customer: withArbitrary(fields.customer, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant(null), weight: 1 },
-      { arbitrary: fc.constantFrom(...customerPool), weight: 3 },
-    )),
-  service: withArbitrary(fields.service, () => fc => fc.constantFrom(...timeEntryServices)),
+  customer: withArbitrary(fields.customer, () => timeEntryCustomerArbitrary),
+  service: withArbitrary(fields.service, () => timeEntryServiceArbitrary),
   invoiceLineItem: withArbitrary(fields.invoiceLineItem, () => fc => fc.constant(null)),
   stoppedAt: withArbitrary(fields.stoppedAt, () => fc => fc.constant(null)),
   createdAt: withArbitrary(fields.createdAt, () => dateArbitrary),

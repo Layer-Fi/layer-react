@@ -12,11 +12,11 @@ import {
   individualNameArbitrary,
   memoArbitrary,
   phoneNumberArbitrary,
-} from '@fixtures/utils/contactFields'
-import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
-import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/idArbitrary'
-import { nullableConstantFrom } from '@fixtures/utils/nullableConstantFromArbitrary'
-import { withArbitrary } from '@fixtures/utils/withArbitrary'
+} from '@fixtures/utils/arbitrary/contactFields'
+import { externalIdArbitrary } from '@fixtures/utils/arbitrary/externalId'
+import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
+import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
+import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
 
 const { _local, ...fields } = CustomerSchema.fields
 

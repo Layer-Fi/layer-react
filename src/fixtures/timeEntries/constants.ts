@@ -1,3 +1,5 @@
+export const commonDurationsMinutes = [15, 30, 45, 60, 90, 120, 180, 240, 300, 480]
+
 export const timeEntryDescriptions = [
   'Kickoff meeting',
   'Requirements gathering',

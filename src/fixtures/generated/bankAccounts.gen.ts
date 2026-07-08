@@ -30,9 +30,9 @@ export const bankAccounts = [
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 827294
+      "balance": 1083800
     },
-    "currentLedgerBalance": 1316001,
+    "currentLedgerBalance": 467400,
     "mask": "9994",
     "notifications": []
   },
@@ -64,9 +64,9 @@ export const bankAccounts = [
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 2499979
+      "balance": 2500000
     },
-    "currentLedgerBalance": 2499986,
+    "currentLedgerBalance": 2499500,
     "mask": "7447",
     "notifications": []
   },
@@ -98,9 +98,9 @@ export const bankAccounts = [
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 1155299
+      "balance": 2205500
     },
-    "currentLedgerBalance": 50014,
+    "currentLedgerBalance": 51100,
     "mask": "0003",
     "notifications": []
   },
@@ -132,9 +132,9 @@ export const bankAccounts = [
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 2467538
+      "balance": 1723400
     },
-    "currentLedgerBalance": 1055626,
+    "currentLedgerBalance": 682900,
     "mask": "6390",
     "notifications": []
   },
@@ -166,9 +166,9 @@ export const bankAccounts = [
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 328920
+      "balance": 1034400
     },
-    "currentLedgerBalance": 2499995,
+    "currentLedgerBalance": 2498600,
     "mask": "0007",
     "notifications": []
   }

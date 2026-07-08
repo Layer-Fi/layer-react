@@ -1,25 +1,22 @@
-import { Arbitrary, type FastCheck, Schema } from 'effect'
+import { Arbitrary, Schema } from 'effect'
 
 import {
   CustomAccountSchema,
-  CustomAccountSubtype,
+  type CustomAccountSubtype,
   getCustomAccountTypeFromSubtype,
 } from '@schemas/customAccounts'
 
-import { accountNames } from '@fixtures/constants/bank/accountNames'
-import { institutionNames } from '@fixtures/constants/bank/institutionNames'
-import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
-import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/idArbitrary'
-import { withArbitrary } from '@fixtures/utils/withArbitrary'
-
-const isoTimestampArbitrary = (fc: typeof FastCheck) =>
-  fc
-    .date({
-      min: new Date('2020-01-01T00:00:00Z'),
-      max: new Date('2025-12-31T23:59:59Z'),
-      noInvalidDate: true,
-    })
-    .map(date => date.toISOString())
+import {
+  accountNameArbitrary,
+  accountSubtypeArbitrary,
+  archivedAtArbitrary,
+  institutionNameArbitrary,
+  isoTimestampArbitrary,
+} from '@fixtures/customAccounts/arbitrary'
+import { externalIdArbitrary } from '@fixtures/utils/arbitrary/externalId'
+import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
+import { maskArbitrary } from '@fixtures/utils/arbitrary/mask'
+import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
 
 const fields = CustomAccountSchema.fields
 
@@ -27,21 +24,13 @@ const base = Schema.Struct({
   ...fields,
   id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.customAccount)),
   externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
-  mask: withArbitrary(fields.mask, () => fc =>
-    fc.integer({ min: 0, max: 9999 }).map(n => String(n).padStart(4, '0'))),
-  accountName: withArbitrary(fields.accountName, () => fc =>
-    fc.constantFrom(...accountNames)),
-  institutionName: withArbitrary(fields.institutionName, () => fc =>
-    fc.constantFrom(...institutionNames)),
-  accountSubtype: withArbitrary(fields.accountSubtype, () => fc =>
-    fc.constantFrom(...Object.values(CustomAccountSubtype))),
+  mask: withArbitrary(fields.mask, () => maskArbitrary),
+  accountName: withArbitrary(fields.accountName, () => accountNameArbitrary),
+  institutionName: withArbitrary(fields.institutionName, () => institutionNameArbitrary),
+  accountSubtype: withArbitrary(fields.accountSubtype, () => accountSubtypeArbitrary),
   createdAt: withArbitrary(fields.createdAt, () => isoTimestampArbitrary),
   updatedAt: withArbitrary(fields.updatedAt, () => isoTimestampArbitrary),
-  archivedAt: withArbitrary(fields.archivedAt, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant(null), weight: 9 },
-      { arbitrary: isoTimestampArbitrary(fc), weight: 1 },
-    )),
+  archivedAt: withArbitrary(fields.archivedAt, () => archivedAtArbitrary),
 })
 
 const baseArbitrary = Arbitrary.make(base)

@@ -1,4 +1,4 @@
-import { Arbitrary, type FastCheck, Schema } from 'effect'
+import { Arbitrary, Schema } from 'effect'
 
 import {
   BalanceTimestampSchema,
@@ -6,19 +6,19 @@ import {
 } from '@schemas/bankAccounts/bankAccount'
 import { AccountInstitutionSchema } from '@schemas/common/accountInstitution'
 
-import { accountNameKinds, getAccountName, institutions } from '@fixtures/bankAccounts/constants'
-import { externalAccountConnectionSchema } from '@fixtures/bankAccounts/externalAccountConnectionSchema'
-import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/idArbitrary'
-import { withArbitrary } from '@fixtures/utils/withArbitrary'
-
-const maskArbitrary = (fc: typeof FastCheck) =>
-  fc.integer({ min: 0, max: 9999 }).map(n => String(n).padStart(4, '0'))
-
-const amountArbitrary = (fc: typeof FastCheck) =>
-  fc.integer({ min: 50000, max: 2500000 })
-
-const institutionArbitrary = (fc: typeof FastCheck) =>
-  fc.constantFrom(...institutions)
+import {
+  accountNameKindArbitrary,
+  amountArbitrary,
+  balanceTimestampArbitrary,
+  externalAccountsArbitrary,
+  institutionArbitrary,
+  isDisconnectedArbitrary,
+  notificationsArbitrary,
+} from '@fixtures/bankAccounts/arbitrary'
+import { getAccountName } from '@fixtures/bankAccounts/constants'
+import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
+import { maskArbitrary } from '@fixtures/utils/arbitrary/mask'
+import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
 
 const fields = BankAccountSchema.fields
 
@@ -26,32 +26,23 @@ const base = Schema.Struct({
   ...fields,
   id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.bankAccount)),
   accountName: Schema.String.annotations({
-    arbitrary: () => fc => fc.constantFrom(...accountNameKinds),
+    arbitrary: () => accountNameKindArbitrary,
   }),
   institution: AccountInstitutionSchema.annotations({
     arbitrary: () => institutionArbitrary,
   }),
   notifyWhenDisconnected: withArbitrary(fields.notifyWhenDisconnected, () => fc =>
     fc.boolean()),
-  isDisconnected: withArbitrary(fields.isDisconnected, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant(false), weight: 4 },
-      { arbitrary: fc.constant(true), weight: 1 },
-    )),
-  externalAccounts: withArbitrary(fields.externalAccounts, () => fc =>
-    fc.array(Arbitrary.make(externalAccountConnectionSchema), { minLength: 1, maxLength: 2 })),
+  isDisconnected: withArbitrary(fields.isDisconnected, () => isDisconnectedArbitrary),
+  externalAccounts: withArbitrary(fields.externalAccounts, () => externalAccountsArbitrary),
   latestBalanceTimestamp: BalanceTimestampSchema.annotations({
-    arbitrary: () => fc => amountArbitrary(fc).map(balance => ({ balance })),
+    arbitrary: () => balanceTimestampArbitrary,
   }),
   currentLedgerBalance: withArbitrary(fields.currentLedgerBalance, () => amountArbitrary),
   mask: Schema.String.annotations({
     arbitrary: () => maskArbitrary,
   }),
-  notifications: withArbitrary(fields.notifications, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant([]), weight: 4 },
-      { arbitrary: fc.constant([{ type: 'ACCOUNT_DISCONNECTED' }]), weight: 1 },
-    )),
+  notifications: withArbitrary(fields.notifications, () => notificationsArbitrary),
 })
 
 const baseArbitrary = Arbitrary.make(base)

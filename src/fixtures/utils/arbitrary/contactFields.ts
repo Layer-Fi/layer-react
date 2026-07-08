@@ -2,7 +2,7 @@ import { type FastCheck } from 'effect'
 
 import { companyNames } from '@fixtures/constants/personal/companyNames'
 import { individualNames } from '@fixtures/constants/personal/individualNames'
-import { nullableConstantFrom } from '@fixtures/utils/nullableConstantFromArbitrary'
+import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
 
 const GENERATED_EMAIL = 'GENERATE'
 

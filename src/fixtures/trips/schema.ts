@@ -1,47 +1,32 @@
-import { Arbitrary, BigDecimal, type FastCheck, Schema } from 'effect'
+import { Arbitrary, Schema } from 'effect'
 
-import { TripPurpose, TripSchema } from '@schemas/trip'
+import { TripSchema } from '@schemas/trip'
 
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { addresses } from '@fixtures/constants/personal/addresses'
-import { vehicles as vehiclePool } from '@fixtures/generated/vehicles.gen'
-import { calendarDateArbitrary } from '@fixtures/utils/calendarDateArbitrary'
-import { dateArbitrary } from '@fixtures/utils/dateArbitrary'
-import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
-import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/idArbitrary'
-import { nullableConstantFrom } from '@fixtures/utils/nullableConstantFromArbitrary'
-import { withArbitrary } from '@fixtures/utils/withArbitrary'
-
-const distanceArbitrary = (fc: typeof FastCheck) =>
-  fc.oneof(
-    { arbitrary: fc.integer({ min: 20, max: 200 }), weight: 6 },
-    { arbitrary: fc.integer({ min: 201, max: 500 }), weight: 3 },
-    { arbitrary: fc.integer({ min: 501, max: 1000 }), weight: 1 },
-  ).map(n => BigDecimal.unsafeFromString((n / 10).toFixed(1)))
+import { distanceArbitrary, tripPurposeArbitrary, tripVehicleArbitrary } from '@fixtures/trips/arbitrary'
+import { tripDescriptions } from '@fixtures/trips/constants'
+import { calendarDateArbitrary } from '@fixtures/utils/arbitrary/calendarDate'
+import { dateArbitrary } from '@fixtures/utils/arbitrary/date'
+import { externalIdArbitrary } from '@fixtures/utils/arbitrary/externalId'
+import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
+import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
+import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
 
 const fields = TripSchema.fields
 
 const base = Schema.Struct({
   ...fields,
   id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.trip)),
-  vehicle: withArbitrary(fields.vehicle, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant(null), weight: 1 },
-      { arbitrary: fc.constantFrom(...vehiclePool), weight: 4 },
-    )),
+  vehicle: withArbitrary(fields.vehicle, () => tripVehicleArbitrary),
   externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
   distance: withArbitrary(fields.distance, () => distanceArbitrary),
   tripDate: withArbitrary(fields.tripDate, () => calendarDateArbitrary(FIXTURE_YEAR)),
-  purpose: withArbitrary(fields.purpose, () => fc =>
-    fc.oneof(
-      { arbitrary: fc.constant(TripPurpose.Business), weight: 6 },
-      { arbitrary: fc.constant(TripPurpose.Personal), weight: 2 },
-      { arbitrary: fc.constant(TripPurpose.Unreviewed), weight: 1 },
-    )),
+  purpose: withArbitrary(fields.purpose, () => tripPurposeArbitrary),
   startAddress: withArbitrary(fields.startAddress, () => nullableConstantFrom(addresses)),
   endAddress: withArbitrary(fields.endAddress, () => nullableConstantFrom(addresses)),
   description: withArbitrary(fields.description, () => nullableConstantFrom(
-    ['Client meeting', 'Site visit', 'Airport pickup', 'Supply run'],
+    tripDescriptions,
     { nullWeight: 3, valueWeight: 1 },
   )),
   createdAt: withArbitrary(fields.createdAt, () => dateArbitrary),
