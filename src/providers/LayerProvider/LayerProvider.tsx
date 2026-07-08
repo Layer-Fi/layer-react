@@ -45,6 +45,7 @@ export const LayerProvider = ({
   businessAccessToken,
   locale = DEFAULT_LOCALE,
   usePlaidSandbox,
+  children,
   ...restProps
 }: PropsWithChildren<LayerProviderProps>) => {
   const [cache] = useState(() => new Map())
@@ -77,9 +78,11 @@ export const LayerProvider = ({
             appSecret={appSecret}
             businessAccessToken={businessAccessToken}
           >
-            <GlobalDateStoreProvider>
-              <BusinessProvider {...restProps} />
-            </GlobalDateStoreProvider>
+            <BusinessProvider {...restProps}>
+              <GlobalDateStoreProvider>
+                {children}
+              </GlobalDateStoreProvider>
+            </BusinessProvider>
           </AuthInputProvider>
         </EnvironmentInputProvider>
       </LayerI18nProvider>

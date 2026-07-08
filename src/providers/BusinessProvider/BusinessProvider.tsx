@@ -1,5 +1,4 @@
 import { type PropsWithChildren, type Reducer, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
-import { isSameDay } from 'date-fns'
 
 import {
   type ColorConfig,
@@ -10,12 +9,9 @@ import {
   type LayerThemeConfig,
 } from '@internal-types/layerContext'
 import { errorHandler, type LayerError } from '@utils/api/errorHandler'
-import { getActivationDate } from '@utils/business'
 import { buildColorsPalette } from '@utils/colors'
-import { ALL_TIME_MIN_DATE } from '@utils/date/dateRange'
 import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
 import { useBusiness } from '@hooks/api/businesses/[business-id]/useBusiness'
-import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { type LayerEvent } from '@providers/LayerProvider/layerEvents'
 import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
 import { BankAccountsProvider } from '@contexts/BankAccountsContext/BankAccountsContext'
@@ -103,14 +99,6 @@ export const BusinessProvider = ({
     eventCallbacks: {},
   })
 
-  const globalDateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
-  const { setDateRange } = useGlobalDateRangeActions()
-
-  const dateRange = useMemo(() => ({
-    range: globalDateRange,
-    setRange: setDateRange,
-  }), [globalDateRange, setDateRange])
-
   const { data: businessData } = useBusiness({ businessId })
 
   useEffect(() => {
@@ -121,16 +109,6 @@ export const BusinessProvider = ({
       payload: { business: businessData.data },
     })
   }, [businessData])
-
-  // The global date store is built before business context exists, so an
-  // "All Time" range starts at the fixed fallback minimum. Once the business
-  // loads, adopt its real activation date as the start.
-  useEffect(() => {
-    const activationDate = getActivationDate(businessData?.data)
-    if (!activationDate || !isSameDay(globalDateRange.startDate, ALL_TIME_MIN_DATE)) return
-
-    setDateRange({ startDate: activationDate, endDate: globalDateRange.endDate })
-  }, [businessData, globalDateRange, setDateRange])
 
   const setTheme = (theme: LayerThemeConfig) => {
     dispatch({
@@ -236,7 +214,6 @@ export const BusinessProvider = ({
         onError: (payload: LayerError) => errorHandler.onError(payload),
         eventCallbacks: stableEventCallbacks,
         accountingConfiguration,
-        dateRange,
       }}
     >
       <BankAccountsProvider>
