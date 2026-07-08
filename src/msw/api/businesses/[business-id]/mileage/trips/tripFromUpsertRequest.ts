@@ -18,11 +18,11 @@ export const tripFromUpsertRequest = async (request: Request, base: Trip): Promi
 
   return {
     ...base,
-    vehicle: resolveEmbedded(
-      body.vehicleId ?? null,
-      base.vehicle,
-      id => vehicleStore.findById(id) ?? base.vehicle,
-    ),
+    vehicle: resolveEmbedded({
+      requestedId: body.vehicleId ?? null,
+      fallback: base.vehicle,
+      lookup: id => vehicleStore.findById(id) ?? base.vehicle,
+    }),
     tripDate: body.tripDate,
     distance: body.distance,
     purpose: toTripPurpose(body.purpose),

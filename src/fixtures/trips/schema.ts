@@ -18,7 +18,11 @@ const tripDateArbitrary = (fc: typeof FastCheck) =>
   }).map(date => new CalendarDate(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate()))
 
 const distanceArbitrary = (fc: typeof FastCheck) =>
-  fc.integer({ min: 1, max: 5000 }).map(n => BigDecimal.unsafeFromString((n / 10).toFixed(1)))
+  fc.oneof(
+    { arbitrary: fc.integer({ min: 5, max: 150 }), weight: 6 },
+    { arbitrary: fc.integer({ min: 151, max: 500 }), weight: 3 },
+    { arbitrary: fc.integer({ min: 501, max: 1000 }), weight: 1 },
+  ).map(n => BigDecimal.unsafeFromString((n / 10).toFixed(1)))
 
 const nullableConstantFrom = (values: readonly string[]) => (fc: typeof FastCheck) =>
   fc.oneof(

@@ -17,20 +17,20 @@ export const toTimeEntryService = (service: CatalogService): TimeEntryService =>
 export const timeEntryFromUpsertRequest = async (request: Request, base: TimeEntry): Promise<TimeEntry> => {
   const body = await readRequestJson(request) as Record<string, unknown>
 
-  const service = resolveEmbedded(
-    body.service_id as string | null | undefined,
-    base.service ?? null,
-    (id): TimeEntryService => {
+  const service = resolveEmbedded({
+    requestedId: body.service_id as string | null | undefined,
+    fallback: base.service ?? null,
+    lookup: (id): TimeEntryService => {
       const stored = catalogServiceStore.findById(id)
       return stored != null ? toTimeEntryService(stored) : { id, name: null, billableRatePerHourAmount: null }
     },
-  )
+  })
 
-  const customer = resolveEmbedded(
-    body.customer_id as string | null | undefined,
-    base.customer ?? null,
-    id => customerStore.findById(id) ?? base.customer ?? null,
-  )
+  const customer = resolveEmbedded({
+    requestedId: body.customer_id as string | null | undefined,
+    fallback: base.customer ?? null,
+    lookup: id => customerStore.findById(id) ?? base.customer ?? null,
+  })
 
   return {
     ...base,
