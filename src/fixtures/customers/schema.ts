@@ -3,7 +3,7 @@ import { Arbitrary, Schema } from 'effect'
 import { CustomerSchema } from '@schemas/customer'
 
 import { addresses } from '@fixtures/constants/personal/addresses'
-import { customerMemos } from '@fixtures/constants/personal/customerMemos'
+import { customerMemos } from '@fixtures/customers/constants'
 import {
   applyContactInvariants,
   companyNameArbitrary,

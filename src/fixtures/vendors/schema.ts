@@ -2,7 +2,6 @@ import { Arbitrary, Schema } from 'effect'
 
 import { VendorSchema } from '@schemas/vendor'
 
-import { vendorMemos } from '@fixtures/constants/personal/vendorMemos'
 import {
   applyContactInvariants,
   companyNameArbitrary,
@@ -14,6 +13,7 @@ import {
 } from '@fixtures/utils/contactFields'
 import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
 import { withArbitrary } from '@fixtures/utils/withArbitrary'
+import { vendorMemos } from '@fixtures/vendors/constants'
 
 const { _local, ...fields } = VendorSchema.fields
 
