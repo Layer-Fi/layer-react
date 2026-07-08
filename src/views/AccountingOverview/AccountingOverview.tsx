@@ -2,6 +2,7 @@ import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type OnboardingStep } from '@internal-types/layerContext'
+import { type TagOption } from '@internal-types/tags'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Container } from '@components/Container/Container'
@@ -19,7 +20,6 @@ import {
 } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
 import { View } from '@components/View/View'
-import { type TagOption } from '@views/ProjectProfitability/ProjectProfitability'
 
 import './accountingOverview.scss'
 

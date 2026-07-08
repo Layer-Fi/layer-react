@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
 
+import { type TagOption } from '@internal-types/tags'
 import { type CallBooking as CallBookingData } from '@schemas/callBooking'
 import { type Variants } from '@utils/styleUtils/sizeVariants'
 import { useBookkeepingOnboardingCallBooking } from '@hooks/features/bookkeeping/useBookkeepingOnboardingCallBooking'
@@ -22,7 +23,6 @@ import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
 import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
 import { View } from '@components/View/View'
 import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
-import { type TagOption } from '@views/ProjectProfitability/ProjectProfitability'
 
 import './bookkeepingOverview.scss'
 
