@@ -10,7 +10,7 @@ import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 const baseTimeEntry: TimeEntry = {
   id: '00000000-0000-4000-8000-000000000701',
   businessId: makeBusiness().id,
-  externalId: 'ext_70001',
+  externalId: null,
   date: new CalendarDate(2025, 3, 15),
   durationMinutes: 90,
   billable: true,

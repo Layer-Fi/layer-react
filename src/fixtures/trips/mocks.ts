@@ -9,7 +9,7 @@ import { makeVehicle } from '@fixtures/vehicles/mocks'
 const baseTrip: Trip = {
   id: '00000000-0000-4000-8000-000000000501',
   vehicle: makeVehicle(),
-  externalId: 'ext_50001',
+  externalId: null,
   distance: BigDecimal.unsafeFromString('12.5'),
   tripDate: new CalendarDate(2024, 3, 15),
   purpose: TripPurpose.Business,

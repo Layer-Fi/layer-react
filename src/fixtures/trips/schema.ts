@@ -8,7 +8,6 @@ import { distanceArbitrary, tripPurposeArbitrary, tripVehicleArbitrary } from '@
 import { tripDescriptions } from '@fixtures/trips/constants'
 import { calendarDateArbitrary } from '@fixtures/utils/arbitrary/calendarDate'
 import { dateArbitrary } from '@fixtures/utils/arbitrary/date'
-import { externalIdArbitrary } from '@fixtures/utils/arbitrary/externalId'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
 import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
 import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
@@ -19,7 +18,7 @@ const base = Schema.Struct({
   ...fields,
   id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.trip)),
   vehicle: withArbitrary(fields.vehicle, () => tripVehicleArbitrary),
-  externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
+  externalId: withArbitrary(fields.externalId, () => fc => fc.constant(null)),
   distance: withArbitrary(fields.distance, () => distanceArbitrary),
   tripDate: withArbitrary(fields.tripDate, () => calendarDateArbitrary(FIXTURE_YEAR)),
   purpose: withArbitrary(fields.purpose, () => tripPurposeArbitrary),

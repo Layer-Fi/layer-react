@@ -12,7 +12,6 @@ import {
   institutionNameArbitrary,
   isoTimestampArbitrary,
 } from '@fixtures/customAccounts/arbitrary'
-import { externalIdArbitrary } from '@fixtures/utils/arbitrary/externalId'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
 import { maskArbitrary } from '@fixtures/utils/arbitrary/mask'
 import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
@@ -22,7 +21,7 @@ const fields = CustomAccountSchema.fields
 const base = Schema.Struct({
   ...fields,
   id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.customAccount)),
-  externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
+  externalId: withArbitrary(fields.externalId, () => fc => fc.constant(null)),
   mask: withArbitrary(fields.mask, () => maskArbitrary),
   accountName: withArbitrary(fields.accountName, () => accountNameArbitrary),
   institutionName: withArbitrary(fields.institutionName, () => institutionNameArbitrary),

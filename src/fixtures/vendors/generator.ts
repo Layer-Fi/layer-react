@@ -5,7 +5,6 @@ export const generator = createGenerator(schema, {
   uniqueBy: [
     vendor => vendor.id,
     vendor => vendor.individualName ?? vendor.companyName,
-    vendor => vendor.externalId,
   ],
   seed: 2,
 })

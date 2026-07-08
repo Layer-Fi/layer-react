@@ -4,7 +4,7 @@ import { createGenerator } from '@fixtures/utils/createGenerator'
 import { spreadDateAcrossYear } from '@fixtures/utils/spreadDateAcrossYear'
 
 const generateTimeEntries = createGenerator(schema, {
-  uniqueBy: [entry => entry.id, entry => entry.externalId],
+  uniqueBy: [entry => entry.id],
   numRuns: 60,
 })
 

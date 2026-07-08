@@ -13,7 +13,6 @@ import {
 import { timeEntryDescriptions, timeEntryMemos } from '@fixtures/timeEntries/constants'
 import { calendarDateArbitrary } from '@fixtures/utils/arbitrary/calendarDate'
 import { dateArbitrary } from '@fixtures/utils/arbitrary/date'
-import { externalIdArbitrary } from '@fixtures/utils/arbitrary/externalId'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
 import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
 import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
@@ -26,7 +25,7 @@ const base = Schema.Struct({
   ...fields,
   id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.timeEntry)),
   businessId: withArbitrary(fields.businessId, () => fc => fc.constant(BUSINESS_ID)),
-  externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
+  externalId: withArbitrary(fields.externalId, () => fc => fc.constant(null)),
   date: withArbitrary(fields.date, () => calendarDateArbitrary(FIXTURE_YEAR)),
   durationMinutes: withArbitrary(fields.durationMinutes, () => durationMinutesArbitrary),
   billable: withArbitrary(fields.billable, () => billableArbitrary),
