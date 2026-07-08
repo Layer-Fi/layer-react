@@ -14,7 +14,7 @@ export const generator: typeof generateCatalogServices = (overrides) => {
   return services.map((service, index) => ({
     ...service,
     archivedAt: index >= services.length - ARCHIVED_COUNT
-      ? service.archivedAt ?? new Date('2025-06-01T00:00:00.000Z')
+      ? new Date('2025-06-01T00:00:00.000Z')
       : null,
   }))
 }
