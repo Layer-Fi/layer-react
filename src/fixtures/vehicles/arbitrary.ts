@@ -1,6 +1,5 @@
 import { type FastCheck } from 'effect'
 
-import { dateArbitrary } from '@fixtures/utils/arbitrary/date'
 import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
 import { vehicleDescriptions, vehicleMakesAndModels } from '@fixtures/vehicles/constants'
 
@@ -19,24 +18,6 @@ export const vinArbitrary = (fc: typeof FastCheck) =>
   fc.oneof(
     fc.constant(null),
     fc.stringOf(fc.constantFrom(...VIN_CHARS.split('')), { minLength: 17, maxLength: 17 }),
-  )
-
-export const vehicleDeletedAtArbitrary = (fc: typeof FastCheck) =>
-  fc.oneof(
-    { arbitrary: fc.constant(null), weight: 19 },
-    { arbitrary: dateArbitrary(fc), weight: 1 },
-  )
-
-export const vehicleArchivedAtArbitrary = (fc: typeof FastCheck) =>
-  fc.oneof(
-    { arbitrary: fc.constant(null), weight: 9 },
-    { arbitrary: dateArbitrary(fc), weight: 1 },
-  )
-
-export const isPrimaryArbitrary = (fc: typeof FastCheck) =>
-  fc.oneof(
-    { arbitrary: fc.constant(true), weight: 1 },
-    { arbitrary: fc.constant(false), weight: 4 },
   )
 
 export const isEligibleForDeletionArbitrary = (fc: typeof FastCheck) =>

@@ -2,7 +2,7 @@ import { Schema } from 'effect'
 
 import { type Vehicle, VehicleSchema } from '@schemas/vehicle'
 
-import { vehicleStore } from '@msw/api/businesses/[business-id]/mileage/vehicles/store'
+import { enforceSinglePrimaryVehicle, vehicleStore } from '@msw/api/businesses/[business-id]/mileage/vehicles/store'
 import { vehicleFromUpsertRequest } from '@msw/api/businesses/[business-id]/mileage/vehicles/vehicleFromUpsertRequest'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
@@ -14,13 +14,22 @@ const encodeVehicle = Schema.encodeSync(VehicleSchema)
 export const toCreateVehicleResponse = (vehicle: Vehicle) =>
   apiData(encodeVehicle(vehicle))
 
+const resolveCreate = createStoreCreateResolver({
+  store: vehicleStore,
+  makeBase: id => makeVehicle({ id }),
+  fromRequest: vehicleFromUpsertRequest,
+  toResponse: toCreateVehicleResponse,
+})
+
 export const post = createMockEndpoint<Vehicle, ReturnType<typeof toCreateVehicleResponse>>({
   method: 'post',
   path: '*/v1/businesses/:businessId/mileage/vehicles',
-  resolve: createStoreCreateResolver({
-    store: vehicleStore,
-    makeBase: id => makeVehicle({ id }),
-    fromRequest: vehicleFromUpsertRequest,
-    toResponse: toCreateVehicleResponse,
-  }),
+  resolve: async (context) => {
+    const response = await resolveCreate(context)
+
+    const created = vehicleStore.findById(response.data.id)
+    if (created?.isPrimary) enforceSinglePrimaryVehicle(created.id)
+
+    return response
+  },
 })

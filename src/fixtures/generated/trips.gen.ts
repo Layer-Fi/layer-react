@@ -18,9 +18,9 @@ export const trips = [
       "createdAt": new Date("2024-05-16T12:31:06.146Z"),
       "updatedAt": new Date("2025-06-27T09:26:33.846Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-07-27T09:26:33.846Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("20"),
@@ -162,9 +162,9 @@ export const trips = [
       "createdAt": new Date("2025-04-07T04:18:25.013Z"),
       "updatedAt": new Date("2025-10-13T08:55:01.394Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-11-12T08:55:01.394Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("11.6"),
@@ -234,9 +234,9 @@ export const trips = [
       "createdAt": new Date("2025-04-07T04:18:25.013Z"),
       "updatedAt": new Date("2025-10-13T08:55:01.394Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-11-12T08:55:01.394Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("14.7"),
@@ -408,9 +408,9 @@ export const trips = [
       "createdAt": new Date("2025-04-07T04:18:25.013Z"),
       "updatedAt": new Date("2025-10-13T08:55:01.394Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-11-12T08:55:01.394Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("5.2"),
@@ -466,9 +466,9 @@ export const trips = [
       "createdAt": new Date("2025-04-07T04:18:25.013Z"),
       "updatedAt": new Date("2025-10-13T08:55:01.394Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-11-12T08:55:01.394Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("6.6"),
@@ -524,9 +524,9 @@ export const trips = [
       "createdAt": new Date("2025-04-07T04:18:25.013Z"),
       "updatedAt": new Date("2025-10-13T08:55:01.394Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-11-12T08:55:01.394Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("10.6"),
@@ -553,9 +553,9 @@ export const trips = [
       "createdAt": new Date("2024-05-16T12:31:06.146Z"),
       "updatedAt": new Date("2025-06-27T09:26:33.846Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-07-27T09:26:33.846Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("19.8"),
@@ -611,9 +611,9 @@ export const trips = [
       "createdAt": new Date("2025-04-07T04:18:25.013Z"),
       "updatedAt": new Date("2025-10-13T08:55:01.394Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-11-12T08:55:01.394Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("50.4"),
@@ -640,9 +640,9 @@ export const trips = [
       "createdAt": new Date("2024-05-16T12:31:06.146Z"),
       "updatedAt": new Date("2025-06-27T09:26:33.846Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-07-27T09:26:33.846Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("45.7"),
@@ -740,9 +740,9 @@ export const trips = [
       "createdAt": new Date("2024-05-16T12:31:06.146Z"),
       "updatedAt": new Date("2025-06-27T09:26:33.846Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-07-27T09:26:33.846Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("20.5"),
@@ -798,9 +798,9 @@ export const trips = [
       "createdAt": new Date("2025-04-07T04:18:25.013Z"),
       "updatedAt": new Date("2025-10-13T08:55:01.394Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-11-12T08:55:01.394Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("15.5"),
@@ -956,9 +956,9 @@ export const trips = [
       "createdAt": new Date("2024-05-16T12:31:06.146Z"),
       "updatedAt": new Date("2025-06-27T09:26:33.846Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-07-27T09:26:33.846Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("7.3"),
@@ -1014,9 +1014,9 @@ export const trips = [
       "createdAt": new Date("2025-04-07T04:18:25.013Z"),
       "updatedAt": new Date("2025-10-13T08:55:01.394Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-11-12T08:55:01.394Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("19.7"),
@@ -1043,9 +1043,9 @@ export const trips = [
       "createdAt": new Date("2024-05-16T12:31:06.146Z"),
       "updatedAt": new Date("2025-06-27T09:26:33.846Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-07-27T09:26:33.846Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("4.4"),
@@ -1072,9 +1072,9 @@ export const trips = [
       "createdAt": new Date("2025-04-07T04:18:25.013Z"),
       "updatedAt": new Date("2025-10-13T08:55:01.394Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-11-12T08:55:01.394Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("2"),
@@ -1230,9 +1230,9 @@ export const trips = [
       "createdAt": new Date("2025-04-07T04:18:25.013Z"),
       "updatedAt": new Date("2025-10-13T08:55:01.394Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-11-12T08:55:01.394Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("54.6"),
@@ -1288,9 +1288,9 @@ export const trips = [
       "createdAt": new Date("2024-05-16T12:31:06.146Z"),
       "updatedAt": new Date("2025-06-27T09:26:33.846Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-07-27T09:26:33.846Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("20.9"),
@@ -1360,9 +1360,9 @@ export const trips = [
       "createdAt": new Date("2025-04-07T04:18:25.013Z"),
       "updatedAt": new Date("2025-10-13T08:55:01.394Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-11-12T08:55:01.394Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("50.5"),
@@ -1432,9 +1432,9 @@ export const trips = [
       "createdAt": new Date("2025-04-07T04:18:25.013Z"),
       "updatedAt": new Date("2025-10-13T08:55:01.394Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-11-12T08:55:01.394Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("10.2"),
@@ -1461,9 +1461,9 @@ export const trips = [
       "createdAt": new Date("2025-04-07T04:18:25.013Z"),
       "updatedAt": new Date("2025-10-13T08:55:01.394Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-11-12T08:55:01.394Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("11.7"),
@@ -1490,9 +1490,9 @@ export const trips = [
       "createdAt": new Date("2024-05-16T12:31:06.146Z"),
       "updatedAt": new Date("2025-06-27T09:26:33.846Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-07-27T09:26:33.846Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("49.4"),
@@ -1519,9 +1519,9 @@ export const trips = [
       "createdAt": new Date("2024-05-16T12:31:06.146Z"),
       "updatedAt": new Date("2025-06-27T09:26:33.846Z"),
       "deletedAt": null,
-      "archivedAt": new Date("2025-07-27T09:26:33.846Z"),
+      "archivedAt": null,
       "isPrimary": false,
-      "isEligibleForDeletion": false
+      "isEligibleForDeletion": true
     },
     "externalId": null,
     "distance": BigDecimal.unsafeFromString("2.4"),

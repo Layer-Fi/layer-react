@@ -13,11 +13,10 @@ export const distanceArbitrary = (fc: typeof FastCheck) =>
     { arbitrary: fc.integer({ min: 501, max: 1000 }), weight: 1 },
   ).map(n => BigDecimal.unsafeFromString((n / 10).toFixed(1)))
 
-export const tripVehicleArbitrary = (fc: typeof FastCheck) =>
-  fc.oneof(
-    { arbitrary: fc.constant(null), weight: 1 },
-    { arbitrary: fc.constantFrom(...vehiclePool), weight: 4 },
-  )
+export const tripVehicleArbitrary = nullableConstantFrom(
+  vehiclePool,
+  { nullWeight: 1, valueWeight: 4 },
+)
 
 export const tripPurposeArbitrary = (fc: typeof FastCheck) =>
   fc.oneof(

@@ -1,7 +1,7 @@
 import { type FastCheck } from 'effect'
 
-export const nullableConstantFrom = (
-  values: readonly string[],
+export const nullableConstantFrom = <T>(
+  values: readonly T[],
   weights?: { nullWeight?: number, valueWeight?: number },
 ) =>
   (fc: typeof FastCheck) =>

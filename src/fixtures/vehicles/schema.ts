@@ -8,11 +8,8 @@ import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
 import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
 import {
   isEligibleForDeletionArbitrary,
-  isPrimaryArbitrary,
   licensePlateArbitrary,
   makeAndModelArbitrary,
-  vehicleArchivedAtArbitrary,
-  vehicleDeletedAtArbitrary,
   vehicleDescriptionArbitrary,
   vinArbitrary,
 } from '@fixtures/vehicles/arbitrary'
@@ -33,9 +30,9 @@ const base = Schema.Struct({
   description: withArbitrary(fields.description, () => vehicleDescriptionArbitrary),
   createdAt: withArbitrary(fields.createdAt, () => dateArbitrary),
   updatedAt: withArbitrary(fields.updatedAt, () => dateArbitrary),
-  deletedAt: withArbitrary(fields.deletedAt, () => vehicleDeletedAtArbitrary),
-  archivedAt: withArbitrary(fields.archivedAt, () => vehicleArchivedAtArbitrary),
-  isPrimary: withArbitrary(fields.isPrimary, () => isPrimaryArbitrary),
+  deletedAt: withArbitrary(fields.deletedAt, () => fc => fc.constant(null)),
+  archivedAt: withArbitrary(fields.archivedAt, () => fc => fc.constant(null)),
+  isPrimary: withArbitrary(fields.isPrimary, () => fc => fc.constant(false)),
   isEligibleForDeletion: withArbitrary(fields.isEligibleForDeletion, () => isEligibleForDeletionArbitrary),
 })
 
@@ -45,14 +42,8 @@ export const VehicleArbitrarySchema = base.annotations({
   arbitrary: () => () =>
     baseArbitrary.map((vehicle): typeof base.Type => {
       const [createdAt, updatedAt] = [vehicle.createdAt, vehicle.updatedAt].sort((a, b) => a.getTime() - b.getTime())
-      const archivedAt = vehicle.archivedAt == null
-        ? vehicle.archivedAt
-        : [updatedAt, vehicle.archivedAt].sort((a, b) => a.getTime() - b.getTime()).at(-1) ?? null
-      const deletedAt = vehicle.deletedAt == null
-        ? vehicle.deletedAt
-        : [updatedAt, vehicle.deletedAt].sort((a, b) => a.getTime() - b.getTime()).at(-1) ?? null
 
-      return { ...vehicle, createdAt, updatedAt, archivedAt, deletedAt }
+      return { ...vehicle, createdAt, updatedAt }
     }),
 })
 

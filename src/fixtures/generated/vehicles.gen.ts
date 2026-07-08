@@ -62,9 +62,9 @@ export const vehicles = [
     "createdAt": new Date("2025-04-07T04:18:25.013Z"),
     "updatedAt": new Date("2025-10-13T08:55:01.394Z"),
     "deletedAt": null,
-    "archivedAt": new Date("2025-11-12T08:55:01.394Z"),
+    "archivedAt": null,
     "isPrimary": false,
-    "isEligibleForDeletion": false
+    "isEligibleForDeletion": true
   },
   {
     "id": "00000005-d6fb-4ef5-8c75-46e387b4abad",
@@ -78,8 +78,8 @@ export const vehicles = [
     "createdAt": new Date("2024-05-16T12:31:06.146Z"),
     "updatedAt": new Date("2025-06-27T09:26:33.846Z"),
     "deletedAt": null,
-    "archivedAt": new Date("2025-07-27T09:26:33.846Z"),
+    "archivedAt": null,
     "isPrimary": false,
-    "isEligibleForDeletion": false
+    "isEligibleForDeletion": true
   }
 ] as (typeof schema.Type)[]

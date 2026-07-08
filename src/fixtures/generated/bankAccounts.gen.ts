@@ -16,7 +16,7 @@ export const bankAccounts = [
         "id": "35975309-4e2e-4773-a358-6ece4da4d075",
         "externalAccountSource": "PLAID",
         "externalAccountName": "American Express Business Savings",
-        "mask": "9994",
+        "mask": "5196",
         "institution": {
           "name": "American Express",
           "logo": null
@@ -24,16 +24,16 @@ export const bankAccounts = [
         "notifications": [],
         "connectionNeedsRepairAsOf": null,
         "reconnectWithNewCredentials": false,
-        "connectionExternalId": "connection_249894",
+        "connectionExternalId": null,
         "userCreated": false,
         "isSyncing": false
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 1083800
+      "balance": 51200
     },
-    "currentLedgerBalance": 467400,
-    "mask": "9994",
+    "currentLedgerBalance": 2108900,
+    "mask": "5196",
     "notifications": []
   },
   {
@@ -50,7 +50,7 @@ export const bankAccounts = [
         "id": "d046606e-ffe6-5fff-bfff-fff500000004",
         "externalAccountSource": "PLAID",
         "externalAccountName": "American Express Business Savings",
-        "mask": "7447",
+        "mask": "9991",
         "institution": {
           "name": "American Express",
           "logo": null
@@ -58,16 +58,16 @@ export const bankAccounts = [
         "notifications": [],
         "connectionNeedsRepairAsOf": null,
         "reconnectWithNewCredentials": false,
-        "connectionExternalId": "connection_811600",
+        "connectionExternalId": null,
         "userCreated": false,
         "isSyncing": false
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 2500000
+      "balance": 2499000
     },
-    "currentLedgerBalance": 2499500,
-    "mask": "7447",
+    "currentLedgerBalance": 2500000,
+    "mask": "9991",
     "notifications": []
   },
   {
@@ -84,7 +84,7 @@ export const bankAccounts = [
         "id": "43eb3c88-9683-434c-a57a-3668100b93e1",
         "externalAccountSource": "PLAID",
         "externalAccountName": "Capital One Business Credit Card",
-        "mask": "0003",
+        "mask": "0011",
         "institution": {
           "name": "Capital One",
           "logo": null
@@ -92,16 +92,16 @@ export const bankAccounts = [
         "notifications": [],
         "connectionNeedsRepairAsOf": null,
         "reconnectWithNewCredentials": false,
-        "connectionExternalId": "connection_444820",
+        "connectionExternalId": null,
         "userCreated": false,
         "isSyncing": false
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 2205500
+      "balance": 2498900
     },
-    "currentLedgerBalance": 51100,
-    "mask": "0003",
+    "currentLedgerBalance": 50000,
+    "mask": "0011",
     "notifications": []
   },
   {
@@ -118,7 +118,7 @@ export const bankAccounts = [
         "id": "5bc417dd-7d76-16e9-b88b-382e8bcdeda9",
         "externalAccountSource": "PLAID",
         "externalAccountName": "Capital One Business Credit Card",
-        "mask": "6390",
+        "mask": "6068",
         "institution": {
           "name": "Capital One",
           "logo": null
@@ -126,16 +126,16 @@ export const bankAccounts = [
         "notifications": [],
         "connectionNeedsRepairAsOf": null,
         "reconnectWithNewCredentials": false,
-        "connectionExternalId": "connection_383465",
+        "connectionExternalId": null,
         "userCreated": false,
         "isSyncing": false
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 1723400
+      "balance": 2097800
     },
-    "currentLedgerBalance": 682900,
-    "mask": "6390",
+    "currentLedgerBalance": 1723400,
+    "mask": "6068",
     "notifications": []
   },
   {
@@ -152,7 +152,7 @@ export const bankAccounts = [
         "id": "9453594d-305f-50c5-92af-87ca851fd344",
         "externalAccountSource": "PLAID",
         "externalAccountName": "Chase Business Checking",
-        "mask": "0007",
+        "mask": "9994",
         "institution": {
           "name": "Chase",
           "logo": null
@@ -160,16 +160,16 @@ export const bankAccounts = [
         "notifications": [],
         "connectionNeedsRepairAsOf": null,
         "reconnectWithNewCredentials": false,
-        "connectionExternalId": "connection_669682",
+        "connectionExternalId": null,
         "userCreated": false,
         "isSyncing": false
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 1034400
+      "balance": 829100
     },
-    "currentLedgerBalance": 2498600,
-    "mask": "0007",
+    "currentLedgerBalance": 1034400,
+    "mask": "9994",
     "notifications": []
   }
 ] as (typeof schema.Type)[]

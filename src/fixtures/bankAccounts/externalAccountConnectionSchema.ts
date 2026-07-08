@@ -25,10 +25,7 @@ export const externalAccountConnectionSchema = Schema.Struct({
   reconnectWithNewCredentials: withArbitrary(fields.reconnectWithNewCredentials, () => fc =>
     fc.boolean()),
   connectionExternalId: withArbitrary(fields.connectionExternalId, () => fc =>
-    fc.option(
-      fc.integer({ min: 100000, max: 999999 }).map(n => `connection_${n}`),
-      { nil: null },
-    )),
+    fc.constant(null)),
   userCreated: withArbitrary(fields.userCreated, () => fc =>
     fc.boolean()),
   isSyncing: withArbitrary(fields.isSyncing, () => fc =>

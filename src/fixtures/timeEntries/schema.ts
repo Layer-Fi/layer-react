@@ -9,13 +9,12 @@ import {
   durationMinutesArbitrary,
   timeEntryCustomerArbitrary,
   timeEntryDescriptionArbitrary,
+  timeEntryMemoArbitrary,
   timeEntryServiceArbitrary,
 } from '@fixtures/timeEntries/arbitrary'
-import { timeEntryMemos } from '@fixtures/timeEntries/constants'
 import { calendarDateArbitrary } from '@fixtures/utils/arbitrary/calendarDate'
 import { dateArbitrary } from '@fixtures/utils/arbitrary/date'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
-import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
 import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
 
 const BUSINESS_ID = makeBusiness().id
@@ -31,8 +30,7 @@ const base = Schema.Struct({
   durationMinutes: withArbitrary(fields.durationMinutes, () => durationMinutesArbitrary),
   billable: withArbitrary(fields.billable, () => billableArbitrary),
   description: withArbitrary(fields.description, () => timeEntryDescriptionArbitrary),
-  memo: withArbitrary(fields.memo, () =>
-    nullableConstantFrom(timeEntryMemos, { nullWeight: 3, valueWeight: 1 })),
+  memo: withArbitrary(fields.memo, () => timeEntryMemoArbitrary),
   metadata: withArbitrary(fields.metadata, () => fc => fc.constant(null)),
   customer: withArbitrary(fields.customer, () => timeEntryCustomerArbitrary),
   service: withArbitrary(fields.service, () => timeEntryServiceArbitrary),
