@@ -3,6 +3,7 @@ import { Arbitrary, Schema } from 'effect'
 import { CustomerSchema } from '@schemas/customer'
 
 import { addresses } from '@fixtures/constants/personal/addresses'
+import { customerMemos } from '@fixtures/customers/constants'
 import {
   applyContactInvariants,
   companyNameArbitrary,
@@ -11,31 +12,25 @@ import {
   individualNameArbitrary,
   memoArbitrary,
   phoneNumberArbitrary,
-} from '@fixtures/utils/contactFields'
-import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
-import { withArbitrary } from '@fixtures/utils/withArbitrary'
+} from '@fixtures/utils/arbitrary/contactFields'
+import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
+import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
+import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
 
 const { _local, ...fields } = CustomerSchema.fields
 
 const base = Schema.Struct({
   ...fields,
-  externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
+  id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.customer)),
+  externalId: withArbitrary(fields.externalId, () => fc => fc.constant(null)),
   individualName: withArbitrary(fields.individualName, () => individualNameArbitrary),
   companyName: withArbitrary(fields.companyName, () => companyNameArbitrary),
   email: withArbitrary(fields.email, () => generatedEmailArbitrary),
   mobilePhone: withArbitrary(fields.mobilePhone, () => phoneNumberArbitrary),
   officePhone: withArbitrary(fields.officePhone, () => phoneNumberArbitrary),
-  addressString: withArbitrary(fields.addressString, () => fc =>
-    fc.oneof(
-      fc.constant(null),
-      fc.constantFrom(...addresses),
-    )),
+  addressString: withArbitrary(fields.addressString, () => nullableConstantFrom(addresses)),
   status: withArbitrary(fields.status, () => contactStatusArbitrary),
-  memo: withArbitrary(fields.memo, () => memoArbitrary([
-    'VIP client',
-    'Follow up next quarter',
-    'Referred by partner',
-  ])),
+  memo: withArbitrary(fields.memo, () => memoArbitrary(customerMemos)),
 })
 
 const baseArbitrary = Arbitrary.make(base)

@@ -4,7 +4,7 @@ import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 
 const baseCustomer: Customer = {
   id: '00000000-0000-4000-8000-000000000001',
-  externalId: 'ext_10001',
+  externalId: null,
   individualName: 'Jane Doe',
   companyName: 'Acme Corp',
   email: 'jane.doe@acmecorp.test',

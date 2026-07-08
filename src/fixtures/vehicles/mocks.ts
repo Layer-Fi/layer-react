@@ -6,7 +6,7 @@ import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 const baseVehicle: Vehicle = {
   id: '00000000-0000-4000-8000-000000000401',
   businessId: makeBusiness().id,
-  externalId: 'ext_40001',
+  externalId: null,
   makeAndModel: 'Toyota Camry',
   year: 2022,
   licensePlate: 'ABC-1234',

@@ -10,26 +10,24 @@ import {
   individualNameArbitrary,
   memoArbitrary,
   phoneNumberArbitrary,
-} from '@fixtures/utils/contactFields'
-import { externalIdArbitrary } from '@fixtures/utils/externalIdArbitrary'
-import { withArbitrary } from '@fixtures/utils/withArbitrary'
+} from '@fixtures/utils/arbitrary/contactFields'
+import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
+import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
+import { vendorMemos } from '@fixtures/vendors/constants'
 
 const { _local, ...fields } = VendorSchema.fields
 
 const base = Schema.Struct({
   ...fields,
-  externalId: withArbitrary(fields.externalId, () => externalIdArbitrary),
+  id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.vendor)),
+  externalId: withArbitrary(fields.externalId, () => fc => fc.constant(null)),
   individualName: withArbitrary(fields.individualName, () => individualNameArbitrary),
   companyName: withArbitrary(fields.companyName, () => companyNameArbitrary),
   email: withArbitrary(fields.email, () => generatedEmailArbitrary),
   mobilePhone: withArbitrary(fields.mobilePhone, () => phoneNumberArbitrary),
   officePhone: withArbitrary(fields.officePhone, () => phoneNumberArbitrary),
   status: withArbitrary(fields.status, () => contactStatusArbitrary),
-  memo: withArbitrary(fields.memo, () => memoArbitrary([
-    'Preferred supplier',
-    'Net 30 terms',
-    'Requires PO number',
-  ])),
+  memo: withArbitrary(fields.memo, () => memoArbitrary(vendorMemos)),
 })
 
 const baseArbitrary = Arbitrary.make(base)
