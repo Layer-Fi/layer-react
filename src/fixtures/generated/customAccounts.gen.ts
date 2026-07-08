@@ -13,8 +13,8 @@ export const customAccounts = [
     "createdAt": "2020-01-01T00:00:00.023Z",
     "updatedAt": "2021-03-25T16:44:30.381Z",
     "archivedAt": null,
-    "ledgerAccountId": "ffffffea-0b44-41fd-bfff-ffe548e13b9f",
-    "userCreated": false
+    "ledgerAccountId": "6feae5ac-000b-1000-8000-001497223d75",
+    "userCreated": true
   },
   {
     "id": "00000002-4b46-4097-85f0-896231804c64",
@@ -27,7 +27,7 @@ export const customAccounts = [
     "createdAt": "2020-01-01T00:00:00.008Z",
     "updatedAt": "2024-05-04T21:13:30.709Z",
     "archivedAt": null,
-    "ledgerAccountId": "e20e076e-000d-1000-9419-b0b000000012",
+    "ledgerAccountId": "0000000e-000d-1000-9419-b0b000000012",
     "userCreated": false
   },
   {
@@ -41,8 +41,8 @@ export const customAccounts = [
     "createdAt": "2023-04-30T00:00:19.012Z",
     "updatedAt": "2025-12-31T23:59:58.991Z",
     "archivedAt": null,
-    "ledgerAccountId": "0000001f-48a8-3c0b-8000-0006ffffffe0",
-    "userCreated": true
+    "ledgerAccountId": "c4c092d4-0009-1000-bfff-fffe00000002",
+    "userCreated": false
   },
   {
     "id": "00000002-a0b6-452b-8812-70c20a3e49d9",
@@ -55,8 +55,8 @@ export const customAccounts = [
     "createdAt": "2020-01-01T00:00:00.003Z",
     "updatedAt": "2025-12-31T23:59:58.984Z",
     "archivedAt": null,
-    "ledgerAccountId": "0000000e-1814-509b-968e-c22600000009",
-    "userCreated": true
+    "ledgerAccountId": "f552d158-d72e-57fd-809b-1814568ec226",
+    "userCreated": false
   },
   {
     "id": "00000002-d6fb-4ef5-8c75-46e387b4abad",
@@ -69,7 +69,7 @@ export const customAccounts = [
     "createdAt": "2020-01-01T00:00:00.008Z",
     "updatedAt": "2022-10-21T16:03:58.089Z",
     "archivedAt": null,
-    "ledgerAccountId": "00000008-ffe2-5fff-8000-0011ffffffed",
+    "ledgerAccountId": "23ab8aac-4956-2526-8000-000effffffea",
     "userCreated": false
   },
   {
@@ -83,7 +83,7 @@ export const customAccounts = [
     "createdAt": "2020-01-01T00:00:00.000Z",
     "updatedAt": "2025-12-31T23:59:58.967Z",
     "archivedAt": null,
-    "ledgerAccountId": "00000002-0016-1000-8000-001c00000002",
+    "ledgerAccountId": "0000001c-0016-1000-8000-0015ffffffe9",
     "userCreated": false
   },
   {
@@ -97,7 +97,7 @@ export const customAccounts = [
     "createdAt": "2025-12-07T11:15:11.399Z",
     "updatedAt": "2025-12-31T23:59:58.995Z",
     "archivedAt": null,
-    "ledgerAccountId": "00000006-0013-1000-a939-79760000001a",
+    "ledgerAccountId": "fffffffe-ffe4-5fff-9cb2-8f050000000b",
     "userCreated": false
   },
   {
@@ -111,8 +111,8 @@ export const customAccounts = [
     "createdAt": "2022-05-27T14:08:03.266Z",
     "updatedAt": "2025-12-31T23:59:58.968Z",
     "archivedAt": null,
-    "ledgerAccountId": "00000002-0007-1000-8252-ed6f00000001",
-    "userCreated": true
+    "ledgerAccountId": "00000018-0001-1000-85e5-3bf300cd3bfc",
+    "userCreated": false
   },
   {
     "id": "00000002-7d4f-48bc-8b7d-93739724218a",
@@ -124,8 +124,8 @@ export const customAccounts = [
     "accountSubtype": "CHECKING",
     "createdAt": "2020-01-01T00:00:00.005Z",
     "updatedAt": "2022-01-27T02:01:07.471Z",
-    "archivedAt": "2022-01-27T02:01:07.471Z",
-    "ledgerAccountId": "6f577e17-ffe1-5fff-bfff-fffbfffffff2",
+    "archivedAt": null,
+    "ledgerAccountId": "33ca1db7-37df-2af7-af57-7e17ffffffe5",
     "userCreated": false
   },
   {
@@ -139,7 +139,7 @@ export const customAccounts = [
     "createdAt": "2020-01-01T00:00:00.000Z",
     "updatedAt": "2025-02-19T18:30:02.720Z",
     "archivedAt": null,
-    "ledgerAccountId": "783ba673-001d-1000-8000-000900000000",
+    "ledgerAccountId": "e929624c-91f3-1ad4-8000-000fef0a467d",
     "userCreated": false
   }
 ] as (typeof schema.Type)[]

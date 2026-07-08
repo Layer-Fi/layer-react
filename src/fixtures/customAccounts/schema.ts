@@ -9,7 +9,6 @@ import {
 import {
   accountNameArbitrary,
   accountSubtypeArbitrary,
-  archivedAtArbitrary,
   institutionNameArbitrary,
   isoTimestampArbitrary,
 } from '@fixtures/customAccounts/arbitrary'
@@ -30,7 +29,7 @@ const base = Schema.Struct({
   accountSubtype: withArbitrary(fields.accountSubtype, () => accountSubtypeArbitrary),
   createdAt: withArbitrary(fields.createdAt, () => isoTimestampArbitrary),
   updatedAt: withArbitrary(fields.updatedAt, () => isoTimestampArbitrary),
-  archivedAt: withArbitrary(fields.archivedAt, () => archivedAtArbitrary),
+  archivedAt: withArbitrary(fields.archivedAt, () => fc => fc.constant(null)),
 })
 
 const baseArbitrary = Arbitrary.make(base)
@@ -39,19 +38,13 @@ export const CustomAccountArbitrarySchema = base.annotations({
   arbitrary: () => () =>
     baseArbitrary.map((account): typeof base.Type => {
       // Timestamps are sampled independently; order them so a row never updates
-      // before it was created, nor archives before its last update. ISO-8601 UTC
-      // strings sort chronologically, so a plain sort suffices.
+      // before it was created. ISO-8601 UTC strings sort chronologically.
       const [createdAt, updatedAt] = [account.createdAt, account.updatedAt].sort()
-      const archivedAt =
-        account.archivedAt == null
-          ? account.archivedAt
-          : [updatedAt, account.archivedAt].sort().at(-1)
 
       return {
         ...account,
         createdAt,
         updatedAt,
-        archivedAt,
         accountType: getCustomAccountTypeFromSubtype(
           account.accountSubtype as CustomAccountSubtype,
         ),

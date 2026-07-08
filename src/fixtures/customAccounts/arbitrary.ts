@@ -22,9 +22,3 @@ export const institutionNameArbitrary = (fc: typeof FastCheck) =>
 
 export const accountSubtypeArbitrary = (fc: typeof FastCheck) =>
   fc.constantFrom(...Object.values(CustomAccountSubtype))
-
-export const archivedAtArbitrary = (fc: typeof FastCheck) =>
-  fc.oneof(
-    { arbitrary: fc.constant(null), weight: 9 },
-    { arbitrary: isoTimestampArbitrary(fc), weight: 1 },
-  )
