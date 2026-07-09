@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 
 import { type DateRange } from '@utils/date/dateRange'
+import type { DatePreset } from '@utils/date/dateRangePresets'
 import { DateRangePicker } from '@components/DatePicker/DateRangePicker'
 import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
 
@@ -9,6 +10,9 @@ import './dateRangeSelection.scss'
 type DateRangeSelectionProps = {
   dateRange: DateRange
   setDateRange: (range: DateRange) => void
+  preset?: DatePreset | null
+  setPresetRange?: (options: { preset: DatePreset, startDate: Date, endDate: Date }) => void
+  includeAllTime?: boolean
   showLabels?: boolean
   isCompact?: boolean
 }
@@ -16,6 +20,9 @@ type DateRangeSelectionProps = {
 export const DateRangeSelection = ({
   dateRange,
   setDateRange,
+  preset,
+  setPresetRange,
+  includeAllTime = false,
   showLabels = false,
   isCompact = false,
 }: DateRangeSelectionProps) => {
@@ -28,6 +35,9 @@ export const DateRangeSelection = ({
       <DateSelectionComboBox
         dateRange={dateRange}
         setDateRange={setDateRange}
+        preset={preset}
+        setPresetRange={setPresetRange}
+        includeAllTime={includeAllTime}
         showLabel={showLabels}
       />
       <DateRangePicker

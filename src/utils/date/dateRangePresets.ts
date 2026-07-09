@@ -58,9 +58,18 @@ export enum DatePreset {
   LastQuarter = 'LastQuarter',
   ThisYear = 'ThisYear',
   LastYear = 'LastYear',
+  /**
+   * Clamped to the business activation date (start) and the present (end).
+   * Unlike the other presets, its range cannot be resolved from `now` alone —
+   * it requires the business context. See `useResolvedInitialRange`.
+   */
+  AllTime = 'AllTime',
   Custom = 'Custom',
 
 }
+
+/** Presets whose range is a pure function of `now` (no context required). */
+export type RelativeDatePreset = Exclude<DatePreset, DatePreset.Custom | DatePreset.AllTime>
 
 const PRESET_ARGS = {
   [DatePreset.ThisMonth]: [Period.Month, 0],
@@ -69,7 +78,7 @@ const PRESET_ARGS = {
   [DatePreset.LastQuarter]: [Period.Quarter, -1],
   [DatePreset.ThisYear]: [Period.Year, 0],
   [DatePreset.LastYear]: [Period.Year, -1],
-} satisfies Record<Exclude<DatePreset, 'Custom'>, readonly [Period, number]>
+} satisfies Record<RelativeDatePreset, readonly [Period, number]>
 
 function typedEntries<T extends Record<PropertyKey, unknown>>(obj: T) {
   return Object.entries(obj) as [keyof T, T[keyof T]][]
@@ -81,10 +90,22 @@ function fromEntriesStrict<K extends PropertyKey, V>(
   return Object.fromEntries(entries) as Record<K, V>
 }
 
-export function rangeForPreset(preset: Exclude<DatePreset, 'Custom'>, base?: Date): DateRange {
+export function rangeForPreset(preset: RelativeDatePreset, base?: Date): DateRange {
   const args = PRESET_ARGS[preset]
   const [period, offset] = args
   return rangeFor(period, offset, base)
+}
+
+/**
+ * The `AllTime` range: from the business activation date to the present. Unlike
+ * `rangeForPreset` this needs the activation date, so it is resolved wherever the
+ * business context is available (the store resolver and the preset combo box).
+ */
+export function rangeForAllTime(activationDate: Date): DateRange {
+  return {
+    startDate: startOfDay(activationDate),
+    endDate: clampToPresentOrPast(endOfDay(new Date())),
+  }
 }
 
 const normalize = (range: DateRange, activationDate?: Date | null): DateRange => {
@@ -112,7 +133,9 @@ export function presetForDateRange(input: DateRange, selectedPreset: DatePreset 
     ]),
   )
 
-  if (selectedPreset !== null && selectedPreset !== DatePreset.Custom) {
+  // AllTime is not a relative candidate (its range needs context), so it can't be
+  // derived here — a caller that tracks the stored preset supplies it directly.
+  if (selectedPreset !== null && selectedPreset !== DatePreset.Custom && selectedPreset !== DatePreset.AllTime) {
     if (sameDateRange(range, candidates[selectedPreset])) return selectedPreset
   }
 
