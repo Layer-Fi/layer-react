@@ -27,7 +27,7 @@ import './solopreneurOverview.scss'
 
 interface SolopreneurOverviewStringOverrides {
   title?: string
-  cashflowSummaries?: ProfitAndLossSummariesStringOverrides
+  profitAndLossSummaries?: ProfitAndLossSummariesStringOverrides
   summaryCards?: {
     profitAndLoss?: SummaryCardStringOverrides
     expenses?: SummaryCardStringOverrides
@@ -94,7 +94,7 @@ export const SolopreneurOverview = ({
           plaidHostedLinkConfig={plaidHostedLinkConfig}
         />
         <ProfitAndLossSummaries
-          stringOverrides={stringOverrides?.cashflowSummaries}
+          stringOverrides={stringOverrides?.profitAndLossSummaries}
           chartColorsList={chartColorsList}
           reportingVariant={slotProps?.profitAndLoss?.summaries?.reportingVariant ?? { type: 'cashflow' }}
           variants={slotProps?.profitAndLoss?.summaries?.variants}
