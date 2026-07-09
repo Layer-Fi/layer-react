@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { Variants } from '@utils/styleUtils/sizeVariants'
@@ -99,23 +99,18 @@ export function ProfitAndLossSummaries({
     uncategorizedLabel,
   ])
 
-  const netFooter = useMemo<SummaryTileConfig['renderFooter']>(() => (
-    isCashflow && (showProfitAndLossBreakout || onTransactionsToReviewClick)
-      ? ({ categorized }, isLoading) => (
-        <CashflowSummariesNetCashflowFooter
-          isLoading={isLoading}
-          categorized={showProfitAndLossBreakout
-            ? {
-              label: t('overview:label.categorized_net_profit', 'Categorized net profit'),
-              amount: categorized,
-            }
-            : undefined}
-          onTransactionsToReviewClick={onTransactionsToReviewClick}
-        />
-      )
-      : undefined
+  const renderNetFooter = useCallback<NonNullable<SummaryTileConfig['renderFooter']>>(({ categorized }, isLoading) => (
+    <CashflowSummariesNetCashflowFooter
+      isLoading={isLoading}
+      categorized={showProfitAndLossBreakout
+        ? {
+          label: t('overview:label.categorized_net_profit', 'Categorized net profit'),
+          amount: categorized,
+        }
+        : undefined}
+      onTransactionsToReviewClick={onTransactionsToReviewClick}
+    />
   ), [
-    isCashflow,
     showProfitAndLossBreakout,
     t,
     onTransactionsToReviewClick,
@@ -152,13 +147,17 @@ export function ProfitAndLossSummaries({
     label: isCashflow
       ? stringOverrides?.netCashFlowLabel || t('overview:label.net_cash_flow', 'Net cash flow')
       : stringOverrides?.netProfitLabel || t('common:label.net_profit', 'Net Profit'),
-    renderFooter: netFooter,
+    renderFooter: isCashflow && (showProfitAndLossBreakout || onTransactionsToReviewClick)
+      ? renderNetFooter
+      : undefined,
   }), [
     isCashflow,
     stringOverrides?.netCashFlowLabel,
     stringOverrides?.netProfitLabel,
     t,
-    netFooter,
+    showProfitAndLossBreakout,
+    onTransactionsToReviewClick,
+    renderNetFooter,
   ])
 
   const tiles: SummariesTiles = useMemo(() => ({
