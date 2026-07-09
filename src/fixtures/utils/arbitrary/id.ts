@@ -9,6 +9,8 @@ export const FixtureIdPrefix = {
   trip: '00000006',
   catalogService: '00000007',
   timeEntry: '00000008',
+  chartOfAccount: '00000009',
+  ledgerEntry: '0000000a',
 } as const
 
 const HEX = '0123456789abcdef'.split('')
