@@ -25,10 +25,12 @@ export type ProfitAndLossSummariesReportingVariant =
   | { type?: 'profitAndLoss' }
   | { type: 'cashflow'; showProfitAndLossBreakout?: boolean }
 
-export type ProfitAndLossSummariesSlotProps = {
+export type FinancialSummariesSlotProps = {
   reportingVariant?: ProfitAndLossSummariesReportingVariant
   variants?: Variants
 }
+
+export type ProfitAndLossSummariesSlotProps = FinancialSummariesSlotProps
 
 type ProfitAndLossSummariesProps = {
   actionable?: boolean

@@ -14,8 +14,8 @@ import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/Pro
 import { ProfitAndLossHeader } from '@components/ProfitAndLossHeader/ProfitAndLossHeader'
 import { ProfitAndLossOverviewDetailedCharts } from '@components/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
 import {
+  type FinancialSummariesSlotProps,
   ProfitAndLossSummaries,
-  type ProfitAndLossSummariesSlotProps,
   type ProfitAndLossSummariesStringOverrides,
 } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
@@ -46,9 +46,7 @@ export interface AccountingOverviewProps {
   stringOverrides?: AccountingOverviewStringOverrides
   tagFilter?: TagOption
   slotProps?: {
-    profitAndLoss?: {
-      summaries?: ProfitAndLossSummariesSlotProps
-    }
+    financialSummaries?: FinancialSummariesSlotProps
   }
 }
 
@@ -65,10 +63,7 @@ export const AccountingOverview = ({
   const { t } = useTranslation()
   const { value: sizeClass } = useSizeClass()
 
-  const profitAndLossSummariesVariants =
-    slotProps?.profitAndLoss?.summaries?.variants
-  const profitAndLossSummariesReportingVariant =
-    slotProps?.profitAndLoss?.summaries?.reportingVariant
+  const financialSummariesSlotProps = slotProps?.financialSummaries
   const profitAndLossTagFilter = tagFilter?.tagValues.length
     ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
     : undefined
@@ -96,8 +91,8 @@ export const AccountingOverview = ({
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}
           chartColorsList={chartColorsList}
           onTransactionsToReviewClick={onTransactionsToReviewClick}
-          reportingVariant={profitAndLossSummariesReportingVariant}
-          variants={profitAndLossSummariesVariants}
+          reportingVariant={financialSummariesSlotProps?.reportingVariant}
+          variants={financialSummariesSlotProps?.variants}
         />
         <Container
           name='accounting-overview-profit-and-loss'

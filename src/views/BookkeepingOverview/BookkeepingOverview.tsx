@@ -18,7 +18,7 @@ import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/Pro
 import { ProfitAndLossHeader } from '@components/ProfitAndLossHeader/ProfitAndLossHeader'
 import { ProfitAndLossOverviewDetailedCharts } from '@components/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
 import {
-  type ProfitAndLossSummariesSlotProps,
+  type FinancialSummariesSlotProps,
   type ProfitAndLossSummariesStringOverrides,
 } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
@@ -74,9 +74,7 @@ export interface BookkeepingOverviewProps {
     }
   }
   slotProps?: {
-    profitAndLoss?: {
-      summaries?: ProfitAndLossSummariesSlotProps
-    }
+    financialSummaries?: FinancialSummariesSlotProps
   }
 
   chartColorsList?: string[]
@@ -101,10 +99,7 @@ export const BookkeepingOverview = ({
   const [width] = useWindowSize()
   const { value: sizeClass } = useSizeClass()
 
-  const profitAndLossSummariesVariants =
-    slotProps?.profitAndLoss?.summaries?.variants
-  const profitAndLossSummariesReportingVariant =
-    slotProps?.profitAndLoss?.summaries?.reportingVariant
+  const financialSummariesSlotProps = slotProps?.financialSummaries
   const profitAndLossTagFilter = tagFilter?.tagValues.length
     ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
     : undefined
@@ -194,8 +189,8 @@ export const BookkeepingOverview = ({
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
                 chartColorsList={chartColorsList}
-                reportingVariant={profitAndLossSummariesReportingVariant}
-                variants={profitAndLossSummariesVariants}
+                reportingVariant={financialSummariesSlotProps?.reportingVariant}
+                variants={financialSummariesSlotProps?.variants}
               />
             </VStack>
             <ProfitAndLoss.Chart
