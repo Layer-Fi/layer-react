@@ -63,13 +63,11 @@ export function Checkbox({ children, className, variant = 'default', size = 'sm'
 
 export function CheckboxWithTooltip({ tooltip, ...props }: CheckboxWithTooltipProps) {
   return (
-    <div className='Layer__checkbox-wrapper'>
-      <Tooltip isDisabled={!tooltip}>
-        <TooltipTrigger variant='fit-content'>
-          <Checkbox {...props} />
-        </TooltipTrigger>
-        <TooltipContent>{tooltip}</TooltipContent>
-      </Tooltip>
-    </div>
+    <Tooltip isDisabled={!tooltip}>
+      <TooltipTrigger variant='fit-content' asChild>
+        <Checkbox {...props} />
+      </TooltipTrigger>
+      <TooltipContent>{tooltip}</TooltipContent>
+    </Tooltip>
   )
 }
