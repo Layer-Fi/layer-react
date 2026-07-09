@@ -7,11 +7,11 @@ import {
 } from '@schemas/generalLedger/ledgerAccount'
 import { UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLedgerAccount'
 import { humanizeEnum } from '@utils/format'
+import { SUBTYPES_CONFIG_BY_TYPE } from '@components/ChartOfAccountsForm/constants'
 
 import { accountParentStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import { readRequestJson } from '@msw/utils/request'
 import { ACCOUNT_TYPE_DISPLAY_NAME } from '@fixtures/chartOfAccounts/constants'
-import { chartOfAccounts } from '@fixtures/generated/chartOfAccounts.gen'
 
 const decodeUpsert = Schema.decodeUnknownSync(UpsertLedgerAccountSchema)
 
@@ -21,7 +21,7 @@ const toLedgerAccountType = (value: string, fallback: LedgerAccountType): Ledger
   isLedgerAccountType(value) ? value : fallback
 
 const SUBTYPE_DISPLAY_NAME = new Map(
-  chartOfAccounts.map(({ accountSubtype }) => [accountSubtype.value, accountSubtype.displayName]),
+  Object.values(SUBTYPES_CONFIG_BY_TYPE).flat().map(({ value, defaultValue }) => [value, defaultValue]),
 )
 
 const subtypeDisplayName = (value: string) => SUBTYPE_DISPLAY_NAME.get(value) ?? humanizeEnum(value)
