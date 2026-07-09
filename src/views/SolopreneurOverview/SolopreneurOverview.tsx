@@ -14,6 +14,7 @@ import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
 import { MileageTrackingSummary } from '@components/MileageTrackingSummary/MileageTrackingSummary'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
+import type { ProfitAndLossSummariesSlotProps } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { ProfitAndLossSummaryCard } from '@components/ProfitAndLossSummaryCard/ProfitAndLossSummaryCard'
 import { SolopreneurOnboardingBanner } from '@components/SolopreneurOnboardingBanner/SolopreneurOnboardingBanner'
 import {
@@ -54,6 +55,11 @@ export interface SolopreneurOverviewProps {
   chartColorsList?: string[]
   stringOverrides?: SolopreneurOverviewStringOverrides
   interactionProps?: SolopreneurOverviewInteractionProps
+  slotProps?: {
+    profitAndLoss?: {
+      summaries?: ProfitAndLossSummariesSlotProps
+    }
+  }
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
 }
 
@@ -61,6 +67,7 @@ export const SolopreneurOverview = ({
   interactionProps,
   chartColorsList,
   stringOverrides,
+  slotProps,
   plaidHostedLinkConfig,
 }: SolopreneurOverviewProps) => {
   const { t } = useTranslation()
@@ -89,6 +96,8 @@ export const SolopreneurOverview = ({
         <CashflowSummaries
           stringOverrides={stringOverrides?.cashflowSummaries}
           chartColorsList={chartColorsList}
+          reportingVariant={slotProps?.profitAndLoss?.summaries?.reportingVariant}
+          variants={slotProps?.profitAndLoss?.summaries?.variants}
           onTransactionsToReviewClick={interactionProps?.cashflowSummaries?.onTransactionsToReviewClick}
         />
         <div className='Layer__SolopreneurOverview__Grid'>
