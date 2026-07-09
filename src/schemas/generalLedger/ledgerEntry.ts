@@ -70,6 +70,8 @@ export const LedgerEntryLineItemSchema = Schema.Struct({
   ),
 })
 
+export type LedgerEntryLineItem = typeof LedgerEntryLineItemSchema.Type
+
 export const LedgerEntrySchema = Schema.Struct({
   id: Schema.String,
   businessId: pipe(

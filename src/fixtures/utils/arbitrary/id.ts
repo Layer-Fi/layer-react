@@ -9,8 +9,10 @@ export const FixtureIdPrefix = {
   trip: '00000006',
   catalogService: '00000007',
   timeEntry: '00000008',
-  invoice: '00000009',
-  invoiceLineItem: '0000000a',
+  chartOfAccount: '00000009',
+  ledgerEntry: '0000000a',
+  invoice: '0000000b',
+  invoiceLineItem: '0000000c',
 } as const
 
 const HEX = '0123456789abcdef'.split('')
