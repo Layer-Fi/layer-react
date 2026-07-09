@@ -5,6 +5,7 @@ import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { getCashflowBreakdownFooter } from '@components/CashflowSummaries/CashflowSummariesFooters'
 import { CashflowSummariesNetCashflowFooter } from '@components/CashflowSummaries/CashflowSummariesNetCashflowFooter'
 import {
+  type SummaryTileBreakdown,
   type SummaryTileConfig,
   SummariesContent,
   type SummariesTiles,
@@ -99,7 +100,7 @@ export function ProfitAndLossSummaries({
     uncategorizedLabel,
   ])
 
-  const renderNetFooter = useCallback<NonNullable<SummaryTileConfig['renderFooter']>>(({ categorized }, isLoading) => (
+  const renderNetFooter = useCallback(({ categorized }: SummaryTileBreakdown, isLoading: boolean) => (
     <CashflowSummariesNetCashflowFooter
       isLoading={isLoading}
       categorized={showProfitAndLossBreakout
