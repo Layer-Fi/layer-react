@@ -200,11 +200,4 @@ export const ledgerEntrySourceExamples: readonly ExampleSource[] = [
     amount: 20000,
     customer: makeCustomer(),
   }),
-  {
-    entryType: EntryType.Manual,
-    source: makeManualEntrySource({
-      id: '00000000-0000-4000-8000-000000001011',
-      memo: 'Manual journal entry',
-    }),
-  },
 ]

@@ -2060,11 +2060,11 @@ export const ledgerEntries = [
       }
     ],
     "source": {
-      "display_description": "Manual journal entry",
+      "display_description": "Loan repayment",
       "entity_name": "Manual journal entry",
       "type": "Manual_Ledger_Entry_Source",
-      "manual_entry_id": "00000000-0000-4000-8000-000000001011",
-      "memo": "Manual journal entry",
+      "manual_entry_id": "0000000a-44aa-4807-88f5-d29f22206a13",
+      "memo": "Loan repayment",
       "created_by": "Layer"
     },
     "transactionTags": [],

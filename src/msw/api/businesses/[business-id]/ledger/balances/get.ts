@@ -15,11 +15,13 @@ const encodeBalances = Schema.encodeSync(LedgerBalancesSchema)
 
 const postedBalanceByAccountId = () => {
   const balances = new Map<string, number>()
+  const accountsById = new Map(ledgerAccountStore.all().map(account => [account.accountId, account]))
 
   ledgerEntryStore.all().forEach((entry) => {
     entry.lineItems.forEach((lineItem) => {
-      const sign = lineItem.direction === lineItem.account.normality ? 1 : -1
       const accountId = lineItem.account.accountId
+      const normality = accountsById.get(accountId)?.normality ?? lineItem.account.normality
+      const sign = lineItem.direction === normality ? 1 : -1
       balances.set(accountId, (balances.get(accountId) ?? 0) + sign * lineItem.amount)
     })
   })

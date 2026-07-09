@@ -6,10 +6,12 @@ import {
   type SingleChartAccountType,
 } from '@schemas/generalLedger/ledgerAccount'
 import { UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLedgerAccount'
+import { humanizeEnum } from '@utils/format'
 
 import { accountParentStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import { readRequestJson } from '@msw/utils/request'
 import { ACCOUNT_TYPE_DISPLAY_NAME } from '@fixtures/chartOfAccounts/constants'
+import { chartOfAccounts } from '@fixtures/generated/chartOfAccounts.gen'
 
 const decodeUpsert = Schema.decodeUnknownSync(UpsertLedgerAccountSchema)
 
@@ -17,6 +19,12 @@ const isLedgerAccountType = Schema.is(LedgerAccountTypeSchema)
 
 const toLedgerAccountType = (value: string, fallback: LedgerAccountType): LedgerAccountType =>
   isLedgerAccountType(value) ? value : fallback
+
+const SUBTYPE_DISPLAY_NAME = new Map(
+  chartOfAccounts.map(({ accountSubtype }) => [accountSubtype.value, accountSubtype.displayName]),
+)
+
+const subtypeDisplayName = (value: string) => SUBTYPE_DISPLAY_NAME.get(value) ?? humanizeEnum(value)
 
 export const ledgerAccountFromUpsertRequest = async (
   request: Request,
@@ -38,7 +46,7 @@ export const ledgerAccountFromUpsertRequest = async (
     stableName: stableName?.stableName ?? base.stableName,
     accountType: { value: accountTypeValue, displayName: ACCOUNT_TYPE_DISPLAY_NAME[accountTypeValue] },
     accountSubtype: accountSubtype != null
-      ? { value: accountSubtype, displayName: base.accountSubtype.displayName }
+      ? { value: accountSubtype, displayName: subtypeDisplayName(accountSubtype) }
       : base.accountSubtype,
   }
 }
