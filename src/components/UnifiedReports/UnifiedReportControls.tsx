@@ -10,7 +10,7 @@ import {
   useUnifiedReportGroupByParam,
   useUnifiedReportReportingBasisParam,
 } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
-import { Stack, VStack } from '@ui/Stack/Stack'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 import { CombinedDateSelection } from '@components/DateSelection/CombinedDateSelection'
 import { DateGroupByComboBox } from '@components/DateSelection/DateGroupByComboBox'
@@ -62,18 +62,16 @@ export const UnifiedReportControls = () => {
   return (
     <VStack ref={containerRef} className='Layer__UnifiedReports__ControlsContainer'>
       {!isDesktop && (
-        <Stack
-          direction='row'
+        <HStack
           pi='lg'
           pbs='lg'
           gap='xs'
           className='Layer__UnifiedReports__ControlsActions'
         >
           <UnifiedReportHeaderButtons variant='Mobile' />
-        </Stack>
+        </HStack>
       )}
-      <Stack
-        direction='row'
+      <HStack
         pb='md'
         pi='lg'
         gap='xs'
@@ -93,7 +91,7 @@ export const UnifiedReportControls = () => {
             )}
           </div>
         )}
-      </Stack>
+      </HStack>
     </VStack>
   )
 }
