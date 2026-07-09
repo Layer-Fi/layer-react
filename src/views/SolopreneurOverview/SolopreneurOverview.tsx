@@ -12,6 +12,7 @@ import { MileageTrackingSummary } from '@components/MileageTrackingSummary/Milea
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import {
   ProfitAndLossSummaries,
+  type ProfitAndLossSummariesReportingVariant,
   type ProfitAndLossSummariesSlotProps,
   type ProfitAndLossSummariesStringOverrides,
 } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
@@ -24,6 +25,10 @@ import {
 import { View } from '@components/View/View'
 
 import './solopreneurOverview.scss'
+
+const SOLOPRENEUR_OVERVIEW_DEFAULT_REPORTING_VARIANT = {
+  type: 'cashflow',
+} satisfies ProfitAndLossSummariesReportingVariant
 
 interface SolopreneurOverviewStringOverrides {
   title?: string
@@ -96,7 +101,10 @@ export const SolopreneurOverview = ({
         <ProfitAndLossSummaries
           stringOverrides={stringOverrides?.profitAndLossSummaries}
           chartColorsList={chartColorsList}
-          reportingVariant={slotProps?.profitAndLoss?.summaries?.reportingVariant ?? { type: 'cashflow' }}
+          reportingVariant={
+            slotProps?.profitAndLoss?.summaries?.reportingVariant
+            ?? SOLOPRENEUR_OVERVIEW_DEFAULT_REPORTING_VARIANT
+          }
           variants={slotProps?.profitAndLoss?.summaries?.variants}
           onTransactionsToReviewClick={interactionProps?.cashflowSummaries?.onTransactionsToReviewClick}
         />
