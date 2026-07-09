@@ -4,7 +4,10 @@ import { useTranslation } from 'react-i18next'
 import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/config/useReportConfig'
 import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { MobileSelectionDrawerWithTrigger } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
+import { HStack } from '@ui/Stack/Stack'
 import { ReportComboBoxOption } from '@components/ReportsNavigation/reportComboBoxOption'
+
+import './reportsMobileSelectionDrawer.scss'
 
 export function ReportsMobileSelectionDrawer() {
   const { t } = useTranslation()
@@ -36,16 +39,18 @@ export function ReportsMobileSelectionDrawer() {
   }, [setBaseReport])
 
   return (
-    <MobileSelectionDrawerWithTrigger<ReportComboBoxOption>
-      ariaLabel={t('reports:label.reports_navigation', 'Reports navigation')}
-      heading={t('reports:label.select_report', 'Select report')}
-      groups={groups}
-      selectedValue={selectedValue}
-      onSelectedValueChange={onSelectedValueChange}
-      isLoading={isLoading}
-      isError={isError}
-      isSearchable
-      searchPlaceholder={t('reports:action.search_reports', 'Search reports')}
-    />
+    <HStack className='Layer__ReportsMobileSelectionDrawer'>
+      <MobileSelectionDrawerWithTrigger<ReportComboBoxOption>
+        ariaLabel={t('reports:label.reports_navigation', 'Reports navigation')}
+        heading={t('reports:label.select_report', 'Select report')}
+        groups={groups}
+        selectedValue={selectedValue}
+        onSelectedValueChange={onSelectedValueChange}
+        isLoading={isLoading}
+        isError={isError}
+        isSearchable
+        searchPlaceholder={t('reports:action.search_reports', 'Search reports')}
+      />
+    </HStack>
   )
 }
