@@ -67,80 +67,100 @@ export function ProfitAndLossSummaries({
 
   const uncategorizedLabel = t('common:label.uncategorized', 'Uncategorized')
 
-  const revenue: SummaryTileConfig = useMemo(() => ({
-    label: isCashflow
-      ? stringOverrides?.moneyInLabel || t('common:label.money_in', 'Money in')
-      : stringOverrides?.revenueLabel || revenueLabel || t('common:label.revenue', 'Revenue'),
-    renderFooter: isCashflow
+  const revenueFooter = useMemo<SummaryTileConfig['renderFooter']>(() => (
+    isCashflow
       ? getCashflowBreakdownFooter({
         showProfitAndLossBreakout,
         chartColorsList,
         categorizedLabel: t('overview:label.categorized_revenue', 'Categorized revenue'),
         uncategorizedLabel,
       })
-      : undefined,
-  }), [
+      : undefined
+  ), [
     isCashflow,
-    stringOverrides?.moneyInLabel,
-    stringOverrides?.revenueLabel,
-    revenueLabel,
-    t,
     showProfitAndLossBreakout,
     chartColorsList,
+    t,
     uncategorizedLabel,
   ])
 
-  const expenses: SummaryTileConfig = useMemo(() => ({
-    label: isCashflow
-      ? stringOverrides?.moneyOutLabel || t('common:label.money_out', 'Money out')
-      : stringOverrides?.expensesLabel || t('common:label.expenses', 'Expenses'),
-    renderFooter: isCashflow
+  const expensesFooter = useMemo<SummaryTileConfig['renderFooter']>(() => (
+    isCashflow
       ? getCashflowBreakdownFooter({
         showProfitAndLossBreakout,
         chartColorsList,
         categorizedLabel: t('overview:label.categorized_expenses', 'Categorized expenses'),
         uncategorizedLabel,
       })
-      : undefined,
+      : undefined
+  ), [
+    isCashflow,
+    showProfitAndLossBreakout,
+    chartColorsList,
+    t,
+    uncategorizedLabel,
+  ])
+
+  const netFooter = useMemo<SummaryTileConfig['renderFooter']>(() => (
+    isCashflow
+      ? getCashflowNetCashflowFooter({
+        showProfitAndLossBreakout,
+        categorizedLabel: t('overview:label.categorized_net_profit', 'Categorized net profit'),
+        onTransactionsToReviewClick,
+      })
+      : undefined
+  ), [
+    isCashflow,
+    showProfitAndLossBreakout,
+    t,
+    onTransactionsToReviewClick,
+  ])
+
+  const revenue: SummaryTileConfig = useMemo(() => ({
+    label: isCashflow
+      ? stringOverrides?.moneyInLabel || t('common:label.money_in', 'Money in')
+      : stringOverrides?.revenueLabel || revenueLabel || t('common:label.revenue', 'Revenue'),
+    renderFooter: revenueFooter,
+  }), [
+    isCashflow,
+    stringOverrides?.moneyInLabel,
+    stringOverrides?.revenueLabel,
+    revenueLabel,
+    t,
+    revenueFooter,
+  ])
+
+  const expenses: SummaryTileConfig = useMemo(() => ({
+    label: isCashflow
+      ? stringOverrides?.moneyOutLabel || t('common:label.money_out', 'Money out')
+      : stringOverrides?.expensesLabel || t('common:label.expenses', 'Expenses'),
+    renderFooter: expensesFooter,
   }), [
     isCashflow,
     stringOverrides?.moneyOutLabel,
     stringOverrides?.expensesLabel,
     t,
-    showProfitAndLossBreakout,
-    chartColorsList,
-    uncategorizedLabel,
+    expensesFooter,
   ])
 
   const net: SummaryTileConfig = useMemo(() => ({
     label: isCashflow
       ? stringOverrides?.netCashFlowLabel || t('overview:label.net_cash_flow', 'Net cash flow')
       : stringOverrides?.netProfitLabel || t('common:label.net_profit', 'Net Profit'),
-    renderFooter: isCashflow
-      ? getCashflowNetCashflowFooter({
-        showProfitAndLossBreakout,
-        categorizedLabel: t('overview:label.categorized_net_profit', 'Categorized net profit'),
-        onTransactionsToReviewClick,
-      })
-      : undefined,
+    renderFooter: netFooter,
   }), [
     isCashflow,
     stringOverrides?.netCashFlowLabel,
     stringOverrides?.netProfitLabel,
     t,
-    showProfitAndLossBreakout,
-    onTransactionsToReviewClick,
+    netFooter,
   ])
 
   const tiles: SummariesTiles = useMemo(() => ({
     revenue,
     expenses,
     net,
-  }), [
-    revenue,
-    expenses,
-    net,
-  ])
+  }), [revenue, expenses, net])
 
   return (
     <SummariesContent
