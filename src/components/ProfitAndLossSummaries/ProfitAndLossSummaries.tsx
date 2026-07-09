@@ -1,9 +1,11 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
-import { getCashflowBreakdownFooter } from '@components/CashflowSummaries/CashflowSummariesFooters'
 import { CashflowSummariesNetCashflowFooter } from '@components/CashflowSummaries/CashflowSummariesNetCashflowFooter'
+import { UNCATEGORIZED_CHART_COLOR } from '@components/ProfitAndLossDetailedCharts/utils'
+import { BaseSummariesBreakdownFooter } from '@components/ProfitAndLossSummaries/internal/BaseSummariesBreakdownFooter'
 import {
   type SummaryTileBreakdown,
   type SummaryTileConfig,
@@ -25,12 +27,10 @@ export type ProfitAndLossSummariesReportingVariant =
   | { type?: 'profitAndLoss' }
   | { type: 'cashflow'; showProfitAndLossBreakout?: boolean }
 
-export type FinancialSummariesSlotProps = {
+export type ProfitAndLossSummariesSlotProps = {
   reportingVariant?: ProfitAndLossSummariesReportingVariant
   variants?: Variants
 }
-
-export type ProfitAndLossSummariesSlotProps = FinancialSummariesSlotProps
 
 type ProfitAndLossSummariesProps = {
   actionable?: boolean
@@ -67,38 +67,45 @@ export function ProfitAndLossSummaries({
       : false
 
   const uncategorizedLabel = t('common:label.uncategorized', 'Uncategorized')
+  const categorizedSwatchColor = chartColorsList?.[0] ?? DEFAULT_CHART_COLORS[0]
 
-  const revenueFooter = useMemo<SummaryTileConfig['renderFooter']>(() => (
-    isCashflow
-      ? getCashflowBreakdownFooter({
-        showProfitAndLossBreakout,
-        chartColorsList,
-        categorizedLabel: t('overview:label.categorized_revenue', 'Categorized revenue'),
-        uncategorizedLabel,
-      })
-      : undefined
+  const renderRevenueFooter = useCallback(({ categorized, uncategorized }: SummaryTileBreakdown, isLoading: boolean) => (
+    <BaseSummariesBreakdownFooter
+      isLoading={isLoading}
+      categorized={{
+        label: t('overview:label.categorized_revenue', 'Categorized revenue'),
+        amount: categorized,
+        swatchColor: categorizedSwatchColor,
+      }}
+      uncategorized={{
+        label: uncategorizedLabel,
+        amount: uncategorized,
+        swatchColor: UNCATEGORIZED_CHART_COLOR,
+      }}
+    />
   ), [
-    isCashflow,
-    showProfitAndLossBreakout,
-    chartColorsList,
     t,
+    categorizedSwatchColor,
     uncategorizedLabel,
   ])
 
-  const expensesFooter = useMemo<SummaryTileConfig['renderFooter']>(() => (
-    isCashflow
-      ? getCashflowBreakdownFooter({
-        showProfitAndLossBreakout,
-        chartColorsList,
-        categorizedLabel: t('overview:label.categorized_expenses', 'Categorized expenses'),
-        uncategorizedLabel,
-      })
-      : undefined
+  const renderExpensesFooter = useCallback(({ categorized, uncategorized }: SummaryTileBreakdown, isLoading: boolean) => (
+    <BaseSummariesBreakdownFooter
+      isLoading={isLoading}
+      categorized={{
+        label: t('overview:label.categorized_expenses', 'Categorized expenses'),
+        amount: categorized,
+        swatchColor: categorizedSwatchColor,
+      }}
+      uncategorized={{
+        label: uncategorizedLabel,
+        amount: uncategorized,
+        swatchColor: UNCATEGORIZED_CHART_COLOR,
+      }}
+    />
   ), [
-    isCashflow,
-    showProfitAndLossBreakout,
-    chartColorsList,
     t,
+    categorizedSwatchColor,
     uncategorizedLabel,
   ])
 
@@ -123,27 +130,33 @@ export function ProfitAndLossSummaries({
     label: isCashflow
       ? stringOverrides?.moneyInLabel || t('common:label.money_in', 'Money in')
       : stringOverrides?.revenueLabel || revenueLabel || t('common:label.revenue', 'Revenue'),
-    renderFooter: revenueFooter,
+    renderFooter: isCashflow && showProfitAndLossBreakout
+      ? renderRevenueFooter
+      : undefined,
   }), [
     isCashflow,
     stringOverrides?.moneyInLabel,
     stringOverrides?.revenueLabel,
     revenueLabel,
     t,
-    revenueFooter,
+    showProfitAndLossBreakout,
+    renderRevenueFooter,
   ])
 
   const expenses: SummaryTileConfig = useMemo(() => ({
     label: isCashflow
       ? stringOverrides?.moneyOutLabel || t('common:label.money_out', 'Money out')
       : stringOverrides?.expensesLabel || t('common:label.expenses', 'Expenses'),
-    renderFooter: expensesFooter,
+    renderFooter: isCashflow && showProfitAndLossBreakout
+      ? renderExpensesFooter
+      : undefined,
   }), [
     isCashflow,
     stringOverrides?.moneyOutLabel,
     stringOverrides?.expensesLabel,
     t,
-    expensesFooter,
+    showProfitAndLossBreakout,
+    renderExpensesFooter,
   ])
 
   const net: SummaryTileConfig = useMemo(() => ({
