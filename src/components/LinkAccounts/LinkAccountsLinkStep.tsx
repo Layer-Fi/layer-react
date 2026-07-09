@@ -46,7 +46,7 @@ export function LinkAccountsLinkStep({ showDoneLinkingButton = true }: LinkAccou
         Empty={(
           <ElevatedLoadingSpinnerContainer>
             {isLinking && <ElevatedLoadingSpinner />}
-            <VStack gap='xl' pbe='md'>
+            <VStack gap='xl' pbe='md' align='start'>
               <P status='disabled'>
                 {t('linkedAccounts:label.connect_bank_accounts_and_credit_cards', 'Connect your bank accounts and credit cards to automatically import your business transactions.')}
               </P>
