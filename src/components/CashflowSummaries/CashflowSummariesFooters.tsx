@@ -1,5 +1,4 @@
 import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
-import { CashflowSummariesNetCashflowFooter } from '@components/CashflowSummaries/CashflowSummariesNetCashflowFooter'
 import { UNCATEGORIZED_CHART_COLOR } from '@components/ProfitAndLossDetailedCharts/utils'
 import { BaseSummariesBreakdownFooter } from '@components/ProfitAndLossSummaries/internal/BaseSummariesBreakdownFooter'
 import type { SummaryTileConfig } from '@components/ProfitAndLossSummaries/internal/SummariesContent'
@@ -34,33 +33,6 @@ export function getCashflowBreakdownFooter({
         amount: uncategorized,
         swatchColor: UNCATEGORIZED_CHART_COLOR,
       }}
-    />
-  )
-}
-
-type CashflowNetCashflowFooterOptions = {
-  showProfitAndLossBreakout: boolean
-  categorizedLabel: string
-  onTransactionsToReviewClick?: () => void
-}
-
-export function getCashflowNetCashflowFooter({
-  showProfitAndLossBreakout,
-  categorizedLabel,
-  onTransactionsToReviewClick,
-}: CashflowNetCashflowFooterOptions): SummaryTileConfig['renderFooter'] {
-  if (!showProfitAndLossBreakout && !onTransactionsToReviewClick) return undefined
-
-  return ({ categorized }, isLoading) => (
-    <CashflowSummariesNetCashflowFooter
-      isLoading={isLoading}
-      categorized={showProfitAndLossBreakout
-        ? {
-          label: categorizedLabel,
-          amount: categorized,
-        }
-        : undefined}
-      onTransactionsToReviewClick={onTransactionsToReviewClick}
     />
   )
 }

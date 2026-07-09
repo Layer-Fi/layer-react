@@ -2,10 +2,8 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { Variants } from '@utils/styleUtils/sizeVariants'
-import {
-  getCashflowBreakdownFooter,
-  getCashflowNetCashflowFooter,
-} from '@components/CashflowSummaries/CashflowSummariesFooters'
+import { getCashflowBreakdownFooter } from '@components/CashflowSummaries/CashflowSummariesFooters'
+import { CashflowSummariesNetCashflowFooter } from '@components/CashflowSummaries/CashflowSummariesNetCashflowFooter'
 import {
   type SummaryTileConfig,
   SummariesContent,
@@ -102,12 +100,19 @@ export function ProfitAndLossSummaries({
   ])
 
   const netFooter = useMemo<SummaryTileConfig['renderFooter']>(() => (
-    isCashflow
-      ? getCashflowNetCashflowFooter({
-        showProfitAndLossBreakout,
-        categorizedLabel: t('overview:label.categorized_net_profit', 'Categorized net profit'),
-        onTransactionsToReviewClick,
-      })
+    isCashflow && (showProfitAndLossBreakout || onTransactionsToReviewClick)
+      ? ({ categorized }, isLoading) => (
+        <CashflowSummariesNetCashflowFooter
+          isLoading={isLoading}
+          categorized={showProfitAndLossBreakout
+            ? {
+              label: t('overview:label.categorized_net_profit', 'Categorized net profit'),
+              amount: categorized,
+            }
+            : undefined}
+          onTransactionsToReviewClick={onTransactionsToReviewClick}
+        />
+      )
       : undefined
   ), [
     isCashflow,
