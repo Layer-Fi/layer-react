@@ -5,14 +5,17 @@ import {
   type ColorsPaletteOption,
   type LayerContextAction,
   LayerContextActionName as Action,
+  type LayerContextDateRange,
   type LayerContextValues,
   type LayerThemeConfig,
 } from '@internal-types/layerContext'
 import { errorHandler, type LayerError } from '@utils/api/errorHandler'
 import { buildColorsPalette } from '@utils/colors'
+import { DatePreset, rangeForPreset } from '@utils/date/dateRangePresets'
 import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
 import { useBusiness } from '@hooks/api/businesses/[business-id]/useBusiness'
-import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
+import { LayerContextDateRangeBridge } from '@providers/BusinessProvider/LayerContextDateRangeBridge'
+import { GlobalDateStoreProvider } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { type LayerEvent } from '@providers/LayerProvider/layerEvents'
 import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
 import { BankAccountsProvider } from '@contexts/BankAccountsContext/BankAccountsContext'
@@ -100,13 +103,14 @@ export const BusinessProvider = ({
     eventCallbacks: {},
   })
 
-  const globalDateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
-  const { setDateRange } = useGlobalDateRangeActions()
-
-  const dateRange = useMemo(() => ({
-    range: globalDateRange,
-    setRange: setDateRange,
-  }), [globalDateRange, setDateRange])
+  // Placeholder only. The real, store-backed `dateRange` is injected by
+  // `LayerContextDateRangeBridge`, which is mounted below the date store (see the
+  // return below). Nothing renders between this provider and the bridge, so this
+  // value is never observed by a consumer.
+  const dateRange = useMemo<LayerContextDateRange['dateRange']>(() => ({
+    range: rangeForPreset(DatePreset.ThisMonth),
+    setRange: range => range,
+  }), [])
 
   const { data: businessData } = useBusiness({ businessId })
 
@@ -226,10 +230,21 @@ export const BusinessProvider = ({
         dateRange,
       }}
     >
-      <BankAccountsProvider>
-        {children}
-      </BankAccountsProvider>
-      <ToastsContainer />
+      {/*
+        The date store is mounted here, below the business context, so its
+        resolver can read the business activation date directly (enabling the
+        context-dependent AllTime preset even for the global store). The bridge,
+        below the store, re-injects the store-backed `dateRange` onto the context
+        so `useLayerContext().dateRange` keeps working for embedding apps.
+      */}
+      <GlobalDateStoreProvider>
+        <LayerContextDateRangeBridge>
+          <BankAccountsProvider>
+            {children}
+          </BankAccountsProvider>
+          <ToastsContainer />
+        </LayerContextDateRangeBridge>
+      </GlobalDateStoreProvider>
     </LayerContext.Provider>
   )
 }
