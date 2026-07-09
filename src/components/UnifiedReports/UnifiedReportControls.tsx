@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import { ReportControl } from '@schemas/reports/reportConfig'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import {
   hasControl,
   useBaseUnifiedReport,
@@ -14,6 +15,7 @@ import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDa
 import { CombinedDateSelection } from '@components/DateSelection/CombinedDateSelection'
 import { DateGroupByComboBox } from '@components/DateSelection/DateGroupByComboBox'
 import { GlobalYearPicker } from '@components/GlobalYearPicker/GlobalYearPicker'
+import { UnifiedReportHeaderButtons } from '@components/UnifiedReports/UnifiedReportHeaderButtons'
 import { UnifiedReportReportingBasisControl } from '@components/UnifiedReports/UnifiedReportReportingBasisControl'
 import { UnifiedReportTagControl } from '@components/UnifiedReports/UnifiedReportTagControl'
 
@@ -43,6 +45,7 @@ export const UnifiedReportControls = () => {
   const { groupBy, setGroupBy } = useUnifiedReportGroupByParam()
   const { reportingBasis, setReportingBasis } = useUnifiedReportReportingBasisParam()
   const dateSelectionMode = useUnifiedReportDateSelectionMode()
+  const { isDesktop } = useSizeClass()
   const [size, setSize] = useState(3)
 
   const containerRef = useElementSize<HTMLDivElement>((size) => {
@@ -58,6 +61,17 @@ export const UnifiedReportControls = () => {
 
   return (
     <VStack ref={containerRef} className='Layer__UnifiedReports__ControlsContainer'>
+      {!isDesktop && (
+        <Stack
+          direction='row'
+          pi='lg'
+          pbs='lg'
+          gap='xs'
+          className='Layer__UnifiedReports__ControlsActions'
+        >
+          <UnifiedReportHeaderButtons variant='Mobile' />
+        </Stack>
+      )}
       <Stack
         direction='row'
         pb='md'
