@@ -3,12 +3,12 @@ import { Arbitrary, Schema } from 'effect'
 import { InvoiceSchema, InvoiceStatus } from '@schemas/invoices/invoice'
 
 import { makeBusiness } from '@fixtures/business/mocks'
-import { invoiceMemos, invoicePaymentInstructions, invoiceRecipientNames } from '@fixtures/invoices/constants'
 import {
   invoiceCustomerArbitrary,
   invoiceLineItemsArbitrary,
   invoiceStatusArbitrary,
 } from '@fixtures/invoices/arbitrary'
+import { invoiceMemos, invoicePaymentInstructions, invoiceRecipientNames } from '@fixtures/invoices/constants'
 import { dateArbitrary } from '@fixtures/utils/arbitrary/date'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
 import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'

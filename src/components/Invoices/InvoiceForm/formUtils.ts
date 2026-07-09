@@ -4,6 +4,7 @@ import { BigDecimal as BD } from 'effect'
 import type { TFunction } from 'i18next'
 
 import { type Invoice, type InvoiceForm, type InvoiceFormLineItem, InvoiceFormLineItemEquivalence, type InvoiceLineItem } from '@schemas/invoices/invoice'
+import { InvoiceTermsValues } from '@schemas/invoices/invoiceTerms'
 import {
   convertCentsToNonRecursiveBigDecimal,
   convertNonRecursiveBigDecimalToCents,
@@ -26,7 +27,7 @@ import {
   computeTaxes,
   getGrandTotalFromInvoice,
 } from '@components/Invoices/InvoiceForm/totalsUtils'
-import { getInvoiceTermsFromDates, InvoiceTermsValues } from '@components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
+import { getInvoiceTermsFromDates } from '@components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
 
 export type InvoiceFormState = {
   isDirty: boolean

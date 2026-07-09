@@ -1,0 +1,35 @@
+import { Schema } from 'effect'
+
+import { InvoiceStatus } from '@schemas/invoices/invoice'
+import { type InvoicePayment, UpsertDedicatedInvoicePaymentSchema } from '@schemas/invoices/invoicePayment'
+
+import { paymentFromUpsertBody, toPaymentResponse } from '@msw/api/businesses/[business-id]/invoices/[invoice-id]/payment/toPaymentResponse'
+import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
+import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
+import { readRequestJson } from '@msw/utils/request'
+
+const decodeUpsertPayment = Schema.decodeUnknownSync(UpsertDedicatedInvoicePaymentSchema)
+
+export const post = createMockEndpoint<InvoicePayment, ReturnType<typeof toPaymentResponse>>({
+  method: 'post',
+  path: '*/v1/businesses/:businessId/invoices/:invoiceId/payment',
+  resolve: async ({ override, request, params }) => {
+    if (override) return toPaymentResponse(override)
+
+    const body = decodeUpsertPayment(await readRequestJson(request))
+
+    invoiceStore.patchById(params.invoiceId as string, (invoice) => {
+      const outstandingBalance = Math.max(0, invoice.outstandingBalance - body.amount)
+
+      return {
+        ...invoice,
+        outstandingBalance,
+        status: outstandingBalance === 0 ? InvoiceStatus.Paid : InvoiceStatus.PartiallyPaid,
+        paidAt: outstandingBalance === 0 ? body.paidAt : invoice.paidAt,
+        updatedAt: new Date(),
+      }
+    })
+
+    return toPaymentResponse(paymentFromUpsertBody(body))
+  },
+})

@@ -3,9 +3,9 @@ import { pipe, Schema } from 'effect'
 import { AccountIdentifierSchema } from '@schemas/accountIdentifier'
 import { ZonedDateTimeFromSelf } from '@schemas/common/zonedDateTimeFromSelf'
 import { CustomerSchema } from '@schemas/customer'
+import { InvoiceTermsValues } from '@schemas/invoices/invoiceTerms'
 import { NonRecursiveBigDecimalSchema } from '@schemas/nonRecursiveBigDecimal'
 import { TagKeyValueSchema, TransactionTagSchema } from '@schemas/tag'
-import { InvoiceTermsValues } from '@components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
 
 export enum InvoiceStatus {
   Draft = 'DRAFT',
