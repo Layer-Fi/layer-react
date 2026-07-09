@@ -1,9 +1,10 @@
+import { endOfYesterday } from 'date-fns'
+
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 
 import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { FIXTURE_TODAY } from '@fixtures/constants/fixtureYear'
 
 const PAID_STATUSES = [InvoiceStatus.Paid, InvoiceStatus.PartiallyPaid, InvoiceStatus.Refunded]
 
@@ -14,8 +15,11 @@ const toSummaryStats = (invoices: readonly Invoice[]) => {
   )
 
   // Overdue and upcoming partition the open invoices - the UI sums both for the
-  // total owed, so an invoice must land in exactly one bucket.
-  const isOverdue = (invoice: Invoice) => invoice.dueAt != null && invoice.dueAt < FIXTURE_TODAY
+  // total owed, so an invoice must land in exactly one bucket. Classify against
+  // the same real-clock cutoff the list uses (Overdue filter = dueAtEnd:
+  // endOfYesterday), so stat cards and list rows never disagree.
+  const overdueCutoff = endOfYesterday()
+  const isOverdue = (invoice: Invoice) => invoice.dueAt != null && invoice.dueAt <= overdueCutoff
   const overdue = open.filter(isOverdue)
   const upcoming = open.filter(invoice => !isOverdue(invoice))
 
