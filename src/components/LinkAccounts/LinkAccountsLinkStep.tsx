@@ -23,7 +23,11 @@ import { Separator } from '@components/Separator/Separator'
 import { ConditionalList } from '@components/utility/ConditionalList'
 import { useWizard } from '@components/Wizard/Wizard'
 
-export function LinkAccountsLinkStep() {
+type LinkAccountsLinkStepProps = {
+  showDoneLinkingButton?: boolean
+}
+
+export function LinkAccountsLinkStep({ showDoneLinkingButton = true }: LinkAccountsLinkStepProps) {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { isLinking, addConnection } = useContext(LinkedAccountsContext)
@@ -121,7 +125,7 @@ export function LinkAccountsLinkStep() {
           </BasicLinkedAccountContainer>
         )}
       </ConditionalList>
-      {effectiveAccounts.length > 0
+      {showDoneLinkingButton && effectiveAccounts.length > 0
         ? (
           <>
             <Separator mbs='lg' mbe='lg' />
