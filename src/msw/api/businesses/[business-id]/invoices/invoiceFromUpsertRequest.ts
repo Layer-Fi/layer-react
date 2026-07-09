@@ -8,7 +8,11 @@ import { readRequestJson } from '@msw/utils/request'
 const decodeUpsertInvoice = Schema.decodeUnknownSync(UpsertInvoiceSchema)
 
 const buildLineItem = (invoiceId: string, lineItem: UpsertInvoiceLineItem): InvoiceLineItem => {
-  const subtotal = Math.round(lineItem.unitPrice * BigDecimal.unsafeToNumber(lineItem.quantity))
+  // unitPrice is integer cents; multiply exactly in BigDecimal so fractional
+  // quantities don't accrue float error before rounding to whole cents.
+  const subtotal = Math.round(BigDecimal.unsafeToNumber(
+    BigDecimal.multiply(BigDecimal.fromBigInt(BigInt(lineItem.unitPrice)), lineItem.quantity),
+  ))
   const salesTaxTotal = (lineItem.salesTaxes ?? []).reduce((sum, tax) => sum + tax.amount, 0)
 
   return {

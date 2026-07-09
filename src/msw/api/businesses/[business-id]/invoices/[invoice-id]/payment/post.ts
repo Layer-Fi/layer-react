@@ -7,6 +7,7 @@ import { paymentFromUpsertBody, toPaymentResponse } from '@msw/api/businesses/[b
 import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
+import { makeInvoice } from '@fixtures/invoices/mocks'
 
 const decodeUpsertPayment = Schema.decodeUnknownSync(UpsertDedicatedInvoicePaymentSchema)
 
@@ -18,16 +19,17 @@ export const post = createMockEndpoint<InvoicePayment, ReturnType<typeof toPayme
 
     const body = decodeUpsertPayment(await readRequestJson(request))
 
-    invoiceStore.patchById(params.invoiceId as string, (invoice) => {
-      const outstandingBalance = Math.max(0, invoice.outstandingBalance - body.amount)
+    // Seed a fallback if the invoice isn't in the store, so the applied payment
+    // is always reflected in the invoice the UI reads back.
+    const invoice = invoiceStore.findById(params.invoiceId as string) ?? makeInvoice({ id: params.invoiceId as string })
+    const outstandingBalance = Math.max(0, invoice.outstandingBalance - body.amount)
 
-      return {
-        ...invoice,
-        outstandingBalance,
-        status: outstandingBalance === 0 ? InvoiceStatus.Paid : InvoiceStatus.PartiallyPaid,
-        paidAt: outstandingBalance === 0 ? body.paidAt : invoice.paidAt,
-        updatedAt: new Date(),
-      }
+    invoiceStore.save({
+      ...invoice,
+      outstandingBalance,
+      status: outstandingBalance === 0 ? InvoiceStatus.Paid : InvoiceStatus.PartiallyPaid,
+      paidAt: outstandingBalance === 0 ? body.paidAt : invoice.paidAt,
+      updatedAt: new Date(),
     })
 
     return toPaymentResponse(paymentFromUpsertBody(body))

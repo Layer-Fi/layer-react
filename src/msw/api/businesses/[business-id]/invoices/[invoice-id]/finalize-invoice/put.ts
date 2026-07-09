@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type Invoice, InvoiceSchema } from '@schemas/invoices/invoice'
+import { type Invoice, InvoiceSchema, InvoiceStatus } from '@schemas/invoices/invoice'
 import { InvoicePaymentMethodsSchema } from '@schemas/invoices/invoicePaymentMethod'
 
 import { invoicePaymentMethodsStore } from '@msw/api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/store'
@@ -44,11 +44,15 @@ export const put = createMockEndpoint<Invoice, ReturnType<typeof apiData>>({
 
     invoicePaymentMethodsStore.save({ id: invoiceId, paymentMethods: body.paymentMethods })
 
-    const invoice = invoiceStore.patchById(invoiceId, invoice => ({
-      ...invoice,
-      customPaymentInstructions: body.customPaymentInstructions ?? invoice.customPaymentInstructions,
+    // Finalizing sends the draft: promote it to a sent invoice with a sent date.
+    const invoice: Invoice = {
+      ...(invoiceStore.findById(invoiceId) ?? makeInvoice({ id: invoiceId })),
+      status: InvoiceStatus.Saved,
+      sentAt: new Date(),
+      customPaymentInstructions: body.customPaymentInstructions ?? null,
       updatedAt: new Date(),
-    })) ?? makeInvoice({ id: invoiceId })
+    }
+    invoiceStore.save(invoice)
 
     return apiData(encodeFinalizeResponse({ paymentMethods: body.paymentMethods, invoice }))
   },
