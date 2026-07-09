@@ -1,12 +1,12 @@
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
-import { CashflowSummariesNetCashflowFooter } from '@components/CashflowSummaries/CashflowSummariesNetCashflowFooter'
-import { UNCATEGORIZED_CHART_COLOR } from '@components/ProfitAndLossDetailedCharts/utils'
-import { BaseSummariesBreakdownFooter } from '@components/ProfitAndLossSummaries/internal/BaseSummariesBreakdownFooter'
 import {
+  getCashflowBreakdownFooter,
+  getCashflowNetCashflowFooter,
+} from '@components/CashflowSummaries/CashflowSummariesFooters'
+import {
+  type SummaryTileConfig,
   SummariesContent,
   type SummariesTiles,
 } from '@components/ProfitAndLossSummaries/internal/SummariesContent'
@@ -58,103 +58,56 @@ export function ProfitAndLossSummaries({
 }: ProfitAndLossSummariesProps) {
   const { t } = useTranslation()
   const mode = reportingVariant?.type === 'cashflow' ? 'cashflow' : 'profitAndLoss'
+  const isCashflow = mode === 'cashflow'
   const showProfitAndLossBreakout =
     reportingVariant?.type === 'cashflow'
       ? reportingVariant.showProfitAndLossBreakout ?? true
       : false
 
   const uncategorizedLabel = t('common:label.uncategorized', 'Uncategorized')
-  const categorizedSwatchColor = chartColorsList?.[0] ?? DEFAULT_CHART_COLORS[0]
 
-  const tiles: SummariesTiles = useMemo(() => {
-    if (mode === 'cashflow') {
-      return {
-        revenue: {
-          label: stringOverrides?.moneyInLabel || t('common:label.money_in', 'Money in'),
-          renderFooter: showProfitAndLossBreakout
-            ? ({ categorized, uncategorized }, isLoading) => (
-              <BaseSummariesBreakdownFooter
-                isLoading={isLoading}
-                categorized={{
-                  label: t('overview:label.categorized_revenue', 'Categorized revenue'),
-                  amount: categorized,
-                  swatchColor: categorizedSwatchColor,
-                }}
-                uncategorized={{
-                  label: uncategorizedLabel,
-                  amount: uncategorized,
-                  swatchColor: UNCATEGORIZED_CHART_COLOR,
-                }}
-              />
-            )
-            : undefined,
-        },
-        expenses: {
-          label: stringOverrides?.moneyOutLabel || t('common:label.money_out', 'Money out'),
-          renderFooter: showProfitAndLossBreakout
-            ? ({ categorized, uncategorized }, isLoading) => (
-              <BaseSummariesBreakdownFooter
-                isLoading={isLoading}
-                categorized={{
-                  label: t('overview:label.categorized_expenses', 'Categorized expenses'),
-                  amount: categorized,
-                  swatchColor: categorizedSwatchColor,
-                }}
-                uncategorized={{
-                  label: uncategorizedLabel,
-                  amount: uncategorized,
-                  swatchColor: UNCATEGORIZED_CHART_COLOR,
-                }}
-              />
-            )
-            : undefined,
-        },
-        net: {
-          label: stringOverrides?.netCashFlowLabel || t('overview:label.net_cash_flow', 'Net cash flow'),
-          renderFooter: showProfitAndLossBreakout || onTransactionsToReviewClick
-            ? ({ categorized }, isLoading) => (
-              <CashflowSummariesNetCashflowFooter
-                isLoading={isLoading}
-                categorized={showProfitAndLossBreakout
-                  ? {
-                    label: t('overview:label.categorized_net_profit', 'Categorized net profit'),
-                    amount: categorized,
-                  }
-                  : undefined}
-                onTransactionsToReviewClick={onTransactionsToReviewClick}
-              />
-            )
-            : undefined,
-        },
-      }
-    }
+  const revenue: SummaryTileConfig = {
+    label: isCashflow
+      ? stringOverrides?.moneyInLabel || t('common:label.money_in', 'Money in')
+      : stringOverrides?.revenueLabel || revenueLabel || t('common:label.revenue', 'Revenue'),
+    renderFooter: isCashflow
+      ? getCashflowBreakdownFooter({
+        showProfitAndLossBreakout,
+        chartColorsList,
+        categorizedLabel: t('overview:label.categorized_revenue', 'Categorized revenue'),
+        uncategorizedLabel,
+      })
+      : undefined,
+  }
 
-    return {
-      revenue: {
-        label: stringOverrides?.revenueLabel || revenueLabel || t('common:label.revenue', 'Revenue'),
-      },
-      expenses: {
-        label: stringOverrides?.expensesLabel || t('common:label.expenses', 'Expenses'),
-      },
-      net: {
-        label: stringOverrides?.netProfitLabel || t('common:label.net_profit', 'Net Profit'),
-      },
-    }
-  }, [
-    mode,
-    stringOverrides?.moneyInLabel,
-    stringOverrides?.moneyOutLabel,
-    stringOverrides?.netCashFlowLabel,
-    stringOverrides?.revenueLabel,
-    stringOverrides?.expensesLabel,
-    stringOverrides?.netProfitLabel,
-    revenueLabel,
-    t,
-    showProfitAndLossBreakout,
-    categorizedSwatchColor,
-    uncategorizedLabel,
-    onTransactionsToReviewClick,
-  ])
+  const expenses: SummaryTileConfig = {
+    label: isCashflow
+      ? stringOverrides?.moneyOutLabel || t('common:label.money_out', 'Money out')
+      : stringOverrides?.expensesLabel || t('common:label.expenses', 'Expenses'),
+    renderFooter: isCashflow
+      ? getCashflowBreakdownFooter({
+        showProfitAndLossBreakout,
+        chartColorsList,
+        categorizedLabel: t('overview:label.categorized_expenses', 'Categorized expenses'),
+        uncategorizedLabel,
+      })
+      : undefined,
+  }
+
+  const net: SummaryTileConfig = {
+    label: isCashflow
+      ? stringOverrides?.netCashFlowLabel || t('overview:label.net_cash_flow', 'Net cash flow')
+      : stringOverrides?.netProfitLabel || t('common:label.net_profit', 'Net Profit'),
+    renderFooter: isCashflow
+      ? getCashflowNetCashflowFooter({
+        showProfitAndLossBreakout,
+        categorizedLabel: t('overview:label.categorized_net_profit', 'Categorized net profit'),
+        onTransactionsToReviewClick,
+      })
+      : undefined,
+  }
+
+  const tiles: SummariesTiles = { revenue, expenses, net }
 
   return (
     <SummariesContent
