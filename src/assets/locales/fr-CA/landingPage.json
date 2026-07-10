@@ -4,26 +4,26 @@
     "learn_more": "Découvrir plus"
   },
   "label": {
-    "all_finances_in_one_place": "Toutes vos finances en un seul endroit",
-    "best_accounting_software_for_industry": "Le meilleur logiciel de comptabilité pour les entreprises du secteur {{industry}}. Rapide à configurer et facile à utiliser.",
-    "built_for_industry": "Conçu pour le secteur {{industry}}",
+    "all_finances_in_one_place": "Toutes vos finances au même endroit",
+    "best_accounting_software_for_industry": "Le meilleur logiciel de comptabilité pour les entreprises de {{industry}}. Rapide à configurer et facile à utiliser.",
+    "built_for_industry": "Conçu pour {{industry}}",
     "complete_bookkeeping_service": "Un service complet de tenue de livres",
     "complete_financial_reports": "Rapports financiers complets et dossier fiscal de fin d’année",
     "direct_integration_with_platform_name": "Intégration directe avec {{platformName}}",
-    "directly_integrated_with_platform_name": "Intégré directement à vos données {{platformName}}, pour vous permettre de voir la performance et la rentabilité de votre entreprise en temps réel.",
+    "directly_integrated_with_platform_name": "Intégré directement à vos données {{platformName}}, pour que vous puissiez voir la performance et les profits de votre entreprise en temps réel.",
     "easy_to_understand_profitability_charts": "Graphiques et rapports de rentabilité faciles à comprendre",
-    "easy_to_use_software": "Logiciel facile à utiliser",
-    "full_service_bookkeeping": "Tenue de livres complète",
+    "easy_to_use_software": "Un logiciel facile à utiliser",
+    "full_service_bookkeeping": "Tenue de livres à service complet",
     "get_dedicated_bookkeeper": "Obtenez un teneur de livres attitré qui organisera et gérera vos livres pour vous.",
     "monthly_books_done_for_you": "Tenue de livres mensuelle faite pour vous",
     "personalized_setup_bookkeeper": "Configuration personnalisée avec votre teneur de livres",
-    "platform_name_accounting": "{{platformName}} Accounting",
-    "platform_name_accounting_dashboard": "Interface du tableau de bord {{platformName}} Accounting affichant des données financières et des renseignements sur l’entreprise",
+    "platform_name_accounting": "Comptabilité {{platformName}}",
+    "platform_name_accounting_dashboard": "Interface du tableau de bord Comptabilité {{platformName}} affichant des données financières et des informations sur l’entreprise",
     "self_service_accounting_business_health": "Comptabilité en libre-service pour comprendre la santé de votre entreprise",
     "starting_at": "À partir de",
-    "track_business_finances_within_platform": "Suivez les finances de votre entreprise, directement dans {{platformName}}.",
-    "track_expenses_and_get_reports": "Suivez vos dépenses et obtenez des rapports faciles à comprendre, conçus spécialement pour les entreprises du secteur {{industry}}.",
+    "track_business_finances_within_platform": "Suivez les finances de votre entreprise directement dans {{platformName}}.",
+    "track_expenses_and_get_reports": "Suivez vos dépenses et obtenez des rapports faciles à comprendre conçus spécialement pour les entreprises de {{industry}}.",
     "track_expenses_and_receipts": "Suivez les dépenses et les reçus",
-    "use_platform_name_accounting": "Utilisez {{platformName}} Accounting vous même, ou laissez votre tenue de livres à notre équipe d’experts"
+    "use_platform_name_accounting": "Utilisez Comptabilité {{platformName}} vous-même, ou laissez votre tenue de livres à notre équipe d’experts"
   }
 }

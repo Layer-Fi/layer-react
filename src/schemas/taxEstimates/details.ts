@@ -32,7 +32,7 @@ export interface TaxDetailsRow extends Schema.Struct.Type<typeof taxDetailsRowFi
   breakdown?: ReadonlyArray<TaxDetailsRow>
 }
 
-interface TaxDetailsRowEncoded extends Schema.Struct.Encoded<typeof taxDetailsRowFields> {
+export interface TaxDetailsRowEncoded extends Schema.Struct.Encoded<typeof taxDetailsRowFields> {
   readonly breakdown?: ReadonlyArray<TaxDetailsRowEncoded>
 }
 

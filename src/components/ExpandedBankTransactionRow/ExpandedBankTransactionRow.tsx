@@ -198,7 +198,7 @@ export const ExpandedBankTransactionRow = ({
           {isCategorizationEnabled && (
             <HStack pi='md' pbe='md' pbs='3xs'>
               <Toggle
-                ariaLabel={t('bankTransactions:label.transaction_action', 'Transaction action')}
+                ariaLabel={t('bankTransactions:label.categorize_or_match_transaction', 'Categorize or match transaction')}
                 size={ToggleSize.small}
                 options={toggleOptions}
                 selectedKey={purpose}

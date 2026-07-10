@@ -11,11 +11,16 @@ if (!baseDir || !targetDir) {
 
 const readJson = async (filePath) => JSON.parse(await readFile(filePath, 'utf8'))
 
-const mergeExisting = (baseValue, targetValue) => {
+// Downloaded values win; base values survive only where the download has none.
+const applyDownloaded = (baseValue, targetValue) => {
+  if (targetValue === undefined) return baseValue
+  if (baseValue === undefined) return targetValue
+
   if (Array.isArray(baseValue)) {
     if (!Array.isArray(targetValue)) return baseValue
 
-    return baseValue.map((item, index) => mergeExisting(item, targetValue[index]))
+    const length = Math.max(baseValue.length, targetValue.length)
+    return Array.from({ length }, (_, index) => applyDownloaded(baseValue[index], targetValue[index]))
   }
 
   if (baseValue && typeof baseValue === 'object') {
@@ -23,15 +28,16 @@ const mergeExisting = (baseValue, targetValue) => {
       ? targetValue
       : {}
 
+    const newKeys = Object.keys(targetObject).filter(key => !(key in baseValue))
     return Object.fromEntries(
-      Object.entries(baseValue).map(([key, value]) => [
+      [...Object.keys(baseValue), ...newKeys].map(key => [
         key,
-        mergeExisting(value, targetObject[key]),
+        applyDownloaded(baseValue[key], targetObject[key]),
       ]),
     )
   }
 
-  return targetValue === undefined || targetValue === '' ? baseValue : targetValue
+  return targetValue === '' ? baseValue : targetValue
 }
 
 const processDir = async (basePath, targetPath) => {
@@ -50,20 +56,23 @@ const processDir = async (basePath, targetPath) => {
       continue
     }
 
+    let baseJson
     try {
-      const baseJson = await readJson(baseEntryPath)
-      const targetJson = await readJson(targetEntryPath)
-      const mergedJson = mergeExisting(baseJson, targetJson)
-
-      await writeFile(targetEntryPath, `${JSON.stringify(mergedJson, null, 2)}\n`)
+      baseJson = await readJson(baseEntryPath)
     } catch (error) {
       if (error && error.code === 'ENOENT') {
+        // No local counterpart: an obsolete namespace still on Crowdin.
         await rm(targetEntryPath)
         continue
       }
 
       throw error
     }
+
+    const targetJson = await readJson(targetEntryPath)
+    const mergedJson = applyDownloaded(baseJson, targetJson)
+
+    await writeFile(targetEntryPath, `${JSON.stringify(mergedJson, null, 2)}\n`)
   }
 }
 

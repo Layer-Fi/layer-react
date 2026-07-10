@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 
 import { type OnboardingStep } from '@internal-types/layerContext'
 import { type TagOption } from '@internal-types/tags'
-import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Container } from '@components/Container/Container'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
@@ -16,6 +15,7 @@ import { ProfitAndLossHeader } from '@components/ProfitAndLossHeader/ProfitAndLo
 import { ProfitAndLossOverviewDetailedCharts } from '@components/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
 import {
   ProfitAndLossSummaries,
+  type ProfitAndLossSummariesSlotProps,
   type ProfitAndLossSummariesStringOverrides,
 } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
@@ -47,9 +47,7 @@ export interface AccountingOverviewProps {
   tagFilter?: TagOption
   slotProps?: {
     profitAndLoss?: {
-      summaries?: {
-        variants?: Variants
-      }
+      summaries?: ProfitAndLossSummariesSlotProps
     }
   }
 }
@@ -69,6 +67,8 @@ export const AccountingOverview = ({
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
+  const profitAndLossSummariesReportingVariant =
+    slotProps?.profitAndLoss?.summaries?.reportingVariant
   const profitAndLossTagFilter = tagFilter?.tagValues.length
     ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
     : undefined
@@ -96,6 +96,7 @@ export const AccountingOverview = ({
           stringOverrides={stringOverrides?.profitAndLoss?.summaries}
           chartColorsList={chartColorsList}
           onTransactionsToReviewClick={onTransactionsToReviewClick}
+          reportingVariant={profitAndLossSummariesReportingVariant}
           variants={profitAndLossSummariesVariants}
         />
         <Container

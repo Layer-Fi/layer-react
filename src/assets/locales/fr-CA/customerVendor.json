@@ -12,7 +12,7 @@
     "matching_customers_vendors": "Aucun client ni fournisseur correspondant trouvé"
   },
   "error": {
-    "load_customer_vendor": "Une erreur s’est produite lors du chargement des options de clients et de fournisseurs.",
+    "load_customer_vendor": "Une erreur s’est produite lors du chargement des options de client et de fournisseur.",
     "load_customers": "Une erreur s’est produite lors du chargement des clients."
   },
   "label": {
