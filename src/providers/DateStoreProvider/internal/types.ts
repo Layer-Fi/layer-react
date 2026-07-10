@@ -16,7 +16,7 @@ export type DateActions = {
   /** Set an explicit range; the preset it represents is derived. */
   setDateRange: (range: DateRange, activationDate?: Date) => DateRangeWithPreset
   /** Set by preset; the concrete range is resolved. */
-  setPresetRange: (options: { preset: Exclude<DatePreset, DatePreset.Custom> }, activationDate?: Date) => DateRangeWithPreset
+  setDatePreset: (datePreset: Exclude<DatePreset, DatePreset.Custom>, activationDate?: Date) => DateRangeWithPreset
   setMonth: (options: { startDate: Date }, activationDate?: Date) => DateRangeWithPreset
   setYear: (options: { startDate: Date }, activationDate?: Date) => DateRangeWithPreset
   setMonthByPeriod: (options: { monthNumber: number, yearNumber: number }, activationDate?: Date) => DateRangeWithPreset

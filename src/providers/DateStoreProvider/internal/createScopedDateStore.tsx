@@ -112,15 +112,9 @@ export function createScopedDateStore({
     )
   }
 
-  // Intentional counterpart to `useDateRange` that also exposes the active preset.
-  function usePresetRange({ dateSelectionMode }: UseDateRangeParams) {
-    const range = useDateRange({ dateSelectionMode })
-    const preset = scopedStore.useSelector(({ preset }) => preset)
-
-    return useMemo(
-      () => ({ ...range, preset }),
-      [range, preset],
-    )
+  // Reads only the active preset — the range counterpart is `useDateRange`.
+  function useDatePreset() {
+    return scopedStore.useSelector(({ preset }) => preset)
   }
 
   function useDateRangeActions() {
@@ -160,21 +154,21 @@ export function createScopedDateStore({
   }
 
   // Intentional counterpart to `useDateRangeActions` for setting by preset.
-  function usePresetRangeActions() {
+  function useDatePresetActions() {
     const activationDate = useBusinessActivationDateSafe()
 
-    const setPresetRangeAction = scopedStore.useSelector(
-      ({ actions }) => actions.setPresetRange,
+    const setDatePresetAction = scopedStore.useSelector(
+      ({ actions }) => actions.setDatePreset,
     )
 
-    const setPresetRange = useCallback(
-      (options: { preset: Exclude<DatePreset, DatePreset.Custom> }) => setPresetRangeAction(options, activationDate),
-      [setPresetRangeAction, activationDate],
+    const setDatePreset = useCallback(
+      (datePreset: Exclude<DatePreset, DatePreset.Custom>) => setDatePresetAction(datePreset, activationDate),
+      [setDatePresetAction, activationDate],
     )
 
     return useMemo(
-      () => ({ setPresetRange }),
-      [setPresetRange],
+      () => ({ setDatePreset }),
+      [setDatePreset],
     )
   }
 
@@ -199,8 +193,8 @@ export function createScopedDateStore({
     useDateActions,
     useDateRange,
     useDateRangeActions,
-    usePresetRange,
-    usePresetRangeActions,
+    useDatePreset,
+    useDatePresetActions,
     usePeriodAlignedActions,
   }
 }

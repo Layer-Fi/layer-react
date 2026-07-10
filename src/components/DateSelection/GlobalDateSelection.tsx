@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-import { useGlobalPresetRange, useGlobalPresetRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
+import { useGlobalDatePreset, useGlobalDatePresetActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
 import { GlobalDatePicker } from '@components/GlobalDatePicker/GlobalDatePicker'
 
@@ -13,8 +13,8 @@ type GlobalDateSelectionProps = {
 }
 
 export const GlobalDateSelection = ({ showLabels = false, isCompact = false, includeAllTime = true }: GlobalDateSelectionProps) => {
-  const { preset } = useGlobalPresetRange({ dateSelectionMode: 'full' })
-  const { setPresetRange } = useGlobalPresetRangeActions()
+  const datePreset = useGlobalDatePreset()
+  const { setDatePreset } = useGlobalDatePresetActions()
 
   return (
     <div
@@ -23,8 +23,8 @@ export const GlobalDateSelection = ({ showLabels = false, isCompact = false, inc
       })}
     >
       <DateSelectionComboBox
-        preset={preset}
-        setPresetRange={setPresetRange}
+        datePreset={datePreset}
+        setDatePreset={setDatePreset}
         includeAllTime={includeAllTime}
         showLabel={showLabels}
       />

@@ -30,8 +30,8 @@ function setupDateStore(options?: CreateScopedDateStoreOptions) {
     useDateActions,
     useDateRange,
     useDateRangeActions,
-    usePresetRange,
-    usePresetRangeActions,
+    useDatePreset,
+    useDatePresetActions,
   } = dateStore
 
   function useDateStoreTestState() {
@@ -39,10 +39,10 @@ function setupDateStore(options?: CreateScopedDateStoreOptions) {
       date: useDate(),
       fullRange: useDateRange({ dateSelectionMode: 'full' }),
       monthRange: useDateRange({ dateSelectionMode: 'month' }),
-      presetRange: usePresetRange({ dateSelectionMode: 'full' }),
+      datePreset: useDatePreset(),
       dateActions: useDateActions(),
       rangeActions: useDateRangeActions(),
-      presetActions: usePresetRangeActions(),
+      datePresetActions: useDatePresetActions(),
     }
   }
 
@@ -62,14 +62,14 @@ describe('createScopedDateStore', () => {
     const { result } = setupDateStore()
 
     expect(result.current.fullRange).toEqual(CURRENT_MONTH_TO_DATE)
-    expect(result.current.presetRange).toEqual({ ...CURRENT_MONTH_TO_DATE, preset: DatePreset.ThisMonth })
+    expect(result.current.datePreset).toBe(DatePreset.ThisMonth)
   })
 
   it('initializes to year-to-date with the ThisYear preset', () => {
     const { result } = setupDateStore({ initialDatePreset: DatePreset.ThisYear })
 
     expect(result.current.fullRange).toEqual(CURRENT_YEAR_TO_DATE)
-    expect(result.current.presetRange.preset).toBe(DatePreset.ThisYear)
+    expect(result.current.datePreset).toBe(DatePreset.ThisYear)
   })
 
   it('reflects setDateRange in the full range, clamping a future end date to today and deriving Custom', () => {
@@ -86,7 +86,7 @@ describe('createScopedDateStore', () => {
       startDate: FIVE_MONTHS_BEFORE_NOW,
       endDate: END_OF_TODAY,
     })
-    expect(result.current.presetRange.preset).toBe(DatePreset.Custom)
+    expect(result.current.datePreset).toBe(DatePreset.Custom)
   })
 
   it('projects the stored range onto the containing month in month mode', () => {
@@ -115,7 +115,7 @@ describe('createScopedDateStore', () => {
   it('tracks the configured preset and resets it to Custom on a direct range change', () => {
     const { result } = setupDateStore({ initialDatePreset: DatePreset.ThisYear })
 
-    expect(result.current.presetRange.preset).toBe(DatePreset.ThisYear)
+    expect(result.current.datePreset).toBe(DatePreset.ThisYear)
 
     act(() => {
       result.current.rangeActions.setDateRange({
@@ -124,17 +124,17 @@ describe('createScopedDateStore', () => {
       })
     })
 
-    expect(result.current.presetRange.preset).toBe(DatePreset.Custom)
+    expect(result.current.datePreset).toBe(DatePreset.Custom)
   })
 
   it('resolves the range and sets the preset when selecting a preset', () => {
     const { result } = setupDateStore()
 
     act(() => {
-      result.current.presetActions.setPresetRange({ preset: DatePreset.LastMonth })
+      result.current.datePresetActions.setDatePreset(DatePreset.LastMonth)
     })
 
-    expect(result.current.presetRange.preset).toBe(DatePreset.LastMonth)
+    expect(result.current.datePreset).toBe(DatePreset.LastMonth)
     // Range resolved to the start of last month (NOW is 2026-06-15).
     expect(result.current.fullRange.startDate).toEqual(new Date(2026, 4, 1))
   })
@@ -149,7 +149,7 @@ describe('createScopedDateStore', () => {
       })
     })
 
-    expect(result.current.presetRange.preset).toBe(DatePreset.ThisYear)
+    expect(result.current.datePreset).toBe(DatePreset.ThisYear)
   })
 
   it('renders the fallback (does not mount the store) when no business context is available', () => {
@@ -174,7 +174,10 @@ describe('createScopedDateStore AllTime preset', () => {
     }
 
     const { result } = renderHook(
-      () => dateStore.usePresetRange({ dateSelectionMode: 'full' }),
+      () => ({
+        range: dateStore.useDateRange({ dateSelectionMode: 'full' }),
+        datePreset: dateStore.useDatePreset(),
+      }),
       { wrapper: Wrapper },
     )
 
@@ -183,7 +186,7 @@ describe('createScopedDateStore AllTime preset', () => {
 
     await waitFor(() => expect(result.current).not.toBeNull())
 
-    expect(result.current.preset).toBe(DatePreset.AllTime)
-    expect(result.current).toEqual({ ...rangeForAllTime(makeBusiness().activationAt), preset: DatePreset.AllTime })
+    expect(result.current.datePreset).toBe(DatePreset.AllTime)
+    expect(result.current.range).toEqual(rangeForAllTime(makeBusiness().activationAt))
   })
 })

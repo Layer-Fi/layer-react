@@ -39,14 +39,14 @@ export function buildDateStore({ initialRange, initialPreset }: BuildDateStoreOp
     }
 
     // Set by preset; resolve the concrete range.
-    const setPresetRange = (
-      { preset }: { preset: Exclude<DatePreset, DatePreset.Custom> },
+    const setDatePreset = (
+      datePreset: Exclude<DatePreset, DatePreset.Custom>,
       activationDate?: Date,
     ): DateRangeWithPreset => {
-      const resolved = resolveRangeForPreset(preset, activationDate)
+      const resolved = resolveRangeForPreset(datePreset, activationDate)
       // AllTime before the activation date is known: keep the current selection.
       if (resolved === null) return { startDate: get().startDate, endDate: get().endDate, preset: get().preset }
-      return applyPreset(getDateRange({ mode: 'full', startDate: resolved.startDate, endDate: resolved.endDate }), preset)
+      return applyPreset(getDateRange({ mode: 'full', startDate: resolved.startDate, endDate: resolved.endDate }), datePreset)
     }
 
     const setDate = ({ date }: { date: Date }, activationDate?: Date): DateRangeWithPreset => {
@@ -69,7 +69,7 @@ export function buildDateStore({ initialRange, initialPreset }: BuildDateStoreOp
       actions: {
         setDate,
         setDateRange,
-        setPresetRange,
+        setDatePreset,
         setMonth,
         setYear,
 

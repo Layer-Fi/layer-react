@@ -13,17 +13,17 @@ type DateSelectionOption = {
 
 type DateSelectionComboBoxProps = {
   /** The store's active preset, shown as the selected option. */
-  preset: DatePreset
-  /** Set the range by preset; selecting an option calls it with `{ preset }`. */
-  setPresetRange: (options: { preset: Exclude<DatePreset, DatePreset.Custom> }) => void
+  datePreset: DatePreset
+  /** Set the range by preset; selecting an option calls it with the chosen preset. */
+  setDatePreset: (datePreset: Exclude<DatePreset, DatePreset.Custom>) => void
   /** Whether to offer the "All Time" option. */
   includeAllTime?: boolean
   showLabel?: boolean
 }
 
 export const DateSelectionComboBox = ({
-  preset,
-  setPresetRange,
+  datePreset,
+  setDatePreset,
   includeAllTime = false,
   showLabel = false,
 }: DateSelectionComboBoxProps) => {
@@ -46,7 +46,7 @@ export const DateSelectionComboBox = ({
   // Selectable options exclude Custom — it only appears as a (non-selectable) label
   // when the range doesn't match a named preset.
   const options = allOptions.filter(o => o.value !== DatePreset.Custom)
-  const selectedOption = allOptions.find(o => o.value === preset) ?? null
+  const selectedOption = allOptions.find(o => o.value === datePreset) ?? null
 
   const onSelectedValueChange = useCallback((option: DateSelectionOption | null) => {
     if (option === null) return
@@ -54,8 +54,8 @@ export const DateSelectionComboBox = ({
     const nextPreset = option.value
     if (nextPreset === DatePreset.Custom) return
 
-    setPresetRange({ preset: nextPreset })
-  }, [setPresetRange])
+    setDatePreset(nextPreset)
+  }, [setDatePreset])
 
   const inputId = useId()
 
