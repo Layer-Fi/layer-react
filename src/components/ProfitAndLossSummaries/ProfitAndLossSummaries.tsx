@@ -25,7 +25,7 @@ export interface ProfitAndLossSummariesStringOverrides {
 
 export type ProfitAndLossSummariesReportingVariant =
   | { type?: 'profitAndLoss' }
-  | { type: 'cashflow', showProfitAndLossBreakout?: boolean }
+  | { type: 'cashflow', showProfitAndLossBreakdown?: boolean }
 
 export type ProfitAndLossSummariesSlotProps = {
   reportingVariant?: ProfitAndLossSummariesReportingVariant
@@ -61,9 +61,9 @@ export function ProfitAndLossSummaries({
   const { t } = useTranslation()
   const mode = reportingVariant?.type === 'cashflow' ? 'cashflow' : 'profitAndLoss'
   const isCashflow = mode === 'cashflow'
-  const showProfitAndLossBreakout =
+  const showProfitAndLossBreakdown =
     reportingVariant?.type === 'cashflow'
-      ? reportingVariant.showProfitAndLossBreakout ?? true
+      ? reportingVariant.showProfitAndLossBreakdown ?? true
       : false
 
   const uncategorizedLabel = t('common:label.uncategorized', 'Uncategorized')
@@ -112,7 +112,7 @@ export function ProfitAndLossSummaries({
   const renderNetFooter = useCallback(({ categorized }: SummaryTileBreakdown, isLoading: boolean) => (
     <CashflowSummariesNetCashflowFooter
       isLoading={isLoading}
-      categorized={showProfitAndLossBreakout
+      categorized={showProfitAndLossBreakdown
         ? {
           label: t('overview:label.categorized_net_profit', 'Categorized net profit'),
           amount: categorized,
@@ -121,7 +121,7 @@ export function ProfitAndLossSummaries({
       onTransactionsToReviewClick={onTransactionsToReviewClick}
     />
   ), [
-    showProfitAndLossBreakout,
+    showProfitAndLossBreakdown,
     t,
     onTransactionsToReviewClick,
   ])
@@ -130,7 +130,7 @@ export function ProfitAndLossSummaries({
     label: isCashflow
       ? stringOverrides?.moneyInLabel || t('common:label.money_in', 'Money in')
       : stringOverrides?.revenueLabel || revenueLabel || t('common:label.revenue', 'Revenue'),
-    renderFooter: isCashflow && showProfitAndLossBreakout
+    renderFooter: isCashflow && showProfitAndLossBreakdown
       ? renderRevenueFooter
       : undefined,
   }), [
@@ -139,7 +139,7 @@ export function ProfitAndLossSummaries({
     stringOverrides?.revenueLabel,
     revenueLabel,
     t,
-    showProfitAndLossBreakout,
+    showProfitAndLossBreakdown,
     renderRevenueFooter,
   ])
 
@@ -147,7 +147,7 @@ export function ProfitAndLossSummaries({
     label: isCashflow
       ? stringOverrides?.moneyOutLabel || t('common:label.money_out', 'Money out')
       : stringOverrides?.expensesLabel || t('common:label.expenses', 'Expenses'),
-    renderFooter: isCashflow && showProfitAndLossBreakout
+    renderFooter: isCashflow && showProfitAndLossBreakdown
       ? renderExpensesFooter
       : undefined,
   }), [
@@ -155,7 +155,7 @@ export function ProfitAndLossSummaries({
     stringOverrides?.moneyOutLabel,
     stringOverrides?.expensesLabel,
     t,
-    showProfitAndLossBreakout,
+    showProfitAndLossBreakdown,
     renderExpensesFooter,
   ])
 
@@ -163,7 +163,7 @@ export function ProfitAndLossSummaries({
     label: isCashflow
       ? stringOverrides?.netCashFlowLabel || t('overview:label.net_cash_flow', 'Net cash flow')
       : stringOverrides?.netProfitLabel || t('common:label.net_profit', 'Net Profit'),
-    renderFooter: isCashflow && (showProfitAndLossBreakout || onTransactionsToReviewClick)
+    renderFooter: isCashflow && (showProfitAndLossBreakdown || onTransactionsToReviewClick)
       ? renderNetFooter
       : undefined,
   }), [
@@ -171,7 +171,7 @@ export function ProfitAndLossSummaries({
     stringOverrides?.netCashFlowLabel,
     stringOverrides?.netProfitLabel,
     t,
-    showProfitAndLossBreakout,
+    showProfitAndLossBreakdown,
     onTransactionsToReviewClick,
     renderNetFooter,
   ])
