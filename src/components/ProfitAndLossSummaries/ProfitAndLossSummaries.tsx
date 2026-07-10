@@ -7,10 +7,10 @@ import { CashflowSummariesNetCashflowFooter } from '@components/CashflowSummarie
 import { UNCATEGORIZED_CHART_COLOR } from '@components/ProfitAndLossDetailedCharts/utils'
 import { BaseSummariesBreakdownFooter } from '@components/ProfitAndLossSummaries/internal/BaseSummariesBreakdownFooter'
 import {
-  type SummaryTileBreakdown,
-  type SummaryTileConfig,
   SummariesContent,
   type SummariesTiles,
+  type SummaryTileBreakdown,
+  type SummaryTileConfig,
 } from '@components/ProfitAndLossSummaries/internal/SummariesContent'
 import { TransactionsToReview } from '@views/AccountingOverview/internal/TransactionsToReview'
 
@@ -29,7 +29,7 @@ export type ProfitAndLossSummariesReportingVariant =
 
 export type ProfitAndLossSummariesSlotProps = {
   reportingVariant?: ProfitAndLossSummariesReportingVariant
-  variants?: Variants
+  variants?: Variants,
 }
 
 type ProfitAndLossSummariesProps = {
