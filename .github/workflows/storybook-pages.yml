@@ -14,9 +14,6 @@ on:
 permissions:
   contents: read
 
-env:
-  STORYBOOK_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
-
 concurrency:
   group: storybook-pages
   cancel-in-progress: false
@@ -30,8 +27,7 @@ jobs:
       contents: read
 
     outputs:
-      destination_dir: ${{ steps.pages-target.outputs.destination_dir }}
-      storybook_url: ${{ steps.pages-target.outputs.storybook_url }}
+      destination_dir: ${{ steps.target.outputs.destination_dir }}
 
     steps:
     - uses: actions/checkout@v4
@@ -49,32 +45,19 @@ jobs:
       run: npm ci
 
     - name: Resolve Pages target
-      id: pages-target
+      id: target
       env:
         TARGET: ${{ inputs.target }}
-        REPO_NAME: ${{ github.event.repository.name }}
+        REPO: ${{ github.event.repository.name }}
       run: |
-        case "$TARGET" in
-          main)
-            echo "destination_dir=" >> "$GITHUB_OUTPUT"
-            echo "storybook_base_path=/$REPO_NAME/" >> "$GITHUB_OUTPUT"
-            echo "storybook_url=$STORYBOOK_URL/" >> "$GITHUB_OUTPUT"
-            ;;
-          dev)
-            echo "destination_dir=dev" >> "$GITHUB_OUTPUT"
-            echo "storybook_base_path=/$REPO_NAME/dev/" >> "$GITHUB_OUTPUT"
-            echo "storybook_url=$STORYBOOK_URL/dev/" >> "$GITHUB_OUTPUT"
-            ;;
-          *)
-            echo "Unsupported target: $TARGET"
-            exit 1
-            ;;
-        esac
+        SUBDIR=$([ "$TARGET" = main ] || echo "$TARGET")
+        echo "destination_dir=$SUBDIR" >> "$GITHUB_OUTPUT"
+        echo "base_path=/$REPO/${SUBDIR:+$SUBDIR/}" >> "$GITHUB_OUTPUT"
 
     - name: Build Storybook
       run: npm run storybook:build
       env:
-        STORYBOOK_BASE_PATH: ${{ steps.pages-target.outputs.storybook_base_path }}
+        STORYBOOK_BASE_PATH: ${{ steps.target.outputs.base_path }}
 
     - name: Upload Storybook artifact
       uses: actions/upload-artifact@v4
@@ -108,5 +91,7 @@ jobs:
 
     - name: Pages URL
       env:
-        STORYBOOK_DEPLOY_URL: ${{ needs.build.outputs.storybook_url }}
-      run: echo "$STORYBOOK_DEPLOY_URL"
+        OWNER: ${{ github.repository_owner }}
+        REPO: ${{ github.event.repository.name }}
+        SUBDIR: ${{ needs.build.outputs.destination_dir }}
+      run: echo "https://$OWNER.github.io/$REPO/${SUBDIR:+$SUBDIR/}" >> "$GITHUB_STEP_SUMMARY"
