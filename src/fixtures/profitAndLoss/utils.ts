@@ -47,7 +47,6 @@ export const makeSectionLineItem = (
   split: readonly CategorySplit[],
 ): LineItem => makeLineItem(name, displayName, total, splitIntoLineItems(total, split))
 
-// Every summary aggregate is linear, so range totals are just field-wise sums.
 export const sumSummaries = (summaries: ProfitAndLossSummary[]) =>
   summaries.reduce(
     (acc, summary) => ({

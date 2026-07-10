@@ -39,11 +39,8 @@ const base = Schema.Struct({
 const baseArbitrary = Arbitrary.make(base)
 
 /**
- * Re-derives the aggregate fields so every generated month satisfies the P&L
- * identities: grossProfit = income - COGS, profitBeforeTaxes = grossProfit -
- * operatingExpenses, netProfit = profitBeforeTaxes - taxes, and totalExpenses
- * = income - netProfit. Operating expenses absorb the remainder, which keeps
- * the generated (small, positive) net profit exact.
+ * Recomputes the aggregate fields so every generated month satisfies the P&L
+ * identities exactly, with operating expenses absorbing the remainder.
  */
 export const ProfitAndLossSummaryArbitrarySchema = base.annotations({
   arbitrary: () => () =>
