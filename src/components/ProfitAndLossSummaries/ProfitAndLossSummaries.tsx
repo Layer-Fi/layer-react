@@ -25,11 +25,11 @@ export interface ProfitAndLossSummariesStringOverrides {
 
 export type ProfitAndLossSummariesReportingVariant =
   | { type?: 'profitAndLoss' }
-  | { type: 'cashflow'; showProfitAndLossBreakout?: boolean }
+  | { type: 'cashflow', showProfitAndLossBreakout?: boolean }
 
 export type ProfitAndLossSummariesSlotProps = {
   reportingVariant?: ProfitAndLossSummariesReportingVariant
-  variants?: Variants,
+  variants?: Variants
 }
 
 type ProfitAndLossSummariesProps = {
