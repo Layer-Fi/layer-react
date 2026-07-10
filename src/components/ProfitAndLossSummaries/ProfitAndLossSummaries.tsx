@@ -29,6 +29,9 @@ export type ProfitAndLossSummariesReportingVariant =
 
 export type ProfitAndLossSummariesSlotProps = {
   reportingVariant?: ProfitAndLossSummariesReportingVariant
+  /**
+   * @deprecated Sizing is determined by the container size
+   */
   variants?: Variants
 }
 
@@ -37,6 +40,9 @@ type ProfitAndLossSummariesProps = {
   stringOverrides?: ProfitAndLossSummariesStringOverrides
   chartColorsList?: string[]
   reportingVariant?: ProfitAndLossSummariesReportingVariant
+  /**
+   * @deprecated Sizing is determined by the container size
+   */
   variants?: Variants
   onTransactionsToReviewClick?: () => void
   /**
@@ -163,7 +169,7 @@ export function ProfitAndLossSummaries({
     label: isCashflow
       ? stringOverrides?.netCashFlowLabel || t('overview:label.net_cash_flow', 'Net cash flow')
       : stringOverrides?.netProfitLabel || t('common:label.net_profit', 'Net Profit'),
-    renderFooter: isCashflow && (showProfitAndLossBreakdown || onTransactionsToReviewClick)
+    renderFooter: isCashflow && showProfitAndLossBreakdown
       ? renderNetFooter
       : undefined,
   }), [
@@ -172,7 +178,6 @@ export function ProfitAndLossSummaries({
     stringOverrides?.netProfitLabel,
     t,
     showProfitAndLossBreakdown,
-    onTransactionsToReviewClick,
     renderNetFooter,
   ])
 
