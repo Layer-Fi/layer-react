@@ -11,6 +11,8 @@ type ProfitAndLossSummariesStoryArgs = {
   actionable: boolean
   reportingVariant: ProfitAndLossSummariesReportingVariant
   withTransactionsToReviewCallback: boolean
+  /** The component's own prop, typed here only so its docgen entry can be hidden from the controls table. */
+  onTransactionsToReviewClick?: () => void
 }
 
 const onTransactionsToReviewClick = () => window.alert('onTransactionsToReviewClick')
@@ -20,7 +22,7 @@ const meta: Meta<ProfitAndLossSummariesStoryArgs> = {
   component: ProfitAndLossSummaries,
   parameters: {
     msw: { handlers: profitAndLossStoryHandlers },
-    controls: { include: ['actionable', 'onTransactionsToReviewClick'] },
+    controls: { include: ['onTransactionsToReviewClick'] },
   },
   decorators: [withProfitAndLossStoryContext({ asContainer: false })],
   args: {
@@ -29,11 +31,9 @@ const meta: Meta<ProfitAndLossSummariesStoryArgs> = {
     withTransactionsToReviewCallback: true,
   },
   argTypes: {
-    actionable: {
-      control: 'boolean',
-      description: 'Make the revenue and expenses tiles clickable to set the sidebar scope',
-    },
+    actionable: { table: { disable: true } },
     reportingVariant: { table: { disable: true } },
+    onTransactionsToReviewClick: { table: { disable: true } },
     withTransactionsToReviewCallback: {
       name: 'onTransactionsToReviewClick',
       control: 'boolean',
