@@ -105,7 +105,7 @@ export function rangeForPreset(preset: RelativeDatePreset, base?: Date): DateRan
 export function rangeForAllTime(activationDate: Date): DateRange {
   return correctDateRange({
     startDate: startOfDay(activationDate),
-    endDate: clampToPresentOrPast(endOfDay(new Date())),
+    endDate: endOfDay(new Date()),
   })
 }
 
