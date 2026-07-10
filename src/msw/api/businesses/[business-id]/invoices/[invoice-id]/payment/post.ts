@@ -4,10 +4,9 @@ import { InvoiceStatus } from '@schemas/invoices/invoice'
 import { type InvoicePayment, UpsertDedicatedInvoicePaymentSchema } from '@schemas/invoices/invoicePayment'
 
 import { paymentFromUpsertBody, toPaymentResponse } from '@msw/api/businesses/[business-id]/invoices/[invoice-id]/payment/toPaymentResponse'
-import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
+import { findOrSeedInvoice, invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
-import { makeInvoice } from '@fixtures/invoices/mocks'
 
 const decodeUpsertPayment = Schema.decodeUnknownSync(UpsertDedicatedInvoicePaymentSchema)
 
@@ -19,9 +18,7 @@ export const post = createMockEndpoint<InvoicePayment, ReturnType<typeof toPayme
 
     const body = decodeUpsertPayment(await readRequestJson(request))
 
-    // Seed a fallback if the invoice isn't in the store, so the applied payment
-    // is always reflected in the invoice the UI reads back.
-    const invoice = invoiceStore.findById(params.invoiceId as string) ?? makeInvoice({ id: params.invoiceId as string })
+    const invoice = findOrSeedInvoice(params.invoiceId as string)
     const outstandingBalance = Math.max(0, invoice.outstandingBalance - body.amount)
 
     invoiceStore.save({

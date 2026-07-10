@@ -3,11 +3,10 @@ import { Schema } from 'effect'
 import { CreateCustomerRefundSchema, type CustomerRefund, CustomerRefundSchema, CustomerRefundStatus } from '@schemas/invoices/customerRefund'
 import { InvoiceStatus } from '@schemas/invoices/invoice'
 
-import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
+import { findOrSeedInvoice, invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
-import { makeInvoice } from '@fixtures/invoices/mocks'
 
 const decodeCreateRefund = Schema.decodeUnknownSync(CreateCustomerRefundSchema)
 const encodeRefund = Schema.encodeSync(CustomerRefundSchema)
@@ -22,7 +21,7 @@ export const post = createMockEndpoint<CustomerRefund, ReturnType<typeof toRefun
 
     const invoiceId = params.invoiceId as string
     const body = decodeCreateRefund(await readRequestJson(request))
-    const invoice = invoiceStore.findById(invoiceId) ?? makeInvoice({ id: invoiceId })
+    const invoice = findOrSeedInvoice(invoiceId)
 
     invoiceStore.save({
       ...invoice,

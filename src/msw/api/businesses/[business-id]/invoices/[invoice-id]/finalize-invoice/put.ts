@@ -1,35 +1,18 @@
+import { addDays } from 'date-fns'
 import { Schema } from 'effect'
 
-import { type Invoice, InvoiceSchema, InvoiceStatus } from '@schemas/invoices/invoice'
-import { InvoicePaymentMethodsSchema } from '@schemas/invoices/invoicePaymentMethod'
+import { FinalizeInvoiceBodySchema, FinalizeInvoiceDataSchema } from '@schemas/invoices/finalizeInvoice'
+import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 
 import { invoicePaymentMethodsStore } from '@msw/api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/store'
-import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
+import { findOrSeedInvoice, invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
-import { makeInvoice } from '@fixtures/invoices/mocks'
-
-// Mirrors FinalizeInvoiceBodySchema/FinalizeInvoiceResponseSchema from
-// useFinalizeInvoice without importing the hook module into the mock layer.
-const FinalizeInvoiceBodySchema = Schema.extend(
-  InvoicePaymentMethodsSchema,
-  Schema.Struct({
-    customPaymentInstructions: Schema.optional(Schema.String).pipe(
-      Schema.fromKey('custom_payment_instructions'),
-    ),
-  }),
-)
-
-const FinalizeInvoiceResponseSchema = Schema.extend(
-  InvoicePaymentMethodsSchema,
-  Schema.Struct({
-    invoice: InvoiceSchema,
-  }),
-)
+import { DEFAULT_INVOICE_PAYMENT_TERMS_DAYS } from '@fixtures/invoices/constants'
 
 const decodeFinalizeBody = Schema.decodeUnknownSync(FinalizeInvoiceBodySchema)
-const encodeFinalizeResponse = Schema.encodeSync(FinalizeInvoiceResponseSchema)
+const encodeFinalizeData = Schema.encodeSync(FinalizeInvoiceDataSchema)
 
 export const put = createMockEndpoint<Invoice, ReturnType<typeof apiData>>({
   method: 'put',
@@ -39,21 +22,25 @@ export const put = createMockEndpoint<Invoice, ReturnType<typeof apiData>>({
     const body = decodeFinalizeBody(await readRequestJson(request))
 
     if (override) {
-      return apiData(encodeFinalizeResponse({ paymentMethods: body.paymentMethods, invoice: override }))
+      return apiData(encodeFinalizeData({ paymentMethods: body.paymentMethods, invoice: override }))
     }
 
     invoicePaymentMethodsStore.save({ id: invoiceId, paymentMethods: body.paymentMethods })
 
-    // Finalizing sends the draft: promote it to a sent invoice with a sent date.
+    // Finalizing sends the draft: promote it to a sent invoice with a sent
+    // date, and default a due date (seeded drafts keep dueAt null).
+    const stored = findOrSeedInvoice(invoiceId)
+    const sentAt = new Date()
     const invoice: Invoice = {
-      ...(invoiceStore.findById(invoiceId) ?? makeInvoice({ id: invoiceId })),
+      ...stored,
       status: InvoiceStatus.Saved,
-      sentAt: new Date(),
+      sentAt,
+      dueAt: stored.dueAt ?? addDays(sentAt, DEFAULT_INVOICE_PAYMENT_TERMS_DAYS),
       customPaymentInstructions: body.customPaymentInstructions ?? null,
       updatedAt: new Date(),
     }
     invoiceStore.save(invoice)
 
-    return apiData(encodeFinalizeResponse({ paymentMethods: body.paymentMethods, invoice }))
+    return apiData(encodeFinalizeData({ paymentMethods: body.paymentMethods, invoice }))
   },
 })

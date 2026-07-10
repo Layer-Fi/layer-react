@@ -3,11 +3,10 @@ import { Schema } from 'effect'
 import { InvoiceStatus } from '@schemas/invoices/invoice'
 import { CreateInvoiceWriteoffSchema, type InvoiceWriteoff, InvoiceWriteoffMode, InvoiceWriteoffSchema } from '@schemas/invoices/invoiceWriteoff'
 
-import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
+import { findOrSeedInvoice, invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
-import { makeInvoice } from '@fixtures/invoices/mocks'
 
 const decodeCreateWriteoff = Schema.decodeUnknownSync(CreateInvoiceWriteoffSchema)
 const encodeWriteoff = Schema.encodeSync(InvoiceWriteoffSchema)
@@ -22,7 +21,7 @@ export const post = createMockEndpoint<InvoiceWriteoff, ReturnType<typeof toWrit
 
     const invoiceId = params.invoiceId as string
     const body = decodeCreateWriteoff(await readRequestJson(request))
-    const invoice = invoiceStore.findById(invoiceId) ?? makeInvoice({ id: invoiceId })
+    const invoice = findOrSeedInvoice(invoiceId)
 
     invoiceStore.save({
       ...invoice,

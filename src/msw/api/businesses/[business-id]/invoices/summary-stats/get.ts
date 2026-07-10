@@ -1,6 +1,7 @@
 import { endOfYesterday } from 'date-fns'
+import { Schema } from 'effect'
 
-import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
+import { type Invoice, InvoiceStatus, type InvoiceSummaryStatsResponse, InvoiceSummaryStatsResponseSchema } from '@schemas/invoices/invoice'
 
 import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
 import { apiData } from '@msw/utils/apiResponse'
@@ -8,7 +9,9 @@ import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 
 const PAID_STATUSES = [InvoiceStatus.Paid, InvoiceStatus.PartiallyPaid, InvoiceStatus.Refunded]
 
-const toSummaryStats = (invoices: readonly Invoice[]) => {
+const encodeSummaryStats = Schema.encodeSync(InvoiceSummaryStatsResponseSchema)
+
+const toSummaryStats = (invoices: readonly Invoice[]): InvoiceSummaryStatsResponse => {
   const open = invoices.filter(invoice =>
     (invoice.status === InvoiceStatus.Saved || invoice.status === InvoiceStatus.PartiallyPaid)
     && invoice.sentAt != null,
@@ -32,19 +35,19 @@ const toSummaryStats = (invoices: readonly Invoice[]) => {
 
   return {
     invoices: {
-      overdue_count: overdue.length,
-      overdue_total: sumOutstanding(overdue),
-      sent_count: upcoming.length,
-      sent_total: sumOutstanding(upcoming),
+      overdueCount: overdue.length,
+      overdueTotal: BigInt(sumOutstanding(overdue)),
+      sentCount: upcoming.length,
+      sentTotal: BigInt(sumOutstanding(upcoming)),
     },
-    invoice_payments: {
-      sum_total: paymentsTotal,
+    invoicePayments: {
+      sumTotal: BigInt(paymentsTotal),
     },
   }
 }
 
-export const get = createMockEndpoint<ReturnType<typeof toSummaryStats>, ReturnType<typeof apiData>>({
+export const get = createMockEndpoint<InvoiceSummaryStatsResponse, ReturnType<typeof apiData>>({
   method: 'get',
   path: '*/v1/businesses/:businessId/invoices/summary-stats',
-  resolve: ({ override }) => apiData(override ?? toSummaryStats(invoiceStore.all())),
+  resolve: ({ override }) => apiData(encodeSummaryStats(override ?? toSummaryStats(invoiceStore.all()))),
 })

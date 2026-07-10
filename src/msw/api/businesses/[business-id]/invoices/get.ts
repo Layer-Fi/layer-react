@@ -1,14 +1,11 @@
-import { Schema } from 'effect'
-
-import { type Invoice, InvoiceSchema } from '@schemas/invoices/invoice'
+import { type Invoice } from '@schemas/invoices/invoice'
 
 import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
+import { encodeInvoice } from '@msw/api/businesses/[business-id]/invoices/toInvoiceResponse'
 import { paginatedApiData } from '@msw/utils/apiResponse'
 import { createListFilter, matchesQuery } from '@msw/utils/createListFilter'
 import { createListSorter } from '@msw/utils/createListSorter'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-
-const encodeInvoice = Schema.encodeSync(InvoiceSchema)
 
 const filterInvoices = createListFilter<Invoice>({
   q: matchesQuery(invoice => [

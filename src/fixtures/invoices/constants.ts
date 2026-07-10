@@ -1,3 +1,7 @@
+export const invoicePaymentTermsDays = [15, 30, 30, 60]
+
+export const DEFAULT_INVOICE_PAYMENT_TERMS_DAYS = 30
+
 export const invoiceLineItemDescriptions = [
   'Design consultation',
   'Logo design',
