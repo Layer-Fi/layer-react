@@ -18,7 +18,7 @@ export const taxesArbitrary = (fc: typeof FastCheck) =>
 export const uncategorizedAmountArbitrary = (fc: typeof FastCheck) =>
   fc.oneof(
     { arbitrary: fc.constant(0), weight: 1 },
-    { arbitrary: centsAmountArbitrary({ minDollars: 600, maxDollars: 2700 })(fc), weight: 3 },
+    { arbitrary: centsAmountArbitrary({ minDollars: 1800, maxDollars: 7500 })(fc), weight: 4 },
   )
 
 export const categorizedTransactionsArbitrary = (fc: typeof FastCheck) =>

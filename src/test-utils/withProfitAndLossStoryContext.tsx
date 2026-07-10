@@ -8,6 +8,8 @@ import { handlers } from '@msw/handlers'
 import { makeBusiness } from '@fixtures/business/mocks'
 import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
 
+import './withProfitAndLossStoryContext.scss'
+
 export const PROFIT_AND_LOSS_PINNED_RANGE: DateRange = {
   startDate: new Date(2025, 8, 1),
   endDate: new Date(2025, 8, 30),
@@ -23,14 +25,8 @@ export const withProfitAndLossStoryContext = (
 ): Decorator => {
   const ProfitAndLossStoryContext: Decorator = Story => (
     <PinnedGlobalDateRange dateRange={PROFIT_AND_LOSS_PINNED_RANGE}>
-      <div
-        className='ProfitAndLossPage'
-        style={{ display: 'grid', paddingBlock: '2rem', paddingInline: '3rem' }}
-      >
-        <div
-          className='ProfitAndLossContainer'
-          style={{ display: 'grid', minInlineSize: '20rem', maxInlineSize: '80rem' }}
-        >
+      <div className='ProfitAndLossPage'>
+        <div className='ProfitAndLossContainer'>
           <ProfitAndLoss asContainer={asContainer}>
             <Story />
           </ProfitAndLoss>

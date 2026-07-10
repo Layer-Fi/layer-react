@@ -14,6 +14,9 @@ export const ProfitAndLossChartSelectionIndicator = ({ viewBox, selected }: Prof
 
   if (!selected || plotArea === undefined || chartHeight === undefined) return null
 
+  const boxHeight = chartHeight - X_AXIS_LABEL_INSET - plotArea.y
+  if (boxHeight <= 0) return null
+
   const { x = 0, width = 0 } = viewBox !== undefined && 'x' in viewBox
     ? viewBox
     : { x: 0, width: 0 }
@@ -30,7 +33,7 @@ export const ProfitAndLossChartSelectionIndicator = ({ viewBox, selected }: Prof
       x={x - margin}
       y={plotArea.y}
       width={boxWidth}
-      height={chartHeight - X_AXIS_LABEL_INSET - plotArea.y}
+      height={boxHeight}
     />
   )
 }

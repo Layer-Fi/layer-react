@@ -1,0 +1,17 @@
+.ProfitAndLossPage {
+  display: grid;
+  padding-block: var(--spacing-xl);
+  padding-inline: var(--spacing-3xl);
+}
+
+.ProfitAndLossContainer {
+  display: grid;
+  min-inline-size: 20rem;
+  max-inline-size: 80rem;
+}
+
+.ProfitAndLossStoryCard {
+  padding: var(--spacing-md);
+  border-radius: var(--spacing-md);
+  border: 1px solid var(--color-base-300);
+}

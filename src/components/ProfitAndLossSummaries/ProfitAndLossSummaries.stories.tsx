@@ -15,14 +15,14 @@ type ProfitAndLossSummariesStoryArgs = {
   onTransactionsToReviewClick?: () => void
 }
 
-const onTransactionsToReviewClick = () => window.alert('onTransactionsToReviewClick')
+const handleTransactionsToReviewClick = () => window.alert('onTransactionsToReviewClick')
 
 const meta: Meta<ProfitAndLossSummariesStoryArgs> = {
   title: 'Components/ProfitAndLoss/Summaries',
   component: ProfitAndLossSummaries,
   parameters: {
     msw: { handlers: profitAndLossStoryHandlers },
-    controls: { include: ['onTransactionsToReviewClick'] },
+    controls: { include: ['onTransactionsToReviewClick', 'withTransactionsToReviewCallback'] },
   },
   decorators: [withProfitAndLossStoryContext({ asContainer: false })],
   args: {
@@ -47,11 +47,11 @@ const meta: Meta<ProfitAndLossSummariesStoryArgs> = {
     },
   },
   render: ({ actionable, reportingVariant, withTransactionsToReviewCallback }) => (
-    <div style={{ padding: '1rem', borderRadius: '1rem', border: '1px solid rgb(0 0 0 / 10%)' }}>
+    <div className='ProfitAndLossStoryCard'>
       <ProfitAndLossSummaries
         actionable={actionable}
         reportingVariant={reportingVariant}
-        onTransactionsToReviewClick={withTransactionsToReviewCallback ? onTransactionsToReviewClick : undefined}
+        onTransactionsToReviewClick={withTransactionsToReviewCallback ? handleTransactionsToReviewClick : undefined}
       />
     </div>
   ),
@@ -61,11 +61,7 @@ export default meta
 
 type Story = StoryObj<ProfitAndLossSummariesStoryArgs>
 
-export const ProfitAndLoss: Story = {
-  args: {
-    actionable: false,
-  },
-}
+export const ProfitAndLoss: Story = {}
 
 export const CashFlow: Story = {
   args: {

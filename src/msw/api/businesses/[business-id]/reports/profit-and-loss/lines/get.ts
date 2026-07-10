@@ -1,4 +1,4 @@
-import { addDays, formatISO, parseISO } from 'date-fns'
+import { addDays, endOfMonth, formatISO, isValid, parseISO, startOfMonth } from 'date-fns'
 import { Schema } from 'effect'
 
 import { Direction } from '@internal-types/general'
@@ -16,6 +16,11 @@ const encodeDetailLines = Schema.encodeSync(PnlDetailLinesDataSchema)
 const toResponse = (data: PnlDetailLinesData) => apiData(encodeDetailLines(data))
 
 const LINE_AMOUNTS = [184200, 96500, 152300, 68400, 120900, 45700]
+
+const parseDateParam = (value: string | null, fallback: Date) => {
+  const parsed = parseISO(value ?? '')
+  return isValid(parsed) ? parsed : fallback
+}
 
 const makeLines = (lineItemName: string, startDate: Date): PnlDetailLine[] =>
   LINE_AMOUNTS.map((amount, index) => ({
@@ -40,8 +45,8 @@ export const get = createMockEndpoint<readonly PnlDetailLine[], ReturnType<typeo
   resolve: ({ override, request }) => {
     const params = new URL(request.url).searchParams
 
-    const startDate = parseISO(params.get('start_date') ?? '')
-    const endDate = parseISO(params.get('end_date') ?? '')
+    const startDate = parseDateParam(params.get('start_date'), startOfMonth(new Date()))
+    const endDate = parseDateParam(params.get('end_date'), endOfMonth(startDate))
     const lineItemName = params.get('line_item_name') ?? 'EXPENSES'
 
     return toResponse({
