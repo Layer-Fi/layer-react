@@ -45,6 +45,8 @@ const renderLegendContent = (payload: { value: string, type: string, id: string 
   )
 }
 
+const LEGEND_HEIGHT = 20
+
 export const ProfitAndLossChartLegend = () => {
   const { t } = useTranslation()
   const payload = useMemo(() => LEGEND_ENTRY_CONFIG.map(entry => ({
@@ -53,6 +55,12 @@ export const ProfitAndLossChartLegend = () => {
     id: entry.id,
   })), [t])
   return (
-    <Legend verticalAlign='top' align='right' content={renderLegendContent(payload)} />
+    <Legend
+      verticalAlign='top'
+      align='right'
+      // Explicit height reserves the legend band deterministically; DOM measurement can lag and let bars overlap.
+      height={LEGEND_HEIGHT}
+      content={renderLegendContent(payload)}
+    />
   )
 }
