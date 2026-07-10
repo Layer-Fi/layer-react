@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 
 import { type DateRange } from '@utils/date/dateRange'
-import type { DatePreset } from '@utils/date/dateRangePresets'
+import type { DatePreset, SelectableDatePreset } from '@utils/date/dateRangePresets'
 import { DateRangePicker } from '@components/DatePicker/DateRangePicker'
 import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
 
@@ -11,7 +11,7 @@ type DateRangeSelectionProps = {
   dateRange: DateRange
   setDateRange: (range: DateRange) => void
   datePreset: DatePreset
-  setDatePreset: (datePreset: Exclude<DatePreset, DatePreset.Custom>) => void
+  setDatePreset: (datePreset: SelectableDatePreset) => void
   showLabels?: boolean
   isCompact?: boolean
 }

@@ -65,12 +65,18 @@ export enum DatePreset {
    * it requires the business context. See `useResolvedInitialRange`.
    */
   AllTime = 'AllTime',
+  /*
+  * The custom preset cannot be selected directly by the user. It can only be set by the store if
+  * the user sets a date range that is not one of the other presets.
+  */
   Custom = 'Custom',
 
 }
 
-/** Presets whose range is a pure function of `now` (no context required). */
+// A date preset that can be computed from `now` alone.
 export type RelativeDatePreset = Exclude<DatePreset, DatePreset.Custom | DatePreset.AllTime>
+// A date preset that can be selected directly by the user.
+export type SelectableDatePreset = Exclude<DatePreset, DatePreset.Custom>
 
 const RELATIVE_DATE_PRESET_ARGS = {
   [DatePreset.ThisMonth]: [Period.Month, 0],

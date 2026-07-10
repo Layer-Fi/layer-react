@@ -1,7 +1,7 @@
 import { type PropsWithChildren, type ReactNode, useCallback, useMemo } from 'react'
 
 import type { DateRange, DateSelectionMode } from '@utils/date/dateRange'
-import { DatePreset } from '@utils/date/dateRangePresets'
+import { DatePreset, type SelectableDatePreset } from '@utils/date/dateRangePresets'
 import { createScopedStore } from '@utils/zustand/createScopedStore'
 import { useStoreWithDateSelected } from '@utils/zustand/useStoreWithDateSelected'
 import { buildDateStore, type MakeDateStoreOptions } from '@providers/DateStoreProvider/internal/buildDateStore'
@@ -155,7 +155,7 @@ export function createScopedDateStore({
     )
 
     const setDatePreset = useCallback(
-      (datePreset: Exclude<DatePreset, DatePreset.Custom>) => setDatePresetAction(datePreset, activationDate),
+      (datePreset: SelectableDatePreset) => setDatePresetAction(datePreset, activationDate),
       [setDatePresetAction, activationDate],
     )
 

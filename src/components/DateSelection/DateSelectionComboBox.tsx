@@ -1,7 +1,7 @@
 import { useCallback, useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { DatePreset } from '@utils/date/dateRangePresets'
+import { DatePreset, type SelectableDatePreset } from '@utils/date/dateRangePresets'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
@@ -13,7 +13,7 @@ type DateSelectionOption = {
 
 type DateSelectionComboBoxProps = {
   datePreset: DatePreset
-  setDatePreset: (datePreset: Exclude<DatePreset, DatePreset.Custom>) => void
+  setDatePreset: (datePreset: SelectableDatePreset) => void
   showLabel?: boolean
 }
 
