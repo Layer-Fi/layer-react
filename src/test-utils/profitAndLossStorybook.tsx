@@ -30,9 +30,27 @@ export const profitAndLossStoryHandlers = [
 
 export const withProfitAndLossStoryContext: Decorator = Story => (
   <PinnedGlobalDateRange dateRange={PROFIT_AND_LOSS_PINNED_RANGE}>
-    {/* The default container also applies the theme's CSS variables, which the charts read. */}
-    <ProfitAndLoss>
-      <Story />
-    </ProfitAndLoss>
+    {/* Mirrors how a host app mounts the P&L components: a padded page with a max-width card. */}
+    <div
+      className='ProfitAndLossPage'
+      style={{ display: 'grid', paddingBlock: '2rem', paddingInline: '3rem' }}
+    >
+      <div
+        className='ProfitAndLossContainer'
+        style={{
+          display: 'grid',
+          minInlineSize: '40rem',
+          maxInlineSize: '80rem',
+          padding: '1rem',
+          borderRadius: '1rem',
+          border: '1px solid rgb(0 0 0 / 10%)',
+        }}
+      >
+        {/* The default container also applies the theme's CSS variables, which the charts read. */}
+        <ProfitAndLoss>
+          <Story />
+        </ProfitAndLoss>
+      </div>
+    </div>
   </PinnedGlobalDateRange>
 )
