@@ -1,5 +1,4 @@
 import { join } from 'node:path'
-
 import { type StorybookConfig } from '@storybook/react-vite'
 
 const config: StorybookConfig = {
