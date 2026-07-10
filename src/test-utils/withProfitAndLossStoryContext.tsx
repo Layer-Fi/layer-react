@@ -36,3 +36,10 @@ export const withProfitAndLossStoryContext = (
 
   return ProfitAndLossStoryContext
 }
+
+/** For full-page overview views, which mount their own ProfitAndLoss provider and containers. */
+export const withOverviewStoryContext: Decorator = Story => (
+  <PinnedGlobalDateRange dateRange={PROFIT_AND_LOSS_PINNED_RANGE}>
+    <Story />
+  </PinnedGlobalDateRange>
+)

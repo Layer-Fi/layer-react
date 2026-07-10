@@ -10,6 +10,7 @@ import { profitAndLossStoryHandlers, withProfitAndLossStoryContext } from '@test
 type ProfitAndLossSummariesStoryArgs = {
   actionable: boolean
   reportingVariant: ProfitAndLossSummariesReportingVariant
+  showProfitAndLossBreakdown: boolean
   withTransactionsToReviewCallback: boolean
   /** The component's own prop, typed here only so its docgen entry can be hidden from the controls table. */
   onTransactionsToReviewClick?: () => void
@@ -28,12 +29,22 @@ const meta: Meta<ProfitAndLossSummariesStoryArgs> = {
   args: {
     actionable: false,
     reportingVariant: { type: 'profitAndLoss' },
+    showProfitAndLossBreakdown: true,
     withTransactionsToReviewCallback: true,
   },
   argTypes: {
     actionable: { table: { disable: true } },
     reportingVariant: { table: { disable: true } },
     onTransactionsToReviewClick: { table: { disable: true } },
+    showProfitAndLossBreakdown: {
+      name: 'reportingVariant.showProfitAndLossBreakdown',
+      control: 'boolean',
+      description: 'Show the categorized/uncategorized breakdown footers',
+      table: {
+        category: 'Slot props',
+        type: { summary: 'boolean' },
+      },
+    },
     withTransactionsToReviewCallback: {
       name: 'onTransactionsToReviewClick',
       control: 'boolean',
@@ -46,11 +57,13 @@ const meta: Meta<ProfitAndLossSummariesStoryArgs> = {
       },
     },
   },
-  render: ({ actionable, reportingVariant, withTransactionsToReviewCallback }) => (
+  render: ({ actionable, reportingVariant, showProfitAndLossBreakdown, withTransactionsToReviewCallback }) => (
     <div style={{ padding: '1rem', borderRadius: '1rem', border: '1px solid rgb(0 0 0 / 10%)' }}>
       <ProfitAndLossSummaries
         actionable={actionable}
-        reportingVariant={reportingVariant}
+        reportingVariant={reportingVariant.type === 'cashflow'
+          ? { type: 'cashflow', showProfitAndLossBreakdown }
+          : reportingVariant}
         onTransactionsToReviewClick={withTransactionsToReviewCallback ? handleTransactionsToReviewClick : undefined}
       />
     </div>
@@ -64,6 +77,15 @@ type Story = StoryObj<ProfitAndLossSummariesStoryArgs>
 export const ProfitAndLoss: Story = {}
 
 export const CashFlow: Story = {
+  parameters: {
+    controls: {
+      include: [
+        'onTransactionsToReviewClick',
+        'withTransactionsToReviewCallback',
+        'reportingVariant.showProfitAndLossBreakdown',
+      ],
+    },
+  },
   args: {
     reportingVariant: { type: 'cashflow' },
   },

@@ -1,9 +1,10 @@
 import { useCallback, useMemo } from 'react'
 import { getMonth, getYear, set } from 'date-fns'
 
+import { BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
 import { getCompletedTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { DateFormat } from '@utils/i18n/date/patterns'
-import { BookkeepingPeriodStatus, useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
