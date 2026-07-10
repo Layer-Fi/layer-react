@@ -10,9 +10,6 @@ const clearBankAccounts = () => {
   bankAccountStore.all().forEach(({ id }) => bankAccountStore.deleteById(id))
 }
 
-// Completing the wizard resets everything and remounts, restarting the flow.
-// The SWR cache must be wiped too: the remount's revalidation is deduped away
-// after the confirm step's own refetch.
 function RestartingLinkAccounts() {
   const [iteration, setIteration] = useState(0)
   const { overwriteCache } = useBankAccountsGlobalCacheActions()
@@ -39,7 +36,7 @@ const meta = {
     Story => (
       <div
         className='LinkAccountsPage'
-        style={{ display: 'grid', paddingBlockStart: '2rem', paddingBlockEnd: '4rem', paddingInline: '3rem' }}
+        style={{ display: 'grid', paddingBlock: '2rem', paddingInline: '3rem' }}
       >
         <div
           className='LinkAccountsContainer'

@@ -1,12 +1,5 @@
 import { useCallback, useMemo, useRef } from 'react'
 
-/**
- * Storybook stand-in for `react-plaid-link` (aliased via `.storybook/main.ts`);
- * `open()` fakes a successful link. Like the real SDK, `open` is stable per
- * token (a per-render identity would loop the open effect) but changes with the
- * token (which is what opens the next session).
- */
-
 type MockPlaidLinkConfig = {
   token?: string | null
   onSuccess?: (publicToken: string, metadata: unknown) => void
