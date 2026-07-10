@@ -1,4 +1,5 @@
-import { type ChangeEvent, type ReactNode, useEffect, useLayoutEffect, useRef } from 'react'
+import { type ChangeEvent, type ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import classNames from 'classnames'
 
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { HStack } from '@ui/Stack/Stack'
@@ -25,9 +26,15 @@ interface TabsProps {
 }
 
 export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
+  const [isInitialized, setIsInitialized] = useState(false)
   const thumbRef = useRef<HTMLSpanElement>(null)
 
   const selectedValue = selected || options[0].value
+
+  const baseClassName = classNames(
+    'Layer__tabs',
+    isInitialized && 'Layer__tabs--initialized',
+  )
 
   const elementRef = useElementSize<HTMLDivElement>(() => positionThumb())
 
@@ -67,18 +74,14 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
   })
 
   // Enable the thumb transition one frame after the first positioning paint, so mount never animates.
-  // Applied via classList (like the thumb itself) - the container's rendered className never changes,
-  // so React's prop diffing won't remove it.
   useEffect(() => {
-    const frame = requestAnimationFrame(() => {
-      elementRef.current?.classList.add('Layer__tabs--initialized')
-    })
+    const frame = requestAnimationFrame(() => setIsInitialized(true))
     return () => cancelAnimationFrame(frame)
-  }, [elementRef])
+  }, [])
 
   return (
     <div className='Layer__tabs__container'>
-      <HStack className='Layer__tabs' ref={elementRef}>
+      <HStack className={baseClassName} ref={elementRef}>
         {options.map((option, index) => (
           <Tab
             {...option}
