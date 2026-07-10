@@ -1,4 +1,4 @@
-import { readdir, readFile, rm, writeFile } from 'node:fs/promises'
+import { readdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
 
@@ -11,11 +11,17 @@ if (!baseDir || !targetDir) {
 
 const readJson = async (filePath) => JSON.parse(await readFile(filePath, 'utf8'))
 
-const mergeExisting = (baseValue, targetValue) => {
+// Existing (base) translations are the source of truth; downloaded (target)
+// values only fill keys that are missing or empty locally.
+const fillUntranslated = (baseValue, targetValue) => {
+  if (targetValue === undefined) return baseValue
+  if (baseValue === undefined || baseValue === '') return targetValue
+
   if (Array.isArray(baseValue)) {
     if (!Array.isArray(targetValue)) return baseValue
 
-    return baseValue.map((item, index) => mergeExisting(item, targetValue[index]))
+    const length = Math.max(baseValue.length, targetValue.length)
+    return Array.from({ length }, (_, index) => fillUntranslated(baseValue[index], targetValue[index]))
   }
 
   if (baseValue && typeof baseValue === 'object') {
@@ -23,15 +29,16 @@ const mergeExisting = (baseValue, targetValue) => {
       ? targetValue
       : {}
 
+    const newKeys = Object.keys(targetObject).filter(key => !(key in baseValue))
     return Object.fromEntries(
-      Object.entries(baseValue).map(([key, value]) => [
+      [...Object.keys(baseValue), ...newKeys].map(key => [
         key,
-        mergeExisting(value, targetObject[key]),
+        fillUntranslated(baseValue[key], targetObject[key]),
       ]),
     )
   }
 
-  return targetValue === undefined || targetValue === '' ? baseValue : targetValue
+  return baseValue
 }
 
 const processDir = async (basePath, targetPath) => {
@@ -50,20 +57,24 @@ const processDir = async (basePath, targetPath) => {
       continue
     }
 
-    try {
-      const baseJson = await readJson(baseEntryPath)
-      const targetJson = await readJson(targetEntryPath)
-      const mergedJson = mergeExisting(baseJson, targetJson)
+    const targetJson = await readJson(targetEntryPath)
 
-      await writeFile(targetEntryPath, `${JSON.stringify(mergedJson, null, 2)}\n`)
+    let baseJson
+    try {
+      baseJson = await readJson(baseEntryPath)
     } catch (error) {
       if (error && error.code === 'ENOENT') {
-        await rm(targetEntryPath)
+        // New namespace from Crowdin: keep the downloaded file as-is.
+        await writeFile(targetEntryPath, `${JSON.stringify(targetJson, null, 2)}\n`)
         continue
       }
 
       throw error
     }
+
+    const mergedJson = fillUntranslated(baseJson, targetJson)
+
+    await writeFile(targetEntryPath, `${JSON.stringify(mergedJson, null, 2)}\n`)
   }
 }
 

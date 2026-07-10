@@ -4,8 +4,8 @@ name: i18n - Sync French Translations
 #
 # On en-US changes merged to main:
 # upload sources -> pre-translate fr-CA (TM, then optional AI)
-# -> download fr-CA -> keep existing fr-CA keys only
-# -> open/update one PR with fr-CA translation value changes.
+# -> download fr-CA -> fill untranslated fr-CA keys only (local values win)
+# -> open/update one PR with new fr-CA translations.
 #
 # Manual runs default to download-only for pulling upstream Crowdin edits.
 # Set pretranslate=true to run the full upload/pre-translate/download flow.
@@ -119,7 +119,7 @@ jobs:
         ls -ld src/assets/locales/fr-CA
         find src/assets/locales/fr-CA -maxdepth 1 -type f -exec ls -l {} +
 
-    - name: Keep existing fr-CA keys only
+    - name: Fill untranslated fr-CA keys only
       run: node scripts/i18next/mergeExistingTranslations.mjs "$RUNNER_TEMP/fr-CA-before-crowdin" src/assets/locales/fr-CA
 
     - name: Open French translations PR
