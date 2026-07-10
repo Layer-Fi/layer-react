@@ -14,7 +14,6 @@ export const PROFIT_AND_LOSS_PINNED_RANGE: DateRange = {
 }
 
 export const profitAndLossStoryHandlers = [
-  // Local-time construction: a UTC midnight would fall in the prior December in western timezones.
   getBusiness.mock(makeBusiness({ activationAt: new Date(2024, 0, 1) })),
   ...handlers,
 ]
