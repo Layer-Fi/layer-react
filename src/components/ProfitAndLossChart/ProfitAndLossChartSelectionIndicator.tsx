@@ -6,7 +6,6 @@ type ProfitAndLossChartSelectionIndicatorProps = Pick<LabelProps, 'viewBox'> & {
 
 import './profitAndLossChartSelectionIndicator.scss'
 
-// Extends the box below the plot area so it wraps the month tick label.
 const X_AXIS_LABEL_INSET = 14
 
 export const ProfitAndLossChartSelectionIndicator = ({ viewBox, selected }: ProfitAndLossChartSelectionIndicatorProps) => {

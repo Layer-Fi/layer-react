@@ -15,7 +15,6 @@ import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
 
 const fields = ProfitAndLossSummarySchema.fields
 
-// Derived fields and the caller-assigned year/month are recomputed below.
 const constantZero = <F>(field: F) => withArbitrary(field, () => fc => fc.constant(0))
 
 const base = Schema.Struct({

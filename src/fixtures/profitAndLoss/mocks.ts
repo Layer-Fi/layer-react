@@ -89,7 +89,6 @@ const OPEX_SPLIT: readonly CategorySplit[] = [
   ['TRAVEL', 'Travel & Meals', 0.04],
 ]
 
-/** Splits a total into per-category line items; rounding remainder lands on the first category. */
 const splitIntoLineItems = (total: number, split: readonly CategorySplit[]): LineItem[] => {
   const items = split.map(([name, displayName, share]) => ({
     name,
