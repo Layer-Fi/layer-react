@@ -24,6 +24,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     permissions:
       contents: read
@@ -36,6 +37,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         ref: ${{ inputs.target }}
+        persist-credentials: false
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -48,20 +50,23 @@ jobs:
 
     - name: Resolve Pages target
       id: pages-target
+      env:
+        TARGET: ${{ inputs.target }}
+        REPO_NAME: ${{ github.event.repository.name }}
       run: |
-        case "${{ inputs.target }}" in
+        case "$TARGET" in
           main)
             echo "destination_dir=" >> "$GITHUB_OUTPUT"
-            echo "storybook_base_path=/${{ github.event.repository.name }}/" >> "$GITHUB_OUTPUT"
+            echo "storybook_base_path=/$REPO_NAME/" >> "$GITHUB_OUTPUT"
             echo "storybook_url=$STORYBOOK_URL/" >> "$GITHUB_OUTPUT"
             ;;
           dev)
             echo "destination_dir=dev" >> "$GITHUB_OUTPUT"
-            echo "storybook_base_path=/${{ github.event.repository.name }}/dev/" >> "$GITHUB_OUTPUT"
+            echo "storybook_base_path=/$REPO_NAME/dev/" >> "$GITHUB_OUTPUT"
             echo "storybook_url=$STORYBOOK_URL/dev/" >> "$GITHUB_OUTPUT"
             ;;
           *)
-            echo "Unsupported target: ${{ inputs.target }}"
+            echo "Unsupported target: $TARGET"
             exit 1
             ;;
         esac
@@ -76,10 +81,12 @@ jobs:
       with:
         name: storybook-static
         path: storybook-static
+        retention-days: 1
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     permissions:
       contents: write
@@ -92,7 +99,7 @@ jobs:
         path: storybook-static
 
     - name: Publish Storybook
-      uses: peaceiris/actions-gh-pages@329bcc8f12caed2cefe5a5b80781499a6f3b361b
+      uses: peaceiris/actions-gh-pages@329bcc8f12caed2cefe5a5b80781499a6f3b361b # v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: storybook-static
@@ -100,4 +107,6 @@ jobs:
         keep_files: true
 
     - name: Pages URL
-      run: echo "${{ needs.build.outputs.storybook_url }}"
+      env:
+        STORYBOOK_DEPLOY_URL: ${{ needs.build.outputs.storybook_url }}
+      run: echo "$STORYBOOK_DEPLOY_URL"
