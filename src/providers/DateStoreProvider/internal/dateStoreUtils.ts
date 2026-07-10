@@ -13,6 +13,10 @@ type GetDateRangeOptions =
   | { mode: 'full', startDate: Date, endDate: Date }
   | { mode: Exclude<DateSelectionMode, 'full'>, startDate?: Date, endDate: Date }
 
+export function getCorrectedDateRange(options: GetDateRangeOptions): DateRange {
+  return correctDateRange(getDateRange(options))
+}
+
 export function getDateRange(options: GetDateRangeOptions): DateRange {
   const mode = options.mode
   switch (mode) {
