@@ -2,9 +2,8 @@ name: i18n - Extract English Keys
 
 # Collect English source keys from code into a stable PR (run manually).
 #
-# extract en-US keys -> open/update one PR with src/assets/locales/en-US only.
-#
-# French is intentionally excluded from extraction; fr-CA is managed by Crowdin.
+# extract keys for all locales -> open/update one PR. fr-CA gets keys
+# scaffolded/removed here; its values are managed by Crowdin.
 
 on:
   workflow_dispatch:
@@ -47,7 +46,7 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        git add src/assets/locales/en-US
+        git add src/assets/locales
         BR=i18n/english-keys
         if git diff --cached --quiet; then
           echo "No English translation key changes."

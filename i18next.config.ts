@@ -5,7 +5,7 @@ import pluralPlugin from './scripts/i18next/pluralPlugin'
 import translationKeyPlugin from './scripts/i18next/translationKeyPlugin'
 
 export default defineConfig({
-  locales: ['en-US'],
+  locales: ['en-US', 'fr-CA'],
   plugins: [conditionalPlugin, pluralPlugin, translationKeyPlugin],
   extract: {
     input: 'src/**/*.{js,jsx,ts,tsx}',
