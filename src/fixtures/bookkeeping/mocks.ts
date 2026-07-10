@@ -47,7 +47,7 @@ const makePeriodTasks = (periodIndex: number, count: number, month: number): Bus
   })
 }
 
-const OPEN_TASK_COUNT_BY_MONTHS_AGO: Record<number, number> = { 1: 2, 3: 1, 4: 2, 7: 1, 10: 1 }
+const OPEN_TASK_COUNT_BY_MONTHS_AGO: Record<number, number> = { 1: 3, 3: 1, 5: 2, 7: 1, 11: 1 }
 
 const openTaskCountFor = (monthsAgo: number) => OPEN_TASK_COUNT_BY_MONTHS_AGO[monthsAgo] ?? 0
 

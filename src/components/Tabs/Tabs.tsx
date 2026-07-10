@@ -1,4 +1,4 @@
-import { type ChangeEvent, type ReactNode, useEffect, useState } from 'react'
+import { type ChangeEvent, type ReactNode, useCallback, useEffect, useState } from 'react'
 import classNames from 'classnames'
 
 import { useElementSize } from '@hooks/utils/size/useElementSize'
@@ -37,18 +37,11 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
   )
 
   const elementRef = useElementSize<HTMLDivElement>((size) => {
-    if (size.width !== currentWidth) {
-      setCurrentWidth(size.width)
-    }
+    setCurrentWidth(previous => previous === size.width ? previous : size.width)
   })
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    updateSelectPosition(Number(e.target.getAttribute('data-idx') ?? 0))
-    onChange(e)
-  }
-
-  const updateSelectPosition = (active: number) => {
-    if (!elementRef?.current) {
+  const updateSelectPosition = useCallback((active: number) => {
+    if (!elementRef.current) {
       return
     }
 
@@ -56,8 +49,8 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
       c.className.includes('Layer__tabs-option'),
     )
 
-    let shift = 0
-    let width = thumbPos.width
+    let shift = STARTING_PADDING
+    let width: number | undefined
 
     optionsNodes.forEach((c, i) => {
       if (i < active) {
@@ -68,37 +61,34 @@ export const Tabs = ({ name, options, selected, onChange }: TabsProps) => {
       }
     })
 
-    shift = shift + STARTING_PADDING
+    setThumbPos(previous => ({ left: shift, width: width ?? previous.width }))
+  }, [elementRef])
 
-    setThumbPos({ left: shift, width })
-  }
-
-  useEffect(() => {
-    const selectedIndex = getSelectedIndex()
-    updateSelectPosition(selectedIndex)
-
-    setTimeout(() => {
-      setInitialized(true)
-    }, 400)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
-    const selectedIndex = getSelectedIndex()
-    updateSelectPosition(selectedIndex)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedValue, currentWidth])
-
-  const getSelectedIndex = () => {
+  const getSelectedIndex = useCallback(() => {
     const selectedIndex = options.findIndex(
       option => option.value === selectedValue,
     )
-    if (selectedIndex === -1) {
-      return 0
+
+    return selectedIndex === -1 ? 0 : selectedIndex
+  }, [options, selectedValue])
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    updateSelectPosition(Number(e.target.getAttribute('data-idx') ?? 0))
+    onChange(e)
+  }
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setInitialized(true), 400)
+    return () => clearTimeout(timeout)
+  }, [])
+
+  useEffect(() => {
+    if (currentWidth === 0) {
+      return
     }
 
-    return selectedIndex
-  }
+    updateSelectPosition(getSelectedIndex())
+  }, [currentWidth, getSelectedIndex, updateSelectPosition])
 
   return (
     <div className='Layer__tabs__container'>
