@@ -36,8 +36,8 @@
     "direction_value": "Sens : {{value}}",
     "following_count_transactions_one": "La {{displayCount}} transaction suivante sera touchée :",
     "following_count_transactions_other": "Les {{displayCount}} transactions suivantes seront touchées :",
-    "money_in": "Entrées d’argent",
-    "money_out": "Sorties d’argent",
+    "money_in": "Entrée d’argent",
+    "money_out": "Sortie d’argent",
     "or": "OU",
     "transaction_no_longer_automatically_categorized": "Les transactions ne seront plus automatiquement catégorisées par cette règle. Les transactions déjà catégorisées sous {{counterparty}} ne seront pas touchées.",
     "update_categorization_rules": "Mettre à jour les règles de catégorisation"
@@ -53,7 +53,7 @@
   },
   "validation": {
     "amount_min_greater_than_max": "Le montant minimal doit être inférieur ou égal au montant maximal.",
-    "category_required": "La catégorie est obligatoire.",
-    "counterparty_required": "La contrepartie est obligatoire."
+    "category_required": "La catégorie est requise.",
+    "counterparty_required": "La contrepartie est requise."
   }
 }

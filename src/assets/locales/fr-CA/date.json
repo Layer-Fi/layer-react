@@ -17,13 +17,13 @@
     "previous_year": "L'année précédente",
     "start_date": "Date de début",
     "this_month": "Ce mois-ci",
-    "this_quarter": "Ce trimestre",
+    "this_quarter": "Ce trimestre-ci",
     "this_year": "Cette année",
     "year": "Année"
   },
   "validation": {
     "date_before_min": "Impossible de sélectionner une date antérieure au {{minDate}}",
     "date_in_future": "Impossible de sélectionner une date future",
-    "date_not_empty": "La date ne peut pas être vide"
+    "date_not_empty": "Impossible de sélectionner une date vide"
   }
 }

@@ -45,7 +45,7 @@
   },
   "validation": {
     "make_model_required": "Le champ Marque et modèle est obligatoire.",
-    "year_range": "L’année doit être comprise entre 1900 et {{maxYear}}.",
+    "year_range": "L’année doit se situer entre 1900 et {{maxYear}}.",
     "year_required": "Le champ Année est obligatoire."
   }
 }

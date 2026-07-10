@@ -12,7 +12,7 @@
   },
   "empty": {
     "add_first_entry": "Ajoutez votre première entrée de temps pour commencer le suivi.",
-    "no_entries_yet": "Aucune entrée pour le moment",
+    "no_entries_yet": "Aucune entrée de temps",
     "no_matching_entries": "Aucune entrée de temps trouvée",
     "try_adjusting_filters": "Essayez d’ajuster vos filtres."
   },
@@ -64,8 +64,8 @@
     "zero_minutes": "0 min"
   },
   "prompt": {
-    "delete_entry": "Supprimer l'entrée?",
-    "discard_timer": "Annuler le minuteur?"
+    "delete_entry": "Supprimer cette entrée de temps ?",
+    "discard_timer": "Annuler ce minuteur ?"
   },
   "services": {
     "add": "Ajouter",

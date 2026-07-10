@@ -1,6 +1,6 @@
 {
   "action": {
-    "add_new_split": "Ajouter une nouvelle répartition",
+    "add_new_split": "Ajouter une nouvelle ventilation",
     "add_next_receipt": "Ajouter le prochain reçu",
     "approve_match": "Approuver la correspondance",
     "categorize_all": "Tout catégoriser",
@@ -11,7 +11,7 @@
     "mark_as_personal": "Marquer comme personnel",
     "no_tax_code": "Aucun code de taxe",
     "or_find_match": "ou trouver une correspondance",
-    "or_split_transaction": "ou répartir la transaction",
+    "or_split_transaction": "ou ventiler la transaction",
     "recategorize_all": "Tout recatégoriser",
     "search_categories": "Rechercher des catégories...",
     "search_tax_codes": "Rechercher des codes de taxe...",
@@ -19,12 +19,12 @@
     "select_a_match": "Sélectionner une correspondance",
     "select_category": "Sélectionner une catégorie",
     "select_tax_code": "Sélectionner un code de taxe",
-    "set_transaction_customer_vendor": "Définir le client ou le fournisseur de la transaction",
+    "set_transaction_customer_vendor": "Sélectionner le client ou le fournisseur de la transaction",
     "show_all_categories": "Afficher toutes les catégories",
-    "split_label": "Répartir",
-    "split_number_label": "Répartition no {{number}}",
-    "split_transaction": "Répartir la transaction",
-    "toggle_details": "Basculer les détails",
+    "split_label": "Ventilation",
+    "split_number_label": "Ventilation no {{number}}",
+    "split_transaction": "Ventiler la transaction",
+    "toggle_details": "Afficher ou masquer les détails",
     "uncategorize_all": "Tout décatégoriser",
     "upload_receipt": "Téléverser un reçu",
     "upload_transactions_manually": "Importer les transactions manuellement"
@@ -55,9 +55,9 @@
   "label": {
     "actionable_count_transactions_will_be_confirmed_one": "{{displayActionableCount}} du {{displayCount}} transaction sera confirmée.",
     "actionable_count_transactions_will_be_confirmed_other": "{{displayActionableCount}} des {{displayCount}} transactions seront confirmées.",
-    "additional_bank_transaction_actions": "Actions supplémentaires pour les opérations bancaires",
-    "affected_transaction_display": "Il n’y a aucune transaction concernée à afficher",
-    "affected_transactions": "Transactions concernées",
+    "additional_bank_transaction_actions": "Actions supplémentaires pour les transactions bancaires",
+    "affected_transaction_display": "Il n’y a aucune transaction touchée à afficher",
+    "affected_transactions": "Transactions touchées",
     "all_categories_uppercase": "TOUTES LES CATÉGORIES",
     "all_done": "Tout est terminé",
     "all_transactions_categorized": "Toutes les transactions sont catégorisées",
@@ -107,7 +107,7 @@
     "uncategorize_selected_transactions": "Retirer la catégorie de toutes les transactions sélectionnées?"
   },
   "validation": {
-    "splits_amount_greater_than_zero": "Toutes les répartitions doivent avoir un montant supérieur à 0,00 $",
-    "splits_must_have_category": "Toutes les répartitions doivent avoir une catégorie"
+    "splits_amount_greater_than_zero": "Toutes les ventilations doivent avoir un montant supérieur à 0,00 $",
+    "splits_must_have_category": "Toutes les ventilations doivent avoir une catégorie"
   }
 }

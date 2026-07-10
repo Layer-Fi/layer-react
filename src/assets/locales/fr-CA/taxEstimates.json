@@ -106,7 +106,7 @@
     "taxes_owed": "Impôts à payer",
     "taxes_owed_projected": "Impôts projetés à payer",
     "taxes_paid": "Impôts payés",
-    "tip_income": "Revenu de pourboires",
+    "tip_income": "Pourboires",
     "total_paid": "Total payé",
     "uncategorized_transactions_one": "{{count}} transaction non catégorisée",
     "uncategorized_transactions_other": "{{count}} transactions non catégorisées",
@@ -115,7 +115,7 @@
     "use_custom_withholding": "Utiliser une retenue personnalisée?",
     "use_simplified_home_office": "Utiliser la déduction simplifiée pour bureau à domicile?",
     "use_standard_mileage_deduction": "Utiliser la déduction forfaitaire kilométrique?",
-    "withholding_amount": "Montant de retenue",
+    "withholding_amount": "Montant de retenue à la source",
     "year_to_date": "Cumul annuel",
     "your_tax_deadlines": "Vos échéances fiscales"
   }

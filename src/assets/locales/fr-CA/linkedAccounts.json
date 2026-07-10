@@ -16,7 +16,7 @@
     "im_done_linking": "J’ai terminé de connecter mes banques",
     "link_another_bank": "Connecter une autre banque",
     "mark_duplicate_account": "Marquer comme compte en double",
-    "mark_not_duplicate_account": "Marquer comme n’étant pas un compte en double",
+    "mark_not_duplicate_account": "Marquer comme compte non en double",
     "repair_connection": "Réparer la connexion",
     "unlink_account": "Déconnecter le compte",
     "unlink_account_label": "Déconnecter le compte",
@@ -40,8 +40,8 @@
     "unlink_failed": "La déconnexion a échoué. Veuillez vérifier votre connexion et réessayer dans quelques secondes."
   },
   "label": {
-    "account_and_unmatched_transactions_deleted": "Ce compte et toutes les transactions non appariées seront supprimés.",
-    "account_stops_syncing_new_data": "Ce compte cessera de synchroniser de nouvelles données, et toutes les transactions non appariées seront supprimées.",
+    "account_and_unmatched_transactions_deleted": "Ce compte et toutes les transactions non rapprochées seront supprimés.",
+    "account_stops_syncing_new_data": "Ce compte cessera de synchroniser de nouvelles données, et toutes les transactions non rapprochées seront supprimées.",
     "accounts_successfully_linked": "Comptes connectés avec succès",
     "bank_balance": "Solde bancaire",
     "confirm_account_inclusion": "Confirmer l’inclusion du compte",
