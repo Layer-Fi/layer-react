@@ -8,7 +8,6 @@ import { schema } from '@fixtures/profitAndLoss/schema'
 import { createGenerator } from '@fixtures/utils/createGenerator'
 
 export const PROFIT_AND_LOSS_FIXTURE_START_YEAR = 2022
-export const PROFIT_AND_LOSS_FIXTURE_END_YEAR = 2025
 
 const generate = createGenerator(schema)
 
@@ -32,7 +31,11 @@ const EMPTY_SUMMARY: Omit<ProfitAndLossSummary, 'year' | 'month'> = {
 const seedForMonth = (year: number, month: number) => year * 12 + month
 
 export const makeProfitAndLossSummary = (year: number, month: number): ProfitAndLossSummary => {
-  if (year < PROFIT_AND_LOSS_FIXTURE_START_YEAR || year > PROFIT_AND_LOSS_FIXTURE_END_YEAR) {
+  const now = new Date()
+  const isBeforeFixtureStart = year < PROFIT_AND_LOSS_FIXTURE_START_YEAR
+  const isAfterCurrentMonth = year * 12 + (month - 1) > now.getFullYear() * 12 + now.getMonth()
+
+  if (isBeforeFixtureStart || isAfterCurrentMonth) {
     return { year, month, ...EMPTY_SUMMARY }
   }
 
