@@ -1,9 +1,15 @@
 name: i18n - Sync Translations
 
-# On en-US merges: upload the merge's own translation edits to Crowdin,
-# scaffold fr-CA keys from the en-US diff, upload sources, pre-translate,
-# then download (Crowdin values overwrite local) and open a translations PR.
-# Manual runs only download unless pretranslate=true.
+# Runs when en-US files change on main. Steps:
+#   1. If the merge also changed fr-CA files, upload them to Crowdin so the
+#      download below cannot revert them.
+#   2. Scaffold fr-CA keys from the en-US diff: added keys get "", changed
+#      keys are blanked, removed keys are dropped.
+#   3. Upload en-US sources to Crowdin.
+#   4. Pre-translate untranslated fr-CA strings (translation memory, then AI).
+#   5. Download fr-CA; downloaded values overwrite local ones.
+#   6. Open/update the i18n/crowdin-fr-ca PR with the result.
+# Manual runs do steps 5-6 only, or all steps with pretranslate=true.
 
 on:
   workflow_dispatch:
