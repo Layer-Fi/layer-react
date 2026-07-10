@@ -2,6 +2,7 @@ import { useCallback, useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { DatePreset, type SelectableDatePreset } from '@utils/date/dateRangePresets'
+import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
@@ -9,6 +10,7 @@ import { Label } from '@ui/Typography/Text'
 type DateSelectionOption = {
   label: string
   value: DatePreset
+  isDisabled?: boolean
 }
 
 type DateSelectionComboBoxProps = {
@@ -24,6 +26,12 @@ export const DateSelectionComboBox = ({
 }: DateSelectionComboBoxProps) => {
   const { t } = useTranslation()
 
+  // AllTime resolves against the business activation date. Until the business
+  // loads (`activationDate == null`), selecting it would be a no-op, so block the
+  // selection until the activationDate is loaded
+  // In practice, the business loads in a fraction of a second, so this is rarely visible.
+  const activationDate = useBusinessActivationDate()
+
   const allOptions = useMemo<DateSelectionOption[]>(
     () => [
       { value: DatePreset.ThisMonth, label: t('date:label.this_month', 'This Month') },
@@ -32,10 +40,10 @@ export const DateSelectionComboBox = ({
       { value: DatePreset.LastQuarter, label: t('date:label.last_quarter', 'Last Quarter') },
       { value: DatePreset.ThisYear, label: t('date:label.this_year', 'This Year') },
       { value: DatePreset.LastYear, label: t('date:label.last_year', 'Last Year') },
-      { value: DatePreset.AllTime, label: t('date:label.all_time', 'All Time') },
+      { value: DatePreset.AllTime, label: t('date:label.all_time', 'All Time'), isDisabled: activationDate == null },
       { value: DatePreset.Custom, label: t('date:label.custom', 'Custom') },
     ],
-    [t],
+    [t, activationDate],
   )
 
   // Selectable options exclude Custom — it only appears as a (non-selectable) label
