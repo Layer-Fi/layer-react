@@ -23,6 +23,10 @@ export const RawBookkeepingPeriodSchema = Schema.Struct({
 
 export type RawBookkeepingPeriod = typeof RawBookkeepingPeriodSchema.Type
 
+export type BookkeepingPeriod = Omit<RawBookkeepingPeriod, 'status'> & {
+  status: BookkeepingPeriodStatus
+}
+
 export const BookkeepingPeriodsSchema = Schema.Struct({
   periods: Schema.Array(RawBookkeepingPeriodSchema),
 })

@@ -1,5 +1,6 @@
 import { Schema } from 'effect'
 
+import { BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
 import {
   type BusinessTask,
   BusinessTaskSchema,
@@ -22,15 +23,22 @@ const completeTaskInStore = (taskId: string, userResponse: string | null): Busin
   bookkeepingPeriodStore.all().forEach((period) => {
     if (!period.tasks.some(task => task.id === taskId)) return
 
-    bookkeepingPeriodStore.patchById(period.id, existing => ({
-      ...existing,
-      tasks: existing.tasks.map((task) => {
+    bookkeepingPeriodStore.patchById(period.id, (existing) => {
+      const tasks = existing.tasks.map((task) => {
         if (task.id !== taskId) return task
 
         completed = { ...task, status: BusinessTaskStatus.UserMarkedCompleted, userResponse }
         return completed
-      }),
-    }))
+      })
+
+      const allTasksComplete = tasks.every(task => task.status !== BusinessTaskStatus.Todo)
+
+      return {
+        ...existing,
+        tasks,
+        status: allTasksComplete ? BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER : existing.status,
+      }
+    })
   })
 
   return completed

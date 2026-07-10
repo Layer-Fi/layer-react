@@ -39,10 +39,10 @@ export const useBookkeepingYearsStatus = () => {
   const earliestIncompletePeriod = useMemo(() => [...(data ?? [])]
     .sort((a, b) => {
       if (a.year === b.year) {
-        return b.month - a.month
+        return a.month - b.month
       }
 
-      return b.year - a.year
+      return a.year - b.year
     })
     .find(period => period.tasks.some(task => isIncompleteTask(task))),
   [data])

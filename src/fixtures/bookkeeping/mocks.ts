@@ -1,4 +1,4 @@
-import { BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
+import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
 import { BookkeepingStatus, type BookkeepingStatusData } from '@schemas/bookkeepingStatus'
 import {
   type BusinessTask,
@@ -6,7 +6,10 @@ import {
   TaskUserResponseType,
 } from '@schemas/businessTasks/businessTask'
 
+import { PeriodIdSchema, schema } from '@fixtures/bookkeeping/schema'
+import { formatDollars, formatTaskDate } from '@fixtures/bookkeeping/utils'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
+import { createGenerator } from '@fixtures/utils/createGenerator'
 import { fromMonthIndex, toMonthIndex } from '@fixtures/utils/monthIndex'
 
 const baseBookkeepingStatus: BookkeepingStatusData = {
@@ -17,46 +20,33 @@ const baseBookkeepingStatus: BookkeepingStatusData = {
 
 export const { make: makeBookkeepingStatus } = createFixtureFactory(baseBookkeepingStatus)
 
-export type BookkeepingPeriodFixture = {
-  id: string
-  month: number
-  year: number
-  status: BookkeepingPeriodStatus
-  tasks: BusinessTask[]
-}
-
-const fixtureUuid = (prefix: number, index: number) =>
-  `00000000-0000-4000-8000-${prefix}${index.toString().padStart(11, '0')}`
-
-const makeTask = (periodIndex: number, taskIndex: number, title: string, question: string): BusinessTask => ({
-  id: fixtureUuid(taskIndex + 1, periodIndex),
-  status: BusinessTaskStatus.Todo,
-  title,
-  question,
-  userResponse: null,
-  userResponseType: TaskUserResponseType.FreeResponse,
-  documents: null,
+const generateTaskSeeds = createGenerator(schema, {
+  uniqueBy: [seed => seed.id, seed => seed.day],
 })
 
-// Bookkeeper-authored free-response prompts, sampled from realistic copy in the API repo.
-const TASK_COPY: ReadonlyArray<readonly [title: string, question: string]> = [
-  ['Uncategorized transactions', 'We found transactions we could not categorize. Can you tell us more about them?'],
-  ['Categorize this transaction', 'What was this purchase for?'],
-  ['Verify duplicate account transaction', 'What was this transaction for?'],
-  ['Categorize restaurant transactions', 'What category are these restaurant transactions?'],
-  ['Tax document review', 'Review your quarterly tax documents and confirm they look accurate.'],
-  ['Monthly expense report', 'Submit your office expenses for this month for approval.'],
-  ['Missing bank statement', 'Please upload the statement for your business checking account for this month.'],
-  ['Need receipt', 'Please provide documentation for your office supplies purchase.'],
-]
+const generatePeriodIds = createGenerator(PeriodIdSchema)
 
-const makePeriodTasks = (periodIndex: number, count: number): BusinessTask[] =>
-  Array.from({ length: count }, (_, taskIndex) => {
-    const [title, question] = TASK_COPY[(periodIndex * 3 + taskIndex) % TASK_COPY.length]
-    return makeTask(periodIndex, taskIndex, title, question)
+const periodIdFor = (monthIndex: number) => generatePeriodIds({ numRuns: 1, seed: monthIndex })[0]
+
+const makePeriodTasks = (periodIndex: number, count: number, month: number): BusinessTask[] => {
+  if (count === 0) return []
+
+  return generateTaskSeeds({ numRuns: count, seed: periodIndex }).map(({ id, day, amountCents, merchant }) => {
+    const date = formatTaskDate(month, day)
+
+    return {
+      id,
+      status: BusinessTaskStatus.Todo,
+      title: `Transaction on ${date}`,
+      question: `On ${date}, you spent ${formatDollars(amountCents)} at ${merchant}. `
+        + 'Can you tell us a bit more about what this transaction was for?',
+      userResponse: null,
+      userResponseType: TaskUserResponseType.FreeResponse,
+      documents: null,
+    }
   })
+}
 
-// Months (before the current one) that still have open tasks - a few, clustered recent.
 const OPEN_TASK_COUNT_BY_MONTHS_AGO: Record<number, number> = { 1: 2, 3: 1, 4: 2, 7: 1, 10: 1 }
 
 const openTaskCountFor = (monthsAgo: number) => OPEN_TASK_COUNT_BY_MONTHS_AGO[monthsAgo] ?? 0
@@ -78,23 +68,23 @@ const periodStatusFor = (monthsAgo: number, openTaskCount: number): BookkeepingP
   return BookkeepingPeriodStatus.CLOSED_COMPLETE
 }
 
-export const makeBookkeepingPeriods = (startYear: number): BookkeepingPeriodFixture[] => {
+export const makeBookkeepingPeriods = (startYear: number): BookkeepingPeriod[] => {
   const now = new Date()
   const start = toMonthIndex(startYear, 1)
   const end = toMonthIndex(now.getFullYear(), now.getMonth() + 1)
 
-  const periods: BookkeepingPeriodFixture[] = []
+  const periods: BookkeepingPeriod[] = []
 
   for (let cursor = start; cursor <= end; cursor++) {
     const { year, month } = fromMonthIndex(cursor)
     const openTaskCount = openTaskCountFor(end - cursor)
 
     periods.push({
-      id: fixtureUuid(0, cursor),
+      id: periodIdFor(cursor),
       month,
       year,
       status: periodStatusFor(end - cursor, openTaskCount),
-      tasks: makePeriodTasks(cursor, openTaskCount),
+      tasks: makePeriodTasks(cursor, openTaskCount, month),
     })
   }
 

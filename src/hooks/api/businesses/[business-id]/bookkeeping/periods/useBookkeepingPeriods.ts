@@ -1,8 +1,8 @@
 import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
 import {
+  type BookkeepingPeriod,
   BookkeepingPeriodsSchema,
   BookkeepingPeriodStatus,
-  type RawBookkeepingPeriod,
 } from '@schemas/bookkeepingPeriods'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
@@ -30,10 +30,6 @@ function constrainToKnownBookkeepingPeriodStatus(status: RawBookkeepingPeriodSta
   }
 
   return BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE
-}
-
-export type BookkeepingPeriod = Omit<RawBookkeepingPeriod, 'status'> & {
-  status: BookkeepingPeriodStatus
 }
 
 const BookkeepingPeriodsResponseSchema = UnwrappedDataResponseSchema(BookkeepingPeriodsSchema)
