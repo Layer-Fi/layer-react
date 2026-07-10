@@ -1,4 +1,4 @@
-import { readdir, readFile, writeFile } from 'node:fs/promises'
+import { readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
 
@@ -11,8 +11,7 @@ if (!baseDir || !targetDir) {
 
 const readJson = async (filePath) => JSON.parse(await readFile(filePath, 'utf8'))
 
-// Downloaded (target) values win so upstream Crowdin edits apply; existing
-// (base) values are kept only where the download has no translation.
+// Downloaded values win; base values survive only where the download has none.
 const applyDownloaded = (baseValue, targetValue) => {
   if (targetValue === undefined) return baseValue
   if (baseValue === undefined) return targetValue
@@ -57,21 +56,20 @@ const processDir = async (basePath, targetPath) => {
       continue
     }
 
-    const targetJson = await readJson(targetEntryPath)
-
     let baseJson
     try {
       baseJson = await readJson(baseEntryPath)
     } catch (error) {
       if (error && error.code === 'ENOENT') {
-        // New namespace from Crowdin: keep the downloaded file as-is.
-        await writeFile(targetEntryPath, `${JSON.stringify(targetJson, null, 2)}\n`)
+        // No local counterpart: an obsolete namespace still on Crowdin.
+        await rm(targetEntryPath)
         continue
       }
 
       throw error
     }
 
+    const targetJson = await readJson(targetEntryPath)
     const mergedJson = applyDownloaded(baseJson, targetJson)
 
     await writeFile(targetEntryPath, `${JSON.stringify(mergedJson, null, 2)}\n`)

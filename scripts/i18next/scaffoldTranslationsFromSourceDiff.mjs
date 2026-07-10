@@ -20,10 +20,7 @@ const readJsonOrEmpty = async (filePath) => {
 
 const isPlainObject = value => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
 
-// Source additions scaffold an empty translation, source changes blank the
-// stale translation (both get filled by the next Crowdin download), source
-// removals drop the translation. Keys the source did not touch are left
-// alone, including translation-only orphans.
+// Additions scaffold "", changes blank stale translations, removals drop them.
 const scaffold = (oldSource, newSource, translation) => {
   const translationObject = isPlainObject(translation) ? translation : {}
   const oldObject = isPlainObject(oldSource) ? oldSource : {}

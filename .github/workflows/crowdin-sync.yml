@@ -1,20 +1,8 @@
 name: i18n - Sync Translations
 
-# Sync translations through Crowdin after English sources change.
-#
-# On en-US changes merged to main:
-# upload translation changes from the merge -> scaffold translation keys from
-# the en-US diff (additions get empty keys, changes blank stale keys,
-# removals drop keys) -> upload sources -> pre-translate fr-CA (TM, then
-# optional AI) -> download fr-CA -> apply downloaded values over local ones
-# (local values survive only where Crowdin has no translation)
-# -> open/update one PR with the translation changes.
-#
-# Manual runs default to download-only for pulling upstream Crowdin edits.
-# Set pretranslate=true to run the full upload/pre-translate/download flow.
-#
-# Secrets:  CROWDIN_PROJECT_ID, CROWDIN_PERSONAL_TOKEN
-# Variable: CROWDIN_AI_PROMPT_ID — required for full pre-translation runs.
+# en-US merges: upload push translations -> scaffold keys -> upload sources
+# -> pre-translate -> download (Crowdin wins) -> translations PR.
+# Manual runs are download-only unless pretranslate=true.
 
 on:
   workflow_dispatch:

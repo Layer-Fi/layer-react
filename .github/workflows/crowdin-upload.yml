@@ -1,12 +1,7 @@
 name: i18n - Upload Translations
 
-# Push local translation edits (e.g. review fixes) up to Crowdin whenever
-# translation manifests change on main, so Crowdin reflects the repo's values
-# instead of reverting them on the next sync download.
-#
-# Sources are uploaded first so translations for newly added keys attach.
-#
-# Secrets: CROWDIN_PROJECT_ID, CROWDIN_PERSONAL_TOKEN
+# Push local translation edits to Crowdin when manifests change on main,
+# uploading sources first so translations for new keys attach.
 
 on:
   workflow_dispatch:
