@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { ProfitAndLossDetailedCharts } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 
-import { profitAndLossStoryHandlers, withProfitAndLossStoryContext } from '@test-utils/profitAndLossStoryContext'
+import { profitAndLossStoryHandlers, withProfitAndLossStoryContext } from '@test-utils/withProfitAndLossStoryContext'
 
 type ProfitAndLossDetailedChartsStoryArgs = {
   scope: 'revenue' | 'expenses'
@@ -17,7 +17,7 @@ const meta: Meta<ProfitAndLossDetailedChartsStoryArgs> = {
     msw: { handlers: profitAndLossStoryHandlers },
     controls: { include: ['scope', 'hideHeader', 'showDatePicker'] },
   },
-  decorators: [withProfitAndLossStoryContext],
+  decorators: [withProfitAndLossStoryContext()],
   args: {
     scope: 'expenses',
     hideHeader: false,

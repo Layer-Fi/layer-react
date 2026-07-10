@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { ProfitAndLossSummaries } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 
-import { profitAndLossStoryHandlers, withProfitAndLossStoryContext } from '@test-utils/profitAndLossStoryContext'
+import { profitAndLossStoryHandlers, withProfitAndLossStoryContext } from '@test-utils/withProfitAndLossStoryContext'
 
 type ProfitAndLossSummariesStoryArgs = {
   actionable: boolean
@@ -15,7 +15,7 @@ const meta: Meta<ProfitAndLossSummariesStoryArgs> = {
     msw: { handlers: profitAndLossStoryHandlers },
     controls: { include: ['actionable'] },
   },
-  decorators: [withProfitAndLossStoryContext],
+  decorators: [withProfitAndLossStoryContext({ asContainer: false })],
   args: {
     actionable: false,
   },
@@ -25,7 +25,11 @@ const meta: Meta<ProfitAndLossSummariesStoryArgs> = {
       description: 'Make the revenue and expenses tiles clickable to set the sidebar scope',
     },
   },
-  render: ({ actionable }) => <ProfitAndLossSummaries actionable={actionable} />,
+  render: ({ actionable }) => (
+    <div style={{ padding: '1rem' }}>
+      <ProfitAndLossSummaries actionable={actionable} />
+    </div>
+  ),
 }
 
 export default meta
