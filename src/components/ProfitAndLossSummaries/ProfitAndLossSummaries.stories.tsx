@@ -13,7 +13,7 @@ type ProfitAndLossSummariesStoryArgs = {
   withTransactionsToReviewCallback: boolean
 }
 
-const noop = () => {}
+const onTransactionsToReviewClick = () => window.alert('onTransactionsToReviewClick')
 
 const meta: Meta<ProfitAndLossSummariesStoryArgs> = {
   title: 'Components/ProfitAndLoss/Summaries',
@@ -51,7 +51,7 @@ const meta: Meta<ProfitAndLossSummariesStoryArgs> = {
       <ProfitAndLossSummaries
         actionable={actionable}
         reportingVariant={reportingVariant}
-        onTransactionsToReviewClick={withTransactionsToReviewCallback ? noop : undefined}
+        onTransactionsToReviewClick={withTransactionsToReviewCallback ? onTransactionsToReviewClick : undefined}
       />
     </div>
   ),
