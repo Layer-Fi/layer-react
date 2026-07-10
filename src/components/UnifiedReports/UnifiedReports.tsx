@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -7,7 +6,6 @@ import { UnifiedReportStoreProvider } from '@providers/UnifiedReportStore/Unifie
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { ReportsNavigationSidebar } from '@components/ReportsNavigation/ReportsNavigationSidebar'
-import { UnifiedReportHeaderButtons } from '@components/UnifiedReports/UnifiedReportHeaderButtons'
 import { UnifiedReportTable } from '@components/UnifiedReports/UnifiedReportTable'
 import { UnifiedReportTableHeader } from '@components/UnifiedReports/UnifiedReportTableHeader'
 import { View } from '@components/View/View'
@@ -19,20 +17,18 @@ export type UnifiedReportNavigationVariant = 'sidebar' | 'menu'
 type UnifiedReportProps = {
   dateSelectionMode?: DateSelectionMode
   navigationVariant?: UnifiedReportNavigationVariant
+  showTitle?: boolean
 }
 
-const UnifiedReportContent = ({ navigationVariant = 'sidebar' }: Pick<UnifiedReportProps, 'navigationVariant'>) => {
+const UnifiedReportContent = ({
+  navigationVariant = 'sidebar',
+  showTitle = true,
+}: Pick<UnifiedReportProps, 'navigationVariant' | 'showTitle'>) => {
   const { t } = useTranslation()
   const { isDesktop } = useSizeClass()
 
-  const header = useMemo(() => {
-    if (isDesktop) return null
-
-    return <UnifiedReportHeaderButtons />
-  }, [isDesktop])
-
   return (
-    <View title={t('reports:label.reports', 'Reports')} viewClassName='Layer__UnifiedReports' header={header}>
+    <View title={t('reports:label.reports', 'Reports')} showHeader={showTitle} viewClassName='Layer__UnifiedReports'>
       <HStack className='Layer__UnifiedReports__Body'>
         {isDesktop && navigationVariant === 'sidebar' && (
           <VStack className='Layer__UnifiedReports__Sidebar'>
@@ -48,11 +44,11 @@ const UnifiedReportContent = ({ navigationVariant = 'sidebar' }: Pick<UnifiedRep
   )
 }
 
-export const UnifiedReports = ({ dateSelectionMode, navigationVariant }: UnifiedReportProps) => {
+export const UnifiedReports = ({ dateSelectionMode, navigationVariant, showTitle = true }: UnifiedReportProps) => {
   return (
     <UnifiedReportStoreProvider dateSelectionMode={dateSelectionMode}>
       <ExpandableDataTableProvider>
-        <UnifiedReportContent navigationVariant={navigationVariant} />
+        <UnifiedReportContent navigationVariant={navigationVariant} showTitle={showTitle} />
       </ExpandableDataTableProvider>
     </UnifiedReportStoreProvider>
   )
