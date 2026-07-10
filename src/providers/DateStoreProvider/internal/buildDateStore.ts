@@ -25,7 +25,6 @@ export function buildDateStore({ initialRange, initialPreset }: BuildDateStoreOp
     const applyDerived = (dateRange: DateRange, activationDate?: Date): DateRangeWithPreset =>
       applyDateRangeWithPreset(dateRange, derivePresetFromDateRange(dateRange, get().preset, activationDate))
 
-    // Set an explicit range; derive the preset it represents.
     const setDateRange = (range: DateRange, activationDate?: Date): DateRangeWithPreset => {
       const [startDate, endDate] = range.startDate <= range.endDate
         ? [range.startDate, range.endDate]
@@ -46,6 +45,12 @@ export function buildDateStore({ initialRange, initialPreset }: BuildDateStoreOp
     const setYear = (date: Date, activationDate?: Date): DateRangeWithPreset =>
       applyDerived(getDateRange({ mode: 'year', endDate: date }), activationDate)
 
+    const setMonthByPeriod = ({ monthNumber, yearNumber }: { monthNumber: number, yearNumber: number }, activationDate?: Date): DateRangeWithPreset => {
+      const monthIndex = Math.min(Math.max(monthNumber, 1), 12) - 1
+      const dayIndex = 1 // Hardcoded to the first day of the month
+      return applyDerived(getDateRange({ mode: 'month', endDate: new Date(yearNumber, monthIndex, dayIndex) }), activationDate)
+    }
+
     const setDatePreset = (
       datePreset: Exclude<DatePreset, DatePreset.Custom>,
       activationDate?: Date,
@@ -63,15 +68,10 @@ export function buildDateStore({ initialRange, initialPreset }: BuildDateStoreOp
       actions: {
         setDate,
         setDateRange,
-        setDatePreset,
         setMonth,
         setYear,
-
-        setMonthByPeriod: ({ monthNumber, yearNumber }, activationDate) => {
-          const monthIndex = Math.min(Math.max(monthNumber, 1), 12) - 1
-          const dayIndex = 1 // Hardcoded to the first day of the month
-          return setMonth(new Date(yearNumber, monthIndex, dayIndex), activationDate)
-        },
+        setMonthByPeriod,
+        setDatePreset,
       },
     }
   })
