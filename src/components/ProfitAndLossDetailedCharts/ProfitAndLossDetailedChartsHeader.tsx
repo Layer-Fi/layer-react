@@ -4,7 +4,7 @@ import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { BackButton } from '@ui/Button/BackButton'
 import { CloseButton as UICloseButton } from '@ui/Button/CloseButton'
-import { VStack } from '@ui/Stack/Stack'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
@@ -19,19 +19,21 @@ type HeaderTitleProps = {
 }
 
 const HeaderTitle = ({ title, dateLabel, isTablet, showDatePicker }: HeaderTitleProps) => (
-  <VStack className='Layer__ProfitAndLossDetailedChartsHeader__head'>
-    <Heading level={3} size='sm'>
-      {title}
-    </Heading>
-    <Span
-      size='sm'
-      variant={isTablet ? undefined : 'subtle'}
-      className='Layer__ProfitAndLossDetailedChartsHeader__date'
-    >
-      {dateLabel}
-    </Span>
+  <HStack justify='space-between' align='center' gap='md' fluid>
+    <VStack className='Layer__ProfitAndLossDetailedChartsHeader__head'>
+      <Heading level={3} size='sm'>
+        {title}
+      </Heading>
+      <Span
+        size='sm'
+        variant={isTablet ? undefined : 'subtle'}
+        className='Layer__ProfitAndLossDetailedChartsHeader__date'
+      >
+        {dateLabel}
+      </Span>
+    </VStack>
     {!isTablet && showDatePicker && <GlobalMonthPicker />}
-  </VStack>
+  </HStack>
 )
 
 enum CloseButtonVariant {
