@@ -12,9 +12,7 @@ type DateSelectionOption = {
 }
 
 type DateSelectionComboBoxProps = {
-  /** The store's active preset, shown as the selected option. */
   datePreset: DatePreset
-  /** Set the range by preset; selecting an option calls it with the chosen preset. */
   setDatePreset: (datePreset: Exclude<DatePreset, DatePreset.Custom>) => void
   showLabel?: boolean
 }
