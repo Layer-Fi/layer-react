@@ -19,6 +19,7 @@ const config: StorybookConfig = {
   staticDirs: ['./public'],
   viteFinal: viteConfig => ({
     ...viteConfig,
+    base: process.env.STORYBOOK_BASE_PATH ?? viteConfig.base,
     resolve: {
       ...viteConfig.resolve,
       tsconfigPaths: true,
