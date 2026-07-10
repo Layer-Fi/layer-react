@@ -2,8 +2,8 @@ import { Schema } from 'effect'
 
 import { type BankAccount, BankAccountSchema } from '@schemas/bankAccounts/bankAccount'
 
+import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-accounts/store'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { bankAccounts as defaultBankAccounts } from '@fixtures/generated/bankAccounts.gen'
 
 const encodeBankAccount = Schema.encodeSync(BankAccountSchema)
 
@@ -14,5 +14,5 @@ const toResponse = (bankAccounts: readonly BankAccount[]) => ({
 export const get = createMockEndpoint<readonly BankAccount[], ReturnType<typeof toResponse>>({
   method: 'get',
   path: '*/v1/businesses/:businessId/bank-accounts',
-  resolve: ({ override: bankAccounts = defaultBankAccounts }) => toResponse(bankAccounts),
+  resolve: ({ override: bankAccounts = bankAccountStore.all() }) => toResponse(bankAccounts),
 })

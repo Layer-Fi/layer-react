@@ -15,8 +15,10 @@ export const accountNameKindArbitrary = (fc: typeof FastCheck) =>
 export const balanceTimestampArbitrary = (fc: typeof FastCheck) =>
   amountArbitrary(fc).map(balance => ({ balance }))
 
+// Exactly one connection per account - the same display details are mirrored
+// onto every connection, so per-connection surfaces would show duplicate rows.
 export const externalAccountsArbitrary = (fc: typeof FastCheck) =>
-  fc.array(Arbitrary.make(externalAccountConnectionSchema), { minLength: 1, maxLength: 2 })
+  fc.array(Arbitrary.make(externalAccountConnectionSchema), { minLength: 1, maxLength: 1 })
 
 export const isDisconnectedArbitrary = (fc: typeof FastCheck) =>
   fc.oneof(

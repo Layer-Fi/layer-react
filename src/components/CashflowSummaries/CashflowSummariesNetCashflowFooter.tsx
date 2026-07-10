@@ -3,7 +3,7 @@ import { BaseSummariesBreakdownFooterContainer } from '@components/ProfitAndLoss
 import { BaseSummariesBreakdownFooterRow, type BaseSummariesBreakdownRow } from '@components/ProfitAndLossSummaries/internal/BaseSummariesBreakdownFooterRow'
 
 type CashflowSummariesNetCashflowFooterProps = {
-  categorized: BaseSummariesBreakdownRow
+  categorized?: BaseSummariesBreakdownRow
   isLoading?: boolean
   onTransactionsToReviewClick?: () => void
 }
@@ -15,7 +15,7 @@ export function CashflowSummariesNetCashflowFooter({
 }: CashflowSummariesNetCashflowFooterProps) {
   return (
     <BaseSummariesBreakdownFooterContainer>
-      <BaseSummariesBreakdownFooterRow row={categorized} isLoading={isLoading} />
+      {categorized && <BaseSummariesBreakdownFooterRow row={categorized} isLoading={isLoading} />}
       {onTransactionsToReviewClick && (
         <UncategorizedTransactionsBadge onTransactionsToReviewClick={onTransactionsToReviewClick} />
       )}

@@ -37,6 +37,7 @@ export default tsEslint.config(
         projectService: {
           allowDefaultProject: [
             '.storybook/main.ts',
+            '.storybook/mocks/react-plaid-link.ts',
             '.storybook/preview.tsx',
             'eslint.config.mjs',
             'i18next.config.ts',
