@@ -21,15 +21,13 @@ export function buildDateStore({ initialRange, initialPreset }: BuildDateStoreOp
       set(next)
       return next
     }
-
     const transformAndSet = (dateRange: DateRange, activationDate?: Date): DateRangeWithPreset => {
-      const correctedRange = correctDateRange(dateRange)
-      const derivedPreset = derivePresetFromDateRange(correctedRange, get().preset, activationDate)
-      return setDateRangeWithPreset(correctedRange, derivedPreset)
+      const derivedPreset = derivePresetFromDateRange(dateRange, get().preset, activationDate)
+      return setDateRangeWithPreset(dateRange, derivedPreset)
     }
 
     const setDateRange = (range: DateRange, activationDate?: Date): DateRangeWithPreset => {
-      const dateRangeToApply = getDateRange({ mode: 'full', ...range })
+      const dateRangeToApply = getDateRange({ mode: 'full', ...correctDateRange(range) })
       return transformAndSet(dateRangeToApply, activationDate)
     }
 

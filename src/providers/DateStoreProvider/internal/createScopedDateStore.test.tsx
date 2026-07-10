@@ -90,6 +90,26 @@ describe('createScopedDateStore', () => {
     expect(result.current.datePreset).toBe(DatePreset.Custom)
   })
 
+  it('clamps the end date to today for an inverted range with a future start (no future end reintroduced)', () => {
+    const { result } = setupDateStore()
+
+    // Assert the stored range (the setter's return), not the projected read —
+    // reads re-clamp on the way out and would mask a bad stored end date.
+    let stored: { startDate: Date, endDate: Date, preset: DatePreset } | undefined
+    act(() => {
+      stored = result.current.rangeActions.setDateRange({
+        startDate: SIX_MONTHS_AFTER_NOW,
+        endDate: THREE_MONTHS_BEFORE_NOW,
+      })
+    })
+
+    expect(stored).toEqual({
+      startDate: THREE_MONTHS_BEFORE_NOW,
+      endDate: END_OF_TODAY,
+      preset: DatePreset.Custom,
+    })
+  })
+
   it('projects the stored range onto the containing month in month mode', () => {
     const { result } = setupDateStore()
 
