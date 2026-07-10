@@ -189,6 +189,6 @@ describe('createScopedDateStore AllTime preset', () => {
     await waitFor(() => expect(result.current).not.toBeNull())
 
     expect(result.current.datePreset).toBe(DatePreset.AllTime)
-    expect(result.current.range).toEqual(rangeForAllTime(makeBusiness().activationAt))
+    expect(result.current.range).toEqual(rangeForAllTime(makeBusiness().activationAt, NOW))
   })
 })
