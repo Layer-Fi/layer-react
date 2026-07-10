@@ -2,11 +2,6 @@ import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-account
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 
-/**
- * Confirming an external account clears its `CONFIRM_RELEVANT` notification on
- * the owning bank account, so the next bank-accounts fetch no longer reports it
- * as needing confirmation.
- */
 export const post = createMockEndpoint({
   method: 'post',
   path: '*/v1/businesses/:businessId/external-accounts/:accountId/confirm',

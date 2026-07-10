@@ -51,11 +51,6 @@ type MirroredBankAccountOptions = {
   externalAccountOverrides?: Partial<ExternalAccountConnection>
 }
 
-/**
- * A bank account whose display details (name, institution, mask) are mirrored
- * into its single external connection - the usual shape for a freshly linked
- * Plaid account, where the connection is the source of those details.
- */
 export function makeBankAccountWithMirroredExternalAccount({
   id,
   externalAccountId,
@@ -94,21 +89,13 @@ export function makeBankAccountWithMirroredExternalAccount({
   })
 }
 
-/**
- * A bank account whose single external connection carries a `CONFIRM_RELEVANT`
- * notification - see `markAccountNeedingConfirmation`.
- */
 export function makeAccountNeedingConfirmation(
   options: Omit<MirroredBankAccountOptions, 'externalAccountOverrides'>,
 ): BankAccount {
   return markAccountNeedingConfirmation(makeBankAccountWithMirroredExternalAccount(options))
 }
 
-/**
- * Flags every external connection on the account with the `CONFIRM_RELEVANT`
- * notification - the flag `getAccountsNeedingConfirmation` looks for to surface
- * the "which accounts do you use for your business?" confirm/exclude step.
- */
+/** Adds the `CONFIRM_RELEVANT` notification `getAccountsNeedingConfirmation` looks for. */
 export function markAccountNeedingConfirmation(account: BankAccount): BankAccount {
   return {
     ...account,

@@ -13,8 +13,7 @@ const config: StorybookConfig = {
       tsconfigPaths: true,
       alias: {
         ...viteConfig.resolve?.alias,
-        // Plaid's hosted iframe can't run in Storybook; swap the SDK for a mock
-        // that fakes a successful link so the connect flow is demoable end-to-end.
+        // Plaid's hosted iframe can't run in Storybook; the mock fakes a successful link.
         'react-plaid-link': join(process.cwd(), '.storybook/mocks/react-plaid-link.ts'),
       },
     },

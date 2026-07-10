@@ -9,10 +9,6 @@ const FIRST_LINK_ACCOUNT_COUNT = 3
 // offset past the generated-fixture seed to avoid reproducing seeded ids.
 let linkSessionSeed = 1000
 
-/**
- * A fake Plaid link session "finds" randomly generated accounts needing
- * confirmation: a few on the first session, one more on each additional one.
- */
 export const post = createMockEndpoint({
   method: 'post',
   path: '*/v1/businesses/:businessId/plaid/link/exchange',

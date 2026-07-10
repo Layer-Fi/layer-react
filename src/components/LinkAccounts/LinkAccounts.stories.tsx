@@ -6,16 +6,13 @@ import { LinkAccounts } from '@components/LinkAccounts/LinkAccounts'
 
 import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-accounts/store'
 
-// The store's default seed is already-linked accounts; this flow links new ones.
 const clearBankAccounts = () => {
   bankAccountStore.all().forEach(({ id }) => bankAccountStore.deleteById(id))
 }
 
-// Completing the wizard empties the store and remounts the component (via key),
-// so the flow restarts from the "Connect my bank" step and can be run repeatedly.
-// The SWR cache is overwritten too: the remount's revalidation is deduped away
-// (the confirm step refetched moments earlier), so the cleared store alone would
-// leave the just-confirmed accounts on screen.
+// Completing the wizard resets everything and remounts, restarting the flow.
+// The SWR cache must be wiped too: the remount's revalidation is deduped away
+// after the confirm step's own refetch.
 function RestartingLinkAccounts() {
   const [iteration, setIteration] = useState(0)
   const { overwriteCache } = useBankAccountsGlobalCacheActions()
@@ -66,11 +63,6 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-/**
- * Full flow: "Connect my bank" runs the fake Plaid link (SDK mocked via
- * `.storybook/mocks/react-plaid-link.ts`), then the found accounts move into
- * the confirm/exclude step. Completing the wizard restarts the flow.
- */
 export const Default: Story = {
   loaders: [clearBankAccounts],
 }

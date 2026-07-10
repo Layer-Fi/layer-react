@@ -1,14 +1,10 @@
 import { useCallback, useMemo, useRef } from 'react'
 
 /**
- * Storybook stand-in for `react-plaid-link` (aliased via `.storybook/main.ts`):
- * Plaid's hosted iframe can't run here, so `open()` fakes a successful link by
- * invoking `onSuccess` after a short delay.
- *
- * Like the real SDK, `open` keeps a stable identity per token - a new identity
- * each render would loop `usePlaidLinkModal`'s open effect, while it must change
- * with the token to open the next session ("Link another bank"). Callbacks are
- * read through a ref so `open` only tracks the token without going stale.
+ * Storybook stand-in for `react-plaid-link` (aliased via `.storybook/main.ts`);
+ * `open()` fakes a successful link. Like the real SDK, `open` is stable per
+ * token (a per-render identity would loop the open effect) but changes with the
+ * token (which is what opens the next session).
  */
 
 type MockPlaidLinkConfig = {

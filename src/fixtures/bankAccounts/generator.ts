@@ -8,10 +8,5 @@ const generate = createGenerator(schema, {
 
 export const generator = () => generate({ numRuns: 5 })
 
-/**
- * Randomly generates bank accounts flagged as needing confirmation - what a
- * fake Plaid link session "finds". Same seed, same accounts; vary the seed to
- * produce fresh banks per link session.
- */
 export const generateAccountsNeedingConfirmation = (count: number, seed: number) =>
   generate({ numRuns: count, seed }).map(markAccountNeedingConfirmation)
