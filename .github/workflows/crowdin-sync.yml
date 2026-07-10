@@ -9,7 +9,12 @@ name: i18n - Sync Translations
 #   4. Pre-translate untranslated fr-CA strings (translation memory, then AI).
 #   5. Download fr-CA; downloaded values overwrite local ones.
 #   6. Open/update the i18n/crowdin-fr-ca PR with the result.
-# Manual runs do steps 5-6 only, or all steps with pretranslate=true.
+#
+# Manual runs default to download-only (steps 5-6) for pulling upstream
+# Crowdin edits. Set pretranslate=true to run the full flow.
+#
+# Secrets:  CROWDIN_PROJECT_ID, CROWDIN_PERSONAL_TOKEN
+# Variable: CROWDIN_AI_PROMPT_ID — required for full pre-translation runs.
 
 on:
   workflow_dispatch:
