@@ -14,6 +14,11 @@ export const CURRENT_MONTH_TO_DATE = {
   endDate: END_OF_TODAY,
 }
 
+export const PREVIOUS_MONTH_RANGE = {
+  startDate: new Date(2026, 4, 1),
+  endDate: new Date(2026, 4, 31, 23, 59, 59, 999),
+}
+
 export const CURRENT_YEAR_TO_DATE = {
   startDate: new Date(2026, 0, 1),
   endDate: END_OF_TODAY,

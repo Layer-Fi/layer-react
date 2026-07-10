@@ -16,6 +16,7 @@ import {
   MONTH_TO_DATE_OF_ONE_MONTH_BEFORE_NOW,
   NOW,
   ONE_MONTH_BEFORE_NOW,
+  PREVIOUS_MONTH_RANGE,
   SIX_MONTHS_AFTER_NOW,
   THREE_MONTHS_BEFORE_NOW,
 } from '@test-utils/fixedDates'
@@ -105,7 +106,7 @@ describe('createScopedDateStore', () => {
     const { result } = setupDateStore()
 
     act(() => {
-      result.current.dateActions.setDate({ date: ONE_MONTH_BEFORE_NOW })
+      result.current.dateActions.setDate(ONE_MONTH_BEFORE_NOW)
     })
 
     expect(result.current.fullRange).toEqual(MONTH_TO_DATE_OF_ONE_MONTH_BEFORE_NOW)
@@ -134,8 +135,7 @@ describe('createScopedDateStore', () => {
     })
 
     expect(result.current.datePreset).toBe(DatePreset.LastMonth)
-    // Range resolved to the start of last month (NOW is 2026-06-15).
-    expect(result.current.fullRange.startDate).toEqual(new Date(2026, 4, 1))
+    expect(result.current.fullRange).toEqual(PREVIOUS_MONTH_RANGE)
   })
 
   it('re-derives a named preset when an explicit range matches it (This Year)', () => {
@@ -143,7 +143,7 @@ describe('createScopedDateStore', () => {
 
     act(() => {
       result.current.rangeActions.setDateRange({
-        startDate: new Date(2026, 0, 1),
+        startDate: CURRENT_YEAR_TO_DATE.startDate,
         endDate: NOW,
       })
     })
