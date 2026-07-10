@@ -181,5 +181,15 @@ export function derivePresetFromDateRange(
   if (activationDate && sameDateRange(normalize(input, activationDate), normalize(rangeForAllTime(activationDate), activationDate))) {
     return DatePreset.AllTime
   }
-  return deriveRelativePresetFromDateRange(input, previousPreset, activationDate) ?? DatePreset.Custom
+  const relativePreset = deriveRelativePresetFromDateRange(input, previousPreset, activationDate)
+
+  if (relativePreset) {
+    return relativePreset
+  }
+
+  if (activationDate && sameDateRange(normalize(input, activationDate), normalize(rangeForAllTime(activationDate), activationDate))) {
+    return DatePreset.AllTime
+  }
+
+  return DatePreset.Custom
 }
