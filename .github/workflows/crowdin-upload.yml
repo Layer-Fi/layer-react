@@ -42,6 +42,7 @@ jobs:
       uses: crowdin/github-action@v2
       with:
         command: upload translations
+        command_args: --auto-approve-imported
       env:
         CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
