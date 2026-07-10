@@ -4,10 +4,9 @@ import { DateRangeSelection } from '@components/DateSelection/DateRangeSelection
 type GlobalDateRangeSelectionProps = {
   showLabels?: boolean
   isCompact?: boolean
-  includeAllTime?: boolean
 }
 
-export const GlobalDateRangeSelection = ({ showLabels = false, isCompact = false, includeAllTime = true }: GlobalDateRangeSelectionProps) => {
+export const GlobalDateRangeSelection = ({ showLabels = false, isCompact = false }: GlobalDateRangeSelectionProps) => {
   const dateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
   const datePreset = useGlobalDatePreset()
   const { setDateRange } = useGlobalDateRangeActions()
@@ -19,7 +18,6 @@ export const GlobalDateRangeSelection = ({ showLabels = false, isCompact = false
       setDateRange={setDateRange}
       datePreset={datePreset}
       setDatePreset={setDatePreset}
-      includeAllTime={includeAllTime}
       showLabels={showLabels}
       isCompact={isCompact}
     />

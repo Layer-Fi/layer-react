@@ -12,7 +12,6 @@ type DateRangeSelectionProps = {
   setDateRange: (range: DateRange) => void
   datePreset: DatePreset
   setDatePreset: (datePreset: Exclude<DatePreset, DatePreset.Custom>) => void
-  includeAllTime?: boolean
   showLabels?: boolean
   isCompact?: boolean
 }
@@ -22,7 +21,6 @@ export const DateRangeSelection = ({
   setDateRange,
   datePreset,
   setDatePreset,
-  includeAllTime = false,
   showLabels = false,
   isCompact = false,
 }: DateRangeSelectionProps) => {
@@ -35,7 +33,6 @@ export const DateRangeSelection = ({
       <DateSelectionComboBox
         datePreset={datePreset}
         setDatePreset={setDatePreset}
-        includeAllTime={includeAllTime}
         showLabel={showLabels}
       />
       <DateRangePicker

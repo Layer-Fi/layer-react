@@ -16,15 +16,12 @@ type DateSelectionComboBoxProps = {
   datePreset: DatePreset
   /** Set the range by preset; selecting an option calls it with the chosen preset. */
   setDatePreset: (datePreset: Exclude<DatePreset, DatePreset.Custom>) => void
-  /** Whether to offer the "All Time" option. */
-  includeAllTime?: boolean
   showLabel?: boolean
 }
 
 export const DateSelectionComboBox = ({
   datePreset,
   setDatePreset,
-  includeAllTime = false,
   showLabel = false,
 }: DateSelectionComboBoxProps) => {
   const { t } = useTranslation()
@@ -37,10 +34,10 @@ export const DateSelectionComboBox = ({
       { value: DatePreset.LastQuarter, label: t('date:label.last_quarter', 'Last Quarter') },
       { value: DatePreset.ThisYear, label: t('date:label.this_year', 'This Year') },
       { value: DatePreset.LastYear, label: t('date:label.last_year', 'Last Year') },
-      ...(includeAllTime ? [{ value: DatePreset.AllTime, label: t('date:label.all_time', 'All Time') }] : []),
+      { value: DatePreset.AllTime, label: t('date:label.all_time', 'All Time') },
       { value: DatePreset.Custom, label: t('date:label.custom', 'Custom') },
     ],
-    [t, includeAllTime],
+    [t],
   )
 
   // Selectable options exclude Custom — it only appears as a (non-selectable) label

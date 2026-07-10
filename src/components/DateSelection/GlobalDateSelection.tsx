@@ -9,10 +9,9 @@ import './globalDateSelection.scss'
 type GlobalDateSelectionProps = {
   showLabels?: boolean
   isCompact?: boolean
-  includeAllTime?: boolean
 }
 
-export const GlobalDateSelection = ({ showLabels = false, isCompact = false, includeAllTime = true }: GlobalDateSelectionProps) => {
+export const GlobalDateSelection = ({ showLabels = false, isCompact = false }: GlobalDateSelectionProps) => {
   const datePreset = useGlobalDatePreset()
   const { setDatePreset } = useGlobalDatePresetActions()
 
@@ -25,7 +24,6 @@ export const GlobalDateSelection = ({ showLabels = false, isCompact = false, inc
       <DateSelectionComboBox
         datePreset={datePreset}
         setDatePreset={setDatePreset}
-        includeAllTime={includeAllTime}
         showLabel={showLabels}
       />
       <GlobalDatePicker showLabel={showLabels} />
