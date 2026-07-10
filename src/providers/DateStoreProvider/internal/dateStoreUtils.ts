@@ -39,16 +39,14 @@ export function getDateRange(options: GetDateRangeOptions): DateRange {
   }
 }
 
-export function withCorrectedRange<TDateRange extends DateRange, TOut>(fn: (options: TDateRange) => TOut) {
-  return (options: TDateRange) => {
-    const { startDate, endDate } = options
+export function correctDateRange(range: DateRange): DateRange {
+  const { startDate, endDate } = range
 
-    if (startDate > endDate) {
-      return fn({ ...options, startDate: endDate, endDate: startDate })
-    }
-
-    return fn({ ...options, startDate, endDate })
+  if (startDate > endDate) {
+    return { startDate: endDate, endDate: startDate }
   }
+
+  return range
 }
 
 export function getEffectiveDateForMode(mode: DateSelectionMode, { date }: { date: Date }): { date: Date } {
