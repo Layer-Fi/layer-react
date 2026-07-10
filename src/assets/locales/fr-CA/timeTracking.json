@@ -37,6 +37,7 @@
   "label": {
     "active": "Actif",
     "add_memo": "Ajouter une note",
+    "add_time_entry": "Ajouter une entrée de temps",
     "additional_time_tracking_actions": "Actions supplémentaires de suivi du temps",
     "all_customers": "Tous les clients",
     "all_services": "Tous les services",
@@ -61,8 +62,7 @@
     "service": "Service",
     "time_entries": "Entrées de temps",
     "time_tracking": "Suivi du temps",
-    "zero_minutes": "0 min",
-    "add_time_entry": "Ajouter une entrée de temps"
+    "zero_minutes": "0 min"
   },
   "prompt": {
     "delete_entry": "Supprimer l'entrée?",
