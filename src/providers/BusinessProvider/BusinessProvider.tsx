@@ -100,14 +100,13 @@ export const BusinessProvider = ({
     eventCallbacks: {},
   })
 
-  const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode: 'full' })
+  const globalDateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
   const { setDateRange } = useGlobalDateRangeActions()
 
   const dateRange = useMemo(() => ({
-    // Keep the public range a plain { startDate, endDate }; the store's `preset` is internal.
-    range: { startDate, endDate },
+    range: globalDateRange,
     setRange: setDateRange,
-  }), [startDate, endDate, setDateRange])
+  }), [globalDateRange, setDateRange])
 
   const { data: businessData } = useBusiness({ businessId })
 
