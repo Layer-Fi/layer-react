@@ -7,6 +7,7 @@ import {
 } from 'date-fns'
 
 import { clampToAfterActivationDate, clampToPresentOrPast, type DateRange } from '@utils/date/dateRange'
+import { correctDateRange } from '@providers/DateStoreProvider/internal/dateStoreUtils'
 
 export enum Period {
   Month = 'Month',
@@ -102,10 +103,10 @@ export function rangeForPreset(preset: RelativeDatePreset, base?: Date): DateRan
  * business context is available (the store resolver and the preset combo box).
  */
 export function rangeForAllTime(activationDate: Date): DateRange {
-  return {
+  return correctDateRange({
     startDate: startOfDay(activationDate),
     endDate: clampToPresentOrPast(endOfDay(new Date())),
-  }
+  })
 }
 
 const normalize = (range: DateRange, activationDate?: Date | null): DateRange => {
