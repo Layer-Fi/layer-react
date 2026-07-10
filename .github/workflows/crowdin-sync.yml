@@ -1,8 +1,9 @@
 name: i18n - Sync Translations
 
-# en-US merges: upload push translations -> scaffold keys -> upload sources
-# -> pre-translate -> download (Crowdin wins) -> translations PR.
-# Manual runs are download-only unless pretranslate=true.
+# On en-US merges: upload the merge's own translation edits to Crowdin,
+# scaffold fr-CA keys from the en-US diff, upload sources, pre-translate,
+# then download (Crowdin values overwrite local) and open a translations PR.
+# Manual runs only download unless pretranslate=true.
 
 on:
   workflow_dispatch:
