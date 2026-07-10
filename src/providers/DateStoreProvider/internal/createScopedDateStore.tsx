@@ -16,10 +16,8 @@ export type CreateScopedDateStoreOptions = MakeDateStoreOptions & {
 
 type ProviderProps = PropsWithChildren<{
   /**
-   * Rendered while a context-dependent preset (e.g. `AllTime`) waits for the
-   * business context to resolve. Keep this scoped to just the date pickers and
-   * date-dependent tables so the rest of the page is not blocked. Relative
-   * presets resolve synchronously and never show the fallback.
+   * Rendered while a business context-dependent preset (e.g. `AllTime`) waits for the
+   * business context to resolve.
    */
   fallback?: ReactNode
 }>
@@ -40,21 +38,18 @@ export function createScopedDateStore({
 
   /**
    * Deferred construction: the store is not created until its initial range can
-   * be fully resolved. The store is therefore born-correct — consumers never
-   * observe a wrong or absent date, and no `useEffect` hydration is needed.
+   * be fully resolved.
    */
   function Provider({ children, fallback = null }: ProviderProps) {
-    const resolved = useDerivedInitialDateRange(initialDatePreset)
+    const initialRange = useDerivedInitialDateRange(initialDatePreset)
 
-    if (resolved.status === 'loading') {
+    if (initialRange.status === 'loading') {
       return <>{fallback}</>
     }
 
-    const { range } = resolved
-
     return (
       <scopedStore.Provider
-        createStore={() => buildDateStore({ initialRange: range, initialPreset: initialDatePreset })}
+        createStore={() => buildDateStore({ initialRange: initialRange.range, initialPreset: initialDatePreset })}
       >
         {children}
       </scopedStore.Provider>
@@ -112,7 +107,6 @@ export function createScopedDateStore({
     )
   }
 
-  // Reads only the active preset — the range counterpart is `useDateRange`.
   function useDatePreset() {
     return scopedStore.useSelector(({ preset }) => preset)
   }
@@ -153,7 +147,6 @@ export function createScopedDateStore({
     )
   }
 
-  // Intentional counterpart to `useDateRangeActions` for setting by preset.
   function useDatePresetActions() {
     const activationDate = useBusinessActivationDateSafe()
 
