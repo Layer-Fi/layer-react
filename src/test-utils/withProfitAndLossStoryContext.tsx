@@ -29,7 +29,7 @@ export const withProfitAndLossStoryContext = (
       >
         <div
           className='ProfitAndLossContainer'
-          style={{ display: 'grid', minInlineSize: '40rem', maxInlineSize: '80rem' }}
+          style={{ display: 'grid', minInlineSize: '20rem', maxInlineSize: '80rem' }}
         >
           <ProfitAndLoss asContainer={asContainer}>
             <Story />

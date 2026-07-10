@@ -45,7 +45,7 @@ const renderLegendContent = (payload: { value: string, type: string, id: string 
   )
 }
 
-const LEGEND_HEIGHT = 20
+const LEGEND_HEIGHT = 44
 
 export const ProfitAndLossChartLegend = () => {
   const { t } = useTranslation()
@@ -58,7 +58,6 @@ export const ProfitAndLossChartLegend = () => {
     <Legend
       verticalAlign='top'
       align='right'
-      // Explicit height reserves the legend band deterministically; DOM measurement can lag and let bars overlap.
       height={LEGEND_HEIGHT}
       content={renderLegendContent(payload)}
     />

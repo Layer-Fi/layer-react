@@ -1,7 +1,6 @@
-import classNames from 'classnames'
-
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { BackButton } from '@ui/Button/BackButton'
 import { CloseButton as UICloseButton } from '@ui/Button/CloseButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -14,25 +13,24 @@ import './profitAndLossDetailedChartsHeader.scss'
 type HeaderTitleProps = {
   title: string
   dateLabel: string
-  isTablet: boolean
   showDatePicker: boolean
+  isMobile: boolean
 }
 
-const HeaderTitle = ({ title, dateLabel, isTablet, showDatePicker }: HeaderTitleProps) => (
+const HeaderTitle = ({ isMobile, title, dateLabel, showDatePicker }: HeaderTitleProps) => (
   <HStack justify='space-between' align='center' gap='md' fluid>
     <VStack className='Layer__ProfitAndLossDetailedChartsHeader__head'>
       <Heading level={3} size='sm'>
         {title}
       </Heading>
-      <Span
-        size='sm'
-        variant={isTablet ? undefined : 'subtle'}
-        className='Layer__ProfitAndLossDetailedChartsHeader__date'
-      >
-        {dateLabel}
-      </Span>
+      {!showDatePicker && (
+        <Span size='sm' variant='subtle'>
+          {dateLabel}
+        </Span>
+      )}
+
     </VStack>
-    {!isTablet && showDatePicker && <GlobalMonthPicker />}
+    {showDatePicker && <GlobalMonthPicker truncateMonth={isMobile} />}
   </HStack>
 )
 
@@ -56,7 +54,6 @@ const CloseButton = ({ variant, onClose }: CloseButtonProps) => {
 type ProfitAndLossDetailedChartsHeaderProps = {
   title: string
   date: Date
-  mode: 'desktop' | 'tablet'
   showCloseButton?: boolean
   showDatePicker?: boolean
   onClose: () => void
@@ -65,36 +62,30 @@ type ProfitAndLossDetailedChartsHeaderProps = {
 export const ProfitAndLossDetailedChartsHeader = ({
   title,
   date,
-  mode,
   showCloseButton = true,
   showDatePicker = false,
   onClose,
 }: ProfitAndLossDetailedChartsHeaderProps) => {
+  const { isDesktop, isMobile } = useSizeClass()
   const { formatDate } = useIntlFormatter()
-  const isTablet = mode === 'tablet'
 
   const headerProps: HeaderTitleProps = {
     title,
-    isTablet,
+    isMobile,
     showDatePicker,
     dateLabel: formatDate(date, DateFormat.MonthYear),
   }
 
   const closeButtonProps: CloseButtonProps = {
-    variant: isTablet ? CloseButtonVariant.BackButton : CloseButtonVariant.OutlinedIconButton,
+    variant: isDesktop ? CloseButtonVariant.OutlinedIconButton : CloseButtonVariant.BackButton,
     onClose,
   }
 
   return (
-    <header
-      className={classNames(
-        'Layer__ProfitAndLossDetailedChartsHeader',
-        `Layer__ProfitAndLossDetailedChartsHeader--${mode}`,
-      )}
-    >
-      {isTablet && showCloseButton && <CloseButton {...closeButtonProps} />}
+    <header className='Layer__ProfitAndLossDetailedChartsHeader'>
+      {!isDesktop && showCloseButton && <CloseButton {...closeButtonProps} />}
       <HeaderTitle {...headerProps} />
-      {!isTablet && showCloseButton && <CloseButton {...closeButtonProps} />}
+      {isDesktop && showCloseButton && <CloseButton {...closeButtonProps} />}
     </header>
   )
 }
