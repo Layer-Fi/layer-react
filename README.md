@@ -151,7 +151,7 @@ import { ProfitAndLoss } from "@layerfi/components";
 The P&L Summaries section supports several optional props:
 
 - `actionable`: When enabled, clicking the revenue & expense charts will open the P&L sidebar view.
-- `variants`: Override the size of the component; supports a small and large version.
+- `variants` (deprecated, no longer has any effect): The tiles size themselves responsively to their container; override the `--text-*` font size variables to adjust sizing.
 
 #### Profit and Loss Table
 
