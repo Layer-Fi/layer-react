@@ -44,7 +44,7 @@ type Story = StoryObj<ProfitAndLossSummariesStoryArgs>
 
 export const ProfitAndLoss: Story = {}
 
-export const Cashflow: Story = {
+export const CashFlow: Story = {
   args: {
     reportingVariant: { type: 'cashflow' },
   },
