@@ -1,4 +1,4 @@
-import { useGlobalDatePreset, useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
+import { useGlobalDateRangeActions, useGlobalPresetRange, useGlobalPresetRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { DateRangeSelection } from '@components/DateSelection/DateRangeSelection'
 
 type GlobalDateRangeSelectionProps = {
@@ -8,13 +8,13 @@ type GlobalDateRangeSelectionProps = {
 }
 
 export const GlobalDateRangeSelection = ({ showLabels = false, isCompact = false, includeAllTime = true }: GlobalDateRangeSelectionProps) => {
-  const dateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
-  const preset = useGlobalDatePreset()
-  const { setDateRange, setPresetRange } = useGlobalDateRangeActions()
+  const { startDate, endDate, preset } = useGlobalPresetRange({ dateSelectionMode: 'full' })
+  const { setDateRange } = useGlobalDateRangeActions()
+  const { setPresetRange } = useGlobalPresetRangeActions()
 
   return (
     <DateRangeSelection
-      dateRange={dateRange}
+      dateRange={{ startDate, endDate }}
       setDateRange={setDateRange}
       preset={preset}
       setPresetRange={setPresetRange}

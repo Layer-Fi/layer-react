@@ -1,24 +1,25 @@
 import type { DateRange } from '@utils/date/dateRange'
 import type { DatePreset } from '@utils/date/dateRangePresets'
 
-export type DateActions = {
-  setDate: (options: { date: Date }) => DateRange
-  setDateRange: (options: { startDate: Date, endDate: Date }) => DateRange
-  setMonth: (options: { startDate: Date }) => DateRange
-  setYear: (options: { startDate: Date }) => DateRange
-  setMonthByPeriod: (options: { monthNumber: number, yearNumber: number }) => DateRange
-  /**
-   * Set the range together with the preset it represents. The caller resolves
-   * the concrete range (context-dependent presets like `AllTime` need business
-   * context the store does not have), so the store just records both, keeping
-   * `preset` and the range consistent.
-   */
-  setPresetRange: (options: { preset: DatePreset, startDate: Date, endDate: Date }) => DateRange
-}
+/**
+ * The selected range together with the preset it represents. `preset` is `Custom`
+ * when the range was set to something that matches no named preset.
+ */
+export type DateRangeWithPreset = DateRange & { preset: DatePreset }
 
 /**
- * The active preset. `Custom` means the range was set directly (e.g. from a date
- * picker) and does not correspond to a named preset. Consumers should treat the
- * range as the source of truth and `preset` as intent/label.
+ * `activationDate` is injected by the hooks so `AllTime` can resolve/derive; the
+ * store itself stays context-free.
  */
-export type DateStore = DateRange & { preset: DatePreset, actions: DateActions }
+export type DateActions = {
+  setDate: (options: { date: Date }, activationDate?: Date) => DateRangeWithPreset
+  /** Set an explicit range; the preset it represents is derived. */
+  setDateRange: (range: DateRange, activationDate?: Date) => DateRangeWithPreset
+  /** Set by preset; the concrete range is resolved. */
+  setPresetRange: (options: { preset: Exclude<DatePreset, DatePreset.Custom> }, activationDate?: Date) => DateRangeWithPreset
+  setMonth: (options: { startDate: Date }, activationDate?: Date) => DateRangeWithPreset
+  setYear: (options: { startDate: Date }, activationDate?: Date) => DateRangeWithPreset
+  setMonthByPeriod: (options: { monthNumber: number, yearNumber: number }, activationDate?: Date) => DateRangeWithPreset
+}
+
+export type DateStore = DateRangeWithPreset & { actions: DateActions }

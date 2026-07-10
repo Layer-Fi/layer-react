@@ -2,7 +2,7 @@ import { useContext } from 'react'
 
 import { getActivationDate } from '@utils/business'
 import type { DateRange } from '@utils/date/dateRange'
-import { DatePreset, rangeForAllTime, rangeForPreset } from '@utils/date/dateRangePresets'
+import { type DatePreset, resolveRangeForPreset } from '@utils/date/dateRangePresets'
 import { LayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type ResolvedInitialRange =
@@ -13,8 +13,10 @@ export type ResolvedInitialRange =
  * Reads the business activation date without throwing when there is no
  * `LayerContext` above (e.g. the global store is mounted above `BusinessProvider`).
  * Returns `undefined` while the business is still loading or unavailable.
+ *
+ * Also used by the action hooks to resolve/derive presets at mutation time.
  */
-function useBusinessActivationDateSafe(): Date | undefined {
+export function useBusinessActivationDateSafe(): Date | undefined {
   const ctx = useContext(LayerContext)
   return ctx ? getActivationDate(ctx.business) : undefined
 }
@@ -28,14 +30,7 @@ function useBusinessActivationDateSafe(): Date | undefined {
  */
 export function useResolvedInitialRange(preset: Exclude<DatePreset, DatePreset.Custom>): ResolvedInitialRange {
   const activationDate = useBusinessActivationDateSafe()
+  const range = resolveRangeForPreset(preset, activationDate)
 
-  if (preset === DatePreset.AllTime) {
-    if (activationDate == null) {
-      return { status: 'loading' }
-    }
-
-    return { status: 'ready', range: rangeForAllTime(activationDate) }
-  }
-
-  return { status: 'ready', range: rangeForPreset(preset) }
+  return range ? { status: 'ready', range } : { status: 'loading' }
 }

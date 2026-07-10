@@ -10,8 +10,8 @@ import './dateRangeSelection.scss'
 type DateRangeSelectionProps = {
   dateRange: DateRange
   setDateRange: (range: DateRange) => void
-  preset?: DatePreset | null
-  setPresetRange?: (options: { preset: DatePreset, startDate: Date, endDate: Date }) => void
+  preset: DatePreset
+  setPresetRange: (options: { preset: Exclude<DatePreset, DatePreset.Custom> }) => void
   includeAllTime?: boolean
   showLabels?: boolean
   isCompact?: boolean
@@ -33,8 +33,6 @@ export const DateRangeSelection = ({
       })}
     >
       <DateSelectionComboBox
-        dateRange={dateRange}
-        setDateRange={setDateRange}
         preset={preset}
         setPresetRange={setPresetRange}
         includeAllTime={includeAllTime}
