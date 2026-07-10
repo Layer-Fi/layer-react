@@ -1,4 +1,4 @@
-import type { LabelProps } from 'recharts'
+import { type LabelProps, useChartHeight, usePlotArea } from 'recharts'
 
 type ProfitAndLossChartSelectionIndicatorProps = Pick<LabelProps, 'viewBox'> & {
   selected?: boolean
@@ -6,8 +6,14 @@ type ProfitAndLossChartSelectionIndicatorProps = Pick<LabelProps, 'viewBox'> & {
 
 import './profitAndLossChartSelectionIndicator.scss'
 
+// Extends the box below the plot area so it wraps the month tick label.
+const X_AXIS_LABEL_INSET = 14
+
 export const ProfitAndLossChartSelectionIndicator = ({ viewBox, selected }: ProfitAndLossChartSelectionIndicatorProps) => {
-  if (!selected) return null
+  const plotArea = usePlotArea()
+  const chartHeight = useChartHeight()
+
+  if (!selected || plotArea === undefined || chartHeight === undefined) return null
 
   const { x = 0, width = 0 } = viewBox !== undefined && 'x' in viewBox
     ? viewBox
@@ -23,9 +29,9 @@ export const ProfitAndLossChartSelectionIndicator = ({ viewBox, selected }: Prof
       rx={borderRadius}
       ry={borderRadius}
       x={x - margin}
-      y={24}
+      y={plotArea.y}
       width={boxWidth}
-      height='calc(100% - 38px)'
+      height={chartHeight - X_AXIS_LABEL_INSET - plotArea.y}
     />
   )
 }
