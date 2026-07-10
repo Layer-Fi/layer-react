@@ -6,7 +6,7 @@ import { createScopedStore } from '@utils/zustand/createScopedStore'
 import { useStoreWithDateSelected } from '@utils/zustand/useStoreWithDateSelected'
 import { buildDateStore, type MakeDateStoreOptions } from '@providers/DateStoreProvider/internal/buildDateStore'
 import { getEffectiveDateForMode, getEffectiveDateRangeForMode } from '@providers/DateStoreProvider/internal/dateStoreUtils'
-import { useBusinessActivationDateSafe, useResolvedInitialRange } from '@providers/DateStoreProvider/internal/useResolvedInitialRange'
+import { useBusinessActivationDateSafe, useDerivedInitialDateRange } from '@providers/DateStoreProvider/internal/useResolvedInitialRange'
 
 type DateStoreApi = ReturnType<typeof buildDateStore>
 
@@ -44,7 +44,7 @@ export function createScopedDateStore({
    * observe a wrong or absent date, and no `useEffect` hydration is needed.
    */
   function Provider({ children, fallback = null }: ProviderProps) {
-    const resolved = useResolvedInitialRange(initialDatePreset)
+    const resolved = useDerivedInitialDateRange(initialDatePreset)
 
     if (resolved.status === 'loading') {
       return <>{fallback}</>
@@ -83,7 +83,7 @@ export function createScopedDateStore({
 
     return useMemo(
       () => ({
-        setDate: (options: { date: Date }) => setDate(options, activationDate),
+        setDate: (date: Date) => setDate(date, activationDate),
       }),
       [setDate, activationDate],
     )
@@ -138,12 +138,12 @@ export function createScopedDateStore({
     )
 
     const setMonth = useCallback(
-      (options: { startDate: Date }) => setMonthAction(options, activationDate),
+      (date: Date) => setMonthAction(date, activationDate),
       [setMonthAction, activationDate],
     )
 
     const setYear = useCallback(
-      (options: { startDate: Date }) => setYearAction(options, activationDate),
+      (date: Date) => setYearAction(date, activationDate),
       [setYearAction, activationDate],
     )
 

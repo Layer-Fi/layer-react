@@ -23,7 +23,7 @@ export const GlobalMonthPicker = ({ truncateMonth, showLabel = false }: GlobalMo
   const maxDateZdt = useMemo(() => convertDateToZonedDateTime(maxDate), [maxDate])
 
   const onChange = useCallback((val: ZonedDateTime) => {
-    setMonth({ startDate: val.toDate() })
+    setMonth(val.toDate())
   }, [setMonth])
 
   return (

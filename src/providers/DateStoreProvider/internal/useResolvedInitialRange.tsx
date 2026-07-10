@@ -2,7 +2,7 @@ import { useContext } from 'react'
 
 import { getActivationDate } from '@utils/business'
 import type { DateRange } from '@utils/date/dateRange'
-import { type DatePreset, resolveRangeForPreset } from '@utils/date/dateRangePresets'
+import { type DatePreset, deriveDateRangeFromPreset } from '@utils/date/dateRangePresets'
 import { LayerContext } from '@contexts/LayerContext/LayerContext'
 
 export type ResolvedInitialRange =
@@ -28,9 +28,9 @@ export function useBusinessActivationDateSafe(): Date | undefined {
  * `loading`, so the store can be constructed *born-correct* rather than seeded
  * with a wrong value and patched later.
  */
-export function useResolvedInitialRange(preset: Exclude<DatePreset, DatePreset.Custom>): ResolvedInitialRange {
+export function useDerivedInitialDateRange(preset: Exclude<DatePreset, DatePreset.Custom>): ResolvedInitialRange {
   const activationDate = useBusinessActivationDateSafe()
-  const range = resolveRangeForPreset(preset, activationDate)
+  const range = deriveDateRangeFromPreset(preset, activationDate)
 
   return range ? { status: 'ready', range } : { status: 'loading' }
 }
