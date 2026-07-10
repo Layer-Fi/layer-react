@@ -1,12 +1,11 @@
-import { type PropsWithChildren, type ReactElement } from 'react'
-import { act, renderHook } from '@testing-library/react'
-import { startOfDay } from 'date-fns'
+import { type PropsWithChildren } from 'react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { DatePreset } from '@utils/date/dateRangePresets'
+import { DatePreset, rangeForAllTime } from '@utils/date/dateRangePresets'
 import { createScopedDateStore, type CreateScopedDateStoreOptions } from '@providers/DateStoreProvider/internal/createScopedDateStore'
-import { LayerContext } from '@contexts/LayerContext/LayerContext'
 
+import { makeBusiness } from '@fixtures/business/mocks'
 import { setupFakeSystemTime } from '@test-utils/fakeSystemTime'
 import {
   CURRENT_MONTH_TO_DATE,
@@ -19,31 +18,10 @@ import {
   ONE_MONTH_BEFORE_NOW,
   SIX_MONTHS_AFTER_NOW,
   THREE_MONTHS_BEFORE_NOW,
-  TWO_YEARS_BEFORE_NOW,
 } from '@test-utils/fixedDates'
+import { LayerTestProvider } from '@test-utils/LayerTestProvider'
 
-setupFakeSystemTime(NOW)
-
-/**
- * Minimal LayerContext wrapper exposing only what the date store resolver reads
- * (`business.activationAt`). Pass `activationAt: null` to simulate a business
- * that has not loaded yet.
- */
-function makeBusinessWrapper(activationAt: Date | null) {
-  const business = activationAt ? { activationAt } : undefined
-  return function BusinessWrapper({ children }: PropsWithChildren) {
-    return (
-      <LayerContext.Provider value={{ business } as never}>
-        {children}
-      </LayerContext.Provider>
-    )
-  }
-}
-
-function setupDateStore(
-  options?: CreateScopedDateStoreOptions,
-  wrapper?: ({ children }: PropsWithChildren) => ReactElement,
-) {
+function setupDateStore(options?: CreateScopedDateStoreOptions) {
   const dateStore = createScopedDateStore(options)
 
   const {
@@ -66,11 +44,7 @@ function setupDateStore(
     }
   }
 
-  const Wrapper = wrapper
-    ? ({ children }: PropsWithChildren) => wrapper({ children: <Provider>{children}</Provider> })
-    : Provider
-
-  const result = renderHook(useDateStoreTestState, { wrapper: Wrapper })
+  const result = renderHook(useDateStoreTestState, { wrapper: Provider })
 
   return {
     dateStore,
@@ -79,6 +53,9 @@ function setupDateStore(
 }
 
 describe('createScopedDateStore', () => {
+  // Relative presets resolve synchronously from `now`, so pin the clock.
+  setupFakeSystemTime(NOW)
+
   it('initializes to the current month by default', () => {
     const { result } = setupDateStore()
 
@@ -159,28 +136,41 @@ describe('createScopedDateStore', () => {
     expect(result.current.preset).toBe(DatePreset.LastMonth)
   })
 
-  describe('AllTime preset', () => {
-    it('resolves the range from the business activation date to the present', () => {
-      const { result } = setupDateStore(
-        { initialDatePreset: DatePreset.AllTime },
-        makeBusinessWrapper(TWO_YEARS_BEFORE_NOW),
+  it('renders the fallback (does not mount the store) when no business context is available', () => {
+    // AllTime needs the business activation date; without a business context the
+    // resolver stays in its loading state and the store is never constructed.
+    const { result } = setupDateStore({ initialDatePreset: DatePreset.AllTime })
+
+    expect(result.current).toBeNull()
+  })
+})
+
+describe('createScopedDateStore AllTime preset', () => {
+  it('defers construction until the business loads, then resolves the range from the activation date', async () => {
+    const dateStore = createScopedDateStore({ initialDatePreset: DatePreset.AllTime })
+
+    function Wrapper({ children }: PropsWithChildren) {
+      return (
+        <LayerTestProvider>
+          <dateStore.Provider>{children}</dateStore.Provider>
+        </LayerTestProvider>
       )
+    }
 
-      expect(result.current.preset).toBe(DatePreset.AllTime)
-      expect(result.current.fullRange).toEqual({
-        startDate: startOfDay(TWO_YEARS_BEFORE_NOW),
-        endDate: END_OF_TODAY,
-      })
-    })
+    const { result } = renderHook(
+      () => ({
+        preset: dateStore.usePreset(),
+        range: dateStore.useDateRange({ dateSelectionMode: 'full' }),
+      }),
+      { wrapper: Wrapper },
+    )
 
-    it('renders the fallback (does not mount the store) while the business is loading', () => {
-      const { result } = setupDateStore(
-        { initialDatePreset: DatePreset.AllTime },
-        makeBusinessWrapper(null),
-      )
+    // Fallback while the business (and thus the activation date) is still loading.
+    expect(result.current).toBeNull()
 
-      // The store never mounts, so the consuming hook never runs.
-      expect(result.current).toBeNull()
-    })
+    await waitFor(() => expect(result.current).not.toBeNull())
+
+    expect(result.current.preset).toBe(DatePreset.AllTime)
+    expect(result.current.range).toEqual(rangeForAllTime(makeBusiness().activationAt))
   })
 })
