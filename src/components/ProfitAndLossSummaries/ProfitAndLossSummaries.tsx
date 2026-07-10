@@ -30,7 +30,8 @@ export type ProfitAndLossSummariesReportingVariant =
 export type ProfitAndLossSummariesSlotProps = {
   reportingVariant?: ProfitAndLossSummariesReportingVariant
   /**
-   * @deprecated Sizing is determined by the container size
+   * @deprecated The summaries tiles size themselves responsively to their container,
+   * so this override is no longer needed and will be removed in a future release.
    */
   variants?: Variants
 }
@@ -41,7 +42,8 @@ type ProfitAndLossSummariesProps = {
   chartColorsList?: string[]
   reportingVariant?: ProfitAndLossSummariesReportingVariant
   /**
-   * @deprecated Sizing is determined by the container size
+   * @deprecated The summaries tiles size themselves responsively to their container,
+   * so this override is no longer needed and will be removed in a future release.
    */
   variants?: Variants
   onTransactionsToReviewClick?: () => void
