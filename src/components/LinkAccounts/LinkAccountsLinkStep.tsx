@@ -23,7 +23,11 @@ import { Separator } from '@components/Separator/Separator'
 import { ConditionalList } from '@components/utility/ConditionalList'
 import { useWizard } from '@components/Wizard/Wizard'
 
-export function LinkAccountsLinkStep() {
+type LinkAccountsLinkStepProps = {
+  showDoneLinkingButton?: boolean
+}
+
+export function LinkAccountsLinkStep({ showDoneLinkingButton = true }: LinkAccountsLinkStepProps) {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { isLinking, addConnection } = useContext(LinkedAccountsContext)
@@ -37,12 +41,12 @@ export function LinkAccountsLinkStep() {
 
   return (
     <>
-      <ConditionalList
-        list={effectiveAccounts}
-        Empty={(
-          <ElevatedLoadingSpinnerContainer>
-            {isLinking && <ElevatedLoadingSpinner />}
-            <VStack gap='xl' pbe='md'>
+      <ElevatedLoadingSpinnerContainer>
+        {isLinking && <ElevatedLoadingSpinner />}
+        <ConditionalList
+          list={effectiveAccounts}
+          Empty={(
+            <VStack gap='xl' pbe='md' align='start'>
               <P status='disabled'>
                 {t('linkedAccounts:label.connect_bank_accounts_and_credit_cards', 'Connect your bank accounts and credit cards to automatically import your business transactions.')}
               </P>
@@ -56,11 +60,8 @@ export function LinkAccountsLinkStep() {
                 </Button>
               </LinkAccountDemoTooltip>
             </VStack>
-          </ElevatedLoadingSpinnerContainer>
-        )}
-        Container={({ children }) => (
-          <ElevatedLoadingSpinnerContainer>
-            {isLinking && <ElevatedLoadingSpinner />}
+          )}
+          Container={({ children }) => (
             <VStack>
               <VStack gap='2xs' pbe='md'>
                 <Heading level={3} size='sm'>
@@ -96,32 +97,32 @@ export function LinkAccountsLinkStep() {
                 />
               </VStack>
             </VStack>
-          </ElevatedLoadingSpinnerContainer>
-        )}
-        isError={isError}
-        Error={(
-          <DataState
-            status={DataStateStatus.failed}
-            title={t('linkedAccounts:error.load_accounts', 'Failed to load accounts')}
-            description={t('common:error.please_try_again_later', 'Please try again later')}
-            onRefresh={() => { void refetch() }}
-          />
-        )}
-        isLoading={loadingStatus === 'loading' || loadingStatus === 'initial'}
-        Loading={<Loader />}
-      >
-        {({ item: bankAccount }) => (
-          <BasicLinkedAccountContainer key={bankAccount.id} isSelected>
-            <BasicLinkedAccountContent account={{
-              externalAccountName: getBankAccountDisplayName(bankAccount),
-              mask: bankAccount.mask,
-              institution: getBankAccountInstitution(bankAccount),
-            }}
+          )}
+          isError={isError}
+          Error={(
+            <DataState
+              status={DataStateStatus.failed}
+              title={t('linkedAccounts:error.load_accounts', 'Failed to load accounts')}
+              description={t('common:error.please_try_again_later', 'Please try again later')}
+              onRefresh={() => { void refetch() }}
             />
-          </BasicLinkedAccountContainer>
-        )}
-      </ConditionalList>
-      {effectiveAccounts.length > 0
+          )}
+          isLoading={loadingStatus === 'loading' || loadingStatus === 'initial'}
+          Loading={<Loader />}
+        >
+          {({ item: bankAccount }) => (
+            <BasicLinkedAccountContainer key={bankAccount.id} isSelected>
+              <BasicLinkedAccountContent account={{
+                externalAccountName: getBankAccountDisplayName(bankAccount),
+                mask: bankAccount.mask,
+                institution: getBankAccountInstitution(bankAccount),
+              }}
+              />
+            </BasicLinkedAccountContainer>
+          )}
+        </ConditionalList>
+      </ElevatedLoadingSpinnerContainer>
+      {showDoneLinkingButton && effectiveAccounts.length > 0
         ? (
           <>
             <Separator mbs='lg' mbe='lg' />

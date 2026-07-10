@@ -12,15 +12,15 @@
   },
   "empty": {
     "add_first_entry": "Ajoutez votre première entrée de temps pour commencer le suivi.",
-    "no_entries_yet": "Aucune entrée de temps pour le moment",
+    "no_entries_yet": "Aucune entrée pour le moment",
     "no_matching_entries": "Aucune entrée de temps trouvée",
-    "try_adjusting_filters": "Essayez de modifier vos filtres."
+    "try_adjusting_filters": "Essayez d’ajuster vos filtres."
   },
   "error": {
     "archive_service": "Impossible d'archiver ce service. Veuillez réessayer.",
     "cancel_timer": "Impossible d'annuler le minuteur. Veuillez réessayer.",
     "complete_timer": "Impossible de terminer le minuteur. Veuillez réessayer.",
-    "complete_timer_stale": "Cette minuterie a déjà été terminée ou annulée. Rechargez la page.",
+    "complete_timer_stale": "Ce minuteur a déjà été terminé ou annulé. Rechargez la page.",
     "create_service": "Impossible de créer le service. Veuillez réessayer.",
     "delete_entry": "Impossible de supprimer l'entrée de temps. Veuillez vérifier votre connexion et réessayer.",
     "load_active_timer": "Impossible de charger le minuteur actif. Veuillez vérifier votre connexion et réessayer.",
@@ -29,7 +29,7 @@
     "load_services": "Impossible de charger les services.",
     "load_summary": "Impossible de charger le sommaire du suivi du temps",
     "start_timer": "Impossible de démarrer le minuteur. Veuillez réessayer.",
-    "start_timer_already_active": "Une minuterie est déjà en cours. Veuillez recharger la page.",
+    "start_timer_already_active": "Un minuteur est déjà en cours. Veuillez recharger la page.",
     "unarchive_service": "Impossible de restaurer ce service. Veuillez réessayer.",
     "update_service": "Impossible d'enregistrer ce service. Veuillez réessayer.",
     "update_timer": "Impossible de mettre à jour le minuteur. Veuillez réessayer."
@@ -37,6 +37,7 @@
   "label": {
     "active": "Actif",
     "add_memo": "Ajouter une note",
+    "add_time_entry": "Ajouter une entrée de temps",
     "additional_time_tracking_actions": "Actions supplémentaires de suivi du temps",
     "all_customers": "Tous les clients",
     "all_services": "Tous les services",
@@ -50,7 +51,7 @@
     "entry_date": "Date de l'entrée",
     "entry_details": "Détails de l'entrée de temps",
     "invoiced": "Facturé",
-    "less_than_one_minute": "< 1 min",
+    "less_than_one_minute": "< 1 min",
     "memo": "Note",
     "no_activity_breakdown": "Aucune activité pendant cette période",
     "no_services": "Aucun service disponible",
@@ -61,11 +62,11 @@
     "service": "Service",
     "time_entries": "Entrées de temps",
     "time_tracking": "Suivi du temps",
-    "zero_minutes": "0 min"
+    "zero_minutes": "0 min"
   },
   "prompt": {
-    "delete_entry": "Supprimer cette entrée de temps?",
-    "discard_timer": "Annuler ce minuteur?"
+    "delete_entry": "Supprimer l'entrée?",
+    "discard_timer": "Annuler le minuteur?"
   },
   "services": {
     "add": "Ajouter",
@@ -78,7 +79,7 @@
     "cancel": "Annuler",
     "create_service_input_value": "Créer le service \"{{inputValue}}\"",
     "hourly_rate_optional": "Taux horaire par défaut (facultatif)",
-    "no_active": "Aucun service pour le moment",
+    "no_active": "Aucun service",
     "no_archived": "Aucun service archivé",
     "rate_per_hour": "{{rate}}/h",
     "save": "Enregistrer",
@@ -86,7 +87,7 @@
     "tab_group_label": "Liste des services",
     "title": "Services",
     "unarchive": "Restaurer",
-    "unarchive_confirm_description": "Ce service apparaîtra de nouveau dans votre liste active.",
+    "unarchive_confirm_description": "Ce service réapparaîtra dans votre liste active.",
     "unarchive_confirm_title": "Restaurer ce service?"
   },
   "validation": {

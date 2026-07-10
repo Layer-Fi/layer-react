@@ -1,7 +1,6 @@
 {
   "action": {
-    "select_dimension_name": "Select {{dimensionName}}",
-    "select_tags": "Select tags"
+    "select_dimension_name": "Select {{dimensionName}}"
   },
   "label": {
     "tag_label_archived": "{{label}} (Archived)"

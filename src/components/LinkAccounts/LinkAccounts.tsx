@@ -15,12 +15,17 @@ import './linkAccounts.scss'
 
 type LinkAccountsProps = {
   onComplete?: () => Awaitable<void>
+  onPlaidConnectionSuccess?: () => Awaitable<void>
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
+  showDoneLinkingButton?: boolean
 }
 
-export function LinkAccounts({ plaidHostedLinkConfig, ...props }: LinkAccountsProps) {
+export function LinkAccounts({ plaidHostedLinkConfig, onPlaidConnectionSuccess, ...props }: LinkAccountsProps) {
   return (
-    <LinkedAccountsProvider plaidHostedLinkConfig={plaidHostedLinkConfig}>
+    <LinkedAccountsProvider
+      plaidHostedLinkConfig={plaidHostedLinkConfig}
+      onPlaidConnectionSuccess={onPlaidConnectionSuccess}
+    >
       <LinkAccountsContent {...props} />
     </LinkedAccountsProvider>
   )
@@ -28,7 +33,8 @@ export function LinkAccounts({ plaidHostedLinkConfig, ...props }: LinkAccountsPr
 
 function LinkAccountsContent({
   onComplete,
-}: LinkAccountsProps) {
+  showDoneLinkingButton = true,
+}: Omit<LinkAccountsProps, 'onPlaidConnectionSuccess' | 'plaidHostedLinkConfig'>) {
   const { t } = useTranslation()
   const { data: linkedAccounts, loadingStatus } = useBankAccountsContext()
 
@@ -52,7 +58,7 @@ function LinkAccountsContent({
         Footer={null}
         onComplete={onComplete}
       >
-        <LinkAccountsLinkStep />
+        <LinkAccountsLinkStep showDoneLinkingButton={showDoneLinkingButton} />
         {hideConfirmationStep ? null : <LinkAccountsConfirmationStep />}
       </Wizard>
     </section>

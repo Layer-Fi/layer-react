@@ -5,9 +5,9 @@
     "add_entry": "Ajouter une écriture",
     "add_new_entry": "Ajouter une nouvelle écriture",
     "add_next_line": "Ajouter la ligne suivante",
-    "reverse_entry": "Contrepasser l’écriture",
+    "reverse_entry": "Contre-passer l’écriture",
     "save_account": "Enregistrer le compte",
-    "select_account_type": "Sélectionner le type de compte..."
+    "select_account_type": "Sélectionner un type de compte..."
   },
   "empty": {
     "credit_line_items": "Aucune ligne de crédit n’a encore été ajoutée. Cliquez sur « Ajouter la ligne suivante » pour commencer.",
@@ -33,7 +33,6 @@
     "bill_number": "Numéro de facture fournisseur",
     "enter_account_name": "Saisissez le nom du compte...",
     "enter_institution_name": "Saisissez le nom de l’institution...",
-    "entries": "Écritures",
     "entry_date": "Date d’écriture",
     "entry_details": "Détails de l’écriture",
     "entry_journal": "Il n’y a aucune écriture dans le journal.",
@@ -45,9 +44,9 @@
     "invoice_number": "Numéro de facture",
     "journal": "Journal",
     "journal_entry": "Écriture de journal",
-    "journal_entry_number": "Écriture de journal #{{entryNumber}}",
-    "journal_entry_posted": "Écriture de journal #{{journalEntryNumber}} comptabilisée",
-    "journal_id": "ID du journal #",
+    "journal_entry_number": "Écriture de journal no {{entryNumber}}",
+    "journal_entry_posted": "Écriture de journal no {{journalEntryNumber}} comptabilisée",
+    "journal_id": "ID du journal",
     "ledger_entries": "Écritures du grand livre",
     "ledger_view": "Vue du grand livre",
     "line_items": "Lignes",
@@ -55,7 +54,7 @@
     "quickbooks_id": "ID QuickBooks",
     "recipient_name": "Nom du destinataire",
     "reversal": "Contrepassation",
-    "running_balance": "Solde cumulatif"
+    "running_balance": "Solde courant"
   },
   "prompt": {
     "discard_changes_journal_entry": "Annuler les modifications apportées à cette écriture de journal?"
@@ -65,7 +64,7 @@
     "account_required": "Le compte est un champ obligatoire.",
     "account_type_required": "Le type de compte est obligatoire",
     "amount_greater_must": "Le montant doit être supérieur à zéro.",
-    "create_required": "Le champ Créé par est obligatoire.",
+    "create_required": "Le créateur est obligatoire.",
     "debit_credit_must": "Les montants au débit et au crédit doivent être égaux",
     "entry_date_required": "La date d’écriture est un champ obligatoire.",
     "institution_name_required": "Le nom de l’institution est obligatoire",

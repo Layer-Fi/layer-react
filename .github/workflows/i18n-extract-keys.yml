@@ -1,10 +1,9 @@
-name: i18n - Extract English Keys
+name: i18n - Extract Keys
 
-# Collect English source keys from code into a stable PR (run manually).
+# Collect translation keys from code into a stable PR (run manually).
 #
-# extract en-US keys -> open/update one PR with src/assets/locales/en-US only.
-#
-# French is intentionally excluded from extraction; fr-CA is managed by Crowdin.
+# extract keys for all locales -> open/update one PR. fr-CA gets keys
+# scaffolded/removed here; its values are managed by Crowdin.
 
 on:
   workflow_dispatch:
@@ -14,7 +13,7 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: i18n-english-keys
+  group: i18n-extract-keys
   cancel-in-progress: false
 
 jobs:
@@ -40,36 +39,36 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-    - name: Extract English translation keys
+    - name: Extract translation keys
       run: npx i18next-cli extract --sync-primary
 
-    - name: Open English manifest PR
+    - name: Open translation keys PR
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        git add src/assets/locales/en-US
-        BR=i18n/english-keys
+        git add src/assets/locales
+        BR=i18n/extract-keys
         if git diff --cached --quiet; then
-          echo "No English translation key changes."
-          echo "No English translation key changes." >> "$GITHUB_STEP_SUMMARY"
+          echo "No translation key changes."
+          echo "No translation key changes." >> "$GITHUB_STEP_SUMMARY"
           exit 0
         fi
         git checkout -B "$BR"
-        git commit -m "i18n: extract English translation keys"
+        git commit -m "i18n: extract translation keys"
         git push -f origin "$BR"
         PR_NUMBER=$(gh pr list --head "$BR" --state open --json number --jq '.[0].number // empty')
         if [ -z "$PR_NUMBER" ]; then
           PR_URL=$(gh pr create --base main --head "$BR" \
-            --title "i18n: extract English keys" \
-            --body "Extracted English translation keys from source with i18next-cli extract for @layerfi/components.")
+            --title "i18n: extract translation keys" \
+            --body "Extracted translation keys from source with i18next-cli extract for @layerfi/components.")
         else
           gh pr edit "$PR_NUMBER" \
-            --title "i18n: extract English keys" \
-            --body "Extracted English translation keys from source with i18next-cli extract for @layerfi/components."
+            --title "i18n: extract translation keys" \
+            --body "Extracted translation keys from source with i18next-cli extract for @layerfi/components."
           PR_URL=$(gh pr view "$PR_NUMBER" --json url --jq '.url')
         fi
         if [ -z "$PR_URL" ]; then
-          echo "::error::Unable to resolve English keys PR URL."
+          echo "::error::Unable to resolve translation keys PR URL."
           exit 1
         fi
-        echo "[English keys PR]($PR_URL)" >> "$GITHUB_STEP_SUMMARY"
+        echo "[Translation keys PR]($PR_URL)" >> "$GITHUB_STEP_SUMMARY"

@@ -6,20 +6,8 @@
   box-shadow: 0 -1px 0 0 var(--color-base-300) inset;
 }
 
-.Layer__ProfitAndLossDetailedChartsHeader--tablet {
-  gap: var(--spacing-md);
-  align-items: center;
-  justify-content: flex-start;
-}
-
 .Layer__ProfitAndLossDetailedChartsHeader__head {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-4xs);
-}
-
-@container (max-width: 767px) {
-  .Layer__ProfitAndLossDetailedChartsHeader--desktop .Layer__ProfitAndLossDetailedChartsHeader__date {
-    display: none;
-  }
 }

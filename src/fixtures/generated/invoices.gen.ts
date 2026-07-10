@@ -4,7 +4,7 @@ import { BigDecimal } from 'effect'
 
 export const invoices = [
   {
-    "id": "0000000b-d814-450a-86a3-bc07dbab5950",
+    "id": "0000000d-d814-450a-86a3-bc07dbab5950",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "PARTIALLY_PAID",
@@ -28,9 +28,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-daf1-42cd-8aee-ea4c8073d8da",
+        "id": "0000000e-daf1-42cd-8aee-ea4c8073d8da",
         "externalId": null,
-        "invoiceId": "0000000b-d814-450a-86a3-bc07dbab5950",
+        "invoiceId": "0000000d-d814-450a-86a3-bc07dbab5950",
         "description": "Photography session",
         "unitPrice": 19000,
         "quantity": BigDecimal.unsafeFromString("1"),
@@ -43,9 +43,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-634d-43a0-8d29-94b138565825",
+        "id": "0000000e-634d-43a0-8d29-94b138565825",
         "externalId": null,
-        "invoiceId": "0000000b-d814-450a-86a3-bc07dbab5950",
+        "invoiceId": "0000000d-d814-450a-86a3-bc07dbab5950",
         "description": "On-site service call",
         "unitPrice": 12000,
         "quantity": BigDecimal.unsafeFromString("2"),
@@ -58,9 +58,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-2c24-4931-8650-8510b5a5183a",
+        "id": "0000000e-2c24-4931-8650-8510b5a5183a",
         "externalId": null,
-        "invoiceId": "0000000b-d814-450a-86a3-bc07dbab5950",
+        "invoiceId": "0000000d-d814-450a-86a3-bc07dbab5950",
         "description": "On-site service call",
         "unitPrice": 6500,
         "quantity": BigDecimal.unsafeFromString("1"),
@@ -73,9 +73,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-4ff1-4222-8099-8f9336aeca4c",
+        "id": "0000000e-4ff1-4222-8099-8f9336aeca4c",
         "externalId": null,
-        "invoiceId": "0000000b-d814-450a-86a3-bc07dbab5950",
+        "invoiceId": "0000000d-d814-450a-86a3-bc07dbab5950",
         "description": "Website maintenance",
         "unitPrice": 32000,
         "quantity": BigDecimal.unsafeFromString("5"),
@@ -99,7 +99,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-0a29-42da-80a3-dbeb110795a6",
+    "id": "0000000d-0a29-42da-80a3-dbeb110795a6",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "PAID",
@@ -123,9 +123,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-bcbd-47f5-843b-868c33a0770b",
+        "id": "0000000e-bcbd-47f5-843b-868c33a0770b",
         "externalId": null,
-        "invoiceId": "0000000b-0a29-42da-80a3-dbeb110795a6",
+        "invoiceId": "0000000d-0a29-42da-80a3-dbeb110795a6",
         "description": "Equipment rental",
         "unitPrice": 9500,
         "quantity": BigDecimal.unsafeFromString("1"),
@@ -149,7 +149,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-18db-4bf6-8849-ccea08ca7849",
+    "id": "0000000d-18db-4bf6-8849-ccea08ca7849",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "PAID",
@@ -173,9 +173,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-bcb8-4aba-89cd-ea022ca03932",
+        "id": "0000000e-bcb8-4aba-89cd-ea022ca03932",
         "externalId": null,
-        "invoiceId": "0000000b-18db-4bf6-8849-ccea08ca7849",
+        "invoiceId": "0000000d-18db-4bf6-8849-ccea08ca7849",
         "description": "On-site service call",
         "unitPrice": 23000,
         "quantity": BigDecimal.unsafeFromString("3"),
@@ -188,9 +188,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-c70a-48ad-8851-a5349ebf590b",
+        "id": "0000000e-c70a-48ad-8851-a5349ebf590b",
         "externalId": null,
-        "invoiceId": "0000000b-18db-4bf6-8849-ccea08ca7849",
+        "invoiceId": "0000000d-18db-4bf6-8849-ccea08ca7849",
         "description": "Design consultation",
         "unitPrice": 38000,
         "quantity": BigDecimal.unsafeFromString("1"),
@@ -214,7 +214,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-e44e-45e2-8192-f879558b33c9",
+    "id": "0000000d-e44e-45e2-8192-f879558b33c9",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "SAVED",
@@ -238,9 +238,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-9e98-467b-8f0d-d70146c0ec9a",
+        "id": "0000000e-9e98-467b-8f0d-d70146c0ec9a",
         "externalId": null,
-        "invoiceId": "0000000b-e44e-45e2-8192-f879558b33c9",
+        "invoiceId": "0000000d-e44e-45e2-8192-f879558b33c9",
         "description": "Installation labor",
         "unitPrice": 12500,
         "quantity": BigDecimal.unsafeFromString("1"),
@@ -253,9 +253,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-d772-42c5-8c9d-54846ed0def0",
+        "id": "0000000e-d772-42c5-8c9d-54846ed0def0",
         "externalId": null,
-        "invoiceId": "0000000b-e44e-45e2-8192-f879558b33c9",
+        "invoiceId": "0000000d-e44e-45e2-8192-f879558b33c9",
         "description": "Equipment rental",
         "unitPrice": 38000,
         "quantity": BigDecimal.unsafeFromString("5"),
@@ -268,9 +268,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-9056-4da0-8513-5b5585cb00e0",
+        "id": "0000000e-9056-4da0-8513-5b5585cb00e0",
         "externalId": null,
-        "invoiceId": "0000000b-e44e-45e2-8192-f879558b33c9",
+        "invoiceId": "0000000d-e44e-45e2-8192-f879558b33c9",
         "description": "On-site service call",
         "unitPrice": 40000,
         "quantity": BigDecimal.unsafeFromString("1"),
@@ -294,7 +294,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-35af-4379-8a43-6adb542189a7",
+    "id": "0000000d-35af-4379-8a43-6adb542189a7",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "PARTIALLY_PAID",
@@ -318,9 +318,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-7bcc-4b40-8d9a-0f73be35d725",
+        "id": "0000000e-7bcc-4b40-8d9a-0f73be35d725",
         "externalId": null,
-        "invoiceId": "0000000b-35af-4379-8a43-6adb542189a7",
+        "invoiceId": "0000000d-35af-4379-8a43-6adb542189a7",
         "description": "Monthly retainer",
         "unitPrice": 9500,
         "quantity": BigDecimal.unsafeFromString("5"),
@@ -333,9 +333,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-74a9-4f9c-85b0-243b78d3bb1c",
+        "id": "0000000e-74a9-4f9c-85b0-243b78d3bb1c",
         "externalId": null,
-        "invoiceId": "0000000b-35af-4379-8a43-6adb542189a7",
+        "invoiceId": "0000000d-35af-4379-8a43-6adb542189a7",
         "description": "Installation labor",
         "unitPrice": 16500,
         "quantity": BigDecimal.unsafeFromString("1"),
@@ -348,9 +348,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-acdd-481a-86d4-618495ffe774",
+        "id": "0000000e-acdd-481a-86d4-618495ffe774",
         "externalId": null,
-        "invoiceId": "0000000b-35af-4379-8a43-6adb542189a7",
+        "invoiceId": "0000000d-35af-4379-8a43-6adb542189a7",
         "description": "Website maintenance",
         "unitPrice": 36500,
         "quantity": BigDecimal.unsafeFromString("1"),
@@ -363,9 +363,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-ecc2-4c87-8047-88f856f08701",
+        "id": "0000000e-ecc2-4c87-8047-88f856f08701",
         "externalId": null,
-        "invoiceId": "0000000b-35af-4379-8a43-6adb542189a7",
+        "invoiceId": "0000000d-35af-4379-8a43-6adb542189a7",
         "description": "Monthly retainer",
         "unitPrice": 3500,
         "quantity": BigDecimal.unsafeFromString("2"),
@@ -389,7 +389,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-4e4f-4baa-81ad-ff6934d06c45",
+    "id": "0000000d-4e4f-4baa-81ad-ff6934d06c45",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "PAID",
@@ -413,9 +413,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-4f1f-4780-850b-d8e5a16de9e3",
+        "id": "0000000e-4f1f-4780-850b-d8e5a16de9e3",
         "externalId": null,
-        "invoiceId": "0000000b-4e4f-4baa-81ad-ff6934d06c45",
+        "invoiceId": "0000000d-4e4f-4baa-81ad-ff6934d06c45",
         "description": "Equipment rental",
         "unitPrice": 7000,
         "quantity": BigDecimal.unsafeFromString("5"),
@@ -428,9 +428,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-a8c4-4557-8bae-39f70e494f60",
+        "id": "0000000e-a8c4-4557-8bae-39f70e494f60",
         "externalId": null,
-        "invoiceId": "0000000b-4e4f-4baa-81ad-ff6934d06c45",
+        "invoiceId": "0000000d-4e4f-4baa-81ad-ff6934d06c45",
         "description": "Design consultation",
         "unitPrice": 8000,
         "quantity": BigDecimal.unsafeFromString("3"),
@@ -454,7 +454,7 @@ export const invoices = [
     "customPaymentInstructions": "Wire transfers accepted — contact us for details."
   },
   {
-    "id": "0000000b-ef84-457b-8f83-605965d20f7b",
+    "id": "0000000d-ef84-457b-8f83-605965d20f7b",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "PAID",
@@ -478,9 +478,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-e00e-4fbd-8b18-cce11b9a46f1",
+        "id": "0000000e-e00e-4fbd-8b18-cce11b9a46f1",
         "externalId": null,
-        "invoiceId": "0000000b-ef84-457b-8f83-605965d20f7b",
+        "invoiceId": "0000000d-ef84-457b-8f83-605965d20f7b",
         "description": "Photography session",
         "unitPrice": 38000,
         "quantity": BigDecimal.unsafeFromString("4"),
@@ -493,9 +493,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-9428-4d9f-8dc6-85e91ede77db",
+        "id": "0000000e-9428-4d9f-8dc6-85e91ede77db",
         "externalId": null,
-        "invoiceId": "0000000b-ef84-457b-8f83-605965d20f7b",
+        "invoiceId": "0000000d-ef84-457b-8f83-605965d20f7b",
         "description": "Installation labor",
         "unitPrice": 13500,
         "quantity": BigDecimal.unsafeFromString("5"),
@@ -519,7 +519,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-75d4-4d81-820c-4a1f65df8db8",
+    "id": "0000000d-75d4-4d81-820c-4a1f65df8db8",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "SAVED",
@@ -543,9 +543,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-6dbb-43f9-8504-ef2f84b03825",
+        "id": "0000000e-6dbb-43f9-8504-ef2f84b03825",
         "externalId": null,
-        "invoiceId": "0000000b-75d4-4d81-820c-4a1f65df8db8",
+        "invoiceId": "0000000d-75d4-4d81-820c-4a1f65df8db8",
         "description": "On-site service call",
         "unitPrice": 5000,
         "quantity": BigDecimal.unsafeFromString("5"),
@@ -558,9 +558,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-9416-41a7-8972-ee62451d3692",
+        "id": "0000000e-9416-41a7-8972-ee62451d3692",
         "externalId": null,
-        "invoiceId": "0000000b-75d4-4d81-820c-4a1f65df8db8",
+        "invoiceId": "0000000d-75d4-4d81-820c-4a1f65df8db8",
         "description": "Equipment rental",
         "unitPrice": 28000,
         "quantity": BigDecimal.unsafeFromString("3"),
@@ -573,9 +573,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-8d83-499a-8e18-9de837d60b4b",
+        "id": "0000000e-8d83-499a-8e18-9de837d60b4b",
         "externalId": null,
-        "invoiceId": "0000000b-75d4-4d81-820c-4a1f65df8db8",
+        "invoiceId": "0000000d-75d4-4d81-820c-4a1f65df8db8",
         "description": "Installation labor",
         "unitPrice": 3000,
         "quantity": BigDecimal.unsafeFromString("2"),
@@ -599,7 +599,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-0526-4ade-8379-e1565658e7cc",
+    "id": "0000000d-0526-4ade-8379-e1565658e7cc",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "PAID",
@@ -623,9 +623,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-7f4d-4f34-8e09-768a5ae77a0e",
+        "id": "0000000e-7f4d-4f34-8e09-768a5ae77a0e",
         "externalId": null,
-        "invoiceId": "0000000b-0526-4ade-8379-e1565658e7cc",
+        "invoiceId": "0000000d-0526-4ade-8379-e1565658e7cc",
         "description": "Website maintenance",
         "unitPrice": 27500,
         "quantity": BigDecimal.unsafeFromString("2"),
@@ -638,9 +638,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-ed86-4c73-8a47-cf73a9ad5984",
+        "id": "0000000e-ed86-4c73-8a47-cf73a9ad5984",
         "externalId": null,
-        "invoiceId": "0000000b-0526-4ade-8379-e1565658e7cc",
+        "invoiceId": "0000000d-0526-4ade-8379-e1565658e7cc",
         "description": "Photography session",
         "unitPrice": 30000,
         "quantity": BigDecimal.unsafeFromString("5"),
@@ -664,7 +664,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-efaa-45ab-824b-1aa5a9fd1624",
+    "id": "0000000d-efaa-45ab-824b-1aa5a9fd1624",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "PARTIALLY_PAID",
@@ -688,9 +688,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-56d5-4309-8e03-68751315bda2",
+        "id": "0000000e-56d5-4309-8e03-68751315bda2",
         "externalId": null,
-        "invoiceId": "0000000b-efaa-45ab-824b-1aa5a9fd1624",
+        "invoiceId": "0000000d-efaa-45ab-824b-1aa5a9fd1624",
         "description": "Equipment rental",
         "unitPrice": 35500,
         "quantity": BigDecimal.unsafeFromString("4"),
@@ -714,7 +714,7 @@ export const invoices = [
     "customPaymentInstructions": "Wire transfers accepted — contact us for details."
   },
   {
-    "id": "0000000b-ec00-4585-8819-6e0320bfec98",
+    "id": "0000000d-ec00-4585-8819-6e0320bfec98",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "SAVED",
@@ -727,9 +727,9 @@ export const invoices = [
     "customer": null,
     "lineItems": [
       {
-        "id": "0000000c-18de-4c04-8565-4d538ef119ab",
+        "id": "0000000e-18de-4c04-8565-4d538ef119ab",
         "externalId": null,
-        "invoiceId": "0000000b-ec00-4585-8819-6e0320bfec98",
+        "invoiceId": "0000000d-ec00-4585-8819-6e0320bfec98",
         "description": "Logo design",
         "unitPrice": 5500,
         "quantity": BigDecimal.unsafeFromString("3"),
@@ -742,9 +742,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-dadf-4925-89a8-dff6d86e436e",
+        "id": "0000000e-dadf-4925-89a8-dff6d86e436e",
         "externalId": null,
-        "invoiceId": "0000000b-ec00-4585-8819-6e0320bfec98",
+        "invoiceId": "0000000d-ec00-4585-8819-6e0320bfec98",
         "description": "Design consultation",
         "unitPrice": 39000,
         "quantity": BigDecimal.unsafeFromString("3"),
@@ -768,7 +768,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-2d3d-42a6-898d-3d4d1f8769dd",
+    "id": "0000000d-2d3d-42a6-898d-3d4d1f8769dd",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "PARTIALLY_PAID",
@@ -792,9 +792,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-df6b-4eea-8fa6-e943ac836a8a",
+        "id": "0000000e-df6b-4eea-8fa6-e943ac836a8a",
         "externalId": null,
-        "invoiceId": "0000000b-2d3d-42a6-898d-3d4d1f8769dd",
+        "invoiceId": "0000000d-2d3d-42a6-898d-3d4d1f8769dd",
         "description": "Project deposit",
         "unitPrice": 19500,
         "quantity": BigDecimal.unsafeFromString("5"),
@@ -807,9 +807,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-31e1-4d8d-8258-5eed2b33ac8a",
+        "id": "0000000e-31e1-4d8d-8258-5eed2b33ac8a",
         "externalId": null,
-        "invoiceId": "0000000b-2d3d-42a6-898d-3d4d1f8769dd",
+        "invoiceId": "0000000d-2d3d-42a6-898d-3d4d1f8769dd",
         "description": "Photography session",
         "unitPrice": 3000,
         "quantity": BigDecimal.unsafeFromString("5"),
@@ -822,9 +822,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-cc41-4b58-8b40-75b78211dfb7",
+        "id": "0000000e-cc41-4b58-8b40-75b78211dfb7",
         "externalId": null,
-        "invoiceId": "0000000b-2d3d-42a6-898d-3d4d1f8769dd",
+        "invoiceId": "0000000d-2d3d-42a6-898d-3d4d1f8769dd",
         "description": "Photography session",
         "unitPrice": 4000,
         "quantity": BigDecimal.unsafeFromString("1"),
@@ -848,7 +848,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-f39f-44f1-8359-b04e59d0bb61",
+    "id": "0000000d-f39f-44f1-8359-b04e59d0bb61",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "SAVED",
@@ -872,9 +872,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-a781-42f0-8eb2-24f59818521f",
+        "id": "0000000e-a781-42f0-8eb2-24f59818521f",
         "externalId": null,
-        "invoiceId": "0000000b-f39f-44f1-8359-b04e59d0bb61",
+        "invoiceId": "0000000d-f39f-44f1-8359-b04e59d0bb61",
         "description": "On-site service call",
         "unitPrice": 18500,
         "quantity": BigDecimal.unsafeFromString("4"),
@@ -887,9 +887,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-b266-4991-87de-48727fc8e38d",
+        "id": "0000000e-b266-4991-87de-48727fc8e38d",
         "externalId": null,
-        "invoiceId": "0000000b-f39f-44f1-8359-b04e59d0bb61",
+        "invoiceId": "0000000d-f39f-44f1-8359-b04e59d0bb61",
         "description": "Monthly retainer",
         "unitPrice": 18500,
         "quantity": BigDecimal.unsafeFromString("3"),
@@ -902,9 +902,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-8d35-4d79-810d-b326dad47a45",
+        "id": "0000000e-8d35-4d79-810d-b326dad47a45",
         "externalId": null,
-        "invoiceId": "0000000b-f39f-44f1-8359-b04e59d0bb61",
+        "invoiceId": "0000000d-f39f-44f1-8359-b04e59d0bb61",
         "description": "Copywriting",
         "unitPrice": 11000,
         "quantity": BigDecimal.unsafeFromString("1"),
@@ -928,7 +928,7 @@ export const invoices = [
     "customPaymentInstructions": "Make checks payable to Acme Corp."
   },
   {
-    "id": "0000000b-ab6a-40e3-8f36-121f280cb348",
+    "id": "0000000d-ab6a-40e3-8f36-121f280cb348",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "SAVED",
@@ -952,9 +952,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-46a3-48af-8a3a-deea5e0db309",
+        "id": "0000000e-46a3-48af-8a3a-deea5e0db309",
         "externalId": null,
-        "invoiceId": "0000000b-ab6a-40e3-8f36-121f280cb348",
+        "invoiceId": "0000000d-ab6a-40e3-8f36-121f280cb348",
         "description": "Website maintenance",
         "unitPrice": 5000,
         "quantity": BigDecimal.unsafeFromString("2"),
@@ -978,7 +978,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-a70d-44ee-8201-7c6f5d009ee1",
+    "id": "0000000d-a70d-44ee-8201-7c6f5d009ee1",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "SAVED",
@@ -1002,9 +1002,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-5d12-46c1-83b7-d058412bff43",
+        "id": "0000000e-5d12-46c1-83b7-d058412bff43",
         "externalId": null,
-        "invoiceId": "0000000b-a70d-44ee-8201-7c6f5d009ee1",
+        "invoiceId": "0000000d-a70d-44ee-8201-7c6f5d009ee1",
         "description": "Website maintenance",
         "unitPrice": 38500,
         "quantity": BigDecimal.unsafeFromString("1"),
@@ -1017,9 +1017,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-b48c-4759-85ef-538da8b38c15",
+        "id": "0000000e-b48c-4759-85ef-538da8b38c15",
         "externalId": null,
-        "invoiceId": "0000000b-a70d-44ee-8201-7c6f5d009ee1",
+        "invoiceId": "0000000d-a70d-44ee-8201-7c6f5d009ee1",
         "description": "Installation labor",
         "unitPrice": 22500,
         "quantity": BigDecimal.unsafeFromString("1"),
@@ -1043,7 +1043,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-c4d1-4d63-8acf-5ae99d563763",
+    "id": "0000000d-c4d1-4d63-8acf-5ae99d563763",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "WRITTEN_OFF",
@@ -1067,9 +1067,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-86e4-4280-8539-1c86a668c86b",
+        "id": "0000000e-86e4-4280-8539-1c86a668c86b",
         "externalId": null,
-        "invoiceId": "0000000b-c4d1-4d63-8acf-5ae99d563763",
+        "invoiceId": "0000000d-c4d1-4d63-8acf-5ae99d563763",
         "description": "On-site service call",
         "unitPrice": 26500,
         "quantity": BigDecimal.unsafeFromString("2"),
@@ -1093,7 +1093,7 @@ export const invoices = [
     "customPaymentInstructions": "Wire transfers accepted — contact us for details."
   },
   {
-    "id": "0000000b-0351-4cfd-860c-32b0b4ffc791",
+    "id": "0000000d-0351-4cfd-860c-32b0b4ffc791",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "SAVED",
@@ -1117,9 +1117,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-95fb-47c0-8716-9e102b5acded",
+        "id": "0000000e-95fb-47c0-8716-9e102b5acded",
         "externalId": null,
-        "invoiceId": "0000000b-0351-4cfd-860c-32b0b4ffc791",
+        "invoiceId": "0000000d-0351-4cfd-860c-32b0b4ffc791",
         "description": "Website maintenance",
         "unitPrice": 29500,
         "quantity": BigDecimal.unsafeFromString("4"),
@@ -1132,9 +1132,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-9f5b-4c3b-83a1-a3762bf11dd2",
+        "id": "0000000e-9f5b-4c3b-83a1-a3762bf11dd2",
         "externalId": null,
-        "invoiceId": "0000000b-0351-4cfd-860c-32b0b4ffc791",
+        "invoiceId": "0000000d-0351-4cfd-860c-32b0b4ffc791",
         "description": "Design consultation",
         "unitPrice": 38500,
         "quantity": BigDecimal.unsafeFromString("2"),
@@ -1147,9 +1147,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-63c7-4a87-89e5-119babe036c2",
+        "id": "0000000e-63c7-4a87-89e5-119babe036c2",
         "externalId": null,
-        "invoiceId": "0000000b-0351-4cfd-860c-32b0b4ffc791",
+        "invoiceId": "0000000d-0351-4cfd-860c-32b0b4ffc791",
         "description": "Monthly retainer",
         "unitPrice": 31500,
         "quantity": BigDecimal.unsafeFromString("2"),
@@ -1173,7 +1173,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-7d4f-48bc-8b7d-93739724218a",
+    "id": "0000000d-7d4f-48bc-8b7d-93739724218a",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "PAID",
@@ -1197,9 +1197,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-6b51-42a3-8215-177f37c85cf3",
+        "id": "0000000e-6b51-42a3-8215-177f37c85cf3",
         "externalId": null,
-        "invoiceId": "0000000b-7d4f-48bc-8b7d-93739724218a",
+        "invoiceId": "0000000d-7d4f-48bc-8b7d-93739724218a",
         "description": "Photography session",
         "unitPrice": 8500,
         "quantity": BigDecimal.unsafeFromString("4"),
@@ -1212,9 +1212,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-4b15-43d4-8e53-ed6cdf73a622",
+        "id": "0000000e-4b15-43d4-8e53-ed6cdf73a622",
         "externalId": null,
-        "invoiceId": "0000000b-7d4f-48bc-8b7d-93739724218a",
+        "invoiceId": "0000000d-7d4f-48bc-8b7d-93739724218a",
         "description": "Installation labor",
         "unitPrice": 27000,
         "quantity": BigDecimal.unsafeFromString("5"),
@@ -1227,9 +1227,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-777e-4415-8717-94de68fb2cf0",
+        "id": "0000000e-777e-4415-8717-94de68fb2cf0",
         "externalId": null,
-        "invoiceId": "0000000b-7d4f-48bc-8b7d-93739724218a",
+        "invoiceId": "0000000d-7d4f-48bc-8b7d-93739724218a",
         "description": "Equipment rental",
         "unitPrice": 13000,
         "quantity": BigDecimal.unsafeFromString("2"),
@@ -1253,7 +1253,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-5d8c-4d5a-8621-dad5d703c8ea",
+    "id": "0000000d-5d8c-4d5a-8621-dad5d703c8ea",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "SAVED",
@@ -1277,9 +1277,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-5e11-4326-8b8c-28c73fce19b7",
+        "id": "0000000e-5e11-4326-8b8c-28c73fce19b7",
         "externalId": null,
-        "invoiceId": "0000000b-5d8c-4d5a-8621-dad5d703c8ea",
+        "invoiceId": "0000000d-5d8c-4d5a-8621-dad5d703c8ea",
         "description": "Monthly retainer",
         "unitPrice": 8500,
         "quantity": BigDecimal.unsafeFromString("3"),
@@ -1303,7 +1303,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-f63f-4fcb-858d-1a35ff5a6aa5",
+    "id": "0000000d-f63f-4fcb-858d-1a35ff5a6aa5",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "PARTIALLY_PAID",
@@ -1327,9 +1327,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-9408-4cc9-878e-64bd56cba237",
+        "id": "0000000e-9408-4cc9-878e-64bd56cba237",
         "externalId": null,
-        "invoiceId": "0000000b-f63f-4fcb-858d-1a35ff5a6aa5",
+        "invoiceId": "0000000d-f63f-4fcb-858d-1a35ff5a6aa5",
         "description": "Photography session",
         "unitPrice": 28500,
         "quantity": BigDecimal.unsafeFromString("4"),
@@ -1342,9 +1342,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-56f3-4f05-807d-07e193f4af3a",
+        "id": "0000000e-56f3-4f05-807d-07e193f4af3a",
         "externalId": null,
-        "invoiceId": "0000000b-f63f-4fcb-858d-1a35ff5a6aa5",
+        "invoiceId": "0000000d-f63f-4fcb-858d-1a35ff5a6aa5",
         "description": "Equipment rental",
         "unitPrice": 35000,
         "quantity": BigDecimal.unsafeFromString("2"),
@@ -1368,7 +1368,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-f72d-4c33-8fd1-91b8a18ae284",
+    "id": "0000000d-f72d-4c33-8fd1-91b8a18ae284",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "PAID",
@@ -1392,9 +1392,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-726c-42a4-86d0-9261ee63eec6",
+        "id": "0000000e-726c-42a4-86d0-9261ee63eec6",
         "externalId": null,
-        "invoiceId": "0000000b-f72d-4c33-8fd1-91b8a18ae284",
+        "invoiceId": "0000000d-f72d-4c33-8fd1-91b8a18ae284",
         "description": "Photography session",
         "unitPrice": 37500,
         "quantity": BigDecimal.unsafeFromString("3"),
@@ -1418,7 +1418,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-d6fb-4ef5-8c75-46e387b4abad",
+    "id": "0000000d-d6fb-4ef5-8c75-46e387b4abad",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "PARTIALLY_PAID",
@@ -1442,9 +1442,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-89a0-4bc5-8620-45a6da2a7582",
+        "id": "0000000e-89a0-4bc5-8620-45a6da2a7582",
         "externalId": null,
-        "invoiceId": "0000000b-d6fb-4ef5-8c75-46e387b4abad",
+        "invoiceId": "0000000d-d6fb-4ef5-8c75-46e387b4abad",
         "description": "Installation labor",
         "unitPrice": 12000,
         "quantity": BigDecimal.unsafeFromString("5"),
@@ -1468,7 +1468,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-a0b6-452b-8812-70c20a3e49d9",
+    "id": "0000000d-a0b6-452b-8812-70c20a3e49d9",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "VOIDED",
@@ -1481,9 +1481,9 @@ export const invoices = [
     "customer": null,
     "lineItems": [
       {
-        "id": "0000000c-2925-4581-8d49-48997eb25fb4",
+        "id": "0000000e-2925-4581-8d49-48997eb25fb4",
         "externalId": null,
-        "invoiceId": "0000000b-a0b6-452b-8812-70c20a3e49d9",
+        "invoiceId": "0000000d-a0b6-452b-8812-70c20a3e49d9",
         "description": "Equipment rental",
         "unitPrice": 28000,
         "quantity": BigDecimal.unsafeFromString("4"),
@@ -1496,9 +1496,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-d7d0-4f2d-8d2b-0c4833edb2d4",
+        "id": "0000000e-d7d0-4f2d-8d2b-0c4833edb2d4",
         "externalId": null,
-        "invoiceId": "0000000b-a0b6-452b-8812-70c20a3e49d9",
+        "invoiceId": "0000000d-a0b6-452b-8812-70c20a3e49d9",
         "description": "Website maintenance",
         "unitPrice": 20000,
         "quantity": BigDecimal.unsafeFromString("3"),
@@ -1511,9 +1511,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-81a6-4bb1-8cd4-61fc84ba15fb",
+        "id": "0000000e-81a6-4bb1-8cd4-61fc84ba15fb",
         "externalId": null,
-        "invoiceId": "0000000b-a0b6-452b-8812-70c20a3e49d9",
+        "invoiceId": "0000000d-a0b6-452b-8812-70c20a3e49d9",
         "description": "Logo design",
         "unitPrice": 31500,
         "quantity": BigDecimal.unsafeFromString("3"),
@@ -1526,9 +1526,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-5d21-47bd-88d9-5548bb084450",
+        "id": "0000000e-5d21-47bd-88d9-5548bb084450",
         "externalId": null,
-        "invoiceId": "0000000b-a0b6-452b-8812-70c20a3e49d9",
+        "invoiceId": "0000000d-a0b6-452b-8812-70c20a3e49d9",
         "description": "On-site service call",
         "unitPrice": 15000,
         "quantity": BigDecimal.unsafeFromString("5"),
@@ -1552,7 +1552,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-045f-4a99-834f-2248873864e4",
+    "id": "0000000d-045f-4a99-834f-2248873864e4",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "PAID",
@@ -1576,9 +1576,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-2542-4524-84af-8ee00207009a",
+        "id": "0000000e-2542-4524-84af-8ee00207009a",
         "externalId": null,
-        "invoiceId": "0000000b-045f-4a99-834f-2248873864e4",
+        "invoiceId": "0000000d-045f-4a99-834f-2248873864e4",
         "description": "Photography session",
         "unitPrice": 4500,
         "quantity": BigDecimal.unsafeFromString("4"),
@@ -1602,7 +1602,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-4b46-4097-85f0-896231804c64",
+    "id": "0000000d-4b46-4097-85f0-896231804c64",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "PARTIALLY_WRITTEN_OFF",
@@ -1626,9 +1626,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-2965-41e0-86f0-d28c45df7267",
+        "id": "0000000e-2965-41e0-86f0-d28c45df7267",
         "externalId": null,
-        "invoiceId": "0000000b-4b46-4097-85f0-896231804c64",
+        "invoiceId": "0000000d-4b46-4097-85f0-896231804c64",
         "description": "Installation labor",
         "unitPrice": 6500,
         "quantity": BigDecimal.unsafeFromString("5"),
@@ -1641,9 +1641,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-a745-4091-85fa-aacc70a572ad",
+        "id": "0000000e-a745-4091-85fa-aacc70a572ad",
         "externalId": null,
-        "invoiceId": "0000000b-4b46-4097-85f0-896231804c64",
+        "invoiceId": "0000000d-4b46-4097-85f0-896231804c64",
         "description": "Photography session",
         "unitPrice": 21500,
         "quantity": BigDecimal.unsafeFromString("5"),
@@ -1656,9 +1656,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-a34b-4c5d-85e2-f4513a826ba0",
+        "id": "0000000e-a34b-4c5d-85e2-f4513a826ba0",
         "externalId": null,
-        "invoiceId": "0000000b-4b46-4097-85f0-896231804c64",
+        "invoiceId": "0000000d-4b46-4097-85f0-896231804c64",
         "description": "Installation labor",
         "unitPrice": 8000,
         "quantity": BigDecimal.unsafeFromString("5"),
@@ -1682,7 +1682,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-e14c-4f0d-8f51-ecbd67728f21",
+    "id": "0000000d-e14c-4f0d-8f51-ecbd67728f21",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "PARTIALLY_PAID",
@@ -1706,9 +1706,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-0733-4639-8ddc-a942215fccdc",
+        "id": "0000000e-0733-4639-8ddc-a942215fccdc",
         "externalId": null,
-        "invoiceId": "0000000b-e14c-4f0d-8f51-ecbd67728f21",
+        "invoiceId": "0000000d-e14c-4f0d-8f51-ecbd67728f21",
         "description": "Monthly retainer",
         "unitPrice": 31000,
         "quantity": BigDecimal.unsafeFromString("3"),
@@ -1721,9 +1721,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-17b6-4b59-8ce8-67c89c45dbeb",
+        "id": "0000000e-17b6-4b59-8ce8-67c89c45dbeb",
         "externalId": null,
-        "invoiceId": "0000000b-e14c-4f0d-8f51-ecbd67728f21",
+        "invoiceId": "0000000d-e14c-4f0d-8f51-ecbd67728f21",
         "description": "Logo design",
         "unitPrice": 17500,
         "quantity": BigDecimal.unsafeFromString("2"),
@@ -1747,7 +1747,7 @@ export const invoices = [
     "customPaymentInstructions": "Wire transfers accepted — contact us for details."
   },
   {
-    "id": "0000000b-ce47-433a-8943-a740f2732a3f",
+    "id": "0000000d-ce47-433a-8943-a740f2732a3f",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "DRAFT",
@@ -1771,9 +1771,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-d726-42b1-8fc3-3994d6206bed",
+        "id": "0000000e-d726-42b1-8fc3-3994d6206bed",
         "externalId": null,
-        "invoiceId": "0000000b-ce47-433a-8943-a740f2732a3f",
+        "invoiceId": "0000000d-ce47-433a-8943-a740f2732a3f",
         "description": "Installation labor",
         "unitPrice": 18500,
         "quantity": BigDecimal.unsafeFromString("3"),
@@ -1786,9 +1786,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-8a50-4620-83d9-d8fde642a132",
+        "id": "0000000e-8a50-4620-83d9-d8fde642a132",
         "externalId": null,
-        "invoiceId": "0000000b-ce47-433a-8943-a740f2732a3f",
+        "invoiceId": "0000000d-ce47-433a-8943-a740f2732a3f",
         "description": "Photography session",
         "unitPrice": 3000,
         "quantity": BigDecimal.unsafeFromString("4"),
@@ -1801,9 +1801,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-b9bb-400c-8c23-75a0faaaa028",
+        "id": "0000000e-b9bb-400c-8c23-75a0faaaa028",
         "externalId": null,
-        "invoiceId": "0000000b-ce47-433a-8943-a740f2732a3f",
+        "invoiceId": "0000000d-ce47-433a-8943-a740f2732a3f",
         "description": "Website maintenance",
         "unitPrice": 24000,
         "quantity": BigDecimal.unsafeFromString("2"),
@@ -1816,9 +1816,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-d181-402d-8ad0-68b31c60cb3d",
+        "id": "0000000e-d181-402d-8ad0-68b31c60cb3d",
         "externalId": null,
-        "invoiceId": "0000000b-ce47-433a-8943-a740f2732a3f",
+        "invoiceId": "0000000d-ce47-433a-8943-a740f2732a3f",
         "description": "Website maintenance",
         "unitPrice": 13000,
         "quantity": BigDecimal.unsafeFromString("5"),
@@ -1842,7 +1842,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-7c7e-4293-8442-0debf31af961",
+    "id": "0000000d-7c7e-4293-8442-0debf31af961",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "DRAFT",
@@ -1866,9 +1866,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-9ce0-48a5-8108-f419d832115a",
+        "id": "0000000e-9ce0-48a5-8108-f419d832115a",
         "externalId": null,
-        "invoiceId": "0000000b-7c7e-4293-8442-0debf31af961",
+        "invoiceId": "0000000d-7c7e-4293-8442-0debf31af961",
         "description": "Photography session",
         "unitPrice": 23500,
         "quantity": BigDecimal.unsafeFromString("2"),
@@ -1892,7 +1892,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-79b1-4082-8d65-0f0692a459cf",
+    "id": "0000000d-79b1-4082-8d65-0f0692a459cf",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "DRAFT",
@@ -1916,9 +1916,9 @@ export const invoices = [
     },
     "lineItems": [
       {
-        "id": "0000000c-4b40-464a-8a9d-d1e01c22bfa0",
+        "id": "0000000e-4b40-464a-8a9d-d1e01c22bfa0",
         "externalId": null,
-        "invoiceId": "0000000b-79b1-4082-8d65-0f0692a459cf",
+        "invoiceId": "0000000d-79b1-4082-8d65-0f0692a459cf",
         "description": "Copywriting",
         "unitPrice": 10500,
         "quantity": BigDecimal.unsafeFromString("2"),
@@ -1931,9 +1931,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-e68c-4c2b-81de-113df8c31ca4",
+        "id": "0000000e-e68c-4c2b-81de-113df8c31ca4",
         "externalId": null,
-        "invoiceId": "0000000b-79b1-4082-8d65-0f0692a459cf",
+        "invoiceId": "0000000d-79b1-4082-8d65-0f0692a459cf",
         "description": "Project deposit",
         "unitPrice": 12000,
         "quantity": BigDecimal.unsafeFromString("3"),
@@ -1946,9 +1946,9 @@ export const invoices = [
         "accountIdentifier": null
       },
       {
-        "id": "0000000c-891e-43bc-8db3-ca727208f62d",
+        "id": "0000000e-891e-43bc-8db3-ca727208f62d",
         "externalId": null,
-        "invoiceId": "0000000b-79b1-4082-8d65-0f0692a459cf",
+        "invoiceId": "0000000d-79b1-4082-8d65-0f0692a459cf",
         "description": "Equipment rental",
         "unitPrice": 39500,
         "quantity": BigDecimal.unsafeFromString("3"),
@@ -1972,7 +1972,7 @@ export const invoices = [
     "customPaymentInstructions": null
   },
   {
-    "id": "0000000b-3183-4f05-837f-1af7c07fe5b2",
+    "id": "0000000d-3183-4f05-837f-1af7c07fe5b2",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "externalId": null,
     "status": "DRAFT",
@@ -1985,9 +1985,9 @@ export const invoices = [
     "customer": null,
     "lineItems": [
       {
-        "id": "0000000c-8526-44ab-8ead-fb9cfdaaa15f",
+        "id": "0000000e-8526-44ab-8ead-fb9cfdaaa15f",
         "externalId": null,
-        "invoiceId": "0000000b-3183-4f05-837f-1af7c07fe5b2",
+        "invoiceId": "0000000d-3183-4f05-837f-1af7c07fe5b2",
         "description": "Photography session",
         "unitPrice": 39000,
         "quantity": BigDecimal.unsafeFromString("1"),
