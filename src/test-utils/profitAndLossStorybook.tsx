@@ -11,7 +11,7 @@ import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
 /**
  * September 2025: the chart initializes with the selected month at the right
  * edge of its 12-month window, then shifts forward 3 months, which lands the
- * visible window exactly on Jan-Dec 2025 - the strongest fixture year.
+ * visible window exactly on Jan-Dec 2025, the last fixture year.
  */
 export const PROFIT_AND_LOSS_PINNED_RANGE: DateRange = {
   startDate: new Date(2025, 8, 1),
