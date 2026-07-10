@@ -1,8 +1,9 @@
-import { Schema } from 'effect'
-
 import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
-import { BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
-import { BusinessTaskSchema } from '@schemas/businessTasks/businessTask'
+import {
+  BookkeepingPeriodsSchema,
+  BookkeepingPeriodStatus,
+  type RawBookkeepingPeriod,
+} from '@schemas/bookkeepingPeriods'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
@@ -35,18 +36,7 @@ export type BookkeepingPeriod = Omit<RawBookkeepingPeriod, 'status'> & {
   status: BookkeepingPeriodStatus
 }
 
-const RawBookkeepingPeriodSchema = Schema.Struct({
-  id: Schema.String,
-  month: Schema.Number,
-  year: Schema.Number,
-  status: Schema.String,
-  tasks: Schema.Array(BusinessTaskSchema),
-})
-type RawBookkeepingPeriod = typeof RawBookkeepingPeriodSchema.Type
-
-const BookkeepingPeriodsResponseSchema = UnwrappedDataResponseSchema(Schema.Struct({
-  periods: Schema.Array(RawBookkeepingPeriodSchema),
-}))
+const BookkeepingPeriodsResponseSchema = UnwrappedDataResponseSchema(BookkeepingPeriodsSchema)
 
 const getBookkeepingPeriods = get<
   typeof BookkeepingPeriodsResponseSchema.Encoded,

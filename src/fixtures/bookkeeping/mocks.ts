@@ -53,10 +53,6 @@ const makePeriodTasks = (periodIndex: number): BusinessTask[] => [
   ),
 ]
 
-/**
- * One period per month from `startYear` through the current month: every third
- * month is awaiting customer input with open tasks, the rest are closed clean.
- */
 export const makeBookkeepingPeriods = (startYear: number): BookkeepingPeriodFixture[] => {
   const now = new Date()
   const start = toMonthIndex(startYear, 1)
