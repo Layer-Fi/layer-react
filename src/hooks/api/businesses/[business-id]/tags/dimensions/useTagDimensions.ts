@@ -1,85 +1,36 @@
 import { Schema } from 'effect'
-import useSWR from 'swr'
 
-import { TagDimensionSchema } from '@schemas/tag'
+import { type TagDimension, TagDimensionSchema } from '@schemas/tag'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export const TAG_DIMENSIONS_TAG_KEY = '#tag-dimensions'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  isEnabled,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  isEnabled: boolean
-}) {
-  if (!isEnabled) {
-    return
-  }
+const TagDimensionsListSchema = Schema.Array(TagDimensionSchema)
 
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [TAG_DIMENSIONS_TAG_KEY],
-    } as const
-  }
-}
+const TagDimensionsResponseSchema = UnwrappedDataResponseSchema(
+  Schema.Struct({ dimensions: TagDimensionsListSchema }),
+)
 
 const getTagDimensions = get<
-  { data: unknown },
+  typeof TagDimensionsResponseSchema.Encoded,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/tags/dimensions`)
-
-const TagDimensionsListSchema = Schema.Array(TagDimensionSchema)
 
 type UseTagDimensionsParameters = {
   isEnabled?: boolean
 }
 
-export function useTagDimensions({ isEnabled = true }: UseTagDimensionsParameters = {}) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { apiUrl } = useEnvironment()
-  const { businessId } = useLayerContext()
+export const useTagDimensions = createQueryHook({
+  tags: [TAG_DIMENSIONS_TAG_KEY],
+  request: getTagDimensions,
+  schema: TagDimensionsResponseSchema,
+  select: data => data.dimensions,
+})
 
-  const swrResponse = useSWR(
-    () => withLocale(buildKey({
-      ...auth,
-      apiUrl,
-      businessId,
-      isEnabled,
-    })),
-    ({ accessToken, apiUrl, businessId }) => getTagDimensions(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-        },
-      },
-    )()
-      .then(({ data }) => data)
-      .then(Schema.decodeUnknownPromise(
-        Schema.Struct({
-          dimensions: TagDimensionsListSchema,
-        }),
-      ))
-      .then(({ dimensions }) => dimensions),
-  )
-
-  return new SWRQueryResult(swrResponse)
-}
+export const useTagDimensionsGlobalCacheActions = createResourceGlobalCacheActions<ReadonlyArray<TagDimension>>(TAG_DIMENSIONS_TAG_KEY)
 
 export function usePreloadTagDimensions(parameters?: UseTagDimensionsParameters) {
   /*

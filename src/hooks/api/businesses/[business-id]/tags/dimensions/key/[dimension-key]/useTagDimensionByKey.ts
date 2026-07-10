@@ -1,46 +1,14 @@
-import { Schema } from 'effect'
-import useSWR from 'swr'
-
 import { TagDimensionSchema } from '@schemas/tag'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const TAG_DIMENSION_BY_KEY_TAG_KEY = '#tag-dimension-by-key'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  isEnabled,
-  dimensionKey,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  isEnabled: boolean
-  dimensionKey: string
-}) {
-  if (!isEnabled) {
-    return
-  }
-
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      dimensionKey,
-      tags: [TAG_DIMENSION_BY_KEY_TAG_KEY],
-    } as const
-  }
-}
+const TagDimensionByKeyResponseSchema = UnwrappedDataResponseSchema(TagDimensionSchema)
 
 const getTagDimensionByKey = get<
-  { data: unknown },
+  typeof TagDimensionByKeyResponseSchema.Encoded,
   { businessId: string, dimensionKey: string }
 >(({ businessId, dimensionKey }) => `/v1/businesses/${businessId}/tags/dimensions/key/${dimensionKey}`)
 
@@ -49,35 +17,11 @@ type UseTagDimensionByKeyParameters = {
   dimensionKey: string
 }
 
-export function useTagDimensionByKey({ isEnabled = true, dimensionKey }: UseTagDimensionByKeyParameters) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { apiUrl } = useEnvironment()
-  const { businessId } = useLayerContext()
-
-  const swrResponse = useSWR(
-    () => withLocale(buildKey({
-      ...auth,
-      apiUrl,
-      isEnabled,
-      businessId,
-      dimensionKey,
-    })),
-    ({ accessToken, apiUrl, businessId }) => getTagDimensionByKey(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          dimensionKey,
-        },
-      },
-    )()
-      .then(({ data }) => Schema.decodeUnknownPromise(TagDimensionSchema)(data)),
-  )
-
-  return new SWRQueryResult(swrResponse)
-}
+export const useTagDimensionByKey = createQueryHook({
+  tags: [TAG_DIMENSION_BY_KEY_TAG_KEY],
+  request: getTagDimensionByKey,
+  schema: TagDimensionByKeyResponseSchema,
+})
 
 export function usePreloadTagDimensionByKey(parameters: UseTagDimensionByKeyParameters) {
   /*

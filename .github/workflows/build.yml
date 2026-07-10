@@ -1,0 +1,46 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run build
+      run: npm run build
+
+    - name: Validate build artifacts
+      run: |
+        # Assert every entrypoint declared in package.json exists and is non-empty.
+        artifacts=(
+          dist/cjs/index.cjs   # main / require
+          dist/esm/index.mjs   # module / import
+          dist/index.d.ts      # types
+          dist/index.css       # style / ./index.css export
+        )
+        missing=0
+        for f in "${artifacts[@]}"; do
+          if [ ! -s "$f" ]; then
+            echo "::error::Missing or empty build artifact: $f"
+            missing=1
+          fi
+        done
+        if [ "$missing" -ne 0 ]; then exit 1; fi
+        echo "All expected build artifacts present."

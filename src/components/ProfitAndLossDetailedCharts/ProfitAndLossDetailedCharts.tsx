@@ -6,14 +6,12 @@ import { SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
 import { humanizeTitle } from '@utils/profitAndLossUtils'
 import { createPnlLineItemComparator, type Scope, type SidebarScope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { DetailedChart } from '@components/DetailedCharts/DetailedChart'
 import { type ColorSelector, type FallbackFillSelector } from '@components/DetailedCharts/types'
 import { DetailedTable, type DetailedTableStringOverrides } from '@components/DetailedTable/DetailedTable'
-import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { DetailReportModal } from '@components/ProfitAndLossDetailedCharts/DetailReportModal'
 import { ProfitAndLossDetailedChartsHeader } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedChartsHeader'
 import { usePnlDetailedTableRows } from '@components/ProfitAndLossDetailedCharts/usePnlDetailedTableRows'
@@ -60,14 +58,6 @@ const EmptyState = () => {
   )
 }
 
-const DetailedChartsDatePickerHeader = () => {
-  return (
-    <HStack className='Layer__ProfitAndLossDetailedCharts__DatePickerHeader--tablet'>
-      <GlobalMonthPicker />
-    </HStack>
-  )
-}
-
 export const ProfitAndLossDetailedCharts = ({
   scope,
   hideClose = false,
@@ -86,7 +76,6 @@ export const ProfitAndLossDetailedCharts = ({
   slotProps?: ProfitAndLossDetailedChartsSlotProps
 }) => {
   const { t } = useTranslation()
-  const { isDesktop } = useSizeClass()
   const {
     chartDataRevenue,
     tableDataRevenue,
@@ -208,7 +197,6 @@ export const ProfitAndLossDetailedCharts = ({
     <div className='Layer__profit-and-loss-detailed-charts Layer__ProfitAndLossDetailedCharts'>
       {!hideHeader && (
         <ProfitAndLossDetailedChartsHeader
-          mode={isDesktop ? 'desktop' : 'tablet'}
           title={humanizeTitle(activeScope, stringOverrides?.detailedChartStringOverrides, t)}
           date={dateRange.startDate}
           showCloseButton={!hideClose}
@@ -225,9 +213,6 @@ export const ProfitAndLossDetailedCharts = ({
 
               <DetailedChart<PnlChartLineItem>
                 data={chartDataWithTotal}
-                slots={{
-                  Header: showDatePicker ? <DetailedChartsDatePickerHeader /> : undefined,
-                }}
                 interactionProps={chartInteractionProps}
                 stylingProps={stylingProps}
                 isLoading={isLoading}

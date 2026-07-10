@@ -2,8 +2,8 @@ import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
 
+import { type TagOption } from '@internal-types/tags'
 import { type CallBooking as CallBookingData } from '@schemas/callBooking'
-import { type Variants } from '@utils/styleUtils/sizeVariants'
 import { useBookkeepingOnboardingCallBooking } from '@hooks/features/bookkeeping/useBookkeepingOnboardingCallBooking'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
@@ -17,12 +17,14 @@ import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossHeader } from '@components/ProfitAndLossHeader/ProfitAndLossHeader'
 import { ProfitAndLossOverviewDetailedCharts } from '@components/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
-import { type ProfitAndLossSummariesStringOverrides } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
+import {
+  type ProfitAndLossSummariesSlotProps,
+  type ProfitAndLossSummariesStringOverrides,
+} from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
 import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
 import { View } from '@components/View/View'
 import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
-import { type TagOption } from '@views/ProjectProfitability/ProjectProfitability'
 
 import './bookkeepingOverview.scss'
 
@@ -73,9 +75,7 @@ export interface BookkeepingOverviewProps {
   }
   slotProps?: {
     profitAndLoss?: {
-      summaries?: {
-        variants?: Variants
-      }
+      summaries?: ProfitAndLossSummariesSlotProps
     }
   }
 
@@ -103,6 +103,8 @@ export const BookkeepingOverview = ({
 
   const profitAndLossSummariesVariants =
     slotProps?.profitAndLoss?.summaries?.variants
+  const profitAndLossSummariesReportingVariant =
+    slotProps?.profitAndLoss?.summaries?.reportingVariant
   const profitAndLossTagFilter = tagFilter?.tagValues.length
     ? { key: tagFilter.tagKey, values: tagFilter.tagValues }
     : undefined
@@ -192,6 +194,7 @@ export const BookkeepingOverview = ({
               <ProfitAndLoss.Summaries
                 stringOverrides={stringOverrides?.profitAndLoss?.summaries}
                 chartColorsList={chartColorsList}
+                reportingVariant={profitAndLossSummariesReportingVariant}
                 variants={profitAndLossSummariesVariants}
               />
             </VStack>

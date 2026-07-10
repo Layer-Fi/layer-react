@@ -1,11 +1,12 @@
-import { Schema } from 'effect/index'
 import useSWR from 'swr'
 
-import { AccountingConfigurationSchema, type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
+import { SWRQueryResult } from '@internal-types/swr/SWRResponseTypes'
+import { AccountingConfigurationSchema } from '@schemas/accountingConfiguration'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
+import { createBuildKey } from '@utils/swr/createBuildKey'
+import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
 import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 
 export const ACCOUNTING_CONFIGURATION_TAG_KEY = '#accounting-configuration'
 
@@ -13,52 +14,29 @@ type GetAccountingConfigurationParams = {
   businessId: string
 }
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tag: [ACCOUNTING_CONFIGURATION_TAG_KEY],
-    } as const
-  }
-}
+const buildKey = createBuildKey<{ businessId: string }>([ACCOUNTING_CONFIGURATION_TAG_KEY])
 
-const getAccountingConfiguration = get<{ data: AccountingConfigurationSchemaType }, GetAccountingConfigurationParams>(
+const GetAccountingConfigurationResponseSchema = UnwrappedDataResponseSchema(AccountingConfigurationSchema)
+
+const getAccountingConfiguration = get<
+  typeof GetAccountingConfigurationResponseSchema.Encoded,
+  GetAccountingConfigurationParams
+>(
   ({ businessId }) => {
     return `/v1/businesses/${businessId}/accounting-config`
   },
 )
 
+const fetchAccountingConfiguration = createKeyedFetcher(
+  getAccountingConfiguration,
+  GetAccountingConfigurationResponseSchema,
+)
+
 export function useAccountingConfiguration({ businessId }: GetAccountingConfigurationParams) {
-  const { apiUrl } = useEnvironment()
   const { data: auth } = useAuth()
 
-  const queryKey = buildKey({
-    ...auth,
-    apiUrl,
-    businessId,
-  })
+  const queryKey = buildKey({ ...auth, businessId })
+  const response = useSWR(() => queryKey, fetchAccountingConfiguration)
 
-  const response = useSWR(
-    () => queryKey,
-    ({ accessToken, apiUrl, businessId }) => getAccountingConfiguration(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-        },
-      },
-    )().then(({ data }) => Schema.decodeUnknownPromise(AccountingConfigurationSchema)(data)),
-  )
   return new SWRQueryResult(response)
 }

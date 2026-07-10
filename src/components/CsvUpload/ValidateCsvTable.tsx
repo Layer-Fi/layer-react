@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type PreviewCell, type PreviewCsv, type PreviewRow } from '@schemas/csvUpload'
-import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
+import { type ColumnConfig } from '@components/DataTable/utils/column'
 import { VirtualizedDataTable } from '@components/VirtualizedDataTable/VirtualizedDataTable'
 
 import './validateCsvTable.scss'
@@ -43,7 +43,7 @@ export function ValidateCsvTable<T extends { [K in keyof T]: string | number | n
     [data],
   )
 
-  const columnConfig = useMemo<NestedColumnConfig<DataRow<T>>>(
+  const columnConfig = useMemo<ColumnConfig<DataRow<T>>>(
     () => [
       {
         id: 'row',

@@ -1,17 +1,11 @@
-import { useCallback } from 'react'
-import { Schema } from 'effect'
-import useSWR from 'swr'
-
 import { type ReportingBasis } from '@internal-types/general'
 import { type PnlDetailLineSchema, PnlDetailLinesDataSchema } from '@schemas/reports/profitAndLoss'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export const LIST_PNL_DETAIL_LINES_TAG_KEY = '#list-pnl-detail-lines'
 
@@ -38,106 +32,33 @@ type PnlDetailLinesParams = PnlDetailLinesBaseParams & PnlDetailLinesFilterParam
 export type PnlDetailLine = typeof PnlDetailLineSchema.Type
 export type PnlDetailLinesReturn = typeof PnlDetailLinesDataSchema.Type
 
-function keyLoader(
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
+const PnlDetailLinesResponseSchema = UnwrappedDataResponseSchema(PnlDetailLinesDataSchema)
+
+const listProfitAndLossDetailLines = getWithQuery<
+  typeof PnlDetailLinesResponseSchema.Encoded,
+  PnlDetailLinesParams
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/profit-and-loss/lines`,
+  ({ startDate, endDate, pnlStructureLineItemName, tagFilter, reportingBasis, pnlStructure }) => ({
     startDate,
     endDate,
-    pnlStructureLineItemName,
-    tagFilter,
+    lineItemName: pnlStructureLineItemName,
     reportingBasis,
+    tagKey: tagFilter?.key,
+    tagValues: tagFilter?.values?.join(','),
     pnlStructure,
-  }: {
-    access_token?: string
-    apiUrl?: string
-  } & PnlDetailLinesParams,
-) {
-  if (accessToken && apiUrl && businessId && startDate && endDate && pnlStructureLineItemName) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      startDate,
-      endDate,
-      pnlStructureLineItemName,
-      tagFilter,
-      reportingBasis,
-      pnlStructure,
-      tags: [LIST_PNL_DETAIL_LINES_TAG_KEY],
-    } as const
-  }
-  return null
-}
+  }),
+)
 
-export function useProfitAndLossDetailLines({
-  startDate,
-  endDate,
-  pnlStructureLineItemName,
-  tagFilter,
-  reportingBasis,
-  pnlStructure,
-}: PnlDetailLinesBaseParams & PnlDetailLinesFilterParams) {
-  const withLocale = useLocalizedKey()
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
+export const useProfitAndLossDetailLines = createQueryHook({
+  tags: [LIST_PNL_DETAIL_LINES_TAG_KEY],
+  request: listProfitAndLossDetailLines,
+  schema: PnlDetailLinesResponseSchema,
+  swrOptions: { keepPreviousData: true },
+})
 
-  const swrResponse = useSWR(
-    () => withLocale(keyLoader({
-      ...auth,
-      apiUrl,
-      businessId,
-      startDate,
-      endDate,
-      pnlStructureLineItemName,
-      tagFilter,
-      reportingBasis,
-      pnlStructure,
-    })),
-    ({
-      accessToken,
-      apiUrl,
-      businessId,
-      startDate,
-      endDate,
-      pnlStructureLineItemName,
-      tagFilter,
-      reportingBasis,
-      pnlStructure,
-    }) => getProfitAndLossDetailLines(
-      apiUrl,
-      accessToken,
-      {
-        businessId,
-        startDate,
-        endDate,
-        pnlStructureLineItemName,
-        tagKey: tagFilter?.key,
-        tagValues: tagFilter?.values?.join(','),
-        reportingBasis,
-        pnlStructure,
-      },
-    )().then(response => response.data).then(Schema.decodeUnknownPromise(PnlDetailLinesDataSchema)),
-    {
-      keepPreviousData: true,
-    },
-  )
-
-  return new SWRQueryResult(swrResponse)
-}
-
-export function usePnlDetailLinesInvalidator() {
-  const { invalidate } = useGlobalCacheActions()
-
-  const invalidatePnlDetailLines = useCallback(
-    () => invalidate(({ tags }) => tags.includes(LIST_PNL_DETAIL_LINES_TAG_KEY)),
-    [invalidate],
-  )
-
-  return { invalidatePnlDetailLines }
-}
+export const usePnlDetailLinesInvalidator = createResourceGlobalCacheActions<PnlDetailLinesReturn>(LIST_PNL_DETAIL_LINES_TAG_KEY)
 
 export type GetProfitAndLossDetailLinesParams = {
   businessId: string

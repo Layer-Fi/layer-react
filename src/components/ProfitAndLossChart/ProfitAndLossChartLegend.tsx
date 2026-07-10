@@ -29,6 +29,12 @@ const LegendIcon = ({ fill }: { fill?: string }) => (
   </svg>
 )
 
+const LEGEND_ICON_FILLS: Record<string, string> = {
+  IncomeLegend: 'var(--bar-color-income)',
+  ExpensesLegend: 'var(--bar-color-expenses)',
+  UncategorizedLegend: STRIPE_PATTERN_DARK_FILL,
+}
+
 const renderLegendContent = (payload: { value: string, type: string, id: string }[]) => {
   return (
     <ul className='Layer__ProfitAndLossChartLegend'>
@@ -37,13 +43,15 @@ const renderLegendContent = (payload: { value: string, type: string, id: string 
           key={`legend-item-${idx}`}
           className={`recharts-legend-item legend-item-${idx}`}
         >
-          <LegendIcon fill={entry.id === 'UncategorizedLegend' ? STRIPE_PATTERN_DARK_FILL : undefined} />
+          <LegendIcon fill={LEGEND_ICON_FILLS[entry.id]} />
           {entry.value}
         </li>
       ))}
     </ul>
   )
 }
+
+const LEGEND_HEIGHT = 44
 
 export const ProfitAndLossChartLegend = () => {
   const { t } = useTranslation()
@@ -53,6 +61,11 @@ export const ProfitAndLossChartLegend = () => {
     id: entry.id,
   })), [t])
   return (
-    <Legend verticalAlign='top' align='right' content={renderLegendContent(payload)} />
+    <Legend
+      verticalAlign='top'
+      align='right'
+      height={LEGEND_HEIGHT}
+      content={renderLegendContent(payload)}
+    />
   )
 }

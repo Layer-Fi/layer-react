@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { createTransformedEnumSchema } from '@schemas/utils'
 
 // Enums matching the frontend types
@@ -122,12 +122,7 @@ const CallBookingSchema = Schema.Struct({
 export type CallBooking = typeof CallBookingSchema.Type
 
 // List response schema
-export const ListCallBookingsResponseSchema = Schema.Struct({
-  data: Schema.Array(CallBookingSchema),
-  meta: Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  }),
-})
+export const ListCallBookingsResponseSchema = PaginatedResponseSchema(CallBookingSchema)
 
 export type ListCallBookingsResponse = typeof ListCallBookingsResponseSchema.Type
 

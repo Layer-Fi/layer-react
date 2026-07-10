@@ -8,7 +8,7 @@ import { VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
+import type { ColumnConfig } from '@components/DataTable/utils/column'
 import { DateTime } from '@components/DateTime/DateTime'
 import { VirtualizedDataTable } from '@components/VirtualizedDataTable/VirtualizedDataTable'
 
@@ -60,7 +60,7 @@ export const AffectedTransactionsTable = ({
   const { t } = useTranslation()
 
   type AffectedTransactionRowType = Row<MinimalBankTransaction>
-  const columnConfig: NestedColumnConfig<MinimalBankTransaction> = useMemo(() => [
+  const columnConfig: ColumnConfig<MinimalBankTransaction> = useMemo(() => [
     {
       id: TransactionColumns.Date,
       header: t('common:label.date', 'Date'),

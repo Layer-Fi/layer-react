@@ -2,7 +2,6 @@ import { type ReactNode, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type View as ViewType } from '@internal-types/general'
-import { type ProfitAndLossCompareConfig } from '@internal-types/profitAndLoss'
 import { translationKey } from '@utils/i18n/translationKey'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
@@ -39,7 +38,11 @@ export interface ReportsProps {
   showTitle?: boolean
   stringOverrides?: ReportsStringOverrides
   enabledReports?: ReportType[]
-  comparisonConfig?: ProfitAndLossCompareConfig
+  /**
+   * @deprecated The Profit & Loss comparison feature has been removed and this prop is ignored.
+   * Use the `UnifiedReports` component for period/tag comparisons instead.
+   */
+  comparisonConfig?: unknown
   profitAndLossConfig?: TimeRangePickerConfig
   statementOfCashFlowConfig?: TimeRangePickerConfig
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
@@ -66,7 +69,6 @@ export const Reports = ({
   showTitle = true,
   stringOverrides,
   enabledReports = defaultEnabledReports,
-  comparisonConfig,
   profitAndLossConfig,
   statementOfCashFlowConfig,
   renderInAppLink,
@@ -109,7 +111,7 @@ export const Reports = ({
       <View title={resolvedTitle} showHeader={showTitle}>
         {!isMobileView && <ReportsToggle />}
         <Container name='reports' ref={containerRef}>
-          <ProfitAndLoss asContainer={false} comparisonConfig={comparisonConfig}>
+          <ProfitAndLoss asContainer={false}>
             <ReportsPanel
               openReport={activeTab}
               stringOverrides={stringOverrides}

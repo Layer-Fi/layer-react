@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useContext, useMemo } from 'react'
 
 import {
   type BankTransaction,
@@ -6,82 +6,21 @@ import {
 } from '@internal-types/bankTransactions'
 import { Direction } from '@internal-types/general'
 import { type TagFilterInput } from '@internal-types/tags'
-import { isAnyBankAccountSyncing } from '@utils/bankAccount'
-import { type BankTransactionFilters, filterVisibility, type NumericRangeFilter } from '@utils/bankTransactions/shared'
+import { type BankTransactionFilters } from '@utils/bankTransactions/shared'
 import { useBankTransactions, type UseBankTransactionsOptions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { useFilterBankTransactions } from '@hooks/features/bankTransactions/useFilterBankTransactions'
+import { usePollBankTransactions } from '@hooks/features/bankTransactions/usePollBankTransactions'
+import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { CategorizationRulesContext } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
-const INITIAL_POLL_INTERVAL_MS = 1000
-const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
-
-const applyAccountFilter = (
-  data?: BankTransaction[],
-  filter?: string[],
-) => data?.filter(x => filter && x.sourceAccountId != null && filter.includes(x.sourceAccountId))
-
-const applyCategorizationStatusFilter = (
-  data?: BankTransaction[],
-  filter?: DisplayState,
-) => {
-  if (!filter) return data
-
-  return data?.filter(
-    tx =>
-      filterVisibility(filter, tx)
-      || filter === DisplayState.all
-      || (filter === DisplayState.review && tx.recentlyCategorized)
-      || (filter === DisplayState.categorized && tx.recentlyCategorized),
-  )
-}
-
-const applyAmountFilter = (
-  data?: BankTransaction[],
-  filter?: NumericRangeFilter,
-) => {
-  return data?.filter((x) => {
-    if ((filter?.min || filter?.min === 0)
-      && (filter?.max || filter?.max === 0)) {
-      return x.amount >= filter.min * 100 && x.amount <= filter.max * 100
-    }
-
-    if (filter?.min || filter?.min === 0) {
-      return x.amount >= filter.min * 100
-    }
-
-    if (filter?.max || filter?.max === 0) {
-      return x.amount <= filter.max * 100
-    }
-  })
-}
-
-const tagFilterToQueryString = (tagFilter: TagFilterInput): string => {
+const tagFilterToParams = (tagFilter: TagFilterInput): Pick<UseBankTransactionsOptions, 'tagKey' | 'tagValues'> => {
   if (tagFilter != 'None' && tagFilter.tagValues.length > 0) {
-    return `tag_key=${tagFilter.tagKey}&tag_values=${tagFilter.tagValues.join(
-      ',',
-    )}&`
-  }
-  return ''
-}
-
-function useTriggerOnChange(
-  data: BankTransaction[] | undefined,
-  anyAccountSyncing: boolean,
-  callback: (data: BankTransaction[] | undefined) => void,
-) {
-  const prevDataRef = useRef<BankTransaction[]>()
-
-  useEffect(() => {
-    if (
-      anyAccountSyncing
-      && prevDataRef.current !== undefined
-      && prevDataRef.current !== data
-    ) {
-      callback(data)
+    return {
+      tagKey: tagFilter.tagKey,
+      tagValues: tagFilter.tagValues.join(','),
     }
-    prevDataRef.current = data
-  }, [data, anyAccountSyncing, callback])
+  }
+  return {}
 }
 
 export function bankTransactionFiltersToHookOptions(
@@ -101,33 +40,26 @@ export function bankTransactionFiltersToHookOptions(
     query: filters?.query,
     startDate: filters?.dateRange?.startDate,
     endDate: filters?.dateRange?.endDate,
-    tagFilterQueryString: filters?.tagFilter ? tagFilterToQueryString(filters.tagFilter) : undefined,
+    ...(filters?.tagFilter ? tagFilterToParams(filters.tagFilter) : undefined),
   }
 }
 
-export type UseAugmentedBankTransactionsWithFiltersParams = {
-  filters: BankTransactionFilters
-}
-
-export const useAugmentedBankTransactions = (
-  params: UseAugmentedBankTransactionsWithFiltersParams,
-) => {
-  const { eventCallbacks } = useLayerContext()
-
+export const useAugmentedBankTransactions = () => {
   const { setRuleSuggestion } = useContext(CategorizationRulesContext)
-
-  const { filters } = params
+  const { filters } = useBankTransactionsFiltersContext()
 
   const display = filters?.categorizationStatus ?? DisplayState.categorized
+  const shouldHideAfterCategorize = display === DisplayState.review
+
   const useBankTransactionsOptions = useMemo(
     () => bankTransactionFiltersToHookOptions(filters),
     [filters],
   )
 
   const {
-    data: rawResponseData,
+    data,
+    flattenedData: bankTransactions,
     isLoading,
-    isValidating,
     isError,
     mutate,
     size,
@@ -135,41 +67,9 @@ export const useAugmentedBankTransactions = (
     hasMore,
   } = useBankTransactions(useBankTransactionsOptions)
 
-  const data: BankTransaction[] | undefined = useMemo(() => {
-    if (rawResponseData && rawResponseData.length > 0) {
-      return rawResponseData
-        ?.map(x => x?.data)
-        .flat()
-        .filter(x => !!x)
-    }
+  usePollBankTransactions({ data, mutate, useBankTransactionsOptions })
 
-    return undefined
-  }, [rawResponseData])
-
-  const filteredData = useMemo(() => {
-    let filtered = data
-
-    if (!filtered) {
-      return
-    }
-
-    if (filters?.categorizationStatus) {
-      filtered = applyCategorizationStatusFilter(
-        filtered,
-        filters.categorizationStatus,
-      )
-    }
-
-    if (filters?.amount?.min || filters?.amount?.max) {
-      filtered = applyAmountFilter(filtered, filters.amount)
-    }
-
-    if (filters?.account) {
-      filtered = applyAccountFilter(filtered, filters.account)
-    }
-
-    return filtered
-  }, [filters, data])
+  const filteredBankTransactions = useFilterBankTransactions({ data: bankTransactions, filters })
 
   const updateLocalBankTransactions = useCallback((newBankTransactions: BankTransaction[]) => {
     const transactionsById = new Map(
@@ -182,7 +82,7 @@ export const useAugmentedBankTransactions = (
       }
     }
 
-    const updatedData = rawResponseData?.map(page => ({
+    const updatedData = data?.map(page => ({
       ...page,
       data: page.data?.map(bt =>
         transactionsById.get(bt.id) ?? bt,
@@ -190,19 +90,17 @@ export const useAugmentedBankTransactions = (
     }))
 
     void mutate(updatedData, { revalidate: false })
-  }, [rawResponseData, mutate, setRuleSuggestion])
+  }, [data, mutate, setRuleSuggestion])
 
-  const shouldHideAfterCategorize = filters?.categorizationStatus === DisplayState.review
-
-  const removeAfterCategorize = (transactionIds: string[]) => {
+  const removeAfterCategorize = useCallback((transactionIds: string[]) => {
     if (shouldHideAfterCategorize) {
-      const updatedData = rawResponseData?.map(page => ({
+      const updatedData = data?.map(page => ({
         ...page,
         data: page.data?.filter(bt => !transactionIds.includes(bt.id)),
       }))
       void mutate(updatedData, { revalidate: false })
     }
-  }
+  }, [shouldHideAfterCategorize, data, mutate])
 
   const fetchMore = useCallback(() => {
     if (hasMore) {
@@ -210,66 +108,9 @@ export const useAugmentedBankTransactions = (
     }
   }, [hasMore, setSize, size])
 
-  const { data: linkedAccounts, refetchAccounts } = useLinkedAccounts()
-  const anyAccountSyncing = useMemo(
-    () => isAnyBankAccountSyncing(linkedAccounts ?? []),
-    [linkedAccounts],
-  )
-
-  const [pollIntervalMs, setPollIntervalMs] = useState(
-    INITIAL_POLL_INTERVAL_MS,
-  )
-
-  const transactionsNotSynced = useMemo(
-    () =>
-      isLoading === false
-      && anyAccountSyncing
-      && (!data || data?.length === 0),
-    [data, anyAccountSyncing, isLoading],
-  )
-
-  const intervalIdRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined)
-
-  // calling `void mutate()` directly in the `setInterval` didn't trigger actual request to API.
-  // But it works when called from `useEffect`
-  const [refreshTrigger, setRefreshTrigger] = useState(-1)
-  useEffect(() => {
-    if (refreshTrigger !== -1) {
-      void mutate()
-      void refetchAccounts()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refreshTrigger])
-
-  useEffect(() => {
-    if (anyAccountSyncing) {
-      intervalIdRef.current = setInterval(() => {
-        setRefreshTrigger(Math.random())
-      }, pollIntervalMs)
-    }
-    else {
-      if (intervalIdRef.current) {
-        clearInterval(intervalIdRef.current)
-      }
-    }
-
-    return () => {
-      if (intervalIdRef.current) {
-        clearInterval(intervalIdRef.current)
-      }
-    }
-  }, [anyAccountSyncing, transactionsNotSynced, pollIntervalMs])
-
-  useTriggerOnChange(data, anyAccountSyncing, (_) => {
-    clearInterval(intervalIdRef.current)
-    setPollIntervalMs(POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS)
-    eventCallbacks?.onTransactionsFetched?.()
-  })
-
-  return {
-    data: filteredData,
+  return useMemo(() => ({
+    data: filteredBankTransactions,
     isLoading,
-    isValidating,
     isError,
     updateLocalBankTransactions,
     shouldHideAfterCategorize,
@@ -279,5 +120,17 @@ export const useAugmentedBankTransactions = (
     fetchMore,
     hasMore,
     mutate,
-  }
+  }), [
+    filteredBankTransactions,
+    isLoading,
+    isError,
+    updateLocalBankTransactions,
+    shouldHideAfterCategorize,
+    removeAfterCategorize,
+    useBankTransactionsOptions,
+    display,
+    fetchMore,
+    hasMore,
+    mutate,
+  ])
 }

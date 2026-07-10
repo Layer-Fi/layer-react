@@ -2,12 +2,10 @@ import classNames from 'classnames'
 import type { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
 
-import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { ProfitAndLossSummariesHeading } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesHeading'
 import { type ProfitAndLossSummariesMode } from '@components/ProfitAndLossSummaries/useProfitAndLossSummariesMiniChartData'
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
@@ -29,7 +27,6 @@ type ProfitAndLossSummariesSummaryProps = {
     Chart?: ReactNode
     Footer?: ReactNode
   }
-  variants?: Variants
 }
 
 export function ProfitAndLossSummariesSummary({
@@ -42,7 +39,6 @@ export function ProfitAndLossSummariesSummary({
   isExpense = false,
   mode,
   slots,
-  variants,
 }: ProfitAndLossSummariesSummaryProps) {
   const { formatPercent } = useIntlFormatter()
   const { Chart, Footer } = slots ?? {}
@@ -71,9 +67,9 @@ export function ProfitAndLossSummariesSummary({
 
         <HStack justify='space-between' fluid pis='sm' pie='xs'>
           <VStack fluid>
-            <ProfitAndLossSummariesHeading variants={variants}>
+            <Span size='sm' weight='bold'>
               {label}
-            </ProfitAndLossSummariesHeading>
+            </Span>
             {isLoading
               ? <SkeletonLoader height='22px' />
               : <MoneySpan slot='amount' amount={amount} size='lg' weight='bold' numeric='tabular-nums' />}

@@ -1,15 +1,9 @@
-import { useCallback } from 'react'
-import { Effect, Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
-
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { type UpsertVehicleEncoded, VehicleSchema } from '@schemas/vehicle'
 import { patch, post } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useTripsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/trips/useListTrips'
 import { useVehiclesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const UPSERT_VEHICLE_TAG_KEY = '#upsert-vehicle'
 
@@ -20,173 +14,65 @@ export enum UpsertVehicleMode {
 
 type UpsertVehicleBody = UpsertVehicleEncoded
 
-const createVehicle = post<
-  UpsertVehicleReturn,
-  UpsertVehicleBody,
-  { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/mileage/vehicles`)
+const UpsertVehicleReturnSchema = UnwrappedDataResponseSchema(VehicleSchema)
+
+type UpsertVehicleReturnEncoded = typeof UpsertVehicleReturnSchema.Encoded
+
+const createVehicle = post<UpsertVehicleReturnEncoded, UpsertVehicleBody>(
+  ({ businessId }) => `/v1/businesses/${businessId}/mileage/vehicles`,
+)
 
 const updateVehicle = patch<
-  UpsertVehicleReturn,
+  UpsertVehicleReturnEncoded,
   UpsertVehicleBody,
   { businessId: string, vehicleId: string }
->(({ businessId, vehicleId }) => `/v1/businesses/${businessId}/mileage/vehicles/${vehicleId}`)
+>(
+  ({ businessId, vehicleId }) => `/v1/businesses/${businessId}/mileage/vehicles/${vehicleId}`,
+)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  vehicleId = undefined,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  vehicleId?: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      vehicleId,
-      tags: [UPSERT_VEHICLE_TAG_KEY],
-    } as const
-  }
-}
+const useCreateVehicle = createMutationHook({
+  tags: [UPSERT_VEHICLE_TAG_KEY],
+  request: createVehicle,
+  schema: UpsertVehicleReturnSchema,
+  swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()
 
-const UpsertVehicleReturnSchema = Schema.Struct({
-  data: VehicleSchema,
-})
-type UpsertVehicleReturn = typeof UpsertVehicleReturnSchema.Type
-
-type RequestArgs = {
-  apiUrl: string
-  accessToken: string
-  body: UpsertVehicleBody
-}
-
-const CreateParamsSchema = Schema.Struct({
-  businessId: Schema.UUID,
-  vehicleId: Schema.Undefined,
-})
-
-const UpdateParamsSchema = Schema.Struct({
-  businessId: Schema.UUID,
-  vehicleId: Schema.UUID,
-})
-
-type CreateParams = typeof CreateParamsSchema.Type
-type UpdateParams = typeof UpdateParamsSchema.Type
-
-type UpsertParams = CreateParams | UpdateParams
-
-type UpsertRequestFn = (args: RequestArgs) => Promise<UpsertVehicleReturn>
-
-const isParamsValidForMode = <M extends UpsertVehicleMode>(
-  mode: M,
-  params: unknown,
-): params is M extends UpsertVehicleMode.Update ? UpdateParams : CreateParams => {
-  if (mode === UpsertVehicleMode.Update) {
-    return Effect.runSync(Effect.either(Schema.decodeUnknown(UpdateParamsSchema)(params)))._tag === 'Right'
-  }
-
-  if (mode === UpsertVehicleMode.Create) {
-    return Effect.runSync(Effect.either(Schema.decodeUnknown(CreateParamsSchema)(params)))._tag === 'Right'
-  }
-
-  return false
-}
-
-function getRequestFn(
-  mode: UpsertVehicleMode,
-  params: UpsertParams,
-): UpsertRequestFn {
-  if (mode === UpsertVehicleMode.Update) {
-    if (!isParamsValidForMode(UpsertVehicleMode.Update, params)) {
-      throw new Error('Invalid params for update mode')
+    return () => {
+      void forceReloadVehicles()
     }
+  },
+})
 
-    return ({ apiUrl, accessToken, body }: { apiUrl: string, accessToken: string, body: UpsertVehicleBody }) =>
-      updateVehicle(apiUrl, accessToken, { params, body })
-  }
-  else {
-    if (!isParamsValidForMode(UpsertVehicleMode.Create, params)) {
-      throw new Error('Invalid params for create mode')
+const useUpdateVehicle = createMutationHook({
+  tags: [UPSERT_VEHICLE_TAG_KEY],
+  request: updateVehicle,
+  keyParams: ['vehicleId'],
+  schema: UpsertVehicleReturnSchema,
+  swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { patchByKey: patchVehicleByKey } = useVehiclesGlobalCacheActions()
+    const { forceReload: forceReloadTrips } = useTripsGlobalCacheActions()
+
+    return (data) => {
+      void patchVehicleByKey(data)
+      void forceReloadTrips()
     }
-
-    return ({ apiUrl, accessToken, body }: { apiUrl: string, accessToken: string, body: UpsertVehicleBody }) =>
-      createVehicle(apiUrl, accessToken, { params, body })
-  }
-}
+  },
+})
 
 type UseUpsertVehicleProps =
   | { mode: UpsertVehicleMode.Create }
   | { mode: UpsertVehicleMode.Update, vehicleId: string }
 
 export const useUpsertVehicle = (props: UseUpsertVehicleProps) => {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-
   const { mode } = props
   const vehicleId = mode === UpsertVehicleMode.Update ? props.vehicleId : undefined
 
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-      vehicleId,
-    })),
-    (
-      { accessToken, apiUrl, businessId, vehicleId },
-      { arg: body }: { arg: UpsertVehicleBody },
-    ) => {
-      const request = getRequestFn(mode, { businessId, vehicleId })
-
-      return request({
-        apiUrl,
-        accessToken,
-        body,
-      }).then(Schema.decodeUnknownPromise(UpsertVehicleReturnSchema))
-    },
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
-
-  const { patchVehicleByKey, forceReloadVehicles } = useVehiclesGlobalCacheActions()
-  const { forceReloadTrips } = useTripsGlobalCacheActions()
-
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      if (mode === UpsertVehicleMode.Update) {
-        void patchVehicleByKey(triggerResult.data)
-        void forceReloadTrips()
-      }
-      else {
-        void forceReloadVehicles()
-      }
-
-      return triggerResult
-    },
-    [originalTrigger, mode, patchVehicleByKey, forceReloadTrips, forceReloadVehicles],
-  )
-
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
+  const createResponse = useCreateVehicle()
+  const updateResponse = useUpdateVehicle({
+    vehicleId: vehicleId ?? '',
   })
+
+  return mode === UpsertVehicleMode.Create ? createResponse : updateResponse
 }

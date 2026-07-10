@@ -10,7 +10,7 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
+import { type ColumnConfig } from '@components/DataTable/utils/column'
 import { type LineItemsTableStringOverrides } from '@components/LedgerEntryDetails/types'
 import { SimpleDataTable } from '@components/SimpleDataTable/SimpleDataTable'
 
@@ -90,7 +90,7 @@ export const LineItemsTable = ({
     return [...itemRows, totalRow]
   }, [lineItems])
 
-  const columnConfig = useMemo<NestedColumnConfig<LineItemRow>>(() => [
+  const columnConfig = useMemo<ColumnConfig<LineItemRow>>(() => [
     {
       id: 'account',
       header: stringOverrides?.lineItemsColumnHeader || t('generalLedger:label.line_items', 'Line items'),

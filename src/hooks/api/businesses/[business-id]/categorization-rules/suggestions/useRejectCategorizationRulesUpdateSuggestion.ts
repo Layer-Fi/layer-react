@@ -1,82 +1,20 @@
-import { useCallback } from 'react'
-import useSWRMutation from 'swr/mutation'
-
 import { del } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const REJECT_CATEGORIZATION_RULE_SUGGESTION_TAG = '#reject-categorization-rule-suggestion'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [REJECT_CATEGORIZATION_RULE_SUGGESTION_TAG],
-    }
-  }
-}
-
-export const rejectCategorizationRulesUpdateSuggestion = del<never>(
+export const rejectCategorizationRulesUpdateSuggestion = del<
+  never,
+  Record<string, unknown>,
+  { businessId: string, suggestionId: string }
+>(
   ({ businessId, suggestionId }) =>
     `/v1/businesses/${businessId}/categorization-rules/suggestions/${suggestionId}`,
 )
 
-export function useRejectCategorizationRulesUpdateSuggestion() {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
-
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      access_token: auth?.access_token,
-      apiUrl: auth?.apiUrl,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: suggestionId }: { arg: string },
-    ) => rejectCategorizationRulesUpdateSuggestion(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          suggestionId,
-        },
-      },
-    ),
-    {
-      revalidate: false,
-    },
-  )
-  const { trigger: originalTrigger } = mutationResponse
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResultPromise = originalTrigger(...triggerParameters)
-      return triggerResultPromise
-    }, [originalTrigger],
-  )
-
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
-}
+export const useRejectCategorizationRulesUpdateSuggestion = createMutationHook({
+  tags: [REJECT_CATEGORIZATION_RULE_SUGGESTION_TAG],
+  request: rejectCategorizationRulesUpdateSuggestion,
+  argToParams: (suggestionId: string) => ({ suggestionId }),
+  argToBody: () => undefined,
+})

@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react'
+import { useCallback } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
@@ -6,7 +6,7 @@ import { getAccountsNeedingConfirmation } from '@utils/bankAccount'
 import { tPlural } from '@utils/i18n/plural'
 import { useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -37,15 +37,15 @@ export function LinkAccountsConfirmationStep() {
   const { formatNumber } = useIntlFormatter()
   const {
     data: linkedAccounts,
+    refetch,
     loadingStatus: linkedAccountsLoadingStatus,
-    refetchAccounts,
-  } = useContext(LinkedAccountsContext)
+  } = useBankAccountsContext()
 
   const effectiveLinkedAccounts = linkedAccounts
     ? getAccountsNeedingConfirmation(linkedAccounts)
     : []
 
-  const { trigger } = useConfirmAndExcludeMultiple({ onSuccess: refetchAccounts })
+  const { trigger } = useConfirmAndExcludeMultiple({ onSuccess: refetch })
 
   const { previous, next } = useWizard()
 

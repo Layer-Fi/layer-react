@@ -21,7 +21,7 @@ import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirm
 import { type ChartOfAccountsTableStringOverrides } from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
 import { filterAccounts, getInitialExpandedState, getMatchedTextIndices, getRowId } from '@components/ChartOfAccountsTable/utils'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
+import { type ColumnConfig } from '@components/DataTable/utils/column'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
 import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 
@@ -186,7 +186,7 @@ export const ChartOfAccountsTable = ({
     ErrorState: ChartOfAccountsErrorState,
   }), [])
 
-  const columnConfig = useMemo<NestedColumnConfig<AugmentedLedgerAccountBalance>>(() => {
+  const columnConfig = useMemo<ColumnConfig<AugmentedLedgerAccountBalance>>(() => {
     const accountNumberColumn = {
       id: ChartOfAccountsColumn.AccountNumber,
       header: stringOverrides?.numberColumnHeader || t('generalLedger:label.account_number', 'Account Number'),
@@ -194,7 +194,7 @@ export const ChartOfAccountsTable = ({
         renderHighlightedValue(row, row.original.accountNumber || ''),
     }
 
-    const columns: NestedColumnConfig<AugmentedLedgerAccountBalance> = [
+    const columns: ColumnConfig<AugmentedLedgerAccountBalance> = [
       {
         id: ChartOfAccountsColumn.Name,
         header: stringOverrides?.nameColumnHeader || t('generalLedger:label.account_name_title_case', 'Account Name'),

@@ -78,9 +78,3 @@ export const BookkeepingConfigurationSchema = Schema.Struct({
 })
 
 export type BookkeepingConfiguration = typeof BookkeepingConfigurationSchema.Type
-
-export const BookkeepingConfigurationResponseSchema = Schema.Struct({
-  data: BookkeepingConfigurationSchema,
-})
-
-export type BookkeepingConfigurationResponse = typeof BookkeepingConfigurationResponseSchema.Type

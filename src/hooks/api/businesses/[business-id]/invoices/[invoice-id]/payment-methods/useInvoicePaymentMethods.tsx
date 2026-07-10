@@ -1,83 +1,25 @@
-import { Schema } from 'effect'
-import useSWR from 'swr'
-
-import {
-  type InvoicePaymentMethodsResponse,
-  InvoicePaymentMethodsResponseSchema,
-} from '@schemas/invoices/invoicePaymentMethod'
+import { InvoicePaymentMethodsResponseSchema } from '@schemas/invoices/invoicePaymentMethod'
 import { get } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export const INVOICE_PAYMENT_METHODS_TAG_KEY = '#invoice-payment-methods'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  isEnabled,
-  invoiceId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  isEnabled: boolean
-  invoiceId: string | null
-}) {
-  if (!isEnabled) {
-    return
-  }
-
-  if (accessToken && apiUrl && invoiceId) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      invoiceId,
-      tags: [INVOICE_PAYMENT_METHODS_TAG_KEY],
-    } as const
-  }
-}
+export const useInvoicePaymentMethodsGlobalCacheActions =
+  createResourceGlobalCacheActions<typeof InvoicePaymentMethodsResponseSchema.Type>(INVOICE_PAYMENT_METHODS_TAG_KEY)
 
 const getInvoicePaymentMethods = get<
-  InvoicePaymentMethodsResponse,
+  typeof InvoicePaymentMethodsResponseSchema.Encoded,
   { businessId: string, invoiceId: string }
 >(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/payment-methods`)
 
-interface UseInvoicePaymentMethodsProps {
-  invoiceId: string
-  isEnabled?: boolean
-}
+export const useInvoicePaymentMethods = createQueryHook({
+  tags: [INVOICE_PAYMENT_METHODS_TAG_KEY],
+  request: getInvoicePaymentMethods,
+  schema: InvoicePaymentMethodsResponseSchema,
+})
 
-export function useInvoicePaymentMethods({
-  invoiceId,
-  isEnabled = true,
-}: UseInvoicePaymentMethodsProps) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-
-  const response = useSWR(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-      isEnabled,
-      invoiceId,
-    })),
-    ({ accessToken, apiUrl, businessId, invoiceId }) => getInvoicePaymentMethods(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId, invoiceId },
-      },
-    )().then(Schema.decodeUnknownPromise(InvoicePaymentMethodsResponseSchema)),
-  )
-  return new SWRQueryResult(response)
-}
-
-export function usePreloadInvoicePaymentMethods(props: UseInvoicePaymentMethodsProps) {
+export function usePreloadInvoicePaymentMethods(props: Parameters<typeof useInvoicePaymentMethods>[0]) {
   /*
    * This will initiate a network request to fill the cache, but will not
    * cause a re-render when `data` changes.

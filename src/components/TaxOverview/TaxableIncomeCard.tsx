@@ -38,7 +38,6 @@ export const TaxableIncomeCard = () => {
   const { data: taxOverviewData, isLoading, isError } = useTaxOverview({
     year,
     fullYearProjection,
-    enabled: true,
   })
 
   return (

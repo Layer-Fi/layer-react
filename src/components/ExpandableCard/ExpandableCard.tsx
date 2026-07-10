@@ -37,7 +37,7 @@ export const ExpandableCard = ({
       <AnimatedPresenceElement
         motionKey='expandable-content'
         variant='expand'
-        isOpen={isExpanded}
+        isPresent={isExpanded}
         style={{ overflow: 'hidden' }}
       >
         <VStack className='Layer__ExpandableCard__Content'>

@@ -1,13 +1,8 @@
-import useSWRMutation from 'swr/mutation'
-
 import type { S3PresignedUrl } from '@internal-types/general'
-import { type APIError } from '@utils/api/apiError'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { getAsMutation } from '@utils/api/getAsMutation'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import type { UseBankTransactionsOptions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 type GetBankTransactionsExportParams = {
   businessId: string
@@ -16,25 +11,19 @@ type GetBankTransactionsExportParams = {
   query?: string
   startDate?: Date
   endDate?: Date
-  tagFilterQueryString?: string
+  tagKey?: string
+  tagValues?: string
   sortOrder?: 'ASC' | 'DESC'
   sortBy?: string
 }
 
-const getBankTransactionsExcel = get<
+const getBankTransactionsExcel = getWithQuery<
   { data: S3PresignedUrl },
   GetBankTransactionsExportParams
->(({
-  businessId,
-  categorized,
-  direction,
-  query,
-  startDate,
-  endDate,
-  sortBy = 'date',
-  sortOrder = 'DESC',
-}: GetBankTransactionsExportParams) => {
-  const parameters = toDefinedSearchParameters({
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/transactions/exports/excel`,
+  ({ categorized, direction, query, startDate, endDate, sortBy = 'date', sortOrder = 'DESC' }) => ({
     categorized,
     direction,
     q: query,
@@ -42,82 +31,18 @@ const getBankTransactionsExcel = get<
     endDate,
     sortBy,
     sortOrder,
-  })
+  }),
+)
 
-  return `/v1/businesses/${businessId}/reports/transactions/exports/excel?${parameters}`
-})
-
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-},
-) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: ['#bank-transactions-download-excel'],
-    } as const
-  }
-}
+const requestBankTransactionsExcel = getAsMutation(getBankTransactionsExcel)
 
 type UseBankTransactionsDownloadOptions = UseBankTransactionsOptions
 
-export function useBankTransactionsDownload() {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-
-  return useSWRMutation<
-    S3PresignedUrl,
-    APIError,
-    () => ReturnType<typeof buildKey>,
-    UseBankTransactionsDownloadOptions>(
-      () => withLocale(buildKey({
-        ...data,
-        businessId,
-      })),
-      (
-        {
-          accessToken,
-          apiUrl,
-          businessId,
-        },
-        {
-          arg: {
-            categorized,
-            direction,
-            query,
-            startDate,
-            endDate,
-            tagFilterQueryString,
-          },
-        }: { arg: UseBankTransactionsDownloadOptions },
-      ) =>
-        getBankTransactionsExcel(
-          apiUrl,
-          accessToken,
-          {
-            params: {
-              businessId,
-              categorized,
-              query,
-              direction,
-              startDate,
-              endDate,
-              tagFilterQueryString,
-            },
-          },
-        )().then(({ data }) => data),
-      {
-        revalidate: false,
-        throwOnError: false,
-      },
-      )
-}
+export const useBankTransactionsDownload = createMutationHook({
+  tags: ['#bank-transactions-download-excel'],
+  request: requestBankTransactionsExcel,
+  argToParams: (arg: UseBankTransactionsDownloadOptions) => arg,
+  argToBody: () => undefined,
+  select: ({ data }: { data: S3PresignedUrl }) => data,
+  swrOptions: { throwOnError: false },
+})

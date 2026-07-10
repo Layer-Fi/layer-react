@@ -7,6 +7,7 @@ import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Banner } from '@ui/Banner/Banner'
@@ -111,18 +112,13 @@ export function SolopreneurOnboardingBanner({ onSetupTaxProfile, plaidHostedLink
 const useSolopreneurOnboardingBannerState = () => {
   const { businessId } = useLayerContext()
   const { data: accountingConfiguration, isLoading: isAccountingConfigLoading } = useAccountingConfiguration({ businessId })
-  const {
-    data: linkedAccounts,
-    isLoading: isLinkedAccountsLoading,
-    loadingStatus: linkedAccountsLoadingStatus,
-    isHostedLinkError,
-  } = useContext(LinkedAccountsContext)
+  const { data: linkedAccounts, loadingStatus: linkedAccountsLoadingStatus } = useBankAccountsContext()
+  const { isHostedLinkError } = useContext(LinkedAccountsContext)
   const { data: taxProfile, isLoading: isTaxProfileLoading } = useTaxProfile()
 
   const isTaxEstimatesEnabled = !!accountingConfiguration?.enableTaxEstimates
 
-  const isLoading = isLinkedAccountsLoading
-    || isAccountingConfigLoading
+  const isLoading = isAccountingConfigLoading
     || (isTaxEstimatesEnabled && isTaxProfileLoading)
     || linkedAccountsLoadingStatus === 'loading'
     || linkedAccountsLoadingStatus === 'initial'

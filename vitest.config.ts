@@ -1,5 +1,5 @@
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vitest/config'
+import { configDefaults, defineConfig } from 'vitest/config'
 
 export default defineConfig({
   plugins: [react()],
@@ -9,6 +9,8 @@ export default defineConfig({
   },
   test: {
     css: true,
+    // Stale agent worktrees under .claude contain their own copies of the suite.
+    exclude: [...configDefaults.exclude, '.claude/**'],
     environment: 'jsdom',
     setupFiles: './vitest.setup.ts',
   },

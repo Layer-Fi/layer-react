@@ -1,4 +1,4 @@
-import { type Key, useMemo } from 'react'
+import { type Key, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
@@ -9,12 +9,12 @@ import {
   BankTransactionSelectionVariant,
   useBankTransactionsCategorizationActions,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
-
-import { Purpose } from './BankTransactionsMobileListItem'
+import { getPurposeFromStore, Purpose } from '@components/BankTransactionsMobileList/purpose'
 
 const PURPOSE_TOGGLE_CONFIG = [
   { value: 'business' as const, ...translationKey('common:label.business', 'Business'), style: { minWidth: 84 } },
@@ -25,29 +25,18 @@ const PURPOSE_TOGGLE_CONFIG = [
 export interface BankTransactionsMobileListItemExpandedRowProps {
   bankTransaction: BankTransaction
   isOpen?: boolean
-
-  purpose: Purpose
-  setPurpose: (value: Purpose) => void
-
-  showCategorization?: boolean
-  showDescriptions: boolean
-  showReceiptUploads: boolean
-  showTooltips: boolean
 }
 
 export const BankTransactionsMobileListItemExpandedRow = ({
   bankTransaction,
   isOpen,
-  purpose,
-  setPurpose,
-  showCategorization,
-  showDescriptions,
-  showReceiptUploads,
-  showTooltips,
 }: BankTransactionsMobileListItemExpandedRowProps) => {
   const { t } = useTranslation()
   const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
   const { setTransactionSelectionVariant } = useBankTransactionsCategorizationActions()
+  const showCategorization = useBankTransactionsIsCategorizationEnabledContext()
+
+  const [purpose, setPurpose] = useState(() => getPurposeFromStore(selectedCategorization))
 
   const purposeToggleOptions = useMemo(
     () => PURPOSE_TOGGLE_CONFIG.map(opt => ({
@@ -57,7 +46,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
     [t],
   )
 
-  const onChangePurpose = (key: Key) => {
+  const onChangePurpose = useCallback((key: Key) => {
     const nextPurpose = key as Purpose
     const isCurrentlySplit = !!selectedCategorization?.category && isSplitAsOption(selectedCategorization.category)
 
@@ -69,27 +58,23 @@ export const BankTransactionsMobileListItemExpandedRow = ({
 
     setTransactionSelectionVariant(bankTransaction.id, nextVariant)
     setPurpose(nextPurpose)
-  }
+  }, [bankTransaction, selectedCategorization.category, setTransactionSelectionVariant])
 
   return (
-    <VStack pi='md' gap='md' pbe='md'>
-      {showCategorization
-        && (
-          <Toggle
-            ariaLabel={t('common:label.purpose', 'Purpose')}
-            options={purposeToggleOptions}
-            selectedKey={purpose}
-            onSelectionChange={onChangePurpose}
-          />
-        )}
+    <VStack pi='sm' gap='md' pbs='4xs' pbe='sm'>
+      {showCategorization && (
+        <Toggle
+          ariaLabel={t('common:label.purpose', 'Purpose')}
+          options={purposeToggleOptions}
+          selectedKey={purpose}
+          onSelectionChange={onChangePurpose}
+        />
+      )}
       <BankTransactionsMobileForms
         isOpen={isOpen}
         purpose={purpose}
         bankTransaction={bankTransaction}
         showCategorization={showCategorization}
-        showDescriptions={showDescriptions}
-        showReceiptUploads={showReceiptUploads}
-        showTooltips={showTooltips}
       />
     </VStack>
 

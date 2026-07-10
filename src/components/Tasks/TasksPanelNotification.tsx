@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next'
 
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { tPlural } from '@utils/i18n/plural'
-import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDatePeriodAlignedActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { P } from '@ui/Typography/Text'
 
 import './tasksPanelNotification.scss'
@@ -21,10 +21,8 @@ export const TasksPanelNotification = ({
   const { t } = useTranslation()
   const { formatNumber, formatDate } = useIntlFormatter()
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
-  const { anyPreviousYearIncomplete, earliestIncompletePeriod } =
-    useBookkeepingYearsStatus()
-  const { disconnectedAccountsRequiringNotification, isLoading } =
-    useListBankAccounts()
+  const { anyPreviousYearIncomplete, earliestIncompletePeriod } = useBookkeepingYearsStatus()
+  const { disconnectedAccountsRequiringNotification, isLoading } = useBankAccountsContext()
 
   if (!isLoading && disconnectedAccountsRequiringNotification > 0) {
     return (

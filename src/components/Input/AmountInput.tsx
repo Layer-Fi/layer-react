@@ -8,6 +8,8 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { getCurrencyFormatConfig } from '@components/Input/amountInputUtils'
 
+import './amountInput.scss'
+
 export interface AmountInputProps extends Omit<CurrencyInputProps, 'onChange' | 'placeholder'> {
   onChange?: (value?: string) => void
   isInvalid?: boolean
@@ -36,14 +38,14 @@ export const AmountInput = ({
   )
 
   const currencyInputClassName = classNames(
-    'Layer__input',
-    isInvalid ? 'Layer__input--error' : '',
+    'Layer__AmountInput',
+    isInvalid ? 'Layer__AmountInput--Error' : '',
     className,
   )
 
   return (
     <Tooltip isDisabled={!isInvalid || !errorMessage}>
-      <TooltipTrigger className='Layer__input-tooltip'>
+      <TooltipTrigger className='Layer__AmountInput__Tooltip'>
         <CurrencyInput
           {...props}
           {...currencyFormatConfig}

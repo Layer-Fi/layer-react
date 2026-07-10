@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { useLedgerBalances } from '@hooks/api/businesses/[business-id]/ledger/balances/useLedgerBalances'
-import { useGlobalDateRange } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 
 type Props = {
   withDates?: boolean
@@ -9,7 +9,10 @@ type Props = {
 
 export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
   const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode: 'month' })
-  const { data, isLoading, isValidating, isError, mutate } = useLedgerBalances(withDates, startDate, endDate)
+  const { data, isLoading, isValidating, isError, mutate } = useLedgerBalances({
+    startDate: withDates ? startDate : undefined,
+    endDate: withDates ? endDate : undefined,
+  })
 
   const refetch = useCallback(async () => {
     await mutate()

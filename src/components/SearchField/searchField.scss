@@ -18,7 +18,7 @@
   }
 
   .Layer__SearchField__Icon {
-    color: var(--input-placeholder-color);
+    color: var(--color-base-500);
 
     &[data-disabled] {
       cursor: not-allowed;

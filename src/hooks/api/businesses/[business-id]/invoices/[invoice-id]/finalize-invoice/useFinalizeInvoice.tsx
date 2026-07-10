@@ -1,19 +1,13 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
-import { useSWRConfig } from 'swr'
-import useSWRMutation from 'swr/mutation'
 
 import { InvoiceSchema } from '@schemas/invoices/invoice'
 import { InvoicePaymentMethodsSchema } from '@schemas/invoices/invoicePaymentMethod'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { put } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { INVOICE_PAYMENT_METHODS_TAG_KEY } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/useInvoicePaymentMethods'
+import { useInvoicePaymentMethodsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/useInvoicePaymentMethods'
 import { useInvoiceSummaryStatsCacheActions } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const FINALIZE_INVOICE_TAG_KEY = '#finalize-invoice'
 
@@ -29,116 +23,38 @@ export const FinalizeInvoiceBodySchema = Schema.extend(
 export type FinalizeInvoiceBody = typeof FinalizeInvoiceBodySchema.Type
 export type FinalizeInvoiceBodyEncoded = typeof FinalizeInvoiceBodySchema.Encoded
 
-export const FinalizeInvoiceResponseSchema = Schema.Struct({
-  data: Schema.extend(
+export const FinalizeInvoiceResponseSchema = UnwrappedDataResponseSchema(
+  Schema.extend(
     InvoicePaymentMethodsSchema,
     Schema.Struct({
       invoice: InvoiceSchema,
     }),
   ),
-})
-
-type FinalizeInvoiceResponse = typeof FinalizeInvoiceResponseSchema.Type
+)
 
 export const finalizeInvoice = put<
-  FinalizeInvoiceResponse,
+  typeof FinalizeInvoiceResponseSchema.Encoded,
   FinalizeInvoiceBodyEncoded,
   { businessId: string, invoiceId: string }
 >(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/finalize-invoice`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  invoiceId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  invoiceId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      invoiceId,
-      tags: [FINALIZE_INVOICE_TAG_KEY],
-    } as const
-  }
-}
+export const useFinalizeInvoice = createMutationHook({
+  tags: [FINALIZE_INVOICE_TAG_KEY],
+  request: finalizeInvoice,
+  keyParams: ['invoiceId'],
+  schema: FinalizeInvoiceResponseSchema,
+  swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { patchByKey: patchInvoiceByKey } = useInvoicesGlobalCacheActions()
+    const { forceReload: forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()
+    const { forceReload: forceReloadInvoicePaymentMethods } = useInvoicePaymentMethodsGlobalCacheActions()
 
-type UseFinalizeInvoiceProps = {
-  invoiceId: string
-}
-
-export function useFinalizeInvoice({ invoiceId }: UseFinalizeInvoiceProps) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-  const { mutate } = useSWRConfig()
-
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-      invoiceId,
-    })),
-    (
-      { accessToken, apiUrl, businessId, invoiceId },
-      { arg: body }: { arg: FinalizeInvoiceBodyEncoded },
-    ) => finalizeInvoice(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId, invoiceId },
-        body,
-      },
-    ).then(Schema.decodeUnknownPromise(FinalizeInvoiceResponseSchema)),
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
-
-  const { patchInvoiceByKey } = useInvoicesGlobalCacheActions()
-  const { forceReloadInvoiceSummaryStats } = useInvoiceSummaryStatsCacheActions()
-
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      void patchInvoiceByKey(triggerResult.data.invoice)
+    return (data) => {
+      void patchInvoiceByKey(data.invoice)
 
       void forceReloadInvoiceSummaryStats()
 
-      void mutate(key => withSWRKeyTags(
-        key,
-        ({ tags }) => tags.includes(INVOICE_PAYMENT_METHODS_TAG_KEY),
-      ))
-
-      return triggerResult
-    },
-    [
-      originalTrigger,
-      patchInvoiceByKey,
-      forceReloadInvoiceSummaryStats,
-      mutate,
-    ],
-  )
-
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
-}
+      void forceReloadInvoicePaymentMethods()
+    }
+  },
+})

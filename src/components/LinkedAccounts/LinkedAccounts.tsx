@@ -1,11 +1,10 @@
-import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
 import { AccountConfirmationStoreProvider } from '@providers/AccountConfirmationStoreProvider'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { OpeningBalanceModalProvider } from '@providers/OpeningBalanceModalProvider/OpeningBalanceModalProvider'
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Container } from '@components/Container/Container'
@@ -53,12 +52,7 @@ export const LinkedAccountsComponent = ({
   stringOverrides,
 }: LinkedAccountsProps) => {
   const { t } = useTranslation()
-  const {
-    isLoading,
-    error,
-    isValidating,
-    refetchAccounts,
-  } = useContext(LinkedAccountsContext)
+  const { isLoading, isError, isValidating, refetch } = useBankAccountsContext()
 
   return (
     <Container name={COMPONENT_NAME} elevated={elevated}>
@@ -77,18 +71,18 @@ export const LinkedAccountsComponent = ({
           <Loader />
         </div>
       )}
-      {error && !isLoading
+      {isError && !isLoading
         ? (
           <DataState
             status={DataStateStatus.failed}
             title={t('common:error.something_went_wrong', 'Something went wrong')}
             description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
-            onRefresh={() => void refetchAccounts()}
+            onRefresh={() => void refetch()}
             isLoading={isValidating}
           />
         )
         : null}
-      {!error && !isLoading
+      {!isError && !isLoading
         ? (
           <LinkedAccountsContent
             asWidget={asWidget}

@@ -1,7 +1,6 @@
 import { type ReactNode, useCallback, useContext, useMemo } from 'react'
 
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
-import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import {
   ProfitAndLossSummariesList,
@@ -37,7 +36,6 @@ type SummariesContentProps = {
   tiles: SummariesTiles
   actionable?: boolean
   chartColorsList?: string[]
-  variants?: Variants
   slots?: {
     unstable_AdditionalListItems?: [ReactNode]
   }
@@ -48,7 +46,6 @@ export function SummariesContent({
   tiles,
   actionable = false,
   chartColorsList,
-  variants,
   slots,
 }: SummariesContentProps) {
   const { sidebarScope, setSidebarScope } = useContext(ProfitAndLossContext)
@@ -77,8 +74,8 @@ export function SummariesContent({
   const renderChart = useCallback((chartData: PnlChartLineItem[] | undefined) => {
     if (!chartData) return null
 
-    return <ProfitAndLossSummariesMiniChart data={chartData} chartColorsList={chartColorsList} variants={variants} />
-  }, [chartColorsList, variants])
+    return <ProfitAndLossSummariesMiniChart data={chartData} chartColorsList={chartColorsList} />
+  }, [chartColorsList])
 
   return (
     <section className='Layer__component Layer__ProfitAndLossSummaries'>
@@ -107,7 +104,6 @@ export function SummariesContent({
               comparisonMonth={comparisonMonth ?? undefined}
               isExpense={isExpense}
               mode={mode}
-              variants={variants}
               slots={{
                 Chart: renderChart(chartData),
                 Footer: config.renderFooter?.(breakdown, isLoading),

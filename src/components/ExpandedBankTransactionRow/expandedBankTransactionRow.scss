@@ -15,8 +15,8 @@
   overflow: hidden;
   background-color: var(--bg-element-focus);
   transition:
-    background-color var(--transition-speed) ease-in-out,
-    height var(--transition-speed) ease-in-out;
+    background-color 300ms ease-in-out,
+    height 300ms ease-in-out;
 }
 
 .Layer__expanded-bank-transaction-row .Layer__expanded-bank-transaction-row__wrapper {
@@ -24,7 +24,7 @@
   flex-direction: column;
   gap: var(--spacing-sm);
   overflow: hidden;
-  transition: height var(--transition-speed) ease-in-out;
+  transition: height 300ms ease-in-out;
 }
 
 .Layer__expanded-bank-transaction-row__content {
@@ -72,11 +72,6 @@
   }
 
   &:not(.Layer__expanded-bank-transaction-row__content-panel--active) {
-    .Layer__select .Layer__select__control {
-      overflow: hidden;
-      max-width: 0;
-    }
-
     .Layer__expanded-bank-transaction-row__table-cell--split-entry {
       overflow: hidden;
       max-width: 0;
@@ -249,7 +244,7 @@
   }
 }
 
-.Layer__expanded-bank-transaction-row__splits-inputs .Layer__input {
+.Layer__expanded-bank-transaction-row__splits-inputs .Layer__AmountInput {
   text-align: right;
 }
 
@@ -259,11 +254,11 @@
 
 @container (min-width: 401px) {
   .Layer__expanded-bank-transaction-row__total-and-btns .Layer__expanded-bank-transaction-row__total-input,
-  .Layer__expanded-bank-transaction-row__table-cell--split-entry .Layer__input-tooltip {
+  .Layer__expanded-bank-transaction-row__table-cell--split-entry .Layer__AmountInput__Tooltip {
     flex: 1;
     max-width: 12rem;
 
-    .Layer__input {
+    .Layer__AmountInput {
       width: 100%;
     }
   }

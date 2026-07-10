@@ -1,11 +1,6 @@
-import { useCallback } from 'react'
-import { Schema } from 'effect'
-import useSWRInfinite from 'swr/infinite'
-
 import type {
   CallBooking,
   CreateCallBookingBody,
-  ListCallBookingsResponse,
 } from '@schemas/callBooking'
 import {
   CallBookingPurpose,
@@ -13,14 +8,9 @@ import {
   CallBookingType,
   ListCallBookingsResponseSchema,
 } from '@schemas/callBooking'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
+import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 export type { CallBooking, CreateCallBookingBody }
 export { CallBookingPurpose, CallBookingState, CallBookingType }
@@ -31,91 +21,25 @@ type ListCallBookingsParams = {
   limit?: number
 }
 
-const listCallBookings = get<
-  Record<string, unknown>,
+const listCallBookings = getWithQuery<
+  typeof ListCallBookingsResponseSchema.Encoded,
   ListCallBookingsParams
->(({ businessId, cursor, limit }) => {
-  const parameters = toDefinedSearchParameters({
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/call-bookings`,
+  ({ cursor, limit }) => ({
     cursor,
     limit,
     status: 'SCHEDULED',
-  })
-
-  return `/v1/businesses/${businessId}/call-bookings?${parameters}`
-})
-
-function keyLoader(
-  previousPageData: ListCallBookingsResponse | null,
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    limit,
-  }: {
-    access_token?: string
-    apiUrl?: string
-    businessId: string
-    limit?: number
-  },
-) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      cursor: previousPageData?.meta.pagination.cursor ?? undefined,
-      limit,
-      tags: [CALL_BOOKINGS_TAG_KEY],
-    } as const
-  }
-}
-
-export function useCallBookings({ limit }: { limit?: number } = {}) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
-
-  const swrResponse = useSWRInfinite(
-    (_index, previousPageData: ListCallBookingsResponse | null) => withLocale(keyLoader(
-      previousPageData,
-      {
-        ...auth,
-        businessId,
-        limit,
-      },
-    )),
-    ({ accessToken, apiUrl, businessId, cursor, limit }) => listCallBookings(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          cursor,
-          limit,
-        },
-      },
-    )().then(Schema.decodeUnknownPromise(ListCallBookingsResponseSchema)),
-    {
-      keepPreviousData: true,
-      revalidateFirstPage: false,
-      initialSize: 1,
-    },
-  )
-
-  usePreserveInfiniteSize(swrResponse)
-
-  return new SWRInfiniteResult(swrResponse)
-}
+  }),
+)
 
 export const CALL_BOOKINGS_TAG_KEY = '#call-bookings'
 
-export function useCallBookingsGlobalCacheActions() {
-  const { forceReload } = useGlobalCacheActions()
+export const useCallBookings = createInfiniteQueryHook({
+  tags: [CALL_BOOKINGS_TAG_KEY],
+  request: listCallBookings,
+  schema: ListCallBookingsResponseSchema,
+})
 
-  const forceReloadCallBookings = useCallback(
-    () => forceReload(({ tags }) => tags.includes(CALL_BOOKINGS_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { forceReloadCallBookings }
-}
+export const useCallBookingsGlobalCacheActions = createInfiniteQueryGlobalCacheActions<CallBooking>(CALL_BOOKINGS_TAG_KEY)

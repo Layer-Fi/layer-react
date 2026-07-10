@@ -9,7 +9,6 @@ export const BankTransactionsContext =
   createContext<BankTransactionsContextType>({
     data: undefined,
     isLoading: false,
-    isValidating: false,
     isError: false,
     updateLocalBankTransactions: () => undefined,
     shouldHideAfterCategorize: false,

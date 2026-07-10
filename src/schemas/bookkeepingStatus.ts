@@ -11,7 +11,7 @@ const TransformedBookkeepingStatusSchema = createTransformedEnumSchema(
   BookkeepingStatus.NOT_PURCHASED,
 )
 
-const BookkeepingStatusDataSchema = Schema.Struct({
+export const BookkeepingStatusDataSchema = Schema.Struct({
   status: TransformedBookkeepingStatusSchema,
 
   showEmbeddedOnboarding: pipe(
@@ -26,9 +26,3 @@ const BookkeepingStatusDataSchema = Schema.Struct({
 })
 
 export type BookkeepingStatusData = typeof BookkeepingStatusDataSchema.Type
-
-export const BookkeepingStatusResponseSchema = Schema.Struct({
-  data: BookkeepingStatusDataSchema,
-})
-
-export type BookkeepingStatusResponse = typeof BookkeepingStatusResponseSchema.Type

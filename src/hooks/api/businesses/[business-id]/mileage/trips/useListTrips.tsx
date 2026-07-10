@@ -1,17 +1,8 @@
-import { useCallback } from 'react'
-import { Schema } from 'effect'
-import useSWRInfinite from 'swr/infinite'
-
-import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type Trip, TripSchema } from '@schemas/trip'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
+import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 export const LIST_TRIPS_TAG_KEY = '#list-trips'
 
@@ -22,133 +13,35 @@ export type ListTripsFilterParams = {
   year?: number
 }
 
-const ListTripsResponseSchema = Schema.Struct({
-  data: Schema.Array(TripSchema),
-  meta: Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  }),
-})
-type ListTripsResponse = typeof ListTripsResponseSchema.Type
-
-function keyLoader(
-  previousPageData: ListTripsResponse | null,
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    query,
-    vehicleId,
-    purpose,
-    year,
-  }: {
-    access_token?: string
-    apiUrl?: string
-    businessId: string
-    query?: string
-    vehicleId?: string
-    purpose?: string
-    year?: number
-  },
-) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      cursor: previousPageData?.meta?.pagination.cursor ?? undefined,
-      query,
-      vehicleId,
-      purpose,
-      year,
-      tags: [LIST_TRIPS_TAG_KEY],
-    } as const
-  }
+type ListTripsParams = ListTripsFilterParams & {
+  businessId: string
+  cursor?: string
+  limit?: number
 }
 
-const listTrips = get<
+const ListTripsResponseSchema = PaginatedResponseSchema(TripSchema)
+
+const listTrips = getWithQuery<
   typeof ListTripsResponseSchema.Encoded,
-  { businessId: string, cursor?: string, limit?: number, query?: string, vehicleId?: string, purpose?: string, year?: number }
->(({ businessId, cursor, limit, query, vehicleId, purpose, year }) => {
-  const parameters = toDefinedSearchParameters({
+  ListTripsParams
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/mileage/trips`,
+  ({ cursor, limit, query, vehicleId, purpose, year }) => ({
     cursor,
     limit,
     q: query,
     vehicle_ids: vehicleId,
     purpose,
     year,
-  })
-  const baseUrl = `/v1/businesses/${businessId}/mileage/trips`
-  return parameters ? `${baseUrl}?${parameters}` : baseUrl
+  }),
+)
+
+export const useListTrips = createInfiniteQueryHook({
+  tags: [LIST_TRIPS_TAG_KEY],
+  request: listTrips,
+  schema: ListTripsResponseSchema,
+  keyDefaults: { limit: 200 },
 })
 
-export function useListTrips(filterParams: ListTripsFilterParams = {}) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-
-  const swrResponse = useSWRInfinite(
-    (_index, previousPageData: ListTripsResponse | null) => withLocale(keyLoader(
-      previousPageData,
-      {
-        ...data,
-        businessId,
-        ...filterParams,
-      },
-    )),
-    ({ accessToken, apiUrl, businessId, cursor, query, vehicleId, purpose, year }) => listTrips(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          cursor,
-          limit: 200,
-          query,
-          vehicleId,
-          purpose,
-          year,
-        },
-      },
-    )().then(Schema.decodeUnknownPromise(ListTripsResponseSchema)),
-    {
-      keepPreviousData: true,
-      revalidateFirstPage: false,
-      initialSize: 1,
-    },
-  )
-
-  usePreserveInfiniteSize(swrResponse)
-
-  return new SWRInfiniteResult(swrResponse)
-}
-
-const withUpdatedTrip = (updated: Trip) =>
-  (trip: Trip): Trip => trip.id === updated.id ? updated : trip
-
-export function useTripsGlobalCacheActions() {
-  const { patchCache, forceReload } = useGlobalCacheActions()
-
-  const patchTripByKey = useCallback((updatedTrip: Trip) =>
-    patchCache<ListTripsResponse[] | ListTripsResponse | undefined>(
-      ({ tags }) => tags.includes(LIST_TRIPS_TAG_KEY),
-      (currentData) => {
-        const iterateOverPage = (page: ListTripsResponse): ListTripsResponse => ({
-          ...page,
-          data: page.data.map(withUpdatedTrip(updatedTrip)),
-        })
-
-        return Array.isArray(currentData)
-          ? currentData.map(iterateOverPage)
-          : currentData
-      },
-    ),
-  [patchCache],
-  )
-
-  const forceReloadTrips = useCallback(
-    () => forceReload(({ tags }) => tags.includes(LIST_TRIPS_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { patchTripByKey, forceReloadTrips }
-}
+export const useTripsGlobalCacheActions = createInfiniteQueryGlobalCacheActions<Trip>(LIST_TRIPS_TAG_KEY)

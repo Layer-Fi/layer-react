@@ -7,15 +7,15 @@ import { CounterpartyComboBoxOption } from '@components/CategorizationRules/Cate
 
 export const useCounterpartyOptions = (value: BankTransactionCounterparty | null) => {
   const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: '' })
-  const { data, isLoading, isError } = useListCounterparties({
+  const { flattenedData, isLoading, isError } = useListCounterparties({
     q: searchQuery || undefined,
     limit: 50,
   })
 
   const fetchedOptions = useMemo<ReadonlyArray<CounterpartyComboBoxOption>>(() => {
-    if (!data) return []
-    return data.flatMap(({ data: page }) => page.map(counterparty => new CounterpartyComboBoxOption(counterparty)))
-  }, [data])
+    if (!flattenedData) return []
+    return flattenedData.map(counterparty => new CounterpartyComboBoxOption(counterparty))
+  }, [flattenedData])
 
   const options = useMemo<ReadonlyArray<CounterpartyComboBoxOption>>(() => {
     if (!value) return fetchedOptions

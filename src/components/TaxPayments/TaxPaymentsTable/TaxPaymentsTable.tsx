@@ -7,7 +7,7 @@ import { type TaxPaymentRow } from '@schemas/taxEstimates/payments'
 import { asMutable } from '@utils/asMutable'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
+import { type ColumnConfig } from '@components/DataTable/utils/column'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
 import { ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { type CommonTaxPaymentsListProps } from '@components/TaxPayments/utils'
@@ -26,7 +26,7 @@ enum TaxPaymentColumns {
 
 type TaxPaymentRowType = Row<TaxPaymentRow>
 
-const getColumnConfig = (t: TFunction): NestedColumnConfig<TaxPaymentRow> => [
+const getColumnConfig = (t: TFunction): ColumnConfig<TaxPaymentRow> => [
   {
     id: TaxPaymentColumns.Quarter,
     header: t('taxEstimates:label.quarter', 'Quarter'),

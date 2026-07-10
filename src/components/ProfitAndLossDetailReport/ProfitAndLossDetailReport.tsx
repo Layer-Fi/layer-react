@@ -9,7 +9,6 @@ import type { PnlDetailLine } from '@hooks/api/businesses/[business-id]/reports/
 import { useProfitAndLossDetailLines } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/lines/useProfitAndLossDetailLines'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -18,7 +17,7 @@ import { Label, Span } from '@ui/Typography/Text'
 import { Badge } from '@components/Badge/Badge'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
+import type { ColumnConfig } from '@components/DataTable/utils/column'
 import { DateTime } from '@components/DateTime/DateTime'
 import { type BreadcrumbItem, DetailReportBreadcrumb } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
 import { EntryDetailField, EntryDetailSection } from '@components/LedgerEntryDetails/EntryDetailSection'
@@ -91,7 +90,6 @@ export const ProfitAndLossDetailReport = ({
 }: ProfitAndLossDetailReportProps) => {
   const { t } = useTranslation()
   const { formatDateRange } = useIntlFormatter()
-  const { businessId } = useLayerContext()
   const { tagFilter, dateRange } = useContext(ProfitAndLossContext)
   const [selectedSource, setSelectedSource] = useState<LedgerEntrySourceType | null>(null)
 
@@ -111,11 +109,11 @@ export const ProfitAndLossDetailReport = ({
   }, [breadcrumbPath, lineItemName])
 
   const { data, isLoading, isError } = useProfitAndLossDetailLines({
-    businessId,
     startDate: dateRange.startDate,
     endDate: dateRange.endDate,
     pnlStructureLineItemName: lineItemName,
     tagFilter,
+    isEnabled: Boolean(dateRange.startDate && dateRange.endDate && lineItemName),
   })
 
   const handleSourceClick = useCallback((source: LedgerEntrySourceType) => {
@@ -147,7 +145,7 @@ export const ProfitAndLossDetailReport = ({
   }, [data?.lines])
 
   type PnlDetailRowType = Row<ProcessedPnlDetailLine>
-  const columnConfig: NestedColumnConfig<ProcessedPnlDetailLine> = useMemo(() => [
+  const columnConfig: ColumnConfig<ProcessedPnlDetailLine> = useMemo(() => [
     {
       id: PnlDetailColumns.Date,
       header: stringOverrides?.dateColumnHeader || t('common:label.date', 'Date'),

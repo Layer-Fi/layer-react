@@ -1,126 +1,38 @@
-import { useCallback } from 'react'
-import { Schema } from 'effect'
-import useSWR from 'swr'
-
 import { type CatalogService, CatalogServiceSchema } from '@schemas/catalogService'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
+import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
-export const CATALOG_SERVICES_TAG_KEY = '#catalog-services'
 const LIST_CATALOG_SERVICES_TAG_KEY = '#list-catalog-services'
 
-const ListCatalogServicesResponseSchema = Schema.Struct({
-  data: Schema.Array(CatalogServiceSchema),
-})
-type ListCatalogServicesResponse = typeof ListCatalogServicesResponseSchema.Type
+const ListCatalogServicesResultSchema = PaginatedResponseSchema(CatalogServiceSchema)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  allowArchived,
-  isEnabled = true,
-}: {
-  access_token?: string
-  apiUrl?: string
+type ListCatalogServicesParams = {
   businessId: string
   allowArchived?: boolean
-  isEnabled?: boolean
-}) {
-  if (!isEnabled) {
-    return
-  }
-
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      allowArchived,
-      tags: [CATALOG_SERVICES_TAG_KEY, LIST_CATALOG_SERVICES_TAG_KEY],
-    } as const
-  }
+  cursor?: string
 }
 
-const listCatalogServices = get<
-  typeof ListCatalogServicesResponseSchema.Encoded,
-  { businessId: string, allowArchived?: boolean }
->(({ businessId, allowArchived }) => {
-  const parameters = toDefinedSearchParameters({ allowArchived })
-  return `/v1/businesses/${businessId}/catalog/services?${parameters}`
-})
+const listCatalogServices = getWithQuery<
+  typeof ListCatalogServicesResultSchema.Encoded,
+  ListCatalogServicesParams
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/catalog/services`,
+)
 
 export type UseListCatalogServicesOptions = {
   allowArchived?: boolean
   isEnabled?: boolean
 }
 
-export class ListCatalogServicesSWRResponse extends SWRQueryResult<ListCatalogServicesResponse> {
-  get error(): unknown {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return this.swrResponse.error
-  }
-}
+export const useListCatalogServices = createInfiniteQueryHook({
+  tags: [LIST_CATALOG_SERVICES_TAG_KEY],
+  request: listCatalogServices,
+  schema: ListCatalogServicesResultSchema,
+})
 
-export function useListCatalogServices({
-  allowArchived,
-  isEnabled = true,
-}: UseListCatalogServicesOptions = {}): ListCatalogServicesSWRResponse {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-
-  const response = useSWR(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-      allowArchived,
-      isEnabled,
-    })),
-    ({ accessToken, apiUrl, businessId, allowArchived: allowArchivedParam }) => listCatalogServices(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId, allowArchived: allowArchivedParam },
-      },
-    )().then(Schema.decodeUnknownPromise(ListCatalogServicesResponseSchema)),
-  )
-
-  return new ListCatalogServicesSWRResponse(response)
-}
-
-export const useCatalogServicesGlobalCacheActions = () => {
-  const { patchCache, forceReload } = useGlobalCacheActions()
-
-  const patchCatalogServiceByKey = useCallback((updatedService: CatalogService) =>
-    patchCache<ListCatalogServicesResponse | undefined>(
-      ({ tags }) => tags.includes(LIST_CATALOG_SERVICES_TAG_KEY),
-      (currentData) => {
-        if (!currentData) {
-          return currentData
-        }
-
-        return {
-          ...currentData,
-          data: currentData.data.map(service => service.id === updatedService.id ? updatedService : service),
-        }
-      },
-    ),
-  [patchCache],
-  )
-
-  const forceReloadCatalogServices = useCallback(
-    () => forceReload(({ tags }) => tags.includes(CATALOG_SERVICES_TAG_KEY)),
-    [forceReload],
-  )
-
-  return {
-    patchCatalogServiceByKey,
-    forceReloadCatalogServices,
-  }
-}
+export const useCatalogServicesGlobalCacheActions = createInfiniteQueryGlobalCacheActions<
+  CatalogService
+>(LIST_CATALOG_SERVICES_TAG_KEY)

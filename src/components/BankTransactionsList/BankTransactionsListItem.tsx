@@ -14,10 +14,10 @@ import { useGetBankTransactionMatchOrCategoryWithDefault } from '@hooks/features
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
 import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+import { useBankTransactionsStringOverrides } from '@contexts/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { SubmitAction } from '@ui/Button/SubmitButton'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
@@ -26,9 +26,6 @@ import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import {
-  type BankTransactionCTAStringOverrides,
-} from '@components/BankTransactions/BankTransactions'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
 import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankTransactionsSubmitButton'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
@@ -39,25 +36,14 @@ import { ErrorText } from '@components/Typography/ErrorText'
 import './bankTransactionsListItem.scss'
 
 type BankTransactionsListItemProps = {
-  index: number
   bankTransaction: BankTransaction
-  stringOverrides?: BankTransactionCTAStringOverrides
-
-  showDescriptions: boolean
-  showReceiptUploads: boolean
-  showTooltips: boolean
 }
 
 export const BankTransactionsListItem = ({
-  index,
   bankTransaction,
-  stringOverrides,
-
-  showDescriptions,
-  showReceiptUploads,
-  showTooltips,
 }: BankTransactionsListItemProps) => {
   const { t } = useTranslation()
+  const { bankTransactionCTAs: stringOverrides } = useBankTransactionsStringOverrides()
   const { formatDate } = useIntlFormatter()
   const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
   const [openExpandedRow, setOpenExpandedRow] = useState(false)
@@ -71,13 +57,8 @@ export const BankTransactionsListItem = ({
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
   const categorized = isCategorized(bankTransaction)
-
   const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction })
-
-  // Keep showing as uncategorized during removal animation to prevent UI flashing
   const displayAsCategorized = isBeingRemoved ? false : categorized
-
-  const { isVisible } = useDelayedVisibility({ delay: index * 80 })
 
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
@@ -107,11 +88,10 @@ export const BankTransactionsListItem = ({
   const rowClassName = classNames(
     'Layer__bank-transaction-list-item',
     openExpandedRow ? openClassName : '',
-    isVisible ? 'show' : '',
   )
 
   return (
-    <AnimatedPresenceElement as='li' variant='fade' isOpen={!isBeingRemoved} motionKey={bankTransaction.id} className={rowClassName} onClick={toggleExpandedRow}>
+    <AnimatedPresenceElement as='li' variant='fade' isPresent={!isBeingRemoved} motionKey={bankTransaction.id} className={rowClassName} onClick={toggleExpandedRow}>
       <span className='Layer__bank-transaction-list-item__heading'>
         <div className='Layer__bank-transaction-list-item__heading__main'>
           <Span ellipsis size='sm'>
@@ -178,16 +158,10 @@ export const BankTransactionsListItem = ({
           </span>
         )}
       <span className='Layer__bank-transaction-list-item__expanded-row' onClick={preventRowExpansion}>
-        <AnimatedPresenceElement variant='expand' isOpen={openExpandedRow} motionKey={`${bankTransaction.id}--expanded`}>
+        <AnimatedPresenceElement variant='expand' isPresent={openExpandedRow} motionKey={`${bankTransaction.id}--expanded`}>
           <ExpandedBankTransactionRow
             bankTransaction={bankTransaction}
-            isOpen={openExpandedRow}
-            categorized={displayAsCategorized}
             asListItem
-            showDescriptions={showDescriptions}
-            showReceiptUploads={showReceiptUploads}
-            showTooltips={showTooltips}
-
             variant='list'
             onValidityChange={setIsExpandedRowValid}
           />
@@ -224,9 +198,7 @@ export const BankTransactionsListItem = ({
         </div>
       )}
       {!openExpandedRow && displayAsCategorized && (
-        <BankTransactionsListItemCategory
-          bankTransaction={bankTransaction}
-        />
+        <BankTransactionsListItemCategory bankTransaction={bankTransaction} categorized />
       )}
       {isError
         && (

@@ -12,9 +12,10 @@ import { errorHandler, type LayerError } from '@utils/api/errorHandler'
 import { buildColorsPalette } from '@utils/colors'
 import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
 import { useBusiness } from '@hooks/api/businesses/[business-id]/useBusiness'
-import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { type LayerEvent } from '@providers/LayerProvider/layerEvents'
 import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
+import { BankAccountsProvider } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { LayerContext } from '@contexts/LayerContext/LayerContext'
 import { type ToastProps, ToastsContainer } from '@components/Toast/Toast'
 
@@ -225,7 +226,9 @@ export const BusinessProvider = ({
         dateRange,
       }}
     >
-      {children}
+      <BankAccountsProvider>
+        {children}
+      </BankAccountsProvider>
       <ToastsContainer />
     </LayerContext.Provider>
   )

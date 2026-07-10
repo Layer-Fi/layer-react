@@ -7,6 +7,7 @@ import { type AccountConfirmExcludeFormState, useConfirmAndExcludeMultiple } fro
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useAccountConfirmationStore } from '@providers/AccountConfirmationStoreProvider'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { Button } from '@ui/Button/Button'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import { Modal } from '@ui/Modal/Modal'
@@ -19,7 +20,8 @@ import { ConditionalList } from '@components/utility/ConditionalList'
 import './linkedAccountsConfirmationModal.scss'
 
 function useLinkedAccountsConfirmationModal() {
-  const { data, refetchAccounts } = useLinkedAccounts()
+  const { data } = useBankAccountsContext()
+  const { refetchAccountsAndTransactions } = useLinkedAccounts()
   const accountsNeedingConfirmation = getAccountsNeedingConfirmation(data ?? [])
 
   const {
@@ -35,7 +37,7 @@ function useLinkedAccountsConfirmationModal() {
     accounts: accountsNeedingConfirmation,
     onDismiss: dismissAccountConfirmation,
     onFinish: resetAccountConfirmation,
-    refetchAccounts,
+    refetchAccountsAndTransactions,
   }
 
   if (mainIsOpen) {
@@ -88,13 +90,13 @@ function LinkedAccountsConfirmationModalPreloadedContent({ onClose }: { onClose:
 function LinkedAccountsConfirmationModalContent({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
-  const { accounts, onFinish, refetchAccounts } = useLinkedAccountsConfirmationModal()
+  const { accounts, onFinish, refetchAccountsAndTransactions } = useLinkedAccountsConfirmationModal()
 
   const [formState, setFormState] = useState(() => Object.fromEntries(
     accounts.map(({ id }) => [id, true]),
   ))
 
-  const { trigger, isMutating, isError } = useConfirmAndExcludeMultiple({ onSuccess: refetchAccounts })
+  const { trigger, isMutating, isError } = useConfirmAndExcludeMultiple({ onSuccess: refetchAccountsAndTransactions })
 
   const handleFinish = async () => {
     const success = await trigger(formState)

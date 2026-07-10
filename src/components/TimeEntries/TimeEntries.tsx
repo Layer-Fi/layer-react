@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Clock, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -73,18 +73,8 @@ const TimeEntriesContent = ({ filterParams }: Pick<TimeEntriesProps, 'filterPara
     ...(selectedServiceId && { serviceId: selectedServiceId }),
   }), [filterParams, selectedCustomer, selectedServiceId])
 
-  const { data, isLoading, isError, size, setSize } = useListTimeEntries(timeEntriesFilterParams)
-  const entries = useMemo(() => data?.flatMap(({ data }) => data), [data])
+  const { data, flattenedData: entries, isLoading, isError, hasMore, fetchMore } = useListTimeEntries(timeEntriesFilterParams)
   const autoResetPageIndexRef = useAutoResetPageIndex(timeEntriesFilterParams, data)
-
-  const paginationMeta = data?.[data.length - 1]?.meta.pagination
-  const hasMore = paginationMeta?.hasMore
-
-  const fetchMore = useCallback(() => {
-    if (hasMore) {
-      void setSize(size + 1)
-    }
-  }, [hasMore, setSize, size])
 
   const tableSlots = useMemo(
     () => ({

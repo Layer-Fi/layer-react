@@ -14,7 +14,7 @@ import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { Card } from '@components/Card/Card'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
+import { type ColumnConfig } from '@components/DataTable/utils/column'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
 import { ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { Loader } from '@components/Loader/Loader'
@@ -92,7 +92,7 @@ const makeAmountCellRenderer = ({ formatNumber, formatPercent }: AmountCellRende
   }
 }
 
-const useColumnConfig = (): NestedColumnConfig<TaxDetailsRow> => {
+const useColumnConfig = (): ColumnConfig<TaxDetailsRow> => {
   const { t } = useTranslation()
   const { formatNumber, formatPercent } = useIntlFormatter()
 

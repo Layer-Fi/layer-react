@@ -1,9 +1,7 @@
-import { useCallback } from 'react'
 import type { BareFetcher, Middleware, SWRHook } from 'swr'
 
 import { setLocaleHeader } from '@utils/api/authenticatedHttp'
 import type { SupportedLocale } from '@utils/i18n/supportedLocale'
-import { useLocale } from '@providers/I18nProvider/LayerI18nProvider'
 
 const createLocalizedFetcher = <Data>(fetcher: BareFetcher<Data> | null) => {
   if (!fetcher) return null
@@ -17,13 +15,4 @@ const createLocalizedFetcher = <Data>(fetcher: BareFetcher<Data> | null) => {
 
 export const localeKeyMiddleware: Middleware = (useSWRNext: SWRHook) => (key, fetcher, config) => {
   return useSWRNext(key, createLocalizedFetcher(fetcher), config)
-}
-
-export const useLocalizedKey = () => {
-  const locale = useLocale()
-
-  return useCallback(<Key extends Record<string, unknown>>(key: Key | null | undefined) => {
-    if (!key) return
-    return { ...key, _locale: locale }
-  }, [locale])
 }

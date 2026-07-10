@@ -1,11 +1,10 @@
-import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { Awaitable } from '@internal-types/utility/promises'
 import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
 import { getAccountsNeedingConfirmation } from '@utils/bankAccount'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { Heading } from '@ui/Typography/Heading'
 import { LinkAccountsConfirmationStep } from '@components/LinkAccounts/LinkAccountsConfirmationStep'
 import { LinkAccountsLinkStep } from '@components/LinkAccounts/LinkAccountsLinkStep'
@@ -16,12 +15,17 @@ import './linkAccounts.scss'
 
 type LinkAccountsProps = {
   onComplete?: () => Awaitable<void>
+  onPlaidConnectionSuccess?: () => Awaitable<void>
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
+  showDoneLinkingButton?: boolean
 }
 
-export function LinkAccounts({ plaidHostedLinkConfig, ...props }: LinkAccountsProps) {
+export function LinkAccounts({ plaidHostedLinkConfig, onPlaidConnectionSuccess, ...props }: LinkAccountsProps) {
   return (
-    <LinkedAccountsProvider plaidHostedLinkConfig={plaidHostedLinkConfig}>
+    <LinkedAccountsProvider
+      plaidHostedLinkConfig={plaidHostedLinkConfig}
+      onPlaidConnectionSuccess={onPlaidConnectionSuccess}
+    >
       <LinkAccountsContent {...props} />
     </LinkedAccountsProvider>
   )
@@ -29,9 +33,10 @@ export function LinkAccounts({ plaidHostedLinkConfig, ...props }: LinkAccountsPr
 
 function LinkAccountsContent({
   onComplete,
-}: LinkAccountsProps) {
+  showDoneLinkingButton = true,
+}: Omit<LinkAccountsProps, 'onPlaidConnectionSuccess' | 'plaidHostedLinkConfig'>) {
   const { t } = useTranslation()
-  const { data: linkedAccounts, loadingStatus } = useContext(LinkedAccountsContext)
+  const { data: linkedAccounts, loadingStatus } = useBankAccountsContext()
 
   const linkedAccountsNeedingConfirmation = linkedAccounts
     ? getAccountsNeedingConfirmation(linkedAccounts)
@@ -53,7 +58,7 @@ function LinkAccountsContent({
         Footer={null}
         onComplete={onComplete}
       >
-        <LinkAccountsLinkStep />
+        <LinkAccountsLinkStep showDoneLinkingButton={showDoneLinkingButton} />
         {hideConfirmationStep ? null : <LinkAccountsConfirmationStep />}
       </Wizard>
     </section>

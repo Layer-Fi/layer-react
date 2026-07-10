@@ -12,7 +12,7 @@ import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
-import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
+import type { ColumnConfig } from '@components/DataTable/utils/column'
 import { PaginatedTable, type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 import { TripsAddressCell } from '@components/Trips/TripAddressCell/TripAddressCell'
 import { TripsTableHeader } from '@components/Trips/TripsTable/TripsTableHeader'
@@ -53,7 +53,7 @@ const TripsDistanceCell = ({ distance }: { distance: Trip['distance'] }) => {
 const getColumnConfig = (
   { onViewOrUpsertTrip, onDeleteTrip }: TripActions,
   t: TFunction,
-): NestedColumnConfig<Trip> => [
+): ColumnConfig<Trip> => [
   {
     id: TripColumns.TripDate,
     header: t('common:label.date', 'Date'),
