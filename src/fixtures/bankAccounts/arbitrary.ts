@@ -15,8 +15,13 @@ export const accountNameKindArbitrary = (fc: typeof FastCheck) =>
 export const balanceTimestampArbitrary = (fc: typeof FastCheck) =>
   amountArbitrary(fc).map(balance => ({ balance }))
 
+/**
+ * Exactly one connection per account: the account's display details are
+ * mirrored onto every connection, so surfaces that render a row per connection
+ * (e.g. the link-accounts confirmation step) would show duplicates otherwise.
+ */
 export const externalAccountsArbitrary = (fc: typeof FastCheck) =>
-  fc.array(Arbitrary.make(externalAccountConnectionSchema), { minLength: 1, maxLength: 2 })
+  fc.array(Arbitrary.make(externalAccountConnectionSchema), { minLength: 1, maxLength: 1 })
 
 export const isDisconnectedArbitrary = (fc: typeof FastCheck) =>
   fc.oneof(
