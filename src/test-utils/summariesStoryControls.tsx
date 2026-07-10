@@ -9,7 +9,6 @@ import {
 export type SummariesStoryArgs = {
   reportingVariant: 'profitAndLoss' | 'cashflow'
   showProfitAndLossBreakdown: boolean
-  summariesSize: 'default' | 'sm' | 'lg'
   revenueLabel: string
   expensesLabel: string
   netProfitLabel: string
@@ -21,7 +20,6 @@ export type SummariesStoryArgs = {
 export const summariesStoryDefaultArgs: SummariesStoryArgs = {
   reportingVariant: 'profitAndLoss',
   showProfitAndLossBreakdown: true,
-  summariesSize: 'default',
   revenueLabel: '',
   expensesLabel: '',
   netProfitLabel: '',
@@ -85,16 +83,6 @@ export const makeSummariesStoryControls = ({ stringOverridesPath, slotPropsPath,
         type: { summary: 'boolean' },
       },
     },
-    summariesSize: {
-      name: 'variants.size',
-      control: 'radio',
-      options: ['default', 'sm', 'lg'],
-      description: `The real prop is \`${slotPropsPath}.variants.size\`. Pick 'default' to omit the override.`,
-      table: {
-        category,
-        type: { summary: '\'sm\' | \'lg\'' },
-      },
-    },
     ...stringOverrideArgTypes,
   }
 
@@ -113,7 +101,6 @@ export const buildSummariesReportingVariant = (
 
 export const buildSummariesSlotProps = (args: SummariesStoryArgs): ProfitAndLossSummariesSlotProps => ({
   reportingVariant: buildSummariesReportingVariant(args),
-  variants: args.summariesSize === 'default' ? undefined : { size: args.summariesSize },
 })
 
 export const buildSummariesStringOverrides = (

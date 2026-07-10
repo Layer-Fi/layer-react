@@ -3,15 +3,14 @@ import { getMonth, getYear } from 'date-fns'
 import { Bell, Check, ChevronRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { Variants } from '@utils/styleUtils/sizeVariants'
 import { useProfitAndLossSummaries } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-summaries/useProfitAndLossSummaries'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { Button } from '@ui/Button/Button'
-import { type StackProps, VStack } from '@ui/Stack/Stack'
+import { VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
 import { Badge } from '@components/Badge/Badge'
 import { BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
-import { ProfitAndLossSummariesLabel } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesLabel'
 
 import './transactionsToReview.scss'
 
@@ -23,16 +22,13 @@ type TransactionsToReviewProps = {
     key: string
     values: string[]
   }
-  variants?: Variants
 }
 
 export function TransactionsToReview({
   onClick,
   tagFilter = undefined,
-  variants,
 }: TransactionsToReviewProps) {
   const { t } = useTranslation()
-  const { size = 'sm' } = variants ?? {}
 
   const dateRange = useGlobalDateRange({ dateSelectionMode: 'month' })
 
@@ -102,21 +98,12 @@ export function TransactionsToReview({
     )
   }, [t, hasLoadedData, isError, mutate, numTransactionsToReview])
 
-  let verticalGap: StackProps['gap'] = '3xs'
-  switch (size) {
-    case 'sm':
-      verticalGap = '3xs'
-      break
-    case 'lg':
-      verticalGap = 'sm'
-      break
-  }
   return (
     <div className={CLASS_NAME}>
-      <VStack gap={verticalGap} align='start'>
-        <ProfitAndLossSummariesLabel variants={variants}>
+      <VStack gap='3xs' align='start'>
+        <Span size='sm' weight='bold'>
           {t('bankTransactions:label.transactions_to_review', 'Transactions to review')}
-        </ProfitAndLossSummariesLabel>
+        </Span>
         {transactionsToReviewBadge}
       </VStack>
       <Button

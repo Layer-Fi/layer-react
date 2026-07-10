@@ -30,8 +30,8 @@ export type ProfitAndLossSummariesReportingVariant =
 export type ProfitAndLossSummariesSlotProps = {
   reportingVariant?: ProfitAndLossSummariesReportingVariant
   /**
-   * @deprecated The summaries tiles size themselves responsively to their container;
-   * to adjust sizing, override the `--text-*` font size variables instead.
+   * @deprecated This prop no longer has any effect; the summaries tiles size themselves
+   * responsively to their container. Override the `--text-*` font size variables to adjust sizing.
    */
   variants?: Variants
 }
@@ -42,8 +42,8 @@ type ProfitAndLossSummariesProps = {
   chartColorsList?: string[]
   reportingVariant?: ProfitAndLossSummariesReportingVariant
   /**
-   * @deprecated The summaries tiles size themselves responsively to their container;
-   * to adjust sizing, override the `--text-*` font size variables instead.
+   * @deprecated This prop no longer has any effect; the summaries tiles size themselves
+   * responsively to their container. Override the `--text-*` font size variables to adjust sizing.
    */
   variants?: Variants
   onTransactionsToReviewClick?: () => void
@@ -63,7 +63,6 @@ export function ProfitAndLossSummaries({
   stringOverrides,
   chartColorsList,
   reportingVariant,
-  variants,
   onTransactionsToReviewClick,
 }: ProfitAndLossSummariesProps) {
   const { t } = useTranslation()
@@ -195,13 +194,11 @@ export function ProfitAndLossSummaries({
       tiles={tiles}
       actionable={actionable}
       chartColorsList={chartColorsList}
-      variants={variants}
       slots={{
         unstable_AdditionalListItems: mode === 'profitAndLoss' && onTransactionsToReviewClick
           ? [
             <TransactionsToReview
               key='transactions-to-review'
-              variants={variants}
               onClick={onTransactionsToReviewClick}
             />,
           ]
