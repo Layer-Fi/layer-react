@@ -1,0 +1,103 @@
+name: Storybook Pages
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Storybook target
+        required: true
+        type: choice
+        options:
+        - dev
+        - main
+
+permissions:
+  contents: read
+
+env:
+  STORYBOOK_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+
+concurrency:
+  group: storybook-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    outputs:
+      destination_dir: ${{ steps.pages-target.outputs.destination_dir }}
+      storybook_url: ${{ steps.pages-target.outputs.storybook_url }}
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.target }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Resolve Pages target
+      id: pages-target
+      run: |
+        case "${{ inputs.target }}" in
+          main)
+            echo "destination_dir=" >> "$GITHUB_OUTPUT"
+            echo "storybook_base_path=/${{ github.event.repository.name }}/" >> "$GITHUB_OUTPUT"
+            echo "storybook_url=$STORYBOOK_URL/" >> "$GITHUB_OUTPUT"
+            ;;
+          dev)
+            echo "destination_dir=dev" >> "$GITHUB_OUTPUT"
+            echo "storybook_base_path=/${{ github.event.repository.name }}/dev/" >> "$GITHUB_OUTPUT"
+            echo "storybook_url=$STORYBOOK_URL/dev/" >> "$GITHUB_OUTPUT"
+            ;;
+          *)
+            echo "Unsupported target: ${{ inputs.target }}"
+            exit 1
+            ;;
+        esac
+
+    - name: Build Storybook
+      run: npm run storybook:build
+      env:
+        STORYBOOK_BASE_PATH: ${{ steps.pages-target.outputs.storybook_base_path }}
+
+    - name: Upload Storybook artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: storybook-static
+        path: storybook-static
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+    - name: Download Storybook artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: storybook-static
+        path: storybook-static
+
+    - name: Publish Storybook
+      uses: peaceiris/actions-gh-pages@329bcc8f12caed2cefe5a5b80781499a6f3b361b
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: storybook-static
+        destination_dir: ${{ needs.build.outputs.destination_dir }}
+        keep_files: true
+
+    - name: Pages URL
+      run: echo "${{ needs.build.outputs.storybook_url }}"
