@@ -4,11 +4,16 @@ import type {
   ProfitAndLossSummary,
 } from '@schemas/reports/profitAndLoss'
 
+import {
+  type CategorySplit,
+  COGS_SPLIT,
+  INCOME_SPLIT,
+  OPEX_SPLIT,
+  PROFIT_AND_LOSS_FIXTURE_BUSINESS_ID,
+  PROFIT_AND_LOSS_FIXTURE_START_YEAR,
+} from '@fixtures/profitAndLoss/constants'
 import { schema } from '@fixtures/profitAndLoss/schema'
 import { createGenerator } from '@fixtures/utils/createGenerator'
-
-export const PROFIT_AND_LOSS_FIXTURE_START_YEAR = 2022
-export const PROFIT_AND_LOSS_FIXTURE_BUSINESS_ID = '00000000-0000-4000-8000-000000000201'
 
 const generate = createGenerator(schema)
 
@@ -91,32 +96,6 @@ const makeLineItem = (
   isContra: false,
   lineItems,
 })
-
-type CategorySplit = readonly [name: string, displayName: string, share: number]
-
-const INCOME_SPLIT: readonly CategorySplit[] = [
-  ['SERVICE_REVENUE', 'Services', 0.54],
-  ['PRODUCT_SALES', 'Product Sales', 0.31],
-  ['SHIPPING_INCOME', 'Shipping Income', 0.09],
-  ['INTEREST_INCOME', 'Interest Income', 0.06],
-]
-
-const COGS_SPLIT: readonly CategorySplit[] = [
-  ['MATERIALS', 'Materials & Supplies', 0.58],
-  ['SUBCONTRACTORS', 'Subcontractors', 0.28],
-  ['FREIGHT', 'Freight & Delivery', 0.14],
-]
-
-const OPEX_SPLIT: readonly CategorySplit[] = [
-  ['PAYROLL', 'Payroll', 0.42],
-  ['RENT', 'Rent & Lease', 0.17],
-  ['MARKETING', 'Marketing', 0.12],
-  ['SOFTWARE', 'Software & Subscriptions', 0.09],
-  ['INSURANCE', 'Insurance', 0.07],
-  ['UTILITIES', 'Utilities', 0.05],
-  ['OFFICE_SUPPLIES', 'Office Supplies', 0.04],
-  ['TRAVEL', 'Travel & Meals', 0.04],
-]
 
 const splitIntoLineItems = (total: number, split: readonly CategorySplit[]): LineItem[] => {
   const values = split.map(([, , share]) => Math.round(total * share))

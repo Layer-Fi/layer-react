@@ -6,11 +6,12 @@ import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
 import { handlers } from '@msw/handlers'
 import { makeBusiness } from '@fixtures/business/mocks'
+import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
 
 export const PROFIT_AND_LOSS_PINNED_RANGE: DateRange = {
-  startDate: new Date(2025, 8, 1),
-  endDate: new Date(2025, 8, 30),
+  startDate: new Date(FIXTURE_YEAR, 8, 1),
+  endDate: new Date(FIXTURE_YEAR, 8, 30),
 }
 
 export const profitAndLossStoryHandlers = [

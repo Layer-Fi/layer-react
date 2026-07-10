@@ -6,7 +6,7 @@ import { PnlDetailLinesDataSchema } from '@schemas/reports/profitAndLoss'
 
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { PROFIT_AND_LOSS_FIXTURE_BUSINESS_ID } from '@fixtures/profitAndLoss/mocks'
+import { PROFIT_AND_LOSS_FIXTURE_BUSINESS_ID } from '@fixtures/profitAndLoss/constants'
 
 type PnlDetailLinesData = typeof PnlDetailLinesDataSchema.Type
 type PnlDetailLine = PnlDetailLinesData['lines'][number]
