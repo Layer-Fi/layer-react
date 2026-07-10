@@ -98,7 +98,9 @@
     "transfer_uppercase": "VIREMENT",
     "uncategorize_count_selected_one": "Cette action décatégorisera {{displayCount}} transaction sélectionnée.",
     "uncategorize_count_selected_other": "Cette action décatégorisera {{displayCount}} transactions sélectionnées.",
-    "upload_transactions_or_wait_for_bank_sync": "Importez vos transactions ou attendez qu’elles soient synchronisées depuis votre banque."
+    "upload_transactions_or_wait_for_bank_sync": "Importez vos transactions ou attendez qu’elles soient synchronisées depuis votre banque.",
+    "select_transaction": "Sélectionner l'opération",
+    "transactions": "Opérations"
   },
   "prompt": {
     "categorize_selected_transactions": "Catégoriser toutes les transactions sélectionnées?",
