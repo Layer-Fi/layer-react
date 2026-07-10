@@ -1,6 +1,6 @@
 import { type PropsWithChildren } from 'react'
 import { act, renderHook, waitFor } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { DatePreset, rangeForAllTime } from '@utils/date/dateRangePresets'
 import { createScopedDateStore, type CreateScopedDateStoreOptions } from '@providers/DateStoreProvider/internal/createScopedDateStore'
@@ -151,12 +151,15 @@ describe('createScopedDateStore', () => {
     expect(result.current.datePreset).toBe(DatePreset.ThisYear)
   })
 
-  it('renders the fallback (does not mount the store) when no business context is available', () => {
-    // AllTime needs the business activation date; without a business context the
-    // resolver stays in its loading state and the store is never constructed.
-    const { result } = setupDateStore({ initialDatePreset: DatePreset.AllTime })
+  it('throws when an AllTime store is mounted with no business context', () => {
+    // AllTime can never resolve without a business context, so fail loudly rather
+    // than hang on the fallback. (A present-but-loading business defers instead.)
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
 
-    expect(result.current).toBeNull()
+    expect(() => setupDateStore({ initialDatePreset: DatePreset.AllTime }))
+      .toThrow('An AllTime date store must be mounted within a business context')
+
+    consoleError.mockRestore()
   })
 })
 

@@ -29,8 +29,24 @@ export function useBusinessActivationDateSafe(): Date | undefined {
  * with a wrong value and patched later.
  */
 export function useDerivedInitialDateRange(preset: SelectableDatePreset): ResolvedInitialRange {
-  const activationDate = useBusinessActivationDateSafe()
+  const ctx = useContext(LayerContext)
+  const activationDate = ctx ? getActivationDate(ctx.business) : undefined
   const range = deriveDateRangeFromPreset(preset, activationDate)
 
-  return range ? { status: 'ready', range } : { status: 'loading' }
+  if (range) {
+    return { status: 'ready', range }
+  }
+
+  // `range` is null only for `AllTime` with no activation date. No `LayerContext`
+  // at all means the store is mounted outside a business context (e.g. an AllTime
+  // store above `BusinessProvider`), where it can never resolve — fail loudly
+  // instead of hanging on the fallback forever. A present-but-still-loading
+  // business is the normal deferral case and reports `loading`.
+  if (ctx === undefined) {
+    throw new Error(
+      'An AllTime date store must be mounted within a business context (below BusinessProvider).',
+    )
+  }
+
+  return { status: 'loading' }
 }
