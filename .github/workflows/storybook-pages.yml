@@ -3,13 +3,18 @@ name: Storybook Pages
 on:
   workflow_dispatch:
     inputs:
+      ref:
+        description: Branch, tag, or SHA to build
+        required: true
+        type: string
+        default: main
       target:
-        description: Storybook target
+        description: Pages destination
         required: true
         type: choice
         options:
-        - dev
         - main
+        - dev
 
 permissions:
   contents: read
@@ -32,7 +37,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        ref: ${{ inputs.target }}
+        ref: ${{ inputs.ref }}
         persist-credentials: false
 
     - name: Setup Node.js
