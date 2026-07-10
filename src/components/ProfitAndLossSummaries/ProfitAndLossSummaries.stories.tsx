@@ -47,7 +47,7 @@ const meta: Meta<ProfitAndLossSummariesStoryArgs> = {
     },
   },
   render: ({ actionable, reportingVariant, withTransactionsToReviewCallback }) => (
-    <div className='ProfitAndLossStoryCard'>
+    <div style={{ padding: '1rem', borderRadius: '1rem', border: '1px solid rgb(0 0 0 / 10%)' }}>
       <ProfitAndLossSummaries
         actionable={actionable}
         reportingVariant={reportingVariant}
