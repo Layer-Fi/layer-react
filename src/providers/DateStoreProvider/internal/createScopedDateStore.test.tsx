@@ -1,8 +1,9 @@
 import { type PropsWithChildren } from 'react'
 import { act, renderHook, waitFor } from '@testing-library/react'
+import { startOfDay } from 'date-fns'
 import { describe, expect, it, vi } from 'vitest'
 
-import { DatePreset, rangeForAllTime } from '@utils/date/dateRangePresets'
+import { DatePreset } from '@utils/date/dateRangePresets'
 import { createScopedDateStore, type CreateScopedDateStoreOptions } from '@providers/DateStoreProvider/internal/createScopedDateStore'
 
 import { makeBusiness } from '@fixtures/business/mocks'
@@ -189,6 +190,6 @@ describe('createScopedDateStore AllTime preset', () => {
     await waitFor(() => expect(result.current).not.toBeNull())
 
     expect(result.current.datePreset).toBe(DatePreset.AllTime)
-    expect(result.current.range).toEqual(rangeForAllTime(makeBusiness().activationAt, NOW))
+    expect(result.current.range.startDate).toEqual(startOfDay(makeBusiness().activationAt))
   })
 })

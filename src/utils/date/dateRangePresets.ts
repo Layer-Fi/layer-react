@@ -108,10 +108,10 @@ export function rangeForPreset(preset: RelativeDatePreset, base?: Date): DateRan
  * `rangeForPreset` this needs the activation date, so it is resolved wherever the
  * business context is available (the store resolver and the preset combo box).
  */
-export function rangeForAllTime(activationDate: Date, now?: Date): DateRange {
+export function rangeForAllTime(activationDate: Date): DateRange {
   return correctDateRange({
     startDate: startOfDay(activationDate),
-    endDate: endOfDay(now ?? new Date()),
+    endDate: endOfDay(new Date()),
   })
 }
 
