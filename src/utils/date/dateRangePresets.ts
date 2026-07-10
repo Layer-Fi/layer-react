@@ -147,11 +147,11 @@ export function presetForDateRange(input: DateRange, selectedPreset: DatePreset 
 }
 
 /**
- * Resolves a preset to its concrete range. Relative presets are pure functions of
+ * Derives a concrete date range given a date preset. Relative presets are pure functions of
  * `now`; `AllTime` needs the business activation date and returns `null` when it
  * isn't available yet (so callers can defer/skip rather than show a wrong range).
  */
-export function resolveRangeForPreset(
+export function deriveDateRangeFromPreset(
   preset: Exclude<DatePreset, DatePreset.Custom>,
   activationDate?: Date,
 ): DateRange | null {
@@ -166,7 +166,7 @@ export function resolveRangeForPreset(
  * otherwise a matching relative preset, otherwise `Custom`. `previousPreset` keeps a
  * selection sticky when a range matches more than one candidate.
  */
-export function derivePreset(
+export function derivePresetFromDateRange(
   input: DateRange,
   previousPreset: DatePreset | null = null,
   activationDate?: Date,
