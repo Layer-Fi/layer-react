@@ -11,6 +11,7 @@ import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
 import { ledgerHandlers } from '@msw/api/businesses/[business-id]/ledger/handlers'
 import { mileageHandlers } from '@msw/api/businesses/[business-id]/mileage/handlers'
 import { plaidHandlers } from '@msw/api/businesses/[business-id]/plaid/handlers'
+import { reportsHandlers } from '@msw/api/businesses/[business-id]/reports/handlers'
 import { timeTrackingHandlers } from '@msw/api/businesses/[business-id]/time-tracking/handlers'
 import { vendorsHandlers } from '@msw/api/businesses/[business-id]/vendors/handlers'
 
@@ -28,4 +29,5 @@ export const businessHandlers: RequestHandler[] = [
   ...catalogHandlers,
   ...timeTrackingHandlers,
   ...ledgerHandlers,
+  ...reportsHandlers,
 ]

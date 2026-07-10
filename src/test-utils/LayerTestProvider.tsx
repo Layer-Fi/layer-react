@@ -1,5 +1,6 @@
 import { type PropsWithChildren } from 'react'
 
+import { type LayerThemeConfig } from '@internal-types/layerContext'
 import { type SupportedLocale } from '@utils/i18n/supportedLocale'
 import { type EnvironmentConfigOverride } from '@providers/Environment/environmentConfigs'
 import { LayerProvider } from '@providers/LayerProvider/LayerProvider'
@@ -18,15 +19,30 @@ const TEST_LAYER_ENVIRONMENT_CONFIG: EnvironmentConfigOverride = {
 
 export const TEST_LAYER_ACCESS_TOKEN = 'test-access-token'
 
-type LayerTestProviderProps = PropsWithChildren<{ locale?: SupportedLocale }>
+/**
+ * Charts and themed surfaces read `--color-dark`/`--color-light` CSS variables
+ * that only exist where a theme is set, so tests and stories get a default one.
+ */
+export const TEST_LAYER_THEME: LayerThemeConfig = {
+  colors: {
+    dark: { h: '218', s: '55%', l: '20%' },
+    light: { h: '158', s: '35%', l: '75%' },
+  },
+}
 
-export const LayerTestProvider = ({ children, locale }: LayerTestProviderProps) => (
+type LayerTestProviderProps = PropsWithChildren<{
+  locale?: SupportedLocale
+  theme?: LayerThemeConfig
+}>
+
+export const LayerTestProvider = ({ children, locale, theme = TEST_LAYER_THEME }: LayerTestProviderProps) => (
   <LayerProvider
     businessId={TEST_LAYER_BUSINESS_ID}
     appId={TEST_LAYER_APP_ID}
     appSecret={TEST_LAYER_APP_SECRET}
     environmentConfigOverride={TEST_LAYER_ENVIRONMENT_CONFIG}
     locale={locale}
+    theme={theme}
   >
     {children}
   </LayerProvider>
