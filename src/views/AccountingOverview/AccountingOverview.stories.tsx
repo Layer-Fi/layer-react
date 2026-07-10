@@ -2,29 +2,55 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { AccountingOverview } from '@views/AccountingOverview/AccountingOverview'
 
+import {
+  buildSummariesSlotProps,
+  buildSummariesStringOverrides,
+  makeSummariesStoryControls,
+  type SummariesStoryArgs,
+  summariesStoryDefaultArgs,
+} from '@test-utils/summariesStoryControls'
 import { profitAndLossStoryHandlers, withOverviewStoryContext } from '@test-utils/withProfitAndLossStoryContext'
 
-const meta: Meta<typeof AccountingOverview> = {
+type AccountingOverviewStoryArgs = SummariesStoryArgs & {
+  showTitle: boolean
+}
+
+const summariesControls = makeSummariesStoryControls({
+  stringOverridesPath: 'stringOverrides.profitAndLoss.summaries',
+  slotPropsPath: 'slotProps.profitAndLoss.summaries',
+  category: 'P&L summaries',
+})
+
+const meta: Meta<AccountingOverviewStoryArgs> = {
   title: 'Views/Overview/Accounting',
   component: AccountingOverview,
   parameters: {
     msw: { handlers: profitAndLossStoryHandlers },
-    controls: { include: ['showTitle'] },
+    controls: { include: ['showTitle', ...summariesControls.controlNames] },
   },
   decorators: [withOverviewStoryContext],
   args: {
     showTitle: true,
+    ...summariesStoryDefaultArgs,
   },
   argTypes: {
     showTitle: {
       control: 'boolean',
       description: 'Show the view title and month picker header',
     },
+    ...summariesControls.argTypes,
   },
+  render: args => (
+    <AccountingOverview
+      showTitle={args.showTitle}
+      stringOverrides={{ profitAndLoss: { summaries: buildSummariesStringOverrides(args) } }}
+      slotProps={{ profitAndLoss: { summaries: buildSummariesSlotProps(args) } }}
+    />
+  ),
 }
 
 export default meta
 
-type Story = StoryObj<typeof AccountingOverview>
+type Story = StoryObj<AccountingOverviewStoryArgs>
 
 export const Default: Story = {}
