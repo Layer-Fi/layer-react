@@ -14,6 +14,7 @@ import { ledgerHandlers } from '@msw/api/businesses/[business-id]/ledger/handler
 import { mileageHandlers } from '@msw/api/businesses/[business-id]/mileage/handlers'
 import { plaidHandlers } from '@msw/api/businesses/[business-id]/plaid/handlers'
 import { reportsHandlers } from '@msw/api/businesses/[business-id]/reports/handlers'
+import { tasksHandlers } from '@msw/api/businesses/[business-id]/tasks/handlers'
 import { taxEstimatesHandlers } from '@msw/api/businesses/[business-id]/tax-estimates/handlers'
 import { timeTrackingHandlers } from '@msw/api/businesses/[business-id]/time-tracking/handlers'
 import { vendorsHandlers } from '@msw/api/businesses/[business-id]/vendors/handlers'
@@ -35,5 +36,6 @@ export const businessHandlers: RequestHandler[] = [
   ...reportsHandlers,
   ...bookkeepingHandlers,
   ...callBookingsHandlers,
+  ...tasksHandlers,
   ...taxEstimatesHandlers,
 ]

@@ -2,10 +2,10 @@ import { Schema } from 'effect'
 
 import { BookkeepingPeriodsSchema } from '@schemas/bookkeepingPeriods'
 
+import { bookkeepingPeriodStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { type BookkeepingPeriodFixture, makeBookkeepingPeriods } from '@fixtures/bookkeeping/mocks'
-import { PROFIT_AND_LOSS_FIXTURE_START_YEAR } from '@fixtures/profitAndLoss/constants'
+import { type BookkeepingPeriodFixture } from '@fixtures/bookkeeping/mocks'
 
 const encodePeriods = Schema.encodeSync(BookkeepingPeriodsSchema)
 
@@ -15,6 +15,5 @@ const toResponse = (periods: readonly BookkeepingPeriodFixture[]) =>
 export const get = createMockEndpoint<readonly BookkeepingPeriodFixture[], ReturnType<typeof toResponse>>({
   method: 'get',
   path: '*/v1/businesses/:businessId/bookkeeping/periods',
-  resolve: ({ override: periods = makeBookkeepingPeriods(PROFIT_AND_LOSS_FIXTURE_START_YEAR) }) =>
-    toResponse(periods),
+  resolve: ({ override: periods = bookkeepingPeriodStore.all() }) => toResponse(periods),
 })
