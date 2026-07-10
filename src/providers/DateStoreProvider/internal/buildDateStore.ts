@@ -57,8 +57,9 @@ export function buildDateStore({ initialRange, initialPreset }: BuildDateStoreOp
 
     const setMonthByPeriod = ({ monthNumber, yearNumber }: { monthNumber: number, yearNumber: number }, activationDate?: Date): DateRangeWithPreset => {
       const monthIndex = Math.min(Math.max(monthNumber, 1), 12) - 1
-      const dayIndex = 1 // Hardcoded to the first day of the month
-      return transformAndSet(getDateRange({ mode: 'month', endDate: new Date(yearNumber, monthIndex, dayIndex) }), activationDate)
+      const firstDayOrMonth = new Date(yearNumber, monthIndex, 1)
+      const dateRangeToApply = getDateRange({ mode: 'month', endDate: firstDayOrMonth })
+      return transformAndSet(dateRangeToApply, activationDate)
     }
 
     const setDatePreset = (
