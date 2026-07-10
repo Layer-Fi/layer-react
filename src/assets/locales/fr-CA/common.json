@@ -16,7 +16,7 @@
     "delete_label": "Supprimer",
     "delete_line_item": "Supprimer la ligne",
     "discard_changes": "Annuler les modifications",
-    "download_csv": "Télécharger le CSV",
+    "download_csv": "Télécharger le fichier CSV",
     "download_label": "Télécharger",
     "edit_details": "Modifier les détails",
     "edit_label": "Modifier",
@@ -33,10 +33,10 @@
     "select_label": "Sélectionner...",
     "show_archived": "Afficher les éléments archivés",
     "submit_label": "Soumettre",
-    "toggle_bulk_actions": "Afficher/masquer les actions groupées",
-    "toggle_section": "Afficher/masquer {{name}}",
+    "toggle_bulk_actions": "Basculer les actions groupées",
+    "toggle_section": "Basculer {{name}}",
     "try_again": "Réessayer",
-    "uncategorize": "Retirer la catégorie",
+    "uncategorize": "Retirer la catégorisation",
     "update_label": "Mettre à jour",
     "upload_label": "Téléverser",
     "view_details": "Voir les détails",
@@ -79,8 +79,8 @@
     "credit": "Crédit",
     "credit_card": "Carte de crédit",
     "date": "Date",
-    "days_ago_one": "Il y a {{displayCount}} jour",
-    "days_ago_other": "Il y a {{displayCount}} jours",
+    "days_ago_one": "il y a {{displayCount}} jour",
+    "days_ago_other": "il y a {{displayCount}} jours",
     "debit": "Débit",
     "description": "Description",
     "direction": "Sens",
@@ -95,8 +95,8 @@
     "liabilities": "Passifs",
     "loading": "Chargement...",
     "memo": "Note",
-    "money_in": "Entrées de fonds",
-    "money_out": "Sorties de fonds",
+    "money_in": "Entrées d’argent",
+    "money_out": "Sorties d’argent",
     "more": "Plus",
     "name": "Nom",
     "net_profit": "Bénéfice net",
@@ -129,8 +129,8 @@
     "transaction": "Transaction",
     "transactions": "Transactions",
     "type": "Type",
-    "uncategorized": "Sans catégorie",
-    "unsaved_changes_lost": "Toute modification non enregistrée sera perdue.",
+    "uncategorized": "Non catégorisé",
+    "unsaved_changes_lost": "Toutes les modifications non enregistrées seront perdues.",
     "value": "Valeur",
     "view_label": "Voir",
     "yes": "Oui"
@@ -143,7 +143,7 @@
     "due_in_count_days_other": "Échéance dans {{displayCount}} jours",
     "due_soon": "Bientôt à échéance",
     "due_today": "Échéance aujourd’hui",
-    "feature_not_enabled": "Fonctionnalité non activée",
+    "feature_not_enabled": "Fonction non activée",
     "loading": "Chargement...",
     "overdue": "En retard",
     "paid": "Payé",
@@ -157,6 +157,6 @@
     "updating": "Mise à jour..."
   },
   "validation": {
-    "value_required": "Le champ est obligatoire"
+    "value_required": "Ce champ est obligatoire"
   }
 }
