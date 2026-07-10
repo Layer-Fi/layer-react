@@ -9,7 +9,7 @@ export const PinnedFixtureYear = ({ year = FIXTURE_YEAR, children }: PropsWithCh
   const [isPinned, setIsPinned] = useState(false)
 
   useLayoutEffect(() => {
-    setYear({ startDate: new Date(year, 0, 1) })
+    setYear(new Date(year, 0, 1))
     setIsPinned(true)
   }, [setYear, year])
 
