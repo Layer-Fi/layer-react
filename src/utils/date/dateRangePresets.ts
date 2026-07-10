@@ -71,7 +71,7 @@ export enum DatePreset {
 /** Presets whose range is a pure function of `now` (no context required). */
 export type RelativeDatePreset = Exclude<DatePreset, DatePreset.Custom | DatePreset.AllTime>
 
-const PRESET_ARGS = {
+const RELATIVE_DATE_PRESET_ARGS = {
   [DatePreset.ThisMonth]: [Period.Month, 0],
   [DatePreset.LastMonth]: [Period.Month, -1],
   [DatePreset.ThisQuarter]: [Period.Quarter, 0],
@@ -91,7 +91,7 @@ function fromEntriesStrict<K extends PropertyKey, V>(
 }
 
 export function rangeForPreset(preset: RelativeDatePreset, base?: Date): DateRange {
-  const args = PRESET_ARGS[preset]
+  const args = RELATIVE_DATE_PRESET_ARGS[preset]
   const [period, offset] = args
   return rangeFor(period, offset, base)
 }
@@ -123,11 +123,11 @@ const sameDateRange = (a: DateRange, b: DateRange) =>
   && isEqual(startOfDay(a.startDate), startOfDay(b.startDate))
   && isEqual(endOfDay(a.endDate), endOfDay(b.endDate))
 
-export function presetForDateRange(input: DateRange, selectedPreset: DatePreset | null = null, activationDate?: Date): DatePreset | null {
+export function deriveRelativePresetFromDateRange(input: DateRange, selectedPreset: DatePreset | null = null, activationDate?: Date): DatePreset | null {
   const range = normalize(input, activationDate)
 
-  const candidates: Record<keyof typeof PRESET_ARGS, DateRange> = fromEntriesStrict(
-    typedEntries(PRESET_ARGS).map(([key, [period, offset]]) => [
+  const relativeDateCandidates: Record<keyof typeof RELATIVE_DATE_PRESET_ARGS, DateRange> = fromEntriesStrict(
+    typedEntries(RELATIVE_DATE_PRESET_ARGS).map(([key, [period, offset]]) => [
       key,
       normalize(rangeFor(period, offset), activationDate),
     ]),
@@ -136,10 +136,10 @@ export function presetForDateRange(input: DateRange, selectedPreset: DatePreset 
   // AllTime is not a relative candidate (its range needs context), so it can't be
   // derived here — a caller that tracks the stored preset supplies it directly.
   if (selectedPreset !== null && selectedPreset !== DatePreset.Custom && selectedPreset !== DatePreset.AllTime) {
-    if (sameDateRange(range, candidates[selectedPreset])) return selectedPreset
+    if (sameDateRange(range, relativeDateCandidates[selectedPreset])) return selectedPreset
   }
 
-  for (const [preset, fixedRange] of Object.entries(candidates)) {
+  for (const [preset, fixedRange] of Object.entries(relativeDateCandidates)) {
     if (sameDateRange(range, fixedRange)) return preset as DatePreset
   }
 
@@ -174,5 +174,5 @@ export function derivePresetFromDateRange(
   if (activationDate && sameDateRange(normalize(input, activationDate), normalize(rangeForAllTime(activationDate), activationDate))) {
     return DatePreset.AllTime
   }
-  return presetForDateRange(input, previousPreset, activationDate) ?? DatePreset.Custom
+  return deriveRelativePresetFromDateRange(input, previousPreset, activationDate) ?? DatePreset.Custom
 }
