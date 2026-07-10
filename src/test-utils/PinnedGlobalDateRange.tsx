@@ -10,9 +10,6 @@ type PinnedGlobalDateRangeProps = PropsWithChildren<{
  * Pins the global date store to a fixed range before rendering children, so
  * stories and tests don't depend on the real clock. Children stay unmounted
  * until the pin lands to keep them from fetching for the current month first.
- *
- * Consumers reading through a `dateSelectionMode` ('month', 'year', ...) derive
- * their period from the pinned range's end date.
  */
 export const PinnedGlobalDateRange = ({ dateRange, children }: PinnedGlobalDateRangeProps) => {
   const { setDateRange } = useGlobalDateRangeActions()

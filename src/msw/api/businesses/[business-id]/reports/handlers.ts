@@ -5,7 +5,6 @@ import { get as getProfitAndLossDetailLines } from '@msw/api/businesses/[busines
 import { get as getProfitAndLossSummaries } from '@msw/api/businesses/[business-id]/reports/profit-and-loss-summaries/get'
 
 export const reportsHandlers: RequestHandler[] = [
-  // Lines is registered before the report endpoint so its longer path matches first.
   getProfitAndLossDetailLines.handler,
   getProfitAndLossReport.handler,
   getProfitAndLossSummaries.handler,
