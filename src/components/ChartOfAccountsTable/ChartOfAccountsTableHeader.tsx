@@ -6,8 +6,8 @@ import { Button } from '@ui/Button/Button'
 import { Heading } from '@ui/Typography/Heading'
 import { AccountBalancesDownloadButton } from '@components/ChartOfAccounts/download/AccountBalancesDownloadButton'
 import { type ChartOfAccountsTableStringOverrides } from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
+import { LedgerDateRangeSelection } from '@components/DateSelection/LedgerDateRangeSelection'
 import { ExpandableDataTableToggleButton } from '@components/ExpandableDataTable/ExpandableDataTableToggleButton'
-import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
@@ -66,7 +66,7 @@ export const ChartOfAccountsTableHeader = ({
       </HeaderRow>
       <HeaderRow>
         <HeaderCol>
-          {withDateControl && <GlobalMonthPicker />}
+          {withDateControl && <LedgerDateRangeSelection />}
         </HeaderCol>
         <HeaderCol className='Layer__chart-of-accounts__actions'>
           <SearchField

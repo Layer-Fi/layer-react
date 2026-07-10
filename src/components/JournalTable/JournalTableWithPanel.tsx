@@ -7,6 +7,7 @@ import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvid
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { Button } from '@ui/Button/Button'
 import { Heading } from '@ui/Typography/Heading'
+import { LedgerDateRangeSelection } from '@components/DateSelection/LedgerDateRangeSelection'
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
@@ -75,6 +76,11 @@ export const JournalTableWithPanel = ({
             >
               {isDesktop ? addEntryLabel : <CirclePlus size={14} />}
             </Button>
+          </HeaderCol>
+        </HeaderRow>
+        <HeaderRow>
+          <HeaderCol>
+            <LedgerDateRangeSelection />
           </HeaderCol>
         </HeaderRow>
       </Header>
