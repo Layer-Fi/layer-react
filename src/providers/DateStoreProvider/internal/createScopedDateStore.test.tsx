@@ -55,7 +55,6 @@ function setupDateStore(options?: CreateScopedDateStoreOptions) {
 }
 
 describe('createScopedDateStore', () => {
-  // Relative presets resolve synchronously from `now`, so pin the clock.
   setupFakeSystemTime(NOW)
 
   it('initializes to the current month by default', () => {
