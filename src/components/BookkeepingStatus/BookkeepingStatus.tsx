@@ -1,5 +1,5 @@
+import { type BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { type BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { useBookkeepingStatusConfig } from '@components/BookkeepingStatus/useBookkeepingStatusConfig'

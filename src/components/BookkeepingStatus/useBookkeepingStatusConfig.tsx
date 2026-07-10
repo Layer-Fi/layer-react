@@ -2,9 +2,9 @@ import { type ReactNode } from 'react'
 import { CircleAlert, CircleCheckBig, Clock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
 import { tPlural } from '@utils/i18n/plural'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import { BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import type { TextStyleProps } from '@ui/Typography/Text'
 

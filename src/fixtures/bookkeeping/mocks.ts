@@ -1,3 +1,4 @@
+import { BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
 import { BookkeepingStatus, type BookkeepingStatusData } from '@schemas/bookkeepingStatus'
 import {
   type BusinessTask,
@@ -16,12 +17,11 @@ const baseBookkeepingStatus: BookkeepingStatusData = {
 
 export const { make: makeBookkeepingStatus } = createFixtureFactory(baseBookkeepingStatus)
 
-// String literals matching BookkeepingPeriodStatus; importing the enum would pull hook modules into fixtures.
 export type BookkeepingPeriodFixture = {
   id: string
   month: number
   year: number
-  status: 'IN_PROGRESS_AWAITING_CUSTOMER' | 'CLOSED_COMPLETE'
+  status: BookkeepingPeriodStatus
   tasks: BusinessTask[]
 }
 
@@ -72,7 +72,9 @@ export const makeBookkeepingPeriods = (startYear: number): BookkeepingPeriodFixt
       id: fixtureUuid(0, cursor),
       month,
       year,
-      status: hasOpenTasks ? 'IN_PROGRESS_AWAITING_CUSTOMER' : 'CLOSED_COMPLETE',
+      status: hasOpenTasks
+        ? BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER
+        : BookkeepingPeriodStatus.CLOSED_COMPLETE,
       tasks: hasOpenTasks ? makePeriodTasks(cursor) : [],
     })
   }

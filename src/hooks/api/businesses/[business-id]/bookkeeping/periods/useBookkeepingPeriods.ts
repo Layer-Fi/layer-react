@@ -1,6 +1,7 @@
 import { Schema } from 'effect'
 
 import type { EnumWithUnknownValues } from '@internal-types/utility/enumWithUnknownValues'
+import { BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
 import { BusinessTaskSchema } from '@schemas/businessTasks/businessTask'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
@@ -14,16 +15,6 @@ import {
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
-export enum BookkeepingPeriodStatus {
-  BOOKKEEPING_NOT_ACTIVE = 'BOOKKEEPING_NOT_ACTIVE',
-  NOT_STARTED = 'NOT_STARTED',
-  IN_PROGRESS_AWAITING_BOOKKEEPER = 'IN_PROGRESS_AWAITING_BOOKKEEPER',
-  IN_PROGRESS_AWAITING_CUSTOMER = 'IN_PROGRESS_AWAITING_CUSTOMER',
-  CLOSING_IN_REVIEW = 'CLOSING_IN_REVIEW',
-  CLOSING_OPEN_ITEMS = 'CLOSING_OPEN_ITEMS',
-  CLOSED_OPEN_TASKS = 'CLOSED_OPEN_TASKS',
-  CLOSED_COMPLETE = 'CLOSED_COMPLETE',
-}
 const BOOKKEEPING_PERIOD_STATUSES: string[] = Object.values(BookkeepingPeriodStatus)
 
 type RawBookkeepingPeriodStatus = EnumWithUnknownValues<BookkeepingPeriodStatus>
