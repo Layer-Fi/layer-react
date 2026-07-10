@@ -29,6 +29,10 @@ export type ProfitAndLossSummariesReportingVariant =
 
 export type ProfitAndLossSummariesSlotProps = {
   reportingVariant?: ProfitAndLossSummariesReportingVariant
+  /**
+   * @deprecated This prop no longer has any effect; the summaries tiles size themselves
+   * responsively to their container. Override the `--text-*` font size variables to adjust sizing.
+   */
   variants?: Variants
 }
 
@@ -37,6 +41,10 @@ type ProfitAndLossSummariesProps = {
   stringOverrides?: ProfitAndLossSummariesStringOverrides
   chartColorsList?: string[]
   reportingVariant?: ProfitAndLossSummariesReportingVariant
+  /**
+   * @deprecated This prop no longer has any effect; the summaries tiles size themselves
+   * responsively to their container. Override the `--text-*` font size variables to adjust sizing.
+   */
   variants?: Variants
   onTransactionsToReviewClick?: () => void
   /**
@@ -55,7 +63,6 @@ export function ProfitAndLossSummaries({
   stringOverrides,
   chartColorsList,
   reportingVariant,
-  variants,
   onTransactionsToReviewClick,
 }: ProfitAndLossSummariesProps) {
   const { t } = useTranslation()
@@ -163,7 +170,7 @@ export function ProfitAndLossSummaries({
     label: isCashflow
       ? stringOverrides?.netCashFlowLabel || t('overview:label.net_cash_flow', 'Net cash flow')
       : stringOverrides?.netProfitLabel || t('common:label.net_profit', 'Net Profit'),
-    renderFooter: isCashflow && (showProfitAndLossBreakdown || onTransactionsToReviewClick)
+    renderFooter: isCashflow && showProfitAndLossBreakdown
       ? renderNetFooter
       : undefined,
   }), [
@@ -172,7 +179,6 @@ export function ProfitAndLossSummaries({
     stringOverrides?.netProfitLabel,
     t,
     showProfitAndLossBreakdown,
-    onTransactionsToReviewClick,
     renderNetFooter,
   ])
 
@@ -188,13 +194,11 @@ export function ProfitAndLossSummaries({
       tiles={tiles}
       actionable={actionable}
       chartColorsList={chartColorsList}
-      variants={variants}
       slots={{
         unstable_AdditionalListItems: mode === 'profitAndLoss' && onTransactionsToReviewClick
           ? [
             <TransactionsToReview
               key='transactions-to-review'
-              variants={variants}
               onClick={onTransactionsToReviewClick}
             />,
           ]

@@ -2,19 +2,20 @@ import { useMemo } from 'react'
 import { Cell, Pie, PieChart } from 'recharts'
 
 import { type PnlChartLineItem } from '@utils/profitAndLossUtils'
-import { type Variants } from '@utils/styleUtils/sizeVariants'
 import { mapTypesToColors } from '@components/ProfitAndLossDetailedCharts/utils'
 
 type ProfitAndLossMiniChartProps = {
   data: PnlChartLineItem[]
   chartColorsList?: string[]
-  variants?: Variants
 }
+
+const CHART_DIMENSION = 52
+const INNER_RADIUS = 10
+const OUTER_RADIUS = 16
 
 export function ProfitAndLossSummariesMiniChart({
   data,
   chartColorsList,
-  variants,
 }: ProfitAndLossMiniChartProps) {
   const chartData = useMemo(() => data.map(x => ({
     ...x,
@@ -25,32 +26,16 @@ export function ProfitAndLossSummariesMiniChart({
 
   const typeColorMapping = useMemo(() => mapTypesToColors<PnlChartLineItem>(chartData, chartColorsList), [chartData, chartColorsList])
 
-  let chartDimension: number = 52
-  let innerRadius: number = 10
-  let outerRadius: number = 16
-  switch (variants?.size) {
-    case 'sm':
-      chartDimension = 52
-      innerRadius = 10
-      outerRadius = 16
-      break
-    case 'lg':
-      chartDimension = 64
-      innerRadius = 12
-      outerRadius = 20
-      break
-  }
-
   return (
-    <PieChart width={chartDimension} height={chartDimension}>
+    <PieChart width={CHART_DIMENSION} height={CHART_DIMENSION}>
       <Pie
         data={chartData}
         dataKey='value'
         nameKey='displayName'
         cx='50%'
         cy='50%'
-        innerRadius={innerRadius}
-        outerRadius={outerRadius}
+        innerRadius={INNER_RADIUS}
+        outerRadius={OUTER_RADIUS}
         paddingAngle={0.4}
         fill='#8884d8'
         width={36}
