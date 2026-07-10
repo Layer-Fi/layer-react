@@ -11,7 +11,7 @@ import { type StackProps, VStack } from '@ui/Stack/Stack'
 import { Badge } from '@components/Badge/Badge'
 import { BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
-import { ProfitAndLossSummariesHeading } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesHeading'
+import { ProfitAndLossSummariesLabel } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesLabel'
 
 import './transactionsToReview.scss'
 
@@ -114,9 +114,9 @@ export function TransactionsToReview({
   return (
     <div className={CLASS_NAME}>
       <VStack gap={verticalGap} align='start'>
-        <ProfitAndLossSummariesHeading variants={variants}>
+        <ProfitAndLossSummariesLabel variants={variants}>
           {t('bankTransactions:label.transactions_to_review', 'Transactions to review')}
-        </ProfitAndLossSummariesHeading>
+        </ProfitAndLossSummariesLabel>
         {transactionsToReviewBadge}
       </VStack>
       <Button

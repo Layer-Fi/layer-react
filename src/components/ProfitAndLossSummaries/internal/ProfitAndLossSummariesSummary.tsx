@@ -7,7 +7,7 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { ProfitAndLossSummariesHeading } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesHeading'
+import { ProfitAndLossSummariesLabel } from '@components/ProfitAndLossSummaries/internal/ProfitAndLossSummariesLabel'
 import { type ProfitAndLossSummariesMode } from '@components/ProfitAndLossSummaries/useProfitAndLossSummariesMiniChartData'
 import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
@@ -71,9 +71,9 @@ export function ProfitAndLossSummariesSummary({
 
         <HStack justify='space-between' fluid pis='sm' pie='xs'>
           <VStack fluid>
-            <ProfitAndLossSummariesHeading variants={variants}>
+            <ProfitAndLossSummariesLabel variants={variants}>
               {label}
-            </ProfitAndLossSummariesHeading>
+            </ProfitAndLossSummariesLabel>
             {isLoading
               ? <SkeletonLoader height='22px' />
               : <MoneySpan slot='amount' amount={amount} size='lg' weight='bold' numeric='tabular-nums' />}
