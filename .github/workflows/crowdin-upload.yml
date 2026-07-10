@@ -1,8 +1,8 @@
-name: i18n - Upload French Translations
+name: i18n - Upload Translations
 
-# Push local fr-CA translation edits (e.g. review fixes) up to Crowdin
-# whenever translation manifests change on main, so Crowdin reflects the
-# repo's values instead of reverting them on the next sync download.
+# Push local translation edits (e.g. review fixes) up to Crowdin whenever
+# translation manifests change on main, so Crowdin reflects the repo's values
+# instead of reverting them on the next sync download.
 #
 # Sources are uploaded first so translations for newly added keys attach.
 #
@@ -14,13 +14,14 @@ on:
     branches:
       - main
     paths:
-      - src/assets/locales/fr-CA/**
+      - src/assets/locales/**
+      - '!src/assets/locales/en-US/**'
 
 permissions:
   contents: read
 
 concurrency:
-  group: i18n-french-sync
+  group: i18n-crowdin-sync
   cancel-in-progress: false
 
 jobs:
@@ -42,11 +43,10 @@ jobs:
         CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
-    - name: Upload fr-CA translations to Crowdin
+    - name: Upload translations to Crowdin
       uses: crowdin/github-action@v2
       with:
         command: upload translations
-        command_args: -l fr-CA
       env:
         CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
         CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}

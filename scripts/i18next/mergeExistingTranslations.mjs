@@ -11,17 +11,17 @@ if (!baseDir || !targetDir) {
 
 const readJson = async (filePath) => JSON.parse(await readFile(filePath, 'utf8'))
 
-// Existing (base) translations are the source of truth; downloaded (target)
-// values only fill keys that are missing or empty locally.
-const fillUntranslated = (baseValue, targetValue) => {
+// Downloaded (target) values win so upstream Crowdin edits apply; existing
+// (base) values are kept only where the download has no translation.
+const applyDownloaded = (baseValue, targetValue) => {
   if (targetValue === undefined) return baseValue
-  if (baseValue === undefined || baseValue === '') return targetValue
+  if (baseValue === undefined) return targetValue
 
   if (Array.isArray(baseValue)) {
     if (!Array.isArray(targetValue)) return baseValue
 
     const length = Math.max(baseValue.length, targetValue.length)
-    return Array.from({ length }, (_, index) => fillUntranslated(baseValue[index], targetValue[index]))
+    return Array.from({ length }, (_, index) => applyDownloaded(baseValue[index], targetValue[index]))
   }
 
   if (baseValue && typeof baseValue === 'object') {
@@ -33,12 +33,12 @@ const fillUntranslated = (baseValue, targetValue) => {
     return Object.fromEntries(
       [...Object.keys(baseValue), ...newKeys].map(key => [
         key,
-        fillUntranslated(baseValue[key], targetObject[key]),
+        applyDownloaded(baseValue[key], targetObject[key]),
       ]),
     )
   }
 
-  return baseValue
+  return targetValue === '' ? baseValue : targetValue
 }
 
 const processDir = async (basePath, targetPath) => {
@@ -72,7 +72,7 @@ const processDir = async (basePath, targetPath) => {
       throw error
     }
 
-    const mergedJson = fillUntranslated(baseJson, targetJson)
+    const mergedJson = applyDownloaded(baseJson, targetJson)
 
     await writeFile(targetEntryPath, `${JSON.stringify(mergedJson, null, 2)}\n`)
   }
