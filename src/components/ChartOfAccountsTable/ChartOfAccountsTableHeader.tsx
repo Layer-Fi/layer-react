@@ -2,7 +2,7 @@ import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useLedgerDateRange } from '@providers/LedgerDateStore/LedgerDateStoreProvider'
+import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { Heading } from '@ui/Typography/Heading'
 import { AccountBalancesDownloadButton } from '@components/ChartOfAccounts/download/AccountBalancesDownloadButton'

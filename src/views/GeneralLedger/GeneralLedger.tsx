@@ -1,7 +1,7 @@
 import { type ReactNode, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { LedgerDateStoreProvider } from '@providers/LedgerDateStore/LedgerDateStoreProvider'
+import { LedgerDateStoreProvider } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { ChartOfAccountsWithData } from '@components/ChartOfAccounts/ChartOfAccounts'

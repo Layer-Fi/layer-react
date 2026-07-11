@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react'
 import { SortOrder } from '@internal-types/utility/pagination'
 import { type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
 import { LedgerEntriesSortBy, type ListLedgerEntriesReturn, useListLedgerEntries } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
-import { useLedgerDateRange } from '@providers/LedgerDateStore/LedgerDateStoreProvider'
+import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 
 type UseJournal = () => {
   data: ReadonlyArray<LedgerEntry> | undefined
