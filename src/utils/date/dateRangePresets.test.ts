@@ -90,4 +90,12 @@ describe('derivePresetFromDateRange', () => {
 
     expect(derivePresetFromDateRange(range, null, activationDate)).toBe(DatePreset.ThisYear)
   })
+
+  // ...unless AllTime was the explicit prior selection, in which case it stays sticky.
+  it('keeps an explicitly selected AllTime sticky over an equivalent periodic preset', () => {
+    const activationDate = startOfYear(NOW)
+    const range = rangeForAllTime(activationDate)
+
+    expect(derivePresetFromDateRange(range, DatePreset.AllTime, activationDate)).toBe(DatePreset.AllTime)
+  })
 })

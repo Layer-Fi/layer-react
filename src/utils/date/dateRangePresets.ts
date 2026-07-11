@@ -1,54 +1,17 @@
 import {
-  addMonths, addQuarters, addYears, endOfDay,
+  endOfDay,
   endOfMonth, endOfQuarter, endOfYear,
-  startOfDay, startOfMonth, startOfQuarter, startOfYear, subMonths,
-  subQuarters,
-  subYears,
+  startOfDay, startOfMonth, startOfQuarter, startOfYear,
+  subMonths, subQuarters, subYears,
 } from 'date-fns'
 
 import { clampToAfterActivationDate, clampToPresentOrPast, correctDateRange, type DateRange, isSameCalendarDayRange } from '@utils/date/dateRange'
+import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 
 export enum Period {
   Month = 'Month',
   Quarter = 'Quarter',
   Year = 'Year',
-}
-
-const PERIOD_FNS: Record<Period, {
-  startOf(d: Date): Date
-  endOf(d: Date): Date
-  add(d: Date, n: number): Date
-  sub(d: Date, n: number): Date
-}> = {
-  [Period.Month]: {
-    startOf: startOfMonth,
-    endOf: endOfMonth,
-    add: addMonths,
-    sub: subMonths,
-  },
-  [Period.Quarter]: {
-    startOf: startOfQuarter,
-    endOf: endOfQuarter,
-    add: addQuarters,
-    sub: subQuarters,
-  },
-  [Period.Year]: {
-    startOf: startOfYear,
-    endOf: endOfYear,
-    add: addYears,
-    sub: subYears,
-  },
-}
-
-export function rangeFor(period: Period, offset = 0, base: Date = new Date()): DateRange {
-  const f = PERIOD_FNS[period]
-  const shifted = offset === 0
-    ? base
-    : offset > 0
-      ? f.add(base, offset)
-      : f.sub(base, Math.abs(offset))
-  const startDate = f.startOf(shifted)
-  return { startDate, endDate: f.endOf(startDate) }
 }
 
 export enum DatePreset {
@@ -69,7 +32,6 @@ export enum DatePreset {
   * the user sets a date range that is not one of the other presets.
   */
   Custom = 'Custom',
-
 }
 
 // A date preset that can be computed from `now` alone.
@@ -77,29 +39,44 @@ export type RelativeDatePreset = Exclude<DatePreset, DatePreset.Custom | DatePre
 // A date preset that can be selected directly by the user.
 export type SelectableDatePreset = Exclude<DatePreset, DatePreset.Custom>
 
-const RELATIVE_DATE_PRESET_ARGS = {
-  [DatePreset.ThisMonth]: [Period.Month, 0],
-  [DatePreset.LastMonth]: [Period.Month, -1],
-  [DatePreset.ThisQuarter]: [Period.Quarter, 0],
-  [DatePreset.LastQuarter]: [Period.Quarter, -1],
-  [DatePreset.ThisYear]: [Period.Year, 0],
-  [DatePreset.LastYear]: [Period.Year, -1],
-} satisfies Record<RelativeDatePreset, readonly [Period, number]>
+/* Range calculation */
 
-function typedEntries<T extends Record<PropertyKey, unknown>>(obj: T) {
-  return Object.entries(obj) as [keyof T, T[keyof T]][]
+/** The full calendar range of the period containing `referenceDate`. */
+export function rangeForPeriod(period: Period, referenceDate: Date): DateRange {
+  switch (period) {
+    case Period.Month:
+      return { startDate: startOfMonth(referenceDate), endDate: endOfMonth(referenceDate) }
+    case Period.Quarter:
+      return { startDate: startOfQuarter(referenceDate), endDate: endOfQuarter(referenceDate) }
+    case Period.Year:
+      return { startDate: startOfYear(referenceDate), endDate: endOfYear(referenceDate) }
+    default:
+      return unsafeAssertUnreachable({ value: period, message: `Unhandled period: ${String(period)}` })
+  }
 }
 
-function fromEntriesStrict<K extends PropertyKey, V>(
-  entries: Iterable<readonly [K, V]>,
-): Record<K, V> {
-  return Object.fromEntries(entries) as Record<K, V>
-}
-
-export function rangeForPreset(preset: RelativeDatePreset, base?: Date): DateRange {
-  const args = RELATIVE_DATE_PRESET_ARGS[preset]
-  const [period, offset] = args
-  return rangeFor(period, offset, base)
+/**
+ * The range for a relative preset — a pure function of `now`. Each preset is just
+ * a period anchored to `now` (or the one before it), so there is no lookup table:
+ * the preset names which period and how far to shift the reference date.
+ */
+export function rangeForPreset(preset: RelativeDatePreset, now: Date = new Date()): DateRange {
+  switch (preset) {
+    case DatePreset.ThisMonth:
+      return rangeForPeriod(Period.Month, now)
+    case DatePreset.LastMonth:
+      return rangeForPeriod(Period.Month, subMonths(now, 1))
+    case DatePreset.ThisQuarter:
+      return rangeForPeriod(Period.Quarter, now)
+    case DatePreset.LastQuarter:
+      return rangeForPeriod(Period.Quarter, subQuarters(now, 1))
+    case DatePreset.ThisYear:
+      return rangeForPeriod(Period.Year, now)
+    case DatePreset.LastYear:
+      return rangeForPeriod(Period.Year, subYears(now, 1))
+    default:
+      return unsafeAssertUnreachable({ value: preset, message: `Unhandled preset: ${String(preset)}` })
+  }
 }
 
 /**
@@ -107,53 +84,20 @@ export function rangeForPreset(preset: RelativeDatePreset, base?: Date): DateRan
  * `rangeForPreset` this needs the activation date, so it is resolved wherever the
  * business context is available (the store resolver and the preset combo box).
  */
-export function rangeForAllTime(activationDate: Date): DateRange {
+export function rangeForAllTime(activationDate: Date, now: Date = new Date()): DateRange {
   return correctDateRange({
     startDate: startOfDay(activationDate),
-    endDate: endOfDay(new Date()),
+    endDate: endOfDay(now),
   })
 }
 
-const normalize = (range: DateRange, activationDate?: Date | null): DateRange => {
-  const rawStartDate = startOfDay(range.startDate)
-  const rawEndDate = endOfDay(range.endDate)
-
-  return {
-    startDate: activationDate ? clampToAfterActivationDate(rawStartDate, startOfDay(activationDate)) : rawStartDate,
-    endDate: clampToPresentOrPast(rawEndDate),
-  }
-}
-
-export function deriveRelativePresetFromDateRange(input: DateRange, selectedPreset: DatePreset | null = null, activationDate?: Date): DatePreset | null {
-  const range = normalize(input, activationDate)
-
-  const relativeDateCandidates: Record<keyof typeof RELATIVE_DATE_PRESET_ARGS, DateRange> = fromEntriesStrict(
-    typedEntries(RELATIVE_DATE_PRESET_ARGS).map(([key, [period, offset]]) => [
-      key,
-      normalize(rangeFor(period, offset), activationDate),
-    ]),
-  )
-
-  // AllTime is not a relative candidate (its range needs context), so it can't be
-  // derived here — a caller that tracks the stored preset supplies it directly.
-  if (selectedPreset !== null && selectedPreset !== DatePreset.Custom && selectedPreset !== DatePreset.AllTime) {
-    if (isSameCalendarDayRange(range, relativeDateCandidates[selectedPreset])) return selectedPreset
-  }
-
-  for (const [preset, fixedRange] of Object.entries(relativeDateCandidates)) {
-    if (isSameCalendarDayRange(range, fixedRange)) return preset as DatePreset
-  }
-
-  return null
-}
-
 /**
- * Derives a concrete date range given a date preset. Relative presets are pure functions of
- * `now`; `AllTime` needs the business activation date and returns `null` when it
- * isn't available yet (so callers can defer/skip rather than show a wrong range).
+ * Derives a concrete date range for a preset. Relative presets are pure functions
+ * of `now`; `AllTime` needs the business activation date and returns `null` when
+ * it isn't available yet (so callers can defer/skip rather than show a wrong range).
  */
 export function deriveDateRangeFromPreset(
-  preset: Exclude<DatePreset, DatePreset.Custom>,
+  preset: SelectableDatePreset,
   activationDate?: Date,
 ): DateRange | null {
   if (preset === DatePreset.AllTime) {
@@ -162,25 +106,59 @@ export function deriveDateRangeFromPreset(
   return rangeForPreset(preset)
 }
 
+/* Range → preset matching */
+
 /**
- * Derives the preset a range represents: `AllTime` when it spans activation→present,
- * otherwise a matching relative preset, otherwise `Custom`. `previousPreset` keeps a
- * selection sticky when a range matches more than one candidate.
+ * Clamps a date range to a valid window: start clamped to on/after the activation
+ * date, end clamped to the present, both at day granularity.
+ */
+function clampRangeToValid(range: DateRange, activationDate?: Date | null): DateRange {
+  const startDate = startOfDay(range.startDate)
+  const endDate = endOfDay(range.endDate)
+
+  return {
+    startDate: activationDate ? clampToAfterActivationDate(startDate, startOfDay(activationDate)) : startDate,
+    endDate: clampToPresentOrPast(endDate),
+  }
+}
+
+// Order in which a range is matched back to a preset: the first match wins.
+// Periodic presets are checked before `AllTime` so a business activated on a
+// period boundary (e.g. Jan 1) reports "This Year" rather than "All Time".
+const PRESET_MATCH_ORDER = [
+  DatePreset.ThisMonth,
+  DatePreset.LastMonth,
+  DatePreset.ThisQuarter,
+  DatePreset.LastQuarter,
+  DatePreset.ThisYear,
+  DatePreset.LastYear,
+  DatePreset.AllTime,
+] as const satisfies readonly SelectableDatePreset[]
+
+function rangeMatchesPreset(range: DateRange, preset: SelectableDatePreset, activationDate?: Date): boolean {
+  const presetRange = deriveDateRangeFromPreset(preset, activationDate)
+  // AllTime without an activation date has no concrete range, so it can't match.
+  if (presetRange === null) return false
+  return isSameCalendarDayRange(clampRangeToValid(range, activationDate), clampRangeToValid(presetRange, activationDate))
+}
+
+/**
+ * Derives the preset a range represents: a matching periodic preset, then `AllTime`,
+ * otherwise `Custom`. `previousPreset` keeps the current selection sticky when the
+ * range still matches it.
  */
 export function derivePresetFromDateRange(
   input: DateRange,
   previousPreset: DatePreset | null = null,
   activationDate?: Date,
 ): DatePreset {
-  const relativePreset = deriveRelativePresetFromDateRange(input, previousPreset, activationDate)
-
-  if (relativePreset) {
-    return relativePreset
+  if (
+    previousPreset !== null
+    && previousPreset !== DatePreset.Custom
+    && rangeMatchesPreset(input, previousPreset, activationDate)
+  ) {
+    return previousPreset
   }
 
-  if (activationDate && isSameCalendarDayRange(normalize(input, activationDate), normalize(rangeForAllTime(activationDate), activationDate))) {
-    return DatePreset.AllTime
-  }
-
-  return DatePreset.Custom
+  return PRESET_MATCH_ORDER.find(preset => rangeMatchesPreset(input, preset, activationDate)) ?? DatePreset.Custom
 }
