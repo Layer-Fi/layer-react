@@ -1,12 +1,12 @@
 import {
   addMonths, addQuarters, addYears, endOfDay,
-  endOfMonth, endOfQuarter, endOfYear, isEqual,
+  endOfMonth, endOfQuarter, endOfYear,
   startOfDay, startOfMonth, startOfQuarter, startOfYear, subMonths,
   subQuarters,
   subYears,
 } from 'date-fns'
 
-import { clampToAfterActivationDate, clampToPresentOrPast, correctDateRange, type DateRange } from '@utils/date/dateRange'
+import { clampToAfterActivationDate, clampToPresentOrPast, correctDateRange, type DateRange, isSameCalendarDayRange } from '@utils/date/dateRange'
 
 export enum Period {
   Month = 'Month',
@@ -124,11 +124,6 @@ const normalize = (range: DateRange, activationDate?: Date | null): DateRange =>
   }
 }
 
-const sameDateRange = (a: DateRange, b: DateRange) =>
-  !!a.startDate && !!b.startDate && !!a.endDate && !!b.endDate
-  && isEqual(startOfDay(a.startDate), startOfDay(b.startDate))
-  && isEqual(endOfDay(a.endDate), endOfDay(b.endDate))
-
 export function deriveRelativePresetFromDateRange(input: DateRange, selectedPreset: DatePreset | null = null, activationDate?: Date): DatePreset | null {
   const range = normalize(input, activationDate)
 
@@ -142,11 +137,11 @@ export function deriveRelativePresetFromDateRange(input: DateRange, selectedPres
   // AllTime is not a relative candidate (its range needs context), so it can't be
   // derived here — a caller that tracks the stored preset supplies it directly.
   if (selectedPreset !== null && selectedPreset !== DatePreset.Custom && selectedPreset !== DatePreset.AllTime) {
-    if (sameDateRange(range, relativeDateCandidates[selectedPreset])) return selectedPreset
+    if (isSameCalendarDayRange(range, relativeDateCandidates[selectedPreset])) return selectedPreset
   }
 
   for (const [preset, fixedRange] of Object.entries(relativeDateCandidates)) {
-    if (sameDateRange(range, fixedRange)) return preset as DatePreset
+    if (isSameCalendarDayRange(range, fixedRange)) return preset as DatePreset
   }
 
   return null
@@ -177,16 +172,13 @@ export function derivePresetFromDateRange(
   previousPreset: DatePreset | null = null,
   activationDate?: Date,
 ): DatePreset {
-  if (activationDate && sameDateRange(normalize(input, activationDate), normalize(rangeForAllTime(activationDate), activationDate))) {
-    return DatePreset.AllTime
-  }
   const relativePreset = deriveRelativePresetFromDateRange(input, previousPreset, activationDate)
 
   if (relativePreset) {
     return relativePreset
   }
 
-  if (activationDate && sameDateRange(normalize(input, activationDate), normalize(rangeForAllTime(activationDate), activationDate))) {
+  if (activationDate && isSameCalendarDayRange(normalize(input, activationDate), normalize(rangeForAllTime(activationDate), activationDate))) {
     return DatePreset.AllTime
   }
 

@@ -5,6 +5,7 @@ import {
   isEqual,
   max,
   min,
+  startOfDay,
   startOfMonth,
   startOfYear,
 } from 'date-fns'
@@ -15,8 +16,20 @@ export type DateSelectionMode = 'full' | 'month' | 'year'
 
 export type DateRange = { startDate: Date, endDate: Date }
 
+/** Exact-timestamp equality: both endpoints must match to the millisecond. */
 export function isSameDateRange(a: DateRange, b: DateRange) {
   return isEqual(a.startDate, b.startDate) && isEqual(a.endDate, b.endDate)
+}
+
+/**
+ * Calendar-day equality: ranges match if they cover the same days, ignoring the
+ * time-of-day of each endpoint. Use this (not {@link isSameDateRange}) when
+ * comparing a user-supplied range against a preset's canonical range.
+ */
+export function isSameCalendarDayRange(a: DateRange, b: DateRange) {
+  return !!a.startDate && !!b.startDate && !!a.endDate && !!b.endDate
+    && isEqual(startOfDay(a.startDate), startOfDay(b.startDate))
+    && isEqual(endOfDay(a.endDate), endOfDay(b.endDate))
 }
 
 export function clampToAfterActivationDate(date: Date | number, activationDate: Date) {
