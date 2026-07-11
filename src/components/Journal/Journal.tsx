@@ -4,12 +4,14 @@ import { useChartOfAccounts } from '@hooks/legacy/useChartOfAccounts'
 import { useJournal } from '@hooks/legacy/useJournal'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
 import { JournalRoute, JournalStoreProvider, useJournalRouteState } from '@providers/JournalStore/JournalStoreProvider'
+import { LedgerDateStoreProvider } from '@providers/LedgerDateStore/LedgerDateStoreProvider'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { Container } from '@components/Container/Container'
 import { JournalEntryDrawer } from '@components/Journal/JournalEntryDrawer/JournalEntryDrawer'
 import { type JournalTableStringOverrides, JournalTableWithPanel } from '@components/JournalTable/JournalTableWithPanel'
+import { Loader } from '@components/Loader/Loader'
 
 import './journal.scss'
 
@@ -25,7 +27,20 @@ export interface JournalProps {
   showCustomerVendor?: boolean
 }
 
-export const Journal = (props: JournalProps) => {
+/**
+ * Standalone entry point: self-provides the ledger date store so the component
+ * works on its own. Composite views that already provide the ledger store (e.g.
+ * `GeneralLedger`, where the Chart of Accounts and Journal share one range)
+ * should render {@link JournalWithData} directly to avoid a nested store.
+ */
+export const Journal = (props: JournalProps) => (
+  <LedgerDateStoreProvider fallback={<Loader />}>
+    <JournalWithData {...props} />
+  </LedgerDateStoreProvider>
+)
+
+/** Assumes an ancestor `LedgerDateStoreProvider` is already mounted. */
+export const JournalWithData = (props: JournalProps) => {
   const JournalContextData = useJournal()
   const AccountsContextData = useChartOfAccounts()
   return (

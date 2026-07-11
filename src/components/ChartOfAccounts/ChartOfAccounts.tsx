@@ -3,6 +3,7 @@ import { type ReactNode, useContext } from 'react'
 import { useChartOfAccounts } from '@hooks/legacy/useChartOfAccounts'
 import { useLedgerAccounts } from '@hooks/legacy/useLedgerAccounts'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
+import { LedgerDateStoreProvider } from '@providers/LedgerDateStore/LedgerDateStoreProvider'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
@@ -10,6 +11,7 @@ import { type ChartOfAccountsTableStringOverrides, ChartOfAccountsTableWithPanel
 import { Container } from '@components/Container/Container'
 import { LedgerAccountPanel } from '@components/LedgerAccountPanel/LedgerAccountPanel'
 import { type LedgerAccountStringOverrides } from '@components/LedgerAccountPanel/LedgerAccountPanel'
+import { Loader } from '@components/Loader/Loader'
 
 import './chartOfAccounts.scss'
 
@@ -28,7 +30,20 @@ export interface ChartOfAccountsProps {
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
 }
 
-export const ChartOfAccounts = (props: ChartOfAccountsProps) => {
+/**
+ * Standalone entry point: self-provides the ledger date store so the component
+ * works on its own. Composite views that already provide the ledger store (e.g.
+ * `GeneralLedger`, where the Chart of Accounts and Journal share one range)
+ * should render {@link ChartOfAccountsWithData} directly to avoid a nested store.
+ */
+export const ChartOfAccounts = (props: ChartOfAccountsProps) => (
+  <LedgerDateStoreProvider fallback={<Loader />}>
+    <ChartOfAccountsWithData {...props} />
+  </LedgerDateStoreProvider>
+)
+
+/** Assumes an ancestor `LedgerDateStoreProvider` is already mounted. */
+export const ChartOfAccountsWithData = (props: ChartOfAccountsProps) => {
   const chartOfAccountsContextData = useChartOfAccounts({
     withDates: props.withDateControl,
   })

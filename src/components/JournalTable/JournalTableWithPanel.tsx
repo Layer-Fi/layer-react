@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
+import { useLedgerDateRange } from '@providers/LedgerDateStore/LedgerDateStoreProvider'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { Button } from '@ui/Button/Button'
 import { Heading } from '@ui/Typography/Heading'
@@ -42,6 +43,7 @@ export const JournalTableWithPanel = ({
   const { t } = useTranslation()
   const { isDesktop } = useSizeClass()
   const { toCreateEntry } = useJournalNavigation()
+  const { startDate, endDate } = useLedgerDateRange({ dateSelectionMode: 'full' })
   const addEntryLabel = stringOverrides?.addEntryButton || t('generalLedger:action.add_entry', 'Add Entry')
 
   const { selectedEntryId } = useContext(JournalContext)
@@ -67,6 +69,8 @@ export const JournalTableWithPanel = ({
           </HeaderCol>
           <HeaderCol>
             <JournalEntriesDownloadButton
+              startDate={startDate}
+              endDate={endDate}
               icon={!isDesktop}
             />
             <Button
