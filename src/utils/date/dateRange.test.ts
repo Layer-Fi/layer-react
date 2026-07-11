@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { correctDateRange, getDateRange } from '@providers/DateStoreProvider/internal/dateStoreUtils'
+import { correctDateRange, getDateRange } from '@utils/date/dateRange'
 
 import { setupFakeSystemTime } from '@test-utils/fakeSystemTime'
 import {
