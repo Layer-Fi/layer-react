@@ -16,16 +16,12 @@ export type DateSelectionMode = 'full' | 'month' | 'year'
 
 export type DateRange = { startDate: Date, endDate: Date }
 
-/** Exact-timestamp equality: both endpoints must match to the millisecond. */
+/** Exact-timestamp equality — contrast {@link isSameCalendarDayRange}. */
 export function isSameDateRange(a: DateRange, b: DateRange) {
   return isEqual(a.startDate, b.startDate) && isEqual(a.endDate, b.endDate)
 }
 
-/**
- * Calendar-day equality: ranges match if they cover the same days, ignoring the
- * time-of-day of each endpoint. Use this (not {@link isSameDateRange}) when
- * comparing a user-supplied range against a preset's canonical range.
- */
+/** Equality ignoring time-of-day — for matching a user-picked range against a preset's canonical range. */
 export function isSameCalendarDayRange(a: DateRange, b: DateRange) {
   return !!a.startDate && !!b.startDate && !!a.endDate && !!b.endDate
     && isEqual(startOfDay(a.startDate), startOfDay(b.startDate))
@@ -54,11 +50,7 @@ type GetDateRangeOptions =
   | { mode: 'full', startDate: Date, endDate: Date }
   | { mode: Exclude<DateSelectionMode, 'full'>, startDate?: Date, endDate: Date }
 
-/**
- * Shapes a range for a selection mode, clamping the end to the present:
- * `month`/`year` snap to the period containing `endDate`; `full` keeps the
- * explicit range.
- */
+/** In `month`/`year` mode `endDate` is any date within the target period, not the range's end. */
 export function getDateRange(options: GetDateRangeOptions): DateRange {
   const mode = options.mode
   switch (mode) {

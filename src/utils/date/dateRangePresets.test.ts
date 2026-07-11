@@ -1,18 +1,43 @@
-import { endOfMonth, endOfYear, startOfMonth, startOfYear, subDays } from 'date-fns'
+import { endOfMonth, endOfQuarter, endOfYear, startOfMonth, startOfQuarter, startOfYear, subDays } from 'date-fns'
 import { describe, expect, it } from 'vitest'
 
 import {
   DatePreset,
   deriveDateRangeFromPreset,
   derivePresetFromDateRange,
+  Period,
   rangeForAllTime,
+  rangeForPeriod,
   rangeForPreset,
 } from '@utils/date/dateRangePresets'
 
 import { setupFakeSystemTime } from '@test-utils/fakeSystemTime'
-import { CURRENT_YEAR_TO_DATE, END_OF_TODAY, NOW } from '@test-utils/fixedDates'
+import { CURRENT_YEAR_TO_DATE, END_OF_TODAY, NOW, THREE_MONTHS_BEFORE_NOW, TWO_YEARS_BEFORE_NOW } from '@test-utils/fixedDates'
 
 setupFakeSystemTime(NOW)
+
+describe('rangeForPeriod', () => {
+  it('returns the month containing the reference date', () => {
+    expect(rangeForPeriod(Period.Month, THREE_MONTHS_BEFORE_NOW)).toEqual({
+      startDate: startOfMonth(THREE_MONTHS_BEFORE_NOW),
+      endDate: endOfMonth(THREE_MONTHS_BEFORE_NOW),
+    })
+  })
+
+  it('returns the quarter containing the reference date', () => {
+    expect(rangeForPeriod(Period.Quarter, THREE_MONTHS_BEFORE_NOW)).toEqual({
+      startDate: startOfQuarter(THREE_MONTHS_BEFORE_NOW),
+      endDate: endOfQuarter(THREE_MONTHS_BEFORE_NOW),
+    })
+  })
+
+  it('returns the year containing the reference date', () => {
+    expect(rangeForPeriod(Period.Year, TWO_YEARS_BEFORE_NOW)).toEqual({
+      startDate: startOfYear(TWO_YEARS_BEFORE_NOW),
+      endDate: endOfYear(TWO_YEARS_BEFORE_NOW),
+    })
+  })
+})
 
 describe('rangeForPreset', () => {
   it('returns the current month for ThisMonth', () => {

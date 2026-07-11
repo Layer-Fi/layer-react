@@ -41,7 +41,6 @@ export type SelectableDatePreset = Exclude<DatePreset, DatePreset.Custom>
 
 /* Range calculation */
 
-/** The full calendar range of the period containing `referenceDate`. */
 export function rangeForPeriod(period: Period, referenceDate: Date): DateRange {
   switch (period) {
     case Period.Month:
@@ -55,11 +54,6 @@ export function rangeForPeriod(period: Period, referenceDate: Date): DateRange {
   }
 }
 
-/**
- * The range for a relative preset — a pure function of `now`. Each preset is just
- * a period anchored to `now` (or the one before it), so there is no lookup table:
- * the preset names which period and how far to shift the reference date.
- */
 export function rangeForPreset(preset: RelativeDatePreset, now: Date = new Date()): DateRange {
   switch (preset) {
     case DatePreset.ThisMonth:
@@ -79,11 +73,7 @@ export function rangeForPreset(preset: RelativeDatePreset, now: Date = new Date(
   }
 }
 
-/**
- * The `AllTime` range: from the business activation date to the present. Unlike
- * `rangeForPreset` this needs the activation date, so it is resolved wherever the
- * business context is available (the store resolver and the preset combo box).
- */
+/** Separate from {@link rangeForPreset} because it needs the business activation date. */
 export function rangeForAllTime(activationDate: Date, now: Date = new Date()): DateRange {
   return correctDateRange({
     startDate: startOfDay(activationDate),
@@ -91,11 +81,7 @@ export function rangeForAllTime(activationDate: Date, now: Date = new Date()): D
   })
 }
 
-/**
- * Derives a concrete date range for a preset. Relative presets are pure functions
- * of `now`; `AllTime` needs the business activation date and returns `null` when
- * it isn't available yet (so callers can defer/skip rather than show a wrong range).
- */
+/** Returns `null` for `AllTime` until the activation date loads, so callers can defer rather than show a wrong range. */
 export function deriveDateRangeFromPreset(
   preset: SelectableDatePreset,
   activationDate?: Date,
@@ -108,10 +94,6 @@ export function deriveDateRangeFromPreset(
 
 /* Range → preset matching */
 
-/**
- * Clamps a date range to a valid window: start clamped to on/after the activation
- * date, end clamped to the present, both at day granularity.
- */
 function clampRangeToValid(range: DateRange, activationDate?: Date | null): DateRange {
   const startDate = startOfDay(range.startDate)
   const endDate = endOfDay(range.endDate)
@@ -142,11 +124,6 @@ function rangeMatchesPreset(range: DateRange, preset: SelectableDatePreset, acti
   return isSameCalendarDayRange(clampRangeToValid(range, activationDate), clampRangeToValid(presetRange, activationDate))
 }
 
-/**
- * Derives the preset a range represents: a matching periodic preset, then `AllTime`,
- * otherwise `Custom`. `previousPreset` keeps the current selection sticky when the
- * range still matches it.
- */
 export function derivePresetFromDateRange(
   input: DateRange,
   previousPreset: DatePreset | null = null,
