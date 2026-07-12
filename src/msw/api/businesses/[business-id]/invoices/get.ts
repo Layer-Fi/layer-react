@@ -26,7 +26,6 @@ const filterInvoices = createListFilter<Invoice>({
     value == null || value === '' || (invoice.dueAt != null && invoice.dueAt <= endOfDay(parseISO(value))),
 })
 
-// `status` repeats in the query string, so it can't go through createListFilter's single-value params.
 const filterByStatuses = (invoices: readonly Invoice[], request: Request): readonly Invoice[] => {
   const statuses = new URL(request.url).searchParams.getAll('status')
 

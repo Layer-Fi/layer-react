@@ -161,7 +161,7 @@ export const InvoiceSchema = Schema.Struct({
   ),
 
   importedAt: pipe(
-    Schema.propertySignature(Schema.Date),
+    Schema.propertySignature(Schema.NullOr(Schema.Date)),
     Schema.fromKey('imported_at'),
   ),
 

@@ -17,10 +17,8 @@ const toSummaryStats = (invoices: readonly Invoice[]): InvoiceSummaryStatsRespon
     && invoice.sentAt != null,
   )
 
-  // Overdue and upcoming partition the open invoices - the UI sums both for the
-  // total owed, so an invoice must land in exactly one bucket. Classify against
-  // the same real-clock cutoff the list uses (Overdue filter = dueAtEnd:
-  // endOfYesterday), so stat cards and list rows never disagree.
+  // Must match the list's Overdue filter cutoff (dueAtEnd: endOfYesterday),
+  // or stat cards and list rows disagree.
   const overdueCutoff = endOfYesterday()
   const isOverdue = (invoice: Invoice) => invoice.dueAt != null && invoice.dueAt <= overdueCutoff
   const overdue = open.filter(isOverdue)

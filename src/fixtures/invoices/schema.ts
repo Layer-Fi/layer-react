@@ -39,7 +39,7 @@ const base = Schema.Struct({
   additionalSalesTaxesTotal: withArbitrary(fields.additionalSalesTaxesTotal, () => fc => fc.constant(0)),
   totalAmount: withArbitrary(fields.totalAmount, () => fc => fc.constant(0)),
   outstandingBalance: withArbitrary(fields.outstandingBalance, () => fc => fc.constant(0)),
-  importedAt: withArbitrary(fields.importedAt, () => dateArbitrary),
+  importedAt: withArbitrary(fields.importedAt, () => fc => fc.constant(null)),
   updatedAt: withArbitrary(fields.updatedAt, () => fc => fc.constant(null)),
   memo: withArbitrary(fields.memo, () => nullableConstantFrom(invoiceMemos, { nullWeight: 2, valueWeight: 1 })),
   customPaymentInstructions: withArbitrary(
@@ -87,8 +87,8 @@ const applyInvoiceInvariants = (invoice: typeof base.Type): typeof base.Type => 
     outstandingBalance,
     sentAt: isDraft ? null : invoice.sentAt,
     dueAt: isDraft ? null : invoice.dueAt,
-    paidAt: isPaid ? invoice.importedAt : null,
-    voidedAt: invoice.status === InvoiceStatus.Voided ? invoice.importedAt : null,
+    paidAt: isPaid ? invoice.sentAt : null,
+    voidedAt: invoice.status === InvoiceStatus.Voided ? invoice.sentAt : null,
     recipientName: invoice.customer != null
       ? invoice.customer.companyName ?? invoice.customer.individualName
       : invoice.recipientName,

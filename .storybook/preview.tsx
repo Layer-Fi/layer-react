@@ -4,6 +4,7 @@ import { initialize, mswLoader } from 'msw-storybook-addon'
 
 import '../src/styles/index.scss'
 
+import './mocks/systemDate'
 import { handlers } from '../src/msw/handlers'
 import { setMinimumResponseDelay } from '../src/msw/utils/createMockEndpoint'
 import { resetMockStores } from '../src/msw/utils/createMockStore'

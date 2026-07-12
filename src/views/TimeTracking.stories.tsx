@@ -2,7 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { TimeTracking, type TimeTrackingProps } from '@views/TimeTracking'
 
-import { PinnedFixtureYear } from '@test-utils/PinnedFixtureYear'
+import { FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
+import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
 
 type TimeTrackingStoryArgs = {
   showTitle: boolean
@@ -55,9 +56,9 @@ const meta: Meta<TimeTrackingStoryArgs> = {
   },
   decorators: [
     Story => (
-      <PinnedFixtureYear>
+      <PinnedGlobalDateRange dateRange={FIXTURE_YEAR_RANGE}>
         <Story />
-      </PinnedFixtureYear>
+      </PinnedGlobalDateRange>
     ),
   ],
   render: ({ showTitle, title, showReportsAction }) => (

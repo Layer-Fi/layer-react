@@ -1,11 +1,20 @@
 import { BigDecimal, Schema } from 'effect'
 
-import { type Invoice, type InvoiceLineItem, type UpsertInvoiceLineItem, UpsertInvoiceSchema } from '@schemas/invoices/invoice'
+import { type Invoice, type InvoiceLineItem, InvoiceStatus, type UpsertInvoiceLineItem, UpsertInvoiceSchema } from '@schemas/invoices/invoice'
 
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'
 import { readRequestJson } from '@msw/utils/request'
 
 const decodeUpsertInvoice = Schema.decodeUnknownSync(UpsertInvoiceSchema)
+
+export const asDraft = (invoice: Invoice): Invoice => ({
+  ...invoice,
+  status: InvoiceStatus.Draft,
+  sentAt: null,
+  dueAt: null,
+  paidAt: null,
+  voidedAt: null,
+})
 
 const buildLineItem = (invoiceId: string, lineItem: UpsertInvoiceLineItem): InvoiceLineItem => {
   // unitPrice is integer cents; multiply exactly in BigDecimal so fractional
@@ -43,7 +52,7 @@ export const invoiceFromUpsertRequest = async (request: Request, base: Invoice):
   const totalAmount = subtotal + additionalSalesTaxesTotal - additionalDiscount
   const alreadyPaid = base.totalAmount - base.outstandingBalance
 
-  return {
+  const invoice: Invoice = {
     ...base,
     sentAt: body.sentAt,
     dueAt: body.dueAt,
@@ -62,4 +71,6 @@ export const invoiceFromUpsertRequest = async (request: Request, base: Invoice):
     outstandingBalance: Math.max(0, totalAmount - alreadyPaid),
     updatedAt: new Date(),
   }
+
+  return base.status === InvoiceStatus.Draft ? asDraft(invoice) : invoice
 }

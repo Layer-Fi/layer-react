@@ -42,7 +42,7 @@ const baseInvoice: Invoice = {
   additionalSalesTaxesTotal: 2400,
   totalAmount: 32400,
   outstandingBalance: 32400,
-  importedAt: new Date('2025-03-01T16:30:00.000Z'),
+  importedAt: null,
   updatedAt: new Date('2025-03-01T16:30:00.000Z'),
   memo: null,
   customPaymentInstructions: null,
