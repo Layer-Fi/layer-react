@@ -6,6 +6,7 @@ import { Menu, MenuItem, MenuTrigger, Popover } from 'react-aria-components/Menu
 import { useTranslation } from 'react-i18next'
 
 import type { Awaitable } from '@internal-types/utility/promises'
+import { Span } from '@ui/Typography/Text'
 
 import './linkedAccountOptions.scss'
 
@@ -53,7 +54,7 @@ export const LinkedAccountOptions = ({
                       className='Layer__linked-accounts__options-menu-item'
                       onAction={() => void item.action()}
                     >
-                      {item.name}
+                      <Span size='sm' variant='inherit'>{item.name}</Span>
                     </MenuItem>
                   ))}
                 </Menu>
