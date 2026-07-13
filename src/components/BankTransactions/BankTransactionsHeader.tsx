@@ -22,7 +22,7 @@ import { Heading } from '@ui/Typography/Heading'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
 import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
 import { BankTransactionsTableContent } from '@components/BankTransactions/constants'
-import { RecordManualExpenseButton } from '@components/BankTransactions/RecordManualExpense/RecordManualExpenseButton'
+import { RecordTransactionMenuButton } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionMenuButton'
 import { SelectedBankAccountsChip } from '@components/BankTransactions/SelectedBankAccountsChip/SelectedBankAccountsChip'
 import { TransactionsSearch } from '@components/BankTransactions/TransactionsSearch/TransactionsSearch'
 import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
@@ -200,7 +200,7 @@ export const BankTransactionsHeader = ({
               {statusToggle}
               <HStack align='center' gap='xs'>
                 <SelectedBankAccountsChip variant='wide' />
-                <RecordManualExpenseButton />
+                <RecordTransactionMenuButton />
                 <BankTransactionsHeaderMenu
                   actions={headerMenuActions}
                   isListView={isListView}
@@ -214,7 +214,7 @@ export const BankTransactionsHeader = ({
             {!isStatusToggleVisible && (
               <>
                 <SelectedBankAccountsChip variant='wide' />
-                <RecordManualExpenseButton isDisabled={showBulkActions} />
+                <RecordTransactionMenuButton isDisabled={showBulkActions} />
                 <BankTransactionsHeaderMenu
                   actions={headerMenuActions}
                   isDisabled={showBulkActions}
@@ -250,7 +250,7 @@ export const BankTransactionsHeader = ({
         <SelectedBankAccountsChip slot='selected-accounts' variant='wide' />
         <TransactionsSearch slot='search' isDisabled={showBulkActions} />
         <HStack slot='download-upload' justify='center' gap='xs'>
-          <RecordManualExpenseButton isDisabled={showBulkActions} />
+          <RecordTransactionMenuButton isDisabled={showBulkActions} />
           <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
         </HStack>
       </BankTransactionsActions>
