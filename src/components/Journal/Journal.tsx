@@ -31,16 +31,16 @@ export interface JournalProps {
  * Standalone entry point: self-provides the ledger date store so the component
  * works on its own. Composite views that already provide the ledger store (e.g.
  * `GeneralLedger`, where the Chart of Accounts and Journal share one range)
- * should render {@link JournalWithData} directly to avoid a nested store.
+ * should render {@link InternalJournal} directly to avoid a nested store.
  */
 export const Journal = (props: JournalProps) => (
   <LedgerDateStoreProvider fallback={<Loader />}>
-    <JournalWithData {...props} />
+    <InternalJournal {...props} />
   </LedgerDateStoreProvider>
 )
 
 /** Assumes an ancestor `LedgerDateStoreProvider` is already mounted. */
-export const JournalWithData = (props: JournalProps) => {
+export const InternalJournal = (props: JournalProps) => {
   const JournalContextData = useJournal()
   const AccountsContextData = useChartOfAccounts()
   return (
