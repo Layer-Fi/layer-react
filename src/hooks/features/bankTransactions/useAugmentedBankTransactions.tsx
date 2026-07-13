@@ -41,6 +41,10 @@ export function bankTransactionFiltersToHookOptions(
     startDate: filters?.dateRange?.startDate,
     endDate: filters?.dateRange?.endDate,
     ...(filters?.tagFilter ? tagFilterToParams(filters.tagFilter) : undefined),
+    bankAccountIds: filters?.bankAccountIds?.length ? filters.bankAccountIds.join(',') : undefined,
+    sourceAccountIds: filters?.sourceAccountIds?.length ? filters.sourceAccountIds.join(',') : undefined,
+    amountMin: filters?.amount?.min != null ? Math.round(filters.amount.min * 100) : undefined,
+    amountMax: filters?.amount?.max != null ? Math.round(filters.amount.max * 100) : undefined,
   }
 }
 
