@@ -81,7 +81,7 @@ export const LinkedAccountsContent = ({
           selectionMode={isFilterEnabled ? 'multiple' : 'none'}
           selectedKeys={selectedBankAccountIds}
           onSelectionChange={onSelectionChange}
-          className='Layer__linked-accounts__grid'
+          className={classNames('Layer__linked-accounts__grid', isFilterLocked && '--locked')}
         >
           {data?.map(account => (
             <LinkedAccountItemThumb

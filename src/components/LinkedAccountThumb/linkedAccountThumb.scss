@@ -49,12 +49,12 @@
     height: 154px;
   }
 
-  [data-selection-mode='multiple'] & {
+  .Layer__linked-accounts__grid:not(.--locked) [data-selection-mode='multiple'] & {
     cursor: pointer;
     transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
   }
 
-  [data-selection-mode='multiple']:not([data-selected]) &:hover {
+  .Layer__linked-accounts__grid:not(.--locked) [data-selection-mode='multiple']:not([data-selected]) &:hover {
     border-color: var(--color-base-300);
     box-shadow: inset 0 0 0 1px var(--color-base-300);
   }
