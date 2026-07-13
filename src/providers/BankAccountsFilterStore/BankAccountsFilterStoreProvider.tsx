@@ -4,7 +4,7 @@ import { createStore, useStore } from 'zustand'
 import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 
 type BankAccountsFilterStoreShape = {
-  isActive: boolean
+  isEnabled: boolean
   selectedBankAccountIds: string[]
   actions: {
     toggleBankAccountId: (bankAccountId: string) => void
@@ -15,7 +15,7 @@ type BankAccountsFilterStoreShape = {
 
 const BankAccountsFilterStoreContext = createContext(
   createStore<BankAccountsFilterStoreShape>(() => ({
-    isActive: false,
+    isEnabled: false,
     selectedBankAccountIds: [],
     actions: {
       toggleBankAccountId: () => {},
@@ -25,9 +25,9 @@ const BankAccountsFilterStoreContext = createContext(
   })),
 )
 
-export function useIsBankAccountFilterActive() {
+export function useIsBankAccountFilterEnabled() {
   const store = useContext(BankAccountsFilterStoreContext)
-  return useStore(store, state => state.isActive)
+  return useStore(store, state => state.isEnabled)
 }
 
 export function useSelectedBankAccountIds() {
@@ -43,7 +43,7 @@ export function useBankAccountFilterActions() {
 export function BankAccountsFilterStoreProvider({ children }: PropsWithChildren) {
   const [store] = useState(() =>
     createStore<BankAccountsFilterStoreShape>(set => ({
-      isActive: true,
+      isEnabled: true,
       selectedBankAccountIds: [],
       actions: {
         toggleBankAccountId: (bankAccountId: string) =>
