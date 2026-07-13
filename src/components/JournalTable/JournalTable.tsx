@@ -7,10 +7,9 @@ import { type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
 import { Alignment } from '@schemas/reports/unifiedReport'
 import { humanizeEnum } from '@utils/format'
 import { entryNumber, sumLineItemAmountsByDirection } from '@utils/journal'
+import { JOURNAL_PAGE_SIZE } from '@hooks/legacy/useJournal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useAutoResetPageIndex } from '@hooks/utils/pagination/useAutoResetPageIndex'
 import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
-import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -26,7 +25,6 @@ import { Pagination } from '@components/Pagination/Pagination'
 import './journalTable.scss'
 
 const COMPONENT_NAME = 'JournalTable'
-const PAGE_SIZE = 15
 
 const EMPTY_ENTRIES: ReadonlyArray<LedgerEntry> = []
 
@@ -78,6 +76,7 @@ const JournalTableContent = ({
     closeSelectedEntry,
     hasMore,
     fetchMore,
+    paginationProps,
   } = useContext(JournalContext)
 
   const { accountingConfiguration } = useLayerContext()
@@ -87,18 +86,14 @@ const JournalTableContent = ({
 
   const entries = rawData ?? EMPTY_ENTRIES
 
-  // A date-range change is a new query, so pagination should snap back to the
-  // first page when it changes — but not on background refetches or `fetchMore`.
-  // `useAutoResetPageIndex` arms on filter change and disarms once fresh data
-  // arrives; `usePaginatedList` also clamps the index, so a shrinking result set
-  // can never leave us stranded on an out-of-range page.
-  const { startDate, endDate } = useLedgerDateRange({ dateSelectionMode: 'full' })
-  const dateRange = useMemo(() => ({ startDate, endDate }), [startDate, endDate])
-  const autoResetPageIndexRef = useAutoResetPageIndex(dateRange, entries)
+  // `useJournal` supplies pageSize + the reset-on-filter-change ref (it owns the
+  // date-range filter and the data); the page index itself lives here in the
+  // list. See the same shape in TimeEntries.
+  const { pageSize = JOURNAL_PAGE_SIZE, autoResetPageIndexRef } = paginationProps
 
   const { pageItems, pageIndex, onPageChange } = usePaginatedList({
     data: entries,
-    pageSize: PAGE_SIZE,
+    pageSize,
     autoResetPageIndexRef,
   })
 
@@ -234,7 +229,7 @@ const JournalTableContent = ({
         <Pagination
           currentPage={pageIndex + 1}
           totalCount={entries.length}
-          pageSize={PAGE_SIZE}
+          pageSize={pageSize}
           onPageChange={onPageChange}
           hasMore={hasMore}
           fetchMore={fetchMore}

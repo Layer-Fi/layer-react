@@ -6,7 +6,7 @@ import { type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { InternalChartOfAccounts } from '@components/ChartOfAccounts/ChartOfAccounts'
 import { type ChartOfAccountsStringOverrides } from '@components/ChartOfAccounts/ChartOfAccounts'
-import { JournalWithData } from '@components/Journal/Journal'
+import { InternalJournal } from '@components/Journal/Journal'
 import { type JournalStringOverrides } from '@components/Journal/Journal'
 import { Loader } from '@components/Loader/Loader'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
@@ -86,7 +86,7 @@ export const GeneralLedgerView = ({
               />
             )
             : (
-              <JournalWithData
+              <InternalJournal
                 showTags={showTags}
                 showCustomerVendor={showCustomerVendor}
                 stringOverrides={stringOverrides?.journal}
