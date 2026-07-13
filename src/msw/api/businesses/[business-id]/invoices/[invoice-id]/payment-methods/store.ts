@@ -3,7 +3,6 @@ import { InvoicePaymentMethod } from '@schemas/invoices/invoicePaymentMethod'
 import { createMockStore } from '@msw/utils/createMockStore'
 
 export const DEFAULT_INVOICE_PAYMENT_METHODS: readonly InvoicePaymentMethod[] = [
-  InvoicePaymentMethod.ACH,
   InvoicePaymentMethod.CreditCard,
 ]
 

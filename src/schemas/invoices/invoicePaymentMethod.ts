@@ -1,7 +1,6 @@
 import { pipe, Schema } from 'effect'
 
 export enum InvoicePaymentMethod {
-  ACH = 'ACH',
   CreditCard = 'CREDIT_CARD',
   Unknown = 'UNKNOWN',
 }
