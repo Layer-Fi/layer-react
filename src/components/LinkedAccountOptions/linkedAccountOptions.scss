@@ -93,7 +93,6 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-3xs);
   min-width: 160px;
   padding: var(--spacing-3xs);
   border-radius: var(--spacing-xs);
@@ -114,6 +113,10 @@
   font-weight: 500;
   color: var(--color-base-500);
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, font-weight 0.2s ease-in-out;
+
+  .Layer__Span {
+    line-height: normal;
+  }
 
   &[data-hovered],
   &[data-focused] {
