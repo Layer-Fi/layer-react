@@ -2,6 +2,7 @@ import { type Key, useCallback, useMemo, useState } from 'react'
 import type { ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
+import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'
@@ -13,6 +14,7 @@ import { useBusinessActivationDate } from '@hooks/features/business/useBusinessA
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useBankAccountFilterActions, useIsBankAccountFilterLocked, useSelectedBankAccountIds } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
@@ -24,6 +26,7 @@ import { DownloadButton as DownloadButtonComponent } from '@ui/Button/DownloadBu
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Heading } from '@ui/Typography/Heading'
+import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
 import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
 import { BankTransactionsTableContent } from '@components/BankTransactions/constants'
@@ -92,6 +95,33 @@ function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
       onChange={handleSearch}
       isDisabled={isDisabled}
     />
+  )
+}
+
+function SelectedBankAccountsChip({ slot, className }: { slot?: string, className?: string }) {
+  const { t } = useTranslation()
+  const selectedBankAccountIds = useSelectedBankAccountIds()
+  const isFilterLocked = useIsBankAccountFilterLocked()
+  const { setSelectedBankAccountIds } = useBankAccountFilterActions()
+
+  if (selectedBankAccountIds.length === 0 || isFilterLocked) return null
+
+  return (
+    <span slot={slot} className={className}>
+      <Badge
+        variant={BadgeVariant.INFO}
+        size={BadgeSize.MEDIUM}
+        icon={<X size={12} />}
+        iconPosition='right'
+        onClick={() => setSelectedBankAccountIds([])}
+      >
+        {t('bankTransactions:label.accounts_selected', {
+          count: selectedBankAccountIds.length,
+          defaultValue_one: '{{count}} account selected',
+          defaultValue_other: '{{count}} accounts selected',
+        })}
+      </Badge>
+    </span>
   )
 }
 
@@ -171,11 +201,12 @@ export const BankTransactionsHeader = ({
 
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
-      <HStack align='center'>
+      <HStack align='center' gap='sm'>
         <Heading level={3} size='sm'>
           {stringOverrides?.header || t('common:label.transactions', 'Transactions')}
         </Heading>
         {isSyncing && <SyncingComponent timeSync={5} inProgress hideContent={isListView} />}
+        <SelectedBankAccountsChip className='Layer__bank-transactions__selected-accounts-chip--compact' />
       </HStack>
       {withDatePicker && monthPickerDate && (
         <MonthPicker
@@ -273,21 +304,27 @@ export const BankTransactionsHeader = ({
           {!showBulkActions && isStatusToggleVisible && (
             <HStack justify='space-between' align='center' gap='xs'>
               {statusToggle}
-              <BankTransactionsHeaderMenu
-                actions={headerMenuActions}
-                isListView={isListView}
-              />
+              <HStack align='center' gap='xs'>
+                <SelectedBankAccountsChip className='Layer__bank-transactions__selected-accounts-chip--wide' />
+                <BankTransactionsHeaderMenu
+                  actions={headerMenuActions}
+                  isListView={isListView}
+                />
+              </HStack>
             </HStack>
           )}
 
           <HStack className='Layer__bank-transactions__header__search-and-menu' align='center' gap='xs'>
             <TransactionsSearch isDisabled={showBulkActions} />
             {!isStatusToggleVisible && (
-              <BankTransactionsHeaderMenu
-                actions={headerMenuActions}
-                isDisabled={showBulkActions}
-                isListView={isListView}
-              />
+              <>
+                <SelectedBankAccountsChip className='Layer__bank-transactions__selected-accounts-chip--wide' />
+                <BankTransactionsHeaderMenu
+                  actions={headerMenuActions}
+                  isDisabled={showBulkActions}
+                  isListView={isListView}
+                />
+              </>
             )}
           </HStack>
 
@@ -314,6 +351,10 @@ export const BankTransactionsHeader = ({
               {statusToggle}
             </HStack>
           )}
+        <SelectedBankAccountsChip
+          slot='selected-accounts'
+          className='Layer__bank-transactions__selected-accounts-chip--wide'
+        />
         <TransactionsSearch slot='search' isDisabled={showBulkActions} />
         <HStack slot='download-upload' justify='center' gap='xs'>
           <DownloadButton

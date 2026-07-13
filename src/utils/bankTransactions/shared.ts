@@ -151,7 +151,8 @@ export const getDefaultVariantForBankTransaction = (bankTransaction: BankTransac
 
 export type BankTransactionFilters = {
   amount?: NumericRangeFilter
-  account?: string[]
+  sourceAccountIds?: string[]
+  bankAccountIds?: string[]
   direction?: Direction[]
   categorizationStatus?: DisplayState
   dateRange?: DateRange

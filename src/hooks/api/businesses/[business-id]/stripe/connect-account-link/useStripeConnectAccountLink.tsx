@@ -1,25 +1,9 @@
-import { pipe, Schema } from 'effect'
-
+import { StripeConnectAccountLinkDataSchema } from '@schemas/stripeConnectAccountLink'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const STRIPE_CONNECT_ACCOUNT_LINK_TAG_KEY = '#stripe-connect-account-link'
-
-const StripeConnectAccountLinkDataSchema = Schema.Struct({
-  createdAt: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('created_at'),
-  ),
-  expiresAt: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('expires_at'),
-  ),
-  connectAccountUrl: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('connect_account_url'),
-  ),
-})
 
 const StripeConnectAccountLinkSchema = UnwrappedDataResponseSchema(StripeConnectAccountLinkDataSchema)
 

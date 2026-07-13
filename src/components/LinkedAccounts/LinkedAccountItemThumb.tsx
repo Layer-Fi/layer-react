@@ -1,13 +1,15 @@
 import { useContext, useState } from 'react'
+import { GridListItem } from 'react-aria-components/GridList'
 import { useTranslation } from 'react-i18next'
 
 import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
-import { getBankAccountInstitution, isAllExternalAccountsUserCreatedCustom } from '@utils/bankAccount'
+import { getBankAccountDisplayName, getBankAccountInstitution, isAllExternalAccountsUserCreatedCustom } from '@utils/bankAccount'
+import { useIsBankAccountFilterEnabled, useIsBankAccountFilterLocked } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { OpeningBalanceModalContext } from '@contexts/OpeningBalanceModalContext/OpeningBalanceModalContext'
-import type { HoverMenuProps } from '@components/HoverMenu/HoverMenu'
-import { LinkedAccountOptions } from '@components/LinkedAccountOptions/LinkedAccountOptions'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
+import { LinkedAccountOptions, type LinkedAccountOptionsConfig } from '@components/LinkedAccountOptions/LinkedAccountOptions'
 import { LinkedAccountPill } from '@components/LinkedAccountPill/LinkedAccountPill'
 import { UnlinkAccountConfirmationModal } from '@components/LinkedAccounts/UnlinkAccountConfirmationModal/UnlinkAccountConfirmationModal'
 import { LinkedAccountThumb } from '@components/LinkedAccountThumb/LinkedAccountThumb'
@@ -63,6 +65,8 @@ export const LinkedAccountItemThumb = ({
   const { setAccountsToAddOpeningBalanceInModal } = useContext(OpeningBalanceModalContext)
   const { environment } = useEnvironment()
   const [isUnlinkConfirmationModalOpen, setIsUnlinkConfirmationModalOpen] = useState(false)
+  const isFilterEnabled = useIsBankAccountFilterEnabled()
+  const isFilterLocked = useIsBankAccountFilterLocked()
 
   const plaidAccount = getPlaidAccount(bankAccount)
   const repairInfo = getConnectionRepairInfo(bankAccount)
@@ -112,7 +116,7 @@ export const LinkedAccountItemThumb = ({
     }
   }
 
-  const additionalConfigs: HoverMenuProps['config'] = []
+  const additionalConfigs: LinkedAccountOptionsConfig = []
 
   additionalConfigs.push({
     name: isAllExternalAccountsUserCreatedCustom(bankAccount) ? t('linkedAccounts:action.delete_account', 'Delete account') : t('linkedAccounts:action.unlink_account', 'Unlink account'),
@@ -184,27 +188,43 @@ export const LinkedAccountItemThumb = ({
   }
 
   return (
-    <LinkedAccountOptions
-      config={[...additionalConfigs, ...(pillConfig ? pillConfig.config : [])]}
-      showLedgerBalance={showLedgerBalance}
+    <GridListItem
+      id={bankAccount.id}
+      textValue={getBankAccountDisplayName(bankAccount)}
+      className='Layer__linked-accounts__item'
     >
-      <LinkedAccountThumb
-        bankAccount={bankAccount}
-        asWidget={asWidget}
-        showLedgerBalance={showLedgerBalance}
-        slots={{
-          Pill: pillConfig
-            ? <LinkedAccountPill label={pillConfig.text} items={pillConfig.config} />
-            : null,
-        }}
-      />
-      {isUnlinkConfirmationModalOpen && (
-        <UnlinkAccountConfirmationModal
-          isOpen
-          onOpenChange={setIsUnlinkConfirmationModalOpen}
-          bankAccount={bankAccount}
-        />
-      )}
-    </LinkedAccountOptions>
+      <Tooltip isDisabled={!(isFilterEnabled && isFilterLocked)}>
+        <TooltipTrigger>
+          <LinkedAccountOptions
+            config={[...additionalConfigs, ...(pillConfig ? pillConfig.config : [])]}
+            showLedgerBalance={showLedgerBalance}
+          >
+            <LinkedAccountThumb
+              bankAccount={bankAccount}
+              asWidget={asWidget}
+              showLedgerBalance={showLedgerBalance}
+              slots={{
+                Pill: pillConfig
+                  ? <LinkedAccountPill label={pillConfig.text} items={pillConfig.config} />
+                  : null,
+              }}
+            />
+            {isUnlinkConfirmationModalOpen && (
+              <UnlinkAccountConfirmationModal
+                isOpen
+                onOpenChange={setIsUnlinkConfirmationModalOpen}
+                bankAccount={bankAccount}
+              />
+            )}
+          </LinkedAccountOptions>
+        </TooltipTrigger>
+        <TooltipContent>
+          {t(
+            'linkedAccounts:tooltip.account_filter_locked',
+            'Account filters can’t be changed while transactions are selected',
+          )}
+        </TooltipContent>
+      </Tooltip>
+    </GridListItem>
   )
 }
