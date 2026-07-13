@@ -60,8 +60,8 @@
   }
 
   [data-focus-visible] & {
-    box-shadow: 0 0 0 3px var(--base-transparent-12);
-    border-color: var(--bg-brand-accent, var(--color-primary));
+    outline: 1px auto -webkit-focus-ring-color;
+    outline-offset: 2px;
   }
 
   [data-selected] & {

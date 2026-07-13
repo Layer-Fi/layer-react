@@ -10,6 +10,17 @@
     overflow-x: scroll;
     overflow-y: hidden;
   }
+}
+
+.Layer__linked-accounts__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  align-items: stretch;
+
+  @media screen and (width <= 650px) {
+    flex-wrap: nowrap;
+  }
 
   .Layer__linked-accounts__item {
     display: flex;
@@ -17,10 +28,6 @@
 
     > [role='gridcell'] {
       display: flex;
-      flex: 1;
-    }
-
-    &.--new-account {
       flex: 1;
     }
   }

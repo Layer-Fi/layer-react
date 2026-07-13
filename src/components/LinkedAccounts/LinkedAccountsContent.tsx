@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import classNames from 'classnames'
 import { CirclePlus } from 'lucide-react'
-import { GridList, GridListItem, type Selection } from 'react-aria-components/GridList'
+import { GridList, type Selection } from 'react-aria-components/GridList'
 import { useTranslation } from 'react-i18next'
 
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
@@ -71,43 +71,42 @@ export const LinkedAccountsContent = ({
 
   return (
     <>
-      <GridList
-        aria-label={t('linkedAccounts:label.linked_accounts', 'Linked accounts')}
-        layout='grid'
-        selectionMode={isFilterEnabled ? 'multiple' : 'none'}
-        selectedKeys={selectedBankAccountIds}
-        onSelectionChange={onSelectionChange}
-        className='Layer__linked-accounts__list'
-      >
-        {data?.map(account => (
-          <LinkedAccountItemThumb
-            key={account.id}
-            account={account}
-            showLedgerBalance={showLedgerBalance}
-            showUnlinkItem={showUnlinkItem}
-            showBreakConnection={showBreakConnection}
-            asWidget={asWidget}
-          />
-        ))}
-        <GridListItem
-          id='add-account'
-          textValue={t('linkedAccounts:action.add_account', 'Add Account')}
-          className='Layer__linked-accounts__item --new-account'
-          isDisabled={isDemoBusiness}
-          onAction={onAddAccountClick}
+      <div className='Layer__linked-accounts__list'>
+        <GridList
+          aria-label={t('linkedAccounts:label.linked_accounts', 'Linked accounts')}
+          layout='grid'
+          selectionMode={isFilterEnabled ? 'multiple' : 'none'}
+          selectedKeys={selectedBankAccountIds}
+          onSelectionChange={onSelectionChange}
+          className='Layer__linked-accounts__grid'
         >
-          <LinkAccountDemoTooltip active={isDemoBusiness} asChild>
-            <div className={linkedAccountsNewAccountClassName}>
-              <HStack align='center' gap='2xs'>
-                <CirclePlus size={14} />
-                <Span variant='placeholder'>
-                  {t('linkedAccounts:action.add_account', 'Add Account')}
-                </Span>
-              </HStack>
-            </div>
-          </LinkAccountDemoTooltip>
-        </GridListItem>
-      </GridList>
+          {data?.map(account => (
+            <LinkedAccountItemThumb
+              key={account.id}
+              account={account}
+              showLedgerBalance={showLedgerBalance}
+              showUnlinkItem={showUnlinkItem}
+              showBreakConnection={showBreakConnection}
+              asWidget={asWidget}
+            />
+          ))}
+        </GridList>
+        <LinkAccountDemoTooltip active={isDemoBusiness} asChild>
+          <button
+            type='button'
+            aria-disabled={isDemoBusiness}
+            onClick={onAddAccountClick}
+            className={linkedAccountsNewAccountClassName}
+          >
+            <HStack align='center' gap='2xs'>
+              <CirclePlus size={14} />
+              <Span variant='placeholder'>
+                {t('linkedAccounts:action.add_account', 'Add Account')}
+              </Span>
+            </HStack>
+          </button>
+        </LinkAccountDemoTooltip>
+      </div>
       <LinkedAccountsConfirmationModal />
     </>
   )
