@@ -44,7 +44,13 @@ export interface BankTransactionsWithLinkedAccountsProps {
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
 }
 
-export const BankTransactionsWithLinkedAccounts = ({
+export const BankTransactionsWithLinkedAccounts = (props: BankTransactionsWithLinkedAccountsProps) => (
+  <BankAccountsFilterStoreProvider>
+    <BankTransactionsWithLinkedAccountsContent {...props} />
+  </BankAccountsFilterStoreProvider>
+)
+
+const BankTransactionsWithLinkedAccountsContent = ({
   title, // deprecated
   showTitle = true,
   elevatedLinkedAccounts = false,
@@ -67,65 +73,41 @@ export const BankTransactionsWithLinkedAccounts = ({
   plaidHostedLinkConfig,
 }: BankTransactionsWithLinkedAccountsProps) => {
   const { t } = useTranslation()
-  return (
-    <View
-      title={stringOverrides?.title || title || t('bankTransactions:label.bank_transactions', 'Bank transactions')}
-      showHeader={showTitle}
-    >
-      <BankAccountsFilterStoreProvider>
-        <LinkedAccounts
-          elevated={elevatedLinkedAccounts}
-          showLedgerBalance={showLedgerBalance}
-          showUnlinkItem={showUnlinkItem}
-          showBreakConnection={showBreakConnection}
-          stringOverrides={stringOverrides?.linkedAccounts}
-          plaidHostedLinkConfig={plaidHostedLinkConfig}
-        />
-        <FilteredBankTransactions
-          showCustomerVendor={showCustomerVendor}
-          showDescriptions={showDescriptions}
-          showReceiptUploads={showReceiptUploads}
-          showTags={showTags}
-          showTooltips={showTooltips}
-          showUploadOptions={showUploadOptions}
-          mobileComponent={mobileComponent}
-          mode={mode}
-          stringOverrides={stringOverrides?.bankTransactions}
-          renderInAppLink={renderInAppLink}
-          showCategorizationRules={showCategorizationRules}
-        />
-      </BankAccountsFilterStoreProvider>
-    </View>
-  )
-}
 
-type FilteredBankTransactionsProps = {
-  showCustomerVendor?: boolean
-  showDescriptions?: boolean
-  showReceiptUploads?: boolean
-  showTags?: boolean
-  showTooltips?: boolean
-  showUploadOptions?: boolean
-  mobileComponent?: MobileComponentType
-  mode?: BankTransactionsMode
-  stringOverrides?: BankTransactionsStringOverrides
-  renderInAppLink?: (details: LinkingMetadata) => ReactNode
-  showCategorizationRules?: boolean
-}
-
-const FilteredBankTransactions = (props: FilteredBankTransactionsProps) => {
   const selectedBankAccountIds = useSelectedBankAccountIds()
-
   const filters = useMemo(
     () => (selectedBankAccountIds.length ? { bankAccountIds: selectedBankAccountIds } : undefined),
     [selectedBankAccountIds],
   )
 
   return (
-    <BankTransactions
-      asWidget
-      filters={filters}
-      {...props}
-    />
+    <View
+      title={stringOverrides?.title || title || t('bankTransactions:label.bank_transactions', 'Bank transactions')}
+      showHeader={showTitle}
+    >
+      <LinkedAccounts
+        elevated={elevatedLinkedAccounts}
+        showLedgerBalance={showLedgerBalance}
+        showUnlinkItem={showUnlinkItem}
+        showBreakConnection={showBreakConnection}
+        stringOverrides={stringOverrides?.linkedAccounts}
+        plaidHostedLinkConfig={plaidHostedLinkConfig}
+      />
+      <BankTransactions
+        asWidget
+        filters={filters}
+        showCustomerVendor={showCustomerVendor}
+        showDescriptions={showDescriptions}
+        showReceiptUploads={showReceiptUploads}
+        showTags={showTags}
+        showTooltips={showTooltips}
+        showUploadOptions={showUploadOptions}
+        mobileComponent={mobileComponent}
+        mode={mode}
+        stringOverrides={stringOverrides?.bankTransactions}
+        renderInAppLink={renderInAppLink}
+        showCategorizationRules={showCategorizationRules}
+      />
+    </View>
   )
 }

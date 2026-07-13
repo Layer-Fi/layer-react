@@ -3,11 +3,12 @@
   display: flex;
 
   &.--hide-ledger-balance {
-    position: relative;
     display: block;
   }
 
-  &:hover .Layer__linked-accounts__options-overlay {
+  &:hover .Layer__linked-accounts__options-overlay,
+  &:focus-within .Layer__linked-accounts__options-overlay,
+  &:has([aria-expanded='true']) .Layer__linked-accounts__options-overlay {
     opacity: 1;
     touch-action: auto;
 
@@ -34,7 +35,7 @@
       );
     opacity: 0;
     touch-action: none;
-    transition: 0.15s all ease-out;
+    transition: opacity 0.15s ease-out;
 
     .Layer__linked-accounts__options-overlay-button {
       display: flex;
@@ -42,8 +43,15 @@
       justify-content: center;
       height: 24px;
       width: 24px;
+      padding: 0;
       border-radius: var(--spacing-2xs);
       border: none;
+
+      &:focus-visible {
+        outline: 1px auto -webkit-focus-ring-color;
+        outline-offset: 2px;
+      }
+
       box-shadow:
         0 0 8px 0
         var(--base-transparent-12);
@@ -52,7 +60,75 @@
       cursor: pointer;
       color: var(--color-base-1000);
       transform: translate3d(5px, -5px, 0);
-      transition: 0.15s all ease-out;
+      transition: transform 0.15s ease-out;
     }
+  }
+}
+
+.Layer__linked-accounts__options-menu {
+  &[data-entering] {
+    animation: linked-accounts-options-menu-slide 150ms ease-out;
+  }
+
+  &[data-exiting] {
+    animation: linked-accounts-options-menu-slide 150ms ease-out reverse;
+  }
+}
+
+/* stylelint-disable-next-line keyframes-name-pattern */
+@keyframes linked-accounts-options-menu-slide {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.Layer__linked-accounts__options-menu-list {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3xs);
+  min-width: 160px;
+  padding: var(--spacing-3xs);
+  border-radius: var(--spacing-xs);
+  box-shadow:
+    0 0 0 1px rgb(25 25 25 / 6%),
+    0 4px 12px 0 var(--base-transparent-1, rgb(16 24 40 / 1%)),
+    0 2px 4px 0 rgb(25 25 25 / 6%);
+  outline: none;
+  background: var(--color-base-0);
+}
+
+.Layer__linked-accounts__options-menu-item {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-3xs);
+  padding-left: var(--spacing-xs);
+  border-radius: var(--spacing-2xs);
+  outline: none;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--color-base-500);
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, font-weight 0.2s ease-in-out;
+
+  .Layer__Span {
+    line-height: normal;
+  }
+
+  &[data-hovered],
+  &[data-focused] {
+    background: var(--color-base-50);
+    font-weight: 540;
+    color: var(--color-base-800);
+  }
+
+  &[data-focus-visible] {
+    outline: 1px auto -webkit-focus-ring-color;
+    outline-offset: 2px;
   }
 }

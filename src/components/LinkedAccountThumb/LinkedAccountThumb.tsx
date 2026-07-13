@@ -15,9 +15,6 @@ export interface LinkedAccountThumbProps {
   bankAccount: BankAccount
   asWidget?: boolean
   showLedgerBalance?: boolean
-  isFilterSelectable?: boolean
-  isFilterSelected?: boolean
-  onToggleFilter?: () => void
   slots: {
     Pill: React.ReactNode
   }
@@ -36,9 +33,6 @@ export const LinkedAccountThumb = ({
   bankAccount,
   asWidget,
   showLedgerBalance,
-  isFilterSelectable = false,
-  isFilterSelected = false,
-  onToggleFilter,
   slots,
 }: LinkedAccountThumbProps) => {
   const { t } = useTranslation()
@@ -49,41 +43,13 @@ export const LinkedAccountThumb = ({
   const institutionName = institution?.name
   const institutionLogo = institution?.logo
 
-  const isFilterInteractive = isFilterSelectable && onToggleFilter != null
-
   const linkedAccountThumbClassName = classNames(
     'Layer__linked-account-thumb',
     asWidget && '--as-widget',
     isSyncing && '--is-syncing',
     isSyncing && 'skeleton-loader',
     showLedgerBalance && '--show-ledger-balance',
-    isFilterInteractive && '--selectable',
-    isFilterSelected && '--selected',
   )
-
-  const isEventFromNestedControl = (event: React.SyntheticEvent) => {
-    const target = event.target as Element | null
-    const interactive = target?.closest('button, a, input, select, textarea, [role="button"], [role="menuitem"]')
-    return interactive != null && interactive !== event.currentTarget
-  }
-
-  const filterToggleProps = isFilterInteractive
-    ? {
-      'role': 'button',
-      'tabIndex': 0,
-      'aria-pressed': isFilterSelected,
-      'onClick': (event: React.MouseEvent<HTMLDivElement>) => {
-        if (isEventFromNestedControl(event)) return
-        onToggleFilter()
-      },
-      'onKeyDown': (event: React.KeyboardEvent<HTMLDivElement>) => {
-        if (event.key !== 'Enter' && event.key !== ' ') return
-        if (isEventFromNestedControl(event)) return
-        event.preventDefault()
-        onToggleFilter()
-      },
-    }
-    : {}
 
   const linkedAccountInfoClassName = classNames(
     'topbar',
@@ -98,7 +64,7 @@ export const LinkedAccountThumb = ({
   )
 
   return (
-    <div className={linkedAccountThumbClassName} {...filterToggleProps}>
+    <div className={linkedAccountThumbClassName}>
       <div className={linkedAccountInfoClassName}>
         <div className='topbar-details'>
           <Span variant='inherit' ellipsis>{displayName}</Span>

@@ -10,12 +10,13 @@ import { usePreloadTagDimensions } from '@hooks/api/businesses/[business-id]/tag
 import { usePreloadVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
+import { useBankAccountFilterActions } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { BankTransactionsCategorizationStoreProvider } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { BankTransactionsFeatureVisibilityProvider } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { BankTransactionsProvider } from '@providers/BankTransactionsPaginationProvider/BankTransactionsProvider'
 import { BankTransactionsPaginationProvider } from '@providers/BankTransactionsProvider/BankTransactionsPaginationProvider'
 import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
-import { BulkSelectionStoreProvider } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { BulkSelectionStoreProvider, useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { type BankTransactionsMode, LegacyModeProvider } from '@providers/LegacyModeProvider/LegacyModeProvider'
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import {
@@ -162,12 +163,29 @@ export const BankTransactions = ({
   )
 }
 
+const LockBankAccountFilter = () => {
+  const { setLocked } = useBankAccountFilterActions()
+
+  useEffect(() => {
+    setLocked(true)
+    return () => setLocked(false)
+  }, [setLocked])
+
+  return null
+}
+
 const BankTransactionsContent = (props: BankTransactionsTableViewProps) => {
   const routeState = useBankTransactionsRouteState()
+  const { count } = useCountSelectedIds()
 
-  return routeState.route === BankTransactionsRoute.BankTransactionsTable
-    ? <BankTransactionsTableView {...props} />
-    : <ResponsiveCategorizationRulesView />
+  return (
+    <>
+      {count > 0 && <LockBankAccountFilter />}
+      {routeState.route === BankTransactionsRoute.BankTransactionsTable
+        ? <BankTransactionsTableView {...props} />
+        : <ResponsiveCategorizationRulesView />}
+    </>
+  )
 }
 
 type BankTransactionsTableContentViewProps = {

@@ -1,9 +1,11 @@
 import { useContext } from 'react'
 import classNames from 'classnames'
 import { CirclePlus } from 'lucide-react'
+import { GridList, type Selection } from 'react-aria-components/GridList'
 import { useTranslation } from 'react-i18next'
 
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
+import { useBankAccountFilterActions, useIsBankAccountFilterEnabled, useIsBankAccountFilterLocked, useSelectedBankAccountIds } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -36,6 +38,20 @@ export const LinkedAccountsContent = ({
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.LinkedAccounts)
   const isDemoBusiness = business?.isDemo ?? false
 
+  const isFilterEnabled = useIsBankAccountFilterEnabled()
+  const isFilterLocked = useIsBankAccountFilterLocked()
+  const selectedBankAccountIds = useSelectedBankAccountIds()
+  const { setSelectedBankAccountIds } = useBankAccountFilterActions()
+
+  const onSelectionChange = (keys: Selection) => {
+    if (isFilterLocked) return
+
+    const accountIds = (data ?? []).map(account => account.id)
+    setSelectedBankAccountIds(
+      keys === 'all' ? accountIds : accountIds.filter(id => keys.has(id)),
+    )
+  }
+
   const onAddAccountClick = () => {
     if (isDemoBusiness) return
 
@@ -59,20 +75,27 @@ export const LinkedAccountsContent = ({
   return (
     <>
       <div className='Layer__linked-accounts__list'>
-        {data?.map(account => (
-          <LinkedAccountItemThumb
-            key={account.id}
-            account={account}
-            showLedgerBalance={showLedgerBalance}
-            showUnlinkItem={showUnlinkItem}
-            showBreakConnection={showBreakConnection}
-            asWidget={asWidget}
-          />
-        ))}
+        <GridList
+          aria-label={t('linkedAccounts:label.linked_accounts', 'Linked accounts')}
+          selectionMode={isFilterEnabled ? 'multiple' : 'none'}
+          selectedKeys={selectedBankAccountIds}
+          onSelectionChange={onSelectionChange}
+          className={classNames('Layer__linked-accounts__grid', isFilterLocked && '--locked')}
+        >
+          {data?.map(account => (
+            <LinkedAccountItemThumb
+              key={account.id}
+              account={account}
+              showLedgerBalance={showLedgerBalance}
+              showUnlinkItem={showUnlinkItem}
+              showBreakConnection={showBreakConnection}
+              asWidget={asWidget}
+            />
+          ))}
+        </GridList>
         <LinkAccountDemoTooltip active={isDemoBusiness} asChild>
-          <div
-            role='button'
-            tabIndex={0}
+          <button
+            type='button'
             aria-disabled={isDemoBusiness}
             onClick={onAddAccountClick}
             className={linkedAccountsNewAccountClassName}
@@ -83,7 +106,7 @@ export const LinkedAccountsContent = ({
                 {t('linkedAccounts:action.add_account', 'Add Account')}
               </Span>
             </HStack>
-          </div>
+          </button>
         </LinkAccountDemoTooltip>
       </div>
       <LinkedAccountsConfirmationModal />

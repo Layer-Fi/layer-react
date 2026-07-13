@@ -4,30 +4,37 @@ import { createStore, useStore } from 'zustand'
 import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 
 type BankAccountsFilterStoreShape = {
-  isActive: boolean
+  isEnabled: boolean
+  isLocked: boolean
   selectedBankAccountIds: string[]
   actions: {
-    toggleBankAccountId: (bankAccountId: string) => void
+    setSelectedBankAccountIds: (bankAccountIds: string[]) => void
     retainBankAccountIds: (validBankAccountIds: string[]) => void
-    clear: () => void
+    setLocked: (isLocked: boolean) => void
   }
 }
 
 const BankAccountsFilterStoreContext = createContext(
   createStore<BankAccountsFilterStoreShape>(() => ({
-    isActive: false,
+    isEnabled: false,
+    isLocked: false,
     selectedBankAccountIds: [],
     actions: {
-      toggleBankAccountId: () => {},
+      setSelectedBankAccountIds: () => {},
       retainBankAccountIds: () => {},
-      clear: () => {},
+      setLocked: () => {},
     },
   })),
 )
 
-export function useIsBankAccountFilterActive() {
+export function useIsBankAccountFilterEnabled() {
   const store = useContext(BankAccountsFilterStoreContext)
-  return useStore(store, state => state.isActive)
+  return useStore(store, state => state.isEnabled)
+}
+
+export function useIsBankAccountFilterLocked() {
+  const store = useContext(BankAccountsFilterStoreContext)
+  return useStore(store, state => state.isLocked)
 }
 
 export function useSelectedBankAccountIds() {
@@ -43,15 +50,13 @@ export function useBankAccountFilterActions() {
 export function BankAccountsFilterStoreProvider({ children }: PropsWithChildren) {
   const [store] = useState(() =>
     createStore<BankAccountsFilterStoreShape>(set => ({
-      isActive: true,
+      isEnabled: true,
+      isLocked: false,
       selectedBankAccountIds: [],
       actions: {
-        toggleBankAccountId: (bankAccountId: string) =>
-          set(state => ({
-            selectedBankAccountIds: state.selectedBankAccountIds.includes(bankAccountId)
-              ? state.selectedBankAccountIds.filter(id => id !== bankAccountId)
-              : [...state.selectedBankAccountIds, bankAccountId],
-          })),
+        setSelectedBankAccountIds: (bankAccountIds: string[]) =>
+          set(() => ({ selectedBankAccountIds: bankAccountIds })),
+        setLocked: (isLocked: boolean) => set(() => ({ isLocked })),
         retainBankAccountIds: (validBankAccountIds: string[]) =>
           set((state) => {
             const validIds = new Set(validBankAccountIds)
@@ -60,7 +65,6 @@ export function BankAccountsFilterStoreProvider({ children }: PropsWithChildren)
               ? state
               : { selectedBankAccountIds: next }
           }),
-        clear: () => set(() => ({ selectedBankAccountIds: [] })),
       },
     })),
   )
