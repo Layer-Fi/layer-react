@@ -2,7 +2,6 @@ import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { Heading } from '@ui/Typography/Heading'
 import { AccountBalancesDownloadButton } from '@components/ChartOfAccounts/download/AccountBalancesDownloadButton'
@@ -39,7 +38,6 @@ export const ChartOfAccountsTableHeader = ({
 }: ChartOfAccountsTableHeaderProps) => {
   const { t } = useTranslation()
   const { isDesktop } = useSizeClass()
-  const { startDate, endDate } = useLedgerDateRange({ dateSelectionMode: 'full' })
   const addAccountLabel = stringOverrides?.addAccountButtonText || t('chartOfAccounts:action.add_account', 'Add Account')
 
   return (
@@ -53,8 +51,7 @@ export const ChartOfAccountsTableHeader = ({
         <HeaderCol>
           {withExpandAllButton && <ExpandableDataTableToggleButton />}
           <AccountBalancesDownloadButton
-            startDate={withDateControl ? startDate : undefined}
-            endDate={withDateControl ? endDate : undefined}
+            filterByDateRange={withDateControl}
             icon={!isDesktop}
           />
           {showAddAccountButton && (

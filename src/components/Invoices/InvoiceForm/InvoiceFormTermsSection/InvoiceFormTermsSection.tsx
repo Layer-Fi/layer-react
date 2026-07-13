@@ -2,13 +2,14 @@ import { useCallback, useRef } from 'react'
 import { fromDate, toCalendarDate, type ZonedDateTime } from '@internationalized/date'
 import { useTranslation } from 'react-i18next'
 
+import { InvoiceTermsValues } from '@schemas/invoices/invoiceTerms'
 import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
 import type { InvoiceFormType } from '@components/Invoices/InvoiceForm/useInvoiceForm'
-import { getDurationInDaysFromTerms, InvoiceTermsComboBox, InvoiceTermsValues } from '@components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
+import { getDurationInDaysFromTerms, InvoiceTermsComboBox } from '@components/Invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
 
 import './invoiceFormTermsSection.scss'
 

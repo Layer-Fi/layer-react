@@ -103,6 +103,7 @@ const DOMAIN_DEPENDENCIES: Record<string, readonly string[]> = {
   trips: ['vehicles'],
   timeEntries: ['catalogServices', 'customers'],
   ledgerEntries: ['chartOfAccounts', 'customers', 'vendors'],
+  invoices: ['customers'],
 }
 
 const sortByDependencies = (domains: readonly string[]): string[] => {

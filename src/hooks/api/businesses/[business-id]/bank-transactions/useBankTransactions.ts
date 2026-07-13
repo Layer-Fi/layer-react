@@ -24,6 +24,10 @@ export type UseBankTransactionsOptions = {
   endDate?: Date
   tagKey?: string
   tagValues?: string
+  bankAccountIds?: string
+  sourceAccountIds?: string
+  amountMin?: number
+  amountMax?: number
 }
 
 type GetBankTransactionsPaginatedParams = UseBankTransactionsOptions & {
@@ -52,6 +56,10 @@ const getBankTransactions = getWithQuery<
     limit,
     tagKey,
     tagValues,
+    bankAccountIds,
+    sourceAccountIds,
+    amountMin,
+    amountMax,
   }) => ({
     cursor,
     categorized,
@@ -64,6 +72,10 @@ const getBankTransactions = getWithQuery<
     limit,
     tagKey,
     tagValues,
+    bankAccountIds,
+    sourceAccountIds,
+    amountMin,
+    amountMax,
   }),
 )
 
@@ -94,6 +106,10 @@ const keyMatchesParams = createKeyMatcher<BankTransactionsKey, UseBankTransactio
   { key: 'endDate', compare: compareDates },
   { key: 'tagKey' },
   { key: 'tagValues' },
+  { key: 'bankAccountIds' },
+  { key: 'sourceAccountIds' },
+  { key: 'amountMin' },
+  { key: 'amountMax' },
 ])
 
 const INVALIDATION_DEBOUNCE_OPTIONS = {

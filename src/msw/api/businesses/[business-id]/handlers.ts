@@ -10,10 +10,12 @@ import { customAccountsHandlers } from '@msw/api/businesses/[business-id]/custom
 import { customersHandlers } from '@msw/api/businesses/[business-id]/customers/handlers'
 import { externalAccountsHandlers } from '@msw/api/businesses/[business-id]/external-accounts/handlers'
 import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
+import { invoicesHandlers } from '@msw/api/businesses/[business-id]/invoices/handlers'
 import { ledgerHandlers } from '@msw/api/businesses/[business-id]/ledger/handlers'
 import { mileageHandlers } from '@msw/api/businesses/[business-id]/mileage/handlers'
 import { plaidHandlers } from '@msw/api/businesses/[business-id]/plaid/handlers'
 import { reportsHandlers } from '@msw/api/businesses/[business-id]/reports/handlers'
+import { stripeHandlers } from '@msw/api/businesses/[business-id]/stripe/handlers'
 import { tasksHandlers } from '@msw/api/businesses/[business-id]/tasks/handlers'
 import { taxEstimatesHandlers } from '@msw/api/businesses/[business-id]/tax-estimates/handlers'
 import { timeTrackingHandlers } from '@msw/api/businesses/[business-id]/time-tracking/handlers'
@@ -33,6 +35,8 @@ export const businessHandlers: RequestHandler[] = [
   ...catalogHandlers,
   ...timeTrackingHandlers,
   ...ledgerHandlers,
+  ...invoicesHandlers,
+  ...stripeHandlers,
   ...reportsHandlers,
   ...bookkeepingHandlers,
   ...callBookingsHandlers,

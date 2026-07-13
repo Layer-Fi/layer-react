@@ -1,7 +1,8 @@
-import { type ReactNode } from 'react'
+import { type ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
+import { BankAccountsFilterStoreProvider, useSelectedBankAccountIds } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { type BankTransactionsMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
 import {
@@ -43,7 +44,13 @@ export interface BankTransactionsWithLinkedAccountsProps {
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
 }
 
-export const BankTransactionsWithLinkedAccounts = ({
+export const BankTransactionsWithLinkedAccounts = (props: BankTransactionsWithLinkedAccountsProps) => (
+  <BankAccountsFilterStoreProvider>
+    <BankTransactionsWithLinkedAccountsContent {...props} />
+  </BankAccountsFilterStoreProvider>
+)
+
+const BankTransactionsWithLinkedAccountsContent = ({
   title, // deprecated
   showTitle = true,
   elevatedLinkedAccounts = false,
@@ -66,6 +73,13 @@ export const BankTransactionsWithLinkedAccounts = ({
   plaidHostedLinkConfig,
 }: BankTransactionsWithLinkedAccountsProps) => {
   const { t } = useTranslation()
+
+  const selectedBankAccountIds = useSelectedBankAccountIds()
+  const filters = useMemo(
+    () => (selectedBankAccountIds.length ? { bankAccountIds: selectedBankAccountIds } : undefined),
+    [selectedBankAccountIds],
+  )
+
   return (
     <View
       title={stringOverrides?.title || title || t('bankTransactions:label.bank_transactions', 'Bank transactions')}
@@ -81,6 +95,7 @@ export const BankTransactionsWithLinkedAccounts = ({
       />
       <BankTransactions
         asWidget
+        filters={filters}
         showCustomerVendor={showCustomerVendor}
         showDescriptions={showDescriptions}
         showReceiptUploads={showReceiptUploads}

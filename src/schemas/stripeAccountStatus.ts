@@ -25,7 +25,7 @@ export const TransformedStripeAccountStatusSchema = Schema.transform(
   },
 )
 
-const StripeAccountStatusDataSchema = Schema.Struct({
+export const StripeAccountStatusDataSchema = Schema.Struct({
   accountStatus: pipe(
     Schema.propertySignature(TransformedStripeAccountStatusSchema),
     Schema.fromKey('account_status'),
