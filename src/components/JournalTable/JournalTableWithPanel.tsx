@@ -67,6 +67,7 @@ export const JournalTableWithPanel = ({
           </HeaderCol>
           <HeaderCol>
             <JournalEntriesDownloadButton
+              filterByDateRange
               icon={!isDesktop}
             />
             <Button
