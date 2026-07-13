@@ -163,24 +163,24 @@ export const BankTransactions = ({
   )
 }
 
-const BankAccountFilterLockSync = () => {
-  const { count } = useCountSelectedIds()
+const LockBankAccountFilter = () => {
   const { setLocked } = useBankAccountFilterActions()
 
   useEffect(() => {
-    setLocked(count > 0)
+    setLocked(true)
     return () => setLocked(false)
-  }, [count, setLocked])
+  }, [setLocked])
 
   return null
 }
 
 const BankTransactionsContent = (props: BankTransactionsTableViewProps) => {
   const routeState = useBankTransactionsRouteState()
+  const { count } = useCountSelectedIds()
 
   return (
     <>
-      <BankAccountFilterLockSync />
+      {count > 0 && <LockBankAccountFilter />}
       {routeState.route === BankTransactionsRoute.BankTransactionsTable
         ? <BankTransactionsTableView {...props} />
         : <ResponsiveCategorizationRulesView />}
