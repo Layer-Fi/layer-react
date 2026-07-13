@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useLayoutEffect, useMemo } from 'react'
 import { type Row } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 
@@ -8,6 +8,8 @@ import { Alignment } from '@schemas/reports/unifiedReport'
 import { humanizeEnum } from '@utils/format'
 import { entryNumber, sumLineItemAmountsByDirection } from '@utils/journal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useAutoResetPageIndex } from '@hooks/utils/pagination/useAutoResetPageIndex'
+import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
 import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -25,6 +27,8 @@ import './journalTable.scss'
 
 const COMPONENT_NAME = 'JournalTable'
 const PAGE_SIZE = 15
+
+const EMPTY_ENTRIES: ReadonlyArray<LedgerEntry> = []
 
 type LedgerEntryLineItem = LedgerEntry['lineItems'][number]
 
@@ -81,44 +85,31 @@ const JournalTableContent = ({
 
   const { setExpanded } = useContext(ExpandableDataTableContext)
 
-  const [currentPage, setCurrentPage] = useState(1)
+  const entries = rawData ?? EMPTY_ENTRIES
 
-  // The list is filtered by the shared ledger date range. When that range
-  // changes the result set is replaced, so the current page index may no longer
-  // exist (e.g. narrowing to a range with fewer pages) — reset to the first page.
+  // A date-range change is a new query, so pagination should snap back to the
+  // first page when it changes — but not on background refetches or `fetchMore`.
+  // `useAutoResetPageIndex` arms on filter change and disarms once fresh data
+  // arrives; `usePaginatedList` also clamps the index, so a shrinking result set
+  // can never leave us stranded on an out-of-range page.
   const { startDate, endDate } = useLedgerDateRange({ dateSelectionMode: 'full' })
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [startDate, endDate])
+  const dateRange = useMemo(() => ({ startDate, endDate }), [startDate, endDate])
+  const autoResetPageIndexRef = useAutoResetPageIndex(dateRange, entries)
+
+  const { pageItems, pageIndex, onPageChange } = usePaginatedList({
+    data: entries,
+    pageSize: PAGE_SIZE,
+    autoResetPageIndexRef,
+  })
 
   // Re-expand every row on page change. Once a row is collapsed, TanStack rewrites
   // `expanded: true` into a per-row map covering only the current page's slice, so
   // the next page would render collapsed without this reset.
   useLayoutEffect(() => {
     setExpanded(true)
-  }, [currentPage, setExpanded])
+  }, [pageIndex, setExpanded])
 
-  const pageData = useMemo(
-    () => {
-      if (!rawData) return undefined
-
-      const firstPageIndex = (currentPage - 1) * PAGE_SIZE
-      return rawData.slice(firstPageIndex, firstPageIndex + PAGE_SIZE)
-    },
-    [rawData, currentPage],
-  )
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-    if (rawData) {
-      const requestedItemIndex = (page - 1) * PAGE_SIZE + PAGE_SIZE - 1
-      if (requestedItemIndex > rawData.length - 1 && hasMore) {
-        fetchMore()
-      }
-    }
-  }
-
-  const hasEntries = !!rawData?.length
+  const hasEntries = entries.length > 0
 
   const slots = useMemo(() => ({
     EmptyState: () => (
@@ -139,9 +130,9 @@ const JournalTableContent = ({
     ),
   }), [t, refetch, isValidating, isLoading])
 
-  const rows = useMemo<JournalRow[] | undefined>(
-    () => pageData?.map(entry => ({ kind: 'entry' as const, entry })),
-    [pageData],
+  const rows = useMemo<JournalRow[]>(
+    () => pageItems.map(entry => ({ kind: 'entry' as const, entry })),
+    [pageItems],
   )
 
   const columnConfig = useMemo<ColumnConfig<JournalRow>>(() => {
@@ -241,10 +232,10 @@ const JournalTableContent = ({
 
       {hasEntries && (
         <Pagination
-          currentPage={currentPage}
-          totalCount={rawData?.length || 0}
+          currentPage={pageIndex + 1}
+          totalCount={entries.length}
           pageSize={PAGE_SIZE}
-          onPageChange={handlePageChange}
+          onPageChange={onPageChange}
           hasMore={hasMore}
           fetchMore={fetchMore}
         />
