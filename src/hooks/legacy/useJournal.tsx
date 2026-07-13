@@ -38,7 +38,18 @@ export const useJournal: UseJournal = () => {
     refetch,
     hasMore,
     fetchMore,
-  } = useListLedgerEntries({ sortBy: LedgerEntriesSortBy.EntryAt, sortOrder: SortOrder.DESC, limit: 150, startDate, endDate })
+  } = useListLedgerEntries({
+    sortBy: LedgerEntriesSortBy.EntryAt,
+    sortOrder: SortOrder.DESC,
+    limit: 150,
+    startDate,
+    endDate,
+    // Changing the date range is a distinct query, not more of the same list, so
+    // drop the hook's `keepPreviousData` default: `data` clears and `isLoading`
+    // goes true, letting the table show a loading state rather than the previous
+    // range's stale entries. `fetchMore` keeps the same key and is unaffected.
+    swrOptions: { keepPreviousData: false },
+  })
 
   const closeSelectedEntry = useCallback(() => {
     setSelectedEntryId(undefined)
