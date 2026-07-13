@@ -45,7 +45,6 @@ export { MileageSummaryCard as unstable_MileageSummaryCard } from './components/
 ======================= Composite Views =======================
 */
 export { Invoices } from './components/Invoices/Invoices'
-export { ProfitAndLossView } from './components/ProfitAndLossView/ProfitAndLossView'
 export { UnifiedReports } from './components/UnifiedReports/UnifiedReports'
 export { AccountingOverview } from './views/AccountingOverview/AccountingOverview'
 export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWithLinkedAccounts/BankTransactionsWithLinkedAccounts'
