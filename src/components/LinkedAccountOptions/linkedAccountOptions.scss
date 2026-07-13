@@ -3,7 +3,6 @@
   display: flex;
 
   &.--hide-ledger-balance {
-    position: relative;
     display: block;
   }
 
@@ -36,7 +35,7 @@
       );
     opacity: 0;
     touch-action: none;
-    transition: 0.15s all ease-out;
+    transition: opacity 0.15s ease-out;
 
     .Layer__linked-accounts__options-overlay-button {
       display: flex;
@@ -61,7 +60,7 @@
       cursor: pointer;
       color: var(--color-base-1000);
       transform: translate3d(5px, -5px, 0);
-      transition: 0.15s all ease-out;
+      transition: transform 0.15s ease-out;
     }
   }
 }
