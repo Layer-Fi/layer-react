@@ -7,14 +7,15 @@ import {
   LayerContextActionName as Action,
   type LayerContextValues,
   type LayerThemeConfig,
-  type OnboardingStep,
 } from '@internal-types/layerContext'
 import { errorHandler, type LayerError } from '@utils/api/errorHandler'
 import { buildColorsPalette } from '@utils/colors'
 import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
 import { useBusiness } from '@hooks/api/businesses/[business-id]/useBusiness'
-import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
+import { type LayerEvent } from '@providers/LayerProvider/layerEvents'
 import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
+import { BankAccountsProvider } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { LayerContext } from '@contexts/LayerContext/LayerContext'
 import { type ToastProps, ToastsContainer } from '@components/Toast/Toast'
 
@@ -25,7 +26,6 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   switch (action.type) {
     case Action.setBusiness:
     case Action.setTheme:
-    case Action.setOnboardingStep:
     case Action.setColors:
       return { ...state, ...action.payload }
     case Action.setToast:
@@ -79,6 +79,9 @@ export const BusinessProvider = ({
 
   // Create stable callback wrappers that always call the latest version
   const stableEventCallbacks = useMemo(() => ({
+    onEvent: (event: LayerEvent) => {
+      eventCallbacksRef.current?.onEvent?.(event)
+    },
     onTransactionCategorized: () => {
       eventCallbacksRef.current?.onTransactionCategorized?.()
     },
@@ -200,12 +203,9 @@ export const BusinessProvider = ({
 
   const { data: accountingConfiguration } = useAccountingConfiguration({ businessId })
 
-  const setOnboardingStep = useCallback((value: OnboardingStep) =>
-    dispatch({
-      type: Action.setOnboardingStep,
-      payload: { onboardingStep: value },
-    }),
-  [])
+  // Deprecated no-op: onboardingStep no longer drives any UI now that the
+  // Onboarding component has been removed.
+  const setOnboardingStep = useCallback(() => {}, [])
 
   return (
     <LayerContext.Provider
@@ -226,7 +226,9 @@ export const BusinessProvider = ({
         dateRange,
       }}
     >
-      {children}
+      <BankAccountsProvider>
+        {children}
+      </BankAccountsProvider>
       <ToastsContainer />
     </LayerContext.Provider>
   )

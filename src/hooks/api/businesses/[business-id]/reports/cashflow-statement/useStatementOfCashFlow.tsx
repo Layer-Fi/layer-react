@@ -1,14 +1,7 @@
-import { endOfMonth, startOfMonth } from 'date-fns'
-import useSWR from 'swr'
-
 import type { StatementOfCashFlow } from '@internal-types/statementOfCashFlow'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export type GetStatementOfCashFlowParams = {
   businessId: string
@@ -16,73 +9,20 @@ export type GetStatementOfCashFlowParams = {
   endDate: Date
 }
 
-const getStatementOfCashFlow = get<
+const getStatementOfCashFlow = getWithQuery<
   { data: StatementOfCashFlow },
   GetStatementOfCashFlowParams
 >(
-  ({ businessId, startDate, endDate }) => {
-    const parameters = toDefinedSearchParameters({ startDate, endDate })
-
-    return `/v1/businesses/${businessId}/reports/cashflow-statement?${parameters}`
-  },
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/cashflow-statement`,
 )
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  startDate,
-  endDate,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  startDate: Date
-  endDate: Date
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      startDate,
-      endDate,
-      tags: ['#statement-of-cash-flow'],
-    } as const
-  }
-}
+export const STATEMENT_OF_CASH_FLOW_TAG_KEY = '#statement-of-cash-flow'
 
-export function useStatementOfCashFlow({
-  startDate = startOfMonth(new Date()),
-  endDate = endOfMonth(new Date()),
-}: {
-  startDate?: Date
-  endDate?: Date
-}) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { apiUrl } = useEnvironment()
-  const { businessId } = useLayerContext()
+export const useStatementOfCashFlow = createQueryHook({
+  tags: [STATEMENT_OF_CASH_FLOW_TAG_KEY],
+  request: getStatementOfCashFlow,
+  select: ({ data }) => data,
+})
 
-  const response = useSWR(
-    withLocale(buildKey({
-      ...auth,
-      apiUrl,
-      businessId,
-      startDate,
-      endDate,
-    })),
-    ({ apiUrl, accessToken, startDate, endDate }) => getStatementOfCashFlow(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          startDate,
-          endDate,
-        },
-      })().then(({ data }) => data),
-  )
-
-  return new SWRQueryResult(response)
-}
+export const useStatementOfCashFlowGlobalCacheActions = createResourceGlobalCacheActions<StatementOfCashFlow>(STATEMENT_OF_CASH_FLOW_TAG_KEY)

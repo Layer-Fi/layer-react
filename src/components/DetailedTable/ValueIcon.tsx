@@ -1,5 +1,7 @@
 import { type ColorSelector, type FallbackFillSelector, type SeriesData, type TypeColorMapping } from '@components/DetailedCharts/types'
 
+import './valueIcon.scss'
+
 export const ValueIcon = <T extends SeriesData>({
   item,
   colorSelector,

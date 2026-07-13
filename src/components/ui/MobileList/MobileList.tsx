@@ -25,6 +25,11 @@ interface MobileListBaseProps<TData> {
     ErrorState: React.FC
   }
   renderItem: (item: TData) => React.ReactNode
+  renderFooter?: (item: TData) => React.ReactNode
+  renderExpandedContent?: (item: TData) => React.ReactNode
+  expandedKeys?: Set<string>
+  exitingKeys?: Set<string>
+  onRemoveItem?: (item: TData) => void
   onClickItem?: (item: TData) => void
   variant?: MobileListVariant
 }
@@ -61,6 +66,11 @@ export const MobileList = <TData extends { id: string }>({
   data,
   slots,
   renderItem,
+  renderFooter,
+  renderExpandedContent,
+  expandedKeys,
+  exitingKeys,
+  onRemoveItem,
   onClickItem,
   isLoading,
   isError,
@@ -77,6 +87,23 @@ export const MobileList = <TData extends { id: string }>({
 
   const resolvedSelectionBehavior = resolvedSelectionMode === 'none' ? 'toggle' : undefined
 
+  const renderRow = useCallback((item: TData) => {
+    return (
+      <MobileListItem
+        key={item.id}
+        item={item}
+        onClickItem={onClickItem}
+        renderFooter={renderFooter}
+        renderExpandedContent={renderExpandedContent}
+        isExpanded={expandedKeys?.has(item.id) ?? false}
+        isExiting={exitingKeys?.has(item.id) ?? false}
+        onExitComplete={onRemoveItem}
+      >
+        {renderItem(item)}
+      </MobileListItem>
+    )
+  }, [exitingKeys, expandedKeys, onClickItem, onRemoveItem, renderExpandedContent, renderFooter, renderItem])
+
   const renderEmptyState = useCallback(() => {
     return <EmptyState />
   }, [EmptyState])
@@ -88,12 +115,6 @@ export const MobileList = <TData extends { id: string }>({
   if (isError) {
     return <ErrorState />
   }
-
-  const renderRow = (item: TData) => (
-    <MobileListItem key={item.id} item={item} onClickItem={onClickItem}>
-      {renderItem(item)}
-    </MobileListItem>
-  )
 
   return (
     <GridList
@@ -113,6 +134,7 @@ export const MobileList = <TData extends { id: string }>({
             label={group.label}
             items={group.items}
             renderItem={renderItem}
+            renderFooter={renderFooter}
             onClickItem={onClickItem}
           />
         ))

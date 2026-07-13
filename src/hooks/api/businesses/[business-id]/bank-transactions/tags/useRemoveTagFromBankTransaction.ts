@@ -1,11 +1,9 @@
 import { useCallback } from 'react'
-import useSWRMutation from 'swr/mutation'
 
 import { del } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const REMOVE_TAG_FROM_BANK_TRANSACTION_TAG_KEY = '#remove-tag-from-bank-transaction'
 
@@ -16,68 +14,29 @@ type RemoveTagFromBankTransactionBody = {
 const removeTagFromBankTransaction = del<
   Record<string, never>,
   RemoveTagFromBankTransactionBody,
-  { businessId: string }
+  { businessId: string, bankTransactionId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/tags`)
-
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  bankTransactionId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  bankTransactionId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      bankTransactionId,
-      tags: [REMOVE_TAG_FROM_BANK_TRANSACTION_TAG_KEY],
-    } as const
-  }
-}
 
 type RemoveTagFromBankTransactionArg = {
   tagId: string
 }
+
+const useRemoveTagFromBankTransactionMutation = createMutationHook({
+  tags: [REMOVE_TAG_FROM_BANK_TRANSACTION_TAG_KEY],
+  request: removeTagFromBankTransaction,
+  keyParams: ['bankTransactionId'],
+  argToBody: ({ tagId }: RemoveTagFromBankTransactionArg) => ({
+    tag_ids: [tagId],
+  }),
+  swrOptions: { throwOnError: false },
+})
 
 type RemoveTagFromBankTransactionOptions = {
   bankTransactionId: string
 }
 
 export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTagFromBankTransactionOptions) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-      bankTransactionId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: { tagId } }: { arg: RemoveTagFromBankTransactionArg },
-    ) => removeTagFromBankTransaction(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-        body: {
-          tag_ids: [tagId],
-        },
-      },
-    ),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
+  const mutationResponse = useRemoveTagFromBankTransactionMutation({ bankTransactionId })
 
   const { optimisticallyUpdateBankTransactions, debouncedInvalidateBankTransactions } = useBankTransactionsGlobalCacheActions()
 
@@ -117,14 +76,5 @@ export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTag
     ],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

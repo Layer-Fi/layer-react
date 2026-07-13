@@ -73,8 +73,8 @@ export function getJournalEntryFormInitialValues(journalEntry: ApiCustomJournalE
     entryAt: fromDate(new Date(journalEntry.entry.entryAt), getLocalTimeZone()),
     createdBy: '',
     memo: journalEntry.memo,
-    customer: journalEntry.customer,
-    vendor: journalEntry.vendor,
+    customer: journalEntry.customer ?? null,
+    vendor: journalEntry.vendor ?? null,
     tags: [],
     metadata: null,
     referenceNumber: '',
@@ -87,8 +87,8 @@ export function getJournalEntryFormInitialValues(journalEntry: ApiCustomJournalE
       amount: convertCentsToNonRecursiveBigDecimal(entryLineItemsById.get(lineItem.id)!.amount),
       direction: entryLineItemsById.get(lineItem.id)!.direction,
       memo: lineItem.memo ?? null,
-      customer: lineItem.customer,
-      vendor: lineItem.vendor,
+      customer: lineItem.customer ?? null,
+      vendor: lineItem.vendor ?? null,
       tags: lineItem.transactionTags?.map(makeTagFromTransactionTag) ?? [],
     })),
   }
@@ -103,7 +103,7 @@ export function convertJournalEntryFormToParams(form: JournalEntryForm): CreateC
   return {
     ...(form.externalId && { externalId: form.externalId }),
     entryAt: form.entryAt.toDate(),
-    createdBy: form.createdBy,
+    createdBy: form.createdBy.trim(),
     memo: form.memo.trim(),
     ...(form.customer?.id && { customerId: form.customer.id }),
     ...(form.customer?.externalId && { customerExternalId: form.customer.externalId }),
@@ -134,11 +134,11 @@ export function validateJournalEntryForm({ value }: { value: JournalEntryForm },
     errors.push({ entryAt: t('generalLedger:validation.entry_date_required', 'Entry date is a required field.') })
   }
 
-  if (!value.createdBy) {
+  if (!value.createdBy.trim()) {
     errors.push({ createdBy: t('generalLedger:validation.create_required', 'Created by is a required field.') })
   }
 
-  if (!value.memo) {
+  if (!value.memo.trim()) {
     errors.push({ memo: t('generalLedger:validation.memo_required', 'Memo is a required field.') })
   }
 

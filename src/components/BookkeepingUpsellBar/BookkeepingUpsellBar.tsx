@@ -1,10 +1,10 @@
 import { Coffee } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { Button, ButtonVariant } from '@components/Button/Button'
-import { Link } from '@components/Button/Link'
+import { Button } from '@ui/Button/Button'
+import { LinkButton } from '@ui/Button/LinkButton'
+import { P } from '@ui/Typography/Text'
 import { IconBox } from '@components/IconBox/IconBox'
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
 
 import './bookkeepingUpsellBar.scss'
 
@@ -25,28 +25,25 @@ export const BookkeepingUpsellBar = ({
           <Coffee size={11} />
         </IconBox>
         <div className='Layer__bar-banner__text-container'>
-          <Text size={TextSize.md} weight={TextWeight.bold}>
+          <P weight='bold' variant='inherit'>
             {t('bookkeeping:prompt.need_help_books', 'Need help with your books?')}
-          </Text>
-          <Text
-            size={TextSize.sm}
-            className='Layer__bar-banner__text-container__desc'
-          >
+          </P>
+          <P size='sm' variant='white'>
             {t('bookkeeping:label.order_our_bookkeeping_service', 'Order our bookkeeping service supported by real humans.')}
-          </Text>
+          </P>
         </div>
       </div>
       {onClick
         ? (
-          <Button variant={ButtonVariant.secondary} onClick={onClick}>
+          <Button variant='outlined' onPress={onClick}>
             {t('bookkeeping:action.schedule_a_demo', 'Schedule a demo')}
           </Button>
         )
         : href
           ? (
-            <Link href={href} target='_blank' variant={ButtonVariant.secondary}>
+            <LinkButton href={href} external variant='outlined'>
               {t('bookkeeping:action.schedule_a_demo', 'Schedule a demo')}
-            </Link>
+            </LinkButton>
           )
           : null}
     </div>

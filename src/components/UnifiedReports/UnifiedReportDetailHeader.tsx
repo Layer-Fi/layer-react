@@ -1,30 +1,36 @@
-import { ChevronLeft } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
-
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useDetailUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
-import { Button } from '@ui/Button/Button'
+import { BackButton } from '@ui/Button/BackButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { UnifiedReportDetailBreadcrumb } from '@components/UnifiedReports/UnifiedReportDetailBreadcrumb'
+import { UnifiedReportDownloadButton } from '@components/UnifiedReports/UnifiedReportDownloadButton'
 
 import './unifiedReportDetailHeader.scss'
 
 export const UnifiedReportDetailHeader = () => {
   const { detailReportConfig, closeDetailReport } = useDetailUnifiedReport()
-  const { t } = useTranslation()
+  const { isDesktop } = useSizeClass()
 
   if (!detailReportConfig) return null
   const { column } = detailReportConfig
 
   return (
-    <HStack gap='sm' pb='lg' pis='lg' align='center' className='Layer__UnifiedReports__DetailHeader'>
-      <Button icon variant='outlined' onClick={closeDetailReport} aria-label={t('common:action.back', 'Back')}>
-        <ChevronLeft size={16} />
-      </Button>
-      <VStack gap='3xs'>
-        <UnifiedReportDetailBreadcrumb />
-        <Span size='sm' variant='subtle'>{column.displayName}</Span>
-      </VStack>
+    <HStack
+      pb='lg'
+      pi='lg'
+      align='center'
+      justify='space-between'
+      className='Layer__UnifiedReports__DetailHeader'
+    >
+      <HStack gap='sm' align='center'>
+        <BackButton onPress={closeDetailReport} />
+        <VStack gap='3xs'>
+          <UnifiedReportDetailBreadcrumb />
+          <Span size='sm' variant='subtle'>{column.displayName}</Span>
+        </VStack>
+      </HStack>
+      <UnifiedReportDownloadButton icon={!isDesktop} />
     </HStack>
   )
 }

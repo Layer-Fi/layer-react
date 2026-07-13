@@ -1,13 +1,11 @@
-import classNames from 'classnames'
-import { XIcon } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
-
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { Button } from '@ui/Button/Button'
-import { VStack } from '@ui/Stack/Stack'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { BackButton } from '@ui/Button/BackButton'
+import { CloseButton as UICloseButton } from '@ui/Button/CloseButton'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
-import { BackButton } from '@components/Button/BackButton'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
 import './profitAndLossDetailedChartsHeader.scss'
@@ -15,24 +13,25 @@ import './profitAndLossDetailedChartsHeader.scss'
 type HeaderTitleProps = {
   title: string
   dateLabel: string
-  isTablet: boolean
   showDatePicker: boolean
+  isMobile: boolean
 }
 
-const HeaderTitle = ({ title, dateLabel, isTablet, showDatePicker }: HeaderTitleProps) => (
-  <VStack className='Layer__ProfitAndLossDetailedChartsHeader__head'>
-    <Span size='lg' weight='bold'>
-      {title}
-    </Span>
-    <Span
-      size='sm'
-      variant={isTablet ? undefined : 'subtle'}
-      className='Layer__ProfitAndLossDetailedChartsHeader__date'
-    >
-      {dateLabel}
-    </Span>
-    {!isTablet && showDatePicker && <GlobalMonthPicker />}
-  </VStack>
+const HeaderTitle = ({ isMobile, title, dateLabel, showDatePicker }: HeaderTitleProps) => (
+  <HStack justify='space-between' align='center' gap='md' fluid>
+    <VStack className='Layer__ProfitAndLossDetailedChartsHeader__head'>
+      <Heading level={3} size='sm'>
+        {title}
+      </Heading>
+      {!showDatePicker && (
+        <Span size='sm' variant='subtle'>
+          {dateLabel}
+        </Span>
+      )}
+
+    </VStack>
+    {showDatePicker && <GlobalMonthPicker truncateMonth={isMobile} />}
+  </HStack>
 )
 
 enum CloseButtonVariant {
@@ -43,30 +42,18 @@ enum CloseButtonVariant {
 type CloseButtonProps = {
   variant: CloseButtonVariant
   onClose: () => void
-  ariaLabel: string
 }
-const CloseButton = ({ variant, onClose, ariaLabel }: CloseButtonProps) => {
+const CloseButton = ({ variant, onClose }: CloseButtonProps) => {
   if (variant === CloseButtonVariant.BackButton) {
-    return <BackButton onClick={onClose} aria-label={ariaLabel} />
+    return <BackButton onPress={onClose} />
   }
 
-  return (
-    <Button
-      icon
-      inset
-      variant='outlined'
-      onPress={onClose}
-      aria-label={ariaLabel}
-    >
-      <XIcon />
-    </Button>
-  )
+  return <UICloseButton onPress={onClose} />
 }
 
 type ProfitAndLossDetailedChartsHeaderProps = {
   title: string
   date: Date
-  mode: 'desktop' | 'tablet'
   showCloseButton?: boolean
   showDatePicker?: boolean
   onClose: () => void
@@ -75,38 +62,30 @@ type ProfitAndLossDetailedChartsHeaderProps = {
 export const ProfitAndLossDetailedChartsHeader = ({
   title,
   date,
-  mode,
   showCloseButton = true,
   showDatePicker = false,
   onClose,
 }: ProfitAndLossDetailedChartsHeaderProps) => {
-  const { t } = useTranslation()
+  const { isDesktop, isMobile } = useSizeClass()
   const { formatDate } = useIntlFormatter()
-  const isTablet = mode === 'tablet'
 
   const headerProps: HeaderTitleProps = {
     title,
-    isTablet,
+    isMobile,
     showDatePicker,
     dateLabel: formatDate(date, DateFormat.MonthYear),
   }
 
   const closeButtonProps: CloseButtonProps = {
-    variant: isTablet ? CloseButtonVariant.BackButton : CloseButtonVariant.OutlinedIconButton,
+    variant: isDesktop ? CloseButtonVariant.OutlinedIconButton : CloseButtonVariant.BackButton,
     onClose,
-    ariaLabel: t('common:action.close_label', 'Close'),
   }
 
   return (
-    <header
-      className={classNames(
-        'Layer__ProfitAndLossDetailedChartsHeader',
-        `Layer__ProfitAndLossDetailedChartsHeader--${mode}`,
-      )}
-    >
-      {isTablet && showCloseButton && <CloseButton {...closeButtonProps} />}
+    <header className='Layer__ProfitAndLossDetailedChartsHeader'>
+      {!isDesktop && showCloseButton && <CloseButton {...closeButtonProps} />}
       <HeaderTitle {...headerProps} />
-      {!isTablet && showCloseButton && <CloseButton {...closeButtonProps} />}
+      {isDesktop && showCloseButton && <CloseButton {...closeButtonProps} />}
     </header>
   )
 }

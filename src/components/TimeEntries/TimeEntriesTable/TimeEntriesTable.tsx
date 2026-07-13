@@ -13,7 +13,7 @@ import { HStack } from '@ui/Stack/Stack'
 import { DurationSpan } from '@ui/Typography/DurationSpan'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
-import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
+import type { ColumnConfig } from '@components/DataTable/utils/column'
 import { PaginatedTable, type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 import { TimeEntriesTableHeader } from '@components/TimeEntries/TimeEntriesTable/TimeEntriesTableHeader'
 
@@ -72,7 +72,7 @@ const TimeEntryActionsCell = memo(function TimeEntryActionsCell({ entry }: { ent
   )
 })
 
-const getColumnConfig = (t: TFunction): NestedColumnConfig<TimeEntry> => [
+const getColumnConfig = (t: TFunction): ColumnConfig<TimeEntry> => [
   {
     id: TimeEntryColumns.EntryDate,
     header: t('common:label.date', 'Date'),

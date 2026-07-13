@@ -6,6 +6,7 @@ export type BankTransactionsFiltersContextType = {
   filters: BankTransactionFilters
   setFilters: (filters: BankTransactionFilters) => void
   dateFilterMode?: BankTransactionsDateFilterMode
+  isMonthlyViewMode: boolean
 }
 
 export const BankTransactionsFiltersContext =
@@ -13,6 +14,7 @@ export const BankTransactionsFiltersContext =
     filters: {},
     setFilters: () => {},
     dateFilterMode: undefined,
+    isMonthlyViewMode: false,
   })
 
 export const useBankTransactionsFiltersContext = () =>

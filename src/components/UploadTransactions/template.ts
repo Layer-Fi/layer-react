@@ -1,4 +1,4 @@
-import { type CustomAccountTransactionRow } from '@internal-types/customAccounts'
+import { type CustomAccountTransactionRow } from '@schemas/customAccounts'
 
 export const templateHeaders: { [K in keyof CustomAccountTransactionRow]: string } = {
   date: 'Date',
@@ -7,8 +7,8 @@ export const templateHeaders: { [K in keyof CustomAccountTransactionRow]: string
 }
 
 export const allHeaders: { [K in keyof CustomAccountTransactionRow]: string } = {
-  external_id: 'External ID',
-  reference_number: 'Reference Number',
+  externalId: 'External ID',
+  referenceNumber: 'Reference Number',
   ...templateHeaders,
 }
 
@@ -17,13 +17,13 @@ export const templateExampleTransactions: CustomAccountTransactionRow[] = [
     date: '05/12/2025',
     description: 'Grocery Store Purchase',
     amount: -76.23,
-    external_id: null,
-    reference_number: '123',
+    externalId: null,
+    referenceNumber: '123',
   },
   {
     date: '05/18/2025',
     description: 'Monthly Interest',
     amount: 12.45,
-    external_id: 'txn-31415',
+    externalId: 'txn-31415',
   },
 ]

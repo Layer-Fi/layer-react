@@ -1,0 +1,14 @@
+.Layer__bank-transactions {
+  max-width: var(--max-component-width);
+  padding-bottom: var(--spacing-lg);
+
+  .Layer__BankTransactions__TableWrapper {
+    overflow: auto;
+    max-width: var(--max-component-width);
+  }
+}
+
+.Layer__bank-transactions__list-loader {
+  width: 100%;
+  padding: var(--spacing-lg) var(--spacing-md);
+}

@@ -1,75 +1,41 @@
-import useSWR from 'swr'
+import { pipe, Schema } from 'effect'
 
-import { mapRawCustomAccountToCustomAccount, type RawCustomAccount } from '@internal-types/customAccounts'
-import { get } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { CustomAccountSchema } from '@schemas/customAccounts'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export const CUSTOM_ACCOUNTS_TAG_KEY = '#custom-accounts'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  userCreated,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  userCreated?: boolean
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      userCreated,
-      tags: [CUSTOM_ACCOUNTS_TAG_KEY],
-    } as const
-  }
-}
-
-const getCustomAccounts = get<
-  {
-    data: {
-      type: 'Custom_Accounts'
-      custom_accounts: RawCustomAccount[]
-    }
-  },
-  {
-    businessId: string
-    userCreated?: boolean
-  }
->(({ businessId, userCreated }) => {
-  const baseUrl = `/v1/businesses/${businessId}/custom-accounts`
-
-  if (userCreated !== undefined) {
-    return `${baseUrl}?user_created=${userCreated}`
-  }
-  return baseUrl
+const CustomAccountsDataSchema = Schema.Struct({
+  customAccounts: pipe(
+    Schema.propertySignature(Schema.Array(CustomAccountSchema)),
+    Schema.fromKey('custom_accounts'),
+  ),
 })
 
-type useCustomAccountsParams = {
+const GetCustomAccountsResponseSchema = UnwrappedDataResponseSchema(CustomAccountsDataSchema)
+
+type GetCustomAccountsParams = {
+  businessId: string
   userCreated?: boolean
 }
-export function useCustomAccounts({ userCreated }: useCustomAccountsParams = {}) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
 
-  return useSWR(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-      userCreated,
-    })),
-    ({ accessToken, apiUrl, businessId, userCreated }) => getCustomAccounts(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId, userCreated },
-      },
-    )().then(({ data }) => data?.custom_accounts.map(account => mapRawCustomAccountToCustomAccount(account))),
-  )
-}
+const getCustomAccounts = getWithQuery<
+  typeof GetCustomAccountsResponseSchema.Encoded,
+  GetCustomAccountsParams
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/custom-accounts`,
+)
+
+export const useCustomAccounts = createQueryHook({
+  tags: [CUSTOM_ACCOUNTS_TAG_KEY],
+  request: getCustomAccounts,
+  schema: GetCustomAccountsResponseSchema,
+  select: ({ customAccounts }) => customAccounts,
+})
+
+export const useCustomAccountsGlobalCacheActions =
+  createResourceGlobalCacheActions<ReadonlyArray<typeof CustomAccountSchema.Type>>(CUSTOM_ACCOUNTS_TAG_KEY)

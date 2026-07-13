@@ -21,13 +21,16 @@ export const UnifiedReportHeaderButtons = ({ variant }: UnifiedReportHeaderButto
   return (
     <HStack
       gap='xs'
+      justify={isMobile ? 'space-between' : 'end'}
       className={classNames('Layer__UnifiedReports__HeaderButtons', {
         'Layer__UnifiedReports__HeaderButtons--mobile': isMobile,
       })}
     >
       {isMobile && <ReportsMobileSelectionDrawer />}
-      <ExpandableDataTableToggleButton iconOnly={isMobile} />
-      <UnifiedReportDownloadButton iconOnly={isMobile} />
+      <HStack gap='xs'>
+        <ExpandableDataTableToggleButton icon={isMobile} />
+        <UnifiedReportDownloadButton icon={isMobile} />
+      </HStack>
     </HStack>
   )
 }

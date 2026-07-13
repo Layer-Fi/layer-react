@@ -13,6 +13,7 @@ import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import {
   useBankTransactionsCategorizationActions,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -25,18 +26,15 @@ import { ErrorText } from '@components/Typography/ErrorText'
 
 interface BankTransactionsMobileListMatchFormProps {
   bankTransaction: BankTransaction
-  showReceiptUploads?: boolean
-  showDescriptions?: boolean
   showCategorization?: boolean
 }
 
 export const BankTransactionsMobileListMatchForm = ({
   bankTransaction,
-  showReceiptUploads,
-  showDescriptions,
   showCategorization,
 }: BankTransactionsMobileListMatchFormProps) => {
   const { t } = useTranslation()
+  const showReceiptUploads = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ReceiptUploads)
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const {
@@ -69,7 +67,7 @@ export const BankTransactionsMobileListMatchForm = ({
   }, [showCategorization, selectedMatchId, bankTransaction, t, onMatchSubmit])
 
   return (
-    <VStack gap='sm'>
+    <VStack gap='3xs'>
       <Span size='sm' weight='bold'>
         {t('bankTransactions:label.find_match', 'Find Match')}
       </Span>
@@ -87,7 +85,6 @@ export const BankTransactionsMobileListMatchForm = ({
       />
       <BankTransactionFormFields
         bankTransaction={bankTransaction}
-        showDescriptions={showDescriptions}
         hideCustomerVendor
         hideTags
         isMobile
@@ -105,8 +102,8 @@ export const BankTransactionsMobileListMatchForm = ({
           <FileInput
             onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
             text={t('bankTransactions:action.upload_receipt', 'Upload receipt')}
-            iconOnly={true}
-            icon={<Paperclip size={20} />}
+            icon
+            slots={{ Icon: <Paperclip size={20} /> }}
             accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
           />
         )}
@@ -126,10 +123,10 @@ export const BankTransactionsMobileListMatchForm = ({
           </Button>
         )}
       </HStack>
-      {formError && <ErrorText>{formError}</ErrorText>}
+      {formError && <ErrorText size='sm' align='center' pb='sm'>{formError}</ErrorText>}
       {isErrorMatching
         && (
-          <ErrorText>
+          <ErrorText size='sm' align='center' pb='sm'>
             {t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
           </ErrorText>
         )}

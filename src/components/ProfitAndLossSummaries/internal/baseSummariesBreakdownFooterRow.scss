@@ -1,0 +1,15 @@
+.Layer__BaseSummariesBreakdownFooter__Row {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-xs);
+  align-items: center;
+  justify-content: space-between;
+  min-height: 30px;
+
+  @container (48rem <= width <= 60rem) {
+    flex-direction: column;
+    gap: var(--spacing-4xs);
+    align-items: start;
+    justify-content: normal;
+  }
+}

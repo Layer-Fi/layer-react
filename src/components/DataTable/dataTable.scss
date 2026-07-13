@@ -7,12 +7,40 @@
   justify-content: center;
 }
 
-.Layer__DataTable__ClickableRow {
-  cursor: pointer;
+.Layer__UI__Table-Row.Layer__DataTable__ExpandedRow {
+  position: relative;
+  z-index: 2;
+  height: fit-content;
+
+  .Layer__DataTable__ExpandedRowCell.Layer__UI__Table-Cell {
+    position: relative;
+    z-index: 2;
+    display: table-cell;
+    padding: 0;
+    border-bottom: 0;
+
+    &.Layer__DataTable__ExpandedRowCell--expanded {
+      border-bottom: 1px solid var(--color-base-200);
+    }
+  }
 }
 
-.Layer__DataTable__SelectedRow {
-  background: var(--color-base-100);
+.Layer__UI__Table-Row.Layer__DataTable__ClickableRow {
+  cursor: pointer;
+
+  .Layer__UI__Table-Cell {
+    transition: background-color 120ms ease-in-out;
+  }
+
+  &:hover .Layer__UI__Table-Cell {
+    background-color: var(--color-base-50);
+  }
+}
+
+.Layer__UI__Table-Row.Layer__DataTable__SelectedRow {
+  &[data-depth] .Layer__UI__Table-Cell {
+    background-color: var(--color-base-100);
+  }
 
   .Layer__UI__Table-Cell:first-child {
     position: relative;

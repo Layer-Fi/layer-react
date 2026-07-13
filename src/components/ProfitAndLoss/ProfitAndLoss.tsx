@@ -1,15 +1,11 @@
 import { type PropsWithChildren } from 'react'
 
 import { type ReportingBasis } from '@internal-types/general'
-import { type ProfitAndLossCompareConfig } from '@internal-types/profitAndLoss'
 import { useProfitAndLoss } from '@hooks/features/profitAndLoss/useProfitAndLoss'
-import { useProfitAndLossComparison } from '@hooks/features/profitAndLoss/useProfitAndLossComparison'
-import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { Container } from '@components/Container/Container'
 import { ProfitAndLossChart } from '@components/ProfitAndLossChart/ProfitAndLossChart'
 import { ProfitAndLossDetailedCharts } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
-import { ProfitAndLossHeader } from '@components/ProfitAndLossHeader/ProfitAndLossHeader'
 import { ProfitAndLossReport } from '@components/ProfitAndLossReport/ProfitAndLossReport'
 import { ProfitAndLossSummaries } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 
@@ -18,7 +14,11 @@ type Props = PropsWithChildren<{
     key: string
     values: string[]
   }
-  comparisonConfig?: ProfitAndLossCompareConfig
+  /**
+   * @deprecated The Profit & Loss comparison feature has been removed and this prop is ignored.
+   * Use the `UnifiedReports` component for period/tag comparisons instead.
+   */
+  comparisonConfig?: unknown
   reportingBasis?: ReportingBasis
   asContainer?: boolean
 }>
@@ -26,24 +26,20 @@ type Props = PropsWithChildren<{
 const ProfitAndLoss = ({
   children,
   tagFilter,
-  comparisonConfig,
   reportingBasis,
   asContainer = true,
 }: Props) => {
   const contextData = useProfitAndLoss({ tagFilter, reportingBasis })
-  const comparisonContextData = useProfitAndLossComparison({ comparisonConfig, reportingBasis })
 
   return (
     <ProfitAndLossContext.Provider value={contextData}>
-      <ProfitAndLossComparisonContext.Provider value={comparisonContextData}>
-        {asContainer
-          ? (
-            <Container name='profit-and-loss'>{children}</Container>
-          )
-          : (
-            children
-          )}
-      </ProfitAndLossComparisonContext.Provider>
+      {asContainer
+        ? (
+          <Container name='profit-and-loss'>{children}</Container>
+        )
+        : (
+          children
+        )}
     </ProfitAndLossContext.Provider>
   )
 }
@@ -52,7 +48,6 @@ ProfitAndLoss.Chart = ProfitAndLossChart
 ProfitAndLoss.Summaries = ProfitAndLossSummaries
 ProfitAndLoss.DetailedCharts = ProfitAndLossDetailedCharts
 
-ProfitAndLoss.Header = ProfitAndLossHeader
 ProfitAndLoss.Report = ProfitAndLossReport
 
 export { ProfitAndLoss }

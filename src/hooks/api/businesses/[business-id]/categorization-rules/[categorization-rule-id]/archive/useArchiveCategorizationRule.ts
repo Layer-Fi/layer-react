@@ -1,94 +1,33 @@
-import { useCallback } from 'react'
-import { Schema } from 'effect/index'
-import useSWRMutation from 'swr/mutation'
-
 import { CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
 import { useCategorizationRulesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/categorization-rules/useListCategorizationRules'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const ARCHIVE_CATEGORIZATION_RULE_TAG = '#archive-categorization-rule'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [ARCHIVE_CATEGORIZATION_RULE_TAG],
-    }
-  }
-}
+const ArchiveCategorizationRuleReturnSchema = UnwrappedDataResponseSchema(CategorizationRuleSchema)
 
-const ArchiveCategorizationRuleReturnSchema = Schema.Struct({
-  data: CategorizationRuleSchema,
-})
-
-type ArchiveCategorizationRuleReturn = typeof ArchiveCategorizationRuleReturnSchema.Type
-
-export const archiveCategorizationRule = post<ArchiveCategorizationRuleReturn>(
+export const archiveCategorizationRule = post<
+  typeof ArchiveCategorizationRuleReturnSchema.Encoded,
+  Record<string, unknown>,
+  { businessId: string, categorizationRuleId: string }
+>(
   ({ businessId, categorizationRuleId }) =>
     `/v1/businesses/${businessId}/categorization-rules/${categorizationRuleId}/archive`,
 )
 
-export function useArchiveCategorizationRule() {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
-  const { forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
+export const useArchiveCategorizationRule = createMutationHook({
+  tags: [ARCHIVE_CATEGORIZATION_RULE_TAG],
+  request: archiveCategorizationRule,
+  argToParams: (categorizationRuleId: string) => ({ categorizationRuleId }),
+  argToBody: () => undefined,
+  schema: ArchiveCategorizationRuleReturnSchema,
+  useOnTriggerSuccess: () => {
+    const { forceReload: forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
 
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      access_token: auth?.access_token,
-      apiUrl: auth?.apiUrl,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: categorizationRuleId }: { arg: string },
-    ) => archiveCategorizationRule(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          categorizationRuleId,
-        },
-      },
-    ).then(Schema.decodeUnknownPromise(ArchiveCategorizationRuleReturnSchema)),
-    {
-      revalidate: false,
-    },
-  )
-  const { trigger: originalTrigger } = mutationResponse
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResultPromise = originalTrigger(...triggerParameters)
-      await triggerResultPromise
+    return () => {
       void forceReloadCategorizationRules()
-      return triggerResultPromise
-    }, [forceReloadCategorizationRules, originalTrigger],
-  )
-
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
-}
+    }
+  },
+})

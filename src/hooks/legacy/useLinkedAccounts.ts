@@ -1,12 +1,11 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type LoadedStatus } from '@internal-types/general'
 import { type AccountSource } from '@internal-types/linkedAccounts'
-import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
+import type { Awaitable } from '@internal-types/utility/promises'
 import { type PlaidHostedLinkConfig, toCreatePlaidLinkParams } from '@schemas/linkedAccounts/plaid'
-import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { useUnlinkBankAccount } from '@hooks/api/businesses/[business-id]/bank-accounts/useUnlinkBankAccount'
+import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useConfirmExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/confirm'
 import { useExcludeExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/exclude'
 import { useBreakPlaidItemConnection } from '@hooks/api/businesses/[business-id]/plaid/items/[plaid-item-id]/sandbox-reset-item-login'
@@ -14,23 +13,22 @@ import { useUnlinkPlaidItem } from '@hooks/api/businesses/[business-id]/plaid/it
 import { useCreatePlaidLink } from '@hooks/api/businesses/[business-id]/plaid/link'
 import { useCreatePlaidUpdateModeLink } from '@hooks/api/businesses/[business-id]/plaid/update-mode-link'
 import { type LinkMode, usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
+import { usePollPlaidHostedLinkStatus } from '@hooks/features/linkedAccounts/usePollPlaidHostedLinkStatus'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 type UseLinkedAccountsOptions = {
+  onPlaidConnectionSuccess?: () => Awaitable<void>
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
 }
 
 type UseLinkedAccounts = (options?: UseLinkedAccountsOptions) => {
-  data?: BankAccount[]
-  isLoading: boolean
-  loadingStatus: LoadedStatus
-  isValidating: boolean
   isLinking: boolean
-  error: unknown
+  isHostedLinkError: boolean
   addConnection: (source: AccountSource) => Promise<void>
   removeConnection: (source: AccountSource, sourceId: string) => Promise<void>
   repairConnection: (source: AccountSource, sourceId: string) => Promise<void>
-  refetchAccounts: () => Promise<void>
+  refetchAccountsAndTransactions: () => Promise<void>
   unlinkBankAccount: (bankAccountId: string) => Promise<void>
   confirmAccount: (source: AccountSource, accountId: string) => Promise<void>
   excludeAccount: (source: AccountSource, accountId: string) => Promise<void>
@@ -59,21 +57,14 @@ const usePlaidOnlyAction = <Args extends unknown[]>(
     [operation, action],
   )
 
-export const useLinkedAccounts: UseLinkedAccounts = ({ plaidHostedLinkConfig } = {}) => {
+export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess, plaidHostedLinkConfig } = {}) => {
   const { addToast } = useLayerContext()
   const { t } = useTranslation()
 
   const [linkToken, setLinkToken] = useState<string | null>(null)
-  const [loadingStatus, setLoadingStatus] = useState<LoadedStatus>('initial')
   const [linkMode, setLinkMode] = useState<LinkMode>('add')
 
-  const {
-    data: bankAccounts,
-    isLoading,
-    isValidating,
-    error: responseError,
-    mutate,
-  } = useListBankAccounts()
+  const { refetch } = useBankAccountsContext()
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
   const { trigger: triggerCreatePlaidLink } = useCreatePlaidLink()
   const { trigger: triggerCreatePlaidUpdateModeLink } = useCreatePlaidUpdateModeLink()
@@ -82,50 +73,48 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ plaidHostedLinkConfig } =
   const { trigger: triggerUnlinkPlaidItem } = useUnlinkPlaidItem()
   const { trigger: triggerBreakPlaidItemConnection } = useBreakPlaidItemConnection()
 
-  useEffect(() => {
-    if (!isLoading && bankAccounts) {
-      setLoadingStatus('complete')
-      return
-    }
+  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
-    if (isLoading && loadingStatus === 'initial') {
-      setLoadingStatus('loading')
-      return
-    }
+  const refetchAccountsAndTransactions = useCallback(async () => {
+    await Promise.all([
+      refetch(),
+      forceReloadBankTransactions(),
+    ])
+  }, [refetch, forceReloadBankTransactions])
 
-    if (!isLoading && loadingStatus === 'loading') {
-      setLoadingStatus('complete')
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading])
-
-  const refetchAccounts = useCallback(async () => {
-    await mutate()
-  }, [mutate])
+  const handlePlaidConnectionSuccess = useCallback(async () => {
+    await refetchAccountsAndTransactions().catch(() => undefined)
+    await onPlaidConnectionSuccess?.()
+  }, [refetchAccountsAndTransactions, onPlaidConnectionSuccess])
 
   const { isLinking } = usePlaidLinkModal({
     linkToken,
     linkMode,
     setLinkMode,
-    onSuccess: refetchAccounts,
+    onSuccess: refetchAccountsAndTransactions,
+    onAddConnectionSuccess: handlePlaidConnectionSuccess,
+  })
+
+  const { isFailed: isHostedLinkError } = usePollPlaidHostedLinkStatus({
+    enabled: plaidHostedLinkConfig != null,
+    onSuccess: refetchAccountsAndTransactions,
   })
 
   /**
-   * Runs a mutation, refreshing the account list on success and surfacing an
-   * error toast on failure. A failed refresh is not reported as a mutation
-   * failure, since the mutation itself succeeded.
+   * Runs a mutation, refetching accounts and transactions on success and showing
+   * an error toast on failure
    *
    * Note: this swallows rejections (the failure becomes a toast and the returned
    * promise resolves), so it must not back an `onConfirm`/submit handler whose
    * caller relies on a rejection to show errors — e.g. BaseConfirmationModal.
    */
-  const mutateAndRefetchAccountsWithToast = useCallback(
+  const mutateAndRefetchWithToast = useCallback(
     (mutation: () => Promise<unknown>, errorMessage: string) =>
       mutation().then(
-        () => refetchAccounts(),
+        () => refetchAccountsAndTransactions(),
         () => addToast({ content: errorMessage, type: 'error' }),
       ),
-    [refetchAccounts, addToast],
+    [refetchAccountsAndTransactions, addToast],
   )
 
   /**
@@ -191,38 +180,38 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ plaidHostedLinkConfig } =
   const repairConnection = usePlaidOnlyAction('Repairing a connection', fetchPlaidUpdateModeLinkToken)
 
   const handleRemoveConnection = useCallback(
-    (connectionExternalId: string) => mutateAndRefetchAccountsWithToast(
+    (connectionExternalId: string) => mutateAndRefetchWithToast(
       () => triggerUnlinkPlaidItem({ plaidItemId: connectionExternalId }),
       t('linkedAccounts:error.remove_connection', 'We couldn’t remove this connection. Please try again.'),
     ),
-    [mutateAndRefetchAccountsWithToast, triggerUnlinkPlaidItem, t],
+    [mutateAndRefetchWithToast, triggerUnlinkPlaidItem, t],
   )
   const removeConnection = usePlaidOnlyAction('Removing a connection', handleRemoveConnection)
 
   const handleConfirmAccount = useCallback(
-    (accountId: string) => mutateAndRefetchAccountsWithToast(
+    (accountId: string) => mutateAndRefetchWithToast(
       () => triggerConfirmExternalAccount({ accountId }),
       t('linkedAccounts:error.confirm_account', 'We couldn’t confirm your account. Please try again.'),
     ),
-    [mutateAndRefetchAccountsWithToast, triggerConfirmExternalAccount, t],
+    [mutateAndRefetchWithToast, triggerConfirmExternalAccount, t],
   )
   const confirmAccount = usePlaidOnlyAction('Confirming an account', handleConfirmAccount)
 
   const handleExcludeAccount = useCallback(
-    (accountId: string) => mutateAndRefetchAccountsWithToast(
+    (accountId: string) => mutateAndRefetchWithToast(
       () => triggerExcludeExternalAccount({ accountId, body: { is_duplicate: true } }),
       t('linkedAccounts:error.exclude_account', 'We couldn’t exclude your account. Please try again.'),
     ),
-    [mutateAndRefetchAccountsWithToast, triggerExcludeExternalAccount, t],
+    [mutateAndRefetchWithToast, triggerExcludeExternalAccount, t],
   )
   const excludeAccount = usePlaidOnlyAction('Excluding an account', handleExcludeAccount)
 
   const handleBreakConnection = useCallback(
-    (connectionExternalId: string) => mutateAndRefetchAccountsWithToast(
+    (connectionExternalId: string) => mutateAndRefetchWithToast(
       () => triggerBreakPlaidItemConnection({ plaidItemId: connectionExternalId }),
       t('linkedAccounts:error.break_connection', 'We couldn’t reset this connection. Please try again.'),
     ),
-    [mutateAndRefetchAccountsWithToast, triggerBreakPlaidItemConnection, t],
+    [mutateAndRefetchWithToast, triggerBreakPlaidItemConnection, t],
   )
   /**
    * Test utility that puts a connection into a broken state; only works in non-production
@@ -230,25 +219,23 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ plaidHostedLinkConfig } =
    */
   const breakConnection = usePlaidOnlyAction('Breaking a sandbox connection', handleBreakConnection)
 
+  // Not `mutateAndRefetchWithToast`: this backs a BaseConfirmationModal that
+  // needs the promise to reject on failure (the helper swallows rejections).
   const unlinkBankAccount = useCallback(
     async (bankAccountId: string) => {
       await triggerUnlinkBankAccount(bankAccountId)
-      await refetchAccounts()
+      await refetchAccountsAndTransactions()
     },
-    [triggerUnlinkBankAccount, refetchAccounts],
+    [triggerUnlinkBankAccount, refetchAccountsAndTransactions],
   )
 
   return {
-    data: bankAccounts ?? [],
-    isLoading,
-    loadingStatus,
-    isValidating,
     isLinking,
-    error: responseError,
+    isHostedLinkError,
     addConnection,
     removeConnection,
     repairConnection,
-    refetchAccounts,
+    refetchAccountsAndTransactions,
     unlinkBankAccount,
     confirmAccount,
     excludeAccount,

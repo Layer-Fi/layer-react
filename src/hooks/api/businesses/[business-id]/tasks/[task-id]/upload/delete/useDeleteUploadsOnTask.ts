@@ -1,14 +1,7 @@
-import { useCallback } from 'react'
-import { useSWRConfig } from 'swr'
-import useSWRMutation from 'swr/mutation'
-
 import type { BusinessTaskEncoded } from '@schemas/businessTasks/businessTask'
 import { post } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { withSWRKeyTags } from '@utils/swr/withSWRKeyTags'
-import { BOOKKEEPING_PERIODS_TAG_KEY } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBookkeepingPeriodsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const deleteUploadsOnTask = post<
   { data: BusinessTaskEncoded },
@@ -22,83 +15,21 @@ const deleteUploadsOnTask = post<
     `/v1/businesses/${businessId}/tasks/${taskId}/upload/delete`,
 )
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: ['#delete-uploads-on-task'],
-    } as const
-  }
-}
-
 type UseDeleteUploadsOnTaskArg = {
   taskId: string
 }
 
-export function useDeleteUploadsOnTask() {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
-  const { mutate } = useSWRConfig()
+export const useDeleteUploadsOnTask = createMutationHook({
+  tags: ['#delete-uploads-on-task'],
+  request: deleteUploadsOnTask,
+  argToParams: (arg: UseDeleteUploadsOnTaskArg) => arg,
+  argToBody: () => undefined,
+  swrOptions: { throwOnError: false },
+  useOnTriggerSuccess: () => {
+    const { invalidate: invalidateBookkeepingPeriods } = useBookkeepingPeriodsGlobalCacheActions()
 
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: { taskId } }: { arg: UseDeleteUploadsOnTaskArg },
-    ) => deleteUploadsOnTask(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId, taskId },
-      },
-    ),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
-
-  const { trigger: originalTrigger } = mutationResponse
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      void mutate(key => withSWRKeyTags(
-        key,
-        ({ tags }) => tags.includes(BOOKKEEPING_PERIODS_TAG_KEY),
-      ))
-
-      return triggerResult
-    },
-    [
-      originalTrigger,
-      mutate,
-    ],
-  )
-
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
-}
+    return () => {
+      void invalidateBookkeepingPeriods()
+    }
+  },
+})

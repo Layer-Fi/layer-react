@@ -1,30 +1,31 @@
 import { useBalanceSheetDownload } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/exports/excel/useBalanceSheetDownload'
-import { DownloadButton } from '@components/Button/DownloadButton'
+import { DownloadButton } from '@ui/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 type BalanceSheetDownloadButtonProps = {
   effectiveDate: Date
-  iconOnly?: boolean
+  icon?: boolean
 }
 
 export function BalanceSheetDownloadButton({
   effectiveDate,
-  iconOnly,
+  icon,
 }: BalanceSheetDownloadButtonProps) {
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { trigger, isMutating, error } = useBalanceSheetDownload({
+  const { trigger, isMutating, isError } = useBalanceSheetDownload({
     effectiveDate,
-    onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
+    swrOptions: {
+      onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
+    },
   })
 
   return (
     <>
       <DownloadButton
-        iconOnly={iconOnly}
-        onClick={() => { void trigger() }}
-        isDownloading={isMutating}
-        requestFailed={Boolean(error)}
+        icon={icon}
+        onPress={() => { void trigger() }}
+        isPending={isMutating}
+        requestFailed={isError}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>

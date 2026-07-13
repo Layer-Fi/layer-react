@@ -3,13 +3,16 @@ import { CircleAlert, CircleCheckBig, Clock } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
+import { type BookkeepingPeriod } from '@schemas/bookkeepingPeriods'
 import { tPlural } from '@utils/i18n/plural'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack } from '@ui/Stack/Stack'
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
+import { P } from '@ui/Typography/Text'
+
+import './taskStatusBadge.scss'
 
 type TaskStatusBadgeProps = {
   status: BookkeepingPeriod['status']
@@ -100,15 +103,14 @@ const BadgeContent = ({ color, icon, display }: BadgeContentProps) => {
       </HStack>
       {display
         ? (
-          <Text
-            className='Layer__TasksBadge__Label'
-            size={TextSize.sm}
+          <P
+            size='sm'
             status={color}
-            invertColor={color === 'warning'}
-            weight={TextWeight.bold}
+            invert={color === 'warning' ? true : undefined}
+            weight='bold'
           >
             {display}
-          </Text>
+          </P>
         )
         : null}
     </HStack>

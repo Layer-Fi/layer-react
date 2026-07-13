@@ -70,7 +70,7 @@ const { t } = useTranslation()
 t('taxEstimates:label.tax_details', 'Tax Details')
 ```
 
-When adding new keys, see `docs/ai/i18n.md` — fr-CA entries must ship as empty strings.
+Do not add new keys to the translation manifest by hand. CI collects English keys; French keys come from Crowdin updates only.
 
 ## Anti-patterns — do not do this
 

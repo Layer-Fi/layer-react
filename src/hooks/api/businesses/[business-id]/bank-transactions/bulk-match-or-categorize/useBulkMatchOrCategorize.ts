@@ -1,17 +1,13 @@
 import { useCallback } from 'react'
 import { pipe, Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
 
 import { type Split } from '@internal-types/bankTransactions'
 import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { post } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
-import { useAuth } from '@hooks/utils/auth/useAuth'
+import { useBulkBankTransactionsTriggerSuccess } from '@hooks/api/businesses/[business-id]/bank-transactions/useBulkBankTransactionsTriggerSuccess'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { type BankTransactionCategorization, BankTransactionSelectionVariant, DEFAULT_CATEGORIZATION, useGetAllBankTransactionsCategorizations } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
@@ -138,92 +134,28 @@ const bulkMatchOrCategorize = post<
   },
 )
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [BULK_MATCH_OR_CATEGORIZE_TAG],
-    } as const
-  }
-}
+const useBulkMatchOrCategorizeMutation = createMutationHook({
+  tags: [BULK_MATCH_OR_CATEGORIZE_TAG],
+  request: bulkMatchOrCategorize,
+  argToBody: (arg: BulkMatchOrCategorizeRequest) => Schema.encodeSync(BulkMatchOrCategorizeRequestSchema)(arg),
+  select: ({ data }) => data,
+  swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: useBulkBankTransactionsTriggerSuccess,
+})
 
 export const useBulkMatchOrCategorize = () => {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId, eventCallbacks } = useLayerContext()
   const { selectedIds } = useSelectedIds()
   const { categorizations } = useGetAllBankTransactionsCategorizations()
-
-  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
-  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const buildTransactionsPayload: () => BulkMatchOrCategorizeRequest = useCallback(() => {
     const transactions = buildBulkMatchOrCategorizePayload(selectedIds, categorizations)
     return { transactions }
   }, [selectedIds, categorizations])
 
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg }: { arg: BulkMatchOrCategorizeRequest },
-    ) => bulkMatchOrCategorize(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-        body: Schema.encodeSync(BulkMatchOrCategorizeRequestSchema)(arg),
-      },
-    ).then(({ data }) => data),
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const { trigger: originalTrigger } = mutationResponse
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      void forceReloadBankTransactions()
-
-      void debouncedInvalidateProfitAndLoss()
-
-      eventCallbacks?.onTransactionCategorized?.()
-
-      return triggerResult
-    },
-    [originalTrigger, forceReloadBankTransactions, debouncedInvalidateProfitAndLoss, eventCallbacks],
-  )
-
-  const proxiedResponse = new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  const response = useBulkMatchOrCategorizeMutation()
 
   return {
-    ...proxiedResponse,
+    response,
     buildTransactionsPayload,
   }
 }

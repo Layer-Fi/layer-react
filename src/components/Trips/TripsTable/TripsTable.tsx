@@ -4,7 +4,7 @@ import type { TFunction } from 'i18next'
 import { Edit, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type Trip, type TripPurpose } from '@schemas/trip'
+import { type Trip } from '@schemas/trip'
 import { formatCalendarDate } from '@utils/time/timeUtils'
 import { getVehicleDisplayName } from '@utils/vehicles'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -12,7 +12,7 @@ import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
-import type { NestedColumnConfig } from '@components/DataTable/columnUtils'
+import type { ColumnConfig } from '@components/DataTable/utils/column'
 import { PaginatedTable, type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 import { TripsAddressCell } from '@components/Trips/TripAddressCell/TripAddressCell'
 import { TripsTableHeader } from '@components/Trips/TripsTable/TripsTableHeader'
@@ -53,7 +53,7 @@ const TripsDistanceCell = ({ distance }: { distance: Trip['distance'] }) => {
 const getColumnConfig = (
   { onViewOrUpsertTrip, onDeleteTrip }: TripActions,
   t: TFunction,
-): NestedColumnConfig<Trip> => [
+): ColumnConfig<Trip> => [
   {
     id: TripColumns.TripDate,
     header: t('common:label.date', 'Date'),
@@ -73,7 +73,7 @@ const getColumnConfig = (
   {
     id: TripColumns.Purpose,
     header: t('common:label.purpose', 'Purpose'),
-    cell: (row: TripsRowType) => getPurposeLabel(row.original.purpose as TripPurpose, t),
+    cell: (row: TripsRowType) => getPurposeLabel(row.original.purpose, t),
   },
   {
     id: TripColumns.Address,

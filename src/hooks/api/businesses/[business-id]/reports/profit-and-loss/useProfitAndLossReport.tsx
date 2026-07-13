@@ -1,103 +1,25 @@
-import { useCallback } from 'react'
-import { Schema } from 'effect'
-import useSWR from 'swr'
-
 import { type ProfitAndLoss, type ProfitAndLossReportRequestParams, ProfitAndLossReportSchema } from '@schemas/reports/profitAndLoss'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export const PNL_REPORT_TAG_KEY = '#profit-and-loss-report'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  startDate,
-  endDate,
-  tagKey,
-  tagValues,
-  reportingBasis,
-  includeUncategorized,
-}: {
-  access_token?: string
-  apiUrl?: string
-} & ProfitAndLossReportRequestParams) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      startDate,
-      endDate,
-      tagKey,
-      tagValues,
-      reportingBasis,
-      includeUncategorized,
-      tags: [PNL_REPORT_TAG_KEY],
-    } as const
-  }
-}
+const ProfitAndLossReportResponseSchema = UnwrappedDataResponseSchema(ProfitAndLossReportSchema)
 
-const getProfitAndLoss = get<
-  { data: ProfitAndLoss },
+const getProfitAndLoss = getWithQuery<
+  typeof ProfitAndLossReportResponseSchema.Encoded,
   ProfitAndLossReportRequestParams
 >(
-  ({
-    businessId,
-    startDate,
-    endDate,
-    tagKey,
-    tagValues,
-    reportingBasis,
-    includeUncategorized,
-  }) => {
-    const parameters = toDefinedSearchParameters({ startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized })
-    return `/v1/businesses/${businessId}/reports/profit-and-loss?${parameters}`
-  })
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/profit-and-loss`,
+)
 
-type UseProfitAndLossReportProps = Omit<ProfitAndLossReportRequestParams, 'businessId'>
-export function useProfitAndLossReport({ startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized }: UseProfitAndLossReportProps) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+export const useProfitAndLossReport = createQueryHook({
+  tags: [PNL_REPORT_TAG_KEY],
+  request: getProfitAndLoss,
+  schema: ProfitAndLossReportResponseSchema,
+})
 
-  const response = useSWR(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-      startDate,
-      endDate,
-      tagKey,
-      tagValues,
-      reportingBasis,
-      includeUncategorized,
-    })),
-    ({ accessToken, apiUrl, businessId }) => getProfitAndLoss(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId, startDate, endDate, tagKey, tagValues, reportingBasis, includeUncategorized },
-      },
-    )().then(({ data }) => Schema.decodeUnknownPromise(ProfitAndLossReportSchema)(data)),
-  )
-
-  return new SWRQueryResult(response)
-}
-
-export const useProfitAndLossReportCacheActions = () => {
-  const { invalidate } = useGlobalCacheActions()
-
-  const invalidateProfitAndLossReport = useCallback(
-    () => invalidate(
-      ({ tags }) => tags.includes(PNL_REPORT_TAG_KEY),
-    ),
-    [invalidate],
-  )
-
-  return { invalidateProfitAndLossReport }
-}
+export const useProfitAndLossReportCacheActions = createResourceGlobalCacheActions<ProfitAndLoss>(PNL_REPORT_TAG_KEY)

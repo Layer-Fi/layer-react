@@ -16,13 +16,14 @@ import {
   XAxis,
 } from 'recharts'
 
-import { isAnyBankAccountSyncing } from '@utils/bankAccount'
 import { isDateAllowedToBrowse } from '@utils/business'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import { useProfitAndLossLTM } from '@hooks/features/profitAndLoss/useProfitAndLossLTM'
-import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useGlobalDate, useGlobalDateRangeActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDate, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ChartYAxis } from '@components/Chart/ChartYAxis'
 import { areChartWindowsEqual, getChartWindow } from '@components/ProfitAndLossChart/getChartWindow'
@@ -57,6 +58,7 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
 
   const { date } = useGlobalDate({ dateSelectionMode: 'month' })
   const { setMonth } = useGlobalDateRangeActions()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.ProfitAndLossChart)
 
   const [chartWindow, setChartWindow] = useState({
     start: startOfMonth(sub(date, { months: 11 })),
@@ -71,12 +73,7 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
     chartWindow,
   })
 
-  const { data: linkedAccounts } = useLinkedAccounts()
-
-  const isSyncing = useMemo(
-    () => isAnyBankAccountSyncing(linkedAccounts ?? []),
-    [linkedAccounts],
-  )
+  const { isSyncing } = useBankAccountsContext()
 
   useEffect(() => {
     if (!activationDate) return
@@ -118,6 +115,11 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
     const isMonthAllowed = isDateAllowedToBrowse(selectedDate, business)
 
     if (isMonthAllowed) {
+      emitLayerEvent({
+        type: LayerEventType.ProfitAndLossMonthSelected,
+        version: 1,
+        payload: { year: selectedDate.getFullYear(), month: selectedDate.getMonth() + 1 },
+      })
       setMonth({ startDate: selectedDate })
     }
 
@@ -127,7 +129,7 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
       setBarAnimation(true)
       prevChartWindowRef.current = newChartWindow
     }
-  }, [chartWindow, setMonth, business, activationDate])
+  }, [chartWindow, setMonth, business, activationDate, emitLayerEvent])
 
   const onResize = useCallback((width: number | undefined) => {
     if (width && width < 620 && !compactView) {
@@ -153,7 +155,7 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
           margin={CHART_MARGINS}
           data={dataOrPlaceholderData}
           onClick={onClick}
-          className='Layer__profit-and-loss-chart Layer__ProfitAndLossChart__Chart'
+          className='Layer__profit-and-loss-chart'
         >
           <ProfitAndLossChartPatternDefs />
           <ReferenceLine y={0} stroke={getColor(300)?.hex ?? '#EBEDF0'} xAxisId='revenue' zIndex={DefaultZIndexes.bar - 1} />

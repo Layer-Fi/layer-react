@@ -1,6 +1,6 @@
-import { type BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { type BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
+import { P } from '@ui/Typography/Text'
 import { useBookkeepingStatusConfig } from '@components/BookkeepingStatus/useBookkeepingStatusConfig'
-import { Text, TextSize } from '@components/Typography/Text'
 
 type BookkeepingStatusDescriptionProps = {
   monthNumber: number
@@ -15,8 +15,6 @@ export const BookkeepingStatusDescription = ({ monthNumber, status, incompleteTa
   }
 
   return (
-    <Text size={TextSize.sm} status='disabled'>
-      {statusConfig.description}
-    </Text>
+    <P size='sm' status='disabled'>{statusConfig.description}</P>
   )
 }

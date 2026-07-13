@@ -1,6 +1,7 @@
 import { pipe, Schema } from 'effect'
 
 import type { Awaitable } from '@internal-types/utility/promises'
+import { createTransformedEnumSchema } from '@schemas/utils'
 
 export const HostedLinkParamsSchema = Schema.Struct({
   completionRedirectUri: Schema.optional(Schema.String).pipe(
@@ -56,8 +57,10 @@ export type PlaidHostedLinkParams = typeof PlaidHostedLinkConfigSchema.Type
 
 export type PlaidHostedLinkConfig = PlaidHostedLinkParams & {
   /**
-   * Navigates the customer platform to the Plaid Hosted Link URL. The link
-   * flow continues on a Plaid-owned page and returns via `completionRedirectUri`.
+   * Navigates the customer platform to the Plaid Hosted Link URL, returning via
+   * `completionRedirectUri`. The return must reload the page: status is polled
+   * only while mounted, so the remount is what signals the user came back and
+   * restarts polling. Without it, a completed or failed link may go undetected.
    */
   navigateToHostedLink: (hostedLinkUrl: string) => Awaitable<void>
 }
@@ -86,6 +89,30 @@ const decodeCreatePlaidLinkParamsFromHostedLinkConfig = Schema.decodeSync(
 export function toCreatePlaidLinkParams(config?: PlaidHostedLinkConfig): CreatePlaidLinkParams {
   return config ? decodeCreatePlaidLinkParamsFromHostedLinkConfig(config) : {}
 }
+
+export enum PlaidHostedLinkState {
+  NOT_STARTED = 'NOT_STARTED',
+  CREATED = 'CREATED',
+  PROCESSING = 'PROCESSING',
+  SUCCEEDED = 'SUCCEEDED',
+  EXITED = 'EXITED',
+  FAILED = 'FAILED',
+  UNKNOWN = 'UNKNOWN',
+}
+
+const PlaidHostedLinkStateEnumSchema = Schema.Enums(PlaidHostedLinkState)
+
+export const TransformedPlaidHostedLinkStateSchema = createTransformedEnumSchema(
+  PlaidHostedLinkStateEnumSchema,
+  PlaidHostedLinkState,
+  PlaidHostedLinkState.UNKNOWN,
+)
+
+export const ApiPlaidHostedLinkStatusSchema = Schema.Struct({
+  state: TransformedPlaidHostedLinkStateSchema,
+})
+
+export type ApiPlaidHostedLinkStatus = typeof ApiPlaidHostedLinkStatusSchema.Type
 
 export const ApiLinkTokenSchema = Schema.Struct({
   type: Schema.Literal('Link_Token'),

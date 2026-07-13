@@ -1,92 +1,99 @@
 import { useCallback, useMemo } from 'react'
-import { Schema } from 'effect'
 import { debounce } from 'lodash-es'
-import useSWRInfinite from 'swr/infinite'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { PaginatedResponseMetaSchema } from '@internal-types/utility/pagination'
 import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
+import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
+import { useGlobalCacheActions } from '@hooks/utils/swr/useGlobalCacheActions'
 
-const GetBankTransactionsResponseSchema = Schema.Struct({
-  data: Schema.Array(BankTransactionSchema),
-  meta: Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  }),
-})
+const GetBankTransactionsResponseSchema = PaginatedResponseSchema(BankTransactionSchema)
 
 export type GetBankTransactionsReturn = typeof GetBankTransactionsResponseSchema.Type
 
-type GetBankTransactionsPaginatedParams = {
-  businessId: string
+export const BANK_TRANSACTIONS_TAG_KEY = '#bank-transactions'
+
+export type UseBankTransactionsOptions = {
   categorized?: boolean
   direction?: 'INFLOW' | 'OUTFLOW'
   query?: string
   startDate?: Date
   endDate?: Date
-  tagFilterQueryString?: string
+  tagKey?: string
+  tagValues?: string
   bankAccountIds?: string
   sourceAccountIds?: string
   amountMin?: number
   amountMax?: number
+}
+
+type GetBankTransactionsPaginatedParams = UseBankTransactionsOptions & {
+  businessId: string
   sortOrder?: 'ASC' | 'DESC'
   sortBy?: string
   cursor?: string
   limit?: number
 }
 
-const getBankTransactions = get<
-  Record<string, unknown>,
+const getBankTransactions = getWithQuery<
+  typeof GetBankTransactionsResponseSchema.Encoded,
   GetBankTransactionsPaginatedParams
 >(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/bank-transactions`,
   ({
-    businessId,
     cursor,
     categorized,
     direction,
-    limit,
     query,
     startDate,
     endDate,
     sortBy = 'date',
     sortOrder = 'DESC',
-    tagFilterQueryString,
+    limit,
+    tagKey,
+    tagValues,
     bankAccountIds,
     sourceAccountIds,
     amountMin,
     amountMax,
-  }: GetBankTransactionsPaginatedParams) => {
-    const parameters = toDefinedSearchParameters({
-      cursor,
-      categorized,
-      direction,
-      q: query,
-      startDate,
-      endDate,
-      sortBy,
-      sortOrder,
-      limit,
-      bankAccountIds,
-      sourceAccountIds,
-      amountMin,
-      amountMax,
-    })
-
-    return `/v1/businesses/${businessId}/bank-transactions?${parameters}${tagFilterQueryString ? `&${tagFilterQueryString}` : ''}`
-  },
+  }) => ({
+    cursor,
+    categorized,
+    direction,
+    q: query,
+    startDate,
+    endDate,
+    sortBy,
+    sortOrder,
+    limit,
+    tagKey,
+    tagValues,
+    bankAccountIds,
+    sourceAccountIds,
+    amountMin,
+    amountMax,
+  }),
 )
 
-export const BANK_TRANSACTIONS_TAG_KEY = '#bank-transactions'
+export const useBankTransactions = createInfiniteQueryHook({
+  tags: [BANK_TRANSACTIONS_TAG_KEY],
+  request: getBankTransactions,
+  schema: GetBankTransactionsResponseSchema,
+  keyDefaults: { limit: 200 },
+})
 
-export type BankTransactionsKey = NonNullable<ReturnType<typeof keyLoader>>
+export type BankTransactionsKey = UseBankTransactionsOptions & {
+  accessToken: string
+  apiUrl: string
+  businessId: string
+  cursor?: string
+  limit?: number
+  tags: ReadonlyArray<string>
+}
 
 const compareDates = (a: unknown, b: unknown) =>
   (a as Date | undefined)?.getTime() === (b as Date | undefined)?.getTime()
@@ -97,177 +104,28 @@ const keyMatchesParams = createKeyMatcher<BankTransactionsKey, UseBankTransactio
   { key: 'query' },
   { key: 'startDate', compare: compareDates },
   { key: 'endDate', compare: compareDates },
-  { key: 'tagFilterQueryString' },
+  { key: 'tagKey' },
+  { key: 'tagValues' },
   { key: 'bankAccountIds' },
   { key: 'sourceAccountIds' },
   { key: 'amountMin' },
   { key: 'amountMax' },
 ])
 
-class BankTransactionsSWRResponse extends SWRInfiniteResult<GetBankTransactionsReturn> {
-  get hasMore() {
-    return this.data && this.data.length > 0
-      ? this.data[this.data.length - 1].meta.pagination.hasMore
-      : false
-  }
-}
-
-export type UseBankTransactionsOptions = {
-  categorized?: boolean
-  direction?: 'INFLOW' | 'OUTFLOW'
-  query?: string
-  startDate?: Date
-  endDate?: Date
-  tagFilterQueryString?: string
-  bankAccountIds?: string
-  sourceAccountIds?: string
-  amountMin?: number
-  amountMax?: number
-}
-
-function keyLoader(
-  previousPageData: GetBankTransactionsReturn | null,
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    categorized,
-    direction,
-    query,
-    startDate,
-    endDate,
-    tagFilterQueryString,
-    bankAccountIds,
-    sourceAccountIds,
-    amountMin,
-    amountMax,
-  }: UseBankTransactionsOptions & {
-    access_token?: string
-    apiUrl?: string
-    businessId: string
-  },
-) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      categorized,
-      cursor: previousPageData?.meta.pagination.cursor ?? undefined,
-      direction,
-      query,
-      startDate,
-      endDate,
-      tagFilterQueryString,
-      bankAccountIds,
-      sourceAccountIds,
-      amountMin,
-      amountMax,
-      tags: [BANK_TRANSACTIONS_TAG_KEY],
-    } as const
-  }
-}
-
-export function useBankTransactions({
-  categorized,
-  direction,
-  query,
-  startDate,
-  endDate,
-  tagFilterQueryString,
-  bankAccountIds,
-  sourceAccountIds,
-  amountMin,
-  amountMax,
-}: UseBankTransactionsOptions) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-
-  const swrResponse = useSWRInfinite(
-    (_index, previousPageData: GetBankTransactionsReturn | null) => withLocale(keyLoader(
-      previousPageData,
-      {
-        ...data,
-        businessId,
-        categorized,
-        direction,
-        query,
-        startDate,
-        endDate,
-        tagFilterQueryString,
-        bankAccountIds,
-        sourceAccountIds,
-        amountMin,
-        amountMax,
-      },
-    )),
-    ({
-      accessToken,
-      apiUrl,
-      businessId,
-      categorized,
-      cursor,
-      direction,
-      query,
-      startDate,
-      endDate,
-      tagFilterQueryString,
-      bankAccountIds,
-      sourceAccountIds,
-      amountMin,
-      amountMax,
-    }: NonNullable<ReturnType<typeof keyLoader>>) => {
-      return getBankTransactions(
-        apiUrl,
-        accessToken,
-        {
-          params: {
-            businessId,
-            categorized,
-            cursor,
-            direction,
-            limit: 200,
-            query,
-            startDate,
-            endDate,
-            tagFilterQueryString,
-            bankAccountIds,
-            sourceAccountIds,
-            amountMin,
-            amountMax,
-          },
-        },
-      )().then(Schema.decodeUnknownPromise(GetBankTransactionsResponseSchema))
-    },
-    {
-      keepPreviousData: true,
-      revalidateFirstPage: false,
-      initialSize: 1,
-    },
-  )
-
-  usePreserveInfiniteSize(swrResponse)
-
-  return new BankTransactionsSWRResponse(swrResponse)
-}
-
 const INVALIDATION_DEBOUNCE_OPTIONS = {
   wait: 1000,
   maxWait: 3000,
 }
 
-type BankTransactionsInvalidateOptions = {
-  withPrecedingOptimisticUpdate?: boolean
-}
+const useBankTransactionsBaseGlobalCacheActions = createInfiniteQueryGlobalCacheActions<BankTransaction>(BANK_TRANSACTIONS_TAG_KEY)
 
 export const useBankTransactionsGlobalCacheActions = () => {
-  const { invalidate, optimisticUpdate, forceReload } = useGlobalCacheActions()
-
-  const forceReloadBankTransactions = useCallback(
-    () => forceReload(({ tags }) => tags.includes(BANK_TRANSACTIONS_TAG_KEY)),
-    [forceReload],
-  )
+  const {
+    invalidate: invalidateBankTransactions,
+    forceReload: forceReloadBankTransactions,
+    optimisticallyUpdate: optimisticallyUpdateBankTransactions,
+  } = useBankTransactionsBaseGlobalCacheActions()
+  const { forceReload } = useGlobalCacheActions()
 
   const forceReloadBackgroundBankTransactions = useCallback(
     (currentParams: UseBankTransactionsOptions) =>
@@ -281,14 +139,6 @@ export const useBankTransactionsGlobalCacheActions = () => {
     [forceReload],
   )
 
-  const invalidateBankTransactions = useCallback(
-    (invalidateOptions?: BankTransactionsInvalidateOptions) => invalidate(
-      ({ tags }) => tags.includes(BANK_TRANSACTIONS_TAG_KEY),
-      invalidateOptions,
-    ),
-    [invalidate],
-  )
-
   const debouncedInvalidateBankTransactions = useMemo(
     () => debounce(
       invalidateBankTransactions,
@@ -299,38 +149,6 @@ export const useBankTransactionsGlobalCacheActions = () => {
       },
     ),
     [invalidateBankTransactions],
-  )
-
-  const optimisticallyUpdateBankTransactions = useCallback(
-    (
-      transformTransaction: (txn: BankTransaction) => BankTransaction,
-    ) =>
-      optimisticUpdate<
-        Array<GetBankTransactionsReturn> | GetBankTransactionsReturn
-      >(
-        ({ tags }) => tags.includes(BANK_TRANSACTIONS_TAG_KEY),
-        (currentData) => {
-          const iterateOverPage = (page: GetBankTransactionsReturn) => {
-            return {
-              ...page,
-              data: page.data.map(txn => transformTransaction(txn)),
-            }
-          }
-
-          if (Array.isArray(currentData)) {
-            return currentData.map(iterateOverPage)
-          }
-
-          /*
-           * The cache contains entries for both the single page and the list of page entries.
-           *
-           * To avoid duplicated work, we intentionally do not apply any transformation to
-           * the single page.
-           */
-          return currentData
-        },
-      ),
-    [optimisticUpdate],
   )
 
   return {

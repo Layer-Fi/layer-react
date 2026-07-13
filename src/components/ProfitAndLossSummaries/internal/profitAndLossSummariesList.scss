@@ -1,0 +1,43 @@
+.Layer__ProfitAndLossSummariesListItem {
+  all: unset;
+  display: grid;
+
+  border-radius: var(--border-radius-xs);
+  box-shadow: 0 0 0 1px var(--color-base-200);
+
+  background: var(--color-base-0);
+
+  &[data-active] {
+    background: var(--color-base-50);
+  }
+
+  &[data-clickable] {
+    cursor: pointer;
+
+    &:hover {
+      background: var(--color-base-50);
+    }
+  }
+}
+
+.Layer__ProfitAndLossSummariesList {
+  all: unset;
+  display: grid;
+
+  grid-auto-rows: minmax(0, 1fr);
+  gap: var(--spacing-sm);
+}
+
+@container (min-width: 60rem) {
+  .Layer__ProfitAndLossSummariesList {
+    --column-count: 3;
+
+    grid-template-columns: repeat(var(--column-count), minmax(0, 1fr));
+
+    gap: var(--spacing-md);
+
+    &[data-column-count='4'] {
+      --column-count: 4;
+    }
+  }
+}

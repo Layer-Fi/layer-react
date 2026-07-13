@@ -3,11 +3,13 @@ import { useTranslation } from 'react-i18next'
 
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { tPlural } from '@utils/i18n/plural'
-import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
-import { Text, TextSize, TextWeight } from '@components/Typography/Text'
+import { useGlobalDatePeriodAlignedActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
+import { P } from '@ui/Typography/Text'
+
+import './tasksPanelNotification.scss'
 
 type TasksPanelNotificationProps = {
   onClickReconnectAccounts?: () => void
@@ -19,26 +21,22 @@ export const TasksPanelNotification = ({
   const { t } = useTranslation()
   const { formatNumber, formatDate } = useIntlFormatter()
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
-  const { anyPreviousYearIncomplete, earliestIncompletePeriod } =
-    useBookkeepingYearsStatus()
-  const { disconnectedAccountsRequiringNotification, isLoading } =
-    useListBankAccounts()
+  const { anyPreviousYearIncomplete, earliestIncompletePeriod } = useBookkeepingYearsStatus()
+  const { disconnectedAccountsRequiringNotification, isLoading } = useBankAccountsContext()
 
   if (!isLoading && disconnectedAccountsRequiringNotification > 0) {
     return (
       <div className='Layer__tasks-header__notification' data-status='error'>
         <div className='Layer__tasks-header__notification__text'>
-          <Text>
-            <CircleAlert size={11} />
-          </Text>
-          <Text size={TextSize.md} weight={TextWeight.bold}>
+          <P variant='inherit'><CircleAlert size={11} /></P>
+          <P weight='bold' variant='inherit'>
             {tPlural(t, 'bookkeeping:label.bank_accounts_disconnected', {
               count: disconnectedAccountsRequiringNotification,
               displayCount: formatNumber(disconnectedAccountsRequiringNotification),
               one: '{{displayCount}} bank account is disconnected',
               other: '{{displayCount}} bank accounts are disconnected',
             })}
-          </Text>
+          </P>
         </div>
         {onClickReconnectAccounts && (
           <button
@@ -47,14 +45,14 @@ export const TasksPanelNotification = ({
               onClickReconnectAccounts()
             }}
           >
-            <Text size={TextSize.sm} weight={TextWeight.bold}>
+            <P size='sm' weight='bold' variant='inherit'>
               {tPlural(t, 'bookkeeping:label.reconnect_count_accounts', {
                 count: disconnectedAccountsRequiringNotification,
                 displayCount: formatNumber(disconnectedAccountsRequiringNotification),
                 one: 'Reconnect {{displayCount}} account',
                 other: 'Reconnect {{displayCount}} accounts',
               })}
-            </Text>
+            </P>
             <CircleArrowRight size={14} />
           </button>
         )}
@@ -68,15 +66,8 @@ export const TasksPanelNotification = ({
     return (
       <div className='Layer__tasks-header__notification' data-status='warning'>
         <div className='Layer__tasks-header__notification__text'>
-          <Text status='warning' invertColor>
-            <CircleAlert size={11} />
-          </Text>
-          <Text
-            size={TextSize.sm}
-            weight={TextWeight.bold}
-            status='warning'
-            invertColor
-          >
+          <P status='warning' invert><CircleAlert size={11} /></P>
+          <P size='sm' weight='bold' status='warning' invert>
             {tPlural(t, 'bookkeeping:label.count_open_tasks', {
               count: unresolvedTasksCount,
               displayCount: formatNumber(unresolvedTasksCount),
@@ -84,7 +75,7 @@ export const TasksPanelNotification = ({
               one: '{{displayCount}} open task in {{displayYear}}',
               other: '{{displayCount}} open tasks in {{displayYear}}',
             })}
-          </Text>
+          </P>
         </div>
         <button
           className='Layer__tasks-header__notification__button'
@@ -95,9 +86,9 @@ export const TasksPanelNotification = ({
             })
           }}
         >
-          <Text size={TextSize.sm} weight={TextWeight.bold}>
+          <P size='sm' weight='bold' status='warning' invert>
             {t('bookkeeping:action.view_and_complete', 'View and complete')}
-          </Text>
+          </P>
           <CircleArrowRight size={14} />
         </button>
       </div>

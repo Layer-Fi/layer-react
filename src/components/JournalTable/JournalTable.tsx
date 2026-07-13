@@ -13,8 +13,8 @@ import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { type NestedColumnConfig } from '@components/DataTable/columnUtils'
 import { type ClickableRowProps } from '@components/DataTable/DataTable'
+import { type ColumnConfig } from '@components/DataTable/utils/column'
 import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
 import { ExpandableDataTableContext, ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
 import { type JournalTableStringOverrides } from '@components/JournalTable/JournalTableWithPanel'
@@ -135,7 +135,7 @@ const JournalTableContent = ({
     [pageData],
   )
 
-  const columnConfig = useMemo<NestedColumnConfig<JournalRow>>(() => {
+  const columnConfig = useMemo<ColumnConfig<JournalRow>>(() => {
     const accountNumberColumn = enableAccountNumbers
       ? [{
         id: 'accountNumber',

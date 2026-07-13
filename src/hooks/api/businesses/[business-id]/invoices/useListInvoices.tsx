@@ -1,24 +1,11 @@
-import { useCallback } from 'react'
-import { Schema } from 'effect'
-import useSWRInfinite from 'swr/infinite'
-
-import { PaginatedResponseMetaSchema, type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
+import { type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
+import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { type Invoice, InvoiceSchema, type InvoiceStatus } from '@schemas/invoices/invoice'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRInfiniteResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { usePreserveInfiniteSize } from '@utils/swr/usePreserveInfiniteSize'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
+import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 export const LIST_INVOICES_TAG_KEY = '#list-invoices'
-
-type ListInvoicesBaseParams = {
-  businessId: string
-}
 
 export type ListInvoicesFilterParams = {
   showSalesReceipts?: boolean
@@ -32,24 +19,20 @@ enum SortBy {
   SentAt = 'sent_at',
 }
 
-type ListInvoicesOptions = ListInvoicesFilterParams & PaginationParams & SortParams<SortBy>
+type ListInvoicesParams = {
+  businessId: string
+  cursor?: string
+} & ListInvoicesFilterParams & Omit<PaginationParams, 'cursor'> & SortParams<SortBy>
 
-type ListInvoicesParams = ListInvoicesBaseParams & ListInvoicesOptions
+const ListInvoicesReturnSchema = PaginatedResponseSchema(InvoiceSchema)
 
-const ListInvoicesReturnSchema = Schema.Struct({
-  data: Schema.Array(InvoiceSchema),
-  meta: Schema.Struct({
-    pagination: PaginatedResponseMetaSchema,
-  }),
-})
-
-type ListInvoicesReturn = typeof ListInvoicesReturnSchema.Type
-
-export const listInvoices = get<
-  ListInvoicesReturn,
+export const listInvoices = getWithQuery<
+  typeof ListInvoicesReturnSchema.Encoded,
   ListInvoicesParams
->(({ businessId, showSalesReceipts, status, query, dueAtStart, dueAtEnd, sortBy, sortOrder, cursor, limit, showTotalCount }) => {
-  const parameters = toDefinedSearchParameters({
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/invoices`,
+  ({ showSalesReceipts, status, query, dueAtStart, dueAtEnd, sortBy, sortOrder, cursor, limit, showTotalCount }) => ({
     showSalesReceipts,
     status,
     q: query,
@@ -60,180 +43,18 @@ export const listInvoices = get<
     cursor,
     limit,
     showTotalCount,
-  })
+  }),
+)
 
-  const baseUrl = `/v1/businesses/${businessId}/invoices`
-  return parameters ? `${baseUrl}?${parameters}` : baseUrl
+export const useListInvoices = createInfiniteQueryHook({
+  tags: [LIST_INVOICES_TAG_KEY],
+  request: listInvoices,
+  schema: ListInvoicesReturnSchema,
+  keyDefaults: {
+    sortBy: SortBy.SentAt,
+    sortOrder: SortOrder.DESC,
+    showTotalCount: true,
+  },
 })
 
-function keyLoader(
-  previousPageData: ListInvoicesReturn | null,
-  {
-    access_token: accessToken,
-    apiUrl,
-    businessId,
-    showSalesReceipts,
-    status,
-    query,
-    dueAtStart,
-    dueAtEnd,
-    sortBy,
-    sortOrder,
-    limit,
-    showTotalCount,
-  }: {
-    access_token?: string
-    apiUrl?: string
-  } & Omit<ListInvoicesParams, 'cursor'>,
-) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      showSalesReceipts,
-      status,
-      query,
-      dueAtStart,
-      dueAtEnd,
-      cursor: previousPageData?.meta?.pagination.cursor,
-      sortBy,
-      sortOrder,
-      limit,
-      showTotalCount,
-      tags: [LIST_INVOICES_TAG_KEY],
-    } as const
-  }
-}
-
-export function useListInvoices({
-  status,
-  showSalesReceipts,
-  query,
-  dueAtStart,
-  dueAtEnd,
-  sortBy = SortBy.SentAt,
-  sortOrder = SortOrder.DESC,
-  limit,
-  showTotalCount = true,
-}: ListInvoicesOptions = {}) {
-  const withLocale = useLocalizedKey()
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
-
-  const swrResponse = useSWRInfinite(
-    (_index, previousPageData: ListInvoicesReturn | null) => withLocale(keyLoader(
-      previousPageData,
-      {
-        ...auth,
-        apiUrl,
-        businessId,
-        showSalesReceipts,
-        status,
-        query,
-        dueAtStart,
-        dueAtEnd,
-        sortBy,
-        sortOrder,
-        limit,
-        showTotalCount,
-      },
-    )),
-    ({
-      accessToken,
-      apiUrl,
-      businessId,
-      cursor,
-      showSalesReceipts,
-      status,
-      query,
-      dueAtStart,
-      dueAtEnd,
-      sortBy,
-      sortOrder,
-      limit,
-      showTotalCount,
-    }) => listInvoices(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          showSalesReceipts,
-          status,
-          query,
-          dueAtStart,
-          dueAtEnd,
-          sortBy,
-          sortOrder,
-          cursor,
-          limit,
-          showTotalCount,
-        },
-      },
-    )().then(Schema.decodeUnknownPromise(ListInvoicesReturnSchema)),
-    {
-      keepPreviousData: true,
-      revalidateFirstPage: false,
-      initialSize: 1,
-    },
-  )
-
-  usePreserveInfiniteSize(swrResponse)
-
-  return new SWRInfiniteResult(swrResponse)
-}
-
-const withUpdatedInvoice = (updated: Invoice) =>
-  (inv: Invoice): Invoice => inv.id === updated.id ? updated : inv
-
-export function useInvoicesGlobalCacheActions() {
-  const { invalidate, patchCache, forceReload } = useGlobalCacheActions()
-
-  const invalidateInvoices = useCallback(
-    () => invalidate(({ tags }) => tags.includes(LIST_INVOICES_TAG_KEY)),
-    [invalidate],
-  )
-
-  const patchInvoiceByKey = useCallback((updatedInvoice: Invoice) =>
-    patchCache<ListInvoicesReturn[] | ListInvoicesReturn | undefined>(
-      ({ tags }) => tags.includes(LIST_INVOICES_TAG_KEY),
-      (currentData) => {
-        const iterateOverPage = (page: ListInvoicesReturn): ListInvoicesReturn => ({
-          ...page,
-          data: page.data.map(withUpdatedInvoice(updatedInvoice)),
-        })
-
-        return Array.isArray(currentData)
-          ? currentData.map(iterateOverPage)
-          : currentData
-      },
-    ),
-  [patchCache],
-  )
-
-  const patchInvoiceWithTransformation = useCallback((transformation: (invoice: Invoice) => Invoice) =>
-    patchCache<ListInvoicesReturn[] | ListInvoicesReturn | undefined>(
-      ({ tags }) => tags.includes(LIST_INVOICES_TAG_KEY),
-      (currentData) => {
-        const iterateOverPage = (page: ListInvoicesReturn): ListInvoicesReturn => ({
-          ...page,
-          data: page.data.map(transformation),
-        })
-
-        return Array.isArray(currentData)
-          ? currentData.map(iterateOverPage)
-          : currentData
-      },
-    ),
-  [patchCache],
-  )
-
-  const forceReloadInvoices = useCallback(
-    () => forceReload(({ tags }) => tags.includes(LIST_INVOICES_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { invalidateInvoices, patchInvoiceByKey, patchInvoiceWithTransformation, forceReloadInvoices }
-}
+export const useInvoicesGlobalCacheActions = createInfiniteQueryGlobalCacheActions<Invoice>(LIST_INVOICES_TAG_KEY)

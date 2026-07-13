@@ -1,20 +1,20 @@
 import { Fragment, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { TableCellAlign } from '@internal-types/table'
 import type { LineItem } from '@schemas/common/lineItem'
 import { useEffectOnMount } from '@hooks/utils/react/useEffectOnMount'
 import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
-import { Button } from '@ui/Button/Button'
-import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { type BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
+import {
+  ReportsTable,
+  ReportsTableAmountCell,
+  ReportsTableBody,
+  ReportsTableNameCell,
+  ReportsTableRow,
+} from '@components/ReportsTable/ReportsTable'
 import { ReportsTableErrorState } from '@components/ReportsTableState/ReportsTableErrorState'
 import { ReportsTableLoader } from '@components/ReportsTableState/ReportsTableLoader'
-import { Table } from '@components/Table/Table'
-import { TableBody } from '@components/TableBody/TableBody'
-import { TableCell } from '@components/TableCell/TableCell'
-import { TableRow } from '@components/TableRow/TableRow'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 export interface ProfitAndLossTableStringOverrides {
@@ -74,46 +74,29 @@ export const ProfitAndLossTableComponent = ({
       { name: lineItem.name, display_name: lineItem.displayName },
     ]
 
+    const amount = Number.isNaN(lineItem.value) ? 0 : lineItem.value ?? 0
+
     return (
       <Fragment key={rowKey + '-' + rowIndex}>
-        <TableRow
-          rowKey={rowKey + '-' + rowIndex}
-          expandable={expandable}
-          isExpanded={expanded}
+        <ReportsTableRow
           depth={depth}
-          variant={variant ? variant : expandable ? 'expandable' : 'default'}
-          handleExpand={() => setIsOpen(rowKey)}
+          expandable={!variant && expandable}
+          summation={variant === 'summation'}
+          onExpand={expandable ? () => setIsOpen(rowKey) : undefined}
         >
-          <TableCell
-            primary
-            withExpandIcon={expandable}
-          >
+          <ReportsTableNameCell expandable={expandable} expanded={expanded} bold>
             {lineItem.displayName}
-          </TableCell>
-          {
-            showValue
-            && (
-              <TableCell
-                isCurrency={variant === 'summation' || !onLineItemClick}
-                primary
-                align={TableCellAlign.RIGHT}
-              >
-                {variant === 'summation' || !onLineItemClick
-                  ? (
-                    Number.isNaN(lineItem.value) ? 0 : lineItem.value
-                  )
-                  : (
-                    <Button
-                      variant='text'
-                      onPress={() => onLineItemClick(lineItem.name, currentBreadcrumbs)}
-                    >
-                      <MoneySpan amount={lineItem.value ?? 0} weight='bold' />
-                    </Button>
-                  )}
-              </TableCell>
-            )
-          }
-        </TableRow>
+          </ReportsTableNameCell>
+          {showValue && (
+            <ReportsTableAmountCell
+              amount={amount}
+              bold
+              onPress={variant !== 'summation' && onLineItemClick
+                ? () => onLineItemClick(lineItem.name, currentBreadcrumbs)
+                : undefined}
+            />
+          )}
+        </ReportsTableRow>
         {expanded && lineItem.lineItems
           ? lineItem.lineItems.map((child, i) =>
             renderLineItem({
@@ -143,8 +126,8 @@ export const ProfitAndLossTableComponent = ({
       )}
     >
       {({ data }) => (
-        <Table borderCollapse='collapse' bottomSpacing={false}>
-          <TableBody>
+        <ReportsTable bottomSpacing={false}>
+          <ReportsTableBody>
             {renderLineItem({
               lineItem: data.income,
               depth: 0,
@@ -232,8 +215,8 @@ export const ProfitAndLossTableComponent = ({
                   showValue: false,
                 }),
               )}
-          </TableBody>
-        </Table>
+          </ReportsTableBody>
+        </ReportsTable>
       )}
     </ConditionalBlock>
   )

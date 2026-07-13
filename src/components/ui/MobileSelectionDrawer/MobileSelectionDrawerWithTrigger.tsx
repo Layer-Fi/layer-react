@@ -27,6 +27,7 @@ export type MobileSelectionDrawerWithTriggerProps<T extends ComboBoxOption> =
     slotProps?: {
       Trigger?: {
         icon?: ReactNode
+        value?: ReactNode | ((selectedValue: T | null) => ReactNode)
       }
     }
   }
@@ -74,6 +75,19 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
     return resolveSelectedOption(filteredOptionsOrGroups, selectedValue)
   }, [filteredOptionsOrGroups, selectedValue])
 
+  const triggerValue = useMemo(() => {
+    const value = slotProps?.Trigger?.value
+    if (!value) {
+      return resolvedSelectedValue?.label ?? resolvedPlaceholder
+    }
+
+    if (typeof value === 'function') {
+      return value(resolvedSelectedValue ?? null)
+    }
+
+    return value
+  }, [slotProps?.Trigger?.value, resolvedSelectedValue, resolvedPlaceholder])
+
   const Header = useCallback(() => (
     <ModalTitleWithClose
       heading={<ModalHeading size='md' weight='bold'>{heading}</ModalHeading>}
@@ -91,7 +105,7 @@ export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
           className='Layer__MobileSelectionDrawerWithTrigger__Trigger'
         >
           <Span size='sm' ellipsis pie='xs'>
-            {resolvedSelectedValue?.label ?? resolvedPlaceholder}
+            {triggerValue}
           </Span>
           {!isDisabled && triggerIcon}
         </HStack>

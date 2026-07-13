@@ -1,13 +1,17 @@
 import { useId, useMemo } from 'react'
 import classNames from 'classnames'
-import type { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select'
+import type { CSSObjectWithLabel, GroupBase, Props as SelectProps, StylesConfig } from 'react-select'
 
 import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
 import type { AriaLabelProps, BaseComboBoxProps, ComboBoxOption } from '@ui/ComboBox/types'
 import { useComboBoxSubcomponents } from '@ui/ComboBox/useComboBoxSubcomponents'
 
+type UseCommonComboBoxPropsReturn<T extends ComboBoxOption, IsMulti extends boolean> =
+  Partial<SelectProps<T, IsMulti, GroupBase<T>>> & AriaLabelProps
+
 export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends boolean>({
   className,
+  name,
   options,
   groups,
   onInputValueChange,
@@ -29,6 +33,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
 }: Pick<
   BaseComboBoxProps<T>,
   | 'className'
+  | 'name'
   | 'options'
   | 'groups'
   | 'onInputValueChange'
@@ -44,7 +49,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   | 'isLoading'
   | 'isMutating'
   | 'filterOption'
-> & AriaLabelProps) {
+> & AriaLabelProps): UseCommonComboBoxPropsReturn<T, IsMulti> {
   const internalInputId = useId()
   const effectiveInputId = inputId ?? internalInputId
 
@@ -84,6 +89,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   const selectProps = useMemo(() => ({
     inputId: effectiveInputId,
     className,
+    name,
     options: options ?? groups,
     onInputChange: onInputValueChange,
     placeholder,
@@ -119,6 +125,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     isMutating,
     isReadOnly,
     isSearchable,
+    name,
     onInputValueChange,
     options,
     placeholder,

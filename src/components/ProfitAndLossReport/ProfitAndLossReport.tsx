@@ -3,7 +3,6 @@ import { type ReactNode, useCallback, useContext, useEffect, useMemo } from 'rea
 import { type View as ViewType } from '@internal-types/general'
 import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
-import { ProfitAndLossComparisonContext } from '@contexts/ProfitAndLossComparisonContext/ProfitAndLossComparisonContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { HStack, Stack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
@@ -11,7 +10,6 @@ import { type BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailRe
 import { Header } from '@components/Header/Header'
 import { HeaderCol } from '@components/Header/HeaderCol'
 import { HeaderRow } from '@components/Header/HeaderRow'
-import { ProfitAndLossCompareOptions } from '@components/ProfitAndLossCompareOptions/ProfitAndLossCompareOptions'
 import { ProfitAndLossDetailReport } from '@components/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 import { ProfitAndLossDownloadButton } from '@components/ProfitAndLossDownloadButton/ProfitAndLossDownloadButton'
 import { ProfitAndLossTableWithProvider } from '@components/ProfitAndLossTable/ProfitAndLossTableWithProvider'
@@ -43,7 +41,6 @@ export const ProfitAndLossReport = ({
   hideHeader,
 }: ProfitAndLossReportProps) => {
   const { selectedLineItem, setSelectedLineItem, setDateSelectionMode } = useContext(ProfitAndLossContext)
-  const { comparisonConfig } = useContext(ProfitAndLossComparisonContext)
   const { headerRef, isCompact } = useReportsCompactHeader()
   const isMobileView = view === 'mobile'
 
@@ -80,8 +77,6 @@ export const ProfitAndLossReport = ({
     setSelectedLineItem(null)
   }, [setSelectedLineItem])
 
-  const useComparisonPnl = !!comparisonConfig
-
   const header = useMemo(() => {
     if (hideHeader) return null
 
@@ -99,32 +94,21 @@ export const ProfitAndLossReport = ({
             >
               <HStack gap='xs'>
                 <CombinedDateRangeSelection mode={dateSelectionMode} isCompact={isCompact} />
-                {view === 'desktop' && useComparisonPnl && <ProfitAndLossCompareOptions isCompact={isCompact} />}
               </HStack>
               <HStack gap='xs' justify='end' fluid={isCompact}>
                 {isMobileView && <ReportsMobileSelectionTrigger />}
                 <ProfitAndLossDownloadButton
                   stringOverrides={stringOverrides?.downloadButton}
                   moneyFormat={csvMoneyFormat}
-                  iconOnly={isMobileView}
+                  icon={isMobileView}
                 />
               </HStack>
             </Stack>
           </HeaderCol>
         </HeaderRow>
-        {view !== 'desktop' && useComparisonPnl
-          && (
-            <HeaderRow>
-              <HeaderCol fluid>
-                <HStack pb='sm' fluid>
-                  <ProfitAndLossCompareOptions isCompact={isCompact} />
-                </HStack>
-              </HeaderCol>
-            </HeaderRow>
-          )}
       </Header>
     )
-  }, [csvMoneyFormat, dateSelectionMode, headerRef, hideHeader, isCompact, isMobileView, stringOverrides?.downloadButton, useComparisonPnl, view])
+  }, [csvMoneyFormat, dateSelectionMode, headerRef, hideHeader, isCompact, isMobileView, stringOverrides?.downloadButton])
 
   return (
     <InAppLinkProvider renderInAppLink={renderInAppLink}>

@@ -1,0 +1,28 @@
+.Layer__ButtonIconBox {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  width: 30px;
+  border-radius: 4px;
+  margin-inline-start: calc(var(--spacing-md) - 4px);
+  background-color: var(--btn-bg-color-icon);
+  color: var(--btn-color-icon);
+  transition: all 150ms ease-out;
+}
+
+.Layer__UI__Button:has(.Layer__ButtonIconBox) {
+  gap: 0;
+  padding-inline: var(--spacing-md) 3px;
+}
+
+.Layer__UI__Button[data-hovered]:not([data-disabled]) .Layer__ButtonIconBox {
+  background-color: var(--btn-bg-color-icon-hover);
+  color: var(--btn-color-icon-hover);
+}
+
+.Layer__UI__Button[data-disabled] .Layer__ButtonIconBox {
+  background-color: var(--color-base-100);
+  color: var(--color-base-500);
+}

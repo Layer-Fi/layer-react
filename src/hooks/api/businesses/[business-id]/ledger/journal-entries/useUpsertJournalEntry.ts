@@ -1,15 +1,10 @@
-import { useCallback } from 'react'
-import { Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
-
 import { post } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
 import { useLedgerEntriesCacheActions } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
+import { useBalanceSheetGlobalCacheActions } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/useBalanceSheet'
+import { useStatementOfCashFlowGlobalCacheActions } from '@hooks/api/businesses/[business-id]/reports/cashflow-statement/useStatementOfCashFlow'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { type JournalEntryReturn, JournalEntryReturnSchema, type UpsertJournalEntrySchema } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { JournalEntryReturnSchema, type UpsertJournalEntrySchema } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
 
 const UPSERT_JOURNAL_ENTRY_TAG_KEY = '#upsert-journal-entry'
 
@@ -20,94 +15,45 @@ export enum UpsertJournalEntryMode {
 
 type UpsertJournalEntryBody = typeof UpsertJournalEntrySchema.Encoded
 
-type UpsertJournalEntryReturn = JournalEntryReturn
-
 const createJournalEntry = post<
-  UpsertJournalEntryReturn,
+  typeof JournalEntryReturnSchema.Encoded,
   UpsertJournalEntryBody,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/ledger/journal-entries`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [UPSERT_JOURNAL_ENTRY_TAG_KEY],
-    } as const
-  }
-}
+const useCreateJournalEntry = createMutationHook({
+  tags: [UPSERT_JOURNAL_ENTRY_TAG_KEY],
+  request: createJournalEntry,
+  schema: JournalEntryReturnSchema,
+  swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { forceReload: forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
+    const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
+    const { invalidate: invalidateBalanceSheet } = useBalanceSheetGlobalCacheActions()
+    const { invalidate: invalidateStatementOfCashFlow } = useStatementOfCashFlowGlobalCacheActions()
+
+    return () => {
+      // Invalidate all relevant caches after successful journal entry creation
+      void forceReloadLedgerEntries()
+      void debouncedInvalidateProfitAndLoss()
+
+      // Invalidate balance sheet and cash flow statement caches
+      void invalidateBalanceSheet()
+      void invalidateStatementOfCashFlow()
+    }
+  },
+})
 
 type UseUpsertJournalEntryProps =
   | { mode: UpsertJournalEntryMode.Create }
   | { mode: UpsertJournalEntryMode.Update, journalEntryId: string }
 
 export const useUpsertJournalEntry = (props: UseUpsertJournalEntryProps) => {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-
   const { mode } = props
   // For now, we only support create mode since the API doesn't have an update endpoint
   if (mode === UpsertJournalEntryMode.Update) {
     throw new Error('Update mode is not yet supported for journal entries')
   }
 
-  // Cache invalidation hooks
-  const { forceReloadLedgerEntries } = useLedgerEntriesCacheActions()
-  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
-  const { invalidate } = useGlobalCacheActions()
-
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: body }: { arg: UpsertJournalEntryBody },
-    ) => {
-      return createJournalEntry(apiUrl, accessToken, {
-        params: { businessId },
-        body,
-      }).then(Schema.decodeUnknownPromise(JournalEntryReturnSchema))
-    },
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const trigger = useCallback(
-    async (body: UpsertJournalEntryBody) => {
-      const result = await rawMutationResponse.trigger(body)
-
-      // Invalidate all relevant caches after successful journal entry creation
-      void forceReloadLedgerEntries()
-      void debouncedInvalidateProfitAndLoss()
-
-      // Invalidate balance sheet and cash flow statement caches
-      void invalidate(({ tags }) => tags.includes('#balance-sheet'))
-      void invalidate(({ tags }) => tags.includes('#statement-of-cash-flow'))
-
-      return result
-    },
-    [rawMutationResponse, forceReloadLedgerEntries, debouncedInvalidateProfitAndLoss, invalidate],
-  )
-
-  return {
-    trigger,
-    data: rawMutationResponse.data,
-    isError: !!rawMutationResponse.error,
-    isMutating: rawMutationResponse.isMutating,
-  }
+  return useCreateJournalEntry()
 }

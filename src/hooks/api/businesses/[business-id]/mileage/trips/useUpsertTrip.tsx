@@ -1,16 +1,10 @@
-import { useCallback } from 'react'
-import { Effect, Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
-
 import { TripSchema, type UpsertTripEncoded } from '@schemas/trip'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patch, post } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useMileageSummaryGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/summary/useMileageSummary'
 import { useTripsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/trips/useListTrips'
 import { useVehiclesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const UPSERT_TRIP_TAG_KEY = '#upsert-trip'
 
@@ -21,179 +15,84 @@ export enum UpsertTripMode {
 
 type UpsertTripBody = UpsertTripEncoded
 
-const createTrip = post<
-  UpsertTripReturn,
-  UpsertTripBody,
-  { businessId: string }
->(({ businessId }) => `/v1/businesses/${businessId}/mileage/trips`)
+const UpsertTripReturnSchema = UnwrappedDataResponseSchema(TripSchema)
+
+type UpsertTripReturnEncoded = typeof UpsertTripReturnSchema.Encoded
+
+const createTrip = post<UpsertTripReturnEncoded, UpsertTripBody>(
+  ({ businessId }) => `/v1/businesses/${businessId}/mileage/trips`,
+)
 
 const updateTrip = patch<
-  UpsertTripReturn,
+  UpsertTripReturnEncoded,
   UpsertTripBody,
   { businessId: string, tripId: string }
->(({ businessId, tripId }) => `/v1/businesses/${businessId}/mileage/trips/${tripId}`)
+>(
+  ({ businessId, tripId }) => `/v1/businesses/${businessId}/mileage/trips/${tripId}`,
+)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  tripId = undefined,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  tripId?: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tripId,
-      tags: [UPSERT_TRIP_TAG_KEY],
-    } as const
-  }
-}
-
-const UpsertTripReturnSchema = Schema.Struct({
-  data: TripSchema,
-})
-
-type UpsertTripReturn = typeof UpsertTripReturnSchema.Type
-
-const CreateParamsSchema = Schema.Struct({
-  businessId: Schema.String,
-})
-
-const UpdateParamsSchema = Schema.Struct({
-  businessId: Schema.String,
-  tripId: Schema.String,
-})
-
-export type CreateParams = typeof CreateParamsSchema.Type
-export type UpdateParams = typeof UpdateParamsSchema.Type
+export type CreateParams = { readonly businessId: string }
+export type UpdateParams = { readonly businessId: string, readonly tripId: string }
 
 export type UpsertParams = CreateParams | UpdateParams
 
-type RequestArgs = {
-  apiUrl: string
-  accessToken: string
-  body: UpsertTripBody
-}
+const useCreateTrip = createMutationHook({
+  tags: [UPSERT_TRIP_TAG_KEY],
+  request: createTrip,
+  schema: UpsertTripReturnSchema,
+  swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { forceReload: forceReloadTrips } = useTripsGlobalCacheActions()
+    const { forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()
+    const { invalidate: invalidateMileageSummary } = useMileageSummaryGlobalCacheActions()
 
-type UpsertRequestFn = (args: RequestArgs) => Promise<UpsertTripReturn>
+    return () => {
+      void forceReloadTrips()
 
-const isParamsValidForMode = <M extends UpsertTripMode>(
-  mode: M,
-  params: unknown,
-): params is M extends UpsertTripMode.Update ? UpdateParams : CreateParams => {
-  if (mode === UpsertTripMode.Update) {
-    return Effect.runSync(Effect.either(Schema.decodeUnknown(UpdateParamsSchema)(params)))._tag === 'Right'
-  }
+      // Creating a trip may change our ability to delete/archive the vehicle
+      void forceReloadVehicles()
 
-  if (mode === UpsertTripMode.Create) {
-    return Effect.runSync(Effect.either(Schema.decodeUnknown(CreateParamsSchema)(params)))._tag === 'Right'
-  }
-
-  return false
-}
-
-function getRequestFn(
-  mode: UpsertTripMode,
-  params: UpsertParams,
-): UpsertRequestFn {
-  if (mode === UpsertTripMode.Update) {
-    if (!isParamsValidForMode(UpsertTripMode.Update, params)) {
-      throw new Error('Invalid params for update mode')
+      // Creating a trip may change our mileage summary
+      void invalidateMileageSummary()
     }
+  },
+})
 
-    return ({ apiUrl, accessToken, body }: { apiUrl: string, accessToken: string, body: UpsertTripBody }) =>
-      updateTrip(apiUrl, accessToken, { params, body })
-  }
-  else {
-    if (!isParamsValidForMode(UpsertTripMode.Create, params)) {
-      throw new Error('Invalid params for create mode')
+const useUpdateTrip = createMutationHook({
+  tags: [UPSERT_TRIP_TAG_KEY],
+  request: updateTrip,
+  keyParams: ['tripId'],
+  schema: UpsertTripReturnSchema,
+  swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: () => {
+    const { patchByKey: patchTripByKey } = useTripsGlobalCacheActions()
+    const { forceReload: forceReloadVehicles } = useVehiclesGlobalCacheActions()
+    const { invalidate: invalidateMileageSummary } = useMileageSummaryGlobalCacheActions()
+
+    return (data) => {
+      void patchTripByKey(data)
+
+      // Updating a trip may change our ability to delete/archive the vehicle
+      void forceReloadVehicles()
+
+      // Updating a trip may change our mileage summary
+      void invalidateMileageSummary()
     }
-
-    return ({ apiUrl, accessToken, body }: { apiUrl: string, accessToken: string, body: UpsertTripBody }) =>
-      createTrip(apiUrl, accessToken, { params, body })
-  }
-}
+  },
+})
 
 type UseUpsertTripProps =
   | { mode: UpsertTripMode.Create }
   | { mode: UpsertTripMode.Update, tripId: string }
 
 export const useUpsertTrip = (props: UseUpsertTripProps) => {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-
   const { mode } = props
   const tripId = mode === UpsertTripMode.Update ? props.tripId : undefined
 
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-      tripId,
-    })),
-    (
-      { accessToken, apiUrl, businessId, tripId },
-      { arg: body }: { arg: UpsertTripBody },
-    ) => {
-      const request = getRequestFn(mode, { businessId, tripId })
-
-      return request({
-        apiUrl,
-        accessToken,
-        body,
-      }).then(Schema.decodeUnknownPromise(UpsertTripReturnSchema))
-    },
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
-
-  const { patchTripByKey, forceReloadTrips } = useTripsGlobalCacheActions()
-  const { forceReloadVehicles } = useVehiclesGlobalCacheActions()
-  const { invalidateMileageSummary } = useMileageSummaryGlobalCacheActions()
-
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      if (mode === UpsertTripMode.Update) {
-        void patchTripByKey(triggerResult.data)
-      }
-      else {
-        void forceReloadTrips()
-      }
-
-      // Creating/updating a trip may change our ability to delete/archive the vehicle
-      void forceReloadVehicles()
-
-      // Creating/updating a trip may change our mileage summary
-      void invalidateMileageSummary()
-
-      return triggerResult
-    },
-    [originalTrigger, mode, forceReloadVehicles, invalidateMileageSummary, patchTripByKey, forceReloadTrips],
-  )
-
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
+  const createResponse = useCreateTrip()
+  const updateResponse = useUpdateTrip({
+    tripId: tripId ?? '',
   })
+
+  return mode === UpsertTripMode.Create ? createResponse : updateResponse
 }

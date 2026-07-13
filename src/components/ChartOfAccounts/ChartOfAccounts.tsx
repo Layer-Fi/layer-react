@@ -8,8 +8,8 @@ import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkCont
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
 import { type ChartOfAccountsTableStringOverrides, ChartOfAccountsTableWithPanel } from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
 import { Container } from '@components/Container/Container'
-import { LedgerAccount } from '@components/LedgerAccount/LedgerAccountIndex'
-import { type LedgerAccountStringOverrides } from '@components/LedgerAccount/LedgerAccountIndex'
+import { LedgerAccountPanel } from '@components/LedgerAccountPanel/LedgerAccountPanel'
+import { type LedgerAccountStringOverrides } from '@components/LedgerAccountPanel/LedgerAccountPanel'
 
 import './chartOfAccounts.scss'
 
@@ -53,14 +53,13 @@ const ChartOfAccountsContent = ({
   showAddAccountButton,
 }: ChartOfAccountsProps) => {
   const { selectedAccount } = useContext(LedgerAccountsContext)
-  const { view, containerRef } = useElementViewSize<HTMLDivElement>()
+  const { containerRef } = useElementViewSize<HTMLDivElement>()
 
   return (
     <Container name='chart-of-accounts' ref={containerRef} asWidget={asWidget}>
       {selectedAccount
         ? (
-          <LedgerAccount
-            view={view}
+          <LedgerAccountPanel
             containerRef={containerRef}
             stringOverrides={stringOverrides?.ledgerAccount}
           />

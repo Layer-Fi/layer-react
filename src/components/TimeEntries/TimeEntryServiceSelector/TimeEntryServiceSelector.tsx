@@ -70,7 +70,7 @@ type TimeEntryServiceSelectorProps =
   })
 
 const formatCreateLabel = (inputValue: string, t: TFunction) => (
-  <Span variant='inherit' className='Layer__TimeEntryServiceSelector__CreateLabel'>
+  <Span className='Layer__TimeEntryServiceSelector__CreateLabel'>
     <Plus size={14} aria-hidden='true' />
     {inputValue
       ? t('timeTracking:services.create_service_input_value', 'Create service "{{inputValue}}"', { inputValue })
@@ -94,7 +94,7 @@ export function TimeEntryServiceSelector({
 }: TimeEntryServiceSelectorProps) {
   const { t } = useTranslation()
 
-  const { data: servicesResponse, isLoading, isError, error } = useListCatalogServices({ allowArchived })
+  const { flattenedData: servicesResponse, isLoading, isError, error } = useListCatalogServices({ allowArchived })
 
   const isLoadingWithoutFallback = isLoading && !servicesResponse
   const shouldHideError = hideSpecifiedIdNotFoundError && isAPIErrorOfType(error, ApiEnumErrorType.SpecifiedIdNotFound)
@@ -102,7 +102,7 @@ export function TimeEntryServiceSelector({
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
   const serviceOptions = useMemo<ServiceAsOption[]>(
-    () => servicesResponse?.data.map(service => new ServiceAsOption(service, t)) ?? [],
+    () => servicesResponse?.map(service => new ServiceAsOption(service, t)) ?? [],
     [servicesResponse, t],
   )
 
@@ -139,20 +139,9 @@ export function TimeEntryServiceSelector({
     [t],
   )
 
-  const ErrorMessage = useMemo(
-    () => {
-      if (!shouldShowError) {
-        return null
-      }
-
-      return (
-        <P size='xs' status='error'>
-          {t('timeTracking:error.load_services', 'Failed to load services.')}
-        </P>
-      )
-    },
-    [shouldShowError, t],
-  )
+  const ErrorMessage = shouldShowError
+    ? t('timeTracking:error.load_services', 'Failed to load services.')
+    : undefined
 
   const inputId = useId()
 

@@ -4,11 +4,10 @@ import type { BankTransaction } from '@internal-types/bankTransactions'
 import { makeTagFromTransactionTag, type Tag } from '@schemas/tag'
 import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
 import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import { useBankTransactionTagVisibility } from '@contexts/BankTransactionTagVisibilityContext/BankTransactionTagVisibilityContext'
 import { VStack } from '@ui/Stack/Stack'
 import { BankTransactionCustomerVendorSelector } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorSelector'
-import { useBankTransactionCustomerVendorVisibility } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorVisibilityProvider'
 import { BankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/BankTransactionMemo'
 import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
 
@@ -17,7 +16,6 @@ type BankTransactionFormFieldProps = {
     BankTransaction,
     'id' | 'transactionTags' | 'customer' | 'vendor'
   >
-  showDescriptions?: boolean
   hideTags?: boolean
   hideCustomerVendor?: boolean
   isMobile?: boolean
@@ -25,13 +23,13 @@ type BankTransactionFormFieldProps = {
 
 export function BankTransactionFormFields({
   bankTransaction,
-  showDescriptions,
   hideTags = false,
   hideCustomerVendor = false,
   isMobile = false,
 }: BankTransactionFormFieldProps) {
-  const { showTags } = useBankTransactionTagVisibility()
-  const { showCustomerVendor } = useBankTransactionCustomerVendorVisibility()
+  const showTags = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.Tags)
+  const showCustomerVendor = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.CustomerVendor)
+  const showDescriptions = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.Descriptions)
 
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 

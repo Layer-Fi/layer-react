@@ -1,23 +1,56 @@
 .Layer__MobileListItem {
   display: grid;
-  grid-template-areas: 'content';
-  grid-template-columns: 1fr;
+  grid-template-areas:
+    'content'
+    'expanded'
+    'footer';
+  grid-template-columns: minmax(0, 1fr);
+  overflow: hidden;
 
-  padding: var(--spacing-sm);
   border-radius: var(--border-radius-sm);
 
   border: 1px solid var(--border-color);
   background-color: var(--color-base-0);
 
-  &[data-selection-mode='multiple'],
-  &[data-selection-mode='single'] {
-    grid-template-areas: 'selection content';
-    grid-template-columns: auto 1fr;
+  &--selectable {
+    grid-template-areas:
+      'selection content'
+      'expanded expanded'
+      'footer footer';
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  & > .Layer__Checkbox {
+    grid-area: selection;
+    align-self: center;
+    padding-inline-start: var(--spacing-sm);
+  }
+
+  &__Content {
+    grid-area: content;
+    padding: var(--spacing-sm);
+  }
+
+  &__Expanded {
+    grid-area: expanded;
+    overflow: hidden;
+  }
+
+  &__Footer {
+    grid-area: footer;
+    overflow: hidden;
   }
 
   [data-variant='compact'] & {
-    padding-inline: 0;
     border-radius: 0;
     border: none;
+  }
+
+  [data-variant='compact'] &__Content {
+    padding-inline: 0;
+  }
+
+  [data-variant='compact'] &__Footer {
+    border-radius: 0;
   }
 }

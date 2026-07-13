@@ -10,9 +10,6 @@
     "accounts": "No accounts found",
     "accounts_match_filters": "No accounts match the current filters. Click \"Add Account\" to create a new one."
   },
-  "error": {
-    "check_connection_retry_message": "Check connection and retry in a few seconds."
-  },
   "label": {
     "account_remove_warning": "This account will be permanently removed from your Chart of Accounts.",
     "accounts_payable": "Accounts Payable",
@@ -83,10 +80,21 @@
     "undeposited_outflows": "Undeposited Outflows",
     "unearned_revenue": "Unearned Revenue"
   },
+  "placeholder": {
+    "select_normality": "Select a normality",
+    "select_parent": "Select a parent account",
+    "select_sub_type": "Select a sub-type",
+    "select_type": "Select a type"
+  },
   "validation": {
     "account_not_modifiable": "This account cannot be modified",
     "delete_account_has_children": "This account cannot be deleted because it has child accounts",
     "delete_account_has_ledger_entries": "This account cannot be deleted because it has ledger entries",
-    "delete_account_is_required": "This account cannot be deleted because it is a required account"
+    "delete_account_is_required": "This account cannot be deleted because it is a required account",
+    "name_required": "Enter an account name",
+    "normality_required": "Select a normality",
+    "parent_required": "Select a parent account",
+    "subtype_required": "Select a sub-type",
+    "type_required": "Select an account type"
   }
 }

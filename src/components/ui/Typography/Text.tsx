@@ -26,7 +26,8 @@ export type TextStyleProps = {
   pie?: Spacing
   pis?: Spacing
   size?: '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-  status?: 'error' | 'success'
+  status?: 'error' | 'success' | 'warning' | 'disabled' | 'info'
+  invert?: true
   textCase?: 'uppercase' | 'lowercase' | 'capitalize'
   variant?: 'placeholder' | 'subtle' | 'inherit' | 'white'
   weight?: 'normal' | 'bold'
@@ -42,6 +43,7 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
     align,
     children,
     ellipsis,
+    invert,
     nonAria,
     noWrap,
     numeric,
@@ -64,6 +66,7 @@ function splitTextProps<TRest>(props: PropsWithChildren<TextStyleProps & TextRen
     dataProperties: toDataProperties({
       align,
       ellipsis,
+      invert,
       'no-wrap': noWrap,
       numeric,
       pb,
@@ -176,7 +179,7 @@ BaseSpan.displayName = 'BaseSpan'
 export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & TextStyleProps & TooltipCapableComponentProps>>(
   function Span(props, forwardedRef) {
     const { children, dataProperties, renderingProps, restProps } = splitTextProps(props)
-    const { className, tooltipContentWidth = 'md' } = props
+    const { className } = props
 
     const internalRef = useRef<HTMLSpanElement | null>(null)
     const isTruncated = useTruncationDetection(internalRef, { checkFirstChild: true })
@@ -186,8 +189,8 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
     if (props.withTooltip) {
       const dataPropertiesWithEllipsis = { ...dataProperties, 'data-with-tooltip': true }
       return (
-        <Tooltip disabled={!isTruncated}>
-          <TooltipTrigger>
+        <Tooltip isDisabled={!isTruncated}>
+          <TooltipTrigger variant='truncate'>
             <BaseSpan
               dataProperties={dataPropertiesWithEllipsis}
               restProps={restProps}
@@ -199,10 +202,8 @@ export const Span = forwardRef<HTMLSpanElement, PropsWithChildren<SpanProps & Te
               {children}
             </BaseSpan>
           </TooltipTrigger>
-          <TooltipContent width={tooltipContentWidth}>
-            <span className='Layer__UI__tooltip-content--text'>
-              {children}
-            </span>
+          <TooltipContent>
+            {children}
           </TooltipContent>
         </Tooltip>
       )

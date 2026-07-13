@@ -19,6 +19,8 @@ import {
 } from '@components/CategorySelect/utils'
 import { SearchField } from '@components/SearchField/SearchField'
 
+import './categorySelectDrawer.scss'
+
 interface CategorySelectDrawerProps {
   onSelectedValueChange: (value: BankTransactionNonSuggestedMatchOption | null) => void
   selectedValue: BankTransactionNonSuggestedMatchOption | null
@@ -96,7 +98,7 @@ export const CategorySelectDrawer = ({
       isDismissable
     >
       {({ close }) => (
-        <VStack className='Layer__bank-transaction-mobile-list-item__categories_list-container' pb='md' gap='md'>
+        <VStack className='Layer__CategorySelectDrawer__ListContainer' pb='md' gap='md'>
           <SearchField value={query} onChange={setQuery} label={t('bankTransactions:action.search_categories', 'Search categories...')} />
           <ActionableList<CategoryOption>
             options={filteredOptions}
@@ -111,7 +113,7 @@ export const CategorySelectDrawer = ({
             }}
             selectedId={selectedActionableId}
             showDescriptions={showTooltips}
-            className='Layer__bank-transaction-mobile-list-item__categories_list'
+            className='Layer__CategorySelectDrawer__List'
           />
         </VStack>
       )}

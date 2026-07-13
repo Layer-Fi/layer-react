@@ -14,47 +14,36 @@ import { useGetBankTransactionMatchOrCategoryWithDefault } from '@hooks/features
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useDelayedVisibility } from '@hooks/utils/visibility/useDelayedVisibility'
 import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import ChevronDownFill from '@icons/ChevronDownFill'
+import { useBankTransactionsStringOverrides } from '@contexts/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
+import { SubmitAction } from '@ui/Button/SubmitButton'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import {
-  type BankTransactionCTAStringOverrides,
-} from '@components/BankTransactions/BankTransactions'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
+import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankTransactionsSubmitButton'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
-import { SubmitAction, SubmitButton } from '@components/Button/SubmitButton'
+import { Chevron } from '@components/Chevron/Chevron'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { ErrorText } from '@components/Typography/ErrorText'
 
-type BankTransactionsListItemProps = {
-  index: number
-  bankTransaction: BankTransaction
-  stringOverrides?: BankTransactionCTAStringOverrides
+import './bankTransactionsListItem.scss'
 
-  showDescriptions: boolean
-  showReceiptUploads: boolean
-  showTooltips: boolean
+type BankTransactionsListItemProps = {
+  bankTransaction: BankTransaction
 }
 
 export const BankTransactionsListItem = ({
-  index,
   bankTransaction,
-  stringOverrides,
-
-  showDescriptions,
-  showReceiptUploads,
-  showTooltips,
 }: BankTransactionsListItemProps) => {
   const { t } = useTranslation()
+  const { bankTransactionCTAs: stringOverrides } = useBankTransactionsStringOverrides()
   const { formatDate } = useIntlFormatter()
   const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
   const [openExpandedRow, setOpenExpandedRow] = useState(false)
@@ -68,13 +57,8 @@ export const BankTransactionsListItem = ({
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
   const categorized = isCategorized(bankTransaction)
-
   const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction })
-
-  // Keep showing as uncategorized during removal animation to prevent UI flashing
   const displayAsCategorized = isBeingRemoved ? false : categorized
-
-  const { isVisible } = useDelayedVisibility({ delay: index * 80 })
 
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
@@ -104,11 +88,10 @@ export const BankTransactionsListItem = ({
   const rowClassName = classNames(
     'Layer__bank-transaction-list-item',
     openExpandedRow ? openClassName : '',
-    isVisible ? 'show' : '',
   )
 
   return (
-    <AnimatedPresenceElement as='li' variant='fade' isOpen={!isBeingRemoved} motionKey={bankTransaction.id} className={rowClassName} onClick={toggleExpandedRow}>
+    <AnimatedPresenceElement as='li' variant='fade' isPresent={!isBeingRemoved} motionKey={bankTransaction.id} className={rowClassName} onClick={toggleExpandedRow}>
       <span className='Layer__bank-transaction-list-item__heading'>
         <div className='Layer__bank-transaction-list-item__heading__main'>
           <Span ellipsis size='sm'>
@@ -138,11 +121,7 @@ export const BankTransactionsListItem = ({
             !isDesktop && 'Layer__bank-transaction-row__expand-button--mobile',
           )}
         >
-          <ChevronDownFill
-            className={`Layer__chevron ${
-              openExpandedRow ? 'Layer__chevron__up' : 'Layer__chevron__down'
-            }`}
-          />
+          <Chevron open={openExpandedRow} />
         </div>
       </span>
       <HStack className='Layer__bank-transaction-list-item__body'>
@@ -179,16 +158,10 @@ export const BankTransactionsListItem = ({
           </span>
         )}
       <span className='Layer__bank-transaction-list-item__expanded-row' onClick={preventRowExpansion}>
-        <AnimatedPresenceElement variant='expand' isOpen={openExpandedRow} motionKey={`${bankTransaction.id}--expanded`}>
+        <AnimatedPresenceElement variant='expand' isPresent={openExpandedRow} motionKey={`${bankTransaction.id}--expanded`}>
           <ExpandedBankTransactionRow
             bankTransaction={bankTransaction}
-            isOpen={openExpandedRow}
-            categorized={displayAsCategorized}
             asListItem
-            showDescriptions={showDescriptions}
-            showReceiptUploads={showReceiptUploads}
-            showTooltips={showTooltips}
-
             variant='list'
             onValidityChange={setIsExpandedRowValid}
           />
@@ -207,28 +180,25 @@ export const BankTransactionsListItem = ({
                 isDisabled={isProcessing}
               />
             )}
-            <SubmitButton
-              disabled={isProcessing}
-              onClick={() => { void save() }}
-              className={isError ? 'Layer__bank-transaction__retry-btn' : 'Layer__bank-transaction__submit-btn'}
-              processing={isProcessing}
+            <BankTransactionsSubmitButton
+              isDisabled={isProcessing}
+              onPress={() => { void save() }}
+              isPending={isProcessing}
               action={!displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
-              withRetry
-              error={isError ? t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.') : undefined}
+              isError={isError}
+              errorMessage={t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
             >
               {isError
                 ? t('common:action.retry_label', 'Retry')
                 : (!displayAsCategorized
                   ? stringOverrides?.approveButtonText ?? t('common:action.approve_label', 'Approve')
                   : stringOverrides?.updateButtonText ?? t('common:action.update_label', 'Update'))}
-            </SubmitButton>
+            </BankTransactionsSubmitButton>
           </HStack>
         </div>
       )}
       {!openExpandedRow && displayAsCategorized && (
-        <BankTransactionsListItemCategory
-          bankTransaction={bankTransaction}
-        />
+        <BankTransactionsListItemCategory bankTransaction={bankTransaction} categorized />
       )}
       {isError
         && (

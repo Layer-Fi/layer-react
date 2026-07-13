@@ -1,7 +1,9 @@
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { P } from '@ui/Typography/Text'
 import { TaskStatusBadge } from '@components/Tasks/TaskStatusBadge'
 import { type MonthData } from '@components/Tasks/types'
-import { Text, TextSize } from '@components/Typography/Text'
+
+import './taskMonthTile.scss'
 
 export type TaskMonthTileProps = {
   data: MonthData
@@ -20,9 +22,9 @@ export const TaskMonthTile = ({ data, onClick, active, disabled, isMobile }: Tas
       onClick={() => !disabled && onClick(new Date(data.year, data.month - 1, 1))}
       {...dataProperties}
     >
-      <Text size={TextSize.sm} className='Layer__tasks-month-selector__month__str'>
+      <P size='sm' status={disabled ? 'disabled' : undefined}>
         {data.monthStr}
-      </Text>
+      </P>
       {data.status && (
         <TaskStatusBadge status={data.status} tasksCount={data.total - data.completed} isMobile={isMobile} />
       )}

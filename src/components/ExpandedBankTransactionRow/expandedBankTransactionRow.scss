@@ -15,8 +15,8 @@
   overflow: hidden;
   background-color: var(--bg-element-focus);
   transition:
-    background-color var(--transition-speed) ease-in-out,
-    height var(--transition-speed) ease-in-out;
+    background-color 300ms ease-in-out,
+    height 300ms ease-in-out;
 }
 
 .Layer__expanded-bank-transaction-row .Layer__expanded-bank-transaction-row__wrapper {
@@ -24,7 +24,7 @@
   flex-direction: column;
   gap: var(--spacing-sm);
   overflow: hidden;
-  transition: height var(--transition-speed) ease-in-out;
+  transition: height 300ms ease-in-out;
 }
 
 .Layer__expanded-bank-transaction-row__content {
@@ -72,11 +72,6 @@
   }
 
   &:not(.Layer__expanded-bank-transaction-row__content-panel--active) {
-    .Layer__select .Layer__select__control {
-      overflow: hidden;
-      max-width: 0;
-    }
-
     .Layer__expanded-bank-transaction-row__table-cell--split-entry {
       overflow: hidden;
       max-width: 0;
@@ -241,41 +236,29 @@
     align-items: center;
     justify-content: space-between;
 
-    .Layer__input-tooltip {
-      position: relative;
+    .Layer__expanded-bank-transaction-row__total-input {
       flex: 1;
       width: 100%;
       max-width: 42%;
     }
-
-    .Layer__input {
-      max-width: 100%;
-    }
   }
 }
 
-.Layer__expanded-bank-transaction-row__splits-inputs + .Layer__text--error {
-  padding: var(--spacing-2xs) 0;
-  padding-bottom: var(--spacing-md);
-  margin: 0;
-}
-
-.Layer__expanded-bank-transaction-row__splits-inputs .Layer__input {
+.Layer__expanded-bank-transaction-row__splits-inputs .Layer__AmountInput {
   text-align: right;
 }
 
-.Layer__expanded-bank-transaction-row__total-and-btns .Layer__input {
-  max-width: 100%;
+.Layer__expanded-bank-transaction-row__total-input .Layer__UI__Input {
   text-align: right;
 }
 
 @container (min-width: 401px) {
-  .Layer__expanded-bank-transaction-row__total-and-btns .Layer__input-tooltip,
-  .Layer__expanded-bank-transaction-row__table-cell--split-entry .Layer__input-tooltip {
+  .Layer__expanded-bank-transaction-row__total-and-btns .Layer__expanded-bank-transaction-row__total-input,
+  .Layer__expanded-bank-transaction-row__table-cell--split-entry .Layer__AmountInput__Tooltip {
     flex: 1;
     max-width: 12rem;
 
-    .Layer__input {
+    .Layer__AmountInput {
       width: 100%;
     }
   }
@@ -283,8 +266,8 @@
 
 @container (max-width: 480px) {
   .Layer__expanded-bank-transaction-row__total-and-btns {
-    & > .Layer__input-tooltip > .Layer__input-left-text {
-      border-right-color: transparent;
+    & > .Layer__expanded-bank-transaction-row__total-input > .Layer__UI__InputGroup__LeadingText {
+      border-inline-end-color: transparent;
     }
   }
 }

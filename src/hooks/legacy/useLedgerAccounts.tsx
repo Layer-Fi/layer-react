@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import type { LedgerAccountBalanceWithNodeType } from '@internal-types/chartOfAccounts'
 import { type LedgerAccountLineItem, type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
@@ -30,51 +30,40 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
 
   // Use the new paginated hook - always call it but with empty accountId when not available
   const {
-    data: paginatedData,
+    flattenedData,
     isLoading: paginationIsLoading,
     isValidating: paginationIsValidating,
     isError,
     mutate,
-    size,
-    setSize,
+    hasMore: rawHasMore,
+    fetchMore: rawFetchMore,
   } = useListLedgerAccountLines({
     accountId: selectedAccountId || '',
     include_child_account_lines: true,
     sort_by: 'entry_at',
     sort_order: 'DESC',
     limit: 150,
+    isEnabled: Boolean(selectedAccountId),
   })
 
   // Only use the data when accountId is available
   const shouldFetch = Boolean(selectedAccountId)
 
-  const data = useMemo(() => {
-    if (!paginatedData || !shouldFetch) return undefined
-    return paginatedData.flatMap(page => page.data)
-  }, [paginatedData, shouldFetch])
-
-  const hasMore = useMemo(() => {
-    if (!shouldFetch || !paginatedData || paginatedData.length === 0) return false
-
-    const lastPage = paginatedData[paginatedData.length - 1]
-    return Boolean(
-      lastPage.meta?.pagination.cursor
-      && lastPage.meta?.pagination.hasMore,
-    )
-  }, [paginatedData, shouldFetch])
+  const data = shouldFetch ? flattenedData : undefined
+  const hasMore = shouldFetch && rawHasMore
 
   const fetchMore = useCallback(() => {
-    if (hasMore && shouldFetch) {
-      void setSize(size + 1)
+    if (shouldFetch) {
+      rawFetchMore()
     }
-  }, [hasMore, setSize, size, shouldFetch])
+  }, [rawFetchMore, shouldFetch])
 
   const {
     data: entryData,
     mutate: mutateEntryData,
     isLoading: isLoadingEntry,
     isError: isErrorEntry,
-  } = useLedgerAccountsEntry({ entryId: selectedEntryId })
+  } = useLedgerAccountsEntry({ entryId: selectedEntryId, isEnabled: Boolean(selectedEntryId) })
 
   const refetch = () => mutate()
 
@@ -85,7 +74,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
 
   return {
     data,
-    entryData: entryData?.data,
+    entryData,
     isLoading: shouldFetch ? paginationIsLoading : false,
     isLoadingEntry,
     isValidating: shouldFetch ? paginationIsValidating : false,

@@ -3,18 +3,23 @@ import { Info } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
+import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
 import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { Banner } from '@ui/Banner/Banner'
 import { Button as LayerButton } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
+import { HostedLinkErrorBanner } from '@components/LinkedAccounts/HostedLinkErrorBanner'
 
 import './solopreneurOnboardingBanner.scss'
 
 enum OnboardingBannerState {
   Loading = 'Loading',
+  HostedLinkError = 'HostedLinkError',
   NoBankAccountsLinked = 'NoBankAccountsLinked',
   NoTaxProfile = 'NoTaxProfile',
   Onboarded = 'Onboarded',
@@ -22,13 +27,21 @@ enum OnboardingBannerState {
 
 const getOnboardingBannerState = ({
   isLoading,
+  isHostedLinkError,
   hasLinkedAccounts,
   hasSavedTaxProfile,
+  isTaxEstimatesEnabled,
 }: {
   isLoading: boolean
+  isHostedLinkError: boolean
   hasLinkedAccounts: boolean
   hasSavedTaxProfile: boolean
+  isTaxEstimatesEnabled: boolean
 }) => {
+  if (isHostedLinkError) {
+    return OnboardingBannerState.HostedLinkError
+  }
+
   if (isLoading) {
     return OnboardingBannerState.Loading
   }
@@ -37,7 +50,7 @@ const getOnboardingBannerState = ({
     return OnboardingBannerState.NoBankAccountsLinked
   }
 
-  if (!hasSavedTaxProfile) {
+  if (isTaxEstimatesEnabled && !hasSavedTaxProfile) {
     return OnboardingBannerState.NoTaxProfile
   }
 
@@ -54,7 +67,7 @@ const NoBankAccountsLinkedBanner = () => {
   const Icon = isMobile ? null : <Info size={16} />
   const title = t('linkedAccounts:label.link_your_bank_accounts', 'Link your bank accounts')
   const description = t('linkedAccounts:label.link_your_bank_accounts_description', 'Linking your bank accounts allows us to load your bank transactions and automatically categorize them.')
-  const Button = <LayerButton onPress={handleLinkBankAccounts} variant='outlined-light'>{title}</LayerButton>
+  const Button = <LayerButton onPress={handleLinkBankAccounts} variant='outlined'>{title}</LayerButton>
   return <Banner title={title} description={description} slots={{ Icon, Button }} />
 }
 
@@ -64,17 +77,20 @@ const NoTaxProfileBanner = ({ onSetupTaxProfile }: Pick<SolopreneurOnboardingBan
   const Icon = isMobile ? null : <Info size={16} />
   const title = t('taxEstimates:label.set_up_your_tax_profile', 'Set up your tax profile')
   const description = t('taxEstimates:label.set_up_your_tax_profile_description', 'Configuring your tax profile allows us to provide you with tax estimates and avoid any surprises come tax time.')
-  const Button = onSetupTaxProfile ? <LayerButton onPress={onSetupTaxProfile} variant='outlined-light'>{title}</LayerButton> : null
+  const Button = onSetupTaxProfile ? <LayerButton onPress={onSetupTaxProfile} variant='outlined'>{title}</LayerButton> : null
   return <Banner title={title} description={description} slots={{ Icon, Button }} />
 }
 
 function SolopreneurOnboardingBannerInternal({ onSetupTaxProfile }: Pick<SolopreneurOnboardingBannerProps, 'onSetupTaxProfile'>) {
   const state = useSolopreneurOnboardingBannerState()
+
   if (state === OnboardingBannerState.Loading || state === OnboardingBannerState.Onboarded) {
     return null
   }
+
   return (
     <HStack className='Layer__SolopreneurLayout__OnboardingBanner'>
+      {state === OnboardingBannerState.HostedLinkError && <HostedLinkErrorBanner showRetryButton />}
       {state === OnboardingBannerState.NoBankAccountsLinked && <NoBankAccountsLinkedBanner />}
       {state === OnboardingBannerState.NoTaxProfile && <NoTaxProfileBanner onSetupTaxProfile={onSetupTaxProfile} />}
     </HStack>
@@ -94,19 +110,22 @@ export function SolopreneurOnboardingBanner({ onSetupTaxProfile, plaidHostedLink
 }
 
 const useSolopreneurOnboardingBannerState = () => {
-  const { data: linkedAccounts, isLoading: isLinkedAccountsLoading, loadingStatus: linkedAccountsLoadingStatus } = useContext(LinkedAccountsContext)
+  const { businessId } = useLayerContext()
+  const { data: accountingConfiguration, isLoading: isAccountingConfigLoading } = useAccountingConfiguration({ businessId })
+  const { data: linkedAccounts, loadingStatus: linkedAccountsLoadingStatus } = useBankAccountsContext()
+  const { isHostedLinkError } = useContext(LinkedAccountsContext)
   const { data: taxProfile, isLoading: isTaxProfileLoading } = useTaxProfile()
 
-  const isLoading =
-  isLinkedAccountsLoading
-  || isTaxProfileLoading
-  || linkedAccountsLoadingStatus === 'loading'
-  || linkedAccountsLoadingStatus === 'initial'
+  const isTaxEstimatesEnabled = !!accountingConfiguration?.enableTaxEstimates
 
-  const hasLinkedAccounts =
-Array.isArray(linkedAccounts) && linkedAccounts.length > 0
+  const isLoading = isAccountingConfigLoading
+    || (isTaxEstimatesEnabled && isTaxProfileLoading)
+    || linkedAccountsLoadingStatus === 'loading'
+    || linkedAccountsLoadingStatus === 'initial'
+
+  const hasLinkedAccounts = Array.isArray(linkedAccounts) && linkedAccounts.length > 0
 
   const hasSavedTaxProfile = taxProfile?.userHasSavedTaxProfile === true
 
-  return getOnboardingBannerState({ isLoading, hasLinkedAccounts, hasSavedTaxProfile })
+  return getOnboardingBannerState({ isLoading, isHostedLinkError, hasLinkedAccounts, hasSavedTaxProfile, isTaxEstimatesEnabled })
 }

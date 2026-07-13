@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { type ComponentRef, forwardRef, useMemo } from 'react'
 import classNames from 'classnames'
 import { Check, Minus } from 'lucide-react'
 import {
@@ -7,7 +7,7 @@ import {
 } from 'react-aria-components/Checkbox'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
-import { DeprecatedTooltip, DeprecatedTooltipContent, DeprecatedTooltipTrigger } from '@components/Tooltip/Tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { withRenderProp } from '@components/utility/withRenderProp'
 
 import './checkbox.scss'
@@ -33,7 +33,7 @@ type CheckboxWithTooltipProps = CheckboxProps & {
   tooltip?: string
 }
 
-export function Checkbox({ children, className, variant = 'default', size = 'sm', isIndeterminate, ...props }: CheckboxProps) {
+export const Checkbox = forwardRef<ComponentRef<typeof ReactAriaCheckbox>, CheckboxProps>(function Checkbox({ children, className, variant = 'default', size = 'sm', isIndeterminate, ...props }, ref) {
   const dataProperties = useMemo(() => toDataProperties({
     size,
     variant,
@@ -44,6 +44,7 @@ export function Checkbox({ children, className, variant = 'default', size = 'sm'
     <ReactAriaCheckbox
       {...dataProperties}
       {...props}
+      ref={ref}
       isIndeterminate={isIndeterminate}
       className={classNames(CLASS_NAME, className)}
     >
@@ -59,17 +60,15 @@ export function Checkbox({ children, className, variant = 'default', size = 'sm'
       ))}
     </ReactAriaCheckbox>
   )
-}
+})
 
 export function CheckboxWithTooltip({ tooltip, ...props }: CheckboxWithTooltipProps) {
   return (
-    <div className='Layer__checkbox-wrapper'>
-      <DeprecatedTooltip disabled={!tooltip}>
-        <DeprecatedTooltipTrigger className='Layer__input-tooltip'>
-          <Checkbox {...props} />
-        </DeprecatedTooltipTrigger>
-        <DeprecatedTooltipContent className='Layer__tooltip'>{tooltip}</DeprecatedTooltipContent>
-      </DeprecatedTooltip>
-    </div>
+    <Tooltip isDisabled={!tooltip}>
+      <TooltipTrigger variant='fit-content' asChild>
+        <Checkbox {...props} />
+      </TooltipTrigger>
+      <TooltipContent>{tooltip}</TooltipContent>
+    </Tooltip>
   )
 }

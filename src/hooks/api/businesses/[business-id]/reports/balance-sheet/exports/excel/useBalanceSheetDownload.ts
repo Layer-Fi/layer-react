@@ -1,84 +1,24 @@
-import useSWRMutation from 'swr/mutation'
-
 import type { S3PresignedUrl } from '@internal-types/general'
-import type { Awaitable } from '@internal-types/utility/promises'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { getAsMutation } from '@utils/api/getAsMutation'
+import { getWithQuery } from '@utils/api/getWithQuery'
 import type { GetBalanceSheetParams } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/useBalanceSheet'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
-const getBalanceSheetExcel = get<
+const getBalanceSheetExcel = getWithQuery<
   { data: S3PresignedUrl },
   GetBalanceSheetParams
 >(
-  ({ businessId, effectiveDate }) => {
-    const parameters = toDefinedSearchParameters({ effectiveDate })
-
-    return `/v1/businesses/${businessId}/reports/balance-sheet/exports/excel?${parameters}`
-  },
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/balance-sheet/exports/excel`,
 )
 
-const DOWNLOAD_BALANCE_SHEET_TAG_KEY = '#download-balance-sheet'
+const requestBalanceSheetExcel = getAsMutation(getBalanceSheetExcel)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  effectiveDate,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  effectiveDate: Date
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      effectiveDate,
-      tags: [DOWNLOAD_BALANCE_SHEET_TAG_KEY],
-    }
-  }
-}
-
-type UseBalanceSheetOptions = {
-  effectiveDate: Date
-  onSuccess?: (url: S3PresignedUrl) => Awaitable<unknown>
-}
-
-export function useBalanceSheetDownload({
-  effectiveDate,
-  onSuccess,
-}: UseBalanceSheetOptions) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
-
-  return useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-      effectiveDate,
-    })),
-    ({ accessToken, apiUrl, businessId, effectiveDate }) => getBalanceSheetExcel(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          effectiveDate,
-        },
-      })().then(({ data }) => {
-      if (onSuccess) {
-        return onSuccess(data)
-      }
-    }),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
-}
+export const useBalanceSheetDownload = createMutationHook({
+  tags: ['#download-balance-sheet'],
+  request: requestBalanceSheetExcel,
+  keyParams: ['effectiveDate'],
+  argToBody: (_arg: undefined) => undefined,
+  select: ({ data }) => data,
+  swrOptions: { throwOnError: false },
+})

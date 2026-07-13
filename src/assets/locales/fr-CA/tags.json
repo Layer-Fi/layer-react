@@ -1,7 +1,6 @@
 {
   "action": {
-    "select_dimension_name": "Sélectionner {{dimensionName}}",
-    "select_tags": "Sélectionner des étiquettes"
+    "select_dimension_name": "Sélectionner {{dimensionName}}"
   },
   "label": {
     "tag_label_archived": "{{label}} (Archivé)"

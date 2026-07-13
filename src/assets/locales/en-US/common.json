@@ -11,8 +11,8 @@
     "close_label": "Close",
     "collapse_all": "Collapse All",
     "confirm_label": "Confirm",
-    "connect_label": "Connect",
     "continue_label": "Continue",
+    "create_label": "Create",
     "delete_label": "Delete",
     "delete_line_item": "Delete line item",
     "discard_changes": "Discard changes",
@@ -22,7 +22,6 @@
     "edit_label": "Edit",
     "expand_all": "Expand All",
     "link_label": "Link",
-    "manage_label": "Manage",
     "post_label": "Post",
     "reactivate_label": "Reactivate",
     "recategorize": "Recategorize",
@@ -30,22 +29,23 @@
     "retry_label": "Retry",
     "save_label": "Save",
     "search_label": "Search",
-    "select_a_project": "Select a project...",
     "select_label": "Select...",
     "show_archived": "Show archived",
     "submit_label": "Submit",
     "toggle_bulk_actions": "Toggle bulk actions",
     "toggle_section": "Toggle {{name}}",
+    "try_again": "Try again",
     "uncategorize": "Uncategorize",
     "update_label": "Update",
     "upload_label": "Upload",
+    "view_details": "View details",
     "view_label": "View"
   },
   "empty": {
     "results": "No results found"
   },
   "error": {
-    "couldnt_load_data": "We couldn’t load your data.",
+    "couldnt_load_data": "We couldn't load your data.",
     "download_failed_check_connection": "Download failed. Check connection and retry in a few seconds.",
     "load_options": "Failed to load options",
     "please_try_again": "Please try again.",
@@ -89,7 +89,7 @@
     "expenses": "Expenses",
     "gross_profit": "Gross Profit",
     "hide_details": "Hide details",
-    "id": "Id",
+    "id": "ID",
     "keep_editing": "Keep editing",
     "liabilities": "Liabilities",
     "loading": "Loading...",
@@ -108,11 +108,8 @@
     "primary": "Primary",
     "processor": "Processor",
     "profit_loss": "Profit & Loss",
-    "project_overview": "Project Overview",
-    "project_view": "Project view",
     "purpose": "Purpose",
     "reference_number": "Reference number",
-    "report": "Report",
     "revenue": "Revenue",
     "row": "Row",
     "savings": "Savings",
@@ -121,7 +118,6 @@
     "source": "Source",
     "status": "Status",
     "tax_estimates": "Tax estimates",
-    "taxes": "Taxes",
     "this_period": "This Period",
     "today": "Today",
     "total": "Total",
@@ -156,8 +152,6 @@
     "updating": "Updating..."
   },
   "validation": {
-    "must_be_selected": "Must be selected",
-    "value_not_blank": "Cannot be blank",
     "value_required": "Field is required"
   }
 }

@@ -1,38 +1,14 @@
 import { useCallback } from 'react'
-import useSWRMutation from 'swr/mutation'
 
 import { type CustomerSchema } from '@schemas/customer'
 import { type VendorSchema } from '@schemas/vendor'
 import { patch } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useAuth } from '@hooks/utils/auth/useAuth'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useMinMutatingMutation } from '@hooks/utils/swr/useMinMutatingMutation'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY = '#set-metadata-on-bank-transaction'
-
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  bankTransactionId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  bankTransactionId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      bankTransactionId,
-      tags: [SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY],
-    } as const
-  }
-}
 
 type SetMetadataOnBankTransactionBody = {
   vendor_id: string | null
@@ -56,6 +32,17 @@ type SetMetadataOnBankTransactionArg = {
   customer: typeof CustomerSchema.Type | null
 }
 
+const useSetMetadataOnBankTransactionMutation = createMutationHook({
+  tags: [SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY],
+  request: setMetadataOnBankTransaction,
+  keyParams: ['bankTransactionId'],
+  argToBody: ({ vendor, customer }: SetMetadataOnBankTransactionArg) => ({
+    vendor_id: vendor?.id ?? null,
+    customer_id: customer?.id ?? null,
+  }),
+  swrOptions: { throwOnError: false },
+})
+
 type UseSetMetadataOnBankTransactionParameters = {
   bankTransactionId: string
 }
@@ -63,38 +50,8 @@ type UseSetMetadataOnBankTransactionParameters = {
 export function useSetMetadataOnBankTransaction({
   bankTransactionId,
 }: UseSetMetadataOnBankTransactionParameters) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-      bankTransactionId,
-    })),
-    (
-      { accessToken, apiUrl, businessId, bankTransactionId },
-      { arg: { vendor, customer } }: { arg: SetMetadataOnBankTransactionArg },
-    ) => setMetadataOnBankTransaction(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          bankTransactionId,
-        },
-        body: {
-          vendor_id: vendor?.id ?? null,
-          customer_id: customer?.id ?? null,
-        },
-      },
-    ),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
+  const rawMutationResponse = useSetMetadataOnBankTransactionMutation({ bankTransactionId })
+  const mutationResponse = useMinMutatingMutation({ swrMutationResponse: rawMutationResponse })
 
   const { debouncedInvalidateBankTransactions, optimisticallyUpdateBankTransactions } = useBankTransactionsGlobalCacheActions()
 
@@ -147,16 +104,5 @@ export function useSetMetadataOnBankTransaction({
     ],
   )
 
-  const baseProxiedResponse = new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
-
-  return useMinMutatingMutation({ swrMutationResponse: baseProxiedResponse })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

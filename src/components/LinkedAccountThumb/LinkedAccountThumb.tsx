@@ -5,7 +5,11 @@ import { useTranslation } from 'react-i18next'
 import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution, isBankAccountSyncing } from '@utils/bankAccount'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { Text, type TextSize } from '@components/Typography/Text'
+import { VStack } from '@ui/Stack/Stack'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { Span } from '@ui/Typography/Text'
+
+import './linkedAccountThumb.scss'
 
 export interface LinkedAccountThumbProps {
   bankAccount: BankAccount
@@ -21,10 +25,10 @@ export interface LinkedAccountThumbProps {
 
 const AccountNumber = ({ accountNumber }: { accountNumber: string }) => (
   <div className='account-number'>
-    <Text size={'sm' as TextSize}>
+    <Span size='sm' variant='inherit'>
       •••
       {accountNumber}
-    </Text>
+    </Span>
   </div>
 )
 
@@ -88,28 +92,22 @@ export const LinkedAccountThumb = ({
   )
 
   const bankBalance = slots.Pill ?? (
-    <Text as='span' className='account-balance'>
+    <Span>
       {formatCurrencyFromCents(bankAccount.latestBalanceTimestamp?.balance)}
-    </Text>
+    </Span>
   )
 
   return (
     <div className={linkedAccountThumbClassName} {...filterToggleProps}>
       <div className={linkedAccountInfoClassName}>
         <div className='topbar-details'>
-          <Text as='div' className='account-name'>
-            {displayName}
-          </Text>
+          <Span variant='inherit' ellipsis>{displayName}</Span>
           {!asWidget && bankAccount.mask && (
             <AccountNumber accountNumber={bankAccount.mask} />
           )}
-          <Text
-            as='span'
-            className='account-institution'
-            size={'sm' as TextSize}
-          >
+          <Span size='sm' variant='subtle' noWrap>
             {institutionName || displayName}
-          </Text>
+          </Span>
         </div>
         <div className='topbar-logo'>
           {institutionLogo != undefined
@@ -129,12 +127,14 @@ export const LinkedAccountThumb = ({
       {isSyncing
         ? (
           <div className='loadingbar'>
-            <div className='loading-text Layer__text--sm'>
-              <div>{t('linkedAccounts:state.syncing_account_data', 'Syncing account data')}</div>
-              <div className='syncing-data-description'>
+            <VStack className='loading-text'>
+              <Span size='sm' variant='inherit'>
+                {t('linkedAccounts:state.syncing_account_data', 'Syncing account data')}
+              </Span>
+              <Span size='sm' variant='subtle'>
                 {t('linkedAccounts:label.may_take_up_to_5_minutes', 'This may take up to 5 minutes')}
-              </div>
-            </div>
+              </Span>
+            </VStack>
             <div className='loading-wrapper'>
               <Loader size={11} className='Layer__anim--rotating' />
             </div>
@@ -144,16 +144,9 @@ export const LinkedAccountThumb = ({
           <>
             {!asWidget && (
               <div className='middlebar'>
-                <Text
-                  as='span'
-                  className={classNames(
-                    'account-balance-text',
-                    !showLedgerBalance && '--hide-ledger-balance',
-                  )}
-                  size={'sm' as TextSize}
-                >
+                <Span size='sm' variant='subtle' pb='sm'>
                   {t('linkedAccounts:label.bank_balance', 'Bank balance')}
-                </Text>
+                </Span>
                 {bankBalance}
               </div>
             )}
@@ -164,17 +157,11 @@ export const LinkedAccountThumb = ({
                     <AccountNumber accountNumber={bankAccount.mask} />
                   )
                   : (
-                    <Text
-                      as='span'
-                      className='account-balance-text'
-                      size={'sm' as TextSize}
-                    >
+                    <Span size='sm' variant='subtle'>
                       {t('linkedAccounts:label.ledger_balance', 'Ledger balance')}
-                    </Text>
+                    </Span>
                   )}
-                <Text as='span' className='account-balance'>
-                  {formatCurrencyFromCents(bankAccount.currentLedgerBalance)}
-                </Text>
+                <MoneySpan amount={bankAccount.currentLedgerBalance} />
               </div>
             )}
           </>

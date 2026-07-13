@@ -1,63 +1,27 @@
-import { Schema } from 'effect'
-import useSWR from 'swr'
-
 import { LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
-import { get } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const LEDGER_ACCOUNTS_ENTRY_TAG_KEY = '#ledger-accounts-entry'
 
-const LedgerAccountsEntryResponseSchema = Schema.Struct({ data: LedgerEntrySchema })
+const LedgerAccountsEntryResponseSchema = UnwrappedDataResponseSchema(LedgerEntrySchema)
 
-const getLedgerAccountsEntry = get<typeof LedgerAccountsEntryResponseSchema.Encoded>(
-  ({ businessId, entryId }) =>
-    `/v1/businesses/${businessId}/ledger/entries/${entryId}`,
-)
-
-function buildKey({
-  accessToken,
-  apiUrl,
-  businessId,
-  entryId,
-}: {
-  accessToken?: string
-  apiUrl: string
+type GetLedgerAccountsEntryParams = {
   businessId: string
   entryId?: string
-}) {
-  if (!accessToken || !entryId) return null
-
-  return {
-    accessToken,
-    apiUrl,
-    businessId,
-    entryId,
-    tags: [LEDGER_ACCOUNTS_ENTRY_TAG_KEY],
-  } as const
 }
 
-export function useLedgerAccountsEntry({ entryId }: { entryId?: string }) {
-  const withLocale = useLocalizedKey()
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
+const getLedgerAccountsEntry = getWithQuery<
+  typeof LedgerAccountsEntryResponseSchema.Encoded,
+  GetLedgerAccountsEntryParams
+>(
+  ['businessId', 'entryId'],
+  ({ businessId, entryId }) => `/v1/businesses/${businessId}/ledger/entries/${entryId}`,
+)
 
-  const swrResponse = useSWR(() =>
-    withLocale(buildKey({
-      accessToken: auth?.access_token,
-      apiUrl,
-      businessId,
-      entryId,
-    })),
-  ({ accessToken, apiUrl, businessId, entryId }) =>
-    getLedgerAccountsEntry(apiUrl, accessToken, {
-      params: { businessId, entryId },
-    })().then(Schema.decodeUnknownPromise(LedgerAccountsEntryResponseSchema)),
-  )
-
-  return new SWRQueryResult(swrResponse)
-}
+export const useLedgerAccountsEntry = createQueryHook({
+  tags: [LEDGER_ACCOUNTS_ENTRY_TAG_KEY],
+  request: getLedgerAccountsEntry,
+  schema: LedgerAccountsEntryResponseSchema,
+})

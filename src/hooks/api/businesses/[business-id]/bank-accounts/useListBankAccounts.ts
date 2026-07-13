@@ -1,81 +1,27 @@
 import { Schema } from 'effect'
-import useSWR from 'swr'
 
 import { type BankAccount, BankAccountSchema } from '@schemas/bankAccounts/bankAccount'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export const BANK_ACCOUNTS_TAG_KEY = '#bank-accounts'
 
-const ListBankAccountsResponseSchema = Schema.Struct({
-  data: Schema.Array(BankAccountSchema),
-})
-
-const requiresNotification = (bankAccount: BankAccount): boolean =>
-  bankAccount.isDisconnected && bankAccount.notifyWhenDisconnected
+const ListBankAccountsResponseSchema = UnwrappedDataResponseSchema(Schema.Array(BankAccountSchema))
 
 const listBankAccounts = get<
-  Record<string, unknown>,
-  {
-    businessId: string
-  }
+  typeof ListBankAccountsResponseSchema.Encoded,
+  { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/bank-accounts`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [BANK_ACCOUNTS_TAG_KEY],
-    } as const
-  }
-}
+export const useListBankAccounts = createQueryHook({
+  tags: [BANK_ACCOUNTS_TAG_KEY],
+  request: listBankAccounts,
+  schema: ListBankAccountsResponseSchema,
+  select: (data): BankAccount[] => [...data],
+  isLocalized: false,
+})
 
-export class ListBankAccountsSWRResponse extends SWRQueryResult<BankAccount[]> {
-  get error(): unknown {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return this.swrResponse.error
-  }
-
-  get disconnectedAccountsRequiringNotification() {
-    return (this.data ?? []).filter(requiresNotification).length
-  }
-}
-
-export function useListBankAccounts(): ListBankAccountsSWRResponse {
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
-
-  const swrResponse = useSWR(
-    () =>
-      buildKey({
-        ...auth,
-        apiUrl,
-        businessId,
-      }),
-    ({ accessToken, apiUrl, businessId }) => listBankAccounts(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-      },
-    )()
-      .then(Schema.decodeUnknownPromise(ListBankAccountsResponseSchema))
-      .then(({ data }) => [...data]),
-  )
-
-  return new ListBankAccountsSWRResponse(swrResponse)
-}
+export const useBankAccountsGlobalCacheActions =
+  createResourceGlobalCacheActions<BankAccount[]>(BANK_ACCOUNTS_TAG_KEY)

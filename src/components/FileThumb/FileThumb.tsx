@@ -1,8 +1,9 @@
 import classNames from 'classnames'
 import { CloudDownload, Eye, Loader, Trash2 } from 'lucide-react'
 
-import { IconButton } from '@components/Button/IconButton'
-import { Text, TextSize } from '@components/Typography/Text'
+import { Button } from '@ui/Button/Button'
+import { LinkButton } from '@ui/Button/LinkButton'
+import { Span } from '@ui/Typography/Text'
 
 import './fileThumb.scss'
 
@@ -16,7 +17,7 @@ type FileThumbProps = {
   date?: string
   onDelete?: () => void
   enableOpen?: boolean
-  onOpen?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
+  onOpen?: () => void
   enableDownload?: boolean
   error?: string
 }
@@ -59,21 +60,15 @@ export const FileThumb = ({
           {uploadPending || deletePending
             ? (
               <div className='Layer__file-thumb__details__uploading'>
-                <Text as='span' size={TextSize.sm}>
+                <Span size='sm' status='info'>
                   {deletePending ? 'Deleting...' : 'Uploading'}
-                </Text>
+                </Span>
                 <Loader className='Layer__anim--rotating' size={11} />
               </div>
             )
             : error
               ? (
-                <Text
-                  as='span'
-                  size={TextSize.sm}
-                  className='Layer__file-thumb__details__error'
-                >
-                  {error}
-                </Text>
+                <Span size='sm' status='error'>{error}</Span>
               )
               : (
                 <div className='Layer__file-thumb__details__date'>{date}</div>
@@ -89,50 +84,55 @@ export const FileThumb = ({
             )}
           >
             {onDelete && (
-              <IconButton
-                onClick={onDelete}
-                active={!disabled}
-                disabled={disabled}
-                icon={
-                  <Trash2 className='Layer__file-thumb__actions__remove' size={18} />
-                }
-              />
+              <Button
+                variant='ghost'
+                icon
+                onPress={onDelete}
+                isDisabled={disabled}
+                aria-label='Delete'
+              >
+                <Trash2 className='Layer__file-thumb__actions__remove' size={18} />
+              </Button>
             )}
             {enableDownload && url
               ? (
-                <IconButton
-                  active={!disabled}
+                <LinkButton
+                  variant='ghost'
+                  icon
                   href={url}
-                  disabled={disabled}
                   download={name ?? 'receipt'}
-                  icon={
-                    <CloudDownload className='Layer__file-thumb__actions__download' size={18} />
-                  }
-                />
+                  isDisabled={disabled}
+                  aria-label='Download'
+                >
+                  <CloudDownload className='Layer__file-thumb__actions__download' size={18} />
+                </LinkButton>
               )
               : null}
             {onOpen
               ? (
-                <IconButton
-                  active={!disabled}
-                  icon={<Eye className='Layer__file-thumb__actions__open' size={18} />}
-                  disabled={disabled}
-                  onClick={(e) => {
-                    onOpen(e as React.MouseEvent<HTMLAnchorElement, MouseEvent>)
-                  }}
-                />
+                <Button
+                  variant='ghost'
+                  icon
+                  onPress={onOpen}
+                  isDisabled={disabled}
+                  aria-label='Open'
+                >
+                  <Eye className='Layer__file-thumb__actions__open' size={18} />
+                </Button>
               )
               : null}
             {enableOpen && url && !onOpen
               ? (
-                <IconButton
+                <LinkButton
+                  variant='ghost'
+                  icon
                   href={url}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  active={!disabled}
-                  disabled={disabled}
-                  icon={<Eye className='Layer__file-thumb__actions__open' size={18} />}
-                />
+                  external
+                  isDisabled={disabled}
+                  aria-label='Open'
+                >
+                  <Eye className='Layer__file-thumb__actions__open' size={18} />
+                </LinkButton>
               )
               : null}
           </div>

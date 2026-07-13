@@ -39,15 +39,18 @@ export const useBookkeepingYearsStatus = () => {
   const earliestIncompletePeriod = useMemo(() => [...(data ?? [])]
     .sort((a, b) => {
       if (a.year === b.year) {
-        return b.month - a.month
+        return a.month - b.month
       }
 
-      return b.year - a.year
+      return a.year - b.year
     })
     .find(period => period.tasks.some(task => isIncompleteTask(task))),
   [data])
 
-  const anyPreviousYearIncomplete = yearStatuses?.find(year => !year.completed && year.year < new Date().getFullYear())
+  // yearStatuses is sorted newest-first; the banner and its navigation target both use the oldest backlog year.
+  const anyPreviousYearIncomplete = yearStatuses
+    ?.filter(year => !year.completed && year.year < new Date().getFullYear())
+    .at(-1)
 
   return {
     yearStatuses,

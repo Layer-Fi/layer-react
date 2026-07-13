@@ -8,13 +8,15 @@ import { DEFAULT_SWR_CONFIG } from '@utils/swr/defaultSWRConfig'
 import { localeKeyMiddleware } from '@utils/swr/localeKeyMiddleware'
 import { AuthInputProvider } from '@providers/AuthInputProvider'
 import { BusinessProvider } from '@providers/BusinessProvider/BusinessProvider'
+import { GlobalDateStoreProvider } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import type { Environment, EnvironmentConfigOverride } from '@providers/Environment/environmentConfigs'
 import { EnvironmentInputProvider } from '@providers/Environment/EnvironmentInputProvider'
-import { GlobalDateStoreProvider } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
 import { LayerI18nProvider } from '@providers/I18nProvider/LayerI18nProvider'
 import { StaleLocaleCacheInvalidator } from '@providers/I18nProvider/StaleLocaleCacheInvalidator'
+import type { LayerEvent } from '@providers/LayerProvider/layerEvents'
 
 export type EventCallbacks = {
+  onEvent?: (event: LayerEvent) => void
   onTransactionCategorized?: () => void
   onTransactionsFetched?: () => void
 }

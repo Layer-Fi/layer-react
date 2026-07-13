@@ -1,12 +1,6 @@
-import { useCallback } from 'react'
-import useSWRMutation from 'swr/mutation'
-
 import type { OneOf } from '@internal-types/utility/oneOf'
 import { post } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const EXCLUDE_EXTERNAL_ACCOUNT_TAG_KEY = '#exclude-external-account'
 
@@ -29,66 +23,9 @@ type ExcludeExternalAccountArg = {
   body?: ExcludeAccountBodyStrict
 }
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [EXCLUDE_EXTERNAL_ACCOUNT_TAG_KEY],
-    } as const
-  }
-}
-
-export function useExcludeExternalAccount() {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
-
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      access_token: auth?.access_token,
-      apiUrl: auth?.apiUrl,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg: { accountId, body } }: { arg: ExcludeExternalAccountArg },
-    ) => excludeExternalAccount(apiUrl, accessToken, {
-      params: { businessId, accountId },
-      body,
-    }),
-    {
-      revalidate: false,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
-
-  const { trigger: originalTrigger } = mutationResponse
-
-  const stableProxiedTrigger = useCallback(
-    (...triggerParameters: Parameters<typeof originalTrigger>) =>
-      originalTrigger(...triggerParameters),
-    [originalTrigger],
-  )
-
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
-}
+export const useExcludeExternalAccount = createMutationHook({
+  tags: [EXCLUDE_EXTERNAL_ACCOUNT_TAG_KEY],
+  request: excludeExternalAccount,
+  argToParams: ({ accountId }: ExcludeExternalAccountArg) => ({ accountId }),
+  argToBody: ({ body }: ExcludeExternalAccountArg) => body,
+})

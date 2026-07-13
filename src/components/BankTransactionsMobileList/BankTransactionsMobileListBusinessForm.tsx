@@ -9,6 +9,7 @@ import { resolveCategoryTaxCode } from '@utils/bankTransactions/taxCode'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
@@ -20,19 +21,14 @@ import { ErrorText } from '@components/Typography/ErrorText'
 interface BankTransactionsMobileListBusinessFormProps {
   bankTransaction: BankTransaction
   showCategorization?: boolean
-  showDescriptions: boolean
-  showReceiptUploads: boolean
-  showTooltips: boolean
 }
 
 export const BankTransactionsMobileListBusinessForm = ({
   bankTransaction,
   showCategorization,
-  showDescriptions,
-  showReceiptUploads,
-  showTooltips,
 }: BankTransactionsMobileListBusinessFormProps) => {
   const { t } = useTranslation()
+  const showReceiptUploads = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ReceiptUploads)
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const {
@@ -80,22 +76,20 @@ export const BankTransactionsMobileListBusinessForm = ({
         {showCategorization && (
           <BankTransactionsMobileCategorySelection
             bankTransaction={bankTransaction}
-            showTooltips={showTooltips}
             isSubmitting={isCategorizing}
           />
         )}
         <BankTransactionFormFields
           bankTransaction={bankTransaction}
-          showDescriptions={showDescriptions}
           hideCustomerVendor
           hideTags
           isMobile
         />
         <div
           className={classNames(
-            'Layer__bank-transaction-mobile-list-item__receipts',
+            'Layer__BankTransactionsMobileListItem__Receipts',
             hasReceipts(bankTransaction)
-              ? 'Layer__bank-transaction-mobile-list-item__actions--with-receipts'
+              ? 'Layer__BankTransactionsMobileListItem__Receipts--WithReceipts'
               : undefined,
           )}
         >
@@ -113,8 +107,8 @@ export const BankTransactionsMobileListBusinessForm = ({
             <FileInput
               onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
               text={t('bankTransactions:action.upload_receipt', 'Upload receipt')}
-              iconOnly={true}
-              icon={<Paperclip size={20} />}
+              icon
+              slots={{ Icon: <Paperclip size={20} /> }}
               accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
             />
           )}
@@ -136,7 +130,7 @@ export const BankTransactionsMobileListBusinessForm = ({
         </HStack>
         {isErrorCategorizing && showRetry
           ? (
-            <ErrorText>
+            <ErrorText size='sm' align='center' pb='sm'>
               {t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
             </ErrorText>
           )

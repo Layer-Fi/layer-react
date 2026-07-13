@@ -1,15 +1,13 @@
 import { useCallback } from 'react'
-import useSWRMutation from 'swr/mutation'
 import { v4 as uuidv4 } from 'uuid'
 
 import type { TransactionTagEncoded } from '@schemas/tag'
 import { post } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
+import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import {
   useBankTransactionsGlobalCacheActions,
 } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const TAG_BANK_TRANSACTION_TAG_KEY = '#tag-bank-transaction'
 
@@ -33,30 +31,8 @@ type TagBankTransactionResponse = {
 const tagBankTransaction = post<
   TagBankTransactionResponse,
   TagBankTransactionBody,
-  { businessId: string }
+  { businessId: string, bankTransactionId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/tags`)
-
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  bankTransactionId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  bankTransactionId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      bankTransactionId,
-      tags: [TAG_BANK_TRANSACTION_TAG_KEY],
-    } as const
-  }
-}
 
 type TagBankTransactionArg = {
   key: string
@@ -65,40 +41,26 @@ type TagBankTransactionArg = {
   valueDisplayName?: string | null
 }
 
+const useTagBankTransactionMutation = createMutationHook({
+  tags: [TAG_BANK_TRANSACTION_TAG_KEY],
+  request: tagBankTransaction,
+  keyParams: ['bankTransactionId'],
+  argToBody: (
+    { key, value, dimensionDisplayName, valueDisplayName }: TagBankTransactionArg,
+    { bankTransactionId },
+  ) => ({
+    key_values: [{ key, dimension_display_name: dimensionDisplayName, value, value_display_name: valueDisplayName }],
+    transaction_ids: [bankTransactionId],
+  }),
+  swrOptions: { throwOnError: false },
+})
+
 type TagBankTransactionOptions = {
   bankTransactionId: string
 }
 
 export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionOptions) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-      bankTransactionId,
-    })),
-    (
-      { accessToken, apiUrl, businessId, bankTransactionId },
-      { arg: { key, value, dimensionDisplayName, valueDisplayName } }: { arg: TagBankTransactionArg },
-    ) => tagBankTransaction(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-        body: {
-          key_values: [{ key, dimension_display_name: dimensionDisplayName, value, value_display_name: valueDisplayName }],
-          transaction_ids: [bankTransactionId],
-        },
-      },
-    ),
-    {
-      revalidate: false,
-      throwOnError: false,
-    },
-  )
+  const mutationResponse = useTagBankTransactionMutation({ bankTransactionId })
 
   const { optimisticallyUpdateBankTransactions, debouncedInvalidateBankTransactions } = useBankTransactionsGlobalCacheActions()
 
@@ -157,14 +119,5 @@ export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionO
     ],
   )
 
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return withStableTrigger(mutationResponse, stableProxiedTrigger)
 }

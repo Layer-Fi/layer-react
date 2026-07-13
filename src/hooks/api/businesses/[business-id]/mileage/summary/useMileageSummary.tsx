@@ -1,72 +1,22 @@
-import { useCallback } from 'react'
-import { Schema } from 'effect'
-import useSWR from 'swr'
-
 import { type MileageSummary, MileageSummarySchema } from '@schemas/mileage'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export const MILEAGE_SUMMARY_TAG_KEY = '#mileage-summary'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [MILEAGE_SUMMARY_TAG_KEY],
-    } as const
-  }
-}
+const MileageSummaryResponseSchema = UnwrappedDataResponseSchema(MileageSummarySchema)
 
 const getMileageSummary = get<
-  { data: MileageSummary },
+  typeof MileageSummaryResponseSchema.Encoded,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/mileage/summary`)
 
-export function useMileageSummary() {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+export const useMileageSummary = createQueryHook({
+  tags: [MILEAGE_SUMMARY_TAG_KEY],
+  request: getMileageSummary,
+  schema: MileageSummaryResponseSchema,
+})
 
-  const response = useSWR(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-    })),
-    ({ accessToken, apiUrl, businessId }) => getMileageSummary(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-      },
-    )().then(({ data }) => Schema.decodeUnknownPromise(MileageSummarySchema)(data)),
-  )
-
-  return new SWRQueryResult(response)
-}
-
-export const useMileageSummaryGlobalCacheActions = () => {
-  const { invalidate } = useGlobalCacheActions()
-
-  const invalidateMileageSummary = useCallback(
-    () => invalidate(
-      ({ tags }) => tags.includes(MILEAGE_SUMMARY_TAG_KEY),
-    ),
-    [invalidate],
-  )
-
-  return { invalidateMileageSummary }
-}
+export const useMileageSummaryGlobalCacheActions = createResourceGlobalCacheActions<MileageSummary>(MILEAGE_SUMMARY_TAG_KEY)

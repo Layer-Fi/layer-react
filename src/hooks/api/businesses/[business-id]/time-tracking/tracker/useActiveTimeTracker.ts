@@ -1,88 +1,32 @@
-import { useCallback } from 'react'
 import { pipe, Schema } from 'effect'
-import useSWR from 'swr'
 
 import { type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export const ACTIVE_TIME_TRACKER_TAG_KEY = '#active-time-tracker'
 
-const ActiveTimeTrackerResponseSchema = Schema.Struct({
-  data: Schema.Struct({
+const ActiveTimeTrackerResponseSchema = UnwrappedDataResponseSchema(
+  Schema.Struct({
     timeEntry: pipe(
       Schema.propertySignature(Schema.NullishOr(TimeEntrySchema)),
       Schema.fromKey('time_entry'),
     ),
   }),
-})
+)
 
 const getActiveTimeTracker = get<
   typeof ActiveTimeTrackerResponseSchema.Encoded,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/time-tracking/tracker/active`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [ACTIVE_TIME_TRACKER_TAG_KEY],
-    } as const
-  }
-}
+export const useActiveTimeTracker = createQueryHook({
+  tags: [ACTIVE_TIME_TRACKER_TAG_KEY],
+  request: getActiveTimeTracker,
+  schema: ActiveTimeTrackerResponseSchema,
+  select: data => data.timeEntry ?? null,
+})
 
-export class ActiveTimeTrackerSWRResponse extends SWRQueryResult<TimeEntry | null> {
-  get error(): unknown {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return this.swrResponse.error
-  }
-}
-
-export function useActiveTimeTracker(): ActiveTimeTrackerSWRResponse {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-
-  const response = useSWR(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-    })),
-    ({ accessToken, apiUrl, businessId }) => getActiveTimeTracker(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-      },
-    )()
-      .then(Schema.decodeUnknownPromise(ActiveTimeTrackerResponseSchema))
-      .then(({ data }) => data.timeEntry ?? null),
-  )
-
-  return new ActiveTimeTrackerSWRResponse(response)
-}
-
-export function useActiveTimeTrackerGlobalCacheActions() {
-  const { invalidate } = useGlobalCacheActions()
-
-  const invalidateActiveTimeTracker = useCallback(
-    () => invalidate(({ tags }) => tags.includes(ACTIVE_TIME_TRACKER_TAG_KEY)),
-    [invalidate],
-  )
-
-  return { invalidateActiveTimeTracker }
-}
+export const useActiveTimeTrackerGlobalCacheActions = createResourceGlobalCacheActions<TimeEntry | null>(ACTIVE_TIME_TRACKER_TAG_KEY)

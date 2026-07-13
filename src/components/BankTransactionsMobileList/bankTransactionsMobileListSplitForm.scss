@@ -19,16 +19,19 @@
   }
 }
 
-.Layer__BankTransactionsMobileSplitForm__AmountInput.Layer__input {
+.Layer__BankTransactionsMobileSplitForm__AmountInput.Layer__AmountInput {
   flex-shrink: 0;
   grid-area: amount;
   inline-size: 6rem;
   font-size: var(--text-md);
 }
 
-.Layer__BankTransactionsMobileSplitForm__TotalAmountInput.Layer__input {
+.Layer__BankTransactionsMobileSplitForm__TotalAmountInput {
   inline-size: 6rem;
-  font-size: var(--text-md);
+
+  .Layer__UI__Input {
+    font-size: var(--text-md);
+  }
 }
 
 .Layer__BankTransactionsMobileSplitForm__TaxCode {

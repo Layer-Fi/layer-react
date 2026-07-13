@@ -18,16 +18,6 @@ export interface S3PresignedUrl {
 
 export type LoadedStatus = 'initial' | 'loading' | 'complete'
 
-export interface FormError {
-  field: string
-  message: string
-}
-
-export interface FormErrorWithId extends FormError {
-  id: number
-}
-// Only Date and string (ISO8601 formatted) make sense here
-
 export type DateRange<T = Date> = {
   startDate: T
   endDate: T

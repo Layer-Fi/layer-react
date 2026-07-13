@@ -86,13 +86,13 @@ export function CustomerSelector({
     ? undefined
     : searchQuery
 
-  const { data, isLoading, isError, error } = useListCustomers({ query: effectiveSearchQuery })
+  const { flattenedData, isLoading, isError, error } = useListCustomers({ query: effectiveSearchQuery })
   const shouldHideError = hideSpecifiedIdNotFoundError && isAPIErrorOfType(error, ApiEnumErrorType.SpecifiedIdNotFound)
   const shouldShowError = isError && !shouldHideError
 
   const options = useMemo(() =>
-    data?.flatMap(({ data }) => data).map(customer => new CustomerAsOption(customer)) || [],
-  [data])
+    flattenedData?.map(customer => new CustomerAsOption(customer)) || [],
+  [flattenedData])
 
   const selectedCustomerId = selectedCustomer?.id
 
@@ -148,21 +148,11 @@ export function CustomerSelector({
     [t],
   )
 
-  const ErrorMessage = useMemo(
-    () => (
-      <P
-        size='xs'
-        status='error'
-      >
-        {t('customerVendor:error.load_customers', 'An error occurred while loading customers.')}
-      </P>
-    ),
-    [t],
-  )
+  const ErrorMessage = t('customerVendor:error.load_customers', 'An error occurred while loading customers.')
 
   const inputId = useId()
 
-  const isLoadingWithoutFallback = isLoading && !data
+  const isLoadingWithoutFallback = isLoading && !flattenedData
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
   const slots = useMemo(() => ({ EmptyMessage, ErrorMessage }), [EmptyMessage, ErrorMessage])

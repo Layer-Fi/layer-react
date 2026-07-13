@@ -1,36 +1,32 @@
-import { type ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import classNames from 'classnames'
-import { debounce } from 'lodash-es'
+import { type ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react'
 
-import { DisplayState } from '@internal-types/bankTransactions'
 import type { LayerError } from '@utils/api/errorHandler'
-import { isAnyBankAccountSyncing } from '@utils/bankAccount'
-import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@utils/bankTransactions/shared'
+import { type BankTransactionFilters } from '@utils/bankTransactions/shared'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { usePreloadCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import { usePreloadCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { usePreloadTagDimensions } from '@hooks/api/businesses/[business-id]/tags/dimensions/useTagDimensions'
 import { usePreloadVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
-import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
 import { BankTransactionsCategorizationStoreProvider } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import { BankTransactionsProvider } from '@providers/BankTransactionsProvider/BankTransactionsProvider'
-import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState, useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
+import { BankTransactionsFeatureVisibilityProvider } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
+import { BankTransactionsProvider } from '@providers/BankTransactionsPaginationProvider/BankTransactionsProvider'
+import { BankTransactionsPaginationProvider } from '@providers/BankTransactionsProvider/BankTransactionsPaginationProvider'
+import { BankTransactionsRoute, BankTransactionsRouteStoreProvider, useBankTransactionsRouteState } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { BulkSelectionStoreProvider } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { type BankTransactionsMode, LegacyModeProvider } from '@providers/LegacyModeProvider/LegacyModeProvider'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import {
   useBankTransactionsContext,
 } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
+import { BankTransactionsFiltersProvider } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersProvider'
 import { BankTransactionsIsCategorizationEnabledProvider } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import { BankTransactionTagVisibilityProvider } from '@contexts/BankTransactionTagVisibilityContext/BankTransactionTagVisibilityContext'
+import { BankTransactionsStringOverridesProvider } from '@contexts/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
 import { CategorizationRulesContext, CategorizationRulesProvider } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
-import { MobileListSkeleton } from '@ui/MobileList/MobileListSkeleton'
-import { HStack } from '@ui/Stack/Stack'
-import { BankTransactionCustomerVendorVisibilityProvider } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorVisibilityProvider'
 import {
   BankTransactionsHeader,
   type BankTransactionsHeaderStringOverrides,
@@ -45,11 +41,9 @@ import {
 import { ResponsiveCategorizationRulesView } from '@components/CategorizationRules/CategorizationRulesView/ResponsiveCategorizationRulesView'
 import { Container } from '@components/Container/Container'
 import { ErrorBoundary } from '@components/ErrorBoundary/ErrorBoundary'
-import { Loader } from '@components/Loader/Loader'
-import { Pagination } from '@components/Pagination/Pagination'
 import { SuggestedCategorizationRuleUpdatesDialog } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDialog'
 
-import { BankTransactionsListWithEmptyStates } from './BankTransactionsTableEmptyState'
+import './bankTransactions.scss'
 
 const COMPONENT_NAME = 'bank-transactions'
 
@@ -100,22 +94,32 @@ export interface BankTransactionsWithErrorProps extends BankTransactionsProps {
   onError?: (error: LayerError) => void
 }
 
-type BankTransactionsTableViewProps = Omit<BankTransactionsProps, 'filters' | 'categorizeView'>
+type BankTransactionsTableViewProps = Pick<
+  BankTransactionsProps,
+  'asWidget' | 'mobileComponent' | 'hideHeader' | 'collapseHeader'
+>
 
 export const BankTransactions = ({
   onError,
-  showTags = false,
-  showCustomerVendor = false,
   monthlyView = false,
   applyGlobalDateRange = false,
   mode,
   renderInAppLink,
   filters,
-  ...restProps
+  categorizeView: _categorizeView,
+
+  asWidget,
+  pageSize,
+  mobileComponent,
+  hideHeader,
+  collapseHeader,
+  stringOverrides,
+
+  ...featureVisibility
 }: BankTransactionsWithErrorProps) => {
-  usePreloadTagDimensions({ isEnabled: showTags })
-  usePreloadCustomers({ isEnabled: showCustomerVendor })
-  usePreloadVendors({ isEnabled: showCustomerVendor })
+  usePreloadTagDimensions({ isEnabled: featureVisibility.showTags })
+  usePreloadCustomers({ isEnabled: featureVisibility.showCustomerVendor })
+  usePreloadVendors({ isEnabled: featureVisibility.showCustomerVendor })
   usePreloadCategories()
 
   return (
@@ -124,23 +128,32 @@ export const BankTransactions = ({
         <BankTransactionsIsCategorizationEnabledProvider>
           <CategorizationRulesProvider>
             <BankTransactionsRouteStoreProvider>
-              <BankTransactionsProvider
+              <BankTransactionsFiltersProvider
                 monthlyView={monthlyView}
                 applyGlobalDateRange={applyGlobalDateRange}
                 filters={filters}
               >
-                <BankTransactionTagVisibilityProvider showTags={showTags}>
-                  <BankTransactionCustomerVendorVisibilityProvider showCustomerVendor={showCustomerVendor}>
-                    <InAppLinkProvider renderInAppLink={renderInAppLink}>
-                      <BulkSelectionStoreProvider>
-                        <BankTransactionsCategorizationStoreProvider>
-                          <BankTransactionsContent {...restProps} />
-                        </BankTransactionsCategorizationStoreProvider>
-                      </BulkSelectionStoreProvider>
-                    </InAppLinkProvider>
-                  </BankTransactionCustomerVendorVisibilityProvider>
-                </BankTransactionTagVisibilityProvider>
-              </BankTransactionsProvider>
+                <BankTransactionsProvider>
+                  <BankTransactionsPaginationProvider pageSize={pageSize}>
+                    <BankTransactionsFeatureVisibilityProvider {...featureVisibility}>
+                      <BankTransactionsStringOverridesProvider stringOverrides={stringOverrides}>
+                        <InAppLinkProvider renderInAppLink={renderInAppLink}>
+                          <BulkSelectionStoreProvider>
+                            <BankTransactionsCategorizationStoreProvider>
+                              <BankTransactionsContent
+                                asWidget={asWidget}
+                                mobileComponent={mobileComponent}
+                                hideHeader={hideHeader}
+                                collapseHeader={collapseHeader}
+                              />
+                            </BankTransactionsCategorizationStoreProvider>
+                          </BulkSelectionStoreProvider>
+                        </InAppLinkProvider>
+                      </BankTransactionsStringOverridesProvider>
+                    </BankTransactionsFeatureVisibilityProvider>
+                  </BankTransactionsPaginationProvider>
+                </BankTransactionsProvider>
+              </BankTransactionsFiltersProvider>
             </BankTransactionsRouteStoreProvider>
           </CategorizationRulesProvider>
         </BankTransactionsIsCategorizationEnabledProvider>
@@ -157,40 +170,44 @@ const BankTransactionsContent = (props: BankTransactionsTableViewProps) => {
     : <ResponsiveCategorizationRulesView />
 }
 
+type BankTransactionsTableContentViewProps = {
+  content: BankTransactionsTableContent
+}
+
+const BankTransactionsTableContentView = ({
+  content,
+}: BankTransactionsTableContentViewProps) => {
+  switch (content) {
+    case BankTransactionsTableContent.Table:
+      return <BankTransactionsTable />
+    case BankTransactionsTableContent.List:
+      return <BankTransactionsList />
+    case BankTransactionsTableContent.MobileList:
+      return <BankTransactionsMobileList />
+    default:
+      return unsafeAssertUnreachable({
+        value: content,
+        message: 'Unexpected table view content',
+      })
+  }
+}
+
 const BankTransactionsTableView = ({
   asWidget = false,
-  pageSize = 20,
-
-  showDescriptions = true,
-  showReceiptUploads = true,
-  showTooltips = false,
-  showUploadOptions = false,
-  showStatusToggle = true,
 
   mobileComponent,
   hideHeader = false,
   collapseHeader = false,
-  stringOverrides,
-  showCategorizationRules = false,
 }: BankTransactionsTableViewProps) => {
   const scrollPaginationRef = useRef<HTMLDivElement>(null)
   const isVisible = useIsVisible(scrollPaginationRef)
 
-  const { dateFilterMode } = useBankTransactionsFiltersContext()
-  const isMonthlyViewMode = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
+  const { isMonthlyViewMode } = useBankTransactionsFiltersContext()
 
-  const { currentBankTransactionsPage: currentPage, setCurrentBankTransactionsPage: setCurrentPage } = useCurrentBankTransactionsPage()
-
-  const { data, isLoading, display, hasMore, fetchMore } = useBankTransactionsContext()
+  const { isLoading, hasMore, fetchMore } = useBankTransactionsContext()
+  const { isSyncing } = useBankAccountsContext()
 
   const { setRuleSuggestion, ruleSuggestion } = useContext(CategorizationRulesContext)
-
-  const { data: linkedAccounts } = useLinkedAccounts()
-
-  const isSyncing = useMemo(
-    () => isAnyBankAccountSyncing(linkedAccounts ?? []),
-    [linkedAccounts],
-  )
 
   useEffect(() => {
     // Fetch more when the user scrolls to the bottom of the page
@@ -199,43 +216,13 @@ const BankTransactionsTableView = ({
     }
   }, [isMonthlyViewMode, isVisible, isLoading, hasMore, fetchMore])
 
-  // Adjust current page to last page if total page count < current page
-  useEffect(() => {
-    if (isMonthlyViewMode || !data?.length || pageSize <= 0) return
-
-    const maxPage = Math.ceil(data.length / pageSize)
-    if (maxPage > 0 && currentPage > maxPage) {
-      setCurrentPage(maxPage)
-    }
-  }, [isMonthlyViewMode, data?.length, pageSize, currentPage, setCurrentPage])
-
   const handleRuleSuggestionOpenChange = useCallback((isOpen: boolean) => {
     if (!isOpen) setRuleSuggestion(null)
   }, [setRuleSuggestion])
 
-  const bankTransactions = useMemo(() => {
-    if (isMonthlyViewMode) return data
-
-    const firstPageIndex = (currentPage - 1) * pageSize
-    const lastPageIndex = firstPageIndex + pageSize
-    return data?.slice(firstPageIndex, lastPageIndex)
-  }, [currentPage, data, isMonthlyViewMode, pageSize])
-
-  const [shiftStickyHeader, setShiftStickyHeader] = useState(0)
-  const debounceShiftStickyHeader = debounce(setShiftStickyHeader, 500)
   const [listView, setListView] = useState(false)
 
   const containerRef = useElementSize<HTMLDivElement>((size) => {
-    if (size.height >= 90) {
-      const newShift = -Math.floor(size.height / 2) + 6
-      if (newShift !== shiftStickyHeader) {
-        void debounceShiftStickyHeader(newShift)
-      }
-    }
-    else if (size?.height > 0 && shiftStickyHeader !== 0) {
-      void debounceShiftStickyHeader(0)
-    }
-
     if (size.width > BREAKPOINTS.TABLET && listView) {
       setListView(false)
     }
@@ -244,121 +231,15 @@ const BankTransactionsTableView = ({
     }
   })
 
-  const isLastPage =
-    data
-    && !hasMore
-    && Math.ceil((data?.length || 0) / pageSize) === currentPage
-
   const tableContentMode = listView && mobileComponent === 'mobileList'
     ? BankTransactionsTableContent.MobileList
     : listView
       ? BankTransactionsTableContent.List
       : BankTransactionsTableContent.Table
 
-  const BankTransactionsTableViewContent = useMemo(() => {
-    return (
-      <div className='Layer__bank-transactions__table-wrapper'>
-        <BankTransactionsTable
-          isLoading={isLoading}
-          isSyncing={isSyncing}
-          bankTransactions={bankTransactions}
-          page={currentPage}
-          stringOverrides={stringOverrides}
-          lastPage={isLastPage}
-          showDescriptions={showDescriptions}
-          showReceiptUploads={showReceiptUploads}
-          showTooltips={showTooltips}
-        />
-      </div>
-    )
-  }, [
-    bankTransactions,
-    currentPage,
-    isLastPage,
-    isLoading,
-    isSyncing,
-    showDescriptions,
-    showReceiptUploads,
-    showTooltips,
-    stringOverrides,
-  ])
-
-  const BankTransactionsListLoader = useMemo(() => {
-    return (
-      <div className='Layer__bank-transactions__list-loader'>
-        <Loader />
-      </div>
-    )
-  }, [])
-
-  const BankTransactionsListView = useMemo(() => {
-    return (
-      <BankTransactionsList
-        bankTransactions={bankTransactions}
-        stringOverrides={stringOverrides?.bankTransactionCTAs}
-
-        showDescriptions={showDescriptions}
-        showReceiptUploads={showReceiptUploads}
-        showTooltips={showTooltips}
-      />
-    )
-  }, [bankTransactions, stringOverrides?.bankTransactionCTAs, showDescriptions, showReceiptUploads, showTooltips])
-
-  const BankTransactionsMobileListView = useMemo(() => {
-    return (
-      <BankTransactionsMobileList
-        bankTransactions={bankTransactions}
-        showDescriptions={showDescriptions}
-        showReceiptUploads={showReceiptUploads}
-        showTooltips={showTooltips}
-      />
-    )
-  }, [bankTransactions, showDescriptions, showReceiptUploads, showTooltips])
-
-  const slots = useMemo(() => {
-    switch (tableContentMode) {
-      case BankTransactionsTableContent.Table:
-        return {
-          List: BankTransactionsTableViewContent,
-        }
-      case BankTransactionsTableContent.List:
-        return {
-          List: BankTransactionsListView,
-          Loader: BankTransactionsListLoader,
-        }
-      case BankTransactionsTableContent.MobileList:
-        return {
-          List: BankTransactionsMobileListView,
-          Loader: <MobileListSkeleton />,
-        }
-      default:
-        return unsafeAssertUnreachable({
-          value: tableContentMode,
-          message: 'Unexpected table view content mode',
-        })
-    }
-  }, [
-    tableContentMode,
-    BankTransactionsTableViewContent,
-    BankTransactionsListView,
-    BankTransactionsListLoader,
-    BankTransactionsMobileListView,
-  ])
-
-  const isEmpty = tableContentMode === BankTransactionsTableContent.Table
-    ? false
-    : (bankTransactions?.length ?? 0) === 0
-
   return (
     <Container
-      className={
-        classNames(
-          'Layer__Public',
-          display === DisplayState.review
-            ? 'Layer__bank-transactions--to-review'
-            : 'Layer__bank-transactions--categorized',
-        )
-      }
+      className='Layer__Public'
       transparentBg={listView && mobileComponent === 'mobileList'}
       name={COMPONENT_NAME}
       asWidget={asWidget}
@@ -366,19 +247,14 @@ const BankTransactionsTableView = ({
     >
       {!hideHeader && (
         <BankTransactionsHeader
-          shiftStickyHeader={shiftStickyHeader}
           asWidget={asWidget}
           tableContentMode={tableContentMode}
-          stringOverrides={stringOverrides?.bankTransactionsHeader}
           isSyncing={isSyncing}
-          withUploadMenu={showUploadOptions}
           collapseHeader={collapseHeader}
-          showStatusToggle={showStatusToggle}
-          showCategorizationRules={showCategorizationRules}
         />
       )}
 
-      <BankTransactionsListWithEmptyStates isEmpty={isEmpty} slots={slots} />
+      <BankTransactionsTableContentView content={tableContentMode} />
 
       <SuggestedCategorizationRuleUpdatesDialog
         isOpen={!!ruleSuggestion}
@@ -386,19 +262,6 @@ const BankTransactionsTableView = ({
         ruleSuggestion={ruleSuggestion}
         variant={tableContentMode === BankTransactionsTableContent.MobileList ? 'drawer' : 'modal'}
       />
-
-      {!isMonthlyViewMode && !isLoading && (
-        <HStack justify='end'>
-          <Pagination
-            currentPage={currentPage}
-            totalCount={data?.length || 0}
-            pageSize={pageSize}
-            onPageChange={page => setCurrentPage(page)}
-            fetchMore={fetchMore}
-            hasMore={hasMore}
-          />
-        </HStack>
-      )}
 
       {isMonthlyViewMode ? <div ref={scrollPaginationRef} /> : null}
     </Container>

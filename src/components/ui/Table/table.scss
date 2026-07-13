@@ -25,7 +25,7 @@
 }
 
 .Layer__UI__Table-Row {
-  height: 3.25rem;
+  height: var(--data-table-row-height, 3.25rem);
   background-color: var(--color-base-200);
 
   @media (width <= 500px) {
@@ -110,6 +110,14 @@
       text-align: $alignment;
     }
   }
+
+  &[data-align='center'] {
+    justify-content: center;
+  }
+
+  &[data-align='end'] {
+    justify-content: flex-end;
+  }
 }
 
 .Layer__UI__Table-ScrollContainer {
@@ -135,6 +143,6 @@
 }
 
 .Layer__UI__Table-TableHeader .Layer__UI__Table-Column[data-pinned] {
-  z-index: 2;
+  z-index: 3;
   background-color: var(--color-base-0);
 }

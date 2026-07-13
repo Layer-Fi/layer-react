@@ -1,118 +1,51 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Schema } from 'effect'
-import useSWR from 'swr'
 
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { type Vehicle, VehicleSchema } from '@schemas/vehicle'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 type ListVehiclesParams = {
   businessId: string
   allowArchived?: boolean
 }
 
-const ListVehiclesResponseSchema = Schema.Struct({
-  data: Schema.Array(VehicleSchema),
-})
+const ListVehiclesResponseSchema = UnwrappedDataResponseSchema(Schema.Array(VehicleSchema))
 
-type ListVehiclesResponse = typeof ListVehiclesResponseSchema.Type
-type ListVehiclesResponseEncoded = typeof ListVehiclesResponseSchema.Encoded
-
-const listVehicles = get<
-  ListVehiclesResponseEncoded,
+const listVehicles = getWithQuery<
+  typeof ListVehiclesResponseSchema.Encoded,
   ListVehiclesParams
->(({ businessId, allowArchived }) => {
-  const parameters = toDefinedSearchParameters({ allowArchived })
-  return `/v1/businesses/${businessId}/mileage/vehicles?${parameters}`
-})
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/mileage/vehicles`,
+)
 
 export const VEHICLES_TAG_KEY = '#list-vehicles'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  allowArchived,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  allowArchived?: boolean
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      allowArchived,
-      tags: [VEHICLES_TAG_KEY],
-    } as const
-  }
-}
+export const useListVehicles = createQueryHook({
+  tags: [VEHICLES_TAG_KEY],
+  request: listVehicles,
+  schema: ListVehiclesResponseSchema,
+})
 
-class ListVehiclesSWRResponse extends SWRQueryResult<ListVehiclesResponse> {
-  // @ts-expect-error override narrows return type to unwrap nested data
-  override get data() {
-    return this.swrResponse.data?.data
-  }
-}
+const useVehiclesResourceCacheActions = createResourceGlobalCacheActions<ReadonlyArray<Vehicle>>(VEHICLES_TAG_KEY)
 
-export function useListVehicles({ allowArchived }: { allowArchived?: boolean } = {}) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-
-  const response = useSWR(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-      allowArchived,
-    })),
-    ({ accessToken, apiUrl, businessId, allowArchived }) => listVehicles(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          allowArchived,
-        },
-      },
-    )().then(Schema.decodeUnknownPromise(ListVehiclesResponseSchema)),
-  )
-
-  return new ListVehiclesSWRResponse(response)
-}
-
-const withUpdatedVehicle = (updated: Vehicle) =>
-  (vehicle: Vehicle): Vehicle => vehicle.id === updated.id ? updated : vehicle
+const patchVehicleById = (updatedVehicle: Vehicle) =>
+  (vehicles?: ReadonlyArray<Vehicle>) =>
+    vehicles?.map(vehicle => vehicle.id === updatedVehicle.id ? updatedVehicle : vehicle)
 
 export function useVehiclesGlobalCacheActions() {
-  const { patchCache, forceReload } = useGlobalCacheActions()
+  const actions = useVehiclesResourceCacheActions()
 
-  const patchVehicleByKey = useCallback((updatedVehicle: Vehicle) =>
-    patchCache<ListVehiclesResponse | undefined>(
-      ({ tags }) => tags.includes(VEHICLES_TAG_KEY),
-      (currentData) => {
-        if (!currentData) return currentData
-
-        return {
-          ...currentData,
-          data: currentData.data.map(withUpdatedVehicle(updatedVehicle)),
-        }
-      },
-    ),
-  [patchCache],
+  const patchByKey = useCallback(
+    (updatedVehicle: Vehicle) => actions.patchCache(patchVehicleById(updatedVehicle)),
+    [actions],
   )
 
-  const forceReloadVehicles = useCallback(
-    () => forceReload(({ tags }) => tags.includes(VEHICLES_TAG_KEY)),
-    [forceReload],
-  )
-
-  return { patchVehicleByKey, forceReloadVehicles }
+  return useMemo(() => ({
+    ...actions,
+    patchByKey,
+  }), [actions, patchByKey])
 }

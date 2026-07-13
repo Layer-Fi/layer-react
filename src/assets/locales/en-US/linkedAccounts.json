@@ -3,10 +3,10 @@
     "add_account": "Add Account",
     "add_opening_balance": "Add opening balance",
     "confirm_account": "Confirm account",
-    "confirm_accounts_one": "Connect Account",
-    "confirm_accounts_other": "Connect All Accounts",
-    "confirm_accounts_selected_one": "Connect {{displayCount}} Account",
-    "confirm_accounts_selected_other": "Connect {{displayCount}} Accounts",
+    "confirm_accounts_one": "Confirm Account",
+    "confirm_accounts_other": "Confirm All Accounts",
+    "confirm_accounts_selected_one": "Confirm {{displayCount}} Selected Account",
+    "confirm_accounts_selected_other": "Confirm {{displayCount}} Selected Accounts",
     "connect_my_bank": "Connect my bank",
     "delete_account": "Delete account",
     "delete_account_label": "Delete Account",
@@ -23,9 +23,6 @@
     "unlink_accounts_under_connection": "Unlink all accounts under this connection",
     "unlink_accounts_under_institution_name": "Unlink all accounts under this {{institutionName}} connection"
   },
-  "empty": {
-    "no_accounts_connected": "No accounts connected"
-  },
   "error": {
     "break_connection": "We couldn’t reset this connection. Please try again.",
     "confirm_account": "We couldn’t confirm your account. Please try again.",
@@ -33,6 +30,8 @@
     "connect_account": "We couldn’t connect your account. Please try again.",
     "delete_account_check_connection": "Deletion failed. Please check your connection and try again in a few seconds.",
     "exclude_account": "We couldn’t exclude your account. Please try again.",
+    "hosted_link_failed_description": "We couldn’t finish linking your account. Please try again.",
+    "hosted_link_failed_title": "Connection failed",
     "load_accounts": "Failed to load accounts",
     "remove_connection": "We couldn’t remove this connection. Please try again.",
     "repair_connection": "We couldn’t repair the Plaid connection with your account. Please try again.",
@@ -42,7 +41,6 @@
   },
   "label": {
     "account_and_unmatched_transactions_deleted": "This account and any unmatched transactions will be deleted.",
-    "account_linked_successfully": "Account linked successfully",
     "account_stops_syncing_new_data": "This account will stop syncing new data, and any unmatched transactions will be deleted.",
     "accounts_successfully_linked": "Accounts Successfully Linked",
     "bank_balance": "Bank balance",
@@ -50,13 +48,11 @@
     "confirm_business_accounts": "Confirm Accounts",
     "confirm_remove_accounts_for_institution": "Please confirm you wish to remove all accounts belonging to this institution",
     "confirm_remove_accounts_for_institution_name": "Please confirm you wish to remove all accounts belonging to {{institutionName}}",
-    "connect_accounts": "Connect accounts",
     "connect_bank_accounts_and_credit_cards": "Connect your bank accounts and credit cards to automatically import your business transactions.",
     "data_is_syncing": "Data is syncing",
     "deselect_unused_accounts": "Please deselect any accounts you don't use for your business.",
     "found_accounts_count_one": "We’ve found {{displayCount}} account",
     "found_accounts_count_other": "We’ve found {{displayCount}} accounts",
-    "import_data_simple_integration": "Import data with one simple integration.",
     "ledger_balance": "Ledger balance",
     "link_bank_accounts_and_credit_cards": "Link your bank accounts and credit cards",
     "link_more_accounts_any_time": "You can link more accounts at any time from the Bank Transactions section",
@@ -74,7 +70,6 @@
     "no_data_sync_until_confirm": "No data will be synced until you confirm.",
     "opening_balance": "Opening balance",
     "opening_date": "Opening date",
-    "populate_accounting_dashboard_three_steps": "Populate your accounting dashboard in 3 steps",
     "remove_unused_accounts_next_step": "You’ll have the chance to remove any accounts you don’t use for your business in the next step.",
     "select_accounts_use_one": "We’ve pulled the below account from your institution. Unselect it if you do not want it connected.",
     "select_accounts_use_other": "We’ve pulled the below accounts from your institution. Please unselect any accounts you do not want connected."

@@ -1,4 +1,3 @@
-import { type PropsWithChildren, type ReactNode } from 'react'
 import { Inbox, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -6,22 +5,9 @@ import { DisplayState } from '@internal-types/bankTransactions'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { DataStateContainer } from '@components/DataStateContainer/DataStateContainer'
 
-type BankTransactionsTableEmptyStatesProps = {
-  isEmpty: boolean
-  slots: {
-    Loader?: ReactNode
-    List: ReactNode
-  }
-}
-
-const DataStateContainer = ({ children }: PropsWithChildren) => (
-  <div className='Layer__table-state-container'>
-    {children}
-  </div>
-)
-
-export const BankTransactionsTableEmptyState = () => {
+export const BankTransactionsEmptyState = () => {
   const { t } = useTranslation()
   const { display } = useBankTransactionsContext()
   const { filters } = useBankTransactionsFiltersContext()
@@ -64,33 +50,17 @@ export const BankTransactionsTableEmptyState = () => {
   )
 }
 
-export function BankTransactionsListWithEmptyStates({
-  isEmpty,
-  slots,
-}: BankTransactionsTableEmptyStatesProps) {
+export const BankTransactionsErrorState = () => {
   const { t } = useTranslation()
-  const { isLoading, isError } = useBankTransactionsContext()
 
-  if (isError) {
-    return (
-      <DataStateContainer>
-        <DataState
-          status={DataStateStatus.failed}
-          title={t('common:error.something_went_wrong', 'Something went wrong')}
-          description={t('bankTransactions:error.couldnt_load_transactions', 'We couldn’t load your transactions')}
-          spacing
-        />
-      </DataStateContainer>
-    )
-  }
-
-  if (isLoading && slots.Loader) {
-    return slots.Loader
-  }
-
-  if (!isLoading && isEmpty) {
-    return <BankTransactionsTableEmptyState />
-  }
-
-  return slots.List
+  return (
+    <DataStateContainer>
+      <DataState
+        status={DataStateStatus.failed}
+        title={t('common:error.something_went_wrong', 'Something went wrong')}
+        description={t('bankTransactions:error.couldnt_load_transactions', 'We couldn’t load your transactions')}
+        spacing
+      />
+    </DataStateContainer>
+  )
 }

@@ -1,0 +1,11 @@
+.Layer__LedgerEntryDetails__Reverse {
+  padding: var(--spacing-md);
+
+  .Layer__UI__Button {
+    min-width: 150px;
+
+    > svg {
+      color: var(--color-danger);
+    }
+  }
+}

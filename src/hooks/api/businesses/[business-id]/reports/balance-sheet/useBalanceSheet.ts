@@ -1,81 +1,27 @@
-import { endOfDay } from 'date-fns'
-import useSWR from 'swr'
-
 import type { BalanceSheet } from '@internal-types/balanceSheet'
-import { get } from '@utils/api/authenticatedHttp'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export type GetBalanceSheetParams = {
   businessId: string
   effectiveDate: Date
 }
 
-const getBalanceSheet = get<
+const getBalanceSheet = getWithQuery<
   { data: BalanceSheet },
   GetBalanceSheetParams
 >(
-  ({ businessId, effectiveDate }) => {
-    const parameters = toDefinedSearchParameters({ effectiveDate })
-
-    return `/v1/businesses/${businessId}/reports/balance-sheet?${parameters}`
-  },
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/reports/balance-sheet`,
 )
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  effectiveDate,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  effectiveDate: Date
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      effectiveDate,
-      tags: ['#balance-sheet'],
-    } as const
-  }
-}
+export const BALANCE_SHEET_TAG_KEY = '#balance-sheet'
 
-export function useBalanceSheet({
-  effectiveDate = endOfDay(new Date()),
-}: {
-  effectiveDate?: Date
-}) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { apiUrl } = useEnvironment()
-  const { businessId } = useLayerContext()
+export const useBalanceSheet = createQueryHook({
+  tags: [BALANCE_SHEET_TAG_KEY],
+  request: getBalanceSheet,
+  select: ({ data }) => data,
+})
 
-  const response = useSWR(
-    () => withLocale(buildKey({
-      ...auth,
-      apiUrl,
-      businessId,
-      effectiveDate,
-    })),
-    ({ accessToken, apiUrl, businessId, effectiveDate }) => getBalanceSheet(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          effectiveDate,
-        },
-      },
-    )().then(({ data }) => data),
-  )
-
-  return new SWRQueryResult(response)
-}
+export const useBalanceSheetGlobalCacheActions = createResourceGlobalCacheActions<BalanceSheet>(BALANCE_SHEET_TAG_KEY)

@@ -4,12 +4,8 @@
 ==========================================================
 */
 
-/* ------------------ Onboarding ------------------ */
-export { Onboarding } from './components/Onboarding/Onboarding'
-
 /* ------------------ Bank Accounts & Transactions ------------------ */
 export { BankTransactions } from './components/BankTransactions/BankTransactions'
-export { Integrations } from './components/Integrations/Integrations'
 export { LinkedAccounts } from './components/LinkedAccounts/LinkedAccounts'
 
 /* ------------------ Reporting ------------------ */
@@ -56,7 +52,6 @@ export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWith
 export { BookkeepingOverview } from './views/BookkeepingOverview/BookkeepingOverview'
 export { GeneralLedgerView } from './views/GeneralLedger/GeneralLedger'
 export { unstable_MileageTracking } from './views/MileageTracking'
-export { ProjectProfitabilityView } from './views/ProjectProfitability/ProjectProfitability'
 export { Reports } from './views/Reports/Reports'
 export { SolopreneurOverview } from './views/SolopreneurOverview/SolopreneurOverview'
 export { TaxEstimates } from './views/TaxEstimates/TaxEstimates'
@@ -67,7 +62,8 @@ export { TimeTracking } from './views/TimeTracking'
 */
 export { EntityName, type LinkingMetadata } from './contexts/InAppLinkContext'
 export { useLayerContext } from './contexts/LayerContext/LayerContext'
-export { LayerProvider } from './providers/LayerProvider/LayerProvider'
+export { type LayerEvent, LayerEventComponent, LayerEventType } from './providers/LayerProvider/layerEvents'
+export { type EventCallbacks, LayerProvider } from './providers/LayerProvider/LayerProvider'
 export { DisplayState } from './types/bankTransactions'
 export { Direction } from './types/general'
 export { SupportedLocale } from './utils/i18n/supportedLocale'

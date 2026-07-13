@@ -1,49 +1,36 @@
-import { useCallback } from 'react'
-import { Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
-
 import type { Awaitable } from '@internal-types/utility/promises'
 import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/common/s3PresignedUrl'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { getAsMutation } from '@utils/api/getAsMutation'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+
+const InvoicePdfReturnSchema = UnwrappedDataResponseSchema(S3PresignedUrlSchema)
+
+type GetInvoicePdfParams = {
+  businessId: string
+  invoiceId: string
+}
 
 const getInvoicePdf = get<
-  { data: S3PresignedUrlSchemaType },
-  { businessId: string, invoiceId: string }
+  typeof InvoicePdfReturnSchema.Encoded,
+  GetInvoicePdfParams
 >(
   ({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/pdf`,
 )
 
+const requestInvoicePdf = getAsMutation(getInvoicePdf)
+
 const DOWNLOAD_INVOICE_PDF_TAG_KEY = '#download-invoice-pdf'
 
-const InvoicePdfReturnSchema = Schema.Struct({
-  data: S3PresignedUrlSchema,
+const useInvoicePdfDownloadMutation = createMutationHook({
+  tags: [DOWNLOAD_INVOICE_PDF_TAG_KEY],
+  request: requestInvoicePdf,
+  keyParams: ['invoiceId'],
+  argToBody: (_arg: undefined) => undefined,
+  schema: InvoicePdfReturnSchema,
+  swrOptions: { throwOnError: false },
 })
-
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-  invoiceId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-  invoiceId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      invoiceId,
-      tags: [DOWNLOAD_INVOICE_PDF_TAG_KEY],
-    } as const
-  }
-}
 
 type UseInvoicePdfDownloadProps = {
   invoiceId: string
@@ -56,55 +43,11 @@ export function useInvoicePdfDownload({
   onSuccess,
   onError,
 }: UseInvoicePdfDownloadProps) {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
-
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-      invoiceId,
-    })),
-    ({ accessToken, apiUrl, businessId, invoiceId }) => getInvoicePdf(
-      apiUrl,
-      accessToken,
-      {
-        params: {
-          businessId,
-          invoiceId,
-        },
-      },
-    )()
-      .then(Schema.decodeUnknownPromise(InvoicePdfReturnSchema))
-      .then(async ({ data }) => {
-        if (onSuccess) {
-          await onSuccess(data)
-        }
-        return data
-      }),
-    {
-      revalidate: false,
-      throwOnError: false,
+  return useInvoicePdfDownloadMutation({
+    invoiceId,
+    swrOptions: {
+      onSuccess: (data) => { void onSuccess?.(data) },
       onError,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => originalTrigger(...triggerParameters),
-    [originalTrigger],
-  )
-
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      return Reflect.get(target, prop) as unknown
     },
   })
 }

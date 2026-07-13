@@ -1,16 +1,9 @@
-import { useCallback } from 'react'
-import { Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
-
-import { type TaxProfileRequest, type TaxProfileResponse, TaxProfileResponseSchema } from '@schemas/taxEstimates/profile'
+import { type TaxProfileRequest, TaxProfileResponseSchema } from '@schemas/taxEstimates/profile'
 import { patch, post } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRMutationResult } from '@utils/swr/SWRResponseTypes'
 import { useTaxDetailsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/tax-estimates/details/useTaxDetails'
 import { useTaxPaymentsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/tax-estimates/payments/useTaxPayments'
 import { useTaxProfileGlobalCacheActions } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const UPSERT_TAX_PROFILE_TAG_KEY = '#upsert-tax-profile'
 
@@ -20,95 +13,53 @@ export enum UpsertTaxProfileMode {
 }
 
 export const createTaxProfile = post<
-  TaxProfileResponse,
+  typeof TaxProfileResponseSchema.Encoded,
   TaxProfileRequest,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/tax-estimates/profile`)
 
 export const updateTaxProfile = patch<
-  TaxProfileResponse,
+  typeof TaxProfileResponseSchema.Encoded,
   TaxProfileRequest,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/tax-estimates/profile`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [UPSERT_TAX_PROFILE_TAG_KEY],
-    } as const
+const useTaxProfileTriggerSuccess = () => {
+  const { overwriteCache: overwriteTaxProfile } = useTaxProfileGlobalCacheActions()
+  const { forceReload: forceReloadTaxPayments } = useTaxPaymentsGlobalCacheActions()
+  const { forceReload: forceReloadTaxDetails } = useTaxDetailsGlobalCacheActions()
+
+  return (data: typeof TaxProfileResponseSchema.Type) => {
+    void overwriteTaxProfile(data)
+    void forceReloadTaxPayments()
+    void forceReloadTaxDetails()
   }
 }
 
-function getRequestFn(mode: UpsertTaxProfileMode) {
-  return mode === UpsertTaxProfileMode.Update ? updateTaxProfile : createTaxProfile
-}
+const useCreateTaxProfileMutation = createMutationHook({
+  tags: [UPSERT_TAX_PROFILE_TAG_KEY],
+  request: createTaxProfile,
+  schema: TaxProfileResponseSchema,
+  swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: useTaxProfileTriggerSuccess,
+})
+
+const useUpdateTaxProfileMutation = createMutationHook({
+  tags: [UPSERT_TAX_PROFILE_TAG_KEY],
+  request: updateTaxProfile,
+  schema: TaxProfileResponseSchema,
+  swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: useTaxProfileTriggerSuccess,
+})
 
 type UseUpsertTaxProfileProps = {
   mode: UpsertTaxProfileMode
 }
 export function useUpsertTaxProfile({ mode }: UseUpsertTaxProfileProps) {
-  const withLocale = useLocalizedKey()
-  const { data: auth } = useAuth()
-  const { businessId } = useLayerContext()
-  const { patchTaxProfile } = useTaxProfileGlobalCacheActions()
-  const { forceReloadTaxPayments } = useTaxPaymentsGlobalCacheActions()
-  const { forceReloadTaxDetails } = useTaxDetailsGlobalCacheActions()
+  const createMutationResponse = useCreateTaxProfileMutation()
+  const updateMutationResponse = useUpdateTaxProfileMutation()
 
-  const rawMutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...auth,
-      businessId,
-    })),
-    async ({ accessToken, apiUrl, businessId }, { arg }: { arg: TaxProfileRequest }) => {
-      const request = getRequestFn(mode)
-
-      return request(apiUrl, accessToken, {
-        params: { businessId },
-        body: arg,
-      }).then(Schema.decodeUnknownPromise(TaxProfileResponseSchema))
-    },
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const mutationResponse = new SWRMutationResult(rawMutationResponse)
-
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      void patchTaxProfile(triggerResult.data)
-      void forceReloadTaxPayments()
-      void forceReloadTaxDetails()
-
-      return triggerResult
-    },
-    [forceReloadTaxDetails, forceReloadTaxPayments, originalTrigger, patchTaxProfile],
-  )
-
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
+  return mode === UpsertTaxProfileMode.Update
+    ? updateMutationResponse
+    : createMutationResponse
 }

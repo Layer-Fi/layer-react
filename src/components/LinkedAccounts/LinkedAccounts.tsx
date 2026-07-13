@@ -1,18 +1,21 @@
-import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
 import { AccountConfirmationStoreProvider } from '@providers/AccountConfirmationStoreProvider'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { OpeningBalanceModalProvider } from '@providers/OpeningBalanceModalProvider/OpeningBalanceModalProvider'
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
+import { HStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
 import { Container } from '@components/Container/Container'
 import { Header } from '@components/Container/Header'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { HostedLinkErrorBanner } from '@components/LinkedAccounts/HostedLinkErrorBanner'
 import { LinkedAccountsContent } from '@components/LinkedAccounts/LinkedAccountsContent'
 import { OpeningBalanceModal } from '@components/LinkedAccounts/OpeningBalanceModal/OpeningBalanceModal'
 import { Loader } from '@components/Loader/Loader'
-import { Heading, HeadingSize } from '@components/Typography/Heading'
+
+import './linkedAccounts.scss'
 
 const COMPONENT_NAME = 'linked-accounts'
 
@@ -49,41 +52,37 @@ export const LinkedAccountsComponent = ({
   stringOverrides,
 }: LinkedAccountsProps) => {
   const { t } = useTranslation()
-  const {
-    isLoading,
-    error,
-    isValidating,
-    refetchAccounts,
-  } = useContext(LinkedAccountsContext)
+  const { isLoading, isError, isValidating, refetch } = useBankAccountsContext()
 
   return (
     <Container name={COMPONENT_NAME} elevated={elevated}>
       <Header className='Layer__linked-accounts__header'>
-        <Heading
-          className='Layer__linked-accounts__title'
-          size={HeadingSize.secondary}
-        >
+        <Heading level={3} size='sm'>
           {stringOverrides?.title || t('linkedAccounts:label.linked_accounts', 'Linked Accounts')}
         </Heading>
       </Header>
+
+      <HStack pi='lg'>
+        <HostedLinkErrorBanner />
+      </HStack>
 
       {isLoading && (
         <div className='Layer__linked-accounts__loader-container'>
           <Loader />
         </div>
       )}
-      {error && !isLoading
+      {isError && !isLoading
         ? (
           <DataState
             status={DataStateStatus.failed}
             title={t('common:error.something_went_wrong', 'Something went wrong')}
             description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
-            onRefresh={() => void refetchAccounts()}
+            onRefresh={() => void refetch()}
             isLoading={isValidating}
           />
         )
         : null}
-      {!error && !isLoading
+      {!isError && !isLoading
         ? (
           <LinkedAccountsContent
             asWidget={asWidget}

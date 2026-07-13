@@ -1,4 +1,5 @@
 import { createContext, useContext, useMemo, useState } from 'react'
+import type { Placement } from '@floating-ui/react'
 import {
   autoUpdate,
   flip,
@@ -13,7 +14,15 @@ import {
   useTransitionStyles,
 } from '@floating-ui/react'
 
-import { type TooltipOptions } from '@components/Tooltip/Tooltip'
+export interface TooltipOptions {
+  isInitiallyOpen?: boolean
+  placement?: Placement
+  isOpen?: boolean
+  isDisabled?: boolean
+  onOpenChange?: (open: boolean) => void
+  offset?: number
+  shift?: { padding?: number }
+}
 
 export type ContextType = ReturnType<typeof useTooltip> | null
 
@@ -30,23 +39,23 @@ export const useTooltipContext = () => {
 }
 
 export const useTooltip = ({
-  initialOpen = false,
+  isInitiallyOpen = false,
   placement = 'top',
-  open: controlledOpen,
-  onOpenChange: setControlledOpen,
-  disabled,
+  isOpen: isControlledOpen,
+  onOpenChange: setIsControlledOpen,
+  isDisabled,
   offset: offsetProp = 5,
   shift: shiftProp = { padding: 5 },
 }: TooltipOptions = {}) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = useState(initialOpen)
+  const [isUncontrolledOpen, setIsUncontrolledOpen] = useState(isInitiallyOpen)
 
-  const open = controlledOpen ?? uncontrolledOpen
-  const setOpen = setControlledOpen ?? setUncontrolledOpen
+  const isOpen = isControlledOpen ?? isUncontrolledOpen
+  const setIsOpen = setIsControlledOpen ?? setIsUncontrolledOpen
 
   const data = useFloating({
     placement,
-    open: disabled ? false : open,
-    onOpenChange: setOpen,
+    open: isDisabled ? false : isOpen,
+    onOpenChange: setIsOpen,
     whileElementsMounted: autoUpdate,
     middleware: [
       offset(offsetProp),
@@ -63,10 +72,10 @@ export const useTooltip = ({
 
   const hover = useHover(context, {
     move: false,
-    enabled: controlledOpen == null,
+    enabled: isControlledOpen == null,
   })
   const focus = useFocus(context, {
-    enabled: controlledOpen == null,
+    enabled: isControlledOpen == null,
   })
   const dismiss = useDismiss(context)
   const role = useRole(context, { role: 'tooltip' })
@@ -84,14 +93,14 @@ export const useTooltip = ({
 
   return useMemo(
     () => ({
-      open,
-      setOpen,
+      isOpen,
+      setIsOpen,
       isMounted,
       styles,
-      disabled,
+      isDisabled,
       ...interactions,
       ...data,
     }),
-    [open, setOpen, isMounted, styles, disabled, interactions, data],
+    [isOpen, setIsOpen, isMounted, styles, isDisabled, interactions, data],
   )
 }

@@ -1,20 +1,23 @@
 .Layer__badge {
   --size: 27px;
+  --fg-color: var(--badge-fg-color);
+  --bg-color: var(--badge-bg-color);
 
   box-sizing: border-box;
   display: inline-flex;
   gap: var(--spacing-3xs);
   align-items: center;
   height: var(--size);
+  inline-size: fit-content;
   min-inline-size: fit-content;
 
   padding: var(--spacing-3xs) var(--spacing-xs);
   border-radius: var(--border-radius-2xs);
 
-  background-color: var(--badge-bg-color);
+  background-color: var(--bg-color);
 
   font-size: var(--text-sm);
-  color: var(--badge-color);
+  color: var(--fg-color);
 
   transition: all var(--transition-speed) ease-in-out;
 
@@ -43,62 +46,39 @@
     min-height: 21px;
     border-width: 0;
     cursor: pointer;
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--bg-color), var(--color-base-1000) 6%);
+    }
   }
 
   &.Layer__badge--default {
-    background-color: var(--badge-bg-color);
-    color: var(--badge-fg-color);
+    --fg-color: var(--badge-fg-color);
+    --bg-color: var(--badge-bg-color);
   }
 
   &.Layer__badge--info {
-    background-color: var(--badge-bg-color-info);
-    color: var(--badge-fg-color-info);
+    --fg-color: var(--badge-fg-color-info);
+    --bg-color: var(--badge-bg-color-info);
   }
 
   &.Layer__badge--success {
-    background-color: var(--badge-bg-color-success);
-    color: var(--badge-fg-color-success);
+    --fg-color: var(--badge-fg-color-success);
+    --bg-color: var(--badge-bg-color-success);
   }
 
   &.Layer__badge--warning {
-    background-color: var(--badge-bg-color-warning);
-    color: var(--badge-fg-color-warning);
+    --fg-color: var(--badge-fg-color-warning);
+    --bg-color: var(--badge-bg-color-warning);
   }
 
   &.Layer__badge--error {
-    background-color: var(--badge-bg-color-error);
-    color: var(--badge-fg-color-error);
+    --fg-color: var(--badge-fg-color-error);
+    --bg-color: var(--badge-bg-color-error);
   }
 
   &.Layer__badge--neutral {
-    background-color: var(--badge-bg-color-neutral);
-    color: var(--badge-fg-color-neutral);
-  }
-
-  &.Layer__badge--with-hover:hover {
-    &.Layer__badge--default {
-      background-color: var(--badge-color);
-      color: var(--badge-bg-color);
-    }
-
-    &.Layer__badge--info {
-      background-color: var(--badge-color-info);
-      color: var(--badge-bg-color-info);
-    }
-
-    &.Layer__badge--success {
-      background-color: var(--badge-color-success);
-      color: var(--badge-bg-color-success);
-    }
-
-    &.Layer__badge--warning {
-      background-color: var(--badge-color-warning);
-      color: var(--badge-bg-color-warning);
-    }
-
-    &.Layer__badge--error {
-      background-color: var(--badge-color-error);
-      color: var(--badge-bg-color-error);
-    }
+    --fg-color: var(--badge-fg-color-neutral);
+    --bg-color: var(--badge-bg-color-neutral);
   }
 }

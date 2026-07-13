@@ -40,7 +40,7 @@ export const Breadcrumb = forwardRef<HTMLLIElement, BreadcrumbProps>(
         {({ isCurrent }) => (
           <>
             <Link {...linkProps}>{children}</Link>
-            {!isCurrent && <ChevronRight size={18} />}
+            {!isCurrent && <ChevronRight size={18} strokeWidth={1.5} />}
           </>
         )}
       </ReactAriaBreadcrumb>

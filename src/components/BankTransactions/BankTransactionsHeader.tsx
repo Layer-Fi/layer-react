@@ -10,38 +10,38 @@ import { translationKey } from '@utils/i18n/translationKey'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useHandleDownloadTransactions } from '@hooks/features/bankTransactions/useHandleBankTransactionsDownload'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+import { useBankTransactionsStringOverrides } from '@contexts/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
+import { DownloadButton as DownloadButtonComponent } from '@ui/Button/DownloadButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
+import { Heading } from '@ui/Typography/Heading'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
 import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
 import { BankTransactionsTableContent } from '@components/BankTransactions/constants'
 import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
 import { BulkActionsModule } from '@components/BulkActionsModule/BulkActionsModule'
-import { ButtonVariant } from '@components/Button/Button'
-import { DownloadButton as DownloadButtonComponent } from '@components/Button/DownloadButton'
 import { Header } from '@components/Container/Header'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 import { SearchField } from '@components/SearchField/SearchField'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
-import { Heading, HeadingSize } from '@components/Typography/Heading'
 import InvisibleDownload from '@components/utility/InvisibleDownload'
 
+import './bankTransactionsHeader.scss'
+
 export interface BankTransactionsHeaderProps {
-  shiftStickyHeader: number
   asWidget?: boolean
   tableContentMode: BankTransactionsTableContent
   isSyncing?: boolean
-  stringOverrides?: BankTransactionsHeaderStringOverrides
-  withUploadMenu?: boolean
-  showStatusToggle?: boolean
   collapseHeader?: boolean
-  showCategorizationRules?: boolean
 }
 
 export interface BankTransactionsHeaderStringOverrides {
@@ -62,11 +62,20 @@ type TransactionsSearchProps = {
 function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
   const { t } = useTranslation()
   const { filters, setFilters } = useBankTransactionsFiltersContext()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BankTransactions)
 
   const [localSearch, setLocalSearch] = useState(() => filters?.query ?? '')
 
   const debouncedSetDescription = useDebounce((value: string) => {
+    if (value === (filters?.query ?? '')) return
+
     setFilters({ query: value })
+
+    emitLayerEvent({
+      type: LayerEventType.TransactionsSearchSubmitted,
+      version: 1,
+      payload: { query: value },
+    })
   })
 
   const handleSearch = useCallback((value: string) => {
@@ -88,13 +97,13 @@ function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
 
 const DownloadButton = ({
   downloadButtonTextOverride,
-  iconOnly,
-  disabled,
+  icon,
+  isDisabled,
   isListView = false,
 }: {
   downloadButtonTextOverride?: string
-  iconOnly?: boolean
-  disabled?: boolean
+  icon?: boolean
+  isDisabled?: boolean
   isListView?: boolean
 }) => {
   const { handleDownloadTransactions, invisibleDownloadRef, isMutating, error } = useHandleDownloadTransactions({ isListView })
@@ -102,13 +111,12 @@ const DownloadButton = ({
   return (
     <>
       <DownloadButtonComponent
-        variant={ButtonVariant.secondary}
-        iconOnly={iconOnly}
-        onClick={handleDownloadTransactions}
-        isDownloading={isMutating}
+        icon={icon}
+        onPress={handleDownloadTransactions}
+        isPending={isMutating}
         requestFailed={Boolean(error)}
         text={downloadButtonTextOverride}
-        disabled={disabled}
+        isDisabled={isDisabled}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>
@@ -116,18 +124,16 @@ const DownloadButton = ({
 }
 
 export const BankTransactionsHeader = ({
-  shiftStickyHeader,
-  asWidget,
   tableContentMode,
-  stringOverrides,
   isSyncing,
-  withUploadMenu,
-  showStatusToggle,
   collapseHeader,
-  showCategorizationRules = false,
 }: BankTransactionsHeaderProps) => {
   const { t } = useTranslation()
+  const { bankTransactionsHeader: stringOverrides } = useBankTransactionsStringOverrides()
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
+  const withUploadMenu = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.UploadOptions)
+  const showStatusToggle = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.StatusToggle)
+  const showCategorizationRules = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.CategorizationRules)
   const activationDate = useBusinessActivationDate()
   const { display } = useBankTransactionsContext()
   const {
@@ -166,19 +172,10 @@ export const BankTransactionsHeader = ({
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
       <HStack align='center'>
-        <Heading
-          className='Layer__bank-transactions__title'
-          size={asWidget ? HeadingSize.secondary : HeadingSize.secondary}
-        >
+        <Heading level={3} size='sm'>
           {stringOverrides?.header || t('common:label.transactions', 'Transactions')}
         </Heading>
-        {isSyncing && (
-          <SyncingComponent
-            timeSync={5}
-            inProgress={true}
-            hideContent={isListView}
-          />
-        )}
+        {isSyncing && <SyncingComponent timeSync={5} inProgress hideContent={isListView} />}
       </HStack>
       {withDatePicker && monthPickerDate && (
         <MonthPicker
@@ -194,7 +191,6 @@ export const BankTransactionsHeader = ({
   ), [
     t,
     activationDate,
-    asWidget,
     isSyncing,
     isListView,
     monthPickerDate,
@@ -263,7 +259,6 @@ export const BankTransactionsHeader = ({
           withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
           isMobileList && 'Layer__bank-transactions__header--mobile',
         )}
-        style={{ top: shiftStickyHeader }}
       >
         <VStack gap='xs'>
           {headerTopRow}
@@ -307,7 +302,6 @@ export const BankTransactionsHeader = ({
         'Layer__bank-transactions__header',
         withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
       )}
-      style={{ top: shiftStickyHeader }}
     >
       {!collapseHeader && headerTopRow}
 
@@ -324,8 +318,8 @@ export const BankTransactionsHeader = ({
         <HStack slot='download-upload' justify='center' gap='xs'>
           <DownloadButton
             downloadButtonTextOverride={stringOverrides?.downloadButton}
-            iconOnly={isListView}
-            disabled={showBulkActions}
+            icon={isListView}
+            isDisabled={showBulkActions}
             isListView={isListView}
           />
           <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />

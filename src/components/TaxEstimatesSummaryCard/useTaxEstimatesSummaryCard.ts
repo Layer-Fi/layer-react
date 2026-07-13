@@ -6,7 +6,6 @@ import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { useFullYearProjection } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
-import { type DetailData, type SeriesData } from '@components/DetailedCharts/types'
 
 const prepareTaxSummaryData = (taxSummaryData: TaxSummary, shortenedDisplayName: (type: TaxSummarySectionType) => string, isMobile: boolean) => {
   return taxSummaryData.sections.map(section => ({
@@ -21,7 +20,7 @@ export const useTaxEstimatesSummaryCard = () => {
   const { fullYearProjection } = useFullYearProjection()
   const { t } = useTranslation()
   const { isDesktop, isMobile } = useSizeClass()
-  const { data: taxSummaryData, isLoading, isError } = useTaxSummary({ year, fullYearProjection, enabled: true })
+  const { data: taxSummaryData, isLoading, isError } = useTaxSummary({ year, fullYearProjection })
 
   const shortenedDisplayName = useCallback((type: TaxSummarySectionType) => {
     if (type === 'federal') return t('taxEstimates:label.federal', 'Federal')
@@ -37,7 +36,7 @@ export const useTaxEstimatesSummaryCard = () => {
     return {
       data,
       total: data.reduce((sum, section) => sum + section.value, 0),
-    } as DetailData<SeriesData>
+    }
   }, [taxSummaryData, isMobile, shortenedDisplayName])
 
   return {

@@ -1,13 +1,8 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
-import useSWRMutation from 'swr/mutation'
 
 import { post } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBulkBankTransactionsTriggerSuccess } from '@hooks/api/businesses/[business-id]/bank-transactions/useBulkBankTransactionsTriggerSuccess'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-uncategorize-bank-transactions'
 
@@ -26,80 +21,11 @@ const bulkUncategorize = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/bulk-uncategorize`)
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY],
-    } as const
-  }
-}
-
-export const useBulkUncategorize = () => {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId, eventCallbacks } = useLayerContext()
-
-  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
-  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
-
-  const mutationResponse = useSWRMutation(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-    })),
-    (
-      { accessToken, apiUrl, businessId },
-      { arg }: { arg: BulkUncategorizeRequest },
-    ) => bulkUncategorize(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-        body: Schema.encodeSync(BulkUncategorizeRequestSchema)(arg),
-      },
-    ).then(({ data }) => data),
-    {
-      revalidate: false,
-      throwOnError: true,
-    },
-  )
-
-  const originalTrigger = mutationResponse.trigger
-
-  const stableProxiedTrigger = useCallback(
-    async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-      const triggerResult = await originalTrigger(...triggerParameters)
-
-      void forceReloadBankTransactions()
-
-      void debouncedInvalidateProfitAndLoss()
-
-      eventCallbacks?.onTransactionCategorized?.()
-
-      return triggerResult
-    },
-    [originalTrigger, forceReloadBankTransactions, debouncedInvalidateProfitAndLoss, eventCallbacks],
-  )
-
-  return new Proxy(mutationResponse, {
-    get(target, prop) {
-      if (prop === 'trigger') {
-        return stableProxiedTrigger
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return Reflect.get(target, prop)
-    },
-  })
-}
+export const useBulkUncategorize = createMutationHook({
+  tags: [BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY],
+  request: bulkUncategorize,
+  argToBody: (arg: BulkUncategorizeRequest) => Schema.encodeSync(BulkUncategorizeRequestSchema)(arg),
+  select: ({ data }) => data,
+  swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: useBulkBankTransactionsTriggerSuccess,
+})

@@ -1,16 +1,15 @@
-import { Fragment, type ReactNode, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Fragment } from 'react'
 
 import type { BalanceSheet } from '@internal-types/balanceSheet'
 import type { LineItem } from '@internal-types/lineItem'
-import { TableCellAlign } from '@internal-types/table'
 import { useEffectOnMount } from '@hooks/utils/react/useEffectOnMount'
 import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
-import { Table } from '@components/Table/Table'
-import { TableBody } from '@components/TableBody/TableBody'
-import { TableCell } from '@components/TableCell/TableCell'
-import { TableHead } from '@components/TableHead/TableHead'
-import { TableRow } from '@components/TableRow/TableRow'
+import {
+  ReportsTable,
+  ReportsTableBody,
+  ReportsTableHeader,
+  ReportsTableLineItems,
+} from '@components/ReportsTable/ReportsTable'
 
 export interface BalanceSheetTableStringOverrides {
   typeColumnHeader?: string
@@ -32,109 +31,32 @@ export const BalanceSheetTable = ({
   config: BalanceSheetRowProps[]
   stringOverrides?: BalanceSheetTableStringOverrides
 }) => {
-  const { t } = useTranslation()
-  const { isOpen, setIsOpen, expandedAllRows } = useTableExpandRow()
-  const allRowKeys: string[] = []
-
-  useEffect(() => {
-    if (expandedAllRows) {
-      setIsOpen(allRowKeys, true)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [expandedAllRows])
+  const { setIsOpen } = useTableExpandRow()
 
   useEffectOnMount(() => {
     setIsOpen(['assets'])
   })
 
-  const renderLineItem = (
-    lineItem: LineItem,
-    depth: number = 0,
-    rowKey: string,
-    rowIndex: number,
-  ): ReactNode => {
-    const expandable = !!lineItem.line_items && lineItem.line_items.length > 0
-
-    const expanded = expandable ? isOpen(rowKey) : true
-
-    const showChildren = expanded || expandedAllRows
-
-    if (expandable) {
-      allRowKeys.push(rowKey)
-    }
-
-    return (
-      <Fragment key={rowKey + '-' + rowIndex}>
-        <TableRow
-          rowKey={rowKey + '-' + rowIndex}
-          expandable={expandable}
-          isExpanded={showChildren}
-          handleExpand={() => setIsOpen(rowKey)}
-          depth={depth}
-          withDivider={depth === 0 && rowIndex > 0}
-        >
-          <TableCell withExpandIcon={expandable} primary={expandable}>
-            {lineItem.display_name}
-          </TableCell>
-          <TableCell
-            isCurrency={!expandable || (expandable && !expanded)}
-            primary={expandable}
-            align={TableCellAlign.RIGHT}
-          >
-            {(!expandable || (expandable && !expanded)) && lineItem.value}
-          </TableCell>
-        </TableRow>
-        {showChildren
-          && lineItem.line_items
-          && lineItem.line_items.map((subItem, subIdx) =>
-            renderLineItem(
-              subItem,
-              depth + 1,
-              rowKey + ':' + subItem.name,
-              subIdx,
-            ),
-          )}
-        {showChildren && expandable && (
-          <TableRow
-            rowKey={rowKey + '-' + rowIndex + '--summation'}
-            depth={depth + 1}
-            variant='summation'
-          >
-            <TableCell primary>{t('reports:label.total_display_name', 'Total of {{displayName}}', { displayName: lineItem.display_name })}</TableCell>
-            <TableCell primary isCurrency align={TableCellAlign.RIGHT}>
-              {lineItem.value}
-            </TableCell>
-          </TableRow>
-        )}
-      </Fragment>
-    )
-  }
-
   return (
-    <Table borderCollapse='collapse'>
-      <TableHead>
-        <TableRow isHeadRow rowKey='balance-sheet-head-row'>
-          <TableCell isHeaderCell>
-            {stringOverrides?.typeColumnHeader || 'Type'}
-          </TableCell>
-          <TableCell isHeaderCell align={TableCellAlign.RIGHT}>
-            {stringOverrides?.totalColumnHeader || 'Total'}
-          </TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
+    <ReportsTable>
+      <ReportsTableHeader
+        typeColumnHeader={stringOverrides?.typeColumnHeader}
+        totalColumnHeader={stringOverrides?.totalColumnHeader}
+      />
+      <ReportsTableBody>
         {config.map((row, idx) => (
           <Fragment key={row.lineItem}>
-            {data[row.lineItem as keyof BalanceSheet]
-              && renderLineItem(
-                data[row.lineItem as keyof BalanceSheet] as LineItem,
-                0,
-                row.lineItem,
-                idx,
-              )}
+            {data[row.lineItem as keyof BalanceSheet] && (
+              <ReportsTableLineItems
+                lineItem={data[row.lineItem as keyof BalanceSheet] as LineItem}
+                rowKey={row.lineItem}
+                rowIndex={idx}
+                withDividers
+              />
+            )}
           </Fragment>
         ))}
-      </TableBody>
-    </Table>
+      </ReportsTableBody>
+    </ReportsTable>
   )
 }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import { ReportControl } from '@schemas/reports/reportConfig'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import {
   hasControl,
   useBaseUnifiedReport,
@@ -9,11 +10,12 @@ import {
   useUnifiedReportGroupByParam,
   useUnifiedReportReportingBasisParam,
 } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
-import { Stack, VStack } from '@ui/Stack/Stack'
+import { HStack, VStack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@components/DateSelection/CombinedDateRangeSelection'
 import { CombinedDateSelection } from '@components/DateSelection/CombinedDateSelection'
 import { DateGroupByComboBox } from '@components/DateSelection/DateGroupByComboBox'
 import { GlobalYearPicker } from '@components/GlobalYearPicker/GlobalYearPicker'
+import { UnifiedReportHeaderButtons } from '@components/UnifiedReports/UnifiedReportHeaderButtons'
 import { UnifiedReportReportingBasisControl } from '@components/UnifiedReports/UnifiedReportReportingBasisControl'
 import { UnifiedReportTagControl } from '@components/UnifiedReports/UnifiedReportTagControl'
 
@@ -43,6 +45,7 @@ export const UnifiedReportControls = () => {
   const { groupBy, setGroupBy } = useUnifiedReportGroupByParam()
   const { reportingBasis, setReportingBasis } = useUnifiedReportReportingBasisParam()
   const dateSelectionMode = useUnifiedReportDateSelectionMode()
+  const { isDesktop } = useSizeClass()
   const [size, setSize] = useState(3)
 
   const containerRef = useElementSize<HTMLDivElement>((size) => {
@@ -55,10 +58,20 @@ export const UnifiedReportControls = () => {
   const hasYear = hasControl(baseReport, ReportControl.Year)
   const hasReportingBasis = hasControl(baseReport, ReportControl.ReportingBasis) && reportingBasis != null
   const tagControl = baseReport?.tagControl
+
   return (
     <VStack ref={containerRef} className='Layer__UnifiedReports__ControlsContainer'>
-      <Stack
-        direction='row'
+      {!isDesktop && (
+        <HStack
+          pi='lg'
+          pbs='lg'
+          gap='xs'
+          className='Layer__UnifiedReports__ControlsActions'
+        >
+          <UnifiedReportHeaderButtons variant='Mobile' />
+        </HStack>
+      )}
+      <HStack
         pb='md'
         pi='lg'
         gap='xs'
@@ -78,7 +91,7 @@ export const UnifiedReportControls = () => {
             )}
           </div>
         )}
-      </Stack>
+      </HStack>
     </VStack>
   )
 }

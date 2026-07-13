@@ -1,33 +1,34 @@
 import { useCashflowStatementDownload } from '@hooks/api/businesses/[business-id]/reports/cashflow-statement/exports/csv/useCashflowStatementDownload'
-import { DownloadButton } from '@components/Button/DownloadButton'
+import { DownloadButton } from '@ui/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 type CashflowStatementDownloadButtonProps = {
   startDate: Date
   endDate: Date
-  iconOnly?: boolean
+  icon?: boolean
 }
 
 export function CashflowStatementDownloadButton({
   startDate,
   endDate,
-  iconOnly,
+  icon,
 }: CashflowStatementDownloadButtonProps) {
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { trigger, isMutating, error } = useCashflowStatementDownload({
+  const { trigger, isMutating, isError } = useCashflowStatementDownload({
     startDate,
     endDate,
-    onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
+    swrOptions: {
+      onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
+    },
   })
 
   return (
     <>
       <DownloadButton
-        iconOnly={iconOnly}
-        onClick={() => { void trigger() }}
-        isDownloading={isMutating}
-        requestFailed={Boolean(error)}
+        icon={icon}
+        onPress={() => { void trigger() }}
+        isPending={isMutating}
+        requestFailed={isError}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
     </>

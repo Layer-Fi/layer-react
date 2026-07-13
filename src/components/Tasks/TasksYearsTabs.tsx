@@ -1,11 +1,13 @@
 import { useMemo } from 'react'
 import { getMonth } from 'date-fns'
 
+import { BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
 import { DateFormat } from '@utils/i18n/date/patterns'
-import { BookkeepingPeriodStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
 import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/GlobalDateStore/GlobalDateStoreProvider'
+import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { Tabs } from '@components/Tabs/Tabs'
 import { TaskStatusBadge } from '@components/Tasks/TaskStatusBadge'
 
@@ -17,6 +19,7 @@ export const TasksYearsTabs = ({ isMobile }: TasksYearsTabsProps) => {
   const { date } = useGlobalDate()
   const { setMonthByPeriod } = useGlobalDatePeriodAlignedActions()
   const { formatDate } = useIntlFormatter()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.Tasks)
 
   const activeYear = date.getFullYear()
 
@@ -24,6 +27,12 @@ export const TasksYearsTabs = ({ isMobile }: TasksYearsTabsProps) => {
 
   const setCurrentYear = (year: string) => {
     const currentMonth = getMonth(date)
+
+    emitLayerEvent({
+      type: LayerEventType.TaskYearSelected,
+      version: 1,
+      payload: { year: Number(year) },
+    })
 
     setMonthByPeriod({
       monthNumber: currentMonth + 1,

@@ -13,7 +13,6 @@ export const BANNER_CLASS_NAMES = {
   DEFAULT: 'Layer__UI__Banner',
   ICON_CONTAINER: 'Layer__UI__Banner__iconContainer',
   CONTENT: 'Layer__UI__Banner__content',
-  TITLE: 'Layer__UI__Banner__title',
   DESCRIPTION: 'Layer__UI__Banner__description',
   ACTIONS: 'Layer__UI__Banner__actions',
 }
@@ -80,9 +79,7 @@ function BannerContent({
     return (
       <VStack gap='3xs' className={BANNER_CLASS_NAMES.CONTENT}>
         {title && (
-          <Heading level={3} size='sm' className={BANNER_CLASS_NAMES.TITLE}>
-            {title}
-          </Heading>
+          <Heading level={3} size='sm'>{title}</Heading>
         )}
         {description && (
           <Span className={BANNER_CLASS_NAMES.DESCRIPTION}>
@@ -150,7 +147,7 @@ export type BannerButtonProps = Omit<ButtonProps, 'variant'> & {
   variant?: ButtonProps['variant']
 }
 
-export const BannerButton = ({ variant = 'outlined-light', ...rest }: BannerButtonProps) => (
+export const BannerButton = ({ variant = 'outlined', ...rest }: BannerButtonProps) => (
   <Button variant={variant} {...rest} />
 )
 

@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react'
+import { useCallback } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
@@ -6,11 +6,11 @@ import { getAccountsNeedingConfirmation } from '@utils/bankAccount'
 import { tPlural } from '@utils/i18n/plural'
 import { useConfirmAndExcludeMultiple } from '@hooks/features/bankAccounts/useConfirmAndExcludeMultiple'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
+import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { P } from '@ui/Typography/Text'
-import { Button, ButtonVariant } from '@components/Button/Button'
 import { LinkAccountsListContainer } from '@components/LinkAccounts/LinkAccountsListContainer'
 import { LinkedAccountToConfirm } from '@components/LinkedAccounts/ConfirmationModal/LinkedAccountToConfirm'
 import { ConditionalList } from '@components/utility/ConditionalList'
@@ -37,15 +37,15 @@ export function LinkAccountsConfirmationStep() {
   const { formatNumber } = useIntlFormatter()
   const {
     data: linkedAccounts,
+    refetch,
     loadingStatus: linkedAccountsLoadingStatus,
-    refetchAccounts,
-  } = useContext(LinkedAccountsContext)
+  } = useBankAccountsContext()
 
   const effectiveLinkedAccounts = linkedAccounts
     ? getAccountsNeedingConfirmation(linkedAccounts)
     : []
 
-  const { trigger } = useConfirmAndExcludeMultiple({ onSuccess: refetchAccounts })
+  const { trigger } = useConfirmAndExcludeMultiple({ onSuccess: refetch })
 
   const { previous, next } = useWizard()
 
@@ -128,7 +128,7 @@ export function LinkAccountsConfirmationStep() {
         )}
       </Field>
       <HStack pbs='lg' gap='sm'>
-        <Button variant={ButtonVariant.secondary} onClick={previous}>
+        <Button variant='outlined' onPress={() => { void previous() }}>
           {t('common:action.back', 'Back')}
         </Button>
         <Subscribe
@@ -140,8 +140,8 @@ export function LinkAccountsConfirmationStep() {
         >
           {({ isSubmitting, totalCount, selectedCount }) => (
             <Button
-              onClick={() => { void handleSubmit() }}
-              disabled={isSubmitting || linkedAccountsLoadingStatus !== 'complete'}
+              onPress={() => { void handleSubmit() }}
+              isDisabled={isSubmitting || linkedAccountsLoadingStatus !== 'complete'}
             >
               {getSubmitButtonText({ totalCount, confirmedCount: selectedCount })}
             </Button>

@@ -1,5 +1,3 @@
-import type { TFunction } from 'i18next'
-
 import { translationKey } from '@utils/i18n/translationKey'
 
 export const US_STATES_CONFIG = [
@@ -61,8 +59,3 @@ export type USStateCode = (typeof US_STATES_CONFIG)[number]['value']
 export type USStateConfigRow = (typeof US_STATES_CONFIG)[number]
 export const US_STATE_VALUES: readonly USStateCode[] = US_STATES_CONFIG.map(s => s.value)
 export type USState = { value: USStateCode, label: string }
-
-export const getUsStateOptions = (t: TFunction) => US_STATES_CONFIG.map(state => ({
-  label: t(state.i18nKey, state.defaultValue),
-  value: state.value,
-}))

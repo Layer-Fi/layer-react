@@ -1,0 +1,48 @@
+name: i18n - Upload Translations
+
+# Push local translation edits to Crowdin when manifests change on main,
+# uploading sources first so translations for new keys attach.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - src/assets/locales/**
+      - '!src/assets/locales/en-US/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: i18n-crowdin-sync
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Upload sources to Crowdin
+      uses: crowdin/github-action@v2
+      with:
+        upload_sources: true
+        upload_translations: false
+        download_translations: false
+        create_pull_request: false
+        push_translations: false
+      env:
+        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+    - name: Upload translations to Crowdin
+      uses: crowdin/github-action@v2
+      with:
+        command: upload translations
+        command_args: --auto-approve-imported
+      env:
+        CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+        CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}

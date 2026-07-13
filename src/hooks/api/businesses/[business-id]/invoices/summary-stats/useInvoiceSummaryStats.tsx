@@ -1,72 +1,22 @@
-import { useCallback } from 'react'
-import { Schema } from 'effect'
-import useSWR from 'swr'
-
 import { type InvoiceSummaryStatsResponse, InvoiceSummaryStatsResponseSchema } from '@schemas/invoices/invoice'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
-import { useLocalizedKey } from '@utils/swr/localeKeyMiddleware'
-import { SWRQueryResult } from '@utils/swr/SWRResponseTypes'
-import { useGlobalCacheActions } from '@utils/swr/useGlobalCacheActions'
-import { useAuth } from '@hooks/utils/auth/useAuth'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 
 export const INVOICE_SUMMARY_STATS_TAG_KEY = '#invoices-summary-stats'
 
-function buildKey({
-  access_token: accessToken,
-  apiUrl,
-  businessId,
-}: {
-  access_token?: string
-  apiUrl?: string
-  businessId: string
-}) {
-  if (accessToken && apiUrl) {
-    return {
-      accessToken,
-      apiUrl,
-      businessId,
-      tags: [INVOICE_SUMMARY_STATS_TAG_KEY],
-    } as const
-  }
-}
+const InvoiceSummaryStatsReturnSchema = UnwrappedDataResponseSchema(InvoiceSummaryStatsResponseSchema)
 
 const getInvoiceSummaryStats = get<
-  { data: InvoiceSummaryStatsResponse },
+  typeof InvoiceSummaryStatsReturnSchema.Encoded,
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/invoices/summary-stats`)
 
-export function useInvoiceSummaryStats() {
-  const withLocale = useLocalizedKey()
-  const { data } = useAuth()
-  const { businessId } = useLayerContext()
+export const useInvoiceSummaryStats = createQueryHook({
+  tags: [INVOICE_SUMMARY_STATS_TAG_KEY],
+  request: getInvoiceSummaryStats,
+  schema: InvoiceSummaryStatsReturnSchema,
+})
 
-  const response = useSWR(
-    () => withLocale(buildKey({
-      ...data,
-      businessId,
-    })),
-    ({ accessToken, apiUrl, businessId }) => getInvoiceSummaryStats(
-      apiUrl,
-      accessToken,
-      {
-        params: { businessId },
-      },
-    )().then(({ data }) => Schema.decodeUnknownPromise(InvoiceSummaryStatsResponseSchema)(data)),
-  )
-
-  return new SWRQueryResult(response)
-}
-
-export const useInvoiceSummaryStatsCacheActions = () => {
-  const { forceReload } = useGlobalCacheActions()
-
-  const forceReloadInvoiceSummaryStats = useCallback(
-    () => forceReload(
-      ({ tags }) => tags.includes(INVOICE_SUMMARY_STATS_TAG_KEY),
-    ),
-    [forceReload],
-  )
-
-  return { forceReloadInvoiceSummaryStats }
-}
+export const useInvoiceSummaryStatsCacheActions = createResourceGlobalCacheActions<InvoiceSummaryStatsResponse>(INVOICE_SUMMARY_STATS_TAG_KEY)

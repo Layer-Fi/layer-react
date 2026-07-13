@@ -2,6 +2,7 @@ import { pipe, Schema } from 'effect'
 
 import { US_STATE_VALUES } from '@internal-types/location'
 import { FilingStatusSchema } from '@schemas/taxEstimates/filingStatus'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 
 const USStateCodeSchema = Schema.Literal(...US_STATE_VALUES)
 
@@ -97,9 +98,7 @@ export const TaxProfileSchema = Schema.Struct({
 
 export type TaxProfile = typeof TaxProfileSchema.Type
 
-export const TaxProfileResponseSchema = Schema.Struct({
-  data: TaxProfileSchema,
-})
+export const TaxProfileResponseSchema = UnwrappedDataResponseSchema(TaxProfileSchema)
 
 export type TaxProfileResponse = typeof TaxProfileResponseSchema.Type
 

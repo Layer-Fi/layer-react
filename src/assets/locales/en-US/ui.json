@@ -17,8 +17,5 @@
     "go_previous_page": "Go to previous page",
     "menu": "Menu",
     "pagination": "Pagination"
-  },
-  "state": {
-    "pending": "pending"
   }
 }

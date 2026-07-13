@@ -7,11 +7,11 @@ import type { FileMetadata } from '@internal-types/fileUpload'
 import { type Awaitable } from '@internal-types/utility/promises'
 import { get, post, postWithFormData } from '@utils/api/authenticatedHttp'
 import { hasReceipts } from '@utils/bankTransactions/shared'
-import { useAuth } from '@hooks/utils/auth/useAuth'
+import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
+import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
+import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { type DocumentWithStatus } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 
 const listBankTransactionDocuments = get<{
@@ -113,10 +113,9 @@ export const useReceipts: UseReceipts = ({
 }: UseReceiptsProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
-  const { businessId } = useLayerContext()
-  const { apiUrl } = useEnvironment()
-  const { data: auth } = useAuth()
+  const { businessId, auth } = useBuildKeyInputs()
   const { updateLocalBankTransactions } = useBankTransactionsContext()
+  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BankTransactions)
 
   const [receiptUrls, setReceiptUrls] = useState<DocumentWithStatus[]>([])
   const pendingUploadNamesRef = useRef<Set<string>>(new Set())
@@ -130,9 +129,11 @@ export const useReceipts: UseReceipts = ({
   }, [isActive])
 
   const fetchDocuments = async () => {
+    if (!auth) return
+
     const listBankTransactionDocumentsCall = listBankTransactionDocuments(
-      apiUrl,
-      auth?.access_token,
+      auth.apiUrl,
+      auth.access_token,
       {
         params: {
           businessId: businessId,
@@ -154,6 +155,14 @@ export const useReceipts: UseReceipts = ({
   }
 
   const uploadReceipt = async (file: File) => {
+    if (!auth) return
+
+    emitLayerEvent({
+      type: LayerEventType.TransactionReceiptUploadClicked,
+      version: 1,
+      payload: { transactionId: bankTransaction.id },
+    })
+
     if (!isValidReceiptFile(file)) {
       const id = new Date().valueOf().toString()
       setReceiptUrls(prev => [
@@ -195,8 +204,8 @@ export const useReceipts: UseReceipts = ({
     try {
       setReceiptUrls(prev => [...prev, newReceipt])
       const uploadDocument = uploadBankTransactionDocument(
-        apiUrl,
-        auth?.access_token,
+        auth.apiUrl,
+        auth.access_token,
       )
       const result = await uploadDocument({
         businessId: businessId,
@@ -237,7 +246,7 @@ export const useReceipts: UseReceipts = ({
   }
 
   const archiveDocument = async (document: DocumentWithStatus) => {
-    if (!document.id) return
+    if (!document.id || !auth) return
 
     try {
       if (document.error) {
@@ -256,7 +265,7 @@ export const useReceipts: UseReceipts = ({
             return url
           }),
         )
-        await archiveBankTransactionDocument(apiUrl, auth?.access_token, {
+        await archiveBankTransactionDocument(auth.apiUrl, auth.access_token, {
           params: {
             businessId: businessId,
             bankTransactionId: bankTransaction.id,
