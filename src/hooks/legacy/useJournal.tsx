@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { SortOrder } from '@internal-types/utility/pagination'
 import { type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
@@ -22,6 +22,13 @@ export const useJournal: UseJournal = () => {
   const [selectedEntryId, setSelectedEntryId] = useState<string | undefined>()
 
   const { startDate, endDate } = useLedgerDateRange({ dateSelectionMode: 'full' })
+
+  // The entry list is filtered by the date range, so a previously selected entry
+  // may fall outside the new range and vanish from the list. Clear the selection
+  // when the range changes to avoid leaving the detail sidebar open with no entry.
+  useEffect(() => {
+    setSelectedEntryId(undefined)
+  }, [startDate, endDate])
 
   const {
     flattenedData: data,
