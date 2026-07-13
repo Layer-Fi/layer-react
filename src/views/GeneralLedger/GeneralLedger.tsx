@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { LedgerDateStoreProvider } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { Toggle } from '@ui/Toggle/Toggle'
-import { ChartOfAccountsWithData } from '@components/ChartOfAccounts/ChartOfAccounts'
+import { InternalChartOfAccounts } from '@components/ChartOfAccounts/ChartOfAccounts'
 import { type ChartOfAccountsStringOverrides } from '@components/ChartOfAccounts/ChartOfAccounts'
 import { JournalWithData } from '@components/Journal/Journal'
 import { type JournalStringOverrides } from '@components/Journal/Journal'
@@ -73,7 +73,7 @@ export const GeneralLedgerView = ({
         <LedgerDateStoreProvider fallback={<Loader />}>
           {activeTab === 'chartOfAccounts'
             ? (
-              <ChartOfAccountsWithData
+              <InternalChartOfAccounts
                 asWidget
                 withDateControl
                 withExpandAllButton
