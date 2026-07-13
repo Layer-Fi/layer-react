@@ -1,42 +1,35 @@
-import { type Key, useCallback, useMemo, useState } from 'react'
+import { type Key, useCallback, useMemo } from 'react'
 import type { ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
-import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { BankTransactionsDateFilterMode } from '@utils/bankTransactions/shared'
 import { translationKey } from '@utils/i18n/translationKey'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
-import { useHandleDownloadTransactions } from '@hooks/features/bankTransactions/useHandleBankTransactionsDownload'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
-import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
-import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useBankAccountFilterActions, useIsBankAccountFilterLocked, useSelectedBankAccountIds } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useBankTransactionsStringOverrides } from '@contexts/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
-import { DownloadButton as DownloadButtonComponent } from '@ui/Button/DownloadButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Heading } from '@ui/Typography/Heading'
-import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
 import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
 import { BankTransactionsTableContent } from '@components/BankTransactions/constants'
+import { RecordManualExpenseButton } from '@components/BankTransactions/RecordManualExpense/RecordManualExpenseButton'
+import { SelectedBankAccountsChip } from '@components/BankTransactions/SelectedBankAccountsChip/SelectedBankAccountsChip'
+import { TransactionsSearch } from '@components/BankTransactions/TransactionsSearch/TransactionsSearch'
 import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
 import { BulkActionsModule } from '@components/BulkActionsModule/BulkActionsModule'
 import { Header } from '@components/Container/Header'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
-import { SearchField } from '@components/SearchField/SearchField'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
-import InvisibleDownload from '@components/utility/InvisibleDownload'
 
 import './bankTransactionsHeader.scss'
 
@@ -56,102 +49,6 @@ const STATUS_TOGGLE_CONFIG = [
   { ...translationKey('bankTransactions:label.to_review', 'To Review'), value: DisplayState.review },
   { ...translationKey('bankTransactions:label.categorized', 'Categorized'), value: DisplayState.categorized },
 ]
-
-type TransactionsSearchProps = {
-  slot?: string
-  isDisabled?: boolean
-}
-
-function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
-  const { t } = useTranslation()
-  const { filters, setFilters } = useBankTransactionsFiltersContext()
-  const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BankTransactions)
-
-  const [localSearch, setLocalSearch] = useState(() => filters?.query ?? '')
-
-  const debouncedSetDescription = useDebounce((value: string) => {
-    if (value === (filters?.query ?? '')) return
-
-    setFilters({ query: value })
-
-    emitLayerEvent({
-      type: LayerEventType.TransactionsSearchSubmitted,
-      version: 1,
-      payload: { query: value },
-    })
-  })
-
-  const handleSearch = useCallback((value: string) => {
-    setLocalSearch(value)
-
-    void debouncedSetDescription(value)
-  }, [debouncedSetDescription])
-
-  return (
-    <SearchField
-      slot={slot}
-      label={t('bankTransactions:label.search_transactions', 'Search transactions')}
-      value={localSearch}
-      onChange={handleSearch}
-      isDisabled={isDisabled}
-    />
-  )
-}
-
-function SelectedBankAccountsChip({ slot, className }: { slot?: string, className?: string }) {
-  const { t } = useTranslation()
-  const selectedBankAccountIds = useSelectedBankAccountIds()
-  const isFilterLocked = useIsBankAccountFilterLocked()
-  const { setSelectedBankAccountIds } = useBankAccountFilterActions()
-
-  if (selectedBankAccountIds.length === 0 || isFilterLocked) return null
-
-  return (
-    <span slot={slot} className={className}>
-      <Badge
-        variant={BadgeVariant.INFO}
-        size={BadgeSize.MEDIUM}
-        icon={<X size={12} />}
-        iconPosition='right'
-        onClick={() => setSelectedBankAccountIds([])}
-      >
-        {t('bankTransactions:label.accounts_selected', {
-          count: selectedBankAccountIds.length,
-          defaultValue_one: '{{count}} account selected',
-          defaultValue_other: '{{count}} accounts selected',
-        })}
-      </Badge>
-    </span>
-  )
-}
-
-const DownloadButton = ({
-  downloadButtonTextOverride,
-  icon,
-  isDisabled,
-  isListView = false,
-}: {
-  downloadButtonTextOverride?: string
-  icon?: boolean
-  isDisabled?: boolean
-  isListView?: boolean
-}) => {
-  const { handleDownloadTransactions, invisibleDownloadRef, isMutating, error } = useHandleDownloadTransactions({ isListView })
-
-  return (
-    <>
-      <DownloadButtonComponent
-        icon={icon}
-        onPress={handleDownloadTransactions}
-        isPending={isMutating}
-        requestFailed={Boolean(error)}
-        text={downloadButtonTextOverride}
-        isDisabled={isDisabled}
-      />
-      <InvisibleDownload ref={invisibleDownloadRef} />
-    </>
-  )
-}
 
 export const BankTransactionsHeader = ({
   tableContentMode,
@@ -206,7 +103,7 @@ export const BankTransactionsHeader = ({
           {stringOverrides?.header || t('common:label.transactions', 'Transactions')}
         </Heading>
         {isSyncing && <SyncingComponent timeSync={5} inProgress hideContent={isListView} />}
-        <SelectedBankAccountsChip className='Layer__bank-transactions__selected-accounts-chip--compact' />
+        <SelectedBankAccountsChip variant='compact' />
       </HStack>
       {withDatePicker && monthPickerDate && (
         <MonthPicker
@@ -247,14 +144,12 @@ export const BankTransactionsHeader = ({
     if (withUploadMenu) {
       actions.push(BankTransactionsHeaderMenuActions.UploadTransactions)
     }
-    if (isListView) {
-      actions.push(BankTransactionsHeaderMenuActions.DownloadTransactions)
-    }
+    actions.push(BankTransactionsHeaderMenuActions.DownloadTransactions)
     if (showCategorizationRules) {
       actions.push(BankTransactionsHeaderMenuActions.ManageCategorizationRules)
     }
     return actions
-  }, [withUploadMenu, isListView, showCategorizationRules])
+  }, [withUploadMenu, showCategorizationRules])
 
   const BulkActions = useCallback(() => {
     return (
@@ -305,7 +200,8 @@ export const BankTransactionsHeader = ({
             <HStack justify='space-between' align='center' gap='xs'>
               {statusToggle}
               <HStack align='center' gap='xs'>
-                <SelectedBankAccountsChip className='Layer__bank-transactions__selected-accounts-chip--wide' />
+                <SelectedBankAccountsChip variant='wide' />
+                <RecordManualExpenseButton />
                 <BankTransactionsHeaderMenu
                   actions={headerMenuActions}
                   isListView={isListView}
@@ -318,7 +214,8 @@ export const BankTransactionsHeader = ({
             <TransactionsSearch isDisabled={showBulkActions} />
             {!isStatusToggleVisible && (
               <>
-                <SelectedBankAccountsChip className='Layer__bank-transactions__selected-accounts-chip--wide' />
+                <SelectedBankAccountsChip variant='wide' />
+                <RecordManualExpenseButton isDisabled={showBulkActions} />
                 <BankTransactionsHeaderMenu
                   actions={headerMenuActions}
                   isDisabled={showBulkActions}
@@ -351,18 +248,10 @@ export const BankTransactionsHeader = ({
               {statusToggle}
             </HStack>
           )}
-        <SelectedBankAccountsChip
-          slot='selected-accounts'
-          className='Layer__bank-transactions__selected-accounts-chip--wide'
-        />
+        <SelectedBankAccountsChip slot='selected-accounts' variant='wide' />
         <TransactionsSearch slot='search' isDisabled={showBulkActions} />
         <HStack slot='download-upload' justify='center' gap='xs'>
-          <DownloadButton
-            downloadButtonTextOverride={stringOverrides?.downloadButton}
-            icon={isListView}
-            isDisabled={showBulkActions}
-            isListView={isListView}
-          />
+          <RecordManualExpenseButton isDisabled={showBulkActions} />
           <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
         </HStack>
       </BankTransactionsActions>
