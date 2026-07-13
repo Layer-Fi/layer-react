@@ -25,11 +25,6 @@
   .Layer__linked-accounts__item {
     display: flex;
     outline: none;
-
-    > [role='gridcell'] {
-      display: flex;
-      flex: 1;
-    }
   }
 }
 
