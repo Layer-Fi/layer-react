@@ -2,7 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { unstable_MileageTracking } from '@views/MileageTracking'
 
-import { PinnedFixtureYear } from '@test-utils/PinnedFixtureYear'
+import { FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
+import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
 
 const meta: Meta<typeof unstable_MileageTracking> = {
   title: 'Views/MileageTracking',
@@ -18,9 +19,9 @@ const meta: Meta<typeof unstable_MileageTracking> = {
   },
   decorators: [
     Story => (
-      <PinnedFixtureYear>
+      <PinnedGlobalDateRange dateRange={FIXTURE_YEAR_RANGE}>
         <Story />
-      </PinnedFixtureYear>
+      </PinnedGlobalDateRange>
     ),
   ],
 }

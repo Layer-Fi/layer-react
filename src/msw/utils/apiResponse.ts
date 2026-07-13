@@ -3,7 +3,7 @@ import { Schema } from 'effect'
 /** Layer API responses wrap their payload in a top-level `data` envelope. */
 export const apiData = <T>(data: T) => ({ data })
 
-const DEFAULT_PAGE_SIZE = 20
+const DEFAULT_PAGE_SIZE = 100
 
 // Opaque wire cursor <-> the page offset it represents. Any string that
 // doesn't decode to a non-negative base64'd number falls back to 0 rather

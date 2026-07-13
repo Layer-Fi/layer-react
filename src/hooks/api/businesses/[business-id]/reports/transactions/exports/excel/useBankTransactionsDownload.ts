@@ -13,6 +13,10 @@ type GetBankTransactionsExportParams = {
   endDate?: Date
   tagKey?: string
   tagValues?: string
+  bankAccountIds?: string
+  sourceAccountIds?: string
+  amountMin?: number
+  amountMax?: number
   sortOrder?: 'ASC' | 'DESC'
   sortBy?: string
 }
@@ -23,7 +27,19 @@ const getBankTransactionsExcel = getWithQuery<
 >(
   ['businessId'],
   ({ businessId }) => `/v1/businesses/${businessId}/reports/transactions/exports/excel`,
-  ({ categorized, direction, query, startDate, endDate, sortBy = 'date', sortOrder = 'DESC' }) => ({
+  ({
+    categorized,
+    direction,
+    query,
+    startDate,
+    endDate,
+    sortBy = 'date',
+    sortOrder = 'DESC',
+    bankAccountIds,
+    sourceAccountIds,
+    amountMin,
+    amountMax,
+  }) => ({
     categorized,
     direction,
     q: query,
@@ -31,6 +47,10 @@ const getBankTransactionsExcel = getWithQuery<
     endDate,
     sortBy,
     sortOrder,
+    bankAccountIds,
+    sourceAccountIds,
+    amountMin,
+    amountMax,
   }),
 )
 

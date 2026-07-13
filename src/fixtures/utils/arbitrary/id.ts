@@ -13,6 +13,8 @@ export const FixtureIdPrefix = {
   ledgerEntry: '0000000a',
   businessTask: '0000000b',
   bookkeepingPeriod: '0000000c',
+  invoice: '0000000d',
+  invoiceLineItem: '0000000e',
 } as const
 
 const HEX = '0123456789abcdef'.split('')

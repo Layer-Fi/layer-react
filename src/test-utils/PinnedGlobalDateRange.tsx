@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useEffect, useState } from 'react'
+import { type PropsWithChildren, useLayoutEffect, useState } from 'react'
 
 import { type DateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 
@@ -15,7 +15,7 @@ export const PinnedGlobalDateRange = ({ dateRange, children }: PinnedGlobalDateR
   const { setDateRange } = useGlobalDateRangeActions()
   const [isPinned, setIsPinned] = useState(false)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setDateRange(dateRange)
     setIsPinned(true)
   }, [setDateRange, dateRange])
