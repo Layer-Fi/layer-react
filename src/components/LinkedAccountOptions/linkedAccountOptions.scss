@@ -113,7 +113,6 @@
   cursor: pointer;
   font-weight: 500;
   color: var(--color-base-500);
-  letter-spacing: -0.06px;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, font-weight 0.2s ease-in-out;
 
   &[data-hovered],
