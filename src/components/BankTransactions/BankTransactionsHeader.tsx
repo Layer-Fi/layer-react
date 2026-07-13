@@ -114,7 +114,6 @@ function SelectedBankAccountsChip({ slot, className }: { slot?: string, classNam
         icon={<X size={12} />}
         iconPosition='right'
         onClick={() => setSelectedBankAccountIds([])}
-        tooltip={t('bankTransactions:label.clear_account_filter', 'Clear account filter')}
       >
         {t('bankTransactions:label.accounts_selected', {
           count: selectedBankAccountIds.length,
