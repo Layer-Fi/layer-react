@@ -1,19 +1,31 @@
+import { type PropsWithChildren } from 'react'
 import classNames from 'classnames'
 import { EllipsisVertical } from 'lucide-react'
+import { Button } from 'react-aria-components/Button'
+import { Menu, MenuItem, MenuTrigger, Popover } from 'react-aria-components/Menu'
+import { useTranslation } from 'react-i18next'
 
-import { HoverMenu, type HoverMenuProps } from '@components/HoverMenu/HoverMenu'
+import type { Awaitable } from '@internal-types/utility/promises'
 
 import './linkedAccountOptions.scss'
 
-interface LinkedAccountOptionsProps extends HoverMenuProps {
+export type LinkedAccountOptionsConfig = Array<{
+  name: string
+  action: () => Awaitable<void>
+}>
+
+type LinkedAccountOptionsProps = PropsWithChildren<{
+  config: LinkedAccountOptionsConfig
   showLedgerBalance?: boolean
-}
+}>
 
 export const LinkedAccountOptions = ({
   children,
   config,
   showLedgerBalance,
 }: LinkedAccountOptionsProps) => {
+  const { t } = useTranslation()
+
   const linkedAccountOptionsClassName = classNames(
     'Layer__linked-accounts__options',
     showLedgerBalance == false && '--hide-ledger-balance',
@@ -23,11 +35,30 @@ export const LinkedAccountOptions = ({
       <div className='Layer__linked-accounts__options-overlay'>
         {config.length
           ? (
-            <div className='Layer__linked-accounts__options-overlay-button'>
-              <HoverMenu config={config}>
+            <MenuTrigger>
+              <Button
+                aria-label={t('linkedAccounts:label.account_options', 'Account options')}
+                className='Layer__linked-accounts__options-overlay-button'
+              >
                 <EllipsisVertical size={16} />
-              </HoverMenu>
-            </div>
+              </Button>
+              <Popover placement='bottom end' className='Layer__linked-accounts__options-menu Layer__variables'>
+                <Menu
+                  aria-label={t('linkedAccounts:label.account_options', 'Account options')}
+                  className='Layer__linked-accounts__options-menu-list'
+                >
+                  {config.map(item => (
+                    <MenuItem
+                      key={item.name}
+                      className='Layer__linked-accounts__options-menu-item'
+                      onAction={() => void item.action()}
+                    >
+                      {item.name}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Popover>
+            </MenuTrigger>
           )
           : null}
       </div>

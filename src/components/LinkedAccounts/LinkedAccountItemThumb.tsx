@@ -7,8 +7,7 @@ import { getBankAccountDisplayName, getBankAccountInstitution, isAllExternalAcco
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { OpeningBalanceModalContext } from '@contexts/OpeningBalanceModalContext/OpeningBalanceModalContext'
-import type { HoverMenuProps } from '@components/HoverMenu/HoverMenu'
-import { LinkedAccountOptions } from '@components/LinkedAccountOptions/LinkedAccountOptions'
+import { LinkedAccountOptions, type LinkedAccountOptionsConfig } from '@components/LinkedAccountOptions/LinkedAccountOptions'
 import { LinkedAccountPill } from '@components/LinkedAccountPill/LinkedAccountPill'
 import { UnlinkAccountConfirmationModal } from '@components/LinkedAccounts/UnlinkAccountConfirmationModal/UnlinkAccountConfirmationModal'
 import { LinkedAccountThumb } from '@components/LinkedAccountThumb/LinkedAccountThumb'
@@ -113,7 +112,7 @@ export const LinkedAccountItemThumb = ({
     }
   }
 
-  const additionalConfigs: HoverMenuProps['config'] = []
+  const additionalConfigs: LinkedAccountOptionsConfig = []
 
   additionalConfigs.push({
     name: isAllExternalAccountsUserCreatedCustom(bankAccount) ? t('linkedAccounts:action.delete_account', 'Delete account') : t('linkedAccounts:action.unlink_account', 'Unlink account'),
