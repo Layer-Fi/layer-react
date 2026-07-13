@@ -108,7 +108,7 @@ function SelectedBankAccountsChip() {
   return (
     <Badge
       variant={BadgeVariant.INFO}
-      size={BadgeSize.SMALL}
+      size={BadgeSize.MEDIUM}
       icon={<X size={12} />}
       iconPosition='right'
       onClick={() => setSelectedBankAccountIds([])}
