@@ -9,12 +9,16 @@
   align-items: center;
 
   @container (min-width: 840px) {
-    grid-template-areas: 'toggle . search download-upload';
-    grid-template-columns: auto minmax(0, 2fr) 15rem auto;
+    grid-template-areas: 'toggle . selected-accounts search download-upload';
+    grid-template-columns: auto minmax(0, 2fr) auto 15rem auto;
   }
 
   > [slot='toggle'] {
     grid-area: toggle;
+  }
+
+  > [slot='selected-accounts'] {
+    grid-area: selected-accounts;
   }
 
   > [slot='search'] {

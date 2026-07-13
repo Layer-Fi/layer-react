@@ -98,7 +98,7 @@ function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
   )
 }
 
-function SelectedBankAccountsChip() {
+function SelectedBankAccountsChip({ slot, className }: { slot?: string, className?: string }) {
   const { t } = useTranslation()
   const selectedBankAccountIds = useSelectedBankAccountIds()
   const { setSelectedBankAccountIds } = useBankAccountFilterActions()
@@ -106,19 +106,21 @@ function SelectedBankAccountsChip() {
   if (selectedBankAccountIds.length === 0) return null
 
   return (
-    <Badge
-      variant={BadgeVariant.INFO}
-      size={BadgeSize.MEDIUM}
-      icon={<X size={12} />}
-      iconPosition='right'
-      onClick={() => setSelectedBankAccountIds([])}
-    >
-      {t('bankTransactions:label.accounts_selected', {
-        count: selectedBankAccountIds.length,
-        defaultValue_one: '{{count}} account selected',
-        defaultValue_other: '{{count}} accounts selected',
-      })}
-    </Badge>
+    <span slot={slot} className={className}>
+      <Badge
+        variant={BadgeVariant.INFO}
+        size={BadgeSize.MEDIUM}
+        icon={<X size={12} />}
+        iconPosition='right'
+        onClick={() => setSelectedBankAccountIds([])}
+      >
+        {t('bankTransactions:label.accounts_selected', {
+          count: selectedBankAccountIds.length,
+          defaultValue_one: '{{count}} account selected',
+          defaultValue_other: '{{count}} accounts selected',
+        })}
+      </Badge>
+    </span>
   )
 }
 
@@ -203,7 +205,7 @@ export const BankTransactionsHeader = ({
           {stringOverrides?.header || t('common:label.transactions', 'Transactions')}
         </Heading>
         {isSyncing && <SyncingComponent timeSync={5} inProgress hideContent={isListView} />}
-        <SelectedBankAccountsChip />
+        <SelectedBankAccountsChip className='Layer__bank-transactions__selected-accounts-chip--compact' />
       </HStack>
       {withDatePicker && monthPickerDate && (
         <MonthPicker
@@ -342,6 +344,10 @@ export const BankTransactionsHeader = ({
               {statusToggle}
             </HStack>
           )}
+        <SelectedBankAccountsChip
+          slot='selected-accounts'
+          className='Layer__bank-transactions__selected-accounts-chip--wide'
+        />
         <TransactionsSearch slot='search' isDisabled={showBulkActions} />
         <HStack slot='download-upload' justify='center' gap='xs'>
           <DownloadButton
