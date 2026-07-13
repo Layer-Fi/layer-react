@@ -7,9 +7,8 @@ type BankAccountsFilterStoreShape = {
   isEnabled: boolean
   selectedBankAccountIds: string[]
   actions: {
-    toggleBankAccountId: (bankAccountId: string) => void
+    setSelectedBankAccountIds: (bankAccountIds: string[]) => void
     retainBankAccountIds: (validBankAccountIds: string[]) => void
-    clear: () => void
   }
 }
 
@@ -18,9 +17,8 @@ const BankAccountsFilterStoreContext = createContext(
     isEnabled: false,
     selectedBankAccountIds: [],
     actions: {
-      toggleBankAccountId: () => {},
+      setSelectedBankAccountIds: () => {},
       retainBankAccountIds: () => {},
-      clear: () => {},
     },
   })),
 )
@@ -46,12 +44,8 @@ export function BankAccountsFilterStoreProvider({ children }: PropsWithChildren)
       isEnabled: true,
       selectedBankAccountIds: [],
       actions: {
-        toggleBankAccountId: (bankAccountId: string) =>
-          set(state => ({
-            selectedBankAccountIds: state.selectedBankAccountIds.includes(bankAccountId)
-              ? state.selectedBankAccountIds.filter(id => id !== bankAccountId)
-              : [...state.selectedBankAccountIds, bankAccountId],
-          })),
+        setSelectedBankAccountIds: (bankAccountIds: string[]) =>
+          set(() => ({ selectedBankAccountIds: bankAccountIds })),
         retainBankAccountIds: (validBankAccountIds: string[]) =>
           set((state) => {
             const validIds = new Set(validBankAccountIds)
@@ -60,7 +54,6 @@ export function BankAccountsFilterStoreProvider({ children }: PropsWithChildren)
               ? state
               : { selectedBankAccountIds: next }
           }),
-        clear: () => set(() => ({ selectedBankAccountIds: [] })),
       },
     })),
   )

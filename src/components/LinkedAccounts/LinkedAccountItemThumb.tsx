@@ -1,9 +1,9 @@
 import { useContext, useState } from 'react'
+import { GridListItem } from 'react-aria-components/GridList'
 import { useTranslation } from 'react-i18next'
 
 import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
-import { getBankAccountInstitution, isAllExternalAccountsUserCreatedCustom } from '@utils/bankAccount'
-import { useBankAccountFilterActions, useIsBankAccountFilterEnabled, useSelectedBankAccountIds } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
+import { getBankAccountDisplayName, getBankAccountInstitution, isAllExternalAccountsUserCreatedCustom } from '@utils/bankAccount'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { OpeningBalanceModalContext } from '@contexts/OpeningBalanceModalContext/OpeningBalanceModalContext'
@@ -64,11 +64,6 @@ export const LinkedAccountItemThumb = ({
   const { setAccountsToAddOpeningBalanceInModal } = useContext(OpeningBalanceModalContext)
   const { environment } = useEnvironment()
   const [isUnlinkConfirmationModalOpen, setIsUnlinkConfirmationModalOpen] = useState(false)
-
-  const isFilterEnabled = useIsBankAccountFilterEnabled()
-  const selectedBankAccountIds = useSelectedBankAccountIds()
-  const { toggleBankAccountId } = useBankAccountFilterActions()
-  const isFilterSelected = selectedBankAccountIds.includes(bankAccount.id)
 
   const plaidAccount = getPlaidAccount(bankAccount)
   const repairInfo = getConnectionRepairInfo(bankAccount)
@@ -190,30 +185,33 @@ export const LinkedAccountItemThumb = ({
   }
 
   return (
-    <LinkedAccountOptions
-      config={[...additionalConfigs, ...(pillConfig ? pillConfig.config : [])]}
-      showLedgerBalance={showLedgerBalance}
+    <GridListItem
+      id={bankAccount.id}
+      textValue={getBankAccountDisplayName(bankAccount)}
+      className='Layer__linked-accounts__item'
     >
-      <LinkedAccountThumb
-        bankAccount={bankAccount}
-        asWidget={asWidget}
+      <LinkedAccountOptions
+        config={[...additionalConfigs, ...(pillConfig ? pillConfig.config : [])]}
         showLedgerBalance={showLedgerBalance}
-        isFilterSelectable={isFilterEnabled}
-        isFilterSelected={isFilterSelected}
-        onToggleFilter={() => toggleBankAccountId(bankAccount.id)}
-        slots={{
-          Pill: pillConfig
-            ? <LinkedAccountPill label={pillConfig.text} items={pillConfig.config} />
-            : null,
-        }}
-      />
-      {isUnlinkConfirmationModalOpen && (
-        <UnlinkAccountConfirmationModal
-          isOpen
-          onOpenChange={setIsUnlinkConfirmationModalOpen}
+      >
+        <LinkedAccountThumb
           bankAccount={bankAccount}
+          asWidget={asWidget}
+          showLedgerBalance={showLedgerBalance}
+          slots={{
+            Pill: pillConfig
+              ? <LinkedAccountPill label={pillConfig.text} items={pillConfig.config} />
+              : null,
+          }}
         />
-      )}
-    </LinkedAccountOptions>
+        {isUnlinkConfirmationModalOpen && (
+          <UnlinkAccountConfirmationModal
+            isOpen
+            onOpenChange={setIsUnlinkConfirmationModalOpen}
+            bankAccount={bankAccount}
+          />
+        )}
+      </LinkedAccountOptions>
+    </GridListItem>
   )
 }

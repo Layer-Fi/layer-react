@@ -10,6 +10,20 @@
     overflow-x: scroll;
     overflow-y: hidden;
   }
+
+  .Layer__linked-accounts__item {
+    display: flex;
+    outline: none;
+
+    > [role='gridcell'] {
+      display: flex;
+      flex: 1;
+    }
+
+    &.--new-account {
+      flex: 1;
+    }
+  }
 }
 
 .Layer__linked-accounts__header + .Layer__linked-accounts__list {
