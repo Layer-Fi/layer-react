@@ -6,14 +6,10 @@ import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { Span } from '@ui/Typography/Text'
 
-type RecordTransactionMenuButtonProps = {
-  isDisabled?: boolean
-}
-
-export function RecordTransactionMenuButton({ isDisabled }: RecordTransactionMenuButtonProps) {
+function RecordTransactionTrigger({ isDisabled }: { isDisabled?: boolean }) {
   const { t } = useTranslation()
 
-  const Trigger = useCallback(() => (
+  return (
     <Button
       icon
       variant='outlined'
@@ -22,7 +18,17 @@ export function RecordTransactionMenuButton({ isDisabled }: RecordTransactionMen
     >
       <Plus size={14} />
     </Button>
-  ), [isDisabled, t])
+  )
+}
+
+type RecordTransactionMenuButtonProps = {
+  isDisabled?: boolean
+}
+
+export function RecordTransactionMenuButton({ isDisabled }: RecordTransactionMenuButtonProps) {
+  const { t } = useTranslation()
+
+  const Trigger = useCallback(() => <RecordTransactionTrigger isDisabled={isDisabled} />, [isDisabled])
 
   return (
     <DropdownMenu
