@@ -18,7 +18,16 @@
     align-items: center;
     justify-content: center;
     width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
     cursor: pointer;
+    color: inherit;
+
+    &:focus-visible {
+      outline: 1px auto -webkit-focus-ring-color;
+      outline-offset: 2px;
+    }
   }
 
   .Layer__hover-menu__list-wrapper {

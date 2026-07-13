@@ -44,14 +44,14 @@ export const HoverMenu = ({ children, config }: HoverMenuProps) => {
       ref={hoverMenuRef}
       onMouseLeave={() => setOpenMenu(false)}
     >
-      <div
+      <button
+        type='button'
         className='Layer__hover-menu__children'
-        role='button'
         onMouseEnter={() => setOpenMenu(true)}
         onClick={() => setOpenMenu(true)}
       >
         {children}
-      </div>
+      </button>
       <div className='Layer__hover-menu__list-wrapper'>
         <ul className='Layer__hover-menu__list'>
           {config

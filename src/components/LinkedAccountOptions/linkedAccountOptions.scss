@@ -7,7 +7,8 @@
     display: block;
   }
 
-  &:hover .Layer__linked-accounts__options-overlay {
+  &:hover .Layer__linked-accounts__options-overlay,
+  &:focus-within .Layer__linked-accounts__options-overlay {
     opacity: 1;
     touch-action: auto;
 
