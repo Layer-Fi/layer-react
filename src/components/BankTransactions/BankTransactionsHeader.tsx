@@ -2,6 +2,7 @@ import { type Key, useCallback, useMemo, useState } from 'react'
 import type { ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { endOfMonth, startOfMonth } from 'date-fns'
+import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'
@@ -13,6 +14,7 @@ import { useBusinessActivationDate } from '@hooks/features/business/useBusinessA
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useBankAccountFilterActions, useSelectedBankAccountIds } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
@@ -21,6 +23,7 @@ import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFil
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useBankTransactionsStringOverrides } from '@contexts/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
 import { DownloadButton as DownloadButtonComponent } from '@ui/Button/DownloadButton'
+import { Pill } from '@ui/Pill/Pill'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Heading } from '@ui/Typography/Heading'
@@ -92,6 +95,25 @@ function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
       onChange={handleSearch}
       isDisabled={isDisabled}
     />
+  )
+}
+
+function SelectedBankAccountsChip() {
+  const { t } = useTranslation()
+  const selectedBankAccountIds = useSelectedBankAccountIds()
+  const { setSelectedBankAccountIds } = useBankAccountFilterActions()
+
+  if (selectedBankAccountIds.length === 0) return null
+
+  return (
+    <Pill onPress={() => setSelectedBankAccountIds([])}>
+      {t('bankTransactions:label.accounts_selected', {
+        count: selectedBankAccountIds.length,
+        defaultValue_one: '{{count}} account selected',
+        defaultValue_other: '{{count}} accounts selected',
+      })}
+      <X size={12} />
+    </Pill>
   )
 }
 
@@ -171,11 +193,12 @@ export const BankTransactionsHeader = ({
 
   const headerTopRow = useMemo(() => (
     <div className='Layer__bank-transactions__header__content'>
-      <HStack align='center'>
+      <HStack align='center' gap='xs'>
         <Heading level={3} size='sm'>
           {stringOverrides?.header || t('common:label.transactions', 'Transactions')}
         </Heading>
         {isSyncing && <SyncingComponent timeSync={5} inProgress hideContent={isListView} />}
+        <SelectedBankAccountsChip />
       </HStack>
       {withDatePicker && monthPickerDate && (
         <MonthPicker
