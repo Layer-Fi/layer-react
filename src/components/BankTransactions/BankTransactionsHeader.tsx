@@ -144,7 +144,6 @@ export const BankTransactionsHeader = ({
     if (withUploadMenu) {
       actions.push(BankTransactionsHeaderMenuActions.UploadTransactions)
     }
-    actions.push(BankTransactionsHeaderMenuActions.DownloadTransactions)
     if (showCategorizationRules) {
       actions.push(BankTransactionsHeaderMenuActions.ManageCategorizationRules)
     }

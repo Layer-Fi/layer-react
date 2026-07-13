@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from 'react'
-import { CloudDownload, CloudUpload, MenuIcon, PencilRuler } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { CloudDownload, CloudUpload, PencilRuler } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useHandleDownloadTransactions } from '@hooks/features/bankTransactions/useHandleBankTransactionsDownload'
@@ -17,7 +17,6 @@ interface BankTransactionsHeaderMenuProps {
 export enum BankTransactionsHeaderMenuActions {
   UploadTransactions = 'UploadTransactions',
   ManageCategorizationRules = 'ManageCategorizationRules',
-  DownloadTransactions = 'DownloadTransactions',
 }
 
 export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = false }: BankTransactionsHeaderMenuProps) => {
@@ -27,16 +26,12 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
   const { handleDownloadTransactions, invisibleDownloadRef } = useHandleDownloadTransactions({ isListView })
 
   const menuItems = useMemo<DataTableHeaderMenuItem[]>(() => {
-    const items: DataTableHeaderMenuItem[] = []
-
-    if (actions.includes(BankTransactionsHeaderMenuActions.DownloadTransactions)) {
-      items.push({
-        key: BankTransactionsHeaderMenuActions.DownloadTransactions,
-        onClick: handleDownloadTransactions,
-        icon: <CloudDownload size={16} />,
-        label: t('bankTransactions:action.download_transactions', 'Download transactions'),
-      })
-    }
+    const items: DataTableHeaderMenuItem[] = [{
+      key: 'DownloadTransactions',
+      onClick: handleDownloadTransactions,
+      icon: <CloudDownload size={16} />,
+      label: t('bankTransactions:action.download_transactions', 'Download transactions'),
+    }]
 
     if (actions.includes(BankTransactionsHeaderMenuActions.UploadTransactions)) {
       items.push({
@@ -59,28 +54,14 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
     return items
   }, [t, actions, toCategorizationRulesTable, handleDownloadTransactions])
 
-  const Icon = useCallback(() => {
-    if (actions.length === 1 && actions[0] === BankTransactionsHeaderMenuActions.UploadTransactions) {
-      return <CloudUpload size={16} />
-    }
-    return <MenuIcon size={14} />
-  }, [actions])
-
-  if (menuItems.length === 0) {
-    return null
-  }
-
   return (
     <>
       <DataTableHeaderMenu
         ariaLabel={t('bankTransactions:label.additional_bank_transaction_actions', 'Additional bank transactions actions')}
         items={menuItems}
         isDisabled={isDisabled}
-        slots={{ Icon }}
       />
-      {actions.includes(
-        BankTransactionsHeaderMenuActions.DownloadTransactions,
-      ) && <InvisibleDownload ref={invisibleDownloadRef} />}
+      <InvisibleDownload ref={invisibleDownloadRef} />
       {isModalOpen && <BankTransactionsUploadModal isOpen onOpenChange={setIsModalOpen} />}
     </>
   )
