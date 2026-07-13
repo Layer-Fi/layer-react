@@ -1,4 +1,4 @@
-import { useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { type Row } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 
@@ -8,6 +8,7 @@ import { Alignment } from '@schemas/reports/unifiedReport'
 import { humanizeEnum } from '@utils/format'
 import { entryNumber, sumLineItemAmountsByDirection } from '@utils/journal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -81,6 +82,14 @@ const JournalTableContent = ({
   const { setExpanded } = useContext(ExpandableDataTableContext)
 
   const [currentPage, setCurrentPage] = useState(1)
+
+  // The list is filtered by the shared ledger date range. When that range
+  // changes the result set is replaced, so the current page index may no longer
+  // exist (e.g. narrowing to a range with fewer pages) — reset to the first page.
+  const { startDate, endDate } = useLedgerDateRange({ dateSelectionMode: 'full' })
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [startDate, endDate])
 
   // Re-expand every row on page change. Once a row is collapsed, TanStack rewrites
   // `expanded: true` into a per-row map covering only the current page's slice, so
