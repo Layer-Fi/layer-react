@@ -3,19 +3,11 @@ import { type ZonedDateTime } from '@internationalized/date'
 import { differenceInDays, startOfDay } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
+import { InvoiceTermsValues } from '@schemas/invoices/invoiceTerms'
 import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-
-export enum InvoiceTermsValues {
-  Net10 = 'Net10',
-  Net15 = 'Net15',
-  Net30 = 'Net30',
-  Net60 = 'Net60',
-  Net90 = 'Net90',
-  Custom = 'Custom',
-}
 
 type InvoiceTermsOption = {
   label: string

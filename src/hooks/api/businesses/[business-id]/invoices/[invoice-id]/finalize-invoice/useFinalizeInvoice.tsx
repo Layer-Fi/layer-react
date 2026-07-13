@@ -1,7 +1,4 @@
-import { Schema } from 'effect'
-
-import { InvoiceSchema } from '@schemas/invoices/invoice'
-import { InvoicePaymentMethodsSchema } from '@schemas/invoices/invoicePaymentMethod'
+import { type FinalizeInvoiceBodyEncoded, FinalizeInvoiceDataSchema } from '@schemas/invoices/finalizeInvoice'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { put } from '@utils/api/authenticatedHttp'
 import { useInvoicePaymentMethodsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/useInvoicePaymentMethods'
@@ -11,26 +8,7 @@ import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const FINALIZE_INVOICE_TAG_KEY = '#finalize-invoice'
 
-export const FinalizeInvoiceBodySchema = Schema.extend(
-  InvoicePaymentMethodsSchema,
-  Schema.Struct({
-    customPaymentInstructions: Schema.optional(Schema.String).pipe(
-      Schema.fromKey('custom_payment_instructions'),
-    ),
-  }),
-)
-
-export type FinalizeInvoiceBody = typeof FinalizeInvoiceBodySchema.Type
-export type FinalizeInvoiceBodyEncoded = typeof FinalizeInvoiceBodySchema.Encoded
-
-export const FinalizeInvoiceResponseSchema = UnwrappedDataResponseSchema(
-  Schema.extend(
-    InvoicePaymentMethodsSchema,
-    Schema.Struct({
-      invoice: InvoiceSchema,
-    }),
-  ),
-)
+export const FinalizeInvoiceResponseSchema = UnwrappedDataResponseSchema(FinalizeInvoiceDataSchema)
 
 export const finalizeInvoice = put<
   typeof FinalizeInvoiceResponseSchema.Encoded,
