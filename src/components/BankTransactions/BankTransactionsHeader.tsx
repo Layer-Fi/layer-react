@@ -23,10 +23,10 @@ import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFil
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useBankTransactionsStringOverrides } from '@contexts/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
 import { DownloadButton as DownloadButtonComponent } from '@ui/Button/DownloadButton'
-import { Pill } from '@ui/Pill/Pill'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Heading } from '@ui/Typography/Heading'
+import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
 import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
 import { BankTransactionsTableContent } from '@components/BankTransactions/constants'
@@ -106,14 +106,19 @@ function SelectedBankAccountsChip() {
   if (selectedBankAccountIds.length === 0) return null
 
   return (
-    <Pill onPress={() => setSelectedBankAccountIds([])}>
+    <Badge
+      variant={BadgeVariant.INFO}
+      size={BadgeSize.SMALL}
+      icon={<X size={12} />}
+      iconPosition='right'
+      onClick={() => setSelectedBankAccountIds([])}
+    >
       {t('bankTransactions:label.accounts_selected', {
         count: selectedBankAccountIds.length,
         defaultValue_one: '{{count}} account selected',
         defaultValue_other: '{{count}} accounts selected',
       })}
-      <X size={12} />
-    </Pill>
+    </Badge>
   )
 }
 
