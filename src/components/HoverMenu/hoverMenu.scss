@@ -10,6 +10,7 @@
       opacity: 1;
       touch-action: auto;
       pointer-events: auto;
+      visibility: visible;
     }
   }
 
@@ -36,6 +37,7 @@
     top: 80%;
     right: -8px;
     display: flex;
+    visibility: hidden;
     justify-content: stretch;
     min-width: 160px;
     padding-top: var(--spacing-xs);
