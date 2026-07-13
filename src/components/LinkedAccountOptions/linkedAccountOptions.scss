@@ -127,4 +127,9 @@
     font-weight: 540;
     color: var(--color-base-800);
   }
+
+  &[data-focus-visible] {
+    outline: 1px auto -webkit-focus-ring-color;
+    outline-offset: 2px;
+  }
 }
