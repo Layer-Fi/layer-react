@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
+import { Button } from 'react-aria-components/Button'
 
 import type { Awaitable } from '@internal-types/utility/promises'
 
@@ -43,15 +44,20 @@ export const HoverMenu = ({ children, config }: HoverMenuProps) => {
       className={hoverMenuClassName}
       ref={hoverMenuRef}
       onMouseLeave={() => setOpenMenu(false)}
+      onBlur={(event) => {
+        if (!hoverMenuRef.current?.contains(event.relatedTarget)) {
+          setOpenMenu(false)
+        }
+      }}
     >
-      <button
-        type='button'
+      <Button
         className='Layer__hover-menu__children'
-        onMouseEnter={() => setOpenMenu(true)}
-        onClick={() => setOpenMenu(true)}
+        onPress={() => setOpenMenu(true)}
+        onFocus={() => setOpenMenu(true)}
+        onHoverStart={() => setOpenMenu(true)}
       >
         {children}
-      </button>
+      </Button>
       <div className='Layer__hover-menu__list-wrapper'>
         <ul className='Layer__hover-menu__list'>
           {config
@@ -61,12 +67,12 @@ export const HoverMenu = ({ children, config }: HoverMenuProps) => {
                 key={`hover-menu-${item.name}`}
                 className='Layer__hover-menu__list-item'
               >
-                <button
+                <Button
                   className='Layer__hover-menu__list-item-button'
-                  onClick={() => void item.action()}
+                  onPress={() => void item.action()}
                 >
                   {item.name}
-                </button>
+                </Button>
               </li>
             ))}
         </ul>
