@@ -14,7 +14,7 @@ import { useBusinessActivationDate } from '@hooks/features/business/useBusinessA
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useBankAccountFilterActions, useSelectedBankAccountIds } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
+import { useBankAccountFilterActions, useIsBankAccountFilterLocked, useSelectedBankAccountIds } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
@@ -101,9 +101,10 @@ function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
 function SelectedBankAccountsChip({ slot, className }: { slot?: string, className?: string }) {
   const { t } = useTranslation()
   const selectedBankAccountIds = useSelectedBankAccountIds()
+  const isFilterLocked = useIsBankAccountFilterLocked()
   const { setSelectedBankAccountIds } = useBankAccountFilterActions()
 
-  if (selectedBankAccountIds.length === 0) return null
+  if (selectedBankAccountIds.length === 0 || isFilterLocked) return null
 
   return (
     <span slot={slot} className={className}>
@@ -303,21 +304,27 @@ export const BankTransactionsHeader = ({
           {!showBulkActions && isStatusToggleVisible && (
             <HStack justify='space-between' align='center' gap='xs'>
               {statusToggle}
-              <BankTransactionsHeaderMenu
-                actions={headerMenuActions}
-                isListView={isListView}
-              />
+              <HStack align='center' gap='xs'>
+                <SelectedBankAccountsChip className='Layer__bank-transactions__selected-accounts-chip--wide' />
+                <BankTransactionsHeaderMenu
+                  actions={headerMenuActions}
+                  isListView={isListView}
+                />
+              </HStack>
             </HStack>
           )}
 
           <HStack className='Layer__bank-transactions__header__search-and-menu' align='center' gap='xs'>
             <TransactionsSearch isDisabled={showBulkActions} />
             {!isStatusToggleVisible && (
-              <BankTransactionsHeaderMenu
-                actions={headerMenuActions}
-                isDisabled={showBulkActions}
-                isListView={isListView}
-              />
+              <>
+                <SelectedBankAccountsChip className='Layer__bank-transactions__selected-accounts-chip--wide' />
+                <BankTransactionsHeaderMenu
+                  actions={headerMenuActions}
+                  isDisabled={showBulkActions}
+                  isListView={isListView}
+                />
+              </>
             )}
           </HStack>
 

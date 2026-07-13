@@ -1,10 +1,10 @@
 .Layer__BankTransactionsActions {
   display: grid;
   grid-template-areas:
-    'toggle . download-upload'
-    'search search search';
+    'toggle . selected-accounts download-upload'
+    'search search search search';
 
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   gap: var(--spacing-xs);
   align-items: center;
 

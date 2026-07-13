@@ -5,20 +5,24 @@ import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-ac
 
 type BankAccountsFilterStoreShape = {
   isEnabled: boolean
+  isLocked: boolean
   selectedBankAccountIds: string[]
   actions: {
     setSelectedBankAccountIds: (bankAccountIds: string[]) => void
     retainBankAccountIds: (validBankAccountIds: string[]) => void
+    setLocked: (isLocked: boolean) => void
   }
 }
 
 const BankAccountsFilterStoreContext = createContext(
   createStore<BankAccountsFilterStoreShape>(() => ({
     isEnabled: false,
+    isLocked: false,
     selectedBankAccountIds: [],
     actions: {
       setSelectedBankAccountIds: () => {},
       retainBankAccountIds: () => {},
+      setLocked: () => {},
     },
   })),
 )
@@ -26,6 +30,11 @@ const BankAccountsFilterStoreContext = createContext(
 export function useIsBankAccountFilterEnabled() {
   const store = useContext(BankAccountsFilterStoreContext)
   return useStore(store, state => state.isEnabled)
+}
+
+export function useIsBankAccountFilterLocked() {
+  const store = useContext(BankAccountsFilterStoreContext)
+  return useStore(store, state => state.isLocked)
 }
 
 export function useSelectedBankAccountIds() {
@@ -42,10 +51,12 @@ export function BankAccountsFilterStoreProvider({ children }: PropsWithChildren)
   const [store] = useState(() =>
     createStore<BankAccountsFilterStoreShape>(set => ({
       isEnabled: true,
+      isLocked: false,
       selectedBankAccountIds: [],
       actions: {
         setSelectedBankAccountIds: (bankAccountIds: string[]) =>
           set(() => ({ selectedBankAccountIds: bankAccountIds })),
+        setLocked: (isLocked: boolean) => set(() => ({ isLocked })),
         retainBankAccountIds: (validBankAccountIds: string[]) =>
           set((state) => {
             const validIds = new Set(validBankAccountIds)

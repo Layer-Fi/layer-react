@@ -5,7 +5,7 @@ import { GridList, type Selection } from 'react-aria-components/GridList'
 import { useTranslation } from 'react-i18next'
 
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
-import { useBankAccountFilterActions, useIsBankAccountFilterEnabled, useSelectedBankAccountIds } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
+import { useBankAccountFilterActions, useIsBankAccountFilterEnabled, useIsBankAccountFilterLocked, useSelectedBankAccountIds } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -39,10 +39,13 @@ export const LinkedAccountsContent = ({
   const isDemoBusiness = business?.isDemo ?? false
 
   const isFilterEnabled = useIsBankAccountFilterEnabled()
+  const isFilterLocked = useIsBankAccountFilterLocked()
   const selectedBankAccountIds = useSelectedBankAccountIds()
   const { setSelectedBankAccountIds } = useBankAccountFilterActions()
 
   const onSelectionChange = (keys: Selection) => {
+    if (isFilterLocked) return
+
     const accountIds = (data ?? []).map(account => account.id)
     setSelectedBankAccountIds(
       keys === 'all' ? accountIds : accountIds.filter(id => keys.has(id)),

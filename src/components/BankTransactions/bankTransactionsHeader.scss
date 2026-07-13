@@ -68,13 +68,13 @@
 .Layer__bank-transactions__selected-accounts-chip--wide {
   display: none;
 
-  @container (min-width: 840px) {
+  @container (min-width: 500px) {
     display: block;
   }
 }
 
 .Layer__bank-transactions__selected-accounts-chip--compact {
-  @container (min-width: 840px) {
+  @container (min-width: 500px) {
     display: none;
   }
 }
