@@ -23,7 +23,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
   const { t } = useTranslation()
   const { toCategorizationRulesTable } = useBankTransactionsNavigation()
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const { handleDownloadTransactions, invisibleDownloadRef } = useHandleDownloadTransactions({ isListView })
+  const { handleDownloadTransactions, invisibleDownloadRef, isMutating } = useHandleDownloadTransactions({ isListView })
 
   const menuItems = useMemo<DataTableHeaderMenuItem[]>(() => {
     const items: DataTableHeaderMenuItem[] = [{
@@ -60,6 +60,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
         ariaLabel={t('bankTransactions:label.additional_bank_transaction_actions', 'Additional bank transactions actions')}
         items={menuItems}
         isDisabled={isDisabled}
+        isPending={isMutating}
       />
       <InvisibleDownload ref={invisibleDownloadRef} />
       {isModalOpen && <BankTransactionsUploadModal isOpen onOpenChange={setIsModalOpen} />}

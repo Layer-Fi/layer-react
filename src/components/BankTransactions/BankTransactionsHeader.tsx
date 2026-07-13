@@ -42,6 +42,7 @@ export interface BankTransactionsHeaderProps {
 
 export interface BankTransactionsHeaderStringOverrides {
   header?: string
+  /** @deprecated Download moved into the header menu and no longer supports a custom label. This override is ignored and will be removed. */
   downloadButton?: string
 }
 
@@ -251,7 +252,10 @@ export const BankTransactionsHeader = ({
         <TransactionsSearch slot='search' isDisabled={showBulkActions} />
         <HStack slot='download-upload' justify='center' gap='xs'>
           <RecordTransactionMenuButton isDisabled={showBulkActions} />
-          <BankTransactionsHeaderMenu actions={headerMenuActions} isDisabled={showBulkActions} />
+          <BankTransactionsHeaderMenu
+            actions={headerMenuActions}
+            isDisabled={showBulkActions}
+          />
         </HStack>
       </BankTransactionsActions>
     </Header>
