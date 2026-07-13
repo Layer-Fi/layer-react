@@ -105,6 +105,8 @@
 }
 
 .Layer__linked-accounts__options-menu-item {
+  display: flex;
+  align-items: center;
   padding: var(--spacing-3xs);
   padding-left: var(--spacing-xs);
   border-radius: var(--spacing-2xs);
