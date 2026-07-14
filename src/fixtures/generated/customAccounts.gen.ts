@@ -10,11 +10,12 @@ export const customAccounts = [
     "institutionName": "Bank of America",
     "accountType": "CREDIT",
     "accountSubtype": "CREDIT_CARD",
-    "createdAt": "2020-01-01T00:00:00.023Z",
-    "updatedAt": "2021-03-25T16:44:30.381Z",
+    "customAccountType": "DEFAULT",
+    "createdAt": "2020-01-01T00:00:00.011Z",
+    "updatedAt": "2023-09-07T16:59:43.117Z",
     "archivedAt": null,
-    "ledgerAccountId": "6feae5ac-000b-1000-8000-001497223d75",
-    "userCreated": true
+    "ledgerAccountId": "ffffffea-0b44-41fd-bfff-ffe548e13b9f",
+    "userCreated": false
   },
   {
     "id": "00000002-4b46-4097-85f0-896231804c64",
@@ -24,10 +25,11 @@ export const customAccounts = [
     "institutionName": "Wells Fargo",
     "accountType": "DEPOSITORY",
     "accountSubtype": "CHECKING",
-    "createdAt": "2020-01-01T00:00:00.008Z",
-    "updatedAt": "2025-12-31T23:59:58.986Z",
+    "customAccountType": "DEFAULT",
+    "createdAt": "2025-12-31T23:59:58.974Z",
+    "updatedAt": "2025-12-31T23:59:58.975Z",
     "archivedAt": null,
-    "ledgerAccountId": "514f96f6-1531-5099-8000-001200000010",
+    "ledgerAccountId": "00000004-076e-520e-8000-00089419b0b0",
     "userCreated": false
   },
   {
@@ -38,11 +40,12 @@ export const customAccounts = [
     "institutionName": "American Express",
     "accountType": "CREDIT",
     "accountSubtype": "CREDIT_CARD",
-    "createdAt": "2023-04-30T00:00:19.012Z",
-    "updatedAt": "2025-12-31T23:59:58.991Z",
+    "customAccountType": "DEFAULT",
+    "createdAt": "2020-01-01T00:00:00.001Z",
+    "updatedAt": "2025-12-31T23:59:58.968Z",
     "archivedAt": null,
-    "ledgerAccountId": "c4c092d4-0009-1000-bfff-fffe00000002",
-    "userCreated": false
+    "ledgerAccountId": "0000001f-48a8-3c0b-8000-0006ffffffe0",
+    "userCreated": true
   },
   {
     "id": "00000002-a0b6-452b-8812-70c20a3e49d9",
@@ -52,10 +55,11 @@ export const customAccounts = [
     "institutionName": "Citibank",
     "accountType": "DEPOSITORY",
     "accountSubtype": "CHECKING",
-    "createdAt": "2020-01-01T00:00:00.000Z",
-    "updatedAt": "2023-03-27T02:52:10.537Z",
+    "customAccountType": "DEFAULT",
+    "createdAt": "2024-03-18T13:17:30.557Z",
+    "updatedAt": "2025-12-31T23:59:58.981Z",
     "archivedAt": null,
-    "ledgerAccountId": "00000008-a089-2aec-aa6e-26ee6340ee42",
+    "ledgerAccountId": "00000009-e5a7-3b6a-8000-0002dcfb35ef",
     "userCreated": true
   },
   {
@@ -66,10 +70,11 @@ export const customAccounts = [
     "institutionName": "Bank of America",
     "accountType": "CREDIT",
     "accountSubtype": "CREDIT_CARD",
-    "createdAt": "2020-01-01T00:00:00.008Z",
-    "updatedAt": "2022-10-21T16:03:58.089Z",
+    "customAccountType": "PERSONAL",
+    "createdAt": "2020-01-01T00:00:00.028Z",
+    "updatedAt": "2020-01-01T00:00:00.037Z",
     "archivedAt": null,
-    "ledgerAccountId": "23ab8aac-4956-2526-8000-000effffffea",
+    "ledgerAccountId": "00000008-ffe2-5fff-8000-0011ffffffed",
     "userCreated": false
   },
   {
@@ -80,10 +85,11 @@ export const customAccounts = [
     "institutionName": "Citibank",
     "accountType": "DEPOSITORY",
     "accountSubtype": "CHECKING",
-    "createdAt": "2020-01-01T00:00:00.000Z",
-    "updatedAt": "2025-12-31T23:59:58.967Z",
+    "customAccountType": "DEFAULT",
+    "createdAt": "2020-01-01T00:00:00.018Z",
+    "updatedAt": "2024-03-04T19:03:07.350Z",
     "archivedAt": null,
-    "ledgerAccountId": "0000001c-0016-1000-8000-0015ffffffe9",
+    "ledgerAccountId": "00000002-0016-1000-8000-001c00000002",
     "userCreated": false
   },
   {
@@ -94,10 +100,11 @@ export const customAccounts = [
     "institutionName": "Capital One",
     "accountType": "DEPOSITORY",
     "accountSubtype": "CHECKING",
-    "createdAt": "2025-12-07T11:15:11.399Z",
-    "updatedAt": "2025-12-31T23:59:58.995Z",
+    "customAccountType": "DEFAULT",
+    "createdAt": "2020-01-01T00:00:00.016Z",
+    "updatedAt": "2020-01-01T00:00:00.031Z",
     "archivedAt": null,
-    "ledgerAccountId": "fffffffe-ffe4-5fff-9cb2-8f050000000b",
+    "ledgerAccountId": "00000006-0013-1000-a939-79760000001a",
     "userCreated": false
   },
   {
@@ -108,10 +115,11 @@ export const customAccounts = [
     "institutionName": "Citibank",
     "accountType": "DEPOSITORY",
     "accountSubtype": "CHECKING",
-    "createdAt": "2020-01-01T00:00:00.004Z",
-    "updatedAt": "2020-01-20T20:46:20.473Z",
+    "customAccountType": "DEFAULT",
+    "createdAt": "2021-10-15T09:58:29.475Z",
+    "updatedAt": "2022-10-12T12:53:05.313Z",
     "archivedAt": null,
-    "ledgerAccountId": "a77196c2-ffe8-5fff-8000-00120000001c",
+    "ledgerAccountId": "ffffffed-41e8-3b36-8000-001c00000007",
     "userCreated": true
   },
   {
@@ -122,10 +130,11 @@ export const customAccounts = [
     "institutionName": "Chase",
     "accountType": "DEPOSITORY",
     "accountSubtype": "CHECKING",
-    "createdAt": "2023-04-09T07:54:20.016Z",
-    "updatedAt": "2025-12-31T23:59:58.966Z",
+    "customAccountType": "DEFAULT",
+    "createdAt": "2020-01-01T00:00:00.009Z",
+    "updatedAt": "2021-09-01T02:42:30.738Z",
     "archivedAt": null,
-    "ledgerAccountId": "00000013-6ae2-35f0-9f94-e965a9438e01",
+    "ledgerAccountId": "ffffffe9-0001-1000-a943-8e018340d4c7",
     "userCreated": true
   },
   {
@@ -136,10 +145,11 @@ export const customAccounts = [
     "institutionName": "Chase",
     "accountType": "CREDIT",
     "accountSubtype": "CREDIT_CARD",
-    "createdAt": "2021-11-10T21:23:38.471Z",
-    "updatedAt": "2022-11-02T21:15:59.615Z",
+    "customAccountType": "DEFAULT",
+    "createdAt": "2020-01-14T12:33:34.382Z",
+    "updatedAt": "2023-11-21T22:13:50.642Z",
     "archivedAt": null,
-    "ledgerAccountId": "e64feeb6-e342-20c8-aecb-7481acf371af",
-    "userCreated": false
+    "ledgerAccountId": "00000002-7481-1ecb-acf3-71af783ba673",
+    "userCreated": true
   }
 ] as (typeof schema.Type)[]

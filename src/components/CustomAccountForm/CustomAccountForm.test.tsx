@@ -150,7 +150,7 @@ describe('CustomAccountForm', () => {
     expect(screen.getByRole('button', { name: /save account/i })).toBeInTheDocument()
   })
 
-  it('defaults account type to personal and sends the selected account type', async () => {
+  it('defaults ownership to personal and sends the selected ownership', async () => {
     const onSuccess = vi.fn()
     const createAccountRequest = mockCreateAccount(MOCK_CUSTOM_ACCOUNT)
     const { user, filler } = renderCustomAccountForm({ onSuccess })
@@ -158,7 +158,7 @@ describe('CustomAccountForm', () => {
     expect(screen.getByRole('radio', { name: 'Personal' })).toBeChecked()
 
     await filler.fill(FORM_DATA)
-    await filler.radio({ field: 'Account type', option: 'Business' })
+    await filler.radio({ field: 'Ownership', option: 'Business' })
     await user.click(screen.getByRole('button', { name: /save account/i }))
 
     await waitFor(() => {

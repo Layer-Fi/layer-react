@@ -115,7 +115,7 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
         <form.AppField name='custom_account_type'>
           {field => (
             <field.FormRadioGroupField
-              label={t('generalLedger:label.account_type', 'Account type')}
+              label={t('generalLedger:label.account_ownership', 'Ownership')}
               orientation='horizontal'
               options={ownershipOptions}
               className='Layer__custom-account-form__field'
