@@ -1,15 +1,18 @@
+import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus, InputStrategy } from '@schemas/bankTransactions/bankTransaction'
 import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 
-import { type BankTransactionFixture } from '@fixtures/bankTransactions/schema'
+import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'
+import { toAccountCategorization } from '@fixtures/bankTransactions/utils'
+import { makeBusiness } from '@fixtures/business/mocks'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 
-const baseBankTransaction: BankTransactionFixture = {
-  id: '00000000-0000-4000-8000-000000000010',
-  businessId: '00000000-0000-4000-8000-000000000001',
+const baseBankTransaction: BankTransaction = {
+  id: '0000000f-0000-4000-8000-000000000001',
+  businessId: makeBusiness().id,
   sourceTransactionId: 'src_txn_100000',
   sourceAccountId: 'acc_00000000000000000000000001',
-  date: '2024-06-01T00:00:00.000Z',
+  date: new Date('2025-06-01T15:45:00.000Z'),
   direction: BankTransactionDirection.Debit,
   amount: 54.21,
   counterpartyName: 'Amazon',
@@ -23,20 +26,8 @@ const baseBankTransaction: BankTransactionFixture = {
     type: InputStrategy.AskFromSuggestions,
     category: null,
     suggestions: [
-      {
-        type: 'Account',
-        id: 'category-office-supplies',
-        stableName: 'OFFICE_SUPPLIES',
-        category: 'OFFICE_SUPPLIES',
-        displayName: 'Office Supplies',
-      },
-      {
-        type: 'Account',
-        id: 'category-supplies',
-        stableName: 'SUPPLIES',
-        category: 'SUPPLIES',
-        displayName: 'Supplies & Materials',
-      },
+      toAccountCategorization(bankTransactionCategories.officeSupplies),
+      toAccountCategorization(bankTransactionCategories.supplies),
     ],
   },
   taxCode: null,
