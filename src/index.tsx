@@ -31,9 +31,6 @@ export { Tasks } from './components/Tasks/Tasks'
 export { LandingPage } from './components/LandingPage/LandingPage'
 export { LinkAccounts } from './components/LinkAccounts/LinkAccounts'
 
-/* --------------------- Banners -------------------------- */
-export { BookkeepingUpsellBar } from './components/BookkeepingUpsellBar/BookkeepingUpsellBar'
-
 /* --------------------- Date Pickers -------------------------- */
 export { GlobalDateRangeSelection } from './components/DateSelection/GlobalDateRangeSelection'
 export { GlobalMonthPicker } from './components/GlobalMonthPicker/GlobalMonthPicker'
