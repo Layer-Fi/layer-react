@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@ui/Button/Button'
@@ -21,7 +21,11 @@ export function RecordTransactionModal({ variant, isOpen, onOpenChange }: Record
 
   const onSuccess = useCallback(() => onOpenChange(false), [onOpenChange])
 
-  const { form, isError } = useRecordTransactionForm({ variant, onSuccess })
+  const { form, isError, resetSubmitState } = useRecordTransactionForm({ variant, onSuccess })
+
+  useEffect(() => {
+    if (isOpen) resetSubmitState()
+  }, [isOpen, resetSubmitState])
 
   const onCancel = useCallback(() => {
     form.reset()

@@ -43,6 +43,21 @@ const useSetMetadataOnBankTransactionMutation = createMutationHook({
   swrOptions: { throwOnError: false },
 })
 
+type SetMetadataOnBankTransactionByIdArg = SetMetadataOnBankTransactionArg & {
+  bankTransactionId: string
+}
+
+export const useSetMetadataOnBankTransactionById = createMutationHook({
+  tags: [SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY],
+  request: setMetadataOnBankTransaction,
+  argToParams: ({ bankTransactionId }: SetMetadataOnBankTransactionByIdArg) => ({ bankTransactionId }),
+  argToBody: ({ vendor, customer }: SetMetadataOnBankTransactionByIdArg) => ({
+    vendor_id: vendor?.id ?? null,
+    customer_id: customer?.id ?? null,
+  }),
+  swrOptions: { throwOnError: true },
+})
+
 type UseSetMetadataOnBankTransactionParameters = {
   bankTransactionId: string
 }

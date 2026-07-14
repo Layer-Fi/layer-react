@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { fromDate, getLocalTimeZone, type ZonedDateTime } from '@internationalized/date'
 import { revalidateLogic } from '@tanstack/react-form'
 import { startOfToday } from 'date-fns'
@@ -7,9 +7,11 @@ import type { Classification } from '@schemas/categorization'
 import type { Customer } from '@schemas/customer'
 import type { NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import type { Vendor } from '@schemas/vendor'
+import { useCategorizeBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/categorize/useCategorizeBankTransaction'
+import { useSetMetadataOnBankTransactionById } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
 import { useCreateCustomAccountTransactions } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/useCreateCustomAccountTransactions'
 import { useAppForm } from '@hooks/features/forms/useForm'
-import { convertRecordTransactionFormToParams } from '@components/BankTransactions/RecordManualTransaction/formUtils'
+import { convertRecordTransactionFormToMetadataParams, convertRecordTransactionFormToParams } from '@components/BankTransactions/RecordManualTransaction/formUtils'
 import type { AccountOption } from '@components/CustomAccountComboBox/AccountOption'
 
 export type RecordTransactionVariant = 'income' | 'expense'
@@ -42,7 +44,24 @@ type UseRecordTransactionFormProps = {
 }
 
 export const useRecordTransactionForm = ({ variant, onSuccess }: UseRecordTransactionFormProps) => {
-  const { trigger, isError } = useCreateCustomAccountTransactions({ swrOptions: { throwOnError: true } })
+  const {
+    trigger: createTransactions,
+    isError: isCreateError,
+    reset: resetCreate,
+  } = useCreateCustomAccountTransactions({ swrOptions: { throwOnError: true } })
+  const {
+    trigger: setMetadata,
+    isError: isMetadataError,
+    reset: resetMetadata,
+  } = useSetMetadataOnBankTransactionById()
+  const {
+    trigger: categorize,
+    isError: isCategorizeError,
+    reset: resetCategorize,
+  } = useCategorizeBankTransaction()
+
+  // Survives a failed follow-up call so retrying doesn't create a duplicate transaction.
+  const createdTransactionIdRef = useRef<string | null>(null)
 
   const handleSubmit = useCallback(
     async ({ value, formApi }: { value: RecordTransactionFormValues, formApi: { reset: () => void } }) => {
@@ -50,7 +69,19 @@ export const useRecordTransactionForm = ({ variant, onSuccess }: UseRecordTransa
       if (params === null) return
 
       try {
-        await trigger(params)
+        if (createdTransactionIdRef.current === null) {
+          const [createdTransaction] = await createTransactions(params)
+          if (createdTransaction === undefined) return
+          createdTransactionIdRef.current = createdTransaction.id
+        }
+        const bankTransactionId = createdTransactionIdRef.current
+
+        await setMetadata(convertRecordTransactionFormToMetadataParams(value, variant, bankTransactionId))
+        if (value.category !== null) {
+          await categorize({ bankTransactionId, type: 'Category', category: value.category })
+        }
+
+        createdTransactionIdRef.current = null
         onSuccess?.()
         formApi.reset()
       }
@@ -58,7 +89,7 @@ export const useRecordTransactionForm = ({ variant, onSuccess }: UseRecordTransa
         console.error(e)
       }
     },
-    [trigger, variant, onSuccess],
+    [createTransactions, setMetadata, categorize, variant, onSuccess],
   )
 
   const form = useAppForm<RecordTransactionFormValues>({
@@ -67,5 +98,14 @@ export const useRecordTransactionForm = ({ variant, onSuccess }: UseRecordTransa
     validationLogic: revalidateLogic(),
   })
 
-  return useMemo(() => ({ form, isError }), [form, isError])
+  const isError = isCreateError || isMetadataError || isCategorizeError
+
+  const resetSubmitState = useCallback(() => {
+    resetCreate()
+    resetMetadata()
+    resetCategorize()
+    createdTransactionIdRef.current = null
+  }, [resetCreate, resetMetadata, resetCategorize])
+
+  return useMemo(() => ({ form, isError, resetSubmitState }), [form, isError, resetSubmitState])
 }
