@@ -26,6 +26,14 @@ export const toAccountCategorization = (
 
 const roundToCents = (amount: number) => Math.round(amount * 100) / 100
 
+/*
+ * Suggested match ids must be valid UUIDs - the bulk-match-or-categorize
+ * request schema validates them - so derive one from the transaction id by
+ * swapping in a prefix outside the FixtureIdPrefix range.
+ */
+export const toSuggestedMatchId = (transactionId: string) =>
+  transactionId.replace(/^[0-9a-f]{8}/, '00000010')
+
 const deriveTransfer = (
   transaction: BankTransaction,
   statusRoll: number,
@@ -88,7 +96,7 @@ const deriveTransfer = (
   return {
     ...common,
     categorizationStatus: CategorizationStatus.READY_FOR_INPUT,
-    suggestedMatches: [{ id: `suggested-match-${transaction.id}`, details }],
+    suggestedMatches: [{ id: toSuggestedMatchId(transaction.id), details }],
   }
 }
 

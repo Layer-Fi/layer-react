@@ -1,19 +1,15 @@
 import { Schema } from 'effect'
 
+import {
+  type BulkUncategorizeRequest,
+  type BulkUncategorizeRequestEncoded,
+  BulkUncategorizeRequestSchema,
+} from '@schemas/bankTransactions/bulkUncategorize'
 import { post } from '@utils/api/authenticatedHttp'
 import { useBulkBankTransactionsTriggerSuccess } from '@hooks/api/businesses/[business-id]/bank-transactions/useBulkBankTransactionsTriggerSuccess'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-uncategorize-bank-transactions'
-
-export const BulkUncategorizeRequestSchema = Schema.Struct({
-  transactionIds: Schema.propertySignature(Schema.Array(Schema.UUID)).pipe(
-    Schema.fromKey('transaction_ids'),
-  ),
-})
-
-type BulkUncategorizeRequest = typeof BulkUncategorizeRequestSchema.Type
-type BulkUncategorizeRequestEncoded = typeof BulkUncategorizeRequestSchema.Encoded
 
 const bulkUncategorize = post<
   { data: unknown },

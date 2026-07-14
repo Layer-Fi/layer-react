@@ -1,6 +1,6 @@
-import { pipe, Schema } from 'effect'
+import { Schema } from 'effect'
 
-import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
+import { BulkMatchOrCategorizeRequestSchema } from '@schemas/bankTransactions/bulkMatchOrCategorize'
 
 import { applyCategoryUpdate, applyConfirmedMatch } from '@msw/api/businesses/[business-id]/bank-transactions/applyCategoryUpdate'
 import { bankTransactionStore, findOrSeedBankTransaction } from '@msw/api/businesses/[business-id]/bank-transactions/store'
@@ -8,28 +8,7 @@ import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
 
-const MatchOrCategorizeSchema = Schema.Union(
-  Schema.Struct({
-    type: Schema.Literal('match'),
-    suggestedMatchId: pipe(
-      Schema.propertySignature(Schema.String),
-      Schema.fromKey('suggested_match_id'),
-    ),
-  }),
-  Schema.Struct({
-    type: Schema.Literal('categorize'),
-    categorization: CategoryUpdateSchema,
-  }),
-)
-
-const BulkMatchOrCategorizeBodySchema = Schema.Struct({
-  transactions: Schema.Record({
-    key: Schema.String,
-    value: MatchOrCategorizeSchema,
-  }),
-})
-
-const decodeBulkMatchOrCategorizeBody = Schema.decodeUnknownSync(BulkMatchOrCategorizeBodySchema)
+const decodeBulkMatchOrCategorizeBody = Schema.decodeUnknownSync(BulkMatchOrCategorizeRequestSchema)
 
 const toResponse = () => apiData({})
 

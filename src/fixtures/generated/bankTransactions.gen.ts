@@ -1376,7 +1376,7 @@ export const bankTransactions = [
     "taxOptions": null,
     "suggestedMatches": [
       {
-        "id": "suggested-match-0000000f-ed16-47c9-8822-f09847446fab",
+        "id": "00000010-ed16-47c9-8822-f09847446fab",
         "details": {
           "type": "Transfer_Match",
           "id": "match-details-0000000f-ed16-47c9-8822-f09847446fab",
@@ -2015,7 +2015,7 @@ export const bankTransactions = [
     "taxOptions": null,
     "suggestedMatches": [
       {
-        "id": "suggested-match-0000000f-34cf-4505-8943-165c473ffe6c",
+        "id": "00000010-34cf-4505-8943-165c473ffe6c",
         "details": {
           "type": "Transfer_Match",
           "id": "match-details-0000000f-34cf-4505-8943-165c473ffe6c",
@@ -2843,7 +2843,7 @@ export const bankTransactions = [
     "taxOptions": null,
     "suggestedMatches": [
       {
-        "id": "suggested-match-0000000f-d6d6-45a2-85a4-89a7176a1d51",
+        "id": "00000010-d6d6-45a2-85a4-89a7176a1d51",
         "details": {
           "type": "Transfer_Match",
           "id": "match-details-0000000f-d6d6-45a2-85a4-89a7176a1d51",
@@ -3216,7 +3216,7 @@ export const bankTransactions = [
     "taxOptions": null,
     "suggestedMatches": [
       {
-        "id": "suggested-match-0000000f-eda2-46d6-8f61-7caa97dfbb59",
+        "id": "00000010-eda2-46d6-8f61-7caa97dfbb59",
         "details": {
           "type": "Transfer_Match",
           "id": "match-details-0000000f-eda2-46d6-8f61-7caa97dfbb59",
@@ -3410,7 +3410,7 @@ export const bankTransactions = [
     "taxOptions": null,
     "suggestedMatches": [
       {
-        "id": "suggested-match-0000000f-7d42-4253-8eb1-15791a66ea01",
+        "id": "00000010-7d42-4253-8eb1-15791a66ea01",
         "details": {
           "type": "Transfer_Match",
           "id": "match-details-0000000f-7d42-4253-8eb1-15791a66ea01",
@@ -4602,7 +4602,7 @@ export const bankTransactions = [
     "taxOptions": null,
     "suggestedMatches": [
       {
-        "id": "suggested-match-0000000f-46a3-4775-87b1-0799b8818e20",
+        "id": "00000010-46a3-4775-87b1-0799b8818e20",
         "details": {
           "type": "Transfer_Match",
           "id": "match-details-0000000f-46a3-4775-87b1-0799b8818e20",

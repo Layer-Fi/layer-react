@@ -1,6 +1,6 @@
-import { pipe, Schema } from 'effect'
+import { Schema } from 'effect'
 
-import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
+import { BulkCategorizeRequestSchema } from '@schemas/bankTransactions/bulkCategorize'
 
 import { applyCategoryUpdate } from '@msw/api/businesses/[business-id]/bank-transactions/applyCategoryUpdate'
 import { bankTransactionStore, findOrSeedBankTransaction } from '@msw/api/businesses/[business-id]/bank-transactions/store'
@@ -8,17 +8,7 @@ import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
 
-const BulkCategorizeBodySchema = Schema.Struct({
-  transactions: Schema.Array(Schema.Struct({
-    transactionId: pipe(
-      Schema.propertySignature(Schema.String),
-      Schema.fromKey('transaction_id'),
-    ),
-    categorization: CategoryUpdateSchema,
-  })),
-})
-
-const decodeBulkCategorizeBody = Schema.decodeUnknownSync(BulkCategorizeBodySchema)
+const decodeBulkCategorizeBody = Schema.decodeUnknownSync(BulkCategorizeRequestSchema)
 
 const toResponse = () => apiData({})
 

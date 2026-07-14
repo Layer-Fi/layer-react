@@ -1,17 +1,14 @@
 import { Schema } from 'effect'
 
 import { type BankTransactionMetadata } from '@internal-types/bankTransactions'
+import { BankTransactionMemoUpdateSchema } from '@schemas/bankTransactions/metadataUpdate'
 
 import { bankTransactionStore, findOrSeedBankTransaction } from '@msw/api/businesses/[business-id]/bank-transactions/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
 
-const UpdateMetadataBodySchema = Schema.Struct({
-  memo: Schema.String,
-})
-
-const decodeUpdateMetadataBody = Schema.decodeUnknownSync(UpdateMetadataBodySchema)
+const decodeUpdateMetadataBody = Schema.decodeUnknownSync(BankTransactionMemoUpdateSchema)
 
 const toResponse = (metadata: BankTransactionMetadata) => apiData(metadata)
 

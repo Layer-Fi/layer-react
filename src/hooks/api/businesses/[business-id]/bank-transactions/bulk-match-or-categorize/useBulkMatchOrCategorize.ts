@@ -1,8 +1,13 @@
 import { useCallback } from 'react'
-import { pipe, Schema } from 'effect'
+import { Schema } from 'effect'
 
 import { type Split } from '@internal-types/bankTransactions'
-import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
+import {
+  type BulkMatchOrCategorizeRequest,
+  type BulkMatchOrCategorizeRequestEncoded,
+  BulkMatchOrCategorizeRequestSchema,
+  type MatchOrCategorizeTransactionRequestSchema,
+} from '@schemas/bankTransactions/bulkMatchOrCategorize'
 import { post } from '@utils/api/authenticatedHttp'
 import { useBulkBankTransactionsTriggerSuccess } from '@hooks/api/businesses/[business-id]/bank-transactions/useBulkBankTransactionsTriggerSuccess'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
@@ -89,34 +94,6 @@ const buildBulkMatchOrCategorizePayload = (
 
   return transactions
 }
-
-export const MatchTransactionRequestSchema = Schema.Struct({
-  type: Schema.Literal('match'),
-  suggestedMatchId: pipe(
-    Schema.propertySignature(Schema.UUID),
-    Schema.fromKey('suggested_match_id'),
-  ),
-})
-
-export const CategorizeTransactionRequestSchema = Schema.Struct({
-  type: Schema.Literal('categorize'),
-  categorization: CategoryUpdateSchema,
-})
-
-export const MatchOrCategorizeTransactionRequestSchema = Schema.Union(
-  MatchTransactionRequestSchema,
-  CategorizeTransactionRequestSchema,
-)
-
-export const BulkMatchOrCategorizeRequestSchema = Schema.Struct({
-  transactions: Schema.Record({
-    key: Schema.UUID,
-    value: MatchOrCategorizeTransactionRequestSchema,
-  }),
-})
-
-type BulkMatchOrCategorizeRequest = typeof BulkMatchOrCategorizeRequestSchema.Type
-type BulkMatchOrCategorizeRequestEncoded = typeof BulkMatchOrCategorizeRequestSchema.Encoded
 
 const _BulkMatchOrCategorizeParamsSchema = Schema.Struct({
   businessId: Schema.String,

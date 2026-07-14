@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 
+import { type RemoveBankTransactionTagsUpdateEncoded } from '@schemas/bankTransactions/tagUpdate'
 import { del } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
@@ -7,9 +8,7 @@ import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const REMOVE_TAG_FROM_BANK_TRANSACTION_TAG_KEY = '#remove-tag-from-bank-transaction'
 
-type RemoveTagFromBankTransactionBody = {
-  tag_ids: ReadonlyArray<string>
-}
+type RemoveTagFromBankTransactionBody = RemoveBankTransactionTagsUpdateEncoded
 
 const removeTagFromBankTransaction = del<
   Record<string, never>,

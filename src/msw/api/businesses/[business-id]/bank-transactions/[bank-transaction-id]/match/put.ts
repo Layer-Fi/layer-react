@@ -1,6 +1,7 @@
-import { pipe, Schema } from 'effect'
+import { Schema } from 'effect'
 
 import { type Match, MatchSchema } from '@schemas/bankTransactions/match'
+import { ConfirmMatchUpdateSchema } from '@schemas/bankTransactions/matchUpdate'
 
 import { applyConfirmedMatch } from '@msw/api/businesses/[business-id]/bank-transactions/applyCategoryUpdate'
 import { bankTransactionStore, findOrSeedBankTransaction } from '@msw/api/businesses/[business-id]/bank-transactions/store'
@@ -9,15 +10,7 @@ import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
 
 const encodeMatch = Schema.encodeSync(MatchSchema)
-
-const MatchBankTransactionBodySchema = Schema.Struct({
-  matchId: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('match_id'),
-  ),
-})
-
-const decodeMatchBody = Schema.decodeUnknownSync(MatchBankTransactionBodySchema)
+const decodeMatchBody = Schema.decodeUnknownSync(ConfirmMatchUpdateSchema)
 
 const toResponse = (match: Match) => apiData(encodeMatch(match))
 

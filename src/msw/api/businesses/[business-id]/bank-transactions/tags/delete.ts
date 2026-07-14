@@ -1,14 +1,12 @@
 import { Schema } from 'effect'
 
+import { RemoveBankTransactionTagsUpdateSchema } from '@schemas/bankTransactions/tagUpdate'
+
 import { bankTransactionStore } from '@msw/api/businesses/[business-id]/bank-transactions/store'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
 
-const RemoveTagsBodySchema = Schema.Struct({
-  tag_ids: Schema.Array(Schema.String),
-})
-
-const decodeRemoveTagsBody = Schema.decodeUnknownSync(RemoveTagsBodySchema)
+const decodeRemoveTagsBody = Schema.decodeUnknownSync(RemoveBankTransactionTagsUpdateSchema)
 
 export const del = createMockEndpoint<Record<string, never>, Record<string, never>>({
   method: 'delete',
@@ -16,7 +14,7 @@ export const del = createMockEndpoint<Record<string, never>, Record<string, neve
   resolve: async ({ override, request }) => {
     if (override) return override
 
-    const { tag_ids: tagIds } = decodeRemoveTagsBody(await readRequestJson(request))
+    const { tagIds } = decodeRemoveTagsBody(await readRequestJson(request))
 
     bankTransactionStore.all().forEach((transaction) => {
       if (!transaction.transactionTags.some(tag => tagIds.includes(tag.id))) return
