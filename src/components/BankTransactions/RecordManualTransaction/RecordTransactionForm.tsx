@@ -137,6 +137,7 @@ export function RecordTransactionForm({ form, variant }: RecordTransactionFormPr
                       placeholder={t('bankTransactions:recordTransaction.placeholder.category', 'Select category...')}
                       showLabel
                       inline
+                      grouped
                       isInvalid={field.state.meta.errors.length > 0}
                       value={field.state.value}
                       onValueChange={field.handleChange}
