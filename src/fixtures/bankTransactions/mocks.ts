@@ -26,8 +26,8 @@ const baseBankTransaction: BankTransaction = {
     type: InputStrategy.AskFromSuggestions,
     category: null,
     suggestions: [
-      toAccountCategorization(bankTransactionCategories.officeSupplies),
-      toAccountCategorization(bankTransactionCategories.supplies),
+      toAccountCategorization(bankTransactionCategories.officeExpenses),
+      toAccountCategorization(bankTransactionCategories.costOfGoodsSold),
     ],
   },
   taxCode: null,

@@ -30,10 +30,10 @@ export const bankTransactions = [
           "amount": 94.04,
           "category": {
             "type": "Account",
-            "id": "category-supplies",
-            "stableName": "SUPPLIES",
-            "category": "SUPPLIES",
-            "displayName": "Supplies & Materials"
+            "id": "00000009-0000-4000-8000-000000000039",
+            "stableName": "OFFICE_EXPENSES",
+            "category": "OFFICE_EXPENSES",
+            "displayName": "Office Expenses"
           },
           "tags": []
         },
@@ -42,10 +42,10 @@ export const bankTransactions = [
           "amount": 101.87,
           "category": {
             "type": "Account",
-            "id": "category-meals",
-            "stableName": "MEALS_AND_ENTERTAINMENT",
-            "category": "MEALS_AND_ENTERTAINMENT",
-            "displayName": "Meals & Entertainment"
+            "id": "00000009-0000-4000-8000-000000000041",
+            "stableName": "MEALS",
+            "category": "MEALS",
+            "displayName": "Business Meals"
           },
           "tags": []
         }
@@ -89,24 +89,24 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-office-supplies",
-          "stableName": "OFFICE_SUPPLIES",
-          "category": "OFFICE_SUPPLIES",
-          "displayName": "Office Supplies"
+          "id": "00000009-0000-4000-8000-000000000039",
+          "stableName": "OFFICE_EXPENSES",
+          "category": "OFFICE_EXPENSES",
+          "displayName": "Office Expenses"
         },
         {
           "type": "Account",
-          "id": "category-supplies",
-          "stableName": "SUPPLIES",
-          "category": "SUPPLIES",
-          "displayName": "Supplies & Materials"
+          "id": "00000009-0000-4000-8000-000000000028",
+          "stableName": "COST_OF_GOODS_SOLD",
+          "category": "COST_OF_GOODS_SOLD",
+          "displayName": "Cost of Goods Sold"
         },
         {
           "type": "Account",
-          "id": "category-equipment",
-          "stableName": "EQUIPMENT",
-          "category": "EQUIPMENT",
-          "displayName": "Equipment"
+          "id": "00000009-0000-4000-8000-000000000042",
+          "stableName": "SOFTWARE",
+          "category": "SOFTWARE",
+          "displayName": "Software"
         }
       ]
     },
@@ -207,10 +207,10 @@ export const bankTransactions = [
           "amount": 0.82,
           "category": {
             "type": "Account",
-            "id": "category-meals",
-            "stableName": "MEALS_AND_ENTERTAINMENT",
-            "category": "MEALS_AND_ENTERTAINMENT",
-            "displayName": "Meals & Entertainment"
+            "id": "00000009-0000-4000-8000-000000000041",
+            "stableName": "MEALS",
+            "category": "MEALS",
+            "displayName": "Business Meals"
           },
           "tags": []
         },
@@ -219,10 +219,10 @@ export const bankTransactions = [
           "amount": 3.3,
           "category": {
             "type": "Account",
-            "id": "category-travel",
+            "id": "00000009-0000-4000-8000-000000000040",
             "stableName": "TRAVEL",
             "category": "TRAVEL",
-            "displayName": "Travel"
+            "displayName": "Business Travel"
           },
           "tags": []
         }
@@ -261,7 +261,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-sales",
+      "id": "00000009-0000-4000-8000-000000000024",
       "stableName": "SALES",
       "category": "SALES",
       "displayName": "Sales"
@@ -299,10 +299,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-meals",
-      "stableName": "MEALS_AND_ENTERTAINMENT",
-      "category": "MEALS_AND_ENTERTAINMENT",
-      "displayName": "Meals & Entertainment"
+      "id": "00000009-0000-4000-8000-000000000041",
+      "stableName": "MEALS",
+      "category": "MEALS",
+      "displayName": "Business Meals"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -352,10 +352,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-phone-and-internet",
-          "stableName": "PHONE_AND_INTERNET",
-          "category": "PHONE_AND_INTERNET",
-          "displayName": "Phone & Internet"
+          "id": "00000009-0000-4000-8000-000000000036",
+          "stableName": "UTILITIES",
+          "category": "UTILITIES",
+          "displayName": "Utilities"
         }
       ]
     },
@@ -401,10 +401,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-advertising",
-      "stableName": "ADVERTISING_AND_MARKETING",
-      "category": "ADVERTISING_AND_MARKETING",
-      "displayName": "Advertising & Marketing"
+      "id": "00000009-0000-4000-8000-000000000038",
+      "stableName": "MARKETING",
+      "category": "MARKETING",
+      "displayName": "Marketing"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -481,10 +481,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-software",
-      "stableName": "SOFTWARE_SUBSCRIPTIONS",
-      "category": "SOFTWARE_SUBSCRIPTIONS",
-      "displayName": "Software & Subscriptions"
+      "id": "00000009-0000-4000-8000-000000000042",
+      "stableName": "SOFTWARE",
+      "category": "SOFTWARE",
+      "displayName": "Software"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -524,10 +524,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-phone-and-internet",
-          "stableName": "PHONE_AND_INTERNET",
-          "category": "PHONE_AND_INTERNET",
-          "displayName": "Phone & Internet"
+          "id": "00000009-0000-4000-8000-000000000036",
+          "stableName": "UTILITIES",
+          "category": "UTILITIES",
+          "displayName": "Utilities"
         }
       ]
     },
@@ -568,10 +568,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-phone-and-internet",
-          "stableName": "PHONE_AND_INTERNET",
-          "category": "PHONE_AND_INTERNET",
-          "displayName": "Phone & Internet"
+          "id": "00000009-0000-4000-8000-000000000036",
+          "stableName": "UTILITIES",
+          "category": "UTILITIES",
+          "displayName": "Utilities"
         }
       ]
     },
@@ -626,10 +626,10 @@ export const bankTransactions = [
           "amount": 3.85,
           "category": {
             "type": "Account",
-            "id": "category-meals",
-            "stableName": "MEALS_AND_ENTERTAINMENT",
-            "category": "MEALS_AND_ENTERTAINMENT",
-            "displayName": "Meals & Entertainment"
+            "id": "00000009-0000-4000-8000-000000000041",
+            "stableName": "MEALS",
+            "category": "MEALS",
+            "displayName": "Business Meals"
           },
           "tags": []
         },
@@ -638,10 +638,10 @@ export const bankTransactions = [
           "amount": 12.19,
           "category": {
             "type": "Account",
-            "id": "category-travel",
+            "id": "00000009-0000-4000-8000-000000000040",
             "stableName": "TRAVEL",
             "category": "TRAVEL",
-            "displayName": "Travel"
+            "displayName": "Business Travel"
           },
           "tags": []
         }
@@ -680,7 +680,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-sales",
+      "id": "00000009-0000-4000-8000-000000000024",
       "stableName": "SALES",
       "category": "SALES",
       "displayName": "Sales"
@@ -729,10 +729,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-repairs",
-      "stableName": "REPAIRS_AND_MAINTENANCE",
-      "category": "REPAIRS_AND_MAINTENANCE",
-      "displayName": "Repairs & Maintenance"
+      "id": "00000009-0000-4000-8000-000000000039",
+      "stableName": "OFFICE_EXPENSES",
+      "category": "OFFICE_EXPENSES",
+      "displayName": "Office Expenses"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -767,10 +767,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-meals",
-      "stableName": "MEALS_AND_ENTERTAINMENT",
-      "category": "MEALS_AND_ENTERTAINMENT",
-      "displayName": "Meals & Entertainment"
+      "id": "00000009-0000-4000-8000-000000000041",
+      "stableName": "MEALS",
+      "category": "MEALS",
+      "displayName": "Business Meals"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -805,10 +805,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-meals",
-      "stableName": "MEALS_AND_ENTERTAINMENT",
-      "category": "MEALS_AND_ENTERTAINMENT",
-      "displayName": "Meals & Entertainment"
+      "id": "00000009-0000-4000-8000-000000000041",
+      "stableName": "MEALS",
+      "category": "MEALS",
+      "displayName": "Business Meals"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -848,24 +848,17 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-repairs",
-          "stableName": "REPAIRS_AND_MAINTENANCE",
-          "category": "REPAIRS_AND_MAINTENANCE",
-          "displayName": "Repairs & Maintenance"
+          "id": "00000009-0000-4000-8000-000000000039",
+          "stableName": "OFFICE_EXPENSES",
+          "category": "OFFICE_EXPENSES",
+          "displayName": "Office Expenses"
         },
         {
           "type": "Account",
-          "id": "category-supplies",
-          "stableName": "SUPPLIES",
-          "category": "SUPPLIES",
-          "displayName": "Supplies & Materials"
-        },
-        {
-          "type": "Account",
-          "id": "category-equipment",
-          "stableName": "EQUIPMENT",
-          "category": "EQUIPMENT",
-          "displayName": "Equipment"
+          "id": "00000009-0000-4000-8000-000000000028",
+          "stableName": "COST_OF_GOODS_SOLD",
+          "category": "COST_OF_GOODS_SOLD",
+          "displayName": "Cost of Goods Sold"
         }
       ]
     },
@@ -906,17 +899,17 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-software",
-          "stableName": "SOFTWARE_SUBSCRIPTIONS",
-          "category": "SOFTWARE_SUBSCRIPTIONS",
-          "displayName": "Software & Subscriptions"
+          "id": "00000009-0000-4000-8000-000000000042",
+          "stableName": "SOFTWARE",
+          "category": "SOFTWARE",
+          "displayName": "Software"
         },
         {
           "type": "Account",
-          "id": "category-equipment",
-          "stableName": "EQUIPMENT",
-          "category": "EQUIPMENT",
-          "displayName": "Equipment"
+          "id": "00000009-0000-4000-8000-000000000039",
+          "stableName": "OFFICE_EXPENSES",
+          "category": "OFFICE_EXPENSES",
+          "displayName": "Office Expenses"
         }
       ]
     },
@@ -1018,10 +1011,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-travel",
+      "id": "00000009-0000-4000-8000-000000000040",
       "stableName": "TRAVEL",
       "category": "TRAVEL",
-      "displayName": "Travel"
+      "displayName": "Business Travel"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -1066,10 +1059,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-advertising",
-      "stableName": "ADVERTISING_AND_MARKETING",
-      "category": "ADVERTISING_AND_MARKETING",
-      "displayName": "Advertising & Marketing"
+      "id": "00000009-0000-4000-8000-000000000038",
+      "stableName": "MARKETING",
+      "category": "MARKETING",
+      "displayName": "Marketing"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -1113,10 +1106,10 @@ export const bankTransactions = [
           "amount": 216.95,
           "category": {
             "type": "Account",
-            "id": "category-software",
-            "stableName": "SOFTWARE_SUBSCRIPTIONS",
-            "category": "SOFTWARE_SUBSCRIPTIONS",
-            "displayName": "Software & Subscriptions"
+            "id": "00000009-0000-4000-8000-000000000042",
+            "stableName": "SOFTWARE",
+            "category": "SOFTWARE",
+            "displayName": "Software"
           },
           "tags": []
         },
@@ -1125,10 +1118,10 @@ export const bankTransactions = [
           "amount": 76.23,
           "category": {
             "type": "Account",
-            "id": "category-advertising",
-            "stableName": "ADVERTISING_AND_MARKETING",
-            "category": "ADVERTISING_AND_MARKETING",
-            "displayName": "Advertising & Marketing"
+            "id": "00000009-0000-4000-8000-000000000038",
+            "stableName": "MARKETING",
+            "category": "MARKETING",
+            "displayName": "Marketing"
           },
           "tags": []
         }
@@ -1167,10 +1160,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-software",
-      "stableName": "SOFTWARE_SUBSCRIPTIONS",
-      "category": "SOFTWARE_SUBSCRIPTIONS",
-      "displayName": "Software & Subscriptions"
+      "id": "00000009-0000-4000-8000-000000000042",
+      "stableName": "SOFTWARE",
+      "category": "SOFTWARE",
+      "displayName": "Software"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -1205,10 +1198,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-repairs",
-      "stableName": "REPAIRS_AND_MAINTENANCE",
-      "category": "REPAIRS_AND_MAINTENANCE",
-      "displayName": "Repairs & Maintenance"
+      "id": "00000009-0000-4000-8000-000000000039",
+      "stableName": "OFFICE_EXPENSES",
+      "category": "OFFICE_EXPENSES",
+      "displayName": "Office Expenses"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -1248,10 +1241,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-advertising",
-          "stableName": "ADVERTISING_AND_MARKETING",
-          "category": "ADVERTISING_AND_MARKETING",
-          "displayName": "Advertising & Marketing"
+          "id": "00000009-0000-4000-8000-000000000038",
+          "stableName": "MARKETING",
+          "category": "MARKETING",
+          "displayName": "Marketing"
         }
       ]
     },
@@ -1292,10 +1285,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-software",
-          "stableName": "SOFTWARE_SUBSCRIPTIONS",
-          "category": "SOFTWARE_SUBSCRIPTIONS",
-          "displayName": "Software & Subscriptions"
+          "id": "00000009-0000-4000-8000-000000000042",
+          "stableName": "SOFTWARE",
+          "category": "SOFTWARE",
+          "displayName": "Software"
         }
       ]
     },
@@ -1331,10 +1324,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-software",
-      "stableName": "SOFTWARE_SUBSCRIPTIONS",
-      "category": "SOFTWARE_SUBSCRIPTIONS",
-      "displayName": "Software & Subscriptions"
+      "id": "00000009-0000-4000-8000-000000000042",
+      "stableName": "SOFTWARE",
+      "category": "SOFTWARE",
+      "displayName": "Software"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -1369,7 +1362,7 @@ export const bankTransactions = [
     "direction": "CREDIT",
     "amount": 1781.05,
     "counterpartyName": null,
-    "description": "ONLINE TRANSFER FROM SAVINGS ACCOUNT XXXXXX5367",
+    "description": "ONLINE TRANSFER FROM BUSINESS CHECKING XXXXXX5367",
     "accountName": "Operating Account",
     "accountMask": "0005",
     "accountInstitution": {
@@ -1389,9 +1382,9 @@ export const bankTransactions = [
           "id": "match-details-0000000f-ed16-47c9-8822-f09847446fab",
           "amount": 1781.05,
           "date": new Date("2025-09-17T15:45:00.000Z"),
-          "description": "Transfer between Savings and Operating Account",
+          "description": "Transfer between Business Checking and Operating Account",
           "adjustment": null,
-          "fromAccountName": "Savings",
+          "fromAccountName": "Business Checking",
           "toAccountName": "Operating Account"
         }
       }
@@ -1457,10 +1450,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-office-supplies",
-      "stableName": "OFFICE_SUPPLIES",
-      "category": "OFFICE_SUPPLIES",
-      "displayName": "Office Supplies"
+      "id": "00000009-0000-4000-8000-000000000039",
+      "stableName": "OFFICE_EXPENSES",
+      "category": "OFFICE_EXPENSES",
+      "displayName": "Office Expenses"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -1514,10 +1507,10 @@ export const bankTransactions = [
           "amount": 79.33,
           "category": {
             "type": "Account",
-            "id": "category-office-supplies",
-            "stableName": "OFFICE_SUPPLIES",
-            "category": "OFFICE_SUPPLIES",
-            "displayName": "Office Supplies"
+            "id": "00000009-0000-4000-8000-000000000039",
+            "stableName": "OFFICE_EXPENSES",
+            "category": "OFFICE_EXPENSES",
+            "displayName": "Office Expenses"
           },
           "tags": []
         },
@@ -1526,10 +1519,10 @@ export const bankTransactions = [
           "amount": 93.13,
           "category": {
             "type": "Account",
-            "id": "category-supplies",
-            "stableName": "SUPPLIES",
-            "category": "SUPPLIES",
-            "displayName": "Supplies & Materials"
+            "id": "00000009-0000-4000-8000-000000000028",
+            "stableName": "COST_OF_GOODS_SOLD",
+            "category": "COST_OF_GOODS_SOLD",
+            "displayName": "Cost of Goods Sold"
           },
           "tags": []
         }
@@ -1565,19 +1558,37 @@ export const bankTransactions = [
       "name": "Citibank",
       "logo": null
     },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "category-payroll",
-      "stableName": "PAYROLL",
-      "category": "PAYROLL",
-      "displayName": "Payroll"
-    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
     "suggestedMatches": [],
-    "match": null,
+    "match": {
+      "id": "match-0000000f-0593-4609-85e3-8c2437afb967",
+      "matchType": "BILL_PAYMENT",
+      "bankTransaction": {
+        "id": "0000000f-0593-4609-85e3-8c2437afb967",
+        "date": new Date("2025-09-02T15:45:00.000Z"),
+        "direction": "DEBIT",
+        "amount": 5489.13,
+        "counterpartyName": "Gusto",
+        "description": "GUSTO PAY 780225"
+      },
+      "details": {
+        "type": "Bill_Match",
+        "id": "match-details-0000000f-0593-4609-85e3-8c2437afb967",
+        "amount": 5489.13,
+        "date": new Date("2025-09-02T15:45:00.000Z"),
+        "description": "Bill payment to Gusto",
+        "adjustment": null,
+        "billIdentifiers": [
+          {
+            "id": "bill-0000000f-0593-4609-85e3-8c2437afb967"
+          }
+        ]
+      }
+    },
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
@@ -1638,10 +1649,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-shipping",
-      "stableName": "SHIPPING_AND_POSTAGE",
-      "category": "SHIPPING_AND_POSTAGE",
-      "displayName": "Shipping & Postage"
+      "id": "00000009-0000-4000-8000-000000000039",
+      "stableName": "OFFICE_EXPENSES",
+      "category": "OFFICE_EXPENSES",
+      "displayName": "Office Expenses"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -1681,10 +1692,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-rent",
-          "stableName": "RENT_AND_LEASE",
-          "category": "RENT_AND_LEASE",
-          "displayName": "Rent & Lease"
+          "id": "00000009-0000-4000-8000-000000000035",
+          "stableName": "RENT",
+          "category": "RENT",
+          "displayName": "Rent"
         }
       ]
     },
@@ -1720,10 +1731,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-phone-and-internet",
-      "stableName": "PHONE_AND_INTERNET",
-      "category": "PHONE_AND_INTERNET",
-      "displayName": "Phone & Internet"
+      "id": "00000009-0000-4000-8000-000000000036",
+      "stableName": "UTILITIES",
+      "category": "UTILITIES",
+      "displayName": "Utilities"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -1767,10 +1778,10 @@ export const bankTransactions = [
           "amount": 3.77,
           "category": {
             "type": "Account",
-            "id": "category-meals",
-            "stableName": "MEALS_AND_ENTERTAINMENT",
-            "category": "MEALS_AND_ENTERTAINMENT",
-            "displayName": "Meals & Entertainment"
+            "id": "00000009-0000-4000-8000-000000000041",
+            "stableName": "MEALS",
+            "category": "MEALS",
+            "displayName": "Business Meals"
           },
           "tags": []
         },
@@ -1779,10 +1790,10 @@ export const bankTransactions = [
           "amount": 5,
           "category": {
             "type": "Account",
-            "id": "category-travel",
+            "id": "00000009-0000-4000-8000-000000000040",
             "stableName": "TRAVEL",
             "category": "TRAVEL",
-            "displayName": "Travel"
+            "displayName": "Business Travel"
           },
           "tags": []
         }
@@ -1821,10 +1832,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-software",
-      "stableName": "SOFTWARE_SUBSCRIPTIONS",
-      "category": "SOFTWARE_SUBSCRIPTIONS",
-      "displayName": "Software & Subscriptions"
+      "id": "00000009-0000-4000-8000-000000000042",
+      "stableName": "SOFTWARE",
+      "category": "SOFTWARE",
+      "displayName": "Software"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -1864,10 +1875,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-advertising",
-          "stableName": "ADVERTISING_AND_MARKETING",
-          "category": "ADVERTISING_AND_MARKETING",
-          "displayName": "Advertising & Marketing"
+          "id": "00000009-0000-4000-8000-000000000038",
+          "stableName": "MARKETING",
+          "category": "MARKETING",
+          "displayName": "Marketing"
         }
       ]
     },
@@ -1893,7 +1904,7 @@ export const bankTransactions = [
     "direction": "DEBIT",
     "amount": 9999.81,
     "counterpartyName": null,
-    "description": "ONLINE TRANSFER TO SAVINGS ACCOUNT XXXXXX2328",
+    "description": "ONLINE TRANSFER TO RESERVE ACCOUNT XXXXXX2328",
     "accountName": "Operating Account",
     "accountMask": "9992",
     "accountInstitution": {
@@ -1915,17 +1926,17 @@ export const bankTransactions = [
         "direction": "DEBIT",
         "amount": 9999.81,
         "counterpartyName": null,
-        "description": "ONLINE TRANSFER TO SAVINGS ACCOUNT XXXXXX2328"
+        "description": "ONLINE TRANSFER TO RESERVE ACCOUNT XXXXXX2328"
       },
       "details": {
         "type": "Transfer_Match",
         "id": "match-details-0000000f-2c52-42af-8093-65ca2189e89b",
         "amount": 9999.81,
         "date": new Date("2025-08-04T15:45:00.000Z"),
-        "description": "Transfer between Operating Account and Savings",
+        "description": "Transfer between Operating Account and Reserve Account",
         "adjustment": null,
         "fromAccountName": "Operating Account",
-        "toAccountName": "Savings"
+        "toAccountName": "Reserve Account"
       }
     },
     "transactionTags": [],
@@ -1961,7 +1972,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-sales",
+          "id": "00000009-0000-4000-8000-000000000024",
           "stableName": "SALES",
           "category": "SALES",
           "displayName": "Sales"
@@ -1990,7 +2001,7 @@ export const bankTransactions = [
     "direction": "CREDIT",
     "amount": 1.03,
     "counterpartyName": null,
-    "description": "ONLINE TRANSFER FROM SAVINGS ACCOUNT XXXXXX1759",
+    "description": "ONLINE TRANSFER FROM BUSINESS CREDIT CARD XXXXXX1759",
     "accountName": "Reserve Account",
     "accountMask": "3572",
     "accountInstitution": {
@@ -2010,9 +2021,9 @@ export const bankTransactions = [
           "id": "match-details-0000000f-34cf-4505-8943-165c473ffe6c",
           "amount": 1.03,
           "date": new Date("2025-07-28T15:45:00.000Z"),
-          "description": "Transfer between Savings and Reserve Account",
+          "description": "Transfer between Business Credit Card and Reserve Account",
           "adjustment": null,
-          "fromAccountName": "Savings",
+          "fromAccountName": "Business Credit Card",
           "toAccountName": "Reserve Account"
         }
       }
@@ -2051,7 +2062,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-sales",
+          "id": "00000009-0000-4000-8000-000000000024",
           "stableName": "SALES",
           "category": "SALES",
           "displayName": "Sales"
@@ -2127,7 +2138,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-sales",
+          "id": "00000009-0000-4000-8000-000000000024",
           "stableName": "SALES",
           "category": "SALES",
           "displayName": "Sales"
@@ -2177,10 +2188,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-repairs",
-      "stableName": "REPAIRS_AND_MAINTENANCE",
-      "category": "REPAIRS_AND_MAINTENANCE",
-      "displayName": "Repairs & Maintenance"
+      "id": "00000009-0000-4000-8000-000000000039",
+      "stableName": "OFFICE_EXPENSES",
+      "category": "OFFICE_EXPENSES",
+      "displayName": "Office Expenses"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -2205,7 +2216,7 @@ export const bankTransactions = [
     "direction": "DEBIT",
     "amount": 4271.95,
     "counterpartyName": null,
-    "description": "ONLINE TRANSFER TO SAVINGS ACCOUNT XXXXXX8710",
+    "description": "ONLINE TRANSFER TO RESERVE ACCOUNT XXXXXX8710",
     "accountName": "Savings",
     "accountMask": "9994",
     "accountInstitution": {
@@ -2227,17 +2238,17 @@ export const bankTransactions = [
         "direction": "DEBIT",
         "amount": 4271.95,
         "counterpartyName": null,
-        "description": "ONLINE TRANSFER TO SAVINGS ACCOUNT XXXXXX8710"
+        "description": "ONLINE TRANSFER TO RESERVE ACCOUNT XXXXXX8710"
       },
       "details": {
         "type": "Transfer_Match",
         "id": "match-details-0000000f-208b-4d9a-8bab-ece06c69610f",
         "amount": 4271.95,
         "date": new Date("2025-07-09T15:45:00.000Z"),
-        "description": "Transfer between Savings and Savings",
+        "description": "Transfer between Savings and Reserve Account",
         "adjustment": null,
         "fromAccountName": "Savings",
-        "toAccountName": "Savings"
+        "toAccountName": "Reserve Account"
       }
     },
     "transactionTags": [],
@@ -2273,17 +2284,17 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-software",
-          "stableName": "SOFTWARE_SUBSCRIPTIONS",
-          "category": "SOFTWARE_SUBSCRIPTIONS",
-          "displayName": "Software & Subscriptions"
+          "id": "00000009-0000-4000-8000-000000000042",
+          "stableName": "SOFTWARE",
+          "category": "SOFTWARE",
+          "displayName": "Software"
         },
         {
           "type": "Account",
-          "id": "category-advertising",
-          "stableName": "ADVERTISING_AND_MARKETING",
-          "category": "ADVERTISING_AND_MARKETING",
-          "displayName": "Advertising & Marketing"
+          "id": "00000009-0000-4000-8000-000000000038",
+          "stableName": "MARKETING",
+          "category": "MARKETING",
+          "displayName": "Marketing"
         }
       ]
     },
@@ -2309,7 +2320,7 @@ export const bankTransactions = [
     "direction": "DEBIT",
     "amount": 8018.33,
     "counterpartyName": null,
-    "description": "ONLINE TRANSFER TO SAVINGS ACCOUNT XXXXXX3324",
+    "description": "ONLINE TRANSFER TO BUSINESS CHECKING XXXXXX3324",
     "accountName": "Primary Checking",
     "accountMask": "4997",
     "accountInstitution": {
@@ -2331,17 +2342,17 @@ export const bankTransactions = [
         "direction": "DEBIT",
         "amount": 8018.33,
         "counterpartyName": null,
-        "description": "ONLINE TRANSFER TO SAVINGS ACCOUNT XXXXXX3324"
+        "description": "ONLINE TRANSFER TO BUSINESS CHECKING XXXXXX3324"
       },
       "details": {
         "type": "Transfer_Match",
         "id": "match-details-0000000f-a4eb-4419-8e14-9ce4b5cec937",
         "amount": 8018.33,
         "date": new Date("2025-07-02T15:45:00.000Z"),
-        "description": "Transfer between Primary Checking and Savings",
+        "description": "Transfer between Primary Checking and Business Checking",
         "adjustment": null,
         "fromAccountName": "Primary Checking",
-        "toAccountName": "Savings"
+        "toAccountName": "Business Checking"
       }
     },
     "transactionTags": [],
@@ -2377,24 +2388,24 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-office-supplies",
-          "stableName": "OFFICE_SUPPLIES",
-          "category": "OFFICE_SUPPLIES",
-          "displayName": "Office Supplies"
+          "id": "00000009-0000-4000-8000-000000000039",
+          "stableName": "OFFICE_EXPENSES",
+          "category": "OFFICE_EXPENSES",
+          "displayName": "Office Expenses"
         },
         {
           "type": "Account",
-          "id": "category-supplies",
-          "stableName": "SUPPLIES",
-          "category": "SUPPLIES",
-          "displayName": "Supplies & Materials"
+          "id": "00000009-0000-4000-8000-000000000028",
+          "stableName": "COST_OF_GOODS_SOLD",
+          "category": "COST_OF_GOODS_SOLD",
+          "displayName": "Cost of Goods Sold"
         },
         {
           "type": "Account",
-          "id": "category-equipment",
-          "stableName": "EQUIPMENT",
-          "category": "EQUIPMENT",
-          "displayName": "Equipment"
+          "id": "00000009-0000-4000-8000-000000000042",
+          "stableName": "SOFTWARE",
+          "category": "SOFTWARE",
+          "displayName": "Software"
         }
       ]
     },
@@ -2435,7 +2446,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-sales",
+          "id": "00000009-0000-4000-8000-000000000024",
           "stableName": "SALES",
           "category": "SALES",
           "displayName": "Sales"
@@ -2490,10 +2501,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-rent",
-          "stableName": "RENT_AND_LEASE",
-          "category": "RENT_AND_LEASE",
-          "displayName": "Rent & Lease"
+          "id": "00000009-0000-4000-8000-000000000035",
+          "stableName": "RENT",
+          "category": "RENT",
+          "displayName": "Rent"
         }
       ]
     },
@@ -2539,7 +2550,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-sales",
+      "id": "00000009-0000-4000-8000-000000000024",
       "stableName": "SALES",
       "category": "SALES",
       "displayName": "Sales"
@@ -2582,17 +2593,17 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-office-supplies",
-          "stableName": "OFFICE_SUPPLIES",
-          "category": "OFFICE_SUPPLIES",
-          "displayName": "Office Supplies"
+          "id": "00000009-0000-4000-8000-000000000039",
+          "stableName": "OFFICE_EXPENSES",
+          "category": "OFFICE_EXPENSES",
+          "displayName": "Office Expenses"
         },
         {
           "type": "Account",
-          "id": "category-supplies",
-          "stableName": "SUPPLIES",
-          "category": "SUPPLIES",
-          "displayName": "Supplies & Materials"
+          "id": "00000009-0000-4000-8000-000000000028",
+          "stableName": "COST_OF_GOODS_SOLD",
+          "category": "COST_OF_GOODS_SOLD",
+          "displayName": "Cost of Goods Sold"
         }
       ]
     },
@@ -2638,10 +2649,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-rent",
-      "stableName": "RENT_AND_LEASE",
-      "category": "RENT_AND_LEASE",
-      "displayName": "Rent & Lease"
+      "id": "00000009-0000-4000-8000-000000000035",
+      "stableName": "RENT",
+      "category": "RENT",
+      "displayName": "Rent"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -2676,10 +2687,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-payroll",
-      "stableName": "PAYROLL",
-      "category": "PAYROLL",
-      "displayName": "Payroll"
+      "id": "00000009-0000-4000-8000-000000000032",
+      "stableName": "PAYROLL_REGULAR_WAGES",
+      "category": "PAYROLL_REGULAR_WAGES",
+      "displayName": "Employee Wages"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -2704,7 +2715,7 @@ export const bankTransactions = [
     "direction": "DEBIT",
     "amount": 1.03,
     "counterpartyName": null,
-    "description": "ONLINE TRANSFER TO SAVINGS ACCOUNT XXXXXX4206",
+    "description": "ONLINE TRANSFER TO OPERATING ACCOUNT XXXXXX4206",
     "accountName": "Business Credit Card",
     "accountMask": "5745",
     "accountInstitution": {
@@ -2726,17 +2737,17 @@ export const bankTransactions = [
         "direction": "DEBIT",
         "amount": 1.03,
         "counterpartyName": null,
-        "description": "ONLINE TRANSFER TO SAVINGS ACCOUNT XXXXXX4206"
+        "description": "ONLINE TRANSFER TO OPERATING ACCOUNT XXXXXX4206"
       },
       "details": {
         "type": "Transfer_Match",
         "id": "match-details-0000000f-0e82-4ef5-8d64-8beb148bc676",
         "amount": 1.03,
         "date": new Date("2025-06-03T15:45:00.000Z"),
-        "description": "Transfer between Business Credit Card and Savings",
+        "description": "Transfer between Business Credit Card and Operating Account",
         "adjustment": null,
         "fromAccountName": "Business Credit Card",
-        "toAccountName": "Savings"
+        "toAccountName": "Operating Account"
       }
     },
     "transactionTags": [],
@@ -2772,24 +2783,17 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-repairs",
-          "stableName": "REPAIRS_AND_MAINTENANCE",
-          "category": "REPAIRS_AND_MAINTENANCE",
-          "displayName": "Repairs & Maintenance"
+          "id": "00000009-0000-4000-8000-000000000039",
+          "stableName": "OFFICE_EXPENSES",
+          "category": "OFFICE_EXPENSES",
+          "displayName": "Office Expenses"
         },
         {
           "type": "Account",
-          "id": "category-supplies",
-          "stableName": "SUPPLIES",
-          "category": "SUPPLIES",
-          "displayName": "Supplies & Materials"
-        },
-        {
-          "type": "Account",
-          "id": "category-equipment",
-          "stableName": "EQUIPMENT",
-          "category": "EQUIPMENT",
-          "displayName": "Equipment"
+          "id": "00000009-0000-4000-8000-000000000028",
+          "stableName": "COST_OF_GOODS_SOLD",
+          "category": "COST_OF_GOODS_SOLD",
+          "displayName": "Cost of Goods Sold"
         }
       ]
     },
@@ -2825,7 +2829,7 @@ export const bankTransactions = [
     "direction": "CREDIT",
     "amount": 2535.72,
     "counterpartyName": null,
-    "description": "ONLINE TRANSFER FROM SAVINGS ACCOUNT XXXXXX2079",
+    "description": "ONLINE TRANSFER FROM RESERVE ACCOUNT XXXXXX2079",
     "accountName": "Business Checking",
     "accountMask": "2196",
     "accountInstitution": {
@@ -2845,9 +2849,9 @@ export const bankTransactions = [
           "id": "match-details-0000000f-d6d6-45a2-85a4-89a7176a1d51",
           "amount": 2535.72,
           "date": new Date("2025-05-27T15:45:00.000Z"),
-          "description": "Transfer between Savings and Business Checking",
+          "description": "Transfer between Reserve Account and Business Checking",
           "adjustment": null,
-          "fromAccountName": "Savings",
+          "fromAccountName": "Reserve Account",
           "toAccountName": "Business Checking"
         }
       }
@@ -2886,17 +2890,17 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-software",
-          "stableName": "SOFTWARE_SUBSCRIPTIONS",
-          "category": "SOFTWARE_SUBSCRIPTIONS",
-          "displayName": "Software & Subscriptions"
+          "id": "00000009-0000-4000-8000-000000000042",
+          "stableName": "SOFTWARE",
+          "category": "SOFTWARE",
+          "displayName": "Software"
         },
         {
           "type": "Account",
-          "id": "category-equipment",
-          "stableName": "EQUIPMENT",
-          "category": "EQUIPMENT",
-          "displayName": "Equipment"
+          "id": "00000009-0000-4000-8000-000000000039",
+          "stableName": "OFFICE_EXPENSES",
+          "category": "OFFICE_EXPENSES",
+          "displayName": "Office Expenses"
         }
       ]
     },
@@ -2932,7 +2936,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-sales",
+      "id": "00000009-0000-4000-8000-000000000024",
       "stableName": "SALES",
       "category": "SALES",
       "displayName": "Sales"
@@ -2981,10 +2985,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-rent",
-      "stableName": "RENT_AND_LEASE",
-      "category": "RENT_AND_LEASE",
-      "displayName": "Rent & Lease"
+      "id": "00000009-0000-4000-8000-000000000035",
+      "stableName": "RENT",
+      "category": "RENT",
+      "displayName": "Rent"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -3024,10 +3028,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-advertising",
-          "stableName": "ADVERTISING_AND_MARKETING",
-          "category": "ADVERTISING_AND_MARKETING",
-          "displayName": "Advertising & Marketing"
+          "id": "00000009-0000-4000-8000-000000000038",
+          "stableName": "MARKETING",
+          "category": "MARKETING",
+          "displayName": "Marketing"
         }
       ]
     },
@@ -3073,10 +3077,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-insurance",
+      "id": "00000009-0000-4000-8000-000000000037",
       "stableName": "INSURANCE",
       "category": "INSURANCE",
-      "displayName": "Insurance"
+      "displayName": "Business Insurance"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -3126,7 +3130,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-sales",
+          "id": "00000009-0000-4000-8000-000000000024",
           "stableName": "SALES",
           "category": "SALES",
           "displayName": "Sales"
@@ -3198,7 +3202,7 @@ export const bankTransactions = [
     "direction": "CREDIT",
     "amount": 4891.09,
     "counterpartyName": null,
-    "description": "ONLINE TRANSFER FROM SAVINGS ACCOUNT XXXXXX9061",
+    "description": "ONLINE TRANSFER FROM OPERATING ACCOUNT XXXXXX9061",
     "accountName": "Business Credit Card",
     "accountMask": "4111",
     "accountInstitution": {
@@ -3218,9 +3222,9 @@ export const bankTransactions = [
           "id": "match-details-0000000f-eda2-46d6-8f61-7caa97dfbb59",
           "amount": 4891.09,
           "date": new Date("2025-04-27T15:45:00.000Z"),
-          "description": "Transfer between Savings and Business Credit Card",
+          "description": "Transfer between Operating Account and Business Credit Card",
           "adjustment": null,
-          "fromAccountName": "Savings",
+          "fromAccountName": "Operating Account",
           "toAccountName": "Business Credit Card"
         }
       }
@@ -3259,17 +3263,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-auto-and-fuel",
-          "stableName": "AUTO_AND_FUEL",
-          "category": "AUTO_AND_FUEL",
-          "displayName": "Auto & Fuel"
-        },
-        {
-          "type": "Account",
-          "id": "category-travel",
+          "id": "00000009-0000-4000-8000-000000000040",
           "stableName": "TRAVEL",
           "category": "TRAVEL",
-          "displayName": "Travel"
+          "displayName": "Business Travel"
         }
       ]
     },
@@ -3361,10 +3358,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-phone-and-internet",
-      "stableName": "PHONE_AND_INTERNET",
-      "category": "PHONE_AND_INTERNET",
-      "displayName": "Phone & Internet"
+      "id": "00000009-0000-4000-8000-000000000036",
+      "stableName": "UTILITIES",
+      "category": "UTILITIES",
+      "displayName": "Utilities"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -3399,7 +3396,7 @@ export const bankTransactions = [
     "direction": "DEBIT",
     "amount": 9240.26,
     "counterpartyName": null,
-    "description": "ONLINE TRANSFER TO SAVINGS ACCOUNT XXXXXX3393",
+    "description": "ONLINE TRANSFER TO SAVINGS XXXXXX3393",
     "accountName": "Reserve Account",
     "accountMask": "4100",
     "accountInstitution": {
@@ -3460,17 +3457,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-auto-and-fuel",
-          "stableName": "AUTO_AND_FUEL",
-          "category": "AUTO_AND_FUEL",
-          "displayName": "Auto & Fuel"
-        },
-        {
-          "type": "Account",
-          "id": "category-travel",
+          "id": "00000009-0000-4000-8000-000000000040",
           "stableName": "TRAVEL",
           "category": "TRAVEL",
-          "displayName": "Travel"
+          "displayName": "Business Travel"
         }
       ]
     },
@@ -3503,19 +3493,37 @@ export const bankTransactions = [
       "name": "Capital One",
       "logo": null
     },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "category-payroll",
-      "stableName": "PAYROLL",
-      "category": "PAYROLL",
-      "displayName": "Payroll"
-    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
     "suggestedMatches": [],
-    "match": null,
+    "match": {
+      "id": "match-0000000f-bd74-4e8f-8ce4-7e13782bb6ef",
+      "matchType": "BILL_PAYMENT",
+      "bankTransaction": {
+        "id": "0000000f-bd74-4e8f-8ce4-7e13782bb6ef",
+        "date": new Date("2025-04-05T15:45:00.000Z"),
+        "direction": "DEBIT",
+        "amount": 8761.83,
+        "counterpartyName": "Gusto",
+        "description": "GUSTO PAY 121103"
+      },
+      "details": {
+        "type": "Bill_Match",
+        "id": "match-details-0000000f-bd74-4e8f-8ce4-7e13782bb6ef",
+        "amount": 8761.83,
+        "date": new Date("2025-04-05T15:45:00.000Z"),
+        "description": "Bill payment to Gusto",
+        "adjustment": null,
+        "billIdentifiers": [
+          {
+            "id": "bill-0000000f-bd74-4e8f-8ce4-7e13782bb6ef"
+          }
+        ]
+      }
+    },
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
@@ -3544,10 +3552,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-repairs",
-      "stableName": "REPAIRS_AND_MAINTENANCE",
-      "category": "REPAIRS_AND_MAINTENANCE",
-      "displayName": "Repairs & Maintenance"
+      "id": "00000009-0000-4000-8000-000000000039",
+      "stableName": "OFFICE_EXPENSES",
+      "category": "OFFICE_EXPENSES",
+      "displayName": "Office Expenses"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -3582,7 +3590,7 @@ export const bankTransactions = [
     "direction": "CREDIT",
     "amount": 1.02,
     "counterpartyName": null,
-    "description": "ONLINE TRANSFER FROM SAVINGS ACCOUNT XXXXXX9854",
+    "description": "ONLINE TRANSFER FROM OPERATING ACCOUNT XXXXXX9854",
     "accountName": "Savings",
     "accountMask": "9204",
     "accountInstitution": {
@@ -3604,16 +3612,16 @@ export const bankTransactions = [
         "direction": "CREDIT",
         "amount": 1.02,
         "counterpartyName": null,
-        "description": "ONLINE TRANSFER FROM SAVINGS ACCOUNT XXXXXX9854"
+        "description": "ONLINE TRANSFER FROM OPERATING ACCOUNT XXXXXX9854"
       },
       "details": {
         "type": "Transfer_Match",
         "id": "match-details-0000000f-d9b6-45cc-85c8-b527e24fd1fd",
         "amount": 1.02,
         "date": new Date("2025-03-29T15:45:00.000Z"),
-        "description": "Transfer between Savings and Savings",
+        "description": "Transfer between Operating Account and Savings",
         "adjustment": null,
-        "fromAccountName": "Savings",
+        "fromAccountName": "Operating Account",
         "toAccountName": "Savings"
       }
     },
@@ -3645,10 +3653,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-repairs",
-      "stableName": "REPAIRS_AND_MAINTENANCE",
-      "category": "REPAIRS_AND_MAINTENANCE",
-      "displayName": "Repairs & Maintenance"
+      "id": "00000009-0000-4000-8000-000000000039",
+      "stableName": "OFFICE_EXPENSES",
+      "category": "OFFICE_EXPENSES",
+      "displayName": "Office Expenses"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -3688,10 +3696,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-meals",
-          "stableName": "MEALS_AND_ENTERTAINMENT",
-          "category": "MEALS_AND_ENTERTAINMENT",
-          "displayName": "Meals & Entertainment"
+          "id": "00000009-0000-4000-8000-000000000041",
+          "stableName": "MEALS",
+          "category": "MEALS",
+          "displayName": "Business Meals"
         }
       ]
     },
@@ -3727,10 +3735,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-travel",
+      "id": "00000009-0000-4000-8000-000000000040",
       "stableName": "TRAVEL",
       "category": "TRAVEL",
-      "displayName": "Travel"
+      "displayName": "Business Travel"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -3765,10 +3773,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-meals",
-      "stableName": "MEALS_AND_ENTERTAINMENT",
-      "category": "MEALS_AND_ENTERTAINMENT",
-      "displayName": "Meals & Entertainment"
+      "id": "00000009-0000-4000-8000-000000000041",
+      "stableName": "MEALS",
+      "category": "MEALS",
+      "displayName": "Business Meals"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -3818,17 +3826,17 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-software",
-          "stableName": "SOFTWARE_SUBSCRIPTIONS",
-          "category": "SOFTWARE_SUBSCRIPTIONS",
-          "displayName": "Software & Subscriptions"
+          "id": "00000009-0000-4000-8000-000000000042",
+          "stableName": "SOFTWARE",
+          "category": "SOFTWARE",
+          "displayName": "Software"
         },
         {
           "type": "Account",
-          "id": "category-advertising",
-          "stableName": "ADVERTISING_AND_MARKETING",
-          "category": "ADVERTISING_AND_MARKETING",
-          "displayName": "Advertising & Marketing"
+          "id": "00000009-0000-4000-8000-000000000038",
+          "stableName": "MARKETING",
+          "category": "MARKETING",
+          "displayName": "Marketing"
         }
       ]
     },
@@ -3874,10 +3882,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-software",
-      "stableName": "SOFTWARE_SUBSCRIPTIONS",
-      "category": "SOFTWARE_SUBSCRIPTIONS",
-      "displayName": "Software & Subscriptions"
+      "id": "00000009-0000-4000-8000-000000000042",
+      "stableName": "SOFTWARE",
+      "category": "SOFTWARE",
+      "displayName": "Software"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -3912,7 +3920,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-sales",
+      "id": "00000009-0000-4000-8000-000000000024",
       "stableName": "SALES",
       "category": "SALES",
       "displayName": "Sales"
@@ -3966,7 +3974,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-sales",
+          "id": "00000009-0000-4000-8000-000000000024",
           "stableName": "SALES",
           "category": "SALES",
           "displayName": "Sales"
@@ -4021,17 +4029,17 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-office-supplies",
-          "stableName": "OFFICE_SUPPLIES",
-          "category": "OFFICE_SUPPLIES",
-          "displayName": "Office Supplies"
+          "id": "00000009-0000-4000-8000-000000000039",
+          "stableName": "OFFICE_EXPENSES",
+          "category": "OFFICE_EXPENSES",
+          "displayName": "Office Expenses"
         },
         {
           "type": "Account",
-          "id": "category-supplies",
-          "stableName": "SUPPLIES",
-          "category": "SUPPLIES",
-          "displayName": "Supplies & Materials"
+          "id": "00000009-0000-4000-8000-000000000028",
+          "stableName": "COST_OF_GOODS_SOLD",
+          "category": "COST_OF_GOODS_SOLD",
+          "displayName": "Cost of Goods Sold"
         }
       ]
     },
@@ -4104,10 +4112,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-rent",
-          "stableName": "RENT_AND_LEASE",
-          "category": "RENT_AND_LEASE",
-          "displayName": "Rent & Lease"
+          "id": "00000009-0000-4000-8000-000000000035",
+          "stableName": "RENT",
+          "category": "RENT",
+          "displayName": "Rent"
         }
       ]
     },
@@ -4143,10 +4151,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-rent",
-      "stableName": "RENT_AND_LEASE",
-      "category": "RENT_AND_LEASE",
-      "displayName": "Rent & Lease"
+      "id": "00000009-0000-4000-8000-000000000035",
+      "stableName": "RENT",
+      "category": "RENT",
+      "displayName": "Rent"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -4274,17 +4282,17 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-software",
-          "stableName": "SOFTWARE_SUBSCRIPTIONS",
-          "category": "SOFTWARE_SUBSCRIPTIONS",
-          "displayName": "Software & Subscriptions"
+          "id": "00000009-0000-4000-8000-000000000042",
+          "stableName": "SOFTWARE",
+          "category": "SOFTWARE",
+          "displayName": "Software"
         },
         {
           "type": "Account",
-          "id": "category-equipment",
-          "stableName": "EQUIPMENT",
-          "category": "EQUIPMENT",
-          "displayName": "Equipment"
+          "id": "00000009-0000-4000-8000-000000000039",
+          "stableName": "OFFICE_EXPENSES",
+          "category": "OFFICE_EXPENSES",
+          "displayName": "Office Expenses"
         }
       ]
     },
@@ -4335,10 +4343,17 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-payroll",
-          "stableName": "PAYROLL",
-          "category": "PAYROLL",
-          "displayName": "Payroll"
+          "id": "00000009-0000-4000-8000-000000000032",
+          "stableName": "PAYROLL_REGULAR_WAGES",
+          "category": "PAYROLL_REGULAR_WAGES",
+          "displayName": "Employee Wages"
+        },
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000033",
+          "stableName": "PAYROLL_CONTRACTORS",
+          "category": "PAYROLL_CONTRACTORS",
+          "displayName": "Contractors"
         }
       ]
     },
@@ -4393,10 +4408,10 @@ export const bankTransactions = [
           "amount": 9.27,
           "category": {
             "type": "Account",
-            "id": "category-meals",
-            "stableName": "MEALS_AND_ENTERTAINMENT",
-            "category": "MEALS_AND_ENTERTAINMENT",
-            "displayName": "Meals & Entertainment"
+            "id": "00000009-0000-4000-8000-000000000041",
+            "stableName": "MEALS",
+            "category": "MEALS",
+            "displayName": "Business Meals"
           },
           "tags": []
         },
@@ -4405,10 +4420,10 @@ export const bankTransactions = [
           "amount": 7.29,
           "category": {
             "type": "Account",
-            "id": "category-travel",
+            "id": "00000009-0000-4000-8000-000000000040",
             "stableName": "TRAVEL",
             "category": "TRAVEL",
-            "displayName": "Travel"
+            "displayName": "Business Travel"
           },
           "tags": []
         }
@@ -4462,10 +4477,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-software",
-          "stableName": "SOFTWARE_SUBSCRIPTIONS",
-          "category": "SOFTWARE_SUBSCRIPTIONS",
-          "displayName": "Software & Subscriptions"
+          "id": "00000009-0000-4000-8000-000000000042",
+          "stableName": "SOFTWARE",
+          "category": "SOFTWARE",
+          "displayName": "Software"
         }
       ]
     },
@@ -4501,7 +4516,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-sales",
+      "id": "00000009-0000-4000-8000-000000000024",
       "stableName": "SALES",
       "category": "SALES",
       "displayName": "Sales"
@@ -4544,10 +4559,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "category-phone-and-internet",
-          "stableName": "PHONE_AND_INTERNET",
-          "category": "PHONE_AND_INTERNET",
-          "displayName": "Phone & Internet"
+          "id": "00000009-0000-4000-8000-000000000036",
+          "stableName": "UTILITIES",
+          "category": "UTILITIES",
+          "displayName": "Utilities"
         }
       ]
     },
@@ -4573,7 +4588,7 @@ export const bankTransactions = [
     "direction": "CREDIT",
     "amount": 1.05,
     "counterpartyName": null,
-    "description": "ONLINE TRANSFER FROM SAVINGS ACCOUNT XXXXXX2859",
+    "description": "ONLINE TRANSFER FROM RESERVE ACCOUNT XXXXXX2859",
     "accountName": "Primary Checking",
     "accountMask": "0013",
     "accountInstitution": {
@@ -4593,9 +4608,9 @@ export const bankTransactions = [
           "id": "match-details-0000000f-46a3-4775-87b1-0799b8818e20",
           "amount": 1.05,
           "date": new Date("2025-01-11T15:45:00.000Z"),
-          "description": "Transfer between Savings and Primary Checking",
+          "description": "Transfer between Reserve Account and Primary Checking",
           "adjustment": null,
-          "fromAccountName": "Savings",
+          "fromAccountName": "Reserve Account",
           "toAccountName": "Primary Checking"
         }
       }
@@ -4629,10 +4644,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-auto-and-fuel",
-      "stableName": "AUTO_AND_FUEL",
-      "category": "AUTO_AND_FUEL",
-      "displayName": "Auto & Fuel"
+      "id": "00000009-0000-4000-8000-000000000040",
+      "stableName": "TRAVEL",
+      "category": "TRAVEL",
+      "displayName": "Business Travel"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -4667,10 +4682,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-advertising",
-      "stableName": "ADVERTISING_AND_MARKETING",
-      "category": "ADVERTISING_AND_MARKETING",
-      "displayName": "Advertising & Marketing"
+      "id": "00000009-0000-4000-8000-000000000038",
+      "stableName": "MARKETING",
+      "category": "MARKETING",
+      "displayName": "Marketing"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -4705,10 +4720,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "category-software",
-      "stableName": "SOFTWARE_SUBSCRIPTIONS",
-      "category": "SOFTWARE_SUBSCRIPTIONS",
-      "displayName": "Software & Subscriptions"
+      "id": "00000009-0000-4000-8000-000000000042",
+      "stableName": "SOFTWARE",
+      "category": "SOFTWARE",
+      "displayName": "Software"
     },
     "categorizationFlow": null,
     "taxCode": null,

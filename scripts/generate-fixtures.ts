@@ -100,7 +100,7 @@ const renderFixtureModule = (
 // load time (e.g. trips embedding real vehicles) must have that dependency
 // generated first in the same run, or they'd see one-run-stale data.
 const DOMAIN_DEPENDENCIES: Record<string, readonly string[]> = {
-  bankTransactions: ['customers', 'vendors'],
+  bankTransactions: ['chartOfAccounts', 'customers', 'vendors'],
   trips: ['vehicles'],
   timeEntries: ['catalogServices', 'customers'],
   ledgerEntries: ['chartOfAccounts', 'customers', 'vendors'],

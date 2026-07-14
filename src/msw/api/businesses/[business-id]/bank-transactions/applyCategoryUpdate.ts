@@ -12,6 +12,7 @@ import { type TransactionTag } from '@schemas/tag'
 
 import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'
 import { toAccountCategorization } from '@fixtures/bankTransactions/utils'
+import { accountNames } from '@fixtures/constants/bank/accountNames'
 
 type AccountCategorization = typeof AccountCategorizationSchema.Type
 type ExclusionCategorization = typeof ExclusionCategorizationSchema.Type
@@ -120,6 +121,7 @@ export const applyCategoryUpdate = (
       },
       categorizationFlow: null,
       match: null,
+      suggestedMatches: [],
     }
   }
 
@@ -130,6 +132,7 @@ export const applyCategoryUpdate = (
     taxCode: update.taxCode ?? transaction.taxCode,
     categorizationFlow: null,
     match: null,
+    suggestedMatches: [],
   }
 }
 
@@ -166,6 +169,8 @@ export const applyConfirmedMatch = (
 ): { transaction: BankTransaction, match: Match } => {
   const suggestedMatch = transaction.suggestedMatches.find(match => match.id === suggestedMatchId)
 
+  const fromAccountName = transaction.accountName ?? 'Business Checking'
+
   const details = suggestedMatch?.details ?? {
     type: 'Transfer_Match',
     id: `match-details-${transaction.id}`,
@@ -173,8 +178,8 @@ export const applyConfirmedMatch = (
     date: transaction.date,
     description: transaction.description ?? 'Transfer',
     adjustment: null,
-    fromAccountName: transaction.accountName ?? 'Business Checking',
-    toAccountName: 'Savings',
+    fromAccountName,
+    toAccountName: accountNames.find(name => name !== fromAccountName) ?? 'Savings',
   }
 
   const match: Match = {

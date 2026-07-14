@@ -10,6 +10,7 @@ import {
   type BankTransactionMerchant,
   bankTransactionMerchants,
 } from '@fixtures/bankTransactions/constants'
+import { accountNames } from '@fixtures/constants/bank/accountNames'
 
 type AccountCategorization = typeof AccountCategorizationSchema.Type
 
@@ -32,11 +33,15 @@ const deriveTransfer = (
 ): BankTransaction => {
   const outbound = statusRoll % 2 === 0
   const accountName = transaction.accountName ?? 'Business Checking'
-  const fromAccountName = outbound ? accountName : 'Savings'
-  const toAccountName = outbound ? 'Savings' : accountName
+  // The other leg is drawn from the accounts the transaction isn't already
+  // on, so a transfer never reports the same account on both sides.
+  const counterpartyAccounts = accountNames.filter(name => name !== accountName)
+  const counterpartyAccount = counterpartyAccounts[ref % counterpartyAccounts.length]
+  const fromAccountName = outbound ? accountName : counterpartyAccount
+  const toAccountName = outbound ? counterpartyAccount : accountName
   const description = outbound
-    ? `ONLINE TRANSFER TO SAVINGS ACCOUNT XXXXXX${String(ref).slice(0, 4)}`
-    : `ONLINE TRANSFER FROM SAVINGS ACCOUNT XXXXXX${String(ref).slice(0, 4)}`
+    ? `ONLINE TRANSFER TO ${counterpartyAccount.toUpperCase()} XXXXXX${String(ref).slice(0, 4)}`
+    : `ONLINE TRANSFER FROM ${counterpartyAccount.toUpperCase()} XXXXXX${String(ref).slice(0, 4)}`
 
   const details: MatchDetailsType = {
     type: 'Transfer_Match',
