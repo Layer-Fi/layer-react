@@ -9,17 +9,6 @@ import { type TaxSummary, TaxSummaryState } from '@schemas/taxEstimates/summary'
 
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 
-/*
- * A single, internally-consistent source of truth for tax-estimate mock data.
- *
- * Every endpoint (overview / summary / details / payments / banner) is *derived*
- * from this one object rather than hand-written, so the numbers always reconcile:
- * taxable income = income - deductions; each section's `total - paid = owed`; the
- * quarterly schedule's owed amounts sum to the full-year tax and its paid amounts
- * sum to taxes-paid; the banner mirrors the same quarterly balances. Amounts are
- * in cents (the currency unit `MoneySpan` renders).
- */
-
 type LineItem = {
   rowKey: string
   label: string
@@ -28,10 +17,8 @@ type LineItem = {
 
 type ScenarioQuarter = {
   quarter: number
-  /** Estimated payment that falls due this quarter. */
   federalOwed: number
   stateOwed: number
-  /** Amount actually paid toward this quarter to date. */
   federalPaid: number
   statePaid: number
 }
@@ -67,7 +54,6 @@ const DEFAULT_SCENARIO: TaxScenario = {
     { rowKey: 'qbi-deduction', label: 'Qualified business income deduction', amount: 2_000_000 },
     { rowKey: 'retirement', label: 'Retirement contributions', amount: 1_000_000 },
   ],
-  // Q1-Q3 paid in full, Q4 (due next January) still outstanding.
   quarters: [
     { quarter: 1, federalOwed: 700_000, stateOwed: 175_000, federalPaid: 700_000, statePaid: 175_000 },
     { quarter: 2, federalOwed: 700_000, stateOwed: 175_000, federalPaid: 700_000, statePaid: 175_000 },
@@ -78,13 +64,12 @@ const DEFAULT_SCENARIO: TaxScenario = {
 }
 
 export const makeTaxScenario = (overrides: Partial<TaxScenario> = {}): TaxScenario => ({
-  ...DEFAULT_SCENARIO,
+  ...structuredClone(DEFAULT_SCENARIO),
   ...overrides,
 })
 
 const sum = (values: number[]) => values.reduce((total, value) => total + value, 0)
 
-/* Federal-estimated-payment due dates for the tax year; Q4 falls in the next January. */
 const quarterDueDate = (year: number, quarter: number): CalendarDate => {
   switch (quarter) {
     case 1: return new CalendarDate(year, 4, 15)
@@ -131,7 +116,7 @@ export const deriveTaxSummary = (scenario: TaxScenario): TaxSummary => ({
   year: scenario.year,
   state: summaryState(scenario),
   projectedTaxesOwed: projectedTaxesOwed(scenario),
-  taxesDueAt: annualDueDate(scenario.year).toDate('UTC'),
+  taxesDueAt: new Date(scenario.year + 1, 3, 15),
   uncategorizedTaxPayments: 0,
   sections: [
     {
@@ -221,7 +206,6 @@ type QuarterBalance = {
   remainingBalance: number
 }
 
-/* Walk the quarters in order, carrying any positive balance forward as the next quarter's rollover. */
 const runningBalances = (owed: number[], paid: number[]): QuarterBalance[] => {
   const balances: QuarterBalance[] = []
   let carried = 0
@@ -269,8 +253,6 @@ export const deriveTaxBanner = (scenario: TaxScenario): TaxEstimatesBanner => {
     scenario.quarters.map(q => q.federalPaid + q.statePaid),
   )
   const now = new CalendarDate(scenario.year, 12, 31)
-  // Attribute uncategorized activity to the current (final) quarter so the per-quarter
-  // figures still sum to the banner totals.
   const currentQuarterIndex = scenario.quarters.length - 1
 
   const quarters = scenario.quarters.map((quarter, index): TaxEstimatesBannerQuarter => {

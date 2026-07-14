@@ -6,7 +6,6 @@ import { resolveYearParam } from '@msw/api/businesses/[business-id]/tax-estimate
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { makeTaxDetails } from '@fixtures/taxEstimates/mocks'
 
-// Encoding the unwrapped-response transform re-adds the `data` envelope.
 const toResponse = Schema.encodeSync(TaxDetailsResponseSchema)
 
 export const get = createMockEndpoint<TaxDetails, ReturnType<typeof toResponse>>({
