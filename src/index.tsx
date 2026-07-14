@@ -39,7 +39,7 @@ export { GlobalDateRangeSelection } from './components/DateSelection/GlobalDateR
 export { GlobalMonthPicker } from './components/GlobalMonthPicker/GlobalMonthPicker'
 
 /* --------------------- Cards -------------------------- */
-export { MileageSummaryCard as unstable_MileageSummaryCard } from './components/MileageSummaryCard/MileageSummaryCard'
+export { MileageSummaryCard } from './components/MileageSummaryCard/MileageSummaryCard'
 
 /*
 ======================= Composite Views =======================
@@ -50,7 +50,7 @@ export { AccountingOverview } from './views/AccountingOverview/AccountingOvervie
 export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWithLinkedAccounts/BankTransactionsWithLinkedAccounts'
 export { BookkeepingOverview } from './views/BookkeepingOverview/BookkeepingOverview'
 export { GeneralLedgerView } from './views/GeneralLedger/GeneralLedger'
-export { unstable_MileageTracking } from './views/MileageTracking'
+export { MileageTracking } from './views/MileageTracking'
 export { Reports } from './views/Reports/Reports'
 export { SolopreneurOverview } from './views/SolopreneurOverview/SolopreneurOverview'
 export { TaxEstimates } from './views/TaxEstimates/TaxEstimates'
