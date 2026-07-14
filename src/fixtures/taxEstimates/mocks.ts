@@ -1,14 +1,14 @@
 import { FilingStatus } from '@schemas/taxEstimates/filingStatus'
 import { type TaxProfile } from '@schemas/taxEstimates/profile'
 
+import { makeTaxScenario } from '@fixtures/taxEstimates/scenario/constants'
 import {
   deriveTaxBanner,
   deriveTaxDetails,
   deriveTaxOverview,
   deriveTaxPayments,
   deriveTaxSummary,
-  makeTaxScenario,
-} from '@fixtures/taxEstimates/scenario'
+} from '@fixtures/taxEstimates/scenario/derive'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 
 const baseTaxProfile: TaxProfile = {
