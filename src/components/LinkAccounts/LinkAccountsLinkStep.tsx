@@ -24,10 +24,10 @@ import { ConditionalList } from '@components/utility/ConditionalList'
 import { useWizard } from '@components/Wizard/Wizard'
 
 type LinkAccountsLinkStepProps = {
-  showDoneLinkingButton?: boolean
+  isReconnectFlow?: boolean
 }
 
-export function LinkAccountsLinkStep({ showDoneLinkingButton = true }: LinkAccountsLinkStepProps) {
+export function LinkAccountsLinkStep({ isReconnectFlow = false }: LinkAccountsLinkStepProps) {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { isLinking, addConnection } = useContext(LinkedAccountsContext)
@@ -48,14 +48,18 @@ export function LinkAccountsLinkStep({ showDoneLinkingButton = true }: LinkAccou
           Empty={(
             <VStack gap='xl' pbe='md' align='start'>
               <P status='disabled'>
-                {t('linkedAccounts:label.connect_bank_accounts_and_credit_cards', 'Connect your bank accounts and credit cards to automatically import your business transactions.')}
+                {isReconnectFlow
+                  ? t('linkedAccounts:label.reconnect_bank_accounts_and_credit_cards_description', 'Reconnect your bank accounts and credit cards to automatically import your business transactions.')
+                  : t('linkedAccounts:label.connect_bank_accounts_and_credit_cards', 'Connect your bank accounts and credit cards to automatically import your business transactions.')}
               </P>
               <LinkAccountDemoTooltip active={isDemoBusiness}>
                 <Button
                   onClick={() => { void addConnection('PLAID') }}
                   isDisabled={isDemoBusiness || loadingStatus !== 'complete' || isLinking}
                 >
-                  {t('linkedAccounts:action.connect_my_bank', 'Connect my bank')}
+                  {isReconnectFlow
+                    ? t('linkedAccounts:action.reconnect_my_accounts', 'Reconnect My Accounts')
+                    : t('linkedAccounts:action.connect_my_bank', 'Connect my bank')}
                   <Link size={12} />
                 </Button>
               </LinkAccountDemoTooltip>
@@ -65,12 +69,19 @@ export function LinkAccountsLinkStep({ showDoneLinkingButton = true }: LinkAccou
             <VStack>
               <VStack gap='2xs' pbe='md'>
                 <Heading level={3} size='sm'>
-                  {tPlural(t, 'linkedAccounts:label.found_accounts_count', {
-                    count: effectiveAccounts.length,
-                    displayCount: formatNumber(effectiveAccounts.length),
-                    one: 'We’ve found {{displayCount}} account',
-                    other: 'We’ve found {{displayCount}} accounts',
-                  })}
+                  {isReconnectFlow
+                    ? tPlural(t, 'linkedAccounts:label.connected_accounts_count', {
+                      count: effectiveAccounts.length,
+                      displayCount: formatNumber(effectiveAccounts.length),
+                      one: 'You’ve connected {{displayCount}} account',
+                      other: 'You’ve connected {{displayCount}} accounts',
+                    })
+                    : tPlural(t, 'linkedAccounts:label.found_accounts_count', {
+                      count: effectiveAccounts.length,
+                      displayCount: formatNumber(effectiveAccounts.length),
+                      one: 'We’ve found {{displayCount}} account',
+                      other: 'We’ve found {{displayCount}} accounts',
+                    })}
                 </Heading>
                 <P status='disabled'>
                   {t('linkedAccounts:label.remove_unused_accounts_next_step', 'You’ll have the chance to remove any accounts you don’t use for your business in the next step.')}
@@ -81,15 +92,19 @@ export function LinkAccountsLinkStep({ showDoneLinkingButton = true }: LinkAccou
               </LinkAccountsListContainer>
               <VStack pbs='xl'>
                 <ActionableRow
-                  title={t('linkedAccounts:prompt.use_other_bank_accounts_or_cards', 'Do you use any other bank accounts or credit cards for your business?')}
+                  title={isReconnectFlow
+                    ? t('linkedAccounts:prompt.connect_all_bank_accounts_for_bookkeeping', 'Please connect all your bank accounts for bookkeeping')
+                    : t('linkedAccounts:prompt.use_other_bank_accounts_or_cards', 'Do you use any other bank accounts or credit cards for your business?')}
                   button={(
                     <LinkAccountDemoTooltip active={isDemoBusiness}>
                       <Button
                         onClick={() => { void addConnection('PLAID') }}
                         isDisabled={isDemoBusiness || loadingStatus !== 'complete' || isLinking}
-                        variant='outlined'
+                        variant={isReconnectFlow ? 'solid' : 'outlined'}
                       >
-                        {t('linkedAccounts:action.link_another_bank', 'Link another bank')}
+                        {isReconnectFlow
+                          ? t('linkedAccounts:action.reconnect_another_bank', 'Reconnect another bank')
+                          : t('linkedAccounts:action.link_another_bank', 'Link another bank')}
                         <Link size={12} />
                       </Button>
                     </LinkAccountDemoTooltip>
@@ -122,7 +137,7 @@ export function LinkAccountsLinkStep({ showDoneLinkingButton = true }: LinkAccou
           )}
         </ConditionalList>
       </ElevatedLoadingSpinnerContainer>
-      {showDoneLinkingButton && effectiveAccounts.length > 0
+      {!isReconnectFlow && effectiveAccounts.length > 0
         ? (
           <>
             <Separator mbs='lg' mbe='lg' />
