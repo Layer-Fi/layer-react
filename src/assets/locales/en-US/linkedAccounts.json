@@ -17,8 +17,6 @@
     "link_another_bank": "Link another bank",
     "mark_duplicate_account": "Mark as a duplicate account",
     "mark_not_duplicate_account": "Mark as not a duplicate account",
-    "reconnect_another_bank": "Reconnect another bank",
-    "reconnect_my_accounts": "Reconnect My Accounts",
     "repair_connection": "Repair connection",
     "unlink_account": "Unlink account",
     "unlink_account_label": "Unlink Account",
@@ -51,8 +49,6 @@
     "confirm_remove_accounts_for_institution": "Please confirm you wish to remove all accounts belonging to this institution",
     "confirm_remove_accounts_for_institution_name": "Please confirm you wish to remove all accounts belonging to {{institutionName}}",
     "connect_bank_accounts_and_credit_cards": "Connect your bank accounts and credit cards to automatically import your business transactions.",
-    "connected_accounts_count_one": "You’ve connected {{displayCount}} account",
-    "connected_accounts_count_other": "You’ve connected {{displayCount}} accounts",
     "data_is_syncing": "Data is syncing",
     "deselect_unused_accounts": "Please deselect any accounts you don't use for your business.",
     "found_accounts_count_one": "We’ve found {{displayCount}} account",
@@ -74,14 +70,11 @@
     "no_data_sync_until_confirm": "No data will be synced until you confirm.",
     "opening_balance": "Opening balance",
     "opening_date": "Opening date",
-    "reconnect_bank_accounts_and_credit_cards": "Reconnect your bank accounts and credit cards",
-    "reconnect_bank_accounts_and_credit_cards_description": "Reconnect your bank accounts and credit cards to automatically import your business transactions.",
     "remove_unused_accounts_next_step": "You’ll have the chance to remove any accounts you don’t use for your business in the next step.",
     "select_accounts_use_one": "We’ve pulled the below account from your institution. Unselect it if you do not want it connected.",
     "select_accounts_use_other": "We’ve pulled the below accounts from your institution. Please unselect any accounts you do not want connected."
   },
   "prompt": {
-    "connect_all_bank_accounts_for_bookkeeping": "Please connect all your bank accounts for bookkeeping",
     "use_other_bank_accounts_or_cards": "Do you use any other bank accounts or credit cards for your business?",
     "which_accounts_for_business": "Which accounts do you use for businesses?"
   },
