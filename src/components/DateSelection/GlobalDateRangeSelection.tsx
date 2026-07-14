@@ -1,7 +1,7 @@
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { DateRangeSelection } from '@components/DateSelection/DateRangeSelection'
 
-type GlobalDateRangeSelectionProps = {
+export type GlobalDateRangeSelectionProps = {
   showLabels?: boolean
   isCompact?: boolean
 }

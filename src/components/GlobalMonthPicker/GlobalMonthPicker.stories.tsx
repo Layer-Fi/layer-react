@@ -1,23 +1,12 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { type DateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
-import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
+import { GlobalMonthPicker, type GlobalMonthPickerProps } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 
 import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
 import { handlers } from '@msw/handlers'
 import { makeBusiness } from '@fixtures/business/mocks'
-import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
+import { FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
 import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
-
-const PINNED_RANGE: DateRange = {
-  startDate: new Date(FIXTURE_YEAR, 8, 1),
-  endDate: new Date(FIXTURE_YEAR, 8, 30),
-}
-
-type GlobalMonthPickerProps = {
-  truncateMonth?: boolean
-  showLabel?: boolean
-}
 
 const meta: Meta<GlobalMonthPickerProps> = {
   title: 'Date/GlobalMonthPicker',
@@ -28,7 +17,7 @@ const meta: Meta<GlobalMonthPickerProps> = {
   },
   decorators: [
     Story => (
-      <PinnedGlobalDateRange dateRange={PINNED_RANGE}>
+      <PinnedGlobalDateRange dateRange={FIXTURE_YEAR_RANGE}>
         <div style={{ padding: '2rem', maxInlineSize: '20rem' }}>
           <Story />
         </div>
