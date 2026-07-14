@@ -10,11 +10,8 @@ type LinkedAccountsStoryArgs = {
   title: string
 } & Pick<LinkedAccountsProps, 'stringOverrides'>
 
-/*
- * Trim the seeded store to two accounts instead of overriding the GET handler:
- * the add-account (plaid link exchange) and confirm/exclude mocks mutate the
- * store, so the GET must stay store-driven for those flows to work.
- */
+// Trim the store rather than overriding the GET handler: the add-account and
+// confirm/exclude mocks mutate the store, so the GET must stay store-driven.
 const keepTwoAccounts = () => {
   bankAccounts.slice(2).forEach(({ id }) => bankAccountStore.deleteById(id))
 }

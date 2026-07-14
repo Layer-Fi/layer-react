@@ -17,13 +17,8 @@ type TasksStoryArgs = {
   onClickReconnectAccounts?: () => void
 }
 
-/*
- * The reconnect notification only renders when the bank-accounts response has
- * accounts with `isDisconnected && notifyWhenDisconnected`, and MSW handlers
- * are registered once per story load — they can't read args. The handler is
- * given this mutable array, whose second entry is swapped when the callback
- * toggle changes; the mock encodes it per request, so a refetch picks it up.
- */
+// MSW handlers register once per story load and can't read args, so the callback
+// toggle mutates this array and refetches to control the disconnected banner.
 const mockAccounts = [...bankAccounts]
 
 const setSecondAccountDisconnected = (disconnected: boolean) => {
