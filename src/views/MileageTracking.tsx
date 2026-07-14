@@ -8,7 +8,7 @@ import { MileageTrackingStats } from '@components/MileageTrackingStats/MileageTr
 import { Trips } from '@components/Trips/Trips'
 import { View } from '@components/View/View'
 
-export const unstable_MileageTracking = ({ showTitle = true }: { showTitle?: boolean }) => {
+export const MileageTracking = ({ showTitle = true }: { showTitle?: boolean }) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { t } = useTranslation()
 
