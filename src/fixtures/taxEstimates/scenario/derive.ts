@@ -155,7 +155,8 @@ export const deriveTaxBanner = (scenario: TaxScenario): TaxEstimatesBanner => {
     scenario.quarters.map(q => q.federalPaid + q.statePaid),
   )
   const now = today(getLocalTimeZone())
-  const currentQuarterIndex = scenario.quarters.length - 1
+  const nextDueIndex = scenario.quarters.findIndex(quarter => quarterDueDate(scenario.year, quarter.quarter).compare(now) >= 0)
+  const currentQuarterIndex = nextDueIndex === -1 ? scenario.quarters.length - 1 : nextDueIndex
   const { earliestAt, latestAt } = scenario.uncategorized
 
   const quarters = scenario.quarters.map((quarter, index): TaxEstimatesBannerQuarter => {
