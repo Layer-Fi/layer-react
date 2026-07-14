@@ -5,14 +5,14 @@ import { GlobalDateRangeSelection, type GlobalDateRangeSelectionProps } from '@c
 import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
 import { handlers } from '@msw/handlers'
 import { makeBusiness } from '@fixtures/business/mocks'
-import { FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
+import { FIXTURE_YEAR, FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
 import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
 
 const meta: Meta<GlobalDateRangeSelectionProps> = {
   title: 'Date/GlobalDateRangeSelection',
   component: GlobalDateRangeSelection,
   parameters: {
-    msw: { handlers: [getBusiness.mock(makeBusiness({ activationAt: new Date(2024, 0, 1) })), ...handlers] },
+    msw: { handlers: [getBusiness.mock(makeBusiness({ activationAt: new Date(FIXTURE_YEAR - 1, 0, 1) })), ...handlers] },
     controls: { include: ['showLabels', 'isCompact'] },
   },
   decorators: [
