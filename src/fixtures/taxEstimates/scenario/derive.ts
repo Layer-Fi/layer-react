@@ -18,7 +18,6 @@ import {
   projectedTaxesOwed,
   quarterDueDate,
   quarterLabel,
-  rebaseToYear,
   runningBalances,
   stateOwedRemaining,
   statePaid,
@@ -157,8 +156,7 @@ export const deriveTaxBanner = (scenario: TaxScenario): TaxEstimatesBanner => {
   )
   const now = today(getLocalTimeZone())
   const currentQuarterIndex = scenario.quarters.length - 1
-  const earliestUncategorizedAt = rebaseToYear(scenario.uncategorized.earliestAt, scenario.year)
-  const latestUncategorizedAt = rebaseToYear(scenario.uncategorized.latestAt, scenario.year)
+  const { earliestAt, latestAt } = scenario.uncategorized
 
   const quarters = scenario.quarters.map((quarter, index): TaxEstimatesBannerQuarter => {
     const dueDate = quarterDueDate(scenario.year, quarter.quarter)
@@ -182,8 +180,8 @@ export const deriveTaxBanner = (scenario: TaxScenario): TaxEstimatesBanner => {
       uncategorizedCount: isCurrentQuarter ? scenario.uncategorized.count : 0,
       uncategorizedMoneyIn: isCurrentQuarter ? scenario.uncategorized.moneyIn : 0,
       uncategorizedMoneyOut: isCurrentQuarter ? scenario.uncategorized.moneyOut : 0,
-      earliestUncategorizedAt: isCurrentQuarter ? earliestUncategorizedAt : null,
-      latestUncategorizedAt: isCurrentQuarter ? latestUncategorizedAt : null,
+      earliestUncategorizedAt: isCurrentQuarter ? earliestAt : null,
+      latestUncategorizedAt: isCurrentQuarter ? latestAt : null,
     }
   })
 
@@ -194,8 +192,8 @@ export const deriveTaxBanner = (scenario: TaxScenario): TaxEstimatesBanner => {
     totalUncategorizedCount: scenario.uncategorized.count,
     totalUncategorizedMoneyIn: scenario.uncategorized.moneyIn,
     totalUncategorizedMoneyOut: scenario.uncategorized.moneyOut,
-    earliestUncategorizedAt,
-    latestUncategorizedAt,
+    earliestUncategorizedAt: earliestAt,
+    latestUncategorizedAt: latestAt,
     quarters,
   }
 }
