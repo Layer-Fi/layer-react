@@ -82,3 +82,12 @@ export const scaleScenario = (scenario: TaxScenario, factor: number): TaxScenari
     moneyOut: scaleAmount(scenario.uncategorized.moneyOut, factor),
   },
 })
+
+export const settleAllQuarters = (scenario: TaxScenario): TaxScenario => ({
+  ...scenario,
+  quarters: scenario.quarters.map(quarter => ({
+    ...quarter,
+    federalPaid: quarter.federalOwed,
+    statePaid: quarter.stateOwed,
+  })),
+})

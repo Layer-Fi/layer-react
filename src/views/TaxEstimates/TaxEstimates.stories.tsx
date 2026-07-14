@@ -29,7 +29,7 @@ export const Onboarding: Story = {
     msw: {
       handlers: [
         enableTaxEstimates,
-        getTaxProfile.mock(makeTaxProfile({ userHasSavedTaxProfile: false })),
+        getTaxProfile.mock(makeTaxProfile({ userHasSavedTaxProfile: false, usConfiguration: null })),
         ...handlers,
       ],
     },
