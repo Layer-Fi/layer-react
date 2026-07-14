@@ -46,6 +46,7 @@ type CustomerSelectorBaseProps = {
   showLabel?: boolean
 
   isReadOnly?: boolean
+  isInvalid?: boolean
   inline?: boolean
 
   className?: string
@@ -65,6 +66,7 @@ export function CustomerSelector({
   isCreatable,
   onCreateCustomer,
   isReadOnly,
+  isInvalid,
   inline,
   className,
   hideSpecifiedIdNotFoundError,
@@ -166,6 +168,7 @@ export function CustomerSelector({
     slots,
     isDisabled: shouldDisableComboBox,
     isError: shouldShowError,
+    isInvalid,
     isLoading: isLoadingWithoutFallback,
     isReadOnly,
     ['aria-label']: showLabel ? undefined : resolvedLabel,

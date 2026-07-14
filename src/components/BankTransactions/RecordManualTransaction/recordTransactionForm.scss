@@ -1,0 +1,38 @@
+$record-transaction-label-width: 7rem;
+
+.Layer__RecordTransactionForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  width: 100%;
+
+  // The scrollable modal content clips overflow on both axes, which would cut off
+  // the 2px focus outline on edge-aligned fields. Inset the form so the outline fits.
+  padding: var(--spacing-3xs);
+
+  .Layer__RecordTransactionForm__Field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3xs);
+  }
+
+  // Give every inline field the same label column + vertical centering so the
+  // controls line up regardless of which underlying component renders them.
+  :is(
+  [data-inline],
+  .Layer__CustomerSelector--inline,
+  .Layer__VendorSelector--inline,
+  .Layer__LedgerAccountCombobox--inline,
+  .Layer__CustomAccountComboBox__Field--inline
+) {
+    grid-template-columns: $record-transaction-label-width 1fr;
+    column-gap: var(--spacing-md);
+    align-items: center;
+  }
+
+  .Layer__RecordTransactionForm__Error {
+    padding-inline-start: calc(#{$record-transaction-label-width} + var(--spacing-md));
+
+    font-size: var(--text-xs);
+  }
+}

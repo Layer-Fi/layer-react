@@ -1,24 +1,40 @@
 import { useCallback, useId, useMemo } from 'react'
+import classNames from 'classnames'
 
 import { CategoryAsOption } from '@internal-types/categorizationOption'
 import { type CategoriesListMode, type Classification, ClassificationEquivalence } from '@schemas/categorization'
 import { getLeafCategories } from '@utils/categories'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
+
+import './ledgerAccountCombobox.scss'
 
 type LedgerAccountComboboxProps = {
   label: string
   value: Classification | null
   onValueChange: (value: Classification | null) => void
   mode?: CategoriesListMode
+  placeholder?: string
   isReadOnly?: boolean
+  isInvalid?: boolean
   showLabel?: boolean
+  inline?: boolean
   className?: string
 }
 
-export const LedgerAccountCombobox = ({ label, value, mode, onValueChange, isReadOnly, showLabel, className }: LedgerAccountComboboxProps) => {
+export const LedgerAccountCombobox = ({
+  label,
+  value,
+  mode,
+  onValueChange,
+  placeholder,
+  isReadOnly,
+  isInvalid,
+  showLabel,
+  inline,
+  className,
+}: LedgerAccountComboboxProps) => {
   const { data: categories, isLoading } = useCategories({ mode })
 
   const options = useMemo(() => {
@@ -38,7 +54,7 @@ export const LedgerAccountCombobox = ({ label, value, mode, onValueChange, isRea
   const inputId = useId()
   const additionalAriaProps = !showLabel && { 'aria-label': label }
   return (
-    <VStack gap='3xs' className={className}>
+    <div className={classNames('Layer__LedgerAccountCombobox', inline && 'Layer__LedgerAccountCombobox--inline', className)}>
       {showLabel && (
         <Label size='sm' htmlFor={inputId}>
           {label}
@@ -49,11 +65,13 @@ export const LedgerAccountCombobox = ({ label, value, mode, onValueChange, isRea
         onSelectedValueChange={onSelectedValueChange}
         selectedValue={selectedCategory}
         inputId={inputId}
+        placeholder={placeholder}
         isReadOnly={isReadOnly}
+        isInvalid={isInvalid}
         isLoading={isLoading}
         isClearable={false}
         {...additionalAriaProps}
       />
-    </VStack>
+    </div>
   )
 }

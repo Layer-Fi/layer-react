@@ -41,6 +41,7 @@ export type BaseComboBoxProps<T extends ComboBoxOption> = {
 
   isDisabled?: boolean
   isError?: boolean
+  isInvalid?: boolean
   isLoading?: boolean
   isMutating?: boolean
 

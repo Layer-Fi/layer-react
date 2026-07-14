@@ -21,6 +21,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   displayDisabledAsSelected,
   isDisabled,
   isError,
+  isInvalid,
   isReadOnly = false,
   isClearable = true,
   isSearchable = true,
@@ -43,6 +44,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
   | 'displayDisabledAsSelected'
   | 'isDisabled'
   | 'isError'
+  | 'isInvalid'
   | 'isReadOnly'
   | 'isClearable'
   | 'isSearchable'
@@ -59,20 +61,18 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     displayDisabledAsSelected,
   })
 
+  const hasError = isError || isInvalid
   const selectClassNames = useMemo(() => ({
     container: () => COMBO_BOX_CLASS_NAMES.CONTAINER,
     control: ({ isFocused, isDisabled }: { isFocused: boolean, isDisabled: boolean }) => classNames(
       COMBO_BOX_CLASS_NAMES.CONTROL,
       isFocused && `${COMBO_BOX_CLASS_NAMES.CONTROL}--focused`,
       isDisabled && `${COMBO_BOX_CLASS_NAMES.CONTROL}--disabled`,
-      isError && `${COMBO_BOX_CLASS_NAMES.CONTROL}--error`,
+      hasError && `${COMBO_BOX_CLASS_NAMES.CONTROL}--error`,
       isReadOnly && `${COMBO_BOX_CLASS_NAMES.CONTROL}--readonly`,
     ),
     valueContainer: () => COMBO_BOX_CLASS_NAMES.VALUE_CONTAINER,
-    placeholder: () => classNames(
-      COMBO_BOX_CLASS_NAMES.PLACEHOLDER,
-      isError && `${COMBO_BOX_CLASS_NAMES.PLACEHOLDER}--error`,
-    ),
+    placeholder: () => COMBO_BOX_CLASS_NAMES.PLACEHOLDER,
     indicatorsContainer: () => classNames(
       COMBO_BOX_CLASS_NAMES.INDICATORS_CONTAINER,
       isReadOnly && `${COMBO_BOX_CLASS_NAMES.INDICATORS_CONTAINER}--readonly`,
@@ -80,7 +80,7 @@ export function useCommonComboBoxProps<T extends ComboBoxOption, IsMulti extends
     menu: () => COMBO_BOX_CLASS_NAMES.MENU,
     menuList: () => COMBO_BOX_CLASS_NAMES.MENU_LIST,
     group: () => COMBO_BOX_CLASS_NAMES.GROUP,
-  }), [isError, isReadOnly])
+  }), [hasError, isReadOnly])
 
   const styles: StylesConfig<T, IsMulti, GroupBase<T>> = useMemo(() => ({
     menuPortal: (base: CSSObjectWithLabel) => ({ ...base, zIndex: 101 }),

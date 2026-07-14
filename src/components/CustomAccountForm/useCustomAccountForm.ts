@@ -51,6 +51,7 @@ export const useCustomAccountForm = ({ onSuccess }: UseCustomAccountFormProps) =
   })
 
   const isFormValid = useStore(form.store, state => state.isValid)
+  const isSubmitting = useStore(form.store, state => state.isSubmitting)
 
-  return { form, submitError, isFormValid }
+  return { form, submitError, isFormValid, isSubmitting }
 }
