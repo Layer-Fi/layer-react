@@ -60,7 +60,13 @@ const DEFAULT_SCENARIO: TaxScenario = {
     { quarter: 3, federalOwed: 700_000, stateOwed: 175_000, federalPaid: 700_000, statePaid: 175_000 },
     { quarter: 4, federalOwed: 700_000, stateOwed: 175_000, federalPaid: 0, statePaid: 0 },
   ],
-  uncategorized: { count: 0, moneyIn: 0, moneyOut: 0, earliestAt: null, latestAt: null },
+  uncategorized: {
+    count: 6,
+    moneyIn: 420_000,
+    moneyOut: 150_000,
+    earliestAt: new Date(FIXTURE_YEAR, 9, 3),
+    latestAt: new Date(FIXTURE_YEAR, 11, 18),
+  },
 }
 
 export const makeTaxScenario = (overrides: Partial<TaxScenario> = {}): TaxScenario => ({
