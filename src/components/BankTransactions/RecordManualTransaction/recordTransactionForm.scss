@@ -5,7 +5,6 @@ $record-transaction-label-width: 7rem;
   flex-direction: column;
   gap: var(--spacing-sm);
 
-  // Align every inline field to a shared label column, whichever component renders it.
   [data-inline],
   [class$='--inline'],
   .Layer__RecordTransactionForm__Field {
@@ -13,8 +12,6 @@ $record-transaction-label-width: 7rem;
     column-gap: var(--spacing-md);
   }
 
-  // Wraps a field control plus its error message; the control spans both columns
-  // while the error sits under the input column.
   .Layer__RecordTransactionForm__Field {
     display: grid;
     row-gap: var(--spacing-3xs);

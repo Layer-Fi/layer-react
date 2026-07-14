@@ -1,8 +1,11 @@
 import { type ReactNode } from 'react'
+import { BigDecimal } from 'effect'
 import { useTranslation } from 'react-i18next'
 
 import { CategoriesListMode } from '@schemas/categorization'
 import { type Customer } from '@schemas/customer'
+import { fromNonRecursiveBigDecimal, type NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Form } from '@ui/Form/Form'
 import { type RecordTransactionFormApi, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { CustomAccountComboBox, isNewAccountOption } from '@components/CustomAccountComboBox/CustomAccountComboBox'
@@ -15,6 +18,9 @@ import './recordTransactionForm.scss'
 
 const required = (message: string) => (value: unknown) =>
   value === null || value === undefined || value === '' ? message : undefined
+
+const positiveAmount = (message: string) => (value: NonRecursiveBigDecimal | null) =>
+  value !== null && BigDecimal.isPositive(fromNonRecursiveBigDecimal(value)) ? undefined : message
 
 function FieldErrors({ errors }: { errors: ReadonlyArray<unknown> }) {
   if (errors.length === 0) return null
@@ -32,6 +38,7 @@ type RecordTransactionFormProps = {
 
 export function RecordTransactionForm({ form, variant }: RecordTransactionFormProps) {
   const { t } = useTranslation()
+  const { formatCurrencyFromCents } = useIntlFormatter()
   const isExpense = variant === 'expense'
 
   const accountLabel = isExpense
@@ -124,14 +131,14 @@ export function RecordTransactionForm({ form, variant }: RecordTransactionFormPr
 
               <form.AppField
                 name='amount'
-                validators={{ onDynamic: ({ value }) => required(t('bankTransactions:recordTransaction.validation.amount_required', 'Amount is required'))(value) }}
+                validators={{ onDynamic: ({ value }) => positiveAmount(t('bankTransactions:recordTransaction.validation.amount_greater_than_zero', 'Amount must be greater than zero'))(value) }}
               >
                 {field => (
                   <field.FormNonRecursiveBigDecimalField
                     label={t('bankTransactions:recordTransaction.label.amount', 'Amount')}
                     inline
                     mode='currency'
-                    placeholder={t('bankTransactions:recordTransaction.placeholder.amount', '$ 0.00')}
+                    placeholder={formatCurrencyFromCents(0)}
                   />
                 )}
               </form.AppField>

@@ -27,12 +27,12 @@
 }
 
 .Layer__ModalContent {
+  box-sizing: border-box;
   display: grid;
   overflow-y: auto;
   block-size: 100%;
 
-  // overflow-y: auto also clips the x-axis, cutting off child focus outlines at
-  // the edges; a small inset keeps them inside the scroll container.
+  // Inset so child focus outlines aren't clipped by the scroll container edge.
   padding: var(--spacing-3xs);
 
   > [slot='center'] {

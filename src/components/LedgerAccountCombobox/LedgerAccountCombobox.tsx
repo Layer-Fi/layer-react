@@ -37,15 +37,22 @@ export const LedgerAccountCombobox = ({
 }: LedgerAccountComboboxProps) => {
   const { data: categories, isLoading } = useCategories({ mode })
 
-  const options = useMemo(() => {
+  const groups = useMemo(() => {
     if (!categories) return []
-    return getLeafCategories(categories).map(category => new CategoryAsOption(category))
+    return categories.map(category => ({
+      label: category.displayName.toLocaleUpperCase(),
+      options: getLeafCategories([category]).map(leaf => new CategoryAsOption(leaf)),
+    }))
   }, [categories])
 
   const selectedCategory = useMemo(() => {
     if (!value) return null
-    return options.find(option => ClassificationEquivalence(value, option.classification)) ?? null
-  }, [options, value])
+    for (const group of groups) {
+      const match = group.options.find(option => ClassificationEquivalence(value, option.classification))
+      if (match) return match
+    }
+    return null
+  }, [groups, value])
 
   const onSelectedValueChange = useCallback((option: CategoryAsOption | null) => {
     onValueChange(option?.classification ?? null)
@@ -61,7 +68,7 @@ export const LedgerAccountCombobox = ({
         </Label>
       )}
       <ComboBox
-        options={options}
+        groups={groups}
         onSelectedValueChange={onSelectedValueChange}
         selectedValue={selectedCategory}
         inputId={inputId}
