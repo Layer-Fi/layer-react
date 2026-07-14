@@ -3,15 +3,14 @@ import { fromDate, getLocalTimeZone, type ZonedDateTime } from '@internationaliz
 import { revalidateLogic } from '@tanstack/react-form'
 import { startOfToday } from 'date-fns'
 
-import { Direction } from '@internal-types/general'
 import type { Classification } from '@schemas/categorization'
 import type { Customer } from '@schemas/customer'
-import { convertNonRecursiveBigDecimalToCents, type NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
+import type { NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import type { Vendor } from '@schemas/vendor'
 import { useCreateCustomAccountTransactions } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/useCreateCustomAccountTransactions'
 import { useAppForm } from '@hooks/features/forms/useForm'
+import { convertRecordTransactionFormToParams } from '@components/BankTransactions/RecordManualTransaction/formUtils'
 import type { AccountOption } from '@components/CustomAccountComboBox/AccountOption'
-import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
 
 export type RecordTransactionVariant = 'income' | 'expense'
 
@@ -43,26 +42,21 @@ type UseRecordTransactionFormProps = {
 }
 
 export const useRecordTransactionForm = ({ variant, onSuccess }: UseRecordTransactionFormProps) => {
-  const { trigger, isError } = useCreateCustomAccountTransactions()
+  const { trigger, isError } = useCreateCustomAccountTransactions({ swrOptions: { throwOnError: true } })
 
   const handleSubmit = useCallback(
     async ({ value, formApi }: { value: RecordTransactionFormValues, formApi: { reset: () => void } }) => {
-      const { account, amount, date, memo } = value
-      if (account === null || isNewAccountOption(account) || amount === null || date === null) return
+      const params = convertRecordTransactionFormToParams(value, variant)
+      if (params === null) return
 
-      const createdTransactions = await trigger({
-        customAccountId: account.value,
-        transactions: [{
-          amount: convertNonRecursiveBigDecimalToCents(amount),
-          direction: variant === 'expense' ? Direction.DEBIT : Direction.CREDIT,
-          date: date.toDate().toISOString(),
-          description: memo.trim(),
-        }],
-      })
-      if (!createdTransactions) return
-
-      onSuccess?.()
-      formApi.reset()
+      try {
+        await trigger(params)
+        onSuccess?.()
+        formApi.reset()
+      }
+      catch (e) {
+        console.error(e)
+      }
     },
     [trigger, variant, onSuccess],
   )
