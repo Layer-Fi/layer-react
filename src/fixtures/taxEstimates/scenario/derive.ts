@@ -1,110 +1,33 @@
-import { CalendarDate } from '@internationalized/date'
+import { getLocalTimeZone, today } from '@internationalized/date'
 
 import { type TaxEstimatesBanner, type TaxEstimatesBannerQuarter } from '@schemas/taxEstimates/banner'
-import { type TaxDetails, type TaxDetailsRow, type TaxDetailsValue } from '@schemas/taxEstimates/details'
-import { FilingStatus } from '@schemas/taxEstimates/filingStatus'
+import { type TaxDetails, type TaxDetailsRow } from '@schemas/taxEstimates/details'
 import { type TaxOverviewApiData, TaxOverviewDeadlineStatus, TaxOverviewMetricType } from '@schemas/taxEstimates/overview'
 import { type TaxPaymentRow } from '@schemas/taxEstimates/payments'
-import { type TaxSummary, TaxSummaryState } from '@schemas/taxEstimates/summary'
+import { type TaxSummary } from '@schemas/taxEstimates/summary'
 
-import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
-
-type LineItem = {
-  rowKey: string
-  label: string
-  amount: number
-}
-
-type ScenarioQuarter = {
-  quarter: number
-  federalOwed: number
-  stateOwed: number
-  federalPaid: number
-  statePaid: number
-}
-
-export type TaxScenario = {
-  year: number
-  filingStatus: FilingStatus
-  stateCode: string
-  stateLabel: string
-  income: LineItem[]
-  deductions: LineItem[]
-  quarters: ScenarioQuarter[]
-  uncategorized: {
-    count: number
-    moneyIn: number
-    moneyOut: number
-    earliestAt: Date | null
-    latestAt: Date | null
-  }
-}
-
-const DEFAULT_SCENARIO: TaxScenario = {
-  year: FIXTURE_YEAR,
-  filingStatus: FilingStatus.SINGLE,
-  stateCode: 'CA',
-  stateLabel: 'California',
-  income: [
-    { rowKey: 'business-income', label: 'Business income', amount: 12_000_000 },
-    { rowKey: 'w2-wages', label: 'W-2 wages', amount: 3_000_000 },
-  ],
-  deductions: [
-    { rowKey: 'se-tax-deduction', label: '½ self-employment tax', amount: 850_000 },
-    { rowKey: 'qbi-deduction', label: 'Qualified business income deduction', amount: 2_000_000 },
-    { rowKey: 'retirement', label: 'Retirement contributions', amount: 1_000_000 },
-  ],
-  quarters: [
-    { quarter: 1, federalOwed: 700_000, stateOwed: 175_000, federalPaid: 700_000, statePaid: 175_000 },
-    { quarter: 2, federalOwed: 700_000, stateOwed: 175_000, federalPaid: 700_000, statePaid: 175_000 },
-    { quarter: 3, federalOwed: 700_000, stateOwed: 175_000, federalPaid: 700_000, statePaid: 175_000 },
-    { quarter: 4, federalOwed: 700_000, stateOwed: 175_000, federalPaid: 0, statePaid: 0 },
-  ],
-  uncategorized: {
-    count: 6,
-    moneyIn: 420_000,
-    moneyOut: 150_000,
-    earliestAt: new Date(FIXTURE_YEAR, 9, 3),
-    latestAt: new Date(FIXTURE_YEAR, 11, 18),
-  },
-}
-
-export const makeTaxScenario = (overrides: Partial<TaxScenario> = {}): TaxScenario => ({
-  ...structuredClone(DEFAULT_SCENARIO),
-  ...overrides,
-})
-
-const sum = (values: number[]) => values.reduce((total, value) => total + value, 0)
-
-const quarterDueDate = (year: number, quarter: number): CalendarDate => {
-  switch (quarter) {
-    case 1: return new CalendarDate(year, 4, 15)
-    case 2: return new CalendarDate(year, 6, 15)
-    case 3: return new CalendarDate(year, 9, 15)
-    default: return new CalendarDate(year + 1, 1, 15)
-  }
-}
-
-const annualDueDate = (year: number) => new CalendarDate(year + 1, 4, 15)
-
-const totalIncome = (scenario: TaxScenario) => sum(scenario.income.map(item => item.amount))
-const totalDeductions = (scenario: TaxScenario) => sum(scenario.deductions.map(item => item.amount))
-const taxableIncome = (scenario: TaxScenario) => totalIncome(scenario) - totalDeductions(scenario)
-
-const federalTotal = (scenario: TaxScenario) => sum(scenario.quarters.map(q => q.federalOwed))
-const stateTotal = (scenario: TaxScenario) => sum(scenario.quarters.map(q => q.stateOwed))
-const federalPaid = (scenario: TaxScenario) => sum(scenario.quarters.map(q => q.federalPaid))
-const statePaid = (scenario: TaxScenario) => sum(scenario.quarters.map(q => q.statePaid))
-
-const federalOwedRemaining = (scenario: TaxScenario) => federalTotal(scenario) - federalPaid(scenario)
-const stateOwedRemaining = (scenario: TaxScenario) => stateTotal(scenario) - statePaid(scenario)
-const projectedTaxesOwed = (scenario: TaxScenario) => federalOwedRemaining(scenario) + stateOwedRemaining(scenario)
-
-const summaryState = (scenario: TaxScenario): TaxSummaryState => {
-  if (totalIncome(scenario) === 0) return TaxSummaryState.NO_TRANSACTIONS
-  if (projectedTaxesOwed(scenario) <= 0) return TaxSummaryState.NO_TAXES_OWED
-  return TaxSummaryState.TAXES_OWED
-}
+import { type TaxScenario } from '@fixtures/taxEstimates/scenario/types'
+import {
+  annualDueDate,
+  currency,
+  effectiveRate,
+  federalOwedRemaining,
+  federalPaid,
+  federalTotal,
+  percentage,
+  projectedTaxesOwed,
+  quarterDueDate,
+  quarterLabel,
+  rebaseToYear,
+  runningBalances,
+  stateOwedRemaining,
+  statePaid,
+  stateTotal,
+  summaryState,
+  taxableIncome,
+  totalDeductions,
+  totalIncome,
+} from '@fixtures/taxEstimates/scenario/utils'
 
 export const deriveTaxOverview = (scenario: TaxScenario): TaxOverviewApiData => {
   const income = totalIncome(scenario)
@@ -143,11 +66,6 @@ export const deriveTaxSummary = (scenario: TaxScenario): TaxSummary => ({
     },
   ],
 })
-
-const currency = (value: number): TaxDetailsValue => ({ type: 'Currency', value })
-const percentage = (value: number): TaxDetailsValue => ({ type: 'Percentage', value })
-
-const effectiveRate = (tax: number, base: number) => base > 0 ? tax / base : 0
 
 export const deriveTaxDetails = (scenario: TaxScenario): TaxDetails => {
   const taxable = taxableIncome(scenario)
@@ -205,27 +123,6 @@ export const deriveTaxDetails = (scenario: TaxScenario): TaxDetails => {
   }
 }
 
-type QuarterBalance = {
-  rolledOverFromPrevious: number
-  owedThisQuarter: number
-  totalPaid: number
-  remainingBalance: number
-}
-
-const runningBalances = (owed: number[], paid: number[]): QuarterBalance[] => {
-  const balances: QuarterBalance[] = []
-  let carried = 0
-  owed.forEach((owedThisQuarter, index) => {
-    const totalPaid = paid[index]
-    const remainingBalance = carried + owedThisQuarter - totalPaid
-    balances.push({ rolledOverFromPrevious: carried, owedThisQuarter, totalPaid, remainingBalance })
-    carried = Math.max(remainingBalance, 0)
-  })
-  return balances
-}
-
-const quarterLabel = (quarter: number) => `Q${quarter}`
-
 export const deriveTaxPayments = (scenario: TaxScenario): { type: 'US_Tax_Payments', data: TaxPaymentRow[] } => {
   const combined = runningBalances(
     scenario.quarters.map(q => q.federalOwed + q.stateOwed),
@@ -258,8 +155,10 @@ export const deriveTaxBanner = (scenario: TaxScenario): TaxEstimatesBanner => {
     scenario.quarters.map(q => q.federalOwed + q.stateOwed),
     scenario.quarters.map(q => q.federalPaid + q.statePaid),
   )
-  const now = new CalendarDate(scenario.year, 12, 31)
+  const now = today(getLocalTimeZone())
   const currentQuarterIndex = scenario.quarters.length - 1
+  const earliestUncategorizedAt = rebaseToYear(scenario.uncategorized.earliestAt, scenario.year)
+  const latestUncategorizedAt = rebaseToYear(scenario.uncategorized.latestAt, scenario.year)
 
   const quarters = scenario.quarters.map((quarter, index): TaxEstimatesBannerQuarter => {
     const dueDate = quarterDueDate(scenario.year, quarter.quarter)
@@ -283,8 +182,8 @@ export const deriveTaxBanner = (scenario: TaxScenario): TaxEstimatesBanner => {
       uncategorizedCount: isCurrentQuarter ? scenario.uncategorized.count : 0,
       uncategorizedMoneyIn: isCurrentQuarter ? scenario.uncategorized.moneyIn : 0,
       uncategorizedMoneyOut: isCurrentQuarter ? scenario.uncategorized.moneyOut : 0,
-      earliestUncategorizedAt: isCurrentQuarter ? scenario.uncategorized.earliestAt : null,
-      latestUncategorizedAt: isCurrentQuarter ? scenario.uncategorized.latestAt : null,
+      earliestUncategorizedAt: isCurrentQuarter ? earliestUncategorizedAt : null,
+      latestUncategorizedAt: isCurrentQuarter ? latestUncategorizedAt : null,
     }
   })
 
@@ -295,8 +194,8 @@ export const deriveTaxBanner = (scenario: TaxScenario): TaxEstimatesBanner => {
     totalUncategorizedCount: scenario.uncategorized.count,
     totalUncategorizedMoneyIn: scenario.uncategorized.moneyIn,
     totalUncategorizedMoneyOut: scenario.uncategorized.moneyOut,
-    earliestUncategorizedAt: scenario.uncategorized.earliestAt,
-    latestUncategorizedAt: scenario.uncategorized.latestAt,
+    earliestUncategorizedAt,
+    latestUncategorizedAt,
     quarters,
   }
 }
