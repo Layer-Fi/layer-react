@@ -9,7 +9,6 @@ import {
   isCategorized,
   isCredit,
 } from '@utils/bankTransactions/shared'
-import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useGetBankTransactionMatchOrCategoryWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -37,10 +36,14 @@ import './bankTransactionsListItem.scss'
 
 type BankTransactionsListItemProps = {
   bankTransaction: BankTransaction
+  isExiting?: boolean
+  onExitComplete?: (id: string) => void
 }
 
 export const BankTransactionsListItem = ({
   bankTransaction,
+  isExiting = false,
+  onExitComplete,
 }: BankTransactionsListItemProps) => {
   const { t } = useTranslation()
   const { bankTransactionCTAs: stringOverrides } = useBankTransactionsStringOverrides()
@@ -55,10 +58,6 @@ export const BankTransactionsListItem = ({
   const { isDesktop } = useSizeClass()
 
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
-
-  const categorized = isCategorized(bankTransaction)
-  const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction })
-  const displayAsCategorized = isBeingRemoved ? false : categorized
 
   const { select, deselect } = useBulkSelectionActions()
   const isSelected = useIdIsSelected()
@@ -91,7 +90,15 @@ export const BankTransactionsListItem = ({
   )
 
   return (
-    <AnimatedPresenceElement as='li' variant='fade' isPresent={!isBeingRemoved} motionKey={bankTransaction.id} className={rowClassName} onClick={toggleExpandedRow}>
+    <AnimatedPresenceElement
+      as='li'
+      variant='fade'
+      isPresent={!isExiting}
+      motionKey={bankTransaction.id}
+      className={rowClassName}
+      onClick={toggleExpandedRow}
+      slotProps={{ AnimatePresence: { initial: false, onExitComplete: () => onExitComplete?.(bankTransaction.id) } }}
+    >
       <span className='Layer__bank-transaction-list-item__heading'>
         <div className='Layer__bank-transaction-list-item__heading__main'>
           <Span ellipsis size='sm'>
@@ -151,7 +158,7 @@ export const BankTransactionsListItem = ({
           size='md'
         />
       </HStack>
-      {!isCategorizationEnabled && !displayAsCategorized
+      {!isCategorizationEnabled && !isCategorized(bankTransaction)
         && (
           <span className='Layer__bank-transaction-list-item__processing-info'>
             <BankTransactionsProcessingInfo />
@@ -167,7 +174,7 @@ export const BankTransactionsListItem = ({
           />
         </AnimatedPresenceElement>
       </span>
-      {isCategorizationEnabled && !displayAsCategorized && (
+      {isCategorizationEnabled && !isCategorized(bankTransaction) && (
         <div onClick={preventRowExpansion}>
           <HStack pi='md' gap='md' pbe='md' justify='end'>
             {!openExpandedRow && (
@@ -184,20 +191,20 @@ export const BankTransactionsListItem = ({
               isDisabled={isProcessing}
               onPress={() => { void save() }}
               isPending={isProcessing}
-              action={!displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
+              action={!isCategorized(bankTransaction) ? SubmitAction.SAVE : SubmitAction.UPDATE}
               isError={isError}
               errorMessage={t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
             >
               {isError
                 ? t('common:action.retry_label', 'Retry')
-                : (!displayAsCategorized
+                : (!isCategorized(bankTransaction)
                   ? stringOverrides?.approveButtonText ?? t('common:action.approve_label', 'Approve')
                   : stringOverrides?.updateButtonText ?? t('common:action.update_label', 'Update'))}
             </BankTransactionsSubmitButton>
           </HStack>
         </div>
       )}
-      {!openExpandedRow && displayAsCategorized && (
+      {!openExpandedRow && isCategorized(bankTransaction) && (
         <BankTransactionsListItemCategory bankTransaction={bankTransaction} categorized />
       )}
       {isError

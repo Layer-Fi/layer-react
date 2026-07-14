@@ -1,5 +1,3 @@
-import { isWithinInterval } from 'date-fns'
-
 import { type BankTransaction, DisplayState, type Split, type SuggestedMatch } from '@internal-types/bankTransactions'
 import { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { type DateRange } from '@internal-types/general'
@@ -52,38 +50,6 @@ export const hasMatch = (bankTransaction?: BankTransaction) => {
 
 export const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
   direction === BankTransactionDirection.Credit
-
-export const countTransactionsToReview = ({
-  transactions,
-  dateRange,
-}: {
-  transactions?: BankTransaction[]
-  dateRange?: DateRange
-}) => {
-  if (transactions && transactions.length > 0) {
-    if (dateRange) {
-      const dateRangeInterval = {
-        start: dateRange.startDate,
-        end: dateRange.endDate,
-      }
-      return transactions.filter((tx) => {
-        try {
-          return (
-            filterVisibility(DisplayState.review, tx)
-            && isWithinInterval(tx.date, dateRangeInterval)
-          )
-        }
-        catch (_err) {
-          return false
-        }
-      }).length
-    }
-    return transactions.filter(tx => filterVisibility(DisplayState.review, tx))
-      .length
-  }
-
-  return 0
-}
 
 export const hasReceipts = (bankTransaction?: BankTransaction) =>
   bankTransaction?.documentIds && bankTransaction.documentIds.length > 0

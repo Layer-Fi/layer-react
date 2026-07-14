@@ -26,6 +26,8 @@ import { Chevron } from '@components/Chevron/Chevron'
 type BankTransactionCategoryCellProps = {
   row: Row<BankTransaction>
   isExpandedRowValid: boolean
+  isExiting: boolean
+  onExitComplete: (id: string) => void
 }
 
 type BankTransactionCategoryCellContainerProps = PropsWithChildren<{
@@ -72,13 +74,14 @@ const getBankTransactionCategoryCellCase = ({
 export const BankTransactionCategoryCell = ({
   row,
   isExpandedRowValid,
+  isExiting,
+  onExitComplete,
 }: BankTransactionCategoryCellProps) => {
   const { t } = useTranslation()
   const { bankTransactionCTAs: stringOverrides } = useBankTransactionsStringOverrides()
   const bankTransaction = row.original
   const isOpen = row.getIsExpanded()
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
-  const categorized = Boolean(isCategorized(bankTransaction))
 
   const { deselect } = useBulkSelectionActions()
   const { count: bulkSelectionCount } = useCountSelectedIds()
@@ -87,11 +90,12 @@ export const BankTransactionCategoryCell = ({
   const selectedOption = useGetBankTransactionMatchOrCategoryWithDefault(bankTransaction)
   const { saveBankTransactionRow, isProcessing, isError } = useSaveBankTransactionRow()
 
-  const { isBeingRemoved } = useDelayedRemoveBankTransaction({
-    bankTransaction,
+  useDelayedRemoveBankTransaction({
+    id: bankTransaction.id,
+    isExiting,
+    onExitComplete,
     onRemove: () => row.toggleExpanded(false),
   })
-  const displayAsCategorized = isBeingRemoved ? false : categorized
 
   const save = async () => {
     if (isOpen && !isExpandedRowValid) return
@@ -113,15 +117,15 @@ export const BankTransactionCategoryCell = ({
         }
       }}
       isPending={isProcessing}
-      isDisabled={selectedOption === null || isBulkSelectionActive || isBeingRemoved}
-      action={displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
+      isDisabled={selectedOption === null || isBulkSelectionActive || isExiting}
+      action={isCategorized(bankTransaction) ? SubmitAction.SAVE : SubmitAction.UPDATE}
       isActive={isOpen}
       isError={isError}
       errorMessage={t('bankTransactions:error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
     >
       {isError
         ? t('common:action.retry_label', 'Retry')
-        : displayAsCategorized
+        : isCategorized(bankTransaction)
           ? stringOverrides?.updateButtonText ?? t('common:action.update_label', 'Update')
           : stringOverrides?.approveButtonText ?? t('common:action.confirm_label', 'Confirm')}
     </BankTransactionsSubmitButton>
@@ -141,7 +145,7 @@ export const BankTransactionCategoryCell = ({
   const cellCase = getBankTransactionCategoryCellCase({
     isOpen,
     isCategorizationEnabled,
-    displayAsCategorized,
+    displayAsCategorized: isCategorized(bankTransaction),
   })
 
   switch (cellCase) {
@@ -180,7 +184,7 @@ export const BankTransactionCategoryCell = ({
             onSelectedValueChange={(selectedCategory: BankTransactionCategoryComboBoxOption | null) => {
               setTransactionCategorization(bankTransaction.id, selectedCategory)
             }}
-            isDisabled={isProcessing || isBeingRemoved}
+            isDisabled={isProcessing || isExiting}
           />
           {submitButton}
           {expandButton}

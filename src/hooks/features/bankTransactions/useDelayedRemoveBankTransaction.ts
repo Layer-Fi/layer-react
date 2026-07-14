@@ -1,33 +1,34 @@
-import { useEffect, useMemo } from 'react'
-
-import type { BankTransaction } from '@internal-types/bankTransactions'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useEffect } from 'react'
 
 const DELAY_MS = 300
 
 type UseDelayedRemoveBankTransactionParams = {
-  bankTransaction: BankTransaction
+  id: string
+  isExiting: boolean
+  onExitComplete: (id: string) => void
   onRemove?: () => void
 }
 
+/**
+ * Removes a row once its CSS exit animation has run. The row is kept mounted (frozen
+ * from its pre-categorization snapshot) while `isExiting` is true; after DELAY_MS —
+ * matching the row's opacity transition — it is dropped via `onExitComplete`.
+ */
 export function useDelayedRemoveBankTransaction({
-  bankTransaction,
+  id,
+  isExiting,
+  onExitComplete,
   onRemove,
 }: UseDelayedRemoveBankTransactionParams) {
-  const { shouldHideAfterCategorize, removeAfterCategorize } = useBankTransactionsContext()
-  const isBeingRemoved = bankTransaction.recentlyCategorized && shouldHideAfterCategorize
-
   useEffect(() => {
-    if (isBeingRemoved) {
-      const timeout = setTimeout(() => {
-        removeAfterCategorize([bankTransaction.id])
-        onRemove?.()
-      }, DELAY_MS)
+    if (!isExiting) return
 
-      return () => clearTimeout(timeout)
-    }
+    const timeout = setTimeout(() => {
+      onExitComplete(id)
+      onRemove?.()
+    }, DELAY_MS)
+
+    return () => clearTimeout(timeout)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bankTransaction.recentlyCategorized])
-
-  return useMemo(() => ({ isBeingRemoved }), [isBeingRemoved])
+  }, [id, isExiting])
 }

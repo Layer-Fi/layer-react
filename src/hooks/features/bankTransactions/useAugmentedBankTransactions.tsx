@@ -96,15 +96,15 @@ export const useAugmentedBankTransactions = () => {
     void mutate(updatedData, { revalidate: false })
   }, [data, mutate, setRuleSuggestion])
 
-  const removeAfterCategorize = useCallback((transactionIds: string[]) => {
-    if (shouldHideAfterCategorize) {
-      const updatedData = data?.map(page => ({
-        ...page,
-        data: page.data?.filter(bt => !transactionIds.includes(bt.id)),
-      }))
-      void mutate(updatedData, { revalidate: false })
-    }
-  }, [shouldHideAfterCategorize, data, mutate])
+  // Drops rows from the local cache once their exit animation has completed, so
+  // categorized review rows stay counted/paginated during the fade but not after.
+  const removeFromCache = useCallback((transactionIds: string[]) => {
+    const updatedData = data?.map(page => ({
+      ...page,
+      data: page.data?.filter(bt => !transactionIds.includes(bt.id)),
+    }))
+    void mutate(updatedData, { revalidate: false })
+  }, [data, mutate])
 
   const fetchMore = useCallback(() => {
     if (hasMore) {
@@ -117,8 +117,8 @@ export const useAugmentedBankTransactions = () => {
     isLoading,
     isError,
     updateLocalBankTransactions,
+    removeFromCache,
     shouldHideAfterCategorize,
-    removeAfterCategorize,
     useBankTransactionsOptions,
     display,
     fetchMore,
@@ -129,8 +129,8 @@ export const useAugmentedBankTransactions = () => {
     isLoading,
     isError,
     updateLocalBankTransactions,
+    removeFromCache,
     shouldHideAfterCategorize,
-    removeAfterCategorize,
     useBankTransactionsOptions,
     display,
     fetchMore,

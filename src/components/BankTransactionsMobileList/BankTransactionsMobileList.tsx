@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
+import { useBankTransactionsWithExit } from '@hooks/features/bankTransactions/useBankTransactionsWithExit'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useMobileListBulkSelection } from '@providers/BulkSelectionStore/useMobileListBulkSelection'
@@ -31,21 +32,16 @@ const BankTransactionsMobileListContent = ({
   const [bulkActionsEnabled, setBulkActionsEnabled] = useState(false)
 
   const { clearSelection } = useBulkSelectionActions()
-  const { shouldHideAfterCategorize, removeAfterCategorize, isLoading, isError } = useBankTransactionsContext()
+  const { isLoading, isError } = useBankTransactionsContext()
 
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
-  const orderedIds = useMemo(
-    () => bankTransactions?.map(tx => tx.id) ?? [],
-    [bankTransactions],
-  )
+  const { displayItems, exitingIds, onExitComplete } = useBankTransactionsWithExit(bankTransactions)
 
-  const exitingKeys = useMemo(() => {
-    if (!shouldHideAfterCategorize || !bankTransactions) {
-      return new Set<string>()
-    }
-    return new Set(bankTransactions.filter(tx => tx.recentlyCategorized).map(tx => tx.id))
-  }, [bankTransactions, shouldHideAfterCategorize])
+  const orderedIds = useMemo(
+    () => displayItems.map(tx => tx.id),
+    [displayItems],
+  )
 
   const bulkSelectionProps = useMobileListBulkSelection(orderedIds, { enabled: bulkActionsEnabled })
 
@@ -85,10 +81,10 @@ const BankTransactionsMobileListContent = ({
 
   const onRemoveItem = useCallback(
     (bankTransaction: BankTransaction) => {
-      removeAfterCategorize([bankTransaction.id])
+      onExitComplete(bankTransaction.id)
       openNext(bankTransaction.id)
     },
-    [removeAfterCategorize, openNext],
+    [onExitComplete, openNext],
   )
 
   const renderFooter = useCallback(
@@ -122,7 +118,7 @@ const BankTransactionsMobileListContent = ({
       <VStack pbs='sm'>
         <MobileList
           ariaLabel={t('bankTransactions:label.transactions', 'Transactions')}
-          data={bankTransactions}
+          data={displayItems}
           isLoading={isLoading}
           isError={isError}
           slots={LIST_SLOTS}
@@ -130,7 +126,7 @@ const BankTransactionsMobileListContent = ({
           renderFooter={renderFooter}
           renderExpandedContent={renderExpandedContent}
           expandedKeys={expandedKeys}
-          exitingKeys={exitingKeys}
+          exitingKeys={exitingIds}
           onRemoveItem={onRemoveItem}
           onClickItem={bulkActionsEnabled ? undefined : onClickItem}
           {...bulkSelectionProps}

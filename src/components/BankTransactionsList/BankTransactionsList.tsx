@@ -1,6 +1,7 @@
 import { type PropsWithChildren } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
+import { useBankTransactionsWithExit } from '@hooks/features/bankTransactions/useBankTransactionsWithExit'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
@@ -38,6 +39,8 @@ const BankTransactionsListContent = ({
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
+  const { displayItems, exitingIds, onExitComplete } = useBankTransactionsWithExit(bankTransactions)
+
   const showSelectAllHeader =
     isCategorizationEnabled && !isLoading && !isError && (bankTransactions?.length ?? 0) > 0
 
@@ -47,7 +50,7 @@ const BankTransactionsListContent = ({
         <BankTransactionsListSelectAllHeader bankTransactions={bankTransactions} />
       )}
       <ConditionalList
-        list={bankTransactions ?? EMPTY_ARRAY}
+        list={displayItems ?? EMPTY_ARRAY}
         isLoading={isLoading}
         isError={isError}
         Loading={<BankTransactionsListLoader />}
@@ -56,7 +59,12 @@ const BankTransactionsListContent = ({
         Container={BankTransactionsListContainer}
       >
         {({ item }) => (
-          <BankTransactionsListItem key={item.id} bankTransaction={item} />
+          <BankTransactionsListItem
+            key={item.id}
+            bankTransaction={item}
+            isExiting={exitingIds.has(item.id)}
+            onExitComplete={onExitComplete}
+          />
         )}
       </ConditionalList>
     </>

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { type BankTransaction, DisplayState } from '@internal-types/bankTransactions'
 import { Alignment } from '@schemas/reports/unifiedReport'
 import { isCredit } from '@utils/bankTransactions/shared'
+import { useBankTransactionsWithExit } from '@hooks/features/bankTransactions/useBankTransactionsWithExit'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBulkSelectionActions, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -66,6 +67,8 @@ type GetColumnConfigParams = {
   display: DisplayState
   isCategorizationEnabled: boolean
   isExpandedRowValid: (id: string) => boolean
+  exitingIds: Set<string>
+  onExitComplete: (id: string) => void
   stringOverrides?: BankTransactionsTableStringOverrides
   t: TFunction
 }
@@ -74,6 +77,8 @@ const getColumnConfig = ({
   display,
   isCategorizationEnabled,
   isExpandedRowValid,
+  exitingIds,
+  onExitComplete,
   stringOverrides,
   t,
 }: GetColumnConfigParams): ColumnConfig<BankTransaction> => [
@@ -116,6 +121,8 @@ const getColumnConfig = ({
       <BankTransactionCategoryCell
         row={row}
         isExpandedRowValid={isExpandedRowValid(row.original.id)}
+        isExiting={exitingIds.has(row.original.id)}
+        onExitComplete={onExitComplete}
       />
     ),
   },
@@ -137,7 +144,6 @@ export const BankTransactionsTable = () => {
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const {
     display,
-    shouldHideAfterCategorize,
     isLoading,
     isError,
     data: bankTransactions,
@@ -148,6 +154,8 @@ export const BankTransactionsTable = () => {
   const { selectMultiple, deselectMultiple } = useBulkSelectionActions()
   const [expandedRowValidity, setExpandedRowValidity] = useState<Record<string, boolean>>({})
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
+
+  const { displayItems, exitingIds, onExitComplete } = useBankTransactionsWithExit(bankTransactions)
 
   const rowSelection = useMemo(() => getRowSelectionState(selectedIds), [selectedIds])
 
@@ -198,12 +206,16 @@ export const BankTransactionsTable = () => {
     display,
     isCategorizationEnabled,
     isExpandedRowValid,
+    exitingIds,
+    onExitComplete,
     stringOverrides,
     t,
   }), [
     display,
     isCategorizationEnabled,
     isExpandedRowValid,
+    exitingIds,
+    onExitComplete,
     stringOverrides,
     t,
   ])
@@ -231,15 +243,15 @@ export const BankTransactionsTable = () => {
       'Layer__bank-transaction-row',
       row.getIsExpanded() && 'Layer__BankTransactionRow--Expanded',
       row.getIsExpanded() && 'Layer__bank-transaction-row--expanded',
-      row.original.recentlyCategorized && shouldHideAfterCategorize && 'Layer__BankTransactionRow--Removing',
-      row.original.recentlyCategorized && shouldHideAfterCategorize && 'Layer__bank-transaction-row--removing',
+      exitingIds.has(row.original.id) && 'Layer__BankTransactionRow--Removing',
+      exitingIds.has(row.original.id) && 'Layer__bank-transaction-row--removing',
     )
-  ), [shouldHideAfterCategorize])
+  ), [exitingIds])
 
   const tableProps = {
     ariaLabel: t('bankTransactions:label.bank_transactions', 'Bank transactions'),
     className: 'Layer__bank-transactions__table',
-    data: bankTransactions,
+    data: displayItems,
     isLoading,
     isError,
     columnConfig,

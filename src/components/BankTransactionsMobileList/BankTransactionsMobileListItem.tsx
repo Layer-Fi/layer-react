@@ -38,13 +38,7 @@ export const BankTransactionsMobileListItem = ({
 }: BankTransactionsMobileListItemProps) => {
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
 
-  const categorized = isCategorized(bankTransaction)
-
   const { renderInAppLink } = useInAppLinkContext()
-
-  const isBeingRemoved = bankTransaction.recentlyCategorized && shouldHideAfterCategorize
-
-  const displayAsCategorized = isBeingRemoved ? false : categorized
 
   useEffect(() => {
     if (bankTransaction.recentlyCategorized && !shouldHideAfterCategorize) {
@@ -60,11 +54,11 @@ export const BankTransactionsMobileListItem = ({
   ])
 
   const inAppLink = useMemo(() => {
-    if (!displayAsCategorized) {
+    if (!isCategorized(bankTransaction)) {
       return null
     }
     return getInAppLink(bankTransaction, renderInAppLink)
-  }, [displayAsCategorized, bankTransaction, renderInAppLink])
+  }, [bankTransaction, renderInAppLink])
 
   return (
     <HStack gap='sm' justify='space-between'>
