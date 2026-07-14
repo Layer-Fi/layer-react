@@ -4,10 +4,6 @@ $record-transaction-label-width: 7rem;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
-  width: 100%;
-
-  // Inset so field focus outlines aren't clipped by the modal content's overflow.
-  padding: var(--spacing-3xs);
 
   .Layer__RecordTransactionForm__Field {
     display: flex;
@@ -15,21 +11,14 @@ $record-transaction-label-width: 7rem;
     gap: var(--spacing-3xs);
   }
 
-  :is(
+  // Align every inline field to a shared label column, whichever component renders it.
   [data-inline],
-  .Layer__CustomerSelector--inline,
-  .Layer__VendorSelector--inline,
-  .Layer__LedgerAccountCombobox--inline,
-  .Layer__CustomAccountComboBox__Field--inline
-) {
+  [class$='--inline'] {
     grid-template-columns: $record-transaction-label-width 1fr;
     column-gap: var(--spacing-md);
-    align-items: center;
   }
 
   .Layer__RecordTransactionForm__Error {
     padding-inline-start: calc(#{$record-transaction-label-width} + var(--spacing-md));
-
-    font-size: var(--text-xs);
   }
 }

@@ -31,6 +31,10 @@
   overflow-y: auto;
   block-size: 100%;
 
+  // overflow-y: auto also clips the x-axis, cutting off child focus outlines at
+  // the edges; a small inset keeps them inside the scroll container.
+  padding: var(--spacing-3xs);
+
   > [slot='center'] {
     align-self: center;
     justify-self: center;
