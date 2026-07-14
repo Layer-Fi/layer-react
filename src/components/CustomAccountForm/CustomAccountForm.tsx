@@ -55,17 +55,6 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
   return (
     <div className='Layer__form Layer__custom-account-form'>
       <VStack gap='xs'>
-        <form.AppField name='custom_account_type'>
-          {field => (
-            <field.FormRadioGroupField
-              label={t('generalLedger:label.account_ownership', 'Ownership')}
-              orientation='horizontal'
-              options={ownershipOptions}
-              className='Layer__custom-account-form__field'
-            />
-          )}
-        </form.AppField>
-
         <form.AppField
           name='account_name'
           validators={{
@@ -122,6 +111,17 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
             </VStack>
           )}
         </form.Field>
+
+        <form.AppField name='custom_account_type'>
+          {field => (
+            <field.FormRadioGroupField
+              label={t('generalLedger:label.account_ownership', 'Ownership')}
+              orientation='horizontal'
+              options={ownershipOptions}
+              className='Layer__custom-account-form__field'
+            />
+          )}
+        </form.AppField>
 
         <HStack gap='xs' pbs='xs'>
           {!isFormValid && (
