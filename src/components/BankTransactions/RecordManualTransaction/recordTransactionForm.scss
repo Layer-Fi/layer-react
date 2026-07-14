@@ -5,20 +5,26 @@ $record-transaction-label-width: 7rem;
   flex-direction: column;
   gap: var(--spacing-sm);
 
-  .Layer__RecordTransactionForm__Field {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-3xs);
-  }
-
   // Align every inline field to a shared label column, whichever component renders it.
   [data-inline],
-  [class$='--inline'] {
+  [class$='--inline'],
+  .Layer__RecordTransactionForm__Field {
     grid-template-columns: $record-transaction-label-width 1fr;
     column-gap: var(--spacing-md);
   }
 
-  .Layer__RecordTransactionForm__Error {
-    padding-inline-start: calc(#{$record-transaction-label-width} + var(--spacing-md));
+  // Wraps a field control plus its error message; the control spans both columns
+  // while the error sits under the input column.
+  .Layer__RecordTransactionForm__Field {
+    display: grid;
+    row-gap: var(--spacing-3xs);
+
+    > :first-child {
+      grid-column: 1 / -1;
+    }
+
+    .Layer__RecordTransactionForm__Error {
+      grid-column: 2;
+    }
   }
 }
