@@ -1,4 +1,4 @@
-import { type ComponentProps, useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { useBankAccountsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
@@ -10,7 +10,7 @@ const clearBankAccounts = () => {
   bankAccountStore.all().forEach(({ id }) => bankAccountStore.deleteById(id))
 }
 
-function RestartingLinkAccounts(props: ComponentProps<typeof LinkAccounts>) {
+function RestartingLinkAccounts() {
   const [iteration, setIteration] = useState(0)
   const { overwriteCache } = useBankAccountsGlobalCacheActions()
 
@@ -20,13 +20,13 @@ function RestartingLinkAccounts(props: ComponentProps<typeof LinkAccounts>) {
     setIteration(previous => previous + 1)
   }, [overwriteCache])
 
-  return <LinkAccounts {...props} key={iteration} onComplete={handleComplete} />
+  return <LinkAccounts key={iteration} onComplete={handleComplete} />
 }
 
 const meta = {
   title: 'Components/LinkAccounts',
   component: LinkAccounts,
-  render: args => <RestartingLinkAccounts {...args} />,
+  render: () => <RestartingLinkAccounts />,
   argTypes: {
     onComplete: { table: { disable: true } },
     plaidHostedLinkConfig: { table: { disable: true } },
@@ -61,12 +61,5 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  loaders: [clearBankAccounts],
-}
-
-export const Reconnect: Story = {
-  args: {
-    isReconnectFlow: true,
-  },
   loaders: [clearBankAccounts],
 }
