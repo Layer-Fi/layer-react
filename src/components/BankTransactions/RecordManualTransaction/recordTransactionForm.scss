@@ -6,8 +6,7 @@ $record-transaction-label-width: 7rem;
   gap: var(--spacing-sm);
   width: 100%;
 
-  // The scrollable modal content clips overflow on both axes, which would cut off
-  // the 2px focus outline on edge-aligned fields. Inset the form so the outline fits.
+  // Inset so field focus outlines aren't clipped by the modal content's overflow.
   padding: var(--spacing-3xs);
 
   .Layer__RecordTransactionForm__Field {
@@ -16,8 +15,6 @@ $record-transaction-label-width: 7rem;
     gap: var(--spacing-3xs);
   }
 
-  // Give every inline field the same label column + vertical centering so the
-  // controls line up regardless of which underlying component renders them.
   :is(
   [data-inline],
   .Layer__CustomerSelector--inline,
