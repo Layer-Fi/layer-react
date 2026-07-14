@@ -1,16 +1,14 @@
 import { type PropsWithChildren, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Customer } from '@schemas/customer'
 import { positiveAmount, required } from '@utils/form/validators'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Form } from '@ui/Form/Form'
-import { type RecordTransactionCounterparty, type RecordTransactionFormApi, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
+import { RecordTransactionCounterpartySelector } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionCounterpartySelector'
+import { type RecordTransactionFormApi, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { CustomAccountComboBox, isNewAccountOption } from '@components/CustomAccountComboBox/CustomAccountComboBox'
-import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
 import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
 import { ErrorText } from '@components/Typography/ErrorText'
-import { VendorSelector } from '@components/VendorSelector/VendorSelector'
 
 import './recordTransactionForm.scss'
 
@@ -26,43 +24,6 @@ function FieldErrors({ errors }: { errors: ReadonlyArray<unknown> }) {
 function RecordTransactionFormField({ withFieldLayout = true, children }: PropsWithChildren<{ withFieldLayout?: boolean }>) {
   if (!withFieldLayout) return <>{children}</>
   return <div className='Layer__RecordTransactionForm__Field'>{children}</div>
-}
-
-type RecordTransactionCounterpartySelectorProps = {
-  variant: RecordTransactionVariant
-  label: string
-  placeholder: string
-  isInvalid: boolean
-  value: RecordTransactionCounterparty | null
-  onChange: (value: RecordTransactionCounterparty | null) => void
-}
-
-function RecordTransactionCounterpartySelector({ variant, label, placeholder, isInvalid, value, onChange }: RecordTransactionCounterpartySelectorProps) {
-  if (variant === 'expense') {
-    return (
-      <VendorSelector
-        label={label}
-        placeholder={placeholder}
-        showLabel
-        inline
-        isInvalid={isInvalid}
-        selectedVendor={value}
-        onSelectedVendorChange={onChange}
-      />
-    )
-  }
-
-  return (
-    <CustomerSelector
-      label={label}
-      placeholder={placeholder}
-      showLabel
-      inline
-      isInvalid={isInvalid}
-      selectedCustomer={value as Customer | null}
-      onSelectedCustomerChange={onChange}
-    />
-  )
 }
 
 type RecordTransactionFormProps = {
