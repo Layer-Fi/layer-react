@@ -2,7 +2,6 @@ import { type ReactNode } from 'react'
 import { BigDecimal } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { CategoriesListMode } from '@schemas/categorization'
 import { type Customer } from '@schemas/customer'
 import { fromNonRecursiveBigDecimal, type NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -152,28 +151,25 @@ export function RecordTransactionForm({ form, variant }: RecordTransactionFormPr
                 )}
               </form.AppField>
 
-              {!isExpense && (
-                <form.Field
-                  name='category'
-                  validators={{ onDynamic: ({ value }) => required(t('bankTransactions:recordTransaction.validation.category_required', 'Category is required'))(value) }}
-                >
-                  {field => (
-                    <div className='Layer__RecordTransactionForm__Field'>
-                      <LedgerAccountCombobox
-                        label={t('bankTransactions:recordTransaction.label.category', 'Category')}
-                        placeholder={t('bankTransactions:recordTransaction.placeholder.category', 'Select category...')}
-                        showLabel
-                        inline
-                        isInvalid={field.state.meta.errors.length > 0}
-                        mode={CategoriesListMode.Revenue}
-                        value={field.state.value}
-                        onValueChange={field.handleChange}
-                      />
-                      <FieldErrors errors={field.state.meta.errors} />
-                    </div>
-                  )}
-                </form.Field>
-              )}
+              <form.Field
+                name='category'
+                validators={{ onDynamic: ({ value }) => required(t('bankTransactions:recordTransaction.validation.category_required', 'Category is required'))(value) }}
+              >
+                {field => (
+                  <div className='Layer__RecordTransactionForm__Field'>
+                    <LedgerAccountCombobox
+                      label={t('bankTransactions:recordTransaction.label.category', 'Category')}
+                      placeholder={t('bankTransactions:recordTransaction.placeholder.category', 'Select category...')}
+                      showLabel
+                      inline
+                      isInvalid={field.state.meta.errors.length > 0}
+                      value={field.state.value}
+                      onValueChange={field.handleChange}
+                    />
+                    <FieldErrors errors={field.state.meta.errors} />
+                  </div>
+                )}
+              </form.Field>
 
               <form.AppField name='memo'>
                 {field => (

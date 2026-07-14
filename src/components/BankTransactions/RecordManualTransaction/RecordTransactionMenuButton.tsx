@@ -58,7 +58,7 @@ export function RecordTransactionMenuButton({ isDisabled }: RecordTransactionMen
         <RecordTransactionModal
           variant={openVariant}
           isOpen
-          onOpenChange={isOpen => setOpenVariant(isOpen ? openVariant : null)}
+          onOpenChange={open => setOpenVariant(open ? openVariant : null)}
         />
       )}
     </>

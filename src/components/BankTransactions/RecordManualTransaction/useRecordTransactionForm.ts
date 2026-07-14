@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { fromDate, getLocalTimeZone, type ZonedDateTime } from '@internationalized/date'
 import { revalidateLogic } from '@tanstack/react-form'
 import { startOfToday } from 'date-fns'
@@ -35,7 +35,6 @@ const getDefaultValues = (): RecordTransactionFormValues => ({
 })
 
 type UseRecordTransactionFormProps = {
-  variant: RecordTransactionVariant
   onSubmit: (values: RecordTransactionFormValues) => void | Promise<void>
 }
 
@@ -48,11 +47,9 @@ export const useRecordTransactionForm = ({ onSubmit }: UseRecordTransactionFormP
     [onSubmit],
   )
 
-  const form = useAppForm<RecordTransactionFormValues>({
+  return useAppForm<RecordTransactionFormValues>({
     defaultValues: getDefaultValues(),
     onSubmit: handleSubmit,
     validationLogic: revalidateLogic(),
   })
-
-  return useMemo(() => ({ form }), [form])
 }

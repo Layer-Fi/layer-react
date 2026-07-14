@@ -24,7 +24,7 @@ export function RecordTransactionModal({ variant, isOpen, onOpenChange }: Record
     onOpenChange(false)
   }, [variant, onOpenChange])
 
-  const { form } = useRecordTransactionForm({ variant, onSubmit: handleSubmit })
+  const form = useRecordTransactionForm({ onSubmit: handleSubmit })
 
   const onCancel = useCallback(() => {
     form.reset()
