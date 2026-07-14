@@ -1,12 +1,11 @@
-import { type ReactNode } from 'react'
-import { BigDecimal } from 'effect'
+import { type PropsWithChildren, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Customer } from '@schemas/customer'
-import { fromNonRecursiveBigDecimal, type NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
+import { positiveAmount, required } from '@utils/form/validators'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Form } from '@ui/Form/Form'
-import { type RecordTransactionFormApi, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
+import { type RecordTransactionCounterparty, type RecordTransactionFormApi, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { CustomAccountComboBox, isNewAccountOption } from '@components/CustomAccountComboBox/CustomAccountComboBox'
 import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
 import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
@@ -15,18 +14,54 @@ import { VendorSelector } from '@components/VendorSelector/VendorSelector'
 
 import './recordTransactionForm.scss'
 
-const required = (message: string) => (value: unknown) =>
-  value === null || value === undefined || value === '' ? message : undefined
-
-const positiveAmount = (message: string) => (value: NonRecursiveBigDecimal | null) =>
-  value !== null && BigDecimal.isPositive(fromNonRecursiveBigDecimal(value)) ? undefined : message
-
 function FieldErrors({ errors }: { errors: ReadonlyArray<unknown> }) {
   if (errors.length === 0) return null
   return (
     <div className='Layer__RecordTransactionForm__Error'>
       <ErrorText size='xs'>{errors[0] as ReactNode}</ErrorText>
     </div>
+  )
+}
+
+function RecordTransactionFormField({ withFieldLayout = true, children }: PropsWithChildren<{ withFieldLayout?: boolean }>) {
+  if (!withFieldLayout) return <>{children}</>
+  return <div className='Layer__RecordTransactionForm__Field'>{children}</div>
+}
+
+type RecordTransactionCounterpartySelectorProps = {
+  variant: RecordTransactionVariant
+  label: string
+  placeholder: string
+  isInvalid: boolean
+  value: RecordTransactionCounterparty | null
+  onChange: (value: RecordTransactionCounterparty | null) => void
+}
+
+function RecordTransactionCounterpartySelector({ variant, label, placeholder, isInvalid, value, onChange }: RecordTransactionCounterpartySelectorProps) {
+  if (variant === 'expense') {
+    return (
+      <VendorSelector
+        label={label}
+        placeholder={placeholder}
+        showLabel
+        inline
+        isInvalid={isInvalid}
+        selectedVendor={value}
+        onSelectedVendorChange={onChange}
+      />
+    )
+  }
+
+  return (
+    <CustomerSelector
+      label={label}
+      placeholder={placeholder}
+      showLabel
+      inline
+      isInvalid={isInvalid}
+      selectedCustomer={value as Customer | null}
+      onSelectedCustomerChange={onChange}
+    />
   )
 }
 
@@ -62,31 +97,24 @@ export function RecordTransactionForm({ form, variant }: RecordTransactionFormPr
         name='account'
         validators={{ onDynamic: ({ value }) => required(t('bankTransactions:recordTransaction.validation.account_required', 'Account is required'))(value) }}
       >
-        {field => isNewAccountOption(field.state.value)
-          ? (
-            <CustomAccountComboBox
-              inputId='record-transaction-account'
-              label={accountLabel}
-              showLabel={false}
-              selectedAccount={field.state.value}
-              onSelectAccount={field.handleChange}
-            />
-          )
-          : (
-            <div className='Layer__RecordTransactionForm__Field'>
+        {(field) => {
+          const isCreatingAccount = isNewAccountOption(field.state.value)
+          return (
+            <RecordTransactionFormField withFieldLayout={!isCreatingAccount}>
               <CustomAccountComboBox
                 inputId='record-transaction-account'
                 label={accountLabel}
                 placeholder={t('bankTransactions:recordTransaction.placeholder.account', 'Select account...')}
-                showLabel
-                inline
+                showLabel={!isCreatingAccount}
+                inline={!isCreatingAccount}
                 isInvalid={field.state.meta.errors.length > 0}
                 selectedAccount={field.state.value}
                 onSelectAccount={field.handleChange}
               />
               <FieldErrors errors={field.state.meta.errors} />
-            </div>
-          )}
+            </RecordTransactionFormField>
+          )
+        }}
       </form.Field>
 
       <form.Subscribe selector={state => isNewAccountOption(state.values.account)}>
@@ -99,32 +127,17 @@ export function RecordTransactionForm({ form, variant }: RecordTransactionFormPr
                 validators={{ onDynamic: ({ value }) => required(t('bankTransactions:recordTransaction.validation.counterparty_required', '{{label}} is required', { label: counterpartyLabel }))(value) }}
               >
                 {field => (
-                  <div className='Layer__RecordTransactionForm__Field'>
-                    {isExpense
-                      ? (
-                        <VendorSelector
-                          label={counterpartyLabel}
-                          placeholder={counterpartyPlaceholder}
-                          showLabel
-                          inline
-                          isInvalid={field.state.meta.errors.length > 0}
-                          selectedVendor={field.state.value}
-                          onSelectedVendorChange={field.handleChange}
-                        />
-                      )
-                      : (
-                        <CustomerSelector
-                          label={counterpartyLabel}
-                          placeholder={counterpartyPlaceholder}
-                          showLabel
-                          inline
-                          isInvalid={field.state.meta.errors.length > 0}
-                          selectedCustomer={field.state.value as Customer | null}
-                          onSelectedCustomerChange={field.handleChange}
-                        />
-                      )}
+                  <RecordTransactionFormField>
+                    <RecordTransactionCounterpartySelector
+                      variant={variant}
+                      label={counterpartyLabel}
+                      placeholder={counterpartyPlaceholder}
+                      isInvalid={field.state.meta.errors.length > 0}
+                      value={field.state.value}
+                      onChange={field.handleChange}
+                    />
                     <FieldErrors errors={field.state.meta.errors} />
-                  </div>
+                  </RecordTransactionFormField>
                 )}
               </form.Field>
 
@@ -156,7 +169,7 @@ export function RecordTransactionForm({ form, variant }: RecordTransactionFormPr
                 validators={{ onDynamic: ({ value }) => required(t('bankTransactions:recordTransaction.validation.category_required', 'Category is required'))(value) }}
               >
                 {field => (
-                  <div className='Layer__RecordTransactionForm__Field'>
+                  <RecordTransactionFormField>
                     <LedgerAccountCombobox
                       label={t('bankTransactions:recordTransaction.label.category', 'Category')}
                       placeholder={t('bankTransactions:recordTransaction.placeholder.category', 'Select category...')}
@@ -167,7 +180,7 @@ export function RecordTransactionForm({ form, variant }: RecordTransactionFormPr
                       onValueChange={field.handleChange}
                     />
                     <FieldErrors errors={field.state.meta.errors} />
-                  </div>
+                  </RecordTransactionFormField>
                 )}
               </form.Field>
 
