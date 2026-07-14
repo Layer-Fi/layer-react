@@ -1,6 +1,13 @@
 import { type TaxProfile } from '@schemas/taxEstimates/profile'
-import { type TaxSummary, TaxSummaryState } from '@schemas/taxEstimates/summary'
 
+import {
+  deriveTaxBanner,
+  deriveTaxDetails,
+  deriveTaxOverview,
+  deriveTaxPayments,
+  deriveTaxSummary,
+  makeTaxScenario,
+} from '@fixtures/taxEstimates/scenario'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 
 const baseTaxProfile: TaxProfile = {
@@ -11,28 +18,8 @@ const baseTaxProfile: TaxProfile = {
 
 export const { make: makeTaxProfile } = createFixtureFactory(baseTaxProfile)
 
-export const makeTaxSummary = (year: number): TaxSummary => ({
-  year,
-  state: TaxSummaryState.TAXES_OWED,
-  projectedTaxesOwed: 330000,
-  taxesDueAt: new Date(year, 8, 15),
-  uncategorizedTaxPayments: 0,
-  sections: [
-    {
-      type: 'federal',
-      key: 'federal',
-      label: 'Federal',
-      total: 890000,
-      taxesPaid: 620000,
-      taxesOwed: 270000,
-    },
-    {
-      type: 'state',
-      key: 'CA',
-      label: 'California',
-      total: 240000,
-      taxesPaid: 180000,
-      taxesOwed: 60000,
-    },
-  ],
-})
+export const makeTaxOverview = (year: number) => deriveTaxOverview(makeTaxScenario({ year }))
+export const makeTaxSummary = (year: number) => deriveTaxSummary(makeTaxScenario({ year }))
+export const makeTaxDetails = (year: number) => deriveTaxDetails(makeTaxScenario({ year }))
+export const makeTaxPayments = (year: number) => deriveTaxPayments(makeTaxScenario({ year }))
+export const makeTaxBanner = (year: number) => deriveTaxBanner(makeTaxScenario({ year }))
