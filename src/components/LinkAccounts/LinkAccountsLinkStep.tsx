@@ -84,7 +84,9 @@ export function LinkAccountsLinkStep({ isReconnectFlow = false }: LinkAccountsLi
                     })}
                 </Heading>
                 <P status='disabled'>
-                  {t('linkedAccounts:label.remove_unused_accounts_next_step', 'You’ll have the chance to remove any accounts you don’t use for your business in the next step.')}
+                  {isReconnectFlow
+                    ? t('linkedAccounts:label.remove_accounts_new_dashboard', 'You’ll have the chance to remove any accounts in the new dashboard.')
+                    : t('linkedAccounts:label.remove_unused_accounts_next_step', 'You’ll have the chance to remove any accounts you don’t use for your business in the next step.')}
                 </P>
               </VStack>
               <LinkAccountsListContainer>
