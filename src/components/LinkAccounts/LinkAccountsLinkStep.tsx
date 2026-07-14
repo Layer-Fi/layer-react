@@ -46,7 +46,7 @@ export function LinkAccountsLinkStep({ isReconnectFlow = false }: LinkAccountsLi
         <ConditionalList
           list={effectiveAccounts}
           Empty={(
-            <VStack gap='xl' pbe='md' align='start'>
+            <VStack gap='xl' align='start'>
               <P status='disabled'>
                 {isReconnectFlow
                   ? t('linkedAccounts:label.reconnect_bank_accounts_and_credit_cards_description', 'Reconnect your bank accounts and credit cards to automatically import your business transactions.')
