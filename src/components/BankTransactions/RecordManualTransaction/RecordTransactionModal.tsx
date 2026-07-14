@@ -7,7 +7,7 @@ import { ModalActions, ModalContent, ModalHeading, ModalTitleWithClose } from '@
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { RecordTransactionForm } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionForm'
 import { type RecordTransactionFormValues, type RecordTransactionVariant, useRecordTransactionForm } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
-import { isNewAccountOption } from '@components/CustomAccountComboBox/CustomAccountComboBox'
+import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
 
 type RecordTransactionModalProps = {
   variant: RecordTransactionVariant

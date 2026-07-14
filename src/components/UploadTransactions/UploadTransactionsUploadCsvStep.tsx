@@ -8,12 +8,14 @@ import { Label, P } from '@ui/Typography/Text'
 import { CopyTemplateHeadersButtonGroup } from '@components/CsvUpload/CopyTemplateHeadersButtonGroup'
 import { CsvUpload } from '@components/CsvUpload/CsvUpload'
 import { DownloadCsvTemplateButton } from '@components/CsvUpload/DownloadCsvTemplateButton'
-import { type AccountOption, CustomAccountComboBox, isNewAccountOption } from '@components/CustomAccountComboBox/CustomAccountComboBox'
+import { type AccountOption } from '@components/CustomAccountComboBox/AccountOption'
+import { CustomAccountComboBox } from '@components/CustomAccountComboBox/CustomAccountComboBox'
+import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
 import { Separator } from '@components/Separator/Separator'
 import { allHeaders, templateExampleTransactions, templateHeaders } from '@components/UploadTransactions/template'
 import { useWizard } from '@components/Wizard/Wizard'
 
-export type { AccountOption } from '@components/CustomAccountComboBox/CustomAccountComboBox'
+export type { AccountOption } from '@components/CustomAccountComboBox/AccountOption'
 
 interface UploadTransactionsUploadCsvStepProps {
   selectedAccount: AccountOption | null

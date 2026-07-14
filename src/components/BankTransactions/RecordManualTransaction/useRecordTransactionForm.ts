@@ -8,7 +8,7 @@ import type { Customer } from '@schemas/customer'
 import type { NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import type { Vendor } from '@schemas/vendor'
 import { useAppForm } from '@hooks/features/forms/useForm'
-import type { AccountOption } from '@components/CustomAccountComboBox/CustomAccountComboBox'
+import type { AccountOption } from '@components/CustomAccountComboBox/AccountOption'
 
 export type RecordTransactionVariant = 'income' | 'expense'
 
