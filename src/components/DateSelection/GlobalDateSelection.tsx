@@ -17,7 +17,7 @@ export const GlobalDateSelection = ({ showLabels = false, isCompact = false }: G
 
   return (
     <div
-      className={classNames('Layer__GlobalDateSelection', {
+      className={classNames('Layer__GlobalDateSelection Layer__variables', {
         'Layer__GlobalDateSelection--compact': isCompact,
       })}
     >

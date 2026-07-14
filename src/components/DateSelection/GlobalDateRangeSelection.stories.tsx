@@ -1,7 +1,7 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { type DateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
-import { GlobalDateSelection } from '@components/DateSelection/GlobalDateSelection'
+import { GlobalDateRangeSelection } from '@components/DateSelection/GlobalDateRangeSelection'
 
 import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
 import { handlers } from '@msw/handlers'
@@ -14,14 +14,14 @@ const PINNED_RANGE: DateRange = {
   endDate: new Date(FIXTURE_YEAR, 8, 30),
 }
 
-type GlobalDateSelectionProps = {
+type GlobalDateRangeSelectionProps = {
   showLabels?: boolean
   isCompact?: boolean
 }
 
-const meta: Meta<GlobalDateSelectionProps> = {
-  title: 'Date/GlobalDateSelection',
-  component: GlobalDateSelection,
+const meta: Meta<GlobalDateRangeSelectionProps> = {
+  title: 'Date/GlobalDateRangeSelection',
+  component: GlobalDateRangeSelection,
   parameters: {
     msw: { handlers: [getBusiness.mock(makeBusiness({ activationAt: new Date(2024, 0, 1) })), ...handlers] },
     controls: { include: ['showLabels', 'isCompact'] },
@@ -42,7 +42,7 @@ const meta: Meta<GlobalDateSelectionProps> = {
   argTypes: {
     showLabels: {
       control: 'boolean',
-      description: 'Render labels above the range combobox and date picker',
+      description: 'Render labels above the range combobox and date pickers',
     },
     isCompact: {
       control: 'boolean',
@@ -53,6 +53,6 @@ const meta: Meta<GlobalDateSelectionProps> = {
 
 export default meta
 
-type Story = StoryObj<GlobalDateSelectionProps>
+type Story = StoryObj<GlobalDateRangeSelectionProps>
 
 export const Default: Story = {}
