@@ -1,7 +1,7 @@
 import { useEffect, useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type CustomAccount, CustomAccountSubtype } from '@schemas/customAccounts'
+import { type CustomAccount, CustomAccountClassification, CustomAccountSubtype } from '@schemas/customAccounts'
 import { notEmpty } from '@utils/form'
 import { translationKey } from '@utils/i18n/translationKey'
 import { Button } from '@ui/Button/Button'
@@ -10,6 +10,7 @@ import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 import { useCustomAccountForm } from '@components/CustomAccountForm/useCustomAccountForm'
+import { type RadioOption } from '@components/forms/FormRadioGroupField'
 import { ErrorText } from '@components/Typography/ErrorText'
 
 import './customAccountForm.scss'
@@ -36,6 +37,14 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
       value: opt.value,
       label: t(opt.i18nKey, opt.defaultValue),
     })),
+    [t],
+  )
+
+  const ownershipOptions = useMemo<RadioOption<CustomAccountClassification>[]>(
+    () => [
+      { value: CustomAccountClassification.PERSONAL, label: t('common:label.personal', 'Personal') },
+      { value: CustomAccountClassification.DEFAULT, label: t('common:label.business', 'Business') },
+    ],
     [t],
   )
 
@@ -102,6 +111,17 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
             </VStack>
           )}
         </form.Field>
+
+        <form.AppField name='custom_account_type'>
+          {field => (
+            <field.FormRadioGroupField
+              label={t('generalLedger:label.account_type', 'Account type')}
+              orientation='horizontal'
+              options={ownershipOptions}
+              className='Layer__custom-account-form__field'
+            />
+          )}
+        </form.AppField>
 
         <HStack gap='xs' pbs='xs'>
           {!isFormValid && (
