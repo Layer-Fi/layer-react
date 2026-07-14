@@ -4,6 +4,7 @@
   gap: var(--spacing-md);
   align-items: stretch;
   padding: var(--spacing-lg);
+  padding-top: 0;
 
   @media screen and (width <= 650px) {
     flex-wrap: nowrap;
@@ -26,10 +27,6 @@
     display: flex;
     outline: none;
   }
-}
-
-.Layer__linked-accounts__header + .Layer__linked-accounts__list {
-  padding-top: 0;
 }
 
 .Layer__linked-accounts__new-account {

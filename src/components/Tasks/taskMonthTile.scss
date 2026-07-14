@@ -23,7 +23,7 @@
     box-shadow: 0 0 0 1px var(--color-base-500), 0 0 0 3px var(--color-base-300);
   }
 
-  .Layer__P {
+  & > .Layer__P {
     min-width: 24px;
   }
 }

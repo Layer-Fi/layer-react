@@ -46,7 +46,7 @@
   background: var(--color-base-0);
 
   &.--show-ledger-balance {
-    height: 154px;
+    height: 162px;
   }
 
   .Layer__linked-accounts__grid:not(.--locked) [data-selection-mode='multiple'] & {
