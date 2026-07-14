@@ -7,7 +7,7 @@ import { useBusinessDatePickerBounds } from '@hooks/utils/dates/useBusinessDateP
 import { useGlobalDate, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 
-type GlobalMonthPickerProps = {
+export type GlobalMonthPickerProps = {
   truncateMonth?: boolean
   showLabel?: boolean
 }

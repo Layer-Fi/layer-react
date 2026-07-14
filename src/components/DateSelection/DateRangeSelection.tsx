@@ -21,7 +21,7 @@ export const DateRangeSelection = ({
 }: DateRangeSelectionProps) => {
   return (
     <div
-      className={classNames('Layer__DateRangeSelection', {
+      className={classNames('Layer__DateRangeSelection Layer__variables', {
         'Layer__DateRangeSelection--compact': isCompact,
       })}
     >
