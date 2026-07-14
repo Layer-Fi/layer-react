@@ -6,6 +6,7 @@ export type LineItem = {
   rowKey: string
   label: string
   amount: number
+  fixed?: boolean
 }
 
 export type ScenarioQuarter = {

@@ -11,7 +11,7 @@ export const DEFAULT_SCENARIO: TaxScenario = {
   stateLabel: 'California',
   income: [
     { rowKey: 'business-income', label: 'Business income', amount: 12_000_000 },
-    { rowKey: 'w2-wages', label: 'W-2 wages', amount: 3_000_000 },
+    { rowKey: 'w2-wages', label: 'W-2 wages', amount: 3_000_000, fixed: true },
   ],
   deductions: [
     { rowKey: 'se-tax-deduction', label: '½ self-employment tax', amount: 850_000 },

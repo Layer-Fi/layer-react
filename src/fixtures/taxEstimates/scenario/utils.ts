@@ -67,7 +67,7 @@ const scaleAmount = (amount: number, factor: number) => Math.round(amount * fact
 
 export const scaleScenario = (scenario: TaxScenario, factor: number): TaxScenario => ({
   ...scenario,
-  income: scenario.income.map(item => ({ ...item, amount: scaleAmount(item.amount, factor) })),
+  income: scenario.income.map(item => item.fixed ? item : { ...item, amount: scaleAmount(item.amount, factor) }),
   deductions: scenario.deductions.map(item => ({ ...item, amount: scaleAmount(item.amount, factor) })),
   quarters: scenario.quarters.map(quarter => ({
     ...quarter,
