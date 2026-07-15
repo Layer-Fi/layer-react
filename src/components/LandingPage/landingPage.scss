@@ -121,6 +121,7 @@ body .calendly-overlay .calendly-popup {
 
   @media (width <= 1024px) {
     flex-direction: column;
+    gap: var(--spacing-lg);
   }
 }
 
@@ -150,7 +151,6 @@ body .calendly-overlay .calendly-popup {
 
   @media (width <= 1024px) {
     padding-inline: var(--spacing-md);
-    margin-top: var(--spacing-lg);
   }
 
   img {
