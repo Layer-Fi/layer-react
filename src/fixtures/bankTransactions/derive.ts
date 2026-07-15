@@ -196,7 +196,7 @@ export const deriveBankTransaction = (
   const merchant = bankTransactionMerchants[merchantIndex % bankTransactionMerchants.length]
   // Amounts are integer cents drawn from the merchant's dollar range.
   const [minDollars, maxDollars] = merchant.amountRange
-  const amount = minDollars * 100 + (amountRoll % ((maxDollars - minDollars) * 100))
+  const amount = minDollars * 100 + (amountRoll % ((maxDollars - minDollars) * 100 + 1))
 
   const merchantTransaction: BankTransaction = {
     ...accountTransaction,
