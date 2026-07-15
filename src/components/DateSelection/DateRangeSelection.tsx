@@ -11,7 +11,7 @@ type DateRangeSelectionProps = {
   dateRange: DateRange
   setDateRange: (range: DateRange) => void
   datePreset: DatePreset
-  setDatePreset: (datePreset: SelectableDatePreset) => void
+  setDatePreset: (options: { datePreset: SelectableDatePreset }) => void
   showLabels?: boolean
   isCompact?: boolean
 }

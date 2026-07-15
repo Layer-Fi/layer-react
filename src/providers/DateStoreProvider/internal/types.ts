@@ -9,13 +9,13 @@ export type DateRangeWithPreset = DateRange & { preset: DatePreset }
 
 export type DateActions = {
   /** Set an explicit date range; the preset it represents is derived. */
-  setDateRange: (range: DateRange, activationDate?: Date) => DateRangeWithPreset
+  setDateRange: (options: { startDate: Date, endDate: Date }, activationDate?: Date) => DateRangeWithPreset
   /** Set an explicit date preset; the concrete date range is derived. */
-  setDatePreset: (datePreset: SelectableDatePreset, activationDate?: Date) => DateRangeWithPreset
-  /** Set an explicit date; the date range and presetit represents is derived. */
-  setDate: (date: Date, activationDate?: Date) => DateRangeWithPreset
-  setMonth: (date: Date, activationDate?: Date) => DateRangeWithPreset
-  setYear: (date: Date, activationDate?: Date) => DateRangeWithPreset
+  setDatePreset: (options: { datePreset: SelectableDatePreset }, activationDate?: Date) => DateRangeWithPreset
+  /** Set an explicit date; the date range and preset it represents are derived. */
+  setDate: (options: { date: Date }, activationDate?: Date) => DateRangeWithPreset
+  setMonth: (options: { startDate: Date }, activationDate?: Date) => DateRangeWithPreset
+  setYear: (options: { startDate: Date }, activationDate?: Date) => DateRangeWithPreset
   setMonthByPeriod: (options: { monthNumber: number, yearNumber: number }, activationDate?: Date) => DateRangeWithPreset
 }
 

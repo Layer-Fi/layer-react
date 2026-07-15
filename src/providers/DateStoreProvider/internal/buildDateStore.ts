@@ -26,12 +26,12 @@ export function buildDateStore({ initialRange, initialPreset }: BuildDateStoreOp
       return setDateRangeWithPreset(dateRange, derivedPreset)
     }
 
-    const setDateRange = (range: DateRange, activationDate?: Date): DateRangeWithPreset => {
-      const dateRangeToApply = getDateRange({ mode: 'full', ...correctDateRange(range) })
+    const setDateRange = (options: { startDate: Date, endDate: Date }, activationDate?: Date): DateRangeWithPreset => {
+      const dateRangeToApply = getDateRange({ mode: 'full', ...correctDateRange(options) })
       return transformAndSet(dateRangeToApply, activationDate)
     }
 
-    const setDate = (date: Date, activationDate?: Date): DateRangeWithPreset => {
+    const setDate = ({ date }: { date: Date }, activationDate?: Date): DateRangeWithPreset => {
       const startOfMonth = getDateRange({ mode: 'month', endDate: date }).startDate
       const endDateClamped = getDateRange({ mode: 'full', startDate: date, endDate: date }).endDate
 
@@ -43,13 +43,13 @@ export function buildDateStore({ initialRange, initialPreset }: BuildDateStoreOp
       return transformAndSet(dateRangeToApply, activationDate)
     }
 
-    const setMonth = (date: Date, activationDate?: Date): DateRangeWithPreset => {
-      const dateRangeToApply = getDateRange({ mode: 'month', endDate: date })
+    const setMonth = ({ startDate }: { startDate: Date }, activationDate?: Date): DateRangeWithPreset => {
+      const dateRangeToApply = getDateRange({ mode: 'month', endDate: startDate })
       return transformAndSet(dateRangeToApply, activationDate)
     }
 
-    const setYear = (date: Date, activationDate?: Date): DateRangeWithPreset => {
-      const dateRangeToApply = getDateRange({ mode: 'year', endDate: date })
+    const setYear = ({ startDate }: { startDate: Date }, activationDate?: Date): DateRangeWithPreset => {
+      const dateRangeToApply = getDateRange({ mode: 'year', endDate: startDate })
       return transformAndSet(dateRangeToApply, activationDate)
     }
 
@@ -61,7 +61,7 @@ export function buildDateStore({ initialRange, initialPreset }: BuildDateStoreOp
     }
 
     const setDatePreset = (
-      datePreset: SelectableDatePreset,
+      { datePreset }: { datePreset: SelectableDatePreset },
       activationDate?: Date,
     ): DateRangeWithPreset => {
       const resolvedDateRange = deriveDateRangeFromPreset(datePreset, activationDate)

@@ -13,7 +13,7 @@ export const GlobalDatePicker = ({ showLabel = false }: { showLabel?: boolean })
   const { minDate, maxDate } = useBusinessDatePickerBounds()
 
   const setDate = useCallback((date: Date) => {
-    setGlobalDate(date)
+    setGlobalDate({ date })
   }, [setGlobalDate])
 
   const { localDate, onChange, minDateZdt, maxDateZdt, errorText, onBlur, isInvalid } = useDatePickerState({

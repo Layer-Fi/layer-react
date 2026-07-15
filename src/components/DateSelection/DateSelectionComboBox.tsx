@@ -15,7 +15,7 @@ type DateSelectionOption = {
 
 type DateSelectionComboBoxProps = {
   datePreset: DatePreset
-  setDatePreset: (datePreset: SelectableDatePreset) => void
+  setDatePreset: (options: { datePreset: SelectableDatePreset }) => void
   showLabel?: boolean
 }
 
@@ -57,7 +57,7 @@ export const DateSelectionComboBox = ({
     const nextPreset = option.value
     if (nextPreset === DatePreset.Custom) return
 
-    setDatePreset(nextPreset)
+    setDatePreset({ datePreset: nextPreset })
   }, [setDatePreset])
 
   const inputId = useId()

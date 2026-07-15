@@ -127,7 +127,7 @@ describe('createScopedDateStore', () => {
     const { result } = setupDateStore()
 
     act(() => {
-      result.current.dateActions.setDate(ONE_MONTH_BEFORE_NOW)
+      result.current.dateActions.setDate({ date: ONE_MONTH_BEFORE_NOW })
     })
 
     expect(result.current.fullRange).toEqual(MONTH_TO_DATE_OF_ONE_MONTH_BEFORE_NOW)
@@ -152,7 +152,7 @@ describe('createScopedDateStore', () => {
     const { result } = setupDateStore()
 
     act(() => {
-      result.current.datePresetActions.setDatePreset(DatePreset.LastMonth)
+      result.current.datePresetActions.setDatePreset({ datePreset: DatePreset.LastMonth })
     })
 
     expect(result.current.datePreset).toBe(DatePreset.LastMonth)
