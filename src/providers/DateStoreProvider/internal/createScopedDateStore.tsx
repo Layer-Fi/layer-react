@@ -70,7 +70,7 @@ export function createScopedDateStore({
 
     return useMemo(
       () => ({
-        setDate: (options: { date: Date }) => setDate(options, activationDate),
+        setDate: (options: { date: Date }) => setDate({ ...options, activationDate }),
       }),
       [setDate, activationDate],
     )
@@ -119,17 +119,17 @@ export function createScopedDateStore({
     )
 
     const setDateRange = useCallback(
-      (options: { startDate: Date, endDate: Date }) => setDateRangeAction(options, activationDate),
+      (options: { startDate: Date, endDate: Date }) => setDateRangeAction({ ...options, activationDate }),
       [setDateRangeAction, activationDate],
     )
 
     const setMonth = useCallback(
-      (options: { startDate: Date }) => setMonthAction(options, activationDate),
+      (options: { startDate: Date }) => setMonthAction({ ...options, activationDate }),
       [setMonthAction, activationDate],
     )
 
     const setYear = useCallback(
-      (options: { startDate: Date }) => setYearAction(options, activationDate),
+      (options: { startDate: Date }) => setYearAction({ ...options, activationDate }),
       [setYearAction, activationDate],
     )
 
@@ -147,7 +147,7 @@ export function createScopedDateStore({
     )
 
     const setDatePreset = useCallback(
-      (options: { datePreset: SelectableDatePreset }) => setDatePresetAction(options, activationDate),
+      (options: { datePreset: SelectableDatePreset }) => setDatePresetAction({ ...options, activationDate }),
       [setDatePresetAction, activationDate],
     )
 
@@ -166,7 +166,7 @@ export function createScopedDateStore({
     return useMemo(
       () => ({
         setMonthByPeriod: (options: { monthNumber: number, yearNumber: number }) =>
-          setMonthByPeriod(options, activationDate),
+          setMonthByPeriod({ ...options, activationDate }),
       }),
       [setMonthByPeriod, activationDate],
     )
