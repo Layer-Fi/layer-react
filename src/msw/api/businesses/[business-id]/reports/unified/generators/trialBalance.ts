@@ -1,5 +1,4 @@
 import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
-import { ReportControl } from '@schemas/reports/reportConfig'
 import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import {
@@ -9,11 +8,13 @@ import {
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {
   accumulatedMagnitudeCents,
+  balanceSheetRange,
   isDebitNormal,
   OPENING_BALANCE_EQUITY_STABLE_NAME,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/balances'
 import {
   currencyCell,
+  detailBaseParams,
   emptyCell,
   linesReportConfig,
   MOCK_REPORT_BUSINESS_ID,
@@ -28,7 +29,6 @@ const DEBIT_COLUMN_KEY = 'debit'
 const CREDIT_COLUMN_KEY = 'credit'
 
 const LINES_ROUTE = 'trial-balance/lines'
-const LINES_CONTROLS = [ReportControl.Date] as const
 
 const ALL_TYPES = [
   LedgerAccountType.Asset,
@@ -61,11 +61,19 @@ export const generateTrialBalance = (params: URLSearchParams): UnifiedReport => 
   const plug = debitSum - creditSum
   const plugOnDebit = plug < 0
 
-  const accountRow = (account: (typeof scored)[number]['account'], magnitude: number, onDebit: boolean): UnifiedReportRow => ({
+  // Drill-downs bake the same accumulation window as the parent so detail totals match the account's balance.
+  const baseParams = detailBaseParams(balanceSheetRange(effectiveDate), params)
+
+  const accountRow = (
+    account: (typeof scored)[number]['account'],
+    magnitude: number,
+    onDebit: boolean,
+    drillDown: boolean = true,
+  ): UnifiedReportRow => ({
     rowKey: account.accountId,
     cells: {
       [ACCOUNT_COLUMN_KEY]: textCell(account.name, {
-        reportConfig: linesReportConfig(LINES_ROUTE, account, LINES_CONTROLS),
+        reportConfig: drillDown ? linesReportConfig(LINES_ROUTE, account, [], baseParams) : undefined,
       }),
       ...sideCells(magnitude, onDebit),
     },
@@ -74,8 +82,9 @@ export const generateTrialBalance = (params: URLSearchParams): UnifiedReport => 
   const rows: UnifiedReportRow[] = scored.map(({ account, magnitude }) =>
     accountRow(account, magnitude, isDebitNormal(account)))
 
+  // Opening balance equity displays the plug, not its own stream, so it has no drill-down.
   if (openingBalanceEquity) {
-    rows.push(accountRow(openingBalanceEquity, Math.abs(plug), plugOnDebit))
+    rows.push(accountRow(openingBalanceEquity, Math.abs(plug), plugOnDebit, false))
   }
 
   const totalDebit = debitSum + (plugOnDebit ? Math.abs(plug) : 0)

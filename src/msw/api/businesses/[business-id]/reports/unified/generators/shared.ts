@@ -1,4 +1,4 @@
-import { isValid, parseISO, subMonths } from 'date-fns'
+import { format, isValid, parseISO, subMonths } from 'date-fns'
 
 import { LedgerAccountType, LedgerEntryDirection, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { type ReportConfig, type ReportControl } from '@schemas/reports/reportConfig'
@@ -83,6 +83,8 @@ export const linesReportConfig = (
   baseQueryParameters: { account_id: account.accountId, ...extraBaseParameters },
 })
 
+export const isoDate = (date: Date) => format(date, 'yyyy-MM-dd')
+
 // parseISO keeps date-only strings in local time, matching how the app builds ranges.
 export const parseDateParam = (value: string | null, fallback: Date) => {
   const parsed = parseISO(value ?? '')
@@ -124,6 +126,17 @@ export const reportingBasisBaseParams = (params: URLSearchParams): Record<string
   const reportingBasis = params.get('reporting_basis')
   return reportingBasis ? { reporting_basis: reportingBasis } : {}
 }
+
+/*
+ * Base parameters for a date-controlled report's drill-down: bake the exact
+ * accumulation window and reporting basis so detail totals match the parent
+ * cell (the detail route is date-range based, unlike the as-of parent).
+ */
+export const detailBaseParams = (range: ReportDateRange, params: URLSearchParams): Record<string, string> => ({
+  start_date: isoDate(range.startDate),
+  end_date: isoDate(range.endDate),
+  ...reportingBasisBaseParams(params),
+})
 
 /*
  * Scales the shared amount engine per account class so mock financials look

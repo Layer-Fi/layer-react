@@ -1,5 +1,5 @@
 import { LedgerAccountType, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
-import { ReportControl } from '@schemas/reports/reportConfig'
+import { type ReportConfig } from '@schemas/reports/reportConfig'
 import { Pinning, type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import {
@@ -9,6 +9,7 @@ import {
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {
   balanceSheetLeafAccounts,
+  balanceSheetRange,
   cumulativeNetIncomeCents,
   leafBalanceCents,
   OPENING_BALANCE_EQUITY_STABLE_NAME,
@@ -16,6 +17,7 @@ import {
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/balances'
 import {
   currencyCell,
+  detailBaseParams,
   linesReportConfig,
   MOCK_REPORT_BUSINESS_ID,
   numericColumn,
@@ -28,13 +30,14 @@ const NAME_COLUMN_KEY = 'name'
 const BALANCE_COLUMN_KEY = 'balance'
 
 const LINES_ROUTE = 'balance-sheet/lines'
-const LINES_CONTROLS = [ReportControl.Date] as const
 
 type BalanceByAccountId = ReadonlyMap<string, number>
+type DrillDownFor = (account: SingleChartAccountType) => ReportConfig | undefined
 
 const accountRow = (
   node: AccountNode,
   balances: BalanceByAccountId,
+  drillDownFor: DrillDownFor,
 ): UnifiedReportRow => {
   const isLeaf = node.children.length === 0
   const amount = isLeaf
@@ -45,11 +48,11 @@ const accountRow = (
     rowKey: node.account.accountId,
     cells: {
       [NAME_COLUMN_KEY]: textCell(node.account.name, {
-        reportConfig: isLeaf ? linesReportConfig(LINES_ROUTE, node.account, LINES_CONTROLS) : undefined,
+        reportConfig: isLeaf ? drillDownFor(node.account) : undefined,
       }),
       [BALANCE_COLUMN_KEY]: currencyCell(amount),
     },
-    ...(isLeaf ? {} : { rows: node.children.map(child => accountRow(child, balances)) }),
+    ...(isLeaf ? {} : { rows: node.children.map(child => accountRow(child, balances, drillDownFor)) }),
   }
 }
 
@@ -99,15 +102,25 @@ export const generateBalanceSheet = (params: URLSearchParams): UnifiedReport => 
 
   const equityTotal = sumForType(leaves, LedgerAccountType.Equity, balances)
 
+  // Drill-downs bake the accumulation window + reporting basis so detail totals match the parent cell.
+  // Retained earnings and opening balance equity are computed/plugged, not stream-backed, so they don't drill down.
+  const range = balanceSheetRange(effectiveDate)
+  const baseParams = detailBaseParams(range, params)
+  const pluggedIds = new Set([retainedEarnings?.accountId, openingBalanceEquity?.accountId])
+  const drillDownFor: DrillDownFor = account =>
+    pluggedIds.has(account.accountId)
+      ? undefined
+      : linesReportConfig(LINES_ROUTE, account, [], baseParams)
+
   const forestFor = (type: LedgerAccountType) =>
     buildAccountForest(accountsOfTypes([type]))
 
   const rows: UnifiedReportRow[] = [
-    ...forestFor(LedgerAccountType.Asset).map(node => accountRow(node, balances)),
+    ...forestFor(LedgerAccountType.Asset).map(node => accountRow(node, balances, drillDownFor)),
     sectionTotalRow('total_assets', 'Total Assets', assetsTotal),
-    ...forestFor(LedgerAccountType.Liability).map(node => accountRow(node, balances)),
+    ...forestFor(LedgerAccountType.Liability).map(node => accountRow(node, balances, drillDownFor)),
     sectionTotalRow('total_liabilities', 'Total Liabilities', liabilitiesTotal),
-    ...forestFor(LedgerAccountType.Equity).map(node => accountRow(node, balances)),
+    ...forestFor(LedgerAccountType.Equity).map(node => accountRow(node, balances, drillDownFor)),
     sectionTotalRow('total_equity', 'Total Equity', equityTotal),
     sectionTotalRow('total_liabilities_and_equity', 'Total Liabilities & Equity', liabilitiesTotal + equityTotal),
   ]
