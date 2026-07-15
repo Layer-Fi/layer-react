@@ -50,8 +50,8 @@ export const hasMatch = (bankTransaction?: BankTransaction) => {
   )
 }
 
-export const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
-  direction === BankTransactionDirection.Credit
+export const isMoneyIn = ({ direction }: Pick<BankTransaction, 'direction'>) =>
+  direction === BankTransactionDirection.MoneyIn
 
 export const countTransactionsToReview = ({
   transactions,
@@ -153,7 +153,7 @@ export type BankTransactionFilters = {
   amount?: NumericRangeFilter
   sourceAccountIds?: string[]
   bankAccountIds?: string[]
-  direction?: Direction[]
+  direction?: (Direction | BankTransactionDirection)[]
   categorizationStatus?: DisplayState
   dateRange?: DateRange
   query?: string

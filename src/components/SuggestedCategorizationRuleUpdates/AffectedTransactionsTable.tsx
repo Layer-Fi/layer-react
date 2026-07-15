@@ -86,7 +86,7 @@ export const AffectedTransactionsTable = ({
       id: TransactionColumns.Amount,
       header: t('common:label.amount', 'Amount'),
       cell: (row: AffectedTransactionRowType) => {
-        const amount = row.original.direction === BankTransactionDirection.Credit ? row.original.amount : -row.original.amount
+        const amount = row.original.direction === BankTransactionDirection.MoneyIn ? row.original.amount : -row.original.amount
         return <MoneySpan amount={amount} />
       },
     },

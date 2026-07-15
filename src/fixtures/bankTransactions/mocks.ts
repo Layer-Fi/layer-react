@@ -16,7 +16,7 @@ const baseBankTransaction: BankTransaction = {
   sourceTransactionId: 'src_txn_100000',
   sourceAccountId: account.externalAccounts[0]?.id ?? account.id,
   date: new Date('2025-06-01T15:45:00.000Z'),
-  direction: BankTransactionDirection.Debit,
+  direction: BankTransactionDirection.MoneyOut,
   amount: 5421,
   counterpartyName: 'Amazon',
   description: 'AMAZON MKTPL*ZX81Q3 AMZN.COM/BILL WA',
