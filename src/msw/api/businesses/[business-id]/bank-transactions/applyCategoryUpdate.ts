@@ -2,40 +2,19 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { type CategoryUpdate, type SplitCategoryEntrySchema } from '@schemas/bankTransactions/categoryUpdate'
 import { type SplitCategorizationEntrySchema } from '@schemas/categorization'
-import { type TransactionTag } from '@schemas/tag'
 
 import { categorizationFromClassification } from '@msw/api/businesses/[business-id]/bank-transactions/categorizationFromClassification'
+import { transactionTagFromKeyValue } from '@msw/api/businesses/[business-id]/bank-transactions/transactionTagFromKeyValue'
 
 type SplitEntry = typeof SplitCategorizationEntrySchema.Type
 type SplitCategoryEntry = typeof SplitCategoryEntrySchema.Type
-
-const toTransactionTag = ({ key, value, dimensionDisplayName, valueDisplayName }: {
-  key: string
-  value: string
-  dimensionDisplayName?: string | null
-  valueDisplayName?: string | null
-}): TransactionTag => {
-  const now = new Date()
-
-  return {
-    id: crypto.randomUUID(),
-    key,
-    value,
-    dimensionDisplayName: dimensionDisplayName ?? null,
-    valueDisplayName: valueDisplayName ?? null,
-    createdAt: now,
-    updatedAt: now,
-    archivedAt: null,
-    deletedAt: null,
-  }
-}
 
 const toSplitEntry = (entry: SplitCategoryEntry): SplitEntry => {
   const category = categorizationFromClassification(entry.category)
   const shared = {
     amount: entry.amount,
     taxCode: entry.taxCode ?? null,
-    tags: (entry.tags ?? []).map(toTransactionTag),
+    tags: (entry.tags ?? []).map(transactionTagFromKeyValue),
   }
 
   return category.type === 'Exclusion'

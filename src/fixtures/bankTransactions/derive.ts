@@ -1,3 +1,5 @@
+import { pick } from 'lodash-es'
+
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus, InputStrategy } from '@schemas/bankTransactions/bankTransaction'
 import { BankTransactionDirection } from '@schemas/bankTransactions/base'
@@ -38,9 +40,8 @@ const roundToCents = (amount: number) => Math.round(amount * 100) / 100
 export const toSuggestedMatchId = (transactionId: string) =>
   transactionId.replace(/^[0-9a-f]{8}/, '00000010')
 
-const toMatchedBankTransaction = (
-  { id, date, direction, amount, counterpartyName, description }: BankTransaction,
-) => ({ id, date, direction, amount, counterpartyName, description })
+const toMatchedBankTransaction = (transaction: BankTransaction) =>
+  pick(transaction, ['id', 'date', 'direction', 'amount', 'counterpartyName', 'description'])
 
 const deriveTransfer = (
   transaction: BankTransaction,
