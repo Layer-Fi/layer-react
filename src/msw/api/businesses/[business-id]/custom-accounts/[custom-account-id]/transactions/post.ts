@@ -1,8 +1,6 @@
 import { Schema } from 'effect'
 
-import { Direction } from '@internal-types/general'
 import { type BankTransactionDataOnly, BankTransactionDataOnlySchema } from '@schemas/bankTransactions/bankTransactionDataOnly'
-import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 import { CustomTransactionSchema } from '@schemas/customAccounts'
 
 import { bankTransactionStore } from '@msw/api/businesses/[business-id]/bank-transactions/store'
@@ -36,9 +34,7 @@ export const post = createMockEndpoint({
         sourceAccountId: customAccountId,
         sourceTransactionId: transaction.externalId ?? `custom-txn-${crypto.randomUUID()}`,
         date: new Date(transaction.date),
-        direction: String(transaction.direction) === String(Direction.CREDIT)
-          ? BankTransactionDirection.Credit
-          : BankTransactionDirection.Debit,
+        direction: transaction.direction,
         amount: transaction.amount,
         counterpartyName: null,
         description: transaction.description,
