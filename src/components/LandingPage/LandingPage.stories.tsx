@@ -284,12 +284,6 @@ export const BookkeepingOnly: Story = {
   args: { availableOffers: ['bookkeeping'] },
 }
 
-export const CustomHeroImage: Story = {
-  args: {
-    heroImageUrl: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=80',
-  },
-}
-
 export const FullyCustomized: Story = {
   args: {
     heroImageUrl: 'https://images.unsplash.com/photo-1734079692160-fcbe4be6ab96?auto=format&fit=crop&w=1600&q=80',
