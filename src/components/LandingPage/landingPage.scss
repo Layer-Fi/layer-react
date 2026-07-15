@@ -92,6 +92,14 @@ body .calendly-overlay .calendly-popup {
   background-color: transparent;
 }
 
+.Layer__LandingPage__section-divider {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1200px;
+  padding-inline: var(--spacing-lg);
+  margin: 0 auto;
+}
+
 .Layer__LandingPage__offers-title-row {
   justify-content: center;
 
