@@ -20,11 +20,6 @@ const MATCH_TYPE_BY_DETAILS_TYPE: Record<
   Payroll_Match: MatchType.PAYROLL_PAYMENT,
 }
 
-/*
- * Confirms one of the transaction's suggested matches, falling back to a
- * synthesized transfer match when the id isn't among the suggestions - the
- * mutation is then still visible to the UI.
- */
 export const applyConfirmedMatch = (
   transaction: BankTransaction,
   suggestedMatchId: string,
