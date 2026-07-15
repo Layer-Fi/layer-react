@@ -30,8 +30,6 @@ export const toAccountCategorization = (
   displayName: category.displayName,
 })
 
-const roundToCents = (amount: number) => Math.round(amount * 100) / 100
-
 export const toSuggestedMatchId = (transactionId: string) =>
   transactionId.replace(/^[0-9a-f]{8}/, '00000010')
 
@@ -159,8 +157,8 @@ const deriveSplit = (
   merchant: BankTransactionMerchant,
   splitPercent: number,
 ): BankTransaction => {
-  const primaryAmount = roundToCents(transaction.amount * (splitPercent / 100))
-  const alternateAmount = roundToCents(transaction.amount - primaryAmount)
+  const primaryAmount = Math.round(transaction.amount * (splitPercent / 100))
+  const alternateAmount = transaction.amount - primaryAmount
 
   return {
     ...transaction,
@@ -196,8 +194,9 @@ export const deriveBankTransaction = (
   }
 
   const merchant = bankTransactionMerchants[merchantIndex % bankTransactionMerchants.length]
+  // Amounts are integer cents drawn from the merchant's dollar range.
   const [minDollars, maxDollars] = merchant.amountRange
-  const amount = roundToCents(minDollars + (amountRoll % ((maxDollars - minDollars) * 100)) / 100)
+  const amount = minDollars * 100 + (amountRoll % ((maxDollars - minDollars) * 100))
 
   const merchantTransaction: BankTransaction = {
     ...accountTransaction,

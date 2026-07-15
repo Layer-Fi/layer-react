@@ -17,7 +17,7 @@ const baseBankTransaction: BankTransaction = {
   sourceAccountId: account.externalAccounts[0]?.id ?? account.id,
   date: new Date('2025-06-01T15:45:00.000Z'),
   direction: BankTransactionDirection.Debit,
-  amount: 54.21,
+  amount: 5421,
   counterpartyName: 'Amazon',
   description: 'AMAZON MKTPL*ZX81Q3 AMZN.COM/BILL WA',
   accountName: account.accountName,

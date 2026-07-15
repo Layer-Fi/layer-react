@@ -31,8 +31,9 @@ const base = Schema.Struct({
   date: withArbitrary(fields.date, () => dateArbitrary),
   direction: withArbitrary(fields.direction, () => fc =>
     fc.constantFrom(...Object.values(BankTransactionDirection))),
+  // Amounts are integer cents, matching the wire format.
   amount: withArbitrary(fields.amount, () => fc =>
-    fc.integer({ min: 100, max: 1_000_000 }).map(cents => cents / 100)),
+    fc.integer({ min: 100, max: 1_000_000 })),
   counterpartyName: withArbitrary(fields.counterpartyName, () => fc => fc.constant(null)),
   description: withArbitrary(fields.description, () => fc => fc.constant(null)),
   // The correlated account/status/categorization/match structures are filled
