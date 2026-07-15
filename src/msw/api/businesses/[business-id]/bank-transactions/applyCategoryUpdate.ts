@@ -58,5 +58,8 @@ export const applyUncategorize = (transaction: BankTransaction): BankTransaction
   ...transaction,
   categorizationStatus: CategorizationStatus.READY_FOR_INPUT,
   category: null,
+  categorizationFlow: null,
+  taxCode: null,
   match: null,
+  suggestedMatches: [],
 })

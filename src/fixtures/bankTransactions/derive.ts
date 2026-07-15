@@ -35,6 +35,9 @@ const roundToCents = (amount: number) => Math.round(amount * 100) / 100
 export const toSuggestedMatchId = (transactionId: string) =>
   transactionId.replace(/^[0-9a-f]{8}/, '00000010')
 
+export const toMatchDetailsId = (transactionId: string) =>
+  transactionId.replace(/^[0-9a-f]{8}/, '00000011')
+
 const toMatchedBankTransaction = (transaction: BankTransaction) =>
   pick(transaction, ['id', 'date', 'direction', 'amount', 'counterpartyName', 'description'])
 
@@ -59,7 +62,7 @@ const deriveTransfer = (
 
   const details: MatchDetailsType = {
     type: 'Transfer_Match',
-    id: `match-details-${transaction.id}`,
+    id: toMatchDetailsId(transaction.id),
     amount: transaction.amount,
     date: transaction.date,
     description: `Transfer between ${fromAccountName} and ${toAccountName}`,
@@ -96,7 +99,7 @@ const deriveMerchantMatch = (
   const details: MatchDetailsType = isInflow
     ? {
       type: 'Payout_Match',
-      id: `match-details-${transaction.id}`,
+      id: toMatchDetailsId(transaction.id),
       amount: transaction.amount,
       date: transaction.date,
       description: `Payout from ${merchant.name}`,
@@ -104,7 +107,7 @@ const deriveMerchantMatch = (
     }
     : {
       type: 'Bill_Match',
-      id: `match-details-${transaction.id}`,
+      id: toMatchDetailsId(transaction.id),
       amount: transaction.amount,
       date: transaction.date,
       description: `Bill payment to ${merchant.name}`,

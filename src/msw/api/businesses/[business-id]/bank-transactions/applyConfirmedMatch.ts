@@ -2,6 +2,7 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { type Match, MatchType } from '@schemas/bankTransactions/match'
 
+import { toMatchDetailsId } from '@fixtures/bankTransactions/derive'
 import { accountNames } from '@fixtures/constants/bank/accountNames'
 
 const MATCH_TYPE_BY_DETAILS_TYPE: Record<
@@ -34,7 +35,7 @@ export const applyConfirmedMatch = (
 
   const details = suggestedMatch?.details ?? {
     type: 'Transfer_Match',
-    id: `match-details-${transaction.id}`,
+    id: toMatchDetailsId(transaction.id),
     amount: transaction.amount,
     date: transaction.date,
     description: transaction.description ?? 'Transfer',
@@ -64,7 +65,7 @@ export const applyConfirmedMatch = (
       category: null,
       categorizationFlow: null,
       match,
-      suggestedMatches: transaction.suggestedMatches.filter(match => match.id !== suggestedMatchId),
+      suggestedMatches: [],
     },
     match,
   }

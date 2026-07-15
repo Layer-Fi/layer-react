@@ -158,7 +158,7 @@ export const bankTransactions = [
       },
       "details": {
         "type": "Bill_Match",
-        "id": "match-details-0000000f-5bc8-496c-857f-e339bfdd27f6",
+        "id": "00000011-5bc8-496c-857f-e339bfdd27f6",
         "amount": 217.8,
         "date": new Date("2025-12-21T15:45:00.000Z"),
         "description": "Bill payment to Amazon",
@@ -971,7 +971,7 @@ export const bankTransactions = [
       },
       "details": {
         "type": "Bill_Match",
-        "id": "match-details-0000000f-9c20-48ec-8edf-71e885a56e67",
+        "id": "00000011-9c20-48ec-8edf-71e885a56e67",
         "amount": 13.91,
         "date": new Date("2025-10-20T15:45:00.000Z"),
         "description": "Bill payment to Starbucks",
@@ -1379,7 +1379,7 @@ export const bankTransactions = [
         "id": "00000010-ed16-47c9-8822-f09847446fab",
         "details": {
           "type": "Transfer_Match",
-          "id": "match-details-0000000f-ed16-47c9-8822-f09847446fab",
+          "id": "00000011-ed16-47c9-8822-f09847446fab",
           "amount": 1781.05,
           "date": new Date("2025-09-17T15:45:00.000Z"),
           "description": "Transfer between Business Checking and Operating Account",
@@ -1577,7 +1577,7 @@ export const bankTransactions = [
       },
       "details": {
         "type": "Bill_Match",
-        "id": "match-details-0000000f-0593-4609-85e3-8c2437afb967",
+        "id": "00000011-0593-4609-85e3-8c2437afb967",
         "amount": 5489.13,
         "date": new Date("2025-09-02T15:45:00.000Z"),
         "description": "Bill payment to Gusto",
@@ -1930,7 +1930,7 @@ export const bankTransactions = [
       },
       "details": {
         "type": "Transfer_Match",
-        "id": "match-details-0000000f-2c52-42af-8093-65ca2189e89b",
+        "id": "00000011-2c52-42af-8093-65ca2189e89b",
         "amount": 9999.81,
         "date": new Date("2025-08-04T15:45:00.000Z"),
         "description": "Transfer between Operating Account and Reserve Account",
@@ -2018,7 +2018,7 @@ export const bankTransactions = [
         "id": "00000010-34cf-4505-8943-165c473ffe6c",
         "details": {
           "type": "Transfer_Match",
-          "id": "match-details-0000000f-34cf-4505-8943-165c473ffe6c",
+          "id": "00000011-34cf-4505-8943-165c473ffe6c",
           "amount": 1.03,
           "date": new Date("2025-07-28T15:45:00.000Z"),
           "description": "Transfer between Business Credit Card and Reserve Account",
@@ -2242,7 +2242,7 @@ export const bankTransactions = [
       },
       "details": {
         "type": "Transfer_Match",
-        "id": "match-details-0000000f-208b-4d9a-8bab-ece06c69610f",
+        "id": "00000011-208b-4d9a-8bab-ece06c69610f",
         "amount": 4271.95,
         "date": new Date("2025-07-09T15:45:00.000Z"),
         "description": "Transfer between Savings and Reserve Account",
@@ -2346,7 +2346,7 @@ export const bankTransactions = [
       },
       "details": {
         "type": "Transfer_Match",
-        "id": "match-details-0000000f-a4eb-4419-8e14-9ce4b5cec937",
+        "id": "00000011-a4eb-4419-8e14-9ce4b5cec937",
         "amount": 8018.33,
         "date": new Date("2025-07-02T15:45:00.000Z"),
         "description": "Transfer between Primary Checking and Business Checking",
@@ -2741,7 +2741,7 @@ export const bankTransactions = [
       },
       "details": {
         "type": "Transfer_Match",
-        "id": "match-details-0000000f-0e82-4ef5-8d64-8beb148bc676",
+        "id": "00000011-0e82-4ef5-8d64-8beb148bc676",
         "amount": 1.03,
         "date": new Date("2025-06-03T15:45:00.000Z"),
         "description": "Transfer between Business Credit Card and Operating Account",
@@ -2846,7 +2846,7 @@ export const bankTransactions = [
         "id": "00000010-d6d6-45a2-85a4-89a7176a1d51",
         "details": {
           "type": "Transfer_Match",
-          "id": "match-details-0000000f-d6d6-45a2-85a4-89a7176a1d51",
+          "id": "00000011-d6d6-45a2-85a4-89a7176a1d51",
           "amount": 2535.72,
           "date": new Date("2025-05-27T15:45:00.000Z"),
           "description": "Transfer between Reserve Account and Business Checking",
@@ -3219,7 +3219,7 @@ export const bankTransactions = [
         "id": "00000010-eda2-46d6-8f61-7caa97dfbb59",
         "details": {
           "type": "Transfer_Match",
-          "id": "match-details-0000000f-eda2-46d6-8f61-7caa97dfbb59",
+          "id": "00000011-eda2-46d6-8f61-7caa97dfbb59",
           "amount": 4891.09,
           "date": new Date("2025-04-27T15:45:00.000Z"),
           "description": "Transfer between Operating Account and Business Credit Card",
@@ -3318,7 +3318,7 @@ export const bankTransactions = [
       },
       "details": {
         "type": "Bill_Match",
-        "id": "match-details-0000000f-3ed4-4df8-831e-f2df02940580",
+        "id": "00000011-3ed4-4df8-831e-f2df02940580",
         "amount": 14.78,
         "date": new Date("2025-04-20T15:45:00.000Z"),
         "description": "Bill payment to Google",
@@ -3413,7 +3413,7 @@ export const bankTransactions = [
         "id": "00000010-7d42-4253-8eb1-15791a66ea01",
         "details": {
           "type": "Transfer_Match",
-          "id": "match-details-0000000f-7d42-4253-8eb1-15791a66ea01",
+          "id": "00000011-7d42-4253-8eb1-15791a66ea01",
           "amount": 9240.26,
           "date": new Date("2025-04-13T15:45:00.000Z"),
           "description": "Transfer between Reserve Account and Savings",
@@ -3512,7 +3512,7 @@ export const bankTransactions = [
       },
       "details": {
         "type": "Bill_Match",
-        "id": "match-details-0000000f-bd74-4e8f-8ce4-7e13782bb6ef",
+        "id": "00000011-bd74-4e8f-8ce4-7e13782bb6ef",
         "amount": 8761.83,
         "date": new Date("2025-04-05T15:45:00.000Z"),
         "description": "Bill payment to Gusto",
@@ -3616,7 +3616,7 @@ export const bankTransactions = [
       },
       "details": {
         "type": "Transfer_Match",
-        "id": "match-details-0000000f-d9b6-45cc-85c8-b527e24fd1fd",
+        "id": "00000011-d9b6-45cc-85c8-b527e24fd1fd",
         "amount": 1.02,
         "date": new Date("2025-03-29T15:45:00.000Z"),
         "description": "Transfer between Operating Account and Savings",
@@ -4237,7 +4237,7 @@ export const bankTransactions = [
       },
       "details": {
         "type": "Bill_Match",
-        "id": "match-details-0000000f-e2a1-4235-8360-e02887864d03",
+        "id": "00000011-e2a1-4235-8360-e02887864d03",
         "amount": 364.86,
         "date": new Date("2025-02-06T15:45:00.000Z"),
         "description": "Bill payment to Amazon",
@@ -4605,7 +4605,7 @@ export const bankTransactions = [
         "id": "00000010-46a3-4775-87b1-0799b8818e20",
         "details": {
           "type": "Transfer_Match",
-          "id": "match-details-0000000f-46a3-4775-87b1-0799b8818e20",
+          "id": "00000011-46a3-4775-87b1-0799b8818e20",
           "amount": 1.05,
           "date": new Date("2025-01-11T15:45:00.000Z"),
           "description": "Transfer between Reserve Account and Primary Checking",
