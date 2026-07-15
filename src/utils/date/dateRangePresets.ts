@@ -1,13 +1,12 @@
 import {
   addMonths, addQuarters, addYears, endOfDay,
   endOfMonth, endOfQuarter, endOfYear, isEqual,
-  startOfDay, startOfMonth, startOfQuarter, startOfYear, subMonths,
+  min, startOfDay, startOfMonth, startOfQuarter, startOfYear, subMonths,
   subQuarters,
   subYears,
 } from 'date-fns'
 
 import { clampToAfterActivationDate, clampToPresentOrPast, type DateRange } from '@utils/date/dateRange'
-import { correctDateRange } from '@providers/DateStoreProvider/internal/dateStoreUtils'
 
 export enum Period {
   Month = 'Month',
@@ -109,10 +108,11 @@ export function rangeForPreset(preset: RelativeDatePreset, base?: Date): DateRan
  * business context is available (the store resolver and the preset combo box).
  */
 export function rangeForAllTime(activationDate: Date): DateRange {
-  return correctDateRange({
-    startDate: startOfDay(activationDate),
-    endDate: endOfDay(new Date()),
-  })
+  const now = new Date()
+  return {
+    startDate: min([startOfDay(activationDate), startOfDay(now)]),
+    endDate: endOfDay(now),
+  }
 }
 
 const normalize = (range: DateRange, activationDate?: Date | null): DateRange => {
