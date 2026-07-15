@@ -6,6 +6,7 @@ import {
 import { type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { humanizeEnum } from '@utils/format'
 
+import { accountCategorizationFields } from '@msw/api/businesses/[business-id]/ledger/accounts/accountCategorizationFields'
 import { ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 
 type AccountCategorization = typeof AccountCategorizationSchema.Type
@@ -13,10 +14,7 @@ type ExclusionCategorization = typeof ExclusionCategorizationSchema.Type
 
 const toAccountCategorization = (account: SingleChartAccountType): AccountCategorization => ({
   type: 'Account',
-  id: account.accountId,
-  stableName: account.stableName ?? null,
-  category: account.stableName ?? account.accountId,
-  displayName: account.name,
+  ...accountCategorizationFields(account),
 })
 
 export const categorizationFromClassification = (

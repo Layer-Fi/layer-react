@@ -13,12 +13,8 @@ import { readRequestJson } from '@msw/utils/request'
 const decodeCreateBody = Schema.decodeUnknownSync(CreateCategorizationRuleSchema)
 const decodePatchBody = Schema.decodeUnknownSync(PatchCategorizationRuleSchema)
 
-/*
- * Create and patch bodies share their rule fields but don't map 1:1 onto the
- * rule: the description filter is echoed back as the readable filter, and the
- * counterparty filter arrives as a bare id the real API resolves to a full
- * counterparty.
- */
+// The description filter is echoed as the readable filter, and the bare
+// counterparty id becomes a minimal counterparty the real API would resolve.
 const applyRuleFields = (
   base: CategorizationRule,
   body: CreateCategorizationRule | PatchCategorizationRule,

@@ -15,8 +15,7 @@ const toRow = (transaction: BankTransaction) => [
   transaction.category?.displayName ?? '',
 ]
 
-// The real endpoint returns a presigned URL to an xlsx; the mock serves the
-// same rows as a CSV data URL so the download works without an S3 round trip.
+// Serves CSV via data URL in place of the real endpoint's presigned xlsx.
 export const get = createMockEndpoint<undefined, ReturnType<typeof csvPresignedUrlResponse>>({
   method: 'get',
   path: '*/v1/businesses/:businessId/reports/transactions/exports/excel',

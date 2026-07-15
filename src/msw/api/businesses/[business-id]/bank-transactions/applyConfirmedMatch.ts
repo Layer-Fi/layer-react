@@ -39,9 +39,7 @@ export const applyConfirmedMatch = (
     details,
   }
 
-  // The suggestion list survives confirmation: the match table renders
-  // suggested rows and badges the confirmed one, so clearing it would blank
-  // the table. Seed a row when the match came from the fallback details.
+  // The match table renders suggestedMatches; clearing them would blank it.
   const suggestedMatches = suggestedMatch
     ? transaction.suggestedMatches
     : [...transaction.suggestedMatches, { id: suggestedMatchId, details }]

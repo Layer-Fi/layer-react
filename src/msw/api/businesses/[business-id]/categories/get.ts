@@ -3,6 +3,7 @@ import { Schema } from 'effect'
 import { CategoryListSchema, type NestedCategorization } from '@schemas/categorization'
 import { type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 
+import { accountCategorizationFields } from '@msw/api/businesses/[business-id]/ledger/accounts/accountCategorizationFields'
 import { groupByParentAccountId, ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
@@ -30,10 +31,7 @@ const buildCategoryTree = () => {
 
     return {
       type: 'AccountNested',
-      id: account.accountId,
-      stableName: account.stableName ?? null,
-      category: account.stableName ?? account.accountId,
-      displayName: account.name,
+      ...accountCategorizationFields(account),
       subCategories: children.length > 0 ? children.map(toNode) : null,
     }
   }

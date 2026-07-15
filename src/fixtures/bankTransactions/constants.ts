@@ -53,11 +53,7 @@ export type BankTransactionMerchant = {
   primary: BankTransactionCategory
   alternates: readonly BankTransactionCategory[]
   amountRange: readonly [number, number]
-  /**
-   * Match flavors that plausibly pair with this counterparty. Empty means the
-   * merchant never appears as a match (e.g. card swipes with no ledger event
-   * to match against).
-   */
+  /** Match flavors that plausibly pair with this counterparty; empty = never matched. */
   matchTypes: readonly MerchantMatchType[]
 }
 

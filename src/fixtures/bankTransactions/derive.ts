@@ -80,8 +80,6 @@ const deriveTransfer = (
 
   const suggestedMatches = [{ id: toSuggestedMatchId(transaction.id), details }]
 
-  // A transfer to another account is also a plausible candidate, so the match
-  // table offers more than one row.
   const alternateCounterparty = counterpartyAccounts[(ref + 1) % counterpartyAccounts.length].accountName
   if (alternateCounterparty !== counterpartyAccount) {
     const alternateFrom = outbound ? accountName : alternateCounterparty
@@ -99,8 +97,7 @@ const deriveTransfer = (
     })
   }
 
-  // The confirmed match stays in suggestedMatches: the match table renders
-  // suggested rows and badges the one whose details id the match points at.
+  // The match table renders suggestedMatches and badges the confirmed one.
   if (matched) {
     return {
       ...transfer,
@@ -134,9 +131,7 @@ export const MATCH_TYPE_BY_DETAILS_TYPE: Record<MatchDetailsType['type'], MatchT
   Payroll_Match: MatchType.PAYROLL_PAYMENT,
 }
 
-// The flavor comes from the merchant's own matchTypes, so the match always
-// corresponds to the counterparty; ref/2 rotates within that list and stays
-// decorrelated from the direction pick at ref % 2.
+// ref/2 keeps the flavor pick decorrelated from the direction pick at ref % 2.
 const merchantMatchDetails = (
   transaction: BankTransaction,
   merchant: BankTransactionMerchant,
@@ -190,11 +185,8 @@ const merchantMatchDetails = (
   }
 }
 
-// Only merchants that declare match flavors can appear as matches; credit
-// merchants are a sliver of that pool, so alternate the direction to keep
-// inflow match types visible alongside the outflow ones. Refund counterparties
-// get a dedicated slice of the outflow picks - they'd rarely win a uniform
-// draw against the sixteen bill merchants.
+// Credit and refund merchants are slivers of the pool; alternating direction
+// and carving out a refund slice keeps them visible in a uniform draw.
 const pickMatchMerchant = (merchantIndex: number, ref: number): BankTransactionMerchant => {
   const wantInflow = ref % 2 === 0
   const matchable = bankTransactionMerchants.filter(candidate =>
@@ -241,8 +233,6 @@ const deriveAwaitingInput = (
   },
 })
 
-// A to-review transaction with a match candidate but nothing confirmed,
-// alongside its category suggestions.
 const deriveSuggestedMerchantMatch = (
   transaction: BankTransaction,
   merchant: BankTransactionMerchant,

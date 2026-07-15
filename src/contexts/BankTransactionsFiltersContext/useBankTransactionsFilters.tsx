@@ -41,8 +41,6 @@ export const useBankTransactionsFilters = ({
   const [baseFilters, setBaseFilters] =
     useState<BankTransactionFilters>(initialFilters)
 
-  // Monthly view follows the global month selection; the month picker writes
-  // back to the global date store.
   const dateRange = dateFilterMode === BankTransactionsDateFilterMode.GlobalDateRange
     ? globalDateRange
     : dateFilterMode === BankTransactionsDateFilterMode.MonthlyView

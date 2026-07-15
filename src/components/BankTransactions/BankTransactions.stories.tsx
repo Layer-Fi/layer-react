@@ -223,8 +223,7 @@ export default meta
 
 type Story = StoryObj<BankTransactionsStoryArgs>
 
-// ACTIVE (a bookkeeping client) disables self-serve categorization: no
-// To Review/Categorized toggle or categorization controls.
+// ACTIVE (a bookkeeping client) disables self-serve categorization.
 export const BookkeepingEnabled: Story = {
   parameters: {
     msw: {
