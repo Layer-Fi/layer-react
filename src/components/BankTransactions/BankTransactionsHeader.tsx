@@ -73,6 +73,7 @@ export const BankTransactionsHeader = ({
 
   const withDatePicker = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
   const monthPickerDate = filters?.dateRange ? convertDateToZonedDateTime(filters.dateRange.startDate) : null
+  const showMonthPicker = withDatePicker && monthPickerDate !== null
   const setDateRange = useCallback((newMonth: ZonedDateTime) => {
     const newMonthAsDate = newMonth.toDate()
     setFilters({
@@ -243,7 +244,7 @@ export const BankTransactionsHeader = ({
         {showBulkActions
           ? <BulkActionsModule slots={{ BulkActions }} />
           : (
-            <HStack slot='toggle' justify='center' gap='xs'>
+            <HStack slot='toggle' justify='center' align='center' gap={collapseHeader && !showMonthPicker ? 'md' : 'xs'}>
               {collapseHeader && headerTopRow}
               {statusToggle}
             </HStack>

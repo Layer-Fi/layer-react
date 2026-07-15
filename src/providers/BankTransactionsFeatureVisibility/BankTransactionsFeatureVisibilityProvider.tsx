@@ -13,7 +13,7 @@ export enum BankTransactionsFeature {
 
 type BankTransactionsFeatureVisibility = Record<BankTransactionsFeature, boolean>
 
-const DEFAULT_FEATURE_VISIBILITY: BankTransactionsFeatureVisibility = {
+export const DEFAULT_FEATURE_VISIBILITY: BankTransactionsFeatureVisibility = {
   [BankTransactionsFeature.CategorizationRules]: false,
   [BankTransactionsFeature.CustomerVendor]: false,
   [BankTransactionsFeature.Descriptions]: true,

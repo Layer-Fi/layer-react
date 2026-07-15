@@ -9,7 +9,7 @@
 
 .Layer__bank-transactions__header__content {
   display: flex;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
   align-items: center;
   justify-content: space-between;
   min-height: 40px;
@@ -22,10 +22,6 @@
 .Layer__bank-transactions__header.Layer__bank-transactions__header--mobile,
 .Layer__bank-transactions__header.Layer__bank-transactions__header--with-date-picker {
   flex-direction: column;
-
-  .Layer__bank-transactions__header__content {
-    padding-left: var(--spacing-3xs);
-  }
 }
 
 .Layer__bank-transactions__header--with-date-picker.Layer__bank-transactions__header--mobile .Layer__MonthPicker__InputGroup {

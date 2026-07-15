@@ -13,7 +13,7 @@ import { createGenerator } from '@fixtures/utils/createGenerator'
 import { fromMonthIndex, toMonthIndex } from '@fixtures/utils/monthIndex'
 
 const baseBookkeepingStatus: BookkeepingStatusData = {
-  status: BookkeepingStatus.ACTIVE,
+  status: BookkeepingStatus.NOT_PURCHASED,
   showEmbeddedOnboarding: false,
   onboardingCallUrl: null,
 }

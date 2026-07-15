@@ -3,15 +3,21 @@ import {
   type Classification,
   type ExclusionCategorizationSchema,
 } from '@schemas/categorization'
+import { type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { humanizeEnum } from '@utils/format'
 
-import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'
-import { toAccountCategorization } from '@fixtures/bankTransactions/derive'
+import { ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 
 type AccountCategorization = typeof AccountCategorizationSchema.Type
 type ExclusionCategorization = typeof ExclusionCategorizationSchema.Type
 
-const KNOWN_CATEGORIES = Object.values(bankTransactionCategories)
+const toAccountCategorization = (account: SingleChartAccountType): AccountCategorization => ({
+  type: 'Account',
+  id: account.accountId,
+  stableName: account.stableName ?? null,
+  category: account.stableName ?? account.accountId,
+  displayName: account.name,
+})
 
 export const categorizationFromClassification = (
   classification: Classification,
@@ -25,8 +31,12 @@ export const categorizationFromClassification = (
     }
   }
 
+  // Resolve against the same account pool the mocked /categories endpoint
+  // serves, so the echoed categorization carries the account's display name.
+  const accounts = ledgerAccountStore.all()
+
   if (classification.type === 'StableName') {
-    const known = KNOWN_CATEGORIES.find(category => category.stableName === classification.stableName)
+    const known = accounts.find(account => account.stableName === classification.stableName)
     if (known) return toAccountCategorization(known)
 
     return {
@@ -38,7 +48,7 @@ export const categorizationFromClassification = (
     }
   }
 
-  const known = KNOWN_CATEGORIES.find(category => category.id === classification.id)
+  const known = accounts.find(account => account.accountId === classification.id)
   if (known) return toAccountCategorization(known)
 
   return {
