@@ -26,6 +26,7 @@ export const post = createMockEndpoint<BusinessTask, ReturnType<typeof toRespons
     const cleared = patchTaskInStore(taskId, task => ({
       ...task,
       status: BusinessTaskStatus.Todo,
+      userResponse: null,
       documents: null,
     })) ?? {
       id: taskId,

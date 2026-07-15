@@ -26,15 +26,21 @@ export const patchTaskInStore = (
         return patched
       })
 
-      const allTasksComplete = tasks.every(task => task.status !== BusinessTaskStatus.Todo)
+      const isComplete = (periodTasks: readonly BusinessTask[]) =>
+        periodTasks.every(task => task.status !== BusinessTaskStatus.Todo)
 
-      return {
-        ...existing,
-        tasks,
-        status: allTasksComplete
+      const wasComplete = isComplete(existing.tasks)
+      const nowComplete = isComplete(tasks)
+
+      // Only transition status when task completion actually flips, so
+      // metadata-only patches don't clobber statuses like CLOSING_IN_REVIEW.
+      const status = nowComplete === wasComplete
+        ? existing.status
+        : nowComplete
           ? BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER
-          : BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER,
-      }
+          : BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER
+
+      return { ...existing, tasks, status }
     })
   })
 
