@@ -3,7 +3,7 @@ import { CategorizationStatus, InputStrategy } from '@schemas/bankTransactions/b
 import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 
 import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'
-import { toAccountCategorization } from '@fixtures/bankTransactions/utils'
+import { toAccountCategorization } from '@fixtures/bankTransactions/derive'
 import { makeBusiness } from '@fixtures/business/mocks'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 

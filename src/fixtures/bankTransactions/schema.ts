@@ -9,12 +9,12 @@ import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 import {
   accountInstitutionArbitrary,
   bankTransactionCustomerArbitrary,
-  bankTransactionRollsArbitrary,
   bankTransactionVendorArbitrary,
   sourceAccountIdArbitrary,
   sourceTransactionIdArbitrary,
 } from '@fixtures/bankTransactions/arbitrary'
-import { deriveBankTransaction } from '@fixtures/bankTransactions/utils'
+import { deriveBankTransaction } from '@fixtures/bankTransactions/derive'
+import { bankTransactionRollsArbitrary } from '@fixtures/bankTransactions/roll'
 import { makeBusiness } from '@fixtures/business/mocks'
 import { accountNames } from '@fixtures/constants/bank/accountNames'
 import { dateArbitrary } from '@fixtures/utils/arbitrary/date'

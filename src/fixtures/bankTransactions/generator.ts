@@ -1,5 +1,5 @@
+import { withBankTransactionDate } from '@fixtures/bankTransactions/derive'
 import { schema } from '@fixtures/bankTransactions/schema'
-import { withBankTransactionDate } from '@fixtures/bankTransactions/utils'
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { createGenerator } from '@fixtures/utils/createGenerator'
 import { spreadDateAcrossYear } from '@fixtures/utils/spreadDateAcrossYear'

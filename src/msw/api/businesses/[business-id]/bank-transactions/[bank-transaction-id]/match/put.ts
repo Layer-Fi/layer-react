@@ -3,7 +3,7 @@ import { Schema } from 'effect'
 import { type Match, MatchSchema } from '@schemas/bankTransactions/match'
 import { ConfirmMatchUpdateSchema } from '@schemas/bankTransactions/matchUpdate'
 
-import { applyConfirmedMatch } from '@msw/api/businesses/[business-id]/bank-transactions/applyCategoryUpdate'
+import { applyConfirmedMatch } from '@msw/api/businesses/[business-id]/bank-transactions/applyConfirmedMatch'
 import { bankTransactionStore, findOrSeedBankTransaction } from '@msw/api/businesses/[business-id]/bank-transactions/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'

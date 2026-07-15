@@ -4,12 +4,16 @@ import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 import { type MatchDetailsType, MatchType } from '@schemas/bankTransactions/match'
 import { type AccountCategorizationSchema } from '@schemas/categorization'
 
-import { type BankTransactionRolls } from '@fixtures/bankTransactions/arbitrary'
 import {
   type BankTransactionCategory,
   type BankTransactionMerchant,
   bankTransactionMerchants,
 } from '@fixtures/bankTransactions/constants'
+import {
+  BankTransactionRollCase,
+  type BankTransactionRolls,
+  bankTransactionRollTable,
+} from '@fixtures/bankTransactions/roll'
 import { accountNames } from '@fixtures/constants/bank/accountNames'
 
 type AccountCategorization = typeof AccountCategorizationSchema.Type
@@ -34,25 +38,14 @@ const roundToCents = (amount: number) => Math.round(amount * 100) / 100
 export const toSuggestedMatchId = (transactionId: string) =>
   transactionId.replace(/^[0-9a-f]{8}/, '00000010')
 
-const STATUS_ROLL_CEILING = {
-  matchedTransfer: 6,
-  suggestedTransfer: 12,
-  pending: 16,
-  awaitingInput: 50,
-  categorized: 80,
-  split: 90,
-} as const
-
 const toMatchedBankTransaction = (
   { id, date, direction, amount, counterpartyName, description }: BankTransaction,
 ) => ({ id, date, direction, amount, counterpartyName, description })
 
 const deriveTransfer = (
   transaction: BankTransaction,
-  statusRoll: number,
-  ref: number,
+  { matched, outbound, ref }: { matched: boolean, outbound: boolean, ref: number },
 ): BankTransaction => {
-  const outbound = statusRoll % 2 === 0
   const accountName = transaction.accountName ?? 'Business Checking'
   const counterpartyAccounts = accountNames.filter(name => name !== accountName)
   const counterpartyAccount = counterpartyAccounts[ref % counterpartyAccounts.length]
@@ -79,7 +72,7 @@ const deriveTransfer = (
     toAccountName,
   }
 
-  if (statusRoll < STATUS_ROLL_CEILING.matchedTransfer) {
+  if (matched) {
     return {
       ...transfer,
       categorizationStatus: CategorizationStatus.MATCHED,
@@ -135,20 +128,11 @@ const deriveMerchantMatch = (
   }
 }
 
-/*
- * The rolls are the single draw of randomness behind every correlated field:
- * statusRoll lands in the first STATUS_ROLL_CEILING bucket that exceeds it
- * (the gaps between ceilings are the status distribution; 90+ is a merchant
- * match), and the chosen merchant fixes direction, amount range, description,
- * and category suggestions together so the fields always agree.
- */
 export const deriveBankTransaction = (
   transaction: BankTransaction,
   { merchantIndex, statusRoll, ref, amountRoll, splitPercent }: BankTransactionRolls,
 ): BankTransaction => {
-  if (statusRoll < STATUS_ROLL_CEILING.suggestedTransfer) {
-    return deriveTransfer(transaction, statusRoll, ref)
-  }
+  const outbound = statusRoll % 2 === 0
 
   const merchant = bankTransactionMerchants[merchantIndex % bankTransactionMerchants.length]
   const [minDollars, maxDollars] = merchant.amountRange
@@ -164,31 +148,13 @@ export const deriveBankTransaction = (
     vendor: merchant.direction === BankTransactionDirection.Debit ? transaction.vendor : null,
   }
 
-  if (statusRoll < STATUS_ROLL_CEILING.pending) {
-    return { ...merchantTransaction, categorizationStatus: CategorizationStatus.PENDING }
-  }
+  const categorize = (): BankTransaction => ({
+    ...merchantTransaction,
+    categorizationStatus: CategorizationStatus.CATEGORIZED,
+    category: toAccountCategorization(merchant.primary),
+  })
 
-  if (statusRoll < STATUS_ROLL_CEILING.awaitingInput) {
-    return {
-      ...merchantTransaction,
-      categorizationStatus: CategorizationStatus.READY_FOR_INPUT,
-      categorizationFlow: {
-        type: InputStrategy.AskFromSuggestions,
-        category: null,
-        suggestions: [merchant.primary, ...merchant.alternates].map(toAccountCategorization),
-      },
-    }
-  }
-
-  if (statusRoll < STATUS_ROLL_CEILING.categorized || merchant.alternates.length === 0) {
-    return {
-      ...merchantTransaction,
-      categorizationStatus: CategorizationStatus.CATEGORIZED,
-      category: toAccountCategorization(merchant.primary),
-    }
-  }
-
-  if (statusRoll < STATUS_ROLL_CEILING.split) {
+  const split = (): BankTransaction => {
     const primaryAmount = roundToCents(amount * (splitPercent / 100))
     const alternateAmount = roundToCents(amount - primaryAmount)
 
@@ -208,7 +174,33 @@ export const deriveBankTransaction = (
     }
   }
 
-  return deriveMerchantMatch(merchantTransaction, merchant)
+  // Splits need an alternate category for the second entry; merchants without
+  // one fall back to a plain categorization.
+  const hasAlternates = merchant.alternates.length > 0
+
+  return bankTransactionRollTable.handle(statusRoll, {
+    [BankTransactionRollCase.MatchedTransfer]: () =>
+      deriveTransfer(transaction, { matched: true, outbound, ref }),
+    [BankTransactionRollCase.SuggestedTransfer]: () =>
+      deriveTransfer(transaction, { matched: false, outbound, ref }),
+    [BankTransactionRollCase.Pending]: () => ({
+      ...merchantTransaction,
+      categorizationStatus: CategorizationStatus.PENDING,
+    }),
+    [BankTransactionRollCase.AwaitingInput]: () => ({
+      ...merchantTransaction,
+      categorizationStatus: CategorizationStatus.READY_FOR_INPUT,
+      categorizationFlow: {
+        type: InputStrategy.AskFromSuggestions,
+        category: null,
+        suggestions: [merchant.primary, ...merchant.alternates].map(toAccountCategorization),
+      },
+    }),
+    [BankTransactionRollCase.Categorized]: categorize,
+    [BankTransactionRollCase.Split]: () => hasAlternates ? split() : categorize(),
+    [BankTransactionRollCase.MerchantMatch]: () =>
+      hasAlternates ? deriveMerchantMatch(merchantTransaction, merchant) : categorize(),
+  })
 }
 
 /** Moves a transaction to a new date, keeping the dates embedded in its matches in step. */
