@@ -28,6 +28,10 @@ export const BankTransactionDirectionSchema = Schema.transform(
   },
 )
 
+export type RawBankTransactionDirection = typeof BankTransactionDirectionSchema.Encoded
+
+export const decodeBankTransactionDirection = Schema.decodeSync(BankTransactionDirectionSchema)
+
 export const MinimalBankTransactionSchema = Schema.Struct({
   id: Schema.String,
   date: Schema.Date,
