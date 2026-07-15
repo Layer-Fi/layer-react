@@ -1,88 +1,55 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { BookkeepingStatus } from '@schemas/bookkeepingStatus'
-import { type MobileComponentType } from '@components/BankTransactions/constants'
 import { BankTransactionsWithLinkedAccounts } from '@views/BankTransactionsWithLinkedAccounts/BankTransactionsWithLinkedAccounts'
 
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { handlers } from '@msw/handlers'
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
+import {
+  type BankTransactionsStoryArgs as SharedBankTransactionsArgs,
+  bankTransactionsStoryDefaultArgs,
+  makeBankTransactionsStoryControls,
+} from '@test-utils/bankTransactionsStoryControls'
+import {
+  type LinkedAccountsStoryArgs as SharedLinkedAccountsArgs,
+  linkedAccountsStoryDefaultArgs,
+  makeLinkedAccountsStoryControls,
+} from '@test-utils/linkedAccountsStoryControls'
 
-type BankTransactionsWithLinkedAccountsStoryArgs = {
-  showTitle: boolean
-  elevatedLinkedAccounts: boolean
-  showBreakConnection: boolean
-  showCategorizationRules: boolean
-  showCustomerVendor: boolean
-  showDescriptions: boolean
-  showLedgerBalance: boolean
-  showReceiptUploads: boolean
-  showTags: boolean
-  showTooltips: boolean
-  showUnlinkItem: boolean
-  showUploadOptions: boolean
-  mobileComponent: MobileComponentType
-  title: string
-}
+type BankTransactionsWithLinkedAccountsStoryArgs =
+  SharedBankTransactionsArgs & SharedLinkedAccountsArgs & {
+    showTitle: boolean
+    title: string
+  }
+
+const bankTransactionsControls = makeBankTransactionsStoryControls({ category: 'Bank transactions' })
+const linkedAccountsControls = makeLinkedAccountsStoryControls({ category: 'Linked accounts' })
 
 const meta: Meta<BankTransactionsWithLinkedAccountsStoryArgs> = {
-  title: 'Views/BankTransactionsWithLinkedAccounts',
+  title: 'Views/BankTransactions/WithLinkedAccounts',
   component: BankTransactionsWithLinkedAccounts,
   parameters: {
     controls: {
       include: [
         'showTitle',
-        'elevatedLinkedAccounts',
-        'showBreakConnection',
-        'showCategorizationRules',
-        'showCustomerVendor',
-        'showDescriptions',
-        'showLedgerBalance',
-        'showReceiptUploads',
-        'showTags',
-        'showTooltips',
-        'showUnlinkItem',
-        'showUploadOptions',
-        'mobileComponent',
+        ...linkedAccountsControls.controlNames,
+        ...bankTransactionsControls.controlNames,
         'stringOverrides.title',
       ],
     },
   },
   args: {
     showTitle: true,
-    elevatedLinkedAccounts: false,
-    showBreakConnection: false,
-    showCategorizationRules: false,
-    showCustomerVendor: false,
-    showDescriptions: true,
-    showLedgerBalance: true,
-    showReceiptUploads: true,
-    showTags: false,
-    showTooltips: false,
-    showUnlinkItem: false,
-    showUploadOptions: false,
-    mobileComponent: 'regularList',
+    ...linkedAccountsStoryDefaultArgs,
+    ...bankTransactionsStoryDefaultArgs,
     title: '',
   },
   argTypes: {
     // Deprecated props (`title`, `mode`) and function props are intentionally not knobs.
     showTitle: { control: 'boolean', description: 'Show the view title' },
-    elevatedLinkedAccounts: { control: 'boolean', description: 'Render linked accounts with elevation' },
-    showBreakConnection: { control: 'boolean', table: { category: 'Linked accounts' } },
-    showLedgerBalance: { control: 'boolean', table: { category: 'Linked accounts' } },
-    showUnlinkItem: { control: 'boolean', table: { category: 'Linked accounts' } },
-    showCategorizationRules: { control: 'boolean', table: { category: 'Bank transactions' } },
-    showCustomerVendor: { control: 'boolean', table: { category: 'Bank transactions' } },
-    showDescriptions: { control: 'boolean', table: { category: 'Bank transactions' } },
-    showReceiptUploads: { control: 'boolean', table: { category: 'Bank transactions' } },
-    showTags: { control: 'boolean', table: { category: 'Bank transactions' } },
-    showTooltips: { control: 'boolean', table: { category: 'Bank transactions' } },
-    showUploadOptions: { control: 'boolean', table: { category: 'Bank transactions' } },
-    mobileComponent: {
-      control: 'radio',
-      options: ['regularList', 'mobileList'],
-      description: 'List variant used at narrow container widths',
-    },
+    ...linkedAccountsControls.argTypes,
+    ...bankTransactionsControls.argTypes,
     title: {
       name: 'stringOverrides.title',
       control: 'text',

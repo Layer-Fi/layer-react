@@ -29,8 +29,6 @@ export const categorizationFromClassification = (
     }
   }
 
-  // Resolve against the same account pool the mocked /categories endpoint
-  // serves, so the echoed categorization carries the account's display name.
   const accounts = ledgerAccountStore.all()
 
   if (classification.type === 'StableName') {

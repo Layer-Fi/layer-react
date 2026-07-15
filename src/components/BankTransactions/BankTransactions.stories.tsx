@@ -1,30 +1,25 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { BookkeepingStatus } from '@schemas/bookkeepingStatus'
-import { DEFAULT_FEATURE_VISIBILITY } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import {
   BankTransactions,
   type BankTransactionsStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
-import { type MobileComponentType } from '@components/BankTransactions/constants'
 
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { handlers } from '@msw/handlers'
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
+import {
+  type BankTransactionsStoryArgs as SharedBankTransactionsArgs,
+  bankTransactionsStoryDefaultArgs,
+  makeBankTransactionsStoryControls,
+} from '@test-utils/bankTransactionsStoryControls'
 
-type BankTransactionsStoryArgs = {
+type BankTransactionsStoryArgs = SharedBankTransactionsArgs & {
   pageSize: number
-  showCategorizationRules: boolean
-  showCustomerVendor: boolean
-  showDescriptions: boolean
-  showReceiptUploads: boolean
   showStatusToggle: boolean
-  showTags: boolean
-  showTooltips: boolean
-  showUploadOptions: boolean
   applyGlobalDateRange: boolean
   monthlyView: boolean
-  mobileComponent: MobileComponentType
   hideHeader: boolean
   collapseHeader: boolean
   headerText: string
@@ -78,6 +73,8 @@ function buildStringOverrides({
   return Object.keys(stringOverrides).length ? stringOverrides : undefined
 }
 
+const bankTransactionsControls = makeBankTransactionsStoryControls()
+
 const meta: Meta<BankTransactionsStoryArgs> = {
   title: 'Components/BankTransactions',
   component: BankTransactions,
@@ -85,17 +82,10 @@ const meta: Meta<BankTransactionsStoryArgs> = {
     controls: {
       include: [
         'pageSize',
-        'showCategorizationRules',
-        'showCustomerVendor',
-        'showDescriptions',
-        'showReceiptUploads',
+        ...bankTransactionsControls.controlNames,
         'showStatusToggle',
-        'showTags',
-        'showTooltips',
-        'showUploadOptions',
         'applyGlobalDateRange',
         'monthlyView',
-        'mobileComponent',
         'hideHeader',
         'collapseHeader',
         'stringOverrides.bankTransactionsHeader.header',
@@ -112,10 +102,10 @@ const meta: Meta<BankTransactionsStoryArgs> = {
   },
   args: {
     pageSize: 20,
-    ...DEFAULT_FEATURE_VISIBILITY,
+    ...bankTransactionsStoryDefaultArgs,
+    showStatusToggle: true,
     applyGlobalDateRange: false,
     monthlyView: false,
-    mobileComponent: 'regularList',
     hideHeader: false,
     collapseHeader: false,
     headerText: '',
@@ -131,14 +121,8 @@ const meta: Meta<BankTransactionsStoryArgs> = {
   argTypes: {
     // Deprecated props (`mode`, `categorizeView`) and function props are intentionally not knobs.
     pageSize: { control: { type: 'number', min: 1 }, description: 'Transactions per page' },
-    showCategorizationRules: { control: 'boolean', table: { category: 'Feature visibility' } },
-    showCustomerVendor: { control: 'boolean', table: { category: 'Feature visibility' } },
-    showDescriptions: { control: 'boolean', table: { category: 'Feature visibility' } },
-    showReceiptUploads: { control: 'boolean', table: { category: 'Feature visibility' } },
-    showStatusToggle: { control: 'boolean', table: { category: 'Feature visibility' } },
-    showTags: { control: 'boolean', table: { category: 'Feature visibility' } },
-    showTooltips: { control: 'boolean', table: { category: 'Feature visibility' } },
-    showUploadOptions: { control: 'boolean', table: { category: 'Feature visibility' } },
+    ...bankTransactionsControls.argTypes,
+    showStatusToggle: { control: 'boolean' },
     applyGlobalDateRange: {
       control: 'boolean',
       description: 'Use the global date range as the date filter',
@@ -146,11 +130,6 @@ const meta: Meta<BankTransactionsStoryArgs> = {
     monthlyView: {
       control: 'boolean',
       description: 'Group transactions by month with infinite scroll',
-    },
-    mobileComponent: {
-      control: 'radio',
-      options: ['regularList', 'mobileList'],
-      description: 'List variant used at narrow container widths',
     },
     hideHeader: { control: 'boolean', description: 'Hide the header entirely' },
     collapseHeader: { control: 'boolean', description: 'Render the compact header layout' },
