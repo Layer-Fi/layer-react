@@ -7,8 +7,8 @@ import { paginatedApiData } from '@msw/utils/apiResponse'
 import {
   createListFilter,
   matchesBoolean,
-  matchesDateOnOrAfter,
-  matchesDateOnOrBefore,
+  matchesOnOrAfter,
+  matchesOnOrBefore,
   matchesValue,
   requiresFlag,
 } from '@msw/utils/createListFilter'
@@ -29,8 +29,8 @@ export const filterTimeEntries = createListFilter<TimeEntry>({
   billable: matchesBoolean(entry => entry.billable),
   has_customer: matchesBoolean(entry => entry.customer != null),
   include_deleted: requiresFlag(entry => entry.deletedAt != null),
-  start_date: matchesDateOnOrAfter(entry => entry.date),
-  end_date: matchesDateOnOrBefore(entry => entry.date),
+  start_date: matchesOnOrAfter(entry => entry.date),
+  end_date: matchesOnOrBefore(entry => entry.date),
 })
 
 export const get = createMockEndpoint<readonly TimeEntry[], ReturnType<typeof toResponse>>({

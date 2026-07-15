@@ -1,13 +1,11 @@
 import { MatchSchema } from '@schemas/bankTransactions/match'
+import { type ConfirmMatchUpdateEncoded } from '@schemas/bankTransactions/matchUpdate'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { put } from '@utils/api/authenticatedHttp'
 import { useBankTransactionTriggerSuccess } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/useBankTransactionTriggerSuccess'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
-export type MatchBankTransactionBody = {
-  match_id: string
-  type: 'Confirm_Match'
-}
+export type MatchBankTransactionBody = ConfirmMatchUpdateEncoded
 
 const MatchBankTransactionResponseSchema = UnwrappedDataResponseSchema(MatchSchema)
 
