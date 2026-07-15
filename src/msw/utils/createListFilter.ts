@@ -27,16 +27,18 @@ export const matchesValue = <TItem>(get: (item: TItem) => string | number | null
 export const matchesBoolean = <TItem>(get: (item: TItem) => boolean) =>
   whenPresent<TItem>((item, value) => get(item) === (value === 'true'))
 
-type Comparable = string | number | Date | CalendarDate
-
-const compareStrings = (left: string, right: string) => left < right ? -1 : left > right ? 1 : 0
+type Comparable = number | Date | CalendarDate
 
 // Dates compare at day granularity - range params arrive as date-only strings.
 const compareToParam = (itemValue: Comparable, value: string): number => {
   if (itemValue instanceof CalendarDate) return itemValue.compare(parseDate(value))
-  if (itemValue instanceof Date) return compareStrings(itemValue.toISOString().slice(0, 10), value)
-  if (typeof itemValue === 'number') return itemValue - Number(value)
-  return compareStrings(itemValue, value)
+
+  if (itemValue instanceof Date) {
+    const day = itemValue.toISOString().slice(0, 10)
+    return day < value ? -1 : day > value ? 1 : 0
+  }
+
+  return itemValue - Number(value)
 }
 
 export const matchesOnOrAfter = <TItem>(get: (item: TItem) => Comparable | null | undefined) =>
