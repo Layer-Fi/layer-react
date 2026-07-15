@@ -9,8 +9,11 @@ export const bookkeepingPeriodStore = createMockStore(
   () => makeBookkeepingPeriods(PROFIT_AND_LOSS_FIXTURE_START_YEAR),
 )
 
-export const completeTaskInStore = (taskId: string, userResponse: string | null): BusinessTask | undefined => {
-  let completed: BusinessTask | undefined
+export const patchTaskInStore = (
+  taskId: string,
+  applyPatch: (task: BusinessTask) => BusinessTask,
+): BusinessTask | undefined => {
+  let patched: BusinessTask | undefined
 
   bookkeepingPeriodStore.all().forEach((period) => {
     if (!period.tasks.some(task => task.id === taskId)) return
@@ -19,8 +22,8 @@ export const completeTaskInStore = (taskId: string, userResponse: string | null)
       const tasks = existing.tasks.map((task) => {
         if (task.id !== taskId) return task
 
-        completed = { ...task, status: BusinessTaskStatus.UserMarkedCompleted, userResponse }
-        return completed
+        patched = applyPatch(task)
+        return patched
       })
 
       const allTasksComplete = tasks.every(task => task.status !== BusinessTaskStatus.Todo)
@@ -33,5 +36,12 @@ export const completeTaskInStore = (taskId: string, userResponse: string | null)
     })
   })
 
-  return completed
+  return patched
 }
+
+export const completeTaskInStore = (taskId: string, userResponse: string | null): BusinessTask | undefined =>
+  patchTaskInStore(taskId, task => ({
+    ...task,
+    status: BusinessTaskStatus.UserMarkedCompleted,
+    userResponse,
+  }))
