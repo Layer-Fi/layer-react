@@ -96,27 +96,29 @@ export const LandingPage = ({
     <VStack className='Layer__LandingPage--main'>
       <div className='Layer__LandingPage__layout'>
         <VStack gap={isMobile ? 'md' : 'lg'} pi={isMobile ? 'md' : 'lg'} className='Layer__LandingPage__responsive-content'>
-          <VStack>
-            {!!heroConfig.stringOverrides?.title === false && (
-              <>
-                <Heading size={isMobile ? 'xl' : '3xl'}>
-                  {platform.platformName}
-                  <br />
-                </Heading>
-                <Heading size={isMobile ? 'xl' : '3xl'} variant='subtle' weight='normal'>{t('common:label.accounting', 'Accounting')}</Heading>
-              </>
-            )}
-            {heroConfig.stringOverrides?.title != '' && (
-              <>
-                <Heading size={isMobile ? 'xl' : '3xl'}>
-                  {interpolateTemplate(heroConfig.stringOverrides.title, platform)}
-                </Heading>
-              </>
-            )}
+          <VStack gap='xs'>
+            <VStack>
+              {!!heroConfig.stringOverrides?.title === false && (
+                <>
+                  <Heading size={isMobile ? 'xl' : '3xl'}>
+                    {platform.platformName}
+                    <br />
+                  </Heading>
+                  <Heading size={isMobile ? 'xl' : '3xl'} variant='subtle' weight='normal'>{t('common:label.accounting', 'Accounting')}</Heading>
+                </>
+              )}
+              {heroConfig.stringOverrides?.title != '' && (
+                <>
+                  <Heading size={isMobile ? 'xl' : '3xl'}>
+                    {interpolateTemplate(heroConfig.stringOverrides.title, platform)}
+                  </Heading>
+                </>
+              )}
+            </VStack>
+            <Heading variant='subtle' size={isMobile ? 'sm' : 'md'}>
+              {interpolateTemplate(heroConfig.stringOverrides.subtitle, platform)}
+            </Heading>
           </VStack>
-          <Heading variant='subtle' size={isMobile ? 'sm' : 'md'}>
-            {interpolateTemplate(heroConfig.stringOverrides.subtitle, platform)}
-          </Heading>
           <VStack>
             <HStack gap='lg' pb={isMobile ? '3xs' : 'xs'}>
               <VStack gap='xs'>

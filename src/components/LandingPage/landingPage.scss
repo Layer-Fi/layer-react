@@ -40,10 +40,15 @@ body .calendly-overlay .calendly-popup {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--spacing-2xl);
+  justify-content: center;
   width: 100%;
   max-width: 1200px;
   padding-inline: var(--spacing-lg);
   margin: 0 auto;
+
+  &:has(> .Layer__LandingPage__offers:only-child) {
+    grid-template-columns: minmax(0, 480px);
+  }
 
   @media (width <= 720px) {
     grid-template-columns: 1fr;
@@ -58,10 +63,17 @@ body .calendly-overlay .calendly-popup {
   gap: var(--spacing-xs);
   height: 100%;
   border-radius: var(--border-radius);
-  border: 1px solid var(--color-base-100);
+  border: 2px solid var(--color-base-100);
   margin: 0;
   background: var(--color-base-0);
   overflow-wrap: break-word;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-base-300);
+    box-shadow: 0 12px 24px rgb(0 0 0 / 8%);
+    transform: translateY(-4px);
+  }
 }
 
 .Layer__LandingPage-options__feature-check {
@@ -84,7 +96,8 @@ body .calendly-overlay .calendly-popup {
   justify-content: center;
 
   .Layer__UI__Heading {
-    max-width: 480px;
+    width: 100%;
+    max-width: none;
   }
 }
 
