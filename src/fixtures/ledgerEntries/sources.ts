@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { Direction } from '@internal-types/general'
+import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 import { EntryType } from '@schemas/generalLedger/ledgerEntry'
 import { LedgerEntrySourceSchema } from '@schemas/generalLedger/ledgerEntrySource'
 
@@ -39,7 +39,7 @@ export const ledgerEntrySourceExamples: readonly ExampleSource[] = [
     accountName: 'Business Checking',
     date: '2025-03-12',
     amount: 8250,
-    direction: Direction.DEBIT,
+    direction: BankTransactionDirection.Debit,
     counterparty: 'Staples',
     description: 'Office supplies',
   }),

@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { Direction } from '@internal-types/general'
+import { BankTransactionDirectionSchema } from '@schemas/bankTransactions/base'
 import { CustomerSchema } from '@schemas/customer'
 import { VendorSchema } from '@schemas/vendor'
 import { EntityName, type LinkingMetadata } from '@contexts/InAppLinkContext'
@@ -42,7 +42,7 @@ export const TransactionLedgerEntrySourceSchema = Schema.Struct({
   ),
   date: Schema.String,
   amount: Schema.Number,
-  direction: Schema.Enums(Direction),
+  direction: BankTransactionDirectionSchema,
   counterparty: Schema.optional(Schema.NullOr(Schema.String)),
   description: Schema.optional(Schema.String),
   memo: Schema.optional(Schema.NullOr(Schema.String)),
