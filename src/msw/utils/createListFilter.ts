@@ -29,13 +29,9 @@ export const matchesBoolean = <TItem>(get: (item: TItem) => boolean) =>
 
 type Comparable = string | number | Date | CalendarDate
 
-/*
- * Compares a field against the param's raw string: numerically for numbers,
- * lexicographically for strings, and at day granularity for Date and
- * CalendarDate (bound params arrive as date-only strings).
- */
 const compareStrings = (left: string, right: string) => left < right ? -1 : left > right ? 1 : 0
 
+// Dates compare at day granularity - range params arrive as date-only strings.
 const compareToParam = (itemValue: Comparable, value: string): number => {
   if (itemValue instanceof CalendarDate) return itemValue.compare(parseDate(value))
   if (itemValue instanceof Date) return compareStrings(itemValue.toISOString().slice(0, 10), value)
@@ -43,14 +39,12 @@ const compareToParam = (itemValue: Comparable, value: string): number => {
   return compareStrings(itemValue, value)
 }
 
-/** Matches items whose field is >= the param; a null/undefined field never matches a present param. */
 export const matchesOnOrAfter = <TItem>(get: (item: TItem) => Comparable | null | undefined) =>
   whenPresent<TItem>((item, value) => {
     const itemValue = get(item)
     return itemValue != null && compareToParam(itemValue, value) >= 0
   })
 
-/** Matches items whose field is <= the param; a null/undefined field never matches a present param. */
 export const matchesOnOrBefore = <TItem>(get: (item: TItem) => Comparable | null | undefined) =>
   whenPresent<TItem>((item, value) => {
     const itemValue = get(item)
