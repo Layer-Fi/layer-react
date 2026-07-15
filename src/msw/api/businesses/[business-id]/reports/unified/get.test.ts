@@ -61,7 +61,7 @@ describe('unified report generators', () => {
     expect(leaf).not.toBeNull()
 
     const detail = unifiedReportGenerators['profit-and-loss/lines'](params({
-      account_id: leaf!.accountId, start_date: `${YEAR}-01-01`, end_date: `${YEAR}-12-31`,
+      ...leaf!.baseParams, start_date: `${YEAR}-01-01`, end_date: `${YEAR}-12-31`,
     }))
     expect(currency(detail, 'total_line_item_detail', 'amount')).toBe(leaf!.total)
   })
@@ -80,15 +80,63 @@ describe('unified report generators', () => {
     expect(unifiedReportGenerators['ar-aging'](effectiveParams).rows.length).toBeGreaterThan(1)
     expect(unifiedReportGenerators['ap-aging'](effectiveParams).rows.length).toBeGreaterThan(1)
   })
+
+  it('reconciles P&L leaf detail under cash basis', () => {
+    const cashParams = params({ start_date: `${YEAR}-01-01`, end_date: `${YEAR}-12-31`, reporting_basis: 'CASH' })
+    const pnl = unifiedReportGenerators['profit-and-loss'](cashParams)
+    const leaf = findLeafWithConfig(pnl)
+    expect(leaf).not.toBeNull()
+
+    // The detail's date_range control supplies the same range as the parent; reporting_basis rides along in base params.
+    const detail = unifiedReportGenerators['profit-and-loss/lines'](params({
+      ...leaf!.baseParams, start_date: `${YEAR}-01-01`, end_date: `${YEAR}-12-31`,
+    }))
+    expect(currency(detail, 'total_line_item_detail', 'amount')).toBe(leaf!.total)
+  })
+
+  it('reconciles Schedule C expense line drill-downs with the line amount', () => {
+    const scheduleC = unifiedReportGenerators['tax/schedule-c'](params({ year: String(YEAR) }))
+    const advertising = scheduleC.rows.find(row => row.rowKey === 'line_8')!
+    const config = advertising.cells['line']?.reportConfig
+    expect(config).toBeTruthy()
+
+    const detail = unifiedReportGenerators['tax/schedule-c/lines'](new URLSearchParams(config!.baseQueryParameters))
+    const amountCell = advertising.cells['amount']
+    const lineAmount = amountCell?.value.type === 'Currency' ? (amountCell.value.value as number) : null
+    expect(currency(detail, 'total_line_item_detail', 'amount')).toBe(lineAmount)
+  })
+
+  it('keeps mileage total deduction equal to the sum of monthly deductions', () => {
+    const mileage = unifiedReportGenerators['business-mileage'](rangeParams)
+    const deductionOf = (row: (typeof mileage.rows)[number]) => {
+      const cell = row.cells['deduction']
+      return cell?.value.type === 'Currency' ? (cell.value.value as number) : 0
+    }
+    const monthlySum = mileage.rows
+      .filter(row => row.rowKey !== 'total_mileage')
+      .reduce((sum, row) => sum + deductionOf(row), 0)
+    expect(currency(mileage, 'total_mileage', 'deduction')).toBe(monthlySum)
+  })
+
+  it('respects mid-month boundaries in personal reports', () => {
+    const halfMonth = unifiedReportGenerators['personal-expenses'](params({ start_date: `${YEAR}-01-01`, end_date: `${YEAR}-01-15` }))
+    const fullMonth = unifiedReportGenerators['personal-expenses'](params({ start_date: `${YEAR}-01-01`, end_date: `${YEAR}-01-31` }))
+    expect(currency(halfMonth, 'total_personal_expense', 'total')!).toBeLessThan(currency(fullMonth, 'total_personal_expense', 'total')!)
+  })
+
+  it('balances cash flow: cash at end = cash at start + net change', () => {
+    const cf = unifiedReportGenerators['cashflow-statement'](params({ start_date: `${YEAR - 1}-06-01`, end_date: `${YEAR}-06-30` }))
+    expect(currency(cf, 'cash_at_end', 'amount')).toBe(currency(cf, 'cash_at_start', 'amount')! + currency(cf, 'net_change_in_cash', 'amount')!)
+  })
 })
 
-const findLeafWithConfig = (report: UnifiedReport): { accountId: string, total: number } | null => {
+const findLeafWithConfig = (report: UnifiedReport): { baseParams: Record<string, string>, total: number } | null => {
   for (const row of report.rows) {
     const nameCell = row.cells['name']
     if (nameCell?.reportConfig && row.rows === undefined) {
       const totalCell = row.cells['total']
       if (totalCell?.value.type === 'Currency') {
-        return { accountId: nameCell.reportConfig.baseQueryParameters['account_id'], total: totalCell.value.value as number }
+        return { baseParams: nameCell.reportConfig.baseQueryParameters, total: totalCell.value.value as number }
       }
     }
     if (row.rows) {

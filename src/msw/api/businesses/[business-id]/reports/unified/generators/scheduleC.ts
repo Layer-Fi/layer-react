@@ -1,12 +1,14 @@
-import { getYear } from 'date-fns'
+import { format, getYear } from 'date-fns'
 
 import { LedgerAccountType, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
-import { ReportControl } from '@schemas/reports/reportConfig'
+import { type ReportConfig } from '@schemas/reports/reportConfig'
 import { Pinning, type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import {
   accountActivityCents,
   accountsOfTypes,
+  buildAccountForest,
+  collectLeafAccounts,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {
   currencyCell,
@@ -49,16 +51,24 @@ const lineRow = (
   lineNumber: string,
   label: string,
   amount: number,
-  account?: SingleChartAccountType,
+  reportConfig?: ReportConfig,
 ): UnifiedReportRow => ({
   rowKey: `line_${lineNumber}`,
   cells: {
-    [LINE_COLUMN_KEY]: textCell(`Line ${lineNumber}: ${label}`, {
-      reportConfig: account ? linesReportConfig(LINES_ROUTE, account, [ReportControl.Date]) : undefined,
-    }),
+    [LINE_COLUMN_KEY]: textCell(`Line ${lineNumber}: ${label}`, { reportConfig }),
     [AMOUNT_COLUMN_KEY]: currencyCell(amount),
   },
 })
+
+const isoDate = (date: Date) => format(date, 'yyyy-MM-dd')
+
+/*
+ * Schedule C uses a year control, but the detail route is date-range based.
+ * Baking the calendar year into base parameters (with no controls) makes the
+ * drill-down cover the same window as the parent line, so totals reconcile.
+ */
+const scheduleCLinesConfig = (account: SingleChartAccountType, range: ReportDateRange): ReportConfig =>
+  linesReportConfig(LINES_ROUTE, account, [], { start_date: isoDate(range.startDate), end_date: isoDate(range.endDate) })
 
 const totalRow = (lineNumber: string, label: string, amount: number): UnifiedReportRow => ({
   rowKey: `line_${lineNumber}`,
@@ -70,11 +80,11 @@ const totalRow = (lineNumber: string, label: string, amount: number): UnifiedRep
 
 export const generateScheduleC = (params: URLSearchParams): UnifiedReport => {
   const range = yearRange(params)
-  const revenueAccounts = accountsOfTypes([LedgerAccountType.Revenue])
+  const revenueLeaves = collectLeafAccounts(buildAccountForest(accountsOfTypes([LedgerAccountType.Revenue])))
   const expenseAccounts = accountsOfTypes([LedgerAccountType.Expense])
 
-  const salesAccount = findByStableName(revenueAccounts, 'SALES')
-  const grossReceipts = revenueAccounts.reduce(
+  // Gross receipts aggregates every revenue leaf account, so it has no single-account drill-down.
+  const grossReceipts = revenueLeaves.reduce(
     (total, account) => total + accountActivityCents(account, range, params),
     0,
   )
@@ -82,13 +92,14 @@ export const generateScheduleC = (params: URLSearchParams): UnifiedReport => {
   const expenseLineRows = EXPENSE_LINES.map((line) => {
     const account = findByStableName(expenseAccounts, line.stableName)
     const amount = account ? accountActivityCents(account, range, params) : 0
-    return { row: lineRow(line.lineNumber, line.label, amount, account), amount }
+    const reportConfig = account ? scheduleCLinesConfig(account, range) : undefined
+    return { row: lineRow(line.lineNumber, line.label, amount, reportConfig), amount }
   })
 
   const totalExpenses = expenseLineRows.reduce((total, { amount }) => total + amount, 0)
 
   const rows: UnifiedReportRow[] = [
-    lineRow('1', 'Gross receipts or sales', grossReceipts, salesAccount),
+    lineRow('1', 'Gross receipts or sales', grossReceipts),
     totalRow('7', 'Gross income', grossReceipts),
     ...expenseLineRows.map(({ row }) => row),
     totalRow('28', 'Total expenses', totalExpenses),

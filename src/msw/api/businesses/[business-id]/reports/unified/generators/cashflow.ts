@@ -1,6 +1,6 @@
 import { Pinning, type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
-import { cumulativeNetIncomeCents } from '@msw/api/businesses/[business-id]/reports/unified/generators/balances'
+import { netIncomeInRange } from '@msw/api/businesses/[business-id]/reports/unified/generators/balances'
 import {
   currencyCell,
   MOCK_REPORT_BUSINESS_ID,
@@ -35,7 +35,7 @@ export const generateCashflow = (params: URLSearchParams): UnifiedReport => {
   const flow = (key: string, magnitude: number) =>
     sumAmountCentsInRange(key, range.startDate, range.endDate, { magnitude })
 
-  const netIncome = cumulativeNetIncomeCents(range.endDate, params) - cumulativeNetIncomeCents(range.startDate, params)
+  const netIncome = netIncomeInRange(range, params)
   const depreciation = flow('cashflow:depreciation', 2)
   const receivablesChange = -flow('cashflow:receivables', 3)
   const payablesChange = flow('cashflow:payables', 3)

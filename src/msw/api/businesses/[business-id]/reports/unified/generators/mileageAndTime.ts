@@ -31,13 +31,16 @@ const generateMileage = (params: URLSearchParams, keyPrefix: string, tripsBase: 
 
   let totalTrips = 0
   let totalMiles = 0
+  let totalDeduction = 0
 
   const rows: UnifiedReportRow[] = months.map((month) => {
     const seed = hashString(`${keyPrefix}:${format(month, 'yyyy-MM')}`)
     const trips = tripsBase + (seed % 10)
     const miles = Math.round((trips * (12 + (seed % 25))) * 10) / 10
+    const deduction = Math.round(miles * MILEAGE_RATE_CENTS)
     totalTrips += trips
     totalMiles += miles
+    totalDeduction += deduction
 
     return {
       rowKey: format(month, 'yyyy-MM'),
@@ -45,7 +48,7 @@ const generateMileage = (params: URLSearchParams, keyPrefix: string, tripsBase: 
         month: textCell(format(month, 'MMM yyyy')),
         trips: decimalCell(trips),
         miles: decimalCell(miles),
-        deduction: currencyCell(Math.round(miles * MILEAGE_RATE_CENTS)),
+        deduction: currencyCell(deduction),
       },
     }
   })
@@ -56,7 +59,7 @@ const generateMileage = (params: URLSearchParams, keyPrefix: string, tripsBase: 
       month: textCell('Total', { bold: true }),
       trips: decimalCell(totalTrips, { bold: true }),
       miles: decimalCell(Math.round(totalMiles * 10) / 10, { bold: true }),
-      deduction: currencyCell(Math.round(totalMiles * MILEAGE_RATE_CENTS), { bold: true }),
+      deduction: currencyCell(totalDeduction, { bold: true }),
     },
   })
 
