@@ -41,7 +41,7 @@ export const applyConfirmedMatch = (
   }
 
   const match: Match = {
-    id: suggestedMatchId,
+    id: `match-${transaction.id}`,
     matchType: MATCH_TYPE_BY_DETAILS_TYPE[details.type],
     bankTransaction: {
       id: transaction.id,
