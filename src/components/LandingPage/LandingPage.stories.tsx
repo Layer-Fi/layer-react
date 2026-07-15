@@ -284,8 +284,15 @@ export const BookkeepingOnly: Story = {
   args: { availableOffers: ['bookkeeping'] },
 }
 
+export const CustomHeroImage: Story = {
+  args: {
+    heroImageUrl: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=80',
+  },
+}
+
 export const FullyCustomized: Story = {
   args: {
+    heroImageUrl: 'https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&w=1200&q=80',
     heroTitle: 'Bookkeeping built for {{industry}}',
     heroSubtitle: 'Everything you need to run the books, inside {{platformName}}.',
     heroHeading1: 'Real-time profitability',

@@ -2,16 +2,16 @@ import { join } from 'node:path'
 import { type StorybookConfig } from '@storybook/react-vite'
 import { type Alias, type AliasOptions } from 'vite'
 
-// Plaid's hosted iframe can't run in Storybook; the mock fakes a successful link.
-const PLAID_LINK_ALIAS = {
-  find: 'react-plaid-link',
-  replacement: join(process.cwd(), '.storybook/mocks/react-plaid-link.ts'),
-}
+// Hosted iframes (Plaid, Calendly) can't run in Storybook; these mocks fake the widgets.
+const IFRAME_MODULE_ALIASES = [
+  { find: 'react-plaid-link', replacement: join(process.cwd(), '.storybook/mocks/react-plaid-link.ts') },
+  { find: 'react-calendly', replacement: join(process.cwd(), '.storybook/mocks/react-calendly.tsx') },
+]
 
-const withPlaidLinkAlias = (alias: AliasOptions | undefined): AliasOptions =>
+const withIframeModuleAliases = (alias: AliasOptions | undefined): AliasOptions =>
   Array.isArray(alias)
-    ? [...(alias as readonly Alias[]), PLAID_LINK_ALIAS]
-    : { ...alias, [PLAID_LINK_ALIAS.find]: PLAID_LINK_ALIAS.replacement }
+    ? [...(alias as readonly Alias[]), ...IFRAME_MODULE_ALIASES]
+    : { ...alias, ...Object.fromEntries(IFRAME_MODULE_ALIASES.map(a => [a.find, a.replacement])) }
 
 const config: StorybookConfig = {
   framework: '@storybook/react-vite',
@@ -23,7 +23,7 @@ const config: StorybookConfig = {
     resolve: {
       ...viteConfig.resolve,
       tsconfigPaths: true,
-      alias: withPlaidLinkAlias(viteConfig.resolve?.alias),
+      alias: withIframeModuleAliases(viteConfig.resolve?.alias),
     },
   }),
 }
