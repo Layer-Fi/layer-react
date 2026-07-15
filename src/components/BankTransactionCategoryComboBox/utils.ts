@@ -1,9 +1,9 @@
 import type { TFunction } from 'i18next'
 
 import type { BankTransaction, SuggestedMatch } from '@internal-types/bankTransactions'
-import { ApiCategorizationAsOption, CategoryAsOption, PlaceholderAsOption, SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
+import { ApiCategorizationAsOption, PlaceholderAsOption, SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { CategorizationStatus, InputStrategy } from '@schemas/bankTransactions/bankTransaction'
-import { type Categorization, isSplitCategorization, type NestedCategorization } from '@schemas/categorization'
+import { type Categorization, isSplitCategorization } from '@schemas/categorization'
 import { makeCustomerVendor } from '@schemas/customerVendor'
 import { makeTagFromTransactionTag } from '@schemas/tag'
 import { hasSuggestions } from '@utils/bankTransactions/shared'
@@ -53,21 +53,6 @@ export const convertApiCategorizationToCategoryOrSplitAsOption = (categorization
   }
 
   return new ApiCategorizationAsOption(categorization)
-}
-
-function getLeafCategories(category: NestedCategorization): NestedCategorization[] {
-  if (!category.subCategories || category.subCategories.length === 0) {
-    return [category]
-  }
-
-  return category.subCategories.flatMap(subCategory => getLeafCategories(subCategory))
-}
-
-export const flattenCategories = (categories: NestedCategorization[]) => {
-  return categories.map((category: NestedCategorization) => ({
-    label: category.displayName.toLocaleUpperCase(),
-    options: getLeafCategories(category).map(x => new CategoryAsOption(x)),
-  }))
 }
 
 const hasOnlyTransferMatches = (bankTransaction: BankTransaction) => {

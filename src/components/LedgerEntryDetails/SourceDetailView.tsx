@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
+import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 import { type LedgerEntrySourceType } from '@schemas/generalLedger/ledgerEntrySource'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { DateTime } from '@components/DateTime/DateTime'
@@ -33,7 +34,9 @@ export const SourceDetailView = ({
           <EntryDetailField
             label={stringOverrides?.directionLabel || t('common:label.direction', 'Direction')}
           >
-            {source.direction}
+            {source.direction === BankTransactionDirection.Credit
+              ? t('common:label.money_in', 'Money in')
+              : t('common:label.money_out', 'Money out')}
           </EntryDetailField>
           <EntryDetailField
             label={stringOverrides?.counterpartyLabel || t('common:label.counterparty', 'Counterparty')}

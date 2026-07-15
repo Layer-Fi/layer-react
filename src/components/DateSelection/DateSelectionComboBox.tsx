@@ -15,7 +15,7 @@ type DateSelectionOption = {
 
 type DateSelectionComboBoxProps = {
   datePreset: DatePreset
-  setDatePreset: (datePreset: SelectableDatePreset) => void
+  setDatePreset: (options: { datePreset: SelectableDatePreset }) => void
   showLabel?: boolean
 }
 
@@ -26,10 +26,6 @@ export const DateSelectionComboBox = ({
 }: DateSelectionComboBoxProps) => {
   const { t } = useTranslation()
 
-  // AllTime resolves against the business activation date. Until the business
-  // loads (`activationDate == null`), selecting it would be a no-op, so block the
-  // selection until the activationDate is loaded
-  // In practice, the business loads in a fraction of a second, so this is rarely visible.
   const activationDate = useBusinessActivationDate()
 
   const allOptions = useMemo<DateSelectionOption[]>(
@@ -46,8 +42,6 @@ export const DateSelectionComboBox = ({
     [t, activationDate],
   )
 
-  // Selectable options exclude Custom — it only appears as a (non-selectable) label
-  // when the range doesn't match a named preset.
   const options = allOptions.filter(o => o.value !== DatePreset.Custom)
   const selectedOption = allOptions.find(o => o.value === datePreset) ?? null
 
@@ -57,7 +51,7 @@ export const DateSelectionComboBox = ({
     const nextPreset = option.value
     if (nextPreset === DatePreset.Custom) return
 
-    setDatePreset(nextPreset)
+    setDatePreset({ datePreset: nextPreset })
   }, [setDatePreset])
 
   const inputId = useId()

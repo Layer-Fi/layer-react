@@ -1,4 +1,5 @@
-import { type CalendarDate, parseDate } from '@internationalized/date'
+import { CalendarDate, parseDate } from '@internationalized/date'
+import { endOfDay, parseISO, startOfDay } from 'date-fns'
 
 type ParamPredicate<TItem> = (item: TItem, value: string | null) => boolean
 
@@ -27,11 +28,29 @@ export const matchesValue = <TItem>(get: (item: TItem) => string | number | null
 export const matchesBoolean = <TItem>(get: (item: TItem) => boolean) =>
   whenPresent<TItem>((item, value) => get(item) === (value === 'true'))
 
-export const matchesDateOnOrAfter = <TItem>(get: (item: TItem) => CalendarDate) =>
-  whenPresent<TItem>((item, value) => get(item).compare(parseDate(value)) >= 0)
+type Comparable = number | Date | CalendarDate
 
-export const matchesDateOnOrBefore = <TItem>(get: (item: TItem) => CalendarDate) =>
-  whenPresent<TItem>((item, value) => get(item).compare(parseDate(value)) <= 0)
+export const matchesOnOrAfter = <TItem>(get: (item: TItem) => Comparable | null | undefined) =>
+  whenPresent<TItem>((item, value) => {
+    const itemValue = get(item)
+
+    if (itemValue == null) return false
+    if (itemValue instanceof CalendarDate) return itemValue.compare(parseDate(value)) >= 0
+    if (itemValue instanceof Date) return itemValue >= startOfDay(parseISO(value))
+
+    return itemValue >= Number(value)
+  })
+
+export const matchesOnOrBefore = <TItem>(get: (item: TItem) => Comparable | null | undefined) =>
+  whenPresent<TItem>((item, value) => {
+    const itemValue = get(item)
+
+    if (itemValue == null) return false
+    if (itemValue instanceof CalendarDate) return itemValue.compare(parseDate(value)) <= 0
+    if (itemValue instanceof Date) return itemValue <= endOfDay(parseISO(value))
+
+    return itemValue <= Number(value)
+  })
 
 /* Items matching `isGated` are only included when the query flag is 'true'. */
 export const requiresFlag = <TItem>(isGated: (item: TItem) => boolean): ParamPredicate<TItem> =>

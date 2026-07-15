@@ -7,7 +7,7 @@ import { useBusinessDatePickerBounds } from '@hooks/utils/dates/useBusinessDateP
 import { useGlobalDate, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 
-type GlobalMonthPickerProps = {
+export type GlobalMonthPickerProps = {
   truncateMonth?: boolean
   showLabel?: boolean
 }
@@ -23,7 +23,7 @@ export const GlobalMonthPicker = ({ truncateMonth, showLabel = false }: GlobalMo
   const maxDateZdt = useMemo(() => convertDateToZonedDateTime(maxDate), [maxDate])
 
   const onChange = useCallback((val: ZonedDateTime) => {
-    setMonth(val.toDate())
+    setMonth({ startDate: val.toDate() })
   }, [setMonth])
 
   return (

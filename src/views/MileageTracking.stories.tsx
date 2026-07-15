@@ -1,13 +1,13 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { unstable_MileageTracking } from '@views/MileageTracking'
+import { MileageTracking } from '@views/MileageTracking'
 
 import { FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
 import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
 
-const meta: Meta<typeof unstable_MileageTracking> = {
+const meta: Meta<typeof MileageTracking> = {
   title: 'Views/MileageTracking',
-  component: unstable_MileageTracking,
+  component: MileageTracking,
   args: {
     showTitle: true,
   },
@@ -28,6 +28,6 @@ const meta: Meta<typeof unstable_MileageTracking> = {
 
 export default meta
 
-type Story = StoryObj<typeof unstable_MileageTracking>
+type Story = StoryObj<typeof MileageTracking>
 
 export const Default: Story = {}

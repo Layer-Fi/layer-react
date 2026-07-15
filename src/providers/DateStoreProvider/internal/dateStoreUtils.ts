@@ -39,7 +39,7 @@ export function getDateRange(options: GetDateRangeOptions): DateRange {
   }
 }
 
-export function correctDateRange(range: DateRange): DateRange {
+export function maybeInvertDateRange(range: DateRange): DateRange {
   const { startDate, endDate } = range
 
   if (startDate > endDate) {

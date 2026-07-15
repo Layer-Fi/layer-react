@@ -1,6 +1,7 @@
 import { pipe, Schema } from 'effect'
 
-import { Direction } from '@internal-types/general'
+import { BankTransactionDirectionSchema } from '@schemas/bankTransactions/base'
+import { createTransformedEnumSchema } from '@schemas/utils'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 
 export enum CustomAccountSubtype {
@@ -14,8 +15,16 @@ export enum CustomAccountType {
   CREDIT = 'CREDIT',
 }
 
+// Backend `CustomAccountType` classification sent as `custom_account_type`; the
+// form only distinguishes personal accounts from the business default.
+export enum CustomAccountClassification {
+  DEFAULT = 'DEFAULT',
+  PERSONAL = 'PERSONAL',
+}
+
 export const CustomAccountSubtypeSchema = Schema.Enums(CustomAccountSubtype)
 export const CustomAccountTypeSchema = Schema.Enums(CustomAccountType)
+export const CustomAccountClassificationSchema = Schema.Enums(CustomAccountClassification)
 
 // Each subtype belongs to exactly one type. This is the single source of truth
 // for that mapping (the form and fixtures both rely on it).
@@ -59,6 +68,16 @@ export const CustomAccountSchema = Schema.Struct({
     Schema.propertySignature(Schema.String),
     Schema.fromKey('account_subtype'),
   ),
+  customAccountType: pipe(
+    Schema.propertySignature(
+      createTransformedEnumSchema(
+        CustomAccountClassificationSchema,
+        CustomAccountClassification,
+        CustomAccountClassification.DEFAULT,
+      ),
+    ),
+    Schema.fromKey('custom_account_type'),
+  ),
   createdAt: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('created_at'),
@@ -89,7 +108,7 @@ export const CustomTransactionSchema = Schema.Struct({
     Schema.fromKey('external_id'),
   ),
   amount: Schema.Number,
-  direction: Schema.Enums(Direction),
+  direction: BankTransactionDirectionSchema,
   date: Schema.String,
   description: Schema.String,
   referenceNumber: Schema.optional(Schema.NullishOr(Schema.String)).pipe(

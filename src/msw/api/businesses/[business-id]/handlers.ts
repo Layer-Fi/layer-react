@@ -2,6 +2,7 @@ import { type RequestHandler } from 'msw'
 
 import { accountingConfigurationHandlers } from '@msw/api/businesses/[business-id]/accounting-config/handlers'
 import { bankAccountsHandlers } from '@msw/api/businesses/[business-id]/bank-accounts/handlers'
+import { bankTransactionsHandlers } from '@msw/api/businesses/[business-id]/bank-transactions/handlers'
 import { bookkeepingHandlers } from '@msw/api/businesses/[business-id]/bookkeeping/handlers'
 import { callBookingsHandlers } from '@msw/api/businesses/[business-id]/call-bookings/handlers'
 import { catalogHandlers } from '@msw/api/businesses/[business-id]/catalog/handlers'
@@ -25,6 +26,7 @@ export const businessHandlers: RequestHandler[] = [
   getBusiness.handler,
   ...accountingConfigurationHandlers,
   ...bankAccountsHandlers,
+  ...bankTransactionsHandlers,
   ...externalAccountsHandlers,
   ...plaidHandlers,
   ...categoriesHandlers,

@@ -5,6 +5,26 @@
   max-height: calc(100vh - 2 * var(--spacing-lg));
 }
 
+// Inset the 6px scrollbar 4px from the right, top, and bottom container edges.
+.Layer__component.Layer__tasks {
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-thumb {
+    // The transparent border consumes the right corners' radius, so widen them to compensate.
+    border-radius: 4px 8px 8px 4px / 4px;
+    border-right: 4px solid transparent;
+    background-clip: padding-box;
+  }
+
+  &::-webkit-scrollbar-button {
+    height: 4px;
+    background: transparent;
+  }
+}
+
 .Layer__tasks__content {
   min-height: 0;
   opacity: 1;

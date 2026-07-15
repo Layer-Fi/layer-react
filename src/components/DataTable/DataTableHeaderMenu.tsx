@@ -19,6 +19,7 @@ interface DataTableHeaderMenuProps {
   ariaLabel: string
   items: DataTableHeaderMenuItem[]
   isDisabled?: boolean
+  isPending?: boolean
   slots?: {
     Icon?: React.FC
   }
@@ -43,14 +44,14 @@ const DataTableHeaderMenuItemComponent = ({
   )
 }
 
-export const DataTableHeaderMenu = ({ ariaLabel, items, isDisabled, slots }: DataTableHeaderMenuProps) => {
+export const DataTableHeaderMenu = ({ ariaLabel, items, isDisabled, isPending, slots }: DataTableHeaderMenuProps) => {
   const Trigger = useCallback(() => {
     return (
-      <Button icon variant='outlined' isDisabled={isDisabled}>
+      <Button icon variant='outlined' isDisabled={isDisabled} isPending={isPending}>
         {slots?.Icon ? <slots.Icon /> : <MenuIcon size={14} />}
       </Button>
     )
-  }, [isDisabled, slots])
+  }, [isDisabled, isPending, slots])
 
   return (
     <DropdownMenu

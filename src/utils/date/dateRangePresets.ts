@@ -1,13 +1,12 @@
 import {
   addMonths, addQuarters, addYears, endOfDay,
   endOfMonth, endOfQuarter, endOfYear, isEqual,
-  startOfDay, startOfMonth, startOfQuarter, startOfYear, subMonths,
+  min, startOfDay, startOfMonth, startOfQuarter, startOfYear, subMonths,
   subQuarters,
   subYears,
 } from 'date-fns'
 
 import { clampToAfterActivationDate, clampToPresentOrPast, type DateRange } from '@utils/date/dateRange'
-import { correctDateRange } from '@providers/DateStoreProvider/internal/dateStoreUtils'
 
 export enum Period {
   Month = 'Month',
@@ -59,18 +58,10 @@ export enum DatePreset {
   LastQuarter = 'LastQuarter',
   ThisYear = 'ThisYear',
   LastYear = 'LastYear',
-  /**
-   * Clamped to the business activation date (start) and the present (end).
-   * Unlike the other presets, its range cannot be resolved from `now` alone —
-   * it requires the business context. See `useResolvedInitialRange`.
-   */
+  /** Spans the business activation date to the present; requires the business context to resolve. */
   AllTime = 'AllTime',
-  /*
-  * The custom preset cannot be selected directly by the user. It can only be set by the store if
-  * the user sets a date range that is not one of the other presets.
-  */
+  /** Set by the store when a range matches no other preset; not directly selectable. */
   Custom = 'Custom',
-
 }
 
 // A date preset that can be computed from `now` alone.
@@ -103,16 +94,12 @@ export function rangeForPreset(preset: RelativeDatePreset, base?: Date): DateRan
   return rangeFor(period, offset, base)
 }
 
-/**
- * The `AllTime` range: from the business activation date to the present. Unlike
- * `rangeForPreset` this needs the activation date, so it is resolved wherever the
- * business context is available (the store resolver and the preset combo box).
- */
 export function rangeForAllTime(activationDate: Date): DateRange {
-  return correctDateRange({
-    startDate: startOfDay(activationDate),
-    endDate: endOfDay(new Date()),
-  })
+  const now = new Date()
+  return {
+    startDate: min([startOfDay(activationDate), startOfDay(now)]),
+    endDate: endOfDay(now),
+  }
 }
 
 const normalize = (range: DateRange, activationDate?: Date | null): DateRange => {
@@ -140,8 +127,6 @@ export function deriveRelativePresetFromDateRange(input: DateRange, selectedPres
     ]),
   )
 
-  // AllTime is not a relative candidate (its range needs context), so it can't be
-  // derived here — a caller that tracks the stored preset supplies it directly.
   if (selectedPreset !== null && selectedPreset !== DatePreset.Custom && selectedPreset !== DatePreset.AllTime) {
     if (sameDateRange(range, relativeDateCandidates[selectedPreset])) return selectedPreset
   }
@@ -153,11 +138,7 @@ export function deriveRelativePresetFromDateRange(input: DateRange, selectedPres
   return null
 }
 
-/**
- * Derives a concrete date range given a date preset. Relative presets are pure functions of
- * `now`; `AllTime` needs the business activation date and returns `null` when it
- * isn't available yet (so callers can defer/skip rather than show a wrong range).
- */
+/** Returns `null` for `AllTime` while the activation date is unavailable. */
 export function deriveDateRangeFromPreset(
   preset: Exclude<DatePreset, DatePreset.Custom>,
   activationDate?: Date,
@@ -169,25 +150,33 @@ export function deriveDateRangeFromPreset(
 }
 
 /**
- * Derives the preset a range represents: `AllTime` when it spans activation→present,
- * otherwise a matching relative preset, otherwise `Custom`. `previousPreset` keeps a
- * selection sticky when a range matches more than one candidate.
+ * When a range matches several presets (e.g. `ThisYear` and `AllTime` for a business
+ * activated on January 1st), `previousPreset` stays selected; without one, relative presets win.
  */
 export function derivePresetFromDateRange(
   input: DateRange,
   previousPreset: DatePreset | null = null,
   activationDate?: Date,
 ): DatePreset {
-  if (activationDate && sameDateRange(normalize(input, activationDate), normalize(rangeForAllTime(activationDate), activationDate))) {
+  const normalizedInput = normalize(input, activationDate)
+  const normalizedAllTimeRange = activationDate
+    ? normalize(rangeForAllTime(activationDate), activationDate)
+    : null
+
+  const matchesAllTime = normalizedAllTimeRange !== null
+    && sameDateRange(normalizedInput, normalizedAllTimeRange)
+
+  if (previousPreset === DatePreset.AllTime && matchesAllTime) {
     return DatePreset.AllTime
   }
+
   const relativePreset = deriveRelativePresetFromDateRange(input, previousPreset, activationDate)
 
   if (relativePreset) {
     return relativePreset
   }
 
-  if (activationDate && sameDateRange(normalize(input, activationDate), normalize(rangeForAllTime(activationDate), activationDate))) {
+  if (matchesAllTime) {
     return DatePreset.AllTime
   }
 

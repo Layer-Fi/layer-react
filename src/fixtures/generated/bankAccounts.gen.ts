@@ -3,22 +3,22 @@ import type { schema } from '@fixtures/bankAccounts/schema'
 
 export const bankAccounts = [
   {
-    "id": "00000001-e14c-4f0d-8f51-ecbd67728f21",
-    "accountName": "American Express Business Savings",
+    "id": "00000001-b730-442c-8d79-cb0f139d1307",
+    "accountName": "Chase Savings",
     "institution": {
-      "name": "American Express",
+      "name": "Chase",
       "logo": null
     },
     "notifyWhenDisconnected": false,
     "isDisconnected": false,
     "externalAccounts": [
       {
-        "id": "ffffffee-fff7-5fff-9c86-5097ffffffe3",
+        "id": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
         "externalAccountSource": "PLAID",
-        "externalAccountName": "American Express Business Savings",
-        "mask": "9995",
+        "externalAccountName": "Chase Savings",
+        "mask": "5717",
         "institution": {
-          "name": "American Express",
+          "name": "Chase",
           "logo": null
         },
         "notifications": [],
@@ -30,29 +30,29 @@ export const bankAccounts = [
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 2499900
+      "balance": 576200
     },
-    "currentLedgerBalance": 1084600,
-    "mask": "9995",
+    "currentLedgerBalance": 2498800,
+    "mask": "5717",
     "notifications": []
   },
   {
-    "id": "00000001-4b46-4097-85f0-896231804c64",
-    "accountName": "American Express Business Savings",
+    "id": "00000001-9a55-48cb-8f2a-738709fe0dd7",
+    "accountName": "Wells Fargo Checking",
     "institution": {
-      "name": "American Express",
+      "name": "Wells Fargo",
       "logo": null
     },
-    "notifyWhenDisconnected": false,
+    "notifyWhenDisconnected": true,
     "isDisconnected": false,
     "externalAccounts": [
       {
-        "id": "cdc54d3e-606e-4046-bfff-ffe8ffffffe9",
+        "id": "00000007-0009-1000-8000-001b8d4052ea",
         "externalAccountSource": "PLAID",
-        "externalAccountName": "American Express Business Savings",
-        "mask": "9988",
+        "externalAccountName": "Wells Fargo Checking",
+        "mask": "0001",
         "institution": {
-          "name": "American Express",
+          "name": "Wells Fargo",
           "logo": null
         },
         "notifications": [],
@@ -64,27 +64,27 @@ export const bankAccounts = [
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 50000
+      "balance": 1989800
     },
-    "currentLedgerBalance": 50600,
-    "mask": "9988",
+    "currentLedgerBalance": 51100,
+    "mask": "0001",
     "notifications": []
   },
   {
-    "id": "00000001-045f-4a99-834f-2248873864e4",
-    "accountName": "Capital One Business Credit Card",
+    "id": "00000001-4f9f-44c5-855f-1e87fbf9d696",
+    "accountName": "Capital One Checking",
     "institution": {
       "name": "Capital One",
       "logo": null
     },
-    "notifyWhenDisconnected": false,
+    "notifyWhenDisconnected": true,
     "isDisconnected": false,
     "externalAccounts": [
       {
-        "id": "00000003-001c-1000-bfff-ffe8fffffff4",
+        "id": "540a9839-0008-1000-bfef-0227ffffffef",
         "externalAccountSource": "PLAID",
-        "externalAccountName": "Capital One Business Credit Card",
-        "mask": "0008",
+        "externalAccountName": "Capital One Checking",
+        "mask": "0012",
         "institution": {
           "name": "Capital One",
           "logo": null
@@ -98,15 +98,15 @@ export const bankAccounts = [
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 78100
+      "balance": 2499400
     },
-    "currentLedgerBalance": 2499900,
-    "mask": "0008",
+    "currentLedgerBalance": 50900,
+    "mask": "0012",
     "notifications": []
   },
   {
-    "id": "00000001-a0b6-452b-8812-70c20a3e49d9",
-    "accountName": "Capital One Business Credit Card",
+    "id": "00000001-52bc-4e5b-8621-b3f696bff863",
+    "accountName": "Capital One Savings",
     "institution": {
       "name": "Capital One",
       "logo": null
@@ -115,9 +115,9 @@ export const bankAccounts = [
     "isDisconnected": false,
     "externalAccounts": [
       {
-        "id": "00000016-001e-1000-bfff-fff500000009",
+        "id": "00000017-0011-1000-8000-0009fffffffb",
         "externalAccountSource": "PLAID",
-        "externalAccountName": "Capital One Business Credit Card",
+        "externalAccountName": "Capital One Savings",
         "mask": "0006",
         "institution": {
           "name": "Capital One",
@@ -132,29 +132,29 @@ export const bankAccounts = [
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 51100
+      "balance": 1816000
     },
-    "currentLedgerBalance": 2416500,
+    "currentLedgerBalance": 50200,
     "mask": "0006",
     "notifications": []
   },
   {
-    "id": "00000001-d6fb-4ef5-8c75-46e387b4abad",
-    "accountName": "Chase Business Checking",
+    "id": "00000001-2211-45d8-8af4-5d23ec83708f",
+    "accountName": "Bank of America Savings",
     "institution": {
-      "name": "Chase",
+      "name": "Bank of America",
       "logo": null
     },
-    "notifyWhenDisconnected": false,
+    "notifyWhenDisconnected": true,
     "isDisconnected": false,
     "externalAccounts": [
       {
-        "id": "0000001f-fff1-5fff-bfff-fff6b4f4186a",
+        "id": "c5296f7f-fff2-5fff-8000-001cffffffe3",
         "externalAccountSource": "PLAID",
-        "externalAccountName": "Chase Business Checking",
-        "mask": "0010",
+        "externalAccountName": "Bank of America Savings",
+        "mask": "1846",
         "institution": {
-          "name": "Chase",
+          "name": "Bank of America",
           "logo": null
         },
         "notifications": [],
@@ -166,10 +166,10 @@ export const bankAccounts = [
       }
     ],
     "latestBalanceTimestamp": {
-      "balance": 2499300
+      "balance": 2500000
     },
-    "currentLedgerBalance": 600000,
-    "mask": "0010",
+    "currentLedgerBalance": 51400,
+    "mask": "1846",
     "notifications": []
   }
 ] as (typeof schema.Type)[]

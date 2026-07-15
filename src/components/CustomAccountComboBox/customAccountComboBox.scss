@@ -1,0 +1,20 @@
+.Layer__CustomAccountComboBox__Field {
+  display: grid;
+  grid-template-areas:
+    'label'
+    'input';
+  gap: var(--spacing-3xs);
+
+  &--inline {
+    grid-template-areas: 'label input';
+    gap: 0;
+
+    align-items: center;
+  }
+}
+
+.Layer__CustomAccountComboBox__CreateForm {
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-3xs);
+  background: var(--color-base-100);
+}

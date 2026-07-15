@@ -1,6 +1,6 @@
 import { type PropsWithChildren, type ReactNode, useCallback, useMemo } from 'react'
 
-import type { DateRange, DateSelectionMode } from '@utils/date/dateRange'
+import type { DateSelectionMode } from '@utils/date/dateRange'
 import { DatePreset, type SelectableDatePreset } from '@utils/date/dateRangePresets'
 import { createScopedStore } from '@utils/zustand/createScopedStore'
 import { useStoreWithDateSelected } from '@utils/zustand/useStoreWithDateSelected'
@@ -15,10 +15,6 @@ export type CreateScopedDateStoreOptions = MakeDateStoreOptions & {
 }
 
 type ProviderProps = PropsWithChildren<{
-  /**
-   * Rendered while a business context-dependent preset (e.g. `AllTime`) waits for the
-   * business context to resolve.
-   */
   fallback?: ReactNode
 }>
 
@@ -36,10 +32,6 @@ export function createScopedDateStore({
 }: CreateScopedDateStoreOptions = {}) {
   const scopedStore = createScopedStore<DateStoreApi>({ storeName })
 
-  /**
-   * Deferred construction: the store is not created until its initial range can
-   * be fully resolved.
-   */
   function Provider({ children, fallback = null }: ProviderProps) {
     const initialRange = useDerivedInitialDateRange(initialDatePreset)
 
@@ -78,7 +70,7 @@ export function createScopedDateStore({
 
     return useMemo(
       () => ({
-        setDate: (date: Date) => setDate(date, activationDate),
+        setDate: (options: { date: Date }) => setDate({ ...options, activationDate }),
       }),
       [setDate, activationDate],
     )
@@ -127,17 +119,17 @@ export function createScopedDateStore({
     )
 
     const setDateRange = useCallback(
-      (range: DateRange) => setDateRangeAction(range, activationDate),
+      (options: { startDate: Date, endDate: Date }) => setDateRangeAction({ ...options, activationDate }),
       [setDateRangeAction, activationDate],
     )
 
     const setMonth = useCallback(
-      (date: Date) => setMonthAction(date, activationDate),
+      (options: { startDate: Date }) => setMonthAction({ ...options, activationDate }),
       [setMonthAction, activationDate],
     )
 
     const setYear = useCallback(
-      (date: Date) => setYearAction(date, activationDate),
+      (options: { startDate: Date }) => setYearAction({ ...options, activationDate }),
       [setYearAction, activationDate],
     )
 
@@ -155,7 +147,7 @@ export function createScopedDateStore({
     )
 
     const setDatePreset = useCallback(
-      (datePreset: SelectableDatePreset) => setDatePresetAction(datePreset, activationDate),
+      (options: { datePreset: SelectableDatePreset }) => setDatePresetAction({ ...options, activationDate }),
       [setDatePresetAction, activationDate],
     )
 
@@ -174,7 +166,7 @@ export function createScopedDateStore({
     return useMemo(
       () => ({
         setMonthByPeriod: (options: { monthNumber: number, yearNumber: number }) =>
-          setMonthByPeriod(options, activationDate),
+          setMonthByPeriod({ ...options, activationDate }),
       }),
       [setMonthByPeriod, activationDate],
     )

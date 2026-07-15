@@ -10,32 +10,9 @@ import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSea
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, P } from '@ui/Typography/Text'
+import { CustomerAsOption } from '@components/CustomerSelector/CustomerAsOption'
 
 import './customerSelector.scss'
-
-class CustomerAsOption {
-  private internalCustomer: Customer
-
-  constructor(customer: Customer) {
-    this.internalCustomer = customer
-  }
-
-  get original() {
-    return this.internalCustomer
-  }
-
-  get label() {
-    return getCustomerName(this.internalCustomer)
-  }
-
-  get id() {
-    return this.internalCustomer.id
-  }
-
-  get value() {
-    return this.internalCustomer.id
-  }
-}
 
 type CustomerSelectorBaseProps = {
   selectedCustomer: Customer | null
@@ -46,6 +23,7 @@ type CustomerSelectorBaseProps = {
   showLabel?: boolean
 
   isReadOnly?: boolean
+  isInvalid?: boolean
   inline?: boolean
 
   className?: string
@@ -65,6 +43,7 @@ export function CustomerSelector({
   isCreatable,
   onCreateCustomer,
   isReadOnly,
+  isInvalid,
   inline,
   className,
   hideSpecifiedIdNotFoundError,
@@ -166,6 +145,7 @@ export function CustomerSelector({
     slots,
     isDisabled: shouldDisableComboBox,
     isError: shouldShowError,
+    isInvalid,
     isLoading: isLoadingWithoutFallback,
     isReadOnly,
     ['aria-label']: showLabel ? undefined : resolvedLabel,
