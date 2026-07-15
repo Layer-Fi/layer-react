@@ -1,12 +1,16 @@
 import { LedgerAccountType, LedgerEntryDirection, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 
 import {
+  accountActivityCents,
   accountsOfTypes,
   accountStreamKey,
+  buildAccountForest,
+  collectLeafAccounts,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {
   accountMagnitude,
   entryStreamOptionsFromParams,
+  type ReportDateRange,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 import { sumAmountCentsInRange } from '@fixtures/unifiedReports/deterministicAmounts'
 
@@ -18,10 +22,13 @@ export const OPENING_BALANCE_EQUITY_STABLE_NAME = 'OPENING_BALANCE_EQUITY'
 // Balances accumulate from a fixed inception so an as-of date carries prior-year history.
 const inceptionFor = (effectiveDate: Date) => new Date(effectiveDate.getFullYear() - 2, 0, 1)
 
+const leafAccountsOfTypes = (types: readonly LedgerAccountType[]): SingleChartAccountType[] =>
+  collectLeafAccounts(buildAccountForest(accountsOfTypes(types)))
+
 /*
- * Positive magnitude of an account's accumulated activity through the effective
- * date. Balance-sheet/trial-balance math places this on the account's normal
- * side, so the sign lives in the column, not the number.
+ * Positive magnitude of a leaf account's accumulated activity through the
+ * effective date. The trial balance places this on the account's normal side,
+ * so the sign lives in the column, not the number.
  */
 export const accumulatedMagnitudeCents = (
   account: SingleChartAccountType,
@@ -34,26 +41,34 @@ export const accumulatedMagnitudeCents = (
   entryStreamOptionsFromParams(params, accountMagnitude(account)),
 )
 
+/*
+ * Signed leaf balance for the balance sheet: contra accounts (accumulated
+ * depreciation, distributions) subtract from their section, matching how the
+ * P&L signs the same accounts.
+ */
+export const leafBalanceCents = (
+  account: SingleChartAccountType,
+  effectiveDate: Date,
+  params: URLSearchParams,
+): number => accountActivityCents(account, { startDate: inceptionFor(effectiveDate), endDate: effectiveDate }, params)
+
 export const isDebitNormal = (account: SingleChartAccountType) =>
   account.normality === LedgerEntryDirection.Debit
 
-export const balanceSheetAccounts = (): SingleChartAccountType[] =>
-  accountsOfTypes(BALANCE_SHEET_TYPES)
+// Leaf accounts only: parent rows are pure subtotals, so summing them too would double-count.
+export const balanceSheetLeafAccounts = (): SingleChartAccountType[] =>
+  leafAccountsOfTypes(BALANCE_SHEET_TYPES)
 
-// Retained earnings mirrors cumulative net income so the balance sheet identity holds.
-export const cumulativeNetIncomeCents = (effectiveDate: Date, params: URLSearchParams): number => {
-  const revenue = accountsOfTypes([LedgerAccountType.Revenue])
-    .reduce((total, account) => total + signedAccumulated(account, effectiveDate, params), 0)
-  const expenses = accountsOfTypes([LedgerAccountType.Expense])
-    .reduce((total, account) => total + signedAccumulated(account, effectiveDate, params), 0)
+// Net income over an exact range, summing leaf revenue minus leaf expense (same basis as P&L net profit).
+export const netIncomeInRange = (range: ReportDateRange, params: URLSearchParams): number => {
+  const revenue = leafAccountsOfTypes([LedgerAccountType.Revenue])
+    .reduce((total, account) => total + accountActivityCents(account, range, params), 0)
+  const expenses = leafAccountsOfTypes([LedgerAccountType.Expense])
+    .reduce((total, account) => total + accountActivityCents(account, range, params), 0)
 
   return revenue - expenses
 }
 
-const signedAccumulated = (account: SingleChartAccountType, effectiveDate: Date, params: URLSearchParams) => {
-  const magnitude = accumulatedMagnitudeCents(account, effectiveDate, params)
-  const isContra = account.accountType.value === LedgerAccountType.Revenue
-    ? account.normality === LedgerEntryDirection.Debit
-    : account.normality === LedgerEntryDirection.Credit
-  return isContra ? -magnitude : magnitude
-}
+// Retained earnings mirrors cumulative net income so the balance sheet identity holds.
+export const cumulativeNetIncomeCents = (effectiveDate: Date, params: URLSearchParams): number =>
+  netIncomeInRange({ startDate: inceptionFor(effectiveDate), endDate: effectiveDate }, params)

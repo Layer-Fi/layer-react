@@ -1,8 +1,6 @@
-import { format } from 'date-fns'
-
 import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { ReportControl } from '@schemas/reports/reportConfig'
-import { Pinning, type UnifiedReport, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
+import { Pinning, type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import {
   accountActivityCents,
@@ -10,56 +8,25 @@ import {
   buildAccountForest,
   collectLeafAccounts,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
-import { type PnlPeriod, resolvePnlPeriods } from '@msw/api/businesses/[business-id]/reports/unified/generators/profitAndLoss'
+import {
+  currentYearFallback,
+  periodCells,
+  periodValueColumns,
+  resolvePeriods,
+} from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'
 import {
   currencyCell,
   linesReportConfig,
   MOCK_REPORT_BUSINESS_ID,
   numericColumn,
   parseDateRangeParams,
-  type ReportDateRange,
   rowHeaderColumn,
   textCell,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
-import { monthlyAmountCents } from '@fixtures/unifiedReports/deterministicAmounts'
+import { sumAmountCentsInRange } from '@fixtures/unifiedReports/deterministicAmounts'
 
 const NAME_COLUMN_KEY = 'name'
 const TOTAL_COLUMN_KEY = 'total'
-
-const currentYearFallback = (): ReportDateRange => {
-  const now = new Date()
-  return { startDate: new Date(now.getFullYear(), 0, 1), endDate: new Date(now.getFullYear(), 11, 31) }
-}
-
-const isSingleTotal = (periods: readonly PnlPeriod[]) =>
-  periods.length === 1 && periods[0].columnKey === TOTAL_COLUMN_KEY
-
-const valueColumns = (periods: readonly PnlPeriod[]): UnifiedReportColumn[] => {
-  if (isSingleTotal(periods)) return [numericColumn(TOTAL_COLUMN_KEY, 'Total', Pinning.Right)]
-
-  return [
-    ...periods.map(period => numericColumn(period.columnKey, format(period.range.startDate, 'MMM yyyy'))),
-    numericColumn(TOTAL_COLUMN_KEY, 'Total', Pinning.Right),
-  ]
-}
-
-const periodCells = (
-  amountFor: (range: ReportDateRange) => number,
-  periods: readonly PnlPeriod[],
-  bold: boolean = false,
-): UnifiedReportRow['cells'] => {
-  const cells: Record<string, ReturnType<typeof currencyCell>> = {}
-  let total = 0
-
-  periods.forEach((period) => {
-    const amount = amountFor(period.range)
-    total += amount
-    if (period.columnKey !== TOTAL_COLUMN_KEY) cells[period.columnKey] = currencyCell(amount, { bold })
-  })
-
-  cells[TOTAL_COLUMN_KEY] = currencyCell(total, { bold })
-  return cells
-}
 
 const generateBusinessAccountReport = (
   params: URLSearchParams,
@@ -68,7 +35,7 @@ const generateBusinessAccountReport = (
   totalLabel: string,
 ): UnifiedReport => {
   const range = parseDateRangeParams(params, currentYearFallback())
-  const periods = resolvePnlPeriods(range, params.get('group_by'))
+  const periods = resolvePeriods(range, params.get('group_by'))
   const leaves = collectLeafAccounts(buildAccountForest(accountsOfTypes([type])))
 
   const rows: UnifiedReportRow[] = leaves.map(account => ({
@@ -95,7 +62,7 @@ const generateBusinessAccountReport = (
 
   return {
     businessId: MOCK_REPORT_BUSINESS_ID,
-    columns: [rowHeaderColumn(NAME_COLUMN_KEY, 'Account'), ...valueColumns(periods)],
+    columns: [rowHeaderColumn(NAME_COLUMN_KEY, 'Account'), ...periodValueColumns(periods)],
     rows,
   }
 }
@@ -115,13 +82,11 @@ const generatePersonalReport = (
   keyPrefix: string,
   totalLabel: string,
 ): UnifiedReport => {
-  const range = parseDateRangeParams(params, currentYearFallback())
+  const { startDate, endDate } = parseDateRangeParams(params, currentYearFallback())
 
+  // Sum the shared entry stream over the exact range so mid-month bounds are respected, matching account-backed reports.
   const amountForCategory = (category: string) =>
-    monthsInRange(range).reduce(
-      (total, { year, monthIndex }) => total + monthlyAmountCents(`${keyPrefix}:${category}`, year, monthIndex, 2),
-      0,
-    )
+    sumAmountCentsInRange(`${keyPrefix}:${category}`, startDate, endDate, { magnitude: 2 })
 
   const rows: UnifiedReportRow[] = categories.map(category => ({
     rowKey: category,
@@ -147,18 +112,6 @@ const generatePersonalReport = (
     columns: [rowHeaderColumn(NAME_COLUMN_KEY, 'Category'), numericColumn(TOTAL_COLUMN_KEY, 'Total', Pinning.Right)],
     rows,
   }
-}
-
-const monthsInRange = ({ startDate, endDate }: ReportDateRange) => {
-  const months: { year: number, monthIndex: number }[] = []
-  const cursor = new Date(startDate.getFullYear(), startDate.getMonth(), 1)
-
-  while (cursor <= endDate) {
-    months.push({ year: cursor.getFullYear(), monthIndex: cursor.getMonth() })
-    cursor.setMonth(cursor.getMonth() + 1)
-  }
-
-  return months
 }
 
 export const generatePersonalExpenses = (params: URLSearchParams) =>

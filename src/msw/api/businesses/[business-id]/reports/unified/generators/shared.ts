@@ -74,12 +74,13 @@ export const linesReportConfig = (
   linesRoute: string,
   account: SingleChartAccountType,
   controls: readonly ReportControl[],
+  extraBaseParameters: Record<string, string> = {},
 ): ReportConfig => ({
   key: `${linesRoute}:${account.accountId}`,
   reportRoute: linesRoute,
   displayName: account.name,
   controls,
-  baseQueryParameters: { account_id: account.accountId },
+  baseQueryParameters: { account_id: account.accountId, ...extraBaseParameters },
 })
 
 // parseISO keeps date-only strings in local time, matching how the app builds ranges.
@@ -117,6 +118,12 @@ export const entryStreamOptionsFromParams = (
   magnitude,
   cashBasis: params.get('reporting_basis') === 'CASH',
 })
+
+// Propagate reporting basis into drill-down base parameters so cash-basis detail reconciles with its parent cell.
+export const reportingBasisBaseParams = (params: URLSearchParams): Record<string, string> => {
+  const reportingBasis = params.get('reporting_basis')
+  return reportingBasis ? { reporting_basis: reportingBasis } : {}
+}
 
 /*
  * Scales the shared amount engine per account class so mock financials look

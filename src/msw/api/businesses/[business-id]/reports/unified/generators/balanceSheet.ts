@@ -4,12 +4,13 @@ import { Pinning, type UnifiedReport, type UnifiedReportRow } from '@schemas/rep
 
 import {
   type AccountNode,
+  accountsOfTypes,
   buildAccountForest,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {
-  accumulatedMagnitudeCents,
-  balanceSheetAccounts,
+  balanceSheetLeafAccounts,
   cumulativeNetIncomeCents,
+  leafBalanceCents,
   OPENING_BALANCE_EQUITY_STABLE_NAME,
   RETAINED_EARNINGS_STABLE_NAME,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/balances'
@@ -65,40 +66,41 @@ const sectionTotalRow = (rowKey: string, label: string, amount: number): Unified
   },
 })
 
+// Sums leaf balances only; parent rows are subtotals, so summing them too would double-count.
 const sumForType = (
-  accounts: readonly SingleChartAccountType[],
+  leaves: readonly SingleChartAccountType[],
   type: LedgerAccountType,
   balances: BalanceByAccountId,
-) => accounts
+) => leaves
   .filter(account => account.accountType.value === type)
   .reduce((total, account) => total + (balances.get(account.accountId) ?? 0), 0)
 
 export const generateBalanceSheet = (params: URLSearchParams): UnifiedReport => {
   const effectiveDate = parseEffectiveDateParam(params)
-  const accounts = balanceSheetAccounts()
+  const leaves = balanceSheetLeafAccounts()
 
   const balances = new Map<string, number>(
-    accounts.map(account => [account.accountId, accumulatedMagnitudeCents(account, effectiveDate, params)]),
+    leaves.map(account => [account.accountId, leafBalanceCents(account, effectiveDate, params)]),
   )
 
   // Retained earnings mirrors net income, and opening balance equity plugs Assets = Liabilities + Equity.
-  const retainedEarnings = accounts.find(a => a.stableName === RETAINED_EARNINGS_STABLE_NAME)
-  const openingBalanceEquity = accounts.find(a => a.stableName === OPENING_BALANCE_EQUITY_STABLE_NAME)
+  const retainedEarnings = leaves.find(a => a.stableName === RETAINED_EARNINGS_STABLE_NAME)
+  const openingBalanceEquity = leaves.find(a => a.stableName === OPENING_BALANCE_EQUITY_STABLE_NAME)
   if (retainedEarnings) balances.set(retainedEarnings.accountId, cumulativeNetIncomeCents(effectiveDate, params))
 
-  const assetsTotal = sumForType(accounts, LedgerAccountType.Asset, balances)
-  const liabilitiesTotal = sumForType(accounts, LedgerAccountType.Liability, balances)
+  const assetsTotal = sumForType(leaves, LedgerAccountType.Asset, balances)
+  const liabilitiesTotal = sumForType(leaves, LedgerAccountType.Liability, balances)
 
   if (openingBalanceEquity) balances.set(openingBalanceEquity.accountId, 0)
-  const equityBeforePlug = sumForType(accounts, LedgerAccountType.Equity, balances)
+  const equityBeforePlug = sumForType(leaves, LedgerAccountType.Equity, balances)
   if (openingBalanceEquity) {
     balances.set(openingBalanceEquity.accountId, assetsTotal - liabilitiesTotal - equityBeforePlug)
   }
 
-  const equityTotal = sumForType(accounts, LedgerAccountType.Equity, balances)
+  const equityTotal = sumForType(leaves, LedgerAccountType.Equity, balances)
 
   const forestFor = (type: LedgerAccountType) =>
-    buildAccountForest(accounts.filter(account => account.accountType.value === type))
+    buildAccountForest(accountsOfTypes([type]))
 
   const rows: UnifiedReportRow[] = [
     ...forestFor(LedgerAccountType.Asset).map(node => accountRow(node, balances)),
