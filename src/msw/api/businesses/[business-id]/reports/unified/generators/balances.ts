@@ -22,6 +22,12 @@ export const OPENING_BALANCE_EQUITY_STABLE_NAME = 'OPENING_BALANCE_EQUITY'
 // Balances accumulate from a fixed inception so an as-of date carries prior-year history.
 const inceptionFor = (effectiveDate: Date) => new Date(effectiveDate.getFullYear() - 2, 0, 1)
 
+// The exact window a balance accumulates over, so drill-downs can cover the same span and reconcile.
+export const balanceSheetRange = (effectiveDate: Date): ReportDateRange => ({
+  startDate: inceptionFor(effectiveDate),
+  endDate: effectiveDate,
+})
+
 const leafAccountsOfTypes = (types: readonly LedgerAccountType[]): SingleChartAccountType[] =>
   collectLeafAccounts(buildAccountForest(accountsOfTypes(types)))
 

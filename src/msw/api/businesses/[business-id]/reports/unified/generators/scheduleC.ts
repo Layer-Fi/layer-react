@@ -1,4 +1,4 @@
-import { format, getYear } from 'date-fns'
+import { getYear } from 'date-fns'
 
 import { LedgerAccountType, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { type ReportConfig } from '@schemas/reports/reportConfig'
@@ -12,6 +12,7 @@ import {
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {
   currencyCell,
+  isoDate,
   linesReportConfig,
   MOCK_REPORT_BUSINESS_ID,
   numericColumn,
@@ -59,8 +60,6 @@ const lineRow = (
     [AMOUNT_COLUMN_KEY]: currencyCell(amount),
   },
 })
-
-const isoDate = (date: Date) => format(date, 'yyyy-MM-dd')
 
 /*
  * Schedule C uses a year control, but the detail route is date-range based.
