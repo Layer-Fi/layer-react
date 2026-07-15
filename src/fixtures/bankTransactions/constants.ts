@@ -80,8 +80,3 @@ export const bankTransactionMerchants: readonly BankTransactionMerchant[] = [
   { name: 'Shopify', direction: BankTransactionDirection.Credit, describe: ref => `SHOPIFY PAYMENTS ${ref}`, primary: CATEGORIES.sales, alternates: [], amountRange: [80, 6000] },
   { name: 'PayPal', direction: BankTransactionDirection.Credit, describe: ref => `PAYPAL TRANSFER ${ref}`, primary: CATEGORIES.sales, alternates: [], amountRange: [20, 1500] },
 ]
-
-export const bankTransactionSourceAccountIds = [
-  'acc_00000000000000000000000001',
-  'acc_00000000000000000000000002',
-] as const

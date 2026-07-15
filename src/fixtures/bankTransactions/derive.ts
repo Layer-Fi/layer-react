@@ -16,7 +16,7 @@ import {
   type BankTransactionRolls,
   bankTransactionRollTable,
 } from '@fixtures/bankTransactions/roll'
-import { accountNames } from '@fixtures/constants/bank/accountNames'
+import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
 
 type AccountCategorization = typeof AccountCategorizationSchema.Type
 
@@ -45,9 +45,9 @@ const deriveTransfer = (
   transaction: BankTransaction,
   { matched, outbound, ref }: { matched: boolean, outbound: boolean, ref: number },
 ): BankTransaction => {
-  const accountName = transaction.accountName ?? 'Business Checking'
-  const counterpartyAccounts = accountNames.filter(name => name !== accountName)
-  const counterpartyAccount = counterpartyAccounts[ref % counterpartyAccounts.length]
+  const accountName = transaction.accountName ?? bankAccounts[0].accountName
+  const counterpartyAccounts = bankAccounts.filter(account => account.accountName !== accountName)
+  const counterpartyAccount = counterpartyAccounts[ref % counterpartyAccounts.length].accountName
   const fromAccountName = outbound ? accountName : counterpartyAccount
   const toAccountName = outbound ? counterpartyAccount : accountName
 
@@ -180,16 +180,27 @@ const deriveSplit = (
 
 export const deriveBankTransaction = (
   transaction: BankTransaction,
-  { merchantIndex, statusRoll, ref, amountRoll, splitPercent }: BankTransactionRolls,
+  { accountIndex, merchantIndex, statusRoll, ref, amountRoll, splitPercent }: BankTransactionRolls,
 ): BankTransaction => {
   const outbound = statusRoll % 2 === 0
+
+  // Each transaction belongs to one of the pooled bank accounts, so its
+  // account fields agree with what the bank-accounts mock serves.
+  const account = bankAccounts[accountIndex % bankAccounts.length]
+  const accountTransaction: BankTransaction = {
+    ...transaction,
+    accountName: account.accountName,
+    accountMask: account.mask,
+    accountInstitution: account.institution,
+    sourceAccountId: account.externalAccounts[0]?.id ?? account.id,
+  }
 
   const merchant = bankTransactionMerchants[merchantIndex % bankTransactionMerchants.length]
   const [minDollars, maxDollars] = merchant.amountRange
   const amount = roundToCents(minDollars + (amountRoll % ((maxDollars - minDollars) * 100)) / 100)
 
   const merchantTransaction: BankTransaction = {
-    ...transaction,
+    ...accountTransaction,
     direction: merchant.direction,
     amount,
     counterpartyName: merchant.name,
@@ -204,9 +215,9 @@ export const deriveBankTransaction = (
 
   return bankTransactionRollTable.handle(statusRoll, {
     [BankTransactionRollCase.MatchedTransfer]: () =>
-      deriveTransfer(transaction, { matched: true, outbound, ref }),
+      deriveTransfer(accountTransaction, { matched: true, outbound, ref }),
     [BankTransactionRollCase.SuggestedTransfer]: () =>
-      deriveTransfer(transaction, { matched: false, outbound, ref }),
+      deriveTransfer(accountTransaction, { matched: false, outbound, ref }),
     [BankTransactionRollCase.Pending]: () => derivePending(merchantTransaction),
     [BankTransactionRollCase.AwaitingInput]: () => deriveAwaitingInput(merchantTransaction, merchant),
     [BankTransactionRollCase.Categorized]: () => deriveCategorized(merchantTransaction, merchant),

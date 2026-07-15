@@ -7,19 +7,15 @@ import {
 import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 
 import {
-  accountInstitutionArbitrary,
   bankTransactionCustomerArbitrary,
   bankTransactionVendorArbitrary,
-  sourceAccountIdArbitrary,
   sourceTransactionIdArbitrary,
 } from '@fixtures/bankTransactions/arbitrary'
 import { deriveBankTransaction } from '@fixtures/bankTransactions/derive'
 import { bankTransactionRollsArbitrary } from '@fixtures/bankTransactions/roll'
 import { makeBusiness } from '@fixtures/business/mocks'
-import { accountNames } from '@fixtures/constants/bank/accountNames'
 import { dateArbitrary } from '@fixtures/utils/arbitrary/date'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
-import { maskArbitrary } from '@fixtures/utils/arbitrary/mask'
 import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
 
 const BUSINESS_ID = makeBusiness().id
@@ -31,7 +27,6 @@ const base = Schema.Struct({
   id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.bankTransaction)),
   businessId: withArbitrary(fields.businessId, () => fc => fc.constant(BUSINESS_ID)),
   sourceTransactionId: withArbitrary(fields.sourceTransactionId, () => sourceTransactionIdArbitrary),
-  sourceAccountId: withArbitrary(fields.sourceAccountId, () => sourceAccountIdArbitrary),
   // Placeholder - the generator respreads dates across the fixture year.
   date: withArbitrary(fields.date, () => dateArbitrary),
   direction: withArbitrary(fields.direction, () => fc =>
@@ -40,12 +35,13 @@ const base = Schema.Struct({
     fc.integer({ min: 100, max: 1_000_000 }).map(cents => cents / 100)),
   counterpartyName: withArbitrary(fields.counterpartyName, () => fc => fc.constant(null)),
   description: withArbitrary(fields.description, () => fc => fc.constant(null)),
-  accountName: withArbitrary(fields.accountName, () => fc => fc.constantFrom(...accountNames)),
-  accountMask: withArbitrary(fields.accountMask, () => maskArbitrary),
-  accountInstitution: withArbitrary(fields.accountInstitution, () => accountInstitutionArbitrary),
-  // The correlated status/categorization/match structures are filled in by the
-  // top-level arbitrary below; the field-level constants only exist so the
-  // base struct stays derivable.
+  // The correlated account/status/categorization/match structures are filled
+  // in by the top-level arbitrary below; the field-level constants only exist
+  // so the base struct stays derivable.
+  sourceAccountId: withArbitrary(fields.sourceAccountId, () => fc => fc.constant(null)),
+  accountName: withArbitrary(fields.accountName, () => fc => fc.constant(null)),
+  accountMask: withArbitrary(fields.accountMask, () => fc => fc.constant(null)),
+  accountInstitution: withArbitrary(fields.accountInstitution, () => fc => fc.constant(null)),
   categorizationStatus: withArbitrary(fields.categorizationStatus, () => fc =>
     fc.constant(CategorizationStatus.PENDING)),
   category: withArbitrary(fields.category, () => fc => fc.constant(null)),

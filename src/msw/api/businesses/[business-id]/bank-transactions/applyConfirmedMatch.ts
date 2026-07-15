@@ -3,7 +3,7 @@ import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { type Match, MatchType } from '@schemas/bankTransactions/match'
 
 import { toMatchDetailsId } from '@fixtures/bankTransactions/derive'
-import { accountNames } from '@fixtures/constants/bank/accountNames'
+import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
 
 const MATCH_TYPE_BY_DETAILS_TYPE: Record<
   NonNullable<BankTransaction['match']>['details']['type'],
@@ -31,7 +31,7 @@ export const applyConfirmedMatch = (
 ): { transaction: BankTransaction, match: Match } => {
   const suggestedMatch = transaction.suggestedMatches.find(match => match.id === suggestedMatchId)
 
-  const fromAccountName = transaction.accountName ?? 'Business Checking'
+  const fromAccountName = transaction.accountName ?? bankAccounts[0].accountName
 
   const details = suggestedMatch?.details ?? {
     type: 'Transfer_Match',
@@ -41,7 +41,8 @@ export const applyConfirmedMatch = (
     description: transaction.description ?? 'Transfer',
     adjustment: null,
     fromAccountName,
-    toAccountName: accountNames.find(name => name !== fromAccountName) ?? 'Savings',
+    toAccountName: bankAccounts.find(account => account.accountName !== fromAccountName)?.accountName
+      ?? fromAccountName,
   }
 
   const match: Match = {

@@ -1,6 +1,7 @@
 import { type FastCheck } from 'effect'
 
 import { bankTransactionMerchants } from '@fixtures/bankTransactions/constants'
+import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
 import { createRollTable } from '@fixtures/utils/createRollTable'
 
 export enum BankTransactionRollCase {
@@ -30,6 +31,7 @@ export const bankTransactionRollTable = createRollTable<BankTransactionRollCase>
  * so the derived fields always agree.
  */
 export type BankTransactionRolls = {
+  accountIndex: number
   merchantIndex: number
   statusRoll: number
   ref: number
@@ -41,6 +43,7 @@ export const bankTransactionRollsArbitrary = (
   fc: typeof FastCheck,
 ): FastCheck.Arbitrary<BankTransactionRolls> =>
   fc.record({
+    accountIndex: fc.noBias(fc.nat(bankAccounts.length - 1)),
     merchantIndex: fc.noBias(fc.nat(bankTransactionMerchants.length - 1)),
     statusRoll: bankTransactionRollTable.rollArbitrary(fc),
     ref: fc.noBias(fc.integer({ min: 100000, max: 999999 })),
