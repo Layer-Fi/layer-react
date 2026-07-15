@@ -1,10 +1,8 @@
 import { useCallback, useMemo, useState } from 'react'
-import { endOfMonth, startOfMonth } from 'date-fns'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@utils/bankTransactions/shared'
 import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
-import { useConstant } from '@hooks/utils/react/useConstant'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 
@@ -34,28 +32,21 @@ export const useBankTransactionsFilters = ({
       : undefined
 
   const globalDateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
-
-  const defaultDateRange = useConstant(() => ({
-    startDate: startOfMonth(new Date()),
-    endDate: endOfMonth(new Date()),
-  }))
+  const globalMonthRange = useGlobalDateRange({ dateSelectionMode: 'month' })
 
   const initialFilters: BankTransactionFilters = {
     ...(scope && { categorizationStatus: scope }),
-    ...(dateFilterMode === BankTransactionsDateFilterMode.MonthlyView && {
-      dateRange: defaultDateRange,
-    }),
   }
 
   const [baseFilters, setBaseFilters] =
     useState<BankTransactionFilters>(initialFilters)
 
-  // Monthly view can be enabled after mount, when the initial filters were
-  // seeded without a date range, so fall back to the current month.
+  // Monthly view follows the global month selection; the month picker writes
+  // back to the global date store.
   const dateRange = dateFilterMode === BankTransactionsDateFilterMode.GlobalDateRange
     ? globalDateRange
     : dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
-      ? baseFilters.dateRange ?? defaultDateRange
+      ? globalMonthRange
       : undefined
 
   // Defensively memoize passed filters to avoid re-renders when the object reference
