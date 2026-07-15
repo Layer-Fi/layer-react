@@ -3,6 +3,7 @@ import {
   type Classification,
   type ExclusionCategorizationSchema,
 } from '@schemas/categorization'
+import { humanizeEnum } from '@utils/format'
 
 import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'
 import { toAccountCategorization } from '@fixtures/bankTransactions/derive'
@@ -10,20 +11,8 @@ import { toAccountCategorization } from '@fixtures/bankTransactions/derive'
 type AccountCategorization = typeof AccountCategorizationSchema.Type
 type ExclusionCategorization = typeof ExclusionCategorizationSchema.Type
 
-const toTitleCase = (stableName: string) =>
-  stableName
-    .toLowerCase()
-    .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
-
 const KNOWN_CATEGORIES = Object.values(bankTransactionCategories)
 
-/*
- * Resolves a request's classification against the fixture category catalog,
- * synthesizing a plausible categorization when the request references an
- * account the catalog doesn't know about.
- */
 export const categorizationFromClassification = (
   classification: Classification,
 ): AccountCategorization | ExclusionCategorization => {
@@ -32,7 +21,7 @@ export const categorizationFromClassification = (
       type: 'Exclusion',
       id: `exclusion-${classification.exclusionType.toLowerCase()}`,
       category: classification.exclusionType,
-      displayName: toTitleCase(classification.exclusionType),
+      displayName: humanizeEnum(classification.exclusionType),
     }
   }
 
@@ -45,7 +34,7 @@ export const categorizationFromClassification = (
       id: `category-${classification.stableName.toLowerCase().replaceAll('_', '-')}`,
       stableName: classification.stableName,
       category: classification.stableName,
-      displayName: toTitleCase(classification.stableName),
+      displayName: humanizeEnum(classification.stableName),
     }
   }
 

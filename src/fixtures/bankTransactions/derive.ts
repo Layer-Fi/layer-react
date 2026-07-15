@@ -32,11 +32,6 @@ export const toAccountCategorization = (
 
 const roundToCents = (amount: number) => Math.round(amount * 100) / 100
 
-/*
- * Suggested match ids must be valid UUIDs - the bulk-match-or-categorize
- * request schema validates them - so derive one from the transaction id by
- * swapping in a prefix outside the FixtureIdPrefix range.
- */
 export const toSuggestedMatchId = (transactionId: string) =>
   transactionId.replace(/^[0-9a-f]{8}/, '00000010')
 
@@ -129,6 +124,57 @@ const deriveMerchantMatch = (
   }
 }
 
+const derivePending = (transaction: BankTransaction): BankTransaction => ({
+  ...transaction,
+  categorizationStatus: CategorizationStatus.PENDING,
+})
+
+const deriveAwaitingInput = (
+  transaction: BankTransaction,
+  merchant: BankTransactionMerchant,
+): BankTransaction => ({
+  ...transaction,
+  categorizationStatus: CategorizationStatus.READY_FOR_INPUT,
+  categorizationFlow: {
+    type: InputStrategy.AskFromSuggestions,
+    category: null,
+    suggestions: [merchant.primary, ...merchant.alternates].map(toAccountCategorization),
+  },
+})
+
+const deriveCategorized = (
+  transaction: BankTransaction,
+  merchant: BankTransactionMerchant,
+): BankTransaction => ({
+  ...transaction,
+  categorizationStatus: CategorizationStatus.CATEGORIZED,
+  category: toAccountCategorization(merchant.primary),
+})
+
+const deriveSplit = (
+  transaction: BankTransaction,
+  merchant: BankTransactionMerchant,
+  splitPercent: number,
+): BankTransaction => {
+  const primaryAmount = roundToCents(transaction.amount * (splitPercent / 100))
+  const alternateAmount = roundToCents(transaction.amount - primaryAmount)
+
+  return {
+    ...transaction,
+    categorizationStatus: CategorizationStatus.SPLIT,
+    category: {
+      type: 'Split_Categorization',
+      id: `split-${transaction.id}`,
+      category: 'SPLIT',
+      displayName: 'Split',
+      entries: [
+        { type: 'AccountSplitEntry', amount: primaryAmount, category: toAccountCategorization(merchant.primary), tags: [] },
+        { type: 'AccountSplitEntry', amount: alternateAmount, category: toAccountCategorization(merchant.alternates[0]), tags: [] },
+      ],
+    },
+  }
+}
+
 export const deriveBankTransaction = (
   transaction: BankTransaction,
   { merchantIndex, statusRoll, ref, amountRoll, splitPercent }: BankTransactionRolls,
@@ -149,32 +195,6 @@ export const deriveBankTransaction = (
     vendor: merchant.direction === BankTransactionDirection.Debit ? transaction.vendor : null,
   }
 
-  const categorize = (): BankTransaction => ({
-    ...merchantTransaction,
-    categorizationStatus: CategorizationStatus.CATEGORIZED,
-    category: toAccountCategorization(merchant.primary),
-  })
-
-  const split = (): BankTransaction => {
-    const primaryAmount = roundToCents(amount * (splitPercent / 100))
-    const alternateAmount = roundToCents(amount - primaryAmount)
-
-    return {
-      ...merchantTransaction,
-      categorizationStatus: CategorizationStatus.SPLIT,
-      category: {
-        type: 'Split_Categorization',
-        id: `split-${transaction.id}`,
-        category: 'SPLIT',
-        displayName: 'Split',
-        entries: [
-          { type: 'AccountSplitEntry', amount: primaryAmount, category: toAccountCategorization(merchant.primary), tags: [] },
-          { type: 'AccountSplitEntry', amount: alternateAmount, category: toAccountCategorization(merchant.alternates[0]), tags: [] },
-        ],
-      },
-    }
-  }
-
   // Splits need an alternate category for the second entry; merchants without
   // one fall back to a plain categorization.
   const hasAlternates = merchant.alternates.length > 0
@@ -184,23 +204,17 @@ export const deriveBankTransaction = (
       deriveTransfer(transaction, { matched: true, outbound, ref }),
     [BankTransactionRollCase.SuggestedTransfer]: () =>
       deriveTransfer(transaction, { matched: false, outbound, ref }),
-    [BankTransactionRollCase.Pending]: () => ({
-      ...merchantTransaction,
-      categorizationStatus: CategorizationStatus.PENDING,
-    }),
-    [BankTransactionRollCase.AwaitingInput]: () => ({
-      ...merchantTransaction,
-      categorizationStatus: CategorizationStatus.READY_FOR_INPUT,
-      categorizationFlow: {
-        type: InputStrategy.AskFromSuggestions,
-        category: null,
-        suggestions: [merchant.primary, ...merchant.alternates].map(toAccountCategorization),
-      },
-    }),
-    [BankTransactionRollCase.Categorized]: categorize,
-    [BankTransactionRollCase.Split]: () => hasAlternates ? split() : categorize(),
+    [BankTransactionRollCase.Pending]: () => derivePending(merchantTransaction),
+    [BankTransactionRollCase.AwaitingInput]: () => deriveAwaitingInput(merchantTransaction, merchant),
+    [BankTransactionRollCase.Categorized]: () => deriveCategorized(merchantTransaction, merchant),
+    [BankTransactionRollCase.Split]: () =>
+      hasAlternates
+        ? deriveSplit(merchantTransaction, merchant, splitPercent)
+        : deriveCategorized(merchantTransaction, merchant),
     [BankTransactionRollCase.MerchantMatch]: () =>
-      hasAlternates ? deriveMerchantMatch(merchantTransaction, merchant) : categorize(),
+      hasAlternates
+        ? deriveMerchantMatch(merchantTransaction, merchant)
+        : deriveCategorized(merchantTransaction, merchant),
   })
 }
 
