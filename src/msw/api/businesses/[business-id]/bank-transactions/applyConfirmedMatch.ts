@@ -28,7 +28,7 @@ export const applyConfirmedMatch = (
 
   const fromAccountName = transaction.accountName ?? bankAccounts[0].accountName
 
-  const details = suggestedMatch?.details ?? {
+  const details = suggestedMatch?.details ?? transaction.match?.details ?? {
     type: 'Transfer_Match',
     id: toMatchDetailsId(transaction.id),
     amount: transaction.amount,
