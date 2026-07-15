@@ -13,12 +13,9 @@ const encodeLedgerEntry = Schema.encodeSync(LedgerEntrySchema)
 const toResponse = (entries: readonly LedgerEntry[], request: Request) =>
   paginatedApiData(entries.map(entry => encodeLedgerEntry(entry)), request)
 
-// start_date/end_date arrive as date-only strings, so compare calendar days, not instants.
-const toDateOnly = (date: Date) => date.toISOString().slice(0, 10)
-
 export const filterLedgerEntries = createListFilter<LedgerEntry>({
-  start_date: matchesOnOrAfter(entry => toDateOnly(entry.entryAt)),
-  end_date: matchesOnOrBefore(entry => toDateOnly(entry.entryAt)),
+  start_date: matchesOnOrAfter(entry => entry.entryAt),
+  end_date: matchesOnOrBefore(entry => entry.entryAt),
 })
 
 const sortLedgerEntries = createListSorter<LedgerEntry>({

@@ -1,4 +1,4 @@
-import { type CalendarDate, parseDate } from '@internationalized/date'
+import { CalendarDate, parseDate } from '@internationalized/date'
 
 type ParamPredicate<TItem> = (item: TItem, value: string | null) => boolean
 
@@ -27,25 +27,35 @@ export const matchesValue = <TItem>(get: (item: TItem) => string | number | null
 export const matchesBoolean = <TItem>(get: (item: TItem) => boolean) =>
   whenPresent<TItem>((item, value) => get(item) === (value === 'true'))
 
-/** Matches items whose derived value is >= the param - numeric for numbers, lexicographic for strings (e.g. date-only). */
-export const matchesOnOrAfter = <TItem>(get: (item: TItem) => string | number) =>
+type Comparable = string | number | Date | CalendarDate
+
+/*
+ * Compares a field against the param's raw string: numerically for numbers,
+ * lexicographically for strings, and at day granularity for Date and
+ * CalendarDate (bound params arrive as date-only strings).
+ */
+const compareStrings = (left: string, right: string) => left < right ? -1 : left > right ? 1 : 0
+
+const compareToParam = (itemValue: Comparable, value: string): number => {
+  if (itemValue instanceof CalendarDate) return itemValue.compare(parseDate(value))
+  if (itemValue instanceof Date) return compareStrings(itemValue.toISOString().slice(0, 10), value)
+  if (typeof itemValue === 'number') return itemValue - Number(value)
+  return compareStrings(itemValue, value)
+}
+
+/** Matches items whose field is >= the param; a null/undefined field never matches a present param. */
+export const matchesOnOrAfter = <TItem>(get: (item: TItem) => Comparable | null | undefined) =>
   whenPresent<TItem>((item, value) => {
     const itemValue = get(item)
-    return typeof itemValue === 'number' ? itemValue >= Number(value) : itemValue >= value
+    return itemValue != null && compareToParam(itemValue, value) >= 0
   })
 
-/** Matches items whose derived value is <= the param - numeric for numbers, lexicographic for strings (e.g. date-only). */
-export const matchesOnOrBefore = <TItem>(get: (item: TItem) => string | number) =>
+/** Matches items whose field is <= the param; a null/undefined field never matches a present param. */
+export const matchesOnOrBefore = <TItem>(get: (item: TItem) => Comparable | null | undefined) =>
   whenPresent<TItem>((item, value) => {
     const itemValue = get(item)
-    return typeof itemValue === 'number' ? itemValue <= Number(value) : itemValue <= value
+    return itemValue != null && compareToParam(itemValue, value) <= 0
   })
-
-export const matchesDateOnOrAfter = <TItem>(get: (item: TItem) => CalendarDate) =>
-  whenPresent<TItem>((item, value) => get(item).compare(parseDate(value)) >= 0)
-
-export const matchesDateOnOrBefore = <TItem>(get: (item: TItem) => CalendarDate) =>
-  whenPresent<TItem>((item, value) => get(item).compare(parseDate(value)) <= 0)
 
 /* Items matching `isGated` are only included when the query flag is 'true'. */
 export const requiresFlag = <TItem>(isGated: (item: TItem) => boolean): ParamPredicate<TItem> =>

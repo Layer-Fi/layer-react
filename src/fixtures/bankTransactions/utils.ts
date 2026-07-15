@@ -41,8 +41,6 @@ const deriveTransfer = (
 ): BankTransaction => {
   const outbound = statusRoll % 2 === 0
   const accountName = transaction.accountName ?? 'Business Checking'
-  // The other leg is drawn from the accounts the transaction isn't already
-  // on, so a transfer never reports the same account on both sides.
   const counterpartyAccounts = accountNames.filter(name => name !== accountName)
   const counterpartyAccount = counterpartyAccounts[ref % counterpartyAccounts.length]
   const fromAccountName = outbound ? accountName : counterpartyAccount

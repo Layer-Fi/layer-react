@@ -25,15 +25,12 @@ const CATEGORIZED_STATUSES: readonly CategorizationStatus[] = [
   CategorizationStatus.SPLIT,
 ]
 
-const toDateOnly = (date: Date) => date.toISOString().slice(0, 10)
-
 const filterBankTransactions = createListFilter<BankTransaction>({
   q: matchesQuery(transaction => [
     transaction.counterpartyName,
     transaction.description,
     transaction.accountName,
   ]),
-  // An INFLOW corresponds to a CREDIT, an OUTFLOW to a DEBIT.
   direction: (transaction, value) =>
     value == null || value === ''
     || transaction.direction === (value === 'INFLOW'
@@ -41,8 +38,8 @@ const filterBankTransactions = createListFilter<BankTransaction>({
       : BankTransactionDirection.Debit),
   categorized: matchesBoolean(transaction =>
     CATEGORIZED_STATUSES.includes(transaction.categorizationStatus)),
-  start_date: matchesOnOrAfter(transaction => toDateOnly(transaction.date)),
-  end_date: matchesOnOrBefore(transaction => toDateOnly(transaction.date)),
+  start_date: matchesOnOrAfter(transaction => transaction.date),
+  end_date: matchesOnOrBefore(transaction => transaction.date),
   amount_min: matchesOnOrAfter(transaction => transaction.amount),
   amount_max: matchesOnOrBefore(transaction => transaction.amount),
 })

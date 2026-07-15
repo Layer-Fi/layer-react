@@ -10,11 +10,6 @@ import { vendors } from '@fixtures/generated/vendors.gen'
 
 const decodeSetMetadataBody = Schema.decodeUnknownSync(BankTransactionCounterpartyUpdateSchema)
 
-/*
- * Assigns a counterparty by id. Ids are resolved against the generated
- * customer/vendor pools, mirroring how the pooled counterparties were drawn
- * into the transaction fixtures in the first place.
- */
 export const patch = createMockEndpoint<Record<string, never>, Record<string, never>>({
   method: 'patch',
   path: '*/v1/businesses/:businessId/bank-transactions/:bankTransactionId/metadata',
