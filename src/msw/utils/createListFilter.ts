@@ -27,6 +27,20 @@ export const matchesValue = <TItem>(get: (item: TItem) => string | number | null
 export const matchesBoolean = <TItem>(get: (item: TItem) => boolean) =>
   whenPresent<TItem>((item, value) => get(item) === (value === 'true'))
 
+/** Matches items whose derived value is >= the param - numeric for numbers, lexicographic for strings (e.g. date-only). */
+export const matchesOnOrAfter = <TItem>(get: (item: TItem) => string | number) =>
+  whenPresent<TItem>((item, value) => {
+    const itemValue = get(item)
+    return typeof itemValue === 'number' ? itemValue >= Number(value) : itemValue >= value
+  })
+
+/** Matches items whose derived value is <= the param - numeric for numbers, lexicographic for strings (e.g. date-only). */
+export const matchesOnOrBefore = <TItem>(get: (item: TItem) => string | number) =>
+  whenPresent<TItem>((item, value) => {
+    const itemValue = get(item)
+    return typeof itemValue === 'number' ? itemValue <= Number(value) : itemValue <= value
+  })
+
 export const matchesDateOnOrAfter = <TItem>(get: (item: TItem) => CalendarDate) =>
   whenPresent<TItem>((item, value) => get(item).compare(parseDate(value)) >= 0)
 

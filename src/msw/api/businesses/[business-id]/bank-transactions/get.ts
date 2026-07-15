@@ -9,7 +9,7 @@ import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 
 import { bankTransactionStore } from '@msw/api/businesses/[business-id]/bank-transactions/store'
 import { paginatedApiData } from '@msw/utils/apiResponse'
-import { createListFilter, matchesBoolean, matchesQuery } from '@msw/utils/createListFilter'
+import { createListFilter, matchesBoolean, matchesOnOrAfter, matchesOnOrBefore, matchesQuery } from '@msw/utils/createListFilter'
 import { createListSorter } from '@msw/utils/createListSorter'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 
@@ -41,8 +41,10 @@ const filterBankTransactions = createListFilter<BankTransaction>({
       : BankTransactionDirection.Debit),
   categorized: matchesBoolean(transaction =>
     CATEGORIZED_STATUSES.includes(transaction.categorizationStatus)),
-  start_date: (transaction, value) => !value || toDateOnly(transaction.date) >= value,
-  end_date: (transaction, value) => !value || toDateOnly(transaction.date) <= value,
+  start_date: matchesOnOrAfter(transaction => toDateOnly(transaction.date)),
+  end_date: matchesOnOrBefore(transaction => toDateOnly(transaction.date)),
+  amount_min: matchesOnOrAfter(transaction => transaction.amount),
+  amount_max: matchesOnOrBefore(transaction => transaction.amount),
 })
 
 const sortBankTransactions = createListSorter<BankTransaction>({
