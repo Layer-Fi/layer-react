@@ -124,6 +124,13 @@ describe('unified report generators', () => {
     expect(currency(halfMonth, 'total_personal_expense', 'total')!).toBeLessThan(currency(fullMonth, 'total_personal_expense', 'total')!)
   })
 
+  it('clips month columns to a non-aligned range so they still sum to the total', () => {
+    const range = { start_date: `${YEAR}-01-10`, end_date: `${YEAR}-03-20` }
+    const monthly = unifiedReportGenerators['profit-and-loss'](params({ ...range, group_by: 'MONTH' }))
+    const singleTotal = unifiedReportGenerators['profit-and-loss'](params(range))
+    expect(currency(monthly, 'net_profit', 'total')).toBe(currency(singleTotal, 'net_profit', 'total'))
+  })
+
   it('balances cash flow: cash at end = cash at start + net change', () => {
     const cf = unifiedReportGenerators['cashflow-statement'](params({ start_date: `${YEAR - 1}-06-01`, end_date: `${YEAR}-06-30` }))
     expect(currency(cf, 'cash_at_end', 'amount')).toBe(currency(cf, 'cash_at_start', 'amount')! + currency(cf, 'net_change_in_cash', 'amount')!)
