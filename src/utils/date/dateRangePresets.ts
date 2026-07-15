@@ -169,25 +169,35 @@ export function deriveDateRangeFromPreset(
 }
 
 /**
- * Derives the preset a range represents: `AllTime` when it spans activation→present,
- * otherwise a matching relative preset, otherwise `Custom`. `previousPreset` keeps a
- * selection sticky when a range matches more than one candidate.
+ * Derives the preset a range represents, or `Custom` when it matches none.
+ * When a range matches several presets (e.g. `ThisYear` and `AllTime` for a
+ * business activated on January 1st), `previousPreset` keeps the current
+ * selection sticky; otherwise relative presets win over `AllTime`.
  */
 export function derivePresetFromDateRange(
   input: DateRange,
   previousPreset: DatePreset | null = null,
   activationDate?: Date,
 ): DatePreset {
-  if (activationDate && sameDateRange(normalize(input, activationDate), normalize(rangeForAllTime(activationDate), activationDate))) {
+  const normalizedInput = normalize(input, activationDate)
+  const normalizedAllTimeRange = activationDate
+    ? normalize(rangeForAllTime(activationDate), activationDate)
+    : null
+
+  const matchesAllTime = normalizedAllTimeRange !== null
+    && sameDateRange(normalizedInput, normalizedAllTimeRange)
+
+  if (previousPreset === DatePreset.AllTime && matchesAllTime) {
     return DatePreset.AllTime
   }
+
   const relativePreset = deriveRelativePresetFromDateRange(input, previousPreset, activationDate)
 
   if (relativePreset) {
     return relativePreset
   }
 
-  if (activationDate && sameDateRange(normalize(input, activationDate), normalize(rangeForAllTime(activationDate), activationDate))) {
+  if (matchesAllTime) {
     return DatePreset.AllTime
   }
 
