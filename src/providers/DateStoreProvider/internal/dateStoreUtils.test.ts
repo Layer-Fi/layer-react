@@ -1,6 +1,6 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
-import { getDateRange, withCorrectedRange } from '@providers/DateStoreProvider/internal/dateStoreUtils'
+import { getDateRange, maybeInvertDateRange } from '@providers/DateStoreProvider/internal/dateStoreUtils'
 
 import { setupFakeSystemTime } from '@test-utils/fakeSystemTime'
 import {
@@ -64,21 +64,17 @@ describe('getDateRange', () => {
   })
 })
 
-describe('withCorrectedRange', () => {
-  it('swaps an inverted range and passes an ordered range through unchanged', () => {
-    const fn = vi.fn((options: { startDate: Date, endDate: Date }) => options)
-    const corrected = withCorrectedRange(fn)
-
-    corrected({ startDate: ONE_MONTH_BEFORE_NOW, endDate: TWO_MONTHS_BEFORE_NOW })
-    expect(fn).toHaveBeenLastCalledWith({
+describe('maybeInvertDateRange', () => {
+  it('swaps an inverted range', () => {
+    expect(maybeInvertDateRange({ startDate: ONE_MONTH_BEFORE_NOW, endDate: TWO_MONTHS_BEFORE_NOW })).toEqual({
       startDate: TWO_MONTHS_BEFORE_NOW,
       endDate: ONE_MONTH_BEFORE_NOW,
     })
+  })
 
-    corrected({ startDate: TWO_MONTHS_BEFORE_NOW, endDate: ONE_MONTH_BEFORE_NOW })
-    expect(fn).toHaveBeenLastCalledWith({
-      startDate: TWO_MONTHS_BEFORE_NOW,
-      endDate: ONE_MONTH_BEFORE_NOW,
-    })
+  it('passes an ordered range through unchanged', () => {
+    const ordered = { startDate: TWO_MONTHS_BEFORE_NOW, endDate: ONE_MONTH_BEFORE_NOW }
+
+    expect(maybeInvertDateRange(ordered)).toEqual(ordered)
   })
 })

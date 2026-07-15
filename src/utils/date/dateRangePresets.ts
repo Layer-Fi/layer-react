@@ -1,7 +1,7 @@
 import {
   addMonths, addQuarters, addYears, endOfDay,
   endOfMonth, endOfQuarter, endOfYear, isEqual,
-  startOfDay, startOfMonth, startOfQuarter, startOfYear, subMonths,
+  min, startOfDay, startOfMonth, startOfQuarter, startOfYear, subMonths,
   subQuarters,
   subYears,
 } from 'date-fns'
@@ -58,18 +58,25 @@ export enum DatePreset {
   LastQuarter = 'LastQuarter',
   ThisYear = 'ThisYear',
   LastYear = 'LastYear',
+  /** Spans the business activation date to the present; requires the business context to resolve. */
+  AllTime = 'AllTime',
+  /** Set by the store when a range matches no other preset; not directly selectable. */
   Custom = 'Custom',
-
 }
 
-const PRESET_ARGS = {
+// A date preset that can be computed from `now` alone.
+export type RelativeDatePreset = Exclude<DatePreset, DatePreset.Custom | DatePreset.AllTime>
+// A date preset that can be selected directly by the user.
+export type SelectableDatePreset = Exclude<DatePreset, DatePreset.Custom>
+
+const RELATIVE_DATE_PRESET_ARGS = {
   [DatePreset.ThisMonth]: [Period.Month, 0],
   [DatePreset.LastMonth]: [Period.Month, -1],
   [DatePreset.ThisQuarter]: [Period.Quarter, 0],
   [DatePreset.LastQuarter]: [Period.Quarter, -1],
   [DatePreset.ThisYear]: [Period.Year, 0],
   [DatePreset.LastYear]: [Period.Year, -1],
-} satisfies Record<Exclude<DatePreset, 'Custom'>, readonly [Period, number]>
+} satisfies Record<RelativeDatePreset, readonly [Period, number]>
 
 function typedEntries<T extends Record<PropertyKey, unknown>>(obj: T) {
   return Object.entries(obj) as [keyof T, T[keyof T]][]
@@ -81,10 +88,18 @@ function fromEntriesStrict<K extends PropertyKey, V>(
   return Object.fromEntries(entries) as Record<K, V>
 }
 
-export function rangeForPreset(preset: Exclude<DatePreset, 'Custom'>, base?: Date): DateRange {
-  const args = PRESET_ARGS[preset]
+export function rangeForPreset(preset: RelativeDatePreset, base?: Date): DateRange {
+  const args = RELATIVE_DATE_PRESET_ARGS[preset]
   const [period, offset] = args
   return rangeFor(period, offset, base)
+}
+
+export function rangeForAllTime(activationDate: Date): DateRange {
+  const now = new Date()
+  return {
+    startDate: min([startOfDay(activationDate), startOfDay(now)]),
+    endDate: endOfDay(now),
+  }
 }
 
 const normalize = (range: DateRange, activationDate?: Date | null): DateRange => {
@@ -102,23 +117,68 @@ const sameDateRange = (a: DateRange, b: DateRange) =>
   && isEqual(startOfDay(a.startDate), startOfDay(b.startDate))
   && isEqual(endOfDay(a.endDate), endOfDay(b.endDate))
 
-export function presetForDateRange(input: DateRange, selectedPreset: DatePreset | null = null, activationDate?: Date): DatePreset | null {
+export function deriveRelativePresetFromDateRange(input: DateRange, selectedPreset: DatePreset | null = null, activationDate?: Date): DatePreset | null {
   const range = normalize(input, activationDate)
 
-  const candidates: Record<keyof typeof PRESET_ARGS, DateRange> = fromEntriesStrict(
-    typedEntries(PRESET_ARGS).map(([key, [period, offset]]) => [
+  const relativeDateCandidates: Record<keyof typeof RELATIVE_DATE_PRESET_ARGS, DateRange> = fromEntriesStrict(
+    typedEntries(RELATIVE_DATE_PRESET_ARGS).map(([key, [period, offset]]) => [
       key,
       normalize(rangeFor(period, offset), activationDate),
     ]),
   )
 
-  if (selectedPreset !== null && selectedPreset !== DatePreset.Custom) {
-    if (sameDateRange(range, candidates[selectedPreset])) return selectedPreset
+  if (selectedPreset !== null && selectedPreset !== DatePreset.Custom && selectedPreset !== DatePreset.AllTime) {
+    if (sameDateRange(range, relativeDateCandidates[selectedPreset])) return selectedPreset
   }
 
-  for (const [preset, fixedRange] of Object.entries(candidates)) {
+  for (const [preset, fixedRange] of Object.entries(relativeDateCandidates)) {
     if (sameDateRange(range, fixedRange)) return preset as DatePreset
   }
 
   return null
+}
+
+/** Returns `null` for `AllTime` while the activation date is unavailable. */
+export function deriveDateRangeFromPreset(
+  preset: Exclude<DatePreset, DatePreset.Custom>,
+  activationDate?: Date,
+): DateRange | null {
+  if (preset === DatePreset.AllTime) {
+    return activationDate ? rangeForAllTime(activationDate) : null
+  }
+  return rangeForPreset(preset)
+}
+
+/**
+ * When a range matches several presets (e.g. `ThisYear` and `AllTime` for a business
+ * activated on January 1st), `previousPreset` stays selected; without one, relative presets win.
+ */
+export function derivePresetFromDateRange(
+  input: DateRange,
+  previousPreset: DatePreset | null = null,
+  activationDate?: Date,
+): DatePreset {
+  const normalizedInput = normalize(input, activationDate)
+  const normalizedAllTimeRange = activationDate
+    ? normalize(rangeForAllTime(activationDate), activationDate)
+    : null
+
+  const matchesAllTime = normalizedAllTimeRange !== null
+    && sameDateRange(normalizedInput, normalizedAllTimeRange)
+
+  if (previousPreset === DatePreset.AllTime && matchesAllTime) {
+    return DatePreset.AllTime
+  }
+
+  const relativePreset = deriveRelativePresetFromDateRange(input, previousPreset, activationDate)
+
+  if (relativePreset) {
+    return relativePreset
+  }
+
+  if (matchesAllTime) {
+    return DatePreset.AllTime
+  }
+
+  return DatePreset.Custom
 }

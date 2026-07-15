@@ -1,3 +1,4 @@
+import { type PropsWithChildren } from 'react'
 import { act, renderHook } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { createStore } from 'zustand'
@@ -9,14 +10,21 @@ type CounterStore = {
   increment: () => void
 }
 
+const makeCounterStore = () => createStore<CounterStore>(set => ({
+  count: 0,
+  increment: () => set(({ count }) => ({ count: count + 1 })),
+}))
+
 function createCounterScopedStore() {
-  return createScopedStore({
-    createStore: () => createStore<CounterStore>(set => ({
-      count: 0,
-      increment: () => set(({ count }) => ({ count: count + 1 })),
-    })),
+  return createScopedStore<ReturnType<typeof makeCounterStore>>({
     storeName: 'CounterStore',
   })
+}
+
+function makeWrapper(scopedStore: ReturnType<typeof createCounterScopedStore>) {
+  return function Wrapper({ children }: PropsWithChildren) {
+    return <scopedStore.Provider createStore={makeCounterStore}>{children}</scopedStore.Provider>
+  }
 }
 
 function useCounterTestState(scopedStore: ReturnType<typeof createCounterScopedStore>) {
@@ -32,7 +40,7 @@ describe('createScopedStore', () => {
 
     const { result } = renderHook(
       () => useCounterTestState(scopedStore),
-      { wrapper: scopedStore.Provider },
+      { wrapper: makeWrapper(scopedStore) },
     )
 
     expect(result.current.count).toBe(0)
@@ -49,11 +57,11 @@ describe('createScopedStore', () => {
 
     const { result: first } = renderHook(
       () => useCounterTestState(scopedStore),
-      { wrapper: scopedStore.Provider },
+      { wrapper: makeWrapper(scopedStore) },
     )
     const { result: second } = renderHook(
       () => useCounterTestState(scopedStore),
-      { wrapper: scopedStore.Provider },
+      { wrapper: makeWrapper(scopedStore) },
     )
 
     act(() => {
