@@ -1,8 +1,10 @@
+import { getLocalTimeZone, today } from '@internationalized/date'
+
 import { FilingStatus } from '@schemas/taxEstimates/filingStatus'
 
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { type TaxScenario } from '@fixtures/taxEstimates/scenario/types'
-import { scaleScenario, settleAllQuarters, yearFactor } from '@fixtures/taxEstimates/scenario/utils'
+import { quarterDueDate, scaleScenario, settleAllQuarters, yearFactor } from '@fixtures/taxEstimates/scenario/utils'
 
 export const DEFAULT_SCENARIO: TaxScenario = {
   year: FIXTURE_YEAR,
@@ -34,6 +36,6 @@ export const DEFAULT_SCENARIO: TaxScenario = {
 export const makeTaxScenario = (overrides: Partial<TaxScenario> = {}): TaxScenario => {
   const year = overrides.year ?? DEFAULT_SCENARIO.year
   const scaled = scaleScenario(structuredClone(DEFAULT_SCENARIO), yearFactor(year))
-  const settled = year < new Date().getFullYear() ? settleAllQuarters(scaled) : scaled
+  const settled = quarterDueDate(year, 4).compare(today(getLocalTimeZone())) < 0 ? settleAllQuarters(scaled) : scaled
   return { ...settled, ...overrides }
 }
