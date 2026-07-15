@@ -30,11 +30,6 @@ export const matchesBoolean = <TItem>(get: (item: TItem) => boolean) =>
 
 type Comparable = number | Date | CalendarDate
 
-/*
- * Range params arrive as date-only strings covering the whole local day, so a
- * Date field compares against the bound's local start/end-of-day instant -
- * matching how the client serialized the bound in the first place.
- */
 export const matchesOnOrAfter = <TItem>(get: (item: TItem) => Comparable | null | undefined) =>
   whenPresent<TItem>((item, value) => {
     const itemValue = get(item)
