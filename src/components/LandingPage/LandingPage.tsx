@@ -189,7 +189,7 @@ export const LandingPage = ({
   )
 
   const RenderOffers = useMemo(() => (
-    <VStack gap={isMobile ? 'lg' : '2xl'} className='Layer__LandingPage--offers'>
+    <VStack gap={isMobile ? 'md' : 'xl'} className='Layer__LandingPage--offers'>
       <HStack align='center' className='Layer__LandingPage__offers-title-row'>
         <Heading size='md' align='center'>
           {interpolateTemplate(offeringSectionTitle, platform)}

@@ -72,7 +72,7 @@ body .calendly-overlay .calendly-popup {
   &:hover {
     border-color: var(--color-base-300);
     box-shadow: 0 12px 24px rgb(0 0 0 / 8%);
-    transform: translateY(-4px);
+    transform: translateY(-2px);
   }
 }
 
@@ -94,6 +94,7 @@ body .calendly-overlay .calendly-popup {
 
 .Layer__LandingPage__offers-title-row {
   justify-content: center;
+  padding-block-start: var(--spacing-lg);
 
   .Layer__UI__Heading {
     width: 100%;
