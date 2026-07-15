@@ -3,7 +3,7 @@ import type { TFunction } from 'i18next'
 
 import { translationKey } from '@utils/i18n/translationKey'
 import { type HeroContentConfig, type LandingPageCardConfig, type LandingPageConfig } from '@components/LandingPage/types'
-import { imagePartnerAccountingImage } from '@assets/images'
+import { imagePnlOverview } from '@assets/images'
 
 export type CoreValueProposition = {
   icon: ReactNode
@@ -126,7 +126,7 @@ export const buildDefaultHeroContentConfig = (t: TFunction): HeroContentConfig =
     heading2Desc: t(HERO_CONTENT_I18N.heading2Desc.i18nKey, HERO_CONTENT_I18N.heading2Desc.defaultValue),
   },
   mediaUrls: {
-    topOfFoldImage: imagePartnerAccountingImage,
+    topOfFoldImage: imagePnlOverview,
   },
   cta: {
     primary: {

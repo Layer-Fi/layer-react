@@ -49,8 +49,8 @@ export const LandingPage = ({
   const { isMobile } = useSizeClass()
   const [width] = useWindowSize()
 
-  // Track layout mode to re-trigger image animation when it changes
-  const isStackedLayout = width <= 1440
+  // Track layout mode to re-trigger image animation when it changes; must match the scss breakpoint
+  const isStackedLayout = width <= 1024
 
   const hasAccountingEnabled = availableOffers.includes('accounting')
   const hasBookkeepingEnabled = availableOffers.includes('bookkeeping')
@@ -188,8 +188,8 @@ export const LandingPage = ({
 
   const RenderOffers = useMemo(() => (
     <VStack gap={isMobile ? 'lg' : '2xl'} className='Layer__LandingPage--offers'>
-      <HStack align='center'>
-        <Heading size='md' align='center' style={{ maxWidth: '480px', margin: '0 auto' }}>
+      <HStack align='center' className='Layer__LandingPage__offers-title-row'>
+        <Heading size='md' align='center'>
           {interpolateTemplate(offeringSectionTitle, platform)}
         </Heading>
       </HStack>
