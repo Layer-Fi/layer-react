@@ -7,6 +7,7 @@ import { bookkeepingHandlers } from '@msw/api/businesses/[business-id]/bookkeepi
 import { callBookingsHandlers } from '@msw/api/businesses/[business-id]/call-bookings/handlers'
 import { catalogHandlers } from '@msw/api/businesses/[business-id]/catalog/handlers'
 import { categoriesHandlers } from '@msw/api/businesses/[business-id]/categories/handlers'
+import { categorizationRulesHandlers } from '@msw/api/businesses/[business-id]/categorization-rules/handlers'
 import { customAccountsHandlers } from '@msw/api/businesses/[business-id]/custom-accounts/handlers'
 import { customersHandlers } from '@msw/api/businesses/[business-id]/customers/handlers'
 import { externalAccountsHandlers } from '@msw/api/businesses/[business-id]/external-accounts/handlers'
@@ -30,6 +31,7 @@ export const businessHandlers: RequestHandler[] = [
   ...externalAccountsHandlers,
   ...plaidHandlers,
   ...categoriesHandlers,
+  ...categorizationRulesHandlers,
   ...customAccountsHandlers,
   ...customersHandlers,
   ...vendorsHandlers,
