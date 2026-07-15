@@ -65,7 +65,7 @@ export function buildDateStore({ initialRange, initialPreset }: BuildDateStoreOp
       activationDate?: Date,
     ): DateRangeWithPreset => {
       const resolvedDateRange = deriveDateRangeFromPreset(datePreset, activationDate)
-      // If the resolved date range is null, the business activation time is not yet loaded in the context, so we keep the current selection and noop
+      // No-op while the activation date is still loading
       if (resolvedDateRange === null) return { ...get() }
       return setDateRangeWithPreset(getDateRange({ mode: 'full', ...resolvedDateRange }), datePreset)
     }

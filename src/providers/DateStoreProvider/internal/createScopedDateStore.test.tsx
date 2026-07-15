@@ -204,10 +204,6 @@ describe('createScopedDateStore AllTime preset', () => {
       { wrapper: Wrapper },
     )
 
-    // While the business (activation date) loads, the Provider renders its
-    // fallback and does not render children, so the hook never runs. renderHook's
-    // `result` is a React.createRef() whose `current` starts as `null`, so it
-    // stays `null` (not `undefined`) until the store mounts.
     expect(result.current).toBeNull()
 
     await waitFor(() => expect(result.current).not.toBeNull())

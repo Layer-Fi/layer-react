@@ -15,10 +15,6 @@ export type CreateScopedDateStoreOptions = MakeDateStoreOptions & {
 }
 
 type ProviderProps = PropsWithChildren<{
-  /**
-   * Rendered while a business context-dependent preset (e.g. `AllTime`) waits for the
-   * business context to resolve.
-   */
   fallback?: ReactNode
 }>
 
@@ -36,10 +32,6 @@ export function createScopedDateStore({
 }: CreateScopedDateStoreOptions = {}) {
   const scopedStore = createScopedStore<DateStoreApi>({ storeName })
 
-  /**
-   * Deferred construction: the store is not created until its initial range can
-   * be fully resolved.
-   */
   function Provider({ children, fallback = null }: ProviderProps) {
     const initialRange = useDerivedInitialDateRange(initialDatePreset)
 
