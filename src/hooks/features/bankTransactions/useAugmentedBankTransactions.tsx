@@ -34,7 +34,7 @@ export function bankTransactionFiltersToHookOptions(
         : undefined
       : undefined,
     direction: filters?.direction?.length === 1
-      ? filters.direction[0] === Direction.CREDIT || filters.direction[0] === BankTransactionDirection.MoneyIn
+      ? filters.direction[0] === Direction.CREDIT || filters.direction[0] === BankTransactionDirection.Credit
         ? 'INFLOW'
         : 'OUTFLOW'
       : undefined,

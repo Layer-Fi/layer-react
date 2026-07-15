@@ -51,7 +51,7 @@ const deriveTransfer = (
 
   const transfer: BankTransaction = {
     ...transaction,
-    direction: outbound ? BankTransactionDirection.MoneyOut : BankTransactionDirection.MoneyIn,
+    direction: outbound ? BankTransactionDirection.Debit : BankTransactionDirection.Credit,
     counterpartyName: null,
     description: `ONLINE TRANSFER ${outbound ? 'TO' : 'FROM'} ${counterpartyAccount.toUpperCase()} XXXXXX${String(ref).slice(0, 4)}`,
     customer: null,
@@ -93,7 +93,7 @@ const deriveMerchantMatch = (
   transaction: BankTransaction,
   merchant: BankTransactionMerchant,
 ): BankTransaction => {
-  const isInflow = merchant.direction === BankTransactionDirection.MoneyIn
+  const isInflow = merchant.direction === BankTransactionDirection.Credit
   const details: MatchDetailsType = isInflow
     ? {
       type: 'Payout_Match',
@@ -204,8 +204,8 @@ export const deriveBankTransaction = (
     amount,
     counterpartyName: merchant.name,
     description: merchant.describe(ref),
-    customer: merchant.direction === BankTransactionDirection.MoneyIn ? transaction.customer : null,
-    vendor: merchant.direction === BankTransactionDirection.MoneyOut ? transaction.vendor : null,
+    customer: merchant.direction === BankTransactionDirection.Credit ? transaction.customer : null,
+    vendor: merchant.direction === BankTransactionDirection.Debit ? transaction.vendor : null,
   }
 
   // Splits need an alternate category for the second entry; merchants without

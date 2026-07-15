@@ -34,7 +34,7 @@ export const SourceDetailView = ({
           <EntryDetailField
             label={stringOverrides?.directionLabel || t('common:label.direction', 'Direction')}
           >
-            {source.direction === BankTransactionDirection.MoneyIn
+            {source.direction === BankTransactionDirection.Credit
               ? t('common:label.money_in', 'Money in')
               : t('common:label.money_out', 'Money out')}
           </EntryDetailField>

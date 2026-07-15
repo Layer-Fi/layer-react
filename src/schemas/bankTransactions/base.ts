@@ -1,26 +1,27 @@
 import { pipe, Schema } from 'effect'
 
 export enum BankTransactionDirection {
-  MoneyIn = 'MONEY_IN',
-  MoneyOut = 'MONEY_OUT',
+  Credit = 'CREDIT',
+  Debit = 'DEBIT',
 }
 
 /*
- * The API historically serialized `BankTransactionDirection` as CREDIT/DEBIT.
- * Accept both encodings until it fully switches to MONEY_IN/MONEY_OUT.
+ * The API is migrating `BankTransactionDirection` from CREDIT/DEBIT to
+ * MONEY_IN/MONEY_OUT. Accept both encodings; CREDIT/DEBIT stay canonical
+ * until the backend serializes the new values.
  */
 export const BankTransactionDirectionSchema = Schema.transform(
-  Schema.Literal('MONEY_IN', 'CREDIT', 'MONEY_OUT', 'DEBIT'),
+  Schema.Literal('CREDIT', 'MONEY_IN', 'DEBIT', 'MONEY_OUT'),
   Schema.typeSchema(Schema.Enums(BankTransactionDirection)),
   {
     decode: (input) => {
       switch (input) {
-        case 'MONEY_IN':
         case 'CREDIT':
-          return BankTransactionDirection.MoneyIn
-        case 'MONEY_OUT':
+        case 'MONEY_IN':
+          return BankTransactionDirection.Credit
         case 'DEBIT':
-          return BankTransactionDirection.MoneyOut
+        case 'MONEY_OUT':
+          return BankTransactionDirection.Debit
       }
     },
     encode: input => input,

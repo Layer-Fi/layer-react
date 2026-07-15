@@ -134,7 +134,7 @@ export const ledgerEntries = [
       "account_name": "Business Checking",
       "date": "2025-03-12",
       "amount": 8250,
-      "direction": "MONEY_OUT",
+      "direction": "DEBIT",
       "counterparty": "Staples",
       "description": "Office supplies"
     },

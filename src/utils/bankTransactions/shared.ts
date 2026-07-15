@@ -51,7 +51,7 @@ export const hasMatch = (bankTransaction?: BankTransaction) => {
 }
 
 export const isMoneyIn = ({ direction }: Pick<BankTransaction, 'direction'>) =>
-  direction === BankTransactionDirection.MoneyIn
+  direction === BankTransactionDirection.Credit
 
 export const countTransactionsToReview = ({
   transactions,

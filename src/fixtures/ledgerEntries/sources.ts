@@ -39,7 +39,7 @@ export const ledgerEntrySourceExamples: readonly ExampleSource[] = [
     accountName: 'Business Checking',
     date: '2025-03-12',
     amount: 8250,
-    direction: BankTransactionDirection.MoneyOut,
+    direction: BankTransactionDirection.Debit,
     counterparty: 'Staples',
     description: 'Office supplies',
   }),

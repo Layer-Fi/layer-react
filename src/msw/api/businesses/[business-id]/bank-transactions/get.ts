@@ -34,8 +34,8 @@ const filterBankTransactions = createListFilter<BankTransaction>({
   direction: (transaction, value) =>
     value == null || value === ''
     || transaction.direction === (value === 'INFLOW'
-      ? BankTransactionDirection.MoneyIn
-      : BankTransactionDirection.MoneyOut),
+      ? BankTransactionDirection.Credit
+      : BankTransactionDirection.Debit),
   categorized: matchesBoolean(transaction =>
     CATEGORIZED_STATUSES.includes(transaction.categorizationStatus)),
   start_date: matchesOnOrAfter(transaction => transaction.date),
