@@ -29,8 +29,6 @@ export type TaxScenario = {
     count: number
     moneyIn: number
     moneyOut: number
-    earliestAt: Date | null
-    latestAt: Date | null
   }
 }
 

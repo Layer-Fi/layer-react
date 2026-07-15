@@ -56,8 +56,17 @@ export const runningBalances = (owed: number[], paid: number[]): QuarterBalance[
 
 export const quarterLabel = (quarter: number) => `Q${quarter}`
 
-export const rebaseToYear = (date: Date | null, year: number): Date | null =>
-  date === null ? null : new Date(year, date.getMonth(), date.getDate())
+const QUARTER_MONTH_SPANS: Record<number, [number, number]> = {
+  1: [0, 2],
+  2: [3, 4],
+  3: [5, 7],
+  4: [8, 11],
+}
+
+export const quarterUncategorizedRange = (year: number, quarter: number): { earliest: Date, latest: Date } => {
+  const [startMonth, endMonth] = QUARTER_MONTH_SPANS[quarter] ?? QUARTER_MONTH_SPANS[4]
+  return { earliest: new Date(year, startMonth, 3), latest: new Date(year, endMonth, 18) }
+}
 
 const ANNUAL_GROWTH_RATE = 1.12
 

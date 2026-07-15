@@ -18,6 +18,7 @@ import {
   projectedTaxesOwed,
   quarterDueDate,
   quarterLabel,
+  quarterUncategorizedRange,
   runningBalances,
   stateOwedRemaining,
   statePaid,
@@ -157,7 +158,10 @@ export const deriveTaxBanner = (scenario: TaxScenario): TaxEstimatesBanner => {
   const now = today(getLocalTimeZone())
   const nextDueIndex = scenario.quarters.findIndex(quarter => quarterDueDate(scenario.year, quarter.quarter).compare(now) >= 0)
   const currentQuarterIndex = nextDueIndex === -1 ? scenario.quarters.length - 1 : nextDueIndex
-  const { earliestAt, latestAt } = scenario.uncategorized
+  const hasUncategorized = scenario.uncategorized.count > 0
+  const currentQuarterRange = quarterUncategorizedRange(scenario.year, scenario.quarters[currentQuarterIndex].quarter)
+  const earliestAt = hasUncategorized ? currentQuarterRange.earliest : null
+  const latestAt = hasUncategorized ? currentQuarterRange.latest : null
 
   const quarters = scenario.quarters.map((quarter, index): TaxEstimatesBannerQuarter => {
     const dueDate = quarterDueDate(scenario.year, quarter.quarter)
