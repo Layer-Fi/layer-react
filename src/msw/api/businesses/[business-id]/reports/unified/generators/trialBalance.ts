@@ -1,0 +1,102 @@
+import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
+import { ReportControl } from '@schemas/reports/reportConfig'
+import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
+
+import {
+  accountsOfTypes,
+  buildAccountForest,
+  collectLeafAccounts,
+} from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
+import {
+  accumulatedMagnitudeCents,
+  isDebitNormal,
+  OPENING_BALANCE_EQUITY_STABLE_NAME,
+} from '@msw/api/businesses/[business-id]/reports/unified/generators/balances'
+import {
+  currencyCell,
+  emptyCell,
+  linesReportConfig,
+  MOCK_REPORT_BUSINESS_ID,
+  numericColumn,
+  parseEffectiveDateParam,
+  rowHeaderColumn,
+  textCell,
+} from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
+
+const ACCOUNT_COLUMN_KEY = 'account'
+const DEBIT_COLUMN_KEY = 'debit'
+const CREDIT_COLUMN_KEY = 'credit'
+
+const LINES_ROUTE = 'trial-balance/lines'
+const LINES_CONTROLS = [ReportControl.Date] as const
+
+const ALL_TYPES = [
+  LedgerAccountType.Asset,
+  LedgerAccountType.Liability,
+  LedgerAccountType.Equity,
+  LedgerAccountType.Revenue,
+  LedgerAccountType.Expense,
+] as const
+
+const sideCells = (magnitude: number, onDebit: boolean) => ({
+  [DEBIT_COLUMN_KEY]: onDebit ? currencyCell(magnitude) : emptyCell(),
+  [CREDIT_COLUMN_KEY]: onDebit ? emptyCell() : currencyCell(magnitude),
+})
+
+export const generateTrialBalance = (params: URLSearchParams): UnifiedReport => {
+  const effectiveDate = parseEffectiveDateParam(params)
+  const leaves = collectLeafAccounts(buildAccountForest(accountsOfTypes(ALL_TYPES)))
+
+  const openingBalanceEquity = leaves.find(a => a.stableName === OPENING_BALANCE_EQUITY_STABLE_NAME)
+  const scored = leaves
+    .filter(account => account !== openingBalanceEquity)
+    .map(account => ({ account, magnitude: accumulatedMagnitudeCents(account, effectiveDate, params) }))
+
+  const debitSum = scored.filter(({ account }) => isDebitNormal(account))
+    .reduce((total, { magnitude }) => total + magnitude, 0)
+  const creditSum = scored.filter(({ account }) => !isDebitNormal(account))
+    .reduce((total, { magnitude }) => total + magnitude, 0)
+
+  // Opening balance equity plugs the report so total debits equal total credits.
+  const plug = debitSum - creditSum
+  const plugOnDebit = plug < 0
+
+  const accountRow = (account: (typeof scored)[number]['account'], magnitude: number, onDebit: boolean): UnifiedReportRow => ({
+    rowKey: account.accountId,
+    cells: {
+      [ACCOUNT_COLUMN_KEY]: textCell(account.name, {
+        reportConfig: linesReportConfig(LINES_ROUTE, account, LINES_CONTROLS),
+      }),
+      ...sideCells(magnitude, onDebit),
+    },
+  })
+
+  const rows: UnifiedReportRow[] = scored.map(({ account, magnitude }) =>
+    accountRow(account, magnitude, isDebitNormal(account)))
+
+  if (openingBalanceEquity) {
+    rows.push(accountRow(openingBalanceEquity, Math.abs(plug), plugOnDebit))
+  }
+
+  const totalDebit = debitSum + (plugOnDebit ? Math.abs(plug) : 0)
+  const totalCredit = creditSum + (plugOnDebit ? 0 : Math.abs(plug))
+
+  rows.push({
+    rowKey: 'total_trial_balance',
+    cells: {
+      [ACCOUNT_COLUMN_KEY]: textCell('Total', { bold: true }),
+      [DEBIT_COLUMN_KEY]: currencyCell(totalDebit, { bold: true }),
+      [CREDIT_COLUMN_KEY]: currencyCell(totalCredit, { bold: true }),
+    },
+  })
+
+  return {
+    businessId: MOCK_REPORT_BUSINESS_ID,
+    columns: [
+      rowHeaderColumn(ACCOUNT_COLUMN_KEY, 'Account'),
+      numericColumn(DEBIT_COLUMN_KEY, 'Debit'),
+      numericColumn(CREDIT_COLUMN_KEY, 'Credit'),
+    ],
+    rows,
+  }
+}
