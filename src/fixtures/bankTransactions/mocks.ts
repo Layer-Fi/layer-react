@@ -2,13 +2,13 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus, InputStrategy } from '@schemas/bankTransactions/bankTransaction'
 import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 
+import { makeBankAccount } from '@fixtures/bankAccounts/mocks'
 import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'
 import { toAccountCategorization } from '@fixtures/bankTransactions/derive'
 import { makeBusiness } from '@fixtures/business/mocks'
-import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 
-const account = bankAccounts[0]
+const account = makeBankAccount()
 
 const baseBankTransaction: BankTransaction = {
   id: '0000000f-0000-4000-8000-000000000001',
