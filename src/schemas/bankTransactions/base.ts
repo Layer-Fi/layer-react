@@ -4,7 +4,33 @@ export enum BankTransactionDirection {
   Credit = 'CREDIT',
   Debit = 'DEBIT',
 }
-export const BankTransactionDirectionSchema = Schema.Enums(BankTransactionDirection)
+
+/*
+ * The API is migrating `BankTransactionDirection` from CREDIT/DEBIT to
+ * MONEY_IN/MONEY_OUT. Accept both encodings; CREDIT/DEBIT stay canonical
+ * until the backend serializes the new values.
+ */
+export const BankTransactionDirectionSchema = Schema.transform(
+  Schema.Literal('CREDIT', 'MONEY_IN', 'DEBIT', 'MONEY_OUT'),
+  Schema.typeSchema(Schema.Enums(BankTransactionDirection)),
+  {
+    decode: (input) => {
+      switch (input) {
+        case 'CREDIT':
+        case 'MONEY_IN':
+          return BankTransactionDirection.Credit
+        case 'DEBIT':
+        case 'MONEY_OUT':
+          return BankTransactionDirection.Debit
+      }
+    },
+    encode: input => input,
+  },
+)
+
+export type RawBankTransactionDirection = typeof BankTransactionDirectionSchema.Encoded
+
+export const decodeBankTransactionDirection = Schema.decodeSync(BankTransactionDirectionSchema)
 
 export const MinimalBankTransactionSchema = Schema.Struct({
   id: Schema.String,
