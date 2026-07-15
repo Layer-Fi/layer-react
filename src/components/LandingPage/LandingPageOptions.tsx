@@ -85,7 +85,7 @@ export const LandingPageOffer = ({
         </VStack>
 
         <HStack justify='space-between' align='end'>
-          <VStack gap='2xs'>
+          <VStack gap='4xs'>
             {config.showStartingAtLabel && <Span size='sm' variant='subtle'>{t('landingPage:label.starting_at', 'Starting at')}</Span>}
             <HStack align='baseline'>
               <Span size='xl' weight='bold'>{config.stringOverrides.priceAmount}</Span>
