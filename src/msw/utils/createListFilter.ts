@@ -1,4 +1,5 @@
 import { CalendarDate, parseDate } from '@internationalized/date'
+import { endOfDay, parseISO, startOfDay } from 'date-fns'
 
 type ParamPredicate<TItem> = (item: TItem, value: string | null) => boolean
 
@@ -29,28 +30,31 @@ export const matchesBoolean = <TItem>(get: (item: TItem) => boolean) =>
 
 type Comparable = number | Date | CalendarDate
 
-// Dates compare at day granularity - range params arrive as date-only strings.
-const compareToParam = (itemValue: Comparable, value: string): number => {
-  if (itemValue instanceof CalendarDate) return itemValue.compare(parseDate(value))
-
-  if (itemValue instanceof Date) {
-    const day = itemValue.toISOString().slice(0, 10)
-    return day < value ? -1 : day > value ? 1 : 0
-  }
-
-  return itemValue - Number(value)
-}
-
+/*
+ * Range params arrive as date-only strings covering the whole local day, so a
+ * Date field compares against the bound's local start/end-of-day instant -
+ * matching how the client serialized the bound in the first place.
+ */
 export const matchesOnOrAfter = <TItem>(get: (item: TItem) => Comparable | null | undefined) =>
   whenPresent<TItem>((item, value) => {
     const itemValue = get(item)
-    return itemValue != null && compareToParam(itemValue, value) >= 0
+
+    if (itemValue == null) return false
+    if (itemValue instanceof CalendarDate) return itemValue.compare(parseDate(value)) >= 0
+    if (itemValue instanceof Date) return itemValue >= startOfDay(parseISO(value))
+
+    return itemValue >= Number(value)
   })
 
 export const matchesOnOrBefore = <TItem>(get: (item: TItem) => Comparable | null | undefined) =>
   whenPresent<TItem>((item, value) => {
     const itemValue = get(item)
-    return itemValue != null && compareToParam(itemValue, value) <= 0
+
+    if (itemValue == null) return false
+    if (itemValue instanceof CalendarDate) return itemValue.compare(parseDate(value)) <= 0
+    if (itemValue instanceof Date) return itemValue <= endOfDay(parseISO(value))
+
+    return itemValue <= Number(value)
   })
 
 /* Items matching `isGated` are only included when the query flag is 'true'. */
