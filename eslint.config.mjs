@@ -37,7 +37,6 @@ export default tsEslint.config(
         projectService: {
           allowDefaultProject: [
             '.storybook/main.ts',
-            '.storybook/mocks/react-calendly.tsx',
             '.storybook/mocks/react-plaid-link.ts',
             '.storybook/mocks/systemDate.ts',
             '.storybook/preview.tsx',

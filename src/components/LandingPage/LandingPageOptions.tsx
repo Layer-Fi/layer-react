@@ -84,7 +84,7 @@ export const LandingPageOffer = ({
           </VStack>
         </VStack>
 
-        <HStack justify='space-between' align='end'>
+        <HStack justify='space-between' align='end' className='Layer__LandingPage-options__footer'>
           <VStack gap='4xs'>
             {config.showStartingAtLabel && <Span size='sm' variant='subtle'>{t('landingPage:label.starting_at', 'Starting at')}</Span>}
             <HStack align='baseline'>
