@@ -2,6 +2,7 @@ import { eachMonthOfInterval, format } from 'date-fns'
 
 import { Pinning, type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
+import { currentYearFallback } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'
 import {
   currencyCell,
   decimalCell,
@@ -16,11 +17,6 @@ import {
 import { hashString } from '@fixtures/unifiedReports/deterministicAmounts'
 
 const MILEAGE_RATE_CENTS = 67
-
-const currentYearFallback = (): ReportDateRange => {
-  const now = new Date()
-  return { startDate: new Date(now.getFullYear(), 0, 1), endDate: new Date(now.getFullYear(), 11, 31) }
-}
 
 const monthsInRange = (range: ReportDateRange) =>
   range.startDate > range.endDate ? [] : eachMonthOfInterval({ start: range.startDate, end: range.endDate })

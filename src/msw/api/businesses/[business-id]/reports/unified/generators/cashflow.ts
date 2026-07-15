@@ -1,12 +1,12 @@
 import { Pinning, type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import { netIncomeInRange } from '@msw/api/businesses/[business-id]/reports/unified/generators/balances'
+import { currentYearFallback } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'
 import {
   currencyCell,
   MOCK_REPORT_BUSINESS_ID,
   numericColumn,
   parseDateRangeParams,
-  type ReportDateRange,
   rowHeaderColumn,
   textCell,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
@@ -14,11 +14,6 @@ import { sumAmountCentsInRange } from '@fixtures/unifiedReports/deterministicAmo
 
 const NAME_COLUMN_KEY = 'name'
 const AMOUNT_COLUMN_KEY = 'amount'
-
-const currentYearFallback = (): ReportDateRange => {
-  const now = new Date()
-  return { startDate: new Date(now.getFullYear(), 0, 1), endDate: new Date(now.getFullYear(), 11, 31) }
-}
 
 const lineRow = (rowKey: string, label: string, amount: number): UnifiedReportRow => ({
   rowKey,

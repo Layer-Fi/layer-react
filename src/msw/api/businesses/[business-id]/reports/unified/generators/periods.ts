@@ -1,4 +1,4 @@
-import { eachMonthOfInterval, format } from 'date-fns'
+import { eachMonthOfInterval, endOfMonth, format, max, min, startOfMonth } from 'date-fns'
 
 import { Pinning, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
@@ -26,11 +26,12 @@ const monthColumnKey = (date: Date) => `month_${format(date, 'yyyy_MM')}`
 export const resolvePeriods = (range: ReportDateRange, groupBy: string | null): PnlPeriod[] => {
   if (groupBy !== 'MONTH') return [{ columnKey: TOTAL_COLUMN_KEY, range }]
 
-  return eachMonthOfInterval({ start: range.startDate, end: range.endDate }).map(monthStart => ({
-    columnKey: monthColumnKey(monthStart),
+  // Each month column spans that whole calendar month, clipped to the selected range at both ends.
+  return eachMonthOfInterval({ start: range.startDate, end: range.endDate }).map(month => ({
+    columnKey: monthColumnKey(month),
     range: {
-      startDate: monthStart,
-      endDate: new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0),
+      startDate: max([startOfMonth(month), range.startDate]),
+      endDate: min([endOfMonth(month), range.endDate]),
     },
   }))
 }
