@@ -26,19 +26,33 @@ export const post = createMockEndpoint<TagValueDefinition, ReturnType<typeof toR
     const dimensionId = String(params.dimensionId)
     const { value, displayName } = decodeCreateTagValueDefinitionBody(await readRequestJson(request))
 
+    // Seed a fallback for unknown ids so the created value is always readable back.
+    // The schema requires a UUID id, so the fallback gets a fresh one and keeps
+    // the requested id as its key.
+    const dimension = tagDimensionStore.findById(dimensionId) ?? {
+      id: crypto.randomUUID(),
+      key: dimensionId,
+      displayName: null,
+      strictness: 'BALANCING' as const,
+      definedValues: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      userVisible: true,
+    }
+
     const valueDefinition: TagValueDefinition = {
       id: crypto.randomUUID(),
-      key: tagDimensionStore.findById(dimensionId)?.key ?? dimensionId,
+      key: dimension.key,
       value,
       displayName: displayName ?? null,
       archivedAt: null,
     }
 
-    tagDimensionStore.patchById(dimensionId, dimension => ({
+    tagDimensionStore.save({
       ...dimension,
       definedValues: [...dimension.definedValues, valueDefinition],
       updatedAt: new Date(),
-    }))
+    })
 
     return toResponse(valueDefinition)
   },

@@ -83,23 +83,24 @@ const parseCsv = (text: string): ParseCsvResponseEncoded => {
     const isDescriptionValid = rawDescription.length > 0
     const isRowValid = isDateValid && isAmountValid && isDescriptionValid
 
-    const amountCents = isAmountValid ? Math.round(Math.abs(parsedAmount) * 100) : null
+    const signedAmountCents = isAmountValid ? Math.round(parsedAmount * 100) : null
 
     preview.push({
       date: cell(rawDate, isDateValid ? rawDate : null, isDateValid),
       description: cell(rawDescription, isDescriptionValid ? rawDescription : null, isDescriptionValid),
-      amount: cell(rawAmount, amountCents, isAmountValid),
+      amount: cell(rawAmount, signedAmountCents, isAmountValid),
       external_id: optionalCell(fields[indices.external_id]),
       reference_number: optionalCell(fields[indices.reference_number]),
       row: index + 1,
       is_valid: isRowValid,
     })
 
-    if (isRowValid && amountCents != null) {
+    if (isRowValid && signedAmountCents != null) {
       transactions.push({
         external_id: fields[indices.external_id] || null,
-        amount: amountCents,
-        direction: parsedAmount < 0 ? 'CREDIT' : 'DEBIT',
+        amount: Math.abs(signedAmountCents),
+        // Negative CSV amounts are outflows (purchases) => DEBIT; positive are inflows => CREDIT.
+        direction: signedAmountCents < 0 ? 'DEBIT' : 'CREDIT',
         date: rawDate,
         description: rawDescription,
         reference_number: fields[indices.reference_number] || null,
@@ -108,11 +109,12 @@ const parseCsv = (text: string): ParseCsvResponseEncoded => {
   })
 
   const invalidCount = preview.filter(row => !row.is_valid).length
+  const isValid = preview.length > 0 && invalidCount === 0
 
   return {
-    is_valid: transactions.length > 0,
+    is_valid: isValid,
     new_transactions_preview: preview,
-    new_transactions_request: transactions.length > 0 ? { transactions } : null,
+    new_transactions_request: isValid ? { transactions } : null,
     invalid_transactions_count: invalidCount,
     total_transactions_count: preview.length,
   }

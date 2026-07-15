@@ -31,7 +31,9 @@ export const patchTaskInStore = (
       return {
         ...existing,
         tasks,
-        status: allTasksComplete ? BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER : existing.status,
+        status: allTasksComplete
+          ? BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER
+          : BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER,
       }
     })
   })

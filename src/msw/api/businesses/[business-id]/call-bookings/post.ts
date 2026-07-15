@@ -20,15 +20,22 @@ const HOUR_MS = 60 * 60 * 1000
 export const post = createMockEndpoint({
   method: 'post',
   path: '*/v1/businesses/:businessId/call-bookings',
-  resolve: async ({ override, request }: { override?: CallBooking, request: Request }) => {
+  resolve: async (
+    { override, request, params }:
+    { override?: CallBooking, request: Request, params: { businessId?: string | readonly string[] } },
+  ) => {
     if (override) return encodeCallBookingItemResponse({ data: override })
 
     const { externalId, purpose, callType } = decodeCreateCallBookingBody(await readRequestJson(request))
 
+    // The schema encodes businessId as a UUID; fall back for non-UUID test params.
+    const businessId = String(params.businessId)
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(businessId)
+
     const now = new Date()
     const booking: CallBooking = {
       id: crypto.randomUUID(),
-      businessId: makeBusiness().id,
+      businessId: isUuid ? businessId : makeBusiness().id,
       externalId,
       purpose,
       state: CallBookingState.SCHEDULED,
