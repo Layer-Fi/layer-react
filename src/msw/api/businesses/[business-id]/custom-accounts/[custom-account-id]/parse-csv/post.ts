@@ -1,3 +1,4 @@
+import { Direction } from '@internal-types/general'
 import { type RawCustomTransaction } from '@schemas/customAccounts'
 
 import { apiData } from '@msw/utils/apiResponse'
@@ -100,11 +101,11 @@ const parseCsv = (text: string): ParseCsvResponseEncoded => {
         external_id: fields[indices.external_id] || null,
         amount: Math.abs(signedAmountCents),
         // Negative CSV amounts are outflows (purchases) => DEBIT; positive are inflows => CREDIT.
-        direction: signedAmountCents < 0 ? 'DEBIT' : 'CREDIT',
+        direction: signedAmountCents < 0 ? Direction.DEBIT : Direction.CREDIT,
         date: rawDate,
         description: rawDescription,
         reference_number: fields[indices.reference_number] || null,
-      } as RawCustomTransaction)
+      })
     }
   })
 

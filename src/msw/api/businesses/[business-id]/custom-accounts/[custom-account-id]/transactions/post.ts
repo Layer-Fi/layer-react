@@ -36,7 +36,7 @@ export const post = createMockEndpoint({
         sourceAccountId: customAccountId,
         sourceTransactionId: transaction.externalId ?? `custom-txn-${crypto.randomUUID()}`,
         date: new Date(transaction.date),
-        direction: transaction.direction === Direction.CREDIT
+        direction: String(transaction.direction) === String(Direction.CREDIT)
           ? BankTransactionDirection.Credit
           : BankTransactionDirection.Debit,
         amount: transaction.amount,
