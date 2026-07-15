@@ -2,7 +2,7 @@ import { createStore } from 'zustand'
 
 import type { DateRange } from '@utils/date/dateRange'
 import { type DatePreset, deriveDateRangeFromPreset, derivePresetFromDateRange, type SelectableDatePreset } from '@utils/date/dateRangePresets'
-import { correctDateRange, getDateRange } from '@providers/DateStoreProvider/internal/dateStoreUtils'
+import { getDateRange, maybeInvertDateRange } from '@providers/DateStoreProvider/internal/dateStoreUtils'
 import type { DateRangeWithPreset, DateStore } from '@providers/DateStoreProvider/internal/types'
 
 export type MakeDateStoreOptions = {
@@ -27,7 +27,7 @@ export function buildDateStore({ initialRange, initialPreset }: BuildDateStoreOp
     }
 
     const setDateRange = ({ startDate, endDate, activationDate }: { startDate: Date, endDate: Date, activationDate?: Date }): DateRangeWithPreset => {
-      const dateRangeToApply = getDateRange({ mode: 'full', ...correctDateRange({ startDate, endDate }) })
+      const dateRangeToApply = getDateRange({ mode: 'full', ...maybeInvertDateRange({ startDate, endDate }) })
       return setDateRangeWithDerivedPreset(dateRangeToApply, activationDate)
     }
 
