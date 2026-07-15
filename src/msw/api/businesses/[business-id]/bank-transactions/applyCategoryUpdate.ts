@@ -37,6 +37,8 @@ export const applyCategoryUpdate = (
         displayName: 'Split',
         entries: update.entries.map(toSplitEntry),
       },
+      // Splits carry per-entry tax codes, so the transaction-level one is cleared.
+      taxCode: null,
       categorizationFlow: null,
       match: null,
       suggestedMatches: [],
