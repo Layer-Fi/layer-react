@@ -16,12 +16,10 @@ export type DateSelectionMode = 'full' | 'month' | 'year'
 
 export type DateRange = { startDate: Date, endDate: Date }
 
-/** Exact-timestamp equality — contrast {@link isSameCalendarDayRange}. */
 export function isSameDateRange(a: DateRange, b: DateRange) {
   return isEqual(a.startDate, b.startDate) && isEqual(a.endDate, b.endDate)
 }
 
-/** Equality ignoring time-of-day — for matching a user-picked range against a preset's canonical range. */
 export function isSameCalendarDayRange(a: DateRange, b: DateRange) {
   return !!a.startDate && !!b.startDate && !!a.endDate && !!b.endDate
     && isEqual(startOfDay(a.startDate), startOfDay(b.startDate))
