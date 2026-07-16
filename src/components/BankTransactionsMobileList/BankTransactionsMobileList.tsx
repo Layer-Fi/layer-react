@@ -6,6 +6,7 @@ import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bank
 import { useBulkSelectionActions } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useMobileListBulkSelection } from '@providers/BulkSelectionStore/useMobileListBulkSelection'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { MobileList } from '@ui/MobileList/MobileList'
 import { useMobileListExpansion } from '@ui/MobileList/useMobileListExpansion'
 import { VStack } from '@ui/Stack/Stack'
@@ -86,9 +87,10 @@ const BankTransactionsMobileListContent = ({
   const onRemoveItem = useCallback(
     (bankTransaction: BankTransaction) => {
       removeAfterCategorize([bankTransaction.id])
+      close(bankTransaction.id)
       openNext(bankTransaction.id)
     },
-    [removeAfterCategorize, openNext],
+    [removeAfterCategorize, close, openNext],
   )
 
   const renderFooter = useCallback(
@@ -140,10 +142,18 @@ const BankTransactionsMobileListContent = ({
   )
 }
 
-export const BankTransactionsMobileList = () => (
-  <BankTransactionsPaginatedList>
-    {displayedTransactions => (
-      <BankTransactionsMobileListContent bankTransactions={displayedTransactions} />
-    )}
-  </BankTransactionsPaginatedList>
-)
+export const BankTransactionsMobileList = () => {
+  const { filters: { categorizationStatus } } = useBankTransactionsFiltersContext()
+
+  return (
+    <BankTransactionsPaginatedList>
+      {displayedTransactions => (
+        <BankTransactionsMobileListContent
+          // Remount on tab change so expansion and bulk-mode state reset per tab
+          key={categorizationStatus}
+          bankTransactions={displayedTransactions}
+        />
+      )}
+    </BankTransactionsPaginatedList>
+  )
+}
