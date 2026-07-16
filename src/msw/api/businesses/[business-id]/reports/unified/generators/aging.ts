@@ -1,16 +1,10 @@
 import { differenceInDays } from 'date-fns'
 
-import { type UnifiedReport, type UnifiedReportCell, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
+import { type UnifiedReport } from '@schemas/reports/unifiedReport'
 
 import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
-import {
-  currencyCell,
-  MOCK_REPORT_BUSINESS_ID,
-  numericColumn,
-  parseEffectiveDateParam,
-  rowHeaderColumn,
-  textCell,
-} from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
+import { parseEffectiveDateParam } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
+import { generateTableReport } from '@msw/api/businesses/[business-id]/reports/unified/generators/tableReport'
 import { allBills } from '@fixtures/bills/mocks'
 
 const BUCKETS = [
@@ -19,8 +13,6 @@ const BUCKETS = [
   { key: 'days_61_90', label: '61–90 days', max: 90 },
   { key: 'days_over_90', label: '90+ days', max: Infinity },
 ] as const
-
-const TOTAL_COLUMN_KEY = 'total'
 
 type AgingItem = { entityName: string, dueAt: Date, amountCents: number }
 
@@ -42,43 +34,28 @@ const buildAgingReport = (
     byEntity.set(item.entityName, amounts)
   })
 
-  const columnTotals = BUCKETS.map(() => 0)
-
-  const rowFor = (entityName: string, amounts: readonly number[]): UnifiedReportRow => {
-    const cells: Record<string, UnifiedReportCell> = { [entityColumnKey]: textCell(entityName) }
-    let rowTotal = 0
-
-    BUCKETS.forEach((bucket, index) => {
-      cells[bucket.key] = currencyCell(amounts[index])
-      rowTotal += amounts[index]
-      columnTotals[index] += amounts[index]
-    })
-
-    cells[TOTAL_COLUMN_KEY] = currencyCell(rowTotal)
-    return { rowKey: entityName, cells }
-  }
-
-  const rows: UnifiedReportRow[] = [...byEntity.entries()]
+  const entities = [...byEntity.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([entityName, amounts]) => rowFor(entityName, amounts))
+    .map(([entityName, amounts]) => ({ entityName, amounts }))
 
-  const totalCells: Record<string, UnifiedReportCell> = { [entityColumnKey]: textCell('Total Outstanding', { bold: true }) }
-  BUCKETS.forEach((bucket, index) => {
-    totalCells[bucket.key] = currencyCell(columnTotals[index], { bold: true })
-  })
-  totalCells[TOTAL_COLUMN_KEY] = currencyCell(columnTotals.reduce((sum, value) => sum + value, 0), { bold: true })
-
-  rows.push({ rowKey: `total_${entityColumnKey}_aging`, cells: totalCells })
-
-  return {
-    businessId: MOCK_REPORT_BUSINESS_ID,
-    columns: [
-      rowHeaderColumn(entityColumnKey, entityColumnLabel),
-      ...BUCKETS.map(bucket => numericColumn(bucket.key, bucket.label)),
-      numericColumn(TOTAL_COLUMN_KEY, 'Total'),
+  return generateTableReport({
+    rowHeader: { columnKey: entityColumnKey, displayName: entityColumnLabel, label: ({ entityName }) => entityName },
+    rowKey: ({ entityName }) => entityName,
+    items: entities,
+    valueColumns: [
+      ...BUCKETS.map((bucket, index) => ({
+        columnKey: bucket.key,
+        displayName: bucket.label,
+        value: ({ amounts }: (typeof entities)[number]) => amounts[index],
+      })),
+      {
+        columnKey: 'total',
+        displayName: 'Total',
+        value: ({ amounts }) => amounts.reduce((sum, value) => sum + value, 0),
+      },
     ],
-    rows,
-  }
+    total: { rowKey: `total_${entityColumnKey}_aging`, label: 'Total Outstanding' },
+  })
 }
 
 export const generateArAging = (params: URLSearchParams): UnifiedReport => {

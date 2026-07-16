@@ -3,32 +3,28 @@ import { subDays, subMonths } from 'date-fns'
 import { Pinning, type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import { netIncomeInRange } from '@msw/api/businesses/[business-id]/reports/unified/generators/balances'
-import { currentYearFallback } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'
+import { reportRangeFromParams } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'
 import {
-  currencyCell,
-  MOCK_REPORT_BUSINESS_ID,
+  labeledCurrencyRowFor,
   numericColumn,
-  parseDateRangeParams,
   rowHeaderColumn,
-  textCell,
+  unifiedReport,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 import { sumAmountCentsInRange } from '@fixtures/unifiedReports/deterministicAmounts'
 
 const NAME_COLUMN_KEY = 'name'
 const AMOUNT_COLUMN_KEY = 'amount'
 
-const lineRow = (rowKey: string, label: string, amount: number): UnifiedReportRow => ({
-  rowKey,
-  cells: { [NAME_COLUMN_KEY]: textCell(label), [AMOUNT_COLUMN_KEY]: currencyCell(amount) },
-})
+const cashflowRow = labeledCurrencyRowFor(NAME_COLUMN_KEY, AMOUNT_COLUMN_KEY)
 
-const totalRow = (rowKey: string, label: string, amount: number): UnifiedReportRow => ({
-  rowKey,
-  cells: { [NAME_COLUMN_KEY]: textCell(label, { bold: true }), [AMOUNT_COLUMN_KEY]: currencyCell(amount, { bold: true }) },
-})
+const lineRow = (rowKey: string, label: string, amount: number) =>
+  cashflowRow(rowKey, label, amount)
+
+const totalRow = (rowKey: string, label: string, amount: number) =>
+  cashflowRow(rowKey, label, amount, { bold: true })
 
 export const generateCashflow = (params: URLSearchParams): UnifiedReport => {
-  const range = parseDateRangeParams(params, currentYearFallback())
+  const range = reportRangeFromParams(params)
   const flow = (key: string, magnitude: number) =>
     sumAmountCentsInRange(key, range.startDate, range.endDate, { magnitude })
 
@@ -67,12 +63,8 @@ export const generateCashflow = (params: URLSearchParams): UnifiedReport => {
     totalRow('cash_at_end', 'Cash at End of Period', cashAtEnd),
   ]
 
-  return {
-    businessId: MOCK_REPORT_BUSINESS_ID,
-    columns: [
-      rowHeaderColumn(NAME_COLUMN_KEY, 'Cash Flow'),
-      numericColumn(AMOUNT_COLUMN_KEY, 'Amount', Pinning.Right),
-    ],
+  return unifiedReport(
+    [rowHeaderColumn(NAME_COLUMN_KEY, 'Cash Flow'), numericColumn(AMOUNT_COLUMN_KEY, 'Amount', Pinning.Right)],
     rows,
-  }
+  )
 }
