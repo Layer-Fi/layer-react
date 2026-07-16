@@ -1,4 +1,4 @@
-import { fromDate, getLocalTimeZone } from '@internationalized/date'
+import { fromDate, toCalendarDate } from '@internationalized/date'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { makeAccountId, makeStableName } from '@schemas/accountIdentifier'
@@ -7,7 +7,6 @@ import type { Categorization, Classification } from '@schemas/categorization'
 import { makeExclusion } from '@schemas/categorization'
 import type { RecordCustomTransaction } from '@schemas/customAccounts'
 import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents } from '@schemas/nonRecursiveBigDecimal'
-import { toLocalDateString } from '@utils/time/timeUtils'
 import type { RecordTransactionFormValues, RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
 
@@ -29,7 +28,7 @@ export function convertRecordTransactionFormToParams(
     transaction: {
       amount: convertNonRecursiveBigDecimalToCents(amount),
       direction: isExpense ? BankTransactionDirection.Debit : BankTransactionDirection.Credit,
-      date: toLocalDateString(date.toDate()),
+      date: toCalendarDate(date).toString(),
       description: memo.trim(),
       ...(counterparty !== null && (isExpense ? { vendorId: counterparty.id } : { customerId: counterparty.id })),
       ...(category !== null && { categorization: { type: 'Category' as const, category } }),
@@ -48,8 +47,9 @@ const getClassificationFromCategorization = (categorization: Categorization): Cl
         : makeAccountId(categorization.id)
     case 'Exclusion':
       return makeExclusion(categorization.category)
-    default:
-      return null
+    case 'Split_Categorization':
+      // The single-category modal can't represent a split; fall back to the first entry.
+      return categorization.entries[0] ? getClassificationFromCategorization(categorization.entries[0].category) : null
   }
 }
 
@@ -61,7 +61,7 @@ export const getRecordTransactionFormValues = (transaction: BankTransaction): Re
   },
   counterparty: transaction.customer ?? transaction.vendor ?? null,
   amount: convertCentsToNonRecursiveBigDecimal(transaction.amount),
-  date: fromDate(transaction.date, getLocalTimeZone()),
+  date: fromDate(transaction.date, 'UTC'),
   category: transaction.category !== null && transaction.category !== undefined
     ? getClassificationFromCategorization(transaction.category)
     : null,

@@ -9,8 +9,8 @@ import { getCustomerName, getVendorName } from '@utils/customerVendor'
 
 import { customAccountStore } from '@msw/api/businesses/[business-id]/custom-accounts/store'
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'
+import { vendorStore } from '@msw/api/businesses/[business-id]/vendors/store'
 import { makeBankTransaction } from '@fixtures/bankTransactions/mocks'
-import { vendors } from '@fixtures/generated/vendors.gen'
 
 const decodeTransaction = Schema.decodeUnknownSync(RecordCustomTransactionSchema)
 
@@ -34,7 +34,7 @@ export const buildCustomBankTransaction = (
   { id, customAccountId, existing }: { id: string, customAccountId: string, existing?: BankTransaction },
 ): BankTransaction => {
   const customer = transaction.customerId ? customerStore.findById(transaction.customerId) ?? null : null
-  const vendor = transaction.vendorId ? vendors.find(candidate => candidate.id === transaction.vendorId) ?? null : null
+  const vendor = transaction.vendorId ? vendorStore.findById(transaction.vendorId) ?? null : null
   const category = transaction.categorization ? toCategorization(transaction.categorization.category) : null
 
   return makeBankTransaction({
@@ -43,7 +43,9 @@ export const buildCustomBankTransaction = (
     source: TransactionSource.CUSTOM,
     sourceAccountId: customAccountId,
     accountName: customAccountStore.findById(customAccountId)?.accountName ?? existing?.accountName ?? null,
-    date: new Date(transaction.date),
+    // Parse the date-only string at local midnight so it renders on the same
+    // calendar day regardless of timezone (bare `new Date('YYYY-MM-DD')` is UTC).
+    date: new Date(`${transaction.date}T00:00:00`),
     direction: transaction.direction,
     amount: transaction.amount,
     description: transaction.description,
