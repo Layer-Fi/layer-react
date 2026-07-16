@@ -9,6 +9,8 @@ const {
   useDateActions: useGlobalDateActions,
   useDateRange: useGlobalDateRange,
   useDateRangeActions: useGlobalDateRangeActions,
+  useDatePreset: useGlobalDatePreset,
+  useDatePresetActions: useGlobalDatePresetActions,
   usePeriodAlignedActions: useGlobalDatePeriodAlignedActions,
 } = createScopedDateStore()
 
@@ -17,6 +19,8 @@ export {
   useGlobalDate,
   useGlobalDateActions,
   useGlobalDatePeriodAlignedActions,
+  useGlobalDatePreset,
+  useGlobalDatePresetActions,
   useGlobalDateRange,
   useGlobalDateRangeActions,
 }

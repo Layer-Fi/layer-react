@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { Direction } from '@internal-types/general'
+import { BankTransactionDirectionSchema } from '@schemas/bankTransactions/base'
 import { SingleCategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { createTransformedEnumSchema } from '@schemas/utils'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
@@ -109,7 +109,7 @@ export const CustomTransactionSchema = Schema.Struct({
     Schema.fromKey('external_id'),
   ),
   amount: Schema.Number,
-  direction: Schema.Enums(Direction),
+  direction: BankTransactionDirectionSchema,
   date: Schema.String,
   description: Schema.String,
   referenceNumber: Schema.optional(Schema.NullishOr(Schema.String)).pipe(
@@ -122,7 +122,7 @@ export type RawCustomTransaction = typeof CustomTransactionSchema.Encoded
 
 export const RecordCustomTransactionSchema = Schema.Struct({
   amount: Schema.Number,
-  direction: Schema.Enums(Direction),
+  direction: BankTransactionDirectionSchema,
   date: Schema.String,
   description: Schema.String,
   customerId: Schema.optional(Schema.UUID).pipe(Schema.fromKey('customer_id')),

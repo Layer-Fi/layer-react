@@ -13,4 +13,5 @@ export const JournalContext = createContext<JournalContextType>({
   closeSelectedEntry: () => {},
   hasMore: false,
   fetchMore: () => {},
+  paginationProps: {},
 })

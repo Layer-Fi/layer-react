@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 
+import { type BankTransactionCounterpartyUpdateEncoded } from '@schemas/bankTransactions/metadataUpdate'
 import { type CustomerSchema } from '@schemas/customer'
 import { type VendorSchema } from '@schemas/vendor'
 import { patch } from '@utils/api/authenticatedHttp'
@@ -10,10 +11,7 @@ import { useMinMutatingMutation } from '@hooks/utils/swr/useMinMutatingMutation'
 
 const SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY = '#set-metadata-on-bank-transaction'
 
-type SetMetadataOnBankTransactionBody = {
-  vendor_id: string | null
-  customer_id: string | null
-}
+type SetMetadataOnBankTransactionBody = BankTransactionCounterpartyUpdateEncoded
 
 const setMetadataOnBankTransaction = patch<
   Record<string, never>,

@@ -1,14 +1,50 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { LinkedAccounts } from '@components/LinkedAccounts/LinkedAccounts'
+import { LinkedAccounts, type LinkedAccountsProps } from '@components/LinkedAccounts/LinkedAccounts'
 
-const meta = {
+import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-accounts/store'
+import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
+
+type LinkedAccountsStoryArgs = {
+  showLedgerBalance: boolean
+  title: string
+} & Pick<LinkedAccountsProps, 'stringOverrides'>
+
+// Trim the store rather than overriding the GET handler: the add-account and
+// confirm/exclude mocks mutate the store, so the GET must stay store-driven.
+const keepTwoAccounts = () => {
+  bankAccounts.slice(2).forEach(({ id }) => bankAccountStore.deleteById(id))
+}
+
+const meta: Meta<LinkedAccountsStoryArgs> = {
   title: 'Components/LinkedAccounts',
   component: LinkedAccounts,
+  loaders: [keepTwoAccounts],
+  parameters: {
+    controls: { include: ['showLedgerBalance', 'stringOverrides.title'] },
+  },
+  args: {
+    showLedgerBalance: false,
+    title: '',
+  },
   argTypes: {
-    asWidget: { table: { disable: true } },
-    elevated: { table: { disable: true } },
-    plaidHostedLinkConfig: { table: { disable: true } },
+    stringOverrides: { table: { disable: true } },
+    showLedgerBalance: {
+      control: 'boolean',
+      description: 'Show each account’s ledger balance row',
+    },
+    title: {
+      name: 'stringOverrides.title',
+      control: 'text',
+      description:
+        'The real prop is `stringOverrides?: { title?: string }`. Type a value to set '
+        + '`stringOverrides.title`, or leave it blank to omit the override and use the default.',
+      table: {
+        category: 'String overrides',
+        type: { summary: '{ title?: string }' },
+        defaultValue: { summary: 'Linked Accounts' },
+      },
+    },
   },
   decorators: [
     Story => (
@@ -25,10 +61,16 @@ const meta = {
       </div>
     ),
   ],
-} satisfies Meta<typeof LinkedAccounts>
+  render: ({ showLedgerBalance, title }) => (
+    <LinkedAccounts
+      showLedgerBalance={showLedgerBalance}
+      stringOverrides={title ? { title } : undefined}
+    />
+  ),
+}
 
 export default meta
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<LinkedAccountsStoryArgs>
 
 export const Default: Story = {}

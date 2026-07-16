@@ -3,9 +3,8 @@ import { isWithinInterval } from 'date-fns'
 import { type BankTransaction, DisplayState, type Split, type SuggestedMatch } from '@internal-types/bankTransactions'
 import { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { type DateRange } from '@internal-types/general'
-import { type Direction } from '@internal-types/general'
 import type { TagFilterInput } from '@internal-types/tags'
-import { BankTransactionDirection } from '@schemas/bankTransactions/base'
+import { BankTransactionDirection, type RawBankTransactionDirection } from '@schemas/bankTransactions/base'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { makeTagKeyValueFromTag } from '@schemas/tag'
 import { getDefaultTaxCodeForBankTransaction } from '@utils/bankTransactions/taxCode'
@@ -50,7 +49,7 @@ export const hasMatch = (bankTransaction?: BankTransaction) => {
   )
 }
 
-export const isCredit = ({ direction }: Pick<BankTransaction, 'direction'>) =>
+export const isMoneyIn = ({ direction }: Pick<BankTransaction, 'direction'>) =>
   direction === BankTransactionDirection.Credit
 
 export const countTransactionsToReview = ({
@@ -153,7 +152,7 @@ export type BankTransactionFilters = {
   amount?: NumericRangeFilter
   sourceAccountIds?: string[]
   bankAccountIds?: string[]
-  direction?: Direction[]
+  direction?: RawBankTransactionDirection[]
   categorizationStatus?: DisplayState
   dateRange?: DateRange
   query?: string

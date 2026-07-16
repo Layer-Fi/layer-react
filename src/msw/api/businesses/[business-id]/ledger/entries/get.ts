@@ -4,7 +4,7 @@ import { type LedgerEntry, LedgerEntrySchema } from '@schemas/generalLedger/ledg
 
 import { ledgerEntryStore } from '@msw/api/businesses/[business-id]/ledger/entries/store'
 import { paginatedApiData } from '@msw/utils/apiResponse'
-import { createListFilter } from '@msw/utils/createListFilter'
+import { createListFilter, matchesOnOrAfter, matchesOnOrBefore } from '@msw/utils/createListFilter'
 import { createListSorter } from '@msw/utils/createListSorter'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 
@@ -13,12 +13,9 @@ const encodeLedgerEntry = Schema.encodeSync(LedgerEntrySchema)
 const toResponse = (entries: readonly LedgerEntry[], request: Request) =>
   paginatedApiData(entries.map(entry => encodeLedgerEntry(entry)), request)
 
-// start_date/end_date arrive as date-only strings, so compare calendar days, not instants.
-const toDateOnly = (date: Date) => date.toISOString().slice(0, 10)
-
 export const filterLedgerEntries = createListFilter<LedgerEntry>({
-  start_date: (entry, value) => !value || toDateOnly(entry.entryAt) >= value,
-  end_date: (entry, value) => !value || toDateOnly(entry.entryAt) <= value,
+  start_date: matchesOnOrAfter(entry => entry.entryAt),
+  end_date: matchesOnOrBefore(entry => entry.entryAt),
 })
 
 const sortLedgerEntries = createListSorter<LedgerEntry>({

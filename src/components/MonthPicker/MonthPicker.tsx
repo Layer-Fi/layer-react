@@ -54,7 +54,7 @@ export const MonthPicker = ({
 
   const inputId = useId()
   return (
-    <VStack>
+    <VStack className='Layer__variables'>
       {showLabel && <Label pbe='3xs' size='sm' htmlFor={inputId}>{label}</Label>}
       <DialogTrigger isOpen={isPopoverOpen} onOpenChange={setPopoverOpen}>
         <InputGroup
