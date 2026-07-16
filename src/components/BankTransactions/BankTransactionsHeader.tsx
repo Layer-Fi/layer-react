@@ -1,7 +1,6 @@
 import { type Key, useCallback, useMemo } from 'react'
 import type { ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
-import { endOfMonth, startOfMonth } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'
@@ -12,6 +11,7 @@ import { useBusinessActivationDate } from '@hooks/features/business/useBusinessA
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
@@ -73,15 +73,11 @@ export const BankTransactionsHeader = ({
 
   const withDatePicker = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
   const monthPickerDate = filters?.dateRange ? convertDateToZonedDateTime(filters.dateRange.startDate) : null
+  const showMonthPicker = withDatePicker && monthPickerDate !== null
+  const { setMonth } = useGlobalDateRangeActions()
   const setDateRange = useCallback((newMonth: ZonedDateTime) => {
-    const newMonthAsDate = newMonth.toDate()
-    setFilters({
-      dateRange: {
-        startDate: startOfMonth(newMonthAsDate),
-        endDate: endOfMonth(newMonthAsDate),
-      },
-    })
-  }, [setFilters])
+    setMonth({ startDate: newMonth.toDate() })
+  }, [setMonth])
 
   const { count } = useCountSelectedIds()
 
@@ -243,7 +239,7 @@ export const BankTransactionsHeader = ({
         {showBulkActions
           ? <BulkActionsModule slots={{ BulkActions }} />
           : (
-            <HStack slot='toggle' justify='center' gap='xs'>
+            <HStack slot='toggle' justify='center' align='center' gap={collapseHeader && !showMonthPicker ? 'md' : 'xs'}>
               {collapseHeader && headerTopRow}
               {statusToggle}
             </HStack>

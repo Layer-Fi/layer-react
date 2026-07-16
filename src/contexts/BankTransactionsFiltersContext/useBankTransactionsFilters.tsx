@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from 'react'
-import { endOfMonth, startOfMonth } from 'date-fns'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@utils/bankTransactions/shared'
@@ -33,17 +32,10 @@ export const useBankTransactionsFilters = ({
       : undefined
 
   const globalDateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
-
-  const defaultDateRange = {
-    startDate: startOfMonth(new Date()),
-    endDate: endOfMonth(new Date()),
-  }
+  const globalMonthRange = useGlobalDateRange({ dateSelectionMode: 'month' })
 
   const initialFilters: BankTransactionFilters = {
     ...(scope && { categorizationStatus: scope }),
-    ...(dateFilterMode === BankTransactionsDateFilterMode.MonthlyView && {
-      dateRange: defaultDateRange,
-    }),
   }
 
   const [baseFilters, setBaseFilters] =
@@ -52,7 +44,7 @@ export const useBankTransactionsFilters = ({
   const dateRange = dateFilterMode === BankTransactionsDateFilterMode.GlobalDateRange
     ? globalDateRange
     : dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
-      ? baseFilters.dateRange
+      ? globalMonthRange
       : undefined
 
   // Defensively memoize passed filters to avoid re-renders when the object reference

@@ -8,29 +8,70 @@ export const bankTransactions = [
     "sourceTransactionId": "src_txn_940953",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-12-28T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 53452,
-    "counterpartyName": "Marriott",
-    "description": "MARRIOTT 996622 SAN FRANCISCO CA",
+    "direction": "CREDIT",
+    "amount": 595459,
+    "counterpartyName": "Shopify",
+    "description": "SHOPIFY PAYMENTS 996622",
     "accountName": "Capital One Checking",
     "accountMask": "0012",
     "accountInstitution": {
       "name": "Capital One",
       "logo": null
     },
-    "categorizationStatus": "PENDING",
+    "categorizationStatus": "READY_FOR_INPUT",
     "category": null,
-    "categorizationFlow": null,
+    "categorizationFlow": {
+      "type": "ASK_FROM_SUGGESTIONS",
+      "category": null,
+      "suggestions": [
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000024",
+          "stableName": "SALES",
+          "category": "SALES",
+          "displayName": "Sales"
+        }
+      ]
+    },
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
+    "suggestedMatches": [
+      {
+        "id": "00000010-3b6a-4dd5-884f-94ffec96415a",
+        "details": {
+          "id": "00000011-3b6a-4dd5-884f-94ffec96415a",
+          "amount": 595459,
+          "date": new Date("2025-12-28T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Invoice_Match",
+          "description": "Invoice payment via Shopify for 1 invoice with the following reference numbers: INV-7622",
+          "invoiceIdentifiers": [
+            {
+              "id": "invoice-0000000f-3b6a-4dd5-884f-94ffec96415a",
+              "referenceNumber": "INV-7622"
+            }
+          ]
+        }
+      }
+    ],
     "match": null,
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
     "referenceNumber": null,
     "metadata": null,
-    "customer": null,
+    "customer": {
+      "id": "00000003-f63f-4fcb-858d-1a35ff5a6aa5",
+      "externalId": null,
+      "individualName": null,
+      "companyName": "Stark Industries",
+      "email": null,
+      "mobilePhone": null,
+      "officePhone": "+12045550104",
+      "addressString": null,
+      "status": "ARCHIVED",
+      "memo": null
+    },
     "vendor": null,
     "updateCategorizationRulesSuggestion": null
   },
@@ -50,34 +91,40 @@ export const bankTransactions = [
       "name": "Capital One",
       "logo": null
     },
-    "categorizationStatus": "MATCHED",
+    "categorizationStatus": "READY_FOR_INPUT",
     "category": null,
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
-    "match": {
-      "id": "match-0000000f-941c-44f5-8243-62cd3fbe96f5",
-      "matchType": "TRANSFER",
-      "bankTransaction": {
-        "id": "0000000f-941c-44f5-8243-62cd3fbe96f5",
-        "date": new Date("2025-12-24T15:45:00.000Z"),
-        "direction": "DEBIT",
-        "amount": 109,
-        "counterpartyName": null,
-        "description": "ONLINE TRANSFER TO CAPITAL ONE CHECKING XXXXXX5485"
+    "suggestedMatches": [
+      {
+        "id": "00000010-941c-44f5-8243-62cd3fbe96f5",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000011-941c-44f5-8243-62cd3fbe96f5",
+          "amount": 109,
+          "date": new Date("2025-12-24T15:45:00.000Z"),
+          "description": "Transfer from Capital One Savings to Capital One Checking",
+          "adjustment": null,
+          "fromAccountName": "Capital One Savings",
+          "toAccountName": "Capital One Checking"
+        }
       },
-      "details": {
-        "type": "Transfer_Match",
-        "id": "00000011-941c-44f5-8243-62cd3fbe96f5",
-        "amount": 109,
-        "date": new Date("2025-12-24T15:45:00.000Z"),
-        "description": "Transfer between Capital One Savings and Capital One Checking",
-        "adjustment": null,
-        "fromAccountName": "Capital One Savings",
-        "toAccountName": "Capital One Checking"
+      {
+        "id": "00000021-941c-44f5-8243-62cd3fbe96f5",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000031-941c-44f5-8243-62cd3fbe96f5",
+          "amount": 109,
+          "date": new Date("2025-12-24T15:45:00.000Z"),
+          "description": "Transfer from Capital One Savings to Bank of America Savings",
+          "adjustment": null,
+          "fromAccountName": "Capital One Savings",
+          "toAccountName": "Bank of America Savings"
+        }
       }
-    },
+    ],
+    "match": null,
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
@@ -93,48 +140,23 @@ export const bankTransactions = [
     "sourceTransactionId": "src_txn_999986",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-12-21T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 3567,
-    "counterpartyName": "Starbucks",
-    "description": "STARBUCKS STORE 277077 SEATTLE WA",
+    "direction": "CREDIT",
+    "amount": 72146,
+    "counterpartyName": "PayPal",
+    "description": "PAYPAL TRANSFER 277077",
     "accountName": "Wells Fargo Checking",
     "accountMask": "0001",
     "accountInstitution": {
       "name": "Wells Fargo",
       "logo": null
     },
-    "categorizationStatus": "SPLIT",
+    "categorizationStatus": "CATEGORIZED",
     "category": {
-      "type": "Split_Categorization",
-      "id": "split-0000000f-5bc8-496c-857f-e339bfdd27f6",
-      "category": "SPLIT",
-      "displayName": "Split",
-      "entries": [
-        {
-          "type": "AccountSplitEntry",
-          "amount": 2176,
-          "category": {
-            "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000041",
-            "stableName": "MEALS",
-            "category": "MEALS",
-            "displayName": "Business Meals"
-          },
-          "tags": []
-        },
-        {
-          "type": "AccountSplitEntry",
-          "amount": 1391,
-          "category": {
-            "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000040",
-            "stableName": "TRAVEL",
-            "category": "TRAVEL",
-            "displayName": "Business Travel"
-          },
-          "tags": []
-        }
-      ]
+      "type": "Account",
+      "id": "00000009-0000-4000-8000-000000000024",
+      "stableName": "SALES",
+      "category": "SALES",
+      "displayName": "Sales"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -146,7 +168,18 @@ export const bankTransactions = [
     "memo": null,
     "referenceNumber": null,
     "metadata": null,
-    "customer": null,
+    "customer": {
+      "id": "00000003-c4d1-4d63-8acf-5ae99d563763",
+      "externalId": null,
+      "individualName": "Wei Chen",
+      "companyName": "Initech",
+      "email": "wei.chen@initech.test",
+      "mobilePhone": null,
+      "officePhone": null,
+      "addressString": null,
+      "status": "ACTIVE",
+      "memo": null
+    },
     "vendor": null,
     "updateCategorizationRulesSuggestion": null
   },
@@ -157,9 +190,9 @@ export const bankTransactions = [
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-12-17T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 1965,
-    "counterpartyName": "Chipotle",
-    "description": "CHIPOTLE 189327 AUSTIN TX",
+    "amount": 69983,
+    "counterpartyName": "Marriott",
+    "description": "MARRIOTT 189327 SAN FRANCISCO CA",
     "accountName": "Bank of America Savings",
     "accountMask": "1846",
     "accountInstitution": {
@@ -172,6 +205,13 @@ export const bankTransactions = [
       "type": "ASK_FROM_SUGGESTIONS",
       "category": null,
       "suggestions": [
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000040",
+          "stableName": "TRAVEL",
+          "category": "TRAVEL",
+          "displayName": "Business Travel"
+        },
         {
           "type": "Account",
           "id": "00000009-0000-4000-8000-000000000041",
@@ -210,10 +250,10 @@ export const bankTransactions = [
     "sourceTransactionId": "src_txn_432463",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-12-13T15:45:00.000Z"),
-    "direction": "CREDIT",
-    "amount": 353266,
-    "counterpartyName": "Shopify",
-    "description": "SHOPIFY PAYMENTS 428177",
+    "direction": "DEBIT",
+    "amount": 51261,
+    "counterpartyName": "Stripe",
+    "description": "STRIPE REFUND ST-428177",
     "accountName": "Capital One Savings",
     "accountMask": "0006",
     "accountInstitution": {
@@ -249,9 +289,9 @@ export const bankTransactions = [
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-12-10T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 25748,
-    "counterpartyName": "Google",
-    "description": "GOOGLE *GSUITE 400517",
+    "amount": 106160,
+    "counterpartyName": "Delta Air Lines",
+    "description": "DELTA AIR LINES ATL 400517",
     "accountName": "Capital One Savings",
     "accountMask": "0006",
     "accountInstitution": {
@@ -266,17 +306,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000042",
-          "stableName": "SOFTWARE",
-          "category": "SOFTWARE",
-          "displayName": "Software"
-        },
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000038",
-          "stableName": "MARKETING",
-          "category": "MARKETING",
-          "displayName": "Marketing"
+          "id": "00000009-0000-4000-8000-000000000040",
+          "stableName": "TRAVEL",
+          "category": "TRAVEL",
+          "displayName": "Business Travel"
         }
       ]
     },
@@ -309,29 +342,54 @@ export const bankTransactions = [
     "sourceTransactionId": "src_txn_938462",
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-12-06T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 146047,
-    "counterpartyName": "WeWork",
-    "description": "WEWORK 242248 NEW YORK NY",
+    "direction": "CREDIT",
+    "amount": 121047,
+    "counterpartyName": "Stripe",
+    "description": "STRIPE TRANSFER ST-242248",
     "accountName": "Chase Savings",
     "accountMask": "5717",
     "accountInstitution": {
       "name": "Chase",
       "logo": null
     },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000035",
-      "stableName": "RENT",
-      "category": "RENT",
-      "displayName": "Rent"
-    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-9d3a-4f25-86df-83cfdf231a1a",
+        "details": {
+          "id": "00000011-9d3a-4f25-86df-83cfdf231a1a",
+          "amount": 121047,
+          "date": new Date("2025-12-06T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Payout_Match",
+          "description": "Payout via Stripe created on 2025-12-06"
+        }
+      }
+    ],
+    "match": {
+      "id": "match-0000000f-9d3a-4f25-86df-83cfdf231a1a",
+      "matchType": "PAYOUT",
+      "bankTransaction": {
+        "id": "0000000f-9d3a-4f25-86df-83cfdf231a1a",
+        "date": new Date("2025-12-06T15:45:00.000Z"),
+        "direction": "CREDIT",
+        "amount": 121047,
+        "counterpartyName": "Stripe",
+        "description": "STRIPE TRANSFER ST-242248"
+      },
+      "details": {
+        "id": "00000011-9d3a-4f25-86df-83cfdf231a1a",
+        "amount": 121047,
+        "date": new Date("2025-12-06T15:45:00.000Z"),
+        "adjustment": null,
+        "type": "Payout_Match",
+        "description": "Payout via Stripe created on 2025-12-06"
+      }
+    },
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
@@ -348,53 +406,63 @@ export const bankTransactions = [
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-12-02T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 8145,
-    "counterpartyName": "Uber",
-    "description": "UBER TRIP 862457 HELP.UBER.COM",
+    "amount": 92652,
+    "counterpartyName": "WeWork",
+    "description": "WEWORK 862457 NEW YORK NY",
     "accountName": "Capital One Checking",
     "accountMask": "0012",
     "accountInstitution": {
       "name": "Capital One",
       "logo": null
     },
-    "categorizationStatus": "SPLIT",
-    "category": {
-      "type": "Split_Categorization",
-      "id": "split-0000000f-fd22-414d-8e1e-749176bb74eb",
-      "category": "SPLIT",
-      "displayName": "Split",
-      "entries": [
-        {
-          "type": "AccountSplitEntry",
-          "amount": 5457,
-          "category": {
-            "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000040",
-            "stableName": "TRAVEL",
-            "category": "TRAVEL",
-            "displayName": "Business Travel"
-          },
-          "tags": []
-        },
-        {
-          "type": "AccountSplitEntry",
-          "amount": 2688,
-          "category": {
-            "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000041",
-            "stableName": "MEALS",
-            "category": "MEALS",
-            "displayName": "Business Meals"
-          },
-          "tags": []
-        }
-      ]
-    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-fd22-414d-8e1e-749176bb74eb",
+        "details": {
+          "id": "00000011-fd22-414d-8e1e-749176bb74eb",
+          "amount": 92652,
+          "date": new Date("2025-12-02T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Bill_Match",
+          "description": "Bill payment via WeWork for 1 bill",
+          "billIdentifiers": [
+            {
+              "id": "bill-0000000f-fd22-414d-8e1e-749176bb74eb"
+            }
+          ]
+        }
+      }
+    ],
+    "match": {
+      "id": "match-0000000f-fd22-414d-8e1e-749176bb74eb",
+      "matchType": "BILL_PAYMENT",
+      "bankTransaction": {
+        "id": "0000000f-fd22-414d-8e1e-749176bb74eb",
+        "date": new Date("2025-12-02T15:45:00.000Z"),
+        "direction": "DEBIT",
+        "amount": 92652,
+        "counterpartyName": "WeWork",
+        "description": "WEWORK 862457 NEW YORK NY"
+      },
+      "details": {
+        "id": "00000011-fd22-414d-8e1e-749176bb74eb",
+        "amount": 92652,
+        "date": new Date("2025-12-02T15:45:00.000Z"),
+        "adjustment": null,
+        "type": "Bill_Match",
+        "description": "Bill payment via WeWork for 1 bill",
+        "billIdentifiers": [
+          {
+            "id": "bill-0000000f-fd22-414d-8e1e-749176bb74eb"
+          }
+        ]
+      }
+    },
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
@@ -411,9 +479,9 @@ export const bankTransactions = [
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-11-29T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 9036,
-    "counterpartyName": "Verizon",
-    "description": "VZWRLSS*APOCC VISB 133420",
+    "amount": 26049,
+    "counterpartyName": "State Farm",
+    "description": "STATE FARM INSURANCE 133420",
     "accountName": "Chase Savings",
     "accountMask": "5717",
     "accountInstitution": {
@@ -428,10 +496,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000036",
-          "stableName": "UTILITIES",
-          "category": "UTILITIES",
-          "displayName": "Utilities"
+          "id": "00000009-0000-4000-8000-000000000037",
+          "stableName": "INSURANCE",
+          "category": "INSURANCE",
+          "displayName": "Business Insurance"
         }
       ]
     },
@@ -455,9 +523,9 @@ export const bankTransactions = [
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-11-25T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 4215,
-    "counterpartyName": "Adobe",
-    "description": "ADOBE *CREATIVE CLOUD 104239",
+    "amount": 11142,
+    "counterpartyName": "Amazon",
+    "description": "AMAZON MKTPL*104239 AMZN.COM/BILL WA",
     "accountName": "Wells Fargo Checking",
     "accountMask": "0001",
     "accountInstitution": {
@@ -467,10 +535,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000042",
-      "stableName": "SOFTWARE",
-      "category": "SOFTWARE",
-      "displayName": "Software"
+      "id": "00000009-0000-4000-8000-000000000039",
+      "stableName": "OFFICE_EXPENSES",
+      "category": "OFFICE_EXPENSES",
+      "displayName": "Office Expenses"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -493,28 +561,59 @@ export const bankTransactions = [
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-11-21T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 105774,
-    "counterpartyName": "Delta Air Lines",
-    "description": "DELTA AIR LINES ATL 368127",
+    "amount": 16765,
+    "counterpartyName": "PayPal",
+    "description": "PAYPAL REFUND 368127",
     "accountName": "Bank of America Savings",
     "accountMask": "1846",
     "accountInstitution": {
       "name": "Bank of America",
       "logo": null
     },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000040",
-      "stableName": "TRAVEL",
-      "category": "TRAVEL",
-      "displayName": "Business Travel"
-    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-570b-40f3-8720-d7d9f9a33c10",
+        "details": {
+          "id": "00000011-570b-40f3-8720-d7d9f9a33c10",
+          "amount": 16765,
+          "date": new Date("2025-11-21T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Refund_Payment_Match",
+          "description": "Refund payment via PayPal",
+          "customerRefundIdentifiers": {
+            "id": "customer-refund-0000000f-570b-40f3-8720-d7d9f9a33c10"
+          }
+        }
+      }
+    ],
+    "match": {
+      "id": "match-0000000f-570b-40f3-8720-d7d9f9a33c10",
+      "matchType": "REFUND_PAYMENT",
+      "bankTransaction": {
+        "id": "0000000f-570b-40f3-8720-d7d9f9a33c10",
+        "date": new Date("2025-11-21T15:45:00.000Z"),
+        "direction": "DEBIT",
+        "amount": 16765,
+        "counterpartyName": "PayPal",
+        "description": "PAYPAL REFUND 368127"
+      },
+      "details": {
+        "id": "00000011-570b-40f3-8720-d7d9f9a33c10",
+        "amount": 16765,
+        "date": new Date("2025-11-21T15:45:00.000Z"),
+        "adjustment": null,
+        "type": "Refund_Payment_Match",
+        "description": "Refund payment via PayPal",
+        "customerRefundIdentifiers": {
+          "id": "customer-refund-0000000f-570b-40f3-8720-d7d9f9a33c10"
+        }
+      }
+    },
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
@@ -531,9 +630,9 @@ export const bankTransactions = [
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-11-18T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 25813,
-    "counterpartyName": "State Farm",
-    "description": "STATE FARM INSURANCE 770583",
+    "amount": 9018,
+    "counterpartyName": "Amazon",
+    "description": "AMAZON MKTPL*770583 AMZN.COM/BILL WA",
     "accountName": "Bank of America Savings",
     "accountMask": "1846",
     "accountInstitution": {
@@ -543,10 +642,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000037",
-      "stableName": "INSURANCE",
-      "category": "INSURANCE",
-      "displayName": "Business Insurance"
+      "id": "00000009-0000-4000-8000-000000000039",
+      "stableName": "OFFICE_EXPENSES",
+      "category": "OFFICE_EXPENSES",
+      "displayName": "Office Expenses"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -569,9 +668,9 @@ export const bankTransactions = [
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-11-14T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 3217,
-    "counterpartyName": "Uber",
-    "description": "UBER TRIP 221115 HELP.UBER.COM",
+    "amount": 27280,
+    "counterpartyName": "Square",
+    "description": "SQUARE INC REFUND 221115",
     "accountName": "Wells Fargo Checking",
     "accountMask": "0001",
     "accountInstitution": {
@@ -583,30 +682,43 @@ export const bankTransactions = [
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
+    "suggestedMatches": [
+      {
+        "id": "00000010-766b-4b2f-8271-c5ffd9a6702f",
+        "details": {
+          "id": "00000011-766b-4b2f-8271-c5ffd9a6702f",
+          "amount": 27280,
+          "date": new Date("2025-11-14T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Refund_Payment_Match",
+          "description": "Refund payment via Square",
+          "customerRefundIdentifiers": {
+            "id": "customer-refund-0000000f-766b-4b2f-8271-c5ffd9a6702f"
+          }
+        }
+      }
+    ],
     "match": {
       "id": "match-0000000f-766b-4b2f-8271-c5ffd9a6702f",
-      "matchType": "BILL_PAYMENT",
+      "matchType": "REFUND_PAYMENT",
       "bankTransaction": {
         "id": "0000000f-766b-4b2f-8271-c5ffd9a6702f",
         "date": new Date("2025-11-14T15:45:00.000Z"),
         "direction": "DEBIT",
-        "amount": 3217,
-        "counterpartyName": "Uber",
-        "description": "UBER TRIP 221115 HELP.UBER.COM"
+        "amount": 27280,
+        "counterpartyName": "Square",
+        "description": "SQUARE INC REFUND 221115"
       },
       "details": {
-        "type": "Bill_Match",
         "id": "00000011-766b-4b2f-8271-c5ffd9a6702f",
-        "amount": 3217,
+        "amount": 27280,
         "date": new Date("2025-11-14T15:45:00.000Z"),
-        "description": "Bill payment to Uber",
         "adjustment": null,
-        "billIdentifiers": [
-          {
-            "id": "bill-0000000f-766b-4b2f-8271-c5ffd9a6702f"
-          }
-        ]
+        "type": "Refund_Payment_Match",
+        "description": "Refund payment via Square",
+        "customerRefundIdentifiers": {
+          "id": "customer-refund-0000000f-766b-4b2f-8271-c5ffd9a6702f"
+        }
       }
     },
     "transactionTags": [],
@@ -635,9 +747,9 @@ export const bankTransactions = [
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-11-10T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 294951,
-    "counterpartyName": "Gusto",
-    "description": "GUSTO PAY 752795",
+    "amount": 4336,
+    "counterpartyName": "FedEx",
+    "description": "FEDEX 752795 MEMPHIS TN",
     "accountName": "Capital One Checking",
     "accountMask": "0012",
     "accountInstitution": {
@@ -647,10 +759,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000032",
-      "stableName": "PAYROLL_REGULAR_WAGES",
-      "category": "PAYROLL_REGULAR_WAGES",
-      "displayName": "Employee Wages"
+      "id": "00000009-0000-4000-8000-000000000039",
+      "stableName": "OFFICE_EXPENSES",
+      "category": "OFFICE_EXPENSES",
+      "displayName": "Office Expenses"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -692,34 +804,40 @@ export const bankTransactions = [
       "name": "Bank of America",
       "logo": null
     },
-    "categorizationStatus": "MATCHED",
+    "categorizationStatus": "READY_FOR_INPUT",
     "category": null,
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
-    "match": {
-      "id": "match-0000000f-f0ab-4ee5-82cb-eb141e82e6b1",
-      "matchType": "TRANSFER",
-      "bankTransaction": {
-        "id": "0000000f-f0ab-4ee5-82cb-eb141e82e6b1",
-        "date": new Date("2025-11-07T15:45:00.000Z"),
-        "direction": "DEBIT",
-        "amount": 103,
-        "counterpartyName": null,
-        "description": "ONLINE TRANSFER TO WELLS FARGO CHECKING XXXXXX7644"
+    "suggestedMatches": [
+      {
+        "id": "00000010-f0ab-4ee5-82cb-eb141e82e6b1",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000011-f0ab-4ee5-82cb-eb141e82e6b1",
+          "amount": 103,
+          "date": new Date("2025-11-07T15:45:00.000Z"),
+          "description": "Transfer from Bank of America Savings to Wells Fargo Checking",
+          "adjustment": null,
+          "fromAccountName": "Bank of America Savings",
+          "toAccountName": "Wells Fargo Checking"
+        }
       },
-      "details": {
-        "type": "Transfer_Match",
-        "id": "00000011-f0ab-4ee5-82cb-eb141e82e6b1",
-        "amount": 103,
-        "date": new Date("2025-11-07T15:45:00.000Z"),
-        "description": "Transfer between Bank of America Savings and Wells Fargo Checking",
-        "adjustment": null,
-        "fromAccountName": "Bank of America Savings",
-        "toAccountName": "Wells Fargo Checking"
+      {
+        "id": "00000021-f0ab-4ee5-82cb-eb141e82e6b1",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000031-f0ab-4ee5-82cb-eb141e82e6b1",
+          "amount": 103,
+          "date": new Date("2025-11-07T15:45:00.000Z"),
+          "description": "Transfer from Bank of America Savings to Capital One Checking",
+          "adjustment": null,
+          "fromAccountName": "Bank of America Savings",
+          "toAccountName": "Capital One Checking"
+        }
       }
-    },
+    ],
+    "match": null,
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
@@ -735,19 +853,38 @@ export const bankTransactions = [
     "sourceTransactionId": "src_txn_999989",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-11-03T15:45:00.000Z"),
-    "direction": "CREDIT",
-    "amount": 158902,
-    "counterpartyName": "Square",
-    "description": "SQUARE INC 416832",
+    "direction": "DEBIT",
+    "amount": 3060,
+    "counterpartyName": "Starbucks",
+    "description": "STARBUCKS STORE 416832 SEATTLE WA",
     "accountName": "Capital One Checking",
     "accountMask": "0012",
     "accountInstitution": {
       "name": "Capital One",
       "logo": null
     },
-    "categorizationStatus": "PENDING",
+    "categorizationStatus": "READY_FOR_INPUT",
     "category": null,
-    "categorizationFlow": null,
+    "categorizationFlow": {
+      "type": "ASK_FROM_SUGGESTIONS",
+      "category": null,
+      "suggestions": [
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000041",
+          "stableName": "MEALS",
+          "category": "MEALS",
+          "displayName": "Business Meals"
+        },
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000040",
+          "stableName": "TRAVEL",
+          "category": "TRAVEL",
+          "displayName": "Business Travel"
+        }
+      ]
+    },
     "taxCode": null,
     "taxOptions": null,
     "suggestedMatches": [],
@@ -758,7 +895,17 @@ export const bankTransactions = [
     "referenceNumber": null,
     "metadata": null,
     "customer": null,
-    "vendor": null,
+    "vendor": {
+      "id": "00000004-9368-428d-8acc-fb8379c48b8d",
+      "externalId": null,
+      "individualName": null,
+      "companyName": "Initech",
+      "email": null,
+      "mobilePhone": "+12085550102",
+      "officePhone": "+12075550102",
+      "status": "ACTIVE",
+      "memo": null
+    },
     "updateCategorizationRulesSuggestion": null
   },
   {
@@ -768,108 +915,13 @@ export const bankTransactions = [
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-10-30T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 1471,
-    "counterpartyName": "Uber",
-    "description": "UBER TRIP 321035 HELP.UBER.COM",
+    "amount": 10372,
+    "counterpartyName": "The Home Depot",
+    "description": "THE HOME DEPOT #3210 DENVER CO",
     "accountName": "Capital One Savings",
     "accountMask": "0006",
     "accountInstitution": {
       "name": "Capital One",
-      "logo": null
-    },
-    "categorizationStatus": "READY_FOR_INPUT",
-    "category": null,
-    "categorizationFlow": {
-      "type": "ASK_FROM_SUGGESTIONS",
-      "category": null,
-      "suggestions": [
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000040",
-          "stableName": "TRAVEL",
-          "category": "TRAVEL",
-          "displayName": "Business Travel"
-        },
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000041",
-          "stableName": "MEALS",
-          "category": "MEALS",
-          "displayName": "Business Meals"
-        }
-      ]
-    },
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-4cba-47ca-8468-f69d37a81e7f",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_745668",
-    "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
-    "date": new Date("2025-10-27T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 24619,
-    "counterpartyName": "Delta Air Lines",
-    "description": "DELTA AIR LINES ATL 502453",
-    "accountName": "Capital One Savings",
-    "accountMask": "0006",
-    "accountInstitution": {
-      "name": "Capital One",
-      "logo": null
-    },
-    "categorizationStatus": "READY_FOR_INPUT",
-    "category": null,
-    "categorizationFlow": {
-      "type": "ASK_FROM_SUGGESTIONS",
-      "category": null,
-      "suggestions": [
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000040",
-          "stableName": "TRAVEL",
-          "category": "TRAVEL",
-          "displayName": "Business Travel"
-        }
-      ]
-    },
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-3180-4882-8984-71afe38e861d",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_815491",
-    "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
-    "date": new Date("2025-10-23T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 40903,
-    "counterpartyName": "Costco",
-    "description": "COSTCO WHSE #8942 PORTLAND OR",
-    "accountName": "Wells Fargo Checking",
-    "accountMask": "0001",
-    "accountInstitution": {
-      "name": "Wells Fargo",
       "logo": null
     },
     "categorizationStatus": "READY_FOR_INPUT",
@@ -884,13 +936,6 @@ export const bankTransactions = [
           "stableName": "OFFICE_EXPENSES",
           "category": "OFFICE_EXPENSES",
           "displayName": "Office Expenses"
-        },
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000041",
-          "stableName": "MEALS",
-          "category": "MEALS",
-          "displayName": "Business Meals"
         },
         {
           "type": "Account",
@@ -915,160 +960,19 @@ export const bankTransactions = [
     "updateCategorizationRulesSuggestion": null
   },
   {
-    "id": "0000000f-9c20-48ec-8edf-71e885a56e67",
+    "id": "0000000f-4cba-47ca-8468-f69d37a81e7f",
     "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_390278",
-    "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
-    "date": new Date("2025-10-20T15:45:00.000Z"),
-    "direction": "CREDIT",
-    "amount": 19786,
-    "counterpartyName": "Shopify",
-    "description": "SHOPIFY PAYMENTS 815600",
-    "accountName": "Chase Savings",
-    "accountMask": "5717",
-    "accountInstitution": {
-      "name": "Chase",
-      "logo": null
-    },
-    "categorizationStatus": "READY_FOR_INPUT",
-    "category": null,
-    "categorizationFlow": {
-      "type": "ASK_FROM_SUGGESTIONS",
-      "category": null,
-      "suggestions": [
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000024",
-          "stableName": "SALES",
-          "category": "SALES",
-          "displayName": "Sales"
-        }
-      ]
-    },
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": {
-      "id": "00000003-f63f-4fcb-858d-1a35ff5a6aa5",
-      "externalId": null,
-      "individualName": null,
-      "companyName": "Stark Industries",
-      "email": null,
-      "mobilePhone": null,
-      "officePhone": "+12045550104",
-      "addressString": null,
-      "status": "ARCHIVED",
-      "memo": null
-    },
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-c5d5-4a79-87e5-d4425e1e5967",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_352064",
-    "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
-    "date": new Date("2025-10-16T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 4713,
-    "counterpartyName": "Shell",
-    "description": "SHELL OIL 328327 HOUSTON TX",
-    "accountName": "Bank of America Savings",
-    "accountMask": "1846",
-    "accountInstitution": {
-      "name": "Bank of America",
-      "logo": null
-    },
-    "categorizationStatus": "READY_FOR_INPUT",
-    "category": null,
-    "categorizationFlow": {
-      "type": "ASK_FROM_SUGGESTIONS",
-      "category": null,
-      "suggestions": [
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000040",
-          "stableName": "TRAVEL",
-          "category": "TRAVEL",
-          "displayName": "Business Travel"
-        }
-      ]
-    },
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": {
-      "id": "00000004-ae8f-4cb9-89b4-d567e9c4d7ea",
-      "externalId": null,
-      "individualName": null,
-      "companyName": "Vandelay Industries",
-      "email": null,
-      "mobilePhone": null,
-      "officePhone": null,
-      "status": "ARCHIVED",
-      "memo": null
-    },
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-f600-42e3-8f89-50c4e790a881",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_349989",
+    "sourceTransactionId": "src_txn_745668",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
-    "date": new Date("2025-10-12T15:45:00.000Z"),
+    "date": new Date("2025-10-27T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 52723,
-    "counterpartyName": "Costco",
-    "description": "COSTCO WHSE #7535 PORTLAND OR",
+    "amount": 14119,
+    "counterpartyName": "Verizon",
+    "description": "VZWRLSS*APOCC VISB 502453",
     "accountName": "Capital One Savings",
     "accountMask": "0006",
     "accountInstitution": {
       "name": "Capital One",
-      "logo": null
-    },
-    "categorizationStatus": "PENDING",
-    "category": null,
-    "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-4ed7-434a-8c2d-02c5513ca6cf",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_100012",
-    "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
-    "date": new Date("2025-10-09T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 8794,
-    "counterpartyName": "Comcast",
-    "description": "COMCAST CABLE COMM 950948",
-    "accountName": "Chase Savings",
-    "accountMask": "5717",
-    "accountInstitution": {
-      "name": "Chase",
       "logo": null
     },
     "categorizationStatus": "READY_FOR_INPUT",
@@ -1100,15 +1004,15 @@ export const bankTransactions = [
     "updateCategorizationRulesSuggestion": null
   },
   {
-    "id": "0000000f-4a12-46bd-8221-b4049fbe8bc1",
+    "id": "0000000f-3180-4882-8984-71afe38e861d",
     "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_999992",
+    "sourceTransactionId": "src_txn_815491",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
-    "date": new Date("2025-10-05T15:45:00.000Z"),
+    "date": new Date("2025-10-23T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 50362,
-    "counterpartyName": "Meta",
-    "description": "FACEBK ADS 182986",
+    "amount": 25902,
+    "counterpartyName": "Square",
+    "description": "SQUARE INC REFUND 894291",
     "accountName": "Wells Fargo Checking",
     "accountMask": "0001",
     "accountInstitution": {
@@ -1118,10 +1022,233 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000038",
-      "stableName": "MARKETING",
-      "category": "MARKETING",
-      "displayName": "Marketing"
+      "id": "00000009-0000-4000-8000-000000000024",
+      "stableName": "SALES",
+      "category": "SALES",
+      "displayName": "Sales"
+    },
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-9c20-48ec-8edf-71e885a56e67",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_390278",
+    "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
+    "date": new Date("2025-10-20T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 12286,
+    "counterpartyName": "PayPal",
+    "description": "PAYPAL REFUND 815600",
+    "accountName": "Chase Savings",
+    "accountMask": "5717",
+    "accountInstitution": {
+      "name": "Chase",
+      "logo": null
+    },
+    "categorizationStatus": "CATEGORIZED",
+    "category": {
+      "type": "Account",
+      "id": "00000009-0000-4000-8000-000000000024",
+      "stableName": "SALES",
+      "category": "SALES",
+      "displayName": "Sales"
+    },
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-c5d5-4a79-87e5-d4425e1e5967",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_352064",
+    "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
+    "date": new Date("2025-10-16T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 8728,
+    "counterpartyName": "The Home Depot",
+    "description": "THE HOME DEPOT #3283 DENVER CO",
+    "accountName": "Bank of America Savings",
+    "accountMask": "1846",
+    "accountInstitution": {
+      "name": "Bank of America",
+      "logo": null
+    },
+    "categorizationStatus": "CATEGORIZED",
+    "category": {
+      "type": "Account",
+      "id": "00000009-0000-4000-8000-000000000039",
+      "stableName": "OFFICE_EXPENSES",
+      "category": "OFFICE_EXPENSES",
+      "displayName": "Office Expenses"
+    },
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": {
+      "id": "00000004-ae8f-4cb9-89b4-d567e9c4d7ea",
+      "externalId": null,
+      "individualName": null,
+      "companyName": "Vandelay Industries",
+      "email": null,
+      "mobilePhone": null,
+      "officePhone": null,
+      "status": "ARCHIVED",
+      "memo": null
+    },
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-f600-42e3-8f89-50c4e790a881",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_349989",
+    "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
+    "date": new Date("2025-10-12T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 2715,
+    "counterpartyName": "Adobe",
+    "description": "ADOBE *CREATIVE CLOUD 753549",
+    "accountName": "Capital One Savings",
+    "accountMask": "0006",
+    "accountInstitution": {
+      "name": "Capital One",
+      "logo": null
+    },
+    "categorizationStatus": "READY_FOR_INPUT",
+    "category": null,
+    "categorizationFlow": {
+      "type": "ASK_FROM_SUGGESTIONS",
+      "category": null,
+      "suggestions": [
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000042",
+          "stableName": "SOFTWARE",
+          "category": "SOFTWARE",
+          "displayName": "Software"
+        }
+      ]
+    },
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-f600-42e3-8f89-50c4e790a881",
+        "details": {
+          "id": "00000011-f600-42e3-8f89-50c4e790a881",
+          "amount": 2715,
+          "date": new Date("2025-10-12T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Bill_Match",
+          "description": "Bill payment via Adobe for 1 bill",
+          "billIdentifiers": [
+            {
+              "id": "bill-0000000f-f600-42e3-8f89-50c4e790a881"
+            }
+          ]
+        }
+      }
+    ],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-4ed7-434a-8c2d-02c5513ca6cf",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_100012",
+    "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
+    "date": new Date("2025-10-09T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 5173,
+    "counterpartyName": "Uber",
+    "description": "UBER TRIP 950948 HELP.UBER.COM",
+    "accountName": "Chase Savings",
+    "accountMask": "5717",
+    "accountInstitution": {
+      "name": "Chase",
+      "logo": null
+    },
+    "categorizationStatus": "CATEGORIZED",
+    "category": {
+      "type": "Account",
+      "id": "00000009-0000-4000-8000-000000000040",
+      "stableName": "TRAVEL",
+      "category": "TRAVEL",
+      "displayName": "Business Travel"
+    },
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-4a12-46bd-8221-b4049fbe8bc1",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_999992",
+    "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
+    "date": new Date("2025-10-05T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 10359,
+    "counterpartyName": "Square",
+    "description": "SQUARE INC REFUND 182986",
+    "accountName": "Wells Fargo Checking",
+    "accountMask": "0001",
+    "accountInstitution": {
+      "name": "Wells Fargo",
+      "logo": null
+    },
+    "categorizationStatus": "CATEGORIZED",
+    "category": {
+      "type": "Account",
+      "id": "00000009-0000-4000-8000-000000000024",
+      "stableName": "SALES",
+      "category": "SALES",
+      "displayName": "Sales"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -1153,29 +1280,54 @@ export const bankTransactions = [
     "sourceTransactionId": "src_txn_377424",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-10-01T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 62858,
-    "counterpartyName": "Delta Air Lines",
-    "description": "DELTA AIR LINES ATL 299928",
+    "direction": "CREDIT",
+    "amount": 42864,
+    "counterpartyName": "Stripe",
+    "description": "STRIPE TRANSFER ST-299928",
     "accountName": "Capital One Savings",
     "accountMask": "0006",
     "accountInstitution": {
       "name": "Capital One",
       "logo": null
     },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000040",
-      "stableName": "TRAVEL",
-      "category": "TRAVEL",
-      "displayName": "Business Travel"
-    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-09d6-46cc-86ea-f33462bd59b5",
+        "details": {
+          "id": "00000011-09d6-46cc-86ea-f33462bd59b5",
+          "amount": 42864,
+          "date": new Date("2025-10-01T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Payout_Match",
+          "description": "Payout via Stripe created on 2025-10-01"
+        }
+      }
+    ],
+    "match": {
+      "id": "match-0000000f-09d6-46cc-86ea-f33462bd59b5",
+      "matchType": "PAYOUT",
+      "bankTransaction": {
+        "id": "0000000f-09d6-46cc-86ea-f33462bd59b5",
+        "date": new Date("2025-10-01T15:45:00.000Z"),
+        "direction": "CREDIT",
+        "amount": 42864,
+        "counterpartyName": "Stripe",
+        "description": "STRIPE TRANSFER ST-299928"
+      },
+      "details": {
+        "id": "00000011-09d6-46cc-86ea-f33462bd59b5",
+        "amount": 42864,
+        "date": new Date("2025-10-01T15:45:00.000Z"),
+        "adjustment": null,
+        "type": "Payout_Match",
+        "description": "Payout via Stripe created on 2025-10-01"
+      }
+    },
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
@@ -1192,9 +1344,9 @@ export const bankTransactions = [
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-09-28T15:45:00.000Z"),
     "direction": "CREDIT",
-    "amount": 227250,
-    "counterpartyName": "Shopify",
-    "description": "SHOPIFY PAYMENTS 418514",
+    "amount": 224250,
+    "counterpartyName": "Square",
+    "description": "SQUARE INC 418514",
     "accountName": "Capital One Checking",
     "accountMask": "0012",
     "accountInstitution": {
@@ -1236,9 +1388,9 @@ export const bankTransactions = [
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-09-24T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 55651,
-    "counterpartyName": "Marriott",
-    "description": "MARRIOTT 799367 SAN FRANCISCO CA",
+    "amount": 121752,
+    "counterpartyName": "Apple",
+    "description": "APPLE.COM/BILL 799367 CUPERTINO CA",
     "accountName": "Wells Fargo Checking",
     "accountMask": "0001",
     "accountInstitution": {
@@ -1248,10 +1400,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000040",
-      "stableName": "TRAVEL",
-      "category": "TRAVEL",
-      "displayName": "Business Travel"
+      "id": "00000009-0000-4000-8000-000000000042",
+      "stableName": "SOFTWARE",
+      "category": "SOFTWARE",
+      "displayName": "Software"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -1274,30 +1426,24 @@ export const bankTransactions = [
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-09-20T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 69804,
-    "counterpartyName": "WeWork",
-    "description": "WEWORK 348416 NEW YORK NY",
+    "amount": 13779,
+    "counterpartyName": "Comcast",
+    "description": "COMCAST CABLE COMM 348416",
     "accountName": "Chase Savings",
     "accountMask": "5717",
     "accountInstitution": {
       "name": "Chase",
       "logo": null
     },
-    "categorizationStatus": "READY_FOR_INPUT",
-    "category": null,
-    "categorizationFlow": {
-      "type": "ASK_FROM_SUGGESTIONS",
-      "category": null,
-      "suggestions": [
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000035",
-          "stableName": "RENT",
-          "category": "RENT",
-          "displayName": "Rent"
-        }
-      ]
+    "categorizationStatus": "CATEGORIZED",
+    "category": {
+      "type": "Account",
+      "id": "00000009-0000-4000-8000-000000000036",
+      "stableName": "UTILITIES",
+      "category": "UTILITIES",
+      "displayName": "Utilities"
     },
+    "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
     "suggestedMatches": [],
@@ -1317,10 +1463,10 @@ export const bankTransactions = [
     "sourceTransactionId": "src_txn_831452",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-09-17T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 5082,
-    "counterpartyName": "Adobe",
-    "description": "ADOBE *CREATIVE CLOUD 850261",
+    "direction": "CREDIT",
+    "amount": 104098,
+    "counterpartyName": "Square",
+    "description": "SQUARE INC 850261",
     "accountName": "Capital One Savings",
     "accountMask": "0006",
     "accountInstitution": {
@@ -1335,10 +1481,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000042",
-          "stableName": "SOFTWARE",
-          "category": "SOFTWARE",
-          "displayName": "Software"
+          "id": "00000009-0000-4000-8000-000000000024",
+          "stableName": "SALES",
+          "category": "SALES",
+          "displayName": "Sales"
         }
       ]
     },
@@ -1352,17 +1498,7 @@ export const bankTransactions = [
     "referenceNumber": null,
     "metadata": null,
     "customer": null,
-    "vendor": {
-      "id": "00000004-9368-428d-8acc-fb8379c48b8d",
-      "externalId": null,
-      "individualName": null,
-      "companyName": "Initech",
-      "email": null,
-      "mobilePhone": "+12085550102",
-      "officePhone": "+12075550102",
-      "status": "ACTIVE",
-      "memo": null
-    },
+    "vendor": null,
     "updateCategorizationRulesSuggestion": null
   },
   {
@@ -1372,9 +1508,9 @@ export const bankTransactions = [
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-09-13T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 184175,
-    "counterpartyName": "WeWork",
-    "description": "WEWORK 964152 NEW YORK NY",
+    "amount": 56173,
+    "counterpartyName": "Amazon Web Services",
+    "description": "AMAZON WEB SERVICES AWS.AMAZON.CO 964152",
     "accountName": "Capital One Checking",
     "accountMask": "0012",
     "accountInstitution": {
@@ -1384,10 +1520,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000035",
-      "stableName": "RENT",
-      "category": "RENT",
-      "displayName": "Rent"
+      "id": "00000009-0000-4000-8000-000000000042",
+      "stableName": "SOFTWARE",
+      "category": "SOFTWARE",
+      "displayName": "Software"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -1410,53 +1546,59 @@ export const bankTransactions = [
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-09-09T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 12491,
-    "counterpartyName": "FedEx",
-    "description": "FEDEX 767151 MEMPHIS TN",
+    "amount": 39900,
+    "counterpartyName": "Square",
+    "description": "SQUARE INC REFUND 767151",
     "accountName": "Chase Savings",
     "accountMask": "5717",
     "accountInstitution": {
       "name": "Chase",
       "logo": null
     },
-    "categorizationStatus": "SPLIT",
-    "category": {
-      "type": "Split_Categorization",
-      "id": "split-0000000f-291d-4720-8f36-45f47c339409",
-      "category": "SPLIT",
-      "displayName": "Split",
-      "entries": [
-        {
-          "type": "AccountSplitEntry",
-          "amount": 2998,
-          "category": {
-            "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000039",
-            "stableName": "OFFICE_EXPENSES",
-            "category": "OFFICE_EXPENSES",
-            "displayName": "Office Expenses"
-          },
-          "tags": []
-        },
-        {
-          "type": "AccountSplitEntry",
-          "amount": 9493,
-          "category": {
-            "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000028",
-            "stableName": "COST_OF_GOODS_SOLD",
-            "category": "COST_OF_GOODS_SOLD",
-            "displayName": "Cost of Goods Sold"
-          },
-          "tags": []
-        }
-      ]
-    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-291d-4720-8f36-45f47c339409",
+        "details": {
+          "id": "00000011-291d-4720-8f36-45f47c339409",
+          "amount": 39900,
+          "date": new Date("2025-09-09T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Refund_Payment_Match",
+          "description": "Refund payment via Square",
+          "customerRefundIdentifiers": {
+            "id": "customer-refund-0000000f-291d-4720-8f36-45f47c339409"
+          }
+        }
+      }
+    ],
+    "match": {
+      "id": "match-0000000f-291d-4720-8f36-45f47c339409",
+      "matchType": "REFUND_PAYMENT",
+      "bankTransaction": {
+        "id": "0000000f-291d-4720-8f36-45f47c339409",
+        "date": new Date("2025-09-09T15:45:00.000Z"),
+        "direction": "DEBIT",
+        "amount": 39900,
+        "counterpartyName": "Square",
+        "description": "SQUARE INC REFUND 767151"
+      },
+      "details": {
+        "id": "00000011-291d-4720-8f36-45f47c339409",
+        "amount": 39900,
+        "date": new Date("2025-09-09T15:45:00.000Z"),
+        "adjustment": null,
+        "type": "Refund_Payment_Match",
+        "description": "Refund payment via Square",
+        "customerRefundIdentifiers": {
+          "id": "customer-refund-0000000f-291d-4720-8f36-45f47c339409"
+        }
+      }
+    },
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
@@ -1482,10 +1624,10 @@ export const bankTransactions = [
     "sourceTransactionId": "src_txn_100010",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-09-06T15:45:00.000Z"),
-    "direction": "CREDIT",
-    "amount": 37641,
-    "counterpartyName": "PayPal",
-    "description": "PAYPAL TRANSFER 273411",
+    "direction": "DEBIT",
+    "amount": 39632,
+    "counterpartyName": "Stripe",
+    "description": "STRIPE REFUND ST-273411",
     "accountName": "Wells Fargo Checking",
     "accountMask": "0001",
     "accountInstitution": {
@@ -1521,9 +1663,9 @@ export const bankTransactions = [
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-09-02T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 6092,
-    "counterpartyName": "Google",
-    "description": "GOOGLE *GSUITE 387965",
+    "amount": 9894,
+    "counterpartyName": "State Farm",
+    "description": "STATE FARM INSURANCE 387965",
     "accountName": "Bank of America Savings",
     "accountMask": "1846",
     "accountInstitution": {
@@ -1533,10 +1675,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000042",
-      "stableName": "SOFTWARE",
-      "category": "SOFTWARE",
-      "displayName": "Software"
+      "id": "00000009-0000-4000-8000-000000000037",
+      "stableName": "INSURANCE",
+      "category": "INSURANCE",
+      "displayName": "Business Insurance"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -1569,9 +1711,9 @@ export const bankTransactions = [
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-08-29T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 52302,
-    "counterpartyName": "Meta",
-    "description": "FACEBK ADS 110014",
+    "amount": 242305,
+    "counterpartyName": "WeWork",
+    "description": "WEWORK 110014 NEW YORK NY",
     "accountName": "Capital One Savings",
     "accountMask": "0006",
     "accountInstitution": {
@@ -1581,10 +1723,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000038",
-      "stableName": "MARKETING",
-      "category": "MARKETING",
-      "displayName": "Marketing"
+      "id": "00000009-0000-4000-8000-000000000035",
+      "stableName": "RENT",
+      "category": "RENT",
+      "displayName": "Rent"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -1617,9 +1759,9 @@ export const bankTransactions = [
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-08-26T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 111065,
-    "counterpartyName": "Delta Air Lines",
-    "description": "DELTA AIR LINES ATL 283149",
+    "amount": 27063,
+    "counterpartyName": "Costco",
+    "description": "COSTCO WHSE #2831 PORTLAND OR",
     "accountName": "Capital One Checking",
     "accountMask": "0012",
     "accountInstitution": {
@@ -1629,10 +1771,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000040",
-      "stableName": "TRAVEL",
-      "category": "TRAVEL",
-      "displayName": "Business Travel"
+      "id": "00000009-0000-4000-8000-000000000039",
+      "stableName": "OFFICE_EXPENSES",
+      "category": "OFFICE_EXPENSES",
+      "displayName": "Office Expenses"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -1679,7 +1821,34 @@ export const bankTransactions = [
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
+    "suggestedMatches": [
+      {
+        "id": "00000010-fea7-46df-8be0-c37cc05f778c",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000011-fea7-46df-8be0-c37cc05f778c",
+          "amount": 174187,
+          "date": new Date("2025-08-22T15:45:00.000Z"),
+          "description": "Transfer from Capital One Checking to Capital One Savings",
+          "adjustment": null,
+          "fromAccountName": "Capital One Checking",
+          "toAccountName": "Capital One Savings"
+        }
+      },
+      {
+        "id": "00000021-fea7-46df-8be0-c37cc05f778c",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000031-fea7-46df-8be0-c37cc05f778c",
+          "amount": 174187,
+          "date": new Date("2025-08-22T15:45:00.000Z"),
+          "description": "Transfer from Bank of America Savings to Capital One Savings",
+          "adjustment": null,
+          "fromAccountName": "Bank of America Savings",
+          "toAccountName": "Capital One Savings"
+        }
+      }
+    ],
     "match": {
       "id": "match-0000000f-fea7-46df-8be0-c37cc05f778c",
       "matchType": "TRANSFER",
@@ -1696,7 +1865,7 @@ export const bankTransactions = [
         "id": "00000011-fea7-46df-8be0-c37cc05f778c",
         "amount": 174187,
         "date": new Date("2025-08-22T15:45:00.000Z"),
-        "description": "Transfer between Capital One Checking and Capital One Savings",
+        "description": "Transfer from Capital One Checking to Capital One Savings",
         "adjustment": null,
         "fromAccountName": "Capital One Checking",
         "toAccountName": "Capital One Savings"
@@ -1717,46 +1886,73 @@ export const bankTransactions = [
     "sourceTransactionId": "src_txn_923273",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-08-18T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 5854,
-    "counterpartyName": "Adobe",
-    "description": "ADOBE *CREATIVE CLOUD 544214",
+    "direction": "CREDIT",
+    "amount": 273963,
+    "counterpartyName": "Square",
+    "description": "SQUARE INC 544214",
     "accountName": "Wells Fargo Checking",
     "accountMask": "0001",
     "accountInstitution": {
       "name": "Wells Fargo",
       "logo": null
     },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000042",
-      "stableName": "SOFTWARE",
-      "category": "SOFTWARE",
-      "displayName": "Software"
-    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-d985-4065-8365-c51fd8a430a1",
+        "details": {
+          "id": "00000011-d985-4065-8365-c51fd8a430a1",
+          "amount": 273963,
+          "date": new Date("2025-08-18T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Invoice_Match",
+          "description": "Invoice payment via Square for 1 invoice with the following reference numbers: INV-5214",
+          "invoiceIdentifiers": [
+            {
+              "id": "invoice-0000000f-d985-4065-8365-c51fd8a430a1",
+              "referenceNumber": "INV-5214"
+            }
+          ]
+        }
+      }
+    ],
+    "match": {
+      "id": "match-0000000f-d985-4065-8365-c51fd8a430a1",
+      "matchType": "INVOICE_PAYMENT",
+      "bankTransaction": {
+        "id": "0000000f-d985-4065-8365-c51fd8a430a1",
+        "date": new Date("2025-08-18T15:45:00.000Z"),
+        "direction": "CREDIT",
+        "amount": 273963,
+        "counterpartyName": "Square",
+        "description": "SQUARE INC 544214"
+      },
+      "details": {
+        "id": "00000011-d985-4065-8365-c51fd8a430a1",
+        "amount": 273963,
+        "date": new Date("2025-08-18T15:45:00.000Z"),
+        "adjustment": null,
+        "type": "Invoice_Match",
+        "description": "Invoice payment via Square for 1 invoice with the following reference numbers: INV-5214",
+        "invoiceIdentifiers": [
+          {
+            "id": "invoice-0000000f-d985-4065-8365-c51fd8a430a1",
+            "referenceNumber": "INV-5214"
+          }
+        ]
+      }
+    },
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
     "referenceNumber": null,
     "metadata": null,
     "customer": null,
-    "vendor": {
-      "id": "00000004-db92-4483-8d55-6765962b7e9c",
-      "externalId": null,
-      "individualName": "Kenji Tanaka",
-      "companyName": "Initech",
-      "email": "kenji.tanaka@initech.test",
-      "mobilePhone": "+15425550146",
-      "officePhone": null,
-      "status": "ACTIVE",
-      "memo": null
-    },
+    "vendor": null,
     "updateCategorizationRulesSuggestion": null
   },
   {
@@ -1766,28 +1962,59 @@ export const bankTransactions = [
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-08-15T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 2134,
-    "counterpartyName": "Shell",
-    "description": "SHELL OIL 277705 HOUSTON TX",
+    "amount": 6178,
+    "counterpartyName": "Square",
+    "description": "SQUARE INC REFUND 277705",
     "accountName": "Wells Fargo Checking",
     "accountMask": "0001",
     "accountInstitution": {
       "name": "Wells Fargo",
       "logo": null
     },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000040",
-      "stableName": "TRAVEL",
-      "category": "TRAVEL",
-      "displayName": "Business Travel"
-    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-8950-447c-8143-0528dae9a7c5",
+        "details": {
+          "id": "00000011-8950-447c-8143-0528dae9a7c5",
+          "amount": 6178,
+          "date": new Date("2025-08-15T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Refund_Payment_Match",
+          "description": "Refund payment via Square",
+          "customerRefundIdentifiers": {
+            "id": "customer-refund-0000000f-8950-447c-8143-0528dae9a7c5"
+          }
+        }
+      }
+    ],
+    "match": {
+      "id": "match-0000000f-8950-447c-8143-0528dae9a7c5",
+      "matchType": "REFUND_PAYMENT",
+      "bankTransaction": {
+        "id": "0000000f-8950-447c-8143-0528dae9a7c5",
+        "date": new Date("2025-08-15T15:45:00.000Z"),
+        "direction": "DEBIT",
+        "amount": 6178,
+        "counterpartyName": "Square",
+        "description": "SQUARE INC REFUND 277705"
+      },
+      "details": {
+        "id": "00000011-8950-447c-8143-0528dae9a7c5",
+        "amount": 6178,
+        "date": new Date("2025-08-15T15:45:00.000Z"),
+        "adjustment": null,
+        "type": "Refund_Payment_Match",
+        "description": "Refund payment via Square",
+        "customerRefundIdentifiers": {
+          "id": "customer-refund-0000000f-8950-447c-8143-0528dae9a7c5"
+        }
+      }
+    },
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
@@ -1814,9 +2041,9 @@ export const bankTransactions = [
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-08-11T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 8432,
-    "counterpartyName": "Shell",
-    "description": "SHELL OIL 255854 HOUSTON TX",
+    "amount": 11952,
+    "counterpartyName": "PayPal",
+    "description": "PAYPAL REFUND 255854",
     "accountName": "Bank of America Savings",
     "accountMask": "1846",
     "accountInstitution": {
@@ -1831,10 +2058,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000040",
-          "stableName": "TRAVEL",
-          "category": "TRAVEL",
-          "displayName": "Business Travel"
+          "id": "00000009-0000-4000-8000-000000000024",
+          "stableName": "SALES",
+          "category": "SALES",
+          "displayName": "Sales"
         }
       ]
     },
@@ -1857,10 +2084,10 @@ export const bankTransactions = [
     "sourceTransactionId": "src_txn_100002",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-08-08T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 58875,
-    "counterpartyName": "Marriott",
-    "description": "MARRIOTT 248406 SAN FRANCISCO CA",
+    "direction": "CREDIT",
+    "amount": 88880,
+    "counterpartyName": "PayPal",
+    "description": "PAYPAL TRANSFER 248406",
     "accountName": "Bank of America Savings",
     "accountMask": "1846",
     "accountInstitution": {
@@ -1870,10 +2097,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000040",
-      "stableName": "TRAVEL",
-      "category": "TRAVEL",
-      "displayName": "Business Travel"
+      "id": "00000009-0000-4000-8000-000000000024",
+      "stableName": "SALES",
+      "category": "SALES",
+      "displayName": "Sales"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -1895,29 +2122,54 @@ export const bankTransactions = [
     "sourceTransactionId": "src_txn_562555",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-08-04T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 72844,
-    "counterpartyName": "Meta",
-    "description": "FACEBK ADS 460196",
+    "direction": "CREDIT",
+    "amount": 430847,
+    "counterpartyName": "Shopify",
+    "description": "SHOPIFY PAYMENTS 460196",
     "accountName": "Capital One Checking",
     "accountMask": "0012",
     "accountInstitution": {
       "name": "Capital One",
       "logo": null
     },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000038",
-      "stableName": "MARKETING",
-      "category": "MARKETING",
-      "displayName": "Marketing"
-    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-2c52-42af-8093-65ca2189e89b",
+        "details": {
+          "id": "00000011-2c52-42af-8093-65ca2189e89b",
+          "amount": 430847,
+          "date": new Date("2025-08-04T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Payout_Match",
+          "description": "Payout via Shopify created on 2025-08-04"
+        }
+      }
+    ],
+    "match": {
+      "id": "match-0000000f-2c52-42af-8093-65ca2189e89b",
+      "matchType": "PAYOUT",
+      "bankTransaction": {
+        "id": "0000000f-2c52-42af-8093-65ca2189e89b",
+        "date": new Date("2025-08-04T15:45:00.000Z"),
+        "direction": "CREDIT",
+        "amount": 430847,
+        "counterpartyName": "Shopify",
+        "description": "SHOPIFY PAYMENTS 460196"
+      },
+      "details": {
+        "id": "00000011-2c52-42af-8093-65ca2189e89b",
+        "amount": 430847,
+        "date": new Date("2025-08-04T15:45:00.000Z"),
+        "adjustment": null,
+        "type": "Payout_Match",
+        "description": "Payout via Shopify created on 2025-08-04"
+      }
+    },
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
@@ -1934,18 +2186,30 @@ export const bankTransactions = [
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-07-31T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 8617,
-    "counterpartyName": "Shell",
-    "description": "SHELL OIL 516933 HOUSTON TX",
+    "amount": 18635,
+    "counterpartyName": "State Farm",
+    "description": "STATE FARM INSURANCE 516933",
     "accountName": "Capital One Savings",
     "accountMask": "0006",
     "accountInstitution": {
       "name": "Capital One",
       "logo": null
     },
-    "categorizationStatus": "PENDING",
+    "categorizationStatus": "READY_FOR_INPUT",
     "category": null,
-    "categorizationFlow": null,
+    "categorizationFlow": {
+      "type": "ASK_FROM_SUGGESTIONS",
+      "category": null,
+      "suggestions": [
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000037",
+          "stableName": "INSURANCE",
+          "category": "INSURANCE",
+          "displayName": "Business Insurance"
+        }
+      ]
+    },
     "taxCode": null,
     "taxOptions": null,
     "suggestedMatches": [],
@@ -1980,7 +2244,34 @@ export const bankTransactions = [
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
+    "suggestedMatches": [
+      {
+        "id": "00000010-34cf-4505-8943-165c473ffe6c",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000011-34cf-4505-8943-165c473ffe6c",
+          "amount": 106617,
+          "date": new Date("2025-07-28T15:45:00.000Z"),
+          "description": "Transfer from Capital One Savings to Wells Fargo Checking",
+          "adjustment": null,
+          "fromAccountName": "Capital One Savings",
+          "toAccountName": "Wells Fargo Checking"
+        }
+      },
+      {
+        "id": "00000021-34cf-4505-8943-165c473ffe6c",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000031-34cf-4505-8943-165c473ffe6c",
+          "amount": 106617,
+          "date": new Date("2025-07-28T15:45:00.000Z"),
+          "description": "Transfer from Capital One Savings to Capital One Checking",
+          "adjustment": null,
+          "fromAccountName": "Capital One Savings",
+          "toAccountName": "Capital One Checking"
+        }
+      }
+    ],
     "match": {
       "id": "match-0000000f-34cf-4505-8943-165c473ffe6c",
       "matchType": "TRANSFER",
@@ -1997,7 +2288,7 @@ export const bankTransactions = [
         "id": "00000011-34cf-4505-8943-165c473ffe6c",
         "amount": 106617,
         "date": new Date("2025-07-28T15:45:00.000Z"),
-        "description": "Transfer between Capital One Savings and Wells Fargo Checking",
+        "description": "Transfer from Capital One Savings to Wells Fargo Checking",
         "adjustment": null,
         "fromAccountName": "Capital One Savings",
         "toAccountName": "Wells Fargo Checking"
@@ -2019,22 +2310,47 @@ export const bankTransactions = [
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-07-24T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 28599,
-    "counterpartyName": "State Farm",
-    "description": "STATE FARM INSURANCE 974076",
+    "amount": 44103,
+    "counterpartyName": "The Home Depot",
+    "description": "THE HOME DEPOT #9740 DENVER CO",
     "accountName": "Capital One Savings",
     "accountMask": "0006",
     "accountInstitution": {
       "name": "Capital One",
       "logo": null
     },
-    "categorizationStatus": "CATEGORIZED",
+    "categorizationStatus": "SPLIT",
     "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000037",
-      "stableName": "INSURANCE",
-      "category": "INSURANCE",
-      "displayName": "Business Insurance"
+      "type": "Split_Categorization",
+      "id": "split-0000000f-c9c7-4a95-8d6c-663c954adf34",
+      "category": "SPLIT",
+      "displayName": "Split",
+      "entries": [
+        {
+          "type": "AccountSplitEntry",
+          "amount": 17200,
+          "category": {
+            "type": "Account",
+            "id": "00000009-0000-4000-8000-000000000039",
+            "stableName": "OFFICE_EXPENSES",
+            "category": "OFFICE_EXPENSES",
+            "displayName": "Office Expenses"
+          },
+          "tags": []
+        },
+        {
+          "type": "AccountSplitEntry",
+          "amount": 26903,
+          "category": {
+            "type": "Account",
+            "id": "00000009-0000-4000-8000-000000000028",
+            "stableName": "COST_OF_GOODS_SOLD",
+            "category": "COST_OF_GOODS_SOLD",
+            "displayName": "Cost of Goods Sold"
+          },
+          "tags": []
+        }
+      ]
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -2056,10 +2372,10 @@ export const bankTransactions = [
     "sourceTransactionId": "src_txn_999999",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-07-20T15:45:00.000Z"),
-    "direction": "CREDIT",
-    "amount": 43091,
-    "counterpartyName": "PayPal",
-    "description": "PAYPAL TRANSFER 802439",
+    "direction": "DEBIT",
+    "amount": 10259,
+    "counterpartyName": "Staples",
+    "description": "STAPLES 00802439 SAN FRANCISCO CA",
     "accountName": "Wells Fargo Checking",
     "accountMask": "0001",
     "accountInstitution": {
@@ -2074,10 +2390,17 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000024",
-          "stableName": "SALES",
-          "category": "SALES",
-          "displayName": "Sales"
+          "id": "00000009-0000-4000-8000-000000000039",
+          "stableName": "OFFICE_EXPENSES",
+          "category": "OFFICE_EXPENSES",
+          "displayName": "Office Expenses"
+        },
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000028",
+          "stableName": "COST_OF_GOODS_SOLD",
+          "category": "COST_OF_GOODS_SOLD",
+          "displayName": "Cost of Goods Sold"
         }
       ]
     },
@@ -2101,21 +2424,50 @@ export const bankTransactions = [
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-07-17T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 52668,
-    "counterpartyName": "Meta",
-    "description": "FACEBK ADS 823475",
+    "amount": 24655,
+    "counterpartyName": "Comcast",
+    "description": "COMCAST CABLE COMM 823475",
     "accountName": "Wells Fargo Checking",
     "accountMask": "0001",
     "accountInstitution": {
       "name": "Wells Fargo",
       "logo": null
     },
-    "categorizationStatus": "PENDING",
+    "categorizationStatus": "READY_FOR_INPUT",
     "category": null,
-    "categorizationFlow": null,
+    "categorizationFlow": {
+      "type": "ASK_FROM_SUGGESTIONS",
+      "category": null,
+      "suggestions": [
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000036",
+          "stableName": "UTILITIES",
+          "category": "UTILITIES",
+          "displayName": "Utilities"
+        }
+      ]
+    },
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
+    "suggestedMatches": [
+      {
+        "id": "00000010-3ae4-4bde-85ae-6c24dc66f120",
+        "details": {
+          "id": "00000011-3ae4-4bde-85ae-6c24dc66f120",
+          "amount": 24655,
+          "date": new Date("2025-07-17T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Bill_Match",
+          "description": "Bill payment via Comcast for 1 bill",
+          "billIdentifiers": [
+            {
+              "id": "bill-0000000f-3ae4-4bde-85ae-6c24dc66f120"
+            }
+          ]
+        }
+      }
+    ],
     "match": null,
     "transactionTags": [],
     "documentIds": [],
@@ -2133,9 +2485,9 @@ export const bankTransactions = [
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-07-13T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 59289,
-    "counterpartyName": "Amazon Web Services",
-    "description": "AMAZON WEB SERVICES AWS.AMAZON.CO 755066",
+    "amount": 37285,
+    "counterpartyName": "Marriott",
+    "description": "MARRIOTT 755066 SAN FRANCISCO CA",
     "accountName": "Bank of America Savings",
     "accountMask": "1846",
     "accountInstitution": {
@@ -2145,10 +2497,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000042",
-      "stableName": "SOFTWARE",
-      "category": "SOFTWARE",
-      "displayName": "Software"
+      "id": "00000009-0000-4000-8000-000000000040",
+      "stableName": "TRAVEL",
+      "category": "TRAVEL",
+      "displayName": "Business Travel"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -2171,9 +2523,9 @@ export const bankTransactions = [
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-07-09T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 1841,
-    "counterpartyName": "Uber",
-    "description": "UBER TRIP 719453 HELP.UBER.COM",
+    "amount": 235099,
+    "counterpartyName": "Apple",
+    "description": "APPLE.COM/BILL 719453 CUPERTINO CA",
     "accountName": "Wells Fargo Checking",
     "accountMask": "0001",
     "accountInstitution": {
@@ -2188,17 +2540,17 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000040",
-          "stableName": "TRAVEL",
-          "category": "TRAVEL",
-          "displayName": "Business Travel"
+          "id": "00000009-0000-4000-8000-000000000042",
+          "stableName": "SOFTWARE",
+          "category": "SOFTWARE",
+          "displayName": "Software"
         },
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000041",
-          "stableName": "MEALS",
-          "category": "MEALS",
-          "displayName": "Business Meals"
+          "id": "00000009-0000-4000-8000-000000000039",
+          "stableName": "OFFICE_EXPENSES",
+          "category": "OFFICE_EXPENSES",
+          "displayName": "Office Expenses"
         }
       ]
     },
@@ -2232,9 +2584,9 @@ export const bankTransactions = [
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-07-06T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 145958,
-    "counterpartyName": "WeWork",
-    "description": "WEWORK 330396 NEW YORK NY",
+    "amount": 110955,
+    "counterpartyName": "Delta Air Lines",
+    "description": "DELTA AIR LINES ATL 330396",
     "accountName": "Capital One Savings",
     "accountMask": "0006",
     "accountInstitution": {
@@ -2249,10 +2601,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000035",
-          "stableName": "RENT",
-          "category": "RENT",
-          "displayName": "Rent"
+          "id": "00000009-0000-4000-8000-000000000040",
+          "stableName": "TRAVEL",
+          "category": "TRAVEL",
+          "displayName": "Business Travel"
         }
       ]
     },
@@ -2295,34 +2647,40 @@ export const bankTransactions = [
       "name": "Capital One",
       "logo": null
     },
-    "categorizationStatus": "MATCHED",
+    "categorizationStatus": "READY_FOR_INPUT",
     "category": null,
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
-    "match": {
-      "id": "match-0000000f-a4eb-4419-8e14-9ce4b5cec937",
-      "matchType": "TRANSFER",
-      "bankTransaction": {
-        "id": "0000000f-a4eb-4419-8e14-9ce4b5cec937",
-        "date": new Date("2025-07-02T15:45:00.000Z"),
-        "direction": "CREDIT",
-        "amount": 267663,
-        "counterpartyName": null,
-        "description": "ONLINE TRANSFER FROM CHASE SAVINGS XXXXXX3351"
+    "suggestedMatches": [
+      {
+        "id": "00000010-a4eb-4419-8e14-9ce4b5cec937",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000011-a4eb-4419-8e14-9ce4b5cec937",
+          "amount": 267663,
+          "date": new Date("2025-07-02T15:45:00.000Z"),
+          "description": "Transfer from Chase Savings to Capital One Checking",
+          "adjustment": null,
+          "fromAccountName": "Chase Savings",
+          "toAccountName": "Capital One Checking"
+        }
       },
-      "details": {
-        "type": "Transfer_Match",
-        "id": "00000011-a4eb-4419-8e14-9ce4b5cec937",
-        "amount": 267663,
-        "date": new Date("2025-07-02T15:45:00.000Z"),
-        "description": "Transfer between Chase Savings and Capital One Checking",
-        "adjustment": null,
-        "fromAccountName": "Chase Savings",
-        "toAccountName": "Capital One Checking"
+      {
+        "id": "00000021-a4eb-4419-8e14-9ce4b5cec937",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000031-a4eb-4419-8e14-9ce4b5cec937",
+          "amount": 267663,
+          "date": new Date("2025-07-02T15:45:00.000Z"),
+          "description": "Transfer from Wells Fargo Checking to Capital One Checking",
+          "adjustment": null,
+          "fromAccountName": "Wells Fargo Checking",
+          "toAccountName": "Capital One Checking"
+        }
       }
-    },
+    ],
+    "match": null,
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
@@ -2339,9 +2697,9 @@ export const bankTransactions = [
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-06-28T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 65712,
-    "counterpartyName": "Meta",
-    "description": "FACEBK ADS 200375",
+    "amount": 4609,
+    "counterpartyName": "Adobe",
+    "description": "ADOBE *CREATIVE CLOUD 200375",
     "accountName": "Capital One Checking",
     "accountMask": "0012",
     "accountInstitution": {
@@ -2356,10 +2714,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000038",
-          "stableName": "MARKETING",
-          "category": "MARKETING",
-          "displayName": "Marketing"
+          "id": "00000009-0000-4000-8000-000000000042",
+          "stableName": "SOFTWARE",
+          "category": "SOFTWARE",
+          "displayName": "Software"
         }
       ]
     },
@@ -2383,9 +2741,9 @@ export const bankTransactions = [
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-06-25T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 7622,
-    "counterpartyName": "Verizon",
-    "description": "VZWRLSS*APOCC VISB 576419",
+    "amount": 19024,
+    "counterpartyName": "Staples",
+    "description": "STAPLES 00576419 SAN FRANCISCO CA",
     "accountName": "Wells Fargo Checking",
     "accountMask": "0001",
     "accountInstitution": {
@@ -2400,10 +2758,17 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000036",
-          "stableName": "UTILITIES",
-          "category": "UTILITIES",
-          "displayName": "Utilities"
+          "id": "00000009-0000-4000-8000-000000000039",
+          "stableName": "OFFICE_EXPENSES",
+          "category": "OFFICE_EXPENSES",
+          "displayName": "Office Expenses"
+        },
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000028",
+          "stableName": "COST_OF_GOODS_SOLD",
+          "category": "COST_OF_GOODS_SOLD",
+          "displayName": "Cost of Goods Sold"
         }
       ]
     },
@@ -2427,21 +2792,50 @@ export const bankTransactions = [
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-06-21T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 58139,
-    "counterpartyName": "The Home Depot",
-    "description": "THE HOME DEPOT #6229 DENVER CO",
+    "amount": 4614,
+    "counterpartyName": "Verizon",
+    "description": "VZWRLSS*APOCC VISB 622987",
     "accountName": "Bank of America Savings",
     "accountMask": "1846",
     "accountInstitution": {
       "name": "Bank of America",
       "logo": null
     },
-    "categorizationStatus": "PENDING",
+    "categorizationStatus": "READY_FOR_INPUT",
     "category": null,
-    "categorizationFlow": null,
+    "categorizationFlow": {
+      "type": "ASK_FROM_SUGGESTIONS",
+      "category": null,
+      "suggestions": [
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000036",
+          "stableName": "UTILITIES",
+          "category": "UTILITIES",
+          "displayName": "Utilities"
+        }
+      ]
+    },
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
+    "suggestedMatches": [
+      {
+        "id": "00000010-11bc-49e8-844d-79307b6a9e7e",
+        "details": {
+          "id": "00000011-11bc-49e8-844d-79307b6a9e7e",
+          "amount": 4614,
+          "date": new Date("2025-06-21T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Bill_Match",
+          "description": "Bill payment via Verizon for 1 bill",
+          "billIdentifiers": [
+            {
+              "id": "bill-0000000f-11bc-49e8-844d-79307b6a9e7e"
+            }
+          ]
+        }
+      }
+    ],
     "match": null,
     "transactionTags": [],
     "documentIds": [],
@@ -2459,9 +2853,9 @@ export const bankTransactions = [
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-06-17T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 5736,
-    "counterpartyName": "Adobe",
-    "description": "ADOBE *CREATIVE CLOUD 972292",
+    "amount": 34785,
+    "counterpartyName": "Square",
+    "description": "SQUARE INC REFUND 972292",
     "accountName": "Capital One Savings",
     "accountMask": "0006",
     "accountInstitution": {
@@ -2471,10 +2865,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000042",
-      "stableName": "SOFTWARE",
-      "category": "SOFTWARE",
-      "displayName": "Software"
+      "id": "00000009-0000-4000-8000-000000000024",
+      "stableName": "SALES",
+      "category": "SALES",
+      "displayName": "Sales"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -2497,9 +2891,9 @@ export const bankTransactions = [
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-06-14T15:45:00.000Z"),
     "direction": "CREDIT",
-    "amount": 209253,
-    "counterpartyName": "Square",
-    "description": "SQUARE INC 425391",
+    "amount": 9250,
+    "counterpartyName": "PayPal",
+    "description": "PAYPAL TRANSFER 425391",
     "accountName": "Capital One Savings",
     "accountMask": "0006",
     "accountInstitution": {
@@ -2540,10 +2934,10 @@ export const bankTransactions = [
     "sourceTransactionId": "src_txn_237567",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-06-10T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 3870,
-    "counterpartyName": "Starbucks",
-    "description": "STARBUCKS STORE 116828 SEATTLE WA",
+    "direction": "CREDIT",
+    "amount": 322866,
+    "counterpartyName": "Square",
+    "description": "SQUARE INC 116828",
     "accountName": "Capital One Checking",
     "accountMask": "0012",
     "accountInstitution": {
@@ -2555,30 +2949,37 @@ export const bankTransactions = [
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
+    "suggestedMatches": [
+      {
+        "id": "00000010-690b-4213-897b-66059abafa6d",
+        "details": {
+          "id": "00000011-690b-4213-897b-66059abafa6d",
+          "amount": 322866,
+          "date": new Date("2025-06-10T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Payout_Match",
+          "description": "Payout via Square created on 2025-06-10"
+        }
+      }
+    ],
     "match": {
       "id": "match-0000000f-690b-4213-897b-66059abafa6d",
-      "matchType": "BILL_PAYMENT",
+      "matchType": "PAYOUT",
       "bankTransaction": {
         "id": "0000000f-690b-4213-897b-66059abafa6d",
         "date": new Date("2025-06-10T15:45:00.000Z"),
-        "direction": "DEBIT",
-        "amount": 3870,
-        "counterpartyName": "Starbucks",
-        "description": "STARBUCKS STORE 116828 SEATTLE WA"
+        "direction": "CREDIT",
+        "amount": 322866,
+        "counterpartyName": "Square",
+        "description": "SQUARE INC 116828"
       },
       "details": {
-        "type": "Bill_Match",
         "id": "00000011-690b-4213-897b-66059abafa6d",
-        "amount": 3870,
+        "amount": 322866,
         "date": new Date("2025-06-10T15:45:00.000Z"),
-        "description": "Bill payment to Starbucks",
         "adjustment": null,
-        "billIdentifiers": [
-          {
-            "id": "bill-0000000f-690b-4213-897b-66059abafa6d"
-          }
-        ]
+        "type": "Payout_Match",
+        "description": "Payout via Square created on 2025-06-10"
       }
     },
     "transactionTags": [],
@@ -2586,18 +2987,19 @@ export const bankTransactions = [
     "memo": null,
     "referenceNumber": null,
     "metadata": null,
-    "customer": null,
-    "vendor": {
-      "id": "00000004-965f-4841-8d6b-5520a8b1bd8b",
+    "customer": {
+      "id": "00000003-ce47-433a-8943-a740f2732a3f",
       "externalId": null,
-      "individualName": "Aisha Bello",
+      "individualName": "Amara Okafor",
       "companyName": null,
       "email": null,
-      "mobilePhone": null,
-      "officePhone": null,
+      "mobilePhone": "+13985550197",
+      "officePhone": "+19935550154",
+      "addressString": null,
       "status": "ACTIVE",
-      "memo": null
+      "memo": "Referred by partner"
     },
+    "vendor": null,
     "updateCategorizationRulesSuggestion": null
   },
   {
@@ -2607,9 +3009,9 @@ export const bankTransactions = [
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-06-06T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 3119,
-    "counterpartyName": "Adobe",
-    "description": "ADOBE *CREATIVE CLOUD 386694",
+    "amount": 78743,
+    "counterpartyName": "Meta",
+    "description": "FACEBK ADS 386694",
     "accountName": "Chase Savings",
     "accountMask": "5717",
     "accountInstitution": {
@@ -2624,10 +3026,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000042",
-          "stableName": "SOFTWARE",
-          "category": "SOFTWARE",
-          "displayName": "Software"
+          "id": "00000009-0000-4000-8000-000000000038",
+          "stableName": "MARKETING",
+          "category": "MARKETING",
+          "displayName": "Marketing"
         }
       ]
     },
@@ -2675,7 +3077,34 @@ export const bankTransactions = [
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
+    "suggestedMatches": [
+      {
+        "id": "00000010-0e82-4ef5-8d64-8beb148bc676",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000011-0e82-4ef5-8d64-8beb148bc676",
+          "amount": 242398,
+          "date": new Date("2025-06-03T15:45:00.000Z"),
+          "description": "Transfer from Wells Fargo Checking to Chase Savings",
+          "adjustment": null,
+          "fromAccountName": "Wells Fargo Checking",
+          "toAccountName": "Chase Savings"
+        }
+      },
+      {
+        "id": "00000021-0e82-4ef5-8d64-8beb148bc676",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000031-0e82-4ef5-8d64-8beb148bc676",
+          "amount": 242398,
+          "date": new Date("2025-06-03T15:45:00.000Z"),
+          "description": "Transfer from Wells Fargo Checking to Capital One Checking",
+          "adjustment": null,
+          "fromAccountName": "Wells Fargo Checking",
+          "toAccountName": "Capital One Checking"
+        }
+      }
+    ],
     "match": {
       "id": "match-0000000f-0e82-4ef5-8d64-8beb148bc676",
       "matchType": "TRANSFER",
@@ -2692,7 +3121,7 @@ export const bankTransactions = [
         "id": "00000011-0e82-4ef5-8d64-8beb148bc676",
         "amount": 242398,
         "date": new Date("2025-06-03T15:45:00.000Z"),
-        "description": "Transfer between Wells Fargo Checking and Chase Savings",
+        "description": "Transfer from Wells Fargo Checking to Chase Savings",
         "adjustment": null,
         "fromAccountName": "Wells Fargo Checking",
         "toAccountName": "Chase Savings"
@@ -2714,762 +3143,13 @@ export const bankTransactions = [
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-05-30T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 3849,
-    "counterpartyName": "Shell",
-    "description": "SHELL OIL 153289 HOUSTON TX",
-    "accountName": "Wells Fargo Checking",
-    "accountMask": "0001",
-    "accountInstitution": {
-      "name": "Wells Fargo",
-      "logo": null
-    },
-    "categorizationStatus": "READY_FOR_INPUT",
-    "category": null,
-    "categorizationFlow": {
-      "type": "ASK_FROM_SUGGESTIONS",
-      "category": null,
-      "suggestions": [
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000040",
-          "stableName": "TRAVEL",
-          "category": "TRAVEL",
-          "displayName": "Business Travel"
-        }
-      ]
-    },
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": {
-      "id": "00000004-db92-4483-8d55-6765962b7e9c",
-      "externalId": null,
-      "individualName": "Kenji Tanaka",
-      "companyName": "Initech",
-      "email": "kenji.tanaka@initech.test",
-      "mobilePhone": "+15425550146",
-      "officePhone": null,
-      "status": "ACTIVE",
-      "memo": null
-    },
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-d6d6-45a2-85a4-89a7176a1d51",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_552405",
-    "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
-    "date": new Date("2025-05-27T15:45:00.000Z"),
-    "direction": "CREDIT",
-    "amount": 666137,
-    "counterpartyName": "Stripe",
-    "description": "STRIPE TRANSFER ST-276039",
-    "accountName": "Wells Fargo Checking",
-    "accountMask": "0001",
-    "accountInstitution": {
-      "name": "Wells Fargo",
-      "logo": null
-    },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000024",
-      "stableName": "SALES",
-      "category": "SALES",
-      "displayName": "Sales"
-    },
-    "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-5f7c-4e46-84f9-16216c4c3e03",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_919316",
-    "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
-    "date": new Date("2025-05-23T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 55720,
-    "counterpartyName": "The Home Depot",
-    "description": "THE HOME DEPOT #8677 DENVER CO",
-    "accountName": "Chase Savings",
-    "accountMask": "5717",
-    "accountInstitution": {
-      "name": "Chase",
-      "logo": null
-    },
-    "categorizationStatus": "READY_FOR_INPUT",
-    "category": null,
-    "categorizationFlow": {
-      "type": "ASK_FROM_SUGGESTIONS",
-      "category": null,
-      "suggestions": [
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000039",
-          "stableName": "OFFICE_EXPENSES",
-          "category": "OFFICE_EXPENSES",
-          "displayName": "Office Expenses"
-        },
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000028",
-          "stableName": "COST_OF_GOODS_SOLD",
-          "category": "COST_OF_GOODS_SOLD",
-          "displayName": "Cost of Goods Sold"
-        }
-      ]
-    },
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-da0e-4fb9-85fa-861adf709404",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_100019",
-    "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
-    "date": new Date("2025-05-19T15:45:00.000Z"),
-    "direction": "CREDIT",
-    "amount": 888767,
-    "counterpartyName": null,
-    "description": "ONLINE TRANSFER FROM BANK OF AMERICA SAVINGS XXXXXX1744",
-    "accountName": "Wells Fargo Checking",
-    "accountMask": "0001",
-    "accountInstitution": {
-      "name": "Wells Fargo",
-      "logo": null
-    },
-    "categorizationStatus": "MATCHED",
-    "category": null,
-    "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": {
-      "id": "match-0000000f-da0e-4fb9-85fa-861adf709404",
-      "matchType": "TRANSFER",
-      "bankTransaction": {
-        "id": "0000000f-da0e-4fb9-85fa-861adf709404",
-        "date": new Date("2025-05-19T15:45:00.000Z"),
-        "direction": "CREDIT",
-        "amount": 888767,
-        "counterpartyName": null,
-        "description": "ONLINE TRANSFER FROM BANK OF AMERICA SAVINGS XXXXXX1744"
-      },
-      "details": {
-        "type": "Transfer_Match",
-        "id": "00000011-da0e-4fb9-85fa-861adf709404",
-        "amount": 888767,
-        "date": new Date("2025-05-19T15:45:00.000Z"),
-        "description": "Transfer between Bank of America Savings and Wells Fargo Checking",
-        "adjustment": null,
-        "fromAccountName": "Bank of America Savings",
-        "toAccountName": "Wells Fargo Checking"
-      }
-    },
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-1288-47a3-8d12-34fa883921b0",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_118407",
-    "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
-    "date": new Date("2025-05-16T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 23479,
-    "counterpartyName": "Verizon",
-    "description": "VZWRLSS*APOCC VISB 283241",
-    "accountName": "Capital One Checking",
-    "accountMask": "0012",
-    "accountInstitution": {
-      "name": "Capital One",
-      "logo": null
-    },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000036",
-      "stableName": "UTILITIES",
-      "category": "UTILITIES",
-      "displayName": "Utilities"
-    },
-    "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-adfc-4819-8b00-f573521efc05",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_999984",
-    "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
-    "date": new Date("2025-05-12T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 171754,
-    "counterpartyName": "WeWork",
-    "description": "WEWORK 549208 NEW YORK NY",
-    "accountName": "Chase Savings",
-    "accountMask": "5717",
-    "accountInstitution": {
-      "name": "Chase",
-      "logo": null
-    },
-    "categorizationStatus": "READY_FOR_INPUT",
-    "category": null,
-    "categorizationFlow": {
-      "type": "ASK_FROM_SUGGESTIONS",
-      "category": null,
-      "suggestions": [
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000035",
-          "stableName": "RENT",
-          "category": "RENT",
-          "displayName": "Rent"
-        }
-      ]
-    },
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-34d8-49ae-8a34-b763e07ba93f",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_320909",
-    "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
-    "date": new Date("2025-05-08T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 8469,
-    "counterpartyName": "State Farm",
-    "description": "STATE FARM INSURANCE 591571",
-    "accountName": "Bank of America Savings",
-    "accountMask": "1846",
-    "accountInstitution": {
-      "name": "Bank of America",
-      "logo": null
-    },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000037",
-      "stableName": "INSURANCE",
-      "category": "INSURANCE",
-      "displayName": "Business Insurance"
-    },
-    "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-f62f-4e96-88a4-a533172fe3d1",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_206500",
-    "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
-    "date": new Date("2025-05-05T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 3156,
-    "counterpartyName": "Uber",
-    "description": "UBER TRIP 870711 HELP.UBER.COM",
-    "accountName": "Capital One Checking",
-    "accountMask": "0012",
-    "accountInstitution": {
-      "name": "Capital One",
-      "logo": null
-    },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000040",
-      "stableName": "TRAVEL",
-      "category": "TRAVEL",
-      "displayName": "Business Travel"
-    },
-    "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-aea8-4360-8d1f-ad2115aaac22",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_100008",
-    "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
-    "date": new Date("2025-05-01T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 22224,
+    "amount": 19912,
     "counterpartyName": "Costco",
-    "description": "COSTCO WHSE #8198 PORTLAND OR",
+    "description": "COSTCO WHSE #1532 PORTLAND OR",
     "accountName": "Wells Fargo Checking",
     "accountMask": "0001",
     "accountInstitution": {
       "name": "Wells Fargo",
-      "logo": null
-    },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000039",
-      "stableName": "OFFICE_EXPENSES",
-      "category": "OFFICE_EXPENSES",
-      "displayName": "Office Expenses"
-    },
-    "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-eda2-46d6-8f61-7caa97dfbb59",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_100017",
-    "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
-    "date": new Date("2025-04-27T15:45:00.000Z"),
-    "direction": "CREDIT",
-    "amount": 101,
-    "counterpartyName": null,
-    "description": "ONLINE TRANSFER FROM CAPITAL ONE CHECKING XXXXXX7213",
-    "accountName": "Wells Fargo Checking",
-    "accountMask": "0001",
-    "accountInstitution": {
-      "name": "Wells Fargo",
-      "logo": null
-    },
-    "categorizationStatus": "MATCHED",
-    "category": null,
-    "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": {
-      "id": "match-0000000f-eda2-46d6-8f61-7caa97dfbb59",
-      "matchType": "TRANSFER",
-      "bankTransaction": {
-        "id": "0000000f-eda2-46d6-8f61-7caa97dfbb59",
-        "date": new Date("2025-04-27T15:45:00.000Z"),
-        "direction": "CREDIT",
-        "amount": 101,
-        "counterpartyName": null,
-        "description": "ONLINE TRANSFER FROM CAPITAL ONE CHECKING XXXXXX7213"
-      },
-      "details": {
-        "type": "Transfer_Match",
-        "id": "00000011-eda2-46d6-8f61-7caa97dfbb59",
-        "amount": 101,
-        "date": new Date("2025-04-27T15:45:00.000Z"),
-        "description": "Transfer between Capital One Checking and Wells Fargo Checking",
-        "adjustment": null,
-        "fromAccountName": "Capital One Checking",
-        "toAccountName": "Wells Fargo Checking"
-      }
-    },
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-e3bb-446b-80a4-54787669ce53",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_350204",
-    "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
-    "date": new Date("2025-04-24T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 30763,
-    "counterpartyName": "Amazon Web Services",
-    "description": "AMAZON WEB SERVICES AWS.AMAZON.CO 569541",
-    "accountName": "Capital One Savings",
-    "accountMask": "0006",
-    "accountInstitution": {
-      "name": "Capital One",
-      "logo": null
-    },
-    "categorizationStatus": "READY_FOR_INPUT",
-    "category": null,
-    "categorizationFlow": {
-      "type": "ASK_FROM_SUGGESTIONS",
-      "category": null,
-      "suggestions": [
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000042",
-          "stableName": "SOFTWARE",
-          "category": "SOFTWARE",
-          "displayName": "Software"
-        }
-      ]
-    },
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": {
-      "id": "00000004-965f-4841-8d6b-5520a8b1bd8b",
-      "externalId": null,
-      "individualName": "Aisha Bello",
-      "companyName": null,
-      "email": null,
-      "mobilePhone": null,
-      "officePhone": null,
-      "status": "ACTIVE",
-      "memo": null
-    },
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-3ed4-4df8-831e-f2df02940580",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_100007",
-    "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
-    "date": new Date("2025-04-20T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 8724,
-    "counterpartyName": "FedEx",
-    "description": "FEDEX 443997 MEMPHIS TN",
-    "accountName": "Capital One Savings",
-    "accountMask": "0006",
-    "accountInstitution": {
-      "name": "Capital One",
-      "logo": null
-    },
-    "categorizationStatus": "SPLIT",
-    "category": {
-      "type": "Split_Categorization",
-      "id": "split-0000000f-3ed4-4df8-831e-f2df02940580",
-      "category": "SPLIT",
-      "displayName": "Split",
-      "entries": [
-        {
-          "type": "AccountSplitEntry",
-          "amount": 2530,
-          "category": {
-            "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000039",
-            "stableName": "OFFICE_EXPENSES",
-            "category": "OFFICE_EXPENSES",
-            "displayName": "Office Expenses"
-          },
-          "tags": []
-        },
-        {
-          "type": "AccountSplitEntry",
-          "amount": 6194,
-          "category": {
-            "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000028",
-            "stableName": "COST_OF_GOODS_SOLD",
-            "category": "COST_OF_GOODS_SOLD",
-            "displayName": "Cost of Goods Sold"
-          },
-          "tags": []
-        }
-      ]
-    },
-    "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": {
-      "id": "00000004-98da-4862-898c-3559b33f72d8",
-      "externalId": null,
-      "individualName": "Jane Doe",
-      "companyName": null,
-      "email": "jane.doe@example.com",
-      "mobilePhone": null,
-      "officePhone": "+12035550103",
-      "status": "ACTIVE",
-      "memo": null
-    },
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-d7ce-47ff-8be3-9cdcbe4f7493",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_125872",
-    "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
-    "date": new Date("2025-04-16T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 40665,
-    "counterpartyName": "Amazon Web Services",
-    "description": "AMAZON WEB SERVICES AWS.AMAZON.CO 607804",
-    "accountName": "Chase Savings",
-    "accountMask": "5717",
-    "accountInstitution": {
-      "name": "Chase",
-      "logo": null
-    },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000042",
-      "stableName": "SOFTWARE",
-      "category": "SOFTWARE",
-      "displayName": "Software"
-    },
-    "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-7d42-4253-8eb1-15791a66ea01",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_999999",
-    "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
-    "date": new Date("2025-04-13T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 4179,
-    "counterpartyName": "Adobe",
-    "description": "ADOBE *CREATIVE CLOUD 234100",
-    "accountName": "Wells Fargo Checking",
-    "accountMask": "0001",
-    "accountInstitution": {
-      "name": "Wells Fargo",
-      "logo": null
-    },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000042",
-      "stableName": "SOFTWARE",
-      "category": "SOFTWARE",
-      "displayName": "Software"
-    },
-    "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-7c3d-4648-86ae-fe9ce422f320",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_752203",
-    "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
-    "date": new Date("2025-04-09T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 83056,
-    "counterpartyName": "Gusto",
-    "description": "GUSTO PAY 975417",
-    "accountName": "Capital One Checking",
-    "accountMask": "0012",
-    "accountInstitution": {
-      "name": "Capital One",
-      "logo": null
-    },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000032",
-      "stableName": "PAYROLL_REGULAR_WAGES",
-      "category": "PAYROLL_REGULAR_WAGES",
-      "displayName": "Employee Wages"
-    },
-    "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-bd74-4e8f-8ce4-7e13782bb6ef",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_973529",
-    "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
-    "date": new Date("2025-04-05T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 49365,
-    "counterpartyName": "The Home Depot",
-    "description": "THE HOME DEPOT #2382 DENVER CO",
-    "accountName": "Bank of America Savings",
-    "accountMask": "1846",
-    "accountInstitution": {
-      "name": "Bank of America",
-      "logo": null
-    },
-    "categorizationStatus": "SPLIT",
-    "category": {
-      "type": "Split_Categorization",
-      "id": "split-0000000f-bd74-4e8f-8ce4-7e13782bb6ef",
-      "category": "SPLIT",
-      "displayName": "Split",
-      "entries": [
-        {
-          "type": "AccountSplitEntry",
-          "amount": 38505,
-          "category": {
-            "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000039",
-            "stableName": "OFFICE_EXPENSES",
-            "category": "OFFICE_EXPENSES",
-            "displayName": "Office Expenses"
-          },
-          "tags": []
-        },
-        {
-          "type": "AccountSplitEntry",
-          "amount": 10860,
-          "category": {
-            "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000028",
-            "stableName": "COST_OF_GOODS_SOLD",
-            "category": "COST_OF_GOODS_SOLD",
-            "displayName": "Cost of Goods Sold"
-          },
-          "tags": []
-        }
-      ]
-    },
-    "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-bd8a-40e0-860b-77c73a3ef976",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_242416",
-    "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
-    "date": new Date("2025-04-02T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 17646,
-    "counterpartyName": "Costco",
-    "description": "COSTCO WHSE #2147 PORTLAND OR",
-    "accountName": "Capital One Checking",
-    "accountMask": "0012",
-    "accountInstitution": {
-      "name": "Capital One",
       "logo": null
     },
     "categorizationStatus": "READY_FOR_INPUT",
@@ -3511,72 +3191,29 @@ export const bankTransactions = [
     "referenceNumber": null,
     "metadata": null,
     "customer": null,
-    "vendor": null,
+    "vendor": {
+      "id": "00000004-db92-4483-8d55-6765962b7e9c",
+      "externalId": null,
+      "individualName": "Kenji Tanaka",
+      "companyName": "Initech",
+      "email": "kenji.tanaka@initech.test",
+      "mobilePhone": "+15425550146",
+      "officePhone": null,
+      "status": "ACTIVE",
+      "memo": null
+    },
     "updateCategorizationRulesSuggestion": null
   },
   {
-    "id": "0000000f-d9b6-45cc-85c8-b527e24fd1fd",
+    "id": "0000000f-d6d6-45a2-85a4-89a7176a1d51",
     "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_819434",
-    "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
-    "date": new Date("2025-03-29T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 583516,
-    "counterpartyName": null,
-    "description": "ONLINE TRANSFER TO CAPITAL ONE CHECKING XXXXXX8560",
-    "accountName": "Chase Savings",
-    "accountMask": "5717",
-    "accountInstitution": {
-      "name": "Chase",
-      "logo": null
-    },
-    "categorizationStatus": "MATCHED",
-    "category": null,
-    "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": {
-      "id": "match-0000000f-d9b6-45cc-85c8-b527e24fd1fd",
-      "matchType": "TRANSFER",
-      "bankTransaction": {
-        "id": "0000000f-d9b6-45cc-85c8-b527e24fd1fd",
-        "date": new Date("2025-03-29T15:45:00.000Z"),
-        "direction": "DEBIT",
-        "amount": 583516,
-        "counterpartyName": null,
-        "description": "ONLINE TRANSFER TO CAPITAL ONE CHECKING XXXXXX8560"
-      },
-      "details": {
-        "type": "Transfer_Match",
-        "id": "00000011-d9b6-45cc-85c8-b527e24fd1fd",
-        "amount": 583516,
-        "date": new Date("2025-03-29T15:45:00.000Z"),
-        "description": "Transfer between Chase Savings and Capital One Checking",
-        "adjustment": null,
-        "fromAccountName": "Chase Savings",
-        "toAccountName": "Capital One Checking"
-      }
-    },
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-4f39-4434-8e94-f4eb542c2224",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_983499",
+    "sourceTransactionId": "src_txn_552405",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
-    "date": new Date("2025-03-25T15:45:00.000Z"),
+    "date": new Date("2025-05-27T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 53406,
-    "counterpartyName": "Apple",
-    "description": "APPLE.COM/BILL 674812 CUPERTINO CA",
+    "amount": 71132,
+    "counterpartyName": "Meta",
+    "description": "FACEBK ADS 276039",
     "accountName": "Wells Fargo Checking",
     "accountMask": "0001",
     "accountInstitution": {
@@ -3586,73 +3223,12 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000042",
-      "stableName": "SOFTWARE",
-      "category": "SOFTWARE",
-      "displayName": "Software"
+      "id": "00000009-0000-4000-8000-000000000038",
+      "stableName": "MARKETING",
+      "category": "MARKETING",
+      "displayName": "Marketing"
     },
     "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": {
-      "id": "00000004-98da-4862-898c-3559b33f72d8",
-      "externalId": null,
-      "individualName": "Jane Doe",
-      "companyName": null,
-      "email": "jane.doe@example.com",
-      "mobilePhone": null,
-      "officePhone": "+12035550103",
-      "status": "ACTIVE",
-      "memo": null
-    },
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-d5ba-4284-8422-d332945d19cc",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_622282",
-    "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
-    "date": new Date("2025-03-22T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 50750,
-    "counterpartyName": "The Home Depot",
-    "description": "THE HOME DEPOT #5974 DENVER CO",
-    "accountName": "Chase Savings",
-    "accountMask": "5717",
-    "accountInstitution": {
-      "name": "Chase",
-      "logo": null
-    },
-    "categorizationStatus": "READY_FOR_INPUT",
-    "category": null,
-    "categorizationFlow": {
-      "type": "ASK_FROM_SUGGESTIONS",
-      "category": null,
-      "suggestions": [
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000039",
-          "stableName": "OFFICE_EXPENSES",
-          "category": "OFFICE_EXPENSES",
-          "displayName": "Office Expenses"
-        },
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000028",
-          "stableName": "COST_OF_GOODS_SOLD",
-          "category": "COST_OF_GOODS_SOLD",
-          "displayName": "Cost of Goods Sold"
-        }
-      ]
-    },
     "taxCode": null,
     "taxOptions": null,
     "suggestedMatches": [],
@@ -3667,19 +3243,19 @@ export const bankTransactions = [
     "updateCategorizationRulesSuggestion": null
   },
   {
-    "id": "0000000f-1da5-4f7e-82cb-452c4e9425ee",
+    "id": "0000000f-5f7c-4e46-84f9-16216c4c3e03",
     "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_680661",
-    "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
-    "date": new Date("2025-03-18T15:45:00.000Z"),
+    "sourceTransactionId": "src_txn_919316",
+    "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
+    "date": new Date("2025-05-23T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 10234,
-    "counterpartyName": "Shell",
-    "description": "SHELL OIL 822447 HOUSTON TX",
-    "accountName": "Capital One Savings",
-    "accountMask": "0006",
+    "amount": 69220,
+    "counterpartyName": "Delta Air Lines",
+    "description": "DELTA AIR LINES ATL 867778",
+    "accountName": "Chase Savings",
+    "accountMask": "5717",
     "accountInstitution": {
-      "name": "Capital One",
+      "name": "Chase",
       "logo": null
     },
     "categorizationStatus": "READY_FOR_INPUT",
@@ -3711,17 +3287,377 @@ export const bankTransactions = [
     "updateCategorizationRulesSuggestion": null
   },
   {
-    "id": "0000000f-7b5c-4de3-8e92-13a842dc0d7e",
+    "id": "0000000f-da0e-4fb9-85fa-861adf709404",
     "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_783404",
+    "sourceTransactionId": "src_txn_100019",
+    "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
+    "date": new Date("2025-05-19T15:45:00.000Z"),
+    "direction": "CREDIT",
+    "amount": 888767,
+    "counterpartyName": null,
+    "description": "ONLINE TRANSFER FROM BANK OF AMERICA SAVINGS XXXXXX1744",
+    "accountName": "Wells Fargo Checking",
+    "accountMask": "0001",
+    "accountInstitution": {
+      "name": "Wells Fargo",
+      "logo": null
+    },
+    "categorizationStatus": "READY_FOR_INPUT",
+    "category": null,
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-da0e-4fb9-85fa-861adf709404",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000011-da0e-4fb9-85fa-861adf709404",
+          "amount": 888767,
+          "date": new Date("2025-05-19T15:45:00.000Z"),
+          "description": "Transfer from Bank of America Savings to Wells Fargo Checking",
+          "adjustment": null,
+          "fromAccountName": "Bank of America Savings",
+          "toAccountName": "Wells Fargo Checking"
+        }
+      },
+      {
+        "id": "00000021-da0e-4fb9-85fa-861adf709404",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000031-da0e-4fb9-85fa-861adf709404",
+          "amount": 888767,
+          "date": new Date("2025-05-19T15:45:00.000Z"),
+          "description": "Transfer from Chase Savings to Wells Fargo Checking",
+          "adjustment": null,
+          "fromAccountName": "Chase Savings",
+          "toAccountName": "Wells Fargo Checking"
+        }
+      }
+    ],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-1288-47a3-8d12-34fa883921b0",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_118407",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
-    "date": new Date("2025-03-15T15:45:00.000Z"),
+    "date": new Date("2025-05-16T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 144719,
-    "counterpartyName": "Gusto",
-    "description": "GUSTO PAY 219195",
+    "amount": 7434,
+    "counterpartyName": "Uber",
+    "description": "UBER TRIP 283241 HELP.UBER.COM",
     "accountName": "Capital One Checking",
     "accountMask": "0012",
+    "accountInstitution": {
+      "name": "Capital One",
+      "logo": null
+    },
+    "categorizationStatus": "SPLIT",
+    "category": {
+      "type": "Split_Categorization",
+      "id": "split-0000000f-1288-47a3-8d12-34fa883921b0",
+      "category": "SPLIT",
+      "displayName": "Split",
+      "entries": [
+        {
+          "type": "AccountSplitEntry",
+          "amount": 4832,
+          "category": {
+            "type": "Account",
+            "id": "00000009-0000-4000-8000-000000000040",
+            "stableName": "TRAVEL",
+            "category": "TRAVEL",
+            "displayName": "Business Travel"
+          },
+          "tags": []
+        },
+        {
+          "type": "AccountSplitEntry",
+          "amount": 2602,
+          "category": {
+            "type": "Account",
+            "id": "00000009-0000-4000-8000-000000000041",
+            "stableName": "MEALS",
+            "category": "MEALS",
+            "displayName": "Business Meals"
+          },
+          "tags": []
+        }
+      ]
+    },
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-adfc-4819-8b00-f573521efc05",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_999984",
+    "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
+    "date": new Date("2025-05-12T15:45:00.000Z"),
+    "direction": "CREDIT",
+    "amount": 144754,
+    "counterpartyName": "Shopify",
+    "description": "SHOPIFY PAYMENTS 549208",
+    "accountName": "Chase Savings",
+    "accountMask": "5717",
+    "accountInstitution": {
+      "name": "Chase",
+      "logo": null
+    },
+    "categorizationStatus": "READY_FOR_INPUT",
+    "category": null,
+    "categorizationFlow": {
+      "type": "ASK_FROM_SUGGESTIONS",
+      "category": null,
+      "suggestions": [
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000024",
+          "stableName": "SALES",
+          "category": "SALES",
+          "displayName": "Sales"
+        }
+      ]
+    },
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-34d8-49ae-8a34-b763e07ba93f",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_320909",
+    "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
+    "date": new Date("2025-05-08T15:45:00.000Z"),
+    "direction": "CREDIT",
+    "amount": 106472,
+    "counterpartyName": "Stripe",
+    "description": "STRIPE TRANSFER ST-591571",
+    "accountName": "Bank of America Savings",
+    "accountMask": "1846",
+    "accountInstitution": {
+      "name": "Bank of America",
+      "logo": null
+    },
+    "categorizationStatus": "CATEGORIZED",
+    "category": {
+      "type": "Account",
+      "id": "00000009-0000-4000-8000-000000000024",
+      "stableName": "SALES",
+      "category": "SALES",
+      "displayName": "Sales"
+    },
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-f62f-4e96-88a4-a533172fe3d1",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_206500",
+    "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
+    "date": new Date("2025-05-05T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 2161,
+    "counterpartyName": "Shell",
+    "description": "SHELL OIL 870711 HOUSTON TX",
+    "accountName": "Capital One Checking",
+    "accountMask": "0012",
+    "accountInstitution": {
+      "name": "Capital One",
+      "logo": null
+    },
+    "categorizationStatus": "CATEGORIZED",
+    "category": {
+      "type": "Account",
+      "id": "00000009-0000-4000-8000-000000000040",
+      "stableName": "TRAVEL",
+      "category": "TRAVEL",
+      "displayName": "Business Travel"
+    },
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-aea8-4360-8d1f-ad2115aaac22",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_100008",
+    "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
+    "date": new Date("2025-05-01T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 6161,
+    "counterpartyName": "Shell",
+    "description": "SHELL OIL 819845 HOUSTON TX",
+    "accountName": "Wells Fargo Checking",
+    "accountMask": "0001",
+    "accountInstitution": {
+      "name": "Wells Fargo",
+      "logo": null
+    },
+    "categorizationStatus": "CATEGORIZED",
+    "category": {
+      "type": "Account",
+      "id": "00000009-0000-4000-8000-000000000040",
+      "stableName": "TRAVEL",
+      "category": "TRAVEL",
+      "displayName": "Business Travel"
+    },
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-eda2-46d6-8f61-7caa97dfbb59",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_100017",
+    "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
+    "date": new Date("2025-04-27T15:45:00.000Z"),
+    "direction": "CREDIT",
+    "amount": 101,
+    "counterpartyName": null,
+    "description": "ONLINE TRANSFER FROM CAPITAL ONE CHECKING XXXXXX7213",
+    "accountName": "Wells Fargo Checking",
+    "accountMask": "0001",
+    "accountInstitution": {
+      "name": "Wells Fargo",
+      "logo": null
+    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-eda2-46d6-8f61-7caa97dfbb59",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000011-eda2-46d6-8f61-7caa97dfbb59",
+          "amount": 101,
+          "date": new Date("2025-04-27T15:45:00.000Z"),
+          "description": "Transfer from Capital One Checking to Wells Fargo Checking",
+          "adjustment": null,
+          "fromAccountName": "Capital One Checking",
+          "toAccountName": "Wells Fargo Checking"
+        }
+      },
+      {
+        "id": "00000021-eda2-46d6-8f61-7caa97dfbb59",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000031-eda2-46d6-8f61-7caa97dfbb59",
+          "amount": 101,
+          "date": new Date("2025-04-27T15:45:00.000Z"),
+          "description": "Transfer from Capital One Savings to Wells Fargo Checking",
+          "adjustment": null,
+          "fromAccountName": "Capital One Savings",
+          "toAccountName": "Wells Fargo Checking"
+        }
+      }
+    ],
+    "match": {
+      "id": "match-0000000f-eda2-46d6-8f61-7caa97dfbb59",
+      "matchType": "TRANSFER",
+      "bankTransaction": {
+        "id": "0000000f-eda2-46d6-8f61-7caa97dfbb59",
+        "date": new Date("2025-04-27T15:45:00.000Z"),
+        "direction": "CREDIT",
+        "amount": 101,
+        "counterpartyName": null,
+        "description": "ONLINE TRANSFER FROM CAPITAL ONE CHECKING XXXXXX7213"
+      },
+      "details": {
+        "type": "Transfer_Match",
+        "id": "00000011-eda2-46d6-8f61-7caa97dfbb59",
+        "amount": 101,
+        "date": new Date("2025-04-27T15:45:00.000Z"),
+        "description": "Transfer from Capital One Checking to Wells Fargo Checking",
+        "adjustment": null,
+        "fromAccountName": "Capital One Checking",
+        "toAccountName": "Wells Fargo Checking"
+      }
+    },
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-e3bb-446b-80a4-54787669ce53",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_350204",
+    "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
+    "date": new Date("2025-04-24T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 848768,
+    "counterpartyName": "Gusto",
+    "description": "GUSTO PAY 569541",
+    "accountName": "Capital One Savings",
+    "accountMask": "0006",
     "accountInstitution": {
       "name": "Capital One",
       "logo": null
@@ -3759,6 +3695,89 @@ export const bankTransactions = [
     "metadata": null,
     "customer": null,
     "vendor": {
+      "id": "00000004-965f-4841-8d6b-5520a8b1bd8b",
+      "externalId": null,
+      "individualName": "Aisha Bello",
+      "companyName": null,
+      "email": null,
+      "mobilePhone": null,
+      "officePhone": null,
+      "status": "ACTIVE",
+      "memo": null
+    },
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-3ed4-4df8-831e-f2df02940580",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_100007",
+    "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
+    "date": new Date("2025-04-20T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 29130,
+    "counterpartyName": "Comcast",
+    "description": "COMCAST CABLE COMM 443997",
+    "accountName": "Capital One Savings",
+    "accountMask": "0006",
+    "accountInstitution": {
+      "name": "Capital One",
+      "logo": null
+    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-3ed4-4df8-831e-f2df02940580",
+        "details": {
+          "id": "00000011-3ed4-4df8-831e-f2df02940580",
+          "amount": 29130,
+          "date": new Date("2025-04-20T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Bill_Match",
+          "description": "Bill payment via Comcast for 1 bill",
+          "billIdentifiers": [
+            {
+              "id": "bill-0000000f-3ed4-4df8-831e-f2df02940580"
+            }
+          ]
+        }
+      }
+    ],
+    "match": {
+      "id": "match-0000000f-3ed4-4df8-831e-f2df02940580",
+      "matchType": "BILL_PAYMENT",
+      "bankTransaction": {
+        "id": "0000000f-3ed4-4df8-831e-f2df02940580",
+        "date": new Date("2025-04-20T15:45:00.000Z"),
+        "direction": "DEBIT",
+        "amount": 29130,
+        "counterpartyName": "Comcast",
+        "description": "COMCAST CABLE COMM 443997"
+      },
+      "details": {
+        "id": "00000011-3ed4-4df8-831e-f2df02940580",
+        "amount": 29130,
+        "date": new Date("2025-04-20T15:45:00.000Z"),
+        "adjustment": null,
+        "type": "Bill_Match",
+        "description": "Bill payment via Comcast for 1 bill",
+        "billIdentifiers": [
+          {
+            "id": "bill-0000000f-3ed4-4df8-831e-f2df02940580"
+          }
+        ]
+      }
+    },
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": {
       "id": "00000004-98da-4862-898c-3559b33f72d8",
       "externalId": null,
       "individualName": "Jane Doe",
@@ -3772,15 +3791,229 @@ export const bankTransactions = [
     "updateCategorizationRulesSuggestion": null
   },
   {
-    "id": "0000000f-d877-4566-8797-79441ff44e6c",
+    "id": "0000000f-d7ce-47ff-8be3-9cdcbe4f7493",
     "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_700635",
-    "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
-    "date": new Date("2025-03-11T15:45:00.000Z"),
+    "sourceTransactionId": "src_txn_125872",
+    "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
+    "date": new Date("2025-04-16T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 17661,
-    "counterpartyName": "Verizon",
-    "description": "VZWRLSS*APOCC VISB 229806",
+    "amount": 20854,
+    "counterpartyName": "Staples",
+    "description": "STAPLES 00607804 SAN FRANCISCO CA",
+    "accountName": "Chase Savings",
+    "accountMask": "5717",
+    "accountInstitution": {
+      "name": "Chase",
+      "logo": null
+    },
+    "categorizationStatus": "CATEGORIZED",
+    "category": {
+      "type": "Account",
+      "id": "00000009-0000-4000-8000-000000000039",
+      "stableName": "OFFICE_EXPENSES",
+      "category": "OFFICE_EXPENSES",
+      "displayName": "Office Expenses"
+    },
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-7d42-4253-8eb1-15791a66ea01",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_999999",
+    "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
+    "date": new Date("2025-04-13T15:45:00.000Z"),
+    "direction": "CREDIT",
+    "amount": 18205,
+    "counterpartyName": "PayPal",
+    "description": "PAYPAL TRANSFER 234100",
+    "accountName": "Wells Fargo Checking",
+    "accountMask": "0001",
+    "accountInstitution": {
+      "name": "Wells Fargo",
+      "logo": null
+    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-7d42-4253-8eb1-15791a66ea01",
+        "details": {
+          "id": "00000011-7d42-4253-8eb1-15791a66ea01",
+          "amount": 18205,
+          "date": new Date("2025-04-13T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Vendor_Refund_Payment_Match",
+          "description": "Vendor refund payment via PayPal",
+          "vendorRefundIdentifiers": {
+            "id": "vendor-refund-0000000f-7d42-4253-8eb1-15791a66ea01"
+          }
+        }
+      }
+    ],
+    "match": {
+      "id": "match-0000000f-7d42-4253-8eb1-15791a66ea01",
+      "matchType": "VENDOR_REFUND_PAYMENT",
+      "bankTransaction": {
+        "id": "0000000f-7d42-4253-8eb1-15791a66ea01",
+        "date": new Date("2025-04-13T15:45:00.000Z"),
+        "direction": "CREDIT",
+        "amount": 18205,
+        "counterpartyName": "PayPal",
+        "description": "PAYPAL TRANSFER 234100"
+      },
+      "details": {
+        "id": "00000011-7d42-4253-8eb1-15791a66ea01",
+        "amount": 18205,
+        "date": new Date("2025-04-13T15:45:00.000Z"),
+        "adjustment": null,
+        "type": "Vendor_Refund_Payment_Match",
+        "description": "Vendor refund payment via PayPal",
+        "vendorRefundIdentifiers": {
+          "id": "vendor-refund-0000000f-7d42-4253-8eb1-15791a66ea01"
+        }
+      }
+    },
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-7c3d-4648-86ae-fe9ce422f320",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_752203",
+    "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
+    "date": new Date("2025-04-09T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 88051,
+    "counterpartyName": "Delta Air Lines",
+    "description": "DELTA AIR LINES ATL 975417",
+    "accountName": "Capital One Checking",
+    "accountMask": "0012",
+    "accountInstitution": {
+      "name": "Capital One",
+      "logo": null
+    },
+    "categorizationStatus": "CATEGORIZED",
+    "category": {
+      "type": "Account",
+      "id": "00000009-0000-4000-8000-000000000040",
+      "stableName": "TRAVEL",
+      "category": "TRAVEL",
+      "displayName": "Business Travel"
+    },
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-bd74-4e8f-8ce4-7e13782bb6ef",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_973529",
+    "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
+    "date": new Date("2025-04-05T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 47365,
+    "counterpartyName": "Stripe",
+    "description": "STRIPE REFUND ST-238285",
+    "accountName": "Bank of America Savings",
+    "accountMask": "1846",
+    "accountInstitution": {
+      "name": "Bank of America",
+      "logo": null
+    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-bd74-4e8f-8ce4-7e13782bb6ef",
+        "details": {
+          "id": "00000011-bd74-4e8f-8ce4-7e13782bb6ef",
+          "amount": 47365,
+          "date": new Date("2025-04-05T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Refund_Payment_Match",
+          "description": "Refund payment via Stripe",
+          "customerRefundIdentifiers": {
+            "id": "customer-refund-0000000f-bd74-4e8f-8ce4-7e13782bb6ef"
+          }
+        }
+      }
+    ],
+    "match": {
+      "id": "match-0000000f-bd74-4e8f-8ce4-7e13782bb6ef",
+      "matchType": "REFUND_PAYMENT",
+      "bankTransaction": {
+        "id": "0000000f-bd74-4e8f-8ce4-7e13782bb6ef",
+        "date": new Date("2025-04-05T15:45:00.000Z"),
+        "direction": "DEBIT",
+        "amount": 47365,
+        "counterpartyName": "Stripe",
+        "description": "STRIPE REFUND ST-238285"
+      },
+      "details": {
+        "id": "00000011-bd74-4e8f-8ce4-7e13782bb6ef",
+        "amount": 47365,
+        "date": new Date("2025-04-05T15:45:00.000Z"),
+        "adjustment": null,
+        "type": "Refund_Payment_Match",
+        "description": "Refund payment via Stripe",
+        "customerRefundIdentifiers": {
+          "id": "customer-refund-0000000f-bd74-4e8f-8ce4-7e13782bb6ef"
+        }
+      }
+    },
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-bd8a-40e0-860b-77c73a3ef976",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_242416",
+    "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
+    "date": new Date("2025-04-02T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 19639,
+    "counterpartyName": "Comcast",
+    "description": "COMCAST CABLE COMM 214777",
     "accountName": "Capital One Checking",
     "accountMask": "0012",
     "accountInstitution": {
@@ -3810,53 +4043,87 @@ export const bankTransactions = [
     "updateCategorizationRulesSuggestion": null
   },
   {
-    "id": "0000000f-ffb5-4452-86c9-3beb7ec23613",
+    "id": "0000000f-d9b6-45cc-85c8-b527e24fd1fd",
     "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_686818",
-    "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
-    "date": new Date("2025-03-07T15:45:00.000Z"),
+    "sourceTransactionId": "src_txn_819434",
+    "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
+    "date": new Date("2025-03-29T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 2730,
-    "counterpartyName": "Starbucks",
-    "description": "STARBUCKS STORE 837786 SEATTLE WA",
-    "accountName": "Capital One Savings",
-    "accountMask": "0006",
+    "amount": 583516,
+    "counterpartyName": null,
+    "description": "ONLINE TRANSFER TO CAPITAL ONE CHECKING XXXXXX8560",
+    "accountName": "Chase Savings",
+    "accountMask": "5717",
     "accountInstitution": {
-      "name": "Capital One",
+      "name": "Chase",
       "logo": null
     },
-    "categorizationStatus": "SPLIT",
-    "category": {
-      "type": "Split_Categorization",
-      "id": "split-0000000f-ffb5-4452-86c9-3beb7ec23613",
-      "category": "SPLIT",
-      "displayName": "Split",
-      "entries": [
-        {
-          "type": "AccountSplitEntry",
-          "amount": 1747,
-          "category": {
-            "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000041",
-            "stableName": "MEALS",
-            "category": "MEALS",
-            "displayName": "Business Meals"
-          },
-          "tags": []
-        },
-        {
-          "type": "AccountSplitEntry",
-          "amount": 983,
-          "category": {
-            "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000040",
-            "stableName": "TRAVEL",
-            "category": "TRAVEL",
-            "displayName": "Business Travel"
-          },
-          "tags": []
+    "categorizationStatus": "READY_FOR_INPUT",
+    "category": null,
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-d9b6-45cc-85c8-b527e24fd1fd",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000011-d9b6-45cc-85c8-b527e24fd1fd",
+          "amount": 583516,
+          "date": new Date("2025-03-29T15:45:00.000Z"),
+          "description": "Transfer from Chase Savings to Capital One Checking",
+          "adjustment": null,
+          "fromAccountName": "Chase Savings",
+          "toAccountName": "Capital One Checking"
         }
-      ]
+      },
+      {
+        "id": "00000021-d9b6-45cc-85c8-b527e24fd1fd",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000031-d9b6-45cc-85c8-b527e24fd1fd",
+          "amount": 583516,
+          "date": new Date("2025-03-29T15:45:00.000Z"),
+          "description": "Transfer from Chase Savings to Capital One Savings",
+          "adjustment": null,
+          "fromAccountName": "Chase Savings",
+          "toAccountName": "Capital One Savings"
+        }
+      }
+    ],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-4f39-4434-8e94-f4eb542c2224",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_983499",
+    "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
+    "date": new Date("2025-03-25T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 7231,
+    "counterpartyName": "Chipotle",
+    "description": "CHIPOTLE 674812 AUSTIN TX",
+    "accountName": "Wells Fargo Checking",
+    "accountMask": "0001",
+    "accountInstitution": {
+      "name": "Wells Fargo",
+      "logo": null
+    },
+    "categorizationStatus": "CATEGORIZED",
+    "category": {
+      "type": "Account",
+      "id": "00000009-0000-4000-8000-000000000041",
+      "stableName": "MEALS",
+      "category": "MEALS",
+      "displayName": "Business Meals"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -3870,30 +4137,74 @@ export const bankTransactions = [
     "metadata": null,
     "customer": null,
     "vendor": {
-      "id": "00000004-ae8f-4cb9-89b4-d567e9c4d7ea",
+      "id": "00000004-98da-4862-898c-3559b33f72d8",
       "externalId": null,
-      "individualName": null,
-      "companyName": "Vandelay Industries",
-      "email": null,
+      "individualName": "Jane Doe",
+      "companyName": null,
+      "email": "jane.doe@example.com",
       "mobilePhone": null,
-      "officePhone": null,
-      "status": "ARCHIVED",
+      "officePhone": "+12035550103",
+      "status": "ACTIVE",
       "memo": null
     },
     "updateCategorizationRulesSuggestion": null
   },
   {
-    "id": "0000000f-18e1-4f8d-88f8-f383315b83c9",
+    "id": "0000000f-d5ba-4284-8422-d332945d19cc",
     "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_807759",
-    "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
-    "date": new Date("2025-03-04T15:45:00.000Z"),
+    "sourceTransactionId": "src_txn_622282",
+    "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
+    "date": new Date("2025-03-22T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 95980,
-    "counterpartyName": "Apple",
-    "description": "APPLE.COM/BILL 719185 CUPERTINO CA",
-    "accountName": "Capital One Checking",
-    "accountMask": "0012",
+    "amount": 3102,
+    "counterpartyName": "Adobe",
+    "description": "ADOBE *CREATIVE CLOUD 597453",
+    "accountName": "Chase Savings",
+    "accountMask": "5717",
+    "accountInstitution": {
+      "name": "Chase",
+      "logo": null
+    },
+    "categorizationStatus": "READY_FOR_INPUT",
+    "category": null,
+    "categorizationFlow": {
+      "type": "ASK_FROM_SUGGESTIONS",
+      "category": null,
+      "suggestions": [
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000042",
+          "stableName": "SOFTWARE",
+          "category": "SOFTWARE",
+          "displayName": "Software"
+        }
+      ]
+    },
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-1da5-4f7e-82cb-452c4e9425ee",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_680661",
+    "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
+    "date": new Date("2025-03-18T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 208271,
+    "counterpartyName": "WeWork",
+    "description": "WEWORK 822447 NEW YORK NY",
+    "accountName": "Capital One Savings",
+    "accountMask": "0006",
     "accountInstitution": {
       "name": "Capital One",
       "logo": null
@@ -3901,10 +4212,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000042",
-      "stableName": "SOFTWARE",
-      "category": "SOFTWARE",
-      "displayName": "Software"
+      "id": "00000009-0000-4000-8000-000000000035",
+      "stableName": "RENT",
+      "category": "RENT",
+      "displayName": "Rent"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -3921,31 +4232,92 @@ export const bankTransactions = [
     "updateCategorizationRulesSuggestion": null
   },
   {
-    "id": "0000000f-44c1-4db6-8d56-81415e5a4270",
+    "id": "0000000f-7b5c-4de3-8e92-13a842dc0d7e",
     "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_340555",
-    "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
-    "date": new Date("2025-02-28T15:45:00.000Z"),
+    "sourceTransactionId": "src_txn_783404",
+    "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
+    "date": new Date("2025-03-15T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 141848,
-    "counterpartyName": "Apple",
-    "description": "APPLE.COM/BILL 447546 CUPERTINO CA",
-    "accountName": "Chase Savings",
-    "accountMask": "5717",
+    "amount": 11358,
+    "counterpartyName": "FedEx",
+    "description": "FEDEX 219195 MEMPHIS TN",
+    "accountName": "Capital One Checking",
+    "accountMask": "0012",
     "accountInstitution": {
-      "name": "Chase",
+      "name": "Capital One",
+      "logo": null
+    },
+    "categorizationStatus": "READY_FOR_INPUT",
+    "category": null,
+    "categorizationFlow": {
+      "type": "ASK_FROM_SUGGESTIONS",
+      "category": null,
+      "suggestions": [
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000039",
+          "stableName": "OFFICE_EXPENSES",
+          "category": "OFFICE_EXPENSES",
+          "displayName": "Office Expenses"
+        },
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000028",
+          "stableName": "COST_OF_GOODS_SOLD",
+          "category": "COST_OF_GOODS_SOLD",
+          "displayName": "Cost of Goods Sold"
+        }
+      ]
+    },
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": {
+      "id": "00000004-98da-4862-898c-3559b33f72d8",
+      "externalId": null,
+      "individualName": "Jane Doe",
+      "companyName": null,
+      "email": "jane.doe@example.com",
+      "mobilePhone": null,
+      "officePhone": "+12035550103",
+      "status": "ACTIVE",
+      "memo": null
+    },
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-d877-4566-8797-79441ff44e6c",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_700635",
+    "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
+    "date": new Date("2025-03-11T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 136267,
+    "counterpartyName": "Apple",
+    "description": "APPLE.COM/BILL 229806 CUPERTINO CA",
+    "accountName": "Capital One Checking",
+    "accountMask": "0012",
+    "accountInstitution": {
+      "name": "Capital One",
       "logo": null
     },
     "categorizationStatus": "SPLIT",
     "category": {
       "type": "Split_Categorization",
-      "id": "split-0000000f-44c1-4db6-8d56-81415e5a4270",
+      "id": "split-0000000f-d877-4566-8797-79441ff44e6c",
       "category": "SPLIT",
       "displayName": "Split",
       "entries": [
         {
           "type": "AccountSplitEntry",
-          "amount": 95038,
+          "amount": 31341,
           "category": {
             "type": "Account",
             "id": "00000009-0000-4000-8000-000000000042",
@@ -3957,7 +4329,7 @@ export const bankTransactions = [
         },
         {
           "type": "AccountSplitEntry",
-          "amount": 46810,
+          "amount": 104926,
           "category": {
             "type": "Account",
             "id": "00000009-0000-4000-8000-000000000039",
@@ -3984,15 +4356,214 @@ export const bankTransactions = [
     "updateCategorizationRulesSuggestion": null
   },
   {
+    "id": "0000000f-ffb5-4452-86c9-3beb7ec23613",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_686818",
+    "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
+    "date": new Date("2025-03-07T15:45:00.000Z"),
+    "direction": "CREDIT",
+    "amount": 244395,
+    "counterpartyName": "Shopify",
+    "description": "SHOPIFY PAYMENTS 837786",
+    "accountName": "Capital One Savings",
+    "accountMask": "0006",
+    "accountInstitution": {
+      "name": "Capital One",
+      "logo": null
+    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-ffb5-4452-86c9-3beb7ec23613",
+        "details": {
+          "id": "00000011-ffb5-4452-86c9-3beb7ec23613",
+          "amount": 244395,
+          "date": new Date("2025-03-07T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Invoice_Match",
+          "description": "Invoice payment via Shopify for 1 invoice with the following reference numbers: INV-1786",
+          "invoiceIdentifiers": [
+            {
+              "id": "invoice-0000000f-ffb5-4452-86c9-3beb7ec23613",
+              "referenceNumber": "INV-1786"
+            }
+          ]
+        }
+      }
+    ],
+    "match": {
+      "id": "match-0000000f-ffb5-4452-86c9-3beb7ec23613",
+      "matchType": "INVOICE_PAYMENT",
+      "bankTransaction": {
+        "id": "0000000f-ffb5-4452-86c9-3beb7ec23613",
+        "date": new Date("2025-03-07T15:45:00.000Z"),
+        "direction": "CREDIT",
+        "amount": 244395,
+        "counterpartyName": "Shopify",
+        "description": "SHOPIFY PAYMENTS 837786"
+      },
+      "details": {
+        "id": "00000011-ffb5-4452-86c9-3beb7ec23613",
+        "amount": 244395,
+        "date": new Date("2025-03-07T15:45:00.000Z"),
+        "adjustment": null,
+        "type": "Invoice_Match",
+        "description": "Invoice payment via Shopify for 1 invoice with the following reference numbers: INV-1786",
+        "invoiceIdentifiers": [
+          {
+            "id": "invoice-0000000f-ffb5-4452-86c9-3beb7ec23613",
+            "referenceNumber": "INV-1786"
+          }
+        ]
+      }
+    },
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-18e1-4f8d-88f8-f383315b83c9",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_807759",
+    "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
+    "date": new Date("2025-03-04T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 113279,
+    "counterpartyName": "Meta",
+    "description": "FACEBK ADS 719185",
+    "accountName": "Capital One Checking",
+    "accountMask": "0012",
+    "accountInstitution": {
+      "name": "Capital One",
+      "logo": null
+    },
+    "categorizationStatus": "CATEGORIZED",
+    "category": {
+      "type": "Account",
+      "id": "00000009-0000-4000-8000-000000000038",
+      "stableName": "MARKETING",
+      "category": "MARKETING",
+      "displayName": "Marketing"
+    },
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-44c1-4db6-8d56-81415e5a4270",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_340555",
+    "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
+    "date": new Date("2025-02-28T15:45:00.000Z"),
+    "direction": "CREDIT",
+    "amount": 106449,
+    "counterpartyName": "Square",
+    "description": "SQUARE INC 447546",
+    "accountName": "Chase Savings",
+    "accountMask": "5717",
+    "accountInstitution": {
+      "name": "Chase",
+      "logo": null
+    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-44c1-4db6-8d56-81415e5a4270",
+        "details": {
+          "id": "00000011-44c1-4db6-8d56-81415e5a4270",
+          "amount": 106449,
+          "date": new Date("2025-02-28T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Invoice_Match",
+          "description": "Invoice payment via Square for 1 invoice with the following reference numbers: INV-7546",
+          "invoiceIdentifiers": [
+            {
+              "id": "invoice-0000000f-44c1-4db6-8d56-81415e5a4270",
+              "referenceNumber": "INV-7546"
+            }
+          ]
+        }
+      }
+    ],
+    "match": {
+      "id": "match-0000000f-44c1-4db6-8d56-81415e5a4270",
+      "matchType": "INVOICE_PAYMENT",
+      "bankTransaction": {
+        "id": "0000000f-44c1-4db6-8d56-81415e5a4270",
+        "date": new Date("2025-02-28T15:45:00.000Z"),
+        "direction": "CREDIT",
+        "amount": 106449,
+        "counterpartyName": "Square",
+        "description": "SQUARE INC 447546"
+      },
+      "details": {
+        "id": "00000011-44c1-4db6-8d56-81415e5a4270",
+        "amount": 106449,
+        "date": new Date("2025-02-28T15:45:00.000Z"),
+        "adjustment": null,
+        "type": "Invoice_Match",
+        "description": "Invoice payment via Square for 1 invoice with the following reference numbers: INV-7546",
+        "invoiceIdentifiers": [
+          {
+            "id": "invoice-0000000f-44c1-4db6-8d56-81415e5a4270",
+            "referenceNumber": "INV-7546"
+          }
+        ]
+      }
+    },
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": {
+      "id": "00000003-4b46-4097-85f0-896231804c64",
+      "externalId": null,
+      "individualName": "Jane Doe",
+      "companyName": null,
+      "email": null,
+      "mobilePhone": null,
+      "officePhone": null,
+      "addressString": "30 Rockefeller Plaza, New York, NY 10112",
+      "status": "ARCHIVED",
+      "memo": "Referred by partner"
+    },
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
     "id": "0000000f-a707-4293-8e8e-577abd2dbcb0",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "sourceTransactionId": "src_txn_687292",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-02-24T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 21102,
-    "counterpartyName": "Amazon",
-    "description": "AMAZON MKTPL*865351 AMZN.COM/BILL WA",
+    "amount": 7843,
+    "counterpartyName": "Shell",
+    "description": "SHELL OIL 865351 HOUSTON TX",
     "accountName": "Bank of America Savings",
     "accountMask": "1846",
     "accountInstitution": {
@@ -4007,24 +4578,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000039",
-          "stableName": "OFFICE_EXPENSES",
-          "category": "OFFICE_EXPENSES",
-          "displayName": "Office Expenses"
-        },
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000028",
-          "stableName": "COST_OF_GOODS_SOLD",
-          "category": "COST_OF_GOODS_SOLD",
-          "displayName": "Cost of Goods Sold"
-        },
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000042",
-          "stableName": "SOFTWARE",
-          "category": "SOFTWARE",
-          "displayName": "Software"
+          "id": "00000009-0000-4000-8000-000000000040",
+          "stableName": "TRAVEL",
+          "category": "TRAVEL",
+          "displayName": "Business Travel"
         }
       ]
     },
@@ -4057,34 +4614,40 @@ export const bankTransactions = [
       "name": "Wells Fargo",
       "logo": null
     },
-    "categorizationStatus": "MATCHED",
+    "categorizationStatus": "READY_FOR_INPUT",
     "category": null,
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
-    "match": {
-      "id": "match-0000000f-afc2-47fe-8417-e8a6c3661b55",
-      "matchType": "TRANSFER",
-      "bankTransaction": {
-        "id": "0000000f-afc2-47fe-8417-e8a6c3661b55",
-        "date": new Date("2025-02-21T15:45:00.000Z"),
-        "direction": "CREDIT",
-        "amount": 718653,
-        "counterpartyName": null,
-        "description": "ONLINE TRANSFER FROM BANK OF AMERICA SAVINGS XXXXXX5433"
+    "suggestedMatches": [
+      {
+        "id": "00000010-afc2-47fe-8417-e8a6c3661b55",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000011-afc2-47fe-8417-e8a6c3661b55",
+          "amount": 718653,
+          "date": new Date("2025-02-21T15:45:00.000Z"),
+          "description": "Transfer from Bank of America Savings to Wells Fargo Checking",
+          "adjustment": null,
+          "fromAccountName": "Bank of America Savings",
+          "toAccountName": "Wells Fargo Checking"
+        }
       },
-      "details": {
-        "type": "Transfer_Match",
-        "id": "00000011-afc2-47fe-8417-e8a6c3661b55",
-        "amount": 718653,
-        "date": new Date("2025-02-21T15:45:00.000Z"),
-        "description": "Transfer between Bank of America Savings and Wells Fargo Checking",
-        "adjustment": null,
-        "fromAccountName": "Bank of America Savings",
-        "toAccountName": "Wells Fargo Checking"
+      {
+        "id": "00000021-afc2-47fe-8417-e8a6c3661b55",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000031-afc2-47fe-8417-e8a6c3661b55",
+          "amount": 718653,
+          "date": new Date("2025-02-21T15:45:00.000Z"),
+          "description": "Transfer from Chase Savings to Wells Fargo Checking",
+          "adjustment": null,
+          "fromAccountName": "Chase Savings",
+          "toAccountName": "Wells Fargo Checking"
+        }
       }
-    },
+    ],
+    "match": null,
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
@@ -4101,9 +4664,9 @@ export const bankTransactions = [
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-02-17T15:45:00.000Z"),
     "direction": "CREDIT",
-    "amount": 866063,
-    "counterpartyName": null,
-    "description": "ONLINE TRANSFER FROM CAPITAL ONE SAVINGS XXXXXX1428",
+    "amount": 103562,
+    "counterpartyName": "PayPal",
+    "description": "PAYPAL TRANSFER 142854",
     "accountName": "Capital One Checking",
     "accountMask": "0012",
     "accountInstitution": {
@@ -4112,21 +4675,31 @@ export const bankTransactions = [
     },
     "categorizationStatus": "READY_FOR_INPUT",
     "category": null,
-    "categorizationFlow": null,
+    "categorizationFlow": {
+      "type": "ASK_FROM_SUGGESTIONS",
+      "category": null,
+      "suggestions": [
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000024",
+          "stableName": "SALES",
+          "category": "SALES",
+          "displayName": "Sales"
+        }
+      ]
+    },
     "taxCode": null,
     "taxOptions": null,
     "suggestedMatches": [
       {
         "id": "00000010-4dc4-40c0-85bc-60253db18558",
         "details": {
-          "type": "Transfer_Match",
           "id": "00000011-4dc4-40c0-85bc-60253db18558",
-          "amount": 866063,
+          "amount": 103562,
           "date": new Date("2025-02-17T15:45:00.000Z"),
-          "description": "Transfer between Capital One Savings and Capital One Checking",
           "adjustment": null,
-          "fromAccountName": "Capital One Savings",
-          "toAccountName": "Capital One Checking"
+          "type": "Payout_Match",
+          "description": "Payout via PayPal created on 2025-02-17"
         }
       }
     ],
@@ -4147,28 +4720,65 @@ export const bankTransactions = [
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-02-13T15:45:00.000Z"),
     "direction": "CREDIT",
-    "amount": 145823,
-    "counterpartyName": "PayPal",
-    "description": "PAYPAL TRANSFER 461630",
+    "amount": 447825,
+    "counterpartyName": "Shopify",
+    "description": "SHOPIFY PAYMENTS 461630",
     "accountName": "Capital One Savings",
     "accountMask": "0006",
     "accountInstitution": {
       "name": "Capital One",
       "logo": null
     },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000024",
-      "stableName": "SALES",
-      "category": "SALES",
-      "displayName": "Sales"
-    },
+    "categorizationStatus": "MATCHED",
+    "category": null,
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
+    "suggestedMatches": [
+      {
+        "id": "00000010-d528-43b2-8fd8-e8abc3eba1f9",
+        "details": {
+          "id": "00000011-d528-43b2-8fd8-e8abc3eba1f9",
+          "amount": 447825,
+          "date": new Date("2025-02-13T15:45:00.000Z"),
+          "adjustment": null,
+          "type": "Invoice_Match",
+          "description": "Invoice payment via Shopify for 1 invoice with the following reference numbers: INV-3630",
+          "invoiceIdentifiers": [
+            {
+              "id": "invoice-0000000f-d528-43b2-8fd8-e8abc3eba1f9",
+              "referenceNumber": "INV-3630"
+            }
+          ]
+        }
+      }
+    ],
+    "match": {
+      "id": "match-0000000f-d528-43b2-8fd8-e8abc3eba1f9",
+      "matchType": "INVOICE_PAYMENT",
+      "bankTransaction": {
+        "id": "0000000f-d528-43b2-8fd8-e8abc3eba1f9",
+        "date": new Date("2025-02-13T15:45:00.000Z"),
+        "direction": "CREDIT",
+        "amount": 447825,
+        "counterpartyName": "Shopify",
+        "description": "SHOPIFY PAYMENTS 461630"
+      },
+      "details": {
+        "id": "00000011-d528-43b2-8fd8-e8abc3eba1f9",
+        "amount": 447825,
+        "date": new Date("2025-02-13T15:45:00.000Z"),
+        "adjustment": null,
+        "type": "Invoice_Match",
+        "description": "Invoice payment via Shopify for 1 invoice with the following reference numbers: INV-3630",
+        "invoiceIdentifiers": [
+          {
+            "id": "invoice-0000000f-d528-43b2-8fd8-e8abc3eba1f9",
+            "referenceNumber": "INV-3630"
+          }
+        ]
+      }
+    },
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
@@ -4194,34 +4804,40 @@ export const bankTransactions = [
       "name": "Capital One",
       "logo": null
     },
-    "categorizationStatus": "MATCHED",
+    "categorizationStatus": "READY_FOR_INPUT",
     "category": null,
     "categorizationFlow": null,
     "taxCode": null,
     "taxOptions": null,
-    "suggestedMatches": [],
-    "match": {
-      "id": "match-0000000f-1ab4-4961-8cc3-a8f8e6452252",
-      "matchType": "TRANSFER",
-      "bankTransaction": {
-        "id": "0000000f-1ab4-4961-8cc3-a8f8e6452252",
-        "date": new Date("2025-02-10T15:45:00.000Z"),
-        "direction": "DEBIT",
-        "amount": 999985,
-        "counterpartyName": null,
-        "description": "ONLINE TRANSFER TO CHASE SAVINGS XXXXXX9363"
+    "suggestedMatches": [
+      {
+        "id": "00000010-1ab4-4961-8cc3-a8f8e6452252",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000011-1ab4-4961-8cc3-a8f8e6452252",
+          "amount": 999985,
+          "date": new Date("2025-02-10T15:45:00.000Z"),
+          "description": "Transfer from Capital One Checking to Chase Savings",
+          "adjustment": null,
+          "fromAccountName": "Capital One Checking",
+          "toAccountName": "Chase Savings"
+        }
       },
-      "details": {
-        "type": "Transfer_Match",
-        "id": "00000011-1ab4-4961-8cc3-a8f8e6452252",
-        "amount": 999985,
-        "date": new Date("2025-02-10T15:45:00.000Z"),
-        "description": "Transfer between Capital One Checking and Chase Savings",
-        "adjustment": null,
-        "fromAccountName": "Capital One Checking",
-        "toAccountName": "Chase Savings"
+      {
+        "id": "00000021-1ab4-4961-8cc3-a8f8e6452252",
+        "details": {
+          "type": "Transfer_Match",
+          "id": "00000031-1ab4-4961-8cc3-a8f8e6452252",
+          "amount": 999985,
+          "date": new Date("2025-02-10T15:45:00.000Z"),
+          "description": "Transfer from Capital One Checking to Wells Fargo Checking",
+          "adjustment": null,
+          "fromAccountName": "Capital One Checking",
+          "toAccountName": "Wells Fargo Checking"
+        }
       }
-    },
+    ],
+    "match": null,
     "transactionTags": [],
     "documentIds": [],
     "memo": null,
@@ -4238,9 +4854,9 @@ export const bankTransactions = [
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-02-06T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 5217,
-    "counterpartyName": "Shell",
-    "description": "SHELL OIL 560556 HOUSTON TX",
+    "amount": 43231,
+    "counterpartyName": "Delta Air Lines",
+    "description": "DELTA AIR LINES ATL 560556",
     "accountName": "Capital One Savings",
     "accountMask": "0006",
     "accountInstitution": {
@@ -4276,9 +4892,9 @@ export const bankTransactions = [
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-02-02T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 5272,
-    "counterpartyName": "Adobe",
-    "description": "ADOBE *CREATIVE CLOUD 869395",
+    "amount": 4272,
+    "counterpartyName": "Square",
+    "description": "SQUARE INC REFUND 869395",
     "accountName": "Bank of America Savings",
     "accountMask": "1846",
     "accountInstitution": {
@@ -4288,10 +4904,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000042",
-      "stableName": "SOFTWARE",
-      "category": "SOFTWARE",
-      "displayName": "Software"
+      "id": "00000009-0000-4000-8000-000000000024",
+      "stableName": "SALES",
+      "category": "SALES",
+      "displayName": "Sales"
     },
     "categorizationFlow": null,
     "taxCode": null,
@@ -4313,10 +4929,10 @@ export const bankTransactions = [
     "sourceTransactionId": "src_txn_100007",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-01-30T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 100721,
-    "counterpartyName": "Apple",
-    "description": "APPLE.COM/BILL 182276 CUPERTINO CA",
+    "direction": "CREDIT",
+    "amount": 10419,
+    "counterpartyName": "PayPal",
+    "description": "PAYPAL TRANSFER 182276",
     "accountName": "Bank of America Savings",
     "accountMask": "1846",
     "accountInstitution": {
@@ -4331,17 +4947,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000042",
-          "stableName": "SOFTWARE",
-          "category": "SOFTWARE",
-          "displayName": "Software"
-        },
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000039",
-          "stableName": "OFFICE_EXPENSES",
-          "category": "OFFICE_EXPENSES",
-          "displayName": "Office Expenses"
+          "id": "00000009-0000-4000-8000-000000000024",
+          "stableName": "SALES",
+          "category": "SALES",
+          "displayName": "Sales"
         }
       ]
     },
@@ -4365,9 +4974,9 @@ export const bankTransactions = [
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-01-26T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 2434,
-    "counterpartyName": "Amazon",
-    "description": "AMAZON MKTPL*657171 AMZN.COM/BILL WA",
+    "amount": 38035,
+    "counterpartyName": "Square",
+    "description": "SQUARE INC REFUND 657171",
     "accountName": "Chase Savings",
     "accountMask": "5717",
     "accountInstitution": {
@@ -4382,24 +4991,10 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000039",
-          "stableName": "OFFICE_EXPENSES",
-          "category": "OFFICE_EXPENSES",
-          "displayName": "Office Expenses"
-        },
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000028",
-          "stableName": "COST_OF_GOODS_SOLD",
-          "category": "COST_OF_GOODS_SOLD",
-          "displayName": "Cost of Goods Sold"
-        },
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000042",
-          "stableName": "SOFTWARE",
-          "category": "SOFTWARE",
-          "displayName": "Software"
+          "id": "00000009-0000-4000-8000-000000000024",
+          "stableName": "SALES",
+          "category": "SALES",
+          "displayName": "Sales"
         }
       ]
     },
@@ -4423,9 +5018,9 @@ export const bankTransactions = [
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-01-22T15:45:00.000Z"),
     "direction": "CREDIT",
-    "amount": 500257,
-    "counterpartyName": null,
-    "description": "ONLINE TRANSFER FROM CHASE SAVINGS XXXXXX6576",
+    "amount": 144771,
+    "counterpartyName": "Square",
+    "description": "SQUARE INC 657648",
     "accountName": "Bank of America Savings",
     "accountMask": "1846",
     "accountInstitution": {
@@ -4434,21 +5029,31 @@ export const bankTransactions = [
     },
     "categorizationStatus": "READY_FOR_INPUT",
     "category": null,
-    "categorizationFlow": null,
+    "categorizationFlow": {
+      "type": "ASK_FROM_SUGGESTIONS",
+      "category": null,
+      "suggestions": [
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000024",
+          "stableName": "SALES",
+          "category": "SALES",
+          "displayName": "Sales"
+        }
+      ]
+    },
     "taxCode": null,
     "taxOptions": null,
     "suggestedMatches": [
       {
         "id": "00000010-0b6a-4149-80e8-911ca6e86ce6",
         "details": {
-          "type": "Transfer_Match",
           "id": "00000011-0b6a-4149-80e8-911ca6e86ce6",
-          "amount": 500257,
+          "amount": 144771,
           "date": new Date("2025-01-22T15:45:00.000Z"),
-          "description": "Transfer between Chase Savings and Bank of America Savings",
           "adjustment": null,
-          "fromAccountName": "Chase Savings",
-          "toAccountName": "Bank of America Savings"
+          "type": "Payout_Match",
+          "description": "Payout via Square created on 2025-01-22"
         }
       }
     ],
@@ -4469,195 +5074,13 @@ export const bankTransactions = [
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-01-19T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 11644,
-    "counterpartyName": "Shell",
-    "description": "SHELL OIL 953783 HOUSTON TX",
+    "amount": 13717,
+    "counterpartyName": "The Home Depot",
+    "description": "THE HOME DEPOT #9537 DENVER CO",
     "accountName": "Capital One Savings",
     "accountMask": "0006",
     "accountInstitution": {
       "name": "Capital One",
-      "logo": null
-    },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000040",
-      "stableName": "TRAVEL",
-      "category": "TRAVEL",
-      "displayName": "Business Travel"
-    },
-    "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-dcbc-470d-879e-84ff722b791f",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_100004",
-    "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
-    "date": new Date("2025-01-15T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 27677,
-    "counterpartyName": "Google",
-    "description": "GOOGLE *GSUITE 308973",
-    "accountName": "Capital One Savings",
-    "accountMask": "0006",
-    "accountInstitution": {
-      "name": "Capital One",
-      "logo": null
-    },
-    "categorizationStatus": "READY_FOR_INPUT",
-    "category": null,
-    "categorizationFlow": {
-      "type": "ASK_FROM_SUGGESTIONS",
-      "category": null,
-      "suggestions": [
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000042",
-          "stableName": "SOFTWARE",
-          "category": "SOFTWARE",
-          "displayName": "Software"
-        },
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000038",
-          "stableName": "MARKETING",
-          "category": "MARKETING",
-          "displayName": "Marketing"
-        }
-      ]
-    },
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-46a3-4775-87b1-0799b8818e20",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_383130",
-    "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
-    "date": new Date("2025-01-11T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 7433,
-    "counterpartyName": "Chipotle",
-    "description": "CHIPOTLE 204419 AUSTIN TX",
-    "accountName": "Capital One Savings",
-    "accountMask": "0006",
-    "accountInstitution": {
-      "name": "Capital One",
-      "logo": null
-    },
-    "categorizationStatus": "READY_FOR_INPUT",
-    "category": null,
-    "categorizationFlow": {
-      "type": "ASK_FROM_SUGGESTIONS",
-      "category": null,
-      "suggestions": [
-        {
-          "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000041",
-          "stableName": "MEALS",
-          "category": "MEALS",
-          "displayName": "Business Meals"
-        }
-      ]
-    },
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": null,
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-b3a1-4cf4-80c8-824612be1944",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_999998",
-    "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
-    "date": new Date("2025-01-08T15:45:00.000Z"),
-    "direction": "CREDIT",
-    "amount": 407932,
-    "counterpartyName": "Stripe",
-    "description": "STRIPE TRANSFER ST-912698",
-    "accountName": "Wells Fargo Checking",
-    "accountMask": "0001",
-    "accountInstitution": {
-      "name": "Wells Fargo",
-      "logo": null
-    },
-    "categorizationStatus": "CATEGORIZED",
-    "category": {
-      "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000024",
-      "stableName": "SALES",
-      "category": "SALES",
-      "displayName": "Sales"
-    },
-    "categorizationFlow": null,
-    "taxCode": null,
-    "taxOptions": null,
-    "suggestedMatches": [],
-    "match": null,
-    "transactionTags": [],
-    "documentIds": [],
-    "memo": null,
-    "referenceNumber": null,
-    "metadata": null,
-    "customer": {
-      "id": "00000003-f72d-4c33-8fd1-91b8a18ae284",
-      "externalId": null,
-      "individualName": null,
-      "companyName": "Acme Corp",
-      "email": "contact@acmecorp.test",
-      "mobilePhone": "+12085550138",
-      "officePhone": null,
-      "addressString": null,
-      "status": "ACTIVE",
-      "memo": null
-    },
-    "vendor": null,
-    "updateCategorizationRulesSuggestion": null
-  },
-  {
-    "id": "0000000f-57f7-43c5-8d35-0f74a6ed07ad",
-    "businessId": "00000000-0000-4000-8000-000000000201",
-    "sourceTransactionId": "src_txn_100018",
-    "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
-    "date": new Date("2025-01-04T15:45:00.000Z"),
-    "direction": "DEBIT",
-    "amount": 45095,
-    "counterpartyName": "Costco",
-    "description": "COSTCO WHSE #1313 PORTLAND OR",
-    "accountName": "Wells Fargo Checking",
-    "accountMask": "0001",
-    "accountInstitution": {
-      "name": "Wells Fargo",
       "logo": null
     },
     "categorizationStatus": "CATEGORIZED",
@@ -4683,15 +5106,190 @@ export const bankTransactions = [
     "updateCategorizationRulesSuggestion": null
   },
   {
+    "id": "0000000f-dcbc-470d-879e-84ff722b791f",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_100004",
+    "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
+    "date": new Date("2025-01-15T15:45:00.000Z"),
+    "direction": "CREDIT",
+    "amount": 772102,
+    "counterpartyName": "Stripe",
+    "description": "STRIPE TRANSFER ST-308973",
+    "accountName": "Capital One Savings",
+    "accountMask": "0006",
+    "accountInstitution": {
+      "name": "Capital One",
+      "logo": null
+    },
+    "categorizationStatus": "READY_FOR_INPUT",
+    "category": null,
+    "categorizationFlow": {
+      "type": "ASK_FROM_SUGGESTIONS",
+      "category": null,
+      "suggestions": [
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000024",
+          "stableName": "SALES",
+          "category": "SALES",
+          "displayName": "Sales"
+        }
+      ]
+    },
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": {
+      "id": "00000003-0351-4cfd-860c-32b0b4ffc791",
+      "externalId": null,
+      "individualName": "Maria Garcia",
+      "companyName": null,
+      "email": null,
+      "mobilePhone": null,
+      "officePhone": "+18995550197",
+      "addressString": null,
+      "status": "ACTIVE",
+      "memo": "Referred by partner"
+    },
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-46a3-4775-87b1-0799b8818e20",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_383130",
+    "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
+    "date": new Date("2025-01-11T15:45:00.000Z"),
+    "direction": "CREDIT",
+    "amount": 352381,
+    "counterpartyName": "Square",
+    "description": "SQUARE INC 204419",
+    "accountName": "Capital One Savings",
+    "accountMask": "0006",
+    "accountInstitution": {
+      "name": "Capital One",
+      "logo": null
+    },
+    "categorizationStatus": "READY_FOR_INPUT",
+    "category": null,
+    "categorizationFlow": {
+      "type": "ASK_FROM_SUGGESTIONS",
+      "category": null,
+      "suggestions": [
+        {
+          "type": "Account",
+          "id": "00000009-0000-4000-8000-000000000024",
+          "stableName": "SALES",
+          "category": "SALES",
+          "displayName": "Sales"
+        }
+      ]
+    },
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-b3a1-4cf4-80c8-824612be1944",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_999998",
+    "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
+    "date": new Date("2025-01-08T15:45:00.000Z"),
+    "direction": "DEBIT",
+    "amount": 21920,
+    "counterpartyName": "State Farm",
+    "description": "STATE FARM INSURANCE 912698",
+    "accountName": "Wells Fargo Checking",
+    "accountMask": "0001",
+    "accountInstitution": {
+      "name": "Wells Fargo",
+      "logo": null
+    },
+    "categorizationStatus": "CATEGORIZED",
+    "category": {
+      "type": "Account",
+      "id": "00000009-0000-4000-8000-000000000037",
+      "stableName": "INSURANCE",
+      "category": "INSURANCE",
+      "displayName": "Business Insurance"
+    },
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
+    "id": "0000000f-57f7-43c5-8d35-0f74a6ed07ad",
+    "businessId": "00000000-0000-4000-8000-000000000201",
+    "sourceTransactionId": "src_txn_100018",
+    "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
+    "date": new Date("2025-01-04T15:45:00.000Z"),
+    "direction": "CREDIT",
+    "amount": 51095,
+    "counterpartyName": "Stripe",
+    "description": "STRIPE TRANSFER ST-131380",
+    "accountName": "Wells Fargo Checking",
+    "accountMask": "0001",
+    "accountInstitution": {
+      "name": "Wells Fargo",
+      "logo": null
+    },
+    "categorizationStatus": "CATEGORIZED",
+    "category": {
+      "type": "Account",
+      "id": "00000009-0000-4000-8000-000000000024",
+      "stableName": "SALES",
+      "category": "SALES",
+      "displayName": "Sales"
+    },
+    "categorizationFlow": null,
+    "taxCode": null,
+    "taxOptions": null,
+    "suggestedMatches": [],
+    "match": null,
+    "transactionTags": [],
+    "documentIds": [],
+    "memo": null,
+    "referenceNumber": null,
+    "metadata": null,
+    "customer": null,
+    "vendor": null,
+    "updateCategorizationRulesSuggestion": null
+  },
+  {
     "id": "0000000f-79fd-4a68-88e8-a8447ce36662",
     "businessId": "00000000-0000-4000-8000-000000000201",
     "sourceTransactionId": "src_txn_100014",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-01-01T15:45:00.000Z"),
     "direction": "DEBIT",
-    "amount": 2912,
-    "counterpartyName": "Starbucks",
-    "description": "STARBUCKS STORE 728824 SEATTLE WA",
+    "amount": 4181,
+    "counterpartyName": "Square",
+    "description": "SQUARE INC REFUND 728824",
     "accountName": "Capital One Checking",
     "accountMask": "0012",
     "accountInstitution": {
@@ -4701,10 +5299,10 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000041",
-      "stableName": "MEALS",
-      "category": "MEALS",
-      "displayName": "Business Meals"
+      "id": "00000009-0000-4000-8000-000000000024",
+      "stableName": "SALES",
+      "category": "SALES",
+      "displayName": "Sales"
     },
     "categorizationFlow": null,
     "taxCode": null,

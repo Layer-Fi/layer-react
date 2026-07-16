@@ -1,7 +1,10 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
+import { BookkeepingStatus } from '@schemas/bookkeepingStatus'
 import { BookkeepingOverview } from '@views/BookkeepingOverview/BookkeepingOverview'
 
+import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
+import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 import {
   buildSummariesSlotProps,
   buildSummariesStringOverrides,
@@ -25,7 +28,12 @@ const meta: Meta<BookkeepingOverviewStoryArgs> = {
   title: 'Views/Overview/Bookkeeping',
   component: BookkeepingOverview,
   parameters: {
-    msw: { handlers: profitAndLossStoryHandlers },
+    msw: {
+      handlers: [
+        getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })),
+        ...profitAndLossStoryHandlers,
+      ],
+    },
     controls: { include: ['showTitle', ...summariesControls.controlNames] },
   },
   decorators: [withOverviewStoryContext],

@@ -41,7 +41,7 @@ export const applyCategoryUpdate = (
       taxCode: null,
       categorizationFlow: null,
       match: null,
-      suggestedMatches: [],
+      suggestedMatches: transaction.suggestedMatches,
     }
   }
 
@@ -52,7 +52,7 @@ export const applyCategoryUpdate = (
     taxCode: update.taxCode ?? transaction.taxCode,
     categorizationFlow: null,
     match: null,
-    suggestedMatches: [],
+    suggestedMatches: transaction.suggestedMatches,
   }
 }
 
@@ -63,5 +63,5 @@ export const applyUncategorize = (transaction: BankTransaction): BankTransaction
   categorizationFlow: null,
   taxCode: null,
   match: null,
-  suggestedMatches: [],
+  suggestedMatches: transaction.suggestedMatches,
 })
