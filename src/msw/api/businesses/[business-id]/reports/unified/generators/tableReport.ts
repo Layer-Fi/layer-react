@@ -1,3 +1,4 @@
+import { type ReportConfig } from '@schemas/reports/reportConfig'
 import {
   type Pinning,
   type UnifiedReport,
@@ -32,7 +33,12 @@ export type TableValueColumn<Item> = {
 }
 
 type TableReportOptions<Item> = {
-  rowHeader: { columnKey: string, displayName: string, label: (item: Item) => string }
+  rowHeader: {
+    columnKey: string
+    displayName: string
+    label: (item: Item) => string
+    reportConfig?: (item: Item) => ReportConfig | undefined
+  }
   rowKey: (item: Item) => string
   items: readonly Item[]
   valueColumns: ReadonlyArray<TableValueColumn<Item>>
@@ -50,7 +56,9 @@ export const generateTableReport = <Item>(
   const totals = valueColumns.map(() => 0)
 
   const rows: UnifiedReportRow[] = items.map((item) => {
-    const cells: Record<string, UnifiedReportCell> = { [rowHeader.columnKey]: textCell(rowHeader.label(item)) }
+    const cells: Record<string, UnifiedReportCell> = {
+      [rowHeader.columnKey]: textCell(rowHeader.label(item), { reportConfig: rowHeader.reportConfig?.(item) }),
+    }
 
     valueColumns.forEach((column, index) => {
       const amount = column.value(item)

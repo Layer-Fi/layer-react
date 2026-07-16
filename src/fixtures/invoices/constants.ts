@@ -1,4 +1,5 @@
-export const invoicePaymentTermsDays = [15, 30, 30, 60]
+// Net-21 in the cycle spreads outstanding invoices across every AR aging bucket against the pinned story clock.
+export const invoicePaymentTermsDays = [15, 30, 21, 60]
 
 export const DEFAULT_INVOICE_PAYMENT_TERMS_DAYS = 30
 

@@ -1,6 +1,6 @@
 import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { ReportControl } from '@schemas/reports/reportConfig'
-import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
+import { Pinning, type UnifiedReport } from '@schemas/reports/unifiedReport'
 
 import {
   accountActivityCents,
@@ -9,19 +9,12 @@ import {
   collectLeafAccounts,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {
-  periodCells,
-  periodValueColumns,
   reportRangeFromParams,
   resolvePeriods,
+  TOTAL_COLUMN_KEY,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'
-import {
-  linesReportConfig,
-  rowHeaderColumn,
-  textCell,
-  unifiedReport,
-} from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
-
-const NAME_COLUMN_KEY = 'name'
+import { linesReportConfig } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
+import { generateTableReport } from '@msw/api/businesses/[business-id]/reports/unified/generators/tableReport'
 
 const generateBusinessAccountReport = (
   params: URLSearchParams,
@@ -33,29 +26,31 @@ const generateBusinessAccountReport = (
   const periods = resolvePeriods(range, params.get('group_by'))
   const leaves = collectLeafAccounts(buildAccountForest(accountsOfTypes([type])))
 
-  const rows: UnifiedReportRow[] = leaves.map(account => ({
-    rowKey: account.accountId,
-    cells: {
-      [NAME_COLUMN_KEY]: textCell(account.name, {
-        reportConfig: linesReportConfig(linesRoute, account, [ReportControl.DateRange]),
-      }),
-      ...periodCells(r => accountActivityCents(account, r, params), periods),
+  return generateTableReport({
+    rowHeader: {
+      columnKey: 'name',
+      displayName: 'Account',
+      label: account => account.name,
+      reportConfig: account => linesReportConfig(linesRoute, account, [ReportControl.DateRange]),
     },
-  }))
-
-  rows.push({
-    rowKey: `total_${totalLabel.toLowerCase().replaceAll(' ', '_')}`,
-    cells: {
-      [NAME_COLUMN_KEY]: textCell(totalLabel, { bold: true }),
-      ...periodCells(
-        r => leaves.reduce((total, account) => total + accountActivityCents(account, r, params), 0),
-        periods,
-        true,
-      ),
-    },
+    rowKey: account => account.accountId,
+    items: leaves,
+    valueColumns: [
+      ...periods.filter(period => period.columnKey !== TOTAL_COLUMN_KEY).map(period => ({
+        columnKey: period.columnKey,
+        displayName: period.label,
+        value: (account: (typeof leaves)[number]) => accountActivityCents(account, period.range, params),
+      })),
+      // The trailing total spans the full range, which the clipped periods partition, so it equals their sum.
+      {
+        columnKey: TOTAL_COLUMN_KEY,
+        displayName: 'Total',
+        value: account => accountActivityCents(account, range, params),
+        pinning: Pinning.Right,
+      },
+    ],
+    total: { rowKey: `total_${totalLabel.toLowerCase().replaceAll(' ', '_')}`, label: totalLabel },
   })
-
-  return unifiedReport([rowHeaderColumn(NAME_COLUMN_KEY, 'Account'), ...periodValueColumns(periods)], rows)
 }
 
 export const generateBusinessExpenses = (params: URLSearchParams) =>
