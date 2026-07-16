@@ -5,6 +5,7 @@ import { type BankTransactionFilters } from '@utils/bankTransactions/shared'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { usePreloadCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
+import { usePreloadCustomAccounts } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
 import { usePreloadCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { usePreloadTagDimensions } from '@hooks/api/businesses/[business-id]/tags/dimensions/useTagDimensions'
 import { usePreloadVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
@@ -118,11 +119,11 @@ export const BankTransactions = ({
 
   ...featureVisibility
 }: BankTransactionsWithErrorProps) => {
+  const showCustomerVendorData = featureVisibility.showCustomerVendor || featureVisibility.showUploadOptions
   usePreloadTagDimensions({ isEnabled: featureVisibility.showTags })
-  // Preloaded unconditionally (not gated on showCustomerVendor) because the
-  // record/edit transaction modal needs customers and vendors regardless.
-  usePreloadCustomers()
-  usePreloadVendors()
+  usePreloadCustomers({ isEnabled: showCustomerVendorData })
+  usePreloadVendors({ isEnabled: showCustomerVendorData })
+  usePreloadCustomAccounts({ userCreated: true, isEnabled: featureVisibility.showUploadOptions })
   usePreloadCategories()
 
   return (

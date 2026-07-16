@@ -48,7 +48,6 @@ const getClassificationFromCategorization = (categorization: Categorization): Cl
     case 'Exclusion':
       return makeExclusion(categorization.category)
     case 'Split_Categorization':
-      // The single-category modal can't represent a split; leave the category empty.
       return null
   }
 }

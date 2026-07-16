@@ -56,10 +56,6 @@ export const isMoneyIn = ({ direction }: Pick<BankTransaction, 'direction'>) =>
 export const isCustomTransaction = ({ source }: Pick<BankTransaction, 'source'>) =>
   source === TransactionSource.CUSTOM
 
-/*
- * Custom transactions have no merchant, so surface their associated customer or
- * vendor as the name; everything else keeps the counterparty/description fallback.
- */
 export const getBankTransactionDisplayName = (bankTransaction: BankTransaction) => {
   if (isCustomTransaction(bankTransaction)) {
     if (bankTransaction.customer) return getCustomerName(bankTransaction.customer)

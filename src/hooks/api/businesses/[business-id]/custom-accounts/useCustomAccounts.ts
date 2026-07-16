@@ -37,5 +37,11 @@ export const useCustomAccounts = createQueryHook({
   select: ({ customAccounts }) => customAccounts,
 })
 
+type UseCustomAccountsParams = Parameters<typeof useCustomAccounts>[0]
+
+export function usePreloadCustomAccounts(parameters?: UseCustomAccountsParams) {
+  useCustomAccounts(parameters)
+}
+
 export const useCustomAccountsGlobalCacheActions =
   createResourceGlobalCacheActions<ReadonlyArray<typeof CustomAccountSchema.Type>>(CUSTOM_ACCOUNTS_TAG_KEY)

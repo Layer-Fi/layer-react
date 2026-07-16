@@ -18,9 +18,6 @@ export function EditCustomTransactionButton({ bankTransaction }: EditCustomTrans
   const [isOpen, setIsOpen] = useState(false)
   const { data: customAccounts } = useCustomAccounts({ userCreated: true })
 
-  // Editing needs a known custom account (its id drives the upsert URL and the
-  // pre-filled account), so only offer it for custom transactions whose source
-  // account is in the list.
   const isEditable = isCustomTransaction(bankTransaction)
     && customAccounts?.some(account => account.id === bankTransaction.sourceAccountId)
 

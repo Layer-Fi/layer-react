@@ -43,8 +43,6 @@ export const buildCustomBankTransaction = (
     source: TransactionSource.CUSTOM,
     sourceAccountId: customAccountId,
     accountName: customAccountStore.findById(customAccountId)?.accountName ?? existing?.accountName ?? null,
-    // Parse the date-only string at local midnight so it renders on the same
-    // calendar day regardless of timezone (bare `new Date('YYYY-MM-DD')` is UTC).
     date: new Date(`${transaction.date}T00:00:00`),
     direction: transaction.direction,
     amount: transaction.amount,
