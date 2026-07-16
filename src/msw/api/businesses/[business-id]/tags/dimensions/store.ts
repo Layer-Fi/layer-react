@@ -9,13 +9,20 @@ export const tagDimensionStore = createMockStore<TagDimension>(() => tagDimensio
 
 const decodeTagDimension = Schema.decodeSync(TagDimensionSchema)
 
+type FallbackTagDimensionFields = {
+  id?: string
+  key: string
+  displayName?: string | null
+  strictness?: TagDimension['strictness']
+}
+
 export const makeFallbackTagDimension = (
-  { id = crypto.randomUUID(), key }: { id?: string, key: string },
+  { id = crypto.randomUUID(), key, displayName, strictness = 'BALANCING' }: FallbackTagDimensionFields,
 ): TagDimension => decodeTagDimension({
   id,
   key,
-  display_name: null,
-  strictness: 'BALANCING',
+  display_name: displayName ?? null,
+  strictness,
   defined_values: [],
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
@@ -25,7 +32,7 @@ export const makeFallbackTagDimension = (
 /** Reads seed a stable fallback so repeated requests return the same dimension. */
 export const findOrSeedTagDimension = (
   findExisting: (dimensions: readonly TagDimension[]) => TagDimension | undefined,
-  fallbackFields: { id?: string, key: string },
+  fallbackFields: FallbackTagDimensionFields,
 ): TagDimension => {
   const existing = findExisting(tagDimensionStore.all())
   if (existing) return existing

@@ -2,7 +2,7 @@ import { Schema } from 'effect'
 
 import { CreateTagDimensionBodySchema, type TagDimension, TagDimensionSchema } from '@schemas/tag'
 
-import { makeFallbackTagDimension, tagDimensionStore } from '@msw/api/businesses/[business-id]/tags/dimensions/store'
+import { findOrSeedTagDimension, tagDimensionStore } from '@msw/api/businesses/[business-id]/tags/dimensions/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
@@ -24,27 +24,23 @@ export const post = createMockEndpoint<TagDimension, ReturnType<typeof toRespons
 
     // Dimension keys are unique per business: like the API, creating an
     // existing key ensures the dimension and adds only its missing values.
-    const existing = tagDimensionStore.all().find(dimension => dimension.key === key)
-
-    const missingValues = definedValues.filter(value =>
-      !existing?.definedValues.some(({ value: existingValue }) => existingValue.toLowerCase() === value.toLowerCase()),
+    const ensured = findOrSeedTagDimension(
+      dimensions => dimensions.find(dimension => dimension.key === key),
+      { key, displayName, strictness },
     )
 
-    const dimension: TagDimension = existing
-      ? {
-        ...existing,
-        definedValues: [
-          ...existing.definedValues,
-          ...missingValues.map(value => makeTagValueDefinition({ key, value })),
-        ],
-        updatedAt: new Date(),
-      }
-      : {
-        ...makeFallbackTagDimension({ key }),
-        displayName: displayName ?? null,
-        strictness,
-        definedValues: missingValues.map(value => makeTagValueDefinition({ key, value })),
-      }
+    const missingValues = definedValues.filter(value =>
+      !ensured.definedValues.some(({ value: existingValue }) => existingValue.toLowerCase() === value.toLowerCase()),
+    )
+
+    const dimension: TagDimension = {
+      ...ensured,
+      definedValues: [
+        ...ensured.definedValues,
+        ...missingValues.map(value => makeTagValueDefinition({ key, value })),
+      ],
+      updatedAt: new Date(),
+    }
     tagDimensionStore.save(dimension)
 
     return toResponse(dimension)
