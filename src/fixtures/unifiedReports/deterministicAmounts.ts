@@ -1,4 +1,5 @@
 import { eachMonthOfInterval, isWithinInterval } from 'date-fns'
+import { sumBy } from 'lodash-es'
 
 export type MockReportEntry = {
   date: Date
@@ -109,5 +110,4 @@ export const sumAmountCentsInRange = (
   startDate: Date,
   endDate: Date,
   options: EntryStreamOptions = {},
-): number => entriesInRange(stableKey, startDate, endDate, options)
-  .reduce((total, entry) => total + entry.amountCents, 0)
+): number => sumBy(entriesInRange(stableKey, startDate, endDate, options), entry => entry.amountCents)

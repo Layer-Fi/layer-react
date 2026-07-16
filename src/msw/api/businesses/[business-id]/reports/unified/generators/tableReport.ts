@@ -1,8 +1,9 @@
+import { sumBy } from 'lodash-es'
+
 import { type ReportConfig } from '@schemas/reports/reportConfig'
 import {
   type Pinning,
   type UnifiedReport,
-  type UnifiedReportCell,
   type UnifiedReportRow,
 } from '@schemas/reports/unifiedReport'
 
@@ -53,30 +54,28 @@ type TableReportOptions<Item> = {
 export const generateTableReport = <Item>(
   { rowHeader, rowKey, items, valueColumns, total }: TableReportOptions<Item>,
 ): UnifiedReport => {
-  const totals = valueColumns.map(() => 0)
-
-  const rows: UnifiedReportRow[] = items.map((item) => {
-    const cells: Record<string, UnifiedReportCell> = {
+  const rows: UnifiedReportRow[] = items.map(item => ({
+    rowKey: rowKey(item),
+    cells: {
       [rowHeader.columnKey]: textCell(rowHeader.label(item), { reportConfig: rowHeader.reportConfig?.(item) }),
-    }
-
-    valueColumns.forEach((column, index) => {
-      const amount = column.value(item)
-      totals[index] += amount
-      cells[column.columnKey] = VALUE_CELLS[column.cellType ?? 'currency'](amount)
-    })
-
-    return { rowKey: rowKey(item), cells }
-  })
+      ...Object.fromEntries(valueColumns.map(column => [
+        column.columnKey,
+        VALUE_CELLS[column.cellType ?? 'currency'](column.value(item)),
+      ])),
+    },
+  }))
 
   rows.push({
     rowKey: total.rowKey,
     cells: {
       [rowHeader.columnKey]: textCell(total.label, { bold: true }),
-      ...Object.fromEntries(valueColumns.map((column, index) => [
-        column.columnKey,
-        VALUE_CELLS[column.cellType ?? 'currency'](column.formatTotal?.(totals[index]) ?? totals[index], { bold: true }),
-      ])),
+      ...Object.fromEntries(valueColumns.map((column) => {
+        const columnTotal = sumBy(items, column.value)
+        return [
+          column.columnKey,
+          VALUE_CELLS[column.cellType ?? 'currency'](column.formatTotal?.(columnTotal) ?? columnTotal, { bold: true }),
+        ]
+      })),
     },
   })
 

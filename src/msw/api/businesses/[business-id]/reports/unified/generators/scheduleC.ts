@@ -1,4 +1,5 @@
 import { getYear } from 'date-fns'
+import { sumBy } from 'lodash-es'
 
 import { LedgerAccountType, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { type ReportConfig } from '@schemas/reports/reportConfig'
@@ -77,7 +78,7 @@ export const generateScheduleC = (params: URLSearchParams): UnifiedReport => {
     return { row: lineRow(line.lineNumber, line.label, amount, reportConfig), amount }
   })
 
-  const totalExpenses = expenseLineRows.reduce((total, { amount }) => total + amount, 0)
+  const totalExpenses = sumBy(expenseLineRows, ({ amount }) => amount)
 
   const rows: UnifiedReportRow[] = [
     lineRow('1', 'Gross receipts or sales', grossReceipts),
