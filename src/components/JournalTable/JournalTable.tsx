@@ -1,4 +1,4 @@
-import { useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useLayoutEffect, useMemo } from 'react'
 import { type Row } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 
@@ -7,7 +7,9 @@ import { type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
 import { Alignment } from '@schemas/reports/unifiedReport'
 import { humanizeEnum } from '@utils/format'
 import { entryNumber, sumLineItemAmountsByDirection } from '@utils/journal'
+import { JOURNAL_PAGE_SIZE } from '@hooks/legacy/useJournal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -23,7 +25,8 @@ import { Pagination } from '@components/Pagination/Pagination'
 import './journalTable.scss'
 
 const COMPONENT_NAME = 'JournalTable'
-const PAGE_SIZE = 15
+
+const EMPTY_ENTRIES: ReadonlyArray<LedgerEntry> = []
 
 type LedgerEntryLineItem = LedgerEntry['lineItems'][number]
 
@@ -73,6 +76,7 @@ const JournalTableContent = ({
     closeSelectedEntry,
     hasMore,
     fetchMore,
+    paginationProps,
   } = useContext(JournalContext)
 
   const { accountingConfiguration } = useLayerContext()
@@ -80,36 +84,24 @@ const JournalTableContent = ({
 
   const { setExpanded } = useContext(ExpandableDataTableContext)
 
-  const [currentPage, setCurrentPage] = useState(1)
+  const entries = rawData ?? EMPTY_ENTRIES
+
+  const { pageSize = JOURNAL_PAGE_SIZE, autoResetPageIndexRef } = paginationProps
+
+  const { pageItems, pageIndex, onPageChange } = usePaginatedList({
+    data: entries,
+    pageSize,
+    autoResetPageIndexRef,
+  })
 
   // Re-expand every row on page change. Once a row is collapsed, TanStack rewrites
   // `expanded: true` into a per-row map covering only the current page's slice, so
   // the next page would render collapsed without this reset.
   useLayoutEffect(() => {
     setExpanded(true)
-  }, [currentPage, setExpanded])
+  }, [pageIndex, setExpanded])
 
-  const pageData = useMemo(
-    () => {
-      if (!rawData) return undefined
-
-      const firstPageIndex = (currentPage - 1) * PAGE_SIZE
-      return rawData.slice(firstPageIndex, firstPageIndex + PAGE_SIZE)
-    },
-    [rawData, currentPage],
-  )
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-    if (rawData) {
-      const requestedItemIndex = (page - 1) * PAGE_SIZE + PAGE_SIZE - 1
-      if (requestedItemIndex > rawData.length - 1 && hasMore) {
-        fetchMore()
-      }
-    }
-  }
-
-  const hasEntries = !!rawData?.length
+  const hasEntries = entries.length > 0
 
   const slots = useMemo(() => ({
     EmptyState: () => (
@@ -130,9 +122,9 @@ const JournalTableContent = ({
     ),
   }), [t, refetch, isValidating, isLoading])
 
-  const rows = useMemo<JournalRow[] | undefined>(
-    () => pageData?.map(entry => ({ kind: 'entry' as const, entry })),
-    [pageData],
+  const rows = useMemo<JournalRow[]>(
+    () => pageItems.map(entry => ({ kind: 'entry' as const, entry })),
+    [pageItems],
   )
 
   const columnConfig = useMemo<ColumnConfig<JournalRow>>(() => {
@@ -232,10 +224,10 @@ const JournalTableContent = ({
 
       {hasEntries && (
         <Pagination
-          currentPage={currentPage}
-          totalCount={rawData?.length || 0}
-          pageSize={PAGE_SIZE}
-          onPageChange={handlePageChange}
+          currentPage={pageIndex + 1}
+          totalCount={entries.length}
+          pageSize={pageSize}
+          onPageChange={onPageChange}
           hasMore={hasMore}
           fetchMore={fetchMore}
         />

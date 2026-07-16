@@ -1,26 +1,27 @@
 import { useTranslation } from 'react-i18next'
 
 import { useAccountBalancesDownload } from '@hooks/api/businesses/[business-id]/ledger/balances/exports/csv/useAccountBalancesDownload'
+import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { DownloadButton } from '@ui/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 type AccountBalancesDownloadButtonProps = {
-  startDate?: Date
-  endDate?: Date
+  /** When true, export the range currently selected in the ledger date store. */
+  filterByDateRange?: boolean
   icon?: boolean
 }
 
 export function AccountBalancesDownloadButton({
-  startDate,
-  endDate,
+  filterByDateRange,
   icon,
 }: AccountBalancesDownloadButtonProps) {
   const { t } = useTranslation()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
+  const { startDate, endDate } = useLedgerDateRange({ dateSelectionMode: 'full' })
 
   const { trigger, isMutating, error } = useAccountBalancesDownload({
-    startDate,
-    endDate,
+    startDate: filterByDateRange ? startDate : undefined,
+    endDate: filterByDateRange ? endDate : undefined,
     swrOptions: {
       onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
     },
