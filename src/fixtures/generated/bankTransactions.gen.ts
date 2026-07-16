@@ -5,6 +5,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-3b6a-4dd5-884f-94ffec96415a",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_940953",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-12-28T15:45:00.000Z"),
@@ -78,6 +79,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-941c-44f5-8243-62cd3fbe96f5",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100008",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-12-24T15:45:00.000Z"),
@@ -137,6 +139,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-5bc8-496c-857f-e339bfdd27f6",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_999986",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-12-21T15:45:00.000Z"),
@@ -186,6 +189,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-f302-476f-8cde-40c6814f88ef",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_605492",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-12-17T15:45:00.000Z"),
@@ -247,6 +251,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-6682-4caf-886f-a9dad2bc6190",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_432463",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-12-13T15:45:00.000Z"),
@@ -285,6 +290,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-4f7b-47c4-8fbc-6a7a17af2dd9",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100011",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-12-10T15:45:00.000Z"),
@@ -339,6 +345,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-9d3a-4f25-86df-83cfdf231a1a",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_938462",
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-12-06T15:45:00.000Z"),
@@ -402,6 +409,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-fd22-414d-8e1e-749176bb74eb",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_570234",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-12-02T15:45:00.000Z"),
@@ -475,6 +483,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-1700-4d7a-8cfc-8637f0382244",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_466964",
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-11-29T15:45:00.000Z"),
@@ -519,6 +528,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-27fc-468e-8830-aa3bac98b4e2",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100018",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-11-25T15:45:00.000Z"),
@@ -557,6 +567,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-570b-40f3-8720-d7d9f9a33c10",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100010",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-11-21T15:45:00.000Z"),
@@ -626,6 +637,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-268a-45c4-82d8-f100aeda145e",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100018",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-11-18T15:45:00.000Z"),
@@ -664,6 +676,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-766b-4b2f-8271-c5ffd9a6702f",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_127678",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-11-14T15:45:00.000Z"),
@@ -743,6 +756,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-e591-4893-8263-c07032cd1673",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100013",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-11-10T15:45:00.000Z"),
@@ -791,6 +805,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-f0ab-4ee5-82cb-eb141e82e6b1",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_999986",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-11-07T15:45:00.000Z"),
@@ -850,6 +865,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-8af4-4ded-8e55-e80234cc7a6b",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_999989",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-11-03T15:45:00.000Z"),
@@ -911,6 +927,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-f6c5-4d5b-8ddf-45f8680e1dee",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_270719",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-10-30T15:45:00.000Z"),
@@ -962,6 +979,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-4cba-47ca-8468-f69d37a81e7f",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_745668",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-10-27T15:45:00.000Z"),
@@ -1006,6 +1024,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-3180-4882-8984-71afe38e861d",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_815491",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-10-23T15:45:00.000Z"),
@@ -1044,6 +1063,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-9c20-48ec-8edf-71e885a56e67",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_390278",
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-10-20T15:45:00.000Z"),
@@ -1082,6 +1102,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-c5d5-4a79-87e5-d4425e1e5967",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_352064",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-10-16T15:45:00.000Z"),
@@ -1130,6 +1151,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-f600-42e3-8f89-50c4e790a881",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_349989",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-10-12T15:45:00.000Z"),
@@ -1191,6 +1213,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-4ed7-434a-8c2d-02c5513ca6cf",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100012",
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-10-09T15:45:00.000Z"),
@@ -1229,6 +1252,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-4a12-46bd-8221-b4049fbe8bc1",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_999992",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-10-05T15:45:00.000Z"),
@@ -1277,6 +1301,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-09d6-46cc-86ea-f33462bd59b5",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_377424",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-10-01T15:45:00.000Z"),
@@ -1340,6 +1365,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-42f6-4c6c-877c-1419d1f39455",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_518724",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-09-28T15:45:00.000Z"),
@@ -1384,6 +1410,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-ccb5-434a-8548-603114e7bdb3",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100009",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-09-24T15:45:00.000Z"),
@@ -1422,6 +1449,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-4761-4ae6-8fd2-cb28cc2ada08",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_687625",
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-09-20T15:45:00.000Z"),
@@ -1460,6 +1488,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-ed16-47c9-8822-f09847446fab",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_831452",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-09-17T15:45:00.000Z"),
@@ -1504,6 +1533,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-ff91-42c0-8375-e0e024677a3c",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_618836",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-09-13T15:45:00.000Z"),
@@ -1542,6 +1572,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-291d-4720-8f36-45f47c339409",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_940045",
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-09-09T15:45:00.000Z"),
@@ -1621,6 +1652,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-d81c-4a45-8e87-70dfc890cee4",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100010",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-09-06T15:45:00.000Z"),
@@ -1659,6 +1691,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-0593-4609-85e3-8c2437afb967",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100013",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-09-02T15:45:00.000Z"),
@@ -1707,6 +1740,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-222e-4252-8adb-0e7b1e1b36bf",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_656219",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-08-29T15:45:00.000Z"),
@@ -1755,6 +1789,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-5b7e-4d79-8e98-d8745dd8cf7a",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_281368",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-08-26T15:45:00.000Z"),
@@ -1803,6 +1838,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-fea7-46df-8be0-c37cc05f778c",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_647234",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-08-22T15:45:00.000Z"),
@@ -1883,6 +1919,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-d985-4065-8365-c51fd8a430a1",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_923273",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-08-18T15:45:00.000Z"),
@@ -1958,6 +1995,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-8950-447c-8143-0528dae9a7c5",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_485392",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-08-15T15:45:00.000Z"),
@@ -2037,6 +2075,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-b6e1-4a77-813a-ce0623d1a55f",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100013",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-08-11T15:45:00.000Z"),
@@ -2081,6 +2120,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-8df8-4eeb-8f8f-3cfe303b9912",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100002",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-08-08T15:45:00.000Z"),
@@ -2119,6 +2159,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-2c52-42af-8093-65ca2189e89b",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_562555",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-08-04T15:45:00.000Z"),
@@ -2182,6 +2223,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-c8d4-4432-830d-42a83964b464",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_999985",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-07-31T15:45:00.000Z"),
@@ -2226,6 +2268,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-34cf-4505-8943-165c473ffe6c",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_950322",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-07-28T15:45:00.000Z"),
@@ -2306,6 +2349,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-c9c7-4a95-8d6c-663c954adf34",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100012",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-07-24T15:45:00.000Z"),
@@ -2369,6 +2413,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-55d1-4d2d-8c3c-9ba6acfba26b",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_999999",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-07-20T15:45:00.000Z"),
@@ -2420,6 +2465,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-3ae4-4bde-85ae-6c24dc66f120",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_999992",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-07-17T15:45:00.000Z"),
@@ -2481,6 +2527,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-ba2d-4883-8f68-4082439a37c1",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_526109",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-07-13T15:45:00.000Z"),
@@ -2519,6 +2566,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-208b-4d9a-8bab-ece06c69610f",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_180121",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-07-09T15:45:00.000Z"),
@@ -2580,6 +2628,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-dbb3-4bf8-8d13-d4cd5b4b8b70",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_449364",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-07-06T15:45:00.000Z"),
@@ -2634,6 +2683,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-a4eb-4419-8e14-9ce4b5cec937",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_339239",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-07-02T15:45:00.000Z"),
@@ -2693,6 +2743,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-7554-464a-8d80-0a1455a760ee",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_616382",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-06-28T15:45:00.000Z"),
@@ -2737,6 +2788,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-5973-490e-8ddf-ca1f62f85559",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_385686",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-06-25T15:45:00.000Z"),
@@ -2788,6 +2840,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-11bc-49e8-844d-79307b6a9e7e",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_536774",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-06-21T15:45:00.000Z"),
@@ -2849,6 +2902,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-af34-47ef-8aae-c929cc5ff438",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_826422",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-06-17T15:45:00.000Z"),
@@ -2887,6 +2941,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-a6e2-4c61-8389-04e78c0dc31f",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100010",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-06-14T15:45:00.000Z"),
@@ -2931,6 +2986,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-690b-4213-897b-66059abafa6d",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_237567",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-06-10T15:45:00.000Z"),
@@ -3005,6 +3061,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-474d-475f-8d2d-caf60dd1219f",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_336171",
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-06-06T15:45:00.000Z"),
@@ -3059,6 +3116,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-0e82-4ef5-8d64-8beb148bc676",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_422349",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-06-03T15:45:00.000Z"),
@@ -3139,6 +3197,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-2bc6-40f9-8955-5b143d1067c6",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_999989",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-05-30T15:45:00.000Z"),
@@ -3207,6 +3266,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-d6d6-45a2-85a4-89a7176a1d51",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_552405",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-05-27T15:45:00.000Z"),
@@ -3245,6 +3305,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-5f7c-4e46-84f9-16216c4c3e03",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_919316",
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-05-23T15:45:00.000Z"),
@@ -3289,6 +3350,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-da0e-4fb9-85fa-861adf709404",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100019",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-05-19T15:45:00.000Z"),
@@ -3348,6 +3410,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-1288-47a3-8d12-34fa883921b0",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_118407",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-05-16T15:45:00.000Z"),
@@ -3411,6 +3474,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-adfc-4819-8b00-f573521efc05",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_999984",
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-05-12T15:45:00.000Z"),
@@ -3455,6 +3519,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-34d8-49ae-8a34-b763e07ba93f",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_320909",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-05-08T15:45:00.000Z"),
@@ -3493,6 +3558,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-f62f-4e96-88a4-a533172fe3d1",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_206500",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-05-05T15:45:00.000Z"),
@@ -3531,6 +3597,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-aea8-4360-8d1f-ad2115aaac22",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100008",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-05-01T15:45:00.000Z"),
@@ -3569,6 +3636,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-eda2-46d6-8f61-7caa97dfbb59",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100017",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-04-27T15:45:00.000Z"),
@@ -3649,6 +3717,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-e3bb-446b-80a4-54787669ce53",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_350204",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-04-24T15:45:00.000Z"),
@@ -3710,6 +3779,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-3ed4-4df8-831e-f2df02940580",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100007",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-04-20T15:45:00.000Z"),
@@ -3793,6 +3863,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-d7ce-47ff-8be3-9cdcbe4f7493",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_125872",
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-04-16T15:45:00.000Z"),
@@ -3831,6 +3902,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-7d42-4253-8eb1-15791a66ea01",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_999999",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-04-13T15:45:00.000Z"),
@@ -3900,6 +3972,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-7c3d-4648-86ae-fe9ce422f320",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_752203",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-04-09T15:45:00.000Z"),
@@ -3938,6 +4011,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-bd74-4e8f-8ce4-7e13782bb6ef",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_973529",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-04-05T15:45:00.000Z"),
@@ -4007,6 +4081,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-bd8a-40e0-860b-77c73a3ef976",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_242416",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-04-02T15:45:00.000Z"),
@@ -4045,6 +4120,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-d9b6-45cc-85c8-b527e24fd1fd",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_819434",
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-03-29T15:45:00.000Z"),
@@ -4104,6 +4180,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-4f39-4434-8e94-f4eb542c2224",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_983499",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-03-25T15:45:00.000Z"),
@@ -4152,6 +4229,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-d5ba-4284-8422-d332945d19cc",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_622282",
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-03-22T15:45:00.000Z"),
@@ -4196,6 +4274,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-1da5-4f7e-82cb-452c4e9425ee",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_680661",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-03-18T15:45:00.000Z"),
@@ -4234,6 +4313,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-7b5c-4de3-8e92-13a842dc0d7e",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_783404",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-03-15T15:45:00.000Z"),
@@ -4295,6 +4375,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-d877-4566-8797-79441ff44e6c",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_700635",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-03-11T15:45:00.000Z"),
@@ -4358,6 +4439,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-ffb5-4452-86c9-3beb7ec23613",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_686818",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-03-07T15:45:00.000Z"),
@@ -4433,6 +4515,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-18e1-4f8d-88f8-f383315b83c9",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_807759",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-03-04T15:45:00.000Z"),
@@ -4471,6 +4554,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-44c1-4db6-8d56-81415e5a4270",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_340555",
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-02-28T15:45:00.000Z"),
@@ -4557,6 +4641,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-a707-4293-8e8e-577abd2dbcb0",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_687292",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-02-24T15:45:00.000Z"),
@@ -4601,6 +4686,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-afc2-47fe-8417-e8a6c3661b55",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_999982",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-02-21T15:45:00.000Z"),
@@ -4660,6 +4746,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-4dc4-40c0-85bc-60253db18558",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_765469",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-02-17T15:45:00.000Z"),
@@ -4716,6 +4803,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-d528-43b2-8fd8-e8abc3eba1f9",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_610424",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-02-13T15:45:00.000Z"),
@@ -4791,6 +4879,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-1ab4-4961-8cc3-a8f8e6452252",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_936915",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-02-10T15:45:00.000Z"),
@@ -4850,6 +4939,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-e2a1-4235-8360-e02887864d03",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100016",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-02-06T15:45:00.000Z"),
@@ -4888,6 +4978,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-bd19-426f-8528-d9b0210def00",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_859816",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-02-02T15:45:00.000Z"),
@@ -4926,6 +5017,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-4464-4a77-8ff1-0f68ef67b22f",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100007",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-01-30T15:45:00.000Z"),
@@ -4970,6 +5062,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-f747-4a50-8486-4c03eb82cb17",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_890614",
     "sourceAccountId": "469aa9b2-35e4-509f-8c7d-061a6fa33d07",
     "date": new Date("2025-01-26T15:45:00.000Z"),
@@ -5014,6 +5107,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-0b6a-4149-80e8-911ca6e86ce6",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_999992",
     "sourceAccountId": "c5296f7f-fff2-5fff-8000-001cffffffe3",
     "date": new Date("2025-01-22T15:45:00.000Z"),
@@ -5070,6 +5164,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-14dc-45ac-881c-9e765dbc41ac",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_999987",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-01-19T15:45:00.000Z"),
@@ -5108,6 +5203,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-dcbc-470d-879e-84ff722b791f",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100004",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-01-15T15:45:00.000Z"),
@@ -5163,6 +5259,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-46a3-4775-87b1-0799b8818e20",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_383130",
     "sourceAccountId": "00000017-0011-1000-8000-0009fffffffb",
     "date": new Date("2025-01-11T15:45:00.000Z"),
@@ -5207,6 +5304,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-b3a1-4cf4-80c8-824612be1944",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_999998",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-01-08T15:45:00.000Z"),
@@ -5245,6 +5343,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-57f7-43c5-8d35-0f74a6ed07ad",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100018",
     "sourceAccountId": "00000007-0009-1000-8000-001b8d4052ea",
     "date": new Date("2025-01-04T15:45:00.000Z"),
@@ -5283,6 +5382,7 @@ export const bankTransactions = [
   {
     "id": "0000000f-79fd-4a68-88e8-a8447ce36662",
     "businessId": "00000000-0000-4000-8000-000000000201",
+    "source": "PLAID",
     "sourceTransactionId": "src_txn_100014",
     "sourceAccountId": "540a9839-0008-1000-bfef-0227ffffffef",
     "date": new Date("2025-01-01T15:45:00.000Z"),

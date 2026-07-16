@@ -67,7 +67,7 @@ export const BankTransactionSchema = Schema.Struct({
     Schema.propertySignature(Schema.String),
     Schema.fromKey('business_id'),
   ),
-  source: Schema.optional(TransactionSourceSchema),
+  source: TransactionSourceSchema,
   sourceTransactionId: pipe(
     Schema.propertySignature(Schema.String),
     Schema.fromKey('source_transaction_id'),

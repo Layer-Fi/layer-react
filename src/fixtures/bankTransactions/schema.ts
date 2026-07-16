@@ -4,7 +4,7 @@ import {
   BankTransactionSchema,
   CategorizationStatus,
 } from '@schemas/bankTransactions/bankTransaction'
-import { BankTransactionDirection } from '@schemas/bankTransactions/base'
+import { BankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
 
 import {
   bankTransactionCustomerArbitrary,
@@ -26,6 +26,7 @@ const base = Schema.Struct({
   ...fields,
   id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.bankTransaction)),
   businessId: withArbitrary(fields.businessId, () => fc => fc.constant(BUSINESS_ID)),
+  source: withArbitrary(fields.source, () => fc => fc.constant(TransactionSource.PLAID)),
   sourceTransactionId: withArbitrary(fields.sourceTransactionId, () => sourceTransactionIdArbitrary),
   // Placeholder - the generator respreads dates across the fixture year.
   date: withArbitrary(fields.date, () => dateArbitrary),
