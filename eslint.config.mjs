@@ -154,6 +154,18 @@ export default tsEslint.config(
     },
   },
   {
+    files: ['src/msw/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': ['error', {
+        patterns: [{
+          group: ['@hooks/*'],
+          message: 'MSW handlers load in every vitest run before per-test mocks apply, so importing hook modules breaks unrelated tests. Share schemas via @schemas instead; type-only imports are fine.',
+          allowTypeImports: true,
+        }],
+      }],
+    },
+  },
+  {
     files: ['**/*.{ts,tsx,js,jsx}'],
     plugins: { 'simple-import-sort': simpleImportSort },
     rules: {
