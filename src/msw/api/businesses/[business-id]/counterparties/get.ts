@@ -9,19 +9,9 @@ import { counterparties as defaultCounterparties } from '@fixtures/counterpartie
 
 const encodeCounterparty = Schema.encodeSync(BankTransactionCounterpartySchema)
 
-const filterByQuery = createListFilter<BankTransactionCounterparty>({
+const filterCounterparties = createListFilter<BankTransactionCounterparty>({
   q: matchesQuery(counterparty => [counterparty.name, counterparty.website]),
 })
-
-const filterByExternalIds = (
-  counterparties: readonly BankTransactionCounterparty[],
-  request: Request,
-) => {
-  const externalIds = new URL(request.url).searchParams.getAll('external_ids')
-  if (externalIds.length === 0) return [...counterparties]
-
-  return counterparties.filter(({ externalId }) => externalId != null && externalIds.includes(externalId))
-}
 
 const sortByName = (counterparties: readonly BankTransactionCounterparty[], request: Request) => {
   const descending = new URL(request.url).searchParams.get('sort_order') === 'DESC'
@@ -38,5 +28,5 @@ export const get = createMockEndpoint<readonly BankTransactionCounterparty[], Re
   method: 'get',
   path: '*/v1/businesses/:businessId/counterparties',
   resolve: ({ override: counterparties = defaultCounterparties, request }) =>
-    toResponse(sortByName(filterByExternalIds(filterByQuery(counterparties, request), request), request), request),
+    toResponse(sortByName(filterCounterparties(counterparties, request), request), request),
 })
