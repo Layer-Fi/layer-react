@@ -7,8 +7,8 @@ import { Pinning, type UnifiedReport, type UnifiedReportRow } from '@schemas/rep
 import {
   accountActivityCents,
   accountsOfTypes,
-  buildAccountForest,
-  collectLeafAccounts,
+  leafAccountsOfTypes,
+  sumActivityCents,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {
   isoDate,
@@ -65,14 +65,10 @@ const totalRow = (lineNumber: string, label: string, amount: number) =>
 
 export const generateScheduleC = (params: URLSearchParams): UnifiedReport => {
   const range = yearRange(params)
-  const revenueLeaves = collectLeafAccounts(buildAccountForest(accountsOfTypes([LedgerAccountType.Revenue])))
   const expenseAccounts = accountsOfTypes([LedgerAccountType.Expense])
 
   // Gross receipts aggregates every revenue leaf account, so it has no single-account drill-down.
-  const grossReceipts = revenueLeaves.reduce(
-    (total, account) => total + accountActivityCents(account, range, params),
-    0,
-  )
+  const grossReceipts = sumActivityCents(leafAccountsOfTypes([LedgerAccountType.Revenue]), range, params)
 
   const expenseLineRows = EXPENSE_LINES.map((line) => {
     const account = findByStableName(expenseAccounts, line.stableName)

@@ -4,9 +4,7 @@ import { Pinning, type UnifiedReport } from '@schemas/reports/unifiedReport'
 
 import {
   accountActivityCents,
-  accountsOfTypes,
-  buildAccountForest,
-  collectLeafAccounts,
+  leafAccountsOfTypes,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {
   reportRangeFromParams,
@@ -24,7 +22,7 @@ const generateBusinessAccountReport = (
 ): UnifiedReport => {
   const range = reportRangeFromParams(params)
   const periods = resolvePeriods(range, params.get('group_by'))
-  const leaves = collectLeafAccounts(buildAccountForest(accountsOfTypes([type])))
+  const leaves = leafAccountsOfTypes([type])
 
   return generateTableReport({
     rowHeader: {

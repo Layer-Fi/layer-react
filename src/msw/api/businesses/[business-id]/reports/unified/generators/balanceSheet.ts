@@ -3,6 +3,7 @@ import { type ReportConfig } from '@schemas/reports/reportConfig'
 import { Pinning, type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import {
+  accountForestRows,
   type AccountNode,
   accountsOfTypes,
   buildAccountForest,
@@ -23,7 +24,6 @@ import {
   numericColumn,
   parseEffectiveDateParam,
   rowHeaderColumn,
-  textCell,
   unifiedReport,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 
@@ -34,28 +34,6 @@ const LINES_ROUTE = 'balance-sheet/lines'
 
 type BalanceByAccountId = ReadonlyMap<string, number>
 type DrillDownFor = (account: SingleChartAccountType) => ReportConfig | undefined
-
-const accountRow = (
-  node: AccountNode,
-  balances: BalanceByAccountId,
-  drillDownFor: DrillDownFor,
-): UnifiedReportRow => {
-  const isLeaf = node.children.length === 0
-  const amount = isLeaf
-    ? balances.get(node.account.accountId) ?? 0
-    : subtreeTotal(node, balances)
-
-  return {
-    rowKey: node.account.accountId,
-    cells: {
-      [NAME_COLUMN_KEY]: textCell(node.account.name, {
-        reportConfig: isLeaf ? drillDownFor(node.account) : undefined,
-      }),
-      [BALANCE_COLUMN_KEY]: currencyCell(amount),
-    },
-    ...(isLeaf ? {} : { rows: node.children.map(child => accountRow(child, balances, drillDownFor)) }),
-  }
-}
 
 const subtreeTotal = (node: AccountNode, balances: BalanceByAccountId): number =>
   node.children.length === 0
@@ -110,15 +88,18 @@ export const generateBalanceSheet = (params: URLSearchParams): UnifiedReport => 
       ? undefined
       : linesReportConfig(LINES_ROUTE, account, [], baseParams)
 
-  const forestFor = (type: LedgerAccountType) =>
-    buildAccountForest(accountsOfTypes([type]))
+  const sectionRows = (type: LedgerAccountType) => accountForestRows(buildAccountForest(accountsOfTypes([type])), {
+    nameColumnKey: NAME_COLUMN_KEY,
+    leafReportConfig: drillDownFor,
+    valueCells: node => ({ [BALANCE_COLUMN_KEY]: currencyCell(subtreeTotal(node, balances)) }),
+  })
 
   const rows: UnifiedReportRow[] = [
-    ...forestFor(LedgerAccountType.Asset).map(node => accountRow(node, balances, drillDownFor)),
+    ...sectionRows(LedgerAccountType.Asset),
     sectionTotalRow('total_assets', 'Total Assets', assetsTotal),
-    ...forestFor(LedgerAccountType.Liability).map(node => accountRow(node, balances, drillDownFor)),
+    ...sectionRows(LedgerAccountType.Liability),
     sectionTotalRow('total_liabilities', 'Total Liabilities', liabilitiesTotal),
-    ...forestFor(LedgerAccountType.Equity).map(node => accountRow(node, balances, drillDownFor)),
+    ...sectionRows(LedgerAccountType.Equity),
     sectionTotalRow('total_equity', 'Total Equity', equityTotal),
     sectionTotalRow('total_liabilities_and_equity', 'Total Liabilities & Equity', liabilitiesTotal + equityTotal),
   ]
