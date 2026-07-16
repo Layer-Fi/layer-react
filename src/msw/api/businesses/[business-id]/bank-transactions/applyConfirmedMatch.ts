@@ -1,24 +1,9 @@
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { type Match, MatchType } from '@schemas/bankTransactions/match'
+import { type Match } from '@schemas/bankTransactions/match'
 
-import { toMatchDetailsId } from '@fixtures/bankTransactions/derive'
+import { MATCH_TYPE_BY_DETAILS_TYPE, toMatchDetailsId } from '@fixtures/bankTransactions/derive'
 import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
-
-const MATCH_TYPE_BY_DETAILS_TYPE: Record<
-  NonNullable<BankTransaction['match']>['details']['type'],
-  MatchType
-> = {
-  Transfer_Match: MatchType.TRANSFER,
-  Payout_Match: MatchType.PAYOUT,
-  Vendor_Payout_Match: MatchType.VENDOR_PAYOUT,
-  Bill_Match: MatchType.BILL_PAYMENT,
-  Invoice_Match: MatchType.INVOICE_PAYMENT,
-  Refund_Payment_Match: MatchType.REFUND_PAYMENT,
-  Vendor_Refund_Payment_Match: MatchType.VENDOR_REFUND_PAYMENT,
-  Journal_Entry_Match: MatchType.MANUAL_JOURNAL_ENTRY,
-  Payroll_Match: MatchType.PAYROLL_PAYMENT,
-}
 
 export const applyConfirmedMatch = (
   transaction: BankTransaction,
@@ -54,6 +39,11 @@ export const applyConfirmedMatch = (
     details,
   }
 
+  // The match table renders suggestedMatches; clearing them would blank it.
+  const suggestedMatches = suggestedMatch
+    ? transaction.suggestedMatches
+    : [...transaction.suggestedMatches, { id: suggestedMatchId, details }]
+
   return {
     transaction: {
       ...transaction,
@@ -61,7 +51,7 @@ export const applyConfirmedMatch = (
       category: null,
       categorizationFlow: null,
       match,
-      suggestedMatches: [],
+      suggestedMatches,
     },
     match,
   }

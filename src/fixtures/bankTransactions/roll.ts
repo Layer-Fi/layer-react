@@ -7,7 +7,7 @@ import { createRollTable } from '@fixtures/utils/createRollTable'
 export enum BankTransactionRollCase {
   MatchedTransfer = 'MATCHED_TRANSFER',
   SuggestedTransfer = 'SUGGESTED_TRANSFER',
-  Pending = 'PENDING',
+  SuggestedMerchantMatch = 'SUGGESTED_MERCHANT_MATCH',
   AwaitingInput = 'AWAITING_INPUT',
   Categorized = 'CATEGORIZED',
   Split = 'SPLIT',
@@ -15,13 +15,13 @@ export enum BankTransactionRollCase {
 }
 
 export const bankTransactionRollTable = createRollTable<BankTransactionRollCase>([
-  [BankTransactionRollCase.MatchedTransfer, 6],
-  [BankTransactionRollCase.SuggestedTransfer, 6],
-  [BankTransactionRollCase.Pending, 4],
-  [BankTransactionRollCase.AwaitingInput, 34],
+  [BankTransactionRollCase.MatchedTransfer, 3],
+  [BankTransactionRollCase.SuggestedTransfer, 3],
+  [BankTransactionRollCase.SuggestedMerchantMatch, 8],
+  [BankTransactionRollCase.AwaitingInput, 30],
   [BankTransactionRollCase.Categorized, 30],
   [BankTransactionRollCase.Split, 10],
-  [BankTransactionRollCase.MerchantMatch, 10],
+  [BankTransactionRollCase.MerchantMatch, 16],
 ])
 
 /*

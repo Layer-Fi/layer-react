@@ -36,8 +36,16 @@ export const toSuggestedMatchId = (transactionId: string) =>
 export const toMatchDetailsId = (transactionId: string) =>
   transactionId.replace(/^[0-9a-f]{8}/, '00000011')
 
+const toAlternateSuggestedMatchId = (transactionId: string, alternate: number) =>
+  transactionId.replace(/^[0-9a-f]{8}/, `0000002${alternate}`)
+
+const toAlternateMatchDetailsId = (transactionId: string, alternate: number) =>
+  transactionId.replace(/^[0-9a-f]{8}/, `0000003${alternate}`)
+
 const toMatchedBankTransaction = (transaction: BankTransaction) =>
   pick(transaction, ['id', 'date', 'direction', 'amount', 'counterpartyName', 'description'])
+
+const formatDescriptionDate = (date: Date) => date.toISOString().slice(0, 10)
 
 const deriveTransfer = (
   transaction: BankTransaction,
@@ -63,16 +71,38 @@ const deriveTransfer = (
     id: toMatchDetailsId(transaction.id),
     amount: transaction.amount,
     date: transaction.date,
-    description: `Transfer between ${fromAccountName} and ${toAccountName}`,
+    // Descriptions mirror the API's MatchDetailsDescriptionGenerator templates.
+    description: `Transfer from ${fromAccountName} to ${toAccountName}`,
     adjustment: null,
     fromAccountName,
     toAccountName,
   }
 
+  const suggestedMatches = [{ id: toSuggestedMatchId(transaction.id), details }]
+
+  const alternateCounterparty = counterpartyAccounts[(ref + 1) % counterpartyAccounts.length].accountName
+  if (alternateCounterparty !== counterpartyAccount) {
+    const alternateFrom = outbound ? accountName : alternateCounterparty
+    const alternateTo = outbound ? alternateCounterparty : accountName
+
+    suggestedMatches.push({
+      id: toAlternateSuggestedMatchId(transaction.id, 1),
+      details: {
+        ...details,
+        id: toAlternateMatchDetailsId(transaction.id, 1),
+        description: `Transfer from ${alternateFrom} to ${alternateTo}`,
+        fromAccountName: alternateFrom,
+        toAccountName: alternateTo,
+      },
+    })
+  }
+
+  // The match table renders suggestedMatches and badges the confirmed one.
   if (matched) {
     return {
       ...transfer,
       categorizationStatus: CategorizationStatus.MATCHED,
+      suggestedMatches,
       match: {
         id: `match-${transaction.id}`,
         matchType: MatchType.TRANSFER,
@@ -85,50 +115,110 @@ const deriveTransfer = (
   return {
     ...transfer,
     categorizationStatus: CategorizationStatus.READY_FOR_INPUT,
-    suggestedMatches: [{ id: toSuggestedMatchId(transaction.id), details }],
+    suggestedMatches,
   }
+}
+
+export const MATCH_TYPE_BY_DETAILS_TYPE: Record<MatchDetailsType['type'], MatchType> = {
+  Transfer_Match: MatchType.TRANSFER,
+  Payout_Match: MatchType.PAYOUT,
+  Vendor_Payout_Match: MatchType.VENDOR_PAYOUT,
+  Bill_Match: MatchType.BILL_PAYMENT,
+  Invoice_Match: MatchType.INVOICE_PAYMENT,
+  Refund_Payment_Match: MatchType.REFUND_PAYMENT,
+  Vendor_Refund_Payment_Match: MatchType.VENDOR_REFUND_PAYMENT,
+  Journal_Entry_Match: MatchType.MANUAL_JOURNAL_ENTRY,
+  Payroll_Match: MatchType.PAYROLL_PAYMENT,
+}
+
+// ref/2 keeps the flavor pick decorrelated from the direction pick at ref % 2.
+const merchantMatchDetails = (
+  transaction: BankTransaction,
+  merchant: BankTransactionMerchant,
+  ref: number,
+): MatchDetailsType => {
+  const type = merchant.matchTypes[Math.floor(ref / 2) % merchant.matchTypes.length]
+
+  const base = {
+    id: toMatchDetailsId(transaction.id),
+    amount: transaction.amount,
+    date: transaction.date,
+    adjustment: null,
+  }
+
+  // Descriptions mirror the API's MatchDetailsDescriptionGenerator templates.
+  switch (type) {
+    case 'Payout_Match':
+      return {
+        ...base,
+        type,
+        description: `Payout via ${merchant.name} created on ${formatDescriptionDate(transaction.date)}`,
+      }
+    case 'Invoice_Match':
+      return {
+        ...base,
+        type,
+        description: `Invoice payment via ${merchant.name} for 1 invoice with the following reference numbers: INV-${1000 + (ref % 9000)}`,
+        invoiceIdentifiers: [{ id: `invoice-${transaction.id}`, referenceNumber: `INV-${1000 + (ref % 9000)}` }],
+      }
+    case 'Bill_Match':
+      return {
+        ...base,
+        type,
+        description: `Bill payment via ${merchant.name} for 1 bill`,
+        billIdentifiers: [{ id: `bill-${transaction.id}` }],
+      }
+    case 'Refund_Payment_Match':
+      return {
+        ...base,
+        type,
+        description: `Refund payment via ${merchant.name}`,
+        customerRefundIdentifiers: { id: `customer-refund-${transaction.id}` },
+      }
+    case 'Vendor_Refund_Payment_Match':
+      return {
+        ...base,
+        type,
+        description: `Vendor refund payment via ${merchant.name}`,
+        vendorRefundIdentifiers: { id: `vendor-refund-${transaction.id}` },
+      }
+  }
+}
+
+// Credit and refund merchants are slivers of the pool; alternating direction
+// and carving out a refund slice keeps them visible in a uniform draw.
+const pickMatchMerchant = (merchantIndex: number, ref: number): BankTransactionMerchant => {
+  const wantInflow = ref % 2 === 0
+  const matchable = bankTransactionMerchants.filter(candidate =>
+    candidate.matchTypes.length > 0
+    && (candidate.direction === BankTransactionDirection.Credit) === wantInflow)
+
+  const wantRefund = !wantInflow && Math.floor(ref / 4) % 3 === 0
+  const pool = matchable.filter(candidate =>
+    candidate.matchTypes.includes('Refund_Payment_Match') === wantRefund)
+
+  return pool[merchantIndex % pool.length]
 }
 
 const deriveMerchantMatch = (
   transaction: BankTransaction,
   merchant: BankTransactionMerchant,
+  ref: number,
 ): BankTransaction => {
-  const isInflow = merchant.direction === BankTransactionDirection.Credit
-  const details: MatchDetailsType = isInflow
-    ? {
-      type: 'Payout_Match',
-      id: toMatchDetailsId(transaction.id),
-      amount: transaction.amount,
-      date: transaction.date,
-      description: `Payout from ${merchant.name}`,
-      adjustment: null,
-    }
-    : {
-      type: 'Bill_Match',
-      id: toMatchDetailsId(transaction.id),
-      amount: transaction.amount,
-      date: transaction.date,
-      description: `Bill payment to ${merchant.name}`,
-      adjustment: null,
-      billIdentifiers: [{ id: `bill-${transaction.id}` }],
-    }
+  const details = merchantMatchDetails(transaction, merchant, ref)
 
   return {
     ...transaction,
     categorizationStatus: CategorizationStatus.MATCHED,
+    suggestedMatches: [{ id: toSuggestedMatchId(transaction.id), details }],
     match: {
       id: `match-${transaction.id}`,
-      matchType: isInflow ? MatchType.PAYOUT : MatchType.BILL_PAYMENT,
+      matchType: MATCH_TYPE_BY_DETAILS_TYPE[details.type],
       bankTransaction: toMatchedBankTransaction(transaction),
       details,
     },
   }
 }
-
-const derivePending = (transaction: BankTransaction): BankTransaction => ({
-  ...transaction,
-  categorizationStatus: CategorizationStatus.PENDING,
-})
 
 const deriveAwaitingInput = (
   transaction: BankTransaction,
@@ -141,6 +231,18 @@ const deriveAwaitingInput = (
     category: null,
     suggestions: [merchant.primary, ...merchant.alternates].map(toAccountCategorization),
   },
+})
+
+const deriveSuggestedMerchantMatch = (
+  transaction: BankTransaction,
+  merchant: BankTransactionMerchant,
+  ref: number,
+): BankTransaction => ({
+  ...deriveAwaitingInput(transaction, merchant),
+  suggestedMatches: [{
+    id: toSuggestedMatchId(transaction.id),
+    details: merchantMatchDetails(transaction, merchant, ref),
+  }],
 })
 
 const deriveCategorized = (
@@ -193,20 +295,24 @@ export const deriveBankTransaction = (
     sourceAccountId: account.externalAccounts[0]?.id ?? account.id,
   }
 
-  const merchant = bankTransactionMerchants[merchantIndex % bankTransactionMerchants.length]
-  // Amounts are integer cents drawn from the merchant's dollar range.
-  const [minDollars, maxDollars] = merchant.amountRange
-  const amount = minDollars * 100 + (amountRoll % ((maxDollars - minDollars) * 100 + 1))
+  const toMerchantTransaction = (merchant: BankTransactionMerchant): BankTransaction => {
+    // Amounts are integer cents drawn from the merchant's dollar range.
+    const [minDollars, maxDollars] = merchant.amountRange
+    const amount = minDollars * 100 + (amountRoll % ((maxDollars - minDollars) * 100 + 1))
 
-  const merchantTransaction: BankTransaction = {
-    ...accountTransaction,
-    direction: merchant.direction,
-    amount,
-    counterpartyName: merchant.name,
-    description: merchant.describe(ref),
-    customer: merchant.direction === BankTransactionDirection.Credit ? transaction.customer : null,
-    vendor: merchant.direction === BankTransactionDirection.Debit ? transaction.vendor : null,
+    return {
+      ...accountTransaction,
+      direction: merchant.direction,
+      amount,
+      counterpartyName: merchant.name,
+      description: merchant.describe(ref),
+      customer: merchant.direction === BankTransactionDirection.Credit ? transaction.customer : null,
+      vendor: merchant.direction === BankTransactionDirection.Debit ? transaction.vendor : null,
+    }
   }
+
+  const merchant = bankTransactionMerchants[merchantIndex % bankTransactionMerchants.length]
+  const merchantTransaction = toMerchantTransaction(merchant)
 
   // Splits need an alternate category for the second entry; merchants without
   // one fall back to a plain categorization.
@@ -217,19 +323,34 @@ export const deriveBankTransaction = (
       deriveTransfer(accountTransaction, { matched: true, outbound, ref }),
     [BankTransactionRollCase.SuggestedTransfer]: () =>
       deriveTransfer(accountTransaction, { matched: false, outbound, ref }),
-    [BankTransactionRollCase.Pending]: () => derivePending(merchantTransaction),
     [BankTransactionRollCase.AwaitingInput]: () => deriveAwaitingInput(merchantTransaction, merchant),
     [BankTransactionRollCase.Categorized]: () => deriveCategorized(merchantTransaction, merchant),
     [BankTransactionRollCase.Split]: () =>
       hasAlternates
         ? deriveSplit(merchantTransaction, merchant, splitPercent)
         : deriveCategorized(merchantTransaction, merchant),
-    [BankTransactionRollCase.MerchantMatch]: () =>
-      hasAlternates
-        ? deriveMerchantMatch(merchantTransaction, merchant)
-        : deriveCategorized(merchantTransaction, merchant),
+    [BankTransactionRollCase.SuggestedMerchantMatch]: () => {
+      const matchMerchant = pickMatchMerchant(merchantIndex, ref)
+
+      return deriveSuggestedMerchantMatch(toMerchantTransaction(matchMerchant), matchMerchant, ref)
+    },
+    [BankTransactionRollCase.MerchantMatch]: () => {
+      const matchMerchant = pickMatchMerchant(merchantIndex, ref)
+
+      return deriveMerchantMatch(toMerchantTransaction(matchMerchant), matchMerchant, ref)
+    },
   })
 }
+
+// Payout descriptions embed a "created on" date, so it moves with the rest.
+const withMatchDetailsDate = <TDetails extends { date: Date, description: string }>(
+  details: TDetails,
+  date: Date,
+): TDetails => ({
+  ...details,
+  date,
+  description: details.description.replace(/\d{4}-\d{2}-\d{2}/, formatDescriptionDate(date)),
+})
 
 /** Moves a transaction to a new date, keeping the dates embedded in its matches in step. */
 export const withBankTransactionDate = (
@@ -243,10 +364,10 @@ export const withBankTransactionDate = (
     : {
       ...transaction.match,
       bankTransaction: { ...transaction.match.bankTransaction, date },
-      details: { ...transaction.match.details, date },
+      details: withMatchDetailsDate(transaction.match.details, date),
     },
   suggestedMatches: transaction.suggestedMatches.map(suggestedMatch => ({
     ...suggestedMatch,
-    details: { ...suggestedMatch.details, date },
+    details: withMatchDetailsDate(suggestedMatch.details, date),
   })),
 })

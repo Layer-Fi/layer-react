@@ -4,9 +4,12 @@ import { LinkedAccounts, type LinkedAccountsProps } from '@components/LinkedAcco
 
 import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-accounts/store'
 import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
+import {
+  type LinkedAccountsStoryArgs as SharedLinkedAccountsArgs,
+  makeLinkedAccountsStoryControls,
+} from '@test-utils/linkedAccountsStoryControls'
 
-type LinkedAccountsStoryArgs = {
-  showLedgerBalance: boolean
+type LinkedAccountsStoryArgs = SharedLinkedAccountsArgs & {
   title: string
 } & Pick<LinkedAccountsProps, 'stringOverrides'>
 
@@ -16,12 +19,14 @@ const keepTwoAccounts = () => {
   bankAccounts.slice(2).forEach(({ id }) => bankAccountStore.deleteById(id))
 }
 
+const linkedAccountsControls = makeLinkedAccountsStoryControls()
+
 const meta: Meta<LinkedAccountsStoryArgs> = {
   title: 'Components/LinkedAccounts',
   component: LinkedAccounts,
   loaders: [keepTwoAccounts],
   parameters: {
-    controls: { include: ['showLedgerBalance', 'stringOverrides.title'] },
+    controls: { include: [...linkedAccountsControls.controlNames, 'stringOverrides.title'] },
   },
   args: {
     showLedgerBalance: false,
@@ -29,10 +34,7 @@ const meta: Meta<LinkedAccountsStoryArgs> = {
   },
   argTypes: {
     stringOverrides: { table: { disable: true } },
-    showLedgerBalance: {
-      control: 'boolean',
-      description: 'Show each account’s ledger balance row',
-    },
+    ...linkedAccountsControls.argTypes,
     title: {
       name: 'stringOverrides.title',
       control: 'text',

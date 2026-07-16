@@ -1,11 +1,14 @@
 import { useEffect, useRef } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
+import { BookkeepingStatus } from '@schemas/bookkeepingStatus'
 import { useBankAccountsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
 import { Tasks } from '@components/Tasks/Tasks'
 
 import { get as getBankAccounts } from '@msw/api/businesses/[business-id]/bank-accounts/get'
+import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { handlers } from '@msw/handlers'
+import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 import { FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
 import { bankAccounts } from '@fixtures/generated/bankAccounts.gen'
 import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
@@ -47,7 +50,14 @@ const meta: Meta<TasksStoryArgs> = {
   title: 'Components/Tasks',
   component: Tasks,
   parameters: {
-    msw: { handlers: [getBankAccounts.mock(mockAccounts), ...handlers] },
+    msw: {
+      // Tasks come from bookkeeping periods, which only fetch for enrolled businesses.
+      handlers: [
+        getBankAccounts.mock(mockAccounts),
+        getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })),
+        ...handlers,
+      ],
+    },
     controls: { include: ['mobile', 'stringOverrides.header', 'onClickReconnectAccounts'] },
   },
   args: {
