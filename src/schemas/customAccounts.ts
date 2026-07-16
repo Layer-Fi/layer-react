@@ -1,6 +1,7 @@
 import { pipe, Schema } from 'effect'
 
 import { BankTransactionDirectionSchema } from '@schemas/bankTransactions/base'
+import { SingleCategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { createTransformedEnumSchema } from '@schemas/utils'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 
@@ -118,6 +119,18 @@ export const CustomTransactionSchema = Schema.Struct({
 
 export type CustomTransaction = typeof CustomTransactionSchema.Type
 export type RawCustomTransaction = typeof CustomTransactionSchema.Encoded
+
+export const RecordCustomTransactionSchema = Schema.Struct({
+  amount: Schema.Number,
+  direction: BankTransactionDirectionSchema,
+  date: Schema.String,
+  description: Schema.String,
+  customerId: Schema.optional(Schema.UUID).pipe(Schema.fromKey('customer_id')),
+  vendorId: Schema.optional(Schema.UUID).pipe(Schema.fromKey('vendor_id')),
+  categorization: Schema.optional(SingleCategoryUpdateSchema),
+})
+
+export type RecordCustomTransaction = typeof RecordCustomTransactionSchema.Type
 
 export const CustomAccountTransactionRowSchema = Schema.Struct({
   date: Schema.String,

@@ -1,12 +1,13 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@ui/Button/Button'
+import { SubmitButton } from '@ui/Button/SubmitButton'
 import { Modal } from '@ui/Modal/Modal'
 import { ModalActions, ModalContent, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { RecordTransactionForm } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionForm'
-import { type RecordTransactionFormValues, type RecordTransactionVariant, useRecordTransactionForm } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
+import { type RecordTransactionVariant, useRecordTransactionForm } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
 
 type RecordTransactionModalProps = {
@@ -18,13 +19,13 @@ type RecordTransactionModalProps = {
 export function RecordTransactionModal({ variant, isOpen, onOpenChange }: RecordTransactionModalProps) {
   const { t } = useTranslation()
 
-  const handleSubmit = useCallback((values: RecordTransactionFormValues) => {
-    // TODO: wire up to the manual transaction API once the endpoint is available.
-    console.warn('Record manual transaction submitted', { variant, values })
-    onOpenChange(false)
-  }, [variant, onOpenChange])
+  const onSuccess = useCallback(() => onOpenChange(false), [onOpenChange])
 
-  const form = useRecordTransactionForm({ onSubmit: handleSubmit })
+  const { form, isError, resetSubmitState } = useRecordTransactionForm({ variant, onSuccess })
+
+  useEffect(() => {
+    if (isOpen) resetSubmitState()
+  }, [isOpen, resetSubmitState])
 
   const onCancel = useCallback(() => {
     form.reset()
@@ -61,9 +62,17 @@ export function RecordTransactionModal({ variant, isOpen, onOpenChange }: Record
                   <Button variant='outlined' onPress={onCancel}>
                     {t('common:action.cancel_label', 'Cancel')}
                   </Button>
-                  <Button onPress={() => void form.handleSubmit()} isPending={isSubmitting && canSubmit}>
-                    {t('common:action.save_label', 'Save')}
-                  </Button>
+                  <SubmitButton
+                    onPress={() => void form.handleSubmit()}
+                    isPending={isSubmitting && canSubmit}
+                    isError={isError}
+                    withRetry
+                    noIcon
+                  >
+                    {isError
+                      ? t('common:action.retry_label', 'Retry')
+                      : t('common:action.save_label', 'Save')}
+                  </SubmitButton>
                 </HStack>
               </ModalActions>
             )}
