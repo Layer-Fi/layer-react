@@ -1,3 +1,5 @@
+import { sumBy } from 'lodash-es'
+
 import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
@@ -48,10 +50,8 @@ export const generateTrialBalance = (params: URLSearchParams): UnifiedReport => 
     .filter(account => account !== openingBalanceEquity)
     .map(account => ({ account, magnitude: accumulatedMagnitudeCents(account, effectiveDate, params) }))
 
-  const debitSum = scored.filter(({ account }) => isDebitNormal(account))
-    .reduce((total, { magnitude }) => total + magnitude, 0)
-  const creditSum = scored.filter(({ account }) => !isDebitNormal(account))
-    .reduce((total, { magnitude }) => total + magnitude, 0)
+  const debitSum = sumBy(scored.filter(({ account }) => isDebitNormal(account)), ({ magnitude }) => magnitude)
+  const creditSum = sumBy(scored.filter(({ account }) => !isDebitNormal(account)), ({ magnitude }) => magnitude)
 
   // Opening balance equity plugs the report so total debits equal total credits.
   const plugMagnitude = Math.abs(debitSum - creditSum)

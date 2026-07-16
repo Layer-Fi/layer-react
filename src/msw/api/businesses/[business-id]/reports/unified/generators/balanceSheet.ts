@@ -1,3 +1,5 @@
+import { sumBy } from 'lodash-es'
+
 import { LedgerAccountType, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { type ReportConfig } from '@schemas/reports/reportConfig'
 import { Pinning, type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
@@ -38,7 +40,7 @@ type DrillDownFor = (account: SingleChartAccountType) => ReportConfig | undefine
 const subtreeTotal = (node: AccountNode, balances: BalanceByAccountId): number =>
   node.children.length === 0
     ? balances.get(node.account.accountId) ?? 0
-    : node.children.reduce((total, child) => total + subtreeTotal(child, balances), 0)
+    : sumBy(node.children, child => subtreeTotal(child, balances))
 
 const balanceSheetRow = labeledCurrencyRowFor(NAME_COLUMN_KEY, BALANCE_COLUMN_KEY)
 
@@ -50,9 +52,10 @@ const sumForType = (
   leaves: readonly SingleChartAccountType[],
   type: LedgerAccountType,
   balances: BalanceByAccountId,
-) => leaves
-  .filter(account => account.accountType.value === type)
-  .reduce((total, account) => total + (balances.get(account.accountId) ?? 0), 0)
+) => sumBy(
+  leaves.filter(account => account.accountType.value === type),
+  account => balances.get(account.accountId) ?? 0,
+)
 
 export const generateBalanceSheet = (params: URLSearchParams): UnifiedReport => {
   const effectiveDate = parseEffectiveDateParam(params)

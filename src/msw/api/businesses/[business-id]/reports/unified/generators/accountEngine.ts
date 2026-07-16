@@ -1,3 +1,5 @@
+import { sumBy } from 'lodash-es'
+
 import { type LedgerAccountType, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { type ReportConfig } from '@schemas/reports/reportConfig'
 import { type UnifiedReportRow } from '@schemas/reports/unifiedReport'
@@ -93,8 +95,7 @@ export const accountActivityCents = (
   account: SingleChartAccountType,
   range: ReportDateRange,
   params: URLSearchParams,
-): number => accountEntriesInRange(account, range, params)
-  .reduce((total, entry) => total + entry.amountCents, 0)
+): number => sumBy(accountEntriesInRange(account, range, params), entry => entry.amountCents)
 
 export const nodeActivityCents = (
   node: AccountNode,
@@ -102,13 +103,13 @@ export const nodeActivityCents = (
   params: URLSearchParams,
 ): number => node.children.length === 0
   ? accountActivityCents(node.account, range, params)
-  : node.children.reduce((total, child) => total + nodeActivityCents(child, range, params), 0)
+  : sumBy(node.children, child => nodeActivityCents(child, range, params))
 
 export const sumActivityCents = (
   accounts: readonly SingleChartAccountType[],
   range: ReportDateRange,
   params: URLSearchParams,
-): number => accounts.reduce((total, account) => total + accountActivityCents(account, range, params), 0)
+): number => sumBy(accounts, account => accountActivityCents(account, range, params))
 
 type ForestRowOptions = {
   nameColumnKey: string

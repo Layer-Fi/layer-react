@@ -1,4 +1,5 @@
 import { differenceInDays } from 'date-fns'
+import { sum } from 'lodash-es'
 
 import { type UnifiedReport } from '@schemas/reports/unifiedReport'
 import { getInvoiceCustomerName } from '@utils/customerVendor'
@@ -52,7 +53,7 @@ const buildAgingReport = (
       {
         columnKey: 'total',
         displayName: 'Total',
-        value: ({ amounts }) => amounts.reduce((sum, value) => sum + value, 0),
+        value: ({ amounts }) => sum(amounts),
       },
     ],
     total: { rowKey: `total_${entityColumnKey}_aging`, label: 'Total Outstanding' },
