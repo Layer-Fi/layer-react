@@ -105,7 +105,7 @@ export function SummariesContent({
               isExpense={isExpense}
               mode={mode}
               slots={{
-                Chart: renderChart(chartData),
+                Chart: amount < 0 ? null : renderChart(chartData),
                 Footer: config.renderFooter?.(breakdown, isLoading),
               }}
             />
