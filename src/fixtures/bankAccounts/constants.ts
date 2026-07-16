@@ -1,9 +1,9 @@
 import { type AccountInstitution } from '@schemas/common/accountInstitution'
 
 export const accountNameKinds = [
-  'Business Checking',
-  'Business Savings',
-  'Business Credit Card',
+  'Checking',
+  'Savings',
+  'Credit Card',
 ] as const
 
 export const institutions: AccountInstitution[] = [

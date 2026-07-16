@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
+import { type TagBankTransactionsUpdateEncoded } from '@schemas/bankTransactions/tagUpdate'
 import type { TransactionTagEncoded } from '@schemas/tag'
 import { post } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
@@ -11,15 +12,7 @@ import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const TAG_BANK_TRANSACTION_TAG_KEY = '#tag-bank-transaction'
 
-type TagBankTransactionBody = {
-  key_values: ReadonlyArray<{
-    key: string
-    dimension_display_name?: string | null
-    value: string
-    value_display_name?: string | null
-  }>
-  transaction_ids: ReadonlyArray<string>
-}
+type TagBankTransactionBody = TagBankTransactionsUpdateEncoded
 
 type TagBankTransactionResponse = {
   data: {

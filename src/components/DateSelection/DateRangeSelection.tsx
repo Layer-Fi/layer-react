@@ -11,7 +11,7 @@ type DateRangeSelectionProps = {
   dateRange: DateRange
   setDateRange: (range: DateRange) => void
   datePreset: DatePreset
-  setDatePreset: (datePreset: SelectableDatePreset) => void
+  setDatePreset: (options: { datePreset: SelectableDatePreset }) => void
   showLabels?: boolean
   isCompact?: boolean
 }
@@ -26,7 +26,7 @@ export const DateRangeSelection = ({
 }: DateRangeSelectionProps) => {
   return (
     <div
-      className={classNames('Layer__DateRangeSelection', {
+      className={classNames('Layer__DateRangeSelection Layer__variables', {
         'Layer__DateRangeSelection--compact': isCompact,
       })}
     >

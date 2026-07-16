@@ -1,7 +1,6 @@
 {
   "action": {
     "delete_uploads": "Supprimer les fichiers téléversés",
-    "schedule_a_demo": "Planifier une démo",
     "select_files": "Sélectionner des fichiers",
     "show_all_tasks_count": "Afficher toutes les tâches ({{tasksCount}})",
     "show_completed_tasks": "Afficher les tâches terminées",
@@ -22,7 +21,6 @@
     "month_name_books_complete": "Vos livres de {{monthName}} sont terminés et prêts à être consultés!",
     "not_enrolled_in_bookkeeping": "Non inscrit à la tenue de livres",
     "optional_description": "Description facultative",
-    "order_our_bookkeeping_service": "Commandez notre service de tenue de livres offert avec l’appui d’une vraie équipe.",
     "pending_tasks": "Il n’y a aucune tâche en attente!",
     "please_contact_support": "Si vous pensez qu’il y a une erreur, veuillez contacter le support.",
     "reconnect_count_accounts_one": "Reconnecter {{displayCount}} compte",
@@ -35,9 +33,6 @@
     "working_on_books_no_action_needed": "Nous travaillons sur vos livres de {{monthName}}. Aucune action de votre part n'est requise pour le moment.",
     "working_on_books_please_complete_tasks_one": "Nous travaillons sur votre tenue de livres de {{monthName}}. Veuillez terminer la {{displayCount}} tâche en attente.",
     "working_on_books_please_complete_tasks_other": "Nous travaillons sur votre tenue de livres de {{monthName}}. Veuillez terminer les {{displayCount}} tâches en attente."
-  },
-  "prompt": {
-    "need_help_books": "Besoin d’aide avec vos livres?"
   },
   "state": {
     "action_required": "Action requise",

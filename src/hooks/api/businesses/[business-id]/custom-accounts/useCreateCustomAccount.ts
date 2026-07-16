@@ -10,6 +10,7 @@ type CreateCustomAccountBody = Pick<
   'account_name'
   | 'account_type'
   | 'account_subtype'
+  | 'custom_account_type'
   | 'institution_name'
   | 'external_id'
   | 'mask'

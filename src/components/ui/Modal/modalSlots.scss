@@ -27,9 +27,13 @@
 }
 
 .Layer__ModalContent {
+  box-sizing: border-box;
   display: grid;
   overflow-y: auto;
   block-size: 100%;
+
+  // Inset so child focus outlines aren't clipped by the scroll container edge.
+  padding: var(--spacing-3xs);
 
   > [slot='center'] {
     align-self: center;

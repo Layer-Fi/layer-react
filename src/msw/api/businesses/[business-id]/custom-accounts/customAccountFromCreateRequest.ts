@@ -8,6 +8,7 @@ const CreateCustomAccountBodySchema = CustomAccountSchema.pick(
   'accountName',
   'accountType',
   'accountSubtype',
+  'customAccountType',
   'institutionName',
   'externalId',
   'mask',

@@ -17,7 +17,7 @@ type LinkAccountsProps = {
   onComplete?: () => Awaitable<void>
   onPlaidConnectionSuccess?: () => Awaitable<void>
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
-  showDoneLinkingButton?: boolean
+  isReconnectFlow?: boolean
 }
 
 export function LinkAccounts({ plaidHostedLinkConfig, onPlaidConnectionSuccess, ...props }: LinkAccountsProps) {
@@ -33,7 +33,7 @@ export function LinkAccounts({ plaidHostedLinkConfig, onPlaidConnectionSuccess, 
 
 function LinkAccountsContent({
   onComplete,
-  showDoneLinkingButton = true,
+  isReconnectFlow = false,
 }: Omit<LinkAccountsProps, 'onPlaidConnectionSuccess' | 'plaidHostedLinkConfig'>) {
   const { t } = useTranslation()
   const { data: linkedAccounts, loadingStatus } = useBankAccountsContext()
@@ -50,7 +50,9 @@ function LinkAccountsContent({
         Header={(
           <>
             <Heading>
-              {t('linkedAccounts:label.link_bank_accounts_and_credit_cards', 'Link your bank accounts and credit cards')}
+              {isReconnectFlow
+                ? t('linkedAccounts:label.reconnect_bank_accounts_and_credit_cards', 'Reconnect your bank accounts and credit cards')
+                : t('linkedAccounts:label.link_bank_accounts_and_credit_cards', 'Link your bank accounts and credit cards')}
             </Heading>
             <HostedLinkErrorBanner />
           </>
@@ -58,7 +60,7 @@ function LinkAccountsContent({
         Footer={null}
         onComplete={onComplete}
       >
-        <LinkAccountsLinkStep showDoneLinkingButton={showDoneLinkingButton} />
+        <LinkAccountsLinkStep isReconnectFlow={isReconnectFlow} />
         {hideConfirmationStep ? null : <LinkAccountsConfirmationStep />}
       </Wizard>
     </section>

@@ -1,11 +1,12 @@
 import {
   endOfDay,
   endOfMonth, endOfQuarter, endOfYear,
+  min,
   startOfDay, startOfMonth, startOfQuarter, startOfYear,
   subMonths, subQuarters, subYears,
 } from 'date-fns'
 
-import { clampToAfterActivationDate, clampToPresentOrPast, correctDateRange, type DateRange, isSameCalendarDayRange } from '@utils/date/dateRange'
+import { clampToAfterActivationDate, clampToPresentOrPast, type DateRange, isSameCalendarDayRange } from '@utils/date/dateRange'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 
 export enum Period {
@@ -21,16 +22,9 @@ export enum DatePreset {
   LastQuarter = 'LastQuarter',
   ThisYear = 'ThisYear',
   LastYear = 'LastYear',
-  /**
-   * Clamped to the business activation date (start) and the present (end).
-   * Unlike the other presets, its range cannot be resolved from `now` alone —
-   * it requires the business context. See `useResolvedInitialRange`.
-   */
+  /** Spans the business activation date to the present; requires the business context to resolve. */
   AllTime = 'AllTime',
-  /*
-  * The custom preset cannot be selected directly by the user. It can only be set by the store if
-  * the user sets a date range that is not one of the other presets.
-  */
+  /** Set by the store when a range matches no other preset; not directly selectable. */
   Custom = 'Custom',
 }
 
@@ -75,13 +69,13 @@ export function rangeForPreset(preset: RelativeDatePreset, now: Date = new Date(
 
 /** Separate from {@link rangeForPreset} because it needs the business activation date. */
 export function rangeForAllTime(activationDate: Date, now: Date = new Date()): DateRange {
-  return correctDateRange({
-    startDate: startOfDay(activationDate),
+  return {
+    startDate: min([startOfDay(activationDate), startOfDay(now)]),
     endDate: endOfDay(now),
-  })
+  }
 }
 
-/** Returns `null` for `AllTime` until the activation date loads, so callers can defer rather than show a wrong range. */
+/** Returns `null` for `AllTime` while the activation date is unavailable. */
 export function deriveDateRangeFromPreset(
   preset: SelectableDatePreset,
   activationDate?: Date,
@@ -104,9 +98,7 @@ function clampRangeToValid(range: DateRange, activationDate?: Date | null): Date
   }
 }
 
-// Order in which a range is matched back to a preset: the first match wins.
-// Periodic presets are checked before `AllTime` so a business activated on a
-// period boundary (e.g. Jan 1) reports "This Year" rather than "All Time".
+// First match wins.
 const PRESET_MATCH_ORDER = [
   DatePreset.ThisMonth,
   DatePreset.LastMonth,
@@ -124,6 +116,10 @@ function rangeMatchesPreset(range: DateRange, preset: SelectableDatePreset, acti
   return isSameCalendarDayRange(clampRangeToValid(range, activationDate), clampRangeToValid(presetRange, activationDate))
 }
 
+/**
+ * When a range matches several presets (e.g. `ThisYear` and `AllTime` for a business
+ * activated on January 1st), `previousPreset` stays selected; without one, relative presets win.
+ */
 export function derivePresetFromDateRange(
   input: DateRange,
   previousPreset: DatePreset | null = null,

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
-import { type CustomAccount, type CustomAccountSubtype, getCustomAccountTypeFromSubtype } from '@schemas/customAccounts'
+import { type CustomAccount, CustomAccountClassification, type CustomAccountSubtype, getCustomAccountTypeFromSubtype } from '@schemas/customAccounts'
 import { useCreateCustomAccount } from '@hooks/api/businesses/[business-id]/custom-accounts/useCreateCustomAccount'
 import { useAppForm } from '@hooks/features/forms/useForm'
 
@@ -10,6 +10,7 @@ type CustomAccountFormData = {
   account_name?: string
   institution_name?: string
   account_type?: CustomAccountSubtype
+  custom_account_type: CustomAccountClassification
 }
 
 type UseCustomAccountFormProps = {
@@ -27,6 +28,7 @@ export const useCustomAccountForm = ({ onSuccess }: UseCustomAccountFormProps) =
       account_name: undefined,
       institution_name: undefined,
       account_type: undefined,
+      custom_account_type: CustomAccountClassification.PERSONAL,
     },
     onSubmit: async ({ value }) => {
       try {
@@ -36,6 +38,7 @@ export const useCustomAccountForm = ({ onSuccess }: UseCustomAccountFormProps) =
             institution_name: value.institution_name.trim(),
             account_type: getCustomAccountTypeFromSubtype(value.account_type),
             account_subtype: value.account_type,
+            custom_account_type: value.custom_account_type,
             external_id: null,
             mask: null,
             user_created: true,
@@ -51,6 +54,7 @@ export const useCustomAccountForm = ({ onSuccess }: UseCustomAccountFormProps) =
   })
 
   const isFormValid = useStore(form.store, state => state.isValid)
+  const isSubmitting = useStore(form.store, state => state.isSubmitting)
 
-  return { form, submitError, isFormValid }
+  return { form, submitError, isFormValid, isSubmitting }
 }

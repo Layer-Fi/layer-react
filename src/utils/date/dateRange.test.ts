@@ -4,12 +4,12 @@ import { describe, expect, it } from 'vitest'
 import {
   clampToAfterActivationDate,
   clampToPresentOrPast,
-  correctDateRange,
   getDateRange,
   getEffectiveDateForMode,
   getEffectiveDateRangeForMode,
   isSameCalendarDayRange,
   isSameDateRange,
+  maybeInvertDateRange,
 } from '@utils/date/dateRange'
 
 import { setupFakeSystemTime } from '@test-utils/fakeSystemTime'
@@ -74,9 +74,9 @@ describe('getDateRange', () => {
   })
 })
 
-describe('correctDateRange', () => {
+describe('maybeInvertDateRange', () => {
   it('swaps an inverted range', () => {
-    expect(correctDateRange({ startDate: ONE_MONTH_BEFORE_NOW, endDate: TWO_MONTHS_BEFORE_NOW })).toEqual({
+    expect(maybeInvertDateRange({ startDate: ONE_MONTH_BEFORE_NOW, endDate: TWO_MONTHS_BEFORE_NOW })).toEqual({
       startDate: TWO_MONTHS_BEFORE_NOW,
       endDate: ONE_MONTH_BEFORE_NOW,
     })
@@ -85,7 +85,7 @@ describe('correctDateRange', () => {
   it('passes an ordered range through unchanged', () => {
     const ordered = { startDate: TWO_MONTHS_BEFORE_NOW, endDate: ONE_MONTH_BEFORE_NOW }
 
-    expect(correctDateRange(ordered)).toEqual(ordered)
+    expect(maybeInvertDateRange(ordered)).toEqual(ordered)
   })
 })
 

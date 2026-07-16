@@ -120,7 +120,7 @@ export const ProfitAndLossChart = ({ tagFilter, hideLegend = false }: ProfitAndL
         version: 1,
         payload: { year: selectedDate.getFullYear(), month: selectedDate.getMonth() + 1 },
       })
-      setMonth(selectedDate)
+      setMonth({ startDate: selectedDate })
     }
 
     const newChartWindow = getChartWindow({ chartWindow, selectedDate, activationDate })

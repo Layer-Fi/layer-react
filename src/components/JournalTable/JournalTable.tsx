@@ -86,9 +86,6 @@ const JournalTableContent = ({
 
   const entries = rawData ?? EMPTY_ENTRIES
 
-  // `useJournal` supplies pageSize + the reset-on-filter-change ref (it owns the
-  // date-range filter and the data); the page index itself lives here in the
-  // list. See the same shape in TimeEntries.
   const { pageSize = JOURNAL_PAGE_SIZE, autoResetPageIndexRef } = paginationProps
 
   const { pageItems, pageIndex, onPageChange } = usePaginatedList({

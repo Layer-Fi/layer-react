@@ -29,9 +29,6 @@ export const useJournal: UseJournal = () => {
   const dateRange = useLedgerDateRange({ dateSelectionMode: 'full' })
   const { startDate, endDate } = dateRange
 
-  // The entry list is filtered by the date range, so a previously selected entry
-  // may fall outside the new range and vanish from the list. Clear the selection
-  // when the range changes to avoid leaving the detail sidebar open with no entry.
   useEffect(() => {
     setSelectedEntryId(undefined)
   }, [startDate, endDate])
@@ -50,17 +47,9 @@ export const useJournal: UseJournal = () => {
     limit: 150,
     startDate,
     endDate,
-    // Changing the date range is a distinct query, not more of the same list, so
-    // drop the hook's `keepPreviousData` default: `data` clears and `isLoading`
-    // goes true, letting the table show a loading state rather than the previous
-    // range's stale entries. `fetchMore` keeps the same key and is unaffected.
     swrOptions: { keepPreviousData: false },
   })
 
-  // Reset pagination to the first page when the date-range filter changes.
-  // `dateRange` and `data` are passed as distinct signals: the ref arms on a
-  // range change and disarms once new data arrives, so `fetchMore` and
-  // revalidation (which change `data` but not `dateRange`) leave the page alone.
   const autoResetPageIndexRef = useAutoResetPageIndex(dateRange, data)
 
   const paginationProps = useMemo<TablePaginationProps>(() => ({

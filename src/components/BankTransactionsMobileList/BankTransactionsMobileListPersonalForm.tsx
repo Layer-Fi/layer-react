@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { hasReceipts, isCategorized, isCredit } from '@utils/bankTransactions/shared'
+import { hasReceipts, isCategorized, isMoneyIn } from '@utils/bankTransactions/shared'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
@@ -88,7 +88,7 @@ export const BankTransactionsMobileListPersonalForm = ({
         type: 'Category',
         category: {
           type: 'StableName',
-          stableName: isCredit(bankTransaction)
+          stableName: isMoneyIn(bankTransaction)
             ? PersonalStableName.CREDIT
             : PersonalStableName.DEBIT,
         },

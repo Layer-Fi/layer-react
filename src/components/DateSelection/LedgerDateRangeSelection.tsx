@@ -6,7 +6,6 @@ type LedgerDateRangeSelectionProps = {
   isCompact?: boolean
 }
 
-/** Preset combo box + date-range picker wired to the ledger date store. */
 export const LedgerDateRangeSelection = ({ showLabels = false, isCompact = false }: LedgerDateRangeSelectionProps) => {
   const dateRange = useLedgerDateRange({ dateSelectionMode: 'full' })
   const datePreset = useLedgerDatePreset()

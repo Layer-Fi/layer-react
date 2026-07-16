@@ -1,4 +1,4 @@
-import { endOfMonth, endOfQuarter, endOfYear, startOfMonth, startOfQuarter, startOfYear, subDays } from 'date-fns'
+import { endOfMonth, endOfQuarter, endOfYear, startOfDay, startOfMonth, startOfQuarter, startOfYear, subDays } from 'date-fns'
 import { describe, expect, it } from 'vitest'
 
 import {
@@ -12,7 +12,15 @@ import {
 } from '@utils/date/dateRangePresets'
 
 import { setupFakeSystemTime } from '@test-utils/fakeSystemTime'
-import { CURRENT_YEAR_TO_DATE, END_OF_TODAY, NOW, THREE_MONTHS_BEFORE_NOW, TWO_YEARS_BEFORE_NOW } from '@test-utils/fixedDates'
+import {
+  CURRENT_YEAR_TO_DATE,
+  END_OF_TODAY,
+  NOW,
+  PREVIOUS_MONTH_RANGE,
+  SIX_MONTHS_AFTER_NOW,
+  THREE_MONTHS_BEFORE_NOW,
+  TWO_YEARS_BEFORE_NOW,
+} from '@test-utils/fixedDates'
 
 setupFakeSystemTime(NOW)
 
@@ -64,6 +72,13 @@ describe('rangeForAllTime', () => {
       endDate: END_OF_TODAY,
     })
   })
+
+  it('clamps the start date to today when the activation date is in the future', () => {
+    expect(rangeForAllTime(SIX_MONTHS_AFTER_NOW)).toEqual({
+      startDate: startOfDay(NOW),
+      endDate: END_OF_TODAY,
+    })
+  })
 })
 
 describe('deriveDateRangeFromPreset', () => {
@@ -87,11 +102,19 @@ describe('derivePresetFromDateRange', () => {
     expect(derivePresetFromDateRange(CURRENT_YEAR_TO_DATE)).toBe(DatePreset.ThisYear)
   })
 
+  it('detects a previous-month range as LastMonth', () => {
+    expect(derivePresetFromDateRange(PREVIOUS_MONTH_RANGE)).toBe(DatePreset.LastMonth)
+  })
+
   it('detects an AllTime range when given the activation date', () => {
     const activationDate = new Date(2024, 2, 10)
     const range = rangeForAllTime(activationDate)
 
     expect(derivePresetFromDateRange(range, null, activationDate)).toBe(DatePreset.AllTime)
+  })
+
+  it('returns Custom for an activation-spanning range when the activation date is unavailable', () => {
+    expect(derivePresetFromDateRange({ startDate: TWO_YEARS_BEFORE_NOW, endDate: NOW })).toBe(DatePreset.Custom)
   })
 
   it('respects a matching previous preset', () => {

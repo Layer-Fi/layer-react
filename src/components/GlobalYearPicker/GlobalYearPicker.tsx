@@ -17,7 +17,7 @@ export const GlobalYearPicker = () => {
   const maxDateZdt = useMemo(() => convertDateToZonedDateTime(maxDate), [maxDate])
 
   const onChange = useCallback((year: number) => {
-    setYear(new Date(year, 0, 1))
+    setYear({ startDate: new Date(year, 0, 1) })
   }, [setYear])
 
   return (

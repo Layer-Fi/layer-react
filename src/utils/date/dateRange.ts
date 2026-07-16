@@ -36,7 +36,7 @@ export function clampToPresentOrPast(date: Date | number, cutoff = endOfDay(new 
   return min([date, cutoff])
 }
 
-export function correctDateRange(range: DateRange): DateRange {
+export function maybeInvertDateRange(range: DateRange): DateRange {
   const { startDate, endDate } = range
 
   if (startDate > endDate) {

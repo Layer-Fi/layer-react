@@ -1,7 +1,6 @@
 {
   "action": {
     "delete_uploads": "Delete Uploads",
-    "schedule_a_demo": "Schedule a demo",
     "select_files": "Select files",
     "show_all_tasks_count": "Show all tasks ({{tasksCount}})",
     "show_completed_tasks": "Show completed tasks",
@@ -22,7 +21,6 @@
     "month_name_books_complete": "Your {{monthName}} books are complete and ready to view!",
     "not_enrolled_in_bookkeeping": "Not Enrolled in Bookkeeping",
     "optional_description": "Optional description",
-    "order_our_bookkeeping_service": "Order our bookkeeping service supported by real humans.",
     "pending_tasks": "There are no pending tasks!",
     "please_contact_support": "If you believe this is an error, please contact support.",
     "reconnect_count_accounts_one": "Reconnect {{displayCount}} account",
@@ -35,9 +33,6 @@
     "working_on_books_no_action_needed": "We're working on your {{monthName}} books. No action is needed from you right now.",
     "working_on_books_please_complete_tasks_one": "We're working on your {{monthName}} books. Please complete the {{displayCount}} open task.",
     "working_on_books_please_complete_tasks_other": "We're working on your {{monthName}} books. Please complete the {{displayCount}} open tasks."
-  },
-  "prompt": {
-    "need_help_books": "Need help with your books?"
   },
   "state": {
     "action_required": "Action required",

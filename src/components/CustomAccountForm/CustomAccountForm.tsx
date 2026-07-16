@@ -1,7 +1,7 @@
-import { type FormEvent, useCallback, useEffect, useId, useMemo } from 'react'
+import { useEffect, useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type CustomAccount, CustomAccountSubtype } from '@schemas/customAccounts'
+import { type CustomAccount, CustomAccountClassification, CustomAccountSubtype } from '@schemas/customAccounts'
 import { notEmpty } from '@utils/form'
 import { translationKey } from '@utils/i18n/translationKey'
 import { Button } from '@ui/Button/Button'
@@ -10,6 +10,7 @@ import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 import { useCustomAccountForm } from '@components/CustomAccountForm/useCustomAccountForm'
+import { type RadioOption } from '@components/forms/FormRadioGroupField'
 import { ErrorText } from '@components/Typography/ErrorText'
 
 import './customAccountForm.scss'
@@ -28,7 +29,7 @@ export type CustomAccountsFormProps = {
 
 export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: CustomAccountsFormProps) => {
   const { t } = useTranslation()
-  const { form, submitError, isFormValid } = useCustomAccountForm({ onSuccess })
+  const { form, submitError, isFormValid, isSubmitting } = useCustomAccountForm({ onSuccess })
   const accountTypeInputId = useId()
 
   const accountTypeOptions = useMemo(
@@ -39,22 +40,20 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
     [t],
   )
 
-  const { isSubmitting } = form.state
-  const onSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    e.stopPropagation()
-    void form.handleSubmit()
-  }, [form])
+  const ownershipOptions = useMemo<RadioOption<CustomAccountClassification>[]>(
+    () => [
+      { value: CustomAccountClassification.PERSONAL, label: t('common:label.personal', 'Personal') },
+      { value: CustomAccountClassification.DEFAULT, label: t('common:label.business', 'Business') },
+    ],
+    [t],
+  )
 
   useEffect(() => {
     form.setFieldValue('account_name', initialAccountName)
   }, [form, initialAccountName])
 
   return (
-    <form
-      className='Layer__form Layer__custom-account-form'
-      onSubmit={onSubmit}
-    >
+    <div className='Layer__form Layer__custom-account-form'>
       <VStack gap='xs'>
         <form.AppField
           name='account_name'
@@ -113,6 +112,17 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
           )}
         </form.Field>
 
+        <form.AppField name='custom_account_type'>
+          {field => (
+            <field.FormRadioGroupField
+              label={t('generalLedger:label.account_ownership', 'Ownership')}
+              orientation='horizontal'
+              options={ownershipOptions}
+              className='Layer__custom-account-form__field'
+            />
+          )}
+        </form.AppField>
+
         <HStack gap='xs' pbs='xs'>
           {!isFormValid && (
             <ErrorText pb='xs'>
@@ -131,9 +141,10 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
             </Button>
           )}
           <SubmitButton
-            type='submit'
-            isPending={isSubmitting}
-            noIcon={!isSubmitting}
+            type='button'
+            onPress={() => void form.handleSubmit()}
+            isPending={isSubmitting && isFormValid}
+            noIcon={!(isSubmitting && isFormValid)}
             withRetry
             isError={Boolean(submitError)}
             errorMessage={submitError ?? undefined}
@@ -144,6 +155,6 @@ export const CustomAccountForm = ({ initialAccountName, onCancel, onSuccess }: C
           </SubmitButton>
         </HStack>
       </VStack>
-    </form>
+    </div>
   )
 }

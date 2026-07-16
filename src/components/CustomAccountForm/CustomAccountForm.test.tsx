@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import {
   type CustomAccount,
+  CustomAccountClassification,
   CustomAccountSubtype,
   CustomAccountType,
 } from '@schemas/customAccounts'
@@ -32,6 +33,7 @@ const EXPECTED_CREDIT_CARD_CREATE_BODY = {
   institution_name: 'Local Bank',
   account_type: CustomAccountType.CREDIT,
   account_subtype: CustomAccountSubtype.CREDIT_CARD,
+  custom_account_type: CustomAccountClassification.PERSONAL,
   external_id: null,
   mask: null,
   user_created: true,
@@ -146,6 +148,25 @@ describe('CustomAccountForm', () => {
 
     expect(screen.queryByText('Something went wrong. Please try again.')).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: /save account/i })).toBeInTheDocument()
+  })
+
+  it('defaults ownership to personal and sends the selected ownership', async () => {
+    const onSuccess = vi.fn()
+    const createAccountRequest = mockCreateAccount(MOCK_CUSTOM_ACCOUNT)
+    const { user, filler } = renderCustomAccountForm({ onSuccess })
+
+    expect(screen.getByRole('radio', { name: 'Personal' })).toBeChecked()
+
+    await filler.fill(FORM_DATA)
+    await filler.radio({ field: 'Ownership', option: 'Business' })
+    await user.click(screen.getByRole('button', { name: /save account/i }))
+
+    await waitFor(() => {
+      expect(createAccountRequest).toHaveBeenCalledWith({
+        body: { ...EXPECTED_CREDIT_CARD_CREATE_BODY, custom_account_type: CustomAccountClassification.DEFAULT },
+        businessId: TEST_LAYER_BUSINESS_ID,
+      })
+    })
   })
 
   it('uses initialAccountName as the starting account name', async () => {

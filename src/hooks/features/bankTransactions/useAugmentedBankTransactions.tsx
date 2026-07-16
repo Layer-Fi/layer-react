@@ -4,8 +4,8 @@ import {
   type BankTransaction,
   DisplayState,
 } from '@internal-types/bankTransactions'
-import { Direction } from '@internal-types/general'
 import { type TagFilterInput } from '@internal-types/tags'
+import { BankTransactionDirection, decodeBankTransactionDirection } from '@schemas/bankTransactions/base'
 import { type BankTransactionFilters } from '@utils/bankTransactions/shared'
 import { useBankTransactions, type UseBankTransactionsOptions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useFilterBankTransactions } from '@hooks/features/bankTransactions/useFilterBankTransactions'
@@ -33,7 +33,7 @@ export function bankTransactionFiltersToHookOptions(
         : undefined
       : undefined,
     direction: filters?.direction?.length === 1
-      ? filters.direction[0] === Direction.CREDIT
+      ? decodeBankTransactionDirection(filters.direction[0]) === BankTransactionDirection.Credit
         ? 'INFLOW'
         : 'OUTFLOW'
       : undefined,

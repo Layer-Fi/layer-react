@@ -127,7 +127,7 @@ describe('createScopedDateStore', () => {
     const { result } = setupDateStore()
 
     act(() => {
-      result.current.dateActions.setDate(ONE_MONTH_BEFORE_NOW)
+      result.current.dateActions.setDate({ date: ONE_MONTH_BEFORE_NOW })
     })
 
     expect(result.current.fullRange).toEqual(MONTH_TO_DATE_OF_ONE_MONTH_BEFORE_NOW)
@@ -152,7 +152,7 @@ describe('createScopedDateStore', () => {
     const { result } = setupDateStore()
 
     act(() => {
-      result.current.datePresetActions.setDatePreset(DatePreset.LastMonth)
+      result.current.datePresetActions.setDatePreset({ datePreset: DatePreset.LastMonth })
     })
 
     expect(result.current.datePreset).toBe(DatePreset.LastMonth)
@@ -204,10 +204,6 @@ describe('createScopedDateStore AllTime preset', () => {
       { wrapper: Wrapper },
     )
 
-    // While the business (activation date) loads, the Provider renders its
-    // fallback and does not render children, so the hook never runs. renderHook's
-    // `result` is a React.createRef() whose `current` starts as `null`, so it
-    // stays `null` (not `undefined`) until the store mounts.
     expect(result.current).toBeNull()
 
     await waitFor(() => expect(result.current).not.toBeNull())

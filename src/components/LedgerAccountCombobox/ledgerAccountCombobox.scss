@@ -1,0 +1,14 @@
+.Layer__LedgerAccountCombobox {
+  display: grid;
+  grid-template-areas:
+    'label'
+    'input';
+  gap: var(--spacing-3xs);
+
+  &--inline {
+    grid-template-areas: 'label input';
+    gap: 0;
+
+    align-items: center;
+  }
+}
