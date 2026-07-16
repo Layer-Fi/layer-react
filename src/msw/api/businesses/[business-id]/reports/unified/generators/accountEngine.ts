@@ -54,22 +54,33 @@ export const accountSign = (account: SingleChartAccountType): number =>
 
 /*
  * Only leaf accounts have entry streams; parent rows are pure subtotals of
- * their descendants. Entries carry the account's sign so contra accounts
- * subtract from section totals, in both summary cells and drill-down lines.
+ * their descendants. Positive magnitudes on the account's normal side, so the
+ * trial balance (which signs via the debit/credit column) reconciles here.
+ */
+export const accountMagnitudeEntriesInRange = (
+  account: SingleChartAccountType,
+  { startDate, endDate }: ReportDateRange,
+  params: URLSearchParams,
+): MockReportEntry[] => entriesInRange(
+  accountStreamKey(account),
+  startDate,
+  endDate,
+  entryStreamOptionsFromParams(params, accountMagnitude(account)),
+)
+
+/*
+ * Entries carry the account's sign so contra accounts subtract from section
+ * totals, in both summary cells and drill-down lines.
  */
 export const accountEntriesInRange = (
   account: SingleChartAccountType,
-  { startDate, endDate }: ReportDateRange,
+  range: ReportDateRange,
   params: URLSearchParams,
 ): MockReportEntry[] => {
   const sign = accountSign(account)
 
-  return entriesInRange(
-    accountStreamKey(account),
-    startDate,
-    endDate,
-    entryStreamOptionsFromParams(params, accountMagnitude(account)),
-  ).map(entry => ({ ...entry, amountCents: sign * entry.amountCents }))
+  return accountMagnitudeEntriesInRange(account, range, params)
+    .map(entry => ({ ...entry, amountCents: sign * entry.amountCents }))
 }
 
 export const accountActivityCents = (

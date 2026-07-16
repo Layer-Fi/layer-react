@@ -62,7 +62,8 @@ export const generateTrialBalance = (params: URLSearchParams): UnifiedReport => 
   const plugOnDebit = plug < 0
 
   // Drill-downs bake the same accumulation window as the parent so detail totals match the account's balance.
-  const baseParams = detailBaseParams(balanceSheetRange(effectiveDate), params)
+  // unsigned keeps detail rows on the account's normal side, matching the magnitude shown in the debit/credit cell.
+  const baseParams = { ...detailBaseParams(balanceSheetRange(effectiveDate), params), unsigned: 'true' }
 
   const accountRow = (
     account: (typeof scored)[number]['account'],
