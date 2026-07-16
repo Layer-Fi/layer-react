@@ -3,6 +3,8 @@ import { Pencil } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
+import { isCustomTransaction } from '@utils/bankTransactions/shared'
+import { useCustomAccounts } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
 import { Button } from '@ui/Button/Button'
 import { getRecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/formUtils'
 import { RecordTransactionModal } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionModal'
@@ -14,6 +16,15 @@ type EditCustomTransactionButtonProps = {
 export function EditCustomTransactionButton({ bankTransaction }: EditCustomTransactionButtonProps) {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
+  const { data: customAccounts } = useCustomAccounts({ userCreated: true })
+
+  // Editing needs a known custom account (its id drives the upsert URL and the
+  // pre-filled account), so only offer it for custom transactions whose source
+  // account is in the list.
+  const isEditable = isCustomTransaction(bankTransaction)
+    && customAccounts?.some(account => account.id === bankTransaction.sourceAccountId)
+
+  if (!isEditable) return null
 
   return (
     <span onClick={(e: MouseEvent) => e.stopPropagation()}>
