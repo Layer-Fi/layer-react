@@ -5,14 +5,21 @@ import { type ReportConfig, type ReportControl } from '@schemas/reports/reportCo
 import {
   Alignment,
   Pinning,
+  type UnifiedReport,
   type UnifiedReportCell,
   type UnifiedReportColumn,
+  type UnifiedReportRow,
 } from '@schemas/reports/unifiedReport'
 
 import { type EntryStreamOptions } from '@fixtures/unifiedReports/deterministicAmounts'
 
 // The story business id is not a UUID, so reports return a fixed one instead of echoing the path param.
 export const MOCK_REPORT_BUSINESS_ID = '00000000-0000-4000-8000-000000000201'
+
+export const unifiedReport = (
+  columns: UnifiedReportColumn[],
+  rows: UnifiedReportRow[],
+): UnifiedReport => ({ businessId: MOCK_REPORT_BUSINESS_ID, columns, rows })
 
 export const rowHeaderColumn = (columnKey: string, displayName: string): UnifiedReportColumn => ({
   columnKey,
@@ -69,6 +76,20 @@ export const textCell = (value: string, options?: CellOptions) =>
   withOptions({ type: 'Text', value }, options)
 
 export const emptyCell = (options?: CellOptions) => withOptions({ type: 'Empty' }, options)
+
+// Row factory for two-column reports (label + currency amount), bound to the report's column keys.
+export const labeledCurrencyRowFor = (labelColumnKey: string, amountColumnKey: string) => (
+  rowKey: string,
+  label: string,
+  amount: number,
+  options?: CellOptions,
+): UnifiedReportRow => ({
+  rowKey,
+  cells: {
+    [labelColumnKey]: textCell(label, options),
+    [amountColumnKey]: currencyCell(amount, { bold: options?.bold }),
+  },
+})
 
 export const linesReportConfig = (
   linesRoute: string,

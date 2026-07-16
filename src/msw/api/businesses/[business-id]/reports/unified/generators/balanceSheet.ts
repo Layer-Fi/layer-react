@@ -18,12 +18,13 @@ import {
 import {
   currencyCell,
   detailBaseParams,
+  labeledCurrencyRowFor,
   linesReportConfig,
-  MOCK_REPORT_BUSINESS_ID,
   numericColumn,
   parseEffectiveDateParam,
   rowHeaderColumn,
   textCell,
+  unifiedReport,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 
 const NAME_COLUMN_KEY = 'name'
@@ -61,13 +62,10 @@ const subtreeTotal = (node: AccountNode, balances: BalanceByAccountId): number =
     ? balances.get(node.account.accountId) ?? 0
     : node.children.reduce((total, child) => total + subtreeTotal(child, balances), 0)
 
-const sectionTotalRow = (rowKey: string, label: string, amount: number): UnifiedReportRow => ({
-  rowKey,
-  cells: {
-    [NAME_COLUMN_KEY]: textCell(label, { bold: true }),
-    [BALANCE_COLUMN_KEY]: currencyCell(amount, { bold: true }),
-  },
-})
+const balanceSheetRow = labeledCurrencyRowFor(NAME_COLUMN_KEY, BALANCE_COLUMN_KEY)
+
+const sectionTotalRow = (rowKey: string, label: string, amount: number) =>
+  balanceSheetRow(rowKey, label, amount, { bold: true })
 
 // Sums leaf balances only; parent rows are subtotals, so summing them too would double-count.
 const sumForType = (
@@ -125,12 +123,8 @@ export const generateBalanceSheet = (params: URLSearchParams): UnifiedReport => 
     sectionTotalRow('total_liabilities_and_equity', 'Total Liabilities & Equity', liabilitiesTotal + equityTotal),
   ]
 
-  return {
-    businessId: MOCK_REPORT_BUSINESS_ID,
-    columns: [
-      rowHeaderColumn(NAME_COLUMN_KEY, 'Account'),
-      numericColumn(BALANCE_COLUMN_KEY, 'Balance', Pinning.Right),
-    ],
+  return unifiedReport(
+    [rowHeaderColumn(NAME_COLUMN_KEY, 'Account'), numericColumn(BALANCE_COLUMN_KEY, 'Balance', Pinning.Right)],
     rows,
-  }
+  )
 }

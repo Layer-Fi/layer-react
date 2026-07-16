@@ -5,6 +5,7 @@ import { Pinning, type UnifiedReportColumn, type UnifiedReportRow } from '@schem
 import {
   currencyCell,
   numericColumn,
+  parseDateRangeParams,
   type ReportDateRange,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 
@@ -17,6 +18,12 @@ export const currentYearFallback = (): ReportDateRange => {
   return { startDate: new Date(now.getFullYear(), 0, 1), endDate: new Date(now.getFullYear(), 11, 31) }
 }
 
+export const reportRangeFromParams = (params: URLSearchParams): ReportDateRange =>
+  parseDateRangeParams(params, currentYearFallback())
+
+export const monthsInRange = (range: ReportDateRange) =>
+  range.startDate > range.endDate ? [] : eachMonthOfInterval({ start: range.startDate, end: range.endDate })
+
 const monthColumnKey = (date: Date) => `month_${format(date, 'yyyy_MM')}`
 
 /*
@@ -26,7 +33,6 @@ const monthColumnKey = (date: Date) => `month_${format(date, 'yyyy_MM')}`
 export const resolvePeriods = (range: ReportDateRange, groupBy: string | null): PnlPeriod[] => {
   if (groupBy !== 'MONTH') return [{ columnKey: TOTAL_COLUMN_KEY, range }]
 
-  // Each month column spans that whole calendar month, clipped to the selected range at both ends.
   return eachMonthOfInterval({ start: range.startDate, end: range.endDate }).map(month => ({
     columnKey: monthColumnKey(month),
     range: {

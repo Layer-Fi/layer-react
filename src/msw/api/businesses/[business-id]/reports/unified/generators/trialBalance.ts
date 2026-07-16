@@ -17,11 +17,11 @@ import {
   detailBaseParams,
   emptyCell,
   linesReportConfig,
-  MOCK_REPORT_BUSINESS_ID,
   numericColumn,
   parseEffectiveDateParam,
   rowHeaderColumn,
   textCell,
+  unifiedReport,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 
 const ACCOUNT_COLUMN_KEY = 'account'
@@ -100,13 +100,12 @@ export const generateTrialBalance = (params: URLSearchParams): UnifiedReport => 
     },
   })
 
-  return {
-    businessId: MOCK_REPORT_BUSINESS_ID,
-    columns: [
+  return unifiedReport(
+    [
       rowHeaderColumn(ACCOUNT_COLUMN_KEY, 'Account'),
       numericColumn(DEBIT_COLUMN_KEY, 'Debit'),
       numericColumn(CREDIT_COLUMN_KEY, 'Credit'),
     ],
     rows,
-  }
+  )
 }

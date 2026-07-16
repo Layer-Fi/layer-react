@@ -11,20 +11,19 @@ import {
   nodeActivityCents,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {
-  currentYearFallback,
   periodCells,
   periodValueColumns,
   type PnlPeriod,
+  reportRangeFromParams,
   resolvePeriods,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'
 import {
   linesReportConfig,
-  MOCK_REPORT_BUSINESS_ID,
-  parseDateRangeParams,
   type ReportDateRange,
   reportingBasisBaseParams,
   rowHeaderColumn,
   textCell,
+  unifiedReport,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 
 const NAME_COLUMN_KEY = 'name'
@@ -75,7 +74,7 @@ const sumLeaves = (
 ) => leaves.reduce((total, account) => total + accountActivityCents(account, range, params), 0)
 
 export const generateProfitAndLoss = (params: URLSearchParams): UnifiedReport => {
-  const range = parseDateRangeParams(params, currentYearFallback())
+  const range = reportRangeFromParams(params)
   const periods = resolvePeriods(range, params.get('group_by'))
 
   const revenueForest = buildAccountForest(accountsOfTypes([LedgerAccountType.Revenue]))
@@ -99,9 +98,5 @@ export const generateProfitAndLoss = (params: URLSearchParams): UnifiedReport =>
     sectionTotalRow('net_profit', 'Net Profit', r => revenueTotal(r) - cogsTotal(r) - expensesTotal(r), periods),
   ]
 
-  return {
-    businessId: MOCK_REPORT_BUSINESS_ID,
-    columns: [rowHeaderColumn(NAME_COLUMN_KEY, 'Account'), ...periodValueColumns(periods)],
-    rows,
-  }
+  return unifiedReport([rowHeaderColumn(NAME_COLUMN_KEY, 'Account'), ...periodValueColumns(periods)], rows)
 }

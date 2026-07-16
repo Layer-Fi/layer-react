@@ -11,14 +11,13 @@ import {
   collectLeafAccounts,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {
-  currencyCell,
   isoDate,
+  labeledCurrencyRowFor,
   linesReportConfig,
-  MOCK_REPORT_BUSINESS_ID,
   numericColumn,
   type ReportDateRange,
   rowHeaderColumn,
-  textCell,
+  unifiedReport,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 
 const LINE_COLUMN_KEY = 'line'
@@ -48,18 +47,10 @@ const yearRange = (params: URLSearchParams): ReportDateRange => {
 const findByStableName = (accounts: readonly SingleChartAccountType[], stableName: string) =>
   accounts.find(account => account.stableName === stableName)
 
-const lineRow = (
-  lineNumber: string,
-  label: string,
-  amount: number,
-  reportConfig?: ReportConfig,
-): UnifiedReportRow => ({
-  rowKey: `line_${lineNumber}`,
-  cells: {
-    [LINE_COLUMN_KEY]: textCell(`Line ${lineNumber}: ${label}`, { reportConfig }),
-    [AMOUNT_COLUMN_KEY]: currencyCell(amount),
-  },
-})
+const scheduleCRow = labeledCurrencyRowFor(LINE_COLUMN_KEY, AMOUNT_COLUMN_KEY)
+
+const lineRow = (lineNumber: string, label: string, amount: number, reportConfig?: ReportConfig) =>
+  scheduleCRow(`line_${lineNumber}`, `Line ${lineNumber}: ${label}`, amount, { reportConfig })
 
 /*
  * Schedule C uses a year control, but the detail route is date-range based.
@@ -69,13 +60,8 @@ const lineRow = (
 const scheduleCLinesConfig = (account: SingleChartAccountType, range: ReportDateRange): ReportConfig =>
   linesReportConfig(LINES_ROUTE, account, [], { start_date: isoDate(range.startDate), end_date: isoDate(range.endDate) })
 
-const totalRow = (lineNumber: string, label: string, amount: number): UnifiedReportRow => ({
-  rowKey: `line_${lineNumber}`,
-  cells: {
-    [LINE_COLUMN_KEY]: textCell(`Line ${lineNumber}: ${label}`, { bold: true }),
-    [AMOUNT_COLUMN_KEY]: currencyCell(amount, { bold: true }),
-  },
-})
+const totalRow = (lineNumber: string, label: string, amount: number) =>
+  scheduleCRow(`line_${lineNumber}`, `Line ${lineNumber}: ${label}`, amount, { bold: true })
 
 export const generateScheduleC = (params: URLSearchParams): UnifiedReport => {
   const range = yearRange(params)
@@ -105,12 +91,8 @@ export const generateScheduleC = (params: URLSearchParams): UnifiedReport => {
     totalRow('31', 'Net profit or (loss)', grossReceipts - totalExpenses),
   ]
 
-  return {
-    businessId: MOCK_REPORT_BUSINESS_ID,
-    columns: [
-      rowHeaderColumn(LINE_COLUMN_KEY, 'Schedule C Line'),
-      numericColumn(AMOUNT_COLUMN_KEY, 'Amount', Pinning.Right),
-    ],
+  return unifiedReport(
+    [rowHeaderColumn(LINE_COLUMN_KEY, 'Schedule C Line'), numericColumn(AMOUNT_COLUMN_KEY, 'Amount', Pinning.Right)],
     rows,
-  }
+  )
 }

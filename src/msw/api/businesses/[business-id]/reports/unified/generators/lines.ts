@@ -9,7 +9,6 @@ import {
 import {
   currencyCell,
   dateCell,
-  MOCK_REPORT_BUSINESS_ID,
   numericColumn,
   parseDateRangeParams,
   parseEffectiveDateParam,
@@ -18,6 +17,7 @@ import {
   textCell,
   textColumn,
   trailingRangeFrom,
+  unifiedReport,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 
 const columns = () => [
@@ -45,7 +45,7 @@ export const generateLineItemDetail = (params: URLSearchParams): UnifiedReport =
   const account = resolveAccount(params)
 
   if (!account) {
-    return { businessId: MOCK_REPORT_BUSINESS_ID, columns: columns(), rows: [] }
+    return unifiedReport(columns(), [])
   }
 
   // The trial balance shows unsigned magnitudes on the normal side, so its drill-down must match.
@@ -81,5 +81,5 @@ export const generateLineItemDetail = (params: URLSearchParams): UnifiedReport =
     },
   })
 
-  return { businessId: MOCK_REPORT_BUSINESS_ID, columns: columns(), rows }
+  return unifiedReport(columns(), rows)
 }
