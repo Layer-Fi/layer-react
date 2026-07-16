@@ -48,7 +48,7 @@ type OpeningBalanceAPIResponseError = {
 }
 
 export type OpeningBalanceAPIResponseResult =
-  | { bankAccountId: string, status: 'fulfilled', value: { data: { type: string } } }
+  | { bankAccountId: string, status: 'fulfilled', value: { data: unknown } }
   | OpeningBalanceAPIResponseValidationError
   | OpeningBalanceAPIResponseError
 

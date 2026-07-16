@@ -1,7 +1,7 @@
 import { GridListItem } from 'react-aria-components/GridList'
 
 import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
-import { isCredit } from '@utils/bankTransactions/shared'
+import { isMoneyIn } from '@utils/bankTransactions/shared'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -37,7 +37,7 @@ export const MatchFormMobileItem = ({ match, bankTransaction, inAppLink }: Match
           amount={match.details.amount}
           date={match.details.date}
           slotProps={{
-            MoneySpan: { size: 'sm', displayPlusSign: isCredit(bankTransaction) },
+            MoneySpan: { size: 'sm', displayPlusSign: isMoneyIn(bankTransaction) },
             DateTime: { size: 'xs' },
           }}
         />

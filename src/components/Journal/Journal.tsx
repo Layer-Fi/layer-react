@@ -3,6 +3,7 @@ import { type ReactNode } from 'react'
 import { useChartOfAccounts } from '@hooks/legacy/useChartOfAccounts'
 import { useJournal } from '@hooks/legacy/useJournal'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
+import { LedgerDateStoreProvider } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { JournalRoute, JournalStoreProvider, useJournalRouteState } from '@providers/JournalStore/JournalStoreProvider'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
@@ -10,6 +11,7 @@ import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { Container } from '@components/Container/Container'
 import { JournalEntryDrawer } from '@components/Journal/JournalEntryDrawer/JournalEntryDrawer'
 import { type JournalTableStringOverrides, JournalTableWithPanel } from '@components/JournalTable/JournalTableWithPanel'
+import { Loader } from '@components/Loader/Loader'
 
 import './journal.scss'
 
@@ -25,7 +27,18 @@ export interface JournalProps {
   showCustomerVendor?: boolean
 }
 
-export const Journal = (props: JournalProps) => {
+/**
+ * Views already inside a `LedgerDateStoreProvider` (e.g. `GeneralLedger`) should
+ * render {@link InternalJournal} instead to avoid a nested store.
+ */
+export const Journal = (props: JournalProps) => (
+  <LedgerDateStoreProvider fallback={<Loader />}>
+    <InternalJournal {...props} />
+  </LedgerDateStoreProvider>
+)
+
+/** Assumes an ancestor `LedgerDateStoreProvider` is already mounted. */
+export const InternalJournal = (props: JournalProps) => {
   const JournalContextData = useJournal()
   const AccountsContextData = useChartOfAccounts()
   return (

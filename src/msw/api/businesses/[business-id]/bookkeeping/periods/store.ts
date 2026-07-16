@@ -9,8 +9,11 @@ export const bookkeepingPeriodStore = createMockStore(
   () => makeBookkeepingPeriods(PROFIT_AND_LOSS_FIXTURE_START_YEAR),
 )
 
-export const completeTaskInStore = (taskId: string, userResponse: string | null): BusinessTask | undefined => {
-  let completed: BusinessTask | undefined
+export const patchTaskInStore = (
+  taskId: string,
+  applyPatch: (task: BusinessTask) => BusinessTask,
+): BusinessTask | undefined => {
+  let patched: BusinessTask | undefined
 
   bookkeepingPeriodStore.all().forEach((period) => {
     if (!period.tasks.some(task => task.id === taskId)) return
@@ -19,19 +22,34 @@ export const completeTaskInStore = (taskId: string, userResponse: string | null)
       const tasks = existing.tasks.map((task) => {
         if (task.id !== taskId) return task
 
-        completed = { ...task, status: BusinessTaskStatus.UserMarkedCompleted, userResponse }
-        return completed
+        patched = applyPatch(task)
+        return patched
       })
 
-      const allTasksComplete = tasks.every(task => task.status !== BusinessTaskStatus.Todo)
+      const isComplete = (periodTasks: readonly BusinessTask[]) =>
+        periodTasks.every(task => task.status !== BusinessTaskStatus.Todo)
 
-      return {
-        ...existing,
-        tasks,
-        status: allTasksComplete ? BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER : existing.status,
-      }
+      const wasComplete = isComplete(existing.tasks)
+      const nowComplete = isComplete(tasks)
+
+      // Only transition status when task completion actually flips, so
+      // metadata-only patches don't clobber statuses like CLOSING_IN_REVIEW.
+      const status = nowComplete === wasComplete
+        ? existing.status
+        : nowComplete
+          ? BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_BOOKKEEPER
+          : BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER
+
+      return { ...existing, tasks, status }
     })
   })
 
-  return completed
+  return patched
 }
+
+export const completeTaskInStore = (taskId: string, userResponse: string | null): BusinessTask | undefined =>
+  patchTaskInStore(taskId, task => ({
+    ...task,
+    status: BusinessTaskStatus.UserMarkedCompleted,
+    userResponse,
+  }))

@@ -7,7 +7,7 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import {
   hasReceipts,
   isCategorized,
-  isCredit,
+  isMoneyIn,
 } from '@utils/bankTransactions/shared'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useGetBankTransactionMatchOrCategoryWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
@@ -147,7 +147,7 @@ export const BankTransactionsListItem = ({
         </HStack>
         <MoneySpan
           amount={bankTransaction.amount}
-          displayPlusSign={isCredit(bankTransaction)}
+          displayPlusSign={isMoneyIn(bankTransaction)}
           size='md'
         />
       </HStack>

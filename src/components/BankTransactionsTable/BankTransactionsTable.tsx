@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, DisplayState } from '@internal-types/bankTransactions'
 import { Alignment } from '@schemas/reports/unifiedReport'
-import { isCredit } from '@utils/bankTransactions/shared'
+import { isMoneyIn } from '@utils/bankTransactions/shared'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBulkSelectionActions, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -59,7 +59,7 @@ const BankTransactionDateCell = ({ bankTransaction }: { bankTransaction: BankTra
 }
 
 const BankTransactionAmountCell = ({ bankTransaction }: { bankTransaction: BankTransaction }) => (
-  <MoneySpan amount={bankTransaction.amount} displayPlusSign={isCredit(bankTransaction)} />
+  <MoneySpan amount={bankTransaction.amount} displayPlusSign={isMoneyIn(bankTransaction)} />
 )
 
 type GetColumnConfigParams = {

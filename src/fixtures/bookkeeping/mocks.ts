@@ -1,3 +1,4 @@
+import { type BookkeepingConfiguration, BookkeepingStatus as ConfigurationBookkeepingStatus } from '@schemas/bookkeepingConfiguration'
 import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
 import { BookkeepingStatus, type BookkeepingStatusData } from '@schemas/bookkeepingStatus'
 import {
@@ -19,6 +20,22 @@ const baseBookkeepingStatus: BookkeepingStatusData = {
 }
 
 export const { make: makeBookkeepingStatus } = createFixtureFactory(baseBookkeepingStatus)
+
+const baseBookkeepingConfiguration: BookkeepingConfiguration = {
+  businessId: '00000000-0000-4000-8000-000000000201',
+  bookkeeperId: '00000000-0000-4000-8000-000000000301',
+  firstMonthPurchasedDate: new Date('2024-01-01T00:00:00.000Z'),
+  onboardingDate: new Date('2024-01-15T00:00:00.000Z'),
+  churnedDate: null,
+  bookkeepingEndDate: null,
+  bookkeepingStatus: ConfigurationBookkeepingStatus.ACTIVE,
+  transactionTaggingStrategy: null,
+  notes: null,
+  onboardingCallUrl: null,
+  adhocCallUrl: null,
+}
+
+export const { make: makeBookkeepingConfiguration } = createFixtureFactory(baseBookkeepingConfiguration)
 
 const generateTaskSeeds = createGenerator(schema, {
   uniqueBy: [seed => seed.id, seed => seed.day],
