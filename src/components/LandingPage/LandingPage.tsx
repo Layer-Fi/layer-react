@@ -20,6 +20,7 @@ import {
 import { LandingPageOffer } from '@components/LandingPage/LandingPageOptions'
 import { type DeepPartial, type HeroContentConfig, type LandingPageCardConfig, type LandingPageLink, type LandingPagePlatformConfig as LandingPagePlatformConfig } from '@components/LandingPage/types'
 import { mergeHeroContentConfig, mergeLandingPageConfig } from '@components/LandingPage/utils'
+import { Separator } from '@components/Separator/Separator'
 import { View } from '@components/View/View'
 
 import './landingPage.scss'
@@ -49,8 +50,8 @@ export const LandingPage = ({
   const { isMobile } = useSizeClass()
   const [width] = useWindowSize()
 
-  // Track layout mode to re-trigger image animation when it changes
-  const isStackedLayout = width <= 1440
+  // Track layout mode to re-trigger image animation when it changes; must match the scss breakpoint
+  const isStackedLayout = width <= 1024
 
   const hasAccountingEnabled = availableOffers.includes('accounting')
   const hasBookkeepingEnabled = availableOffers.includes('bookkeeping')
@@ -96,27 +97,29 @@ export const LandingPage = ({
     <VStack className='Layer__LandingPage--main'>
       <div className='Layer__LandingPage__layout'>
         <VStack gap={isMobile ? 'md' : 'lg'} pi={isMobile ? 'md' : 'lg'} className='Layer__LandingPage__responsive-content'>
-          <VStack>
-            {!!heroConfig.stringOverrides?.title === false && (
-              <>
-                <Heading size={isMobile ? 'xl' : '3xl'}>
-                  {platform.platformName}
-                  <br />
-                </Heading>
-                <Heading size={isMobile ? 'xl' : '3xl'} variant='subtle' weight='normal'>{t('common:label.accounting', 'Accounting')}</Heading>
-              </>
-            )}
-            {heroConfig.stringOverrides?.title != '' && (
-              <>
-                <Heading size={isMobile ? 'xl' : '3xl'}>
-                  {interpolateTemplate(heroConfig.stringOverrides.title, platform)}
-                </Heading>
-              </>
-            )}
+          <VStack gap='xs'>
+            <VStack>
+              {!!heroConfig.stringOverrides?.title === false && (
+                <>
+                  <Heading size={isMobile ? 'xl' : '3xl'}>
+                    {platform.platformName}
+                    <br />
+                  </Heading>
+                  <Heading size={isMobile ? 'xl' : '3xl'} variant='subtle' weight='normal'>{t('common:label.accounting', 'Accounting')}</Heading>
+                </>
+              )}
+              {heroConfig.stringOverrides?.title != '' && (
+                <>
+                  <Heading size={isMobile ? 'xl' : '3xl'}>
+                    {interpolateTemplate(heroConfig.stringOverrides.title, platform)}
+                  </Heading>
+                </>
+              )}
+            </VStack>
+            <Heading variant='subtle' size={isMobile ? 'sm' : 'md'}>
+              {interpolateTemplate(heroConfig.stringOverrides.subtitle, platform)}
+            </Heading>
           </VStack>
-          <Heading variant='subtle' size={isMobile ? 'sm' : 'md'}>
-            {interpolateTemplate(heroConfig.stringOverrides.subtitle, platform)}
-          </Heading>
           <VStack>
             <HStack gap='lg' pb={isMobile ? '3xs' : 'xs'}>
               <VStack gap='xs'>
@@ -187,9 +190,12 @@ export const LandingPage = ({
   )
 
   const RenderOffers = useMemo(() => (
-    <VStack gap={isMobile ? 'lg' : '2xl'} className='Layer__LandingPage--offers'>
-      <HStack align='center'>
-        <Heading size='md' align='center' style={{ maxWidth: '480px', margin: '0 auto' }}>
+    <VStack gap={isMobile ? 'md' : 'xl'} className='Layer__LandingPage--offers'>
+      <div className='Layer__LandingPage__section-divider'>
+        <Separator />
+      </div>
+      <HStack align='center' className='Layer__LandingPage__offers-title-row'>
+        <Heading size='md' align='center'>
           {interpolateTemplate(offeringSectionTitle, platform)}
         </Heading>
       </HStack>

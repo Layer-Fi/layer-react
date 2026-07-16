@@ -3,6 +3,8 @@ import { type StorybookConfig } from '@storybook/react-vite'
 import { type Alias, type AliasOptions } from 'vite'
 
 // Plaid's hosted iframe can't run in Storybook; the mock fakes a successful link.
+// Calendly is NOT mocked: stories point CTAs at Calendly's public demo page
+// (calendly.com/calendly-demo), which renders the real widget.
 const PLAID_LINK_ALIAS = {
   find: 'react-plaid-link',
   replacement: join(process.cwd(), '.storybook/mocks/react-plaid-link.ts'),
