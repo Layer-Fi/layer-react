@@ -1,4 +1,4 @@
-import { type ParseCsvResponseEncoded, parseCsv } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/parseCsv'
+import { parseCsv, type ParseCsvResponseEncoded } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/parseCsv'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 

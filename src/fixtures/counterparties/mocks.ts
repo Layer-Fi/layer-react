@@ -1,7 +1,5 @@
 import { type BankTransactionCounterparty } from '@schemas/bankTransactions/base'
 
-// Names overlap counterpartyName values in the generated bank transaction
-// fixtures so counterparty pickers line up with transaction data.
 export const counterparties: BankTransactionCounterparty[] = [
   {
     id: '00000000-0000-4000-8000-000000000501',

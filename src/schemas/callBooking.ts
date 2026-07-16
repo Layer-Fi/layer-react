@@ -46,7 +46,7 @@ const TransformedCallBookingPurposeSchema = createTransformedEnumSchema(
   CallBookingPurpose.ADHOC,
 )
 
-const CallBookingSchema = Schema.Struct({
+export const CallBookingSchema = Schema.Struct({
   id: Schema.UUID,
 
   businessId: pipe(
