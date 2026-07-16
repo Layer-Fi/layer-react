@@ -77,13 +77,16 @@ export const generateProfitAndLoss = (params: URLSearchParams): UnifiedReport =>
   const range = reportRangeFromParams(params)
   const periods = resolvePeriods(range, params.get('group_by'))
 
+  const isCogs = (account: SingleChartAccountType) => account.accountSubtype?.value === 'COGS'
+  const expenseAccounts = accountsOfTypes([LedgerAccountType.Expense])
+
   const revenueForest = buildAccountForest(accountsOfTypes([LedgerAccountType.Revenue]))
-  const expenseForest = buildAccountForest(accountsOfTypes([LedgerAccountType.Expense]))
+  const cogsForest = buildAccountForest(expenseAccounts.filter(isCogs))
+  const operatingForest = buildAccountForest(expenseAccounts.filter(account => !isCogs(account)))
 
   const revenueLeaves = collectLeafAccounts(revenueForest)
-  const expenseLeaves = collectLeafAccounts(expenseForest)
-  const cogsLeaves = expenseLeaves.filter(account => account.accountSubtype?.value === 'COGS')
-  const operatingLeaves = expenseLeaves.filter(account => account.accountSubtype?.value !== 'COGS')
+  const cogsLeaves = collectLeafAccounts(cogsForest)
+  const operatingLeaves = collectLeafAccounts(operatingForest)
 
   const revenueTotal = (r: ReportDateRange) => sumLeaves(revenueLeaves, r, params)
   const cogsTotal = (r: ReportDateRange) => sumLeaves(cogsLeaves, r, params)
@@ -92,9 +95,11 @@ export const generateProfitAndLoss = (params: URLSearchParams): UnifiedReport =>
   const rows: UnifiedReportRow[] = [
     ...revenueForest.map(node => accountRow(node, periods, params)),
     sectionTotalRow('total_revenue', 'Total Revenue', revenueTotal, periods),
+    ...cogsForest.map(node => accountRow(node, periods, params)),
+    sectionTotalRow('total_cogs', 'Total Cost of Goods Sold', cogsTotal, periods),
     sectionTotalRow('gross_profit', 'Gross Profit', r => revenueTotal(r) - cogsTotal(r), periods),
-    ...expenseForest.map(node => accountRow(node, periods, params)),
-    sectionTotalRow('total_expenses', 'Total Expenses', r => cogsTotal(r) + expensesTotal(r), periods),
+    ...operatingForest.map(node => accountRow(node, periods, params)),
+    sectionTotalRow('total_expenses', 'Total Expenses', expensesTotal, periods),
     sectionTotalRow('net_profit', 'Net Profit', r => revenueTotal(r) - cogsTotal(r) - expensesTotal(r), periods),
   ]
 
