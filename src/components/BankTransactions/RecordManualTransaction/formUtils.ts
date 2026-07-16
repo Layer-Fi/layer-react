@@ -1,42 +1,33 @@
 import { formatISO } from 'date-fns'
 
 import { Direction } from '@internal-types/general'
-import type { RawCustomTransaction } from '@schemas/customAccounts'
-import type { Customer } from '@schemas/customer'
+import type { RecordCustomTransaction } from '@schemas/customAccounts'
 import { convertNonRecursiveBigDecimalToCents } from '@schemas/nonRecursiveBigDecimal'
 import type { RecordTransactionFormValues, RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
 
-type CreateCustomAccountTransactionsParams = {
+type RecordCustomAccountTransactionParams = {
   customAccountId: string
-  transactions: RawCustomTransaction[]
+  transaction: RecordCustomTransaction
 }
 
 export function convertRecordTransactionFormToParams(
-  { account, amount, date, memo }: RecordTransactionFormValues,
+  { account, counterparty, amount, date, category, memo }: RecordTransactionFormValues,
   variant: RecordTransactionVariant,
-): CreateCustomAccountTransactionsParams | null {
+): RecordCustomAccountTransactionParams | null {
   if (account === null || isNewAccountOption(account) || amount === null || date === null) return null
+
+  const isExpense = variant === 'expense'
 
   return {
     customAccountId: account.value,
-    transactions: [{
+    transaction: {
       amount: convertNonRecursiveBigDecimalToCents(amount),
-      direction: variant === 'expense' ? Direction.DEBIT : Direction.CREDIT,
+      direction: isExpense ? Direction.DEBIT : Direction.CREDIT,
       date: formatISO(date.toDate()),
       description: memo.trim(),
-    }],
-  }
-}
-
-export function convertRecordTransactionFormToMetadataParams(
-  { counterparty }: RecordTransactionFormValues,
-  variant: RecordTransactionVariant,
-  bankTransactionId: string,
-) {
-  return {
-    bankTransactionId,
-    customer: variant === 'income' ? counterparty as Customer | null : null,
-    vendor: variant === 'expense' ? counterparty : null,
+      ...(counterparty !== null && (isExpense ? { vendorId: counterparty.id } : { customerId: counterparty.id })),
+      ...(category !== null && { categorization: { type: 'Category' as const, category } }),
+    },
   }
 }
