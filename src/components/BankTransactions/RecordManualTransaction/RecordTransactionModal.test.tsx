@@ -2,9 +2,12 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
+import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
+import { BankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
 import { RecordTransactionModal } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionModal'
 import { type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 
+import { patch as patchRecordTransaction } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/[transaction-id]/patch'
 import { post as postRecordTransaction } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/post'
 import { get as getCustomAccounts } from '@msw/api/businesses/[business-id]/custom-accounts/get'
 import { get as getCustomers } from '@msw/api/businesses/[business-id]/customers/get'
@@ -56,6 +59,59 @@ const renderModal = (variant: RecordTransactionVariant = 'expense') => {
       { wrapper: LayerTestProvider },
     ),
   }
+}
+
+const EDIT_TRANSACTION = makeBankTransaction({
+  source: TransactionSource.CUSTOM,
+  sourceAccountId: CUSTOM_ACCOUNT.id,
+  accountName: CUSTOM_ACCOUNT.accountName,
+  direction: BankTransactionDirection.Debit,
+  amount: 12550,
+  description: 'Team lunch',
+  counterpartyName: 'John Smith',
+  vendor: VENDOR,
+  customer: null,
+  category: { type: 'Account', id: 'cash', stableName: 'cash', category: 'cash', displayName: 'Cash', description: null },
+  categorizationStatus: CategorizationStatus.CATEGORIZED,
+})
+
+const renderEditModal = () => {
+  const user = userEvent.setup()
+  const onOpenChange = vi.fn()
+
+  server.use(
+    getCustomAccounts.mock([CUSTOM_ACCOUNT]),
+    getVendors.mock([VENDOR]),
+    getCustomers.mock([CUSTOMER]),
+  )
+
+  return {
+    user,
+    onOpenChange,
+    ...render(
+      <RecordTransactionModal variant='expense' transaction={EDIT_TRANSACTION} isOpen onOpenChange={onOpenChange} />,
+      { wrapper: LayerTestProvider },
+    ),
+  }
+}
+
+const mockUpdateTransaction = () => {
+  const updateRequest = vi.fn()
+
+  server.use(
+    patchRecordTransaction.mock(makeBankTransaction(), {
+      onRequest: async ({ request, params }) => {
+        const formData = await request.formData()
+        updateRequest({
+          customAccountId: params.customAccountId,
+          transactionId: params.transactionId,
+          transaction: JSON.parse(formData.get('transaction') as string) as unknown,
+        })
+      },
+    }),
+  )
+
+  return updateRequest
 }
 
 const mockRecordTransaction = () => {
@@ -147,6 +203,31 @@ describe('RecordTransactionModal', () => {
         direction: 'CREDIT',
         description: 'Cash sale',
         customer_id: CUSTOMER.id,
+      }) as object,
+    }))
+
+    await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false))
+  })
+
+  it('pre-populates fields and updates via PATCH when editing a custom transaction', async () => {
+    const updateRequest = mockUpdateTransaction()
+    const { user, onOpenChange } = renderEditModal()
+
+    expect(await screen.findByText('Edit transaction')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('Team lunch')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /save/i }))
+
+    await waitFor(() => expect(updateRequest).toHaveBeenCalledTimes(1))
+
+    expect(updateRequest).toHaveBeenCalledWith(expect.objectContaining({
+      customAccountId: CUSTOM_ACCOUNT.id,
+      transactionId: EDIT_TRANSACTION.id,
+      transaction: expect.objectContaining({
+        amount: 12550,
+        direction: 'DEBIT',
+        description: 'Team lunch',
+        vendor_id: VENDOR.id,
       }) as object,
     }))
 

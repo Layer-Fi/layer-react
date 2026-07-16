@@ -1,28 +1,22 @@
-import { Schema } from 'effect'
-
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 
 import { bankTransactionStore } from '@msw/api/businesses/[business-id]/bank-transactions/store'
+import { toRecordCustomAccountTransactionResponse } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/post'
 import { buildCustomBankTransaction, parseRecordCustomTransaction } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/recordedCustomTransaction'
-import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 
-const encodeBankTransaction = Schema.encodeSync(BankTransactionSchema)
-
-export const toRecordCustomAccountTransactionResponse = (bankTransaction: BankTransaction) =>
-  apiData(encodeBankTransaction(bankTransaction))
-
-export const post = createMockEndpoint<BankTransaction, ReturnType<typeof toRecordCustomAccountTransactionResponse>>({
-  method: 'post',
-  path: '*/v1/businesses/:businessId/custom-accounts/:customAccountId/transactions/record',
+export const patch = createMockEndpoint<BankTransaction, ReturnType<typeof toRecordCustomAccountTransactionResponse>>({
+  method: 'patch',
+  path: '*/v1/businesses/:businessId/custom-accounts/:customAccountId/transactions/:transactionId',
   resolve: async ({ override, request, params }) => {
     if (override) return toRecordCustomAccountTransactionResponse(override)
 
+    const transactionId = String(params.transactionId)
     const transaction = await parseRecordCustomTransaction(request)
     const bankTransaction = buildCustomBankTransaction(transaction, {
-      id: crypto.randomUUID(),
+      id: transactionId,
       customAccountId: String(params.customAccountId),
+      existing: bankTransactionStore.findById(transactionId),
     })
     bankTransactionStore.save(bankTransaction)
 

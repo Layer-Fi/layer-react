@@ -1,9 +1,11 @@
 import { File } from 'lucide-react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
+import { getBankTransactionDisplayName, isCustomTransaction } from '@utils/bankTransactions/shared'
 import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import { EditCustomTransactionButton } from '@components/BankTransactions/RecordManualTransaction/EditCustomTransactionButton'
 import { IconBox } from '@components/IconBox/IconBox'
 
 import './bankTransactionDescriptionCell.scss'
@@ -27,9 +29,14 @@ export const BankTransactionDescriptionCell = ({
       fluid
       className='Layer__BankTransactionDescriptionCell'
     >
-      <Span ellipsis withTooltip>
-        {bankTransaction.counterpartyName ?? bankTransaction.description}
-      </Span>
+      <HStack gap='xs' align='center' overflow='hidden'>
+        {isCustomTransaction(bankTransaction) && (
+          <EditCustomTransactionButton bankTransaction={bankTransaction} />
+        )}
+        <Span ellipsis withTooltip>
+          {getBankTransactionDisplayName(bankTransaction)}
+        </Span>
+      </HStack>
       {hasReceipt && (
         <IconBox>
           <File size={12} />

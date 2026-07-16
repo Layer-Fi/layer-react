@@ -3,13 +3,14 @@ import { fromDate, getLocalTimeZone, type ZonedDateTime } from '@internationaliz
 import { revalidateLogic } from '@tanstack/react-form'
 import { startOfToday } from 'date-fns'
 
+import type { BankTransaction } from '@internal-types/bankTransactions'
 import type { Classification } from '@schemas/categorization'
 import type { Customer } from '@schemas/customer'
 import type { NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import type { Vendor } from '@schemas/vendor'
-import { useRecordCustomAccountTransaction } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/useRecordCustomAccountTransaction'
+import { UpsertCustomAccountTransactionMode, useUpsertCustomAccountTransaction } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/useRecordCustomAccountTransaction'
 import { useAppForm } from '@hooks/features/forms/useForm'
-import { convertRecordTransactionFormToParams } from '@components/BankTransactions/RecordManualTransaction/formUtils'
+import { convertRecordTransactionFormToParams, getRecordTransactionFormValues } from '@components/BankTransactions/RecordManualTransaction/formUtils'
 import type { AccountOption } from '@components/CustomAccountComboBox/AccountOption'
 
 export type RecordTransactionVariant = 'income' | 'expense'
@@ -38,11 +39,16 @@ const getDefaultValues = (): RecordTransactionFormValues => ({
 
 type UseRecordTransactionFormProps = {
   variant: RecordTransactionVariant
+  transaction?: BankTransaction
   onSuccess?: () => void
 }
 
-export const useRecordTransactionForm = ({ variant, onSuccess }: UseRecordTransactionFormProps) => {
-  const { trigger, isError, reset: resetSubmitState } = useRecordCustomAccountTransaction()
+export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: UseRecordTransactionFormProps) => {
+  const { trigger, isError, reset: resetSubmitState } = useUpsertCustomAccountTransaction(
+    transaction
+      ? { mode: UpsertCustomAccountTransactionMode.Update, transactionId: transaction.id }
+      : { mode: UpsertCustomAccountTransactionMode.Create },
+  )
 
   const handleSubmit = useCallback(
     async ({ value, formApi }: { value: RecordTransactionFormValues, formApi: { reset: () => void } }) => {
@@ -62,7 +68,7 @@ export const useRecordTransactionForm = ({ variant, onSuccess }: UseRecordTransa
   )
 
   const form = useAppForm<RecordTransactionFormValues>({
-    defaultValues: getDefaultValues(),
+    defaultValues: transaction ? getRecordTransactionFormValues(transaction) : getDefaultValues(),
     onSubmit: handleSubmit,
     validationLogic: revalidateLogic(),
   })

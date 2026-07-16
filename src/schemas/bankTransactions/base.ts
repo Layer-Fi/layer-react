@@ -32,6 +32,15 @@ export type RawBankTransactionDirection = typeof BankTransactionDirectionSchema.
 
 export const decodeBankTransactionDirection = Schema.decodeSync(BankTransactionDirectionSchema)
 
+export enum TransactionSource {
+  UNIT = 'UNIT',
+  PLAID = 'PLAID',
+  STRIPE = 'STRIPE',
+  CUSTOM = 'CUSTOM',
+}
+
+export const TransactionSourceSchema = Schema.Enums(TransactionSource)
+
 export const MinimalBankTransactionSchema = Schema.Struct({
   id: Schema.String,
   date: Schema.Date,

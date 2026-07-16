@@ -4,10 +4,11 @@ import { type BankTransaction, DisplayState, type Split, type SuggestedMatch } f
 import { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { type DateRange } from '@internal-types/general'
 import type { TagFilterInput } from '@internal-types/tags'
-import { BankTransactionDirection, type RawBankTransactionDirection } from '@schemas/bankTransactions/base'
+import { BankTransactionDirection, type RawBankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { makeTagKeyValueFromTag } from '@schemas/tag'
 import { getDefaultTaxCodeForBankTransaction } from '@utils/bankTransactions/taxCode'
+import { getCustomerName, getVendorName } from '@utils/customerVendor'
 import { BankTransactionSelectionVariant } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
@@ -51,6 +52,22 @@ export const hasMatch = (bankTransaction?: BankTransaction) => {
 
 export const isMoneyIn = ({ direction }: Pick<BankTransaction, 'direction'>) =>
   direction === BankTransactionDirection.Credit
+
+export const isCustomTransaction = ({ source }: Pick<BankTransaction, 'source'>) =>
+  source === TransactionSource.CUSTOM
+
+/*
+ * Custom transactions have no merchant, so surface their associated customer or
+ * vendor as the name; everything else keeps the counterparty/description fallback.
+ */
+export const getBankTransactionDisplayName = (bankTransaction: BankTransaction) => {
+  if (isCustomTransaction(bankTransaction)) {
+    if (bankTransaction.customer) return getCustomerName(bankTransaction.customer)
+    if (bankTransaction.vendor) return getVendorName(bankTransaction.vendor)
+  }
+
+  return bankTransaction.counterpartyName ?? bankTransaction.description
+}
 
 export const countTransactionsToReview = ({
   transactions,

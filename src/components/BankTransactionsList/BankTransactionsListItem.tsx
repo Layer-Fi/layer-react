@@ -5,8 +5,10 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import {
+  getBankTransactionDisplayName,
   hasReceipts,
   isCategorized,
+  isCustomTransaction,
   isMoneyIn,
 } from '@utils/bankTransactions/shared'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
@@ -28,6 +30,7 @@ import { BankTransactionCategoryComboBox } from '@components/BankTransactionCate
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
 import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankTransactionsSubmitButton'
+import { EditCustomTransactionButton } from '@components/BankTransactions/RecordManualTransaction/EditCustomTransactionButton'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { Chevron } from '@components/Chevron/Chevron'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
@@ -141,8 +144,11 @@ export const BankTransactionsListItem = ({
               />
             </div>
           )}
+          {isCustomTransaction(bankTransaction) && (
+            <EditCustomTransactionButton bankTransaction={bankTransaction} />
+          )}
           <Span withTooltip>
-            {bankTransaction.counterpartyName ?? bankTransaction.description}
+            {getBankTransactionDisplayName(bankTransaction)}
           </Span>
         </HStack>
         <MoneySpan

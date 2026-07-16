@@ -1,27 +1,32 @@
 import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import type { BankTransaction } from '@internal-types/bankTransactions'
 import { Button } from '@ui/Button/Button'
 import { SubmitButton } from '@ui/Button/SubmitButton'
 import { Modal } from '@ui/Modal/Modal'
 import { ModalActions, ModalContent, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
+import { getRecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/formUtils'
 import { RecordTransactionForm } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionForm'
 import { type RecordTransactionVariant, useRecordTransactionForm } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
 
 type RecordTransactionModalProps = {
   variant: RecordTransactionVariant
+  transaction?: BankTransaction
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
 }
 
-export function RecordTransactionModal({ variant, isOpen, onOpenChange }: RecordTransactionModalProps) {
+export function RecordTransactionModal({ variant, transaction, isOpen, onOpenChange }: RecordTransactionModalProps) {
   const { t } = useTranslation()
+
+  const effectiveVariant = transaction ? getRecordTransactionVariant(transaction) : variant
 
   const onSuccess = useCallback(() => onOpenChange(false), [onOpenChange])
 
-  const { form, isError, resetSubmitState } = useRecordTransactionForm({ variant, onSuccess })
+  const { form, isError, resetSubmitState } = useRecordTransactionForm({ variant: effectiveVariant, transaction, onSuccess })
 
   useEffect(() => {
     if (isOpen) resetSubmitState()
@@ -32,9 +37,11 @@ export function RecordTransactionModal({ variant, isOpen, onOpenChange }: Record
     onOpenChange(false)
   }, [form, onOpenChange])
 
-  const title = variant === 'expense'
-    ? t('bankTransactions:recordTransaction.title.add_expense', 'Add expense')
-    : t('bankTransactions:recordTransaction.title.add_income', 'Add income')
+  const title = transaction
+    ? t('bankTransactions:recordTransaction.title.edit', 'Edit transaction')
+    : effectiveVariant === 'expense'
+      ? t('bankTransactions:recordTransaction.title.add_expense', 'Add expense')
+      : t('bankTransactions:recordTransaction.title.add_income', 'Add income')
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} size='md' flexBlock>
@@ -44,7 +51,7 @@ export function RecordTransactionModal({ variant, isOpen, onOpenChange }: Record
           onClose={onCancel}
         />
         <ModalContent>
-          <RecordTransactionForm form={form} variant={variant} />
+          <RecordTransactionForm form={form} variant={effectiveVariant} />
         </ModalContent>
         <form.Subscribe
           selector={state => ({

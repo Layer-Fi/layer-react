@@ -4,12 +4,13 @@ import { File } from 'lucide-react'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
-import { hasReceipts, isCategorized, isMoneyIn } from '@utils/bankTransactions/shared'
+import { getBankTransactionDisplayName, hasReceipts, isCategorized, isCustomTransaction, isMoneyIn } from '@utils/bankTransactions/shared'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { type LinkingMetadata, useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
+import { EditCustomTransactionButton } from '@components/BankTransactions/RecordManualTransaction/EditCustomTransactionButton'
 
 import './bankTransactionsMobileListItem.scss'
 
@@ -69,9 +70,14 @@ export const BankTransactionsMobileListItem = ({
   return (
     <HStack gap='sm' justify='space-between'>
       <VStack align='start' gap='3xs' overflow='hidden'>
-        <Span ellipsis>
-          {bankTransaction.counterpartyName ?? bankTransaction.description}
-        </Span>
+        <HStack gap='xs' align='center' overflow='hidden'>
+          {isCustomTransaction(bankTransaction) && (
+            <EditCustomTransactionButton bankTransaction={bankTransaction} />
+          )}
+          <Span ellipsis>
+            {getBankTransactionDisplayName(bankTransaction)}
+          </Span>
+        </HStack>
         {inAppLink}
         <HStack gap='2xs' align='center' overflow='hidden'>
           <Span ellipsis size='sm'>
