@@ -12,7 +12,7 @@ type PreviewRowEncoded = typeof TransactionPreviewRowSchema.Encoded
 
 type ParseCsvResponseEncoded = typeof ParseCsvResponseSchema.Encoded
 
-type CsvColumn = 'date' | 'description' | 'amount' | 'external_id' | 'reference_number'
+const REQUIRED_COLUMNS = ['date', 'description', 'amount'] as const
 
 const splitCsvLine = (line: string) => line.split(',').map(field => field.trim().replace(/^"|"$/g, ''))
 
@@ -22,32 +22,30 @@ const cell = <T>(raw: string, parsed: T | null, isValid: boolean): PreviewCellEn
 const optionalCell = (raw: string | undefined): PreviewCellEncoded<string> | null =>
   raw ? cell(raw, raw, true) : null
 
+const INVALID_CSV_RESPONSE: ParseCsvResponseEncoded = {
+  is_valid: false,
+  new_transactions_preview: [],
+  new_transactions_request: null,
+  invalid_transactions_count: 0,
+  total_transactions_count: 0,
+}
+
 const parseCsv = (text: string): ParseCsvResponseEncoded => {
   const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0)
   const [headerLine, ...rowLines] = lines
 
-  if (!headerLine || rowLines.length === 0) {
-    return {
-      is_valid: false,
-      new_transactions_preview: [],
-      new_transactions_request: null,
-      invalid_transactions_count: 0,
-      total_transactions_count: 0,
-    }
-  }
+  if (!headerLine || rowLines.length === 0) return INVALID_CSV_RESPONSE
 
   const headers = splitCsvLine(headerLine).map(header => header.toLowerCase().replace(/\s+/g, '_'))
-  const columnIndex = (column: CsvColumn, fallback: number) => {
-    const index = headers.indexOf(column)
-    return index === -1 ? fallback : index
-  }
+
+  if (REQUIRED_COLUMNS.some(column => !headers.includes(column))) return INVALID_CSV_RESPONSE
 
   const indices = {
-    date: columnIndex('date', 0),
-    description: columnIndex('description', 1),
-    amount: columnIndex('amount', 2),
-    external_id: columnIndex('external_id', 3),
-    reference_number: columnIndex('reference_number', 4),
+    date: headers.indexOf('date'),
+    description: headers.indexOf('description'),
+    amount: headers.indexOf('amount'),
+    external_id: headers.indexOf('external_id'),
+    reference_number: headers.indexOf('reference_number'),
   }
 
   const preview: PreviewRowEncoded[] = []
