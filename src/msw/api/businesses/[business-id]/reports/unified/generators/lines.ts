@@ -2,7 +2,10 @@ import { type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccoun
 import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import { ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
-import { accountEntriesInRange } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
+import {
+  accountEntriesInRange,
+  accountMagnitudeEntriesInRange,
+} from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {
   currencyCell,
   dateCell,
@@ -45,7 +48,10 @@ export const generateLineItemDetail = (params: URLSearchParams): UnifiedReport =
     return { businessId: MOCK_REPORT_BUSINESS_ID, columns: columns(), rows: [] }
   }
 
-  const entries = accountEntriesInRange(account, detailRange(params), params)
+  // The trial balance shows unsigned magnitudes on the normal side, so its drill-down must match.
+  const entries = params.get('unsigned') === 'true'
+    ? accountMagnitudeEntriesInRange(account, detailRange(params), params)
+    : accountEntriesInRange(account, detailRange(params), params)
 
   let runningBalance = 0
   const rows: UnifiedReportRow[] = entries.map((entry, index) => {

@@ -1,3 +1,5 @@
+import { subDays, subMonths } from 'date-fns'
+
 import { Pinning, type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import { netIncomeInRange } from '@msw/api/businesses/[business-id]/reports/unified/generators/balances'
@@ -44,7 +46,9 @@ export const generateCashflow = (params: URLSearchParams): UnifiedReport => {
   const financing = distributions + borrowing
 
   const netChange = operating + investing + financing
-  const cashAtStart = 2_500_000 + flow('cashflow:opening', 4)
+  // Opening cash reflects the period start only, so it accumulates the trailing year up to the day before the range.
+  const cashAtStart = 2_500_000
+    + sumAmountCentsInRange('cashflow:opening', subMonths(range.startDate, 12), subDays(range.startDate, 1), { magnitude: 4 })
   const cashAtEnd = cashAtStart + netChange
 
   const rows: UnifiedReportRow[] = [
