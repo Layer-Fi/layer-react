@@ -48,7 +48,7 @@ export function rangeForPeriod(period: Period, referenceDate: Date): DateRange {
   }
 }
 
-export function rangeForPreset(preset: RelativeDatePreset, now: Date = new Date()): DateRange {
+export function rangeForRelativePreset(preset: RelativeDatePreset, now: Date = new Date()): DateRange {
   switch (preset) {
     case DatePreset.ThisMonth:
       return rangeForPeriod(Period.Month, now)
@@ -67,7 +67,7 @@ export function rangeForPreset(preset: RelativeDatePreset, now: Date = new Date(
   }
 }
 
-/** Separate from {@link rangeForPreset} because it needs the business activation date. */
+/** Separate from {@link rangeForRelativePreset} because it needs the business activation date. */
 export function rangeForAllTime(activationDate: Date, now: Date = new Date()): DateRange {
   return {
     startDate: min([startOfDay(activationDate), startOfDay(now)]),
@@ -83,7 +83,7 @@ export function deriveDateRangeFromPreset(
   if (preset === DatePreset.AllTime) {
     return activationDate ? rangeForAllTime(activationDate) : null
   }
-  return rangeForPreset(preset)
+  return rangeForRelativePreset(preset)
 }
 
 /* Range → preset matching */

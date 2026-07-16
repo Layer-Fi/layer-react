@@ -8,7 +8,7 @@ import {
   Period,
   rangeForAllTime,
   rangeForPeriod,
-  rangeForPreset,
+  rangeForRelativePreset,
 } from '@utils/date/dateRangePresets'
 
 import { setupFakeSystemTime } from '@test-utils/fakeSystemTime'
@@ -47,16 +47,16 @@ describe('rangeForPeriod', () => {
   })
 })
 
-describe('rangeForPreset', () => {
+describe('rangeForRelativePreset', () => {
   it('returns the current month for ThisMonth', () => {
-    expect(rangeForPreset(DatePreset.ThisMonth)).toEqual({
+    expect(rangeForRelativePreset(DatePreset.ThisMonth)).toEqual({
       startDate: startOfMonth(NOW),
       endDate: endOfMonth(NOW),
     })
   })
 
   it('returns the current year for ThisYear', () => {
-    expect(rangeForPreset(DatePreset.ThisYear)).toEqual({
+    expect(rangeForRelativePreset(DatePreset.ThisYear)).toEqual({
       startDate: startOfYear(NOW),
       endDate: endOfYear(NOW),
     })
@@ -83,7 +83,7 @@ describe('rangeForAllTime', () => {
 
 describe('deriveDateRangeFromPreset', () => {
   it('resolves a relative preset without needing an activation date', () => {
-    expect(deriveDateRangeFromPreset(DatePreset.ThisYear)).toEqual(rangeForPreset(DatePreset.ThisYear))
+    expect(deriveDateRangeFromPreset(DatePreset.ThisYear)).toEqual(rangeForRelativePreset(DatePreset.ThisYear))
   })
 
   it('resolves AllTime when an activation date is available', () => {
@@ -118,7 +118,7 @@ describe('derivePresetFromDateRange', () => {
   })
 
   it('respects a matching previous preset', () => {
-    const range = rangeForPreset(DatePreset.ThisMonth)
+    const range = rangeForRelativePreset(DatePreset.ThisMonth)
 
     expect(derivePresetFromDateRange(range, DatePreset.ThisMonth)).toBe(DatePreset.ThisMonth)
   })
