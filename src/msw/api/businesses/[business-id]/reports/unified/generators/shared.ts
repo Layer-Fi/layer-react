@@ -1,4 +1,4 @@
-import { format, isValid, parseISO, subMonths } from 'date-fns'
+import { format, subMonths } from 'date-fns'
 
 import { LedgerAccountType, LedgerEntryDirection, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { type ReportConfig, type ReportControl } from '@schemas/reports/reportConfig'
@@ -11,6 +11,7 @@ import {
   type UnifiedReportRow,
 } from '@schemas/reports/unifiedReport'
 
+import { parseDateParam } from '@msw/utils/parseDateParam'
 import { type EntryStreamOptions } from '@fixtures/unifiedReports/deterministicAmounts'
 
 // The story business id is not a UUID, so reports return a fixed one instead of echoing the path param.
@@ -104,12 +105,6 @@ export const linesReportConfig = (
 })
 
 export const isoDate = (date: Date) => format(date, 'yyyy-MM-dd')
-
-// parseISO keeps date-only strings in local time, matching how the app builds ranges.
-export const parseDateParam = (value: string | null, fallback: Date) => {
-  const parsed = parseISO(value ?? '')
-  return isValid(parsed) ? parsed : fallback
-}
 
 export type ReportDateRange = { startDate: Date, endDate: Date }
 

@@ -3,12 +3,12 @@ import { ReportControl } from '@schemas/reports/reportConfig'
 import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import {
-  accountActivityCents,
-  type AccountNode,
+  accountForestRows,
   accountsOfTypes,
   buildAccountForest,
   collectLeafAccounts,
   nodeActivityCents,
+  sumActivityCents,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {
   periodCells,
@@ -31,29 +31,6 @@ const NAME_COLUMN_KEY = 'name'
 const LINES_ROUTE = 'profit-and-loss/lines'
 const LINES_CONTROLS = [ReportControl.DateRange] as const
 
-const accountRow = (
-  node: AccountNode,
-  periods: readonly PnlPeriod[],
-  params: URLSearchParams,
-): UnifiedReportRow => {
-  const isLeaf = node.children.length === 0
-
-  return {
-    rowKey: node.account.accountId,
-    cells: {
-      [NAME_COLUMN_KEY]: textCell(node.account.name, {
-        reportConfig: isLeaf
-          ? linesReportConfig(LINES_ROUTE, node.account, LINES_CONTROLS, reportingBasisBaseParams(params))
-          : undefined,
-      }),
-      ...periodCells(range => isLeaf
-        ? accountActivityCents(node.account, range, params)
-        : nodeActivityCents(node, range, params), periods),
-    },
-    ...(isLeaf ? {} : { rows: node.children.map(child => accountRow(child, periods, params)) }),
-  }
-}
-
 const sectionTotalRow = (
   rowKey: string,
   label: string,
@@ -66,12 +43,6 @@ const sectionTotalRow = (
     ...periodCells(amountFor, periods, true),
   },
 })
-
-const sumLeaves = (
-  leaves: readonly SingleChartAccountType[],
-  range: ReportDateRange,
-  params: URLSearchParams,
-) => leaves.reduce((total, account) => total + accountActivityCents(account, range, params), 0)
 
 export const generateProfitAndLoss = (params: URLSearchParams): UnifiedReport => {
   const range = reportRangeFromParams(params)
@@ -88,17 +59,23 @@ export const generateProfitAndLoss = (params: URLSearchParams): UnifiedReport =>
   const cogsLeaves = collectLeafAccounts(cogsForest)
   const operatingLeaves = collectLeafAccounts(operatingForest)
 
-  const revenueTotal = (r: ReportDateRange) => sumLeaves(revenueLeaves, r, params)
-  const cogsTotal = (r: ReportDateRange) => sumLeaves(cogsLeaves, r, params)
-  const expensesTotal = (r: ReportDateRange) => sumLeaves(operatingLeaves, r, params)
+  const revenueTotal = (r: ReportDateRange) => sumActivityCents(revenueLeaves, r, params)
+  const cogsTotal = (r: ReportDateRange) => sumActivityCents(cogsLeaves, r, params)
+  const expensesTotal = (r: ReportDateRange) => sumActivityCents(operatingLeaves, r, params)
+
+  const sectionRows = (forest: ReturnType<typeof buildAccountForest>) => accountForestRows(forest, {
+    nameColumnKey: NAME_COLUMN_KEY,
+    leafReportConfig: account => linesReportConfig(LINES_ROUTE, account, LINES_CONTROLS, reportingBasisBaseParams(params)),
+    valueCells: node => periodCells(r => nodeActivityCents(node, r, params), periods),
+  })
 
   const rows: UnifiedReportRow[] = [
-    ...revenueForest.map(node => accountRow(node, periods, params)),
+    ...sectionRows(revenueForest),
     sectionTotalRow('total_revenue', 'Total Revenue', revenueTotal, periods),
-    ...cogsForest.map(node => accountRow(node, periods, params)),
+    ...sectionRows(cogsForest),
     sectionTotalRow('total_cogs', 'Total Cost of Goods Sold', cogsTotal, periods),
     sectionTotalRow('gross_profit', 'Gross Profit', r => revenueTotal(r) - cogsTotal(r), periods),
-    ...operatingForest.map(node => accountRow(node, periods, params)),
+    ...sectionRows(operatingForest),
     sectionTotalRow('total_expenses', 'Total Expenses', expensesTotal, periods),
     sectionTotalRow('net_profit', 'Net Profit', r => revenueTotal(r) - cogsTotal(r) - expensesTotal(r), periods),
   ]

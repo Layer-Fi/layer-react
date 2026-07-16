@@ -1,11 +1,7 @@
 import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
-import {
-  accountsOfTypes,
-  buildAccountForest,
-  collectLeafAccounts,
-} from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
+import { leafAccountsOfTypes } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {
   accumulatedMagnitudeCents,
   balanceSheetRange,
@@ -45,7 +41,7 @@ const sideCells = (magnitude: number, onDebit: boolean) => ({
 
 export const generateTrialBalance = (params: URLSearchParams): UnifiedReport => {
   const effectiveDate = parseEffectiveDateParam(params)
-  const leaves = collectLeafAccounts(buildAccountForest(accountsOfTypes(ALL_TYPES)))
+  const leaves = leafAccountsOfTypes(ALL_TYPES)
 
   const openingBalanceEquity = leaves.find(a => a.stableName === OPENING_BALANCE_EQUITY_STABLE_NAME)
   const scored = leaves
@@ -58,8 +54,8 @@ export const generateTrialBalance = (params: URLSearchParams): UnifiedReport => 
     .reduce((total, { magnitude }) => total + magnitude, 0)
 
   // Opening balance equity plugs the report so total debits equal total credits.
-  const plug = debitSum - creditSum
-  const plugOnDebit = plug < 0
+  const plugMagnitude = Math.abs(debitSum - creditSum)
+  const plugOnDebit = debitSum < creditSum
 
   // Drill-downs bake the same accumulation window as the parent so detail totals match the account's balance.
   // unsigned keeps detail rows on the account's normal side, matching the magnitude shown in the debit/credit cell.
@@ -85,11 +81,11 @@ export const generateTrialBalance = (params: URLSearchParams): UnifiedReport => 
 
   // Opening balance equity displays the plug, not its own stream, so it has no drill-down.
   if (openingBalanceEquity) {
-    rows.push(accountRow(openingBalanceEquity, Math.abs(plug), plugOnDebit, false))
+    rows.push(accountRow(openingBalanceEquity, plugMagnitude, plugOnDebit, false))
   }
 
-  const totalDebit = debitSum + (plugOnDebit ? Math.abs(plug) : 0)
-  const totalCredit = creditSum + (plugOnDebit ? 0 : Math.abs(plug))
+  const totalDebit = debitSum + (plugOnDebit ? plugMagnitude : 0)
+  const totalCredit = creditSum + (plugOnDebit ? 0 : plugMagnitude)
 
   rows.push({
     rowKey: 'total_trial_balance',

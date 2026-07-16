@@ -2,10 +2,9 @@ import { LedgerAccountType, LedgerEntryDirection, type SingleChartAccountType } 
 
 import {
   accountActivityCents,
-  accountsOfTypes,
   accountStreamKey,
-  buildAccountForest,
-  collectLeafAccounts,
+  leafAccountsOfTypes,
+  sumActivityCents,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {
   accountMagnitude,
@@ -27,9 +26,6 @@ export const balanceSheetRange = (effectiveDate: Date): ReportDateRange => ({
   startDate: inceptionFor(effectiveDate),
   endDate: effectiveDate,
 })
-
-const leafAccountsOfTypes = (types: readonly LedgerAccountType[]): SingleChartAccountType[] =>
-  collectLeafAccounts(buildAccountForest(accountsOfTypes(types)))
 
 /*
  * Positive magnitude of a leaf account's accumulated activity through the
@@ -66,14 +62,9 @@ export const balanceSheetLeafAccounts = (): SingleChartAccountType[] =>
   leafAccountsOfTypes(BALANCE_SHEET_TYPES)
 
 // Net income over an exact range, summing leaf revenue minus leaf expense (same basis as P&L net profit).
-export const netIncomeInRange = (range: ReportDateRange, params: URLSearchParams): number => {
-  const revenue = leafAccountsOfTypes([LedgerAccountType.Revenue])
-    .reduce((total, account) => total + accountActivityCents(account, range, params), 0)
-  const expenses = leafAccountsOfTypes([LedgerAccountType.Expense])
-    .reduce((total, account) => total + accountActivityCents(account, range, params), 0)
-
-  return revenue - expenses
-}
+export const netIncomeInRange = (range: ReportDateRange, params: URLSearchParams): number =>
+  sumActivityCents(leafAccountsOfTypes([LedgerAccountType.Revenue]), range, params)
+  - sumActivityCents(leafAccountsOfTypes([LedgerAccountType.Expense]), range, params)
 
 // Retained earnings mirrors cumulative net income so the balance sheet identity holds.
 export const cumulativeNetIncomeCents = (effectiveDate: Date, params: URLSearchParams): number =>
