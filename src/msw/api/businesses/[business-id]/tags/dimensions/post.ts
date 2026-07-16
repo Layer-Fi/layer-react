@@ -1,20 +1,13 @@
 import { Schema } from 'effect'
 
-import { type TagDimension, TagDimensionSchema, TagDimensionStrictnessSchema } from '@schemas/tag'
+import { type TagDimension, TagDimensionSchema } from '@schemas/tag'
+import { CreateTagDimensionBodySchema } from '@hooks/api/businesses/[business-id]/tags/dimensions/useCreateTagDimension'
 
 import { makeFallbackTagDimension, tagDimensionStore } from '@msw/api/businesses/[business-id]/tags/dimensions/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
 import { makeTagValueDefinition } from '@fixtures/tagDimensions/mocks'
-
-const CreateTagDimensionBodySchema = Schema.Struct({
-  key: Schema.NonEmptyTrimmedString,
-  strictness: TagDimensionStrictnessSchema,
-  displayName: Schema.optional(Schema.NonEmptyTrimmedString),
-  definedValues: Schema.propertySignature(Schema.Array(Schema.NonEmptyTrimmedString))
-    .pipe(Schema.fromKey('defined_values')),
-})
 
 const decodeCreateTagDimensionBody = Schema.decodeUnknownSync(CreateTagDimensionBodySchema)
 const encodeTagDimension = Schema.encodeSync(TagDimensionSchema)

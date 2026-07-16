@@ -7,7 +7,7 @@ import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const CREATE_TAG_DIMENSION_TAG_KEY = '#create-tag-dimension'
 
-const CreateTagDimensionBodySchema = Schema.Struct({
+export const CreateTagDimensionBodySchema = Schema.Struct({
   key: Schema.NonEmptyTrimmedString,
   strictness: TagDimensionStrictnessSchema,
   displayName: Schema.optional(Schema.NonEmptyTrimmedString),
