@@ -7,6 +7,7 @@ import { bookkeepingHandlers } from '@msw/api/businesses/[business-id]/bookkeepi
 import { callBookingsHandlers } from '@msw/api/businesses/[business-id]/call-bookings/handlers'
 import { catalogHandlers } from '@msw/api/businesses/[business-id]/catalog/handlers'
 import { categoriesHandlers } from '@msw/api/businesses/[business-id]/categories/handlers'
+import { counterpartiesHandlers } from '@msw/api/businesses/[business-id]/counterparties/handlers'
 import { customAccountsHandlers } from '@msw/api/businesses/[business-id]/custom-accounts/handlers'
 import { customersHandlers } from '@msw/api/businesses/[business-id]/customers/handlers'
 import { externalAccountsHandlers } from '@msw/api/businesses/[business-id]/external-accounts/handlers'
@@ -17,6 +18,7 @@ import { mileageHandlers } from '@msw/api/businesses/[business-id]/mileage/handl
 import { plaidHandlers } from '@msw/api/businesses/[business-id]/plaid/handlers'
 import { reportsHandlers } from '@msw/api/businesses/[business-id]/reports/handlers'
 import { stripeHandlers } from '@msw/api/businesses/[business-id]/stripe/handlers'
+import { tagsHandlers } from '@msw/api/businesses/[business-id]/tags/handlers'
 import { tasksHandlers } from '@msw/api/businesses/[business-id]/tasks/handlers'
 import { taxEstimatesHandlers } from '@msw/api/businesses/[business-id]/tax-estimates/handlers'
 import { timeTrackingHandlers } from '@msw/api/businesses/[business-id]/time-tracking/handlers'
@@ -30,6 +32,7 @@ export const businessHandlers: RequestHandler[] = [
   ...externalAccountsHandlers,
   ...plaidHandlers,
   ...categoriesHandlers,
+  ...counterpartiesHandlers,
   ...customAccountsHandlers,
   ...customersHandlers,
   ...vendorsHandlers,
@@ -42,6 +45,7 @@ export const businessHandlers: RequestHandler[] = [
   ...reportsHandlers,
   ...bookkeepingHandlers,
   ...callBookingsHandlers,
+  ...tagsHandlers,
   ...tasksHandlers,
   ...taxEstimatesHandlers,
 ]

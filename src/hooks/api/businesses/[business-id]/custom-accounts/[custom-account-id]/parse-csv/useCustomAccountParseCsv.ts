@@ -12,7 +12,7 @@ type CustomAccountParseCsvArgs = {
   customAccountId: string
 }
 
-const TransactionPreviewRowSchema = PreviewRowSchema({
+export const TransactionPreviewRowSchema = PreviewRowSchema({
   date: PreviewCellSchema(Schema.String),
   description: PreviewCellSchema(Schema.String),
   amount: Schema.NullishOr(PreviewCellSchema(Schema.Number)),
@@ -33,7 +33,7 @@ const TransactionPreviewRowSchema = PreviewRowSchema({
  * shape is validated while the inner transaction objects are left opaque. It
  * is null when the uploaded CSV is invalid (no request to build).
  */
-const ParseCsvResponseSchema = Schema.Struct({
+export const ParseCsvResponseSchema = Schema.Struct({
   isValid: pipe(
     Schema.propertySignature(Schema.Boolean),
     Schema.fromKey('is_valid'),

@@ -44,6 +44,14 @@ export const TagKeyValueSchema = Schema.Struct({
 })
 export const makeTagKeyValue = Schema.decodeSync(TagKeyValueSchema)
 
+export const CreateTagDimensionBodySchema = Schema.Struct({
+  key: Schema.NonEmptyTrimmedString,
+  strictness: TagDimensionStrictnessSchema,
+  displayName: Schema.optional(Schema.NonEmptyTrimmedString),
+  definedValues: Schema.propertySignature(Schema.Array(Schema.NonEmptyTrimmedString))
+    .pipe(Schema.fromKey('defined_values')),
+})
+
 export const TagDimensionSchema = Schema.Struct({
   id: Schema.UUID,
   key: Schema.NonEmptyTrimmedString,

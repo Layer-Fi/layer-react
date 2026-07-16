@@ -16,6 +16,7 @@ export const FixtureIdPrefix = {
   invoice: '0000000d',
   invoiceLineItem: '0000000e',
   bankTransaction: '0000000f',
+  counterparty: '00000010',
 } as const
 
 const HEX = '0123456789abcdef'.split('')
