@@ -28,6 +28,7 @@ export type TableValueColumn<Item> = {
   displayName: string
   value: (item: Item) => number
   cellType?: keyof typeof VALUE_CELLS
+  reportConfig?: (item: Item) => ReportConfig | undefined
   /** Reformats the summed column total, e.g. re-rounding floats. */
   formatTotal?: (total: number) => number
   pinning?: Pinning
@@ -38,7 +39,6 @@ type TableReportOptions<Item> = {
     columnKey: string
     displayName: string
     label: (item: Item) => string
-    reportConfig?: (item: Item) => ReportConfig | undefined
   }
   rowKey: (item: Item) => string
   items: readonly Item[]
@@ -57,10 +57,10 @@ export const generateTableReport = <Item>(
   const rows: UnifiedReportRow[] = items.map(item => ({
     rowKey: rowKey(item),
     cells: {
-      [rowHeader.columnKey]: textCell(rowHeader.label(item), { reportConfig: rowHeader.reportConfig?.(item) }),
+      [rowHeader.columnKey]: textCell(rowHeader.label(item)),
       ...Object.fromEntries(valueColumns.map(column => [
         column.columnKey,
-        VALUE_CELLS[column.cellType ?? 'currency'](column.value(item)),
+        VALUE_CELLS[column.cellType ?? 'currency'](column.value(item), { reportConfig: column.reportConfig?.(item) }),
       ])),
     },
   }))

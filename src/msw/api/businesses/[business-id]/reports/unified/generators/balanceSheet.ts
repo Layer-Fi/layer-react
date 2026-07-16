@@ -93,8 +93,11 @@ export const generateBalanceSheet = (params: URLSearchParams): UnifiedReport => 
 
   const sectionRows = (type: LedgerAccountType) => accountForestRows(buildAccountForest(accountsOfTypes([type])), {
     nameColumnKey: NAME_COLUMN_KEY,
-    leafReportConfig: drillDownFor,
-    valueCells: node => ({ [BALANCE_COLUMN_KEY]: currencyCell(subtreeTotal(node, balances)) }),
+    valueCells: (node, isLeaf) => ({
+      [BALANCE_COLUMN_KEY]: currencyCell(subtreeTotal(node, balances), {
+        reportConfig: isLeaf ? drillDownFor(node.account) : undefined,
+      }),
+    }),
   })
 
   const rows: UnifiedReportRow[] = [

@@ -40,7 +40,7 @@ const sectionTotalRow = (
   rowKey,
   cells: {
     [NAME_COLUMN_KEY]: textCell(label, { bold: true }),
-    ...periodCells(amountFor, periods, true),
+    ...periodCells(amountFor, periods, { bold: true }),
   },
 })
 
@@ -65,8 +65,11 @@ export const generateProfitAndLoss = (params: URLSearchParams): UnifiedReport =>
 
   const sectionRows = (forest: ReturnType<typeof buildAccountForest>) => accountForestRows(forest, {
     nameColumnKey: NAME_COLUMN_KEY,
-    leafReportConfig: account => linesReportConfig(LINES_ROUTE, account, LINES_CONTROLS, reportingBasisBaseParams(params)),
-    valueCells: node => periodCells(r => nodeActivityCents(node, r, params), periods),
+    valueCells: (node, isLeaf) => periodCells(r => nodeActivityCents(node, r, params), periods, {
+      reportConfig: isLeaf
+        ? linesReportConfig(LINES_ROUTE, node.account, LINES_CONTROLS, reportingBasisBaseParams(params))
+        : undefined,
+    }),
   })
 
   const rows: UnifiedReportRow[] = [

@@ -23,14 +23,11 @@ const generateBusinessAccountReport = (
   const range = reportRangeFromParams(params)
   const periods = resolvePeriods(range, params.get('group_by'))
   const leaves = leafAccountsOfTypes([type])
+  const drillDownFor = (account: (typeof leaves)[number]) =>
+    linesReportConfig(linesRoute, account, [ReportControl.DateRange])
 
   return generateTableReport({
-    rowHeader: {
-      columnKey: 'name',
-      displayName: 'Account',
-      label: account => account.name,
-      reportConfig: account => linesReportConfig(linesRoute, account, [ReportControl.DateRange]),
-    },
+    rowHeader: { columnKey: 'name', displayName: 'Account', label: account => account.name },
     rowKey: account => account.accountId,
     items: leaves,
     valueColumns: [
@@ -38,11 +35,13 @@ const generateBusinessAccountReport = (
         columnKey: period.columnKey,
         displayName: period.label,
         value: (account: (typeof leaves)[number]) => accountActivityCents(account, period.range, params),
+        reportConfig: drillDownFor,
       })),
       {
         columnKey: TOTAL_COLUMN_KEY,
         displayName: 'Total',
         value: account => accountActivityCents(account, range, params),
+        reportConfig: drillDownFor,
         pinning: Pinning.Right,
       },
     ],

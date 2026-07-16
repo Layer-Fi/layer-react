@@ -86,8 +86,8 @@ export const labeledCurrencyRowFor = (labelColumnKey: string, amountColumnKey: s
 ): UnifiedReportRow => ({
   rowKey,
   cells: {
-    [labelColumnKey]: textCell(label, options),
-    [amountColumnKey]: currencyCell(amount, { bold: options?.bold }),
+    [labelColumnKey]: textCell(label, { bold: options?.bold }),
+    [amountColumnKey]: currencyCell(amount, options),
   },
 })
 
