@@ -119,7 +119,7 @@ describe('RecordTransactionModal', () => {
       transaction: {
         amount: 12550,
         direction: 'DEBIT',
-        date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T/) as string,
+        date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/) as string,
         description: 'Team lunch',
         vendor_id: VENDOR.id,
         categorization: {
