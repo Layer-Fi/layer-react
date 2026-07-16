@@ -22,12 +22,29 @@ export const post = createMockEndpoint<TagDimension, ReturnType<typeof toRespons
     const { key, strictness, displayName, definedValues } =
       decodeCreateTagDimensionBody(await readRequestJson(request))
 
-    const dimension: TagDimension = {
-      ...makeFallbackTagDimension({ key }),
-      displayName: displayName ?? null,
-      strictness,
-      definedValues: definedValues.map(value => makeTagValueDefinition({ key, value })),
-    }
+    // Dimension keys are unique per business: like the API, creating an
+    // existing key ensures the dimension and adds only its missing values.
+    const existing = tagDimensionStore.all().find(dimension => dimension.key === key)
+
+    const missingValues = definedValues.filter(value =>
+      !existing?.definedValues.some(({ value: existingValue }) => existingValue.toLowerCase() === value.toLowerCase()),
+    )
+
+    const dimension: TagDimension = existing
+      ? {
+        ...existing,
+        definedValues: [
+          ...existing.definedValues,
+          ...missingValues.map(value => makeTagValueDefinition({ key, value })),
+        ],
+        updatedAt: new Date(),
+      }
+      : {
+        ...makeFallbackTagDimension({ key }),
+        displayName: displayName ?? null,
+        strictness,
+        definedValues: missingValues.map(value => makeTagValueDefinition({ key, value })),
+      }
     tagDimensionStore.save(dimension)
 
     return toResponse(dimension)
