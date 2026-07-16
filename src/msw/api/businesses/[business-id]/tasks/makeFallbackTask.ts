@@ -2,11 +2,11 @@ import { Schema } from 'effect'
 
 import { type BusinessTask, BusinessTaskSchema } from '@schemas/businessTasks/businessTask'
 
-const makeBusinessTask = Schema.decodeSync(BusinessTaskSchema)
+const decodeBusinessTask = Schema.decodeSync(BusinessTaskSchema)
 
 /** Response fallback for task mutations when the id isn't in the periods store. */
 export const makeFallbackTask = (id: string, overrides?: Partial<BusinessTask>): BusinessTask => ({
-  ...makeBusinessTask({
+  ...decodeBusinessTask({
     id,
     status: 'TODO',
     title: '',

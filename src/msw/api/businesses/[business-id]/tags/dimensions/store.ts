@@ -7,12 +7,12 @@ import { tagDimensions } from '@fixtures/tagDimensions/mocks'
 
 export const tagDimensionStore = createMockStore<TagDimension>(() => tagDimensions)
 
-const makeTagDimension = Schema.decodeSync(TagDimensionSchema)
+const decodeTagDimension = Schema.decodeSync(TagDimensionSchema)
 const decodeTagValueDefinition = Schema.decodeSync(TagValueDefinitionSchema)
 
 // The schema requires a UUID id, so fallbacks get a fresh one and carry the
 // requested key.
-export const makeFallbackTagDimension = (key: string): TagDimension => makeTagDimension({
+export const makeFallbackTagDimension = (key: string): TagDimension => decodeTagDimension({
   id: crypto.randomUUID(),
   key,
   display_name: null,
