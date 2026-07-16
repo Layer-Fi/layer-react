@@ -5,7 +5,7 @@ import { type BankTransactionCounterparty, BankTransactionCounterpartySchema } f
 import { paginatedApiData } from '@msw/utils/apiResponse'
 import { createListFilter, matchesQuery } from '@msw/utils/createListFilter'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { counterparties as defaultCounterparties } from '@fixtures/counterparties/mocks'
+import { counterparties as defaultCounterparties } from '@fixtures/generated/counterparties.gen'
 
 const encodeCounterparty = Schema.encodeSync(BankTransactionCounterpartySchema)
 
