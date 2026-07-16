@@ -2,7 +2,7 @@ import { Schema } from 'effect'
 
 import { type TagDimension, TagDimensionSchema } from '@schemas/tag'
 
-import { makeFallbackTagDimension, tagDimensionStore } from '@msw/api/businesses/[business-id]/tags/dimensions/store'
+import { findOrSeedTagDimension } from '@msw/api/businesses/[business-id]/tags/dimensions/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 
@@ -17,8 +17,10 @@ export const get = createMockEndpoint<TagDimension, ReturnType<typeof toResponse
     if (override) return toResponse(override)
 
     const dimensionKey = String(params.dimensionKey)
-    const dimension = tagDimensionStore.all().find(({ key }) => key === dimensionKey)
 
-    return toResponse(dimension ?? makeFallbackTagDimension(dimensionKey))
+    return toResponse(findOrSeedTagDimension(
+      dimensions => dimensions.find(({ key }) => key === dimensionKey),
+      dimensionKey,
+    ))
   },
 })

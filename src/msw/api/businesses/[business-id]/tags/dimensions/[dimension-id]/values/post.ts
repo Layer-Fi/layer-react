@@ -2,7 +2,7 @@ import { Schema } from 'effect'
 
 import { type TagValueDefinition, TagValueDefinitionSchema } from '@schemas/tag'
 
-import { makeFallbackTagDimension, makeTagValueDefinition, tagDimensionStore } from '@msw/api/businesses/[business-id]/tags/dimensions/store'
+import { findOrSeedTagDimension, makeTagValueDefinition, tagDimensionStore } from '@msw/api/businesses/[business-id]/tags/dimensions/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
@@ -26,8 +26,7 @@ export const post = createMockEndpoint<TagValueDefinition, ReturnType<typeof toR
     const dimensionId = String(params.dimensionId)
     const { value, displayName } = decodeCreateTagValueDefinitionBody(await readRequestJson(request))
 
-    // Seed a fallback for unknown ids so the created value is always readable back.
-    const dimension = tagDimensionStore.findById(dimensionId) ?? makeFallbackTagDimension(dimensionId)
+    const dimension = findOrSeedTagDimension(() => tagDimensionStore.findById(dimensionId), dimensionId)
 
     const valueDefinition = makeTagValueDefinition({ key: dimension.key, value, displayName })
 

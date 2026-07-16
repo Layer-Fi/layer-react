@@ -4,6 +4,7 @@ import {
   type BusinessTask,
   BusinessTaskSchema,
   BusinessTaskStatus,
+  TaskUserResponseType,
 } from '@schemas/businessTasks/businessTask'
 
 import { completeTaskInStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
@@ -27,7 +28,11 @@ export const post = createMockEndpoint<BusinessTask, ReturnType<typeof toRespons
     const userResponse = body.user_response ?? null
 
     const completed = completeTaskInStore(taskId, userResponse)
-      ?? makeFallbackTask(taskId, { status: BusinessTaskStatus.UserMarkedCompleted, userResponse })
+      ?? makeFallbackTask(taskId, {
+        status: BusinessTaskStatus.UserMarkedCompleted,
+        userResponse,
+        userResponseType: TaskUserResponseType.FreeResponse,
+      })
 
     return toResponse(completed)
   },
