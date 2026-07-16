@@ -67,7 +67,7 @@ const mockRecordTransaction = () => {
         const formData = await request.formData()
         recordRequest({
           customAccountId: params.customAccountId,
-          transaction: JSON.parse(formData.get('transaction') as string),
+          transaction: JSON.parse(formData.get('transaction') as string) as unknown,
         })
       },
     }),
