@@ -1,6 +1,6 @@
 import { formatISO } from 'date-fns'
 
-import { Direction } from '@internal-types/general'
+import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 import type { RecordCustomTransaction } from '@schemas/customAccounts'
 import { convertNonRecursiveBigDecimalToCents } from '@schemas/nonRecursiveBigDecimal'
 import type { RecordTransactionFormValues, RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
@@ -23,7 +23,7 @@ export function convertRecordTransactionFormToParams(
     customAccountId: account.value,
     transaction: {
       amount: convertNonRecursiveBigDecimalToCents(amount),
-      direction: isExpense ? Direction.DEBIT : Direction.CREDIT,
+      direction: isExpense ? BankTransactionDirection.Debit : BankTransactionDirection.Credit,
       date: formatISO(date.toDate()),
       description: memo.trim(),
       ...(counterparty !== null && (isExpense ? { vendorId: counterparty.id } : { customerId: counterparty.id })),
