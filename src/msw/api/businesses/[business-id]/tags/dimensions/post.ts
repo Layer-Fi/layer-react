@@ -2,10 +2,11 @@ import { Schema } from 'effect'
 
 import { type TagDimension, TagDimensionSchema, TagDimensionStrictnessSchema } from '@schemas/tag'
 
-import { makeFallbackTagDimension, makeTagValueDefinition, tagDimensionStore } from '@msw/api/businesses/[business-id]/tags/dimensions/store'
+import { makeFallbackTagDimension, tagDimensionStore } from '@msw/api/businesses/[business-id]/tags/dimensions/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
+import { makeTagValueDefinition } from '@fixtures/tagDimensions/mocks'
 
 const CreateTagDimensionBodySchema = Schema.Struct({
   key: Schema.NonEmptyTrimmedString,

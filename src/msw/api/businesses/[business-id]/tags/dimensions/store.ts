@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type TagDimension, TagDimensionSchema, type TagValueDefinition, TagValueDefinitionSchema } from '@schemas/tag'
+import { type TagDimension, TagDimensionSchema } from '@schemas/tag'
 
 import { createMockStore } from '@msw/utils/createMockStore'
 import { tagDimensions } from '@fixtures/tagDimensions/mocks'
@@ -8,7 +8,6 @@ import { tagDimensions } from '@fixtures/tagDimensions/mocks'
 export const tagDimensionStore = createMockStore<TagDimension>(() => tagDimensions)
 
 const decodeTagDimension = Schema.decodeSync(TagDimensionSchema)
-const decodeTagValueDefinition = Schema.decodeSync(TagValueDefinitionSchema)
 
 const isUuid = (value: string) =>
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)
@@ -39,13 +38,3 @@ export const findOrSeedTagDimension = (
 
   return fallback
 }
-
-export const makeTagValueDefinition = (
-  { key, value, displayName }: { key: string, value: string, displayName?: string | null },
-): TagValueDefinition => decodeTagValueDefinition({
-  id: crypto.randomUUID(),
-  key,
-  value,
-  display_name: displayName ?? null,
-  archived_at: null,
-})
