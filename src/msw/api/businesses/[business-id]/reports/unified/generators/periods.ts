@@ -24,7 +24,6 @@ export const reportRangeFromParams = (params: URLSearchParams): ReportDateRange 
 export const monthsInRange = (range: ReportDateRange) =>
   range.startDate > range.endDate ? [] : eachMonthOfInterval({ start: range.startDate, end: range.endDate })
 
-// Each period column spans its whole calendar unit, clipped to the selected range at both ends.
 const clippedPeriod = (
   columnKey: string,
   label: string,
