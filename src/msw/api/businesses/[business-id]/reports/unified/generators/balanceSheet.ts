@@ -1,0 +1,117 @@
+import { sumBy } from 'lodash-es'
+
+import { LedgerAccountType, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
+import { type ReportConfig } from '@schemas/reports/reportConfig'
+import { Pinning, type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
+
+import {
+  accountForestRows,
+  type AccountNode,
+  accountsOfTypes,
+  buildAccountForest,
+} from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
+import {
+  balanceSheetLeafAccounts,
+  balanceSheetRange,
+  cumulativeNetIncomeCents,
+  leafBalanceCents,
+  OPENING_BALANCE_EQUITY_STABLE_NAME,
+  RETAINED_EARNINGS_STABLE_NAME,
+} from '@msw/api/businesses/[business-id]/reports/unified/generators/balances'
+import {
+  currencyCell,
+  detailBaseParams,
+  labeledCurrencyRowFor,
+  linesReportConfig,
+  numericColumn,
+  parseEffectiveDateParam,
+  rowHeaderColumn,
+  unifiedReport,
+} from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
+
+const NAME_COLUMN_KEY = 'name'
+const BALANCE_COLUMN_KEY = 'balance'
+
+const LINES_ROUTE = 'balance-sheet/lines'
+
+type BalanceByAccountId = ReadonlyMap<string, number>
+type DrillDownFor = (account: SingleChartAccountType) => ReportConfig | undefined
+
+const subtreeTotal = (node: AccountNode, balances: BalanceByAccountId): number =>
+  node.children.length === 0
+    ? balances.get(node.account.accountId) ?? 0
+    : sumBy(node.children, child => subtreeTotal(child, balances))
+
+const balanceSheetRow = labeledCurrencyRowFor(NAME_COLUMN_KEY, BALANCE_COLUMN_KEY)
+
+const sectionTotalRow = (rowKey: string, label: string, amount: number) =>
+  balanceSheetRow(rowKey, label, amount, { bold: true })
+
+// Sums leaf balances only; parent rows are subtotals, so summing them too would double-count.
+const sumForType = (
+  leaves: readonly SingleChartAccountType[],
+  type: LedgerAccountType,
+  balances: BalanceByAccountId,
+) => sumBy(
+  leaves.filter(account => account.accountType.value === type),
+  account => balances.get(account.accountId) ?? 0,
+)
+
+export const generateBalanceSheet = (params: URLSearchParams): UnifiedReport => {
+  const effectiveDate = parseEffectiveDateParam(params)
+  const leaves = balanceSheetLeafAccounts()
+
+  const balances = new Map<string, number>(
+    leaves.map(account => [account.accountId, leafBalanceCents(account, effectiveDate, params)]),
+  )
+
+  // Retained earnings mirrors net income, and opening balance equity plugs Assets = Liabilities + Equity.
+  const retainedEarnings = leaves.find(a => a.stableName === RETAINED_EARNINGS_STABLE_NAME)
+  const openingBalanceEquity = leaves.find(a => a.stableName === OPENING_BALANCE_EQUITY_STABLE_NAME)
+  if (retainedEarnings) balances.set(retainedEarnings.accountId, cumulativeNetIncomeCents(effectiveDate, params))
+
+  const assetsTotal = sumForType(leaves, LedgerAccountType.Asset, balances)
+  const liabilitiesTotal = sumForType(leaves, LedgerAccountType.Liability, balances)
+
+  if (openingBalanceEquity) balances.set(openingBalanceEquity.accountId, 0)
+  const equityBeforePlug = sumForType(leaves, LedgerAccountType.Equity, balances)
+  if (openingBalanceEquity) {
+    balances.set(openingBalanceEquity.accountId, assetsTotal - liabilitiesTotal - equityBeforePlug)
+  }
+
+  const equityTotal = sumForType(leaves, LedgerAccountType.Equity, balances)
+
+  // Drill-downs bake the accumulation window + reporting basis so detail totals match the parent cell.
+  // Retained earnings and opening balance equity are computed/plugged, not stream-backed, so they don't drill down.
+  const range = balanceSheetRange(effectiveDate)
+  const baseParams = detailBaseParams(range, params)
+  const pluggedIds = new Set([retainedEarnings?.accountId, openingBalanceEquity?.accountId])
+  const drillDownFor: DrillDownFor = account =>
+    pluggedIds.has(account.accountId)
+      ? undefined
+      : linesReportConfig(LINES_ROUTE, account, [], baseParams)
+
+  const sectionRows = (type: LedgerAccountType) => accountForestRows(buildAccountForest(accountsOfTypes([type])), {
+    nameColumnKey: NAME_COLUMN_KEY,
+    valueCells: (node, isLeaf) => ({
+      [BALANCE_COLUMN_KEY]: currencyCell(subtreeTotal(node, balances), {
+        reportConfig: isLeaf ? drillDownFor(node.account) : undefined,
+      }),
+    }),
+  })
+
+  const rows: UnifiedReportRow[] = [
+    ...sectionRows(LedgerAccountType.Asset),
+    sectionTotalRow('total_assets', 'Total Assets', assetsTotal),
+    ...sectionRows(LedgerAccountType.Liability),
+    sectionTotalRow('total_liabilities', 'Total Liabilities', liabilitiesTotal),
+    ...sectionRows(LedgerAccountType.Equity),
+    sectionTotalRow('total_equity', 'Total Equity', equityTotal),
+    sectionTotalRow('total_liabilities_and_equity', 'Total Liabilities & Equity', liabilitiesTotal + equityTotal),
+  ]
+
+  return unifiedReport(
+    [rowHeaderColumn(NAME_COLUMN_KEY, 'Account'), numericColumn(BALANCE_COLUMN_KEY, 'Balance', Pinning.Right)],
+    rows,
+  )
+}

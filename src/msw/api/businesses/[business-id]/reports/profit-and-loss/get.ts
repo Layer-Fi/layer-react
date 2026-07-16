@@ -1,21 +1,16 @@
-import { endOfMonth, isValid, parseISO, startOfMonth } from 'date-fns'
+import { endOfMonth, startOfMonth } from 'date-fns'
 import { Schema } from 'effect'
 
 import { type ProfitAndLoss, ProfitAndLossReportSchema } from '@schemas/reports/profitAndLoss'
 
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
+import { parseDateParam } from '@msw/utils/parseDateParam'
 import { makeProfitAndLossReport } from '@fixtures/profitAndLoss/mocks'
 
 const encodeReport = Schema.encodeSync(ProfitAndLossReportSchema)
 
 const toResponse = (report: ProfitAndLoss) => apiData(encodeReport(report))
-
-// parseISO keeps date-only strings in local time, matching how the app builds ranges.
-const parseDateParam = (value: string | null, fallback: Date) => {
-  const parsed = parseISO(value ?? '')
-  return isValid(parsed) ? parsed : fallback
-}
 
 export const get = createMockEndpoint<ProfitAndLoss, ReturnType<typeof toResponse>>({
   method: 'get',

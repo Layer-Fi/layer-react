@@ -1,4 +1,4 @@
-import { addDays, endOfMonth, formatISO, isValid, parseISO, startOfMonth } from 'date-fns'
+import { addDays, endOfMonth, formatISO, startOfMonth } from 'date-fns'
 import { Schema } from 'effect'
 
 import { Direction } from '@internal-types/general'
@@ -6,6 +6,7 @@ import { PnlDetailLinesDataSchema } from '@schemas/reports/profitAndLoss'
 
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
+import { parseDateParam } from '@msw/utils/parseDateParam'
 import { PROFIT_AND_LOSS_FIXTURE_BUSINESS_ID } from '@fixtures/profitAndLoss/constants'
 
 type PnlDetailLinesData = typeof PnlDetailLinesDataSchema.Type
@@ -16,11 +17,6 @@ const encodeDetailLines = Schema.encodeSync(PnlDetailLinesDataSchema)
 const toResponse = (data: PnlDetailLinesData) => apiData(encodeDetailLines(data))
 
 const LINE_AMOUNTS = [184200, 96500, 152300, 68400, 120900, 45700]
-
-const parseDateParam = (value: string | null, fallback: Date) => {
-  const parsed = parseISO(value ?? '')
-  return isValid(parsed) ? parsed : fallback
-}
 
 const makeLines = (lineItemName: string, startDate: Date): PnlDetailLine[] =>
   LINE_AMOUNTS.map((amount, index) => ({
