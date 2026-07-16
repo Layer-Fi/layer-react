@@ -119,8 +119,10 @@ export const BankTransactions = ({
   ...featureVisibility
 }: BankTransactionsWithErrorProps) => {
   usePreloadTagDimensions({ isEnabled: featureVisibility.showTags })
-  usePreloadCustomers({ isEnabled: featureVisibility.showCustomerVendor })
-  usePreloadVendors({ isEnabled: featureVisibility.showCustomerVendor })
+  // Preloaded unconditionally (not gated on showCustomerVendor) because the
+  // record/edit transaction modal needs customers and vendors regardless.
+  usePreloadCustomers()
+  usePreloadVendors()
   usePreloadCategories()
 
   return (
