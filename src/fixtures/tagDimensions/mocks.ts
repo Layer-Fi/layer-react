@@ -15,8 +15,6 @@ export const makeTagValueDefinition = (
   archived_at: null,
 })
 
-// Jobs follow the Customer:Job costing convention (customer + scope), applied
-// per line item, hence NON_BALANCING.
 const jobDimension: TagDimension = {
   id: '00000000-0000-4000-8000-000000000401',
   key: 'job',
