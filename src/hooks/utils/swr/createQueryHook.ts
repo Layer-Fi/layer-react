@@ -27,12 +27,14 @@ export function createQueryHook<
   schema?: Schema.Schema<TDecoded, TEncoded>
   /** Reshapes the decoded response into the hook's `data` — e.g. unwrap an envelope or pick one field. */
   select?: (decoded: TDecoded) => TData
+  /** Params fixed for every caller; baked into the key and request unless a call-site param overrides them. */
+  keyDefaults?: Partial<Omit<TParams, 'businessId'>>
   /** Default SWR behavior for every caller. A caller's own `swrOptions` win, key by key. */
   swrOptions?: SWRConfiguration
   /** Whether the locale is part of the cache key (switching locale refetches). True by default. */
   isLocalized?: boolean
 }) {
-  const { tags, request, schema, select, swrOptions, isLocalized = true } = config
+  const { tags, request, schema, select, keyDefaults, swrOptions, isLocalized = true } = config
 
   const buildKey = createBuildKey<TParams>(tags)
   const decodingFetcher = createKeyedFetcher(request, schema)
@@ -57,6 +59,7 @@ export function createQueryHook<
         const key = buildKey({
           ...auth,
           businessId,
+          ...keyDefaults,
           ...keyInputs,
         } as Parameters<typeof buildKey>[0])
 
