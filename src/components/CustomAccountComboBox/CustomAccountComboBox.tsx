@@ -42,7 +42,7 @@ export function CustomAccountComboBox({
     data: customAccounts,
     isLoading: isLoadingCustomAccounts,
     error: customAccountsError,
-  } = useCustomAccounts({ userCreated: true })
+  } = useCustomAccounts()
 
   const accountOptions = useMemo(() => {
     if (!customAccounts) return []

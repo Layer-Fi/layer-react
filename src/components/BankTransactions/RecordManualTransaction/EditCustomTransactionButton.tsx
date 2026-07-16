@@ -16,7 +16,7 @@ type EditCustomTransactionButtonProps = {
 export function EditCustomTransactionButton({ bankTransaction }: EditCustomTransactionButtonProps) {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
-  const { data: customAccounts } = useCustomAccounts({ userCreated: true })
+  const { data: customAccounts } = useCustomAccounts()
 
   const isEditable = isCustomTransaction(bankTransaction)
     && customAccounts?.some(account => account.id === bankTransaction.sourceAccountId)

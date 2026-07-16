@@ -123,7 +123,7 @@ export const BankTransactions = ({
   usePreloadTagDimensions({ isEnabled: featureVisibility.showTags })
   usePreloadCustomers({ isEnabled: showCustomerVendorData })
   usePreloadVendors({ isEnabled: showCustomerVendorData })
-  usePreloadCustomAccounts({ userCreated: true, isEnabled: featureVisibility.showUploadOptions })
+  usePreloadCustomAccounts({ isEnabled: featureVisibility.showUploadOptions })
   usePreloadCategories()
 
   return (
