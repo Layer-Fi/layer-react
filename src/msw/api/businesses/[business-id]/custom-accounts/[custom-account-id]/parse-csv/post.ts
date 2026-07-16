@@ -1,27 +1,16 @@
+import { type PreviewCellEncoded } from '@schemas/csvUpload'
 import { type RawCustomTransaction } from '@schemas/customAccounts'
+import {
+  type ParseCsvResponseSchema,
+  type TransactionPreviewRowSchema,
+} from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
 
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 
-type PreviewCellEncoded<T> = { raw: string, parsed: T | null, is_valid: boolean }
+type PreviewRowEncoded = typeof TransactionPreviewRowSchema.Encoded
 
-type PreviewRowEncoded = {
-  date: PreviewCellEncoded<string>
-  description: PreviewCellEncoded<string>
-  amount: PreviewCellEncoded<number> | null
-  external_id: PreviewCellEncoded<string> | null
-  reference_number: PreviewCellEncoded<string> | null
-  row: number
-  is_valid: boolean
-}
-
-type ParseCsvResponseEncoded = {
-  is_valid: boolean
-  new_transactions_preview: PreviewRowEncoded[]
-  new_transactions_request: { transactions: RawCustomTransaction[] } | null
-  invalid_transactions_count: number
-  total_transactions_count: number
-}
+type ParseCsvResponseEncoded = typeof ParseCsvResponseSchema.Encoded
 
 type CsvColumn = 'date' | 'description' | 'amount' | 'external_id' | 'reference_number'
 

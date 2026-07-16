@@ -14,6 +14,10 @@ export type PreviewCell<T> = Schema.Schema.Type<
   ReturnType<typeof PreviewCellSchema<Schema.Schema<T>>>
 >
 
+export type PreviewCellEncoded<T> = Schema.Schema.Encoded<
+  ReturnType<typeof PreviewCellSchema<Schema.Schema<T>>>
+>
+
 export const PreviewRowSchema = <Cells extends Schema.Struct.Fields>(cells: Cells) =>
   Schema.Struct({
     ...cells,
