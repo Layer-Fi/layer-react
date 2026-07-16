@@ -1,13 +1,20 @@
-import { startOfDay } from 'date-fns'
+import { endOfMonth, endOfQuarter, endOfYear, startOfDay, startOfMonth, startOfQuarter, startOfYear, subDays } from 'date-fns'
 import { describe, expect, it } from 'vitest'
 
-import { DatePreset, derivePresetFromDateRange, rangeForAllTime } from '@utils/date/dateRangePresets'
+import {
+  DatePreset,
+  deriveDateRangeFromPreset,
+  derivePresetFromDateRange,
+  Period,
+  rangeForAllTime,
+  rangeForPeriod,
+  rangeForRelativePreset,
+} from '@utils/date/dateRangePresets'
 
 import { setupFakeSystemTime } from '@test-utils/fakeSystemTime'
 import {
   CURRENT_YEAR_TO_DATE,
   END_OF_TODAY,
-  FIVE_MONTHS_BEFORE_NOW,
   NOW,
   PREVIOUS_MONTH_RANGE,
   SIX_MONTHS_AFTER_NOW,
@@ -15,14 +22,53 @@ import {
   TWO_YEARS_BEFORE_NOW,
 } from '@test-utils/fixedDates'
 
-const START_OF_CURRENT_YEAR = CURRENT_YEAR_TO_DATE.startDate
+setupFakeSystemTime(NOW)
+
+describe('rangeForPeriod', () => {
+  it('returns the month containing the reference date', () => {
+    expect(rangeForPeriod(Period.Month, THREE_MONTHS_BEFORE_NOW)).toEqual({
+      startDate: startOfMonth(THREE_MONTHS_BEFORE_NOW),
+      endDate: endOfMonth(THREE_MONTHS_BEFORE_NOW),
+    })
+  })
+
+  it('returns the quarter containing the reference date', () => {
+    expect(rangeForPeriod(Period.Quarter, THREE_MONTHS_BEFORE_NOW)).toEqual({
+      startDate: startOfQuarter(THREE_MONTHS_BEFORE_NOW),
+      endDate: endOfQuarter(THREE_MONTHS_BEFORE_NOW),
+    })
+  })
+
+  it('returns the year containing the reference date', () => {
+    expect(rangeForPeriod(Period.Year, TWO_YEARS_BEFORE_NOW)).toEqual({
+      startDate: startOfYear(TWO_YEARS_BEFORE_NOW),
+      endDate: endOfYear(TWO_YEARS_BEFORE_NOW),
+    })
+  })
+})
+
+describe('rangeForRelativePreset', () => {
+  it('returns the current month for ThisMonth', () => {
+    expect(rangeForRelativePreset(DatePreset.ThisMonth)).toEqual({
+      startDate: startOfMonth(NOW),
+      endDate: endOfMonth(NOW),
+    })
+  })
+
+  it('returns the current year for ThisYear', () => {
+    expect(rangeForRelativePreset(DatePreset.ThisYear)).toEqual({
+      startDate: startOfYear(NOW),
+      endDate: endOfYear(NOW),
+    })
+  })
+})
 
 describe('rangeForAllTime', () => {
-  setupFakeSystemTime(NOW)
+  it('spans the activation date (start of day) through the end of today', () => {
+    const activationDate = new Date(2024, 2, 10, 8, 30)
 
-  it('spans the activation date to the present', () => {
-    expect(rangeForAllTime(TWO_YEARS_BEFORE_NOW)).toEqual({
-      startDate: startOfDay(TWO_YEARS_BEFORE_NOW),
+    expect(rangeForAllTime(activationDate)).toEqual({
+      startDate: new Date(2024, 2, 10),
       endDate: END_OF_TODAY,
     })
   })
@@ -35,68 +81,69 @@ describe('rangeForAllTime', () => {
   })
 })
 
-describe('derivePresetFromDateRange', () => {
-  setupFakeSystemTime(NOW)
+describe('deriveDateRangeFromPreset', () => {
+  it('resolves a relative preset without needing an activation date', () => {
+    expect(deriveDateRangeFromPreset(DatePreset.ThisYear)).toEqual(rangeForRelativePreset(DatePreset.ThisYear))
+  })
 
-  it('derives a relative preset', () => {
+  it('resolves AllTime when an activation date is available', () => {
+    const activationDate = new Date(2024, 2, 10)
+
+    expect(deriveDateRangeFromPreset(DatePreset.AllTime, activationDate)).toEqual(rangeForAllTime(activationDate))
+  })
+
+  it('returns null for AllTime without an activation date (defer rather than guess a range)', () => {
+    expect(deriveDateRangeFromPreset(DatePreset.AllTime)).toBeNull()
+  })
+})
+
+describe('derivePresetFromDateRange', () => {
+  it('detects a year-to-date range as ThisYear', () => {
+    expect(derivePresetFromDateRange(CURRENT_YEAR_TO_DATE)).toBe(DatePreset.ThisYear)
+  })
+
+  it('detects a previous-month range as LastMonth', () => {
     expect(derivePresetFromDateRange(PREVIOUS_MONTH_RANGE)).toBe(DatePreset.LastMonth)
   })
 
-  it('derives AllTime when the range spans activation to present', () => {
-    const preset = derivePresetFromDateRange(
-      { startDate: TWO_YEARS_BEFORE_NOW, endDate: NOW },
-      null,
-      TWO_YEARS_BEFORE_NOW,
-    )
+  it('detects an AllTime range when given the activation date', () => {
+    const activationDate = new Date(2024, 2, 10)
+    const range = rangeForAllTime(activationDate)
 
-    expect(preset).toBe(DatePreset.AllTime)
+    expect(derivePresetFromDateRange(range, null, activationDate)).toBe(DatePreset.AllTime)
   })
 
-  it('derives Custom when the range matches no preset', () => {
-    const preset = derivePresetFromDateRange(
-      { startDate: FIVE_MONTHS_BEFORE_NOW, endDate: THREE_MONTHS_BEFORE_NOW },
-      null,
-      TWO_YEARS_BEFORE_NOW,
-    )
-
-    expect(preset).toBe(DatePreset.Custom)
+  it('returns Custom for an activation-spanning range when the activation date is unavailable', () => {
+    expect(derivePresetFromDateRange({ startDate: TWO_YEARS_BEFORE_NOW, endDate: NOW })).toBe(DatePreset.Custom)
   })
 
-  it('derives Custom for an activation-spanning range when the activation date is unavailable', () => {
-    const preset = derivePresetFromDateRange({ startDate: TWO_YEARS_BEFORE_NOW, endDate: NOW })
+  it('respects a matching previous preset', () => {
+    const range = rangeForRelativePreset(DatePreset.ThisMonth)
 
-    expect(preset).toBe(DatePreset.Custom)
+    expect(derivePresetFromDateRange(range, DatePreset.ThisMonth)).toBe(DatePreset.ThisMonth)
   })
 
-  describe('when the AllTime range coincides with This Year (activation on January 1st)', () => {
-    it('keeps a previous ThisYear selection', () => {
-      const preset = derivePresetFromDateRange(
-        CURRENT_YEAR_TO_DATE,
-        DatePreset.ThisYear,
-        START_OF_CURRENT_YEAR,
-      )
+  it('returns Custom for a range that matches no preset', () => {
+    const range = { startDate: subDays(NOW, 3), endDate: NOW }
 
-      expect(preset).toBe(DatePreset.ThisYear)
-    })
+    expect(derivePresetFromDateRange(range)).toBe(DatePreset.Custom)
+  })
 
-    it('keeps a previous AllTime selection', () => {
-      const preset = derivePresetFromDateRange(
-        CURRENT_YEAR_TO_DATE,
-        DatePreset.AllTime,
-        START_OF_CURRENT_YEAR,
-      )
+  // When a business activates on a period boundary (e.g. Jan 1), its AllTime range
+  // coincides with ThisYear. AllTime is matched only after the periodic presets, so
+  // the more specific ThisYear wins rather than the range being reported as AllTime.
+  it('prefers a periodic preset over AllTime when the activation date is a period boundary', () => {
+    const activationDate = startOfYear(NOW)
+    const range = rangeForAllTime(activationDate)
 
-      expect(preset).toBe(DatePreset.AllTime)
-    })
+    expect(derivePresetFromDateRange(range, null, activationDate)).toBe(DatePreset.ThisYear)
+  })
 
-    it('prefers the relative preset without a previous selection', () => {
-      const preset = derivePresetFromDateRange(
-        CURRENT_YEAR_TO_DATE,
-        null,
-        START_OF_CURRENT_YEAR,
-      )
+  // ...unless AllTime was the explicit prior selection, in which case it stays sticky.
+  it('keeps an explicitly selected AllTime sticky over an equivalent periodic preset', () => {
+    const activationDate = startOfYear(NOW)
+    const range = rangeForAllTime(activationDate)
 
-      expect(preset).toBe(DatePreset.ThisYear)
-    })
+    expect(derivePresetFromDateRange(range, DatePreset.AllTime, activationDate)).toBe(DatePreset.AllTime)
   })
 })
