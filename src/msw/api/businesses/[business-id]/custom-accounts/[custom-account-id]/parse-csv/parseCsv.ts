@@ -11,44 +11,18 @@ export type ParseCsvResponseEncoded = typeof ParseCsvResponseSchema.Encoded
 
 const REQUIRED_COLUMNS = ['date', 'description', 'amount'] as const
 
-// Quote-aware field splitting ("" escapes a quote). Fields spanning lines are
-// not supported: rows are split on newlines before this runs.
-const splitCsvLine = (line: string) => {
-  const fields: string[] = []
-  let current = ''
-  let inQuotes = false
+// A field is a quoted run (with "" escaping a quote) or bare text up to the
+// next comma. Fields spanning lines are not supported: rows are split on
+// newlines before this runs.
+const CSV_FIELD = /(?:^|,)("(?:[^"]|"")*"|[^,]*)/g
 
-  for (let index = 0; index < line.length; index++) {
-    const char = line[index]
-
-    if (inQuotes) {
-      if (char === '"' && line[index + 1] === '"') {
-        current += '"'
-        index++
-      }
-      else if (char === '"') {
-        inQuotes = false
-      }
-      else {
-        current += char
-      }
-    }
-    else if (char === '"') {
-      inQuotes = true
-    }
-    else if (char === ',') {
-      fields.push(current.trim())
-      current = ''
-    }
-    else {
-      current += char
-    }
-  }
-
-  fields.push(current.trim())
-
-  return fields
-}
+const splitCsvLine = (line: string) =>
+  [...line.matchAll(CSV_FIELD)].map(([, field]) =>
+    (field.startsWith('"')
+      ? field.slice(1, -1).replaceAll('""', '"')
+      : field
+    ).trim(),
+  )
 
 const cell = <T>(raw: string, parsed: T | null, isValid: boolean): PreviewCellEncoded<T> =>
   ({ raw, parsed, is_valid: isValid })
