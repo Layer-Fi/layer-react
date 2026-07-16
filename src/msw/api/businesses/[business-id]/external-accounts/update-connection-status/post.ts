@@ -22,6 +22,6 @@ export const post = createMockEndpoint({
       })
     })
 
-    return apiData({ message: 'Updated account connection statuses' })
+    return apiData({})
   },
 })
