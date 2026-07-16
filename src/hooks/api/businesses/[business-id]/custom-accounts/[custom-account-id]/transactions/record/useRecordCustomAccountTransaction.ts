@@ -8,6 +8,8 @@ import { useBankTransactionTriggerSuccess } from '@hooks/api/businesses/[busines
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
+const RECORD_CUSTOM_ACCOUNT_TRANSACTION_TAG_KEY = `${CUSTOM_ACCOUNTS_TAG_KEY}:record-transaction`
+
 const RECORD_TRANSACTION_PART_NAME = 'transaction'
 
 const RecordCustomAccountTransactionResponseSchema = UnwrappedDataResponseSchema(BankTransactionSchema)
@@ -49,7 +51,7 @@ const recordCustomAccountTransaction = (
 }
 
 export const useRecordCustomAccountTransaction = createMutationHook({
-  tags: [`${CUSTOM_ACCOUNTS_TAG_KEY}:record-transaction`],
+  tags: [RECORD_CUSTOM_ACCOUNT_TRANSACTION_TAG_KEY],
   request: recordCustomAccountTransaction,
   argToParams: ({ customAccountId }: RecordCustomAccountTransactionArgs) => ({ customAccountId }),
   argToBody: ({ transaction }: RecordCustomAccountTransactionArgs) => ({ transaction }),
