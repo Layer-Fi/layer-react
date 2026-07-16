@@ -14,10 +14,12 @@ const filterCounterparties = createListFilter<BankTransactionCounterparty>({
 })
 
 const sortByName = (counterparties: readonly BankTransactionCounterparty[], request: Request) => {
-  const descending = new URL(request.url).searchParams.get('sort_order') === 'DESC'
+  const ascending = ['ASC', 'ASCENDING'].includes(
+    new URL(request.url).searchParams.get('sort_order') ?? 'ASC',
+  )
 
   return [...counterparties].sort(
-    (a, b) => (a.name ?? '').localeCompare(b.name ?? '') * (descending ? -1 : 1),
+    (a, b) => (a.name ?? '').localeCompare(b.name ?? '') * (ascending ? 1 : -1),
   )
 }
 

@@ -4,49 +4,59 @@ import type { schema } from '@fixtures/counterparties/schema'
 export const counterparties = [
   {
     "id": "00000010-e14c-4f0d-8f51-ecbd67728f21",
-    "externalId": "cp_marriott",
-    "name": "Marriott",
-    "website": "https://www.marriott.com",
-    "logo": null,
-    "mccs": [
-      "5411"
-    ]
-  },
-  {
-    "id": "00000010-4b46-4097-85f0-896231804c64",
-    "externalId": "cp_deltaairlines",
-    "name": "Delta Air Lines",
-    "website": "https://www.deltaairlines.com",
-    "logo": null,
-    "mccs": [
-      "5411"
-    ]
-  },
-  {
-    "id": "00000010-045f-4a99-834f-2248873864e4",
-    "externalId": "cp_uber",
-    "name": "Uber",
-    "website": "https://www.uber.com",
+    "externalId": "cp_amazon",
+    "name": "Amazon",
+    "website": "https://www.amazon.com",
     "logo": null,
     "mccs": [
       "5734"
     ]
   },
   {
-    "id": "00000010-a0b6-452b-8812-70c20a3e49d9",
-    "externalId": "cp_square",
-    "name": "Square",
-    "website": "https://www.square.com",
+    "id": "00000010-4b46-4097-85f0-896231804c64",
+    "externalId": "cp_chipotle",
+    "name": "Chipotle",
+    "website": "https://www.chipotle.com",
     "logo": null,
     "mccs": [
-      "5411"
+      "6012"
+    ]
+  },
+  {
+    "id": "00000010-045f-4a99-834f-2248873864e4",
+    "externalId": "cp_starbucks",
+    "name": "Starbucks",
+    "website": "https://www.starbucks.com",
+    "logo": null,
+    "mccs": [
+      "6012"
+    ]
+  },
+  {
+    "id": "00000010-a0b6-452b-8812-70c20a3e49d9",
+    "externalId": "cp_verizon",
+    "name": "Verizon",
+    "website": "https://www.verizon.com",
+    "logo": null,
+    "mccs": [
+      "4511"
     ]
   },
   {
     "id": "00000010-d6fb-4ef5-8c75-46e387b4abad",
-    "externalId": "cp_paypal",
-    "name": "PayPal",
-    "website": "https://www.paypal.com",
+    "name": "Meta",
+    "website": "https://www.meta.com",
+    "logo": null,
+    "mccs": [
+      "5942"
+    ],
+    "externalId": "cp_meta"
+  },
+  {
+    "id": "00000010-f72d-4c33-8fd1-91b8a18ae284",
+    "externalId": "cp_deltaairlines",
+    "name": "Delta Air Lines",
+    "website": "https://www.deltaairlines.com",
     "logo": null,
     "mccs": [
       "4511"
@@ -54,52 +64,42 @@ export const counterparties = [
   },
   {
     "id": "00000010-f63f-4fcb-858d-1a35ff5a6aa5",
-    "externalId": "cp_gusto",
-    "name": "Gusto",
-    "website": "https://www.gusto.com",
-    "logo": null,
+    "name": "Amazon Web Services",
+    "website": "https://www.amazonwebservices.com",
     "mccs": [
       "6012"
-    ]
-  },
-  {
-    "id": "00000010-5d8c-4d5a-8621-dad5d703c8ea",
-    "externalId": "cp_google",
-    "name": "Google",
-    "website": "https://www.google.com",
-    "logo": null,
-    "mccs": [
-      "5734"
-    ]
+    ],
+    "externalId": "cp_amazonwebservices",
+    "logo": null
   },
   {
     "id": "00000010-7d4f-48bc-8b7d-93739724218a",
-    "externalId": "cp_shell",
-    "name": "Shell",
-    "website": "https://www.shell.com",
+    "externalId": "cp_apple",
+    "name": "Apple",
+    "website": "https://www.apple.com",
     "logo": null,
     "mccs": [
-      "5734"
+      "5411"
     ]
   },
   {
     "id": "00000010-ce47-433a-8943-a740f2732a3f",
-    "externalId": "cp_shopify",
-    "name": "Shopify",
-    "website": "https://www.shopify.com",
-    "logo": null,
-    "mccs": [
-      "4511"
-    ]
-  },
-  {
-    "id": "00000010-0351-4cfd-860c-32b0b4ffc791",
-    "externalId": "cp_thehomedepot",
-    "name": "The Home Depot",
-    "website": "https://www.thehomedepot.com",
+    "externalId": "cp_adobe",
+    "name": "Adobe",
+    "website": "https://www.adobe.com",
     "logo": null,
     "mccs": [
       "5942"
     ]
+  },
+  {
+    "id": "00000010-0351-4cfd-860c-32b0b4ffc791",
+    "externalId": "cp_paypal",
+    "name": "PayPal",
+    "logo": null,
+    "mccs": [
+      "4511"
+    ],
+    "website": "https://www.paypal.com"
   }
 ] as (typeof schema.Type)[]

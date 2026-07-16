@@ -34,12 +34,14 @@ export const post = createMockEndpoint({
     const files = formData.getAll('file').filter((entry): entry is File => entry instanceof File)
     const description = formData.get('description')
 
-    patchTaskInStore(String(params.taskId), task => ({
-      ...task,
-      status: BusinessTaskStatus.UserMarkedCompleted,
-      userResponse: typeof description === 'string' ? description : task.userResponse,
-      documents: [...(task.documents ?? []), ...files.map(toTaskDocument)],
-    }))
+    if (files.length > 0) {
+      patchTaskInStore(String(params.taskId), task => ({
+        ...task,
+        status: BusinessTaskStatus.UserMarkedCompleted,
+        userResponse: typeof description === 'string' ? description : task.userResponse,
+        documents: [...(task.documents ?? []), ...files.map(toTaskDocument)],
+      }))
+    }
 
     const [firstFile] = files
 

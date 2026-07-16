@@ -21,7 +21,7 @@ export const post = createMockEndpoint({
         bankAccountStore.save({
           ...account,
           externalAccounts: remaining,
-          isDisconnected: remaining.length === 0 || account.isDisconnected,
+          isDisconnected: remaining.length === 0,
         })
       })
 

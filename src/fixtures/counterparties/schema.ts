@@ -6,15 +6,15 @@ import { mccArbitrary, merchantNameArbitrary } from '@fixtures/counterparties/ar
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
 import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
 
-// The wire schema's fields are optional; fixture rows always fill them, so the
-// fixture schema declares concrete counterparts.
+const fields = BankTransactionCounterpartySchema.fields
+
 const base = Schema.Struct({
-  id: withArbitrary(BankTransactionCounterpartySchema.fields.id, () => idArbitrary(FixtureIdPrefix.counterparty)),
-  externalId: Schema.String,
+  ...fields,
+  id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.counterparty)),
+  // The wire field is optional; the fixture requires a name so external id and
+  // website can be derived from it.
   name: withArbitrary(Schema.String, () => merchantNameArbitrary),
-  website: Schema.String,
-  logo: Schema.Null,
-  mccs: withArbitrary(Schema.Array(Schema.String), () => fc => mccArbitrary(fc).map(mcc => [mcc])),
+  mccs: withArbitrary(fields.mccs, () => fc => mccArbitrary(fc).map(mcc => [mcc])),
 })
 
 const baseArbitrary = Arbitrary.make(base)
