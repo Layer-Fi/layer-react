@@ -31,7 +31,7 @@ export const post = createMockEndpoint<TagDimension, ReturnType<typeof toRespons
       decodeCreateTagDimensionBody(await readRequestJson(request))
 
     const dimension: TagDimension = {
-      ...makeFallbackTagDimension(key),
+      ...makeFallbackTagDimension({ key }),
       displayName: displayName ?? null,
       strictness,
       definedValues: definedValues.map(value => makeTagValueDefinition({ key, value })),

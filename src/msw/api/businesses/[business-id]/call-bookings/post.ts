@@ -10,7 +10,6 @@ import {
 import { callBookingStore } from '@msw/api/businesses/[business-id]/call-bookings/store'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
-import { makeBusiness } from '@fixtures/business/mocks'
 
 const decodeCreateCallBookingBody = Schema.decodeUnknownSync(CreateCallBookingBodySchema)
 const encodeCallBookingItemResponse = Schema.encodeSync(CallBookingItemResponseSchema)
@@ -28,14 +27,10 @@ export const post = createMockEndpoint({
 
     const { externalId, purpose, callType } = decodeCreateCallBookingBody(await readRequestJson(request))
 
-    // The schema encodes businessId as a UUID; fall back for non-UUID test params.
-    const businessId = String(params.businessId)
-    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(businessId)
-
     const now = new Date()
     const booking: CallBooking = {
       id: crypto.randomUUID(),
-      businessId: isUuid ? businessId : makeBusiness().id,
+      businessId: String(params.businessId),
       externalId,
       purpose,
       state: CallBookingState.SCHEDULED,

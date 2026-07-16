@@ -22,12 +22,6 @@ const cell = <T>(raw: string, parsed: T | null, isValid: boolean): PreviewCellEn
 const optionalCell = (raw: string | undefined): PreviewCellEncoded<string> | null =>
   raw ? cell(raw, raw, true) : null
 
-/*
- * Naive CSV parsing (no quoted-comma support): enough for fixtures and
- * user-supplied files in stories. Expects a header row with date, description,
- * amount and optional external_id / reference_number columns; falls back to
- * positional order when headers don't match.
- */
 const parseCsv = (text: string): ParseCsvResponseEncoded => {
   const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0)
   const [headerLine, ...rowLines] = lines

@@ -27,7 +27,17 @@ export const post = createMockEndpoint<TagValueDefinition, ReturnType<typeof toR
     const dimensionId = String(params.dimensionId)
     const { value, displayName } = decodeCreateTagValueDefinitionBody(await readRequestJson(request))
 
-    const dimension = findOrSeedTagDimension(() => tagDimensionStore.findById(dimensionId), dimensionId)
+    const dimension = findOrSeedTagDimension(
+      () => tagDimensionStore.findById(dimensionId),
+      { id: dimensionId, key: dimensionId },
+    )
+
+    // Like the API's findOrCreateValueDefinition: an existing value (matched
+    // case-insensitively) is returned instead of duplicated.
+    const existingValue = dimension.definedValues.find(
+      definedValue => definedValue.value.toLowerCase() === value.toLowerCase(),
+    )
+    if (existingValue) return toResponse(existingValue)
 
     const valueDefinition = makeTagValueDefinition({ key: dimension.key, value, displayName })
 

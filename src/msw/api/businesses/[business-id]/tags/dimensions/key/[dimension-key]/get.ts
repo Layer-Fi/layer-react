@@ -20,7 +20,7 @@ export const get = createMockEndpoint<TagDimension, ReturnType<typeof toResponse
 
     return toResponse(findOrSeedTagDimension(
       dimensions => dimensions.find(({ key }) => key === dimensionKey),
-      dimensionKey,
+      { key: dimensionKey },
     ))
   },
 })
