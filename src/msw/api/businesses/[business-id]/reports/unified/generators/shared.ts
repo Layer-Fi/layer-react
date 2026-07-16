@@ -77,7 +77,6 @@ export const textCell = (value: string, options?: CellOptions) =>
 
 export const emptyCell = (options?: CellOptions) => withOptions({ type: 'Empty' }, options)
 
-// Row factory for two-column reports (label + currency amount), bound to the report's column keys.
 export const labeledCurrencyRowFor = (labelColumnKey: string, amountColumnKey: string) => (
   rowKey: string,
   label: string,

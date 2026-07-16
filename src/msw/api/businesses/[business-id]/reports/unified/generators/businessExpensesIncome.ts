@@ -41,7 +41,6 @@ const generateBusinessAccountReport = (
         displayName: period.label,
         value: (account: (typeof leaves)[number]) => accountActivityCents(account, period.range, params),
       })),
-      // The trailing total spans the full range, which the clipped periods partition, so it equals their sum.
       {
         columnKey: TOTAL_COLUMN_KEY,
         displayName: 'Total',
