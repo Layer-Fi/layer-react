@@ -2,7 +2,7 @@ import { Schema } from 'effect'
 
 import { type TagDimension, TagDimensionSchema, TagDimensionStrictnessSchema } from '@schemas/tag'
 
-import { tagDimensionStore } from '@msw/api/businesses/[business-id]/tags/dimensions/store'
+import { makeFallbackTagDimension, makeTagValueDefinition, tagDimensionStore } from '@msw/api/businesses/[business-id]/tags/dimensions/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
@@ -29,22 +29,11 @@ export const post = createMockEndpoint<TagDimension, ReturnType<typeof toRespons
     const { key, strictness, displayName, definedValues } =
       decodeCreateTagDimensionBody(await readRequestJson(request))
 
-    const now = new Date()
     const dimension: TagDimension = {
-      id: crypto.randomUUID(),
-      key,
+      ...makeFallbackTagDimension(key),
       displayName: displayName ?? null,
       strictness,
-      definedValues: definedValues.map(value => ({
-        id: crypto.randomUUID(),
-        key,
-        value,
-        displayName: null,
-        archivedAt: null,
-      })),
-      createdAt: now,
-      updatedAt: now,
-      userVisible: true,
+      definedValues: definedValues.map(value => makeTagValueDefinition({ key, value })),
     }
     tagDimensionStore.save(dimension)
 
