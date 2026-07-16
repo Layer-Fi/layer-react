@@ -31,10 +31,8 @@ export interface ChartOfAccountsProps {
 }
 
 /**
- * Standalone entry point: self-provides the ledger date store so the component
- * works on its own. Composite views that already provide the ledger store (e.g.
- * `GeneralLedger`, where the Chart of Accounts and Journal share one range)
- * should render {@link InternalChartOfAccounts} directly to avoid a nested store.
+ * Views already inside a `LedgerDateStoreProvider` (e.g. `GeneralLedger`) should
+ * render {@link InternalChartOfAccounts} instead to avoid a nested store.
  */
 export const ChartOfAccounts = (props: ChartOfAccountsProps) => (
   <LedgerDateStoreProvider fallback={<Loader />}>

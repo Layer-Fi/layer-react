@@ -2,12 +2,8 @@ import { DatePreset } from '@utils/date/dateRangePresets'
 import { createScopedDateStore } from '@providers/DateStoreProvider/internal/createScopedDateStore'
 
 /**
- * A date store scoped to the General Ledger. Unlike the global store it defaults
- * to `AllTime`, so the ledger opens showing the whole history and the Chart of
- * Accounts / Journal tabs share one range as you switch between them.
- *
- * Because `AllTime` needs the business activation date, the Provider defers
- * construction until the business context resolves — mount it below
+ * Date store scoped to the General Ledger, defaulting to `AllTime`. Resolving
+ * `AllTime` needs the business activation date, so mount the Provider below
  * `BusinessProvider` and give it a `fallback`.
  */
 const {
