@@ -1,7 +1,6 @@
 import { sumBy } from 'lodash-es'
 
 import { type LedgerAccountType, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
-import { type ReportConfig } from '@schemas/reports/reportConfig'
 import { type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import {
@@ -113,9 +112,8 @@ export const sumActivityCents = (
 
 type ForestRowOptions = {
   nameColumnKey: string
-  /** Drill-down for leaf rows; parent rows are subtotals with nothing to drill into. */
-  leafReportConfig?: (account: SingleChartAccountType) => ReportConfig | undefined
-  valueCells: (node: AccountNode) => UnifiedReportRow['cells']
+  /** isLeaf lets callers put drill-downs on leaf amounts only; parent rows are subtotals with nothing to drill into. */
+  valueCells: (node: AccountNode, isLeaf: boolean) => UnifiedReportRow['cells']
 }
 
 export const accountForestRows = (
@@ -127,10 +125,8 @@ export const accountForestRows = (
   return {
     rowKey: node.account.accountId,
     cells: {
-      [options.nameColumnKey]: textCell(node.account.name, {
-        reportConfig: isLeaf ? options.leafReportConfig?.(node.account) : undefined,
-      }),
-      ...options.valueCells(node),
+      [options.nameColumnKey]: textCell(node.account.name),
+      ...options.valueCells(node, isLeaf),
     },
     ...(isLeaf ? {} : { rows: accountForestRows(node.children, options) }),
   }

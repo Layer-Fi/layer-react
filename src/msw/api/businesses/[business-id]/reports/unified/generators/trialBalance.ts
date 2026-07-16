@@ -1,6 +1,7 @@
 import { sumBy } from 'lodash-es'
 
 import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
+import { type ReportConfig } from '@schemas/reports/reportConfig'
 import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import { leafAccountsOfTypes } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
@@ -36,9 +37,9 @@ const ALL_TYPES = [
   LedgerAccountType.Expense,
 ] as const
 
-const sideCells = (magnitude: number, onDebit: boolean) => ({
-  [DEBIT_COLUMN_KEY]: onDebit ? currencyCell(magnitude) : emptyCell(),
-  [CREDIT_COLUMN_KEY]: onDebit ? emptyCell() : currencyCell(magnitude),
+const sideCells = (magnitude: number, onDebit: boolean, reportConfig?: ReportConfig) => ({
+  [DEBIT_COLUMN_KEY]: onDebit ? currencyCell(magnitude, { reportConfig }) : emptyCell(),
+  [CREDIT_COLUMN_KEY]: onDebit ? emptyCell() : currencyCell(magnitude, { reportConfig }),
 })
 
 export const generateTrialBalance = (params: URLSearchParams): UnifiedReport => {
@@ -69,10 +70,8 @@ export const generateTrialBalance = (params: URLSearchParams): UnifiedReport => 
   ): UnifiedReportRow => ({
     rowKey: account.accountId,
     cells: {
-      [ACCOUNT_COLUMN_KEY]: textCell(account.name, {
-        reportConfig: drillDown ? linesReportConfig(LINES_ROUTE, account, [], baseParams) : undefined,
-      }),
-      ...sideCells(magnitude, onDebit),
+      [ACCOUNT_COLUMN_KEY]: textCell(account.name),
+      ...sideCells(magnitude, onDebit, drillDown ? linesReportConfig(LINES_ROUTE, account, [], baseParams) : undefined),
     },
   })
 

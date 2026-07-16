@@ -1,6 +1,7 @@
 import { eachMonthOfInterval, eachYearOfInterval, endOfMonth, endOfYear, format, max, min, startOfMonth, startOfYear } from 'date-fns'
 import { sumBy } from 'lodash-es'
 
+import { type ReportConfig } from '@schemas/reports/reportConfig'
 import { DateGroupBy, Pinning, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import {
@@ -79,14 +80,14 @@ export const periodValueColumns = (periods: readonly PnlPeriod[]): UnifiedReport
 export const periodCells = (
   amountFor: (range: ReportDateRange) => number,
   periods: readonly PnlPeriod[],
-  bold: boolean = false,
+  options: { bold?: boolean, reportConfig?: ReportConfig } = {},
 ): UnifiedReportRow['cells'] => {
   const amounts = periods.map(period => ({ columnKey: period.columnKey, amount: amountFor(period.range) }))
 
   return {
     ...Object.fromEntries(amounts
       .filter(({ columnKey }) => columnKey !== TOTAL_COLUMN_KEY)
-      .map(({ columnKey, amount }) => [columnKey, currencyCell(amount, { bold })])),
-    [TOTAL_COLUMN_KEY]: currencyCell(sumBy(amounts, ({ amount }) => amount), { bold }),
+      .map(({ columnKey, amount }) => [columnKey, currencyCell(amount, options)])),
+    [TOTAL_COLUMN_KEY]: currencyCell(sumBy(amounts, ({ amount }) => amount), options),
   }
 }
