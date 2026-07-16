@@ -1,6 +1,7 @@
 import { differenceInDays } from 'date-fns'
 
 import { type UnifiedReport } from '@schemas/reports/unifiedReport'
+import { getInvoiceCustomerName } from '@utils/customerVendor'
 
 import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
 import { parseEffectiveDateParam } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
@@ -62,10 +63,7 @@ export const generateArAging = (params: URLSearchParams): UnifiedReport => {
   const items: AgingItem[] = invoiceStore.all()
     .filter(invoice => invoice.voidedAt == null && invoice.outstandingBalance > 0 && invoice.dueAt != null)
     .map(invoice => ({
-      entityName: invoice.customer?.companyName
-        ?? invoice.customer?.individualName
-        ?? invoice.recipientName
-        ?? 'Unknown customer',
+      entityName: getInvoiceCustomerName(invoice),
       dueAt: invoice.dueAt as Date,
       amountCents: invoice.outstandingBalance,
     }))

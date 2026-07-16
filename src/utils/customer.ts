@@ -7,3 +7,12 @@ export function getCustomerName(
     ?? customer?.companyName
     ?? 'Unknown Customer'
 }
+
+export function getInvoiceCustomerName(
+  invoice: { customer?: Customer | null, recipientName?: string | null },
+) {
+  return invoice.customer?.individualName
+    ?? invoice.customer?.companyName
+    ?? invoice.recipientName
+    ?? 'Unknown Customer'
+}
