@@ -28,7 +28,7 @@ export enum DatePreset {
   Custom = 'Custom',
 }
 
-// A date preset that can be computed from `now` alone.
+// A date preset that can be computed relative to the current date `now`.
 export type RelativeDatePreset = Exclude<DatePreset, DatePreset.Custom | DatePreset.AllTime>
 // A date preset that can be selected directly by the user.
 export type SelectableDatePreset = Exclude<DatePreset, DatePreset.Custom>
@@ -67,7 +67,6 @@ export function rangeForRelativePreset(preset: RelativeDatePreset, now: Date = n
   }
 }
 
-/** Separate from {@link rangeForRelativePreset} because it needs the business activation date. */
 export function rangeForAllTime(activationDate: Date, now: Date = new Date()): DateRange {
   return {
     startDate: min([startOfDay(activationDate), startOfDay(now)]),
@@ -75,7 +74,6 @@ export function rangeForAllTime(activationDate: Date, now: Date = new Date()): D
   }
 }
 
-/** Returns `null` for `AllTime` while the activation date is unavailable. */
 export function deriveDateRangeFromPreset(
   preset: SelectableDatePreset,
   activationDate?: Date,
@@ -116,10 +114,6 @@ function rangeMatchesPreset(range: DateRange, preset: SelectableDatePreset, acti
   return isSameCalendarDayRange(clampRangeToValid(range, activationDate), clampRangeToValid(presetRange, activationDate))
 }
 
-/**
- * When a range matches several presets (e.g. `ThisYear` and `AllTime` for a business
- * activated on January 1st), `previousPreset` stays selected; without one, relative presets win.
- */
 export function derivePresetFromDateRange(
   input: DateRange,
   previousPreset: DatePreset | null = null,
