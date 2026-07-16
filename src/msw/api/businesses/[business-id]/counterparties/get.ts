@@ -1,9 +1,11 @@
 import { Schema } from 'effect'
 
+import { SortOrder } from '@internal-types/utility/pagination'
 import { type BankTransactionCounterparty, BankTransactionCounterpartySchema } from '@schemas/bankTransactions/base'
 
 import { paginatedApiData } from '@msw/utils/apiResponse'
 import { createListFilter, matchesQuery } from '@msw/utils/createListFilter'
+import { ASCENDING_SORT_ORDERS } from '@msw/utils/createListSorter'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { counterparties as defaultCounterparties } from '@fixtures/generated/counterparties.gen'
 
@@ -14,8 +16,8 @@ const filterCounterparties = createListFilter<BankTransactionCounterparty>({
 })
 
 const sortByName = (counterparties: readonly BankTransactionCounterparty[], request: Request) => {
-  const ascending = ['ASC', 'ASCENDING'].includes(
-    new URL(request.url).searchParams.get('sort_order') ?? 'ASC',
+  const ascending = ASCENDING_SORT_ORDERS.includes(
+    new URL(request.url).searchParams.get('sort_order') ?? SortOrder.ASC,
   )
 
   return [...counterparties].sort(

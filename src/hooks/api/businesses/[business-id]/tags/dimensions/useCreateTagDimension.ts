@@ -1,19 +1,11 @@
 import { Schema } from 'effect'
 
-import { type TagDimensionSchema, TagDimensionStrictnessSchema } from '@schemas/tag'
+import { CreateTagDimensionBodySchema, type TagDimensionSchema } from '@schemas/tag'
 import { post } from '@utils/api/authenticatedHttp'
 import { useTagDimensionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/tags/dimensions/useTagDimensions'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const CREATE_TAG_DIMENSION_TAG_KEY = '#create-tag-dimension'
-
-export const CreateTagDimensionBodySchema = Schema.Struct({
-  key: Schema.NonEmptyTrimmedString,
-  strictness: TagDimensionStrictnessSchema,
-  displayName: Schema.optional(Schema.NonEmptyTrimmedString),
-  definedValues: Schema.propertySignature(Schema.Array(Schema.NonEmptyTrimmedString))
-    .pipe(Schema.fromKey('defined_values')),
-})
 
 const createTagDimension = post<
   { data: typeof TagDimensionSchema.Encoded },

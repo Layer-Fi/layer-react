@@ -2,7 +2,7 @@ import { SortOrder } from '@internal-types/utility/pagination'
 
 type SortKeys<TItem> = Record<string, (item: TItem) => number>
 
-const ASCENDING_SORT_ORDERS: readonly string[] = [SortOrder.ASC, SortOrder.ASCENDING]
+export const ASCENDING_SORT_ORDERS: readonly string[] = [SortOrder.ASC, SortOrder.ASCENDING]
 
 export const createListSorter = <TItem>(keys: SortKeys<TItem>, defaultKey: keyof SortKeys<TItem>) =>
   (items: readonly TItem[], request: Request): TItem[] => {

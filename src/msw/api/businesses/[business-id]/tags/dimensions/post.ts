@@ -1,7 +1,6 @@
 import { Schema } from 'effect'
 
-import { type TagDimension, TagDimensionSchema } from '@schemas/tag'
-import { CreateTagDimensionBodySchema } from '@hooks/api/businesses/[business-id]/tags/dimensions/useCreateTagDimension'
+import { CreateTagDimensionBodySchema, type TagDimension, TagDimensionSchema } from '@schemas/tag'
 
 import { makeFallbackTagDimension, tagDimensionStore } from '@msw/api/businesses/[business-id]/tags/dimensions/store'
 import { apiData } from '@msw/utils/apiResponse'
