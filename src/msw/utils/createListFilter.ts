@@ -25,6 +25,12 @@ export const matchesQuery = <TItem>(fields: (item: TItem) => ReadonlyArray<strin
 export const matchesValue = <TItem>(get: (item: TItem) => string | number | null | undefined) =>
   whenPresent<TItem>((item, value) => String(get(item)) === value)
 
+export const matchesAnyOf = <TItem>(get: (item: TItem) => string | null | undefined) =>
+  whenPresent<TItem>((item, value) => {
+    const itemValue = get(item)
+    return itemValue != null && value.split(',').includes(itemValue)
+  })
+
 export const matchesBoolean = <TItem>(get: (item: TItem) => boolean) =>
   whenPresent<TItem>((item, value) => get(item) === (value === 'true'))
 
