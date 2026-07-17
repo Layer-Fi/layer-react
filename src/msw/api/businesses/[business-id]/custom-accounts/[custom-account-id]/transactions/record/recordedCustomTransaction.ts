@@ -43,7 +43,7 @@ export const buildCustomBankTransaction = (
     source: TransactionSource.CUSTOM,
     sourceAccountId: customAccountId,
     accountName: customAccountStore.findById(customAccountId)?.accountName ?? existing?.accountName ?? null,
-    date: new Date(`${transaction.date}T00:00:00`),
+    date: new Date(`${transaction.date}T09:00:00-05:00`),
     direction: transaction.direction,
     amount: transaction.amount,
     description: transaction.description,
