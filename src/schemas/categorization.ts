@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { type AccountIdentifier, AccountIdentifierSchema } from '@schemas/accountIdentifier'
+import { type AccountIdentifier, AccountIdentifierSchema, makeAccountId } from '@schemas/accountIdentifier'
 import { CustomerSchema } from '@schemas/customer'
 import { TransactionTagSchema } from '@schemas/tag'
 import { VendorSchema } from '@schemas/vendor'
@@ -234,3 +234,14 @@ export const isClassificationAccountIdentifier = (value: Classification): value 
 
 export const ClassificationEquivalence = Schema.equivalence(ClassificationSchema)
 export type Classification = typeof ClassificationSchema.Type
+
+export const getClassificationFromCategorization = (categorization: Categorization): Classification | null => {
+  switch (categorization.type) {
+    case 'Account':
+      return makeAccountId(categorization.id)
+    case 'Exclusion':
+      return makeExclusion(categorization.category)
+    case 'Split_Categorization':
+      return null
+  }
+}

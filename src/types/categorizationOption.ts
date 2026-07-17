@@ -3,6 +3,7 @@ import { makeAccountId, makeStableName } from '@schemas/accountIdentifier'
 import {
   type Categorization,
   type Classification,
+  getClassificationFromCategorization,
   makeExclusion,
   type NestedCategorization,
 } from '@schemas/categorization'
@@ -198,18 +199,6 @@ export class ApiCategorizationAsOption extends BaseCategorizationOption<Categori
   }
 
   get classification(): Classification | null {
-    switch (this.internalValue.type) {
-      case 'Account':
-        return makeAccountId(this.internalValue.id)
-      case 'Exclusion':
-        return makeExclusion(this.internalValue.id)
-      case 'Split_Categorization':
-        return null
-      default:
-        return unsafeAssertUnreachable({
-          value: this.internalValue,
-          message: 'Unexpected categorization type in ApiCategorizationAsOption.classification',
-        })
-    }
+    return getClassificationFromCategorization(this.internalValue)
   }
 }

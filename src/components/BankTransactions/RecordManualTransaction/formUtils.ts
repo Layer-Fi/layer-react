@@ -1,10 +1,8 @@
 import { fromDate, toCalendarDate } from '@internationalized/date'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { makeAccountId, makeStableName } from '@schemas/accountIdentifier'
 import { BankTransactionDirection } from '@schemas/bankTransactions/base'
-import type { Categorization, Classification } from '@schemas/categorization'
-import { makeExclusion } from '@schemas/categorization'
+import { getClassificationFromCategorization } from '@schemas/categorization'
 import type { RecordCustomTransaction } from '@schemas/customAccounts'
 import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents } from '@schemas/nonRecursiveBigDecimal'
 import type { RecordTransactionFormValues, RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
@@ -38,19 +36,6 @@ export function convertRecordTransactionFormToParams(
 
 export const getRecordTransactionVariant = ({ direction }: BankTransaction): RecordTransactionVariant =>
   direction === BankTransactionDirection.Debit ? 'expense' : 'income'
-
-const getClassificationFromCategorization = (categorization: Categorization): Classification | null => {
-  switch (categorization.type) {
-    case 'Account':
-      return categorization.stableName !== null
-        ? makeStableName(categorization.stableName)
-        : makeAccountId(categorization.id)
-    case 'Exclusion':
-      return makeExclusion(categorization.category)
-    case 'Split_Categorization':
-      return null
-  }
-}
 
 export const getRecordTransactionFormValues = (transaction: BankTransaction): RecordTransactionFormValues => ({
   account: {
