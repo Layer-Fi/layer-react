@@ -55,8 +55,12 @@ export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: Us
       const params = convertRecordTransactionFormToParams(value, variant)
       if (params === null) return
 
+      const request = transaction
+        ? { ...params, customAccountId: transaction.sourceAccountId ?? params.customAccountId }
+        : params
+
       try {
-        await trigger(params)
+        await trigger(request)
         onSuccess?.()
         formApi.reset()
       }
@@ -64,7 +68,7 @@ export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: Us
         console.error(e)
       }
     },
-    [trigger, variant, onSuccess],
+    [trigger, variant, transaction, onSuccess],
   )
 
   const form = useAppForm<RecordTransactionFormValues>({

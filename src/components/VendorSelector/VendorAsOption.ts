@@ -1,7 +1,5 @@
 import { type Vendor } from '@schemas/vendor'
-
-export const getVendorName = (vendor: Vendor) =>
-  vendor.individualName ?? vendor.companyName ?? vendor.externalId ?? 'Unknown vendor'
+import { getVendorName } from '@utils/vendor'
 
 export class VendorAsOption {
   private internalVendor: Vendor

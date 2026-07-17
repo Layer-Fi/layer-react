@@ -30,9 +30,10 @@ function RecordTransactionFormField({ withFieldLayout = true, children }: PropsW
 type RecordTransactionFormProps = {
   form: RecordTransactionFormApi
   variant: RecordTransactionVariant
+  isAccountReadOnly?: boolean
 }
 
-export function RecordTransactionForm({ form, variant }: RecordTransactionFormProps) {
+export function RecordTransactionForm({ form, variant, isAccountReadOnly = false }: RecordTransactionFormProps) {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
   const isExpense = variant === 'expense'
@@ -70,6 +71,7 @@ export function RecordTransactionForm({ form, variant }: RecordTransactionFormPr
                 showLabel={!isCreatingAccount}
                 inline={!isCreatingAccount}
                 isInvalid={field.state.meta.errors.length > 0}
+                isReadOnly={isAccountReadOnly}
                 selectedAccount={field.state.value}
                 onSelectAccount={field.handleChange}
               />

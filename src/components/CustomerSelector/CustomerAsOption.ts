@@ -1,5 +1,5 @@
 import { type Customer } from '@schemas/customer'
-import { getCustomerName } from '@utils/customerVendor'
+import { getCustomerName } from '@utils/customer'
 
 export class CustomerAsOption {
   private internalCustomer: Customer

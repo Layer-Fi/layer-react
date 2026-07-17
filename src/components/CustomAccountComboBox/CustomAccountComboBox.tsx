@@ -23,6 +23,7 @@ type CustomAccountComboBoxProps = {
   showLabel?: boolean
   inline?: boolean
   isInvalid?: boolean
+  isReadOnly?: boolean
   className?: string
 }
 
@@ -35,6 +36,7 @@ export function CustomAccountComboBox({
   showLabel = true,
   inline = false,
   isInvalid = false,
+  isReadOnly = false,
   className,
 }: CustomAccountComboBoxProps) {
   const { t } = useTranslation()
@@ -88,7 +90,7 @@ export function CustomAccountComboBox({
           selectedValue={selectedAccount}
           isClearable
           isLoading={isLoadingCustomAccounts}
-          isDisabled={!!customAccountsError}
+          isDisabled={!!customAccountsError || isReadOnly}
           isError={!!customAccountsError}
           isInvalid={isInvalid}
           slots={{ Option: AccountOptionSlot, SingleValue: AccountSingleValueSlot }}

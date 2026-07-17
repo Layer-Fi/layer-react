@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
-import { getCustomerName } from '@utils/customerVendor'
+import { getCustomerName } from '@utils/customer'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'

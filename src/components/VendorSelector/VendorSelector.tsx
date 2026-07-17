@@ -3,12 +3,13 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type Vendor } from '@schemas/vendor'
+import { getVendorName } from '@utils/vendor'
 import { useListVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, P } from '@ui/Typography/Text'
-import { getVendorName, VendorAsOption } from '@components/VendorSelector/VendorAsOption'
+import { VendorAsOption } from '@components/VendorSelector/VendorAsOption'
 
 import './vendorSelector.scss'
 

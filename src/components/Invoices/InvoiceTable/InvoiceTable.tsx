@@ -5,7 +5,7 @@ import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
-import { getCustomerName } from '@utils/customerVendor'
+import { getCustomerName } from '@utils/customer'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { type SearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
