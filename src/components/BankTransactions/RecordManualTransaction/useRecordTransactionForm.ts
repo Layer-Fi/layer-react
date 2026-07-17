@@ -77,10 +77,5 @@ export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: Us
     validationLogic: revalidateLogic(),
   })
 
-  const isAccountReadOnly = transaction !== undefined
-
-  return useMemo(
-    () => ({ form, isError, resetSubmitState, isAccountReadOnly }),
-    [form, isError, resetSubmitState, isAccountReadOnly],
-  )
+  return useMemo(() => ({ form, isError, resetSubmitState }), [form, isError, resetSubmitState])
 }

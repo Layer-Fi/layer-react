@@ -3,11 +3,11 @@ import { Schema } from 'effect'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { TransactionSource } from '@schemas/bankTransactions/base'
-import type { Categorization, Classification } from '@schemas/categorization'
 import { type RecordCustomTransaction, RecordCustomTransactionSchema } from '@schemas/customAccounts'
 import { getCustomerName } from '@utils/customer'
 import { getVendorName } from '@utils/vendor'
 
+import { categorizationFromClassification } from '@msw/api/businesses/[business-id]/bank-transactions/categorizationFromClassification'
 import { customAccountStore } from '@msw/api/businesses/[business-id]/custom-accounts/store'
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'
 import { vendorStore } from '@msw/api/businesses/[business-id]/vendors/store'
@@ -21,22 +21,13 @@ export const parseRecordCustomTransaction = async (request: Request): Promise<Re
   return decodeTransaction(JSON.parse(typeof transaction === 'string' ? transaction : '{}'))
 }
 
-const toCategorization = (classification: Classification): Categorization => {
-  if (classification.type === 'Exclusion') {
-    return { type: 'Exclusion', id: classification.exclusionType, category: classification.exclusionType, displayName: classification.exclusionType, description: null }
-  }
-
-  const identifier = classification.type === 'StableName' ? classification.stableName : classification.id
-  return { type: 'Account', id: identifier, stableName: classification.type === 'StableName' ? classification.stableName : null, category: identifier, displayName: identifier, description: null }
-}
-
 export const buildCustomBankTransaction = (
   transaction: RecordCustomTransaction,
   { id, customAccountId, existing }: { id: string, customAccountId: string, existing?: BankTransaction },
 ): BankTransaction => {
   const customer = transaction.customerId ? customerStore.findById(transaction.customerId) ?? null : null
   const vendor = transaction.vendorId ? vendorStore.findById(transaction.vendorId) ?? null : null
-  const category = transaction.categorization ? toCategorization(transaction.categorization.category) : null
+  const category = transaction.categorization ? categorizationFromClassification(transaction.categorization.category) : null
 
   return makeBankTransaction({
     ...existing,
