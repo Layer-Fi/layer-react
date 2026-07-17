@@ -4,7 +4,7 @@ import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction
 import { type RecordCustomTransaction, RecordCustomTransactionSchema } from '@schemas/customAccounts'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patchWithFormData, postWithFormData } from '@utils/api/authenticatedHttp'
-import { useBankTransactionTriggerSuccess, useUpdateBankTransactionTriggerSuccess } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/useBankTransactionTriggerSuccess'
+import { useBankTransactionTriggerSuccess } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/useBankTransactionTriggerSuccess'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
@@ -103,10 +103,7 @@ const useUpdateCustomAccountTransaction = createMutationHook({
   argToBody: ({ transaction }: UpdateArgs) => ({ transaction }),
   schema: RecordCustomAccountTransactionResponseSchema,
   swrOptions: { throwOnError: true },
-  useOnTriggerSuccess: () => {
-    const onUpdateSuccess = useUpdateBankTransactionTriggerSuccess()
-    return bankTransaction => onUpdateSuccess(bankTransaction)
-  },
+  useOnTriggerSuccess: useBankTransactionTriggerSuccess,
 })
 
 type UseUpsertCustomAccountTransactionProps =

@@ -6,6 +6,7 @@ import { type DateRange } from '@internal-types/general'
 import type { TagFilterInput } from '@internal-types/tags'
 import { BankTransactionDirection, type RawBankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
+import type { CustomAccount } from '@schemas/customAccounts'
 import { makeTagKeyValueFromTag } from '@schemas/tag'
 import { getDefaultTaxCodeForBankTransaction } from '@utils/bankTransactions/taxCode'
 import { getCustomerName, getVendorName } from '@utils/customerVendor'
@@ -55,6 +56,13 @@ export const isMoneyIn = ({ direction }: Pick<BankTransaction, 'direction'>) =>
 
 export const isCustomTransaction = ({ source }: Pick<BankTransaction, 'source'>) =>
   source === TransactionSource.CUSTOM
+
+export const isEditableCustomTransaction = (
+  bankTransaction: BankTransaction,
+  customAccounts?: readonly CustomAccount[],
+) =>
+  isCustomTransaction(bankTransaction)
+  && (customAccounts?.some(account => account.id === bankTransaction.sourceAccountId) ?? false)
 
 export const getBankTransactionDisplayName = (bankTransaction: BankTransaction) => {
   if (isCustomTransaction(bankTransaction)) {

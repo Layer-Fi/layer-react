@@ -3,7 +3,7 @@ import { Pencil } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { isCustomTransaction } from '@utils/bankTransactions/shared'
+import { isEditableCustomTransaction } from '@utils/bankTransactions/shared'
 import { useCustomAccounts } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
 import { Button } from '@ui/Button/Button'
 import { getRecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/formUtils'
@@ -18,10 +18,7 @@ export function EditCustomTransactionButton({ bankTransaction }: EditCustomTrans
   const [isOpen, setIsOpen] = useState(false)
   const { data: customAccounts } = useCustomAccounts()
 
-  const isEditable = isCustomTransaction(bankTransaction)
-    && customAccounts?.some(account => account.id === bankTransaction.sourceAccountId)
-
-  if (!isEditable) return null
+  if (!isEditableCustomTransaction(bankTransaction, customAccounts)) return null
 
   return (
     <span onClick={(e: MouseEvent) => e.stopPropagation()}>
