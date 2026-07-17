@@ -121,6 +121,7 @@ export type CustomTransaction = typeof CustomTransactionSchema.Type
 export type RawCustomTransaction = typeof CustomTransactionSchema.Encoded
 
 export const RecordCustomTransactionSchema = Schema.Struct({
+  externalId: Schema.optional(Schema.String).pipe(Schema.fromKey('external_id')),
   amount: Schema.Number,
   direction: BankTransactionDirectionSchema,
   date: Schema.String,

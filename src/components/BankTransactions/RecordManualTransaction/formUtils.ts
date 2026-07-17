@@ -39,7 +39,7 @@ export const getRecordTransactionVariant = ({ direction }: BankTransaction): Rec
 
 export const getRecordTransactionFormValues = (transaction: BankTransaction): RecordTransactionFormValues => ({
   account: {
-    value: transaction.sourceAccountId ?? '',
+    value: transaction.externalAccountId ?? '',
     label: transaction.accountName ?? '',
     account: { accountName: transaction.accountName ?? '' },
   },

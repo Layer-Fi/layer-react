@@ -63,7 +63,7 @@ export const isEditableCustomTransaction = (
   customAccounts?: readonly CustomAccount[],
 ) =>
   isCustomTransaction(bankTransaction)
-  && (customAccounts?.some(account => account.id === bankTransaction.sourceAccountId) ?? false)
+  && (customAccounts?.some(account => account.id === bankTransaction.externalAccountId) ?? false)
 
 export const getBankTransactionDisplayName = (bankTransaction: BankTransaction) => {
   if (isCustomTransaction(bankTransaction)) {

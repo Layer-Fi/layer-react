@@ -20,9 +20,13 @@ export const post = createMockEndpoint<BankTransaction, ReturnType<typeof toReco
     if (override) return toRecordCustomAccountTransactionResponse(override)
 
     const transaction = await parseRecordCustomTransaction(request)
+    const existing = transaction.externalId
+      ? bankTransactionStore.all().find(saved => saved.sourceTransactionId === transaction.externalId)
+      : undefined
     const bankTransaction = buildCustomBankTransaction(transaction, {
-      id: crypto.randomUUID(),
+      id: existing?.id ?? crypto.randomUUID(),
       customAccountId: String(params.customAccountId),
+      existing,
     })
     bankTransactionStore.save(bankTransaction)
 

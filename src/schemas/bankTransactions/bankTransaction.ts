@@ -76,6 +76,9 @@ export const BankTransactionSchema = Schema.Struct({
     Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('source_account_id'),
   ),
+  externalAccountId: Schema.optional(Schema.NullishOr(Schema.UUID)).pipe(
+    Schema.fromKey('external_account_id'),
+  ),
   date: Schema.Date,
   direction: BankTransactionDirectionSchema,
   amount: Schema.Number,

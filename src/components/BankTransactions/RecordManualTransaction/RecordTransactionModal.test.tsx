@@ -7,7 +7,6 @@ import { BankTransactionDirection, TransactionSource } from '@schemas/bankTransa
 import { RecordTransactionModal } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionModal'
 import { type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 
-import { patch as patchRecordTransaction } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/[transaction-id]/patch'
 import { post as postRecordTransaction } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/post'
 import { get as getCustomAccounts } from '@msw/api/businesses/[business-id]/custom-accounts/get'
 import { get as getCustomers } from '@msw/api/businesses/[business-id]/customers/get'
@@ -63,7 +62,8 @@ const renderModal = (variant: RecordTransactionVariant = 'expense') => {
 
 const EDIT_TRANSACTION = makeBankTransaction({
   source: TransactionSource.CUSTOM,
-  sourceAccountId: CUSTOM_ACCOUNT.id,
+  externalAccountId: CUSTOM_ACCOUNT.id,
+  sourceTransactionId: 'ext-txn-1',
   accountName: CUSTOM_ACCOUNT.accountName,
   direction: BankTransactionDirection.Debit,
   amount: 12550,
@@ -93,25 +93,6 @@ const renderEditModal = () => {
       { wrapper: LayerTestProvider },
     ),
   }
-}
-
-const mockUpdateTransaction = () => {
-  const updateRequest = vi.fn()
-
-  server.use(
-    patchRecordTransaction.mock(makeBankTransaction(), {
-      onRequest: async ({ request, params }) => {
-        const formData = await request.formData()
-        updateRequest({
-          customAccountId: params.customAccountId,
-          transactionId: params.transactionId,
-          transaction: JSON.parse(formData.get('transaction') as string) as unknown,
-        })
-      },
-    }),
-  )
-
-  return updateRequest
 }
 
 const mockRecordTransaction = () => {
@@ -173,6 +154,7 @@ describe('RecordTransactionModal', () => {
     expect(recordRequest).toHaveBeenCalledWith({
       customAccountId: CUSTOM_ACCOUNT.id,
       transaction: {
+        external_id: expect.any(String) as string,
         amount: 12550,
         direction: 'DEBIT',
         date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/) as string,
@@ -209,8 +191,8 @@ describe('RecordTransactionModal', () => {
     await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false))
   })
 
-  it('pre-populates fields and updates via PATCH when editing a custom transaction', async () => {
-    const updateRequest = mockUpdateTransaction()
+  it('pre-populates fields and re-records with the original external id when editing', async () => {
+    const recordRequest = mockRecordTransaction()
     const { user, onOpenChange } = renderEditModal()
 
     expect(await screen.findByText('Edit transaction')).toBeInTheDocument()
@@ -218,12 +200,12 @@ describe('RecordTransactionModal', () => {
 
     await user.click(screen.getByRole('button', { name: /save/i }))
 
-    await waitFor(() => expect(updateRequest).toHaveBeenCalledTimes(1))
+    await waitFor(() => expect(recordRequest).toHaveBeenCalledTimes(1))
 
-    expect(updateRequest).toHaveBeenCalledWith(expect.objectContaining({
+    expect(recordRequest).toHaveBeenCalledWith(expect.objectContaining({
       customAccountId: CUSTOM_ACCOUNT.id,
-      transactionId: EDIT_TRANSACTION.id,
       transaction: expect.objectContaining({
+        external_id: 'ext-txn-1',
         amount: 12550,
         direction: 'DEBIT',
         description: 'Team lunch',
