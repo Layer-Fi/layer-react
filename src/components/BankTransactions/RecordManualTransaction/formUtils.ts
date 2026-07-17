@@ -43,7 +43,7 @@ export const getRecordTransactionFormValues = (transaction: BankTransaction): Re
     label: transaction.accountName ?? '',
     account: { accountName: transaction.accountName ?? '' },
   },
-  counterparty: transaction.customer ?? transaction.vendor ?? null,
+  counterparty: (getRecordTransactionVariant(transaction) === 'expense' ? transaction.vendor : transaction.customer) ?? null,
   amount: convertCentsToNonRecursiveBigDecimal(transaction.amount),
   date: fromDate(transaction.date, 'UTC'),
   category: transaction.category !== null && transaction.category !== undefined

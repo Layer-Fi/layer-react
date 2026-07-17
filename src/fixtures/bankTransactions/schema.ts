@@ -41,6 +41,7 @@ const base = Schema.Struct({
   // in by the top-level arbitrary below; the field-level constants only exist
   // so the base struct stays derivable.
   sourceAccountId: withArbitrary(fields.sourceAccountId, () => fc => fc.constant(null)),
+  externalAccountId: withArbitrary(fields.externalAccountId, () => fc => fc.constant(null)),
   accountName: withArbitrary(fields.accountName, () => fc => fc.constant(null)),
   accountMask: withArbitrary(fields.accountMask, () => fc => fc.constant(null)),
   accountInstitution: withArbitrary(fields.accountInstitution, () => fc => fc.constant(null)),

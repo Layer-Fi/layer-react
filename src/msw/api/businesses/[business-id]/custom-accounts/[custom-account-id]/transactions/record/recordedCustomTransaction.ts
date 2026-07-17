@@ -34,6 +34,7 @@ export const buildCustomBankTransaction = (
     id,
     source: TransactionSource.CUSTOM,
     externalAccountId: customAccountId,
+    sourceAccountId: customAccountId,
     sourceTransactionId: transaction.externalId ?? existing?.sourceTransactionId ?? `custom-txn-${id}`,
     accountName: customAccountStore.findById(customAccountId)?.accountName ?? existing?.accountName ?? null,
     date: new Date(`${transaction.date}T09:00:00-05:00`),
