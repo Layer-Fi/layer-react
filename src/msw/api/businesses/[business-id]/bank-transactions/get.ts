@@ -5,7 +5,7 @@ import {
   BankTransactionSchema,
   CategorizationStatus,
 } from '@schemas/bankTransactions/bankTransaction'
-import { BankTransactionDirection } from '@schemas/bankTransactions/base'
+import { BankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
 
 import { bankTransactionStore } from '@msw/api/businesses/[business-id]/bank-transactions/store'
 import { paginatedApiData } from '@msw/utils/apiResponse'
@@ -42,7 +42,8 @@ const filterBankTransactions = createListFilter<BankTransaction>({
   end_date: matchesOnOrBefore(transaction => transaction.date),
   amount_min: matchesOnOrAfter(transaction => transaction.amount),
   amount_max: matchesOnOrBefore(transaction => transaction.amount),
-  source_account_ids: matchesAnyOf(transaction => transaction.sourceAccountId),
+  source_account_ids: matchesAnyOf(transaction =>
+    transaction.source === TransactionSource.CUSTOM ? transaction.externalAccountId : transaction.sourceAccountId),
 })
 
 const sortBankTransactions = createListSorter<BankTransaction>({
