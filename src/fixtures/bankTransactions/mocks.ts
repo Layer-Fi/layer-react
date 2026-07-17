@@ -16,6 +16,7 @@ const baseBankTransaction: BankTransaction = {
   source: TransactionSource.PLAID,
   sourceTransactionId: 'src_txn_100000',
   sourceAccountId: account.externalAccounts[0]?.id ?? account.id,
+  externalAccountId: null,
   date: new Date('2025-06-01T15:45:00.000Z'),
   direction: BankTransactionDirection.Debit,
   amount: 5421,
