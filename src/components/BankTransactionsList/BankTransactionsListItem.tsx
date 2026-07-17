@@ -8,7 +8,6 @@ import {
   getBankTransactionDisplayName,
   hasReceipts,
   isCategorized,
-  isCustomTransaction,
   isMoneyIn,
 } from '@utils/bankTransactions/shared'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
@@ -31,6 +30,7 @@ import { type BankTransactionCategoryComboBoxOption } from '@components/BankTran
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
 import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankTransactionsSubmitButton'
 import { EditCustomTransactionButton } from '@components/BankTransactions/RecordManualTransaction/EditCustomTransactionButton'
+import { useIsEditableCustomTransaction } from '@components/BankTransactions/RecordManualTransaction/useIsEditableCustomTransaction'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { Chevron } from '@components/Chevron/Chevron'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
@@ -58,6 +58,7 @@ export const BankTransactionsListItem = ({
   const { isDesktop } = useSizeClass()
 
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
+  const isEditable = useIsEditableCustomTransaction(bankTransaction)
 
   const categorized = isCategorized(bankTransaction)
   const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction })
@@ -144,7 +145,7 @@ export const BankTransactionsListItem = ({
               />
             </div>
           )}
-          {isCustomTransaction(bankTransaction) && (
+          {isEditable && (
             <EditCustomTransactionButton bankTransaction={bankTransaction} />
           )}
           <Span withTooltip>
