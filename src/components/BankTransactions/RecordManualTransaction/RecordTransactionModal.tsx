@@ -26,7 +26,7 @@ export function RecordTransactionModal({ variant, transaction, isOpen, onOpenCha
 
   const onSuccess = useCallback(() => onOpenChange(false), [onOpenChange])
 
-  const { form, isError, resetSubmitState } = useRecordTransactionForm({ variant: effectiveVariant, transaction, onSuccess })
+  const { form, isError, resetSubmitState, isAccountReadOnly } = useRecordTransactionForm({ variant: effectiveVariant, transaction, onSuccess })
 
   useEffect(() => {
     if (isOpen) resetSubmitState()
@@ -51,7 +51,7 @@ export function RecordTransactionModal({ variant, transaction, isOpen, onOpenCha
           onClose={onCancel}
         />
         <ModalContent>
-          <RecordTransactionForm form={form} variant={effectiveVariant} isAccountReadOnly={transaction !== undefined} />
+          <RecordTransactionForm form={form} variant={effectiveVariant} isAccountReadOnly={isAccountReadOnly} />
         </ModalContent>
         <form.Subscribe
           selector={state => ({
