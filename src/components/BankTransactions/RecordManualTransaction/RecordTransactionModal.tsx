@@ -2,6 +2,7 @@ import { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { SubmitButton } from '@ui/Button/SubmitButton'
 import { Modal } from '@ui/Modal/Modal'
@@ -15,18 +16,19 @@ import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
 type RecordTransactionModalProps = {
   variant: RecordTransactionVariant
   transaction?: BankTransaction
+  categorization?: BankTransactionCategorization
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
 }
 
-export function RecordTransactionModal({ variant, transaction, isOpen, onOpenChange }: RecordTransactionModalProps) {
+export function RecordTransactionModal({ variant, transaction, categorization, isOpen, onOpenChange }: RecordTransactionModalProps) {
   const { t } = useTranslation()
 
   const effectiveVariant = transaction ? getRecordTransactionVariant(transaction) : variant
 
   const onSuccess = useCallback(() => onOpenChange(false), [onOpenChange])
 
-  const { form, isError, resetSubmitState } = useRecordTransactionForm({ variant: effectiveVariant, transaction, onSuccess })
+  const { form, isError, resetSubmitState } = useRecordTransactionForm({ variant: effectiveVariant, transaction, categorization, onSuccess })
 
   useEffect(() => {
     if (isOpen) resetSubmitState()

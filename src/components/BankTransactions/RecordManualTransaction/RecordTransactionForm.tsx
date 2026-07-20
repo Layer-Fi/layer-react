@@ -152,9 +152,9 @@ export function RecordTransactionForm({ form, variant, isAccountReadOnly }: Reco
               <form.AppField name='memo'>
                 {field => (
                   <field.FormTextField
-                    label={t('bankTransactions:recordTransaction.label.description', 'Description')}
+                    label={t('bankTransactions:recordTransaction.label.memo', 'Memo')}
                     inline
-                    placeholder={t('bankTransactions:recordTransaction.placeholder.description', 'Add a note about this transaction...')}
+                    placeholder={t('bankTransactions:recordTransaction.placeholder.memo', 'Add a note about this transaction...')}
                   />
                 )}
               </form.AppField>

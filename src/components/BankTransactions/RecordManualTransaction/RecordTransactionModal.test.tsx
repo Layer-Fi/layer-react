@@ -4,6 +4,8 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { BankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
+import { type BankTransactionCategorization, BankTransactionSelectionVariant } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 import { RecordTransactionModal } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionModal'
 import { type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 
@@ -29,7 +31,7 @@ const EXPENSE_FORM_DATA = [
   { kind: 'comboBox', field: 'Vendor', option: /John Smith/ },
   { kind: 'number', field: 'Amount', value: '125.50' },
   { kind: 'comboBox', field: 'Category', option: /^Cash$/ },
-  { kind: 'text', field: 'Description', value: 'Team lunch' },
+  { kind: 'text', field: 'Memo', value: 'Team lunch' },
 ] satisfies readonly FillFormSpec[]
 
 const INCOME_FORM_DATA = [
@@ -37,7 +39,7 @@ const INCOME_FORM_DATA = [
   { kind: 'comboBox', field: 'Customer', option: /Jane Doe/ },
   { kind: 'number', field: 'Amount', value: '80' },
   { kind: 'comboBox', field: 'Category', option: /^Cash$/ },
-  { kind: 'text', field: 'Description', value: 'Cash sale' },
+  { kind: 'text', field: 'Memo', value: 'Cash sale' },
 ] satisfies readonly FillFormSpec[]
 
 const renderModal = (variant: RecordTransactionVariant = 'expense') => {
@@ -68,13 +70,20 @@ const EDIT_TRANSACTION = makeBankTransaction({
   accountName: CUSTOM_ACCOUNT.accountName,
   direction: BankTransactionDirection.Debit,
   amount: 12550,
-  description: 'Team lunch',
+  memo: 'Team lunch',
   counterpartyName: 'John Smith',
   vendor: VENDOR,
   customer: null,
   category: { type: 'Account', id: 'cash', stableName: 'cash', category: 'cash', displayName: 'Cash', description: null },
   categorizationStatus: CategorizationStatus.CATEGORIZED,
 })
+
+const EDIT_CATEGORIZATION: BankTransactionCategorization = {
+  category: convertApiCategorizationToCategoryOrSplitAsOption(EDIT_TRANSACTION.category!),
+  taxCode: 'TAX-1',
+  match: null,
+  variant: BankTransactionSelectionVariant.CATEGORY,
+}
 
 const renderEditModal = () => {
   const user = userEvent.setup()
@@ -90,7 +99,7 @@ const renderEditModal = () => {
     user,
     onOpenChange,
     ...render(
-      <RecordTransactionModal variant='expense' transaction={EDIT_TRANSACTION} isOpen onOpenChange={onOpenChange} />,
+      <RecordTransactionModal variant='expense' transaction={EDIT_TRANSACTION} categorization={EDIT_CATEGORIZATION} isOpen onOpenChange={onOpenChange} />,
       { wrapper: LayerTestProvider },
     ),
   }
@@ -178,7 +187,7 @@ describe('RecordTransactionModal', () => {
         amount: 12550,
         direction: 'DEBIT',
         date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/) as string,
-        description: 'Team lunch',
+        memo: 'Team lunch',
         vendor_id: VENDOR.id,
         categorization: {
           type: 'Category',
@@ -203,7 +212,7 @@ describe('RecordTransactionModal', () => {
       transaction: expect.objectContaining({
         amount: 8000,
         direction: 'CREDIT',
-        description: 'Cash sale',
+        memo: 'Cash sale',
         customer_id: CUSTOMER.id,
       }) as object,
     }))
@@ -228,8 +237,12 @@ describe('RecordTransactionModal', () => {
       transaction: expect.objectContaining({
         amount: 12550,
         direction: 'DEBIT',
-        description: 'Team lunch',
+        memo: 'Team lunch',
         vendor_id: VENDOR.id,
+        categorization: expect.objectContaining({
+          type: 'Category',
+          tax_code: 'TAX-1',
+        }) as object,
       }) as object,
     }))
 
