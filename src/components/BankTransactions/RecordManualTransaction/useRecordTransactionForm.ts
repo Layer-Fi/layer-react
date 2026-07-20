@@ -8,7 +8,7 @@ import type { Classification } from '@schemas/categorization'
 import type { Customer } from '@schemas/customer'
 import type { NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import type { Vendor } from '@schemas/vendor'
-import { useRecordCustomAccountTransaction } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/useRecordCustomAccountTransaction'
+import { UpsertCustomAccountTransactionMode, useUpsertCustomAccountTransaction } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/useRecordCustomAccountTransaction'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { convertRecordTransactionFormToParams, getRecordTransactionFormValues } from '@components/BankTransactions/RecordManualTransaction/formUtils'
 import type { AccountOption } from '@components/CustomAccountComboBox/AccountOption'
@@ -44,18 +44,19 @@ type UseRecordTransactionFormProps = {
 }
 
 export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: UseRecordTransactionFormProps) => {
-  const { trigger, isError, reset: resetSubmitState } = useRecordCustomAccountTransaction()
+  const { trigger, isError, reset: resetSubmitState } = useUpsertCustomAccountTransaction(
+    transaction
+      ? { mode: UpsertCustomAccountTransactionMode.Update, transactionId: transaction.id }
+      : { mode: UpsertCustomAccountTransactionMode.Create },
+  )
 
   const handleSubmit = useCallback(
     async ({ value, formApi }: { value: RecordTransactionFormValues, formApi: { reset: () => void } }) => {
       const params = convertRecordTransactionFormToParams(value, variant)
       if (params === null) return
 
-      const externalId = transaction?.sourceTransactionId ?? crypto.randomUUID()
-      const request = { ...params, transaction: { ...params.transaction, externalId } }
-
       try {
-        await trigger(request)
+        await trigger(params)
         onSuccess?.()
         formApi.reset()
       }
@@ -63,7 +64,7 @@ export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: Us
         console.error(e)
       }
     },
-    [trigger, variant, transaction, onSuccess],
+    [trigger, variant, onSuccess],
   )
 
   const form = useAppForm<RecordTransactionFormValues>({

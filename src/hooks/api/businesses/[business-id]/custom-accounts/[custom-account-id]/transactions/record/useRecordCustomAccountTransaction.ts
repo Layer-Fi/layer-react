@@ -3,7 +3,7 @@ import { Schema } from 'effect'
 import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 import { type RecordCustomTransaction, RecordCustomTransactionSchema } from '@schemas/customAccounts'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
-import { postWithFormData } from '@utils/api/authenticatedHttp'
+import { patchWithFormData, postWithFormData } from '@utils/api/authenticatedHttp'
 import { useBankTransactionTriggerSuccess } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/useBankTransactionTriggerSuccess'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
@@ -28,6 +28,11 @@ const buildTransactionFormData = ({ transaction }: RecordCustomAccountTransactio
   const formData = new FormData()
   formData.append(RECORD_TRANSACTION_PART_NAME, JSON.stringify(Schema.encodeSync(RecordCustomTransactionSchema)(transaction)))
   return formData
+}
+
+export enum UpsertCustomAccountTransactionMode {
+  Create = 'Create',
+  Update = 'Update',
 }
 
 const recordCustomAccountTransaction = (
@@ -55,3 +60,44 @@ export const useRecordCustomAccountTransaction = createMutationHook({
   swrOptions: { throwOnError: true },
   useOnTriggerSuccess: useBankTransactionTriggerSuccess,
 })
+
+const updateCustomAccountTransaction = (
+  baseUrl: string,
+  accessToken: string | undefined,
+  options?: { params?: { businessId: string, customAccountId: string, transactionId: string }, body?: RecordCustomAccountTransactionBody },
+) => {
+  const { businessId, customAccountId, transactionId } = options?.params
+    ?? ({} as { businessId: string, customAccountId: string, transactionId: string })
+
+  const endpoint = `/v1/businesses/${businessId}/custom-accounts/${customAccountId}/transactions/${transactionId}/record`
+  return patchWithFormData<RecordCustomAccountTransactionResponseEncoded>(
+    endpoint,
+    buildTransactionFormData(options?.body ?? ({} as RecordCustomAccountTransactionBody)),
+    baseUrl,
+    accessToken,
+  )
+}
+
+const useUpdateCustomAccountTransaction = createMutationHook({
+  tags: [RECORD_CUSTOM_ACCOUNT_TRANSACTION_TAG_KEY],
+  request: updateCustomAccountTransaction,
+  keyParams: ['transactionId'],
+  argToParams: ({ customAccountId }: RecordCustomAccountTransactionArgs) => ({ customAccountId }),
+  argToBody: ({ transaction }: RecordCustomAccountTransactionArgs) => ({ transaction }),
+  schema: RecordCustomAccountTransactionResponseSchema,
+  swrOptions: { throwOnError: true },
+  useOnTriggerSuccess: useBankTransactionTriggerSuccess,
+})
+
+type UseUpsertCustomAccountTransactionProps =
+  | { mode: UpsertCustomAccountTransactionMode.Create }
+  | { mode: UpsertCustomAccountTransactionMode.Update, transactionId: string }
+
+export const useUpsertCustomAccountTransaction = (props: UseUpsertCustomAccountTransactionProps) => {
+  const transactionId = props.mode === UpsertCustomAccountTransactionMode.Update ? props.transactionId : undefined
+
+  const createResponse = useRecordCustomAccountTransaction()
+  const updateResponse = useUpdateCustomAccountTransaction({ transactionId: transactionId ?? '' })
+
+  return props.mode === UpsertCustomAccountTransactionMode.Create ? createResponse : updateResponse
+}
