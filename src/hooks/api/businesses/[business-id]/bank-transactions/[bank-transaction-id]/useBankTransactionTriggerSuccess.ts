@@ -1,4 +1,3 @@
-import { type BankTransaction } from '@internal-types/bankTransactions'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
 import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
@@ -16,17 +15,12 @@ export const useBankTransactionTriggerSuccess = () => {
   }
 }
 
-/**
- * Post-success side effects for recording/updating a custom transaction. Patch the returned
- * transaction into the bank-transactions cache by key so edits (memo, counterparty-derived
- * description) stay fresh, and reload so newly created rows appear.
- */
+/** Post-success side effects for recording/updating a custom transaction: reload the list and invalidate P&L. */
 export const useRecordTransactionTriggerSuccess = () => {
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
-  const { forceReloadBankTransactions, patchBankTransactionByKey } = useBankTransactionsGlobalCacheActions()
+  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 
-  return (bankTransaction: BankTransaction) => {
-    void patchBankTransactionByKey(bankTransaction)
+  return () => {
     void forceReloadBankTransactions()
 
     void debouncedInvalidateProfitAndLoss()
