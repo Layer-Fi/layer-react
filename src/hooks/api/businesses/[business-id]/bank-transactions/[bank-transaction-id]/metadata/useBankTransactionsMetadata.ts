@@ -12,7 +12,9 @@ const BankTransactionMetadataSchema = Schema.Struct({
   memo: Schema.NullishOr(Schema.String),
 })
 
-const GetBankTransactionMetadataResponseSchema = UnwrappedDataResponseSchema(BankTransactionMetadataSchema)
+export const BankTransactionMetadataResponseSchema = UnwrappedDataResponseSchema(BankTransactionMetadataSchema)
+
+const GetBankTransactionMetadataResponseSchema = BankTransactionMetadataResponseSchema
 
 const getBankTransactionMetadata = get<
   typeof GetBankTransactionMetadataResponseSchema.Encoded,
