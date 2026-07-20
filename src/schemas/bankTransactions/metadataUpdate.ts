@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-/** PUT metadata body - updates the transaction's memo. */
+/** PATCH metadata body - partially updates the transaction's memo without touching its counterparty. */
 export const BankTransactionMemoUpdateSchema = Schema.Struct({
   memo: Schema.String,
 })

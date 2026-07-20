@@ -1,11 +1,11 @@
 import type { BankTransactionMetadata } from '@internal-types/bankTransactions'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { type BankTransactionMemoUpdateEncoded } from '@schemas/bankTransactions/metadataUpdate'
-import { put } from '@utils/api/authenticatedHttp'
+import { patch } from '@utils/api/authenticatedHttp'
 import { useBankTransactionMetadataGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useBankTransactionsMetadata'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
-const updateBankTransactionMetadata = put<
+const updateBankTransactionMetadata = patch<
   { data: BankTransactionMetadata, errors: unknown },
   BankTransactionMemoUpdateEncoded,
   { businessId: string, bankTransactionId: string }
