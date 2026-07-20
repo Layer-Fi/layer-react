@@ -88,11 +88,13 @@ export class CategoryAsOption extends BaseCategorizationOption<NestedCategorizat
   get classification(): Classification {
     switch (this.internalValue.type) {
       case 'AccountNested':
-        return makeAccountId(this.internalValue.id)
+        return this.internalValue.stableName !== null
+          ? makeStableName(this.internalValue.stableName)
+          : makeAccountId(this.internalValue.id)
       case 'OptionalAccountNested':
         return makeStableName(this.internalValue.stableName)
       case 'ExclusionNested':
-        return makeExclusion(this.internalValue.id)
+        return makeExclusion(this.internalValue.category)
       default:
         return unsafeAssertUnreachable({
           value: this.internalValue,
