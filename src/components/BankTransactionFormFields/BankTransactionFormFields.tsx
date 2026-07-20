@@ -14,7 +14,7 @@ import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimen
 type BankTransactionFormFieldProps = {
   bankTransaction: Pick<
     BankTransaction,
-    'id' | 'transactionTags' | 'customer' | 'vendor'
+    'id' | 'transactionTags' | 'customer' | 'vendor' | 'memo'
   >
   hideTags?: boolean
   hideCustomerVendor?: boolean
@@ -93,7 +93,7 @@ export function BankTransactionFormFields({
       {showDescriptions
         && (
           <VStack gap='sm'>
-            <BankTransactionMemo bankTransactionId={bankTransaction.id} isMobile={isMobile} />
+            <BankTransactionMemo bankTransactionId={bankTransaction.id} memo={bankTransaction.memo} isMobile={isMobile} />
           </VStack>
         )}
     </VStack>

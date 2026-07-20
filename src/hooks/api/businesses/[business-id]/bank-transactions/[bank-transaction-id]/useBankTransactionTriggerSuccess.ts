@@ -14,3 +14,15 @@ export const useBankTransactionTriggerSuccess = () => {
     void debouncedInvalidateProfitAndLoss()
   }
 }
+
+/** Post-success side effects for recording/updating a custom transaction: reload the list and invalidate P&L. */
+export const useRecordTransactionTriggerSuccess = () => {
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
+  const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
+
+  return () => {
+    void forceReloadBankTransactions()
+
+    void debouncedInvalidateProfitAndLoss()
+  }
+}

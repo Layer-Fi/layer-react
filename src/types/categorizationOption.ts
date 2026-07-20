@@ -3,6 +3,7 @@ import { makeAccountId, makeStableName } from '@schemas/accountIdentifier'
 import {
   type Categorization,
   type Classification,
+  getClassificationFromCategorization,
   makeExclusion,
   type NestedCategorization,
 } from '@schemas/categorization'
@@ -87,11 +88,13 @@ export class CategoryAsOption extends BaseCategorizationOption<NestedCategorizat
   get classification(): Classification {
     switch (this.internalValue.type) {
       case 'AccountNested':
-        return makeAccountId(this.internalValue.id)
+        return this.internalValue.stableName !== null
+          ? makeStableName(this.internalValue.stableName)
+          : makeAccountId(this.internalValue.id)
       case 'OptionalAccountNested':
         return makeStableName(this.internalValue.stableName)
       case 'ExclusionNested':
-        return makeExclusion(this.internalValue.id)
+        return makeExclusion(this.internalValue.category)
       default:
         return unsafeAssertUnreachable({
           value: this.internalValue,
@@ -198,18 +201,6 @@ export class ApiCategorizationAsOption extends BaseCategorizationOption<Categori
   }
 
   get classification(): Classification | null {
-    switch (this.internalValue.type) {
-      case 'Account':
-        return makeAccountId(this.internalValue.id)
-      case 'Exclusion':
-        return makeExclusion(this.internalValue.id)
-      case 'Split_Categorization':
-        return null
-      default:
-        return unsafeAssertUnreachable({
-          value: this.internalValue,
-          message: 'Unexpected categorization type in ApiCategorizationAsOption.classification',
-        })
-    }
+    return getClassificationFromCategorization(this.internalValue)
   }
 }

@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect/index'
 
-import { BankTransactionDirectionSchema } from '@schemas/bankTransactions/base'
+import { BankTransactionDirectionSchema, TransactionSourceSchema } from '@schemas/bankTransactions/base'
 import { UpdateCategorizationRulesSuggestionSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { MatchSchema, SuggestedMatchSchema } from '@schemas/bankTransactions/match'
 import { CategorizationSchema } from '@schemas/categorization'
@@ -67,6 +67,7 @@ export const BankTransactionSchema = Schema.Struct({
     Schema.propertySignature(Schema.String),
     Schema.fromKey('business_id'),
   ),
+  source: TransactionSourceSchema,
   sourceTransactionId: pipe(
     Schema.propertySignature(Schema.String),
     Schema.fromKey('source_transaction_id'),
@@ -74,6 +75,10 @@ export const BankTransactionSchema = Schema.Struct({
   sourceAccountId: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('source_account_id'),
+  ),
+  externalAccountId: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.UUID)),
+    Schema.fromKey('external_account_id'),
   ),
   date: Schema.Date,
   direction: BankTransactionDirectionSchema,

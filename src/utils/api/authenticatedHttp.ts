@@ -118,25 +118,27 @@ export const post = request('post')
 export const put = request('put')
 export const del = request('delete')
 
-export const postWithFormData = <
-  Return extends Record<string, unknown> = Record<string, unknown>,
->(
-  url: string,
-  formData: FormData,
-  baseUrl: string,
-  accessToken: string | undefined,
-): Promise<Return> => {
-  return fetch(`${baseUrl}${url}`, {
-    method: 'POST',
-    headers: {
-      Authorization: 'Bearer ' + (accessToken || ''),
-      ...getCustomHeaders(),
-    },
-    body: formData,
-  })
-    .then(res => handleResponse<Return>(res))
-    .catch((error: Error | APIError) => handleException(error))
-}
+const requestWithFormData = (method: 'POST' | 'PATCH') =>
+  <Return extends Record<string, unknown> = Record<string, unknown>>(
+    url: string,
+    formData: FormData,
+    baseUrl: string,
+    accessToken: string | undefined,
+  ): Promise<Return> => {
+    return fetch(`${baseUrl}${url}`, {
+      method,
+      headers: {
+        Authorization: 'Bearer ' + (accessToken || ''),
+        ...getCustomHeaders(),
+      },
+      body: formData,
+    })
+      .then(res => handleResponse<Return>(res))
+      .catch((error: Error | APIError) => handleException(error))
+  }
+
+export const postWithFormData = requestWithFormData('POST')
+export const patchWithFormData = requestWithFormData('PATCH')
 
 const handleResponse = async <Return>(res: Response) => {
   if (!res.ok) {

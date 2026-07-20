@@ -1,14 +1,19 @@
 import { type PropsWithChildren, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import type { BankTransaction } from '@internal-types/bankTransactions'
+import { isClassificationExclusion } from '@schemas/categorization'
 import { positiveAmount, required } from '@utils/form/validators'
+import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Form } from '@ui/Form/Form'
+import { Label } from '@ui/Typography/Text'
 import { RecordTransactionCounterpartySelector } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionCounterpartySelector'
 import { type RecordTransactionFormApi, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { CustomAccountComboBox } from '@components/CustomAccountComboBox/CustomAccountComboBox'
 import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
 import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
+import { TaxCodeComboBox } from '@components/TaxCodeSelect/TaxCodeComboBox'
 import { ErrorText } from '@components/Typography/ErrorText'
 
 import './recordTransactionForm.scss'
@@ -30,12 +35,16 @@ function RecordTransactionFormField({ withFieldLayout = true, children }: PropsW
 type RecordTransactionFormProps = {
   form: RecordTransactionFormApi
   variant: RecordTransactionVariant
+  transaction?: BankTransaction
 }
 
-export function RecordTransactionForm({ form, variant }: RecordTransactionFormProps) {
+export function RecordTransactionForm({ form, variant, transaction }: RecordTransactionFormProps) {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
+  const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(transaction)
   const isExpense = variant === 'expense'
+  // Editing keeps a recorded transaction on its original account.
+  const isAccountReadOnly = transaction !== undefined
 
   const accountLabel = isExpense
     ? t('bankTransactions:recordTransaction.label.paid_to', 'Paid to')
@@ -70,6 +79,7 @@ export function RecordTransactionForm({ form, variant }: RecordTransactionFormPr
                 showLabel={!isCreatingAccount}
                 inline={!isCreatingAccount}
                 isInvalid={field.state.meta.errors.length > 0}
+                isReadOnly={isAccountReadOnly}
                 selectedAccount={field.state.value}
                 onSelectAccount={field.handleChange}
               />
@@ -147,12 +157,32 @@ export function RecordTransactionForm({ form, variant }: RecordTransactionFormPr
                 )}
               </form.Field>
 
+              {hasTaxCodeOptions && (
+                <form.Subscribe selector={state => state.values.category}>
+                  {category => (
+                    <form.Field name='taxCode'>
+                      {field => (
+                        <RecordTransactionFormField>
+                          <Label size='sm'>{t('bankTransactions:recordTransaction.label.tax_code', 'Tax code')}</Label>
+                          <TaxCodeComboBox
+                            options={taxCodeOptions}
+                            selectedValue={getSelectedTaxCodeOption(field.state.value)}
+                            onSelectedValueChange={option => field.handleChange(option?.value ?? null)}
+                            isDisabled={category === null || isClassificationExclusion(category)}
+                          />
+                        </RecordTransactionFormField>
+                      )}
+                    </form.Field>
+                  )}
+                </form.Subscribe>
+              )}
+
               <form.AppField name='memo'>
                 {field => (
                   <field.FormTextField
-                    label={t('bankTransactions:recordTransaction.label.description', 'Description')}
+                    label={t('bankTransactions:recordTransaction.label.memo', 'Memo')}
                     inline
-                    placeholder={t('bankTransactions:recordTransaction.placeholder.description', 'Add a note about this transaction...')}
+                    placeholder={t('bankTransactions:recordTransaction.placeholder.memo', 'Add a note about this transaction...')}
                   />
                 )}
               </form.AppField>

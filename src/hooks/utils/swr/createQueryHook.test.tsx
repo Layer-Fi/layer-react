@@ -83,6 +83,34 @@ describe('createQueryHook', () => {
     expect(result.current.data).toBeUndefined()
   })
 
+  it('bakes keyDefaults into the request', async () => {
+    const request = makeRequest(() => Promise.resolve(RAW_WIDGET))
+    const useWidget = createQueryHook<WidgetParams, RawWidget>({
+      tags: ['Widgets'],
+      request,
+      keyDefaults: { widgetId: 'default' },
+    })
+
+    const { result } = await renderHookWithAuth(() => useWidget())
+
+    await waitFor(() => expect(result.current.data).toEqual(RAW_WIDGET))
+    expect(getRequestOptions(request)?.params).toMatchObject({ widgetId: 'default' })
+  })
+
+  it('lets call-site params override keyDefaults', async () => {
+    const request = makeRequest(() => Promise.resolve(RAW_WIDGET))
+    const useWidget = createQueryHook<WidgetParams, RawWidget>({
+      tags: ['Widgets'],
+      request,
+      keyDefaults: { widgetId: 'default' },
+    })
+
+    const { result } = await renderHookWithAuth(() => useWidget({ widgetId: 'override' }))
+
+    await waitFor(() => expect(result.current.data).toEqual(RAW_WIDGET))
+    expect(getRequestOptions(request)?.params).toMatchObject({ widgetId: 'override' })
+  })
+
   it('decodes the response with the schema', async () => {
     const request = makeRequest(() => Promise.resolve(RAW_WIDGET))
     const useWidget = createQueryHook<WidgetParams, RawWidget, typeof WidgetSchema.Type>({

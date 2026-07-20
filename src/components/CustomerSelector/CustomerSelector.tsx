@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type Customer } from '@schemas/customer'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
-import { getCustomerName } from '@utils/customerVendor'
+import { getCustomerName } from '@utils/customer'
 import { useListCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'

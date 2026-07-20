@@ -1,45 +1,23 @@
 import { useCallback } from 'react'
 
-import { type BankTransactionCounterpartyUpdateEncoded } from '@schemas/bankTransactions/metadataUpdate'
 import { type CustomerSchema } from '@schemas/customer'
 import { type VendorSchema } from '@schemas/vendor'
-import { patch } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
+import { createBankTransactionMetadataMutationHook } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useBankTransactionMetadataMutation'
 import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useMinMutatingMutation } from '@hooks/utils/swr/useMinMutatingMutation'
-
-const SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY = '#set-metadata-on-bank-transaction'
-
-type SetMetadataOnBankTransactionBody = BankTransactionCounterpartyUpdateEncoded
-
-const setMetadataOnBankTransaction = patch<
-  Record<string, never>,
-  SetMetadataOnBankTransactionBody,
-  {
-    businessId: string
-    bankTransactionId: string
-  }
->(({
-  businessId,
-  bankTransactionId,
-}) => `/v1/businesses/${businessId}/bank-transactions/${bankTransactionId}/metadata`)
 
 type SetMetadataOnBankTransactionArg = {
   vendor: typeof VendorSchema.Type | null
   customer: typeof CustomerSchema.Type | null
 }
 
-const useSetMetadataOnBankTransactionMutation = createMutationHook({
-  tags: [SET_METADATA_ON_BANK_TRANSACTION_TAG_KEY],
-  request: setMetadataOnBankTransaction,
-  keyParams: ['bankTransactionId'],
-  argToBody: ({ vendor, customer }: SetMetadataOnBankTransactionArg) => ({
+const useSetMetadataOnBankTransactionMutation = createBankTransactionMetadataMutationHook(
+  ({ vendor, customer }: SetMetadataOnBankTransactionArg) => ({
     vendor_id: vendor?.id ?? null,
     customer_id: customer?.id ?? null,
   }),
-  swrOptions: { throwOnError: false },
-})
+)
 
 type UseSetMetadataOnBankTransactionParameters = {
   bankTransactionId: string

@@ -4,7 +4,7 @@ import {
   BankTransactionSchema,
   CategorizationStatus,
 } from '@schemas/bankTransactions/bankTransaction'
-import { BankTransactionDirection } from '@schemas/bankTransactions/base'
+import { BankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
 
 import {
   bankTransactionCustomerArbitrary,
@@ -26,6 +26,7 @@ const base = Schema.Struct({
   ...fields,
   id: withArbitrary(fields.id, () => idArbitrary(FixtureIdPrefix.bankTransaction)),
   businessId: withArbitrary(fields.businessId, () => fc => fc.constant(BUSINESS_ID)),
+  source: withArbitrary(fields.source, () => fc => fc.constant(TransactionSource.PLAID)),
   sourceTransactionId: withArbitrary(fields.sourceTransactionId, () => sourceTransactionIdArbitrary),
   // Placeholder - the generator respreads dates across the fixture year.
   date: withArbitrary(fields.date, () => dateArbitrary),
@@ -40,6 +41,7 @@ const base = Schema.Struct({
   // in by the top-level arbitrary below; the field-level constants only exist
   // so the base struct stays derivable.
   sourceAccountId: withArbitrary(fields.sourceAccountId, () => fc => fc.constant(null)),
+  externalAccountId: withArbitrary(fields.externalAccountId, () => fc => fc.constant(null)),
   accountName: withArbitrary(fields.accountName, () => fc => fc.constant(null)),
   accountMask: withArbitrary(fields.accountMask, () => fc => fc.constant(null)),
   accountInstitution: withArbitrary(fields.accountInstitution, () => fc => fc.constant(null)),

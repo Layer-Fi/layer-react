@@ -1,9 +1,12 @@
 import { File } from 'lucide-react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
+import { getBankTransactionDisplayName } from '@utils/bankTransactions/shared'
 import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import { EditCustomTransactionButton } from '@components/BankTransactions/RecordManualTransaction/EditCustomTransactionButton'
+import { useIsEditableCustomTransaction } from '@components/BankTransactions/RecordManualTransaction/useIsEditableCustomTransaction'
 import { IconBox } from '@components/IconBox/IconBox'
 
 import './bankTransactionDescriptionCell.scss'
@@ -17,6 +20,7 @@ export const BankTransactionDescriptionCell = ({
 }: BankTransactionDescriptionCellProps) => {
   const showReceiptUploads = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ReceiptUploads)
   const hasReceipt = showReceiptUploads && bankTransaction.documentIds?.length > 0
+  const isEditable = useIsEditableCustomTransaction(bankTransaction)
 
   return (
     <HStack
@@ -27,9 +31,14 @@ export const BankTransactionDescriptionCell = ({
       fluid
       className='Layer__BankTransactionDescriptionCell'
     >
-      <Span ellipsis withTooltip>
-        {bankTransaction.counterpartyName ?? bankTransaction.description}
-      </Span>
+      <HStack gap='xs' align='center' overflow='hidden'>
+        {isEditable && (
+          <EditCustomTransactionButton bankTransaction={bankTransaction} />
+        )}
+        <Span ellipsis withTooltip>
+          {getBankTransactionDisplayName(bankTransaction)}
+        </Span>
+      </HStack>
       {hasReceipt && (
         <IconBox>
           <File size={12} />

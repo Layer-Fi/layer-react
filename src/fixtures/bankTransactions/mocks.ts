@@ -1,6 +1,6 @@
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus, InputStrategy } from '@schemas/bankTransactions/bankTransaction'
-import { BankTransactionDirection } from '@schemas/bankTransactions/base'
+import { BankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
 
 import { makeBankAccount } from '@fixtures/bankAccounts/mocks'
 import { bankTransactionCategories } from '@fixtures/bankTransactions/constants'
@@ -13,8 +13,10 @@ const account = makeBankAccount()
 const baseBankTransaction: BankTransaction = {
   id: '0000000f-0000-4000-8000-000000000001',
   businessId: makeBusiness().id,
+  source: TransactionSource.PLAID,
   sourceTransactionId: 'src_txn_100000',
   sourceAccountId: account.externalAccounts[0]?.id ?? account.id,
+  externalAccountId: null,
   date: new Date('2025-06-01T15:45:00.000Z'),
   direction: BankTransactionDirection.Debit,
   amount: 5421,

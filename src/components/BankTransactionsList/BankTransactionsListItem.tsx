@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import {
+  getBankTransactionDisplayName,
   hasReceipts,
   isCategorized,
   isMoneyIn,
@@ -28,6 +29,8 @@ import { BankTransactionCategoryComboBox } from '@components/BankTransactionCate
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
 import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankTransactionsSubmitButton'
+import { EditCustomTransactionButton } from '@components/BankTransactions/RecordManualTransaction/EditCustomTransactionButton'
+import { useIsEditableCustomTransaction } from '@components/BankTransactions/RecordManualTransaction/useIsEditableCustomTransaction'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { Chevron } from '@components/Chevron/Chevron'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
@@ -55,6 +58,7 @@ export const BankTransactionsListItem = ({
   const { isDesktop } = useSizeClass()
 
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
+  const isEditable = useIsEditableCustomTransaction(bankTransaction)
 
   const categorized = isCategorized(bankTransaction)
   const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction })
@@ -141,8 +145,11 @@ export const BankTransactionsListItem = ({
               />
             </div>
           )}
+          {isEditable && (
+            <EditCustomTransactionButton bankTransaction={bankTransaction} />
+          )}
           <Span withTooltip>
-            {bankTransaction.counterpartyName ?? bankTransaction.description}
+            {getBankTransactionDisplayName(bankTransaction)}
           </Span>
         </HStack>
         <MoneySpan
