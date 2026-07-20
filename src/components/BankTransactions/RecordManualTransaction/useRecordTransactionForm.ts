@@ -10,7 +10,8 @@ import type { NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import type { Vendor } from '@schemas/vendor'
 import { UpsertCustomAccountTransactionMode, useUpsertCustomAccountTransaction } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/useRecordCustomAccountTransaction'
 import { useAppForm } from '@hooks/features/forms/useForm'
-import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { type BankTransactionCategorization, useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 import { convertRecordTransactionFormToParams, getRecordTransactionFormValues } from '@components/BankTransactions/RecordManualTransaction/formUtils'
 import type { AccountOption } from '@components/CustomAccountComboBox/AccountOption'
 
@@ -54,6 +55,7 @@ export const useRecordTransactionForm = ({ variant, transaction, categorization,
       ? { mode: UpsertCustomAccountTransactionMode.Update, transactionId: transaction.id }
       : { mode: UpsertCustomAccountTransactionMode.Create },
   )
+  const { setTransactionCategorization, setTransactionTaxCodeSelection } = useBankTransactionsCategorizationActions()
 
   const handleSubmit = useCallback(
     async ({ value, formApi }: { value: RecordTransactionFormValues, formApi: { reset: () => void } }) => {
@@ -65,7 +67,14 @@ export const useRecordTransactionForm = ({ variant, transaction, categorization,
         : { ...params, transaction: { ...params.transaction, externalId: createExternalId } }
 
       try {
-        await trigger(request)
+        const updated = await trigger(request)
+
+        // Keep the categorization store (which the row/table cells and this modal read) in sync with the saved edit.
+        if (transaction && updated) {
+          setTransactionCategorization(transaction.id, updated.category ? convertApiCategorizationToCategoryOrSplitAsOption(updated.category) : null)
+          setTransactionTaxCodeSelection(transaction.id, updated.taxCode ?? null)
+        }
+
         onSuccess?.()
         formApi.reset()
       }
@@ -73,7 +82,7 @@ export const useRecordTransactionForm = ({ variant, transaction, categorization,
         console.error(e)
       }
     },
-    [trigger, variant, transaction, createExternalId, onSuccess],
+    [trigger, variant, transaction, createExternalId, setTransactionCategorization, setTransactionTaxCodeSelection, onSuccess],
   )
 
   const form = useAppForm<RecordTransactionFormValues>({

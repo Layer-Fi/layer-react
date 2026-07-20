@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
@@ -6,6 +7,7 @@ import { SplitAsOption } from '@internal-types/categorizationOption'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { BankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
 import { type BankTransactionCategorization, BankTransactionSelectionVariant } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { BankTransactionsCategorizationStoreProvider } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 import { RecordTransactionModal } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionModal'
 import { type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
@@ -22,6 +24,12 @@ import { makeCustomer } from '@fixtures/customers/mocks'
 import { makeVendor } from '@fixtures/vendors/mocks'
 import { createFormFiller, type FillFormSpec } from '@test-utils/forms/fillForm'
 import { LayerTestProvider } from '@test-utils/LayerTestProvider'
+
+const RecordModalWrapper = ({ children }: { children: ReactNode }) => (
+  <LayerTestProvider>
+    <BankTransactionsCategorizationStoreProvider>{children}</BankTransactionsCategorizationStoreProvider>
+  </LayerTestProvider>
+)
 
 const CUSTOM_ACCOUNT = makeCustomAccount({ accountName: 'Business Checking' })
 const VENDOR = makeVendor({ individualName: 'John Smith' })
@@ -59,7 +67,7 @@ const renderModal = (variant: RecordTransactionVariant = 'expense') => {
     filler: createFormFiller(user),
     ...render(
       <RecordTransactionModal variant={variant} isOpen onOpenChange={onOpenChange} />,
-      { wrapper: LayerTestProvider },
+      { wrapper: RecordModalWrapper },
     ),
   }
 }
@@ -114,7 +122,7 @@ const renderEditModal = (categorization: BankTransactionCategorization = EDIT_CA
     onOpenChange,
     ...render(
       <RecordTransactionModal variant='expense' transaction={EDIT_TRANSACTION} categorization={categorization} isOpen onOpenChange={onOpenChange} />,
-      { wrapper: LayerTestProvider },
+      { wrapper: RecordModalWrapper },
     ),
   }
 }
