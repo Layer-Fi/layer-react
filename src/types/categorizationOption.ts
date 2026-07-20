@@ -174,8 +174,9 @@ export class SplitAsOption extends BaseCategorizationOption<Split[]> {
     return 'split'
   }
 
-  get classification() {
-    return null
+  // A single-entry split is effectively one category; a multi-entry split has no single classification.
+  get classification(): Classification | null {
+    return this.isSingleSplit ? this.internalValue[0].category?.classification ?? null : null
   }
 }
 
