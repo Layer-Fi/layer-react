@@ -125,7 +125,7 @@ export const RecordCustomTransactionSchema = Schema.Struct({
   amount: Schema.Number,
   direction: BankTransactionDirectionSchema,
   date: Schema.String,
-  description: Schema.String,
+  description: Schema.optional(Schema.String),
   memo: Schema.optional(Schema.NullOr(Schema.String)),
   customerId: Schema.optional(Schema.UUID).pipe(Schema.fromKey('customer_id')),
   vendorId: Schema.optional(Schema.UUID).pipe(Schema.fromKey('vendor_id')),

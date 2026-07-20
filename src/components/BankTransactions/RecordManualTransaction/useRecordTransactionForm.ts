@@ -63,8 +63,9 @@ export const useRecordTransactionForm = ({ variant, transaction, categorization,
       if (params === null) return
 
       const request = transaction
+        // Update omits description so the existing value is preserved; create sends an empty one.
         ? params
-        : { ...params, transaction: { ...params.transaction, externalId: createExternalId } }
+        : { ...params, transaction: { ...params.transaction, externalId: createExternalId, description: '' } }
 
       try {
         const updated = await trigger(request)

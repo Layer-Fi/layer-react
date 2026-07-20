@@ -1,14 +1,19 @@
 import { type PropsWithChildren, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import type { BankTransaction } from '@internal-types/bankTransactions'
+import { isClassificationExclusion } from '@schemas/categorization'
 import { positiveAmount, required } from '@utils/form/validators'
+import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Form } from '@ui/Form/Form'
+import { Label } from '@ui/Typography/Text'
 import { RecordTransactionCounterpartySelector } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionCounterpartySelector'
 import { type RecordTransactionFormApi, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { CustomAccountComboBox } from '@components/CustomAccountComboBox/CustomAccountComboBox'
 import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
 import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
+import { TaxCodeComboBox } from '@components/TaxCodeSelect/TaxCodeComboBox'
 import { ErrorText } from '@components/Typography/ErrorText'
 
 import './recordTransactionForm.scss'
@@ -31,11 +36,13 @@ type RecordTransactionFormProps = {
   form: RecordTransactionFormApi
   variant: RecordTransactionVariant
   isAccountReadOnly: boolean
+  transaction?: BankTransaction
 }
 
-export function RecordTransactionForm({ form, variant, isAccountReadOnly }: RecordTransactionFormProps) {
+export function RecordTransactionForm({ form, variant, isAccountReadOnly, transaction }: RecordTransactionFormProps) {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
+  const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(transaction)
   const isExpense = variant === 'expense'
 
   const accountLabel = isExpense
@@ -148,6 +155,26 @@ export function RecordTransactionForm({ form, variant, isAccountReadOnly }: Reco
                   </RecordTransactionFormField>
                 )}
               </form.Field>
+
+              {hasTaxCodeOptions && (
+                <form.Subscribe selector={state => state.values.category}>
+                  {category => (
+                    <form.Field name='taxCode'>
+                      {field => (
+                        <RecordTransactionFormField>
+                          <Label size='sm'>{t('bankTransactions:recordTransaction.label.tax_code', 'Tax code')}</Label>
+                          <TaxCodeComboBox
+                            options={taxCodeOptions}
+                            selectedValue={getSelectedTaxCodeOption(field.state.value)}
+                            onSelectedValueChange={option => field.handleChange(option?.value ?? null)}
+                            isDisabled={category === null || isClassificationExclusion(category)}
+                          />
+                        </RecordTransactionFormField>
+                      )}
+                    </form.Field>
+                  )}
+                </form.Subscribe>
+              )}
 
               <form.AppField name='memo'>
                 {field => (

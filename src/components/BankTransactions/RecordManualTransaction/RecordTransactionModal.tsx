@@ -53,7 +53,7 @@ export function RecordTransactionModal({ variant, transaction, categorization, i
           onClose={onCancel}
         />
         <ModalContent>
-          <RecordTransactionForm form={form} variant={effectiveVariant} isAccountReadOnly={transaction !== undefined} />
+          <RecordTransactionForm form={form} variant={effectiveVariant} isAccountReadOnly={transaction !== undefined} transaction={transaction} />
         </ModalContent>
         <form.Subscribe
           selector={state => ({
