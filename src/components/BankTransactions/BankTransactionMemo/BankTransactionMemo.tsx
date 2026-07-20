@@ -11,9 +11,9 @@ import { useBankTransactionMemo } from '@components/BankTransactions/BankTransac
 
 import './bankTransactionMemo.scss'
 
-export const BankTransactionMemo = ({ bankTransactionId, isMobile }: { bankTransactionId: BankTransaction['id'], isMobile?: boolean }) => {
+export const BankTransactionMemo = ({ bankTransactionId, memo, isMobile }: { bankTransactionId: BankTransaction['id'], memo: BankTransaction['memo'], isMobile?: boolean }) => {
   const { t } = useTranslation()
-  const { form, isUpdatingMemo, isErrorUpdatingMemo, isSaved } = useBankTransactionMemo({ bankTransactionId })
+  const { form, isUpdatingMemo, isErrorUpdatingMemo, isSaved } = useBankTransactionMemo({ bankTransactionId, memo })
 
   return (
     <form
