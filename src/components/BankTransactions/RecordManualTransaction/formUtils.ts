@@ -3,7 +3,10 @@ import { fromDate, toCalendarDate } from '@internationalized/date'
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 import type { RecordCustomTransaction } from '@schemas/customAccounts'
+import type { Customer } from '@schemas/customer'
 import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents } from '@schemas/nonRecursiveBigDecimal'
+import { getCustomerName } from '@utils/customer'
+import { getVendorName } from '@utils/vendor'
 import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import type { RecordTransactionFormValues, RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
@@ -27,7 +30,7 @@ export function convertRecordTransactionFormToParams(
       amount: convertNonRecursiveBigDecimalToCents(amount),
       direction: isExpense ? BankTransactionDirection.Debit : BankTransactionDirection.Credit,
       date: toCalendarDate(date).toString(),
-      description: counterparty !== null ? (counterparty.individualName ?? counterparty.companyName ?? '') : '',
+      description: counterparty === null ? '' : isExpense ? getVendorName(counterparty) : getCustomerName(counterparty as Customer),
       memo: memo.trim(),
       ...(counterparty !== null && (isExpense ? { vendorId: counterparty.id } : { customerId: counterparty.id })),
       ...(category !== null && { categorization: { type: 'Category' as const, category, ...(taxCode !== null && { taxCode }) } }),
