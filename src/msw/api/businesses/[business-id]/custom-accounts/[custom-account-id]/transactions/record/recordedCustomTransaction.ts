@@ -40,6 +40,7 @@ export const buildCustomBankTransaction = (
     date: new Date(`${transaction.date}T09:00:00-05:00`),
     direction: transaction.direction,
     amount: transaction.amount,
+    description: transaction.description,
     memo: transaction.memo ?? existing?.memo ?? null,
     counterpartyName: customer ? getCustomerName(customer) : vendor ? getVendorName(vendor) : null,
     customer,

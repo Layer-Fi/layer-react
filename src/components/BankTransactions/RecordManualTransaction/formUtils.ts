@@ -27,6 +27,7 @@ export function convertRecordTransactionFormToParams(
       amount: convertNonRecursiveBigDecimalToCents(amount),
       direction: isExpense ? BankTransactionDirection.Debit : BankTransactionDirection.Credit,
       date: toCalendarDate(date).toString(),
+      description: counterparty !== null ? (counterparty.individualName ?? counterparty.companyName ?? '') : '',
       memo: memo.trim(),
       ...(counterparty !== null && (isExpense ? { vendorId: counterparty.id } : { customerId: counterparty.id })),
       ...(category !== null && { categorization: { type: 'Category' as const, category, ...(taxCode !== null && { taxCode }) } }),

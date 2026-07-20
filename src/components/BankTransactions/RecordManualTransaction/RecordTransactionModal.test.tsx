@@ -187,6 +187,7 @@ describe('RecordTransactionModal', () => {
         amount: 12550,
         direction: 'DEBIT',
         date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/) as string,
+        description: 'John Smith',
         memo: 'Team lunch',
         vendor_id: VENDOR.id,
         categorization: {
@@ -212,6 +213,7 @@ describe('RecordTransactionModal', () => {
       transaction: expect.objectContaining({
         amount: 8000,
         direction: 'CREDIT',
+        description: 'Jane Doe',
         memo: 'Cash sale',
         customer_id: CUSTOMER.id,
       }) as object,
