@@ -8,6 +8,7 @@ import type { Classification } from '@schemas/categorization'
 import type { Customer } from '@schemas/customer'
 import type { NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import type { Vendor } from '@schemas/vendor'
+import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import { UpsertCustomAccountTransactionMode, useUpsertCustomAccountTransaction } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/useRecordCustomAccountTransaction'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { convertRecordTransactionFormToParams, getRecordTransactionFormValues } from '@components/BankTransactions/RecordManualTransaction/formUtils'
@@ -44,6 +45,7 @@ type UseRecordTransactionFormProps = {
 }
 
 export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: UseRecordTransactionFormProps) => {
+  const { data: categories } = useCategories({})
   const { trigger, isError, reset: resetSubmitState } = useUpsertCustomAccountTransaction(
     transaction
       ? { mode: UpsertCustomAccountTransactionMode.Update, transactionId: transaction.id }
@@ -68,7 +70,7 @@ export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: Us
   )
 
   const form = useAppForm<RecordTransactionFormValues>({
-    defaultValues: transaction ? getRecordTransactionFormValues(transaction) : getDefaultValues(),
+    defaultValues: transaction ? getRecordTransactionFormValues(transaction, categories) : getDefaultValues(),
     onSubmit: handleSubmit,
     validationLogic: revalidateLogic(),
   })
