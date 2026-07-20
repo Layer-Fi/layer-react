@@ -19,7 +19,7 @@ export const useBankTransactionMemo = ({ bankTransactionId, memo }: BankTransact
     isError: isErrorUpdatingMemo,
     data: updateResult,
   } = useUpdateBankTransactionMetadata({ bankTransactionId })
-  const { optimisticallyUpdateBankTransactions, debouncedInvalidateBankTransactions } = useBankTransactionsGlobalCacheActions()
+  const { patchBankTransactionsByTransformation } = useBankTransactionsGlobalCacheActions()
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BankTransactions)
 
   const form = useForm({
@@ -28,12 +28,12 @@ export const useBankTransactionMemo = ({ bankTransactionId, memo }: BankTransact
     },
     onSubmit: async ({ value }) => {
       if (value.memo !== undefined && form.state.isDirty) {
-        void optimisticallyUpdateBankTransactions(bankTransaction =>
-          bankTransaction.id === bankTransactionId ? { ...bankTransaction, memo: value.memo ?? null } : bankTransaction)
-
         const result = await updateBankTransactionMetadata({ memo: value.memo ?? '' })
 
         if (result !== undefined) {
+          void patchBankTransactionsByTransformation(bankTransaction =>
+            bankTransaction.id === bankTransactionId ? { ...bankTransaction, memo: value.memo ?? null } : bankTransaction)
+
           emitLayerEvent({
             type: LayerEventType.TransactionDescriptionEntered,
             version: 1,
@@ -42,8 +42,6 @@ export const useBankTransactionMemo = ({ bankTransactionId, memo }: BankTransact
 
           form.reset(value)
         }
-
-        void debouncedInvalidateBankTransactions({ withPrecedingOptimisticUpdate: true })
       }
     },
   })
