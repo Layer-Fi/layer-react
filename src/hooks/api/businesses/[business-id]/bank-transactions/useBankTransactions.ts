@@ -123,6 +123,7 @@ export const useBankTransactionsGlobalCacheActions = () => {
   const {
     invalidate: invalidateBankTransactions,
     forceReload: forceReloadBankTransactions,
+    patchByKey: patchBankTransactionByKey,
     optimisticallyUpdate: optimisticallyUpdateBankTransactions,
   } = useBankTransactionsBaseGlobalCacheActions()
   const { forceReload } = useGlobalCacheActions()
@@ -156,6 +157,7 @@ export const useBankTransactionsGlobalCacheActions = () => {
     debouncedInvalidateBankTransactions,
     forceReloadBankTransactions,
     forceReloadBackgroundBankTransactions,
+    patchBankTransactionByKey,
     optimisticallyUpdateBankTransactions,
   }
 }
