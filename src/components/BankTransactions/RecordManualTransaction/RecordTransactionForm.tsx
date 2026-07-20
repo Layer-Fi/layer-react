@@ -35,15 +35,16 @@ function RecordTransactionFormField({ withFieldLayout = true, children }: PropsW
 type RecordTransactionFormProps = {
   form: RecordTransactionFormApi
   variant: RecordTransactionVariant
-  isAccountReadOnly: boolean
   transaction?: BankTransaction
 }
 
-export function RecordTransactionForm({ form, variant, isAccountReadOnly, transaction }: RecordTransactionFormProps) {
+export function RecordTransactionForm({ form, variant, transaction }: RecordTransactionFormProps) {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
   const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(transaction)
   const isExpense = variant === 'expense'
+  // Editing keeps a recorded transaction on its original account.
+  const isAccountReadOnly = transaction !== undefined
 
   const accountLabel = isExpense
     ? t('bankTransactions:recordTransaction.label.paid_to', 'Paid to')
