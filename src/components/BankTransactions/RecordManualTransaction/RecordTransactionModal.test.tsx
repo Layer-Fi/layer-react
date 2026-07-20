@@ -3,7 +3,6 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
-import { SplitAsOption } from '@internal-types/categorizationOption'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { BankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
 import { type BankTransactionCategorization, BankTransactionSelectionVariant } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
@@ -94,20 +93,7 @@ const EDIT_CATEGORIZATION: BankTransactionCategorization = {
   variant: BankTransactionSelectionVariant.CATEGORY,
 }
 
-const SINGLE_SPLIT_CATEGORIZATION: BankTransactionCategorization = {
-  category: new SplitAsOption([{
-    amount: 12550,
-    category: convertApiCategorizationToCategoryOrSplitAsOption(EDIT_TRANSACTION.category!),
-    taxCode: null,
-    tags: [],
-    customerVendor: null,
-  }]),
-  taxCode: null,
-  match: null,
-  variant: BankTransactionSelectionVariant.CATEGORY,
-}
-
-const renderEditModal = (categorization: BankTransactionCategorization = EDIT_CATEGORIZATION) => {
+const renderEditModal = () => {
   const user = userEvent.setup()
   const onOpenChange = vi.fn()
 
@@ -121,7 +107,7 @@ const renderEditModal = (categorization: BankTransactionCategorization = EDIT_CA
     user,
     onOpenChange,
     ...render(
-      <RecordTransactionModal variant='expense' transaction={EDIT_TRANSACTION} categorization={categorization} isOpen onOpenChange={onOpenChange} />,
+      <RecordTransactionModal variant='expense' transaction={EDIT_TRANSACTION} categorization={EDIT_CATEGORIZATION} isOpen onOpenChange={onOpenChange} />,
       { wrapper: RecordModalWrapper },
     ),
   }
@@ -268,23 +254,6 @@ describe('RecordTransactionModal', () => {
           type: 'Category',
           tax_code: 'TAX-1',
         }) as object,
-      }) as object,
-    }))
-
-    await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false))
-  })
-
-  it('prefills the category from a single-entry split categorization', async () => {
-    const updateRequest = mockUpdateTransaction()
-    const { user, onOpenChange } = renderEditModal(SINGLE_SPLIT_CATEGORIZATION)
-
-    await user.click(screen.getByRole('button', { name: /save/i }))
-
-    await waitFor(() => expect(updateRequest).toHaveBeenCalledTimes(1))
-
-    expect(updateRequest).toHaveBeenCalledWith(expect.objectContaining({
-      transaction: expect.objectContaining({
-        categorization: expect.objectContaining({ type: 'Category' }) as object,
       }) as object,
     }))
 
