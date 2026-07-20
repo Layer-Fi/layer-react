@@ -215,6 +215,7 @@ describe('RecordTransactionModal', () => {
         categorization: {
           type: 'Category',
           category: expect.objectContaining({ type: expect.any(String) as string }) as object,
+          tax_code: null,
         },
       },
     })

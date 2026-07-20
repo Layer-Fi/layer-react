@@ -46,6 +46,7 @@ export const buildCustomBankTransaction = (
     customer,
     vendor,
     category,
+    taxCode: transaction.categorization ? transaction.categorization.taxCode ?? null : existing?.taxCode ?? null,
     categorizationStatus: category ? CategorizationStatus.CATEGORIZED : CategorizationStatus.READY_FOR_INPUT,
   })
 }

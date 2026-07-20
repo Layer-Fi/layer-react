@@ -30,7 +30,7 @@ export function convertRecordTransactionFormToParams(
       date: toCalendarDate(date).toString(),
       memo: memo.trim(),
       ...(counterparty !== null && (isExpense ? { vendorId: counterparty.id } : { customerId: counterparty.id })),
-      ...(category !== null && { categorization: { type: 'Category' as const, category, ...(taxCode !== null && !isClassificationExclusion(category) && { taxCode }) } }),
+      ...(category !== null && { categorization: { type: 'Category' as const, category, taxCode: isClassificationExclusion(category) ? null : taxCode } }),
     },
   }
 }
