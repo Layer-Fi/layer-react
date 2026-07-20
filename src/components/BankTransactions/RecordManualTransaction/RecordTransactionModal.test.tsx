@@ -174,6 +174,7 @@ describe('RecordTransactionModal', () => {
     expect(recordRequest).toHaveBeenCalledWith({
       customAccountId: CUSTOM_ACCOUNT.id,
       transaction: {
+        external_id: expect.any(String) as string,
         amount: 12550,
         direction: 'DEBIT',
         date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/) as string,

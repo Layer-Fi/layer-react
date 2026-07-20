@@ -44,6 +44,7 @@ type UseRecordTransactionFormProps = {
 }
 
 export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: UseRecordTransactionFormProps) => {
+  const createExternalId = useMemo(() => crypto.randomUUID(), [])
   const { trigger, isError, reset: resetSubmitState } = useUpsertCustomAccountTransaction(
     transaction
       ? { mode: UpsertCustomAccountTransactionMode.Update, transactionId: transaction.id }
@@ -55,8 +56,12 @@ export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: Us
       const params = convertRecordTransactionFormToParams(value, variant)
       if (params === null) return
 
+      const request = transaction
+        ? params
+        : { ...params, transaction: { ...params.transaction, externalId: createExternalId } }
+
       try {
-        await trigger(params)
+        await trigger(request)
         onSuccess?.()
         formApi.reset()
       }
@@ -64,7 +69,7 @@ export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: Us
         console.error(e)
       }
     },
-    [trigger, variant, onSuccess],
+    [trigger, variant, transaction, createExternalId, onSuccess],
   )
 
   const form = useAppForm<RecordTransactionFormValues>({
