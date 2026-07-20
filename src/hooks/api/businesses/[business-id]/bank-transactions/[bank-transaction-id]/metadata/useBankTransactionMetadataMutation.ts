@@ -1,11 +1,15 @@
+import { Schema } from 'effect'
+
 import { type BankTransactionMetadataUpdateEncoded } from '@schemas/bankTransactions/metadataUpdate'
+import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patch } from '@utils/api/authenticatedHttp'
-import {
-  BankTransactionMetadataResponseSchema,
-} from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useBankTransactionsMetadata'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const BANK_TRANSACTION_METADATA_MUTATION_TAG_KEY = '#bank-transaction-metadata-mutation'
+
+const BankTransactionMetadataResponseSchema = UnwrappedDataResponseSchema(
+  Schema.Struct({ memo: Schema.NullishOr(Schema.String) }),
+)
 
 type BankTransactionMetadataResponseEncoded = typeof BankTransactionMetadataResponseSchema.Encoded
 
