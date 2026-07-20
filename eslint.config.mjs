@@ -40,6 +40,7 @@ export default tsEslint.config(
             '.storybook/mocks/react-plaid-link.ts',
             '.storybook/mocks/systemDate.ts',
             '.storybook/preview.tsx',
+            '.storybook/StorybookLayerProvider.tsx',
             'eslint.config.mjs',
             'i18next.config.ts',
             'vite.config.ts',

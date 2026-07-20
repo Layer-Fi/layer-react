@@ -37,6 +37,7 @@
     "prepack": "npm run typecheck && npm run build:clean",
     "prepare": "husky",
     "storybook": "storybook dev -p 6006",
+    "storybook:real": "STORYBOOK_LAYER_BACKEND=real storybook dev -p 6006",
     "storybook:build": "storybook build",
     "test": "vitest",
     "typecheck": "tsc --noEmit"
