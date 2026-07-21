@@ -23,11 +23,13 @@ import { Separator } from '@components/Separator/Separator'
 import { ConditionalList } from '@components/utility/ConditionalList'
 import { useWizard } from '@components/Wizard/Wizard'
 
+export interface LinkAccountsStringOverrides {
+  removeUnusedAccountsNextStep?: string
+}
+
 type LinkAccountsLinkStepProps = {
   isReconnectFlow?: boolean
-  stringOverrides?: {
-    removeUnusedAccountsNextStep?: string
-  }
+  stringOverrides?: LinkAccountsStringOverrides
 }
 
 export function LinkAccountsLinkStep({ isReconnectFlow = false, stringOverrides }: LinkAccountsLinkStepProps) {
