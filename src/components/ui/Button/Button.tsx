@@ -37,6 +37,7 @@ function ButtonTransparentContent({ children }: PropsWithChildren) {
 
 export type ButtonVariant = 'solid' | 'ghost' | 'outlined' | 'text' | 'branded'
 export type ButtonSize = 'md'
+export type ButtonStatus = 'danger'
 
 export type ButtonStyleProps = {
   ellipsis?: true
@@ -44,6 +45,7 @@ export type ButtonStyleProps = {
   inset?: true
   size?: ButtonSize
   variant?: ButtonVariant
+  status?: ButtonStatus
   fullWidth?: boolean
   flex?: boolean
   tooltip?: ReactNode
@@ -63,6 +65,7 @@ const Button = forwardRef<
     inset,
     size = 'md',
     variant = 'solid',
+    status,
     fullWidth = false,
     flex = false,
     tooltip,
@@ -78,6 +81,7 @@ const Button = forwardRef<
     inset,
     size,
     variant,
+    status,
     'full-width': fullWidth,
     flex,
     underline,

@@ -7,6 +7,7 @@ import { SubmitButton } from '@ui/Button/SubmitButton'
 import { Modal } from '@ui/Modal/Modal'
 import { ModalActions, ModalContent, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
+import { DeleteRecordedTransactionButton } from '@components/BankTransactions/RecordManualTransaction/DeleteRecordedTransactionButton'
 import { getRecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/formUtils'
 import { RecordTransactionForm } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionForm'
 import { type RecordTransactionVariant, useRecordTransactionForm } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
@@ -65,6 +66,9 @@ export function RecordTransactionModal({ variant, transaction, isOpen, onOpenCha
             : (
               <ModalActions>
                 <HStack gap='sm'>
+                  {transaction && (
+                    <DeleteRecordedTransactionButton transaction={transaction} onDeleted={() => onOpenChange(false)} />
+                  )}
                   <Spacer />
                   <Button variant='outlined' onPress={onCancel}>
                     {t('common:action.cancel_label', 'Cancel')}
