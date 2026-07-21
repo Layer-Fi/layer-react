@@ -16,7 +16,6 @@ import { P } from '@ui/Typography/Text'
 import { ActionableRow } from '@components/ActionableRow/ActionableRow'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { LinkAccountsListContainer } from '@components/LinkAccounts/LinkAccountsListContainer'
-import { type LinkAccountsStringOverrides } from '@components/LinkAccounts/linkAccountsStringOverrides'
 import { BasicLinkedAccountContainer, BasicLinkedAccountContent } from '@components/LinkedAccounts/BasicLinkedAccount/BasicLinkedAccount'
 import { LinkAccountDemoTooltip } from '@components/LinkedAccounts/LinkAccountDemoTooltip'
 import { Loader } from '@components/Loader/Loader'
@@ -26,7 +25,9 @@ import { useWizard } from '@components/Wizard/Wizard'
 
 type LinkAccountsLinkStepProps = {
   isReconnectFlow?: boolean
-  stringOverrides?: LinkAccountsStringOverrides
+  stringOverrides?: {
+    removeUnusedAccountsNextStep?: string
+  }
 }
 
 export function LinkAccountsLinkStep({ isReconnectFlow = false, stringOverrides }: LinkAccountsLinkStepProps) {
