@@ -107,6 +107,8 @@ const makeEditTransaction = (category: Categorization, taxCode: string | null = 
   customer: null,
   category,
   taxCode,
+  // The prefill keeps a tax code only when it appears in taxOptions.
+  taxOptions: taxCode ? { Default: [{ code: taxCode, displayName: taxCode }] } : null,
   categorizationStatus: CategorizationStatus.CATEGORIZED,
 })
 

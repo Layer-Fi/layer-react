@@ -6,6 +6,7 @@ import { isClassificationExclusion } from '@schemas/categorization'
 import type { RecordCustomTransaction } from '@schemas/customAccounts'
 import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents } from '@schemas/nonRecursiveBigDecimal'
 import { getDefaultSelectedCategoryForBankTransaction } from '@utils/bankTransactions/shared'
+import { getDefaultTaxCodeForBankTransaction } from '@utils/bankTransactions/taxCode'
 import type { RecordTransactionFormValues, RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
 
@@ -50,6 +51,6 @@ export const getRecordTransactionFormValues = (
   amount: convertCentsToNonRecursiveBigDecimal(transaction.amount),
   date: fromDate(transaction.date, 'UTC'),
   category: getDefaultSelectedCategoryForBankTransaction(transaction)?.classification ?? null,
-  taxCode: transaction.taxCode ?? null,
+  taxCode: getDefaultTaxCodeForBankTransaction(transaction),
   memo: transaction.memo ?? '',
 })
