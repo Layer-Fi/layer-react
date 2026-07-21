@@ -8,14 +8,13 @@ import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccoun
 import { Heading } from '@ui/Typography/Heading'
 import { LinkAccountsConfirmationStep } from '@components/LinkAccounts/LinkAccountsConfirmationStep'
 import { LinkAccountsLinkStep } from '@components/LinkAccounts/LinkAccountsLinkStep'
+import { type LinkAccountsStringOverrides } from '@components/LinkAccounts/linkAccountsStringOverrides'
 import { HostedLinkErrorBanner } from '@components/LinkedAccounts/HostedLinkErrorBanner'
 import { Wizard } from '@components/Wizard/Wizard'
 
 import './linkAccounts.scss'
 
-export type LinkAccountsStringOverrides = {
-  removeUnusedAccountsNextStep?: string
-}
+export type { LinkAccountsStringOverrides }
 
 type LinkAccountsProps = {
   onComplete?: () => Awaitable<void>
