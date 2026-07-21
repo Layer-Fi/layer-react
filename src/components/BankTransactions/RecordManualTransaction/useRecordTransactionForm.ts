@@ -49,7 +49,7 @@ type UseRecordTransactionFormProps = {
 
 export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: UseRecordTransactionFormProps) => {
   const createExternalId = useMemo(() => crypto.randomUUID(), [])
-  const { trigger, isError, reset: resetSubmitState } = useUpsertCustomAccountTransaction(
+  const { trigger, isError } = useUpsertCustomAccountTransaction(
     transaction
       ? { mode: UpsertCustomAccountTransactionMode.Update, transactionId: transaction.id }
       : { mode: UpsertCustomAccountTransactionMode.Create },
@@ -91,5 +91,5 @@ export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: Us
     validationLogic: revalidateLogic(),
   })
 
-  return useMemo(() => ({ form, isError, resetSubmitState }), [form, isError, resetSubmitState])
+  return useMemo(() => ({ form, isError }), [form, isError])
 }
