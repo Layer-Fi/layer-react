@@ -24,6 +24,7 @@ import { tasksHandlers } from '@msw/api/businesses/[business-id]/tasks/handlers'
 import { taxEstimatesHandlers } from '@msw/api/businesses/[business-id]/tax-estimates/handlers'
 import { timeTrackingHandlers } from '@msw/api/businesses/[business-id]/time-tracking/handlers'
 import { vendorsHandlers } from '@msw/api/businesses/[business-id]/vendors/handlers'
+import { overviewConfigurationHandlers } from './overview/handler'
 
 export const businessHandlers: RequestHandler[] = [
   getBusiness.handler,
@@ -42,6 +43,7 @@ export const businessHandlers: RequestHandler[] = [
   ...catalogHandlers,
   ...timeTrackingHandlers,
   ...ledgerHandlers,
+  ...overviewConfigurationHandlers,
   ...invoicesHandlers,
   ...stripeHandlers,
   ...reportsHandlers,

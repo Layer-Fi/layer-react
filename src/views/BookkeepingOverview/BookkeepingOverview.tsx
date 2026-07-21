@@ -37,7 +37,8 @@ type BookkeepingOverviewTasksContentProps = {
   onClickReconnectAccounts?: () => void
 }
 
-const BookkeepingOverviewTasksContent = ({
+// Should probably move into a seperate file
+export const BookkeepingOverviewTasksContent = ({
   callBooking,
   showCallBookingCard,
   tasksMobile,
