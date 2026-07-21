@@ -7,9 +7,9 @@ import { Label } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
 
-import './recordTransactionsFormCategoryCombobox.scss'
+import './recordTransactionFormCategoryCombobox.scss'
 
-type RecordTransactionsFormCategoryComboboxProps = {
+type RecordTransactionFormCategoryComboboxProps = {
   label: string
   placeholder: string
   value: Classification | null
@@ -19,7 +19,7 @@ type RecordTransactionsFormCategoryComboboxProps = {
   category?: BankTransactionNonSuggestedMatchOption | null
 }
 
-export function RecordTransactionsFormCategoryCombobox({
+export function RecordTransactionFormCategoryCombobox({
   label,
   placeholder,
   value,
@@ -27,7 +27,7 @@ export function RecordTransactionsFormCategoryCombobox({
   isInvalid,
   transaction,
   category,
-}: RecordTransactionsFormCategoryComboboxProps) {
+}: RecordTransactionFormCategoryComboboxProps) {
   if (!transaction) {
     return (
       <LedgerAccountCombobox
@@ -70,7 +70,7 @@ function RecordTransactionFormEditCategoryCombobox({ label, onValueChange, trans
   }, [onValueChange])
 
   return (
-    <div className='Layer__RecordTransactionsFormCategoryCombobox--inline'>
+    <div className='Layer__RecordTransactionFormCategoryCombobox--inline'>
       <Label size='sm' htmlFor={inputId}>{label}</Label>
       <BankTransactionCategoryComboBox
         inputId={inputId}

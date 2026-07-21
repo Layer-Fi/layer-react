@@ -11,7 +11,7 @@ import { Form } from '@ui/Form/Form'
 import { Label } from '@ui/Typography/Text'
 import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { RecordTransactionCounterpartySelector } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionCounterpartySelector'
-import { RecordTransactionsFormCategoryCombobox } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionsFormCategoryCombobox'
+import { RecordTransactionFormCategoryCombobox } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionFormCategoryCombobox'
 import { type RecordTransactionFormApi, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { CustomAccountComboBox } from '@components/CustomAccountComboBox/CustomAccountComboBox'
 import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
@@ -152,7 +152,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
               >
                 {field => (
                   <RecordTransactionFormField>
-                    <RecordTransactionsFormCategoryCombobox
+                    <RecordTransactionFormCategoryCombobox
                       label={t('bankTransactions:recordTransaction.label.category', 'Category')}
                       placeholder={t('bankTransactions:recordTransaction.placeholder.category', 'Select category...')}
                       isInvalid={field.state.meta.errors.length > 0}
