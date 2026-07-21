@@ -5,9 +5,8 @@ import { describe, expect, it, vi } from 'vitest'
 
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { BankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
-import { type BankTransactionCategorization, BankTransactionSelectionVariant } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import type { Categorization } from '@schemas/categorization'
 import { BankTransactionsCategorizationStoreProvider } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 import { RecordTransactionModal } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionModal'
 import { type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 
@@ -71,7 +70,31 @@ const renderModal = (variant: RecordTransactionVariant = 'expense') => {
   }
 }
 
-const EDIT_TRANSACTION = makeBankTransaction({
+const CASH_CATEGORY: Categorization = { type: 'Account', id: 'cash', stableName: 'cash', category: 'cash', displayName: 'Cash', description: null }
+const MEALS_CATEGORY: Categorization = { type: 'Account', id: 'meals', stableName: 'meals', category: 'meals', displayName: 'Meals', description: null }
+
+const SPLIT_CATEGORY: Categorization = {
+  type: 'Split_Categorization',
+  id: 'split-1',
+  category: 'SPLIT',
+  displayName: 'Split',
+  entries: [
+    { type: 'AccountSplitEntry', amount: 6275, category: CASH_CATEGORY, taxCode: null, tags: [], customer: null, vendor: null },
+    { type: 'AccountSplitEntry', amount: 6275, category: MEALS_CATEGORY, taxCode: null, tags: [], customer: null, vendor: null },
+  ],
+}
+
+const SINGLE_SPLIT_CATEGORY: Categorization = {
+  type: 'Split_Categorization',
+  id: 'split-2',
+  category: 'SPLIT',
+  displayName: 'Split',
+  entries: [
+    { type: 'AccountSplitEntry', amount: 12550, category: CASH_CATEGORY, taxCode: null, tags: [], customer: null, vendor: null },
+  ],
+}
+
+const makeEditTransaction = (category: Categorization, taxCode: string | null = null) => makeBankTransaction({
   source: TransactionSource.CUSTOM,
   externalAccountId: CUSTOM_ACCOUNT.id,
   sourceTransactionId: 'ext-txn-1',
@@ -82,49 +105,16 @@ const EDIT_TRANSACTION = makeBankTransaction({
   counterpartyName: 'John Smith',
   vendor: VENDOR,
   customer: null,
-  category: { type: 'Account', id: 'cash', stableName: 'cash', category: 'cash', displayName: 'Cash', description: null },
+  category,
+  taxCode,
   categorizationStatus: CategorizationStatus.CATEGORIZED,
 })
 
-const EDIT_CATEGORIZATION: BankTransactionCategorization = {
-  category: convertApiCategorizationToCategoryOrSplitAsOption(EDIT_TRANSACTION.category!),
-  taxCode: 'TAX-1',
-  match: null,
-  variant: BankTransactionSelectionVariant.CATEGORY,
-}
+const EDIT_TRANSACTION = makeEditTransaction(CASH_CATEGORY, 'TAX-1')
+const SPLIT_TRANSACTION = makeEditTransaction(SPLIT_CATEGORY)
+const SINGLE_SPLIT_TRANSACTION = makeEditTransaction(SINGLE_SPLIT_CATEGORY)
 
-const SPLIT_CATEGORIZATION: BankTransactionCategorization = {
-  category: convertApiCategorizationToCategoryOrSplitAsOption({
-    type: 'Split_Categorization',
-    id: 'split-1',
-    category: 'SPLIT',
-    displayName: 'Split',
-    entries: [
-      { type: 'AccountSplitEntry', amount: 6275, category: { type: 'Account', id: 'cash', stableName: 'cash', category: 'cash', displayName: 'Cash', description: null }, taxCode: null, tags: [], customer: null, vendor: null },
-      { type: 'AccountSplitEntry', amount: 6275, category: { type: 'Account', id: 'meals', stableName: 'meals', category: 'meals', displayName: 'Meals', description: null }, taxCode: null, tags: [], customer: null, vendor: null },
-    ],
-  }),
-  taxCode: null,
-  match: null,
-  variant: BankTransactionSelectionVariant.CATEGORY,
-}
-
-const SINGLE_SPLIT_CATEGORIZATION: BankTransactionCategorization = {
-  category: convertApiCategorizationToCategoryOrSplitAsOption({
-    type: 'Split_Categorization',
-    id: 'split-2',
-    category: 'SPLIT',
-    displayName: 'Split',
-    entries: [
-      { type: 'AccountSplitEntry', amount: 12550, category: { type: 'Account', id: 'cash', stableName: 'cash', category: 'cash', displayName: 'Cash', description: null }, taxCode: null, tags: [], customer: null, vendor: null },
-    ],
-  }),
-  taxCode: null,
-  match: null,
-  variant: BankTransactionSelectionVariant.CATEGORY,
-}
-
-const renderEditModal = (categorization: BankTransactionCategorization = EDIT_CATEGORIZATION) => {
+const renderEditModal = (transaction = EDIT_TRANSACTION) => {
   const user = userEvent.setup()
   const onOpenChange = vi.fn()
 
@@ -139,7 +129,7 @@ const renderEditModal = (categorization: BankTransactionCategorization = EDIT_CA
     onOpenChange,
     filler: createFormFiller(user),
     ...render(
-      <RecordTransactionModal variant='expense' transaction={EDIT_TRANSACTION} categorization={categorization} isOpen onOpenChange={onOpenChange} />,
+      <RecordTransactionModal variant='expense' transaction={transaction} isOpen onOpenChange={onOpenChange} />,
       { wrapper: RecordModalWrapper },
     ),
   }
@@ -294,7 +284,7 @@ describe('RecordTransactionModal', () => {
 
   it('shows the split accounts in the category input and disables the amount when editing a split', async () => {
     mockUpdateTransaction()
-    renderEditModal(SPLIT_CATEGORIZATION)
+    renderEditModal(SPLIT_TRANSACTION)
 
     expect(await screen.findByText('Cash and Meals')).toBeInTheDocument()
     expect(screen.getByText('Split')).toBeInTheDocument()
@@ -304,7 +294,7 @@ describe('RecordTransactionModal', () => {
 
   it('omits the categorization from the PATCH when a split is saved without editing', async () => {
     const updateRequest = mockUpdateTransaction()
-    const { user } = renderEditModal(SPLIT_CATEGORIZATION)
+    const { user } = renderEditModal(SPLIT_TRANSACTION)
 
     expect(await screen.findByText('Cash and Meals')).toBeInTheDocument()
 
@@ -319,7 +309,7 @@ describe('RecordTransactionModal', () => {
 
   it('re-enables the amount and includes the categorization when a category replaces the split', async () => {
     const updateRequest = mockUpdateTransaction()
-    const { user, filler } = renderEditModal(SPLIT_CATEGORIZATION)
+    const { user, filler } = renderEditModal(SPLIT_TRANSACTION)
 
     expect(await screen.findByText('Cash and Meals')).toBeInTheDocument()
     expect(screen.getByLabelText('Amount')).toHaveAttribute('readonly')
@@ -341,7 +331,7 @@ describe('RecordTransactionModal', () => {
 
   it('treats a single-entry split as a category: editable amount and categorization sent on save', async () => {
     const updateRequest = mockUpdateTransaction()
-    const { user } = renderEditModal(SINGLE_SPLIT_CATEGORIZATION)
+    const { user } = renderEditModal(SINGLE_SPLIT_TRANSACTION)
 
     expect(await screen.findByText('Edit transaction')).toBeInTheDocument()
     expect(screen.getByLabelText('Amount')).not.toHaveAttribute('readonly')

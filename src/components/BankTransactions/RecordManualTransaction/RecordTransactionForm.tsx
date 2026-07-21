@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { isClassificationExclusion } from '@schemas/categorization'
+import { getDefaultSelectedCategoryForBankTransaction } from '@utils/bankTransactions/shared'
 import { positiveAmount, required } from '@utils/form/validators'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import type { BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { Form } from '@ui/Form/Form'
 import { Label } from '@ui/Typography/Text'
 import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
@@ -38,10 +38,9 @@ type RecordTransactionFormProps = {
   form: RecordTransactionFormApi
   variant: RecordTransactionVariant
   transaction?: BankTransaction
-  categorization?: BankTransactionCategorization
 }
 
-export function RecordTransactionForm({ form, variant, transaction, categorization }: RecordTransactionFormProps) {
+export function RecordTransactionForm({ form, variant, transaction }: RecordTransactionFormProps) {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
   const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(transaction)
@@ -49,7 +48,8 @@ export function RecordTransactionForm({ form, variant, transaction, categorizati
   // Editing keeps a recorded transaction on its original account.
   const isAccountReadOnly = transaction !== undefined
 
-  const category = categorization?.category ?? null
+  // Prefill from the persisted transaction (its selected category, or its first suggestion).
+  const category = transaction ? getDefaultSelectedCategoryForBankTransaction(transaction) : null
   // A multi-entry split has no single classification: lock the amount and skip the category
   // requirement until the user replaces it with a real category.
   const isMultiSplit = category !== null && isSplitAsOption(category) && !category.isSingleSplit
@@ -151,7 +151,7 @@ export function RecordTransactionForm({ form, variant, transaction, categorizati
 
               <form.Field
                 name='category'
-                validators={{ onDynamic: ({ value }) => !isMultiSplit && required(t('bankTransactions:recordTransaction.validation.category_required', 'Category is required'))(value) }}
+                validators={{ onDynamic: ({ value }) => isMultiSplit ? undefined : required(t('bankTransactions:recordTransaction.validation.category_required', 'Category is required'))(value) }}
               >
                 {field => (
                   <RecordTransactionFormField>
