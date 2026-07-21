@@ -49,7 +49,9 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
   const isAccountReadOnly = transaction !== undefined
 
   const category = transaction ? getDefaultSelectedCategoryForBankTransaction(transaction) : null
-  const isMultiSplit = category !== null && isSplitAsOption(category) && !category.isSingleSplit
+  // Only an already-applied split locks the amount / skips category validation — a split *suggestion*
+  // (used when the transaction has no saved category) has not been applied, so it must not.
+  const isMultiSplit = transaction?.category != null && category !== null && isSplitAsOption(category) && !category.isSingleSplit
 
   const accountLabel = isExpense
     ? t('bankTransactions:recordTransaction.label.paid_to', 'Paid to')

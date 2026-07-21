@@ -34,6 +34,7 @@ export function DeleteRecordedTransactionConfirmation({ transaction, onCancel, o
       <ModalTitleWithClose
         heading={<ModalHeading size='sm'>{t('bankTransactions:recordTransaction.delete.title', 'Delete transaction')}</ModalHeading>}
         onClose={onCancel}
+        hideCloseButton={isProcessing}
       />
       <ModalContent>
         <ModalDescription>
@@ -43,7 +44,7 @@ export function DeleteRecordedTransactionConfirmation({ transaction, onCancel, o
       <ModalActions>
         <HStack gap='sm'>
           <Spacer />
-          <Button variant='outlined' onPress={onCancel}>
+          <Button variant='outlined' onPress={onCancel} isDisabled={isProcessing}>
             {t('common:action.cancel_label', 'Cancel')}
           </Button>
           <SubmitButton
