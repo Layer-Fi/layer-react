@@ -7,17 +7,23 @@ import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/Linked
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { Heading } from '@ui/Typography/Heading'
 import { LinkAccountsConfirmationStep } from '@components/LinkAccounts/LinkAccountsConfirmationStep'
-import { LinkAccountsLinkStep } from '@components/LinkAccounts/LinkAccountsLinkStep'
+import {
+  LinkAccountsLinkStep,
+  type LinkAccountsStringOverrides,
+} from '@components/LinkAccounts/LinkAccountsLinkStep'
 import { HostedLinkErrorBanner } from '@components/LinkedAccounts/HostedLinkErrorBanner'
 import { Wizard } from '@components/Wizard/Wizard'
 
 import './linkAccounts.scss'
+
+export type { LinkAccountsStringOverrides }
 
 type LinkAccountsProps = {
   onComplete?: () => Awaitable<void>
   onPlaidConnectionSuccess?: () => Awaitable<void>
   plaidHostedLinkConfig?: PlaidHostedLinkConfig
   isReconnectFlow?: boolean
+  stringOverrides?: LinkAccountsStringOverrides
 }
 
 export function LinkAccounts({ plaidHostedLinkConfig, onPlaidConnectionSuccess, ...props }: LinkAccountsProps) {
@@ -34,6 +40,7 @@ export function LinkAccounts({ plaidHostedLinkConfig, onPlaidConnectionSuccess, 
 function LinkAccountsContent({
   onComplete,
   isReconnectFlow = false,
+  stringOverrides,
 }: Omit<LinkAccountsProps, 'onPlaidConnectionSuccess' | 'plaidHostedLinkConfig'>) {
   const { t } = useTranslation()
   const { data: linkedAccounts, loadingStatus } = useBankAccountsContext()
@@ -60,7 +67,7 @@ function LinkAccountsContent({
         Footer={null}
         onComplete={onComplete}
       >
-        <LinkAccountsLinkStep isReconnectFlow={isReconnectFlow} />
+        <LinkAccountsLinkStep isReconnectFlow={isReconnectFlow} stringOverrides={stringOverrides} />
         {hideConfirmationStep ? null : <LinkAccountsConfirmationStep />}
       </Wizard>
     </section>

@@ -23,11 +23,16 @@ import { Separator } from '@components/Separator/Separator'
 import { ConditionalList } from '@components/utility/ConditionalList'
 import { useWizard } from '@components/Wizard/Wizard'
 
-type LinkAccountsLinkStepProps = {
-  isReconnectFlow?: boolean
+export interface LinkAccountsStringOverrides {
+  removeUnusedAccountsNextStep?: string
 }
 
-export function LinkAccountsLinkStep({ isReconnectFlow = false }: LinkAccountsLinkStepProps) {
+type LinkAccountsLinkStepProps = {
+  isReconnectFlow?: boolean
+  stringOverrides?: LinkAccountsStringOverrides
+}
+
+export function LinkAccountsLinkStep({ isReconnectFlow = false, stringOverrides }: LinkAccountsLinkStepProps) {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { isLinking, addConnection } = useContext(LinkedAccountsContext)
@@ -86,7 +91,8 @@ export function LinkAccountsLinkStep({ isReconnectFlow = false }: LinkAccountsLi
                 <P status='disabled'>
                   {isReconnectFlow
                     ? t('linkedAccounts:label.remove_accounts_new_dashboard', 'You’ll have the chance to remove any accounts in the new dashboard.')
-                    : t('linkedAccounts:label.remove_unused_accounts_next_step', 'You’ll have the chance to remove any accounts you don’t use for your business in the next step.')}
+                    : stringOverrides?.removeUnusedAccountsNextStep
+                      ?? t('linkedAccounts:label.remove_unused_accounts_next_step', 'You’ll have the chance to remove any accounts you don’t use for your business in the next step.')}
                 </P>
               </VStack>
               <LinkAccountsListContainer>
