@@ -1,3 +1,5 @@
+import type { SplitAsOption } from '@internal-types/categorizationOption'
+import { useSplitLabel } from '@hooks/features/bankTransactions/useSplitLabel'
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
@@ -15,11 +17,12 @@ type BankTransactionsUncategorizedSelectedValueProps = {
 }
 
 export const BankTransactionsUncategorizedSelectedValue = (props: BankTransactionsUncategorizedSelectedValueProps) => {
+  const getSplitLabel = useSplitLabel()
   const { selectedValue, className, slotProps, showCategoryBadge } = props
 
   if (!selectedValue) return null
 
-  const baseSelectedValue = normalizeFromSelectedValue(selectedValue)
+  const baseSelectedValue = normalizeFromSelectedValue(selectedValue, getSplitLabel)
   return (
     <BankTransactionsBaseSelectedValue
       {...baseSelectedValue}
@@ -30,7 +33,10 @@ export const BankTransactionsUncategorizedSelectedValue = (props: BankTransactio
   )
 }
 
-const normalizeFromSelectedValue = (selectedValue: BankTransactionCategoryComboBoxOption): BankTransactionsBaseSelectedValueProps => {
+const normalizeFromSelectedValue = (
+  selectedValue: BankTransactionCategoryComboBoxOption,
+  getSplitLabel: (split: SplitAsOption) => string,
+): BankTransactionsBaseSelectedValueProps => {
   if (isSuggestedMatchAsOption(selectedValue)) {
     return {
       type: selectedValue.original.details.type === 'Transfer_Match' ? 'transfer' : 'match',
@@ -41,7 +47,7 @@ const normalizeFromSelectedValue = (selectedValue: BankTransactionCategoryComboB
   if (isSplitAsOption(selectedValue) && selectedValue.original.length > 1) {
     return {
       type: 'split',
-      label: selectedValue.label,
+      label: getSplitLabel(selectedValue),
     }
   }
 

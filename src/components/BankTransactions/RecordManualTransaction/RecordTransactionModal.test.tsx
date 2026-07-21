@@ -93,7 +93,38 @@ const EDIT_CATEGORIZATION: BankTransactionCategorization = {
   variant: BankTransactionSelectionVariant.CATEGORY,
 }
 
-const renderEditModal = () => {
+const SPLIT_CATEGORIZATION: BankTransactionCategorization = {
+  category: convertApiCategorizationToCategoryOrSplitAsOption({
+    type: 'Split_Categorization',
+    id: 'split-1',
+    category: 'SPLIT',
+    displayName: 'Split',
+    entries: [
+      { type: 'AccountSplitEntry', amount: 6275, category: { type: 'Account', id: 'cash', stableName: 'cash', category: 'cash', displayName: 'Cash', description: null }, taxCode: null, tags: [], customer: null, vendor: null },
+      { type: 'AccountSplitEntry', amount: 6275, category: { type: 'Account', id: 'meals', stableName: 'meals', category: 'meals', displayName: 'Meals', description: null }, taxCode: null, tags: [], customer: null, vendor: null },
+    ],
+  }),
+  taxCode: null,
+  match: null,
+  variant: BankTransactionSelectionVariant.CATEGORY,
+}
+
+const SINGLE_SPLIT_CATEGORIZATION: BankTransactionCategorization = {
+  category: convertApiCategorizationToCategoryOrSplitAsOption({
+    type: 'Split_Categorization',
+    id: 'split-2',
+    category: 'SPLIT',
+    displayName: 'Split',
+    entries: [
+      { type: 'AccountSplitEntry', amount: 12550, category: { type: 'Account', id: 'cash', stableName: 'cash', category: 'cash', displayName: 'Cash', description: null }, taxCode: null, tags: [], customer: null, vendor: null },
+    ],
+  }),
+  taxCode: null,
+  match: null,
+  variant: BankTransactionSelectionVariant.CATEGORY,
+}
+
+const renderEditModal = (categorization: BankTransactionCategorization = EDIT_CATEGORIZATION) => {
   const user = userEvent.setup()
   const onOpenChange = vi.fn()
 
@@ -106,8 +137,9 @@ const renderEditModal = () => {
   return {
     user,
     onOpenChange,
+    filler: createFormFiller(user),
     ...render(
-      <RecordTransactionModal variant='expense' transaction={EDIT_TRANSACTION} categorization={EDIT_CATEGORIZATION} isOpen onOpenChange={onOpenChange} />,
+      <RecordTransactionModal variant='expense' transaction={EDIT_TRANSACTION} categorization={categorization} isOpen onOpenChange={onOpenChange} />,
       { wrapper: RecordModalWrapper },
     ),
   }
@@ -258,6 +290,69 @@ describe('RecordTransactionModal', () => {
     }))
 
     await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false))
+  })
+
+  it('shows the split accounts in the category input and disables the amount when editing a split', async () => {
+    mockUpdateTransaction()
+    renderEditModal(SPLIT_CATEGORIZATION)
+
+    expect(await screen.findByText('Cash and Meals')).toBeInTheDocument()
+    expect(screen.getByText('Split')).toBeInTheDocument()
+    expect(screen.queryByText('Select category...')).not.toBeInTheDocument()
+    expect(screen.getByLabelText('Amount')).toHaveAttribute('readonly')
+  })
+
+  it('omits the categorization from the PATCH when a split is saved without editing', async () => {
+    const updateRequest = mockUpdateTransaction()
+    const { user } = renderEditModal(SPLIT_CATEGORIZATION)
+
+    expect(await screen.findByText('Cash and Meals')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /save/i }))
+
+    await waitFor(() => expect(updateRequest).toHaveBeenCalledTimes(1))
+
+    const { transaction } = updateRequest.mock.calls[0][0] as { transaction: Record<string, unknown> }
+    expect(transaction).not.toHaveProperty('categorization')
+    expect(transaction.amount).toBe(12550)
+  })
+
+  it('re-enables the amount and includes the categorization when a category replaces the split', async () => {
+    const updateRequest = mockUpdateTransaction()
+    const { user, filler } = renderEditModal(SPLIT_CATEGORIZATION)
+
+    expect(await screen.findByText('Cash and Meals')).toBeInTheDocument()
+    expect(screen.getByLabelText('Amount')).toHaveAttribute('readonly')
+
+    await filler.comboBox({ field: 'Category', option: /^Cash$/ })
+
+    expect(screen.getByLabelText('Amount')).not.toHaveAttribute('readonly')
+
+    await user.click(screen.getByRole('button', { name: /save/i }))
+
+    await waitFor(() => expect(updateRequest).toHaveBeenCalledTimes(1))
+
+    expect(updateRequest).toHaveBeenCalledWith(expect.objectContaining({
+      transaction: expect.objectContaining({
+        categorization: expect.objectContaining({ type: 'Category' }) as object,
+      }) as object,
+    }))
+  })
+
+  it('treats a single-entry split as a category: editable amount and categorization sent on save', async () => {
+    const updateRequest = mockUpdateTransaction()
+    const { user } = renderEditModal(SINGLE_SPLIT_CATEGORIZATION)
+
+    expect(await screen.findByText('Edit transaction')).toBeInTheDocument()
+    expect(screen.getByLabelText('Amount')).not.toHaveAttribute('readonly')
+
+    await user.click(screen.getByRole('button', { name: /save/i }))
+
+    await waitFor(() => expect(updateRequest).toHaveBeenCalledTimes(1))
+
+    const { transaction } = updateRequest.mock.calls[0][0] as { transaction: Record<string, unknown> }
+    expect(transaction).toHaveProperty('categorization')
+    expect(transaction.categorization).toEqual(expect.objectContaining({ type: 'Category' }))
   })
 
   it('shows a retry state and keeps the modal open when the request fails', async () => {

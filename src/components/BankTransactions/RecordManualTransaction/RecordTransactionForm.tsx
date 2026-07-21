@@ -6,13 +6,15 @@ import { isClassificationExclusion } from '@schemas/categorization'
 import { positiveAmount, required } from '@utils/form/validators'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import type { BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { Form } from '@ui/Form/Form'
 import { Label } from '@ui/Typography/Text'
+import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { RecordTransactionCounterpartySelector } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionCounterpartySelector'
+import { RecordTransactionsFormCategoryCombobox } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionsFormCategoryCombobox'
 import { type RecordTransactionFormApi, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { CustomAccountComboBox } from '@components/CustomAccountComboBox/CustomAccountComboBox'
 import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
-import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
 import { TaxCodeComboBox } from '@components/TaxCodeSelect/TaxCodeComboBox'
 import { ErrorText } from '@components/Typography/ErrorText'
 
@@ -36,15 +38,21 @@ type RecordTransactionFormProps = {
   form: RecordTransactionFormApi
   variant: RecordTransactionVariant
   transaction?: BankTransaction
+  categorization?: BankTransactionCategorization
 }
 
-export function RecordTransactionForm({ form, variant, transaction }: RecordTransactionFormProps) {
+export function RecordTransactionForm({ form, variant, transaction, categorization }: RecordTransactionFormProps) {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
   const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(transaction)
   const isExpense = variant === 'expense'
   // Editing keeps a recorded transaction on its original account.
   const isAccountReadOnly = transaction !== undefined
+
+  const category = categorization?.category ?? null
+  // A multi-entry split has no single classification: lock the amount and skip the category
+  // requirement until the user replaces it with a real category.
+  const isMultiSplit = category !== null && isSplitAsOption(category) && !category.isSingleSplit
 
   const accountLabel = isExpense
     ? t('bankTransactions:recordTransaction.label.paid_to', 'Paid to')
@@ -114,20 +122,6 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
               </form.Field>
 
               <form.AppField
-                name='amount'
-                validators={{ onDynamic: ({ value }) => positiveAmount(t('bankTransactions:recordTransaction.validation.amount_greater_than_zero', 'Amount must be greater than zero'))(value) }}
-              >
-                {field => (
-                  <field.FormNonRecursiveBigDecimalField
-                    label={t('bankTransactions:recordTransaction.label.amount', 'Amount')}
-                    inline
-                    mode='currency'
-                    placeholder={formatCurrencyFromCents(0)}
-                  />
-                )}
-              </form.AppField>
-
-              <form.AppField
                 name='date'
                 validators={{ onDynamic: ({ value }) => required(t('bankTransactions:recordTransaction.validation.date_required', 'Date is required'))(value) }}
               >
@@ -136,21 +130,39 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                 )}
               </form.AppField>
 
+              <form.Subscribe selector={state => isMultiSplit && state.values.category === null}>
+                {isAmountReadOnly => (
+                  <form.AppField
+                    name='amount'
+                    validators={{ onDynamic: ({ value }) => positiveAmount(t('bankTransactions:recordTransaction.validation.amount_greater_than_zero', 'Amount must be greater than zero'))(value) }}
+                  >
+                    {field => (
+                      <field.FormNonRecursiveBigDecimalField
+                        label={t('bankTransactions:recordTransaction.label.amount', 'Amount')}
+                        inline
+                        mode='currency'
+                        placeholder={formatCurrencyFromCents(0)}
+                        isReadOnly={isAmountReadOnly}
+                      />
+                    )}
+                  </form.AppField>
+                )}
+              </form.Subscribe>
+
               <form.Field
                 name='category'
-                validators={{ onDynamic: ({ value }) => required(t('bankTransactions:recordTransaction.validation.category_required', 'Category is required'))(value) }}
+                validators={{ onDynamic: ({ value }) => !isMultiSplit && required(t('bankTransactions:recordTransaction.validation.category_required', 'Category is required'))(value) }}
               >
                 {field => (
                   <RecordTransactionFormField>
-                    <LedgerAccountCombobox
+                    <RecordTransactionsFormCategoryCombobox
                       label={t('bankTransactions:recordTransaction.label.category', 'Category')}
                       placeholder={t('bankTransactions:recordTransaction.placeholder.category', 'Select category...')}
-                      showLabel
-                      inline
-                      grouped
                       isInvalid={field.state.meta.errors.length > 0}
                       value={field.state.value}
                       onValueChange={field.handleChange}
+                      transaction={transaction}
+                      category={category}
                     />
                     <FieldErrors errors={field.state.meta.errors} />
                   </RecordTransactionFormField>
