@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import classNames from 'classnames'
 import { Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -31,16 +31,9 @@ export function RecordTransactionModal({ variant, transaction, isOpen, onOpenCha
 
   const onSuccess = useCallback(() => onOpenChange(false), [onOpenChange])
 
-  const { form, isError, resetSubmitState } = useRecordTransactionForm({ variant: effectiveVariant, transaction, onSuccess })
+  const { form, isError } = useRecordTransactionForm({ variant: effectiveVariant, transaction, onSuccess })
 
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
-
-  useEffect(() => {
-    if (isOpen) {
-      resetSubmitState()
-      setIsConfirmingDelete(false)
-    }
-  }, [isOpen, resetSubmitState])
 
   const onCancel = useCallback(() => {
     form.reset()
