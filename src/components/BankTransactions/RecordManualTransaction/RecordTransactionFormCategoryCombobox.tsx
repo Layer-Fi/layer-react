@@ -1,7 +1,10 @@
-import { useCallback, useId, useState } from 'react'
+import { useCallback, useId, useMemo } from 'react'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { type Classification } from '@schemas/categorization'
+import { CategoryAsOption } from '@internal-types/categorizationOption'
+import { type Classification, ClassificationEquivalence } from '@schemas/categorization'
+import { getLeafCategories } from '@utils/categories'
+import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { Label } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
@@ -46,6 +49,7 @@ export function RecordTransactionFormCategoryCombobox({
   return (
     <RecordTransactionFormEditCategoryCombobox
       label={label}
+      value={value}
       onValueChange={onValueChange}
       transaction={transaction}
       category={category}
@@ -55,19 +59,33 @@ export function RecordTransactionFormCategoryCombobox({
 
 type RecordTransactionFormEditCategoryComboboxProps = {
   label: string
+  value: Classification | null
   onValueChange: (value: Classification | null) => void
   transaction: BankTransaction
   category?: BankTransactionNonSuggestedMatchOption | null
 }
 
-function RecordTransactionFormEditCategoryCombobox({ label, onValueChange, transaction, category }: RecordTransactionFormEditCategoryComboboxProps) {
+function RecordTransactionFormEditCategoryCombobox({ label, value, onValueChange, transaction, category }: RecordTransactionFormEditCategoryComboboxProps) {
   const inputId = useId()
-  const [selectedValue, setSelectedValue] = useState<BankTransactionNonSuggestedMatchOption | null>(category ?? null)
+  const { data: categories } = useCategories()
 
-  const onSelectedValueChange = useCallback((option: BankTransactionNonSuggestedMatchOption | null) => {
-    setSelectedValue(option)
-    onValueChange(option?.classification ?? null)
-  }, [onValueChange])
+  const options = useMemo(
+    () => (categories ? getLeafCategories(categories).map(leaf => new CategoryAsOption(leaf)) : []),
+    [categories],
+  )
+
+  // Derive the display from the form value (the source of truth) so it survives remounts, e.g. when
+  // the delete step unmounts the form. Fall back to the seeded category (an existing split, which
+  // has no single classification to reverse-map) only while nothing has been selected.
+  const selectedValue = useMemo<BankTransactionNonSuggestedMatchOption | null>(() => {
+    if (value === null) return category ?? null
+    return options.find(option => ClassificationEquivalence(value, option.classification)) ?? null
+  }, [value, category, options])
+
+  const onSelectedValueChange = useCallback(
+    (option: BankTransactionNonSuggestedMatchOption | null) => onValueChange(option?.classification ?? null),
+    [onValueChange],
+  )
 
   return (
     <div className='Layer__RecordTransactionFormCategoryCombobox--inline'>
