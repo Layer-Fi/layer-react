@@ -286,7 +286,7 @@ describe('RecordTransactionModal', () => {
     mockUpdateTransaction()
     renderEditModal(SPLIT_TRANSACTION)
 
-    expect(await screen.findByText('Cash and Meals')).toBeInTheDocument()
+    expect(await screen.findByText('Cash, Meals')).toBeInTheDocument()
     expect(screen.getByText('Split')).toBeInTheDocument()
     expect(screen.queryByText('Select category...')).not.toBeInTheDocument()
     expect(screen.getByLabelText('Amount')).toHaveAttribute('readonly')
@@ -296,7 +296,7 @@ describe('RecordTransactionModal', () => {
     const updateRequest = mockUpdateTransaction()
     const { user } = renderEditModal(SPLIT_TRANSACTION)
 
-    expect(await screen.findByText('Cash and Meals')).toBeInTheDocument()
+    expect(await screen.findByText('Cash, Meals')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /save/i }))
 
@@ -311,7 +311,7 @@ describe('RecordTransactionModal', () => {
     const updateRequest = mockUpdateTransaction()
     const { user, filler } = renderEditModal(SPLIT_TRANSACTION)
 
-    expect(await screen.findByText('Cash and Meals')).toBeInTheDocument()
+    expect(await screen.findByText('Cash, Meals')).toBeInTheDocument()
     expect(screen.getByLabelText('Amount')).toHaveAttribute('readonly')
 
     await filler.comboBox({ field: 'Category', option: /^Cash$/ })
