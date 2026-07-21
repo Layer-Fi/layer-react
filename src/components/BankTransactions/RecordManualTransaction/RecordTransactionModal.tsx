@@ -51,11 +51,7 @@ export function RecordTransactionModal({ variant, transaction, isOpen, onOpenCha
           onClose={onCancel}
         />
         <ModalContent>
-          <RecordTransactionForm
-            form={form}
-            variant={effectiveVariant}
-            transaction={transaction}
-          />
+          <RecordTransactionForm form={form} variant={effectiveVariant} transaction={transaction} />
         </ModalContent>
         <form.Subscribe
           selector={state => ({

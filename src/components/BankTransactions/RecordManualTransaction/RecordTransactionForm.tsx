@@ -48,10 +48,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
   // Editing keeps a recorded transaction on its original account.
   const isAccountReadOnly = transaction !== undefined
 
-  // Prefill from the persisted transaction (its selected category, or its first suggestion).
   const category = transaction ? getDefaultSelectedCategoryForBankTransaction(transaction) : null
-  // A multi-entry split has no single classification: lock the amount and skip the category
-  // requirement until the user replaces it with a real category.
   const isMultiSplit = category !== null && isSplitAsOption(category) && !category.isSingleSplit
 
   const accountLabel = isExpense

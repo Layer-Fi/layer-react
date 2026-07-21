@@ -44,7 +44,7 @@ export function RecordTransactionsFormCategoryCombobox({
   }
 
   return (
-    <EditCategoryCombobox
+    <RecordTransactionFormEditCategoryCombobox
       label={label}
       onValueChange={onValueChange}
       transaction={transaction}
@@ -53,14 +53,14 @@ export function RecordTransactionsFormCategoryCombobox({
   )
 }
 
-type EditCategoryComboboxProps = {
+type RecordTransactionFormEditCategoryComboboxProps = {
   label: string
   onValueChange: (value: Classification | null) => void
   transaction: BankTransaction
   category?: BankTransactionNonSuggestedMatchOption | null
 }
 
-function EditCategoryCombobox({ label, onValueChange, transaction, category }: EditCategoryComboboxProps) {
+function RecordTransactionFormEditCategoryCombobox({ label, onValueChange, transaction, category }: RecordTransactionFormEditCategoryComboboxProps) {
   const inputId = useId()
   const [selectedValue, setSelectedValue] = useState<BankTransactionNonSuggestedMatchOption | null>(category ?? null)
 
