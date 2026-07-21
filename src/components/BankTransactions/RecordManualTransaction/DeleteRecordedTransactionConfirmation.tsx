@@ -34,7 +34,6 @@ export function DeleteRecordedTransactionConfirmation({ transaction, onCancel, o
       <ModalTitleWithClose
         heading={<ModalHeading size='sm'>{t('bankTransactions:recordTransaction.delete.title', 'Delete transaction')}</ModalHeading>}
         onClose={onCancel}
-        hideCloseButton={isProcessing}
       />
       <ModalContent>
         <ModalDescription>
