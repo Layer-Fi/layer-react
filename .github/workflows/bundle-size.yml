@@ -12,8 +12,12 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      # Maximum allowed growth of the JS build output relative to the PR base, in kilobytes.
       MAX_GROWTH_KB: 150
+
+    defaults:
+      run:
+        # Explicit bash enables pipefail, so a failed `du` can't silently yield an empty size.
+        shell: bash
 
     steps:
     - uses: actions/checkout@v4
@@ -26,15 +30,18 @@ jobs:
         node-version: '22'
         cache: 'npm'
 
+    # The checked-out github.sha is the synthetic merge commit, so comparing it against its
+    # first parent (the live base tip) isolates exactly the PR's delta — pull_request.base.sha
+    # can lag behind the base branch and would skew the comparison.
     - name: Build base
       run: |
-        git checkout --detach ${{ github.event.pull_request.base.sha }}
+        git checkout --detach "$(git rev-parse 'HEAD^1')"
         npm ci
         rm -rf dist
         npm run build:js
         echo "BASE_KB=$(du -sk dist | cut -f1)" >> "$GITHUB_ENV"
 
-    - name: Build PR head
+    - name: Build merged PR
       run: |
         git checkout --detach ${{ github.sha }}
         npm ci
