@@ -8,6 +8,7 @@ import { getVendorName } from '@utils/vendor'
 import { useListVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
 import { UpsertVendorMode, useUpsertVendor } from '@hooks/api/businesses/[business-id]/vendors/useUpsertVendor'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, P } from '@ui/Typography/Text'
@@ -66,7 +67,19 @@ export function VendorSelector({
 
   const { flattenedData, isLoading, isError } = useListVendors({ query: effectiveSearchQuery })
 
-  const { trigger: createVendor, isError: isCreateError, reset: resetCreateError } = useUpsertVendor({ mode: UpsertVendorMode.Create })
+  // Creation is gated on the business config flag here rather than by callers, so every consumer stays consistent.
+  const { accountingConfiguration } = useLayerContext()
+  const canCreate = isCreatable === true && accountingConfiguration?.enableVendorManagement === true
+  // Self-create means the selector owns creation (no external handler); only then surface the create mutation's state.
+  const isSelfCreate = canCreate && onCreateVendor === undefined
+  const {
+    trigger: createVendor,
+    isError: isCreateError,
+    isMutating: isCreatingVendor,
+    reset: resetCreateError,
+  } = useUpsertVendor({ mode: UpsertVendorMode.Create })
+  const showCreateError = isSelfCreate && isCreateError
+  const isCreating = isSelfCreate && isCreatingVendor
 
   const options = useMemo(() =>
     flattenedData?.map(vendor => new VendorAsOption(vendor)) ?? [],
@@ -103,8 +116,11 @@ export function VendorSelector({
       return
     }
 
+    const companyName = name.trim()
+    if (!companyName) return
+
     // Resolve to undefined (instead of throwing) on failure; isCreateError drives the combobox error message.
-    const created = await createVendor(encodeUpsertVendor({ companyName: name }), { throwOnError: false })
+    const created = await createVendor(encodeUpsertVendor({ companyName }), { throwOnError: false })
     if (created) onSelectedVendorChange(created)
   }, [onCreateVendor, createVendor, onSelectedVendorChange])
 
@@ -114,15 +130,15 @@ export function VendorSelector({
   const slots = useMemo(() => ({
     EmptyMessage: (
       <P variant='subtle'>
-        {isCreatable && !onCreateVendor
+        {isSelfCreate
           ? t('customerVendor:empty.type_to_add_vendor', 'Type a name to add a vendor')
           : t('customerVendor:empty.matching_vendors', 'No matching vendors')}
       </P>
     ),
-    ErrorMessage: isCreateError
+    ErrorMessage: showCreateError
       ? t('customerVendor:error.create_vendor', 'Could not create vendor. Please try again.')
       : t('customerVendor:error.load_vendors', 'An error occurred while loading vendors.'),
-  }), [t, isCreatable, onCreateVendor, isCreateError])
+  }), [t, isSelfCreate, showCreateError])
 
   const sharedProps = {
     selectedValue: selectedVendorForComboBox,
@@ -131,10 +147,11 @@ export function VendorSelector({
     inputId,
     placeholder,
     slots,
-    isDisabled: isLoadingWithoutFallback || isError,
-    isError: isError || isCreateError,
+    isDisabled: isLoadingWithoutFallback || isError || isCreating,
+    isError: isError || showCreateError,
     isInvalid,
     isLoading: isLoadingWithoutFallback,
+    isMutating: isCreating,
     isReadOnly,
     isClearable: true,
     ['aria-label']: showLabel ? undefined : resolvedLabel,
@@ -159,10 +176,10 @@ export function VendorSelector({
   )
 
   const creatableProps = useMemo(
-    () => isCreatable
+    () => canCreate
       ? ({ isCreatable: true as const, onCreateOption: (name: string) => void handleCreate(name), formatCreateLabel, isValidNewOption, groups })
       : ({ isCreatable: false as const, options }),
-    [isCreatable, handleCreate, formatCreateLabel, isValidNewOption, groups, options],
+    [canCreate, handleCreate, formatCreateLabel, isValidNewOption, groups, options],
   )
 
   return (

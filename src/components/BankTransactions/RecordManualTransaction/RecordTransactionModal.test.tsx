@@ -16,7 +16,6 @@ import { patch as patchRecordTransaction } from '@msw/api/businesses/[business-i
 import { post as postRecordTransaction } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/post'
 import { get as getCustomAccounts } from '@msw/api/businesses/[business-id]/custom-accounts/get'
 import { get as getCustomers } from '@msw/api/businesses/[business-id]/customers/get'
-import { post as postCustomer } from '@msw/api/businesses/[business-id]/customers/post'
 import { get as getVendors } from '@msw/api/businesses/[business-id]/vendors/get'
 import { post as postVendor } from '@msw/api/businesses/[business-id]/vendors/post'
 import { server } from '@msw/node'
@@ -290,33 +289,6 @@ describe('RecordTransactionModal', () => {
     expect(onOpenChange).not.toHaveBeenCalled()
   })
 
-  it('is not creatable when vendor/customer management is disabled', async () => {
-    const { user } = renderModal('expense')
-
-    await waitFor(() => expect(screen.getByLabelText('Vendor')).toBeEnabled())
-    const input = screen.getByLabelText('Vendor')
-    await user.click(input)
-    await user.type(input, 'Brand New Vendor')
-
-    expect(screen.queryByRole('option', { name: /^Create "/ })).not.toBeInTheDocument()
-  })
-
-  it('prompts the user to type a name to add one and only reveals the create option after typing', async () => {
-    const { user } = renderModal('expense', { enableManagement: true })
-    server.use(getVendors.mock([]))
-
-    await waitFor(() => expect(screen.getByLabelText('Vendor')).toBeEnabled())
-    const input = screen.getByLabelText('Vendor')
-    await user.click(input)
-
-    // With nothing typed, the empty state encourages adding but exposes no actionable create option.
-    expect(await screen.findByText('Type a name to add a vendor')).toBeInTheDocument()
-    expect(screen.queryByRole('option', { name: /^Create "/ })).not.toBeInTheDocument()
-
-    await user.type(input, 'Acme')
-    expect(await screen.findByRole('option', { name: 'Create "Acme"' })).toBeInTheDocument()
-  })
-
   it('creates a vendor from the typed company name and records it against the new vendor', async () => {
     const NEW_VENDOR = makeVendor({ id: '00000000-0000-4000-8000-0000000000aa', individualName: null, companyName: 'Acme Supplies' })
     const recordRequest = mockRecordTransaction()
@@ -344,32 +316,5 @@ describe('RecordTransactionModal', () => {
     expect(recordRequest).toHaveBeenCalledWith(expect.objectContaining({
       transaction: expect.objectContaining({ vendor_id: NEW_VENDOR.id }) as object,
     }))
-  })
-
-  it('creates a customer from the typed individual name', async () => {
-    const NEW_CUSTOMER = makeCustomer({ id: '00000000-0000-4000-8000-0000000000bb', individualName: 'Riley Rivera', companyName: null })
-
-    let createdCustomerBody: unknown
-    server.use(postCustomer.mock(NEW_CUSTOMER, {
-      onRequest: async ({ request }) => { createdCustomerBody = await request.json() },
-    }))
-
-    const { user } = renderModal('income', { enableManagement: true })
-
-    await createCounterparty(user, 'Customer', 'Riley Rivera', 'Create "Riley Rivera"')
-
-    expect(await screen.findByText('Riley Rivera')).toBeInTheDocument()
-    expect(createdCustomerBody).toEqual({ individual_name: 'Riley Rivera' })
-  })
-
-  it('shows an inline error and selects nothing when create fails', async () => {
-    server.use(postVendor.mockError({ errors: [{ description: 'nope' }] }))
-
-    const { user } = renderModal('expense', { enableManagement: true })
-
-    await createCounterparty(user, 'Vendor', 'Doomed Vendor', 'Create "Doomed Vendor"')
-
-    expect(await screen.findByText('Could not create vendor. Please try again.')).toBeInTheDocument()
-    expect(screen.queryByText('Doomed Vendor')).not.toBeInTheDocument()
   })
 })

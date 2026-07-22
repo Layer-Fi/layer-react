@@ -1,5 +1,4 @@
 import { type Customer } from '@schemas/customer'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { type RecordTransactionCounterparty, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
 import { VendorSelector } from '@components/VendorSelector/VendorSelector'
@@ -13,9 +12,8 @@ type RecordTransactionCounterpartySelectorProps = {
   onChange: (value: RecordTransactionCounterparty | null) => void
 }
 
+// The selectors gate creation on the customer/vendor management config flags internally, so we just opt in here.
 export function RecordTransactionCounterpartySelector({ variant, label, placeholder, isInvalid, value, onChange }: RecordTransactionCounterpartySelectorProps) {
-  const { accountingConfiguration } = useLayerContext()
-
   if (variant === 'expense') {
     return (
       <VendorSelector
@@ -24,7 +22,7 @@ export function RecordTransactionCounterpartySelector({ variant, label, placehol
         showLabel
         inline
         isInvalid={isInvalid}
-        isCreatable={accountingConfiguration?.enableVendorManagement === true}
+        isCreatable
         selectedVendor={value}
         onSelectedVendorChange={onChange}
       />
@@ -38,7 +36,7 @@ export function RecordTransactionCounterpartySelector({ variant, label, placehol
       showLabel
       inline
       isInvalid={isInvalid}
-      isCreatable={accountingConfiguration?.enableCustomerManagement === true}
+      isCreatable
       selectedCustomer={value as Customer | null}
       onSelectedCustomerChange={onChange}
     />

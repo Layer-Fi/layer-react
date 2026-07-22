@@ -9,6 +9,7 @@ import { getCustomerName } from '@utils/customer'
 import { useListCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { UpsertCustomerMode, useUpsertCustomer } from '@hooks/api/businesses/[business-id]/customers/useUpsertCustomer'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, P } from '@ui/Typography/Text'
@@ -73,7 +74,20 @@ export function CustomerSelector({
   const shouldHideError = hideSpecifiedIdNotFoundError && isAPIErrorOfType(error, ApiEnumErrorType.SpecifiedIdNotFound)
   const shouldShowError = isError && !shouldHideError
 
-  const { trigger: createCustomer, isError: isCreateError, reset: resetCreateError } = useUpsertCustomer({ mode: UpsertCustomerMode.Create })
+  // Creation is gated on the business config flag here rather than by callers, so every consumer stays consistent.
+  const { accountingConfiguration } = useLayerContext()
+  const canCreate = isCreatable === true && accountingConfiguration?.enableCustomerManagement === true
+  // Self-create means the selector owns creation (no external handler). The create mutation shares an SWR
+  // key with CustomerForm, so only surface its error/busy state when we're the one creating.
+  const isSelfCreate = canCreate && onCreateCustomer === undefined
+  const {
+    trigger: createCustomer,
+    isError: isCreateError,
+    isMutating: isCreatingCustomer,
+    reset: resetCreateError,
+  } = useUpsertCustomer({ mode: UpsertCustomerMode.Create })
+  const showCreateError = isSelfCreate && isCreateError
+  const isCreating = isSelfCreate && isCreatingCustomer
 
   const options = useMemo(() =>
     flattenedData?.map(customer => new CustomerAsOption(customer)) || [],
@@ -118,8 +132,11 @@ export function CustomerSelector({
       return
     }
 
+    const individualName = name.trim()
+    if (!individualName) return
+
     // Resolve to undefined (instead of throwing) on failure; isCreateError drives the combobox error message.
-    const created = await createCustomer(encodeUpsertCustomer({ individualName: name }), { throwOnError: false })
+    const created = await createCustomer(encodeUpsertCustomer({ individualName }), { throwOnError: false })
     if (created) onSelectedCustomerChange(created)
   }, [onCreateCustomer, createCustomer, onSelectedCustomerChange])
 
@@ -140,22 +157,22 @@ export function CustomerSelector({
   const EmptyMessage = useMemo(
     () => (
       <P variant='subtle'>
-        {isCreatable && !onCreateCustomer
+        {isSelfCreate
           ? t('customerVendor:empty.type_to_add_customer', 'Type a name to add a customer')
           : t('customerVendor:empty.matching_customers', 'No matching customers')}
       </P>
     ),
-    [t, isCreatable, onCreateCustomer],
+    [t, isSelfCreate],
   )
 
-  const ErrorMessage = isCreateError
+  const ErrorMessage = showCreateError
     ? t('customerVendor:error.create_customer', 'Could not create customer. Please try again.')
     : t('customerVendor:error.load_customers', 'An error occurred while loading customers.')
 
   const inputId = useId()
 
   const isLoadingWithoutFallback = isLoading && !flattenedData
-  const shouldDisableComboBox = isLoadingWithoutFallback || isError
+  const shouldDisableComboBox = isLoadingWithoutFallback || isError || isCreating
 
   const slots = useMemo(() => ({ EmptyMessage, ErrorMessage }), [EmptyMessage, ErrorMessage])
 
@@ -167,9 +184,10 @@ export function CustomerSelector({
     placeholder,
     slots,
     isDisabled: shouldDisableComboBox,
-    isError: shouldShowError || isCreateError,
+    isError: shouldShowError || showCreateError,
     isInvalid,
     isLoading: isLoadingWithoutFallback,
+    isMutating: isCreating,
     isReadOnly,
     ['aria-label']: showLabel ? undefined : resolvedLabel,
   }
@@ -193,10 +211,10 @@ export function CustomerSelector({
   )
 
   const creatableProps = useMemo(
-    () => isCreatable
+    () => canCreate
       ? ({ isCreatable: true as const, onCreateOption: (name: string) => void handleCreate(name), formatCreateLabel, isValidNewOption, groups })
       : ({ isCreatable: false as const, options }),
-    [isCreatable, handleCreate, formatCreateLabel, isValidNewOption, groups, options],
+    [canCreate, handleCreate, formatCreateLabel, isValidNewOption, groups, options],
   )
 
   return (
