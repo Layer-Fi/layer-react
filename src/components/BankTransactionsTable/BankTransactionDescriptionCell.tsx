@@ -30,13 +30,9 @@ export const BankTransactionDescriptionCell = ({
       fluid
       className='Layer__BankTransactionDescriptionCell'
     >
-      <HStack gap='xs' align='center' overflow='hidden'>
-        {isEditable && (
-          <EditCustomTransactionButton bankTransaction={bankTransaction} />
-        )}
-        <Span ellipsis withTooltip>
-          {bankTransaction.description}
-        </Span>
+      <HStack gap='4xs' align='center' overflow='hidden'>
+        {isEditable && <EditCustomTransactionButton bankTransaction={bankTransaction} />}
+        <Span ellipsis withTooltip>{bankTransaction.description}</Span>
       </HStack>
       {hasReceipt && (
         <IconBox>

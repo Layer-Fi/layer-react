@@ -10,8 +10,6 @@ import { type LinkingMetadata, useInAppLinkContext } from '@contexts/InAppLinkCo
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
-import { EditCustomTransactionButton } from '@components/BankTransactions/RecordManualTransaction/EditCustomTransactionButton'
-import { useIsEditableCustomTransaction } from '@components/BankTransactions/RecordManualTransaction/useIsEditableCustomTransaction'
 
 import './bankTransactionsMobileListItem.scss'
 
@@ -39,7 +37,6 @@ export const BankTransactionsMobileListItem = ({
   onClose,
 }: BankTransactionsMobileListItemProps) => {
   const { shouldHideAfterCategorize } = useBankTransactionsContext()
-  const isEditable = useIsEditableCustomTransaction(bankTransaction)
 
   const categorized = isCategorized(bankTransaction)
 
@@ -72,14 +69,7 @@ export const BankTransactionsMobileListItem = ({
   return (
     <HStack gap='sm' justify='space-between'>
       <VStack align='start' gap='3xs' overflow='hidden'>
-        <HStack gap='xs' align='center' overflow='hidden'>
-          {isEditable && (
-            <EditCustomTransactionButton bankTransaction={bankTransaction} />
-          )}
-          <Span ellipsis>
-            {bankTransaction.description}
-          </Span>
-        </HStack>
+        <Span ellipsis>{bankTransaction.description}</Span>
         {inAppLink}
         <HStack gap='2xs' align='center' overflow='hidden'>
           <Span ellipsis size='sm'>

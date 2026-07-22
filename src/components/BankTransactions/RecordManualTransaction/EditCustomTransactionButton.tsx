@@ -9,23 +9,29 @@ import { RecordTransactionModal } from '@components/BankTransactions/RecordManua
 
 type EditCustomTransactionButtonProps = {
   bankTransaction: BankTransaction
+  // Renders a full-width labeled button (e.g. the mobile detail panel) instead of the icon-only affordance.
+  withLabel?: boolean
 }
 
-export function EditCustomTransactionButton({ bankTransaction }: EditCustomTransactionButtonProps) {
+export function EditCustomTransactionButton({ bankTransaction, withLabel = false }: EditCustomTransactionButtonProps) {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
+  const label = t('bankTransactions:action.edit_transaction', 'Edit transaction')
 
   return (
     <span onClick={(e: MouseEvent) => e.stopPropagation()}>
-      <Button
-        inset
-        icon
-        variant='ghost'
-        aria-label={t('bankTransactions:action.edit_transaction', 'Edit transaction')}
-        onPress={() => setIsOpen(true)}
-      >
-        <Pencil size={14} />
-      </Button>
+      {withLabel
+        ? (
+          <Button variant='outlined' fullWidth onPress={() => setIsOpen(true)}>
+            <Pencil size={14} />
+            {label}
+          </Button>
+        )
+        : (
+          <Button inset icon variant='ghost' aria-label={label} onPress={() => setIsOpen(true)}>
+            <Pencil size={14} />
+          </Button>
+        )}
       {isOpen && (
         <RecordTransactionModal
           variant={getRecordTransactionVariant(bankTransaction)}

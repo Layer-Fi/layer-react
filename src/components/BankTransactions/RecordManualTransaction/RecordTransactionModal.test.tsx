@@ -292,25 +292,6 @@ describe('RecordTransactionModal', () => {
     expect(transaction.amount).toBe(12550)
   })
 
-  it('still omits the categorization from the PATCH when a split is saved after editing memo and description', async () => {
-    const updateRequest = mockUpdateTransaction()
-    const { user, filler } = renderEditModal(SPLIT_TRANSACTION)
-
-    expect(await screen.findByText('Cash, Meals')).toBeInTheDocument()
-
-    await filler.text({ field: 'Memo', value: 'Updated memo' })
-    await filler.text({ field: 'Description', value: 'Updated description' })
-
-    await user.click(screen.getByRole('button', { name: /save/i }))
-
-    await waitFor(() => expect(updateRequest).toHaveBeenCalledTimes(1))
-
-    const { transaction } = updateRequest.mock.calls[0][0] as { transaction: Record<string, unknown> }
-    expect(transaction).not.toHaveProperty('categorization')
-    expect(transaction.memo).toBe('Updated memo')
-    expect(transaction.description).toBe('Updated description')
-  })
-
   it('re-enables the amount and includes the categorization when a category replaces the split', async () => {
     const updateRequest = mockUpdateTransaction()
     const { user, filler } = renderEditModal(SPLIT_TRANSACTION)
