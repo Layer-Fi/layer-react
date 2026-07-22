@@ -13,13 +13,9 @@ import { type RecordTransactionVariant } from '@components/BankTransactions/Reco
 import { patch as patchRecordTransaction } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/[transaction-id]/record/patch'
 import { post as postRecordTransaction } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/post'
 import { get as getCustomAccounts } from '@msw/api/businesses/[business-id]/custom-accounts/get'
-import { get as getCustomers } from '@msw/api/businesses/[business-id]/customers/get'
-import { get as getVendors } from '@msw/api/businesses/[business-id]/vendors/get'
 import { server } from '@msw/node'
 import { makeBankTransaction } from '@fixtures/bankTransactions/mocks'
 import { makeCustomAccount } from '@fixtures/customAccounts/mocks'
-import { makeCustomer } from '@fixtures/customers/mocks'
-import { makeVendor } from '@fixtures/vendors/mocks'
 import { createFormFiller, type FillFormSpec } from '@test-utils/forms/fillForm'
 import { LayerTestProvider } from '@test-utils/LayerTestProvider'
 
@@ -30,12 +26,10 @@ const RecordModalWrapper = ({ children }: { children: ReactNode }) => (
 )
 
 const CUSTOM_ACCOUNT = makeCustomAccount({ accountName: 'Business Checking' })
-const VENDOR = makeVendor({ individualName: 'John Smith' })
-const CUSTOMER = makeCustomer({ individualName: 'Jane Doe' })
 
 const EXPENSE_FORM_DATA = [
   { kind: 'comboBox', field: 'Paid to', option: /Business Checking/ },
-  { kind: 'comboBox', field: 'Vendor', option: /John Smith/ },
+  { kind: 'text', field: 'Description', value: '  Coffee shop  ' },
   { kind: 'number', field: 'Amount', value: '125.50' },
   { kind: 'comboBox', field: 'Category', option: /^Cash$/ },
   { kind: 'text', field: 'Memo', value: 'Team lunch' },
@@ -43,7 +37,7 @@ const EXPENSE_FORM_DATA = [
 
 const INCOME_FORM_DATA = [
   { kind: 'comboBox', field: 'Deposited in', option: /Business Checking/ },
-  { kind: 'comboBox', field: 'Customer', option: /Jane Doe/ },
+  { kind: 'text', field: 'Description', value: 'Client payment' },
   { kind: 'number', field: 'Amount', value: '80' },
   { kind: 'comboBox', field: 'Category', option: /^Cash$/ },
   { kind: 'text', field: 'Memo', value: 'Cash sale' },
@@ -53,11 +47,7 @@ const renderModal = (variant: RecordTransactionVariant = 'expense') => {
   const user = userEvent.setup()
   const onOpenChange = vi.fn()
 
-  server.use(
-    getCustomAccounts.mock([CUSTOM_ACCOUNT]),
-    getVendors.mock([VENDOR]),
-    getCustomers.mock([CUSTOMER]),
-  )
+  server.use(getCustomAccounts.mock([CUSTOM_ACCOUNT]))
 
   return {
     user,
@@ -102,9 +92,7 @@ const makeEditTransaction = (category: Categorization, taxCode: string | null = 
   direction: BankTransactionDirection.Debit,
   amount: 12550,
   memo: 'Team lunch',
-  counterpartyName: 'John Smith',
-  vendor: VENDOR,
-  customer: null,
+  description: 'Coffee shop',
   category,
   taxCode,
   // The prefill keeps a tax code only when it appears in taxOptions.
@@ -120,11 +108,7 @@ const renderEditModal = (transaction = EDIT_TRANSACTION) => {
   const user = userEvent.setup()
   const onOpenChange = vi.fn()
 
-  server.use(
-    getCustomAccounts.mock([CUSTOM_ACCOUNT]),
-    getVendors.mock([VENDOR]),
-    getCustomers.mock([CUSTOMER]),
-  )
+  server.use(getCustomAccounts.mock([CUSTOM_ACCOUNT]))
 
   return {
     user,
@@ -195,7 +179,7 @@ describe('RecordTransactionModal', () => {
     await user.click(screen.getByRole('button', { name: /save/i }))
 
     expect(await screen.findByText('Account is required')).toBeInTheDocument()
-    expect(screen.getByText('Vendor is required')).toBeInTheDocument()
+    expect(screen.getByText('Description is required')).toBeInTheDocument()
     expect(screen.getByText('Amount must be greater than zero')).toBeInTheDocument()
     expect(screen.getByText('Category is required')).toBeInTheDocument()
 
@@ -219,9 +203,8 @@ describe('RecordTransactionModal', () => {
         amount: 12550,
         direction: 'DEBIT',
         date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/) as string,
-        description: '',
+        description: 'Coffee shop',
         memo: 'Team lunch',
-        vendor_id: VENDOR.id,
         categorization: {
           type: 'Category',
           category: expect.objectContaining({ type: expect.any(String) as string }) as object,
@@ -233,7 +216,7 @@ describe('RecordTransactionModal', () => {
     await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false))
   })
 
-  it('records income with a credit direction and the selected customer', async () => {
+  it('records income with a credit direction', async () => {
     const recordRequest = mockRecordTransaction()
     const { user, filler, onOpenChange } = renderModal('income')
 
@@ -246,9 +229,8 @@ describe('RecordTransactionModal', () => {
       transaction: expect.objectContaining({
         amount: 8000,
         direction: 'CREDIT',
-        description: '',
+        description: 'Client payment',
         memo: 'Cash sale',
-        customer_id: CUSTOMER.id,
       }) as object,
     }))
 
@@ -261,6 +243,7 @@ describe('RecordTransactionModal', () => {
 
     expect(await screen.findByText('Edit transaction')).toBeInTheDocument()
     expect(screen.getByDisplayValue('Team lunch')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('Coffee shop')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /save/i }))
 
@@ -273,7 +256,7 @@ describe('RecordTransactionModal', () => {
         amount: 12550,
         direction: 'DEBIT',
         memo: 'Team lunch',
-        vendor_id: VENDOR.id,
+        description: 'Coffee shop',
         categorization: expect.objectContaining({
           type: 'Category',
           tax_code: 'TAX-1',
@@ -307,6 +290,25 @@ describe('RecordTransactionModal', () => {
     const { transaction } = updateRequest.mock.calls[0][0] as { transaction: Record<string, unknown> }
     expect(transaction).not.toHaveProperty('categorization')
     expect(transaction.amount).toBe(12550)
+  })
+
+  it('still omits the categorization from the PATCH when a split is saved after editing memo and description', async () => {
+    const updateRequest = mockUpdateTransaction()
+    const { user, filler } = renderEditModal(SPLIT_TRANSACTION)
+
+    expect(await screen.findByText('Cash, Meals')).toBeInTheDocument()
+
+    await filler.text({ field: 'Memo', value: 'Updated memo' })
+    await filler.text({ field: 'Description', value: 'Updated description' })
+
+    await user.click(screen.getByRole('button', { name: /save/i }))
+
+    await waitFor(() => expect(updateRequest).toHaveBeenCalledTimes(1))
+
+    const { transaction } = updateRequest.mock.calls[0][0] as { transaction: Record<string, unknown> }
+    expect(transaction).not.toHaveProperty('categorization')
+    expect(transaction.memo).toBe('Updated memo')
+    expect(transaction.description).toBe('Updated description')
   })
 
   it('re-enables the amount and includes the categorization when a category replaces the split', async () => {

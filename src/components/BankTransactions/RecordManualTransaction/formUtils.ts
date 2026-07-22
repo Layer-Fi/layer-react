@@ -16,7 +16,7 @@ type RecordCustomAccountTransactionParams = {
 }
 
 export function convertRecordTransactionFormToParams(
-  { account, counterparty, amount, date, category, taxCode, memo }: RecordTransactionFormValues,
+  { account, description, amount, date, category, taxCode, memo }: RecordTransactionFormValues,
   variant: RecordTransactionVariant,
 ): RecordCustomAccountTransactionParams | null {
   if (account === null || isNewAccountOption(account) || amount === null || date === null) return null
@@ -29,8 +29,8 @@ export function convertRecordTransactionFormToParams(
       amount: convertNonRecursiveBigDecimalToCents(amount),
       direction: isExpense ? BankTransactionDirection.Debit : BankTransactionDirection.Credit,
       date: toCalendarDate(date).toString(),
+      description: description.trim(),
       memo: memo.trim(),
-      ...(counterparty !== null && (isExpense ? { vendorId: counterparty.id } : { customerId: counterparty.id })),
       ...(category !== null && { categorization: { type: 'Category' as const, category, taxCode: isClassificationExclusion(category) ? null : taxCode } }),
     },
   }
@@ -47,7 +47,7 @@ export const getRecordTransactionFormValues = (
     label: transaction.accountName ?? '',
     account: { accountName: transaction.accountName ?? '' },
   },
-  counterparty: (getRecordTransactionVariant(transaction) === 'expense' ? transaction.vendor : transaction.customer) ?? null,
+  description: transaction.description ?? '',
   amount: convertCentsToNonRecursiveBigDecimal(transaction.amount),
   date: fromDate(transaction.date, 'UTC'),
   category: getDefaultSelectedCategoryForBankTransaction(transaction)?.classification ?? null,
