@@ -9,7 +9,6 @@ import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOp
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Form } from '@ui/Form/Form'
 import { Label } from '@ui/Typography/Text'
-import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { RecordTransactionFormCategoryCombobox } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionFormCategoryCombobox'
 import { type RecordTransactionFormApi, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { CustomAccountComboBox } from '@components/CustomAccountComboBox/CustomAccountComboBox'
@@ -48,7 +47,6 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
   const isAccountReadOnly = transaction !== undefined
 
   const category = transaction ? getDefaultSelectedCategoryForBankTransaction(transaction) : null
-  const isMultiSplit = category !== null && isSplitAsOption(category) && !category.isSingleSplit
 
   const accountLabel = isExpense
     ? t('bankTransactions:recordTransaction.label.paid_to', 'Paid to')
@@ -114,7 +112,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                 )}
               </form.AppField>
 
-              <form.Subscribe selector={state => isMultiSplit && state.values.category === null}>
+              <form.Subscribe selector={state => state.values.category?.type === 'Split'}>
                 {isAmountReadOnly => (
                   <form.AppField
                     name='amount'
@@ -135,7 +133,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
 
               <form.Field
                 name='category'
-                validators={{ onDynamic: ({ value }) => isMultiSplit ? undefined : required(t('bankTransactions:recordTransaction.validation.category_required', 'Category is required'))(value) }}
+                validators={{ onDynamic: ({ value }) => required(t('bankTransactions:recordTransaction.validation.category_required', 'Category is required'))(value) }}
               >
                 {field => (
                   <RecordTransactionFormField>
@@ -164,7 +162,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                             options={taxCodeOptions}
                             selectedValue={getSelectedTaxCodeOption(field.state.value)}
                             onSelectedValueChange={option => field.handleChange(option?.value ?? null)}
-                            isDisabled={category === null || isClassificationExclusion(category)}
+                            isDisabled={category === null || category.type === 'Split' || isClassificationExclusion(category.category)}
                           />
                         </RecordTransactionFormField>
                       )}

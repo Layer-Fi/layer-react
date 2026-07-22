@@ -7,7 +7,7 @@ import { type RecordCustomTransaction, RecordCustomTransactionSchema } from '@sc
 import { getCustomerName } from '@utils/customer'
 import { getVendorName } from '@utils/vendor'
 
-import { categorizationFromClassification } from '@msw/api/businesses/[business-id]/bank-transactions/categorizationFromClassification'
+import { applyCategoryUpdate } from '@msw/api/businesses/[business-id]/bank-transactions/applyCategoryUpdate'
 import { customAccountStore } from '@msw/api/businesses/[business-id]/custom-accounts/store'
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'
 import { vendorStore } from '@msw/api/businesses/[business-id]/vendors/store'
@@ -27,9 +27,8 @@ export const buildCustomBankTransaction = (
 ): BankTransaction => {
   const customer = transaction.customerId ? customerStore.findById(transaction.customerId) ?? null : null
   const vendor = transaction.vendorId ? vendorStore.findById(transaction.vendorId) ?? null : null
-  const category = transaction.categorization ? categorizationFromClassification(transaction.categorization.category) : null
 
-  return makeBankTransaction({
+  const bankTransaction = makeBankTransaction({
     ...existing,
     id,
     source: TransactionSource.CUSTOM,
@@ -45,8 +44,12 @@ export const buildCustomBankTransaction = (
     counterpartyName: customer ? getCustomerName(customer) : vendor ? getVendorName(vendor) : null,
     customer,
     vendor,
-    category,
-    taxCode: transaction.categorization ? transaction.categorization.taxCode ?? null : existing?.taxCode ?? null,
-    categorizationStatus: category ? CategorizationStatus.CATEGORIZED : CategorizationStatus.READY_FOR_INPUT,
+    category: existing?.category ?? null,
+    taxCode: existing?.taxCode ?? null,
+    categorizationStatus: existing?.categorizationStatus ?? CategorizationStatus.READY_FOR_INPUT,
   })
+
+  return transaction.categorization
+    ? applyCategoryUpdate(bankTransaction, transaction.categorization)
+    : bankTransaction
 }

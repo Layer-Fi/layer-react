@@ -1,10 +1,11 @@
 import { useCallback, useId, useState } from 'react'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { type Classification } from '@schemas/categorization'
+import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { Label } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { convertCategoryOptionToCategoryUpdate } from '@components/BankTransactions/RecordManualTransaction/formUtils'
 import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
 
 import './recordTransactionFormCategoryCombobox.scss'
@@ -12,8 +13,8 @@ import './recordTransactionFormCategoryCombobox.scss'
 type RecordTransactionFormCategoryComboboxProps = {
   label: string
   placeholder: string
-  value: Classification | null
-  onValueChange: (value: Classification | null) => void
+  value: CategoryUpdate | null
+  onValueChange: (value: CategoryUpdate | null) => void
   isInvalid?: boolean
   transaction?: BankTransaction
   category?: BankTransactionNonSuggestedMatchOption | null
@@ -37,8 +38,8 @@ export function RecordTransactionFormCategoryCombobox({
         inline
         grouped
         isInvalid={isInvalid}
-        value={value}
-        onValueChange={onValueChange}
+        value={value !== null && value.type === 'Category' ? value.category : null}
+        onValueChange={classification => onValueChange(classification ? { type: 'Category', category: classification } : null)}
       />
     )
   }
@@ -55,7 +56,7 @@ export function RecordTransactionFormCategoryCombobox({
 
 type RecordTransactionFormEditCategoryComboboxProps = {
   label: string
-  onValueChange: (value: Classification | null) => void
+  onValueChange: (value: CategoryUpdate | null) => void
   transaction: BankTransaction
   category?: BankTransactionNonSuggestedMatchOption | null
 }
@@ -66,7 +67,7 @@ function RecordTransactionFormEditCategoryCombobox({ label, onValueChange, trans
 
   const onSelectedValueChange = useCallback((option: BankTransactionNonSuggestedMatchOption | null) => {
     setSelectedValue(option)
-    onValueChange(option?.classification ?? null)
+    onValueChange(convertCategoryOptionToCategoryUpdate(option))
   }, [onValueChange])
 
   return (

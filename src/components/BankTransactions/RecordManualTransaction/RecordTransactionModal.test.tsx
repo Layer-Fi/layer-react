@@ -277,7 +277,7 @@ describe('RecordTransactionModal', () => {
     expect(screen.getByLabelText('Amount')).toHaveAttribute('readonly')
   })
 
-  it('omits the categorization from the PATCH when a split is saved without editing', async () => {
+  it('sends the full split categorization on the PATCH when a split is saved without editing', async () => {
     const updateRequest = mockUpdateTransaction()
     const { user } = renderEditModal(SPLIT_TRANSACTION)
 
@@ -287,12 +287,13 @@ describe('RecordTransactionModal', () => {
 
     await waitFor(() => expect(updateRequest).toHaveBeenCalledTimes(1))
 
-    const { transaction } = updateRequest.mock.calls[0][0] as { transaction: Record<string, unknown> }
-    expect(transaction).not.toHaveProperty('categorization')
+    const { transaction } = updateRequest.mock.calls[0][0] as { transaction: { categorization: { type: string, entries: unknown[] }, amount: number } }
+    expect(transaction.categorization.type).toBe('Split')
+    expect(transaction.categorization.entries).toHaveLength(2)
     expect(transaction.amount).toBe(12550)
   })
 
-  it('still omits the categorization from the PATCH when a split is saved after editing memo and description', async () => {
+  it('keeps the split categorization when saved after editing memo and description', async () => {
     const updateRequest = mockUpdateTransaction()
     const { user, filler } = renderEditModal(SPLIT_TRANSACTION)
 
@@ -306,7 +307,7 @@ describe('RecordTransactionModal', () => {
     await waitFor(() => expect(updateRequest).toHaveBeenCalledTimes(1))
 
     const { transaction } = updateRequest.mock.calls[0][0] as { transaction: Record<string, unknown> }
-    expect(transaction).not.toHaveProperty('categorization')
+    expect(transaction.categorization).toEqual(expect.objectContaining({ type: 'Split' }))
     expect(transaction.memo).toBe('Updated memo')
     expect(transaction.description).toBe('Updated description')
   })

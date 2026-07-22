@@ -4,7 +4,7 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { startOfToday } from 'date-fns'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import type { Classification } from '@schemas/categorization'
+import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import type { NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import { UpsertCustomAccountTransactionMode, useUpsertCustomAccountTransaction } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/useRecordCustomAccountTransaction'
 import { useAppForm } from '@hooks/features/forms/useForm'
@@ -20,7 +20,7 @@ export type RecordTransactionFormValues = {
   description: string
   amount: NonRecursiveBigDecimal | null
   date: ZonedDateTime | null
-  category: Classification | null
+  category: CategoryUpdate | null
   taxCode: string | null
   memo: string
 }

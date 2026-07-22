@@ -1,7 +1,7 @@
 import { pipe, Schema } from 'effect'
 
 import { BankTransactionDirectionSchema } from '@schemas/bankTransactions/base'
-import { SingleCategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
+import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { createTransformedEnumSchema } from '@schemas/utils'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 
@@ -129,7 +129,7 @@ export const RecordCustomTransactionSchema = Schema.Struct({
   memo: Schema.optional(Schema.NullOr(Schema.String)),
   customerId: Schema.optional(Schema.UUID).pipe(Schema.fromKey('customer_id')),
   vendorId: Schema.optional(Schema.UUID).pipe(Schema.fromKey('vendor_id')),
-  categorization: Schema.optional(SingleCategoryUpdateSchema),
+  categorization: Schema.optional(CategoryUpdateSchema),
 })
 
 export type RecordCustomTransaction = typeof RecordCustomTransactionSchema.Type
