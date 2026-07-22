@@ -36,8 +36,9 @@ const useCreateCustomer = createMutationHook({
   useOnTriggerSuccess: () => {
     const { forceReload: forceReloadCustomers } = useCustomersGlobalCacheActions()
 
-    return () => {
-      void forceReloadCustomers()
+    // `data` is undefined when a caller passes throwOnError:false and the request failed; skip the reload then.
+    return (data) => {
+      if (data) void forceReloadCustomers()
     }
   },
 })

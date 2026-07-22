@@ -114,7 +114,7 @@ export function VendorSelector({
   const slots = useMemo(() => ({
     EmptyMessage: (
       <P variant='subtle'>
-        {isCreatable
+        {isCreatable && !onCreateVendor
           ? t('customerVendor:empty.type_to_add_vendor', 'Type a name to add a vendor')
           : t('customerVendor:empty.matching_vendors', 'No matching vendors')}
       </P>
@@ -122,7 +122,7 @@ export function VendorSelector({
     ErrorMessage: isCreateError
       ? t('customerVendor:error.create_vendor', 'Could not create vendor. Please try again.')
       : t('customerVendor:error.load_vendors', 'An error occurred while loading vendors.'),
-  }), [t, isCreatable, isCreateError])
+  }), [t, isCreatable, onCreateVendor, isCreateError])
 
   const sharedProps = {
     selectedValue: selectedVendorForComboBox,
@@ -152,7 +152,11 @@ export function VendorSelector({
     [t, options],
   )
 
-  const isValidNewOption = useCallback((inputValue: string) => inputValue.trim().length > 0, [])
+  // Consumers that run their own create flow can create with no typed name; self-create needs text.
+  const isValidNewOption = useCallback(
+    (inputValue: string) => onCreateVendor != null || inputValue.trim().length > 0,
+    [onCreateVendor],
+  )
 
   const creatableProps = useMemo(
     () => isCreatable

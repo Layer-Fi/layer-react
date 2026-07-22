@@ -140,12 +140,12 @@ export function CustomerSelector({
   const EmptyMessage = useMemo(
     () => (
       <P variant='subtle'>
-        {isCreatable
+        {isCreatable && !onCreateCustomer
           ? t('customerVendor:empty.type_to_add_customer', 'Type a name to add a customer')
           : t('customerVendor:empty.matching_customers', 'No matching customers')}
       </P>
     ),
-    [t, isCreatable],
+    [t, isCreatable, onCreateCustomer],
   )
 
   const ErrorMessage = isCreateError
@@ -186,7 +186,11 @@ export function CustomerSelector({
     [t, options],
   )
 
-  const isValidNewOption = useCallback((inputValue: string) => inputValue.trim().length > 0, [])
+  // Consumers that run their own create flow (e.g. a drawer) can create with no typed name; self-create needs text.
+  const isValidNewOption = useCallback(
+    (inputValue: string) => onCreateCustomer != null || inputValue.trim().length > 0,
+    [onCreateCustomer],
+  )
 
   const creatableProps = useMemo(
     () => isCreatable
