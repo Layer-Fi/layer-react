@@ -1,3 +1,13 @@
 .Layer__ProfitAndLossSummaryCard {
   position: relative;
 }
+
+@media (width > 760px) {
+  .Layer__ProfitAndLossSummaryCard .Layer__ProfitAndLossChart {
+    block-size: 100%;
+  }
+
+  .Layer__ProfitAndLossSummaryCard .Layer__ProfitAndLossChart__Container {
+    min-block-size: 0;
+  }
+}
