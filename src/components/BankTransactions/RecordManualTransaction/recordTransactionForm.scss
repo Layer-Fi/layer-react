@@ -24,4 +24,14 @@ $record-transaction-label-width: 7rem;
       grid-column: 2;
     }
   }
+
+  &--mobile {
+    .Layer__RecordTransactionForm__Field {
+      grid-template-columns: 1fr;
+
+      .Layer__RecordTransactionForm__Error {
+        grid-column: 1;
+      }
+    }
+  }
 }

@@ -4,6 +4,7 @@ import { Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { SubmitButton } from '@ui/Button/SubmitButton'
 import { Modal } from '@ui/Modal/Modal'
@@ -26,6 +27,7 @@ type RecordTransactionModalProps = {
 
 export function RecordTransactionModal({ variant, transaction, isOpen, onOpenChange }: RecordTransactionModalProps) {
   const { t } = useTranslation()
+  const { isMobile } = useSizeClass()
 
   const effectiveVariant = transaction ? getRecordTransactionVariant(transaction) : variant
 
@@ -47,8 +49,8 @@ export function RecordTransactionModal({ variant, transaction, isOpen, onOpenCha
       : t('bankTransactions:recordTransaction.title.add_income', 'Add income')
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} size='md' flexBlock>
-      <VStack>
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange} size='md' flexBlock variant={isMobile ? 'mobile-drawer' : 'center'}>
+      <VStack pi={isMobile ? 'lg' : undefined} pb={isMobile ? 'lg' : undefined}>
         <div className={classNames('Layer__RecordTransactionModal__Step', isConfirmingDelete && 'Layer__RecordTransactionModal__Step--hidden')}>
           <ModalTitleWithClose
             heading={<ModalHeading size='sm'>{title}</ModalHeading>}

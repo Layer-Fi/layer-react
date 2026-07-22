@@ -156,9 +156,17 @@ export function Modal({
   return (
     <ModalOverlay isOpen={isOpen} onOpenChange={onOpenChange} variant={variant} isDismissable={isDismissable}>
       <InternalModal flexBlock={flexBlock} flexInline={flexInline} size={size} variant={variant}>
-        <Dialog role={role ?? 'dialog'} aria-label={ariaLabel} variant={variant}>
-          {children}
-        </Dialog>
+        {({ isEntering, isExiting }) => (
+          <Dialog
+            role={role ?? 'dialog'}
+            aria-label={ariaLabel}
+            variant={variant}
+            isEntering={isEntering}
+            isExiting={isExiting}
+          >
+            {children}
+          </Dialog>
+        )}
       </InternalModal>
     </ModalOverlay>
   )

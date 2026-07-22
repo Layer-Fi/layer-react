@@ -1,4 +1,5 @@
 import { type PropsWithChildren, type ReactNode } from 'react'
+import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
@@ -7,6 +8,7 @@ import { getDefaultSelectedCategoryForBankTransaction } from '@utils/bankTransac
 import { positiveAmount, required } from '@utils/form/validators'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Form } from '@ui/Form/Form'
 import { Label } from '@ui/Typography/Text'
 import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
@@ -43,6 +45,8 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
   const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(transaction)
+  const { isMobile } = useSizeClass()
+  const isInline = !isMobile
   const isExpense = variant === 'expense'
   // Editing keeps a recorded transaction on its original account.
   const isAccountReadOnly = transaction !== undefined
@@ -56,7 +60,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
 
   return (
     <Form
-      className='Layer__RecordTransactionForm'
+      className={classNames('Layer__RecordTransactionForm', isMobile && 'Layer__RecordTransactionForm--mobile')}
       onSubmit={(e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -75,7 +79,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                 label={accountLabel}
                 placeholder={t('bankTransactions:recordTransaction.placeholder.account', 'Select account...')}
                 showLabel={!isCreatingAccount}
-                inline={!isCreatingAccount}
+                inline={!isCreatingAccount && isInline}
                 isInvalid={field.state.meta.errors.length > 0}
                 isReadOnly={isAccountReadOnly}
                 selectedAccount={field.state.value}
@@ -99,7 +103,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                 {field => (
                   <field.FormTextField
                     label={t('bankTransactions:recordTransaction.label.description', 'Description')}
-                    inline
+                    inline={isInline}
                     placeholder={t('bankTransactions:recordTransaction.placeholder.description', 'Add a description...')}
                   />
                 )}
@@ -110,7 +114,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                 validators={{ onDynamic: ({ value }) => required(t('bankTransactions:recordTransaction.validation.date_required', 'Date is required'))(value) }}
               >
                 {field => (
-                  <field.FormDateField label={t('bankTransactions:recordTransaction.label.date', 'Date')} inline />
+                  <field.FormDateField label={t('bankTransactions:recordTransaction.label.date', 'Date')} inline={isInline} />
                 )}
               </form.AppField>
 
@@ -123,7 +127,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                     {field => (
                       <field.FormNonRecursiveBigDecimalField
                         label={t('bankTransactions:recordTransaction.label.amount', 'Amount')}
-                        inline
+                        inline={isInline}
                         mode='currency'
                         placeholder={formatCurrencyFromCents(0)}
                         isReadOnly={isAmountReadOnly}
@@ -142,6 +146,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                     <RecordTransactionFormCategoryCombobox
                       label={t('bankTransactions:recordTransaction.label.category', 'Category')}
                       placeholder={t('bankTransactions:recordTransaction.placeholder.category', 'Select category...')}
+                      inline={isInline}
                       isInvalid={field.state.meta.errors.length > 0}
                       value={field.state.value}
                       onValueChange={field.handleChange}
@@ -177,7 +182,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                 {field => (
                   <field.FormTextField
                     label={t('bankTransactions:recordTransaction.label.memo', 'Memo')}
-                    inline
+                    inline={isInline}
                     placeholder={t('bankTransactions:recordTransaction.placeholder.memo', 'Add a note about this transaction...')}
                   />
                 )}
