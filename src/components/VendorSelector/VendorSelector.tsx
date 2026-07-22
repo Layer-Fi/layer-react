@@ -67,10 +67,10 @@ export function VendorSelector({
 
   const { flattenedData, isLoading, isError } = useListVendors({ query: effectiveSearchQuery })
 
-  // Creation is gated on the business config flag here rather than by callers, so every consumer stays consistent.
   const { accountingConfiguration } = useLayerContext()
   const canCreate = isCreatable === true && accountingConfiguration?.enableVendorManagement === true
-  // Self-create means the selector owns creation (no external handler); only then surface the create mutation's state.
+  // The create mutation's SWR state is shared with other consumers of the hook, so only
+  // surface it when the selector owns creation.
   const isSelfCreate = canCreate && onCreateVendor === undefined
   const {
     trigger: createVendor,
@@ -119,7 +119,6 @@ export function VendorSelector({
     const companyName = name.trim()
     if (!companyName) return
 
-    // Resolve to undefined (instead of throwing) on failure; isCreateError drives the combobox error message.
     const created = await createVendor(encodeUpsertVendor({ companyName }), { throwOnError: false })
     if (created) onSelectedVendorChange(created)
   }, [onCreateVendor, createVendor, onSelectedVendorChange])
@@ -169,7 +168,7 @@ export function VendorSelector({
     [t, options],
   )
 
-  // Consumers that run their own create flow can create with no typed name; self-create needs text.
+  // External create flows (e.g. a drawer) may open with no typed name; self-create needs text.
   const isValidNewOption = useCallback(
     (inputValue: string) => onCreateVendor != null || inputValue.trim().length > 0,
     [onCreateVendor],

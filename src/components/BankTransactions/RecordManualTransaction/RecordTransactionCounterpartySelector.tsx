@@ -12,7 +12,6 @@ type RecordTransactionCounterpartySelectorProps = {
   onChange: (value: RecordTransactionCounterparty | null) => void
 }
 
-// The selectors gate creation on the customer/vendor management config flags internally, so we just opt in here.
 export function RecordTransactionCounterpartySelector({ variant, label, placeholder, isInvalid, value, onChange }: RecordTransactionCounterpartySelectorProps) {
   if (variant === 'expense') {
     return (

@@ -74,11 +74,10 @@ export function CustomerSelector({
   const shouldHideError = hideSpecifiedIdNotFoundError && isAPIErrorOfType(error, ApiEnumErrorType.SpecifiedIdNotFound)
   const shouldShowError = isError && !shouldHideError
 
-  // Creation is gated on the business config flag here rather than by callers, so every consumer stays consistent.
   const { accountingConfiguration } = useLayerContext()
   const canCreate = isCreatable === true && accountingConfiguration?.enableCustomerManagement === true
-  // Self-create means the selector owns creation (no external handler). The create mutation shares an SWR
-  // key with CustomerForm, so only surface its error/busy state when we're the one creating.
+  // The create mutation's SWR state is shared with other consumers (e.g. CustomerForm), so only
+  // surface it when the selector owns creation.
   const isSelfCreate = canCreate && onCreateCustomer === undefined
   const {
     trigger: createCustomer,
@@ -135,7 +134,6 @@ export function CustomerSelector({
     const individualName = name.trim()
     if (!individualName) return
 
-    // Resolve to undefined (instead of throwing) on failure; isCreateError drives the combobox error message.
     const created = await createCustomer(encodeUpsertCustomer({ individualName }), { throwOnError: false })
     if (created) onSelectedCustomerChange(created)
   }, [onCreateCustomer, createCustomer, onSelectedCustomerChange])
@@ -204,7 +202,7 @@ export function CustomerSelector({
     [t, options],
   )
 
-  // Consumers that run their own create flow (e.g. a drawer) can create with no typed name; self-create needs text.
+  // External create flows (e.g. a drawer) may open with no typed name; self-create needs text.
   const isValidNewOption = useCallback(
     (inputValue: string) => onCreateCustomer != null || inputValue.trim().length > 0,
     [onCreateCustomer],
