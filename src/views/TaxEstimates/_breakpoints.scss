@@ -1,0 +1,19 @@
+// Layer breakpoint variables follow the convention:
+//   $Layer--<thing>--<purpose>
+// e.g. $Layer--tax-details--min-desktop-width.
+// Must match TAX_DETAIL_MIN_DESKTOP_WIDTH in ./breakpoints.ts so the JS subtree
+// swap and the CSS container query flip at the same boundary.
+
+$Layer--tax-details--min-desktop-width: 721px;
+
+@mixin tax-detail-narrow {
+  @container tax-detail (max-width: #{$Layer--tax-details--min-desktop-width - 1}) {
+    @content;
+  }
+}
+
+@mixin tax-detail-wide {
+  @container tax-detail (min-width: #{$Layer--tax-details--min-desktop-width}) {
+    @content;
+  }
+}
