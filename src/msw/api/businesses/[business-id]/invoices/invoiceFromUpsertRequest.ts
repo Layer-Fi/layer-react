@@ -59,7 +59,7 @@ export const invoiceFromUpsertRequest = async (request: Request, base: Invoice):
     invoiceNumber: body.invoiceNumber ?? base.invoiceNumber,
     customer,
     recipientName: customer != null
-      ? customer.companyName ?? customer.individualName
+      ? customer.companyName ?? customer.individualName ?? null
       : base.recipientName,
     memo: body.memo ?? null,
     customPaymentInstructions: body.customPaymentInstructions ?? base.customPaymentInstructions,

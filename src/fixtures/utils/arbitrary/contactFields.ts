@@ -15,7 +15,7 @@ const slugify = (value: string) =>
     .replace(/[^a-z0-9]+/g, '.')
     .replace(/^\.+|\.+$/g, '')
 
-const emailForName = (individualName: string | null, companyName: string | null) => {
+const emailForName = (individualName: string | null | undefined, companyName: string | null | undefined) => {
   const local = individualName != null ? slugify(individualName) : 'contact'
   const domain = companyName != null ? `${slugify(companyName).replace(/\./g, '')}.test` : 'example.com'
 
@@ -42,7 +42,7 @@ export const memoArbitrary = (options: readonly string[]) =>
   nullableConstantFrom(options, { nullWeight: 4, valueWeight: 1 })
 
 export const applyContactInvariants = <
-  T extends { individualName: string | null, companyName: string | null, email: string | null },
+  T extends { individualName: string | null | undefined, companyName: string | null | undefined, email: string | null | undefined },
 >(entity: T): T => {
   const individualName = entity.individualName == null && entity.companyName == null
     ? 'Jane Doe'

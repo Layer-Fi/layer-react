@@ -25,40 +25,40 @@ export const CustomerSchema = Schema.Struct({
   id: Schema.UUID,
 
   externalId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('external_id'),
   ),
 
   individualName: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('individual_name'),
   ),
 
   companyName: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('company_name'),
   ),
 
-  email: Schema.NullOr(Schema.String),
+  email: Schema.NullishOr(Schema.String),
 
   mobilePhone: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('mobile_phone'),
   ),
 
   officePhone: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('office_phone'),
   ),
 
   addressString: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('address_string'),
   ),
 
   status: TransformedCustomerStatusSchema,
 
-  memo: Schema.NullOr(Schema.String),
+  memo: Schema.NullishOr(Schema.String),
 
   _local: Schema.Struct({
     isOptimistic: Schema.Boolean,

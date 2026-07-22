@@ -6,6 +6,7 @@ const baseAccountingConfiguration: AccountingConfigurationSchemaType = {
   id: '00000000-0000-4000-8000-000000000301',
   enableAccountNumbers: false,
   enableCustomerManagement: false,
+  enableVendorManagement: false,
   taxEstimatesUserAgreementAt: null,
   enableTaxEstimates: false,
   enableMileageTracking: false,

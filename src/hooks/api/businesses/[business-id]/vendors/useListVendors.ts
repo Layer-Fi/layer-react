@@ -1,6 +1,7 @@
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
-import { VendorSchema } from '@schemas/vendor'
+import { type Vendor, VendorSchema } from '@schemas/vendor'
 import { getWithQuery } from '@utils/api/getWithQuery'
+import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 const ListVendorsRawResultSchema = PaginatedResponseSchema(VendorSchema)
@@ -44,3 +45,5 @@ export function usePreloadVendors(parameters?: UseListVendorsParameters) {
    */
   useListVendors(parameters)
 }
+
+export const useVendorsGlobalCacheActions = createInfiniteQueryGlobalCacheActions<Vendor>(VENDORS_TAG_KEY)

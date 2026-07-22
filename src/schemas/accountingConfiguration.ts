@@ -29,6 +29,11 @@ export const AccountingConfigurationSchema = Schema.Struct({
     Schema.fromKey('enable_customer_management'),
   ),
 
+  enableVendorManagement: pipe(
+    Schema.propertySignature(Schema.Boolean),
+    Schema.fromKey('enable_vendor_management'),
+  ),
+
   taxEstimatesUserAgreementAt: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.Date)),
     Schema.fromKey('tax_estimates_user_agreement_at'),

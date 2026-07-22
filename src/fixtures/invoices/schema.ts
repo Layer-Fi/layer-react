@@ -90,7 +90,7 @@ const applyInvoiceInvariants = (invoice: typeof base.Type): typeof base.Type => 
     paidAt: isPaid ? invoice.sentAt : null,
     voidedAt: invoice.status === InvoiceStatus.Voided ? invoice.sentAt : null,
     recipientName: invoice.customer != null
-      ? invoice.customer.companyName ?? invoice.customer.individualName
+      ? invoice.customer.companyName ?? invoice.customer.individualName ?? null
       : invoice.recipientName,
   }
 }

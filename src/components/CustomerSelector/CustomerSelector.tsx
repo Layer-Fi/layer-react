@@ -121,10 +121,12 @@ export function CustomerSelector({
   const EmptyMessage = useMemo(
     () => (
       <P variant='subtle'>
-        {t('customerVendor:empty.matching_customers', 'No matching customers')}
+        {isCreatable
+          ? t('customerVendor:empty.type_to_add_customer', 'Type a name to add a customer')
+          : t('customerVendor:empty.matching_customers', 'No matching customers')}
       </P>
     ),
-    [t],
+    [t, isCreatable],
   )
 
   const ErrorMessage = t('customerVendor:error.load_customers', 'An error occurred while loading customers.')
@@ -153,8 +155,8 @@ export function CustomerSelector({
 
   const formatCreateLabel = useCallback((inputValue: string) =>
     inputValue
-      ? t('customerVendor:action.create_customer_input_value', 'Create customer "{{inputValue}}"', { inputValue })
-      : t('customerVendor:action.create_new_customer', 'Create new customer'),
+      ? t('customerVendor:action.create_named', 'Create "{{inputValue}}"', { inputValue })
+      : t('customerVendor:action.create_unnamed', 'Create new'),
   [t],
   )
 
@@ -163,11 +165,13 @@ export function CustomerSelector({
     [t, options],
   )
 
+  const isValidNewOption = useCallback((inputValue: string) => inputValue.trim().length > 0, [])
+
   const creatableProps = useMemo(
     () => isCreatable
-      ? ({ isCreatable: true as const, onCreateOption: onCreateCustomer, formatCreateLabel, groups })
+      ? ({ isCreatable: true as const, onCreateOption: onCreateCustomer, formatCreateLabel, isValidNewOption, groups })
       : ({ isCreatable: false as const, options }),
-    [isCreatable, onCreateCustomer, formatCreateLabel, groups, options],
+    [isCreatable, onCreateCustomer, formatCreateLabel, isValidNewOption, groups, options],
   )
 
   return (

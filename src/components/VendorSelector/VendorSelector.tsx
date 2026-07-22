@@ -6,14 +6,14 @@ import { type Vendor } from '@schemas/vendor'
 import { getVendorName } from '@utils/vendor'
 import { useListVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
-import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, P } from '@ui/Typography/Text'
 import { VendorAsOption } from '@components/VendorSelector/VendorAsOption'
 
 import './vendorSelector.scss'
 
-type VendorSelectorProps = {
+type VendorSelectorBaseProps = {
   selectedVendor: Vendor | null
   onSelectedVendorChange: (vendor: Vendor | null) => void
 
@@ -28,11 +28,18 @@ type VendorSelectorProps = {
   className?: string
 }
 
+type VendorSelectorProps = VendorSelectorBaseProps & (
+  | { isCreatable: true, onCreateVendor: (name: string) => void }
+  | { isCreatable?: false, onCreateVendor?: (name: string) => void }
+)
+
 export function VendorSelector({
   selectedVendor,
   onSelectedVendorChange,
   label,
   placeholder,
+  isCreatable,
+  onCreateVendor,
   isReadOnly,
   isInvalid,
   inline,
@@ -86,28 +93,58 @@ export function VendorSelector({
   const inputId = useId()
   const isLoadingWithoutFallback = isLoading && !flattenedData
 
+  const slots = useMemo(() => ({
+    EmptyMessage: (
+      <P variant='subtle'>
+        {isCreatable
+          ? t('customerVendor:empty.type_to_add_vendor', 'Type a name to add a vendor')
+          : t('customerVendor:empty.matching_vendors', 'No matching vendors')}
+      </P>
+    ),
+    ErrorMessage: t('customerVendor:error.load_vendors', 'An error occurred while loading vendors.'),
+  }), [t, isCreatable])
+
+  const sharedProps = {
+    selectedValue: selectedVendorForComboBox,
+    onSelectedValueChange: handleSelectionChange,
+    onInputValueChange: handleInputChange,
+    inputId,
+    placeholder,
+    slots,
+    isDisabled: isLoadingWithoutFallback || isError,
+    isError,
+    isInvalid,
+    isLoading: isLoadingWithoutFallback,
+    isReadOnly,
+    isClearable: true,
+    ['aria-label']: showLabel ? undefined : resolvedLabel,
+  }
+
+  const formatCreateLabel = useCallback((inputValue: string) =>
+    inputValue
+      ? t('customerVendor:action.create_named', 'Create "{{inputValue}}"', { inputValue })
+      : t('customerVendor:action.create_unnamed', 'Create new'),
+  [t],
+  )
+
+  const groups = useMemo(
+    () => [{ label: t('customerVendor:label.vendors', 'Vendors'), options }],
+    [t, options],
+  )
+
+  const isValidNewOption = useCallback((inputValue: string) => inputValue.trim().length > 0, [])
+
+  const creatableProps = useMemo(
+    () => isCreatable
+      ? ({ isCreatable: true as const, onCreateOption: onCreateVendor, formatCreateLabel, isValidNewOption, groups })
+      : ({ isCreatable: false as const, options }),
+    [isCreatable, onCreateVendor, formatCreateLabel, isValidNewOption, groups, options],
+  )
+
   return (
     <VStack className={combinedClassName}>
       {showLabel && <Label htmlFor={inputId} size='sm'>{resolvedLabel}</Label>}
-      <ComboBox
-        options={options}
-        selectedValue={selectedVendorForComboBox}
-        onSelectedValueChange={handleSelectionChange}
-        onInputValueChange={handleInputChange}
-        inputId={inputId}
-        placeholder={placeholder}
-        isDisabled={isLoadingWithoutFallback || isError}
-        isError={isError}
-        isInvalid={isInvalid}
-        isLoading={isLoadingWithoutFallback}
-        isReadOnly={isReadOnly}
-        isClearable
-        slots={{
-          EmptyMessage: <P variant='subtle'>{t('customerVendor:empty.matching_vendors', 'No matching vendors')}</P>,
-          ErrorMessage: t('customerVendor:error.load_vendors', 'An error occurred while loading vendors.'),
-        }}
-        aria-label={showLabel ? undefined : resolvedLabel}
-      />
+      <MaybeCreatableComboBox {...sharedProps} {...creatableProps} />
     </VStack>
   )
 }

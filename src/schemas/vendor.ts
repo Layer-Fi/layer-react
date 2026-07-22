@@ -25,35 +25,35 @@ export const VendorSchema = Schema.Struct({
   id: Schema.UUID,
 
   externalId: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('external_id'),
   ),
 
   individualName: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('individual_name'),
   ),
 
   companyName: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('company_name'),
   ),
 
-  email: Schema.NullOr(Schema.String),
+  email: Schema.NullishOr(Schema.String),
 
   mobilePhone: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('mobile_phone'),
   ),
 
   officePhone: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('office_phone'),
   ),
 
   status: TransformedVendorStatusSchema,
 
-  memo: Schema.NullOr(Schema.String),
+  memo: Schema.NullishOr(Schema.String),
 
   _local: Schema.Struct({
     isOptimistic: Schema.Boolean,
@@ -61,3 +61,32 @@ export const VendorSchema = Schema.Struct({
 })
 
 export type Vendor = typeof VendorSchema.Type
+
+export const UpsertVendorSchema = Schema.Struct({
+  externalId: Schema.optional(Schema.NullOr(Schema.String)).pipe(
+    Schema.fromKey('external_id'),
+  ),
+
+  individualName: Schema.optional(Schema.NullOr(Schema.String)).pipe(
+    Schema.fromKey('individual_name'),
+  ),
+
+  companyName: Schema.optional(Schema.NullOr(Schema.String)).pipe(
+    Schema.fromKey('company_name'),
+  ),
+
+  email: Schema.optional(Schema.NullOr(Schema.String)),
+
+  mobilePhone: Schema.optional(Schema.NullOr(Schema.String)).pipe(
+    Schema.fromKey('mobile_phone'),
+  ),
+
+  officePhone: Schema.optional(Schema.NullOr(Schema.String)).pipe(
+    Schema.fromKey('office_phone'),
+  ),
+
+  memo: Schema.optional(Schema.NullOr(Schema.String)),
+})
+
+export type UpsertVendor = typeof UpsertVendorSchema.Type
+export type UpsertVendorEncoded = typeof UpsertVendorSchema.Encoded
