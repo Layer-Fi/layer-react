@@ -17,21 +17,16 @@ export function EditCustomTransactionButton({ bankTransaction, withLabel = false
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const label = t('bankTransactions:action.edit_transaction', 'Edit transaction')
+  const buttonProps = withLabel
+    ? { variant: 'outlined' as const, fullWidth: true }
+    : { variant: 'ghost' as const, icon: true, inset: true as const, ['aria-label']: label }
 
   return (
     <span onClick={(e: MouseEvent) => e.stopPropagation()}>
-      {withLabel
-        ? (
-          <Button variant='outlined' fullWidth onPress={() => setIsOpen(true)}>
-            <Pencil size={14} />
-            {label}
-          </Button>
-        )
-        : (
-          <Button inset icon variant='ghost' aria-label={label} onPress={() => setIsOpen(true)}>
-            <Pencil size={14} />
-          </Button>
-        )}
+      <Button {...buttonProps} onPress={() => setIsOpen(true)}>
+        <Pencil size={14} />
+        {withLabel && label}
+      </Button>
       {isOpen && (
         <RecordTransactionModal
           variant={getRecordTransactionVariant(bankTransaction)}
