@@ -27,7 +27,7 @@ export const useTripForm = (props: UseTripFormProps) => {
 
   const onSubmit = useCallback(async ({ value }: { value: TripForm }) => {
     try {
-      const tripParams = convertTripFormToUpsertTrip(value)
+      const tripParams = convertTripFormToUpsertTrip(value, trip)
       const upsertTripRequest = Schema.encodeUnknownSync(UpsertTripSchema)(tripParams)
       const result = await upsertTrip(upsertTripRequest)
 
@@ -38,7 +38,7 @@ export const useTripForm = (props: UseTripFormProps) => {
       console.error(e)
       setSubmitError(t('common:error.something_went_wrong_please_try_again', 'Something went wrong. Please try again.'))
     }
-  }, [onSuccess, upsertTrip, t])
+  }, [onSuccess, upsertTrip, trip, t])
 
   const onDynamic = useCallback(({ value }: { value: TripForm }) => {
     return validateTripForm({ trip: value }, t)

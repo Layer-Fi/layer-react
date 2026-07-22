@@ -10,6 +10,11 @@ export enum TripPurpose {
   Business = 'BUSINESS',
   Personal = 'PERSONAL',
 }
+
+export enum TripDistanceSource {
+  Manual = 'MANUAL',
+  Computed = 'COMPUTED',
+}
 const TripPurposeSchema = Schema.Enums(TripPurpose)
 
 const TransformedTripPurposeSchema = Schema.transform(
@@ -39,6 +44,11 @@ export const TripSchema = Schema.Struct({
 
   distance: Schema.BigDecimal,
 
+  distanceSource: pipe(
+    Schema.optional(Schema.NullOr(Schema.Enums(TripDistanceSource))),
+    Schema.fromKey('distance_source'),
+  ),
+
   tripDate: pipe(
     Schema.propertySignature(CalendarDateSchema),
     Schema.fromKey('trip_date'),
@@ -54,6 +64,36 @@ export const TripSchema = Schema.Struct({
   endAddress: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('end_address'),
+  ),
+
+  googleStartPlaceId: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('google_start_place_id'),
+  ),
+
+  googleEndPlaceId: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('google_end_place_id'),
+  ),
+
+  startLatitude: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('start_latitude'),
+  ),
+
+  startLongitude: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('start_longitude'),
+  ),
+
+  endLatitude: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('end_latitude'),
+  ),
+
+  endLongitude: pipe(
+    Schema.optional(Schema.NullOr(Schema.String)),
+    Schema.fromKey('end_longitude'),
   ),
 
   description: Schema.NullishOr(Schema.String),
@@ -77,13 +117,23 @@ export const TripSchema = Schema.Struct({
 export type Trip = typeof TripSchema.Type
 export type TripEncoded = typeof TripSchema.Encoded
 
+export const TripPlaceSchema = Schema.Struct({
+  placeId: Schema.String,
+  latitude: Schema.NullOr(Schema.String),
+  longitude: Schema.NullOr(Schema.String),
+})
+
+export type TripPlace = typeof TripPlaceSchema.Type
+
 export const TripFormSchema = Schema.Struct({
   vehicle: Schema.NullOr(VehicleSchema),
   tripDate: Schema.NullOr(CalendarDateFromSelf),
   distance: NonRecursiveBigDecimalSchema,
   purpose: TripPurposeSchema,
   startAddress: Schema.String,
+  startPlace: Schema.NullOr(TripPlaceSchema),
   endAddress: Schema.String,
+  endPlace: Schema.NullOr(TripPlaceSchema),
   description: Schema.String,
 })
 
@@ -98,7 +148,8 @@ export const UpsertTripSchema = Schema.Struct({
     Schema.propertySignature(CalendarDateSchema),
     Schema.fromKey('trip_date'),
   ),
-  distance: Schema.BigDecimal,
+  /* Omitted when the server should derive it from the two Google place IDs. */
+  distance: Schema.optional(Schema.BigDecimal),
   purpose: Schema.String,
   startAddress: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.String)),
@@ -107,6 +158,30 @@ export const UpsertTripSchema = Schema.Struct({
   endAddress: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('end_address'),
+  ),
+  googleStartPlaceId: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('google_start_place_id'),
+  ),
+  googleEndPlaceId: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('google_end_place_id'),
+  ),
+  startLatitude: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('start_latitude'),
+  ),
+  startLongitude: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('start_longitude'),
+  ),
+  endLatitude: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('end_latitude'),
+  ),
+  endLongitude: pipe(
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
+    Schema.fromKey('end_longitude'),
   ),
   description: Schema.NullishOr(Schema.String),
 })

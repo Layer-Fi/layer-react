@@ -10,6 +10,7 @@ import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { TripAddressComboBox } from '@components/Trips/TripAddressComboBox/TripAddressComboBox'
 import { useTripForm } from '@components/Trips/TripForm/useTripForm'
 import { TripPurposeComboBox } from '@components/Trips/TripPurposeComboBox/TripPurposeComboBox'
 import { VehicleSelector } from '@components/VehicleManagement/VehicleSelector/VehicleSelector'
@@ -78,29 +79,35 @@ export const TripForm = (props: TripFormProps) => {
         )}
       </form.AppField>
 
-      <form.AppField name='startAddress'>
+      <form.Field name='startAddress'>
         {field => (
-          <field.FormTextField
+          <TripAddressComboBox
             label={t('trips:label.start_address', 'Start address')}
-            inline
+            address={field.state.value}
+            onAddressChange={(selection) => {
+              field.handleChange(selection?.address ?? '')
+              form.setFieldValue('startPlace', selection?.place ?? null)
+            }}
             isReadOnly={isReadOnly}
-            placeholder={t('trips:label.enter_address', 'Enter address')}
             className='Layer__TripForm__Field__StartAddress'
           />
         )}
-      </form.AppField>
+      </form.Field>
 
-      <form.AppField name='endAddress'>
+      <form.Field name='endAddress'>
         {field => (
-          <field.FormTextField
+          <TripAddressComboBox
             label={t('trips:label.end_address', 'End address')}
-            inline
+            address={field.state.value}
+            onAddressChange={(selection) => {
+              field.handleChange(selection?.address ?? '')
+              form.setFieldValue('endPlace', selection?.place ?? null)
+            }}
             isReadOnly={isReadOnly}
-            placeholder={t('common:label.enter_address', 'Enter address')}
             className='Layer__TripForm__Field__EndAddress'
           />
         )}
-      </form.AppField>
+      </form.Field>
 
       <form.Field name='purpose'>
         {field => (
