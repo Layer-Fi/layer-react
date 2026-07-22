@@ -143,7 +143,7 @@ export function VendorSelector({
   const formatCreateLabel = useCallback((inputValue: string) =>
     inputValue
       ? t('customerVendor:action.create_named', 'Create "{{inputValue}}"', { inputValue })
-      : t('customerVendor:action.create_unnamed', 'Create new'),
+      : t('customerVendor:action.create_new_vendor', 'Create new vendor'),
   [t],
   )
 
