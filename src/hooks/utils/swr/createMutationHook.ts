@@ -103,8 +103,6 @@ export function createMutationHook<
 
         const selected = select ? decoded.then(select) : decoded as Promise<unknown> as Promise<TData>
 
-        // The fetcher only resolves on success, so chaining here keeps the side effect off the
-        // failure path (whatever the caller's throwOnError) and awaited before `trigger` resolves.
         return selected.then(async (data) => {
           await onTriggerSuccessRef.current?.(data, arg)
           return data
