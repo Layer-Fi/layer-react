@@ -29,8 +29,8 @@ export const AccountingConfigurationSchema = Schema.Struct({
     Schema.fromKey('enable_customer_management'),
   ),
 
-  // Optional/defaulted so configs from backends that predate the flag still decode.
-  enableVendorManagement: Schema.optionalWith(Schema.Boolean, { default: () => false, nullable: true }).pipe(
+  enableVendorManagement: pipe(
+    Schema.propertySignature(Schema.Boolean),
     Schema.fromKey('enable_vendor_management'),
   ),
 
