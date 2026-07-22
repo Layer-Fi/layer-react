@@ -33,6 +33,9 @@ const baseBookkeepingConfiguration: BookkeepingConfiguration = {
   notes: null,
   onboardingCallUrl: null,
   adhocCallUrl: null,
+  onboardingCallCardTitleText: null,
+  onboardingCallCardDescriptionText: null,
+  onboardingCallCardCoverageText: null,
 }
 
 export const { make: makeBookkeepingConfiguration } = createFixtureFactory(baseBookkeepingConfiguration)

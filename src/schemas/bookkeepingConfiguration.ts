@@ -75,6 +75,21 @@ export const BookkeepingConfigurationSchema = Schema.Struct({
     Schema.propertySignature(Schema.NullOr(Schema.String)),
     Schema.fromKey('adhoc_call_url'),
   ),
+
+  onboardingCallCardTitleText: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('onboarding_call_card_title_text'),
+  ),
+
+  onboardingCallCardDescriptionText: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('onboarding_call_card_description_text'),
+  ),
+
+  onboardingCallCardCoverageText: pipe(
+    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.fromKey('onboarding_call_card_coverage_text'),
+  ),
 })
 
 export type BookkeepingConfiguration = typeof BookkeepingConfigurationSchema.Type
