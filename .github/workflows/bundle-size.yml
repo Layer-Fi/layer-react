@@ -1,0 +1,60 @@
+name: Bundle Size
+
+on:
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  bundle-size:
+    runs-on: ubuntu-latest
+
+    env:
+      MAX_GROWTH_KB: 150
+
+    defaults:
+      run:
+        # Explicit bash enables pipefail, so a failed `du` can't silently yield an empty size.
+        shell: bash
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    # The checked-out github.sha is the synthetic merge commit, so comparing it against its
+    # first parent (the live base tip) isolates exactly the PR's delta — pull_request.base.sha
+    # can lag behind the base branch and would skew the comparison.
+    - name: Build base
+      run: |
+        git checkout --detach "$(git rev-parse 'HEAD^1')"
+        npm ci
+        rm -rf dist
+        npm run build:js
+        echo "BASE_KB=$(du -sk dist | cut -f1)" >> "$GITHUB_ENV"
+
+    - name: Build merged PR
+      run: |
+        git checkout --detach ${{ github.sha }}
+        npm ci
+        rm -rf dist
+        npm run build:js
+        echo "HEAD_KB=$(du -sk dist | cut -f1)" >> "$GITHUB_ENV"
+
+    - name: Compare sizes
+      run: |
+        growth=$((HEAD_KB - BASE_KB))
+        echo "Base build: ${BASE_KB} kB"
+        echo "PR build:   ${HEAD_KB} kB (${growth} kB change)"
+        if [ "$growth" -gt "$MAX_GROWTH_KB" ]; then
+          echo "::error::Build size grew by ${growth} kB (limit: ${MAX_GROWTH_KB} kB). Check for large assets or dependencies pulled into the bundle."
+          exit 1
+        fi

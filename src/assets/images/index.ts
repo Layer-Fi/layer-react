@@ -1,5 +1,5 @@
 /** Landing Page > Top of fold image content */
-export { default as imagePartnerAccountingImage } from './partner-accounting.png'
+export { default as imagePartnerAccountingImage } from './partner-accounting.jpg'
 /** Landing Page > Accounting value proposition images */
 export { default as imageBusinessAccounts } from './business-accounts.svg'
 export { default as imageBusinessOverview } from './business-overview.svg'
