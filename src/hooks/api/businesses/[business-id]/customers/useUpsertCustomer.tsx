@@ -1,7 +1,7 @@
 import { CustomerSchema, type UpsertCustomerEncoded } from '@schemas/customer'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patch, post } from '@utils/api/authenticatedHttp'
-import { CUSTOMERS_TAG_KEY, useCustomersGlobalCacheActions } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
+import { useCustomersGlobalCacheActions } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
 import { useInvoicesGlobalCacheActions } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
@@ -29,22 +29,21 @@ const updateCustomer = patch<
 >(({ businessId, customerId }) => `/v1/businesses/${businessId}/customers/${customerId}`)
 
 const useCreateCustomer = createMutationHook({
-  tags: [UPSERT_CUSTOMER_TAG_KEY, CUSTOMERS_TAG_KEY],
+  tags: [UPSERT_CUSTOMER_TAG_KEY],
   request: createCustomer,
   schema: UpsertCustomerReturnSchema,
   swrOptions: { throwOnError: true },
   useOnTriggerSuccess: () => {
     const { forceReload: forceReloadCustomers } = useCustomersGlobalCacheActions()
 
-    // `data` is undefined when a caller passes throwOnError:false and the request failed; skip the reload then.
-    return (data) => {
-      if (data) void forceReloadCustomers()
+    return () => {
+      void forceReloadCustomers()
     }
   },
 })
 
 const useUpdateCustomer = createMutationHook({
-  tags: [UPSERT_CUSTOMER_TAG_KEY, CUSTOMERS_TAG_KEY],
+  tags: [UPSERT_CUSTOMER_TAG_KEY],
   request: updateCustomer,
   keyParams: ['customerId'],
   schema: UpsertCustomerReturnSchema,

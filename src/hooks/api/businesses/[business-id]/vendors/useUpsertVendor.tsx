@@ -1,7 +1,7 @@
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { type UpsertVendorEncoded, VendorSchema } from '@schemas/vendor'
 import { patch, post } from '@utils/api/authenticatedHttp'
-import { useVendorsGlobalCacheActions, VENDORS_TAG_KEY } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
+import { useVendorsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const UPSERT_VENDOR_TAG_KEY = '#upsert-vendor'
@@ -28,22 +28,21 @@ const updateVendor = patch<
 >(({ businessId, vendorId }) => `/v1/businesses/${businessId}/vendors/${vendorId}`)
 
 const useCreateVendor = createMutationHook({
-  tags: [UPSERT_VENDOR_TAG_KEY, VENDORS_TAG_KEY],
+  tags: [UPSERT_VENDOR_TAG_KEY],
   request: createVendor,
   schema: UpsertVendorReturnSchema,
   swrOptions: { throwOnError: true },
   useOnTriggerSuccess: () => {
     const { forceReload: forceReloadVendors } = useVendorsGlobalCacheActions()
 
-    // `data` is undefined when a caller passes throwOnError:false and the request failed; skip the reload then.
-    return (data) => {
-      if (data) void forceReloadVendors()
+    return () => {
+      void forceReloadVendors()
     }
   },
 })
 
 const useUpdateVendor = createMutationHook({
-  tags: [UPSERT_VENDOR_TAG_KEY, VENDORS_TAG_KEY],
+  tags: [UPSERT_VENDOR_TAG_KEY],
   request: updateVendor,
   keyParams: ['vendorId'],
   schema: UpsertVendorReturnSchema,

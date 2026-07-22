@@ -336,6 +336,28 @@ describe('createMutationHook', () => {
       expect(onTriggerSuccess).not.toHaveBeenCalled()
     })
 
+    it('does not run the side-effect callback when a throwOnError:false trigger fails', async () => {
+      const request = makeRequest(() => Promise.reject(new Error('boom')))
+      const onTriggerSuccess = vi.fn()
+      const useUpsertWidget = createMutationHook<RawWidget, WidgetBody>({
+        tags: ['Widgets'],
+        request,
+        swrOptions: { throwOnError: false },
+        useOnTriggerSuccess: () => onTriggerSuccess,
+      })
+
+      const { result } = await renderHookWithAuth(() => useUpsertWidget())
+
+      // Resolves (does not reject) because the caller opted out of throwing...
+      await act(async () => {
+        await expect(result.current.trigger({ name: 'New Widget' })).resolves.toBeUndefined()
+      })
+
+      // ...but the success side-effect must still be skipped on failure.
+      expect(onTriggerSuccess).not.toHaveBeenCalled()
+      await waitFor(() => expect(result.current.isError).toBe(true))
+    })
+
     it('awaits a promise returned by the side-effect callback before trigger resolves', async () => {
       const request = makeRequest(() => Promise.resolve(RAW_WIDGET))
       let resolveSideEffect: (() => void) | undefined

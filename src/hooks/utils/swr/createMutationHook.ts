@@ -120,15 +120,27 @@ export function createMutationHook<
       async (...triggerParameters: Parameters<typeof originalTrigger>) => {
         // The trigger's with/without-args union only resolves once TArg is concrete, so it is
         // not callable here without narrowing to a single signature.
-        const trigger = originalTrigger as (...args: typeof triggerParameters) => Promise<TData>
+        const trigger = originalTrigger as (arg: TArg | undefined, options?: MutationSWROptions<TData>) => Promise<TData>
+        const [arg, triggerOptions] = triggerParameters as [TArg | undefined, MutationSWROptions<TData> | undefined]
 
-        const triggerResult = await trigger(...triggerParameters)
+        // Whether the caller ultimately wants failures to throw, honoring per-call > per-hook > factory, defaulting to SWR's `true`.
+        const shouldThrowOnError = triggerOptions?.throwOnError ?? callSwrOptions?.throwOnError ?? swrOptions?.throwOnError ?? true
 
-        await onTriggerSuccessRef.current?.(triggerResult, triggerParameters[0] as TArg)
+        try {
+          // Force a rejection on failure so the success side-effect only runs on genuine success,
+          // even when the caller opted into throwOnError:false.
+          const triggerResult = await trigger(arg, { ...triggerOptions, throwOnError: true })
 
-        return triggerResult
+          await onTriggerSuccessRef.current?.(triggerResult, arg as TArg)
+
+          return triggerResult
+        }
+        catch (error) {
+          if (shouldThrowOnError) throw error
+          return undefined as TData
+        }
       },
-      [originalTrigger, onTriggerSuccessRef],
+      [originalTrigger, onTriggerSuccessRef, callSwrOptions],
     )
 
     return useOnTriggerSuccess
