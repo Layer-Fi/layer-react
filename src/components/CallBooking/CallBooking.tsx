@@ -86,45 +86,45 @@ const OnboardingCallCoverage = ({ coverage }: { coverage?: string }) => {
       <VStack pbe='md'>
         {coverage != null
           ? (
-              <Span size='sm'>
-                {coverage}
-              </Span>
-            )
+            <Span size='sm'>
+              {coverage}
+            </Span>
+          )
           : (
-              <>
-                <Span
-                  size='2xs'
-                  variant='subtle'
-                  weight='bold'
-                  pbe='sm'
-                  className='Layer__CallBooking__CoverageHeading'
-                >
-                  {t('callBookings:label.on_this_call_well', 'On this call, we\'ll')}
-                </Span>
-                <VStack role='list' gap='xs'>
-                  {ONBOARDING_CALL_COVERAGE_ITEMS.map(({ key, i18nKey, defaultValue }) => (
+            <>
+              <Span
+                size='2xs'
+                variant='subtle'
+                weight='bold'
+                pbe='sm'
+                className='Layer__CallBooking__CoverageHeading'
+              >
+                {t('callBookings:label.on_this_call_well', 'On this call, we\'ll')}
+              </Span>
+              <VStack role='list' gap='xs'>
+                {ONBOARDING_CALL_COVERAGE_ITEMS.map(({ key, i18nKey, defaultValue }) => (
+                  <HStack
+                    key={key}
+                    className='Layer__CallBooking__CoverageItem'
+                    align='start'
+                    gap='sm'
+                    role='listitem'
+                  >
                     <HStack
-                      key={key}
-                      className='Layer__CallBooking__CoverageItem'
-                      align='start'
-                      gap='sm'
-                      role='listitem'
+                      className='Layer__CallBooking__CoverageBadge'
+                      align='center'
+                      justify='center'
                     >
-                      <HStack
-                        className='Layer__CallBooking__CoverageBadge'
-                        align='center'
-                        justify='center'
-                      >
-                        <Check size={12} strokeWidth={2.5} />
-                      </HStack>
-                      <Span size='sm'>
-                        {t(i18nKey, defaultValue)}
-                      </Span>
+                      <Check size={12} strokeWidth={2.5} />
                     </HStack>
-                  ))}
-                </VStack>
-              </>
-            )}
+                    <Span size='sm'>
+                      {t(i18nKey, defaultValue)}
+                    </Span>
+                  </HStack>
+                ))}
+              </VStack>
+            </>
+          )}
       </VStack>
     </>
   )
