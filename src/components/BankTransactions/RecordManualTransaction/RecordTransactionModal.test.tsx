@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { BankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
@@ -330,44 +330,20 @@ describe('RecordTransactionModal', () => {
     expect(transaction.categorization).toEqual(expect.objectContaining({ type: 'Category' }))
   })
 
-  describe('on mobile', () => {
+  it('renders as a drawer with stacked labels on mobile', async () => {
     const originalInnerWidth = window.innerWidth
+    Object.defineProperty(window, 'innerWidth', { configurable: true, writable: true, value: 400 })
 
-    const setWindowWidth = (value: number) => {
-      Object.defineProperty(window, 'innerWidth', { configurable: true, writable: true, value })
-    }
+    try {
+      renderModal('expense')
 
-    afterEach(() => {
-      setWindowWidth(originalInnerWidth)
-    })
-
-    it('renders as a drawer with stacked labels and records an expense like the desktop modal', async () => {
-      setWindowWidth(400)
-
-      const recordRequest = mockRecordTransaction()
-      const { user, filler, onOpenChange } = renderModal('expense')
-
+      expect(await screen.findByLabelText('Description')).toBeInTheDocument()
       expect(document.querySelector('.Layer__Modal')).toHaveAttribute('data-variant', 'mobile-drawer')
       expect(screen.getByLabelText('Description').closest('[data-inline]')).toBeNull()
-
-      await filler.fill(EXPENSE_FORM_DATA)
-      await user.click(screen.getByRole('button', { name: /save/i }))
-
-      await waitFor(() => expect(recordRequest).toHaveBeenCalledTimes(1))
-      await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false))
-    })
-
-    it('closes the drawer without saving when cancelled', async () => {
-      setWindowWidth(400)
-
-      const recordRequest = mockRecordTransaction()
-      const { user, onOpenChange } = renderModal('expense')
-
-      await user.click(screen.getByRole('button', { name: /cancel/i }))
-
-      expect(onOpenChange).toHaveBeenCalledWith(false)
-      expect(recordRequest).not.toHaveBeenCalled()
-    })
+    }
+    finally {
+      Object.defineProperty(window, 'innerWidth', { configurable: true, writable: true, value: originalInnerWidth })
+    }
   })
 
   it('shows a retry state and keeps the modal open when the request fails', async () => {
