@@ -9,7 +9,6 @@ import { RecordTransactionModal } from '@components/BankTransactions/RecordManua
 
 type EditCustomTransactionButtonProps = {
   bankTransaction: BankTransaction
-  // Renders a full-width labeled button (e.g. the mobile detail panel) instead of the icon-only affordance.
   withLabel?: boolean
 }
 
