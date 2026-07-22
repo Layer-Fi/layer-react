@@ -1,11 +1,13 @@
 import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
+import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { type Customer } from '@schemas/customer'
+import { type Customer, UpsertCustomerSchema } from '@schemas/customer'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
 import { getCustomerName } from '@utils/customer'
 import { useListCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
+import { UpsertCustomerMode, useUpsertCustomer } from '@hooks/api/businesses/[business-id]/customers/useUpsertCustomer'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
@@ -14,7 +16,9 @@ import { CustomerAsOption } from '@components/CustomerSelector/CustomerAsOption'
 
 import './customerSelector.scss'
 
-type CustomerSelectorBaseProps = {
+const encodeUpsertCustomer = Schema.encodeSync(UpsertCustomerSchema)
+
+type CustomerSelectorProps = {
   selectedCustomer: Customer | null
   onSelectedCustomerChange: (customer: Customer | null) => void
 
@@ -28,12 +32,12 @@ type CustomerSelectorBaseProps = {
 
   className?: string
   hideSpecifiedIdNotFoundError?: boolean
-}
 
-type CustomerSelectorProps = CustomerSelectorBaseProps & (
-  | { isCreatable: true, onCreateCustomer: (name: string) => void }
-  | { isCreatable?: false, onCreateCustomer?: (name: string) => void }
-)
+  isCreatable?: boolean
+  // When creatable and provided, called with the typed text so the consumer can run its own create flow
+  // (e.g. open a form). When omitted, the selector creates the customer itself from the typed name.
+  onCreateCustomer?: (name: string) => void
+}
 
 export function CustomerSelector({
   selectedCustomer,
@@ -69,6 +73,8 @@ export function CustomerSelector({
   const shouldHideError = hideSpecifiedIdNotFoundError && isAPIErrorOfType(error, ApiEnumErrorType.SpecifiedIdNotFound)
   const shouldShowError = isError && !shouldHideError
 
+  const { trigger: createCustomer, isError: isCreateError, reset: resetCreateError } = useUpsertCustomer({ mode: UpsertCustomerMode.Create })
+
   const options = useMemo(() =>
     flattenedData?.map(customer => new CustomerAsOption(customer)) || [],
   [flattenedData])
@@ -77,6 +83,8 @@ export function CustomerSelector({
 
   const handleSelectionChange = useCallback(
     (selectedOption: { value: string } | null) => {
+      resetCreateError()
+
       if (selectedOption === null) {
         handleInputChange('')
 
@@ -101,8 +109,19 @@ export function CustomerSelector({
         return
       }
     },
-    [options, handleInputChange, selectedCustomerId, onSelectedCustomerChange],
+    [options, handleInputChange, selectedCustomerId, onSelectedCustomerChange, resetCreateError],
   )
+
+  const handleCreate = useCallback(async (name: string) => {
+    if (onCreateCustomer) {
+      onCreateCustomer(name)
+      return
+    }
+
+    // Resolve to undefined (instead of throwing) on failure; isCreateError drives the combobox error message.
+    const created = await createCustomer(encodeUpsertCustomer({ individualName: name }), { throwOnError: false })
+    if (created) onSelectedCustomerChange(created)
+  }, [onCreateCustomer, createCustomer, onSelectedCustomerChange])
 
   const selectedCustomerForComboBox = useMemo(
     () => {
@@ -129,7 +148,9 @@ export function CustomerSelector({
     [t, isCreatable],
   )
 
-  const ErrorMessage = t('customerVendor:error.load_customers', 'An error occurred while loading customers.')
+  const ErrorMessage = isCreateError
+    ? t('customerVendor:error.create_customer', 'Could not create customer. Please try again.')
+    : t('customerVendor:error.load_customers', 'An error occurred while loading customers.')
 
   const inputId = useId()
 
@@ -146,7 +167,7 @@ export function CustomerSelector({
     placeholder,
     slots,
     isDisabled: shouldDisableComboBox,
-    isError: shouldShowError,
+    isError: shouldShowError || isCreateError,
     isInvalid,
     isLoading: isLoadingWithoutFallback,
     isReadOnly,
@@ -169,9 +190,9 @@ export function CustomerSelector({
 
   const creatableProps = useMemo(
     () => isCreatable
-      ? ({ isCreatable: true as const, onCreateOption: onCreateCustomer, formatCreateLabel, isValidNewOption, groups })
+      ? ({ isCreatable: true as const, onCreateOption: (name: string) => void handleCreate(name), formatCreateLabel, isValidNewOption, groups })
       : ({ isCreatable: false as const, options }),
-    [isCreatable, onCreateCustomer, formatCreateLabel, isValidNewOption, groups, options],
+    [isCreatable, handleCreate, formatCreateLabel, isValidNewOption, groups, options],
   )
 
   return (

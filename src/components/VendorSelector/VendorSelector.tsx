@@ -1,10 +1,12 @@
 import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
+import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { type Vendor } from '@schemas/vendor'
+import { UpsertVendorSchema, type Vendor } from '@schemas/vendor'
 import { getVendorName } from '@utils/vendor'
 import { useListVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
+import { UpsertVendorMode, useUpsertVendor } from '@hooks/api/businesses/[business-id]/vendors/useUpsertVendor'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
@@ -13,7 +15,9 @@ import { VendorAsOption } from '@components/VendorSelector/VendorAsOption'
 
 import './vendorSelector.scss'
 
-type VendorSelectorBaseProps = {
+const encodeUpsertVendor = Schema.encodeSync(UpsertVendorSchema)
+
+type VendorSelectorProps = {
   selectedVendor: Vendor | null
   onSelectedVendorChange: (vendor: Vendor | null) => void
 
@@ -26,12 +30,12 @@ type VendorSelectorBaseProps = {
   inline?: boolean
 
   className?: string
-}
 
-type VendorSelectorProps = VendorSelectorBaseProps & (
-  | { isCreatable: true, onCreateVendor: (name: string) => void }
-  | { isCreatable?: false, onCreateVendor?: (name: string) => void }
-)
+  isCreatable?: boolean
+  // When creatable and provided, called with the typed text so the consumer can run its own create flow.
+  // When omitted, the selector creates the vendor itself from the typed name.
+  onCreateVendor?: (name: string) => void
+}
 
 export function VendorSelector({
   selectedVendor,
@@ -62,6 +66,8 @@ export function VendorSelector({
 
   const { flattenedData, isLoading, isError } = useListVendors({ query: effectiveSearchQuery })
 
+  const { trigger: createVendor, isError: isCreateError, reset: resetCreateError } = useUpsertVendor({ mode: UpsertVendorMode.Create })
+
   const options = useMemo(() =>
     flattenedData?.map(vendor => new VendorAsOption(vendor)) ?? [],
   [flattenedData])
@@ -76,6 +82,7 @@ export function VendorSelector({
   const handleSelectionChange = useCallback(
     (selectedOption: { value: string } | null) => {
       handleInputChange('')
+      resetCreateError()
 
       if (selectedOption === null) {
         if (selectedVendor) onSelectedVendorChange(null)
@@ -87,8 +94,19 @@ export function VendorSelector({
         onSelectedVendorChange(selected.original)
       }
     },
-    [options, handleInputChange, selectedVendor, onSelectedVendorChange],
+    [options, handleInputChange, selectedVendor, onSelectedVendorChange, resetCreateError],
   )
+
+  const handleCreate = useCallback(async (name: string) => {
+    if (onCreateVendor) {
+      onCreateVendor(name)
+      return
+    }
+
+    // Resolve to undefined (instead of throwing) on failure; isCreateError drives the combobox error message.
+    const created = await createVendor(encodeUpsertVendor({ companyName: name }), { throwOnError: false })
+    if (created) onSelectedVendorChange(created)
+  }, [onCreateVendor, createVendor, onSelectedVendorChange])
 
   const inputId = useId()
   const isLoadingWithoutFallback = isLoading && !flattenedData
@@ -101,8 +119,10 @@ export function VendorSelector({
           : t('customerVendor:empty.matching_vendors', 'No matching vendors')}
       </P>
     ),
-    ErrorMessage: t('customerVendor:error.load_vendors', 'An error occurred while loading vendors.'),
-  }), [t, isCreatable])
+    ErrorMessage: isCreateError
+      ? t('customerVendor:error.create_vendor', 'Could not create vendor. Please try again.')
+      : t('customerVendor:error.load_vendors', 'An error occurred while loading vendors.'),
+  }), [t, isCreatable, isCreateError])
 
   const sharedProps = {
     selectedValue: selectedVendorForComboBox,
@@ -112,7 +132,7 @@ export function VendorSelector({
     placeholder,
     slots,
     isDisabled: isLoadingWithoutFallback || isError,
-    isError,
+    isError: isError || isCreateError,
     isInvalid,
     isLoading: isLoadingWithoutFallback,
     isReadOnly,
@@ -136,9 +156,9 @@ export function VendorSelector({
 
   const creatableProps = useMemo(
     () => isCreatable
-      ? ({ isCreatable: true as const, onCreateOption: onCreateVendor, formatCreateLabel, isValidNewOption, groups })
+      ? ({ isCreatable: true as const, onCreateOption: (name: string) => void handleCreate(name), formatCreateLabel, isValidNewOption, groups })
       : ({ isCreatable: false as const, options }),
-    [isCreatable, onCreateVendor, formatCreateLabel, isValidNewOption, groups, options],
+    [isCreatable, handleCreate, formatCreateLabel, isValidNewOption, groups, options],
   )
 
   return (
