@@ -1,11 +1,9 @@
-import { useCallback } from 'react'
 import { Schema } from 'effect'
 import useSWRMutation from 'swr/mutation'
 
 import { SWRMutationResult } from '@internal-types/swr/SWRResponseTypes'
 import type { MutationRequest } from '@utils/api/getAsMutation'
 import { createBuildKey } from '@utils/swr/createBuildKey'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import { useLatestRef } from '@hooks/utils/react/useLatestRef'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 
@@ -75,6 +73,10 @@ export function createMutationHook<
 
     const { swrOptions: callSwrOptions, ...keyInputs } = options ?? ({} as UseMutationOptions)
 
+    const onTriggerSuccess = useOnTriggerSuccessHook({ businessId, ...keyInputs } as KeyParamValues)
+
+    const onTriggerSuccessRef = useLatestRef(onTriggerSuccess)
+
     const rawMutationResponse = useSWRMutation(
       () => {
         const key = buildKey({ ...auth, businessId, ...keyInputs } as Parameters<typeof buildKey>[0])
@@ -99,7 +101,14 @@ export function createMutationHook<
           ? response.then(Schema.decodeUnknownPromise(schema))
           : response as Promise<unknown> as Promise<TDecoded>
 
-        return select ? decoded.then(select) : decoded as Promise<unknown> as Promise<TData>
+        const selected = select ? decoded.then(select) : decoded as Promise<unknown> as Promise<TData>
+
+        // The fetcher only resolves on success, so chaining here keeps the side effect off the
+        // failure path (whatever the caller's throwOnError) and awaited before `trigger` resolves.
+        return selected.then(async (data) => {
+          await onTriggerSuccessRef.current?.(data, arg)
+          return data
+        })
       },
       {
         revalidate: false,
@@ -108,46 +117,6 @@ export function createMutationHook<
       },
     )
 
-    const mutationResult = new SWRMutationResult(rawMutationResponse)
-
-    const onTriggerSuccess = useOnTriggerSuccessHook({ businessId, ...keyInputs } as KeyParamValues)
-
-    const onTriggerSuccessRef = useLatestRef(onTriggerSuccess)
-
-    const originalTrigger = mutationResult.trigger
-
-    const stableProxiedTrigger = useCallback(
-      async (...triggerParameters: Parameters<typeof originalTrigger>) => {
-        // The trigger's with/without-args union only resolves once TArg is concrete, so it is
-        // not callable here without narrowing to a single signature.
-        const trigger = originalTrigger as (arg: TArg | undefined, options?: MutationSWROptions<TData>) => Promise<TData>
-        const [arg, triggerOptions] = triggerParameters as [TArg | undefined, MutationSWROptions<TData> | undefined]
-
-        // SWR only invokes onSuccess when the mutation actually succeeds, so the side-effect never runs
-        // on failure — regardless of the caller's throwOnError. We capture its result here and await it
-        // below so the "side-effect finishes before trigger resolves" contract still holds.
-        let sideEffect: Promise<void> | undefined
-        const triggerResult = await trigger(arg, {
-          ...triggerOptions,
-          onSuccess: (data) => {
-            // Our onSuccess overrides SWR's merge, so forward any caller-provided one (per-call > per-hook > factory).
-            (triggerOptions?.onSuccess ?? callSwrOptions?.onSuccess ?? swrOptions?.onSuccess)?.(data)
-            sideEffect = Promise.resolve(onTriggerSuccessRef.current?.(data, arg as TArg))
-          },
-        })
-
-        if (sideEffect) await sideEffect
-
-        return triggerResult
-      },
-      [originalTrigger, onTriggerSuccessRef, callSwrOptions],
-    )
-
-    return useOnTriggerSuccess
-      ? withStableTrigger(
-        mutationResult,
-        stableProxiedTrigger as unknown as (...args: Parameters<typeof originalTrigger>) => ReturnType<typeof originalTrigger>,
-      )
-      : mutationResult
+    return new SWRMutationResult(rawMutationResponse)
   }
 }
