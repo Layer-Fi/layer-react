@@ -32,21 +32,14 @@ export function RecordTransactionCounterpartySelector({ variant, label, placehol
   const { trigger: createVendor, isError: isCreateVendorError, reset: resetCreateVendor } = useUpsertVendor({ mode: UpsertVendorMode.Create })
 
   const handleCreateCustomer = useCallback(async (individualName: string) => {
-    try {
-      onChange(await createCustomer(encodeUpsertCustomer({ individualName })))
-    }
-    catch (e) {
-      console.error(e)
-    }
+    // Resolve to undefined (instead of throwing) on failure; the hook's isError drives the inline error.
+    const created = await createCustomer(encodeUpsertCustomer({ individualName }), { throwOnError: false })
+    if (created) onChange(created)
   }, [createCustomer, onChange])
 
   const handleCreateVendor = useCallback(async (companyName: string) => {
-    try {
-      onChange(await createVendor(encodeUpsertVendor({ companyName })))
-    }
-    catch (e) {
-      console.error(e)
-    }
+    const created = await createVendor(encodeUpsertVendor({ companyName }), { throwOnError: false })
+    if (created) onChange(created)
   }, [createVendor, onChange])
 
   const handleChangeVendor = useCallback((vendor: Vendor | null) => {
