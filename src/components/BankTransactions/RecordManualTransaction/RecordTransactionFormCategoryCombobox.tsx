@@ -1,4 +1,5 @@
 import { useCallback, useId, useState } from 'react'
+import classNames from 'classnames'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { type Classification } from '@schemas/categorization'
@@ -15,6 +16,7 @@ type RecordTransactionFormCategoryComboboxProps = {
   value: Classification | null
   onValueChange: (value: Classification | null) => void
   isInvalid?: boolean
+  inline?: boolean
   transaction?: BankTransaction
   category?: BankTransactionNonSuggestedMatchOption | null
 }
@@ -25,6 +27,7 @@ export function RecordTransactionFormCategoryCombobox({
   value,
   onValueChange,
   isInvalid,
+  inline = false,
   transaction,
   category,
 }: RecordTransactionFormCategoryComboboxProps) {
@@ -34,7 +37,7 @@ export function RecordTransactionFormCategoryCombobox({
         label={label}
         placeholder={placeholder}
         showLabel
-        inline
+        inline={inline}
         grouped
         isInvalid={isInvalid}
         value={value}
@@ -46,6 +49,7 @@ export function RecordTransactionFormCategoryCombobox({
   return (
     <RecordTransactionFormEditCategoryCombobox
       label={label}
+      inline={inline}
       onValueChange={onValueChange}
       transaction={transaction}
       category={category}
@@ -55,12 +59,13 @@ export function RecordTransactionFormCategoryCombobox({
 
 type RecordTransactionFormEditCategoryComboboxProps = {
   label: string
+  inline?: boolean
   onValueChange: (value: Classification | null) => void
   transaction: BankTransaction
   category?: BankTransactionNonSuggestedMatchOption | null
 }
 
-function RecordTransactionFormEditCategoryCombobox({ label, onValueChange, transaction, category }: RecordTransactionFormEditCategoryComboboxProps) {
+function RecordTransactionFormEditCategoryCombobox({ label, inline, onValueChange, transaction, category }: RecordTransactionFormEditCategoryComboboxProps) {
   const inputId = useId()
   const [selectedValue, setSelectedValue] = useState<BankTransactionNonSuggestedMatchOption | null>(category ?? null)
 
@@ -70,7 +75,7 @@ function RecordTransactionFormEditCategoryCombobox({ label, onValueChange, trans
   }, [onValueChange])
 
   return (
-    <div className='Layer__RecordTransactionFormCategoryCombobox--inline'>
+    <div className={classNames('Layer__RecordTransactionFormCategoryCombobox', inline && 'Layer__RecordTransactionFormCategoryCombobox--inline')}>
       <Label size='sm' htmlFor={inputId}>{label}</Label>
       <BankTransactionCategoryComboBox
         inputId={inputId}

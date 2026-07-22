@@ -1,5 +1,10 @@
-.Layer__RecordTransactionFormCategoryCombobox--inline {
+.Layer__RecordTransactionFormCategoryCombobox {
   display: grid;
+  gap: var(--spacing-3xs);
 
-  align-items: center;
+  &--inline {
+    gap: 0;
+
+    align-items: center;
+  }
 }
