@@ -10,19 +10,12 @@ import { BankTransactionsCategorizationStoreProvider } from '@providers/BankTran
 import { RecordTransactionModal } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionModal'
 import { type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 
-import { get as getAccountingConfig } from '@msw/api/businesses/[business-id]/accounting-config/get'
 import { patch as patchRecordTransaction } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/[transaction-id]/record/patch'
 import { post as postRecordTransaction } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/post'
 import { get as getCustomAccounts } from '@msw/api/businesses/[business-id]/custom-accounts/get'
-import { get as getCustomers } from '@msw/api/businesses/[business-id]/customers/get'
-import { get as getVendors } from '@msw/api/businesses/[business-id]/vendors/get'
-import { post as postVendor } from '@msw/api/businesses/[business-id]/vendors/post'
 import { server } from '@msw/node'
-import { makeAccountingConfiguration } from '@fixtures/accountingConfiguration/mocks'
 import { makeBankTransaction } from '@fixtures/bankTransactions/mocks'
 import { makeCustomAccount } from '@fixtures/customAccounts/mocks'
-import { makeCustomer } from '@fixtures/customers/mocks'
-import { makeVendor } from '@fixtures/vendors/mocks'
 import { createFormFiller, type FillFormSpec } from '@test-utils/forms/fillForm'
 import { LayerTestProvider } from '@test-utils/LayerTestProvider'
 
@@ -33,12 +26,10 @@ const RecordModalWrapper = ({ children }: { children: ReactNode }) => (
 )
 
 const CUSTOM_ACCOUNT = makeCustomAccount({ accountName: 'Business Checking' })
-const VENDOR = makeVendor({ individualName: 'John Smith' })
-const CUSTOMER = makeCustomer({ individualName: 'Jane Doe' })
 
 const EXPENSE_FORM_DATA = [
   { kind: 'comboBox', field: 'Paid to', option: /Business Checking/ },
-  { kind: 'comboBox', field: 'Vendor', option: /John Smith/ },
+  { kind: 'text', field: 'Description', value: 'Coffee shop' },
   { kind: 'number', field: 'Amount', value: '125.50' },
   { kind: 'comboBox', field: 'Category', option: /^Cash$/ },
   { kind: 'text', field: 'Memo', value: 'Team lunch' },
@@ -46,25 +37,17 @@ const EXPENSE_FORM_DATA = [
 
 const INCOME_FORM_DATA = [
   { kind: 'comboBox', field: 'Deposited in', option: /Business Checking/ },
-  { kind: 'comboBox', field: 'Customer', option: /Jane Doe/ },
+  { kind: 'text', field: 'Description', value: 'Client payment' },
   { kind: 'number', field: 'Amount', value: '80' },
   { kind: 'comboBox', field: 'Category', option: /^Cash$/ },
   { kind: 'text', field: 'Memo', value: 'Cash sale' },
 ] satisfies readonly FillFormSpec[]
 
-const renderModal = (variant: RecordTransactionVariant = 'expense', { enableManagement = false }: { enableManagement?: boolean } = {}) => {
+const renderModal = (variant: RecordTransactionVariant = 'expense') => {
   const user = userEvent.setup()
   const onOpenChange = vi.fn()
 
-  server.use(
-    getCustomAccounts.mock([CUSTOM_ACCOUNT]),
-    getVendors.mock([VENDOR]),
-    getCustomers.mock([CUSTOMER]),
-  )
-
-  if (enableManagement) {
-    server.use(getAccountingConfig.mock(makeAccountingConfiguration({ enableCustomerManagement: true, enableVendorManagement: true })))
-  }
+  server.use(getCustomAccounts.mock([CUSTOM_ACCOUNT]))
 
   return {
     user,
@@ -109,9 +92,7 @@ const makeEditTransaction = (category: Categorization, taxCode: string | null = 
   direction: BankTransactionDirection.Debit,
   amount: 12550,
   memo: 'Team lunch',
-  counterpartyName: 'John Smith',
-  vendor: VENDOR,
-  customer: null,
+  description: 'Coffee shop',
   category,
   taxCode,
   // The prefill keeps a tax code only when it appears in taxOptions.
@@ -127,11 +108,7 @@ const renderEditModal = (transaction = EDIT_TRANSACTION) => {
   const user = userEvent.setup()
   const onOpenChange = vi.fn()
 
-  server.use(
-    getCustomAccounts.mock([CUSTOM_ACCOUNT]),
-    getVendors.mock([VENDOR]),
-    getCustomers.mock([CUSTOMER]),
-  )
+  server.use(getCustomAccounts.mock([CUSTOM_ACCOUNT]))
 
   return {
     user,
@@ -161,15 +138,6 @@ const mockUpdateTransaction = () => {
   )
 
   return updateRequest
-}
-
-const createCounterparty = async (user: ReturnType<typeof userEvent.setup>, label: string, typed: string, createOption: string) => {
-  // react-select swaps the input node when the option list finishes loading, so re-query each poll.
-  await waitFor(() => expect(screen.getByLabelText(label)).toBeEnabled())
-  const input = screen.getByLabelText(label)
-  await user.click(input)
-  await user.type(input, typed)
-  await user.click(await screen.findByRole('option', { name: createOption }))
 }
 
 const mockRecordTransaction = () => {
@@ -211,7 +179,6 @@ describe('RecordTransactionModal', () => {
     await user.click(screen.getByRole('button', { name: /save/i }))
 
     expect(await screen.findByText('Account is required')).toBeInTheDocument()
-    expect(screen.getByText('Vendor is required')).toBeInTheDocument()
     expect(screen.getByText('Amount must be greater than zero')).toBeInTheDocument()
     expect(screen.getByText('Category is required')).toBeInTheDocument()
 
@@ -235,9 +202,8 @@ describe('RecordTransactionModal', () => {
         amount: 12550,
         direction: 'DEBIT',
         date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/) as string,
-        description: '',
+        description: 'Coffee shop',
         memo: 'Team lunch',
-        vendor_id: VENDOR.id,
         categorization: {
           type: 'Category',
           category: expect.objectContaining({ type: expect.any(String) as string }) as object,
@@ -249,7 +215,7 @@ describe('RecordTransactionModal', () => {
     await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false))
   })
 
-  it('records income with a credit direction and the selected customer', async () => {
+  it('records income with a credit direction', async () => {
     const recordRequest = mockRecordTransaction()
     const { user, filler, onOpenChange } = renderModal('income')
 
@@ -262,9 +228,8 @@ describe('RecordTransactionModal', () => {
       transaction: expect.objectContaining({
         amount: 8000,
         direction: 'CREDIT',
-        description: '',
+        description: 'Client payment',
         memo: 'Cash sale',
-        customer_id: CUSTOMER.id,
       }) as object,
     }))
 
@@ -277,6 +242,7 @@ describe('RecordTransactionModal', () => {
 
     expect(await screen.findByText('Edit transaction')).toBeInTheDocument()
     expect(screen.getByDisplayValue('Team lunch')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('Coffee shop')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /save/i }))
 
@@ -289,7 +255,7 @@ describe('RecordTransactionModal', () => {
         amount: 12550,
         direction: 'DEBIT',
         memo: 'Team lunch',
-        vendor_id: VENDOR.id,
+        description: 'Coffee shop',
         categorization: expect.objectContaining({
           type: 'Category',
           tax_code: 'TAX-1',
@@ -374,34 +340,5 @@ describe('RecordTransactionModal', () => {
 
     expect(recordRequest).toHaveBeenCalledTimes(1)
     expect(onOpenChange).not.toHaveBeenCalled()
-  })
-
-  it('creates a vendor from the typed company name and records it against the new vendor', async () => {
-    const NEW_VENDOR = makeVendor({ id: '00000000-0000-4000-8000-0000000000aa', individualName: null, companyName: 'Acme Supplies' })
-    const recordRequest = mockRecordTransaction()
-
-    let createdVendorBody: unknown
-    server.use(postVendor.mock(NEW_VENDOR, {
-      onRequest: async ({ request }) => { createdVendorBody = await request.json() },
-    }))
-
-    const { user, filler } = renderModal('expense', { enableManagement: true })
-
-    await createCounterparty(user, 'Vendor', 'Acme Supplies', 'Create "Acme Supplies"')
-
-    expect(await screen.findByText('Acme Supplies')).toBeInTheDocument()
-    expect(createdVendorBody).toEqual({ company_name: 'Acme Supplies' })
-
-    await filler.fill([
-      { kind: 'comboBox', field: 'Paid to', option: /Business Checking/ },
-      { kind: 'number', field: 'Amount', value: '40' },
-      { kind: 'comboBox', field: 'Category', option: /^Cash$/ },
-    ])
-    await user.click(screen.getByRole('button', { name: /save/i }))
-
-    await waitFor(() => expect(recordRequest).toHaveBeenCalledTimes(1))
-    expect(recordRequest).toHaveBeenCalledWith(expect.objectContaining({
-      transaction: expect.objectContaining({ vendor_id: NEW_VENDOR.id }) as object,
-    }))
   })
 })

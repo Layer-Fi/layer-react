@@ -10,7 +10,6 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Form } from '@ui/Form/Form'
 import { Label } from '@ui/Typography/Text'
 import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { RecordTransactionCounterpartySelector } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionCounterpartySelector'
 import { RecordTransactionFormCategoryCombobox } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionFormCategoryCombobox'
 import { type RecordTransactionFormApi, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { CustomAccountComboBox } from '@components/CustomAccountComboBox/CustomAccountComboBox'
@@ -54,12 +53,6 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
   const accountLabel = isExpense
     ? t('bankTransactions:recordTransaction.label.paid_to', 'Paid to')
     : t('bankTransactions:recordTransaction.label.deposited_in', 'Deposited in')
-  const counterpartyLabel = isExpense
-    ? t('bankTransactions:recordTransaction.label.vendor', 'Vendor')
-    : t('bankTransactions:recordTransaction.label.customer', 'Customer')
-  const counterpartyPlaceholder = isExpense
-    ? t('bankTransactions:recordTransaction.placeholder.vendor', 'Select vendor...')
-    : t('bankTransactions:recordTransaction.placeholder.customer', 'Select customer...')
 
   return (
     <Form
@@ -99,24 +92,15 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
           ? null
           : (
             <>
-              <form.Field
-                name='counterparty'
-                validators={{ onDynamic: ({ value }) => required(t('bankTransactions:recordTransaction.validation.counterparty_required', '{{label}} is required', { label: counterpartyLabel }))(value) }}
-              >
+              <form.AppField name='description'>
                 {field => (
-                  <RecordTransactionFormField>
-                    <RecordTransactionCounterpartySelector
-                      variant={variant}
-                      label={counterpartyLabel}
-                      placeholder={counterpartyPlaceholder}
-                      isInvalid={field.state.meta.errors.length > 0}
-                      value={field.state.value}
-                      onChange={field.handleChange}
-                    />
-                    <FieldErrors errors={field.state.meta.errors} />
-                  </RecordTransactionFormField>
+                  <field.FormTextField
+                    label={t('bankTransactions:recordTransaction.label.description', 'Description')}
+                    inline
+                    placeholder={t('bankTransactions:recordTransaction.placeholder.description', 'Add a description...')}
+                  />
                 )}
-              </form.Field>
+              </form.AppField>
 
               <form.AppField
                 name='date'

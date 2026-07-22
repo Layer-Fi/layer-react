@@ -198,7 +198,7 @@ export function CustomerSelector({
   )
 
   const groups = useMemo(
-    () => [{ label: t('customerVendor:label.customers', 'Customers'), options }],
+    () => [{ label: t('customerVendor:label.customers', 'Customers').toUpperCase(), options }],
     [t, options],
   )
 

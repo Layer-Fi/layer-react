@@ -164,7 +164,7 @@ export function VendorSelector({
   )
 
   const groups = useMemo(
-    () => [{ label: t('customerVendor:label.vendors', 'Vendors'), options }],
+    () => [{ label: t('customerVendor:label.vendors', 'Vendors').toUpperCase(), options }],
     [t, options],
   )
 

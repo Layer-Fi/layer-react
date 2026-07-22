@@ -5,9 +5,7 @@ import { startOfToday } from 'date-fns'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import type { Classification } from '@schemas/categorization'
-import type { Customer } from '@schemas/customer'
 import type { NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
-import type { Vendor } from '@schemas/vendor'
 import { UpsertCustomAccountTransactionMode, useUpsertCustomAccountTransaction } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/useRecordCustomAccountTransaction'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
@@ -17,11 +15,9 @@ import type { AccountOption } from '@components/CustomAccountComboBox/AccountOpt
 
 export type RecordTransactionVariant = 'income' | 'expense'
 
-export type RecordTransactionCounterparty = Customer | Vendor
-
 export type RecordTransactionFormValues = {
   account: AccountOption | null
-  counterparty: RecordTransactionCounterparty | null
+  description: string
   amount: NonRecursiveBigDecimal | null
   date: ZonedDateTime | null
   category: Classification | null
@@ -33,7 +29,7 @@ export type RecordTransactionFormApi = ReturnType<typeof useAppForm<RecordTransa
 
 const getDefaultValues = (): RecordTransactionFormValues => ({
   account: null,
-  counterparty: null,
+  description: '',
   amount: null,
   date: fromDate(startOfToday(), getLocalTimeZone()),
   category: null,
@@ -62,9 +58,8 @@ export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: Us
       if (params === null) return
 
       const request = transaction
-        // Update omits description so the existing value is preserved; create sends an empty one.
         ? params
-        : { ...params, transaction: { ...params.transaction, externalId: createExternalId, description: '' } }
+        : { ...params, transaction: { ...params.transaction, externalId: createExternalId } }
 
       try {
         const updated = await trigger(request)
