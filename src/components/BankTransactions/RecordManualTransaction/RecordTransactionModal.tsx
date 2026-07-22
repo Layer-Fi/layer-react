@@ -7,7 +7,7 @@ import type { BankTransaction } from '@internal-types/bankTransactions'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { SubmitButton } from '@ui/Button/SubmitButton'
-import { Drawer, Modal } from '@ui/Modal/Modal'
+import { Modal } from '@ui/Modal/Modal'
 import { ModalActions, ModalContent, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { DeleteRecordedTransactionConfirmation } from '@components/BankTransactions/RecordManualTransaction/DeleteRecordedTransactionConfirmation'
@@ -48,77 +48,65 @@ export function RecordTransactionModal({ variant, transaction, isOpen, onOpenCha
       ? t('bankTransactions:recordTransaction.title.add_expense', 'Add expense')
       : t('bankTransactions:recordTransaction.title.add_income', 'Add income')
 
-  const content = (
-    <VStack pi={isMobile ? 'lg' : undefined} pb={isMobile ? 'lg' : undefined}>
-      <div className={classNames('Layer__RecordTransactionModal__Step', isConfirmingDelete && 'Layer__RecordTransactionModal__Step--hidden')}>
-        <ModalTitleWithClose
-          heading={<ModalHeading size='sm'>{title}</ModalHeading>}
-          onClose={onCancel}
-        />
-        <ModalContent>
-          <RecordTransactionForm form={form} variant={effectiveVariant} transaction={transaction} />
-        </ModalContent>
-        <form.Subscribe
-          selector={state => ({
-            isCreatingAccount: isNewAccountOption(state.values.account),
-            isSubmitting: state.isSubmitting,
-            canSubmit: state.canSubmit,
-          })}
-        >
-          {({ isCreatingAccount, isSubmitting, canSubmit }) => isCreatingAccount
-            ? null
-            : (
-              <ModalActions>
-                <HStack gap='sm'>
-                  {transaction && (
-                    <Button variant='outlined' status='danger' onPress={() => setIsConfirmingDelete(true)}>
-                      <HStack gap='3xs' align='center'>
-                        <Trash2 size={14} />
-                        {t('bankTransactions:recordTransaction.action.delete', 'Delete')}
-                      </HStack>
-                    </Button>
-                  )}
-                  <Spacer />
-                  <Button variant='outlined' onPress={onCancel}>
-                    {t('common:action.cancel_label', 'Cancel')}
-                  </Button>
-                  <SubmitButton
-                    onPress={() => void form.handleSubmit()}
-                    isPending={isSubmitting && canSubmit}
-                    isError={isError}
-                    withRetry
-                    noIcon
-                  >
-                    {isError
-                      ? t('common:action.retry_label', 'Retry')
-                      : t('common:action.save_label', 'Save')}
-                  </SubmitButton>
-                </HStack>
-              </ModalActions>
-            )}
-        </form.Subscribe>
-      </div>
-      {isConfirmingDelete && transaction && (
-        <DeleteRecordedTransactionConfirmation
-          transaction={transaction}
-          onCancel={() => setIsConfirmingDelete(false)}
-          onDeleted={() => onOpenChange(false)}
-        />
-      )}
-    </VStack>
-  )
-
-  if (isMobile) {
-    return (
-      <Drawer isOpen={isOpen} onOpenChange={onOpenChange} variant='mobile-drawer' flexBlock>
-        {content}
-      </Drawer>
-    )
-  }
-
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} size='md' flexBlock>
-      {content}
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange} size='md' flexBlock variant={isMobile ? 'mobile-drawer' : 'center'}>
+      <VStack pi={isMobile ? 'lg' : undefined} pb={isMobile ? 'lg' : undefined}>
+        <div className={classNames('Layer__RecordTransactionModal__Step', isConfirmingDelete && 'Layer__RecordTransactionModal__Step--hidden')}>
+          <ModalTitleWithClose
+            heading={<ModalHeading size='sm'>{title}</ModalHeading>}
+            onClose={onCancel}
+          />
+          <ModalContent>
+            <RecordTransactionForm form={form} variant={effectiveVariant} transaction={transaction} />
+          </ModalContent>
+          <form.Subscribe
+            selector={state => ({
+              isCreatingAccount: isNewAccountOption(state.values.account),
+              isSubmitting: state.isSubmitting,
+              canSubmit: state.canSubmit,
+            })}
+          >
+            {({ isCreatingAccount, isSubmitting, canSubmit }) => isCreatingAccount
+              ? null
+              : (
+                <ModalActions>
+                  <HStack gap='sm'>
+                    {transaction && (
+                      <Button variant='outlined' status='danger' onPress={() => setIsConfirmingDelete(true)}>
+                        <HStack gap='3xs' align='center'>
+                          <Trash2 size={14} />
+                          {t('bankTransactions:recordTransaction.action.delete', 'Delete')}
+                        </HStack>
+                      </Button>
+                    )}
+                    <Spacer />
+                    <Button variant='outlined' onPress={onCancel}>
+                      {t('common:action.cancel_label', 'Cancel')}
+                    </Button>
+                    <SubmitButton
+                      onPress={() => void form.handleSubmit()}
+                      isPending={isSubmitting && canSubmit}
+                      isError={isError}
+                      withRetry
+                      noIcon
+                    >
+                      {isError
+                        ? t('common:action.retry_label', 'Retry')
+                        : t('common:action.save_label', 'Save')}
+                    </SubmitButton>
+                  </HStack>
+                </ModalActions>
+              )}
+          </form.Subscribe>
+        </div>
+        {isConfirmingDelete && transaction && (
+          <DeleteRecordedTransactionConfirmation
+            transaction={transaction}
+            onCancel={() => setIsConfirmingDelete(false)}
+            onDeleted={() => onOpenChange(false)}
+          />
+        )}
+      </VStack>
     </Modal>
   )
 }
