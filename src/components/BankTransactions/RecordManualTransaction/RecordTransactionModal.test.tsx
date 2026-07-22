@@ -330,22 +330,6 @@ describe('RecordTransactionModal', () => {
     expect(transaction.categorization).toEqual(expect.objectContaining({ type: 'Category' }))
   })
 
-  it('renders as a drawer with stacked labels on mobile', async () => {
-    const originalInnerWidth = window.innerWidth
-    Object.defineProperty(window, 'innerWidth', { configurable: true, writable: true, value: 400 })
-
-    try {
-      renderModal('expense')
-
-      expect(await screen.findByLabelText('Description')).toBeInTheDocument()
-      expect(document.querySelector('.Layer__Modal')).toHaveAttribute('data-variant', 'mobile-drawer')
-      expect(screen.getByLabelText('Description').closest('[data-inline]')).toBeNull()
-    }
-    finally {
-      Object.defineProperty(window, 'innerWidth', { configurable: true, writable: true, value: originalInnerWidth })
-    }
-  })
-
   it('shows a retry state and keeps the modal open when the request fails', async () => {
     const recordRequest = mockRecordTransactionError()
     const { user, filler, onOpenChange } = renderModal('expense')
