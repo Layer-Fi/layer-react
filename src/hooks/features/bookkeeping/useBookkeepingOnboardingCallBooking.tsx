@@ -1,10 +1,12 @@
 import { useCallback } from 'react'
 
 import { type CallBooking, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
+import { useBookkeepingConfiguration } from '@hooks/api/businesses/[business-id]/bookkeeping/config/useBookkeepingConfiguration'
 import { useBookkeepingStatus, useBookkeepingStatusGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
 import { useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
 import { useCreateCallBooking } from '@hooks/api/businesses/[business-id]/call-bookings/useCreateCallBooking'
 import { type CalendlyPayload, useCalendly } from '@hooks/features/calendly/useCalendly'
+import { type CallBookingStringOverrides } from '@components/CallBooking/CallBooking'
 
 const getUuidFromCalendlyUri = (uri: string) => {
   try {
@@ -19,6 +21,7 @@ const getUuidFromCalendlyUri = (uri: string) => {
 
 export const useBookkeepingOnboardingCallBooking = () => {
   const { data: bookkeepingStatus } = useBookkeepingStatus()
+  const { data: bookkeepingConfiguration } = useBookkeepingConfiguration()
   const { forceReload: forceReloadBookkeepingStatus } = useBookkeepingStatusGlobalCacheActions()
   const { trigger: createCallBooking } = useCreateCallBooking()
   const { data: callBookings, isError, isLoading } = useCallBookings({ limit: 1 })
@@ -26,6 +29,12 @@ export const useBookkeepingOnboardingCallBooking = () => {
   const onboardingCallUrl = bookkeepingStatus?.showEmbeddedOnboarding
     ? bookkeepingStatus.onboardingCallUrl
     : undefined
+
+  const callBookingStringOverrides: CallBookingStringOverrides = {
+    title: bookkeepingConfiguration?.onboardingCallCardTitleText ?? undefined,
+    description: bookkeepingConfiguration?.onboardingCallCardDescriptionText ?? undefined,
+    coverage: bookkeepingConfiguration?.onboardingCallCardCoverageText ?? undefined,
+  }
 
   const recordCalendlyScheduled = useCallback(async (payload: CalendlyPayload) => {
     const externalId = getUuidFromCalendlyUri(payload.event.uri)
@@ -77,6 +86,7 @@ export const useBookkeepingOnboardingCallBooking = () => {
     callBooking: callBooking ?? undefined,
     showCallBookingCard: showScheduledCallBooking || showEmptyCallBooking,
     handleBookCall,
+    callBookingStringOverrides,
     isCalendlyVisible,
     calendlyLink,
     calendlyRef,

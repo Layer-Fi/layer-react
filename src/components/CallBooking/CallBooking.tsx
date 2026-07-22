@@ -34,12 +34,25 @@ const ONBOARDING_CALL_COVERAGE_ITEMS = [
   },
 ] as const
 
+export interface CallBookingStringOverrides {
+  title?: string
+  description?: string
+  coverage?: string
+}
+
 export interface CallBookingProps {
   callBooking?: CallBookingData
   onBookCall?: () => void
+  stringOverrides?: CallBookingStringOverrides
 }
 
-const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
+const EmptyState = ({
+  onBookCall,
+  stringOverrides,
+}: {
+  onBookCall?: () => void
+  stringOverrides?: CallBookingStringOverrides
+}) => {
   const { t } = useTranslation()
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BookkeepingOverview)
 
@@ -51,10 +64,10 @@ const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
   return (
     <VStack gap='md' align='center' pi='lg' pb='lg'>
       <Heading size='sm' align='center'>
-        {t('callBookings:prompt.ready_to_get_started', 'Ready to get started?')}
+        {stringOverrides?.title ?? t('callBookings:prompt.ready_to_get_started', 'Ready to get started?')}
       </Heading>
       <Span variant='subtle' align='center'>
-        {t('callBookings:label.book_call_with_bookkeeper', 'Schedule an onboarding call with your bookkeeper')}
+        {stringOverrides?.description ?? t('callBookings:label.book_call_with_bookkeeper', 'Schedule an onboarding call with your bookkeeper')}
       </Span>
       <Button variant='solid' onClick={handleBookCall}>
         {t('callBookings:action.book_call', 'Schedule Call')}
@@ -63,7 +76,7 @@ const EmptyState = ({ onBookCall }: { onBookCall?: () => void }) => {
   )
 }
 
-const OnboardingCallCoverage = () => {
+const OnboardingCallCoverage = ({ coverage }: { coverage?: string }) => {
   const { t } = useTranslation()
 
   return (
@@ -71,43 +84,57 @@ const OnboardingCallCoverage = () => {
       <Span className='Layer__CallBooking__Divider' />
 
       <VStack pbe='md'>
-        <Span
-          size='2xs'
-          variant='subtle'
-          weight='bold'
-          pbe='sm'
-          className='Layer__CallBooking__CoverageHeading'
-        >
-          {t('callBookings:label.on_this_call_well', 'On this call, we\'ll')}
-        </Span>
-        <VStack role='list' gap='xs'>
-          {ONBOARDING_CALL_COVERAGE_ITEMS.map(({ key, i18nKey, defaultValue }) => (
-            <HStack
-              key={key}
-              className='Layer__CallBooking__CoverageItem'
-              align='start'
-              gap='sm'
-              role='listitem'
-            >
-              <HStack
-                className='Layer__CallBooking__CoverageBadge'
-                align='center'
-                justify='center'
-              >
-                <Check size={12} strokeWidth={2.5} />
-              </HStack>
+        {coverage != null
+          ? (
               <Span size='sm'>
-                {t(i18nKey, defaultValue)}
+                {coverage}
               </Span>
-            </HStack>
-          ))}
-        </VStack>
+            )
+          : (
+              <>
+                <Span
+                  size='2xs'
+                  variant='subtle'
+                  weight='bold'
+                  pbe='sm'
+                  className='Layer__CallBooking__CoverageHeading'
+                >
+                  {t('callBookings:label.on_this_call_well', 'On this call, we\'ll')}
+                </Span>
+                <VStack role='list' gap='xs'>
+                  {ONBOARDING_CALL_COVERAGE_ITEMS.map(({ key, i18nKey, defaultValue }) => (
+                    <HStack
+                      key={key}
+                      className='Layer__CallBooking__CoverageItem'
+                      align='start'
+                      gap='sm'
+                      role='listitem'
+                    >
+                      <HStack
+                        className='Layer__CallBooking__CoverageBadge'
+                        align='center'
+                        justify='center'
+                      >
+                        <Check size={12} strokeWidth={2.5} />
+                      </HStack>
+                      <Span size='sm'>
+                        {t(i18nKey, defaultValue)}
+                      </Span>
+                    </HStack>
+                  ))}
+                </VStack>
+              </>
+            )}
       </VStack>
     </>
   )
 }
 
-export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
+export const CallBooking = ({
+  callBooking,
+  onBookCall,
+  stringOverrides,
+}: CallBookingProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
   const countdownLabel = useCallBookingCountdownLabel(callBooking?.eventStartAt)
@@ -115,16 +142,19 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
   if (callBooking == null) {
     return (
       <Container name='CallBooking'>
-        <EmptyState onBookCall={onBookCall} />
+        <EmptyState
+          onBookCall={onBookCall}
+          stringOverrides={stringOverrides}
+        />
       </Container>
     )
   }
 
   const isOnboardingCall = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING
   const purpose = isOnboardingCall
-    ? t('callBookings:label.onboarding_call', 'Onboarding call')
+    ? (stringOverrides?.title ?? t('callBookings:label.onboarding_call', 'Onboarding call'))
     : t('callBookings:label.ad_hoc_call', 'Ad hoc call')
-  const subtitle = t('callBookings:label.meet_bookkeeping_team', 'Meet with our bookkeeping team')
+  const subtitle = stringOverrides?.description ?? t('callBookings:label.meet_bookkeeping_team', 'Meet with our bookkeeping team')
   const callPlatform = callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'
   const callLink = callBooking.callLink.toString()
   const timeLabel = formatDate(callBooking.eventStartAt, DateFormat.MonthDayWithTimeReadable)
@@ -174,7 +204,7 @@ export const CallBooking = ({ callBooking, onBookCall }: CallBookingProps) => {
           </Span>
         </HStack>
 
-        {isOnboardingCall && <OnboardingCallCoverage />}
+        {isOnboardingCall && <OnboardingCallCoverage coverage={stringOverrides?.coverage} />}
 
         <HStack align='center' gap='xs'>
           <HStack className='Layer__CallBooking__JoinAction'>

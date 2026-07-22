@@ -7,7 +7,7 @@ import { type CallBooking as CallBookingData } from '@schemas/callBooking'
 import { useBookkeepingOnboardingCallBooking } from '@hooks/features/bookkeeping/useBookkeepingOnboardingCallBooking'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
-import { CallBooking } from '@components/CallBooking/CallBooking'
+import { CallBooking, type CallBookingStringOverrides } from '@components/CallBooking/CallBooking'
 import { Container } from '@components/Container/Container'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { Header } from '@components/Header/Header'
@@ -33,6 +33,7 @@ type BookkeepingOverviewTasksContentProps = {
   showCallBookingCard: boolean
   tasksMobile: boolean
   tasksStringOverrides?: TasksStringOverrides
+  callBookingStringOverrides?: CallBookingStringOverrides
   onBookCall: () => void
   onClickReconnectAccounts?: () => void
 }
@@ -42,6 +43,7 @@ const BookkeepingOverviewTasksContent = ({
   showCallBookingCard,
   tasksMobile,
   tasksStringOverrides,
+  callBookingStringOverrides,
   onBookCall,
   onClickReconnectAccounts,
 }: BookkeepingOverviewTasksContentProps) => {
@@ -51,6 +53,7 @@ const BookkeepingOverviewTasksContent = ({
         <CallBooking
           callBooking={callBooking}
           onBookCall={onBookCall}
+          stringOverrides={callBookingStringOverrides}
         />
       )}
       <Tasks
@@ -116,6 +119,7 @@ export const BookkeepingOverview = ({
     callBooking,
     showCallBookingCard,
     handleBookCall,
+    callBookingStringOverrides,
     isCalendlyVisible,
     calendlyLink,
     calendlyRef,
@@ -147,6 +151,7 @@ export const BookkeepingOverview = ({
               showCallBookingCard={showCallBookingCard}
               tasksMobile={false}
               tasksStringOverrides={stringOverrides?.tasks}
+              callBookingStringOverrides={callBookingStringOverrides}
               onBookCall={handleBookCall}
               onClickReconnectAccounts={onClickReconnectAccounts}
             />
@@ -165,6 +170,7 @@ export const BookkeepingOverview = ({
                 showCallBookingCard={showCallBookingCard}
                 tasksMobile
                 tasksStringOverrides={stringOverrides?.tasks}
+                callBookingStringOverrides={callBookingStringOverrides}
                 onBookCall={handleBookCall}
                 onClickReconnectAccounts={onClickReconnectAccounts}
               />
