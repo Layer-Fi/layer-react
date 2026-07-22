@@ -3,7 +3,6 @@ import { Pencil } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { useGetBankTransactionCategorizationByTransactionId } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { getRecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/formUtils'
 import { RecordTransactionModal } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionModal'
@@ -15,7 +14,6 @@ type EditCustomTransactionButtonProps = {
 export function EditCustomTransactionButton({ bankTransaction }: EditCustomTransactionButtonProps) {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
-  const categorization = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)
 
   return (
     <span onClick={(e: MouseEvent) => e.stopPropagation()}>
@@ -32,7 +30,6 @@ export function EditCustomTransactionButton({ bankTransaction }: EditCustomTrans
         <RecordTransactionModal
           variant={getRecordTransactionVariant(bankTransaction)}
           transaction={bankTransaction}
-          categorization={categorization}
           isOpen
           onOpenChange={setIsOpen}
         />

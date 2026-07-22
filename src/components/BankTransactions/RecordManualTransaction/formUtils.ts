@@ -5,7 +5,8 @@ import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 import { isClassificationExclusion } from '@schemas/categorization'
 import type { RecordCustomTransaction } from '@schemas/customAccounts'
 import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents } from '@schemas/nonRecursiveBigDecimal'
-import { type BankTransactionCategorization } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { getDefaultSelectedCategoryForBankTransaction } from '@utils/bankTransactions/shared'
+import { getDefaultTaxCodeForBankTransaction } from '@utils/bankTransactions/taxCode'
 import type { RecordTransactionFormValues, RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
 
@@ -40,7 +41,6 @@ export const getRecordTransactionVariant = ({ direction }: BankTransaction): Rec
 
 export const getRecordTransactionFormValues = (
   transaction: BankTransaction,
-  categorization?: BankTransactionCategorization,
 ): RecordTransactionFormValues => ({
   account: {
     value: transaction.externalAccountId ?? '',
@@ -50,7 +50,7 @@ export const getRecordTransactionFormValues = (
   counterparty: (getRecordTransactionVariant(transaction) === 'expense' ? transaction.vendor : transaction.customer) ?? null,
   amount: convertCentsToNonRecursiveBigDecimal(transaction.amount),
   date: fromDate(transaction.date, 'UTC'),
-  category: categorization?.category?.classification ?? null,
-  taxCode: categorization?.taxCode ?? null,
+  category: getDefaultSelectedCategoryForBankTransaction(transaction)?.classification ?? null,
+  taxCode: getDefaultTaxCodeForBankTransaction(transaction),
   memo: transaction.memo ?? '',
 })

@@ -17,6 +17,7 @@ import {
   formatSecondsAsDuration as formatSecondsAsDurationFn,
   type SecondsDurationFormatFn,
 } from '@utils/i18n/duration/formatters'
+import { formatList as formatListFn, type ListFormatFn } from '@utils/i18n/list/formatters'
 import {
   type CurrencyFormatFn,
   formatCurrencyFromCents as formatCurrencyFromCentsFn,
@@ -35,6 +36,7 @@ export type IntlFormatter = {
   formatMonthName: MonthNameFormatFn
   formatMinutesAsDuration: DurationFormatFn
   formatSecondsAsDuration: SecondsDurationFormatFn
+  formatList: ListFormatFn
 }
 
 export function useIntlFormatter(): IntlFormatter {
@@ -72,6 +74,10 @@ export function useIntlFormatter(): IntlFormatter {
     return formatSecondsAsDurationFn(intl, totalSeconds)
   }, [intl])
 
+  const formatList: ListFormatFn = useCallback((labels, options) => {
+    return formatListFn(intl, labels, options)
+  }, [intl])
+
   return useMemo(
     () => ({
       formatCurrencyFromCents,
@@ -82,6 +88,7 @@ export function useIntlFormatter(): IntlFormatter {
       formatMonthName,
       formatMinutesAsDuration,
       formatSecondsAsDuration,
+      formatList,
     }),
     [
       formatCurrencyFromCents,
@@ -92,6 +99,7 @@ export function useIntlFormatter(): IntlFormatter {
       formatMonthName,
       formatMinutesAsDuration,
       formatSecondsAsDuration,
+      formatList,
     ],
   )
 }
