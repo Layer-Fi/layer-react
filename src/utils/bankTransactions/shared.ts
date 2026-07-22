@@ -63,9 +63,6 @@ export const isEditableCustomTransaction = (
   isCustomTransaction(bankTransaction)
   && (customAccounts?.some(account => account.id === bankTransaction.externalAccountId) ?? false)
 
-export const getBankTransactionDisplayName = (bankTransaction: BankTransaction) =>
-  bankTransaction.description ?? bankTransaction.counterpartyName
-
 export const countTransactionsToReview = ({
   transactions,
   dateRange,

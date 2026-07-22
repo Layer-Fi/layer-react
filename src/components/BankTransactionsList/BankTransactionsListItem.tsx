@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import {
-  getBankTransactionDisplayName,
   hasReceipts,
   isCategorized,
   isMoneyIn,
@@ -149,7 +148,7 @@ export const BankTransactionsListItem = ({
             <EditCustomTransactionButton bankTransaction={bankTransaction} />
           )}
           <Span withTooltip>
-            {getBankTransactionDisplayName(bankTransaction)}
+            {bankTransaction.description}
           </Span>
         </HStack>
         <MoneySpan

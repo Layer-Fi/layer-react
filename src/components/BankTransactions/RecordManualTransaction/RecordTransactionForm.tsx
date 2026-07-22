@@ -92,7 +92,10 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
           ? null
           : (
             <>
-              <form.AppField name='description'>
+              <form.AppField
+                name='description'
+                validators={{ onDynamic: ({ value }) => required(t('bankTransactions:recordTransaction.validation.description_required', 'Description is required'))(value) }}
+              >
                 {field => (
                   <field.FormTextField
                     label={t('bankTransactions:recordTransaction.label.description', 'Description')}
