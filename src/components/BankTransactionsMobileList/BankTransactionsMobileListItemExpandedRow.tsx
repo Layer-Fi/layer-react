@@ -13,6 +13,8 @@ import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/Ban
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { EditCustomTransactionButton } from '@components/BankTransactions/RecordManualTransaction/EditCustomTransactionButton'
+import { useIsEditableCustomTransaction } from '@components/BankTransactions/RecordManualTransaction/useIsEditableCustomTransaction'
 import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
 import { getPurposeFromStore, Purpose } from '@components/BankTransactionsMobileList/purpose'
 
@@ -35,6 +37,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
   const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
   const { setTransactionSelectionVariant } = useBankTransactionsCategorizationActions()
   const showCategorization = useBankTransactionsIsCategorizationEnabledContext()
+  const isEditable = useIsEditableCustomTransaction(bankTransaction)
 
   const [purpose, setPurpose] = useState(() => getPurposeFromStore(selectedCategorization))
 
@@ -70,12 +73,15 @@ export const BankTransactionsMobileListItemExpandedRow = ({
           onSelectionChange={onChangePurpose}
         />
       )}
-      <BankTransactionsMobileForms
-        isOpen={isOpen}
-        purpose={purpose}
-        bankTransaction={bankTransaction}
-        showCategorization={showCategorization}
-      />
+      <VStack gap='xs'>
+        <BankTransactionsMobileForms
+          isOpen={isOpen}
+          purpose={purpose}
+          bankTransaction={bankTransaction}
+          showCategorization={showCategorization}
+        />
+        {isEditable && <EditCustomTransactionButton bankTransaction={bankTransaction} withLabel />}
+      </VStack>
     </VStack>
 
   )

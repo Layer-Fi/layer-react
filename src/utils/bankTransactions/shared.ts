@@ -9,8 +9,6 @@ import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import type { CustomAccount } from '@schemas/customAccounts'
 import { makeTagKeyValueFromTag } from '@schemas/tag'
 import { getDefaultTaxCodeForBankTransaction } from '@utils/bankTransactions/taxCode'
-import { getCustomerName } from '@utils/customer'
-import { getVendorName } from '@utils/vendor'
 import { BankTransactionSelectionVariant } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
@@ -64,15 +62,6 @@ export const isEditableCustomTransaction = (
 ) =>
   isCustomTransaction(bankTransaction)
   && (customAccounts?.some(account => account.id === bankTransaction.externalAccountId) ?? false)
-
-export const getBankTransactionDisplayName = (bankTransaction: BankTransaction) => {
-  if (isCustomTransaction(bankTransaction)) {
-    if (bankTransaction.customer) return getCustomerName(bankTransaction.customer)
-    if (bankTransaction.vendor) return getVendorName(bankTransaction.vendor)
-  }
-
-  return bankTransaction.counterpartyName ?? bankTransaction.description
-}
 
 export const countTransactionsToReview = ({
   transactions,

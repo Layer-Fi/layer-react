@@ -119,10 +119,9 @@ export const BankTransactions = ({
 
   ...featureVisibility
 }: BankTransactionsWithErrorProps) => {
-  const showCustomerVendorData = featureVisibility.showCustomerVendor || featureVisibility.showUploadOptions
   usePreloadTagDimensions({ isEnabled: featureVisibility.showTags })
-  usePreloadCustomers({ isEnabled: showCustomerVendorData })
-  usePreloadVendors({ isEnabled: showCustomerVendorData })
+  usePreloadCustomers({ isEnabled: featureVisibility.showCustomerVendor })
+  usePreloadVendors({ isEnabled: featureVisibility.showCustomerVendor })
   usePreloadCustomAccounts({ isEnabled: featureVisibility.showUploadOptions })
   usePreloadCategories()
 

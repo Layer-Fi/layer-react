@@ -102,7 +102,7 @@ export const BankTransactionsMobileListBusinessForm = ({
             />
           )}
         </div>
-        <HStack gap='md'>
+        <HStack gap='xs'>
           {showReceiptUploads && (
             <FileInput
               onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}

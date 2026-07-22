@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import {
-  getBankTransactionDisplayName,
   hasReceipts,
   isCategorized,
   isMoneyIn,
@@ -129,7 +128,7 @@ export const BankTransactionsListItem = ({
         </div>
       </span>
       <HStack className='Layer__bank-transaction-list-item__body'>
-        <HStack gap='sm' className='Layer__bank-transaction-list-item__body__name'>
+        <HStack gap='sm' align='center' className='Layer__bank-transaction-list-item__body__name'>
           {isCategorizationEnabled && (
             <div className='Layer__bank-transaction-list-item__checkbox' onClick={preventRowExpansion}>
               <Checkbox
@@ -145,12 +144,11 @@ export const BankTransactionsListItem = ({
               />
             </div>
           )}
-          {isEditable && (
-            <EditCustomTransactionButton bankTransaction={bankTransaction} />
-          )}
-          <Span withTooltip>
-            {getBankTransactionDisplayName(bankTransaction)}
-          </Span>
+          <HStack gap='4xs' align='center'>
+            {isEditable && <EditCustomTransactionButton bankTransaction={bankTransaction} />}
+            <Span withTooltip>{bankTransaction.description}</Span>
+          </HStack>
+
         </HStack>
         <MoneySpan
           amount={bankTransaction.amount}

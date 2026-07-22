@@ -60,6 +60,7 @@ export const BankTransactionsHeader = ({
   const { bankTransactionsHeader: stringOverrides } = useBankTransactionsStringOverrides()
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const showUploadOptions = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.UploadOptions)
+  const canRecordTransactions = showUploadOptions && isCategorizationEnabled
   const showStatusToggle = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.StatusToggle)
   const showCategorizationRules = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.CategorizationRules)
   const activationDate = useBusinessActivationDate()
@@ -197,7 +198,7 @@ export const BankTransactionsHeader = ({
               {statusToggle}
               <HStack align='center' gap='xs'>
                 <SelectedBankAccountsChip variant='wide' />
-                {showUploadOptions && <RecordTransactionMenuButton />}
+                {canRecordTransactions && <RecordTransactionMenuButton />}
                 <BankTransactionsHeaderMenu
                   actions={headerMenuActions}
                   isListView={isListView}
@@ -211,7 +212,7 @@ export const BankTransactionsHeader = ({
             {!isStatusToggleVisible && (
               <>
                 <SelectedBankAccountsChip variant='wide' />
-                {showUploadOptions && <RecordTransactionMenuButton isDisabled={showBulkActions} />}
+                {canRecordTransactions && <RecordTransactionMenuButton isDisabled={showBulkActions} />}
                 <BankTransactionsHeaderMenu
                   actions={headerMenuActions}
                   isDisabled={showBulkActions}
@@ -247,7 +248,7 @@ export const BankTransactionsHeader = ({
         <SelectedBankAccountsChip slot='selected-accounts' variant='wide' />
         <TransactionsSearch slot='search' isDisabled={showBulkActions} />
         <HStack slot='download-upload' justify='center' gap='xs'>
-          {showUploadOptions && <RecordTransactionMenuButton isDisabled={showBulkActions} />}
+          {canRecordTransactions && <RecordTransactionMenuButton isDisabled={showBulkActions} />}
           <BankTransactionsHeaderMenu
             actions={headerMenuActions}
             isDisabled={showBulkActions}
