@@ -10,7 +10,7 @@ import type { NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import type { Vendor } from '@schemas/vendor'
 import { UpsertCustomAccountTransactionMode, useUpsertCustomAccountTransaction } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/useRecordCustomAccountTransaction'
 import { useAppForm } from '@hooks/features/forms/useForm'
-import { type BankTransactionCategorization, useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 import { convertRecordTransactionFormToParams, getRecordTransactionFormValues } from '@components/BankTransactions/RecordManualTransaction/formUtils'
 import type { AccountOption } from '@components/CustomAccountComboBox/AccountOption'
@@ -44,13 +44,12 @@ const getDefaultValues = (): RecordTransactionFormValues => ({
 type UseRecordTransactionFormProps = {
   variant: RecordTransactionVariant
   transaction?: BankTransaction
-  categorization?: BankTransactionCategorization
   onSuccess?: () => void
 }
 
-export const useRecordTransactionForm = ({ variant, transaction, categorization, onSuccess }: UseRecordTransactionFormProps) => {
+export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: UseRecordTransactionFormProps) => {
   const createExternalId = useMemo(() => crypto.randomUUID(), [])
-  const { trigger, isError, reset: resetSubmitState } = useUpsertCustomAccountTransaction(
+  const { trigger, isError } = useUpsertCustomAccountTransaction(
     transaction
       ? { mode: UpsertCustomAccountTransactionMode.Update, transactionId: transaction.id }
       : { mode: UpsertCustomAccountTransactionMode.Create },
@@ -87,10 +86,10 @@ export const useRecordTransactionForm = ({ variant, transaction, categorization,
   )
 
   const form = useAppForm<RecordTransactionFormValues>({
-    defaultValues: transaction ? getRecordTransactionFormValues(transaction, categorization) : getDefaultValues(),
+    defaultValues: transaction ? getRecordTransactionFormValues(transaction) : getDefaultValues(),
     onSubmit: handleSubmit,
     validationLogic: revalidateLogic(),
   })
 
-  return useMemo(() => ({ form, isError, resetSubmitState }), [form, isError, resetSubmitState])
+  return useMemo(() => ({ form, isError }), [form, isError])
 }

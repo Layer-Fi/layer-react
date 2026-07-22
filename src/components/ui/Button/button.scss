@@ -155,6 +155,24 @@
     color: var(--fg-brand-accent, var(--color-primary));
   }
 
+  &[data-status='danger']:not([data-disabled], [data-pending]) {
+    &[data-variant='outlined'],
+    &[data-variant='ghost'],
+    &[data-variant='text'] {
+      color: var(--color-danger);
+    }
+
+    &[data-variant='solid'] {
+      background-color: var(--color-danger);
+      color: var(--color-white);
+
+      &[data-hovered]:not([data-pressed]),
+      &[data-pressed]:not([data-focus-visible]) {
+        background-color: var(--color-danger-dark);
+      }
+    }
+  }
+
   &[data-full-width] {
     inline-size: 100%;
   }
