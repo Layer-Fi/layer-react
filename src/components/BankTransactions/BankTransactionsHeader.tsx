@@ -60,8 +60,6 @@ export const BankTransactionsHeader = ({
   const { bankTransactionsHeader: stringOverrides } = useBankTransactionsStringOverrides()
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const showUploadOptions = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.UploadOptions)
-  // Recording custom transactions requires categorization, mirroring useIsEditableCustomTransaction,
-  // so a transaction can't be created in a state where it could never be reopened to edit.
   const canRecordTransactions = showUploadOptions && isCategorizationEnabled
   const showStatusToggle = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.StatusToggle)
   const showCategorizationRules = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.CategorizationRules)
