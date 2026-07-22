@@ -123,22 +123,22 @@ export function createMutationHook<
         const trigger = originalTrigger as (arg: TArg | undefined, options?: MutationSWROptions<TData>) => Promise<TData>
         const [arg, triggerOptions] = triggerParameters as [TArg | undefined, MutationSWROptions<TData> | undefined]
 
-        // Whether the caller ultimately wants failures to throw, honoring per-call > per-hook > factory, defaulting to SWR's `true`.
-        const shouldThrowOnError = triggerOptions?.throwOnError ?? callSwrOptions?.throwOnError ?? swrOptions?.throwOnError ?? true
+        // SWR only invokes onSuccess when the mutation actually succeeds, so the side-effect never runs
+        // on failure — regardless of the caller's throwOnError. We capture its result here and await it
+        // below so the "side-effect finishes before trigger resolves" contract still holds.
+        let sideEffect: Promise<void> | undefined
+        const triggerResult = await trigger(arg, {
+          ...triggerOptions,
+          onSuccess: (data) => {
+            // Our onSuccess overrides SWR's merge, so forward any caller-provided one (per-call > per-hook > factory).
+            (triggerOptions?.onSuccess ?? callSwrOptions?.onSuccess ?? swrOptions?.onSuccess)?.(data)
+            sideEffect = Promise.resolve(onTriggerSuccessRef.current?.(data, arg as TArg))
+          },
+        })
 
-        try {
-          // Force a rejection on failure so the success side-effect only runs on genuine success,
-          // even when the caller opted into throwOnError:false.
-          const triggerResult = await trigger(arg, { ...triggerOptions, throwOnError: true })
+        if (sideEffect) await sideEffect
 
-          await onTriggerSuccessRef.current?.(triggerResult, arg as TArg)
-
-          return triggerResult
-        }
-        catch (error) {
-          if (shouldThrowOnError) throw error
-          return undefined as TData
-        }
+        return triggerResult
       },
       [originalTrigger, onTriggerSuccessRef, callSwrOptions],
     )
