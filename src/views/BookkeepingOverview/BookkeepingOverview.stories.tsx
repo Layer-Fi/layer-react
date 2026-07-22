@@ -1,10 +1,18 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
+import {
+  type CallBooking,
+  CallBookingPurpose,
+  CallBookingState,
+  CallBookingType,
+} from '@schemas/callBooking'
 import { BookkeepingStatus } from '@schemas/bookkeepingStatus'
 import { BookkeepingOverview } from '@views/BookkeepingOverview/BookkeepingOverview'
 
+import { get as getCallBookings } from '@msw/api/businesses/[business-id]/call-bookings/get'
+import { get as getBookkeepingConfiguration } from '@msw/api/businesses/[business-id]/bookkeeping/config/get'
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
-import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
+import { makeBookkeepingConfiguration, makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 import {
   buildSummariesSlotProps,
   buildSummariesStringOverrides,
@@ -13,6 +21,35 @@ import {
   summariesStoryDefaultArgs,
 } from '@test-utils/summariesStoryControls'
 import { profitAndLossStoryHandlers, withOverviewStoryContext } from '@test-utils/withProfitAndLossStoryContext'
+
+const ONBOARDING_CALL_URL = 'https://calendly.com/layerfi/bookkeeping-onboarding'
+
+const scheduledOnboardingCall: CallBooking = {
+  id: '00000000-0000-4000-8000-000000000401',
+  businessId: '00000000-0000-4000-8000-000000000201',
+  externalId: 'calendly-event-1',
+  purpose: CallBookingPurpose.BOOKKEEPING_ONBOARDING,
+  state: CallBookingState.SCHEDULED,
+  callType: CallBookingType.GOOGLE_MEET,
+  eventStartAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+  eventEndAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000 + 30 * 60 * 1000),
+  callLink: new URL('https://meet.google.com/abc-defg-hij'),
+  bookkeeperName: 'Alex Bookkeeper',
+  bookkeeperEmail: 'alex@layerfi.com',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+}
+
+const onboardingCallCardHandlers = (callBookings: readonly CallBooking[] = []) => [
+  getBookkeepingStatus.mock(makeBookkeepingStatus({
+    status: BookkeepingStatus.ACTIVE,
+    showEmbeddedOnboarding: true,
+    onboardingCallUrl: ONBOARDING_CALL_URL,
+  })),
+  getBookkeepingConfiguration.mock(makeBookkeepingConfiguration()),
+  getCallBookings.mock(callBookings),
+  ...profitAndLossStoryHandlers,
+]
 
 type BookkeepingOverviewStoryArgs = SummariesStoryArgs & {
   showTitle: boolean
@@ -62,3 +99,21 @@ export default meta
 type Story = StoryObj<BookkeepingOverviewStoryArgs>
 
 export const Default: Story = {}
+
+export const OnboardingCallCard: Story = {
+  name: 'Onboarding call card (empty)',
+  parameters: {
+    msw: {
+      handlers: onboardingCallCardHandlers(),
+    },
+  },
+}
+
+export const ScheduledOnboardingCallCard: Story = {
+  name: 'Onboarding call card (scheduled)',
+  parameters: {
+    msw: {
+      handlers: onboardingCallCardHandlers([scheduledOnboardingCall]),
+    },
+  },
+}
