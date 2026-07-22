@@ -154,7 +154,9 @@ export const CallBooking = ({
   const purpose = isOnboardingCall
     ? (stringOverrides?.title ?? t('callBookings:label.onboarding_call', 'Onboarding call'))
     : t('callBookings:label.ad_hoc_call', 'Ad hoc call')
-  const subtitle = stringOverrides?.description ?? t('callBookings:label.meet_bookkeeping_team', 'Meet with our bookkeeping team')
+  const subtitle = isOnboardingCall
+    ? (stringOverrides?.description ?? t('callBookings:label.meet_bookkeeping_team', 'Meet with our bookkeeping team'))
+    : t('callBookings:label.meet_bookkeeping_team', 'Meet with our bookkeeping team')
   const callPlatform = callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'
   const callLink = callBooking.callLink.toString()
   const timeLabel = formatDate(callBooking.eventStartAt, DateFormat.MonthDayWithTimeReadable)
