@@ -52,7 +52,7 @@ export const BankTransactionMemo = ({ bankTransactionId, memo, isMobile }: { ban
                       inset
                       name='memo'
                       value={field.state.value ?? undefined}
-                      placeholder={t('common:action.add_description', 'Add a description')}
+                      placeholder={t('common:action.add_description', 'Add description')}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
                     />
                   </InputGroup>
@@ -61,7 +61,7 @@ export const BankTransactionMemo = ({ bankTransactionId, memo, isMobile }: { ban
                   <TextArea
                     name='memo'
                     value={field.state.value ?? undefined}
-                    placeholder={t('common:action.add_description', 'Add a description')}
+                    placeholder={t('common:action.add_description', 'Add description')}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
                   />
                 )}

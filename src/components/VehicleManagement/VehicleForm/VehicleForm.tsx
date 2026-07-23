@@ -109,7 +109,7 @@ export const VehicleForm = (props: VehicleFormProps) => {
             label={t('common:label.description', 'Description')}
             inline
             isReadOnly={isReadOnly}
-            placeholder={t('common:action.add_description', 'Add a description')}
+            placeholder={t('common:action.add_description', 'Add description')}
             className={`${VEHICLE_FORM_FIELD_CSS_PREFIX}__Description`}
           />
         )}

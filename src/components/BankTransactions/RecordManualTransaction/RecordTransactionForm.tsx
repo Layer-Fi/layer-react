@@ -207,7 +207,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                   <field.FormTextAreaField
                     label={t('common:label.description', 'Description')}
                     inline={isInline}
-                    placeholder={t('common:action.add_description', 'Add a description')}
+                    placeholder={t('common:action.add_description', 'Add description')}
                   />
                 )}
               </form.AppField>
