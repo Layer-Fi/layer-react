@@ -7,16 +7,16 @@
     "categorize_or_match": "Catégoriser ou apparier...",
     "confirm_all": "Tout confirmer",
     "download_transactions": "Télécharger les transactions",
-    "edit_transaction": "",
+    "edit_transaction": "Modifier la transaction",
     "manage_categorization_rules": "Gérer les règles de catégorisation",
     "mark_as_personal": "Marquer comme personnel",
     "no_tax_code": "Aucun code de taxe",
     "or_find_match": "ou trouver une correspondance",
     "or_split_transaction": "ou répartir la transaction",
     "recategorize_all": "Tout recatégoriser",
-    "record_expense": "",
-    "record_income": "",
-    "record_transaction": "",
+    "record_expense": "Enregistrer une dépense",
+    "record_income": "Enregistrer un revenu",
+    "record_transaction": "Enregistrer une transaction",
     "search_categories": "Rechercher des catégories...",
     "search_tax_codes": "Rechercher des codes de taxe...",
     "select_a_category": "Sélectionner une catégorie",
@@ -57,9 +57,8 @@
     "upload_file_type": "Type de fichier invalide. Veuillez téléverser une image ou un PDF."
   },
   "label": {
-    "accounts_selected_one": "",
-    "accounts_selected_many": "",
-    "accounts_selected_other": "",
+    "accounts_selected_one": "{{count}} compte sélectionné",
+    "accounts_selected_other": "{{count}} comptes sélectionnés",
     "actionable_count_transactions_will_be_confirmed_one": "{{displayActionableCount}} du {{displayCount}} transaction sera confirmée.",
     "actionable_count_transactions_will_be_confirmed_other": "{{displayActionableCount}} des {{displayCount}} transactions seront confirmées.",
     "additional_bank_transaction_actions": "Actions supplémentaires pour les opérations bancaires",
@@ -106,7 +105,8 @@
     "transfer_uppercase": "VIREMENT",
     "uncategorize_count_selected_one": "Cette action décatégorisera {{displayCount}} transaction sélectionnée.",
     "uncategorize_count_selected_other": "Cette action décatégorisera {{displayCount}} transactions sélectionnées.",
-    "upload_transactions_or_wait_for_bank_sync": "Importez vos transactions ou attendez qu’elles soient synchronisées depuis votre banque."
+    "upload_transactions_or_wait_for_bank_sync": "Importez vos transactions ou attendez qu’elles soient synchronisées depuis votre banque.",
+    "accounts_selected_many": ""
   },
   "prompt": {
     "categorize_selected_transactions": "Catégoriser toutes les transactions sélectionnées?",
@@ -116,39 +116,39 @@
   },
   "recordTransaction": {
     "delete": {
-      "description": "",
-      "title": ""
+      "description": "Cette transaction sera supprimée définitivement. Cette action ne peut pas être annulée.",
+      "title": "Supprimer la transaction"
     },
     "label": {
-      "deposited_in": "",
-      "paid_from": "",
-      "payee": "",
-      "payer": ""
+      "deposited_in": "Déposé dans",
+      "paid_from": "Payé à partir de",
+      "payee": "Bénéficiaire",
+      "payer": "Payeur"
     },
     "placeholder": {
-      "account": "",
-      "category": "",
-      "payee": "",
-      "payer": ""
+      "account": "Sélectionner un compte...",
+      "category": "Sélectionner une catégorie...",
+      "payee": "Personne que vous avez payée",
+      "payer": "Personne qui vous a payé"
     },
     "title": {
-      "add_expense": "",
-      "add_income": "",
-      "edit": ""
+      "add_expense": "Ajouter une dépense",
+      "add_income": "Ajouter un revenu",
+      "edit": "Modifier la transaction"
     },
     "toast": {
-      "transaction_recorded": "",
-      "transaction_updated": ""
+      "transaction_recorded": "Transaction enregistrée",
+      "transaction_updated": "Transaction mise à jour"
     },
     "validation": {
-      "account_required": "",
-      "amount_greater_than_zero": "",
-      "category_required": "",
-      "date_before_activation": "",
-      "date_in_future": "",
-      "date_required": "",
-      "payee_required": "",
-      "payer_required": ""
+      "account_required": "Le compte est obligatoire",
+      "amount_greater_than_zero": "Le montant doit être supérieur à zéro",
+      "category_required": "La catégorie est obligatoire",
+      "date_before_activation": "La date ne peut pas être antérieure à la date d’activation de l’entreprise",
+      "date_in_future": "La date ne peut pas être dans le futur",
+      "date_required": "La date est obligatoire",
+      "payee_required": "Le bénéficiaire est obligatoire",
+      "payer_required": "Le payeur est obligatoire"
     }
   },
   "validation": {
