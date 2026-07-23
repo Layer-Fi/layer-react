@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback } from 'react'
+import { useCallback } from 'react'
 import { type CalendarDate } from '@internationalized/date'
 import { AlertTriangle, Save } from 'lucide-react'
 import type React from 'react'
@@ -9,23 +9,13 @@ import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { FieldErrors } from '@components/forms/FieldErrors'
 import { TripAddressComboBox } from '@components/Trips/TripAddressComboBox/TripAddressComboBox'
 import { useTripForm } from '@components/Trips/TripForm/useTripForm'
 import { TripPurposeComboBox } from '@components/Trips/TripPurposeComboBox/TripPurposeComboBox'
-import { ErrorText } from '@components/Typography/ErrorText'
 import { VehicleSelector } from '@components/VehicleManagement/VehicleSelector/VehicleSelector'
 
 import './tripForm.scss'
-
-function FieldErrors({ errors }: { errors: ReadonlyArray<unknown> }) {
-  if (errors.length === 0) return null
-
-  return (
-    <HStack justify='end' className='Layer__TripForm__FieldError'>
-      <ErrorText size='xs'>{errors[0] as ReactNode}</ErrorText>
-    </HStack>
-  )
-}
 
 export type TripFormProps = {
   trip?: Trip
@@ -108,6 +98,7 @@ export const TripForm = (props: TripFormProps) => {
 
       {isDistanceIncalculable && (
         <FieldErrors
+          className='Layer__TripForm__FieldError'
           errors={[t(
             'trips:error.distance_incalculable',
             'A route between these addresses could not be found. Enter the distance manually.',
@@ -124,7 +115,7 @@ export const TripForm = (props: TripFormProps) => {
               isReadOnly={isReadOnly}
               className='Layer__TripForm__Field__Purpose'
             />
-            <FieldErrors errors={field.state.meta.errors} />
+            <FieldErrors errors={field.state.meta.errors} className='Layer__TripForm__FieldError' />
           </>
         )}
       </form.Field>
