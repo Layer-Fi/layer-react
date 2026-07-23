@@ -17,8 +17,8 @@
     "link_another_bank": "Connecter une autre banque",
     "mark_duplicate_account": "Marquer comme compte en double",
     "mark_not_duplicate_account": "Marquer comme n’étant pas un compte en double",
-    "reconnect_another_bank": "",
-    "reconnect_my_accounts": "",
+    "reconnect_another_bank": "Reconnecter une autre banque",
+    "reconnect_my_accounts": "Reconnecter mes comptes",
     "repair_connection": "Réparer la connexion",
     "unlink_account": "Déconnecter le compte",
     "unlink_account_label": "Déconnecter le compte",
@@ -43,7 +43,7 @@
   },
   "label": {
     "account_and_unmatched_transactions_deleted": "Ce compte et toutes les transactions non appariées seront supprimés.",
-    "account_options": "",
+    "account_options": "Options du compte",
     "account_stops_syncing_new_data": "Ce compte cessera de synchroniser de nouvelles données, et toutes les transactions non appariées seront supprimées.",
     "accounts_successfully_linked": "Comptes connectés avec succès",
     "bank_balance": "Solde bancaire",
@@ -52,8 +52,8 @@
     "confirm_remove_accounts_for_institution": "Veuillez confirmer que vous souhaitez supprimer tous les comptes associés à cette institution",
     "confirm_remove_accounts_for_institution_name": "Veuillez confirmer que vous souhaitez supprimer tous les comptes associés à {{institutionName}}",
     "connect_bank_accounts_and_credit_cards": "Connectez vos comptes bancaires et vos cartes de crédit pour importer automatiquement vos transactions d’entreprise.",
-    "connected_accounts_count_one": "",
-    "connected_accounts_count_other": "",
+    "connected_accounts_count_one": "Vous avez connecté {{displayCount}} compte",
+    "connected_accounts_count_other": "Vous avez connecté {{displayCount}} comptes",
     "data_is_syncing": "Les données sont en cours de synchronisation",
     "deselect_unused_accounts": "Veuillez désélectionner tous les comptes que vous n’utilisez pas pour votre entreprise.",
     "found_accounts_count_one": "Nous avons trouvé {{displayCount}} compte",
@@ -64,7 +64,7 @@
     "link_your_bank_accounts": "Connectez vos comptes bancaires",
     "link_your_bank_accounts_description": "La connexion de vos comptes bancaires nous permet de charger vos transactions bancaires et de les catégoriser automatiquement.",
     "linked_accounts": "Comptes connectés",
-    "linked_accounts_list": "",
+    "linked_accounts_list": "Comptes connectés",
     "loading_accounts": "Chargement de vos comptes...",
     "may_take_few_minutes": "Cela peut prendre quelques minutes",
     "may_take_up_to_5_minutes": "Cela peut prendre jusqu’à 5 minutes",
@@ -76,15 +76,15 @@
     "no_data_sync_until_confirm": "Aucune donnée ne sera synchronisée tant que vous n’aurez pas confirmé.",
     "opening_balance": "Solde d'ouverture",
     "opening_date": "Date d'ouverture",
-    "reconnect_bank_accounts_and_credit_cards": "",
-    "reconnect_bank_accounts_and_credit_cards_description": "",
-    "remove_accounts_new_dashboard": "",
+    "reconnect_bank_accounts_and_credit_cards": "Reconnectez vos comptes bancaires et vos cartes de crédit",
+    "reconnect_bank_accounts_and_credit_cards_description": "Reconnectez vos comptes bancaires et vos cartes de crédit pour importer automatiquement vos transactions d’entreprise.",
+    "remove_accounts_new_dashboard": "Vous aurez la possibilité de retirer des comptes dans le nouveau tableau de bord.",
     "remove_unused_accounts_next_step": "Vous aurez la possibilité de supprimer les comptes que vous n’utilisez pas pour votre entreprise à l’étape suivante.",
     "select_accounts_use_one": "Nous avons récupéré le compte ci-dessous de votre institution. Désélectionnez-le si vous ne souhaitez pas le connecter.",
     "select_accounts_use_other": "Nous avons récupéré les comptes ci-dessous de votre institution. Désélectionnez ceux que vous ne souhaitez pas connecter."
   },
   "prompt": {
-    "connect_all_bank_accounts_for_bookkeeping": "",
+    "connect_all_bank_accounts_for_bookkeeping": "Veuillez connecter tous vos comptes bancaires pour la tenue de livres",
     "use_other_bank_accounts_or_cards": "Utilisez-vous d'autres comptes bancaires ou cartes de crédit pour votre entreprise?",
     "which_accounts_for_business": "Quels comptes utilisez-vous pour votre entreprise?"
   },
@@ -93,7 +93,7 @@
     "syncing_historical_account_data": "Synchronisation des données historiques du compte"
   },
   "tooltip": {
-    "account_filter_locked": "",
+    "account_filter_locked": "Les filtres de compte ne peuvent pas être modifiés lorsque des transactions sont sélectionnées",
     "cannot_link_demo_business": "La connexion de comptes n’est pas offerte pour les entreprises de démonstration. Il s’agit d’une entreprise exemple qui utilise des données fictives au lieu de véritables connexions bancaires."
   }
 }
