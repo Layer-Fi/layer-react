@@ -70,7 +70,7 @@ const EmptyState = ({
         {stringOverrides?.description || t('callBookings:label.book_call_with_bookkeeper', 'Schedule an onboarding call with your bookkeeper')}
       </Span>
       <Button variant='solid' onClick={handleBookCall}>
-        {t('callBookings:action.book_call', 'Schedule Call')}
+        {t('callBookings:action.schedule_call', 'Schedule a call')}
       </Button>
     </VStack>
   )
@@ -85,11 +85,7 @@ const OnboardingCallCoverage = ({ coverage }: { coverage?: string }) => {
 
       <VStack pbe='md'>
         {coverage
-          ? (
-            <Span size='sm'>
-              {coverage}
-            </Span>
-          )
+          ? <Span size='sm'>{coverage}</Span>
           : (
             <>
               <Span
