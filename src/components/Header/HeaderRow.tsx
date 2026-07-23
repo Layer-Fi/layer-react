@@ -10,10 +10,7 @@ interface HeaderRowProps {
   style?: CSSProperties
   children: ReactNode
   direction?: 'row' | 'col'
-  /**
-   * When true, the row scrolls horizontally instead of clipping its contents
-   * if they are wider than the available width (e.g. filters on mobile).
-   */
+  /** Scroll horizontally instead of clipping overflowing content */
   scrollable?: boolean
 }
 

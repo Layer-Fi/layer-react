@@ -27,11 +27,7 @@
     padding: 0 var(--spacing-xl);
   }
 
-  // Quick fix for narrow / mobile screens: when the row's filters are wider
-  // than the available width, allow the row to scroll horizontally rather than
-  // clipping the filters that overflow off-screen.
   &[data-scrollable='true'] {
-    flex-wrap: nowrap;
     overflow-x: auto;
 
     .Layer__HeaderCol {
