@@ -36,7 +36,7 @@ export type TripFormProps = {
 export const TripForm = (props: TripFormProps) => {
   const { t } = useTranslation()
   const { onSuccess, trip, isReadOnly } = props
-  const { form, submitError, isDistanceUncalculatable } = useTripForm({ onSuccess, trip })
+  const { form, submitError, isDistanceIncalculable } = useTripForm({ onSuccess, trip })
 
   // Prevents default browser form submission behavior
   const blockNativeOnSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
@@ -106,10 +106,10 @@ export const TripForm = (props: TripFormProps) => {
         )}
       </form.AppField>
 
-      {isDistanceUncalculatable && (
+      {isDistanceIncalculable && (
         <FieldErrors
           errors={[t(
-            'trips:error.distance_uncalculatable',
+            'trips:error.distance_incalculable',
             'A route between these addresses could not be found. Enter the distance manually.',
           )]}
         />

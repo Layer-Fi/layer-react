@@ -7,7 +7,6 @@ import { useMileageAddressDetails } from '@hooks/api/businesses/[business-id]/mi
 import { MIN_ADDRESS_QUERY_LENGTH, useMileageAddressSuggestions } from '@hooks/api/businesses/[business-id]/mileage/address-suggestions/useMileageAddressSuggestions'
 import { SearchComboBox, useSearchComboBox } from '@ui/ComboBox/SearchComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
-import { HStack } from '@ui/Stack/Stack'
 import { Label, P } from '@ui/Typography/Text'
 
 import './tripAddressComboBox.scss'
@@ -97,7 +96,7 @@ export const TripAddressComboBox = ({
   const inputId = useId()
 
   return (
-    <HStack
+    <div
       className={classNames(
         'Layer__TripAddressComboBox',
         'Layer__TripAddressComboBox--inline',
@@ -122,6 +121,6 @@ export const TripAddressComboBox = ({
           ErrorMessage: t('trips:error.load_address_suggestions', 'An error occurred while loading address suggestions.'),
         }}
       />
-    </HStack>
+    </div>
   )
 }

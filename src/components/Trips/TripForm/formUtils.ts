@@ -68,18 +68,28 @@ export const validateTripForm = ({ trip }: { trip: TripForm }, t: TFunction) => 
   return Object.keys(fields).length > 0 ? { fields } : undefined
 }
 
-export const convertTripFormToUpsertTrip = (form: TripForm, existingTrip?: Trip): unknown => {
+export const convertTripFormToUpsertTrip = (
+  form: TripForm,
+  existingTrip?: Trip,
+  computedDistance?: BD.BigDecimal,
+): unknown => {
   const distance = fromNonRecursiveBigDecimal(form.distance)
   const isDistanceEdited = existingTrip
     ? !BD.equals(distance, existingTrip.distance)
     : BD.isPositive(distance)
 
+  const isDistanceAutofilled = hasBothPlaces(form)
+    && computedDistance !== undefined
+    && BD.equals(distance, computedDistance)
+
   /*
    * An omitted distance tells the server to derive it from the two place IDs
    * (or keep the stored one when the locations are unchanged); an explicit
-   * distance always wins and is stored as MANUAL.
+   * distance always wins and is stored as MANUAL. An autofilled distance the
+   * user never touched is omitted so the server stores it as COMPUTED.
    */
   const shouldSendDistance = BD.isPositive(distance)
+    && !isDistanceAutofilled
     && (isDistanceEdited || !hasBothPlaces(form))
 
   return {
@@ -89,12 +99,17 @@ export const convertTripFormToUpsertTrip = (form: TripForm, existingTrip?: Trip)
     purpose: form.purpose,
     startAddress: form.start.address.trim() || null,
     endAddress: form.end.address.trim() || null,
-    googleStartPlaceId: form.start.place?.placeId,
-    googleEndPlaceId: form.end.place?.placeId,
-    startLatitude: form.start.place?.latitude,
-    startLongitude: form.start.place?.longitude,
-    endLatitude: form.end.place?.latitude,
-    endLongitude: form.end.place?.longitude,
+    /*
+     * Explicit nulls, not undefined: JSON.stringify drops undefined keys, and
+     * a missing key on PATCH means "leave unchanged" server-side, so clearing
+     * a place would otherwise strand its stale ID and coordinates.
+     */
+    googleStartPlaceId: form.start.place?.placeId ?? null,
+    googleEndPlaceId: form.end.place?.placeId ?? null,
+    startLatitude: form.start.place?.latitude ?? null,
+    startLongitude: form.start.place?.longitude ?? null,
+    endLatitude: form.end.place?.latitude ?? null,
+    endLongitude: form.end.place?.longitude ?? null,
     description: form.description.trim() || null,
   }
 }

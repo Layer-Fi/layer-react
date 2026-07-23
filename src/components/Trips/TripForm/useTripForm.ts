@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
-import { Schema } from 'effect'
+import { type BigDecimal, Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
 import { type Trip, type TripForm, UpsertTripSchema } from '@schemas/trip'
@@ -26,9 +26,12 @@ export const useTripForm = (props: UseTripFormProps) => {
   const defaultValuesRef = useRef<TripForm>(getTripFormDefaultValues(trip))
   const defaultValues = defaultValuesRef.current
 
+  /* Bridges the autofill hook (which needs the form) into onSubmit (which the form needs) */
+  const computedDistanceRef = useRef<BigDecimal.BigDecimal | undefined>(undefined)
+
   const onSubmit = useCallback(async ({ value }: { value: TripForm }) => {
     try {
-      const tripParams = convertTripFormToUpsertTrip(value, trip)
+      const tripParams = convertTripFormToUpsertTrip(value, trip, computedDistanceRef.current)
       const upsertTripRequest = Schema.encodeUnknownSync(UpsertTripSchema)(tripParams)
       const result = await upsertTrip(upsertTripRequest)
 
@@ -62,10 +65,14 @@ export const useTripForm = (props: UseTripFormProps) => {
     form.reset(getTripFormDefaultValues(trip))
   }, [trip, form])
 
-  const { isDistanceUncalculatable } = useAutofillTripDistance({ form, trip })
+  const { computedDistance, isDistanceIncalculable } = useAutofillTripDistance({ form, trip })
+
+  useEffect(() => {
+    computedDistanceRef.current = computedDistance
+  }, [computedDistance])
 
   return useMemo(
-    () => ({ form, submitError, isDistanceUncalculatable }),
-    [form, submitError, isDistanceUncalculatable],
+    () => ({ form, submitError, isDistanceIncalculable }),
+    [form, submitError, isDistanceIncalculable],
   )
 }

@@ -36,7 +36,10 @@ export function useAutofillTripDistance({ form, trip }: UseAutofillTripDistanceP
     form.setFieldValue('distance', nextDistance)
   }, [computedDistance, form])
 
-  const isDistanceUncalculatable = isAPIErrorOfType(error, ApiEnumErrorType.MileageDistanceUncalculatable)
+  const isDistanceIncalculable = isAPIErrorOfType(error, ApiEnumErrorType.MileageDistanceIncalculable)
 
-  return useMemo(() => ({ isDistanceUncalculatable }), [isDistanceUncalculatable])
+  return useMemo(
+    () => ({ computedDistance, isDistanceIncalculable }),
+    [computedDistance, isDistanceIncalculable],
+  )
 }
