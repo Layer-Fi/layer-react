@@ -1,4 +1,4 @@
-import { type CalendarDate, fromDate, getLocalTimeZone, ZonedDateTime } from '@internationalized/date'
+import { type CalendarDate, fromDate, getLocalTimeZone, toCalendarDate, ZonedDateTime } from '@internationalized/date'
 import { differenceInDays, formatISO } from 'date-fns'
 
 import type { DateFormatFn } from '@utils/i18n/date/formatters'
@@ -20,6 +20,8 @@ export function isZonedDateTime(val: unknown): val is ZonedDateTime {
 }
 
 export const convertDateToZonedDateTime = (date: Date) => fromDate(date, getLocalTimeZone())
+
+export const convertDateToLocalCalendarDate = (date: Date) => toCalendarDate(convertDateToZonedDateTime(date))
 
 export const formatCalendarDate = (date: CalendarDate, formatDate: DateFormatFn): string => {
   const localDate = new Date(date.year, date.month - 1, date.day)

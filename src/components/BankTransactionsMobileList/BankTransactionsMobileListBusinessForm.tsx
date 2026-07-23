@@ -9,7 +9,6 @@ import { resolveCategoryTaxCode } from '@utils/bankTransactions/taxCode'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
-import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
@@ -28,7 +27,6 @@ export const BankTransactionsMobileListBusinessForm = ({
   showCategorization,
 }: BankTransactionsMobileListBusinessFormProps) => {
   const { t } = useTranslation()
-  const showReceiptUploads = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ReceiptUploads)
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const {
@@ -93,25 +91,21 @@ export const BankTransactionsMobileListBusinessForm = ({
               : undefined,
           )}
         >
-          {showReceiptUploads && (
-            <BankTransactionReceipts
-              label={t('bankTransactions:label.receipts', 'Receipts')}
-              ref={receiptsRef}
-              floatingActions={false}
-              hideUploadButtons={true}
-            />
-          )}
+          <BankTransactionReceipts
+            label={t('bankTransactions:label.receipts', 'Receipts')}
+            ref={receiptsRef}
+            floatingActions={false}
+            hideUploadButtons={true}
+          />
         </div>
         <HStack gap='xs'>
-          {showReceiptUploads && (
-            <FileInput
-              onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
-              text={t('bankTransactions:action.upload_receipt', 'Upload receipt')}
-              icon
-              slots={{ Icon: <Paperclip size={20} /> }}
-              accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
-            />
-          )}
+          <FileInput
+            onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
+            text={t('bankTransactions:action.upload_receipt', 'Upload receipt')}
+            icon
+            slots={{ Icon: <Paperclip size={20} /> }}
+            accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
+          />
           {showCategorization && (
             <Button
               onClick={save}

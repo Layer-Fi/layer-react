@@ -1,5 +1,5 @@
 import { type PropsWithChildren, useCallback, useEffect, useState } from 'react'
-import type { ZonedDateTime } from '@internationalized/date'
+import type { DateValue } from '@internationalized/date'
 import classNames from 'classnames'
 
 import { useFieldContext } from '@hooks/features/forms/useForm'
@@ -9,13 +9,13 @@ import type { CommonFormFieldProps } from '@components/forms/types'
 import './formDatePickerField.scss'
 
 export type FormDatePickerFieldProps = CommonFormFieldProps & {
-  minDate?: ZonedDateTime | null
-  maxDate?: ZonedDateTime | null
+  minDate?: DateValue | null
+  maxDate?: DateValue | null
 }
 
 const FORM_DATE_PICKER_FIELD_CLASSNAME = 'Layer__FormDatePickerField'
 
-export function FormDatePickerField({
+export function FormDatePickerField<T extends DateValue>({
   label,
   className,
   inline = false,
@@ -25,18 +25,18 @@ export function FormDatePickerField({
   minDate,
   maxDate,
 }: PropsWithChildren<FormDatePickerFieldProps>) {
-  const field = useFieldContext<ZonedDateTime | null>()
+  const field = useFieldContext<T | null>()
 
   const { state, handleChange, handleBlur } = field
   const { meta, value } = state
   const { errors, isValid } = meta
-  const [localDate, setLocalDate] = useState<ZonedDateTime | null>(value)
+  const [localDate, setLocalDate] = useState<T | null>(value)
 
   useEffect(() => {
     setLocalDate(value)
   }, [value])
 
-  const onChange = useCallback((newValue: ZonedDateTime | null) => {
+  const onChange = useCallback((newValue: T | null) => {
     setLocalDate(newValue)
   }, [])
 

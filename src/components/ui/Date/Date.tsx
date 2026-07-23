@@ -1,5 +1,5 @@
 import { forwardRef } from 'react'
-import type { DateValue, ZonedDateTime } from '@internationalized/date'
+import type { DateValue } from '@internationalized/date'
 import classNames from 'classnames'
 import {
   DateField as ReactAriaDateField,
@@ -89,12 +89,15 @@ export const DateSegment = forwardRef<HTMLDivElement, DateSegmentProps>(
   },
 )
 
-type DatePickerProps = Omit<ReactAriaDatePickerProps<ZonedDateTime>, 'className'> & {
+type DatePickerProps<T extends DateValue> = Omit<ReactAriaDatePickerProps<T>, 'className'> & {
   className?: string
 }
 
-export const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
-  function DatePicker({ className, ...restProps }, ref) {
+export const DatePicker = forwardRef(
+  function DatePicker<T extends DateValue>(
+    { className, ...restProps }: DatePickerProps<T>,
+    ref: React.Ref<HTMLDivElement>,
+  ) {
     return (
       <ReactAriaDatePicker
         {...restProps}
@@ -103,4 +106,6 @@ export const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
       />
     )
   },
-)
+) as <T extends DateValue>(
+  props: DatePickerProps<T> & { ref?: React.Ref<HTMLDivElement> }
+) => React.ReactElement

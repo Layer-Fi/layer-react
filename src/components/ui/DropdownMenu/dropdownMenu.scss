@@ -27,6 +27,7 @@
   padding: var(--spacing-sm);
   border-radius: var(--border-radius-xs);
   border: 1px solid var(--border-color);
+  outline: none;
   background: var(--color-base-0);
 
   &[data-variant='compact'] {
@@ -42,12 +43,19 @@
   border-radius: var(--border-radius-3xs);
   border: 1px solid var(--border-color);
 
+  outline: none;
+
   cursor: pointer;
   transition: background-color 0.1s ease-in-out;
 
   &:hover,
-  &:focus-visible {
+  &[data-focused] {
     background-color: var(--color-base-50);
+  }
+
+  &[data-focus-visible] {
+    outline: 1px auto -webkit-focus-ring-color;
+    outline-offset: 2px;
   }
 
   &[data-variant='compact'] {
@@ -64,6 +72,7 @@
 .Layer__UI__DropdownMenu__Menu {
   display: grid;
   gap: var(--spacing-3xs);
+  outline: none;
 
   &[data-variant='compact'] {
     gap: 0;

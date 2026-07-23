@@ -70,7 +70,13 @@ export interface BankTransactionsProps {
 
   showCategorizationRules?: boolean
   showCustomerVendor?: boolean
+  /**
+   * @deprecated This prop is no longer honored; transaction descriptions are always enabled.
+   */
   showDescriptions?: boolean
+  /**
+   * @deprecated This prop is no longer honored; receipt uploads are always enabled.
+   */
   showReceiptUploads?: boolean
   showStatusToggle?: boolean
   showTags?: boolean
@@ -109,6 +115,8 @@ export const BankTransactions = ({
   renderInAppLink,
   filters,
   categorizeView: _categorizeView,
+  showDescriptions: _showDescriptions,
+  showReceiptUploads: _showReceiptUploads,
 
   asWidget,
   pageSize,

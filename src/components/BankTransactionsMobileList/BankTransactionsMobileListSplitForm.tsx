@@ -40,7 +40,6 @@ export const BankTransactionsMobileListSplitForm = ({
 }: BankTransactionsMobileListSplitFormProps) => {
   const { t } = useTranslation()
   const showTooltips = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.Tooltips)
-  const showReceiptUploads = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ReceiptUploads)
   const { formatCurrencyFromCents } = useIntlFormatter()
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
   const totalInputId = useId()
@@ -191,25 +190,21 @@ export const BankTransactionsMobileListSplitForm = ({
             : undefined,
         )}
       >
-        {showReceiptUploads && (
-          <BankTransactionReceipts
-            ref={receiptsRef}
-            floatingActions={false}
-            hideUploadButtons={true}
-            label={t('bankTransactions:label.receipts', 'Receipts')}
-          />
-        )}
+        <BankTransactionReceipts
+          ref={receiptsRef}
+          floatingActions={false}
+          hideUploadButtons={true}
+          label={t('bankTransactions:label.receipts', 'Receipts')}
+        />
       </div>
       <HStack gap='md'>
-        {showReceiptUploads && (
-          <FileInput
-            onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
-            text={t('bankTransactions:action.upload_receipt', 'Upload receipt')}
-            icon
-            slots={{ Icon: <Paperclip size={20} /> }}
-            accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
-          />
-        )}
+        <FileInput
+          onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
+          text={t('bankTransactions:action.upload_receipt', 'Upload receipt')}
+          icon
+          slots={{ Icon: <Paperclip size={20} /> }}
+          accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
+        />
         {showCategorization && (
           <Button
             fullWidth

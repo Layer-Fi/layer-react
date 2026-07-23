@@ -1,7 +1,6 @@
 import { File } from 'lucide-react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { EditCustomTransactionButton } from '@components/BankTransactions/RecordManualTransaction/EditCustomTransactionButton'
@@ -17,8 +16,7 @@ type BankTransactionDescriptionCellProps = {
 export const BankTransactionDescriptionCell = ({
   bankTransaction,
 }: BankTransactionDescriptionCellProps) => {
-  const showReceiptUploads = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ReceiptUploads)
-  const hasReceipt = showReceiptUploads && bankTransaction.documentIds?.length > 0
+  const hasReceipt = bankTransaction.documentIds?.length > 0
   const isEditable = useIsEditableCustomTransaction(bankTransaction)
 
   return (
