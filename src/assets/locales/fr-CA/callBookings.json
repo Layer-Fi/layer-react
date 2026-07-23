@@ -1,9 +1,9 @@
 {
   "action": {
     "add_calendar": "Ajouter au calendrier",
-    "book_call": "Réserver un appel",
     "download_ics_file": "Télécharger le fichier .ics",
-    "join_call": "Rejoindre l’appel"
+    "join_call": "Rejoindre l’appel",
+    "schedule_call": ""
   },
   "label": {
     "ad_hoc_call": "Appel ponctuel",

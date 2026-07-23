@@ -85,7 +85,7 @@ export function RecordTransactionModal({ variant, transaction, isOpen, onOpenCha
                       <Button variant='outlined' status='danger' onPress={() => setIsConfirmingDelete(true)}>
                         <HStack gap='3xs' align='center'>
                           <Trash2 size={14} />
-                          {t('bankTransactions:recordTransaction.action.delete', 'Delete')}
+                          {t('common:action.delete_label', 'Delete')}
                         </HStack>
                       </Button>
                     )}

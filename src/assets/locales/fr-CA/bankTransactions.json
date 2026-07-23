@@ -7,12 +7,16 @@
     "categorize_or_match": "Catégoriser ou apparier...",
     "confirm_all": "Tout confirmer",
     "download_transactions": "Télécharger les transactions",
+    "edit_transaction": "",
     "manage_categorization_rules": "Gérer les règles de catégorisation",
     "mark_as_personal": "Marquer comme personnel",
     "no_tax_code": "Aucun code de taxe",
     "or_find_match": "ou trouver une correspondance",
     "or_split_transaction": "ou répartir la transaction",
     "recategorize_all": "Tout recatégoriser",
+    "record_expense": "",
+    "record_income": "",
+    "record_transaction": "",
     "search_categories": "Rechercher des catégories...",
     "search_tax_codes": "Rechercher des codes de taxe...",
     "select_a_category": "Sélectionner une catégorie",
@@ -53,6 +57,9 @@
     "upload_file_type": "Type de fichier invalide. Veuillez téléverser une image ou un PDF."
   },
   "label": {
+    "accounts_selected_one": "",
+    "accounts_selected_many": "",
+    "accounts_selected_other": "",
     "actionable_count_transactions_will_be_confirmed_one": "{{displayActionableCount}} du {{displayCount}} transaction sera confirmée.",
     "actionable_count_transactions_will_be_confirmed_other": "{{displayActionableCount}} des {{displayCount}} transactions seront confirmées.",
     "additional_bank_transaction_actions": "Actions supplémentaires pour les opérations bancaires",
@@ -106,6 +113,43 @@
     "confirm_all_suggestions": "Confirmer toutes les suggestions?",
     "recategorize_selected_transactions": "Recatégoriser toutes les transactions sélectionnées?",
     "uncategorize_selected_transactions": "Retirer la catégorie de toutes les transactions sélectionnées?"
+  },
+  "recordTransaction": {
+    "delete": {
+      "description": "",
+      "title": ""
+    },
+    "label": {
+      "deposited_in": "",
+      "paid_from": "",
+      "payee": "",
+      "payer": ""
+    },
+    "placeholder": {
+      "account": "",
+      "category": "",
+      "payee": "",
+      "payer": ""
+    },
+    "title": {
+      "add_expense": "",
+      "add_income": "",
+      "edit": ""
+    },
+    "toast": {
+      "transaction_recorded": "",
+      "transaction_updated": ""
+    },
+    "validation": {
+      "account_required": "",
+      "amount_greater_than_zero": "",
+      "category_required": "",
+      "date_before_activation": "",
+      "date_in_future": "",
+      "date_required": "",
+      "payee_required": "",
+      "payer_required": ""
+    }
   },
   "validation": {
     "splits_amount_greater_than_zero": "Toutes les répartitions doivent avoir un montant supérieur à 0,00 $",

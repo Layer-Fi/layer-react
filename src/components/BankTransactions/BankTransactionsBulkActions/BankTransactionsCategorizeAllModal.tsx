@@ -146,7 +146,7 @@ export const BankTransactionsCategorizeAllModal = ({
           </VStack>
           {showTaxCodeSelect && (
             <VStack gap='3xs' pbs='sm'>
-              <Label size='sm' htmlFor={taxCodeSelectId}>{t('bankTransactions:label.tax_code', 'Tax Code')}</Label>
+              <Label size='sm' htmlFor={taxCodeSelectId}>{t('bankTransactions:label.tax_code', 'Tax code')}</Label>
               <TaxCodeSelect
                 inputId={taxCodeSelectId}
                 isMobile={isMobileView}

@@ -9,11 +9,13 @@
   },
   "empty": {
     "matching_customers": "No matching customers",
-    "matching_customers_vendors": "No matching customers or vendors found"
+    "matching_customers_vendors": "No matching customers or vendors found",
+    "matching_vendors": "No matching vendors"
   },
   "error": {
     "load_customer_vendor": "An error occurred while loading customer and vendor options.",
-    "load_customers": "An error occurred while loading customers."
+    "load_customers": "An error occurred while loading customers.",
+    "load_vendors": "An error occurred while loading vendors."
   },
   "label": {
     "company_name": "Company name",
