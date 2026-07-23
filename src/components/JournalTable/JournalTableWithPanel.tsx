@@ -79,7 +79,7 @@ export const JournalTableWithPanel = ({
             </Button>
           </HeaderCol>
         </HeaderRow>
-        <HeaderRow>
+        <HeaderRow scrollable>
           <HeaderCol>
             <LedgerDateRangeSelection />
           </HeaderCol>
