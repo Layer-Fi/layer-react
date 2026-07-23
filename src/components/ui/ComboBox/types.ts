@@ -59,26 +59,6 @@ export type SingleSelectComboBoxProps<T extends ComboBoxOption> = BaseComboBoxPr
   onSelectedValueChange: (value: T | null) => void
 }
 
-export type AsyncComboBoxFetchParams = {
-  inputValue: string
-  cursor?: string
-}
-
-export type AsyncComboBoxFetchResult<T extends ComboBoxOption> = {
-  options: ReadonlyArray<T>
-  nextCursor?: string
-}
-
-export type AsyncComboBoxFetchOptions<T extends ComboBoxOption> =
-  (params: AsyncComboBoxFetchParams) => Promise<AsyncComboBoxFetchResult<T>>
-
-export type AsyncSingleSelectComboBoxProps<T extends ComboBoxOption> = Omit<
-  SingleSelectComboBoxProps<T>,
-  'options' | 'groups' | 'filterOption' | 'onInputValueChange'
-> & {
-  fetchOptions: AsyncComboBoxFetchOptions<T>
-}
-
 export type MultiSelectComboBoxProps<T extends ComboBoxOption> = BaseComboBoxProps<T> & {
   selectedValues: ReadonlyArray<T>
   onSelectedValuesChange: (values: ReadonlyArray<T>) => void

@@ -125,15 +125,32 @@ export const TripPlaceSchema = Schema.Struct({
 
 export type TripPlace = typeof TripPlaceSchema.Type
 
+export const makeTripPlace = (
+  { placeId, latitude, longitude }: {
+    placeId: string
+    latitude?: string | null
+    longitude?: string | null
+  },
+): TripPlace => ({
+  placeId,
+  latitude: latitude ?? null,
+  longitude: longitude ?? null,
+})
+
+export const TripFormAddressSchema = Schema.Struct({
+  address: Schema.String,
+  place: Schema.NullOr(TripPlaceSchema),
+})
+
+export type TripFormAddress = typeof TripFormAddressSchema.Type
+
 export const TripFormSchema = Schema.Struct({
   vehicle: Schema.NullOr(VehicleSchema),
   tripDate: Schema.NullOr(CalendarDateFromSelf),
   distance: NonRecursiveBigDecimalSchema,
   purpose: TripPurposeSchema,
-  startAddress: Schema.String,
-  startPlace: Schema.NullOr(TripPlaceSchema),
-  endAddress: Schema.String,
-  endPlace: Schema.NullOr(TripPlaceSchema),
+  start: TripFormAddressSchema,
+  end: TripFormAddressSchema,
   description: Schema.String,
 })
 

@@ -66,6 +66,30 @@ export const TripForm = (props: TripFormProps) => {
         )}
       </form.AppField>
 
+      <form.Field name='start'>
+        {field => (
+          <TripAddressComboBox
+            label={t('trips:label.start_address', 'Start address')}
+            address={field.state.value.address}
+            onAddressChange={field.handleChange}
+            isReadOnly={isReadOnly}
+            className='Layer__TripForm__Field__StartAddress'
+          />
+        )}
+      </form.Field>
+
+      <form.Field name='end'>
+        {field => (
+          <TripAddressComboBox
+            label={t('trips:label.end_address', 'End address')}
+            address={field.state.value.address}
+            onAddressChange={field.handleChange}
+            isReadOnly={isReadOnly}
+            className='Layer__TripForm__Field__EndAddress'
+          />
+        )}
+      </form.Field>
+
       <form.AppField name='distance'>
         {field => (
           <field.FormNonRecursiveBigDecimalField
@@ -78,36 +102,6 @@ export const TripForm = (props: TripFormProps) => {
           />
         )}
       </form.AppField>
-
-      <form.Field name='startAddress'>
-        {field => (
-          <TripAddressComboBox
-            label={t('trips:label.start_address', 'Start address')}
-            address={field.state.value}
-            onAddressChange={(selection) => {
-              field.handleChange(selection?.address ?? '')
-              form.setFieldValue('startPlace', selection?.place ?? null)
-            }}
-            isReadOnly={isReadOnly}
-            className='Layer__TripForm__Field__StartAddress'
-          />
-        )}
-      </form.Field>
-
-      <form.Field name='endAddress'>
-        {field => (
-          <TripAddressComboBox
-            label={t('trips:label.end_address', 'End address')}
-            address={field.state.value}
-            onAddressChange={(selection) => {
-              field.handleChange(selection?.address ?? '')
-              form.setFieldValue('endPlace', selection?.place ?? null)
-            }}
-            isReadOnly={isReadOnly}
-            className='Layer__TripForm__Field__EndAddress'
-          />
-        )}
-      </form.Field>
 
       <form.Field name='purpose'>
         {field => (

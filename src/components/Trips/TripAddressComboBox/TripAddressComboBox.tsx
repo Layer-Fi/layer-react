@@ -1,25 +1,21 @@
-import { useCallback, useId, useMemo } from 'react'
+import { useCallback, useEffect, useId, useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import type { TripPlace } from '@schemas/trip'
-import { useMileageAddressLookup } from '@hooks/api/businesses/[business-id]/mileage/addresses/useMileageAddressLookup'
-import { AsyncComboBox } from '@ui/ComboBox/AsyncComboBox'
-import type { AsyncComboBoxFetchParams } from '@ui/ComboBox/types'
+import { makeTripPlace, type TripFormAddress } from '@schemas/trip'
+import { useMileageAddressDetails } from '@hooks/api/businesses/[business-id]/mileage/address-details/useMileageAddressDetails'
+import { MIN_ADDRESS_QUERY_LENGTH, useMileageAddressSuggestions } from '@hooks/api/businesses/[business-id]/mileage/address-suggestions/useMileageAddressSuggestions'
+import { SearchComboBox, useSearchComboBox } from '@ui/ComboBox/SearchComboBox'
+import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { HStack } from '@ui/Stack/Stack'
 import { Label, P } from '@ui/Typography/Text'
 
 import './tripAddressComboBox.scss'
 
-export type TripAddressSelection = {
-  address: string
-  place: TripPlace | null
-}
-
 type TripAddressComboBoxProps = {
   label: string
   address: string
-  onAddressChange: (selection: TripAddressSelection | null) => void
+  onAddressChange: (selection: TripFormAddress) => void
   isReadOnly?: boolean
   className?: string
 }
@@ -32,48 +28,59 @@ export const TripAddressComboBox = ({
   className,
 }: TripAddressComboBoxProps) => {
   const { t } = useTranslation()
-  const { fetchAddressSuggestions, fetchAddressDetails } = useMileageAddressLookup()
+  const { searchQuery, isSearchEnabled, searchComboBoxProps } = useSearchComboBox({
+    minQueryLength: MIN_ADDRESS_QUERY_LENGTH,
+  })
 
-  const fetchOptions = useCallback(async ({ inputValue }: AsyncComboBoxFetchParams) => {
-    const suggestions = await fetchAddressSuggestions(inputValue)
+  const [sessionToken, setSessionToken] = useState(() => crypto.randomUUID())
+  const [pendingSelection, setPendingSelection] = useState<{ placeId: string, label: string } | null>(null)
 
-    return {
-      options: suggestions.map(({ description, placeId }) => ({
-        label: description,
-        value: placeId,
-      })),
-    }
-  }, [fetchAddressSuggestions])
+  const {
+    data: suggestions,
+    isLoading,
+    isError,
+  } = useMileageAddressSuggestions({
+    query: searchQuery,
+    sessionToken,
+    isEnabled: isSearchEnabled,
+  })
 
-  const selectedValue = useMemo(
-    () => (address ? { label: address, value: address } : null),
-    [address],
-  )
+  const { data: details } = useMileageAddressDetails({
+    placeId: pendingSelection?.placeId ?? '',
+    sessionToken,
+    isEnabled: pendingSelection !== null,
+  })
+
+  useEffect(() => {
+    if (pendingSelection === null || details?.placeId !== pendingSelection.placeId) return
+
+    onAddressChange({ address: pendingSelection.label, place: makeTripPlace(details) })
+    setPendingSelection(null)
+    setSessionToken(crypto.randomUUID())
+  }, [details, pendingSelection, onAddressChange])
+
+  const options = useMemo(() => (suggestions ?? []).map(({ description, placeId }) => ({
+    label: description,
+    value: placeId,
+  })), [suggestions])
+
+  const selectedValue = useMemo(() => (address ? { label: address, value: address } : null), [address])
 
   const handleSelectedValueChange = useCallback(
-    (option: { label: string, value: string } | null) => {
+    (option: ComboBoxOption | null) => {
       if (option === null) {
-        onAddressChange(null)
+        setPendingSelection(null)
+        onAddressChange({ address: '', place: null })
         return
       }
 
       onAddressChange({
         address: option.label,
-        place: { placeId: option.value, latitude: null, longitude: null },
+        place: makeTripPlace({ placeId: option.value }),
       })
-
-      void fetchAddressDetails(option.value)
-        .then(({ placeId, formattedAddress, latitude, longitude }) => {
-          onAddressChange({
-            address: formattedAddress ?? option.label,
-            place: { placeId, latitude: latitude ?? null, longitude: longitude ?? null },
-          })
-        })
-        .catch(() => {
-          /* The suggestion description and place ID are enough to save the trip */
-        })
+      setPendingSelection({ placeId: option.value, label: option.label })
     },
-    [onAddressChange, fetchAddressDetails],
+    [onAddressChange],
   )
 
   const EmptyMessage = useMemo(
@@ -98,12 +105,15 @@ export const TripAddressComboBox = ({
       <Label size='sm' htmlFor={inputId}>
         {label}
       </Label>
-      <AsyncComboBox
-        fetchOptions={fetchOptions}
+      <SearchComboBox
+        {...searchComboBoxProps}
+        options={options}
         selectedValue={selectedValue}
         onSelectedValueChange={handleSelectedValueChange}
         inputId={inputId}
         isReadOnly={isReadOnly}
+        isLoading={isLoading}
+        isError={isError}
         placeholder={t('trips:label.enter_address', 'Enter address')}
         slots={{
           EmptyMessage,

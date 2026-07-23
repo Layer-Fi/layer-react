@@ -3,19 +3,14 @@ import { BigDecimal as BD } from 'effect'
 import type { TFunction } from 'i18next'
 
 import { fromNonRecursiveBigDecimal, NRBD_ZERO, toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
-import { type Trip, type TripForm, type TripPlace, TripPurpose } from '@schemas/trip'
+import { makeTripPlace, type Trip, type TripForm, type TripPlace, TripPurpose } from '@schemas/trip'
 
 const getTripPlace = (
   placeId: string | null | undefined,
   latitude: string | null | undefined,
   longitude: string | null | undefined,
-): TripPlace | null => {
-  if (!placeId) {
-    return null
-  }
-
-  return { placeId, latitude: latitude ?? null, longitude: longitude ?? null }
-}
+): TripPlace | null =>
+  placeId ? makeTripPlace({ placeId, latitude, longitude }) : null
 
 export const getTripFormDefaultValues = (trip?: Trip): TripForm => {
   if (trip) {
@@ -24,10 +19,14 @@ export const getTripFormDefaultValues = (trip?: Trip): TripForm => {
       tripDate: trip.tripDate,
       distance: toNonRecursiveBigDecimal(trip.distance),
       purpose: trip.purpose,
-      startAddress: trip.startAddress || '',
-      startPlace: getTripPlace(trip.googleStartPlaceId, trip.startLatitude, trip.startLongitude),
-      endAddress: trip.endAddress || '',
-      endPlace: getTripPlace(trip.googleEndPlaceId, trip.endLatitude, trip.endLongitude),
+      start: {
+        address: trip.startAddress || '',
+        place: getTripPlace(trip.googleStartPlaceId, trip.startLatitude, trip.startLongitude),
+      },
+      end: {
+        address: trip.endAddress || '',
+        place: getTripPlace(trip.googleEndPlaceId, trip.endLatitude, trip.endLongitude),
+      },
       description: trip.description || '',
     }
   }
@@ -37,16 +36,14 @@ export const getTripFormDefaultValues = (trip?: Trip): TripForm => {
     tripDate: today(getLocalTimeZone()),
     distance: NRBD_ZERO,
     purpose: TripPurpose.Business,
-    startAddress: '',
-    startPlace: null,
-    endAddress: '',
-    endPlace: null,
+    start: { address: '', place: null },
+    end: { address: '', place: null },
     description: '',
   }
 }
 
 const hasBothPlaces = (trip: TripForm) =>
-  trip.startPlace !== null && trip.endPlace !== null
+  trip.start.place !== null && trip.end.place !== null
 
 export const validateTripForm = ({ trip }: { trip: TripForm }, t: TFunction) => {
   const { tripDate, distance, purpose } = trip
@@ -91,14 +88,14 @@ export const convertTripFormToUpsertTrip = (form: TripForm, existingTrip?: Trip)
     tripDate: form.tripDate,
     distance: shouldSendDistance ? distance : undefined,
     purpose: form.purpose,
-    startAddress: form.startAddress.trim() || null,
-    endAddress: form.endAddress.trim() || null,
-    googleStartPlaceId: form.startPlace?.placeId ?? null,
-    googleEndPlaceId: form.endPlace?.placeId ?? null,
-    startLatitude: form.startPlace?.latitude ?? null,
-    startLongitude: form.startPlace?.longitude ?? null,
-    endLatitude: form.endPlace?.latitude ?? null,
-    endLongitude: form.endPlace?.longitude ?? null,
+    startAddress: form.start.address.trim() || null,
+    endAddress: form.end.address.trim() || null,
+    googleStartPlaceId: form.start.place?.placeId ?? null,
+    googleEndPlaceId: form.end.place?.placeId ?? null,
+    startLatitude: form.start.place?.latitude ?? null,
+    startLongitude: form.start.place?.longitude ?? null,
+    endLatitude: form.end.place?.latitude ?? null,
+    endLongitude: form.end.place?.longitude ?? null,
     description: form.description.trim() || null,
   }
 }
