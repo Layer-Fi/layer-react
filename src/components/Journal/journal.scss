@@ -6,7 +6,7 @@
 }
 
 .Layer__journal .Layer__panel {
-  max-width: 100%;
+  max-inline-size: 100%;
 }
 
 .Layer__journal .Layer__panel__sidebar .Layer__panel__sidebar-content {
@@ -14,7 +14,7 @@
 }
 
 @container (max-width: 760px) {
-  .Layer__journal {
+  .Layer__component-container.Layer__journal {
     overflow: auto;
   }
 }
