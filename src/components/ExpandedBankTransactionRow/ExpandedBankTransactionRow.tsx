@@ -93,7 +93,6 @@ export const ExpandedBankTransactionRow = ({
 
   const showTags = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.Tags)
   const showCustomerVendor = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.CustomerVendor)
-  const showReceiptUploads = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ReceiptUploads)
 
   const [matchFormError, setMatchFormError] = useState<string | undefined>()
   const bodyRef = useRef<HTMLDivElement>(null)
@@ -369,14 +368,12 @@ export const ExpandedBankTransactionRow = ({
               />
             </VStack>
 
-            {showReceiptUploads && (
-              <BankTransactionReceiptsWithProvider
-                bankTransaction={bankTransaction}
-                isActive={true}
-                classNamePrefix='Layer__expanded-bank-transaction-row'
-                floatingActions={!asListItem}
-              />
-            )}
+            <BankTransactionReceiptsWithProvider
+              bankTransaction={bankTransaction}
+              isActive={true}
+              classNamePrefix='Layer__expanded-bank-transaction-row'
+              floatingActions={!asListItem}
+            />
           </div>
         </VStack>
       </div>

@@ -26,8 +26,14 @@ export interface BankTransactionsWithLinkedAccountsProps {
 
   showBreakConnection?: boolean
   showCustomerVendor?: boolean
+  /**
+   * @deprecated This prop is no longer honored; transaction descriptions are always enabled.
+   */
   showDescriptions?: boolean
   showLedgerBalance?: boolean
+  /**
+   * @deprecated This prop is no longer honored; receipt uploads are always enabled.
+   */
   showReceiptUploads?: boolean
   showTags?: boolean
   showTooltips?: boolean
@@ -58,9 +64,7 @@ const BankTransactionsWithLinkedAccountsContent = ({
 
   showBreakConnection = false,
   showCustomerVendor = false,
-  showDescriptions = true,
   showLedgerBalance = true,
-  showReceiptUploads = true,
   showTags = false,
   showTooltips = false,
   showUnlinkItem = false,
@@ -97,8 +101,6 @@ const BankTransactionsWithLinkedAccountsContent = ({
         asWidget
         filters={filters}
         showCustomerVendor={showCustomerVendor}
-        showDescriptions={showDescriptions}
-        showReceiptUploads={showReceiptUploads}
         showTags={showTags}
         showTooltips={showTooltips}
         showUploadOptions={showUploadOptions}

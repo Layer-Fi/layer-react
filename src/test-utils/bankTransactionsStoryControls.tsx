@@ -8,8 +8,6 @@ import { type MobileComponentType } from '@components/BankTransactions/constants
 export type BankTransactionsStoryArgs = {
   showCategorizationRules: boolean
   showCustomerVendor: boolean
-  showDescriptions: boolean
-  showReceiptUploads: boolean
   showTags: boolean
   showTooltips: boolean
   showUploadOptions: boolean
@@ -19,8 +17,6 @@ export type BankTransactionsStoryArgs = {
 const FEATURE_TOGGLES = [
   'showCategorizationRules',
   'showCustomerVendor',
-  'showDescriptions',
-  'showReceiptUploads',
   'showTags',
   'showTooltips',
   'showUploadOptions',

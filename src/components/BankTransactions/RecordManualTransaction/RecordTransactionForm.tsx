@@ -5,8 +5,9 @@ import { useTranslation } from 'react-i18next'
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { isClassificationExclusion } from '@schemas/categorization'
 import { getDefaultSelectedCategoryForBankTransaction } from '@utils/bankTransactions/shared'
-import { positiveAmount, required } from '@utils/form/validators'
+import { dateNotBefore, dateNotInFuture, positiveAmount, required } from '@utils/form/validators'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
+import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Form } from '@ui/Form/Form'
@@ -45,6 +46,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
   const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(transaction)
+  const activationDate = useBusinessActivationDate()
   const { isMobile } = useSizeClass()
   const isInline = !isMobile
   const isExpense = variant === 'expense'
@@ -55,8 +57,18 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
   const isMultiSplit = category !== null && isSplitAsOption(category) && !category.isSingleSplit
 
   const accountLabel = isExpense
-    ? t('bankTransactions:recordTransaction.label.paid_to', 'Paid to')
+    ? t('bankTransactions:recordTransaction.label.paid_from', 'Paid from')
     : t('bankTransactions:recordTransaction.label.deposited_in', 'Deposited in')
+
+  const payeeLabel = isExpense
+    ? t('bankTransactions:recordTransaction.label.payee', 'Payee')
+    : t('bankTransactions:recordTransaction.label.payer', 'Payer')
+  const payeePlaceholder = isExpense
+    ? t('bankTransactions:recordTransaction.placeholder.payee', 'Who you paid')
+    : t('bankTransactions:recordTransaction.placeholder.payer', 'Who paid you')
+  const payeeRequiredMessage = isExpense
+    ? t('bankTransactions:recordTransaction.validation.payee_required', 'Payee is required')
+    : t('bankTransactions:recordTransaction.validation.payer_required', 'Payer is required')
 
   return (
     <Form
@@ -98,20 +110,25 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
             <>
               <form.AppField
                 name='description'
-                validators={{ onDynamic: ({ value }) => required(t('bankTransactions:recordTransaction.validation.description_required', 'Description is required'))(value) }}
+                validators={{ onDynamic: ({ value }) => required(payeeRequiredMessage)(value) }}
               >
                 {field => (
                   <field.FormTextField
-                    label={t('bankTransactions:recordTransaction.label.description', 'Description')}
+                    label={payeeLabel}
                     inline={isInline}
-                    placeholder={t('bankTransactions:recordTransaction.placeholder.description', 'Add a description...')}
+                    placeholder={payeePlaceholder}
                   />
                 )}
               </form.AppField>
 
               <form.AppField
                 name='date'
-                validators={{ onDynamic: ({ value }) => required(t('bankTransactions:recordTransaction.validation.date_required', 'Date is required'))(value) }}
+                validators={{
+                  onDynamic: ({ value }) =>
+                    required(t('bankTransactions:recordTransaction.validation.date_required', 'Date is required'))(value)
+                    ?? dateNotInFuture(t('bankTransactions:recordTransaction.validation.date_in_future', 'Date cannot be in the future'))(value)
+                    ?? dateNotBefore(activationDate, t('bankTransactions:recordTransaction.validation.date_before_activation', 'Date cannot be before the business activation date'))(value),
+                }}
               >
                 {field => (
                   <field.FormDateField label={t('bankTransactions:recordTransaction.label.date', 'Date')} inline={isInline} />
@@ -180,10 +197,10 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
 
               <form.AppField name='memo'>
                 {field => (
-                  <field.FormTextField
-                    label={t('bankTransactions:recordTransaction.label.memo', 'Memo')}
+                  <field.FormTextAreaField
+                    label={t('bankTransactions:recordTransaction.label.description', 'Description')}
                     inline={isInline}
-                    placeholder={t('bankTransactions:recordTransaction.placeholder.memo', 'Add a note about this transaction...')}
+                    placeholder={t('bankTransactions:recordTransaction.placeholder.description', 'Add a description...')}
                   />
                 )}
               </form.AppField>

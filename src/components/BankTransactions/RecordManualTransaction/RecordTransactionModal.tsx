@@ -3,8 +3,9 @@ import classNames from 'classnames'
 import { Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { BankTransaction } from '@internal-types/bankTransactions'
+import { type BankTransaction, DisplayState } from '@internal-types/bankTransactions'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { Button } from '@ui/Button/Button'
 import { SubmitButton } from '@ui/Button/SubmitButton'
 import { Modal } from '@ui/Modal/Modal'
@@ -31,7 +32,16 @@ export function RecordTransactionModal({ variant, transaction, isOpen, onOpenCha
 
   const effectiveVariant = transaction ? getRecordTransactionVariant(transaction) : variant
 
-  const onSuccess = useCallback(() => onOpenChange(false), [onOpenChange])
+  const { setFilters } = useBankTransactionsFiltersContext()
+  const isCreating = transaction === undefined
+
+  const onSuccess = useCallback(() => {
+    // Land newly recorded transactions on the "Categorized" tab so the user can see the result.
+    if (isCreating) {
+      setFilters({ categorizationStatus: DisplayState.categorized })
+    }
+    onOpenChange(false)
+  }, [isCreating, setFilters, onOpenChange])
 
   const { form, isError } = useRecordTransactionForm({ variant: effectiveVariant, transaction, onSuccess })
 

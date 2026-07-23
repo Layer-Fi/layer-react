@@ -29,7 +29,6 @@ export function BankTransactionFormFields({
 }: BankTransactionFormFieldProps) {
   const showTags = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.Tags)
   const showCustomerVendor = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.CustomerVendor)
-  const showDescriptions = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.Descriptions)
 
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
@@ -73,10 +72,6 @@ export function BankTransactionFormFields({
     })
   }
 
-  if (!showTags && !showCustomerVendor && !showDescriptions) {
-    return null
-  }
-
   return (
     <VStack gap='md'>
       {showCustomerVendor && !hideCustomerVendor
@@ -90,12 +85,9 @@ export function BankTransactionFormFields({
             isReadOnly={!isCategorizationEnabled}
           />
         )}
-      {showDescriptions
-        && (
-          <VStack gap='sm'>
-            <BankTransactionMemo bankTransactionId={bankTransaction.id} memo={bankTransaction.memo} isMobile={isMobile} />
-          </VStack>
-        )}
+      <VStack gap='sm'>
+        <BankTransactionMemo bankTransactionId={bankTransaction.id} memo={bankTransaction.memo} isMobile={isMobile} />
+      </VStack>
     </VStack>
   )
 }

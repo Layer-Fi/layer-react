@@ -28,19 +28,19 @@ const RecordModalWrapper = ({ children }: { children: ReactNode }) => (
 const CUSTOM_ACCOUNT = makeCustomAccount({ accountName: 'Business Checking' })
 
 const EXPENSE_FORM_DATA = [
-  { kind: 'comboBox', field: 'Paid to', option: /Business Checking/ },
-  { kind: 'text', field: 'Description', value: '  Coffee shop  ' },
+  { kind: 'comboBox', field: 'Paid from', option: /Business Checking/ },
+  { kind: 'text', field: 'Payee', value: '  Coffee shop  ' },
   { kind: 'number', field: 'Amount', value: '125.50' },
   { kind: 'comboBox', field: 'Category', option: /^Cash$/ },
-  { kind: 'text', field: 'Memo', value: 'Team lunch' },
+  { kind: 'text', field: 'Description', value: 'Team lunch' },
 ] satisfies readonly FillFormSpec[]
 
 const INCOME_FORM_DATA = [
   { kind: 'comboBox', field: 'Deposited in', option: /Business Checking/ },
-  { kind: 'text', field: 'Description', value: 'Client payment' },
+  { kind: 'text', field: 'Payer', value: 'Client payment' },
   { kind: 'number', field: 'Amount', value: '80' },
   { kind: 'comboBox', field: 'Category', option: /^Cash$/ },
-  { kind: 'text', field: 'Memo', value: 'Cash sale' },
+  { kind: 'text', field: 'Description', value: 'Cash sale' },
 ] satisfies readonly FillFormSpec[]
 
 const renderModal = (variant: RecordTransactionVariant = 'expense') => {
@@ -179,7 +179,7 @@ describe('RecordTransactionModal', () => {
     await user.click(screen.getByRole('button', { name: /save/i }))
 
     expect(await screen.findByText('Account is required')).toBeInTheDocument()
-    expect(screen.getByText('Description is required')).toBeInTheDocument()
+    expect(screen.getByText('Payee is required')).toBeInTheDocument()
     expect(screen.getByText('Amount must be greater than zero')).toBeInTheDocument()
     expect(screen.getByText('Category is required')).toBeInTheDocument()
 

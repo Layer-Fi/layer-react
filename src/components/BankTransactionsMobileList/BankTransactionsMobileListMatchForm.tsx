@@ -13,7 +13,6 @@ import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import {
   useBankTransactionsCategorizationActions,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
@@ -34,7 +33,6 @@ export const BankTransactionsMobileListMatchForm = ({
   showCategorization,
 }: BankTransactionsMobileListMatchFormProps) => {
   const { t } = useTranslation()
-  const showReceiptUploads = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.ReceiptUploads)
   const receiptsRef = useRef<BankTransactionReceiptsHandle>(null)
 
   const {
@@ -89,24 +87,20 @@ export const BankTransactionsMobileListMatchForm = ({
         hideTags
         isMobile
       />
-      {showReceiptUploads && (
-        <BankTransactionReceipts
-          ref={receiptsRef}
-          floatingActions={false}
-          hideUploadButtons={true}
-          label={t('bankTransactions:label.receipts', 'Receipts')}
-        />
-      )}
+      <BankTransactionReceipts
+        ref={receiptsRef}
+        floatingActions={false}
+        hideUploadButtons={true}
+        label={t('bankTransactions:label.receipts', 'Receipts')}
+      />
       <HStack gap='md'>
-        {showReceiptUploads && (
-          <FileInput
-            onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
-            text={t('bankTransactions:action.upload_receipt', 'Upload receipt')}
-            icon
-            slots={{ Icon: <Paperclip size={20} /> }}
-            accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
-          />
-        )}
+        <FileInput
+          onUpload={files => receiptsRef.current?.uploadReceipt(files[0])}
+          text={t('bankTransactions:action.upload_receipt', 'Upload receipt')}
+          icon
+          slots={{ Icon: <Paperclip size={20} /> }}
+          accept={RECEIPT_ALLOWED_INPUT_FILE_TYPES}
+        />
         {showCategorization && (
           <Button
             fullWidth

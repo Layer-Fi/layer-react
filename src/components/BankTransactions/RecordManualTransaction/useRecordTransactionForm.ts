@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { fromDate, getLocalTimeZone, type ZonedDateTime } from '@internationalized/date'
 import { revalidateLogic } from '@tanstack/react-form'
 import { startOfToday } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import type { Classification } from '@schemas/categorization'
@@ -9,6 +10,7 @@ import type { NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import { UpsertCustomAccountTransactionMode, useUpsertCustomAccountTransaction } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/useRecordCustomAccountTransaction'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 import { convertRecordTransactionFormToParams, getRecordTransactionFormValues } from '@components/BankTransactions/RecordManualTransaction/formUtils'
 import type { AccountOption } from '@components/CustomAccountComboBox/AccountOption'
@@ -44,6 +46,8 @@ type UseRecordTransactionFormProps = {
 }
 
 export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: UseRecordTransactionFormProps) => {
+  const { t } = useTranslation()
+  const { addToast } = useLayerContext()
   const createExternalId = useMemo(() => crypto.randomUUID(), [])
   const { trigger, isError } = useUpsertCustomAccountTransaction(
     transaction
@@ -70,6 +74,13 @@ export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: Us
           setTransactionTaxCodeSelection(transaction.id, updated.taxCode ?? null)
         }
 
+        addToast({
+          content: transaction
+            ? t('bankTransactions:recordTransaction.toast.transaction_updated', 'Transaction updated')
+            : t('bankTransactions:recordTransaction.toast.transaction_recorded', 'Transaction recorded'),
+          type: 'success',
+        })
+
         onSuccess?.()
         formApi.reset()
       }
@@ -77,7 +88,7 @@ export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: Us
         console.error(e)
       }
     },
-    [trigger, variant, transaction, createExternalId, setTransactionCategorization, setTransactionTaxCodeSelection, onSuccess],
+    [trigger, variant, transaction, createExternalId, setTransactionCategorization, setTransactionTaxCodeSelection, addToast, t, onSuccess],
   )
 
   const form = useAppForm<RecordTransactionFormValues>({
