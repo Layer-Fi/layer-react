@@ -119,7 +119,7 @@ export const TripForm = (props: TripFormProps) => {
             label={t('common:label.description', 'Description')}
             inline
             isReadOnly={isReadOnly}
-            placeholder={t('common:action.add_description', 'Add description')}
+            placeholder={t('common:action.add_description', 'Add a description')}
             className='Layer__TripForm__Field__Description'
           />
         )}

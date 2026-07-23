@@ -11,7 +11,7 @@ import { createDateGroupByOnChange, type GroupByOption } from '@components/DateS
 import './dateGroupByComboBox.scss'
 
 const DATE_GROUP_BY_CONFIG = [
-  { value: DateGroupBy.AllTime, ...translationKey('date:label.all_time', 'All time') },
+  { value: DateGroupBy.AllTime, ...translationKey('date:label.all_time', 'All Time') },
   { value: DateGroupBy.Month, ...translationKey('date:label.month', 'Month') },
   { value: DateGroupBy.Year, ...translationKey('date:label.year', 'Year') },
 ]

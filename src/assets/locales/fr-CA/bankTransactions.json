@@ -115,28 +115,19 @@
     "uncategorize_selected_transactions": "Retirer la catégorie de toutes les transactions sélectionnées?"
   },
   "recordTransaction": {
-    "action": {
-      "delete": ""
-    },
     "delete": {
       "description": "",
       "title": ""
     },
     "label": {
-      "amount": "",
-      "category": "",
-      "date": "",
       "deposited_in": "",
-      "description": "",
       "paid_from": "",
       "payee": "",
-      "payer": "",
-      "tax_code": ""
+      "payer": ""
     },
     "placeholder": {
       "account": "",
       "category": "",
-      "description": "",
       "payee": "",
       "payer": ""
     },

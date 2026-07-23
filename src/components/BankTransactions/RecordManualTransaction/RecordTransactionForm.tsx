@@ -134,7 +134,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
               >
                 {field => (
                   <field.FormDatePickerField<CalendarDate>
-                    label={t('bankTransactions:recordTransaction.label.date', 'Date')}
+                    label={t('common:label.date', 'Date')}
                     inline={isInline}
                     minDate={activationDate ? convertDateToLocalCalendarDate(activationDate) : undefined}
                     maxDate={today(getLocalTimeZone())}
@@ -150,7 +150,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                   >
                     {field => (
                       <field.FormNonRecursiveBigDecimalField
-                        label={t('bankTransactions:recordTransaction.label.amount', 'Amount')}
+                        label={t('common:label.amount', 'Amount')}
                         inline={isInline}
                         mode='currency'
                         placeholder={formatCurrencyFromCents(0)}
@@ -168,7 +168,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                 {field => (
                   <RecordTransactionFormField>
                     <RecordTransactionFormCategoryCombobox
-                      label={t('bankTransactions:recordTransaction.label.category', 'Category')}
+                      label={t('common:label.category', 'Category')}
                       placeholder={t('bankTransactions:recordTransaction.placeholder.category', 'Select category...')}
                       inline={isInline}
                       isInvalid={field.state.meta.errors.length > 0}
@@ -188,7 +188,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                     <form.Field name='taxCode'>
                       {field => (
                         <RecordTransactionFormField>
-                          <Label size='sm'>{t('bankTransactions:recordTransaction.label.tax_code', 'Tax code')}</Label>
+                          <Label size='sm'>{t('bankTransactions:label.tax_code', 'Tax code')}</Label>
                           <TaxCodeComboBox
                             options={taxCodeOptions}
                             selectedValue={getSelectedTaxCodeOption(field.state.value)}
@@ -205,9 +205,9 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
               <form.AppField name='memo'>
                 {field => (
                   <field.FormTextAreaField
-                    label={t('bankTransactions:recordTransaction.label.description', 'Description')}
+                    label={t('common:label.description', 'Description')}
                     inline={isInline}
-                    placeholder={t('bankTransactions:recordTransaction.placeholder.description', 'Add a description...')}
+                    placeholder={t('common:action.add_description', 'Add a description')}
                   />
                 )}
               </form.AppField>

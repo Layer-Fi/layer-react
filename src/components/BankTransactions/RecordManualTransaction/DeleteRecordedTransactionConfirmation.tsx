@@ -55,7 +55,7 @@ export function DeleteRecordedTransactionConfirmation({ transaction, onCancel, o
           >
             {isError
               ? t('common:action.retry_label', 'Retry')
-              : t('bankTransactions:recordTransaction.action.delete', 'Delete')}
+              : t('common:action.delete_label', 'Delete')}
           </SubmitButton>
         </HStack>
       </ModalActions>

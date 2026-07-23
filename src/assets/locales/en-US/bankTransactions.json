@@ -94,7 +94,7 @@
     "selected_counterparty": "this counterparty",
     "suggested_category": "Suggested category",
     "suggestions_uppercase": "SUGGESTIONS",
-    "tax_code": "Tax Code",
+    "tax_code": "Tax code",
     "this_will_confirm_count_transactions_one": "This will confirm {{displayCount}} transaction.",
     "this_will_confirm_count_transactions_other": "This will confirm {{displayCount}} transactions.",
     "to_review": "To Review",
@@ -114,28 +114,19 @@
     "uncategorize_selected_transactions": "Uncategorize all selected transactions?"
   },
   "recordTransaction": {
-    "action": {
-      "delete": "Delete"
-    },
     "delete": {
       "description": "This transaction will be permanently deleted. This action cannot be undone.",
       "title": "Delete transaction"
     },
     "label": {
-      "amount": "Amount",
-      "category": "Category",
-      "date": "Date",
       "deposited_in": "Deposited in",
-      "description": "Description",
       "paid_from": "Paid from",
       "payee": "Payee",
-      "payer": "Payer",
-      "tax_code": "Tax code"
+      "payer": "Payer"
     },
     "placeholder": {
       "account": "Select account...",
       "category": "Select category...",
-      "description": "Add a description...",
       "payee": "Who you paid",
       "payer": "Who paid you"
     },

@@ -76,7 +76,7 @@ export const LinkedAccountsContent = ({
     <>
       <div className='Layer__linked-accounts__list'>
         <GridList
-          aria-label={t('linkedAccounts:label.linked_accounts', 'Linked accounts')}
+          aria-label={t('linkedAccounts:label.linked_accounts_list', 'Linked accounts')}
           selectionMode={isFilterEnabled ? 'multiple' : 'none'}
           selectedKeys={selectedBankAccountIds}
           onSelectionChange={onSelectionChange}
