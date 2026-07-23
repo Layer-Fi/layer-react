@@ -77,17 +77,17 @@ export const BookkeepingConfigurationSchema = Schema.Struct({
   ),
 
   onboardingCallCardTitleText: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('onboarding_call_card_title_text'),
   ),
 
   onboardingCallCardDescriptionText: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('onboarding_call_card_description_text'),
   ),
 
   onboardingCallCardCoverageText: pipe(
-    Schema.propertySignature(Schema.NullOr(Schema.String)),
+    Schema.propertySignature(Schema.NullishOr(Schema.String)),
     Schema.fromKey('onboarding_call_card_coverage_text'),
   ),
 })

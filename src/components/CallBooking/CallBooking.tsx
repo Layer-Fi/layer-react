@@ -64,13 +64,13 @@ const EmptyState = ({
   return (
     <VStack gap='md' align='center' pi='lg' pb='lg'>
       <Heading size='sm' align='center'>
-        {stringOverrides?.title ?? t('callBookings:prompt.ready_to_get_started', 'Ready to get started?')}
+        {stringOverrides?.title || t('callBookings:prompt.ready_to_get_started', 'Ready to get started?')}
       </Heading>
       <Span variant='subtle' align='center'>
-        {stringOverrides?.description ?? t('callBookings:label.book_call_with_bookkeeper', 'Schedule an onboarding call with your bookkeeper')}
+        {stringOverrides?.description || t('callBookings:label.book_call_with_bookkeeper', 'Schedule an onboarding call with your bookkeeper')}
       </Span>
       <Button variant='solid' onClick={handleBookCall}>
-        {t('callBookings:action.book_call', 'Schedule Call')}
+        {t('callBookings:action.schedule_call', 'Schedule a call')}
       </Button>
     </VStack>
   )
@@ -84,12 +84,8 @@ const OnboardingCallCoverage = ({ coverage }: { coverage?: string }) => {
       <Span className='Layer__CallBooking__Divider' />
 
       <VStack pbe='md'>
-        {coverage != null
-          ? (
-            <Span size='sm'>
-              {coverage}
-            </Span>
-          )
+        {coverage
+          ? <Span size='sm'>{coverage}</Span>
           : (
             <>
               <Span
@@ -152,10 +148,10 @@ export const CallBooking = ({
 
   const isOnboardingCall = callBooking.purpose === CallBookingPurpose.BOOKKEEPING_ONBOARDING
   const purpose = isOnboardingCall
-    ? (stringOverrides?.title ?? t('callBookings:label.onboarding_call', 'Onboarding call'))
+    ? (stringOverrides?.title || t('callBookings:label.onboarding_call', 'Onboarding call'))
     : t('callBookings:label.ad_hoc_call', 'Ad hoc call')
   const subtitle = isOnboardingCall
-    ? (stringOverrides?.description ?? t('callBookings:label.meet_bookkeeping_team', 'Meet with our bookkeeping team'))
+    ? (stringOverrides?.description || t('callBookings:label.meet_bookkeeping_team', 'Meet with our bookkeeping team'))
     : t('callBookings:label.meet_bookkeeping_team', 'Meet with our bookkeeping team')
   const callPlatform = callBooking.callType === CallBookingType.ZOOM ? 'Zoom' : 'Google Meet'
   const callLink = callBooking.callLink.toString()
