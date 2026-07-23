@@ -38,8 +38,5 @@ export function useAutofillTripDistance({ form, trip }: UseAutofillTripDistanceP
 
   const isDistanceIncalculable = isAPIErrorOfType(error, ApiEnumErrorType.MileageDistanceIncalculable)
 
-  return useMemo(
-    () => ({ computedDistance, isDistanceIncalculable }),
-    [computedDistance, isDistanceIncalculable],
-  )
+  return useMemo(() => ({ isDistanceIncalculable }), [isDistanceIncalculable])
 }

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
-import { type BigDecimal, Schema } from 'effect'
+import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
 import { type Trip, type TripForm, UpsertTripSchema } from '@schemas/trip'
@@ -26,12 +26,9 @@ export const useTripForm = (props: UseTripFormProps) => {
   const defaultValuesRef = useRef<TripForm>(getTripFormDefaultValues(trip))
   const defaultValues = defaultValuesRef.current
 
-  /* Bridges the autofill hook (which needs the form) into onSubmit (which the form needs) */
-  const computedDistanceRef = useRef<BigDecimal.BigDecimal | undefined>(undefined)
-
   const onSubmit = useCallback(async ({ value }: { value: TripForm }) => {
     try {
-      const tripParams = convertTripFormToUpsertTrip(value, trip, computedDistanceRef.current)
+      const tripParams = convertTripFormToUpsertTrip(value)
       const upsertTripRequest = Schema.encodeUnknownSync(UpsertTripSchema)(tripParams)
       const result = await upsertTrip(upsertTripRequest)
 
@@ -42,7 +39,7 @@ export const useTripForm = (props: UseTripFormProps) => {
       console.error(e)
       setSubmitError(t('common:error.something_went_wrong_please_try_again', 'Something went wrong. Please try again.'))
     }
-  }, [onSuccess, upsertTrip, trip, t])
+  }, [onSuccess, upsertTrip, t])
 
   const onDynamic = useCallback(({ value }: { value: TripForm }) => {
     return validateTripForm({ trip: value }, t)
@@ -65,11 +62,7 @@ export const useTripForm = (props: UseTripFormProps) => {
     form.reset(getTripFormDefaultValues(trip))
   }, [trip, form])
 
-  const { computedDistance, isDistanceIncalculable } = useAutofillTripDistance({ form, trip })
-
-  useEffect(() => {
-    computedDistanceRef.current = computedDistance
-  }, [computedDistance])
+  const { isDistanceIncalculable } = useAutofillTripDistance({ form, trip })
 
   return useMemo(
     () => ({ form, submitError, isDistanceIncalculable }),

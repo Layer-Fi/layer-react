@@ -151,8 +151,7 @@ export const UpsertTripSchema = Schema.Struct({
     Schema.propertySignature(CalendarDateSchema),
     Schema.fromKey('trip_date'),
   ),
-  /* Omitted when the server should derive it from the two Google place IDs. */
-  distance: Schema.optional(Schema.BigDecimal),
+  distance: Schema.BigDecimal,
   purpose: Schema.String,
   startAddress: pipe(
     Schema.propertySignature(Schema.NullishOr(Schema.String)),

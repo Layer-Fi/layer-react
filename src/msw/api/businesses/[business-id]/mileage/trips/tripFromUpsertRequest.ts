@@ -1,4 +1,4 @@
-import { BigDecimal, Schema } from 'effect'
+import { Schema } from 'effect'
 
 import { type Trip, TripDistanceSource, TripPurpose, UpsertTripSchema } from '@schemas/trip'
 
@@ -13,21 +13,13 @@ const toTripPurpose = (purpose: string): TripPurpose =>
     ? purpose as TripPurpose
     : TripPurpose.Business
 
-/* Stands in for the server-side Routes API computation. */
-const MOCK_COMPUTED_DISTANCE = BigDecimal.unsafeFromString('42.7')
-
 export const tripFromUpsertRequest = async (request: Request, base: Trip): Promise<Trip> => {
-  const { vehicleId, purpose, distance, ...scalars } = decodeUpsert(await readRequestJson(request))
-
-  const hasBothPlaces = Boolean(scalars.googleStartPlaceId && scalars.googleEndPlaceId)
+  const { vehicleId, purpose, ...scalars } = decodeUpsert(await readRequestJson(request))
 
   return {
     ...base,
     ...scalars,
-    distance: distance ?? (hasBothPlaces ? MOCK_COMPUTED_DISTANCE : base.distance),
-    distanceSource: distance != null || !hasBothPlaces
-      ? TripDistanceSource.Manual
-      : TripDistanceSource.Computed,
+    distanceSource: TripDistanceSource.Manual,
     purpose: toTripPurpose(purpose),
     vehicle: resolveEmbedded({
       requestedId: vehicleId ?? null,
