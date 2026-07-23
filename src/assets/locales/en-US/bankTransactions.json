@@ -7,12 +7,16 @@
     "categorize_or_match": "Categorize or match...",
     "confirm_all": "Confirm all",
     "download_transactions": "Download transactions",
+    "edit_transaction": "Edit transaction",
     "manage_categorization_rules": "Manage categorization rules",
     "mark_as_personal": "Mark as Personal",
     "no_tax_code": "No tax code",
     "or_find_match": "or find match",
     "or_split_transaction": "or split transaction",
     "recategorize_all": "Recategorize All",
+    "record_expense": "Record expense",
+    "record_income": "Record income",
+    "record_transaction": "Record transaction",
     "search_categories": "Search categories...",
     "search_tax_codes": "Search tax codes...",
     "select_a_category": "Select a category",
@@ -53,6 +57,8 @@
     "upload_file_type": "Invalid file type. Please upload an image or PDF."
   },
   "label": {
+    "accounts_selected_one": "{{count}} account selected",
+    "accounts_selected_other": "{{count}} accounts selected",
     "actionable_count_transactions_will_be_confirmed_one": "{{displayActionableCount}} of {{displayCount}} transaction will be confirmed.",
     "actionable_count_transactions_will_be_confirmed_other": "{{displayActionableCount}} of {{displayCount}} transactions will be confirmed.",
     "additional_bank_transaction_actions": "Additional bank transactions actions",
@@ -106,6 +112,52 @@
     "confirm_all_suggestions": "Confirm all suggestions?",
     "recategorize_selected_transactions": "Recategorize all selected transactions?",
     "uncategorize_selected_transactions": "Uncategorize all selected transactions?"
+  },
+  "recordTransaction": {
+    "action": {
+      "delete": "Delete"
+    },
+    "delete": {
+      "description": "This transaction will be permanently deleted. This action cannot be undone.",
+      "title": "Delete transaction"
+    },
+    "label": {
+      "amount": "Amount",
+      "category": "Category",
+      "date": "Date",
+      "deposited_in": "Deposited in",
+      "description": "Description",
+      "paid_from": "Paid from",
+      "payee": "Payee",
+      "payer": "Payer",
+      "tax_code": "Tax code"
+    },
+    "placeholder": {
+      "account": "Select account...",
+      "category": "Select category...",
+      "description": "Add a description...",
+      "payee": "Who you paid",
+      "payer": "Who paid you"
+    },
+    "title": {
+      "add_expense": "Add expense",
+      "add_income": "Add income",
+      "edit": "Edit transaction"
+    },
+    "toast": {
+      "transaction_recorded": "Transaction recorded",
+      "transaction_updated": "Transaction updated"
+    },
+    "validation": {
+      "account_required": "Account is required",
+      "amount_greater_than_zero": "Amount must be greater than zero",
+      "category_required": "Category is required",
+      "date_before_activation": "Date cannot be before the business activation date",
+      "date_in_future": "Date cannot be in the future",
+      "date_required": "Date is required",
+      "payee_required": "Payee is required",
+      "payer_required": "Payer is required"
+    }
   },
   "validation": {
     "splits_amount_greater_than_zero": "All splits must have an amount greater than $0.00",

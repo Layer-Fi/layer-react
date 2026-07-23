@@ -9,11 +9,13 @@
   },
   "empty": {
     "matching_customers": "Aucun client correspondant",
-    "matching_customers_vendors": "Aucun client ni fournisseur correspondant trouvé"
+    "matching_customers_vendors": "Aucun client ni fournisseur correspondant trouvé",
+    "matching_vendors": ""
   },
   "error": {
     "load_customer_vendor": "Une erreur s’est produite lors du chargement des options de client et de fournisseur.",
-    "load_customers": "Une erreur s’est produite lors du chargement des clients."
+    "load_customers": "Une erreur s’est produite lors du chargement des clients.",
+    "load_vendors": ""
   },
   "label": {
     "company_name": "Nom de l’entreprise",

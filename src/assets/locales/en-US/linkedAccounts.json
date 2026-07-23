@@ -17,6 +17,8 @@
     "link_another_bank": "Link another bank",
     "mark_duplicate_account": "Mark as a duplicate account",
     "mark_not_duplicate_account": "Mark as not a duplicate account",
+    "reconnect_another_bank": "Reconnect another bank",
+    "reconnect_my_accounts": "Reconnect My Accounts",
     "repair_connection": "Repair connection",
     "unlink_account": "Unlink account",
     "unlink_account_label": "Unlink Account",
@@ -41,6 +43,7 @@
   },
   "label": {
     "account_and_unmatched_transactions_deleted": "This account and any unmatched transactions will be deleted.",
+    "account_options": "Account options",
     "account_stops_syncing_new_data": "This account will stop syncing new data, and any unmatched transactions will be deleted.",
     "accounts_successfully_linked": "Accounts Successfully Linked",
     "bank_balance": "Bank balance",
@@ -49,6 +52,8 @@
     "confirm_remove_accounts_for_institution": "Please confirm you wish to remove all accounts belonging to this institution",
     "confirm_remove_accounts_for_institution_name": "Please confirm you wish to remove all accounts belonging to {{institutionName}}",
     "connect_bank_accounts_and_credit_cards": "Connect your bank accounts and credit cards to automatically import your business transactions.",
+    "connected_accounts_count_one": "You’ve connected {{displayCount}} account",
+    "connected_accounts_count_other": "You’ve connected {{displayCount}} accounts",
     "data_is_syncing": "Data is syncing",
     "deselect_unused_accounts": "Please deselect any accounts you don't use for your business.",
     "found_accounts_count_one": "We’ve found {{displayCount}} account",
@@ -58,7 +63,7 @@
     "link_more_accounts_any_time": "You can link more accounts at any time from the Bank Transactions section",
     "link_your_bank_accounts": "Link your bank accounts",
     "link_your_bank_accounts_description": "Linking your bank accounts allows us to load your bank transactions and automatically categorize them.",
-    "linked_accounts": "Linked Accounts",
+    "linked_accounts": "Linked accounts",
     "loading_accounts": "Loading Your Accounts...",
     "may_take_few_minutes": "This may take a few minutes",
     "may_take_up_to_5_minutes": "This may take up to 5 minutes",
@@ -70,11 +75,15 @@
     "no_data_sync_until_confirm": "No data will be synced until you confirm.",
     "opening_balance": "Opening balance",
     "opening_date": "Opening date",
+    "reconnect_bank_accounts_and_credit_cards": "Reconnect your bank accounts and credit cards",
+    "reconnect_bank_accounts_and_credit_cards_description": "Reconnect your bank accounts and credit cards to automatically import your business transactions.",
+    "remove_accounts_new_dashboard": "You’ll have the chance to remove any accounts in the new dashboard.",
     "remove_unused_accounts_next_step": "You’ll have the chance to remove any accounts you don’t use for your business in the next step.",
     "select_accounts_use_one": "We’ve pulled the below account from your institution. Unselect it if you do not want it connected.",
     "select_accounts_use_other": "We’ve pulled the below accounts from your institution. Please unselect any accounts you do not want connected."
   },
   "prompt": {
+    "connect_all_bank_accounts_for_bookkeeping": "Please connect all your bank accounts for bookkeeping",
     "use_other_bank_accounts_or_cards": "Do you use any other bank accounts or credit cards for your business?",
     "which_accounts_for_business": "Which accounts do you use for businesses?"
   },
@@ -83,6 +92,7 @@
     "syncing_historical_account_data": "Syncing historical account data"
   },
   "tooltip": {
+    "account_filter_locked": "Account filters can’t be changed while transactions are selected",
     "cannot_link_demo_business": "Account linking is not available for demo businesses. This is a sample business that uses example data instead of real bank connections."
   }
 }
