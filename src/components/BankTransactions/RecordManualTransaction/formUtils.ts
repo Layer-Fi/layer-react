@@ -28,7 +28,7 @@ export function convertRecordTransactionFormToParams(
     transaction: {
       amount: convertNonRecursiveBigDecimalToCents(amount),
       direction: isExpense ? BankTransactionDirection.Debit : BankTransactionDirection.Credit,
-      date: toCalendarDate(date).toString(),
+      date: date.toString(),
       description: description.trim(),
       memo: memo.trim(),
       ...(category !== null && { categorization: { type: 'Category' as const, category, taxCode: isClassificationExclusion(category) ? null : taxCode } }),
@@ -49,7 +49,7 @@ export const getRecordTransactionFormValues = (
   },
   description: transaction.description ?? '',
   amount: convertCentsToNonRecursiveBigDecimal(transaction.amount),
-  date: fromDate(transaction.date, 'UTC'),
+  date: toCalendarDate(fromDate(transaction.date, 'UTC')),
   category: getDefaultSelectedCategoryForBankTransaction(transaction)?.classification ?? null,
   taxCode: getDefaultTaxCodeForBankTransaction(transaction),
   memo: transaction.memo ?? '',

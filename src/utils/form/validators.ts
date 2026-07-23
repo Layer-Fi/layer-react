@@ -1,4 +1,4 @@
-import { type CalendarDate, fromDate, getLocalTimeZone, toCalendarDate, type ZonedDateTime } from '@internationalized/date'
+import { type CalendarDate, type DateValue, fromDate, getLocalTimeZone, toCalendarDate } from '@internationalized/date'
 import { BigDecimal } from 'effect'
 
 import { fromNonRecursiveBigDecimal, type NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
@@ -8,7 +8,7 @@ export const required = (message: string) => (value: unknown) =>
 
 const toLocalCalendarDate = (date: Date) => toCalendarDate(fromDate(date, getLocalTimeZone()))
 
-const invalidDate = (isInvalid: (date: CalendarDate) => boolean) => (message: string) => (value: ZonedDateTime | null) =>
+const invalidDate = (isInvalid: (date: CalendarDate) => boolean) => (message: string) => (value: DateValue | null) =>
   value !== null && isInvalid(toCalendarDate(value)) ? message : undefined
 
 export const dateNotBefore = (minDate: Date | undefined, message: string) =>

@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from 'react'
-import { fromDate, getLocalTimeZone, type ZonedDateTime } from '@internationalized/date'
+import { type CalendarDate, getLocalTimeZone, today } from '@internationalized/date'
 import { revalidateLogic } from '@tanstack/react-form'
-import { startOfToday } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
@@ -21,7 +20,7 @@ export type RecordTransactionFormValues = {
   account: AccountOption | null
   description: string
   amount: NonRecursiveBigDecimal | null
-  date: ZonedDateTime | null
+  date: CalendarDate | null
   category: Classification | null
   taxCode: string | null
   memo: string
@@ -33,7 +32,7 @@ const getDefaultValues = (): RecordTransactionFormValues => ({
   account: null,
   description: '',
   amount: null,
-  date: fromDate(startOfToday(), getLocalTimeZone()),
+  date: today(getLocalTimeZone()),
   category: null,
   taxCode: null,
   memo: '',
