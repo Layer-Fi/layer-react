@@ -24,6 +24,12 @@ import { profitAndLossStoryHandlers, withOverviewStoryContext } from '@test-util
 
 const ONBOARDING_CALL_URL = 'https://calendly.com/layerfi/bookkeeping-onboarding'
 
+const onboardingCallCardConfiguration = makeBookkeepingConfiguration({
+  onboardingCallCardTitleText: 'Meet your new bookkeeper',
+  onboardingCallCardDescriptionText: 'Get set up on the new Jobber Bookkeeping experience, meet your bookkeeper, and review your books.',
+  onboardingCallCardCoverageText: 'On this call, we\'ll walk through the upgraded Jobber Bookkeeping experience, review your books, and answer any questions you have.',
+})
+
 const scheduledOnboardingCall: CallBooking = {
   id: '00000000-0000-4000-8000-000000000401',
   businessId: '00000000-0000-4000-8000-000000000201',
@@ -46,7 +52,7 @@ const onboardingCallCardHandlers = (callBookings: readonly CallBooking[] = []) =
     showEmbeddedOnboarding: true,
     onboardingCallUrl: ONBOARDING_CALL_URL,
   })),
-  getBookkeepingConfiguration.mock(makeBookkeepingConfiguration()),
+  getBookkeepingConfiguration.mock(onboardingCallCardConfiguration),
   getCallBookings.mock(callBookings),
   ...profitAndLossStoryHandlers,
 ]
