@@ -65,7 +65,7 @@ export const ChartOfAccountsTableHeader = ({
           )}
         </HeaderCol>
       </HeaderRow>
-      <HeaderRow>
+      <HeaderRow scrollable>
         <HeaderCol>
           {withDateControl && <LedgerDateRangeSelection />}
         </HeaderCol>

@@ -26,4 +26,12 @@
   @container (min-width: 1400px) {
     padding: 0 var(--spacing-xl);
   }
+
+  &[data-scrollable='true'] {
+    overflow-x: auto;
+
+    .Layer__HeaderCol {
+      flex-shrink: 0;
+    }
+  }
 }

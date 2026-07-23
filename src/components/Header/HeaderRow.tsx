@@ -10,10 +10,12 @@ interface HeaderRowProps {
   style?: CSSProperties
   children: ReactNode
   direction?: 'row' | 'col'
+  /** Scroll horizontally instead of clipping overflowing content */
+  scrollable?: boolean
 }
 
-export const HeaderRow = ({ className, children, direction, style }: HeaderRowProps) => {
-  const dataProps = toDataProperties({ direction })
+export const HeaderRow = ({ className, children, direction, style, scrollable }: HeaderRowProps) => {
+  const dataProps = toDataProperties({ direction, scrollable })
 
   return (
     <div {...dataProps} className={classNames('Layer__HeaderRow', className)} style={style}>
