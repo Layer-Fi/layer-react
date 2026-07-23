@@ -2,7 +2,7 @@ import { useCallback, useEffect, useId, useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { makeTripPlace, type TripFormAddress } from '@schemas/trip'
+import type { TripFormAddress } from '@schemas/trip'
 import { useMileageAddressDetails } from '@hooks/api/businesses/[business-id]/mileage/address-details/useMileageAddressDetails'
 import { MIN_ADDRESS_QUERY_LENGTH, useMileageAddressSuggestions } from '@hooks/api/businesses/[business-id]/mileage/address-suggestions/useMileageAddressSuggestions'
 import { SearchComboBox, useSearchComboBox } from '@ui/ComboBox/SearchComboBox'
@@ -54,7 +54,8 @@ export const TripAddressComboBox = ({
   useEffect(() => {
     if (pendingSelection === null || details?.placeId !== pendingSelection.placeId) return
 
-    onAddressChange({ address: pendingSelection.label, place: makeTripPlace(details) })
+    const { placeId, latitude, longitude } = details
+    onAddressChange({ address: pendingSelection.label, place: { placeId, latitude, longitude } })
     setPendingSelection(null)
     setSessionToken(crypto.randomUUID())
   }, [details, pendingSelection, onAddressChange])
@@ -70,17 +71,18 @@ export const TripAddressComboBox = ({
     (option: ComboBoxOption | null) => {
       if (option === null) {
         setPendingSelection(null)
+        searchComboBoxProps.onSearchQueryChange('')
         onAddressChange({ address: '', place: null })
         return
       }
 
       onAddressChange({
         address: option.label,
-        place: makeTripPlace({ placeId: option.value }),
+        place: { placeId: option.value, latitude: null, longitude: null },
       })
       setPendingSelection({ placeId: option.value, label: option.label })
     },
-    [onAddressChange],
+    [onAddressChange, searchComboBoxProps],
   )
 
   const EmptyMessage = useMemo(

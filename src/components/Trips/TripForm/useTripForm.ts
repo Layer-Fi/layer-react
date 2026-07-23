@@ -62,7 +62,10 @@ export const useTripForm = (props: UseTripFormProps) => {
     form.reset(getTripFormDefaultValues(trip))
   }, [trip, form])
 
-  useAutofillTripDistance({ form, trip })
+  const { isDistanceUncalculatable } = useAutofillTripDistance({ form, trip })
 
-  return useMemo(() => ({ form, submitError }), [form, submitError])
+  return useMemo(
+    () => ({ form, submitError, isDistanceUncalculatable }),
+    [form, submitError, isDistanceUncalculatable],
+  )
 }

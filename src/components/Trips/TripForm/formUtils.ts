@@ -3,14 +3,14 @@ import { BigDecimal as BD } from 'effect'
 import type { TFunction } from 'i18next'
 
 import { fromNonRecursiveBigDecimal, NRBD_ZERO, toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
-import { makeTripPlace, type Trip, type TripForm, type TripPlace, TripPurpose } from '@schemas/trip'
+import { type Trip, type TripForm, type TripPlace, TripPurpose } from '@schemas/trip'
 
 const getTripPlace = (
   placeId: string | null | undefined,
   latitude: string | null | undefined,
   longitude: string | null | undefined,
 ): TripPlace | null =>
-  placeId ? makeTripPlace({ placeId, latitude, longitude }) : null
+  placeId ? { placeId, latitude, longitude } : null
 
 export const getTripFormDefaultValues = (trip?: Trip): TripForm => {
   if (trip) {
@@ -48,25 +48,24 @@ const hasBothPlaces = (trip: TripForm) =>
 export const validateTripForm = ({ trip }: { trip: TripForm }, t: TFunction) => {
   const { tripDate, distance, purpose } = trip
 
-  const errors = []
+  const fields: Partial<Record<'tripDate' | 'distance' | 'purpose', string>> = {}
 
   if (tripDate === null) {
-    errors.push({ tripDate: t('trips:validation.trip_date_required', 'Trip date is a required field.') })
+    fields.tripDate = t('trips:validation.trip_date_required', 'Trip date is a required field.')
   }
-
-  if (tripDate && tripDate.compare(today(getLocalTimeZone())) > 0) {
-    errors.push({ tripDate: t('trips:validation.trip_date_not_future', 'Trip date cannot be in the future.') })
+  else if (tripDate.compare(today(getLocalTimeZone())) > 0) {
+    fields.tripDate = t('trips:validation.trip_date_not_future', 'Trip date cannot be in the future.')
   }
 
   if (!BD.isPositive(fromNonRecursiveBigDecimal(distance)) && !hasBothPlaces(trip)) {
-    errors.push({ distance: t('trips:validation.distance_or_addresses_required', 'Enter a distance or select start and end addresses.') })
+    fields.distance = t('trips:validation.distance_or_addresses_required', 'Enter a distance or select start and end addresses.')
   }
 
   if (!purpose) {
-    errors.push({ purpose: t('trips:validation.purpose_required', 'Purpose is a required field.') })
+    fields.purpose = t('trips:validation.purpose_required', 'Purpose is a required field.')
   }
 
-  return errors.length > 0 ? errors : null
+  return Object.keys(fields).length > 0 ? { fields } : undefined
 }
 
 export const convertTripFormToUpsertTrip = (form: TripForm, existingTrip?: Trip): unknown => {
@@ -90,12 +89,12 @@ export const convertTripFormToUpsertTrip = (form: TripForm, existingTrip?: Trip)
     purpose: form.purpose,
     startAddress: form.start.address.trim() || null,
     endAddress: form.end.address.trim() || null,
-    googleStartPlaceId: form.start.place?.placeId ?? null,
-    googleEndPlaceId: form.end.place?.placeId ?? null,
-    startLatitude: form.start.place?.latitude ?? null,
-    startLongitude: form.start.place?.longitude ?? null,
-    endLatitude: form.end.place?.latitude ?? null,
-    endLongitude: form.end.place?.longitude ?? null,
+    googleStartPlaceId: form.start.place?.placeId,
+    googleEndPlaceId: form.end.place?.placeId,
+    startLatitude: form.start.place?.latitude,
+    startLongitude: form.start.place?.longitude,
+    endLatitude: form.end.place?.latitude,
+    endLongitude: form.end.place?.longitude,
     description: form.description.trim() || null,
   }
 }

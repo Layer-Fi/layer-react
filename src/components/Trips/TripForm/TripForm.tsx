@@ -1,11 +1,10 @@
-import { useCallback } from 'react'
+import { type ReactNode, useCallback } from 'react'
 import { type CalendarDate } from '@internationalized/date'
 import { AlertTriangle, Save } from 'lucide-react'
 import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Trip, TripPurpose } from '@schemas/trip'
-import { flattenValidationErrors } from '@utils/form'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -13,9 +12,20 @@ import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { TripAddressComboBox } from '@components/Trips/TripAddressComboBox/TripAddressComboBox'
 import { useTripForm } from '@components/Trips/TripForm/useTripForm'
 import { TripPurposeComboBox } from '@components/Trips/TripPurposeComboBox/TripPurposeComboBox'
+import { ErrorText } from '@components/Typography/ErrorText'
 import { VehicleSelector } from '@components/VehicleManagement/VehicleSelector/VehicleSelector'
 
 import './tripForm.scss'
+
+function FieldErrors({ errors }: { errors: ReadonlyArray<unknown> }) {
+  if (errors.length === 0) return null
+
+  return (
+    <HStack justify='end' className='Layer__TripForm__FieldError'>
+      <ErrorText size='xs'>{errors[0] as ReactNode}</ErrorText>
+    </HStack>
+  )
+}
 
 export type TripFormProps = {
   trip?: Trip
@@ -26,7 +36,7 @@ export type TripFormProps = {
 export const TripForm = (props: TripFormProps) => {
   const { t } = useTranslation()
   const { onSuccess, trip, isReadOnly } = props
-  const { form, submitError } = useTripForm({ onSuccess, trip })
+  const { form, submitError, isDistanceUncalculatable } = useTripForm({ onSuccess, trip })
 
   // Prevents default browser form submission behavior
   const blockNativeOnSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
@@ -36,24 +46,17 @@ export const TripForm = (props: TripFormProps) => {
 
   return (
     <Form className='Layer__TripForm' onSubmit={blockNativeOnSubmit}>
-      <form.Subscribe selector={state => state.errorMap}>
-        {(errorMap) => {
-          const validationErrors = flattenValidationErrors(errorMap)
-          if (validationErrors.length > 0 || submitError) {
-            return (
-              <HStack className='Layer__TripForm__FormError'>
-                <DataState
-                  icon={<AlertTriangle size={16} />}
-                  status={DataStateStatus.failed}
-                  title={validationErrors[0] || submitError}
-                  titleSize='md'
-                  inline
-                />
-              </HStack>
-            )
-          }
-        }}
-      </form.Subscribe>
+      {submitError && (
+        <HStack className='Layer__TripForm__FormError'>
+          <DataState
+            icon={<AlertTriangle size={16} />}
+            status={DataStateStatus.failed}
+            title={submitError}
+            titleSize='md'
+            inline
+          />
+        </HStack>
+      )}
 
       <form.AppField name='tripDate'>
         {field => (
@@ -103,14 +106,26 @@ export const TripForm = (props: TripFormProps) => {
         )}
       </form.AppField>
 
+      {isDistanceUncalculatable && (
+        <FieldErrors
+          errors={[t(
+            'trips:error.distance_uncalculatable',
+            'A route between these addresses could not be found. Enter the distance manually.',
+          )]}
+        />
+      )}
+
       <form.Field name='purpose'>
         {field => (
-          <TripPurposeComboBox
-            value={field.state.value}
-            onValueChange={value => field.handleChange(value ?? TripPurpose.Unreviewed)}
-            isReadOnly={isReadOnly}
-            className='Layer__TripForm__Field__Purpose'
-          />
+          <>
+            <TripPurposeComboBox
+              value={field.state.value}
+              onValueChange={value => field.handleChange(value ?? TripPurpose.Unreviewed)}
+              isReadOnly={isReadOnly}
+              className='Layer__TripForm__Field__Purpose'
+            />
+            <FieldErrors errors={field.state.meta.errors} />
+          </>
         )}
       </form.Field>
 
