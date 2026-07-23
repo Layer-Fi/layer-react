@@ -54,8 +54,8 @@
   }
 
   &[data-focus-visible] {
-    outline: 1px solid var(--color-base-100);
-    outline-offset: 1px;
+    outline: 1px auto -webkit-focus-ring-color;
+    outline-offset: 2px;
   }
 
   &[data-variant='compact'] {

@@ -1,4 +1,4 @@
-import { type ZonedDateTime } from '@internationalized/date'
+import { type DateValue } from '@internationalized/date'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 import type { View } from '@internal-types/general'
@@ -10,8 +10,8 @@ import { Heading } from '@ui/Typography/Heading'
 import './dateCalendar.scss'
 
 type DateCalendarProps = {
-  minDate?: ZonedDateTime | null
-  maxDate?: ZonedDateTime | null
+  minDate?: DateValue | null
+  maxDate?: DateValue | null
   variant?: View
 }
 

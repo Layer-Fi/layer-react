@@ -1,4 +1,5 @@
 import { type PropsWithChildren, type ReactNode } from 'react'
+import { type CalendarDate, getLocalTimeZone, today } from '@internationalized/date'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
@@ -6,6 +7,7 @@ import type { BankTransaction } from '@internal-types/bankTransactions'
 import { isClassificationExclusion } from '@schemas/categorization'
 import { getDefaultSelectedCategoryForBankTransaction } from '@utils/bankTransactions/shared'
 import { dateNotBefore, dateNotInFuture, positiveAmount, required } from '@utils/form/validators'
+import { convertDateToLocalCalendarDate } from '@utils/time/timeUtils'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
@@ -131,7 +133,12 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                 }}
               >
                 {field => (
-                  <field.FormDateField label={t('bankTransactions:recordTransaction.label.date', 'Date')} inline={isInline} />
+                  <field.FormDatePickerField<CalendarDate>
+                    label={t('bankTransactions:recordTransaction.label.date', 'Date')}
+                    inline={isInline}
+                    minDate={activationDate ? convertDateToLocalCalendarDate(activationDate) : undefined}
+                    maxDate={today(getLocalTimeZone())}
+                  />
                 )}
               </form.AppField>
 
