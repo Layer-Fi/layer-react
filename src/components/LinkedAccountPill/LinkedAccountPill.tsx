@@ -1,8 +1,6 @@
-import { useState } from 'react'
 import { CircleAlert } from 'lucide-react'
-import { MenuTrigger, Popover } from 'react-aria-components/Menu'
 
-import { Menu, MenuItem } from '@ui/Menu/Menu'
+import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { Pill } from '@ui/Pill/Pill'
 import { Span } from '@ui/Typography/Text'
 
@@ -15,35 +13,27 @@ type LinkedAccountPillProps = {
 }
 
 export function LinkedAccountPill({ label, items }: LinkedAccountPillProps) {
-  const [isOpen, setIsOpen] = useState(false)
-
   return (
-    <MenuTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
-      <Pill
-        status='error'
-        onPress={() => setIsOpen(true)}
-      >
-        <CircleAlert size={14} />
-        {label}
-      </Pill>
-      <Popover
-        className='Layer__Portal'
-        placement='bottom end'
-      >
-        <Menu>
-          {items.map(({ action, name }, index) => (
-            <MenuItem
-              key={index}
-              onAction={action}
-              textValue={name}
-            >
-              <Span slot='label' size='sm'>
-                {name}
-              </Span>
-            </MenuItem>
-          ))}
-        </Menu>
-      </Popover>
-    </MenuTrigger>
+    <DropdownMenu
+      ariaLabel={label}
+      slots={{
+        Trigger: () => (
+          <Pill status='error'>
+            <CircleAlert size={14} />
+            {label}
+          </Pill>
+        ),
+      }}
+    >
+      <MenuList>
+        {items.map(({ action, name }, index) => (
+          <MenuItem key={index} onClick={action}>
+            <Span slot='label' size='sm'>
+              {name}
+            </Span>
+          </MenuItem>
+        ))}
+      </MenuList>
+    </DropdownMenu>
   )
 }
