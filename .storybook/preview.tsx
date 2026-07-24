@@ -35,9 +35,10 @@ const preview: Preview = {
   },
   decorators: [
     (Story, context) => {
-      // Base UI primitives render bare, so scope the design-system root class
+      // Base UI/block components render bare, so scope the design-system root class
       // (variables, font, reset) onto them. Feature stories supply their own.
-      const story = context.title?.startsWith('UI/')
+      const isPrimitive = context.title?.startsWith('UI/') || context.title?.startsWith('Blocks/')
+      const story = isPrimitive
         ? <div className='Layer__component'><Story /></div>
         : <Story />
 
