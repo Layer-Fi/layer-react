@@ -37,12 +37,14 @@ export function useEnvironment() {
   } = useContext(AuthInputContext)
   const resolvedEnvironment = environmentOverride ?? environment
 
+  const defaultConfig = EnvironmentConfigs[resolvedEnvironment] ?? {}
+
   const {
     apiUrl: defaultApiUrl,
     authUrl: defaultAuthUrl,
     scope: defaultScope,
     usePlaidSandbox: defaultUsePlaidSandbox,
-  } = EnvironmentConfigs[resolvedEnvironment]
+  } = defaultConfig
 
   return {
     environment: resolvedEnvironment,
