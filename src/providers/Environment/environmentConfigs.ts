@@ -1,4 +1,4 @@
-export type Environment = 'production' | 'sandbox' | 'staging' | 'internalStaging'
+export type Environment = 'production' | 'production-ca' | 'sandbox' | 'staging' | 'internalStaging'
 
 export type EnvironmentConfig = {
   environment: Environment
@@ -11,28 +11,35 @@ export type EnvironmentConfig = {
 export type EnvironmentConfigOverride = Omit<EnvironmentConfig, 'usePlaidSandbox'>
 
 export const EnvironmentConfigs = {
-  production: {
+  'production-ca': {
+    environment: 'production-ca',
+    apiUrl: 'https://api-ca.layerfi.com',
+    authUrl: 'https://auth.layerfi.com/oauth2/token',
+    scope: 'https://api-ca.layerfi.com/production',
+    usePlaidSandbox: false,
+  },
+  'production': {
     environment: 'production',
     apiUrl: 'https://api.layerfi.com',
     authUrl: 'https://auth.layerfi.com/oauth2/token',
     scope: 'https://api.layerfi.com/production',
     usePlaidSandbox: false,
   },
-  sandbox: {
+  'sandbox': {
     environment: 'sandbox',
     apiUrl: 'https://sandbox.layerfi.com',
     authUrl: 'https://auth.layerfi.com/oauth2/token',
     scope: 'https://sandbox.layerfi.com/sandbox',
     usePlaidSandbox: true,
   },
-  staging: {
+  'staging': {
     environment: 'staging',
     apiUrl: 'https://staging.layerfi.com',
     authUrl: 'https://auth.layerfi.com/oauth2/token',
     scope: 'https://sandbox.layerfi.com/sandbox',
     usePlaidSandbox: true,
   },
-  internalStaging: {
+  'internalStaging': {
     environment: 'internalStaging',
     apiUrl: 'https://staging.layerfi.com',
     authUrl: 'https://auth.layerfi.com/oauth2/token',
