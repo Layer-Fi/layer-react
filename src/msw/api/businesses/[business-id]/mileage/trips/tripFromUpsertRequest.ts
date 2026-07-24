@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type Trip, TripPurpose, UpsertTripSchema } from '@schemas/trip'
+import { type Trip, TripDistanceSource, TripPurpose, UpsertTripSchema } from '@schemas/trip'
 
 import { vehicleStore } from '@msw/api/businesses/[business-id]/mileage/vehicles/store'
 import { readRequestJson } from '@msw/utils/request'
@@ -19,6 +19,7 @@ export const tripFromUpsertRequest = async (request: Request, base: Trip): Promi
   return {
     ...base,
     ...scalars,
+    distanceSource: TripDistanceSource.Manual,
     purpose: toTripPurpose(purpose),
     vehicle: resolveEmbedded({
       requestedId: vehicleId ?? null,

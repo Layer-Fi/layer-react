@@ -1,4 +1,4 @@
-import { type PropsWithChildren, type ReactNode } from 'react'
+import { type PropsWithChildren } from 'react'
 import { type CalendarDate, getLocalTimeZone, today } from '@internationalized/date'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
@@ -19,19 +19,10 @@ import { RecordTransactionFormCategoryCombobox } from '@components/BankTransacti
 import { type RecordTransactionFormApi, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { CustomAccountComboBox } from '@components/CustomAccountComboBox/CustomAccountComboBox'
 import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
+import { FieldErrors } from '@components/forms/FieldErrors'
 import { TaxCodeComboBox } from '@components/TaxCodeSelect/TaxCodeComboBox'
-import { ErrorText } from '@components/Typography/ErrorText'
 
 import './recordTransactionForm.scss'
-
-function FieldErrors({ errors }: { errors: ReadonlyArray<unknown> }) {
-  if (errors.length === 0) return null
-  return (
-    <div className='Layer__RecordTransactionForm__Error'>
-      <ErrorText size='xs'>{errors[0] as ReactNode}</ErrorText>
-    </div>
-  )
-}
 
 function RecordTransactionFormField({ withFieldLayout = true, children }: PropsWithChildren<{ withFieldLayout?: boolean }>) {
   if (!withFieldLayout) return <>{children}</>
@@ -99,7 +90,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                 selectedAccount={field.state.value}
                 onSelectAccount={field.handleChange}
               />
-              <FieldErrors errors={field.state.meta.errors} />
+              <FieldErrors errors={field.state.meta.errors} className='Layer__RecordTransactionForm__Error' />
             </RecordTransactionFormField>
           )
         }}
@@ -177,7 +168,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                       transaction={transaction}
                       category={category}
                     />
-                    <FieldErrors errors={field.state.meta.errors} />
+                    <FieldErrors errors={field.state.meta.errors} className='Layer__RecordTransactionForm__Error' />
                   </RecordTransactionFormField>
                 )}
               </form.Field>

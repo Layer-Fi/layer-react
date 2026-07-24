@@ -62,3 +62,8 @@ export const MileageSummarySchema = Schema.Struct({
   years: Schema.Array(MileageYearSchema),
 })
 export type MileageSummary = typeof MileageSummarySchema.Type
+
+export const MileageDistanceSchema = Schema.Struct({
+  distance: Schema.BigDecimal,
+})
+export type MileageDistance = typeof MileageDistanceSchema.Type

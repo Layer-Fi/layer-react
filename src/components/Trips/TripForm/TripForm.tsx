@@ -5,11 +5,12 @@ import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Trip, TripPurpose } from '@schemas/trip'
-import { flattenValidationErrors } from '@utils/form'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { FieldErrors } from '@components/forms/FieldErrors'
+import { TripAddressComboBox } from '@components/Trips/TripAddressComboBox/TripAddressComboBox'
 import { useTripForm } from '@components/Trips/TripForm/useTripForm'
 import { TripPurposeComboBox } from '@components/Trips/TripPurposeComboBox/TripPurposeComboBox'
 import { VehicleSelector } from '@components/VehicleManagement/VehicleSelector/VehicleSelector'
@@ -25,7 +26,7 @@ export type TripFormProps = {
 export const TripForm = (props: TripFormProps) => {
   const { t } = useTranslation()
   const { onSuccess, trip, isReadOnly } = props
-  const { form, submitError } = useTripForm({ onSuccess, trip })
+  const { form, submitError, isDistanceIncalculable } = useTripForm({ onSuccess, trip })
 
   // Prevents default browser form submission behavior
   const blockNativeOnSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
@@ -35,24 +36,17 @@ export const TripForm = (props: TripFormProps) => {
 
   return (
     <Form className='Layer__TripForm' onSubmit={blockNativeOnSubmit}>
-      <form.Subscribe selector={state => state.errorMap}>
-        {(errorMap) => {
-          const validationErrors = flattenValidationErrors(errorMap)
-          if (validationErrors.length > 0 || submitError) {
-            return (
-              <HStack className='Layer__TripForm__FormError'>
-                <DataState
-                  icon={<AlertTriangle size={16} />}
-                  status={DataStateStatus.failed}
-                  title={validationErrors[0] || submitError}
-                  titleSize='md'
-                  inline
-                />
-              </HStack>
-            )
-          }
-        }}
-      </form.Subscribe>
+      {submitError && (
+        <HStack className='Layer__TripForm__FormError'>
+          <DataState
+            icon={<AlertTriangle size={16} />}
+            status={DataStateStatus.failed}
+            title={submitError}
+            titleSize='md'
+            inline
+          />
+        </HStack>
+      )}
 
       <form.AppField name='tripDate'>
         {field => (
@@ -64,6 +58,30 @@ export const TripForm = (props: TripFormProps) => {
           />
         )}
       </form.AppField>
+
+      <form.Field name='start'>
+        {field => (
+          <TripAddressComboBox
+            label={t('trips:label.start_address', 'Start address')}
+            address={field.state.value.address}
+            onAddressChange={field.handleChange}
+            isReadOnly={isReadOnly}
+            className='Layer__TripForm__Field__StartAddress'
+          />
+        )}
+      </form.Field>
+
+      <form.Field name='end'>
+        {field => (
+          <TripAddressComboBox
+            label={t('trips:label.end_address', 'End address')}
+            address={field.state.value.address}
+            onAddressChange={field.handleChange}
+            isReadOnly={isReadOnly}
+            className='Layer__TripForm__Field__EndAddress'
+          />
+        )}
+      </form.Field>
 
       <form.AppField name='distance'>
         {field => (
@@ -78,38 +96,27 @@ export const TripForm = (props: TripFormProps) => {
         )}
       </form.AppField>
 
-      <form.AppField name='startAddress'>
-        {field => (
-          <field.FormTextField
-            label={t('trips:label.start_address', 'Start address')}
-            inline
-            isReadOnly={isReadOnly}
-            placeholder={t('trips:label.enter_address', 'Enter address')}
-            className='Layer__TripForm__Field__StartAddress'
-          />
-        )}
-      </form.AppField>
-
-      <form.AppField name='endAddress'>
-        {field => (
-          <field.FormTextField
-            label={t('trips:label.end_address', 'End address')}
-            inline
-            isReadOnly={isReadOnly}
-            placeholder={t('common:label.enter_address', 'Enter address')}
-            className='Layer__TripForm__Field__EndAddress'
-          />
-        )}
-      </form.AppField>
+      {isDistanceIncalculable && (
+        <FieldErrors
+          className='Layer__TripForm__FieldError'
+          errors={[t(
+            'trips:error.distance_incalculable',
+            'A route between these addresses could not be found. Enter the distance manually.',
+          )]}
+        />
+      )}
 
       <form.Field name='purpose'>
         {field => (
-          <TripPurposeComboBox
-            value={field.state.value}
-            onValueChange={value => field.handleChange(value ?? TripPurpose.Unreviewed)}
-            isReadOnly={isReadOnly}
-            className='Layer__TripForm__Field__Purpose'
-          />
+          <>
+            <TripPurposeComboBox
+              value={field.state.value}
+              onValueChange={value => field.handleChange(value ?? TripPurpose.Unreviewed)}
+              isReadOnly={isReadOnly}
+              className='Layer__TripForm__Field__Purpose'
+            />
+            <FieldErrors errors={field.state.meta.errors} className='Layer__TripForm__FieldError' />
+          </>
         )}
       </form.Field>
 

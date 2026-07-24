@@ -1,6 +1,7 @@
 export const ApiEnumErrorType = {
   SpecifiedIdNotFound: 'SpecifiedIdNotFound',
   SpecifiedBadRequest: 'SpecifiedBadRequest',
+  MileageDistanceIncalculable: 'MileageDistanceIncalculable',
 } as const
 export type ApiEnumErrorType = typeof ApiEnumErrorType[keyof typeof ApiEnumErrorType]
 

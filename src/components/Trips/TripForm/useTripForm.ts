@@ -7,6 +7,7 @@ import { type Trip, type TripForm, UpsertTripSchema } from '@schemas/trip'
 import { UpsertTripMode, useUpsertTrip } from '@hooks/api/businesses/[business-id]/mileage/trips/useUpsertTrip'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { convertTripFormToUpsertTrip, getTripFormDefaultValues, validateTripForm } from '@components/Trips/TripForm/formUtils'
+import { useAutofillTripDistance } from '@components/Trips/TripForm/useAutofillTripDistance'
 
 type onSuccessFn = (trip: Trip) => void
 type UseTripFormProps = { onSuccess: onSuccessFn, trip?: Trip }
@@ -61,5 +62,10 @@ export const useTripForm = (props: UseTripFormProps) => {
     form.reset(getTripFormDefaultValues(trip))
   }, [trip, form])
 
-  return useMemo(() => ({ form, submitError }), [form, submitError])
+  const { isDistanceIncalculable } = useAutofillTripDistance({ form, trip })
+
+  return useMemo(
+    () => ({ form, submitError, isDistanceIncalculable }),
+    [form, submitError, isDistanceIncalculable],
+  )
 }

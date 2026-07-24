@@ -20,6 +20,11 @@
     width: 100%;
   }
 
+  .Layer__TripForm__FieldError {
+    display: flex;
+    justify-content: flex-end;
+  }
+
   .Layer__TripForm__Submit {
     align-items: flex-end;
     padding-block-start: 1rem;
