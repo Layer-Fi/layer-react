@@ -1,8 +1,8 @@
 import { Loader } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { Badge, BadgeVariant } from '@components/Badge/Badge'
-import { BadgeSize } from '@components/Badge/Badge'
+import { Badge, BadgeVariant } from '@ui/Badge/Badge'
+import { BadgeSize } from '@ui/Badge/Badge'
 
 export const SyncingBadge = () => {
   const { t } = useTranslation()

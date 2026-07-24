@@ -1,8 +1,8 @@
 import type { LucideIcon } from 'lucide-react'
 
+import type { BadgeVariant } from '@ui/Badge/Badge'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import type { BadgeVariant } from '@components/Badge/Badge'
 
 import './mobileListItemStatusFooter.scss'
 

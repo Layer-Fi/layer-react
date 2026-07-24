@@ -10,11 +10,11 @@ import {
 
 import { type ListFormatFn } from '@utils/i18n/list/formatters'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 
 const getSelectedCount = <T extends ComboBoxOption>(selectedValues: T | readonly T[] | null | undefined): number => {
   if (!selectedValues) {

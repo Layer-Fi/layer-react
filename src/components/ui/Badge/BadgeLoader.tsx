@@ -1,10 +1,8 @@
-import { type ReactNode } from 'react'
 import { Check, CircleAlert, Loader, X } from 'lucide-react'
 
 import './badgeLoader.scss'
 
 export interface BadgeLoaderProps {
-  children?: ReactNode
   size?: number
   variant?: 'default' | 'info' | 'success' | 'error' | 'warning'
   showLoading?: boolean
@@ -18,11 +16,10 @@ const BadgeLoaderIcon = ({ variant, showLoading }: { variant: BadgeLoaderProps['
   return <Loader size={12} className='Layer__anim--rotating' />
 }
 
-export const BadgeLoader = ({ children, showLoading, variant = 'default' }: BadgeLoaderProps) => {
+export const BadgeLoader = ({ showLoading, variant = 'default' }: BadgeLoaderProps) => {
   return (
     <span className={`Layer__loader Layer__loader--as-badge Layer__loader--${variant}`}>
       <BadgeLoaderIcon variant={variant} showLoading={showLoading} />
-      {children}
     </span>
   )
 }

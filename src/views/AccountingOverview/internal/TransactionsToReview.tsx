@@ -5,12 +5,12 @@ import { useTranslation } from 'react-i18next'
 
 import { useProfitAndLossSummaries } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-summaries/useProfitAndLossSummaries'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
+import { Badge } from '@ui/Badge/Badge'
+import { BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
+import { BadgeLoader } from '@ui/Badge/BadgeLoader'
 import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { Badge } from '@components/Badge/Badge'
-import { BadgeSize, BadgeVariant } from '@components/Badge/Badge'
-import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
 
 import './transactionsToReview.scss'
 

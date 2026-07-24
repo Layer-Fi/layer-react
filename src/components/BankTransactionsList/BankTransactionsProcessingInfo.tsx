@@ -2,9 +2,9 @@ import { Clock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
+import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { HStack } from '@ui/Stack/Stack'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
-import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 
 import './bankTransactionsProcessingInfo.scss'

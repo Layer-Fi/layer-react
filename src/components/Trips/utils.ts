@@ -5,7 +5,7 @@ import { Briefcase, CircleHelp, House, type LucideIcon } from 'lucide-react'
 import { TripPurpose } from '@schemas/trip'
 import { type NumberFormatFn } from '@utils/i18n/number/formatters'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import { BadgeVariant } from '@components/Badge/Badge'
+import { BadgeVariant } from '@ui/Badge/Badge'
 
 export const formatDistance = (
   distance: BD.BigDecimal,

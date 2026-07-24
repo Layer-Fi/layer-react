@@ -1,9 +1,9 @@
 import { Layers2Icon, Minimize2, Scissors, SparklesIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { Badge, BadgeSize } from '@ui/Badge/Badge'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { Badge, BadgeSize } from '@components/Badge/Badge'
 
 import './bankTransactionsSelectedValue.scss'
 
