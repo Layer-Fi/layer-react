@@ -19,10 +19,6 @@ export default meta
 
 type Story = StoryObj<typeof Input>
 
-export const Playground: Story = {
-  parameters: { chromatic: { disableSnapshot: true } },
-}
-
 const Row = ({ label, children }: { label: string, children: React.ReactNode }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
     <span style={{ width: 96, fontSize: 12, opacity: 0.6 }}>{label}</span>

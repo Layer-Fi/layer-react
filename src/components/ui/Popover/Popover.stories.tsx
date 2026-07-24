@@ -15,22 +15,11 @@ export default meta
 type Story = StoryObj<typeof Popover>
 
 const body = (
-  <Dialog aria-label='Details' style={{ padding: 16, maxWidth: 240 }}>
-    <P>Settled popover content shown for the snapshot.</P>
+  <Dialog aria-label='Details' style={{ padding: 16 }}>
+    <P>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</P>
   </Dialog>
 )
 
-export const Playground: Story = {
-  parameters: { chromatic: { disableSnapshot: true } },
-  render: () => (
-    <DialogTrigger>
-      <Button variant='outlined'>Open popover</Button>
-      <Popover>{body}</Popover>
-    </DialogTrigger>
-  ),
-}
-
-// defaultOpen renders the settled open state for the snapshot.
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (

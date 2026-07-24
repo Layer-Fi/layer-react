@@ -6,7 +6,7 @@ const meta: Meta<typeof DateTile> = {
   title: 'UI/DateTile',
   component: DateTile,
   args: {
-    date: new Date('2026-07-23'),
+    date: new Date('2026-07-23T00:00:00'),
   },
 }
 
@@ -14,15 +14,13 @@ export default meta
 
 type Story = StoryObj<typeof DateTile>
 
-export const Playground: Story = {
-  parameters: { chromatic: { disableSnapshot: true } },
-}
-
+// Date-only strings parse as UTC but DateTile formats in local time, which shifts the
+// rendered day in negative-offset zones; the time component forces local parsing.
 const DATES = [
-  new Date('2026-01-01'),
-  new Date('2026-07-23'),
-  new Date('2026-11-15'),
-  new Date('2026-12-31'),
+  new Date('2026-01-01T00:00:00'),
+  new Date('2026-07-23T00:00:00'),
+  new Date('2026-11-15T00:00:00'),
+  new Date('2026-12-31T00:00:00'),
 ]
 
 export const AllVariants: Story = {

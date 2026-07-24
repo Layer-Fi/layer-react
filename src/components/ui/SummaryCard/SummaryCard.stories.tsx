@@ -13,14 +13,6 @@ export default meta
 
 type Story = StoryObj<typeof SummaryCard>
 
-export const Playground: Story = {
-  parameters: { chromatic: { disableSnapshot: true } },
-  args: {
-    slots: { title: 'Revenue', subtitle: 'Last 30 days' },
-    children: <Span>Card content</Span>,
-  },
-}
-
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (

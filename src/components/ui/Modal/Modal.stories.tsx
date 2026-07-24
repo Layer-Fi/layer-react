@@ -2,21 +2,10 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { Button } from '@ui/Button/Button'
 import { Modal } from '@ui/Modal/Modal'
-import { HStack, VStack } from '@ui/Stack/Stack'
+import { ModalActions, ModalContent, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
+import { HStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
 import { P } from '@ui/Typography/Text'
-
-const Content = (
-  <div style={{ padding: 24 }}>
-    <VStack gap='md'>
-      <P weight='bold' size='lg'>Confirm action</P>
-      <P>This is the settled content of an open modal dialog.</P>
-      <HStack gap='sm' justify='end'>
-        <Button variant='outlined'>Cancel</Button>
-        <Button>Confirm</Button>
-      </HStack>
-    </VStack>
-  </div>
-)
 
 const meta: Meta<typeof Modal> = {
   title: 'UI/Modal',
@@ -26,7 +15,6 @@ const meta: Meta<typeof Modal> = {
     'aria-label': 'Example modal',
     'size': 'md',
     'variant': 'center',
-    'children': Content,
   },
   argTypes: {
     size: { control: 'select', options: ['md', 'lg', 'xl', '2xl'] },
@@ -39,12 +27,28 @@ export default meta
 
 type Story = StoryObj<typeof Modal>
 
-export const Playground: Story = {
-  parameters: { chromatic: { disableSnapshot: true } },
-}
-
-// Overlay modals fill the viewport, so a single open instance is snapshotted
-// rather than a stacked grid of sizes/variants.
+// Overlay modals fill the viewport, so a single open instance is snapshotted.
+// Composed from the Modal subcomponents (title/close, content, actions).
 export const Open: Story = {
   parameters: { chromatic: { viewports: [1280] } },
+  render: args => (
+    <Modal {...args}>
+      <ModalTitleWithClose
+        heading={<ModalHeading>Confirm action</ModalHeading>}
+        description={<Heading level={3} size='xs' variant='subtle' weight='normal'>This cannot be undone.</Heading>}
+      />
+      <ModalContent>
+        <P>This is the settled content of an open modal dialog, composed from the Modal subcomponents.</P>
+      </ModalContent>
+      <ModalActions>
+        <HStack justify='space-between'>
+          <Button status='danger' variant='outlined'>Delete</Button>
+          <HStack gap='xs'>
+            <Button variant='outlined'>Cancel</Button>
+            <Button>Confirm</Button>
+          </HStack>
+        </HStack>
+      </ModalActions>
+    </Modal>
+  ),
 }

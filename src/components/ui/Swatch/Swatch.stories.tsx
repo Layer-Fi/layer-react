@@ -14,10 +14,6 @@ export default meta
 
 type Story = StoryObj<typeof Swatch>
 
-export const Playground: Story = {
-  parameters: { chromatic: { disableSnapshot: true } },
-}
-
 const Cell = ({ label, children }: { label: string, children: React.ReactNode }) => (
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, width: 40 }}>
     <div style={{ width: 24, height: 24 }}>{children}</div>

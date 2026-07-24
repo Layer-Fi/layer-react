@@ -19,10 +19,6 @@ export default meta
 
 type Story = StoryObj<typeof Meter>
 
-export const Playground: Story = {
-  parameters: { chromatic: { disableSnapshot: true } },
-}
-
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (

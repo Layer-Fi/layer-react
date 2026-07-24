@@ -27,15 +27,6 @@ const Field = ({
   </TextField>
 )
 
-export const Playground: Story = {
-  parameters: { chromatic: { disableSnapshot: true } },
-  render: () => (
-    <Form style={{ maxWidth: 320 }}>
-      <Field label='Name' />
-    </Form>
-  ),
-}
-
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (

@@ -11,17 +11,6 @@ export default meta
 
 type Story = StoryObj<typeof Breadcrumbs>
 
-export const Playground: Story = {
-  parameters: { chromatic: { disableSnapshot: true } },
-  render: () => (
-    <Breadcrumbs>
-      <Breadcrumb href='#'>Home</Breadcrumb>
-      <Breadcrumb href='#'>Reports</Breadcrumb>
-      <Breadcrumb>Profit &amp; Loss</Breadcrumb>
-    </Breadcrumbs>
-  ),
-}
-
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (

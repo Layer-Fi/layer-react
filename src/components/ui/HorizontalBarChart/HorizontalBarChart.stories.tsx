@@ -2,9 +2,9 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { HorizontalBarChart } from '@ui/HorizontalBarChart/HorizontalBarChart'
 import { LegendLayout } from '@ui/Legend/Legend'
-import { VStack } from '@ui/Stack/Stack'
-import { Span } from '@ui/Typography/Text'
 import type { SeriesData } from '@components/DetailedCharts/types'
+
+import { Col, Gallery } from '@test-utils/storybook/gallery'
 
 const DATA = {
   data: [
@@ -13,6 +13,17 @@ const DATA = {
     { name: 'taxes', displayName: 'Taxes', value: 1500 },
   ],
   total: 11000,
+}
+
+// The aligned layout is only kept when every segment is at least a quarter of the total;
+// anything smaller is downgraded to the table layout.
+const BALANCED_DATA = {
+  data: [
+    { name: 'income', displayName: 'Income', value: 4500 },
+    { name: 'expenses', displayName: 'Expenses', value: 4000 },
+    { name: 'taxes', displayName: 'Taxes', value: 3500 },
+  ],
+  total: 12000,
 }
 
 const COLORS: Record<string, string> = {
@@ -42,46 +53,44 @@ export default meta
 
 type Story = StoryObj<typeof HorizontalBarChart<SeriesData>>
 
-export const Playground: Story = {
-  parameters: { chromatic: { disableSnapshot: true } },
-  render: args => (
-    <div style={{ width: 480 }}>
-      <HorizontalBarChart {...args} />
-    </div>
-  ),
-}
+const CHART_SIZE = 720
 
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 32, padding: 24, width: 480 }}>
-      <VStack gap='sm'>
-        <Span size='sm' weight='bold'>Table legend</Span>
+    <Gallery gap={32} inlineSize={CHART_SIZE}>
+      <Col label='table legend'>
         <HorizontalBarChart
           data={DATA}
           stylingProps={{ colorSelector }}
           formatValue={formatValue}
           labelMode={LegendLayout.Table}
         />
-      </VStack>
-      <VStack gap='sm'>
-        <Span size='sm' weight='bold'>Aligned legend</Span>
+      </Col>
+      <Col label='aligned legend'>
+        <HorizontalBarChart
+          data={BALANCED_DATA}
+          stylingProps={{ colorSelector }}
+          formatValue={formatValue}
+          labelMode={LegendLayout.Aligned}
+        />
+      </Col>
+      <Col label='aligned requested, small segment forces the table layout'>
         <HorizontalBarChart
           data={DATA}
           stylingProps={{ colorSelector }}
           formatValue={formatValue}
           labelMode={LegendLayout.Aligned}
         />
-      </VStack>
-      <VStack gap='sm'>
-        <Span size='sm' weight='bold'>No legend</Span>
+      </Col>
+      <Col label='no legend'>
         <HorizontalBarChart
           data={DATA}
           stylingProps={{ colorSelector }}
           formatValue={formatValue}
           showLegend={false}
         />
-      </VStack>
-    </div>
+      </Col>
+    </Gallery>
   ),
 }
