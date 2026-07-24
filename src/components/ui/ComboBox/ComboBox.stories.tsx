@@ -33,10 +33,6 @@ export default meta
 
 type Story = StoryObj<typeof ComboBox<ComboBoxOption>>
 
-export const Playground: Story = {
-  parameters: { chromatic: { disableSnapshot: true } },
-}
-
 const Row = ({ label, children }: { label: string, children: React.ReactNode }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
     <span style={{ width: 96, fontSize: 12, opacity: 0.6 }}>{label}</span>
@@ -44,8 +40,7 @@ const Row = ({ label, children }: { label: string, children: React.ReactNode }) 
   </div>
 )
 
-// react-select does not expose a static open prop here, so the gallery shows
-// closed control states.
+// Closed control states; the open menu is covered by the MenuOpen story.
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
@@ -68,6 +63,21 @@ export const AllVariants: Story = {
       <Row label='loading'>
         <ComboBox aria-label='Loading' options={OPTIONS} selectedValue={null} onSelectedValueChange={noop} isLoading />
       </Row>
+    </div>
+  ),
+}
+
+// react-select portals the open menu to the document body, so leave vertical room.
+export const MenuOpen: Story = {
+  parameters: { chromatic: { viewports: [1280] } },
+  render: () => (
+    <div style={{ display: 'flex', gap: 48, padding: 24, minHeight: 320, alignItems: 'flex-start' }}>
+      <div style={{ width: 240 }}>
+        <ComboBox aria-label='Open' options={OPTIONS} selectedValue={null} onSelectedValueChange={noop} placeholder='Select an account' menuIsOpen />
+      </div>
+      <div style={{ width: 240 }}>
+        <ComboBox aria-label='Open selected' options={OPTIONS} selectedValue={OPTIONS[0]} onSelectedValueChange={noop} menuIsOpen />
+      </div>
     </div>
   ),
 }
