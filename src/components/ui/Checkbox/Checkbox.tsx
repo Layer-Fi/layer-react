@@ -14,7 +14,7 @@ import './checkbox.scss'
 
 const CLASS_NAME = 'Layer__Checkbox'
 
-type CheckboxVariant = 'default' | 'success' | 'round' | 'error'
+type CheckboxVariant = 'default' | 'round' | 'error' | 'branded'
 type CheckboxSize = 'sm' | 'md' | 'lg'
 
 const CHECK_SIZE = {

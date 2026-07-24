@@ -26,10 +26,6 @@ export default meta
 
 type Story = StoryObj<typeof RadioGroup>
 
-export const Playground: Story = {
-  parameters: { chromatic: { disableSnapshot: true } },
-}
-
 const Col = ({ label, children }: { label: string, children: React.ReactNode }) => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
     <span style={{ fontSize: 12, fontWeight: 600 }}>{label}</span>

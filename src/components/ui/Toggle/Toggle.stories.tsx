@@ -1,14 +1,12 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
+import { Toggle } from '@ui/Toggle/Toggle'
 
 const OPTIONS = [
   { label: 'Day', value: 'day' },
   { label: 'Week', value: 'week' },
   { label: 'Month', value: 'month' },
 ]
-
-const SIZES = [ToggleSize.medium, ToggleSize.small, ToggleSize.xsmall]
 
 const meta: Meta<typeof Toggle> = {
   title: 'UI/Toggle',
@@ -17,10 +15,8 @@ const meta: Meta<typeof Toggle> = {
     ariaLabel: 'Range',
     options: OPTIONS,
     selectedKey: 'day',
-    size: ToggleSize.medium,
   },
   argTypes: {
-    size: { control: 'select', options: SIZES },
     fullWidth: { control: 'boolean' },
   },
 }
@@ -28,10 +24,6 @@ const meta: Meta<typeof Toggle> = {
 export default meta
 
 type Story = StoryObj<typeof Toggle>
-
-export const Playground: Story = {
-  parameters: { chromatic: { disableSnapshot: true } },
-}
 
 const Col = ({ label, children }: { label: string, children: React.ReactNode }) => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -50,11 +42,9 @@ export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24, padding: 24 }}>
-      {SIZES.map(size => (
-        <Col key={size} label={`size: ${size}`}>
-          <Toggle ariaLabel={size} options={OPTIONS} selectedKey='day' size={size} />
-        </Col>
-      ))}
+      <Col label='default'>
+        <Toggle ariaLabel='default' options={OPTIONS} selectedKey='day' />
+      </Col>
       <Col label='full width'>
         <Toggle ariaLabel='full-width' options={OPTIONS} selectedKey='week' fullWidth />
       </Col>

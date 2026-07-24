@@ -36,7 +36,11 @@
 
   &[data-disabled] {
     cursor: not-allowed;
-    opacity: 0.5;
+    color: var(--button-fg-disabled);
+
+    &::before {
+      background-color: var(--button-bg-disabled);
+    }
   }
 }
 
