@@ -34,11 +34,15 @@ const preview: Preview = {
     chromatic: { viewports: SIZE_CLASS_VIEWPORTS },
   },
   decorators: [
-    Story => (
-      <LayerTestProvider>
-        <Story />
-      </LayerTestProvider>
-    ),
+    (Story, context) => {
+      // Base UI primitives render bare, so scope the design-system root class
+      // (variables, font, reset) onto them. Feature stories supply their own.
+      const story = context.title?.startsWith('UI/')
+        ? <div className='Layer__component'><Story /></div>
+        : <Story />
+
+      return <LayerTestProvider>{story}</LayerTestProvider>
+    },
   ],
 }
 
