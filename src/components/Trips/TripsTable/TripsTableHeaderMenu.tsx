@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'
-import { DataTableHeaderMenu } from '@components/DataTable/DataTableHeaderMenu'
+import { DataTableHeaderMenu } from '@blocks/DataTable/DataTableHeaderMenu'
 
 enum TripsTableHeaderMenuActions {
   ManageVehicles = 'ManageVehicles',

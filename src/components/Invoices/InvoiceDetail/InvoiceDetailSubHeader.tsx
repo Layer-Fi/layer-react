@@ -2,9 +2,9 @@ import { useTranslation } from 'react-i18next'
 
 import { type Invoice } from '@schemas/invoices/invoice'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { DataPoint } from '@ui/DataPoint/DataPoint'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { DataPoint } from '@components/DataPoint/DataPoint'
 import { InvoiceStatusCell } from '@components/Invoices/InvoiceStatusCell/InvoiceStatusCell'
 
 import './invoiceDetailSubHeader.scss'

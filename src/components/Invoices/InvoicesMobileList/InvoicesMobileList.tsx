@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next'
 
 import { type Invoice } from '@schemas/invoices/invoice'
 import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
+import { type TablePaginationProps } from '@blocks/PaginatedDataTable/PaginatedDataTable'
 import { InvoicesMobileHeader } from '@components/Invoices/InvoicesMobileHeader/InvoicesMobileHeader'
 import { InvoicesMobileListItem } from '@components/Invoices/InvoicesMobileList/InvoicesMobileListItem'
 import { InvoicesMobileListItemStatusFooter } from '@components/Invoices/InvoicesMobileList/InvoicesMobileListItemStatusFooter'
-import { type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
 export interface InvoicesMobileListProps {
   data: Invoice[] | undefined

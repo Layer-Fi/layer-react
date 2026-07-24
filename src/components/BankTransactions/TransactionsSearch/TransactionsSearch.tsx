@@ -5,7 +5,7 @@ import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
-import { SearchField } from '@components/SearchField/SearchField'
+import { SearchField } from '@ui/SearchField/SearchField'
 
 type TransactionsSearchProps = {
   slot?: string

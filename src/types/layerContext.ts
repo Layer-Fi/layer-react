@@ -3,7 +3,7 @@ import { type AccountingConfigurationSchemaType } from '@schemas/accountingConfi
 import { type Business } from '@schemas/business'
 import { type LayerError } from '@utils/api/errorHandler'
 import type { EventCallbacks } from '@providers/LayerProvider/LayerProvider'
-import { type ToastProps } from '@components/Toast/Toast'
+import { type ToastProps } from '@ui/Toast/Toast'
 
 export type LayerContextValues = {
   businessId: string

@@ -8,13 +8,13 @@ import {
   useInvoicePreviewRoute,
 } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
+import { Loader } from '@ui/Loader/Loader'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import {
   InvoiceFinalizeForm,
 } from '@components/Invoices/InvoicePreview/InvoiceFinalizeForm/InvoiceFinalizeForm'
 import { InvoicePreview } from '@components/Invoices/InvoicePreview/InvoicePreview'
-import { Loader } from '@components/Loader/Loader'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import './invoiceFinalizeStep.scss'

@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 
 import { type TaxPaymentRow } from '@schemas/taxEstimates/payments'
 import { MobileList } from '@ui/MobileList/MobileList'
+import { Separator } from '@ui/Separator/Separator'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { Separator } from '@components/Separator/Separator'
 import { type CommonTaxPaymentsListProps } from '@components/TaxPayments/utils'
 
 import './taxPaymentsMobileList.scss'

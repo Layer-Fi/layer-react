@@ -1,8 +1,8 @@
+import { SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { HStack } from '@ui/Stack/Stack'
 import { Swatch } from '@ui/Swatch/Swatch'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
 import './baseSummariesBreakdownFooterRow.scss'
 

@@ -7,7 +7,7 @@ import { PaginationChangeSource } from '@hooks/utils/pagination/types'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
-import { type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
+import { type TablePaginationProps } from '@blocks/PaginatedDataTable/PaginatedDataTable'
 
 type UseBankTransactionsPaginationParams = {
   data?: BankTransaction[]

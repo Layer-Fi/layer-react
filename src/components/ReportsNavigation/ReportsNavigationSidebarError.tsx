@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 
 export const ReportsNavigationSidebarError = () => {
   const { t } = useTranslation()

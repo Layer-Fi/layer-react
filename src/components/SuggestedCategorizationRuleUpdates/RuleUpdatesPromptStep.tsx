@@ -5,11 +5,11 @@ import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransacti
 import { useRejectCategorizationRulesUpdateSuggestion } from '@hooks/api/businesses/[business-id]/categorization-rules/suggestions/useRejectCategorizationRulesUpdateSuggestion'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
+import { Separator } from '@ui/Separator/Separator'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { Separator } from '@components/Separator/Separator'
+import { useWizard } from '@blocks/Wizard/Wizard'
 import { CreateRuleButton } from '@components/SuggestedCategorizationRuleUpdates/CreateRuleButton'
-import { useWizard } from '@components/Wizard/Wizard'
 
 interface RuleUpdatesPromptStepProps {
   close: () => void

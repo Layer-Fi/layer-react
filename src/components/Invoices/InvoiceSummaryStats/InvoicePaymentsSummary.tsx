@@ -5,9 +5,9 @@ import { convertBigIntCentsToBigDecimal, formatBigDecimalToString } from '@utils
 import { useInvoiceSummaryStats } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
+import { FallbackWithSkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { FallbackWithSkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
 import './invoicePaymentsSummary.scss'
 

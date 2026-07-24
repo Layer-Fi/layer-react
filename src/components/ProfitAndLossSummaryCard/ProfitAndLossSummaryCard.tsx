@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
-import { SummaryCard } from '@ui/SummaryCard/SummaryCard'
+import { SummaryCard } from '@blocks/SummaryCard/SummaryCard'
 import {
   type SummaryCardInteractionProps,
   type SummaryCardStringOverrides,
   useSummaryCardSlots,
-} from '@ui/SummaryCard/useSummaryCardSlots'
+} from '@blocks/SummaryCard/useSummaryCardSlots'
 import { ProfitAndLossChart } from '@components/ProfitAndLossChart/ProfitAndLossChart'
 import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
 

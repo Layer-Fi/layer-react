@@ -2,11 +2,11 @@ import { useTranslation } from 'react-i18next'
 
 import { useTaxEstimatesDeadlines } from '@hooks/features/taxEstimates/useTaxEstimatesDeadlines'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { Card } from '@ui/Card/Card'
+import { SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
-import { Card } from '@components/Card/Card'
-import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 import { TaxEstimatesDeadlineRow } from '@components/TaxEstimatesDeadlineRow/TaxEstimatesDeadlineRow'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 

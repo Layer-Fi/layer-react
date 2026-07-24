@@ -6,7 +6,7 @@ import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/con
 import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
-import { MegaMenu } from '@components/NestedNavigation/MegaMenu/MegaMenu'
+import { MegaMenu } from '@blocks/NestedNavigation/MegaMenu/MegaMenu'
 import {
   buildFlatReportsGroupConfig,
   buildReportsLeafConfig,

@@ -1,11 +1,11 @@
 import classNames from 'classnames'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import type { DefaultVariant } from '@ui/ResponsiveComponent/ResponsiveComponent'
 import { HStack } from '@ui/Stack/Stack'
-import { ExpandableDataTableToggleButton } from '@components/ExpandableDataTable/ExpandableDataTableToggleButton'
+import { ExpandableDataTableToggleButton } from '@blocks/ExpandableDataTable/ExpandableDataTableToggleButton'
 import { ReportsMobileSelectionDrawer } from '@components/ReportsNavigation/ReportsMobileSelectionDrawer'
 import { UnifiedReportDownloadButton } from '@components/UnifiedReports/UnifiedReportDownloadButton'
+import type { DefaultVariant } from '@components/utility/ResponsiveComponent'
 
 import './unifiedReportHeaderButtons.scss'
 

@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { getIncompleteTasks, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
-import { MobilePanel } from '@components/MobilePanel/MobilePanel'
-import { Pagination } from '@components/Pagination/Pagination'
+import { MobilePanel } from '@ui/MobilePanel/MobilePanel'
+import { Pagination } from '@ui/Pagination/Pagination'
 import { TasksListItem } from '@components/Tasks/TasksListItem'
 
 const MOBILE_SHOW_UNRESOLVED_TASKS_COUNT = 2

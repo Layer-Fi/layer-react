@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { DataStateContainer } from '@components/DataStateContainer/DataStateContainer'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
+import { DataStateContainer } from '@ui/DataState/DataStateContainer'
 
 type ReportsTableErrorStateProps = {
   isLoading?: boolean

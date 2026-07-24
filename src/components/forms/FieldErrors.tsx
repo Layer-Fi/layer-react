@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-import { ErrorText } from '@components/Typography/ErrorText'
+import { ErrorText } from '@ui/Typography/ErrorText'
 
 type FieldErrorsProps = {
   errors: ReadonlyArray<unknown>

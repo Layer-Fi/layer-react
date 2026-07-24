@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { convertBigIntCentsToBigDecimal, formatBigDecimalToString } from '@utils/bigDecimalUtils'
 import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { FallbackWithSkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { FallbackWithSkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
 import './invoiceOwedSummaryStatCard.scss'
 

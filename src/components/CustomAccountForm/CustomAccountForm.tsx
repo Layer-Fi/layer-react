@@ -8,10 +8,10 @@ import { Button } from '@ui/Button/Button'
 import { SubmitButton } from '@ui/Button/SubmitButton'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
+import { ErrorText } from '@ui/Typography/ErrorText'
 import { Label } from '@ui/Typography/Text'
 import { useCustomAccountForm } from '@components/CustomAccountForm/useCustomAccountForm'
 import { type RadioOption } from '@components/forms/FormRadioGroupField'
-import { ErrorText } from '@components/Typography/ErrorText'
 
 import './customAccountForm.scss'
 

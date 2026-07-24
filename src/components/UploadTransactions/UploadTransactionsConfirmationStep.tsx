@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next'
 import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
+import { Separator } from '@ui/Separator/Separator'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { Separator } from '@components/Separator/Separator'
+import { useWizard } from '@blocks/Wizard/Wizard'
 import { UploadTransactionsStep } from '@components/UploadTransactions/types'
-import { useWizard } from '@components/Wizard/Wizard'
 
 type UploadTransactionsConfirmationStepProps = {
   onRestartFlow: () => void

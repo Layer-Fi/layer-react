@@ -9,13 +9,13 @@ import { useListTrips } from '@hooks/api/businesses/[business-id]/mileage/trips/
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { useCurrentTripsPage, useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
-import { type DefaultVariant, ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { TripDeleteConfirmationModal } from '@components/Trips/TripDeleteConfirmationModal/TripDeleteConfirmationModal'
 import { TripDrawer } from '@components/Trips/TripDrawer/TripDrawer'
 import { TripPurposeFilterValue } from '@components/Trips/TripPurposeToggle/TripPurposeToggle'
 import { TripsMobileList } from '@components/Trips/TripsMobileList/TripsMobileList'
 import { TripsTable } from '@components/Trips/TripsTable/TripsTable'
+import { type DefaultVariant, ResponsiveComponent } from '@components/utility/ResponsiveComponent'
 
 const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
   width < BREAKPOINTS.TABLET ? 'Mobile' : 'Desktop'

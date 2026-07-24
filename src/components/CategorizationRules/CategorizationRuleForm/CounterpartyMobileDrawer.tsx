@@ -8,11 +8,11 @@ import { Button } from '@ui/Button/Button'
 import { MobileSelectionDrawerList } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerList'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
+import { SearchField } from '@ui/SearchField/SearchField'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { type CounterpartyOption, toCounterpartyValue } from '@components/CategorizationRules/CategorizationRuleForm/counterpartyComboBoxOption'
 import { useCounterpartyOptions } from '@components/CategorizationRules/CategorizationRuleForm/useCounterpartyOptions'
-import { SearchField } from '@components/SearchField/SearchField'
 
 type CounterpartyMobileDrawerProps = {
   label: string

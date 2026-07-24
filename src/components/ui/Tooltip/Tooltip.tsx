@@ -12,7 +12,7 @@ import classNames from 'classnames'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { HStack } from '@ui/Stack/Stack'
-import { TooltipContext, useTooltip, useTooltipContext } from '@components/Tooltip/useTooltip'
+import { TooltipContext, useTooltip, useTooltipContext } from '@ui/Tooltip/useTooltip'
 
 import './tooltip.scss'
 

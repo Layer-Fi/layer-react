@@ -14,14 +14,14 @@ import {
   useBankTransactionsCategorizationActions,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { Button } from '@ui/Button/Button'
+import { FileInput } from '@ui/Input/FileInput'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { ErrorText } from '@ui/Typography/ErrorText'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { FileInput } from '@components/Input/FileInput'
 import { MatchFormMobile } from '@components/MatchForm/MatchFormMobile'
-import { ErrorText } from '@components/Typography/ErrorText'
 
 interface BankTransactionsMobileListMatchFormProps {
   bankTransaction: BankTransaction

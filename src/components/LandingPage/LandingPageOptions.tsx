@@ -8,11 +8,11 @@ import { isCalendlyLink } from '@hooks/features/calendly/useCalendly'
 import { Badge } from '@ui/Badge/Badge'
 import { BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { Button } from '@ui/Button/Button'
+import { Separator } from '@ui/Separator/Separator'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { P, Span } from '@ui/Typography/Text'
 import { type LandingPageCardConfig, type LandingPagePlatformConfig } from '@components/LandingPage/types'
-import { Separator } from '@components/Separator/Separator'
 export interface LandingPageOptionsProps {
   type: 'accounting' | 'bookkeeping'
   platformConfig: LandingPagePlatformConfig

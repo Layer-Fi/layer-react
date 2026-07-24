@@ -9,6 +9,7 @@ import { useCategories } from '@hooks/api/businesses/[business-id]/categories/us
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { DateTime } from '@ui/DateTime/DateTime'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -16,7 +17,6 @@ import { Header, Span } from '@ui/Typography/Text'
 import { type BankTransactionCategoryComboBoxOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { getAllCategoriesGroup, getGroupDisplayLabel, getSuggestedCategoriesGroup, getSuggestedMatchesGroup, isBoldGroupLabel, isLoadingSuggestions } from '@components/BankTransactionCategoryComboBox/utils'
 import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
-import { DateTime } from '@components/DateTime/DateTime'
 
 import './bankTransactionCategoryComboBox.scss'
 

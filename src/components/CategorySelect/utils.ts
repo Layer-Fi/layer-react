@@ -1,7 +1,7 @@
 import { type CategoryAsOption } from '@internal-types/categorizationOption'
 import type { NestedCategorization } from '@schemas/categorization'
 import { groupCategoriesByParent } from '@utils/categoryOptions'
-import type { ActionableListOption } from '@components/ActionableList/ActionableList'
+import type { ActionableListOption } from '@blocks/ActionableList/ActionableList'
 
 export interface CategoryGroup {
   label: string

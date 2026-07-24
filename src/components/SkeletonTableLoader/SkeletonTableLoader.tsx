@@ -1,4 +1,4 @@
-import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
+import { SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 
 import './skeletonTableLoader.scss'
 

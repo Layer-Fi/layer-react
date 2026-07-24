@@ -6,9 +6,9 @@ import { useUnifiedReport } from '@hooks/api/businesses/[business-id]/reports/un
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useActiveUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { ExpandableDataTable } from '@components/ExpandableDataTable/ExpandableDataTable'
-import { ExpandableDataTableContext } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
+import { ExpandableDataTable } from '@blocks/ExpandableDataTable/ExpandableDataTable'
+import { ExpandableDataTableContext } from '@blocks/ExpandableDataTable/ExpandableDataTableProvider'
 import { buildNestedColumnConfig, getSubRows } from '@components/UnifiedReports/utils'
 
 import './unifiedReportTable.scss'

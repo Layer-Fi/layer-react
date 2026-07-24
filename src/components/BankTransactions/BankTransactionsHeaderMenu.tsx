@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { useHandleDownloadTransactions } from '@hooks/features/bankTransactions/useHandleBankTransactionsDownload'
 import { useBankTransactionsNavigation } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'
+import { DataTableHeaderMenu } from '@blocks/DataTable/DataTableHeaderMenu'
 import { BankTransactionsUploadModal } from '@components/BankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
-import { DataTableHeaderMenu } from '@components/DataTable/DataTableHeaderMenu'
 import InvisibleDownload from '@components/utility/InvisibleDownload'
 
 interface BankTransactionsHeaderMenuProps {

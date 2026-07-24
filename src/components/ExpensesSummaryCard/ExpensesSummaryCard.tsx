@@ -2,12 +2,12 @@ import { useMemo } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { SummaryCard } from '@ui/SummaryCard/SummaryCard'
+import { SummaryCard } from '@blocks/SummaryCard/SummaryCard'
 import {
   type SummaryCardInteractionProps,
   type SummaryCardStringOverrides,
   useSummaryCardSlots,
-} from '@ui/SummaryCard/useSummaryCardSlots'
+} from '@blocks/SummaryCard/useSummaryCardSlots'
 import { ProfitAndLossDetailedCharts, type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 
 import './expensesSummaryCard.scss'

@@ -9,8 +9,9 @@ import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTran
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
+import { SearchField } from '@ui/SearchField/SearchField'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { ActionableList } from '@components/ActionableList/ActionableList'
+import { ActionableList } from '@blocks/ActionableList/ActionableList'
 import {
   buildFilteredCategoryOptions,
   type CategoryGroup,
@@ -19,7 +20,6 @@ import {
   getSelectedCategoryActionableId,
   isGroup,
 } from '@components/CategorySelect/utils'
-import { SearchField } from '@components/SearchField/SearchField'
 
 import './categorySelectDrawer.scss'
 

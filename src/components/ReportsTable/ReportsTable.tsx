@@ -6,11 +6,11 @@ import { type LineItem } from '@internal-types/lineItem'
 import { Alignment } from '@schemas/reports/unifiedReport'
 import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { Button } from '@ui/Button/Button'
+import { ExpandButton } from '@ui/ExpandButton/ExpandButton'
 import { HStack } from '@ui/Stack/Stack'
 import { Cell, Column, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { ExpandButton } from '@components/ExpandButton/ExpandButton'
 
 import './reportsTable.scss'
 

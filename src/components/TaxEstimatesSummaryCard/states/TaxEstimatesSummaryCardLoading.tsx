@@ -1,5 +1,5 @@
+import { CircleSkeletonLoader, SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { VStack } from '@ui/Stack/Stack'
-import { CircleSkeletonLoader, SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 import { TaxEstimatesSummaryCardMode } from '@components/TaxEstimatesSummaryCard/constants'
 
 export const TaxEstimatesSummaryCardLoading = ({ mode }: { mode: TaxEstimatesSummaryCardMode }) => {

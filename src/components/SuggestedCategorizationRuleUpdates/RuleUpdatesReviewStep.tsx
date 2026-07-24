@@ -5,12 +5,12 @@ import { asMutable } from '@utils/asMutable'
 import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
+import { Separator } from '@ui/Separator/Separator'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { Separator } from '@components/Separator/Separator'
+import { useWizard } from '@blocks/Wizard/Wizard'
 import { AffectedTransactionsTable } from '@components/SuggestedCategorizationRuleUpdates/AffectedTransactionsTable'
 import { CreateRuleButton } from '@components/SuggestedCategorizationRuleUpdates/CreateRuleButton'
-import { useWizard } from '@components/Wizard/Wizard'
 
 interface RuleUpdatesPromptReviewStepProps {
   ruleSuggestion: UpdateCategorizationRulesSuggestion

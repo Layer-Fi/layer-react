@@ -5,10 +5,10 @@ import { convertBigIntCentsToBigDecimal, convertDecimalToPercent, formatBigDecim
 import { useInvoiceSummaryStats } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Meter } from '@ui/Meter/Meter'
+import { FallbackWithSkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { InvoiceOwedSummaryStatCard } from '@components/Invoices/InvoiceSummaryStats/InvoiceOwedSummaryStatCard'
-import { FallbackWithSkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
 import './invoiceOwedSummary.scss'
 

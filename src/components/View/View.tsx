@@ -3,8 +3,8 @@ import classNames from 'classnames'
 
 import { parseStylesFromThemeConfig } from '@utils/colors'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { Panel } from '@components/Panel/Panel'
-import { ViewHeader } from '@components/ViewHeader/ViewHeader'
+import { Panel } from '@components/View/Panel/Panel'
+import { ViewHeader } from '@components/View/ViewHeader/ViewHeader'
 
 import './view.scss'
 

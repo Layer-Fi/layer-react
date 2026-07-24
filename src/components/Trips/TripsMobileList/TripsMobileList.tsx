@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type Trip } from '@schemas/trip'
 import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
-import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
+import type { TablePaginationProps } from '@blocks/PaginatedDataTable/PaginatedDataTable'
 import { TripsMobileHeader } from '@components/Trips/TripsMobileHeader/TripsMobileHeader'
 import { TripsMobileListItem, TripsMobileListItemFooter } from '@components/Trips/TripsMobileList/TripsMobileListItem'
 
