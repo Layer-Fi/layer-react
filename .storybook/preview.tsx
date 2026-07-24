@@ -9,6 +9,12 @@ import { handlers } from '../src/msw/handlers'
 import { setMinimumResponseDelay } from '../src/msw/utils/createMockEndpoint'
 import { resetMockStores } from '../src/msw/utils/createMockStore'
 import { LayerTestProvider } from '../src/test-utils/LayerTestProvider'
+import { BREAKPOINTS } from '../src/utils/screenSizeBreakpoints'
+
+// Responsiveness is JS-driven off window.innerWidth (see useSizeClass), so Chromatic
+// must resize the capture iframe to exercise each size class. Widths sit just below the
+// mobile/tablet breakpoints and comfortably above them for desktop.
+const SIZE_CLASS_VIEWPORTS = [BREAKPOINTS.MOBILE, BREAKPOINTS.TABLET, 1280]
 
 initialize({
   serviceWorker: { url: `${import.meta.env.BASE_URL}mockServiceWorker.js` },
@@ -25,6 +31,7 @@ const preview: Preview = {
   parameters: {
     msw: { handlers },
     layout: 'fullscreen',
+    chromatic: { viewports: SIZE_CLASS_VIEWPORTS },
   },
   decorators: [
     Story => (
