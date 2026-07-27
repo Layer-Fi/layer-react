@@ -94,10 +94,7 @@ export const TripForm = (props: TripFormProps) => {
             placeholder={t('trips:label.enter_distance', 'Enter distance')}
             className='Layer__TripForm__Field__Distance'
             errorText={isDistanceIncalculable
-              ? t(
-                'trips:error.distance_incalculable',
-                'No route found between these addresses. Enter the distance manually.',
-              )
+              ? t('trips:error.distance_incalculable', 'No route found between these addresses.')
               : undefined}
           />
         )}
