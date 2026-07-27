@@ -98,12 +98,12 @@ describe('useAutofillTripDistance', () => {
     expect(distanceOf(result.current)).toBeNull()
   })
 
-  it('recomputes on an address change once the user has emptied the field', () => {
+  it('recomputes when the destination changes once the user has emptied the field', () => {
     const { result } = renderAutofill()
 
     setRoute(result.current, 'end-b')
     enterDistance(result.current, null)
-    setRoute(result.current, 'end-c')
+    setEnd(result.current, 'end-c')
 
     expect(distanceOf(result.current)).toBe('30')
   })
@@ -113,8 +113,8 @@ describe('useAutofillTripDistance', () => {
 
     setRoute(result.current, 'end-b')
     enterDistance(result.current, null)
-    setRoute(result.current, 'end-c')
-    setRoute(result.current, 'end-b')
+    setEnd(result.current, 'end-c')
+    setEnd(result.current, 'end-b')
 
     expect(distanceOf(result.current)).toBe('12')
   })
