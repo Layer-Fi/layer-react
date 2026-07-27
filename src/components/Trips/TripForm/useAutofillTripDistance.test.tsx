@@ -73,6 +73,11 @@ describe('useAutofillTripDistance', () => {
     expect(distanceOf(result.current)).toBe('99')
   })
 
+  /*
+   * Nothing may be typed between the fill and the empty: that would disable the
+   * query, and the resulting new data identity would re-run the write-back
+   * effect on its own, hiding whether emptying the field alone triggers it.
+   */
   it('refills the distance after the user empties it', () => {
     const { result } = renderAutofill()
 
