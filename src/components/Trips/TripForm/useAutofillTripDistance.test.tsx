@@ -35,10 +35,18 @@ const renderAutofill = () => renderHook(() => {
 
 const makePlace = (placeId: string): TripPlace => ({ placeId, latitude: null, longitude: null })
 
-const setRoute = (form: AppForm<TripForm>, endPlaceId: string) => act(() => {
+const setStart = (form: AppForm<TripForm>) => act(() => {
   form.setFieldValue('start', { address: 'Start', place: makePlace(START_PLACE_ID) })
+})
+
+const setEnd = (form: AppForm<TripForm>, endPlaceId: string) => act(() => {
   form.setFieldValue('end', { address: 'End', place: makePlace(endPlaceId) })
 })
+
+const setRoute = (form: AppForm<TripForm>, endPlaceId: string) => {
+  setStart(form)
+  setEnd(form, endPlaceId)
+}
 
 const enterDistance = (form: AppForm<TripForm>, miles: string | null) => act(() => {
   form.setFieldValue(
@@ -67,6 +75,16 @@ describe('useAutofillTripDistance', () => {
 
     setRoute(result.current, 'end-b')
     enterDistance(result.current, '99')
+
+    expect(distanceOf(result.current)).toBe('99')
+  })
+
+  it('leaves a distance entered before the second address alone', () => {
+    const { result } = renderAutofill()
+
+    setStart(result.current)
+    enterDistance(result.current, '99')
+    setEnd(result.current, 'end-b')
 
     expect(distanceOf(result.current)).toBe('99')
   })
