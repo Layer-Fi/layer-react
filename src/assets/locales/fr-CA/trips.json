@@ -8,10 +8,13 @@
   },
   "empty": {
     "add_first_trip": "Ajoutez votre premier voyage pour commencer à faire le suivi des kilomètres parcourus.",
+    "address_suggestions": "",
     "no_trips_yet": "Aucun voyage pour le moment"
   },
   "error": {
     "delete_trip": "Échec de la suppression du voyage. Veuillez vérifier votre connexion et réessayer.",
+    "distance_incalculable": "",
+    "load_address_suggestions": "",
     "load_trips": "Nous n'avons pas pu charger vos voyages",
     "load_trips_error": "Une erreur s'est produite lors du chargement de vos voyages. Veuillez vérifier votre connexion et réessayer."
   },
