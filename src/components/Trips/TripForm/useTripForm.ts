@@ -62,10 +62,10 @@ export const useTripForm = (props: UseTripFormProps) => {
     form.reset(getTripFormDefaultValues(trip))
   }, [trip, form])
 
-  const { isDistanceIncalculable } = useAutofillTripDistance({ form, trip })
+  const { isDistanceIncalculable, notifyAddressChange } = useAutofillTripDistance({ form })
 
   return useMemo(
-    () => ({ form, submitError, isDistanceIncalculable }),
-    [form, submitError, isDistanceIncalculable],
+    () => ({ form, submitError, isDistanceIncalculable, notifyAddressChange }),
+    [form, submitError, isDistanceIncalculable, notifyAddressChange],
   )
 }

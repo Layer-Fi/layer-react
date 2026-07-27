@@ -8,6 +8,7 @@ import type { CommonFormFieldProps } from '@components/forms/types'
 export type BaseFormTextFieldProps = CommonFormFieldProps & {
   inputMode?: TextFieldProps['inputMode']
   isTextArea?: boolean
+  errorText?: string
 }
 
 export function BaseFormTextField({
@@ -17,6 +18,7 @@ export function BaseFormTextField({
   showFieldError = true,
   isTextArea = false,
   isReadOnly = false,
+  errorText,
   className,
   children,
 }: PropsWithChildren<BaseFormTextFieldProps>) {
@@ -26,14 +28,14 @@ export function BaseFormTextField({
   const { meta } = state
   const { errors, isValid } = meta
 
-  const errorMessage = errors.length !== 0 ? (errors[0] as string) : undefined
+  const errorMessage = errors.length !== 0 ? (errors[0] as string) : errorText
   const shouldShowErrorMessage = showFieldError && errorMessage
 
   const additionalAriaProps = !showLabel && { 'aria-label': label }
   return (
     <TextField
       name={name}
-      isInvalid={!isValid}
+      isInvalid={!isValid || !!errorText}
       inline={inline}
       className={className}
       textarea={isTextArea}

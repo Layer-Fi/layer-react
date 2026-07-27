@@ -1,46 +1,75 @@
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useStore } from '@tanstack/react-form'
 
-import { nrbdEquals, toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
-import type { Trip, TripForm } from '@schemas/trip'
+import { toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
+import type { TripForm } from '@schemas/trip'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
 import { useMileageDistance } from '@hooks/api/businesses/[business-id]/mileage/distance/useMileageDistance'
 import type { AppForm } from '@hooks/features/forms/useForm'
 
 type UseAutofillTripDistanceProps = {
   form: AppForm<TripForm>
-  trip?: Trip
 }
 
-export function useAutofillTripDistance({ form, trip }: UseAutofillTripDistanceProps) {
+export function useAutofillTripDistance({ form }: UseAutofillTripDistanceProps) {
   const startPlaceId = useStore(form.store, state => state.values.start.place?.placeId)
   const endPlaceId = useStore(form.store, state => state.values.end.place?.placeId)
 
-  /* A distance the user has ever edited is theirs; autofill must not overwrite it */
+  const isDistanceEmpty = useStore(form.store, state => state.values.distance === null)
   const isDistanceDirty = useStore(form.store, state => state.fieldMeta.distance?.isDirty ?? false)
 
-  const isPlacePairChanged = startPlaceId !== (trip?.googleStartPlaceId ?? undefined)
-    || endPlaceId !== (trip?.googleEndPlaceId ?? undefined)
+  const [hasChangedAddress, setHasChangedAddress] = useState(false)
+  /* Mirrors hasChangedAddress so effects in one commit see each other's writes */
+  const hasChangedAddressRef = useRef(false)
+
+  const applyHasChangedAddress = useCallback((next: boolean) => {
+    hasChangedAddressRef.current = next
+    setHasChangedAddress(next)
+  }, [])
+
+  const notifyAddressChange = useCallback(() => {
+    applyHasChangedAddress(true)
+  }, [applyHasChangedAddress])
+
+  /*
+   * Clearing the distance cancels any not-yet-applied address change, so the
+   * field refills only after the next selection. Only the moment of clearing
+   * cancels — selections made while the field sits empty must stay armed.
+   */
+  const wasDistanceEmptyRef = useRef(isDistanceEmpty)
+
+  useEffect(() => {
+    const wasDistanceEmpty = wasDistanceEmptyRef.current
+    wasDistanceEmptyRef.current = isDistanceEmpty
+
+    if (isDistanceEmpty && !wasDistanceEmpty) {
+      applyHasChangedAddress(false)
+    }
+  }, [isDistanceEmpty, applyHasChangedAddress])
 
   const { data: computedDistance, error } = useMileageDistance({
     startPlaceId: startPlaceId ?? '',
     endPlaceId: endPlaceId ?? '',
-    isEnabled: Boolean(startPlaceId && endPlaceId) && isPlacePairChanged && !isDistanceDirty,
+    isEnabled: Boolean(startPlaceId && endPlaceId)
+      && hasChangedAddress
+      && (isDistanceEmpty || !isDistanceDirty),
     /* A route that Google cannot compute stays uncomputable; retrying spams the Routes API. */
     swrOptions: { shouldRetryOnError: false },
   })
 
   useEffect(() => {
-    if (computedDistance === undefined) return
+    /* The ref, not state: a clear landing in this same commit must veto the write */
+    if (computedDistance === undefined || !hasChangedAddressRef.current) return
 
-    const nextDistance = toNonRecursiveBigDecimal(computedDistance)
-    if (nrbdEquals(form.state.values.distance, nextDistance)) return
-
-    /* dontUpdateMeta keeps autofill from marking the field dirty itself */
-    form.setFieldValue('distance', nextDistance, { dontUpdateMeta: true })
-  }, [computedDistance, form])
+    form.setFieldValue('distance', toNonRecursiveBigDecimal(computedDistance), { dontUpdateMeta: true })
+    form.setFieldMeta('distance', prev => ({ ...prev, isDirty: false }))
+    applyHasChangedAddress(false)
+  }, [computedDistance, form, applyHasChangedAddress])
 
   const isDistanceIncalculable = isAPIErrorOfType(error, ApiEnumErrorType.MileageDistanceIncalculable)
 
-  return useMemo(() => ({ isDistanceIncalculable }), [isDistanceIncalculable])
+  return useMemo(
+    () => ({ isDistanceIncalculable, notifyAddressChange }),
+    [isDistanceIncalculable, notifyAddressChange],
+  )
 }

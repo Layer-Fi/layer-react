@@ -26,7 +26,7 @@ export type TripFormProps = {
 export const TripForm = (props: TripFormProps) => {
   const { t } = useTranslation()
   const { onSuccess, trip, isReadOnly } = props
-  const { form, submitError, isDistanceIncalculable } = useTripForm({ onSuccess, trip })
+  const { form, submitError, isDistanceIncalculable, notifyAddressChange } = useTripForm({ onSuccess, trip })
 
   // Prevents default browser form submission behavior
   const blockNativeOnSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
@@ -59,7 +59,7 @@ export const TripForm = (props: TripFormProps) => {
         )}
       </form.AppField>
 
-      <form.Field name='start'>
+      <form.Field name='start' listeners={{ onChange: notifyAddressChange }}>
         {field => (
           <TripAddressComboBox
             label={t('trips:label.start_address', 'Start address')}
@@ -71,7 +71,7 @@ export const TripForm = (props: TripFormProps) => {
         )}
       </form.Field>
 
-      <form.Field name='end'>
+      <form.Field name='end' listeners={{ onChange: notifyAddressChange }}>
         {field => (
           <TripAddressComboBox
             label={t('trips:label.end_address', 'End address')}
@@ -90,21 +90,15 @@ export const TripForm = (props: TripFormProps) => {
             inline
             isReadOnly={isReadOnly}
             maxDecimalPlaces={2}
+            allowEmpty
             placeholder={t('trips:label.enter_distance', 'Enter distance')}
             className='Layer__TripForm__Field__Distance'
+            errorText={isDistanceIncalculable
+              ? t('trips:error.distance_incalculable', 'No route found between these addresses.')
+              : undefined}
           />
         )}
       </form.AppField>
-
-      {isDistanceIncalculable && (
-        <FieldErrors
-          className='Layer__TripForm__FieldError'
-          errors={[t(
-            'trips:error.distance_incalculable',
-            'A route between these addresses could not be found. Enter the distance manually.',
-          )]}
-        />
-      )}
 
       <form.Field name='purpose'>
         {field => (
