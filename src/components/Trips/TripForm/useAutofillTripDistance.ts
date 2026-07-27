@@ -44,7 +44,7 @@ export function useAutofillTripDistance({ form, trip }: UseAutofillTripDistanceP
 
     /*
      * An autofilled value is never the user's, so the field must not read as
-     * dirty afterwards — including when the user emptied it to get here.
+     * dirty afterwards.
      */
     form.setFieldValue('distance', nextDistance, { dontUpdateMeta: true })
     form.setFieldMeta('distance', prev => ({ ...prev, isDirty: false }))
