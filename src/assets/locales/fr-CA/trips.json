@@ -8,13 +8,13 @@
   },
   "empty": {
     "add_first_trip": "Ajoutez votre premier voyage pour commencer à faire le suivi des kilomètres parcourus.",
-    "address_suggestions": "",
+    "address_suggestions": "Saisissez une adresse à rechercher",
     "no_trips_yet": "Aucun voyage pour le moment"
   },
   "error": {
     "delete_trip": "Échec de la suppression du voyage. Veuillez vérifier votre connexion et réessayer.",
-    "distance_incalculable": "",
-    "load_address_suggestions": "",
+    "distance_incalculable": "Aucun trajet trouvé entre ces adresses.",
+    "load_address_suggestions": "Une erreur s’est produite lors du chargement des suggestions d’adresse.",
     "load_trips": "Nous n'avons pas pu charger vos voyages",
     "load_trips_error": "Une erreur s'est produite lors du chargement de vos voyages. Veuillez vérifier votre connexion et réessayer."
   },
@@ -40,7 +40,7 @@
     "delete_trip": "Supprimer ce voyage?"
   },
   "validation": {
-    "distance_greater_than_zero": "La distance doit être supérieure à zéro.",
+    "distance_greater_than_zero": "La distance doit être supérieure à 0 mille.",
     "purpose_required": "Le motif est un champ obligatoire.",
     "trip_date_not_future": "La date du voyage ne peut pas être dans le futur.",
     "trip_date_required": "La date du voyage est un champ obligatoire."
