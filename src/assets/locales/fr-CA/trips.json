@@ -22,8 +22,8 @@
     "additional_trip_actions": "Actions supplémentaires pour les voyages",
     "delete_trip_warning": "Ce voyage sera supprimé définitivement. Cette action ne peut pas être annulée.",
     "distance": "Distance",
-    "distance_mi": "{{distance}} mi",
-    "distance_miles": "Distance (milles)",
+    "distance_mi": "{{distance}} km",
+    "distance_miles": "Distance (kilomètres)",
     "end_address": "Adresse de destination",
     "enter_address": "Saisissez l’adresse",
     "enter_distance": "Saisissez la distance",
@@ -40,7 +40,7 @@
     "delete_trip": "Supprimer ce voyage?"
   },
   "validation": {
-    "distance_greater_than_zero": "La distance doit être supérieure à 0 mille.",
+    "distance_greater_than_zero": "La distance doit être supérieure à 0 kilomètre.",
     "purpose_required": "Le motif est un champ obligatoire.",
     "trip_date_not_future": "La date du voyage ne peut pas être dans le futur.",
     "trip_date_required": "La date du voyage est un champ obligatoire."
