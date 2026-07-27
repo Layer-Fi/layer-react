@@ -93,7 +93,7 @@ describe('useAutofillTripDistance', () => {
     expect(distanceOf(result.current)).toBe('99')
   })
 
-  it('leaves a distance entered before the second address alone', () => {
+  it('never fills over a distance typed before autofill could, and clearing it stays empty', () => {
     const { result } = renderAutofill()
 
     setStart(result.current)
@@ -101,33 +101,7 @@ describe('useAutofillTripDistance', () => {
     setEnd(result.current, 'end-b')
 
     expect(distanceOf(result.current)).toBe('99')
-  })
 
-  it('leaves the field empty when the user empties it', () => {
-    const { result } = renderAutofill()
-
-    setRoute(result.current, 'end-b')
-    enterDistance(result.current, null)
-
-    expect(distanceOf(result.current)).toBeNull()
-  })
-
-  it('leaves the field empty when the user empties a distance they typed', () => {
-    const { result } = renderAutofill()
-
-    setRoute(result.current, 'end-b')
-    enterDistance(result.current, '99')
-    enterDistance(result.current, null)
-
-    expect(distanceOf(result.current)).toBeNull()
-  })
-
-  it('leaves the field empty when the user clears a distance typed before autofill filled', () => {
-    const { result } = renderAutofill()
-
-    setStart(result.current)
-    enterDistance(result.current, '99')
-    setEnd(result.current, 'end-b')
     enterDistance(result.current, null)
 
     expect(distanceOf(result.current)).toBeNull()
@@ -147,20 +121,18 @@ describe('useAutofillTripDistance', () => {
     expect(distanceOf(result.current)).toBeNull()
   })
 
-  it('refills an emptied distance when the same destination is re-selected', () => {
+  it('stays empty after a clear until an address is selected again, even the same one', () => {
     const { result } = renderAutofill()
 
     setRoute(result.current, 'end-b')
     enterDistance(result.current, null)
+
+    expect(distanceOf(result.current)).toBeNull()
+
     setEnd(result.current, 'end-b')
 
     expect(distanceOf(result.current)).toBe('12')
-  })
 
-  it('refills an emptied distance when the destination is cleared and re-selected', () => {
-    const { result } = renderAutofill()
-
-    setRoute(result.current, 'end-b')
     enterDistance(result.current, null)
     clearEnd(result.current)
     setEnd(result.current, 'end-b')
@@ -168,7 +140,7 @@ describe('useAutofillTripDistance', () => {
     expect(distanceOf(result.current)).toBe('12')
   })
 
-  it('recomputes when the destination changes once the user has emptied the field', () => {
+  it('recomputes for each selection made after the field was emptied', () => {
     const { result } = renderAutofill()
 
     setRoute(result.current, 'end-b')
@@ -176,14 +148,7 @@ describe('useAutofillTripDistance', () => {
     setEnd(result.current, 'end-c')
 
     expect(distanceOf(result.current)).toBe('30')
-  })
 
-  it('keeps recomputing once autofill has reclaimed an emptied field', () => {
-    const { result } = renderAutofill()
-
-    setRoute(result.current, 'end-b')
-    enterDistance(result.current, null)
-    setEnd(result.current, 'end-c')
     setEnd(result.current, 'end-b')
 
     expect(distanceOf(result.current)).toBe('12')
