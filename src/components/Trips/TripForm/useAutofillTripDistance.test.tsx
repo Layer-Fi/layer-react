@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { fromNonRecursiveBigDecimal, toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import type { Trip, TripForm, TripPlace } from '@schemas/trip'
 import { useMileageDistance } from '@hooks/api/businesses/[business-id]/mileage/distance/useMileageDistance'
-import { type AppForm, useAppForm } from '@hooks/features/forms/useForm'
+import { useAppForm } from '@hooks/features/forms/useForm'
 import { getTripFormDefaultValues } from '@components/Trips/TripForm/formUtils'
 import { useAutofillTripDistance } from '@components/Trips/TripForm/useAutofillTripDistance'
 
@@ -32,34 +32,44 @@ beforeEach(() => {
 
 const renderAutofill = (trip?: Trip) => renderHook(() => {
   const form = useAppForm<TripForm>({ defaultValues: getTripFormDefaultValues(trip) })
-  useAutofillTripDistance({ form, trip })
+  const { notifyAddressChange } = useAutofillTripDistance({ form })
 
-  return form
+  return { form, notifyAddressChange }
 })
+
+type Rendered = ReturnType<typeof renderAutofill>['result']['current']
 
 const makePlace = (placeId: string): TripPlace => ({ placeId, latitude: null, longitude: null })
 
-const setStart = (form: AppForm<TripForm>) => act(() => {
+/* Address helpers notify like TripForm's field onChange listeners do */
+const setStart = ({ form, notifyAddressChange }: Rendered) => act(() => {
   form.setFieldValue('start', { address: 'Start', place: makePlace(START_PLACE_ID) })
+  notifyAddressChange()
 })
 
-const setEnd = (form: AppForm<TripForm>, endPlaceId: string) => act(() => {
+const setEnd = ({ form, notifyAddressChange }: Rendered, endPlaceId: string) => act(() => {
   form.setFieldValue('end', { address: 'End', place: makePlace(endPlaceId) })
+  notifyAddressChange()
 })
 
-const setRoute = (form: AppForm<TripForm>, endPlaceId: string) => {
-  setStart(form)
-  setEnd(form, endPlaceId)
+const clearEnd = ({ form, notifyAddressChange }: Rendered) => act(() => {
+  form.setFieldValue('end', { address: '', place: null })
+  notifyAddressChange()
+})
+
+const setRoute = (rendered: Rendered, endPlaceId: string) => {
+  setStart(rendered)
+  setEnd(rendered, endPlaceId)
 }
 
-const enterDistance = (form: AppForm<TripForm>, miles: string | null) => act(() => {
+const enterDistance = ({ form }: Rendered, miles: string | null) => act(() => {
   form.setFieldValue(
     'distance',
     miles === null ? null : toNonRecursiveBigDecimal(BD.unsafeFromString(miles)),
   )
 })
 
-const distanceOf = (form: AppForm<TripForm>) => {
+const distanceOf = ({ form }: Rendered) => {
   const { distance } = form.state.values
 
   return distance === null ? null : BD.format(fromNonRecursiveBigDecimal(distance))
@@ -112,6 +122,17 @@ describe('useAutofillTripDistance', () => {
     expect(distanceOf(result.current)).toBeNull()
   })
 
+  it('leaves the field empty when the user clears a distance typed before autofill filled', () => {
+    const { result } = renderAutofill()
+
+    setStart(result.current)
+    enterDistance(result.current, '99')
+    setEnd(result.current, 'end-b')
+    enterDistance(result.current, null)
+
+    expect(distanceOf(result.current)).toBeNull()
+  })
+
   it('leaves a saved distance alone, and empty once the user empties it', () => {
     const { result } = renderAutofill(makeTrip({
       distance: BD.unsafeFromString('7'),
@@ -124,6 +145,27 @@ describe('useAutofillTripDistance', () => {
     enterDistance(result.current, null)
 
     expect(distanceOf(result.current)).toBeNull()
+  })
+
+  it('refills an emptied distance when the same destination is re-selected', () => {
+    const { result } = renderAutofill()
+
+    setRoute(result.current, 'end-b')
+    enterDistance(result.current, null)
+    setEnd(result.current, 'end-b')
+
+    expect(distanceOf(result.current)).toBe('12')
+  })
+
+  it('refills an emptied distance when the destination is cleared and re-selected', () => {
+    const { result } = renderAutofill()
+
+    setRoute(result.current, 'end-b')
+    enterDistance(result.current, null)
+    clearEnd(result.current)
+    setEnd(result.current, 'end-b')
+
+    expect(distanceOf(result.current)).toBe('12')
   })
 
   it('recomputes when the destination changes once the user has emptied the field', () => {

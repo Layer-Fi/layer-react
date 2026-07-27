@@ -26,7 +26,7 @@ export type TripFormProps = {
 export const TripForm = (props: TripFormProps) => {
   const { t } = useTranslation()
   const { onSuccess, trip, isReadOnly } = props
-  const { form, submitError, isDistanceIncalculable } = useTripForm({ onSuccess, trip })
+  const { form, submitError, isDistanceIncalculable, notifyAddressChange } = useTripForm({ onSuccess, trip })
 
   // Prevents default browser form submission behavior
   const blockNativeOnSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
@@ -59,7 +59,7 @@ export const TripForm = (props: TripFormProps) => {
         )}
       </form.AppField>
 
-      <form.Field name='start'>
+      <form.Field name='start' listeners={{ onChange: notifyAddressChange }}>
         {field => (
           <TripAddressComboBox
             label={t('trips:label.start_address', 'Start address')}
@@ -71,7 +71,7 @@ export const TripForm = (props: TripFormProps) => {
         )}
       </form.Field>
 
-      <form.Field name='end'>
+      <form.Field name='end' listeners={{ onChange: notifyAddressChange }}>
         {field => (
           <TripAddressComboBox
             label={t('trips:label.end_address', 'End address')}
