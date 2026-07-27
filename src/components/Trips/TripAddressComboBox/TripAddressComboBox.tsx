@@ -103,9 +103,7 @@ export const TripAddressComboBox = ({
         className,
       )}
     >
-      <Label size='sm' htmlFor={inputId}>
-        {label}
-      </Label>
+      <Label size='sm' htmlFor={inputId}>{label}</Label>
       <SearchComboBox
         {...searchComboBoxProps}
         options={options}

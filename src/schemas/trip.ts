@@ -133,7 +133,7 @@ export type TripFormAddress = typeof TripFormAddressSchema.Type
 export const TripFormSchema = Schema.Struct({
   vehicle: Schema.NullOr(VehicleSchema),
   tripDate: Schema.NullOr(CalendarDateFromSelf),
-  distance: NonRecursiveBigDecimalSchema,
+  distance: Schema.NullOr(NonRecursiveBigDecimalSchema),
   purpose: TripPurposeSchema,
   start: TripFormAddressSchema,
   end: TripFormAddressSchema,

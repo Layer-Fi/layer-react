@@ -1,7 +1,7 @@
 import { getLocalTimeZone, today } from '@internationalized/date'
 import type { TFunction } from 'i18next'
 
-import { fromNonRecursiveBigDecimal, NRBD_ZERO, toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
+import { fromNonRecursiveBigDecimal, toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import { type Trip, type TripForm, type TripPlace, TripPurpose } from '@schemas/trip'
 import { dateNotInFuture, positiveAmount, required } from '@utils/form/validators'
 
@@ -34,7 +34,7 @@ export const getTripFormDefaultValues = (trip?: Trip): TripForm => {
   return {
     vehicle: null,
     tripDate: today(getLocalTimeZone()),
-    distance: NRBD_ZERO,
+    distance: null,
     purpose: TripPurpose.Business,
     start: { address: '', place: null },
     end: { address: '', place: null },
@@ -59,7 +59,8 @@ export const convertTripFormToUpsertTrip = (form: TripForm): unknown => {
   return {
     vehicleId: form.vehicle?.id,
     tripDate: form.tripDate,
-    distance: fromNonRecursiveBigDecimal(form.distance),
+    /* Never null in practice: validation blocks submission while the distance is empty */
+    distance: form.distance === null ? null : fromNonRecursiveBigDecimal(form.distance),
     purpose: form.purpose,
     startAddress: form.start.address.trim() || null,
     endAddress: form.end.address.trim() || null,

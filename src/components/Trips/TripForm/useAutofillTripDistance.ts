@@ -19,13 +19,17 @@ export function useAutofillTripDistance({ form, trip }: UseAutofillTripDistanceP
   /* A distance the user has ever edited is theirs; autofill must not overwrite it */
   const isDistanceDirty = useStore(form.store, state => state.fieldMeta.distance?.isDirty ?? false)
 
+  /* An emptied field is unclaimed again, so autofill may take it back over */
+  const isDistanceEmpty = useStore(form.store, state => state.values.distance === null)
+
   const isPlacePairChanged = startPlaceId !== (trip?.googleStartPlaceId ?? undefined)
     || endPlaceId !== (trip?.googleEndPlaceId ?? undefined)
 
   const { data: computedDistance, error } = useMileageDistance({
     startPlaceId: startPlaceId ?? '',
     endPlaceId: endPlaceId ?? '',
-    isEnabled: Boolean(startPlaceId && endPlaceId) && isPlacePairChanged && !isDistanceDirty,
+    isEnabled: Boolean(startPlaceId && endPlaceId)
+      && (isDistanceEmpty || (isPlacePairChanged && !isDistanceDirty)),
     /* A route that Google cannot compute stays uncomputable; retrying spams the Routes API. */
     swrOptions: { shouldRetryOnError: false },
   })
@@ -34,7 +38,8 @@ export function useAutofillTripDistance({ form, trip }: UseAutofillTripDistanceP
     if (computedDistance === undefined) return
 
     const nextDistance = toNonRecursiveBigDecimal(computedDistance)
-    if (nrbdEquals(form.state.values.distance, nextDistance)) return
+    const currentDistance = form.state.values.distance
+    if (currentDistance !== null && nrbdEquals(currentDistance, nextDistance)) return
 
     /* dontUpdateMeta keeps autofill from marking the field dirty itself */
     form.setFieldValue('distance', nextDistance, { dontUpdateMeta: true })
