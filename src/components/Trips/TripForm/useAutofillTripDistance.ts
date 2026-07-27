@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useStore } from '@tanstack/react-form'
 
 import { toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
@@ -19,28 +19,23 @@ export function useAutofillTripDistance({ form, trip }: UseAutofillTripDistanceP
   const startPlaceId = useStore(form.store, state => state.values.start.place?.placeId)
   const endPlaceId = useStore(form.store, state => state.values.end.place?.placeId)
 
-  /* A distance the user has ever edited is theirs; autofill must not overwrite it */
+  const isDistanceEmpty = useStore(form.store, state => state.values.distance === null)
   const isDistanceDirty = useStore(form.store, state => state.fieldMeta.distance?.isDirty ?? false)
 
-  /* An emptied field is unclaimed again, so autofill may take it back over */
-  const isDistanceEmpty = useStore(form.store, state => state.values.distance === null)
+  const currentPlacePair = placePairKey(startPlaceId, endPlaceId)
+  const savedPlacePair = placePairKey(trip?.googleStartPlaceId, trip?.googleEndPlaceId)
 
-  /*
-   * The pair the distance in the field already answers for — a saved trip's own
-   * distance counts. Without it, emptying the field would re-enable the query
-   * and SWR's cached route would snap straight back in.
-   */
-  const answeredPairRef = useRef(placePairKey(trip?.googleStartPlaceId, trip?.googleEndPlaceId))
+  const [answeredPlacePair, setAnsweredPlacePair] = useState(savedPlacePair)
 
   useEffect(() => {
-    answeredPairRef.current = placePairKey(trip?.googleStartPlaceId, trip?.googleEndPlaceId)
-  }, [trip])
+    setAnsweredPlacePair(savedPlacePair)
+  }, [savedPlacePair])
 
   const { data: computedDistance, error } = useMileageDistance({
     startPlaceId: startPlaceId ?? '',
     endPlaceId: endPlaceId ?? '',
     isEnabled: Boolean(startPlaceId && endPlaceId)
-      && answeredPairRef.current !== placePairKey(startPlaceId, endPlaceId)
+      && currentPlacePair !== answeredPlacePair
       && (isDistanceEmpty || !isDistanceDirty),
     /* A route that Google cannot compute stays uncomputable; retrying spams the Routes API. */
     swrOptions: { shouldRetryOnError: false },
@@ -49,11 +44,10 @@ export function useAutofillTripDistance({ form, trip }: UseAutofillTripDistanceP
   useEffect(() => {
     if (computedDistance === undefined) return
 
-    /* An autofilled value is never the user's, so the field must not read as dirty */
     form.setFieldValue('distance', toNonRecursiveBigDecimal(computedDistance), { dontUpdateMeta: true })
     form.setFieldMeta('distance', prev => ({ ...prev, isDirty: false }))
-    answeredPairRef.current = placePairKey(startPlaceId, endPlaceId)
-  }, [computedDistance, startPlaceId, endPlaceId, form])
+    setAnsweredPlacePair(currentPlacePair)
+  }, [computedDistance, currentPlacePair, form])
 
   const isDistanceIncalculable = isAPIErrorOfType(error, ApiEnumErrorType.MileageDistanceIncalculable)
 

@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react'
 import { BigDecimal as BD } from 'effect'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { fromNonRecursiveBigDecimal, toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import type { Trip, TripForm, TripPlace } from '@schemas/trip'
@@ -23,10 +23,12 @@ const ROUTES: Record<string, BD.BigDecimal> = {
   [`${START_PLACE_ID}|end-c`]: BD.unsafeFromString('30'),
 }
 
-vi.mocked(useMileageDistance).mockImplementation(params => ({
-  data: params?.isEnabled ? ROUTES[`${params.startPlaceId}|${params.endPlaceId}`] : undefined,
-  error: undefined,
-}) as ReturnType<typeof useMileageDistance>)
+beforeEach(() => {
+  vi.mocked(useMileageDistance).mockImplementation(params => ({
+    data: params?.isEnabled ? ROUTES[`${params.startPlaceId}|${params.endPlaceId}`] : undefined,
+    error: undefined,
+  }) as ReturnType<typeof useMileageDistance>)
+})
 
 const renderAutofill = (trip?: Trip) => renderHook(() => {
   const form = useAppForm<TripForm>({ defaultValues: getTripFormDefaultValues(trip) })
@@ -110,12 +112,14 @@ describe('useAutofillTripDistance', () => {
     expect(distanceOf(result.current)).toBeNull()
   })
 
-  it('leaves the field empty when the user empties a saved distance', () => {
+  it('leaves a saved distance alone, and empty once the user empties it', () => {
     const { result } = renderAutofill(makeTrip({
       distance: BD.unsafeFromString('7'),
       googleStartPlaceId: START_PLACE_ID,
       googleEndPlaceId: 'end-b',
     }))
+
+    expect(distanceOf(result.current)).toBe('7')
 
     enterDistance(result.current, null)
 
