@@ -21,7 +21,6 @@ const ROUTES: Record<string, BD.BigDecimal> = {
   [`${START_PLACE_ID}|end-c`]: BD.unsafeFromString('30'),
 }
 
-/* Stands in for SWR: a disabled query has no data, an enabled one resolves from cache */
 vi.mocked(useMileageDistance).mockImplementation(params => ({
   data: params?.isEnabled ? ROUTES[`${params.startPlaceId}|${params.endPlaceId}`] : undefined,
   error: undefined,
@@ -41,7 +40,6 @@ const setRoute = (form: AppForm<TripForm>, endPlaceId: string) => act(() => {
   form.setFieldValue('end', { address: 'End', place: makePlace(endPlaceId) })
 })
 
-/* Mirrors the field: handleChange, so the form marks the distance dirty as a user edit would */
 const enterDistance = (form: AppForm<TripForm>, miles: string | null) => act(() => {
   form.setFieldValue(
     'distance',
@@ -73,21 +71,16 @@ describe('useAutofillTripDistance', () => {
     expect(distanceOf(result.current)).toBe('99')
   })
 
-  /*
-   * Nothing may be typed between the fill and the empty: that would disable the
-   * query, and the resulting new data identity would re-run the write-back
-   * effect on its own, hiding whether emptying the field alone triggers it.
-   */
-  it('refills the distance after the user empties it', () => {
+  it('leaves the field empty when the user empties it', () => {
     const { result } = renderAutofill()
 
     setRoute(result.current, 'end-b')
     enterDistance(result.current, null)
 
-    expect(distanceOf(result.current)).toBe('12')
+    expect(distanceOf(result.current)).toBeNull()
   })
 
-  it('still recomputes on an address change after an empty-and-refill cycle', () => {
+  it('recomputes on an address change once the user has emptied the field', () => {
     const { result } = renderAutofill()
 
     setRoute(result.current, 'end-b')
@@ -95,5 +88,16 @@ describe('useAutofillTripDistance', () => {
     setRoute(result.current, 'end-c')
 
     expect(distanceOf(result.current)).toBe('30')
+  })
+
+  it('keeps recomputing once autofill has reclaimed an emptied field', () => {
+    const { result } = renderAutofill()
+
+    setRoute(result.current, 'end-b')
+    enterDistance(result.current, null)
+    setRoute(result.current, 'end-c')
+    setRoute(result.current, 'end-b')
+
+    expect(distanceOf(result.current)).toBe('12')
   })
 })

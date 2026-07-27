@@ -19,10 +19,8 @@ export function useAutofillTripDistance({ form, trip }: UseAutofillTripDistanceP
   /* A distance the user has ever edited is theirs; autofill must not overwrite it */
   const isDistanceDirty = useStore(form.store, state => state.fieldMeta.distance?.isDirty ?? false)
 
-  const distance = useStore(form.store, state => state.values.distance)
-
   /* An emptied field is unclaimed again, so autofill may take it back over */
-  const isDistanceEmpty = distance === null
+  const isDistanceEmpty = useStore(form.store, state => state.values.distance === null)
 
   const isPlacePairChanged = startPlaceId !== (trip?.googleStartPlaceId ?? undefined)
     || endPlaceId !== (trip?.googleEndPlaceId ?? undefined)
@@ -40,15 +38,13 @@ export function useAutofillTripDistance({ form, trip }: UseAutofillTripDistanceP
     if (computedDistance === undefined) return
 
     const nextDistance = toNonRecursiveBigDecimal(computedDistance)
-    if (distance !== null && nrbdEquals(distance, nextDistance)) return
+    const currentDistance = form.state.values.distance
+    if (currentDistance !== null && nrbdEquals(currentDistance, nextDistance)) return
 
-    /*
-     * An autofilled value is never the user's, so the field must not read as
-     * dirty afterwards.
-     */
+    /* An autofilled value is never the user's, so the field must not read as dirty */
     form.setFieldValue('distance', nextDistance, { dontUpdateMeta: true })
     form.setFieldMeta('distance', prev => ({ ...prev, isDirty: false }))
-  }, [computedDistance, distance, form])
+  }, [computedDistance, form])
 
   const isDistanceIncalculable = isAPIErrorOfType(error, ApiEnumErrorType.MileageDistanceIncalculable)
 
