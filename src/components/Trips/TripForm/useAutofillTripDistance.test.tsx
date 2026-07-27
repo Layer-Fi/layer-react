@@ -3,11 +3,13 @@ import { BigDecimal as BD } from 'effect'
 import { describe, expect, it, vi } from 'vitest'
 
 import { fromNonRecursiveBigDecimal, toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
-import type { TripForm, TripPlace } from '@schemas/trip'
+import type { Trip, TripForm, TripPlace } from '@schemas/trip'
 import { useMileageDistance } from '@hooks/api/businesses/[business-id]/mileage/distance/useMileageDistance'
 import { type AppForm, useAppForm } from '@hooks/features/forms/useForm'
 import { getTripFormDefaultValues } from '@components/Trips/TripForm/formUtils'
 import { useAutofillTripDistance } from '@components/Trips/TripForm/useAutofillTripDistance'
+
+import { makeTrip } from '@fixtures/trips/mocks'
 
 vi.mock('@hooks/api/businesses/[business-id]/mileage/distance/useMileageDistance', () => ({
   useMileageDistance: vi.fn(),
@@ -26,9 +28,9 @@ vi.mocked(useMileageDistance).mockImplementation(params => ({
   error: undefined,
 }) as ReturnType<typeof useMileageDistance>)
 
-const renderAutofill = () => renderHook(() => {
-  const form = useAppForm<TripForm>({ defaultValues: getTripFormDefaultValues() })
-  useAutofillTripDistance({ form })
+const renderAutofill = (trip?: Trip) => renderHook(() => {
+  const form = useAppForm<TripForm>({ defaultValues: getTripFormDefaultValues(trip) })
+  useAutofillTripDistance({ form, trip })
 
   return form
 })
@@ -93,6 +95,28 @@ describe('useAutofillTripDistance', () => {
     const { result } = renderAutofill()
 
     setRoute(result.current, 'end-b')
+    enterDistance(result.current, null)
+
+    expect(distanceOf(result.current)).toBeNull()
+  })
+
+  it('leaves the field empty when the user empties a distance they typed', () => {
+    const { result } = renderAutofill()
+
+    setRoute(result.current, 'end-b')
+    enterDistance(result.current, '99')
+    enterDistance(result.current, null)
+
+    expect(distanceOf(result.current)).toBeNull()
+  })
+
+  it('leaves the field empty when the user empties a saved distance', () => {
+    const { result } = renderAutofill(makeTrip({
+      distance: BD.unsafeFromString('7'),
+      googleStartPlaceId: START_PLACE_ID,
+      googleEndPlaceId: 'end-b',
+    }))
+
     enterDistance(result.current, null)
 
     expect(distanceOf(result.current)).toBeNull()
