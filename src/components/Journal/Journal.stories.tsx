@@ -6,6 +6,7 @@ import { Journal, type JournalProps } from '@components/Journal/Journal'
 type JournalStoryArgs = {
   showTags: boolean
   showCustomerVendor: boolean
+  showAddEntryButton: boolean
   componentTitle: string
   showInAppLinks: boolean
 } & Pick<JournalProps, 'stringOverrides' | 'renderInAppLink'>
@@ -15,12 +16,13 @@ const meta: Meta<JournalStoryArgs> = {
   component: Journal,
   parameters: {
     controls: {
-      include: ['showTags', 'showCustomerVendor', 'stringOverrides.journalTable.componentTitle', 'renderInAppLink'],
+      include: ['showTags', 'showCustomerVendor', 'showAddEntryButton', 'stringOverrides.journalTable.componentTitle', 'renderInAppLink'],
     },
   },
   args: {
     showTags: true,
     showCustomerVendor: true,
+    showAddEntryButton: true,
     componentTitle: '',
     showInAppLinks: false,
   },
@@ -34,6 +36,10 @@ const meta: Meta<JournalStoryArgs> = {
     showCustomerVendor: {
       control: 'boolean',
       description: 'Show customer/vendor columns on journal entries',
+    },
+    showAddEntryButton: {
+      control: 'boolean',
+      description: 'Show the add entry button',
     },
     componentTitle: {
       name: 'stringOverrides.journalTable.componentTitle',
@@ -60,10 +66,11 @@ const meta: Meta<JournalStoryArgs> = {
       },
     },
   },
-  render: ({ showTags, showCustomerVendor, componentTitle, showInAppLinks }) => (
+  render: ({ showTags, showCustomerVendor, showAddEntryButton, componentTitle, showInAppLinks }) => (
     <Journal
       showTags={showTags}
       showCustomerVendor={showCustomerVendor}
+      showAddEntryButton={showAddEntryButton}
       stringOverrides={componentTitle ? { journalTable: { componentTitle } } : undefined}
       renderInAppLink={showInAppLinks
         ? ({ entityName }) => (

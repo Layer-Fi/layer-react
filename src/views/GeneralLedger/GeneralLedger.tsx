@@ -24,6 +24,11 @@ export interface ChartOfAccountsOptions {
   templateAccountsEditable?: boolean
   showAddAccountButton?: boolean
 }
+
+export interface JournalOptions {
+  showAddEntryButton?: boolean
+}
+
 export interface GeneralLedgerProps {
   title?: string // deprecated
   showTitle?: boolean
@@ -31,6 +36,7 @@ export interface GeneralLedgerProps {
   showCustomerVendor?: boolean
   stringOverrides?: GeneralLedgerStringOverrides
   chartOfAccountsOptions?: ChartOfAccountsOptions
+  journalOptions?: JournalOptions
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
 }
 
@@ -41,6 +47,7 @@ export const GeneralLedgerView = ({
   showCustomerVendor = true,
   stringOverrides,
   chartOfAccountsOptions,
+  journalOptions,
   renderInAppLink,
 }: GeneralLedgerProps) => {
   const { t } = useTranslation()
@@ -89,6 +96,7 @@ export const GeneralLedgerView = ({
               <InternalJournal
                 showTags={showTags}
                 showCustomerVendor={showCustomerVendor}
+                showAddEntryButton={journalOptions?.showAddEntryButton}
                 stringOverrides={stringOverrides?.journal}
                 renderInAppLink={renderInAppLink}
               />

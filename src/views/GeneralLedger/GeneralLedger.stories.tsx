@@ -9,7 +9,8 @@ type GeneralLedgerStoryArgs = {
   title: string
   templateAccountsEditable: boolean
   showAddAccountButton: boolean
-} & Pick<GeneralLedgerProps, 'stringOverrides' | 'chartOfAccountsOptions'>
+  showAddEntryButton: boolean
+} & Pick<GeneralLedgerProps, 'stringOverrides' | 'chartOfAccountsOptions' | 'journalOptions'>
 
 const meta: Meta<GeneralLedgerStoryArgs> = {
   title: 'Views/GeneralLedger',
@@ -23,6 +24,7 @@ const meta: Meta<GeneralLedgerStoryArgs> = {
         'stringOverrides.title',
         'chartOfAccountsOptions.templateAccountsEditable',
         'chartOfAccountsOptions.showAddAccountButton',
+        'journalOptions.showAddEntryButton',
       ],
     },
   },
@@ -33,10 +35,12 @@ const meta: Meta<GeneralLedgerStoryArgs> = {
     title: '',
     templateAccountsEditable: true,
     showAddAccountButton: true,
+    showAddEntryButton: true,
   },
   argTypes: {
     stringOverrides: { table: { disable: true } },
     chartOfAccountsOptions: { table: { disable: true } },
+    journalOptions: { table: { disable: true } },
     showTitle: {
       control: 'boolean',
       description: 'Show the view title and header row',
@@ -73,14 +77,21 @@ const meta: Meta<GeneralLedgerStoryArgs> = {
       description: 'Show the add account button on the Chart of Accounts tab',
       table: { category: 'Chart of accounts options' },
     },
+    showAddEntryButton: {
+      name: 'journalOptions.showAddEntryButton',
+      control: 'boolean',
+      description: 'Show the add entry button on the Journal tab',
+      table: { category: 'Journal options' },
+    },
   },
-  render: ({ showTitle, showTags, showCustomerVendor, title, templateAccountsEditable, showAddAccountButton }) => (
+  render: ({ showTitle, showTags, showCustomerVendor, title, templateAccountsEditable, showAddAccountButton, showAddEntryButton }) => (
     <GeneralLedgerView
       showTitle={showTitle}
       showTags={showTags}
       showCustomerVendor={showCustomerVendor}
       stringOverrides={title ? { title, chartOfAccounts: {}, journal: {} } : undefined}
       chartOfAccountsOptions={{ templateAccountsEditable, showAddAccountButton }}
+      journalOptions={{ showAddEntryButton }}
     />
   ),
 }

@@ -34,9 +34,11 @@ export interface JournalTableStringOverrides {
 
 export const JournalTableWithPanel = ({
   containerRef,
+  showAddEntryButton = true,
   stringOverrides,
 }: {
   containerRef: RefObject<HTMLDivElement>
+  showAddEntryButton?: boolean
   stringOverrides?: JournalTableStringOverrides
 }) => {
   const { t } = useTranslation()
@@ -70,13 +72,15 @@ export const JournalTableWithPanel = ({
               filterByDateRange
               icon={!isDesktop}
             />
-            <Button
-              onPress={() => toCreateEntry()}
-              icon={!isDesktop}
-              aria-label={!isDesktop ? addEntryLabel : undefined}
-            >
-              {isDesktop ? addEntryLabel : <CirclePlus size={14} />}
-            </Button>
+            {showAddEntryButton && (
+              <Button
+                onPress={() => toCreateEntry()}
+                icon={!isDesktop}
+                aria-label={!isDesktop ? addEntryLabel : undefined}
+              >
+                {isDesktop ? addEntryLabel : <CirclePlus size={14} />}
+              </Button>
+            )}
           </HeaderCol>
         </HeaderRow>
         <HeaderRow scrollable>
