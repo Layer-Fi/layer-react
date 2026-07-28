@@ -58,7 +58,7 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
   return (
     <HStack gap='xs' align='center' className={className}>
       {showCategoryBadge && (
-        <Badge size={BadgeSize.SMALL} icon={<Layers2Icon size={11} />}>
+        <Badge size={BadgeSize.SMALL} icon={isCategorized ? <Layers2Icon size={11} /> : <SparklesIcon size={11} />}>
           {isCategorized ? t('common:label.category', 'Category') : t('bankTransactions:label.suggested_category', 'Suggested category')}
         </Badge>
       )}
