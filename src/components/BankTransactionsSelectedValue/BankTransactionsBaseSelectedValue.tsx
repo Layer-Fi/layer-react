@@ -25,14 +25,9 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
   const { t } = useTranslation()
   const { type, className, label, slotProps, showCategoryBadge = false, showAiSparkle = false, isCategorized = false } = props
 
-  const sparkle = showAiSparkle
-    ? <SparklesIcon size={14} className='Layer__BankTransactionsSelectedValue__AiSparkle' />
-    : null
-
   if (type === 'placeholder') {
     return (
       <HStack gap='xs' align='center' className={className}>
-        {sparkle}
         <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
       </HStack>
     )
@@ -44,7 +39,6 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
         <Badge size={BadgeSize.SMALL} icon={<Minimize2 size={11} />}>
           {type === 'transfer' ? t('bankTransactions:label.transfer', 'Transfer') : t('bankTransactions:label.match', 'Match')}
         </Badge>
-        {sparkle}
         <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
       </HStack>
     )
@@ -56,7 +50,6 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
         <Badge size={BadgeSize.SMALL} icon={<Scissors size={11} />}>
           {t('bankTransactions:action.split_label', 'Split')}
         </Badge>
-        {sparkle}
         <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
       </HStack>
     )
@@ -69,7 +62,7 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
           {isCategorized ? t('common:label.category', 'Category') : t('bankTransactions:label.suggested_category', 'Suggested category')}
         </Badge>
       )}
-      {sparkle}
+      {showAiSparkle && <SparklesIcon size={14} className='Layer__BankTransactionsSelectedValue__AiSparkle' />}
       <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
     </HStack>
   )
