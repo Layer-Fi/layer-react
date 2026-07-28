@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
+import { useBookkeepingStatusContext } from '@contexts/BookkeepingStatusContext/BookkeepingStatusContext'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { Button } from '@ui/Button/Button'
 import { Heading } from '@ui/Typography/Heading'
@@ -42,6 +43,8 @@ export const JournalTableWithPanel = ({
   const { t } = useTranslation()
   const { isDesktop } = useSizeClass()
   const { toCreateEntry } = useJournalNavigation()
+  const { isActiveBookkeepingStatus } = useBookkeepingStatusContext()
+  const showAddEntryButton = !isActiveBookkeepingStatus
   const addEntryLabel = stringOverrides?.addEntryButton || t('generalLedger:action.add_entry', 'Add Entry')
 
   const { selectedEntryId } = useContext(JournalContext)
@@ -70,13 +73,15 @@ export const JournalTableWithPanel = ({
               filterByDateRange
               icon={!isDesktop}
             />
-            <Button
-              onPress={() => toCreateEntry()}
-              icon={!isDesktop}
-              aria-label={!isDesktop ? addEntryLabel : undefined}
-            >
-              {isDesktop ? addEntryLabel : <CirclePlus size={14} />}
-            </Button>
+            {showAddEntryButton && (
+              <Button
+                onPress={() => toCreateEntry()}
+                icon={!isDesktop}
+                aria-label={!isDesktop ? addEntryLabel : undefined}
+              >
+                {isDesktop ? addEntryLabel : <CirclePlus size={14} />}
+              </Button>
+            )}
           </HeaderCol>
         </HeaderRow>
         <HeaderRow scrollable>

@@ -24,6 +24,7 @@ export interface ChartOfAccountsOptions {
   templateAccountsEditable?: boolean
   showAddAccountButton?: boolean
 }
+
 export interface GeneralLedgerProps {
   title?: string // deprecated
   showTitle?: boolean

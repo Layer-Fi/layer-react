@@ -1,6 +1,7 @@
 import { type RefObject } from 'react'
 
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
+import { useBookkeepingStatusContext } from '@contexts/BookkeepingStatusContext/BookkeepingStatusContext'
 import { ChartOfAccountsForm, type ChartOfAccountsFormStringOverrides } from '@components/ChartOfAccountsForm/ChartOfAccountsForm'
 import { useChartOfAccountsFormMode } from '@components/ChartOfAccountsForm/useChartOfAccountsFormMode'
 import { ChartOfAccountsTable } from '@components/ChartOfAccountsTable/ChartOfAccountsTable'
@@ -38,8 +39,10 @@ export const ChartOfAccountsTableWithPanel = ({
   templateAccountsEditable?: boolean
 }) => {
   const { formMode, addAccount, editAccount, cancelForm } = useChartOfAccountsFormMode()
+  const { isActiveBookkeepingStatus } = useBookkeepingStatusContext()
 
   const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: '' })
+  const canShowAddAccountButton = showAddAccountButton && !isActiveBookkeepingStatus
 
   return (
     <ExpandableDataTableProvider>
@@ -58,7 +61,7 @@ export const ChartOfAccountsTableWithPanel = ({
           asWidget={asWidget}
           withDateControl={withDateControl}
           withExpandAllButton={withExpandAllButton}
-          showAddAccountButton={showAddAccountButton}
+          showAddAccountButton={canShowAddAccountButton}
           onAddAccount={addAccount}
           inputValue={inputValue}
           onSearchChange={handleInputChange}

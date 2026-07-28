@@ -16,6 +16,7 @@ import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateSt
 import { type LayerEvent } from '@providers/LayerProvider/layerEvents'
 import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
 import { BankAccountsProvider } from '@contexts/BankAccountsContext/BankAccountsContext'
+import { BookkeepingStatusProvider } from '@contexts/BookkeepingStatusContext/BookkeepingStatusContext'
 import { LayerContext } from '@contexts/LayerContext/LayerContext'
 import { type ToastProps, ToastsContainer } from '@components/Toast/Toast'
 
@@ -226,9 +227,11 @@ export const BusinessProvider = ({
         dateRange,
       }}
     >
-      <BankAccountsProvider>
-        {children}
-      </BankAccountsProvider>
+      <BookkeepingStatusProvider>
+        <BankAccountsProvider>
+          {children}
+        </BankAccountsProvider>
+      </BookkeepingStatusProvider>
       <ToastsContainer />
     </LayerContext.Provider>
   )
