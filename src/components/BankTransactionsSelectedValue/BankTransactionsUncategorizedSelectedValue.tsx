@@ -1,5 +1,3 @@
-import type { ReactNode } from 'react'
-
 import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
@@ -9,9 +7,7 @@ type BankTransactionsUncategorizedSelectedValueProps = {
   selectedValue: BankTransactionCategoryComboBoxOption | null
   className?: string
   showCategoryBadge?: boolean
-  slots?: {
-    Icon?: ReactNode
-  }
+  showAiSparkle?: boolean
   slotProps?: {
     Label?: {
       size?: 'sm' | 'md'
@@ -20,7 +16,7 @@ type BankTransactionsUncategorizedSelectedValueProps = {
 }
 
 export const BankTransactionsUncategorizedSelectedValue = (props: BankTransactionsUncategorizedSelectedValueProps) => {
-  const { selectedValue, className, slots, slotProps, showCategoryBadge } = props
+  const { selectedValue, className, slotProps, showCategoryBadge, showAiSparkle } = props
 
   if (!selectedValue) return null
 
@@ -28,8 +24,8 @@ export const BankTransactionsUncategorizedSelectedValue = (props: BankTransactio
   return (
     <BankTransactionsBaseSelectedValue
       {...baseSelectedValue}
-      slots={slots}
       slotProps={slotProps}
+      showAiSparkle={showAiSparkle}
       className={className}
       showCategoryBadge={showCategoryBadge}
     />

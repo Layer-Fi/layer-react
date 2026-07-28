@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react'
-import { SparklesIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { GroupBase } from 'react-select'
 
@@ -159,11 +158,7 @@ export const BankTransactionCategoryComboBox = ({
     return (
       <BankTransactionsUncategorizedSelectedValue
         selectedValue={selectedValue}
-        slots={{
-          Icon: isSuggestedCategorySelected
-            ? <SparklesIcon size={14} className='Layer__BankTransactionCategoryComboBox__SuggestedCategoryIcon' />
-            : undefined,
-        }}
+        showAiSparkle={isSuggestedCategorySelected}
       />
     )
   }, [isSuggestedCategorySelected, selectedValue])

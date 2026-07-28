@@ -2,10 +2,6 @@
   color: var(--color-base-900);
 }
 
-.Layer__BankTransactionCategoryComboBox__SuggestedCategoryIcon {
-  flex-shrink: 0;
-}
-
 .Layer__BankTransactionCategoryComboBox__CustomGroupHeading {
   /* style the parent .Layer__ComboBoxGroupHeading of this element */
   :is(.Layer__ComboBoxGroupHeading:has(&)) {
