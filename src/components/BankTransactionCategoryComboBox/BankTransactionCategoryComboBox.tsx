@@ -149,9 +149,17 @@ export const BankTransactionCategoryComboBox = ({
         ? t('bankTransactions:action.categorize_or_match', 'Categorize or match...')
         : t('bankTransactions:action.select_category', 'Select category')
 
+  const isSuggestedCategorySelected = selectedValue !== null
+    && (suggestedGroup?.options.some(option => option.value === selectedValue.value) ?? false)
+
   const SingleValue = useCallback(() => {
-    return <BankTransactionsUncategorizedSelectedValue selectedValue={selectedValue} />
-  }, [selectedValue])
+    return (
+      <BankTransactionsUncategorizedSelectedValue
+        selectedValue={selectedValue}
+        showAiSparkle={isSuggestedCategorySelected}
+      />
+    )
+  }, [isSuggestedCategorySelected, selectedValue])
 
   const handleSelectedValueChange = useCallback((value: BankTransactionCategoryComboBoxOption | null) => {
     if (!includeSuggestedMatches) {

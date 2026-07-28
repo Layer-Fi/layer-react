@@ -7,6 +7,7 @@ type BankTransactionsUncategorizedSelectedValueProps = {
   selectedValue: BankTransactionCategoryComboBoxOption | null
   className?: string
   showCategoryBadge?: boolean
+  showAiSparkle?: boolean
   slotProps?: {
     Label?: {
       size?: 'sm' | 'md'
@@ -15,7 +16,7 @@ type BankTransactionsUncategorizedSelectedValueProps = {
 }
 
 export const BankTransactionsUncategorizedSelectedValue = (props: BankTransactionsUncategorizedSelectedValueProps) => {
-  const { selectedValue, className, slotProps, showCategoryBadge } = props
+  const { selectedValue, className, slotProps, showCategoryBadge, showAiSparkle } = props
 
   if (!selectedValue) return null
 
@@ -24,6 +25,7 @@ export const BankTransactionsUncategorizedSelectedValue = (props: BankTransactio
     <BankTransactionsBaseSelectedValue
       {...baseSelectedValue}
       slotProps={slotProps}
+      showAiSparkle={showAiSparkle}
       className={className}
       showCategoryBadge={showCategoryBadge}
     />

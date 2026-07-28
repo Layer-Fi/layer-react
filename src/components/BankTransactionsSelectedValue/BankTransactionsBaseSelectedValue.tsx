@@ -1,14 +1,17 @@
-import { Layers2Icon, Minimize2, Scissors } from 'lucide-react'
+import { Layers2Icon, Minimize2, Scissors, SparklesIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Badge, BadgeSize } from '@components/Badge/Badge'
 
+import './bankTransactionsSelectedValue.scss'
+
 export type BankTransactionsBaseSelectedValueProps = {
   type: 'match' | 'transfer' | 'split' | 'category' | 'placeholder'
   label: string
   showCategoryBadge?: boolean
+  showAiSparkle?: boolean
   isCategorized?: boolean
   className?: string
   slotProps?: {
@@ -20,7 +23,7 @@ export type BankTransactionsBaseSelectedValueProps = {
 
 export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSelectedValueProps) => {
   const { t } = useTranslation()
-  const { type, className, label, slotProps, showCategoryBadge = false, isCategorized = false } = props
+  const { type, className, label, slotProps, showCategoryBadge = false, showAiSparkle = false, isCategorized = false } = props
 
   if (type === 'placeholder') {
     return (
@@ -55,10 +58,11 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
   return (
     <HStack gap='xs' align='center' className={className}>
       {showCategoryBadge && (
-        <Badge size={BadgeSize.SMALL} icon={<Layers2Icon size={11} />}>
+        <Badge size={BadgeSize.SMALL} icon={isCategorized ? <Layers2Icon size={11} /> : <SparklesIcon size={11} />}>
           {isCategorized ? t('common:label.category', 'Category') : t('bankTransactions:label.suggested_category', 'Suggested category')}
         </Badge>
       )}
+      {showAiSparkle && <SparklesIcon size={14} className='Layer__BankTransactionsSelectedValue__AiSparkle' />}
       <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
     </HStack>
   )
