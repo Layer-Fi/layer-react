@@ -1,4 +1,5 @@
 import { Layers2Icon, Minimize2, Scissors } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { HStack } from '@ui/Stack/Stack'
@@ -11,6 +12,9 @@ export type BankTransactionsBaseSelectedValueProps = {
   showCategoryBadge?: boolean
   isCategorized?: boolean
   className?: string
+  slots?: {
+    Icon?: ReactNode
+  }
   slotProps?: {
     Label?: {
       size?: 'sm' | 'md'
@@ -20,11 +24,12 @@ export type BankTransactionsBaseSelectedValueProps = {
 
 export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSelectedValueProps) => {
   const { t } = useTranslation()
-  const { type, className, label, slotProps, showCategoryBadge = false, isCategorized = false } = props
+  const { type, className, label, slots, slotProps, showCategoryBadge = false, isCategorized = false } = props
 
   if (type === 'placeholder') {
     return (
       <HStack gap='xs' align='center' className={className}>
+        {slots?.Icon}
         <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
       </HStack>
     )
@@ -36,6 +41,7 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
         <Badge size={BadgeSize.SMALL} icon={<Minimize2 size={11} />}>
           {type === 'transfer' ? t('bankTransactions:label.transfer', 'Transfer') : t('bankTransactions:label.match', 'Match')}
         </Badge>
+        {slots?.Icon}
         <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
       </HStack>
     )
@@ -47,6 +53,7 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
         <Badge size={BadgeSize.SMALL} icon={<Scissors size={11} />}>
           {t('bankTransactions:action.split_label', 'Split')}
         </Badge>
+        {slots?.Icon}
         <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
       </HStack>
     )
@@ -59,6 +66,7 @@ export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSel
           {isCategorized ? t('common:label.category', 'Category') : t('bankTransactions:label.suggested_category', 'Suggested category')}
         </Badge>
       )}
+      {slots?.Icon}
       <Span ellipsis size={slotProps?.Label?.size ?? 'md'}>{label}</Span>
     </HStack>
   )

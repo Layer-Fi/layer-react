@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react'
+import { SparklesIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { GroupBase } from 'react-select'
 
@@ -149,9 +150,23 @@ export const BankTransactionCategoryComboBox = ({
         ? t('bankTransactions:action.categorize_or_match', 'Categorize or match...')
         : t('bankTransactions:action.select_category', 'Select category')
 
+  const isSuggestedCategorySelected = useMemo(() => {
+    if (!selectedValue || !suggestedGroup) return false
+    return suggestedGroup.options.some(option => option.value === selectedValue.value)
+  }, [selectedValue, suggestedGroup])
+
   const SingleValue = useCallback(() => {
-    return <BankTransactionsUncategorizedSelectedValue selectedValue={selectedValue} />
-  }, [selectedValue])
+    return (
+      <BankTransactionsUncategorizedSelectedValue
+        selectedValue={selectedValue}
+        slots={{
+          Icon: isSuggestedCategorySelected
+            ? <SparklesIcon size={14} className='Layer__BankTransactionCategoryComboBox__SuggestedCategoryIcon' />
+            : undefined,
+        }}
+      />
+    )
+  }, [isSuggestedCategorySelected, selectedValue])
 
   const handleSelectedValueChange = useCallback((value: BankTransactionCategoryComboBoxOption | null) => {
     if (!includeSuggestedMatches) {
