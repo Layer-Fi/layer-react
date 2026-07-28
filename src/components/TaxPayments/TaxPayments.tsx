@@ -7,6 +7,9 @@ import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstima
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ResponsiveDetailView } from '@components/ResponsiveDetailView/ResponsiveDetailView'
 import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@components/TaxEstimates/TaxEstimatesHeader'
+import { TAX_DETAIL_MIN_DESKTOP_WIDTH } from '@views/TaxEstimates/breakpoints'
+
+import './taxPayments.scss'
 
 import { TaxPaymentsMobileList } from './TaxPaymentsMobileList/TaxPaymentsMobileList'
 import { TaxPaymentsTable } from './TaxPaymentsTable/TaxPaymentsTable'
@@ -55,8 +58,15 @@ export const TaxPayments = () => {
   }), [data, isError, isLoading])
 
   return (
-    <ResponsiveDetailView name='TaxPayments' slots={{ Header }}>
-      {isDesktop ? <TaxPaymentsTable {...props} /> : <TaxPaymentsMobileList {...props} />}
+    <ResponsiveDetailView
+      name='TaxPayments'
+      className='Layer__TaxDetail'
+      minDesktopWidth={TAX_DETAIL_MIN_DESKTOP_WIDTH}
+      slots={{ Header }}
+    >
+      <div className='Layer__TaxPayments__Wrapper'>
+        {isDesktop ? <TaxPaymentsTable {...props} /> : <TaxPaymentsMobileList {...props} />}
+      </div>
     </ResponsiveDetailView>
   )
 }

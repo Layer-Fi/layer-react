@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 
 import { type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
 import { useTaxBanner } from '@hooks/features/taxEstimates/useTaxBanner'
-import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesContext } from '@contexts/TaxEstimatesContext/TaxEstimatesContextProvider'
 import { Banner, BannerButton } from '@ui/Banner/Banner'
 import { VStack } from '@ui/Stack/Stack'
@@ -15,7 +14,6 @@ export type TaxBannerProps = {
 }
 
 export const TaxBanner = ({ data }: TaxBannerProps) => {
-  const { isMobile } = useSizeClass()
   const { t } = useTranslation()
   const { onClickReviewTransactions } = useTaxEstimatesContext()
   const { bannerDescription } = useTaxBanner(data)
@@ -44,7 +42,7 @@ export const TaxBanner = ({ data }: TaxBannerProps) => {
         title={title}
         description={bannerDescription}
         slots={{
-          Icon: isMobile ? null : <FileText size={16} />,
+          Icon: <FileText size={16} />,
           Button: ReviewButton,
         }}
       />

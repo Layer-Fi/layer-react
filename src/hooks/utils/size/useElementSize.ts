@@ -7,6 +7,7 @@ export interface ElementSize {
 
 export const useElementSize = <T extends HTMLElement>(
   callback: (size: ElementSize) => void,
+  timeout: number = 100,
 ) => {
   const ref = useRef<T>(null)
   const callbackRef = useRef(callback)
@@ -42,7 +43,7 @@ export const useElementSize = <T extends HTMLElement>(
       }
       resizeTimeout.current = window.setTimeout(() => {
         invokeCallback({ width, height })
-      }, 100)
+      }, timeout)
     })
 
     observer.observe(element)
@@ -53,6 +54,6 @@ export const useElementSize = <T extends HTMLElement>(
         clearTimeout(resizeTimeout.current)
       }
     }
-  }, [])
+  }, [timeout])
   return ref
 }

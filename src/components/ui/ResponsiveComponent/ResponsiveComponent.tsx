@@ -28,7 +28,7 @@ export const ResponsiveComponent = <T extends string = DefaultVariant>({
     setCurrentVariant(resolveVariant({ width: size.width }))
   }, [resolveVariant])
 
-  const containerRef = useElementSize<HTMLDivElement>(handleResize)
+  const containerRef = useElementSize<HTMLDivElement>(handleResize, 0)
 
   return (
     <div ref={containerRef} className={classNames(CLASS_NAME, className)}>

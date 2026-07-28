@@ -22,11 +22,15 @@ export default {
           'if',
           'include',
           'mixin',
+          'use',
           'while',
         ],
       },
     ],
     'declaration-block-no-redundant-longhand-properties': null,
+    // Allow either kebab-case (default) or the Layer breakpoint convention:
+    // $Layer--<thing>--<purpose> (e.g. $Layer--tax-details--min-desktop-width).
+    'scss/dollar-variable-pattern': '^([a-z][a-z0-9-]*|Layer--[a-z0-9-]+)$',
     'declaration-empty-line-before': [
       'always',
       {
