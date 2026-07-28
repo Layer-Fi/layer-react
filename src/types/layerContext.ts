@@ -15,6 +15,7 @@ export type LayerContextValues = {
   toasts: (ToastProps & { isExiting: boolean })[]
   eventCallbacks?: EventCallbacks
   accountingConfiguration?: AccountingConfigurationSchemaType
+  isActiveBookkeepingStatus: boolean
 }
 
 export type LayerContextDateRange = {

@@ -9,8 +9,10 @@ import {
   type LayerThemeConfig,
 } from '@internal-types/layerContext'
 import { errorHandler, type LayerError } from '@utils/api/errorHandler'
+import { isActiveBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
 import { buildColorsPalette } from '@utils/colors'
 import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
+import { useEffectiveBookkeepingStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
 import { useBusiness } from '@hooks/api/businesses/[business-id]/useBusiness'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { type LayerEvent } from '@providers/LayerProvider/layerEvents'
@@ -98,6 +100,7 @@ export const BusinessProvider = ({
     onboardingStep: undefined,
     toasts: [],
     eventCallbacks: {},
+    isActiveBookkeepingStatus: false,
   })
 
   const globalDateRange = useGlobalDateRange({ dateSelectionMode: 'full' })
@@ -202,6 +205,8 @@ export const BusinessProvider = ({
   }
 
   const { data: accountingConfiguration } = useAccountingConfiguration({ businessId })
+  const effectiveBookkeepingStatus = useEffectiveBookkeepingStatus()
+  const isActiveBookkeepingStatusValue = isActiveBookkeepingStatus(effectiveBookkeepingStatus)
 
   // Deprecated no-op: onboardingStep no longer drives any UI now that the
   // Onboarding component has been removed.
@@ -223,6 +228,7 @@ export const BusinessProvider = ({
         onError: (payload: LayerError) => errorHandler.onError(payload),
         eventCallbacks: stableEventCallbacks,
         accountingConfiguration,
+        isActiveBookkeepingStatus: isActiveBookkeepingStatusValue,
         dateRange,
       }}
     >

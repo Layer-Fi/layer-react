@@ -107,7 +107,7 @@ export const ChartOfAccountsTable = ({
   const { data, isLoading, isError, refetch } = useContext(ChartOfAccountsContext)
   const { trigger: deleteAccount } = useDeleteAccountFromLedger()
   const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
-  const { accountingConfiguration } = useLayerContext()
+  const { accountingConfiguration, isActiveBookkeepingStatus } = useLayerContext()
   const enableAccountNumbers = !!accountingConfiguration?.enableAccountNumbers
 
   const onConfirmDelete = async () => {
@@ -256,16 +256,18 @@ export const ChartOfAccountsTable = ({
               >
                 <Pen size={14} />
               </Button>
-              <Button
-                variant='outlined'
-                icon
-                aria-label={t('common:action.delete_label', 'Delete')}
-                onClick={e => onClickDelete(account, e)}
-                isDisabled={isDeleteDisabled}
-                tooltip={getDeleteButtonTooltip(account)}
-              >
-                <Trash2 size={14} />
-              </Button>
+              {!isActiveBookkeepingStatus && (
+                <Button
+                  variant='outlined'
+                  icon
+                  aria-label={t('common:action.delete_label', 'Delete')}
+                  onClick={e => onClickDelete(account, e)}
+                  isDisabled={isDeleteDisabled}
+                  tooltip={getDeleteButtonTooltip(account)}
+                >
+                  <Trash2 size={14} />
+                </Button>
+              )}
             </HStack>
           )
         },
@@ -281,6 +283,7 @@ export const ChartOfAccountsTable = ({
     enableAccountNumbers,
     formatCurrencyFromCents,
     getDeleteButtonTooltip,
+    isActiveBookkeepingStatus,
     onClickEdit,
     onClickView,
     renderHighlightedNonRootValue,
