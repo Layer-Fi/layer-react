@@ -1,12 +1,7 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { BookkeepingStatus } from '@schemas/bookkeepingStatus'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
 import { Journal, type JournalProps } from '@components/Journal/Journal'
-
-import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
-import { handlers } from '@msw/handlers'
-import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 
 type JournalStoryArgs = {
   showTags: boolean
@@ -90,14 +85,3 @@ export default meta
 type Story = StoryObj<JournalStoryArgs>
 
 export const Default: Story = {}
-
-export const WithBookkeeping: Story = {
-  parameters: {
-    msw: {
-      handlers: [
-        getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })),
-        ...handlers,
-      ],
-    },
-  },
-}
