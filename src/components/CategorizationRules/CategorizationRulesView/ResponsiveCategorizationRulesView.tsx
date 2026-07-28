@@ -53,11 +53,9 @@ const CategorizationRulesErrorState = () => {
   )
 }
 
-const ENABLE_CATEGORIZATION_RULE_EDITING = false
-
 type CategorizationRulesHeaderProps = {
   onGoBack?: () => void
-  onCreateRule?: () => void
+  onCreateRule: () => void
 }
 
 const CategorizationRulesHeader = ({ onGoBack, onCreateRule }: CategorizationRulesHeaderProps) => {
@@ -68,14 +66,12 @@ const CategorizationRulesHeader = ({ onGoBack, onCreateRule }: CategorizationRul
         {onGoBack && <BackButton onPress={onGoBack} />}
         <Heading size='sm'>{t('categorizationRules:label.categorization_rules', 'Categorization Rules')}</Heading>
       </HStack>
-      {onCreateRule && (
-        <HStack pie='md' align='center' gap='xs'>
-          <Button onPress={onCreateRule}>
-            {t('categorizationRules:action.create_rule', 'Create Rule')}
-            <Plus size={16} />
-          </Button>
-        </HStack>
-      )}
+      <HStack pie='md' align='center' gap='xs'>
+        <Button onPress={onCreateRule}>
+          {t('categorizationRules:action.create_rule', 'Create Rule')}
+          <Plus size={16} />
+        </Button>
+      </HStack>
     </HStack>
   )
 }
@@ -93,8 +89,6 @@ export const ResponsiveCategorizationRulesView = () => {
 
   const onCreateRule = useCallback(() => setFormState({ mode: 'create' }), [])
   const onEditRule = useCallback((rule: CategorizationRule) => setFormState({ mode: 'edit', rule }), [])
-  const createRuleHandler = ENABLE_CATEGORIZATION_RULE_EDITING ? onCreateRule : undefined
-  const editRuleHandler = ENABLE_CATEGORIZATION_RULE_EDITING ? onEditRule : undefined
   const onFormDrawerOpenChange = useCallback((isOpen: boolean) => {
     if (!isOpen) setFormState(null)
   }, [])
@@ -138,8 +132,8 @@ export const ResponsiveCategorizationRulesView = () => {
   const { toBankTransactionsTable } = useBankTransactionsNavigation()
 
   const DesktopHeader = useCallback(
-    () => <CategorizationRulesHeader onCreateRule={createRuleHandler} />,
-    [createRuleHandler],
+    () => <CategorizationRulesHeader onCreateRule={onCreateRule} />,
+    [onCreateRule],
   )
 
   const DesktopView = useMemo(() => (
@@ -154,7 +148,7 @@ export const ResponsiveCategorizationRulesView = () => {
         isError={isError}
         paginationProps={paginationProps}
         options={options}
-        onEditRule={editRuleHandler}
+        onEditRule={onEditRule}
         onDeleteRule={onDeleteRule}
         slots={{
           EmptyState: CategorizationRulesEmptyState,
@@ -162,18 +156,18 @@ export const ResponsiveCategorizationRulesView = () => {
         }}
       />
     </BaseDetailView>
-  ), [DesktopHeader, toBankTransactionsTable, categorizationRules, isLoading, isError, paginationProps, options, editRuleHandler, onDeleteRule])
+  ), [DesktopHeader, toBankTransactionsTable, categorizationRules, isLoading, isError, paginationProps, options, onEditRule, onDeleteRule])
 
   const MobileView = useMemo(() => (
     <VStack gap='md'>
-      <CategorizationRulesHeader onGoBack={toBankTransactionsTable} onCreateRule={createRuleHandler} />
+      <CategorizationRulesHeader onGoBack={toBankTransactionsTable} onCreateRule={onCreateRule} />
       <CategorizationRulesMobileList
         data={categorizationRules}
         isLoading={isLoading}
         isError={isError}
         paginationProps={paginationProps}
         options={options}
-        onEditRule={editRuleHandler}
+        onEditRule={onEditRule}
         onDeleteRule={onDeleteRule}
         slots={{
           EmptyState: CategorizationRulesEmptyState,
@@ -181,7 +175,7 @@ export const ResponsiveCategorizationRulesView = () => {
         }}
       />
     </VStack>
-  ), [toBankTransactionsTable, createRuleHandler, categorizationRules, isLoading, isError, paginationProps, options, editRuleHandler, onDeleteRule])
+  ), [toBankTransactionsTable, onCreateRule, categorizationRules, isLoading, isError, paginationProps, options, onEditRule, onDeleteRule])
 
   const selectedRuleCounterpartyLabel = (selectedRule && getCategorizationRuleCounterpartyLabel(selectedRule))
     ?? t('bankTransactions:label.selected_counterparty', 'this counterparty')
