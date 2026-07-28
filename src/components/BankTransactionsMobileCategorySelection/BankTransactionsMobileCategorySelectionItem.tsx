@@ -1,4 +1,4 @@
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, SparklesIcon } from 'lucide-react'
 import { GridListItem } from 'react-aria-components/GridList'
 
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
@@ -13,6 +13,7 @@ export type BankTransactionsMobileCategorySelectionOptionValue = BankTransaction
 export interface BankTransactionsMobileCategorySelectionItemOption {
   value: BankTransactionsMobileCategorySelectionOptionValue
   asLink?: boolean
+  isSuggested?: boolean
 }
 
 interface BankTransactionsMobileCategorySelectionItemProps {
@@ -40,7 +41,15 @@ export const BankTransactionsMobileCategorySelectionItem = ({
           />
         )}
 
-        <Span size='sm'>{label}</Span>
+        <HStack gap='xs' align='center'>
+          {option.isSuggested && (
+            <SparklesIcon
+              size={14}
+              className='Layer__BankTransactionsMobileCategorySelectionItem__sparkle-icon'
+            />
+          )}
+          <Span size='sm'>{label}</Span>
+        </HStack>
 
         {option.asLink && (
           <ChevronRight

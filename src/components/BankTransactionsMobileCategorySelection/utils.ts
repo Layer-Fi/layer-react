@@ -15,6 +15,14 @@ const isSingleSelectedCategory = (selectedCategory: BankTransactionNonSuggestedM
   return true
 }
 
+const getSuggestedCategoryOptions = (bankTransaction: BankTransaction) => {
+  if (bankTransaction.categorizationFlow?.type !== InputStrategy.AskFromSuggestions) return []
+  return bankTransaction.categorizationFlow.suggestions.map(suggestion => new ApiCategorizationAsOption(suggestion))
+}
+
+export const getSuggestedCategoryValues = (bankTransaction: BankTransaction) =>
+  new Set(getSuggestedCategoryOptions(bankTransaction).map(option => option.value))
+
 export const buildInitialSessionCategoriesMap = (
   bankTransaction: BankTransaction,
   selectedCategory: BankTransactionNonSuggestedMatchOption | null,
@@ -28,12 +36,9 @@ export const buildInitialSessionCategoriesMap = (
     }
   }
 
-  if (bankTransaction?.categorizationFlow?.type === InputStrategy.AskFromSuggestions) {
-    bankTransaction.categorizationFlow.suggestions.forEach((suggestion) => {
-      const suggestionOption = new ApiCategorizationAsOption(suggestion)
-      categoriesMap.set(suggestionOption.value, suggestionOption)
-    })
-  }
+  getSuggestedCategoryOptions(bankTransaction).forEach((suggestionOption) => {
+    categoriesMap.set(suggestionOption.value, suggestionOption)
+  })
 
   if (selectedCategory && isSingleSelectedCategory(selectedCategory)) {
     categoriesMap.set(selectedCategory.value, selectedCategory)
@@ -45,9 +50,11 @@ export const buildInitialSessionCategoriesMap = (
 export const buildCategoryOptions = (
   sessionCategories: Map<string, BankTransactionNonSuggestedMatchOption>,
   showAllCategoriesLabel: string,
+  suggestedCategoryValues: ReadonlySet<string>,
 ): BankTransactionsMobileCategorySelectionItemOption[] => {
   const categoryOptionsList: BankTransactionsMobileCategorySelectionItemOption[] = Array.from(sessionCategories.values()).map(category => ({
     value: category,
+    isSuggested: suggestedCategoryValues.has(category.value),
   }))
 
   categoryOptionsList.push({

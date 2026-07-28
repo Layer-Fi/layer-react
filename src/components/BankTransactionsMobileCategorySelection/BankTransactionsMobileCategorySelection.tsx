@@ -21,7 +21,7 @@ import {
   BankTransactionsMobileCategorySelectionItem,
   type BankTransactionsMobileCategorySelectionOptionValue,
 } from './BankTransactionsMobileCategorySelectionItem'
-import { buildCategoryOptions, buildInitialSessionCategoriesMap } from './utils'
+import { buildCategoryOptions, buildInitialSessionCategoriesMap, getSuggestedCategoryValues } from './utils'
 
 interface BankTransactionsMobileCategorySelectionProps {
   bankTransaction: BankTransaction
@@ -58,8 +58,9 @@ export const BankTransactionsMobileCategorySelection = ({
     () => buildCategoryOptions(
       sessionCategories,
       t('bankTransactions:action.show_all_categories', 'Show all categories'),
+      getSuggestedCategoryValues(bankTransaction),
     ),
-    [sessionCategories, t],
+    [bankTransaction, sessionCategories, t],
   )
 
   const handleCategoryGridSelect = useCallback((selectionKeys: Set<string | number> | 'all') => {
