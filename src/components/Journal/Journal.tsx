@@ -25,7 +25,6 @@ export interface JournalProps {
   renderInAppLink?: (source: LinkingMetadata) => ReactNode
   showTags?: boolean
   showCustomerVendor?: boolean
-  showAddEntryButton?: boolean
 }
 
 /**
@@ -60,29 +59,20 @@ const JournalContent = ({
   stringOverrides,
   showTags = true,
   showCustomerVendor = true,
-  showAddEntryButton,
 }: JournalProps) => {
   const routeState = useJournalRouteState()
 
   return routeState.route === JournalRoute.EntryForm
     ? <JournalEntryDrawer showTags={showTags} showCustomerVendor={showCustomerVendor} />
-    : (
-      <JournalTableView
-        asWidget={asWidget}
-        stringOverrides={stringOverrides}
-        showAddEntryButton={showAddEntryButton}
-      />
-    )
+    : <JournalTableView asWidget={asWidget} stringOverrides={stringOverrides} />
 }
 
 const JournalTableView = ({
   asWidget,
   stringOverrides,
-  showAddEntryButton,
 }: {
   asWidget?: boolean
   stringOverrides?: JournalStringOverrides
-  showAddEntryButton?: boolean
 }) => {
   const { containerRef } = useElementViewSize<HTMLDivElement>()
 
@@ -90,7 +80,6 @@ const JournalTableView = ({
     <Container name='journal' ref={containerRef} asWidget={asWidget}>
       <JournalTableWithPanel
         containerRef={containerRef}
-        showAddEntryButton={showAddEntryButton}
         stringOverrides={stringOverrides?.journalTable}
       />
     </Container>

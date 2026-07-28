@@ -1,12 +1,16 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
+import { BookkeepingStatus } from '@schemas/bookkeepingStatus'
 import { Badge, BadgeVariant } from '@components/Badge/Badge'
 import { Journal, type JournalProps } from '@components/Journal/Journal'
+
+import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
+import { handlers } from '@msw/handlers'
+import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 
 type JournalStoryArgs = {
   showTags: boolean
   showCustomerVendor: boolean
-  showAddEntryButton: boolean
   componentTitle: string
   showInAppLinks: boolean
 } & Pick<JournalProps, 'stringOverrides' | 'renderInAppLink'>
@@ -16,13 +20,12 @@ const meta: Meta<JournalStoryArgs> = {
   component: Journal,
   parameters: {
     controls: {
-      include: ['showTags', 'showCustomerVendor', 'showAddEntryButton', 'stringOverrides.journalTable.componentTitle', 'renderInAppLink'],
+      include: ['showTags', 'showCustomerVendor', 'stringOverrides.journalTable.componentTitle', 'renderInAppLink'],
     },
   },
   args: {
     showTags: true,
     showCustomerVendor: true,
-    showAddEntryButton: true,
     componentTitle: '',
     showInAppLinks: false,
   },
@@ -36,10 +39,6 @@ const meta: Meta<JournalStoryArgs> = {
     showCustomerVendor: {
       control: 'boolean',
       description: 'Show customer/vendor columns on journal entries',
-    },
-    showAddEntryButton: {
-      control: 'boolean',
-      description: 'Show the add entry button',
     },
     componentTitle: {
       name: 'stringOverrides.journalTable.componentTitle',
@@ -66,11 +65,10 @@ const meta: Meta<JournalStoryArgs> = {
       },
     },
   },
-  render: ({ showTags, showCustomerVendor, showAddEntryButton, componentTitle, showInAppLinks }) => (
+  render: ({ showTags, showCustomerVendor, componentTitle, showInAppLinks }) => (
     <Journal
       showTags={showTags}
       showCustomerVendor={showCustomerVendor}
-      showAddEntryButton={showAddEntryButton}
       stringOverrides={componentTitle ? { journalTable: { componentTitle } } : undefined}
       renderInAppLink={showInAppLinks
         ? ({ entityName }) => (
@@ -92,3 +90,14 @@ export default meta
 type Story = StoryObj<JournalStoryArgs>
 
 export const Default: Story = {}
+
+export const WithBookkeeping: Story = {
+  parameters: {
+    msw: {
+      handlers: [
+        getBookkeepingStatus.mock(makeBookkeepingStatus({ status: BookkeepingStatus.ACTIVE })),
+        ...handlers,
+      ],
+    },
+  },
+}

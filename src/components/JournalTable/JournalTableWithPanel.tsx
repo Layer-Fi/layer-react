@@ -2,6 +2,8 @@ import { type RefObject, useContext } from 'react'
 import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
+import { useEffectiveBookkeepingStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
@@ -34,16 +36,16 @@ export interface JournalTableStringOverrides {
 
 export const JournalTableWithPanel = ({
   containerRef,
-  showAddEntryButton = true,
   stringOverrides,
 }: {
   containerRef: RefObject<HTMLDivElement>
-  showAddEntryButton?: boolean
   stringOverrides?: JournalTableStringOverrides
 }) => {
   const { t } = useTranslation()
   const { isDesktop } = useSizeClass()
   const { toCreateEntry } = useJournalNavigation()
+  const bookkeepingStatus = useEffectiveBookkeepingStatus()
+  const showAddEntryButton = !isActiveOrPausedBookkeepingStatus(bookkeepingStatus)
   const addEntryLabel = stringOverrides?.addEntryButton || t('generalLedger:action.add_entry', 'Add Entry')
 
   const { selectedEntryId } = useContext(JournalContext)
