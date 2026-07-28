@@ -1,7 +1,7 @@
 import { type RefObject } from 'react'
 
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBookkeepingStatusContext } from '@contexts/BookkeepingStatusContext/BookkeepingStatusContext'
 import { ChartOfAccountsForm, type ChartOfAccountsFormStringOverrides } from '@components/ChartOfAccountsForm/ChartOfAccountsForm'
 import { useChartOfAccountsFormMode } from '@components/ChartOfAccountsForm/useChartOfAccountsFormMode'
 import { ChartOfAccountsTable } from '@components/ChartOfAccountsTable/ChartOfAccountsTable'
@@ -39,7 +39,7 @@ export const ChartOfAccountsTableWithPanel = ({
   templateAccountsEditable?: boolean
 }) => {
   const { formMode, addAccount, editAccount, cancelForm } = useChartOfAccountsFormMode()
-  const { isActiveBookkeepingStatus } = useLayerContext()
+  const { isActiveBookkeepingStatus } = useBookkeepingStatusContext()
 
   const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: '' })
   const canShowAddAccountButton = showAddAccountButton && !isActiveBookkeepingStatus

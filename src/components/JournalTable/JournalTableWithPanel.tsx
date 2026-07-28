@@ -2,10 +2,9 @@ import { type RefObject, useContext } from 'react'
 import { CirclePlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
-import { useEffectiveBookkeepingStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
+import { useBookkeepingStatusContext } from '@contexts/BookkeepingStatusContext/BookkeepingStatusContext'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { Button } from '@ui/Button/Button'
 import { Heading } from '@ui/Typography/Heading'
@@ -44,8 +43,8 @@ export const JournalTableWithPanel = ({
   const { t } = useTranslation()
   const { isDesktop } = useSizeClass()
   const { toCreateEntry } = useJournalNavigation()
-  const bookkeepingStatus = useEffectiveBookkeepingStatus()
-  const showAddEntryButton = !isActiveOrPausedBookkeepingStatus(bookkeepingStatus)
+  const { isActiveBookkeepingStatus } = useBookkeepingStatusContext()
+  const showAddEntryButton = !isActiveBookkeepingStatus
   const addEntryLabel = stringOverrides?.addEntryButton || t('generalLedger:action.add_entry', 'Add Entry')
 
   const { selectedEntryId } = useContext(JournalContext)

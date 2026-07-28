@@ -11,6 +11,7 @@ import { Alignment } from '@schemas/reports/unifiedReport'
 import { asMutable } from '@utils/asMutable'
 import { useDeleteAccountFromLedger } from '@hooks/api/businesses/[business-id]/ledger/accounts/[account-id]/useDeleteLedgerAccount'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useBookkeepingStatusContext } from '@contexts/BookkeepingStatusContext/BookkeepingStatusContext'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
@@ -107,7 +108,8 @@ export const ChartOfAccountsTable = ({
   const { data, isLoading, isError, refetch } = useContext(ChartOfAccountsContext)
   const { trigger: deleteAccount } = useDeleteAccountFromLedger()
   const [accountToDelete, setAccountToDelete] = useState<AugmentedLedgerAccountBalance | null>(null)
-  const { accountingConfiguration, isActiveBookkeepingStatus } = useLayerContext()
+  const { accountingConfiguration } = useLayerContext()
+  const { isActiveBookkeepingStatus } = useBookkeepingStatusContext()
   const enableAccountNumbers = !!accountingConfiguration?.enableAccountNumbers
 
   const onConfirmDelete = async () => {
