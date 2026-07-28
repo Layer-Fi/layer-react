@@ -149,10 +149,8 @@ export const BankTransactionCategoryComboBox = ({
         ? t('bankTransactions:action.categorize_or_match', 'Categorize or match...')
         : t('bankTransactions:action.select_category', 'Select category')
 
-  const isSuggestedCategorySelected = useMemo(() => {
-    if (!selectedValue || !suggestedGroup) return false
-    return suggestedGroup.options.some(option => option.value === selectedValue.value)
-  }, [selectedValue, suggestedGroup])
+  const isSuggestedCategorySelected = selectedValue !== null
+    && (suggestedGroup?.options.some(option => option.value === selectedValue.value) ?? false)
 
   const SingleValue = useCallback(() => {
     return (
