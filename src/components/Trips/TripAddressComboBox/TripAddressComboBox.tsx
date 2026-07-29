@@ -16,6 +16,7 @@ type TripAddressComboBoxProps = {
   address: string
   onAddressChange: (selection: TripFormAddress) => void
   isReadOnly?: boolean
+  inline?: boolean
   className?: string
 }
 
@@ -24,6 +25,7 @@ export const TripAddressComboBox = ({
   address,
   onAddressChange,
   isReadOnly,
+  inline,
   className,
 }: TripAddressComboBoxProps) => {
   const { t } = useTranslation()
@@ -99,7 +101,7 @@ export const TripAddressComboBox = ({
     <div
       className={classNames(
         'Layer__TripAddressComboBox',
-        'Layer__TripAddressComboBox--inline',
+        inline && 'Layer__TripAddressComboBox--inline',
         className,
       )}
     >

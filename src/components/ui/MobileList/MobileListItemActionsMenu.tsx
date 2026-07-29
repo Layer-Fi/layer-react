@@ -23,7 +23,7 @@ export const MobileListItemActionsMenu = ({ ariaLabel, actions }: MobileListItem
   const { t } = useTranslation()
 
   const Trigger = useCallback(() => (
-    <Button icon variant='ghost' aria-label={t('common:label.more_options', 'More options')}>
+    <Button icon inset variant='ghost' aria-label={t('common:label.more_options', 'More options')}>
       <EllipsisVertical size={18} />
     </Button>
   ), [t])
@@ -33,8 +33,8 @@ export const MobileListItemActionsMenu = ({ ariaLabel, actions }: MobileListItem
       <MenuList>
         {actions.map(({ key, label, icon: Icon, onClick, isDisabled }) => (
           <MenuItem key={key} onClick={onClick} isDisabled={isDisabled}>
-            <Icon size={16} />
-            <Span size='md'>{label}</Span>
+            <Icon size={14} />
+            <Span size='sm'>{label}</Span>
           </MenuItem>
         ))}
       </MenuList>

@@ -16,9 +16,9 @@ export const TripsMobileListItem = ({ trip }: { trip: Trip }) => {
   return (
     <MobileListItemContent
       title={formatCalendarDate(trip.tripDate, formatDate)}
-      value={(
-        <Span weight='bold' numeric='tabular-nums'>{formatDistance(trip.distance, t, formatNumber)}</Span>
-      )}
+      slots={{
+        Value: <Span weight='bold' numeric='tabular-nums'>{formatDistance(trip.distance, t, formatNumber)}</Span>,
+      }}
     >
       {(trip.startAddress || trip.endAddress) && <TripsAddressCell trip={trip} />}
     </MobileListItemContent>

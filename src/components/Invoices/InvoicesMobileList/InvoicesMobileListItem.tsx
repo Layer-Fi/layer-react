@@ -16,18 +16,20 @@ export const InvoicesMobileListItem = ({ invoice }: { invoice: Invoice }) => {
   return (
     <MobileListItemContent
       title={invoice.invoiceNumber ?? ''}
-      value={(
-        <VStack gap='3xs' align='end'>
-          <Span weight='bold' numeric='tabular-nums'>{formatCurrencyFromCents(invoice.totalAmount)}</Span>
-          {isPartiallyPaid && (
-            <Span variant='subtle' size='sm' numeric='tabular-nums'>
-              {t('invoices:label.amount_outstanding', '{{amount}} outstanding', {
-                amount: formatCurrencyFromCents(invoice.outstandingBalance),
-              })}
-            </Span>
-          )}
-        </VStack>
-      )}
+      slots={{
+        Value: (
+          <VStack gap='3xs' align='end'>
+            <Span weight='bold' numeric='tabular-nums'>{formatCurrencyFromCents(invoice.totalAmount)}</Span>
+            {isPartiallyPaid && (
+              <Span variant='subtle' size='sm' numeric='tabular-nums'>
+                {t('invoices:label.amount_outstanding', '{{amount}} outstanding', {
+                  amount: formatCurrencyFromCents(invoice.outstandingBalance),
+                })}
+              </Span>
+            )}
+          </VStack>
+        ),
+      }}
     >
       <Span size='sm' ellipsis>{getCustomerName(invoice.customer)}</Span>
       {invoice.sentAt && <Span variant='subtle' size='sm'>{formatDate(invoice.sentAt)}</Span>}

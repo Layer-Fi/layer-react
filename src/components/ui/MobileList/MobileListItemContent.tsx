@@ -7,15 +7,21 @@ import './mobileListItemContent.scss'
 
 type MobileListItemContentProps = PropsWithChildren<{
   title: string
-  value?: ReactNode
+  slots?: {
+    Value?: ReactNode
+  }
 }>
 
-export const MobileListItemContent = ({ title, value, children }: MobileListItemContentProps) => (
-  <VStack gap='3xs'>
-    <HStack fluid justify='space-between' align='start' gap='sm' className='Layer__UI__MobileListItemContent__TitleRow'>
-      <Span weight='bold' ellipsis className='Layer__UI__MobileListItemContent__Title'>{title}</Span>
-      {value}
-    </HStack>
-    {children}
-  </VStack>
-)
+export const MobileListItemContent = ({ title, slots, children }: MobileListItemContentProps) => {
+  const { Value } = slots ?? {}
+
+  return (
+    <VStack gap='3xs'>
+      <HStack fluid justify='space-between' align='start' gap='sm' className='Layer__UI__MobileListItemContent__TitleRow'>
+        <Span weight='bold' ellipsis className='Layer__UI__MobileListItemContent__Title'>{title}</Span>
+        {Value}
+      </HStack>
+      {children}
+    </VStack>
+  )
+}
