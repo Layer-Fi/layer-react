@@ -46,14 +46,14 @@ export const CategorizationRulesMobileList = ({
       {
         key: 'edit',
         label: t('categorizationRules:action.edit_rule', 'Edit Rule'),
-        icon: Pencil,
         onClick: () => onEditRule(rule),
+        slots: { Icon: Pencil },
       },
       {
         key: 'delete',
         label: t('categorizationRules:action.delete_rule', 'Delete Rule'),
-        icon: Trash2,
         onClick: () => onDeleteRule(rule),
+        slots: { Icon: Trash2 },
       },
     ],
   }), [t, onEditRule, onDeleteRule])

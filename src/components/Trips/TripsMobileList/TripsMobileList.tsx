@@ -44,14 +44,14 @@ export const TripsMobileList = ({
       {
         key: 'edit',
         label: t('trips:action.edit_trip', 'Edit Trip'),
-        icon: Pencil,
         onClick: () => onEditTrip(trip),
+        slots: { Icon: Pencil },
       },
       {
         key: 'delete',
         label: t('trips:action.delete_trip', 'Delete Trip'),
-        icon: Trash2,
         onClick: () => onDeleteTrip(trip),
+        slots: { Icon: Trash2 },
       },
     ],
   }), [t, onEditTrip, onDeleteTrip])

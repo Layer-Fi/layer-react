@@ -1,23 +1,16 @@
-import { type ReactNode, useCallback } from 'react'
+import { useCallback } from 'react'
 import { ChevronRight, MenuIcon } from 'lucide-react'
 
 import { Button } from '@ui/Button/Button'
-import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
+import { DropdownMenu, type DropdownMenuItem, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { Spacer, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 
 import './dataTableHeaderMenu.scss'
 
-export interface DataTableHeaderMenuItem {
-  key: string
-  onClick: () => void
-  icon: ReactNode
-  label: string
-}
-
 interface DataTableHeaderMenuProps {
   ariaLabel: string
-  items: DataTableHeaderMenuItem[]
+  items: DropdownMenuItem[]
   isDisabled?: boolean
   isPending?: boolean
   slots?: {
@@ -26,17 +19,20 @@ interface DataTableHeaderMenuProps {
 }
 
 interface DataTableHeaderMenuItemProps {
-  item: DataTableHeaderMenuItem
+  item: DropdownMenuItem
 }
 
 const DataTableHeaderMenuItemComponent = ({
   item,
 }: DataTableHeaderMenuItemProps) => {
+  const { Icon } = item.slots ?? {}
   return (
     <MenuItem key={item.key} onClick={item.onClick}>
-      <VStack className='Layer__DataTableHeaderMenu__Icon'>
-        {item.icon}
-      </VStack>
+      {Icon && (
+        <VStack className='Layer__DataTableHeaderMenu__Icon'>
+          <Icon size={16} strokeWidth={1.5} />
+        </VStack>
+      )}
       <Span size='sm'>{item.label}</Span>
       <Spacer />
       <ChevronRight size={12} />
