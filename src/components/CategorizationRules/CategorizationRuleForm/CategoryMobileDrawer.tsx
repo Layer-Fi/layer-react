@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react'
 
 import { CategoryAsOption } from '@internal-types/categorizationOption'
-import { type Classification, ClassificationEquivalence } from '@schemas/categorization'
-import { getLeafCategories } from '@utils/categories'
+import { CategoriesListMode, type Classification } from '@schemas/categorization'
+import { findCategoryOption, flattenCategories } from '@utils/categories'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { VStack } from '@ui/Stack/Stack'
@@ -22,17 +22,17 @@ export const CategoryMobileDrawer = ({
   onValueChange,
   showLabel,
 }: CategoryMobileDrawerProps) => {
-  const { data: categories } = useCategories()
+  const { data: categories } = useCategories({ mode: CategoriesListMode.All })
 
   const flatOptions = useMemo(() => {
     if (!categories) return []
-    return getLeafCategories(categories).map(category => new CategoryAsOption(category))
+    return flattenCategories(categories).map(category => new CategoryAsOption(category))
   }, [categories])
 
-  const selectedOption = useMemo(() => {
-    if (!value) return null
-    return flatOptions.find(option => ClassificationEquivalence(value, option.classification)) ?? null
-  }, [flatOptions, value])
+  const selectedOption = useMemo(
+    () => findCategoryOption(flatOptions, value),
+    [flatOptions, value],
+  )
 
   const handleSelectedValueChange = useCallback(
     (option: BankTransactionNonSuggestedMatchOption | null) => {

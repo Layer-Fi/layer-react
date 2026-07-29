@@ -1,5 +1,6 @@
+import { type CategoryAsOption } from '@internal-types/categorizationOption'
 import { type AccountIdentifier, AccountIdEquivalence, AccountStableNameEquivalence, makeAccountId, makeStableName } from '@schemas/accountIdentifier'
-import { type NestedCategorization } from '@schemas/categorization'
+import { type Classification, ClassificationEquivalence, isClassificationAccountIdentifier, type NestedCategorization } from '@schemas/categorization'
 
 export const accountIdentifierIsForCategory = (accountIdentifier: AccountIdentifier, category: NestedCategorization): boolean => {
   if (accountIdentifier.type === 'AccountId') {
@@ -43,4 +44,17 @@ export const flattenCategories = (categories: NestedCategorization[]): NestedCat
     category,
     ...(category.subCategories ? flattenCategories(category.subCategories) : []),
   ])
+}
+
+export const findCategoryOption = (
+  options: ReadonlyArray<CategoryAsOption>,
+  value: Classification | null,
+): CategoryAsOption | null => {
+  if (!value) return null
+
+  if (isClassificationAccountIdentifier(value)) {
+    return options.find(option => accountIdentifierIsForCategory(value, option.original)) ?? null
+  }
+
+  return options.find(option => ClassificationEquivalence(value, option.classification)) ?? null
 }

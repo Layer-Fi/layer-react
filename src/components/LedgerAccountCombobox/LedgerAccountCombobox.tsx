@@ -2,8 +2,8 @@ import { useCallback, useId, useMemo } from 'react'
 import classNames from 'classnames'
 
 import { CategoryAsOption } from '@internal-types/categorizationOption'
-import { type CategoriesListMode, type Classification, ClassificationEquivalence } from '@schemas/categorization'
-import { getLeafCategories } from '@utils/categories'
+import { type CategoriesListMode, type Classification } from '@schemas/categorization'
+import { findCategoryOption, flattenCategories as flattenAllCategories, getLeafCategories } from '@utils/categories'
 import { flattenCategories } from '@utils/categoryOptions'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
@@ -50,10 +50,12 @@ export const LedgerAccountCombobox = ({
 
   const optionsOrGroups: OptionsOrGroups<CategoryAsOption> = grouped ? { groups } : { options }
 
-  const selectedCategory = useMemo(() => {
-    if (!value) return null
-    return options.find(option => ClassificationEquivalence(value, option.classification)) ?? null
-  }, [options, value])
+  const allOptions = useMemo(() => {
+    if (!categories) return []
+    return flattenAllCategories(categories).map(category => new CategoryAsOption(category))
+  }, [categories])
+
+  const selectedCategory = useMemo(() => findCategoryOption(allOptions, value), [allOptions, value])
 
   const onSelectedValueChange = useCallback((option: CategoryAsOption | null) => {
     onValueChange(option?.classification ?? null)
