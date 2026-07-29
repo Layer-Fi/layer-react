@@ -3,6 +3,7 @@ import { pipe, Schema } from 'effect'
 import { CustomerSchema } from '@schemas/customer'
 import { LedgerEntryDirectionSchema, SingleChartAccountSchema } from '@schemas/generalLedger/ledgerAccount'
 import { TransactionTagSchema } from '@schemas/tag'
+import { createOpenEnumSchema } from '@schemas/utils'
 import { VendorSchema } from '@schemas/vendor'
 
 export enum ClassifierAgent {
@@ -13,7 +14,7 @@ export enum ClassifierAgent {
   QuickbooksSync = 'QUICKBOOKS_SYNC',
   CheckPayrollSync = 'CHECK_PAYROLL_SYNC',
 }
-const ClassifierAgentSchema = Schema.Enums(ClassifierAgent)
+const ClassifierAgentSchema = createOpenEnumSchema(ClassifierAgent)
 
 export enum EntryType {
   Expense = 'EXPENSE',
@@ -40,7 +41,7 @@ export enum EntryType {
   CustomerCredit = 'CUSTOMER_CREDIT',
   ClosingActionRecognizeExternalRevenue = 'CLOSING_ACTION_RECOGNIZE_EXTERNAL_REVENUE',
 }
-const EntryTypeSchema = Schema.Enums(EntryType)
+const EntryTypeSchema = createOpenEnumSchema(EntryType)
 
 export const LedgerEntryLineItemSchema = Schema.Struct({
   id: Schema.String,
