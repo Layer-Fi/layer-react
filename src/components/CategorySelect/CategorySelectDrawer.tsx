@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { ChevronLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import type { CategoriesListMode } from '@schemas/categorization'
 import { withoutExclusions } from '@utils/categoryOptions'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
@@ -29,6 +30,7 @@ interface CategorySelectDrawerProps {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
   includeExclusions?: boolean
+  mode?: CategoriesListMode
 }
 
 export const CategorySelectDrawer = ({
@@ -38,9 +40,10 @@ export const CategorySelectDrawer = ({
   isOpen,
   onOpenChange,
   includeExclusions = false,
+  mode,
 }: CategorySelectDrawerProps) => {
   const { t } = useTranslation()
-  const { data: categories } = useCategories()
+  const { data: categories } = useCategories({ mode })
   const [query, setQuery] = useState('')
   const [selectedGroup, setSelectedGroup] = useState<CategoryGroup | null>(null)
   const selectedId = selectedValue?.value

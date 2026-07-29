@@ -24,7 +24,8 @@ export const CategoryMobileDrawer = ({
   showLabel,
   placeholder,
 }: CategoryMobileDrawerProps) => {
-  const { data: categories } = useCategories({ mode: CategoriesListMode.Default })
+  const mode = CategoriesListMode.Default
+  const { data: categories } = useCategories({ mode })
 
   const flatOptions = useMemo(() => {
     if (!categories) return []
@@ -50,6 +51,7 @@ export const CategoryMobileDrawer = ({
         selectedValue={selectedOption}
         onSelectedValueChange={handleSelectedValueChange}
         showTooltips={false}
+        mode={mode}
         slotProps={{ TriggerSpan: { size: 'sm' } }}
         placeholder={placeholder}
       />

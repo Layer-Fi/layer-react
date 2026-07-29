@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import type { CategoriesListMode } from '@schemas/categorization'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
@@ -16,6 +17,7 @@ type CategorySelectDrawerWithTriggerProps = {
   placeholder?: string
   showTooltips: boolean
   includeExclusions?: boolean
+  mode?: CategoriesListMode
   slotProps?: {
     TriggerSpan?: TextStyleProps
   }
@@ -27,6 +29,7 @@ export const CategorySelectDrawerWithTrigger = ({
   placeholder,
   showTooltips,
   includeExclusions,
+  mode,
   slotProps,
 }: CategorySelectDrawerWithTriggerProps) => {
   const { t } = useTranslation()
@@ -51,6 +54,7 @@ export const CategorySelectDrawerWithTrigger = ({
         selectedValue={selectedValue}
         showTooltips={showTooltips}
         includeExclusions={includeExclusions}
+        mode={mode}
         isOpen={isDrawerOpen}
         onOpenChange={setIsDrawerOpen}
       />
