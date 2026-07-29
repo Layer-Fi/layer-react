@@ -6,6 +6,7 @@ import { GridListItem } from 'react-aria-components/GridList'
 import { AnimatedElement } from '@ui/AnimatedElement/AnimatedElement'
 import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
+import { HStack } from '@ui/Stack/Stack'
 
 import './mobileListItem.scss'
 
@@ -14,6 +15,7 @@ type MobileListItemProps<TData> = PropsWithChildren<{
   onClickItem?: (item: TData) => void
   renderFooter?: (item: TData) => ReactNode
   renderExpandedContent?: (item: TData) => ReactNode
+  renderActions?: (item: TData) => ReactNode
   isExpanded?: boolean
   isExiting?: boolean
   onExitComplete?: (item: TData) => void
@@ -25,6 +27,7 @@ export const MobileListItem = <TData extends { id: string }>({
   children,
   renderFooter,
   renderExpandedContent,
+  renderActions,
   isExpanded = false,
   isExiting = false,
   onExitComplete,
@@ -38,7 +41,7 @@ export const MobileListItem = <TData extends { id: string }>({
   }, [onExitComplete, item])
 
   return (
-    <GridListItem key={item.id} id={item.id} onAction={onAction}>
+    <GridListItem key={item.id} id={item.id} onAction={renderActions ? undefined : onAction}>
       {composeRenderProps(children, (children, { selectionMode, selectionBehavior }) => (
         <AnimatedPresenceElement
           variant='fade'
@@ -47,6 +50,7 @@ export const MobileListItem = <TData extends { id: string }>({
           className={classNames(
             'Layer__MobileListItem',
             selectionMode !== 'none' && 'Layer__MobileListItem--selectable',
+            renderActions && 'Layer__MobileListItem--withActions',
           )}
           slotProps={{ AnimatePresence: { initial: false, onExitComplete: handleExitComplete } }}
         >
@@ -56,6 +60,11 @@ export const MobileListItem = <TData extends { id: string }>({
           <div className='Layer__MobileListItem__Content'>
             {children}
           </div>
+          {renderActions && (
+            <HStack align='center' justify='end' className='Layer__MobileListItem__Action'>
+              {renderActions(item)}
+            </HStack>
+          )}
           {renderExpandedContent && (
             <AnimatedElement
               variant='expand'

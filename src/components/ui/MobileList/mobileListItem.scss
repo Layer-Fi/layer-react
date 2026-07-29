@@ -20,6 +20,10 @@
     grid-template-columns: auto minmax(0, 1fr);
   }
 
+  &--withActions {
+    position: relative;
+  }
+
   & > .Layer__Checkbox {
     grid-area: selection;
     align-self: center;
@@ -29,6 +33,16 @@
   &__Content {
     grid-area: content;
     padding: var(--spacing-sm);
+  }
+
+  &__Action {
+    position: absolute;
+    inset-block-start: var(--spacing-3xs);
+    inset-inline-end: var(--spacing-3xs);
+  }
+
+  &--withActions .Layer__UI__MobileListItemContent__TitleRow {
+    padding-inline-end: var(--spacing-2xl);
   }
 
   &__Expanded {

@@ -27,6 +27,7 @@ interface MobileListBaseProps<TData> {
   renderItem: (item: TData) => React.ReactNode
   renderFooter?: (item: TData) => React.ReactNode
   renderExpandedContent?: (item: TData) => React.ReactNode
+  renderActions?: (item: TData) => React.ReactNode
   expandedKeys?: Set<string>
   exitingKeys?: Set<string>
   onRemoveItem?: (item: TData) => void
@@ -68,6 +69,7 @@ export const MobileList = <TData extends { id: string }>({
   renderItem,
   renderFooter,
   renderExpandedContent,
+  renderActions,
   expandedKeys,
   exitingKeys,
   onRemoveItem,
@@ -87,6 +89,10 @@ export const MobileList = <TData extends { id: string }>({
 
   const resolvedSelectionBehavior = resolvedSelectionMode === 'none' ? 'toggle' : undefined
 
+  const isSelectionActive = resolvedSelectionMode !== 'none' && (selectedKeys?.size ?? 0) > 0
+
+  const rowActions = isSelectionActive ? undefined : renderActions
+
   const renderRow = useCallback((item: TData) => {
     return (
       <MobileListItem
@@ -95,6 +101,7 @@ export const MobileList = <TData extends { id: string }>({
         onClickItem={onClickItem}
         renderFooter={renderFooter}
         renderExpandedContent={renderExpandedContent}
+        renderActions={rowActions}
         isExpanded={expandedKeys?.has(item.id) ?? false}
         isExiting={exitingKeys?.has(item.id) ?? false}
         onExitComplete={onRemoveItem}
@@ -102,7 +109,7 @@ export const MobileList = <TData extends { id: string }>({
         {renderItem(item)}
       </MobileListItem>
     )
-  }, [exitingKeys, expandedKeys, onClickItem, onRemoveItem, renderExpandedContent, renderFooter, renderItem])
+  }, [exitingKeys, expandedKeys, onClickItem, onRemoveItem, renderExpandedContent, renderFooter, renderItem, rowActions])
 
   const renderEmptyState = useCallback(() => {
     return <EmptyState />
@@ -135,6 +142,7 @@ export const MobileList = <TData extends { id: string }>({
             items={group.items}
             renderItem={renderItem}
             renderFooter={renderFooter}
+            renderActions={rowActions}
             onClickItem={onClickItem}
           />
         ))
