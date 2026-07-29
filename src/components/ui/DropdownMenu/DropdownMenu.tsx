@@ -1,4 +1,5 @@
 import { createContext, type PropsWithChildren, useContext } from 'react'
+import { type LucideIcon } from 'lucide-react'
 import type React from 'react'
 import { Dialog } from 'react-aria-components/Dialog'
 import {
@@ -36,6 +37,16 @@ type DropdownMenuProps = PropsWithChildren<{
   }
   variant?: 'compact'
 }>
+
+export type DropdownMenuItem = {
+  key: string
+  label: string
+  onClick: () => void
+  isDisabled?: boolean
+  slots?: {
+    Icon?: LucideIcon
+  }
+}
 
 type MenuItemProps = PropsWithChildren<{
   isDisabled?: boolean

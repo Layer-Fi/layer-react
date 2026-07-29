@@ -6,12 +6,12 @@
   .Layer__UI__Table-TableHeader > tr {
     display: grid;
     grid-template-columns:
-      minmax(8rem, 30%)
-      minmax(6rem, 14%)
-      minmax(7rem, 20%)
-      minmax(8rem, 30%)
-      auto
-      auto;
+      minmax(8rem, 6fr)
+      minmax(6rem, 3fr)
+      minmax(7rem, 4fr)
+      minmax(8rem, 6fr)
+      2.25rem
+      2.25rem;
   }
 
   .Layer__UI__Table-Cell__CategorizationRulesTable {

@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next'
 
 import { useHandleDownloadTransactions } from '@hooks/features/bankTransactions/useHandleBankTransactionsDownload'
 import { useBankTransactionsNavigation } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
+import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'
 import { BankTransactionsUploadModal } from '@components/BankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
-import { DataTableHeaderMenu, type DataTableHeaderMenuItem } from '@components/DataTable/DataTableHeaderMenu'
+import { DataTableHeaderMenu } from '@components/DataTable/DataTableHeaderMenu'
 import InvisibleDownload from '@components/utility/InvisibleDownload'
 
 interface BankTransactionsHeaderMenuProps {
@@ -25,11 +26,11 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { handleDownloadTransactions, invisibleDownloadRef, isMutating } = useHandleDownloadTransactions({ isListView })
 
-  const menuItems = useMemo<DataTableHeaderMenuItem[]>(() => {
-    const items: DataTableHeaderMenuItem[] = [{
+  const menuItems = useMemo<DropdownMenuItem[]>(() => {
+    const items: DropdownMenuItem[] = [{
       key: 'DownloadTransactions',
       onClick: handleDownloadTransactions,
-      icon: <CloudDownload size={16} />,
+      slots: { Icon: CloudDownload },
       label: t('bankTransactions:action.download_transactions', 'Download transactions'),
     }]
 
@@ -37,7 +38,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
       items.push({
         key: BankTransactionsHeaderMenuActions.UploadTransactions,
         onClick: () => setIsModalOpen(true),
-        icon: <CloudUpload size={16} />,
+        slots: { Icon: CloudUpload },
         label: t('bankTransactions:action.upload_transactions_manually', 'Upload transactions manually'),
       })
     }
@@ -46,7 +47,7 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
       items.push({
         key: BankTransactionsHeaderMenuActions.ManageCategorizationRules,
         onClick: toCategorizationRulesTable,
-        icon: <PencilRuler size={16} strokeWidth={1.25} />,
+        slots: { Icon: PencilRuler },
         label: t('bankTransactions:action.manage_categorization_rules', 'Manage categorization rules'),
       })
     }

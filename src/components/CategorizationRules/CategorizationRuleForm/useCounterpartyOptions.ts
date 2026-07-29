@@ -2,11 +2,9 @@ import { useMemo } from 'react'
 
 import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
 import { useListCounterparties } from '@hooks/api/businesses/[business-id]/counterparties/useListCounterparties'
-import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { CounterpartyComboBoxOption } from '@components/CategorizationRules/CategorizationRuleForm/counterpartyComboBoxOption'
 
-export const useCounterpartyOptions = (value: BankTransactionCounterparty | null) => {
-  const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: '' })
+export const useCounterpartyOptions = (value: BankTransactionCounterparty | null, searchQuery: string) => {
   const { flattenedData, isLoading, isError } = useListCounterparties({
     q: searchQuery || undefined,
     limit: 50,
@@ -28,13 +26,8 @@ export const useCounterpartyOptions = (value: BankTransactionCounterparty | null
     return options.find(option => option.value === value.id) ?? null
   }, [options, value])
 
-  return {
-    inputValue,
-    searchQuery,
-    handleInputChange,
-    options,
-    selectedOption,
-    isLoading,
-    isError,
-  }
+  return useMemo(
+    () => ({ options, selectedOption, isLoading, isError }),
+    [options, selectedOption, isLoading, isError],
+  )
 }

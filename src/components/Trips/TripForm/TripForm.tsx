@@ -1,10 +1,12 @@
 import { useCallback } from 'react'
 import { type CalendarDate } from '@internationalized/date'
+import classNames from 'classnames'
 import { AlertTriangle, Save } from 'lucide-react'
 import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Trip, TripPurpose } from '@schemas/trip'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -27,6 +29,8 @@ export const TripForm = (props: TripFormProps) => {
   const { t } = useTranslation()
   const { onSuccess, trip, isReadOnly } = props
   const { form, submitError, isDistanceIncalculable, notifyAddressChange } = useTripForm({ onSuccess, trip })
+  const { isMobile } = useSizeClass()
+  const isInline = !isMobile
 
   // Prevents default browser form submission behavior
   const blockNativeOnSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
@@ -35,7 +39,10 @@ export const TripForm = (props: TripFormProps) => {
   }, [])
 
   return (
-    <Form className='Layer__TripForm' onSubmit={blockNativeOnSubmit}>
+    <Form
+      className={classNames('Layer__TripForm', isInline && 'Layer__TripForm--inline')}
+      onSubmit={blockNativeOnSubmit}
+    >
       {submitError && (
         <HStack className='Layer__TripForm__FormError'>
           <DataState
@@ -52,9 +59,9 @@ export const TripForm = (props: TripFormProps) => {
         {field => (
           <field.FormDateField<CalendarDate>
             label={t('trips:label.trip_date', 'Trip date')}
-            inline
+            inline={isInline}
             isReadOnly={isReadOnly}
-            className='Layer__TripForm__Field__TripDate'
+            className='Layer__TripForm__Field'
           />
         )}
       </form.AppField>
@@ -66,7 +73,8 @@ export const TripForm = (props: TripFormProps) => {
             address={field.state.value.address}
             onAddressChange={field.handleChange}
             isReadOnly={isReadOnly}
-            className='Layer__TripForm__Field__StartAddress'
+            inline={isInline}
+            className='Layer__TripForm__Field'
           />
         )}
       </form.Field>
@@ -78,7 +86,8 @@ export const TripForm = (props: TripFormProps) => {
             address={field.state.value.address}
             onAddressChange={field.handleChange}
             isReadOnly={isReadOnly}
-            className='Layer__TripForm__Field__EndAddress'
+            inline={isInline}
+            className='Layer__TripForm__Field'
           />
         )}
       </form.Field>
@@ -87,12 +96,12 @@ export const TripForm = (props: TripFormProps) => {
         {field => (
           <field.FormNonRecursiveBigDecimalField
             label={t('trips:label.distance_miles', 'Distance (miles)')}
-            inline
+            inline={isInline}
             isReadOnly={isReadOnly}
             maxDecimalPlaces={2}
             allowEmpty
             placeholder={t('trips:label.enter_distance', 'Enter distance')}
-            className='Layer__TripForm__Field__Distance'
+            className='Layer__TripForm__Field'
             errorText={isDistanceIncalculable
               ? t('trips:error.distance_incalculable', 'No route found between these addresses.')
               : undefined}
@@ -107,7 +116,8 @@ export const TripForm = (props: TripFormProps) => {
               value={field.state.value}
               onValueChange={value => field.handleChange(value ?? TripPurpose.Unreviewed)}
               isReadOnly={isReadOnly}
-              className='Layer__TripForm__Field__Purpose'
+              inline={isInline}
+              className='Layer__TripForm__Field'
             />
             <FieldErrors errors={field.state.meta.errors} className='Layer__TripForm__FieldError' />
           </>
@@ -118,10 +128,10 @@ export const TripForm = (props: TripFormProps) => {
         {field => (
           <field.FormTextAreaField
             label={t('common:label.description', 'Description')}
-            inline
+            inline={isInline}
             isReadOnly={isReadOnly}
             placeholder={t('common:action.add_description', 'Add description')}
-            className='Layer__TripForm__Field__Description'
+            className='Layer__TripForm__Field'
           />
         )}
       </form.AppField>
@@ -132,9 +142,9 @@ export const TripForm = (props: TripFormProps) => {
             selectedVehicle={field.state.value}
             onSelectedVehicleChange={field.handleChange}
             isReadOnly={isReadOnly}
-            inline
+            inline={isInline}
             placeholder={t('vehicles:action.add_vehicle_label', 'Add vehicle')}
-            containerClassName='Layer__TripForm__Field__Vehicle'
+            containerClassName='Layer__TripForm__Field'
           />
         )}
       </form.Field>

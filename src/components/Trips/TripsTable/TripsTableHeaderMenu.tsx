@@ -3,7 +3,8 @@ import { Car } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
-import { DataTableHeaderMenu, type DataTableHeaderMenuItem } from '@components/DataTable/DataTableHeaderMenu'
+import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'
+import { DataTableHeaderMenu } from '@components/DataTable/DataTableHeaderMenu'
 
 enum TripsTableHeaderMenuActions {
   ManageVehicles = 'ManageVehicles',
@@ -13,11 +14,11 @@ export const TripsTableHeaderMenu = () => {
   const { t } = useTranslation()
   const { toVehicleManagement } = useTripsNavigation()
 
-  const menuItems = useMemo<DataTableHeaderMenuItem[]>(() => [
+  const menuItems = useMemo<DropdownMenuItem[]>(() => [
     {
       key: TripsTableHeaderMenuActions.ManageVehicles,
       onClick: toVehicleManagement,
-      icon: <Car size={20} strokeWidth={1.25} />,
+      slots: { Icon: Car },
       label: t('vehicles:action.manage_vehicles', 'Manage vehicles'),
     },
   ], [t, toVehicleManagement])

@@ -3,6 +3,7 @@ import { ChevronDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
+import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { Button } from '@ui/Button/Button'
 import { MobileSelectionDrawerList } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerList'
 import { Drawer } from '@ui/Modal/Modal'
@@ -33,14 +34,13 @@ export const CounterpartyMobileDrawer = ({
   const { t } = useTranslation()
   const inputId = useId()
   const [isOpen, setIsOpen] = useState(false)
+  const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: '' })
   const {
-    inputValue,
-    handleInputChange,
     options,
     selectedOption,
     isLoading,
     isError: isListError,
-  } = useCounterpartyOptions(value)
+  } = useCounterpartyOptions(value, searchQuery)
 
   const Header = useCallback(() => (
     <ModalTitleWithClose

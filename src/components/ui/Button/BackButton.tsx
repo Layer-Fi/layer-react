@@ -1,12 +1,17 @@
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, type LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button, type ButtonProps } from '@ui/Button/Button'
 
-type BackButtonProps = Pick<ButtonProps, 'onPress'>
+export type BackButtonProps = Pick<ButtonProps, 'onPress'> & {
+  slots?: {
+    Icon?: LucideIcon
+  }
+}
 
-export function BackButton({ onPress }: BackButtonProps) {
+export function BackButton({ onPress, slots }: BackButtonProps) {
   const { t } = useTranslation()
+  const { Icon = ChevronLeft } = slots ?? {}
 
   return (
     <Button
@@ -15,7 +20,7 @@ export function BackButton({ onPress }: BackButtonProps) {
       onPress={onPress}
       aria-label={t('common:action.back', 'Back')}
     >
-      <ChevronLeft size={16} />
+      <Icon size={16} />
     </Button>
   )
 }

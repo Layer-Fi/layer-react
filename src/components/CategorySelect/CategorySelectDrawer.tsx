@@ -2,6 +2,8 @@ import { useCallback, useMemo, useState } from 'react'
 import { ChevronLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import type { CategoriesListMode } from '@schemas/categorization'
+import { withoutExclusions } from '@utils/categoryOptions'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { Button } from '@ui/Button/Button'
@@ -27,6 +29,8 @@ interface CategorySelectDrawerProps {
   showTooltips: boolean
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
+  hideExclusions?: boolean
+  mode?: CategoriesListMode
 }
 
 export const CategorySelectDrawer = ({
@@ -35,9 +39,11 @@ export const CategorySelectDrawer = ({
   showTooltips,
   isOpen,
   onOpenChange,
+  hideExclusions,
+  mode,
 }: CategorySelectDrawerProps) => {
   const { t } = useTranslation()
-  const { data: categories } = useCategories()
+  const { data: categories } = useCategories({ mode })
   const [query, setQuery] = useState('')
   const [selectedGroup, setSelectedGroup] = useState<CategoryGroup | null>(null)
   const selectedId = selectedValue?.value
@@ -57,10 +63,9 @@ export const CategorySelectDrawer = ({
 
   const categoryOptions = useMemo(() => {
     if (selectedGroup) return selectedGroup.categories
-    return flattenCategories(
-      (categories ?? []).filter(category => category.type != 'ExclusionNested'),
-    )
-  }, [categories, selectedGroup])
+    const allCategories = categories ?? []
+    return flattenCategories(hideExclusions ? withoutExclusions(allCategories) : allCategories)
+  }, [categories, selectedGroup, hideExclusions])
 
   const filteredOptions = useMemo(
     () => buildFilteredCategoryOptions(categoryOptions, query, selectedId),

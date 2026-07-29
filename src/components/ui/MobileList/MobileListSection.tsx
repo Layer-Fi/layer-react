@@ -1,6 +1,7 @@
 import { GridListHeader, GridListSection } from 'react-aria-components/GridList'
 
 import { MobileListItem } from '@ui/MobileList/MobileListItem'
+import { type MobileListItemActionsMenuConfig } from '@ui/MobileList/MobileListItemActionsMenu'
 import { Span } from '@ui/Typography/Text'
 
 import './mobileListSection.scss'
@@ -10,6 +11,9 @@ type MobileListSectionProps<TData extends { id: string }> = {
   items: ReadonlyArray<TData>
   renderItem: (item: TData) => React.ReactNode
   renderFooter?: (item: TData) => React.ReactNode
+  slotProps?: {
+    ActionsMenu?: MobileListItemActionsMenuConfig<TData>
+  }
   onClickItem?: (item: TData) => void
 }
 
@@ -18,6 +22,7 @@ export const MobileListSection = <TData extends { id: string }>({
   items,
   renderItem,
   renderFooter,
+  slotProps,
   onClickItem,
 }: MobileListSectionProps<TData>) => (
   <GridListSection
@@ -33,6 +38,7 @@ export const MobileListSection = <TData extends { id: string }>({
         item={item}
         onClickItem={onClickItem}
         renderFooter={renderFooter}
+        slotProps={slotProps}
       >
         {renderItem(item)}
       </MobileListItem>

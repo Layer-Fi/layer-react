@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { useActiveTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useActiveTimeTracker'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { TimeTrackingServicesDrawerProvider, useTimeTrackingServicesDrawer } from '@providers/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
-import { DataTableHeaderMenu, type DataTableHeaderMenuItem } from '@components/DataTable/DataTableHeaderMenu'
+import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'
+import { DataTableHeaderMenu } from '@components/DataTable/DataTableHeaderMenu'
 import { ActiveTimeTracker } from '@components/TimeEntries/ActiveTimeTracker/ActiveTimeTracker'
 import { TimeEntries } from '@components/TimeEntries/TimeEntries'
 import { TimeTrackingStats } from '@components/TimeTrackingStats/TimeTrackingStats'
@@ -50,19 +51,19 @@ const TimeTrackingContent = ({ showTitle, onReportsClick, stringOverrides }: Tim
     setIsActiveTimerDrawerOpen(true)
   }, [])
 
-  const menuItems = useMemo<DataTableHeaderMenuItem[]>(() => [
+  const menuItems = useMemo<DropdownMenuItem[]>(() => [
     ...(onReportsClick
       ? [{
         key: TimeTrackingHeaderMenuActions.Reports,
         onClick: onReportsClick,
-        icon: <FileText size={20} strokeWidth={1.25} />,
+        slots: { Icon: FileText },
         label: t('reports:label.reports', 'Reports'),
       }]
       : []),
     {
       key: TimeTrackingHeaderMenuActions.Services,
       onClick: openServicesDrawer,
-      icon: <Briefcase size={20} strokeWidth={1.25} />,
+      slots: { Icon: Briefcase },
       label: t('timeTracking:services.title', 'Services'),
     },
   ], [openServicesDrawer, t, onReportsClick])

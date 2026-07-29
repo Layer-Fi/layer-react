@@ -25,14 +25,15 @@ type TripPurposeComboBoxProps = {
   value: TripPurpose | null
   onValueChange: (value: TripPurpose | null) => void
   isReadOnly?: boolean
+  inline?: boolean
   className?: string
 }
 
-export const TripPurposeComboBox = ({ value, onValueChange, isReadOnly, className }: TripPurposeComboBoxProps) => {
+export const TripPurposeComboBox = ({ value, onValueChange, isReadOnly, inline, className }: TripPurposeComboBoxProps) => {
   const { t } = useTranslation()
   const combinedClassName = classNames(
     'Layer__TripPurposeComboBox',
-    'Layer__TripPurposeComboBox--inline',
+    inline && 'Layer__TripPurposeComboBox--inline',
     className,
   )
 

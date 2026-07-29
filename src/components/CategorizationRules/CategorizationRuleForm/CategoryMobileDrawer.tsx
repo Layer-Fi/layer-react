@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react'
 
 import { CategoryAsOption } from '@internal-types/categorizationOption'
-import { type Classification, ClassificationEquivalence } from '@schemas/categorization'
-import { getLeafCategories } from '@utils/categories'
+import { type CategoriesListMode, type Classification } from '@schemas/categorization'
+import { findCategoryOption, flattenCategories } from '@utils/categories'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { VStack } from '@ui/Stack/Stack'
@@ -13,26 +13,32 @@ type CategoryMobileDrawerProps = {
   label: string
   value: Classification | null
   onValueChange: (value: Classification | null) => void
+  mode: CategoriesListMode
+  hideExclusions?: boolean
   showLabel?: boolean
+  placeholder?: string
 }
 
 export const CategoryMobileDrawer = ({
   label,
   value,
   onValueChange,
+  mode,
+  hideExclusions,
   showLabel,
+  placeholder,
 }: CategoryMobileDrawerProps) => {
-  const { data: categories } = useCategories()
+  const { data: categories } = useCategories({ mode })
 
   const flatOptions = useMemo(() => {
     if (!categories) return []
-    return getLeafCategories(categories).map(category => new CategoryAsOption(category))
+    return flattenCategories(categories).map(category => new CategoryAsOption(category))
   }, [categories])
 
-  const selectedOption = useMemo(() => {
-    if (!value) return null
-    return flatOptions.find(option => ClassificationEquivalence(value, option.classification)) ?? null
-  }, [flatOptions, value])
+  const selectedOption = useMemo(
+    () => findCategoryOption(flatOptions, value),
+    [flatOptions, value],
+  )
 
   const handleSelectedValueChange = useCallback(
     (option: BankTransactionNonSuggestedMatchOption | null) => {
@@ -48,7 +54,10 @@ export const CategoryMobileDrawer = ({
         selectedValue={selectedOption}
         onSelectedValueChange={handleSelectedValueChange}
         showTooltips={false}
+        mode={mode}
+        hideExclusions={hideExclusions}
         slotProps={{ TriggerSpan: { size: 'sm' } }}
+        placeholder={placeholder}
       />
     </VStack>
   )

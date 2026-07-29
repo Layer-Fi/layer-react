@@ -3,6 +3,7 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { amountRangeInOrder } from '@utils/form/validators'
 import { UpsertCategorizationRuleMode, useUpsertCategorizationRule } from '@hooks/api/businesses/[business-id]/categorization-rules/useUpsertCategorizationRule'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import {
@@ -11,7 +12,6 @@ import {
   convertFormToCreateBody,
   convertFormToPatchBody,
   getCategorizationRuleFormDefaultValues,
-  validateCategorizationRuleForm,
 } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 
 type UseCategorizationRuleFormProps = {
@@ -51,21 +51,23 @@ export const useCategorizationRuleForm = ({ formState, onSuccess }: UseCategoriz
     }
   }, [formState, upsertCategorizationRule, onSuccess, t])
 
-  const onDynamic = useCallback(({ value }: { value: CategorizationRuleFormValues }) => {
-    return validateCategorizationRuleForm(value, t)
-  }, [t])
-
-  const validators = useMemo(() => ({ onDynamic }), [onDynamic])
-
   const form = useAppForm<CategorizationRuleFormValues>({
     defaultValues,
     onSubmit,
-    validators,
-    validationLogic: revalidateLogic({
-      mode: 'submit',
-      modeAfterSubmission: 'submit',
-    }),
+    validationLogic: revalidateLogic(),
     canSubmitWhenInvalid: true,
+    validators: {
+      onDynamic: ({ value }) => {
+        const error = amountRangeInOrder(
+          { min: value.amountMinFilter, max: value.amountMaxFilter },
+          t(
+            'categorizationRules:validation.amount_min_greater_than_max',
+            'Minimum amount must be less than or equal to maximum amount.',
+          ),
+        )
+        return error ? { fields: { amountMinFilter: error, amountMaxFilter: error } } : undefined
+      },
+    },
   })
 
   useEffect(() => {

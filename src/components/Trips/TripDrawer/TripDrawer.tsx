@@ -1,13 +1,11 @@
-import { useCallback, useState } from 'react'
-import { Edit, Trash2 } from 'lucide-react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { Trip } from '@schemas/trip'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
-import { HStack, VStack } from '@ui/Stack/Stack'
+import { VStack } from '@ui/Stack/Stack'
 import { TripForm } from '@components/Trips/TripForm/TripForm'
 
 interface TripDrawerProps {
@@ -15,7 +13,6 @@ interface TripDrawerProps {
   onOpenChange: (isOpen: boolean) => void
   trip: Trip | null
   onSuccess: () => void
-  onDeleteTrip: (trip: Trip) => void
 }
 
 const TripDrawerHeader = ({ title, close, isMobile }: { title: string, close: () => void, isMobile?: boolean }) => (
@@ -26,19 +23,10 @@ const TripDrawerHeader = ({ title, close, isMobile }: { title: string, close: ()
   />
 )
 
-export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess }: TripDrawerProps) => {
+export const TripDrawer = ({ isOpen, onOpenChange, trip, onSuccess }: TripDrawerProps) => {
   const { t } = useTranslation()
-  const { isMobile, isTablet } = useSizeClass()
-  const [isEditMode, setIsEditMode] = useState(false)
-  const isReadOnly = !isEditMode && !!trip && (isMobile || isTablet)
-  const title = trip ? t('trips:label.trip_details', 'Trip details') : t('trips:action.record_trip', 'Record trip')
-
-  const handleOpenChange = useCallback((nextIsOpen: boolean) => {
-    if (!nextIsOpen) {
-      setIsEditMode(false)
-    }
-    onOpenChange(nextIsOpen)
-  }, [onOpenChange])
+  const { isMobile } = useSizeClass()
+  const title = trip ? t('trips:action.edit_trip', 'Edit Trip') : t('trips:action.record_trip', 'Record trip')
 
   const Header = useCallback(({ close }: { close: () => void }) => (
     <TripDrawerHeader title={title} close={close} isMobile={isMobile} />
@@ -47,41 +35,24 @@ export const TripDrawer = ({ isOpen, onOpenChange, trip, onDeleteTrip, onSuccess
   return (
     <Drawer
       isOpen={isOpen}
-      onOpenChange={handleOpenChange}
+      onOpenChange={onOpenChange}
       isDismissable
       variant={isMobile ? 'mobile-drawer' : 'drawer'}
       flexBlock={isMobile}
       aria-label={title}
       slots={{ Header }}
     >
-      {({ close }) => {
-        return (
-          <VStack pb='lg'>
-            <VStack gap='md'>
-              <TripForm
-                isReadOnly={isReadOnly}
-                trip={trip ?? undefined}
-                onSuccess={() => {
-                  onSuccess()
-                  close()
-                }}
-              />
-              {isReadOnly && (
-                <HStack pie='lg' gap='xs' justify='end' pbs='sm'>
-                  <Button variant='outlined' onPress={() => onDeleteTrip(trip)}>
-                    <Trash2 size={16} />
-                    {t('trips:action.delete_trip', 'Delete Trip')}
-                  </Button>
-                  <Button onPress={() => setIsEditMode(true)}>
-                    <Edit size={16} />
-                    {t('trips:action.edit_trip', 'Edit Trip')}
-                  </Button>
-                </HStack>
-              )}
-            </VStack>
-          </VStack>
-        )
-      }}
+      {({ close }) => (
+        <VStack pb='lg'>
+          <TripForm
+            trip={trip ?? undefined}
+            onSuccess={() => {
+              onSuccess()
+              close()
+            }}
+          />
+        </VStack>
+      )}
     </Drawer>
   )
 }

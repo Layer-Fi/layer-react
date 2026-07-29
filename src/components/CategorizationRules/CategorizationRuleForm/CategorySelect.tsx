@@ -8,20 +8,23 @@ type CategorySelectProps = {
   value: Classification | null
   onValueChange: (value: Classification | null) => void
   showLabel?: boolean
+  placeholder?: string
 }
 
 export const CategorySelect = (props: CategorySelectProps) => {
   const { isMobile } = useSizeClass()
   if (isMobile) {
-    return <CategoryMobileDrawer {...props} />
+    return <CategoryMobileDrawer {...props} mode={CategoriesListMode.Default} hideExclusions />
   }
   return (
     <LedgerAccountCombobox
       label={props.label}
       value={props.value}
       onValueChange={props.onValueChange}
-      mode={CategoriesListMode.All}
+      mode={CategoriesListMode.Default}
+      hideExclusions
       showLabel={props.showLabel}
+      placeholder={props.placeholder}
     />
   )
 }

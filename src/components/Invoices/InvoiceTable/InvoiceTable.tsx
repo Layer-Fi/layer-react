@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { getCustomerName } from '@utils/customer'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import { type SearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
+import { useDebouncedSearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useInvoiceTableFilters } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import ChevronRightFill from '@icons/ChevronRightFill'
@@ -127,7 +127,6 @@ export interface InvoiceTableProps {
   paginationProps: TablePaginationProps
   onViewInvoice: (invoice: Invoice) => void
   onCreateInvoice: () => void
-  searchProps: SearchProps
   slots: {
     EmptyState: React.FC
     ErrorState: React.FC
@@ -141,12 +140,13 @@ export const InvoiceTable = ({
   paginationProps,
   onViewInvoice,
   onCreateInvoice,
-  searchProps,
   slots,
 }: InvoiceTableProps) => {
   const { t } = useTranslation()
   const { tableFilters, setTableFilters } = useInvoiceTableFilters()
   const { status: selectedInvoiceStatusOption } = tableFilters
+
+  const searchProps = useDebouncedSearchProps({ query: tableFilters.query, setTableFilters })
 
   const options = useInvoiceStatusOptions()
 

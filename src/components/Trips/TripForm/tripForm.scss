@@ -9,15 +9,12 @@
     padding-block-end: var(--spacing-xs);
   }
 
-  .Layer__TripForm__Field__Vehicle,
-  .Layer__TripForm__Field__TripDate,
-  .Layer__TripForm__Field__Distance,
-  .Layer__TripForm__Field__Purpose,
-  .Layer__TripForm__Field__StartAddress,
-  .Layer__TripForm__Field__EndAddress,
-  .Layer__TripForm__Field__Description {
-    grid-template-columns: 10rem auto;
+  .Layer__TripForm__Field {
     width: 100%;
+  }
+
+  &--inline .Layer__TripForm__Field {
+    grid-template-columns: 10rem auto;
   }
 
   .Layer__TripForm__FieldError {

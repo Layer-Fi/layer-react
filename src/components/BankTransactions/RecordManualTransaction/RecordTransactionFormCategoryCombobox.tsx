@@ -38,7 +38,6 @@ export function RecordTransactionFormCategoryCombobox({
         placeholder={placeholder}
         showLabel
         inline={inline}
-        grouped
         isInvalid={isInvalid}
         value={value}
         onValueChange={onValueChange}

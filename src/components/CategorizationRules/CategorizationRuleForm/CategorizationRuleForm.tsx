@@ -1,18 +1,19 @@
 import { useCallback, useMemo } from 'react'
-import { AlertTriangle, Save } from 'lucide-react'
 import type { FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { BankDirectionFilter, type CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { flattenValidationErrors } from '@utils/form'
-import { Button } from '@ui/Button/Button'
+import { isClassificationAccountIdentifier } from '@schemas/categorization'
+import { required } from '@utils/form/validators'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { SubmitButton } from '@ui/Button/SubmitButton'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { CategorySelect } from '@components/CategorizationRules/CategorizationRuleForm/CategorySelect'
 import { CounterpartySelect } from '@components/CategorizationRules/CategorizationRuleForm/CounterpartySelect'
 import { type CategorizationRuleFormState, type DirectionFormValue } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 import { useCategorizationRuleForm } from '@components/CategorizationRules/CategorizationRuleForm/useCategorizationRuleForm'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { FieldErrors } from '@components/forms/FieldErrors'
 
 import './categorizationRuleForm.scss'
 
@@ -24,6 +25,7 @@ export type CategorizationRuleFormProps = {
 export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationRuleFormProps) => {
   const { t } = useTranslation()
   const { form, submitError } = useCategorizationRuleForm({ formState, onSuccess })
+  const { formatCurrencyFromCents } = useIntlFormatter()
 
   const blockNativeOnSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -38,45 +40,47 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
 
   return (
     <Form className='Layer__CategorizationRuleForm' onSubmit={blockNativeOnSubmit}>
-      <form.Subscribe selector={state => state.errorMap}>
-        {(errorMap) => {
-          const validationErrors = flattenValidationErrors(errorMap)
-          if (validationErrors.length > 0 || submitError) {
-            return (
-              <HStack>
-                <DataState
-                  icon={<AlertTriangle size={16} />}
-                  status={DataStateStatus.failed}
-                  title={validationErrors[0] || submitError}
-                  titleSize='md'
-                  inline
-                />
-              </HStack>
-            )
-          }
+      <form.Field
+        name='counterparty'
+        validators={{
+          onDynamic: ({ value }) => required(
+            t('categorizationRules:validation.counterparty_required', 'Counterparty is required.'),
+          )(value),
         }}
-      </form.Subscribe>
-
-      <form.Field name='counterparty'>
+      >
         {field => (
-          <CounterpartySelect
-            label={t('common:label.counterparty', 'Counterparty')}
-            value={field.state.value}
-            onValueChange={field.handleChange}
-            placeholder={t('categorizationRules:placeholder.select_counterparty', 'Select counterparty')}
-            showLabel
-          />
+          <VStack gap='3xs'>
+            <CounterpartySelect
+              label={t('common:label.counterparty', 'Counterparty')}
+              value={field.state.value}
+              onValueChange={field.handleChange}
+              placeholder={t('categorizationRules:placeholder.select_counterparty', 'Select counterparty')}
+              showLabel
+            />
+            <FieldErrors errors={field.state.meta.errors} />
+          </VStack>
         )}
       </form.Field>
 
-      <form.Field name='category'>
+      <form.Field
+        name='category'
+        validators={{
+          onDynamic: ({ value }) => value && isClassificationAccountIdentifier(value)
+            ? undefined
+            : t('categorizationRules:validation.category_required', 'Category is required.'),
+        }}
+      >
         {field => (
-          <CategorySelect
-            label={t('common:label.category', 'Category')}
-            value={field.state.value}
-            onValueChange={field.handleChange}
-            showLabel
-          />
+          <VStack gap='3xs'>
+            <CategorySelect
+              label={t('common:label.category', 'Category')}
+              value={field.state.value}
+              onValueChange={field.handleChange}
+              showLabel
+              placeholder={t('categorizationRules:placeholder.select_account', 'Select account')}
+            />
+            <FieldErrors errors={field.state.meta.errors} />
+          </VStack>
         )}
       </form.Field>
 
@@ -90,43 +94,54 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
         )}
       </form.AppField>
 
-      <HStack gap='md' className='Layer__CategorizationRuleForm__AmountRow'>
-        <form.AppField name='amountMinFilter'>
-          {field => (
-            <field.FormNonRecursiveBigDecimalField
-              label={t('categorizationRules:label.amount_min', 'Minimum amount')}
-              mode='currency'
-              allowEmpty
-              placeholder={t('categorizationRules:placeholder.no_minimum', 'No minimum')}
-            />
-          )}
-        </form.AppField>
-        <form.AppField name='amountMaxFilter'>
-          {field => (
-            <field.FormNonRecursiveBigDecimalField
-              label={t('categorizationRules:label.amount_max', 'Maximum amount')}
-              mode='currency'
-              allowEmpty
-              placeholder={t('categorizationRules:placeholder.no_maximum', 'No maximum')}
-            />
-          )}
-        </form.AppField>
-      </HStack>
+      <VStack gap='3xs'>
+        <HStack gap='md' className='Layer__CategorizationRuleForm__AmountRow'>
+          <form.AppField name='amountMinFilter'>
+            {field => (
+              <field.FormNonRecursiveBigDecimalField
+                label={t('categorizationRules:label.amount_min_optional', 'Minimum amount (optional)')}
+                mode='currency'
+                allowEmpty
+                showFieldError={false}
+                placeholder={formatCurrencyFromCents(0)}
+              />
+            )}
+          </form.AppField>
+          <form.AppField name='amountMaxFilter'>
+            {field => (
+              <field.FormNonRecursiveBigDecimalField
+                label={t('categorizationRules:label.amount_max_optional', 'Maximum amount (optional)')}
+                mode='currency'
+                allowEmpty
+                showFieldError={false}
+                placeholder={t('categorizationRules:placeholder.none', 'None')}
+              />
+            )}
+          </form.AppField>
+        </HStack>
+        <form.Subscribe selector={state => state.fieldMeta.amountMinFilter?.errors}>
+          {errors => <FieldErrors errors={errors ?? []} />}
+        </form.Subscribe>
+      </VStack>
 
       <VStack justify='end' className='Layer__CategorizationRuleForm__Submit'>
         <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting] as const}>
           {([canSubmit, isSubmitting]) => (
-            <Button
+            <SubmitButton
               type='submit'
+              onPress={() => { void form.handleSubmit() }}
               isDisabled={!canSubmit}
               isPending={isSubmitting}
-              onPress={() => { void form.handleSubmit() }}
+              isError={!!submitError}
+              errorMessage={submitError}
+              withRetry
             >
-              <Save size={14} />
-              {formState.mode === 'edit'
-                ? t('categorizationRules:action.save_rule', 'Save Rule')
-                : t('categorizationRules:action.create_rule', 'Create Rule')}
-            </Button>
+              {submitError
+                ? t('common:action.retry_label', 'Retry')
+                : formState.mode === 'edit'
+                  ? t('categorizationRules:action.save_rule', 'Save Rule')
+                  : t('categorizationRules:action.create_rule', 'Create Rule')}
+            </SubmitButton>
           )}
         </form.Subscribe>
       </VStack>

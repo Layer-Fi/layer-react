@@ -1,5 +1,6 @@
 import { BigDecimal as BD } from 'effect'
 import { type TFunction } from 'i18next'
+import { Briefcase, CircleHelp, House, type LucideIcon } from 'lucide-react'
 
 import { TripPurpose } from '@schemas/trip'
 import { type NumberFormatFn } from '@utils/i18n/number/formatters'
@@ -41,4 +42,14 @@ export const getPurposeBadgeVariant = (purpose: TripPurpose): BadgeVariant => {
     return BadgeVariant.INFO
   }
   return BadgeVariant.WARNING
+}
+
+export const getPurposeIcon = (purpose: TripPurpose): LucideIcon => {
+  if (purpose === TripPurpose.Business) {
+    return Briefcase
+  }
+  if (purpose === TripPurpose.Personal) {
+    return House
+  }
+  return CircleHelp
 }

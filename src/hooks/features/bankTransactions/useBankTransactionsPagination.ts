@@ -1,10 +1,10 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { type BankTransactionFilters } from '@utils/bankTransactions/shared'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { PaginationChangeSource } from '@hooks/utils/pagination/types'
-import { useAutoResetPageIndex } from '@hooks/utils/pagination/useAutoResetPageIndex'
+import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
@@ -24,32 +24,30 @@ export function useBankTransactionsPagination({
   filters,
   pageSize,
 }: UseBankTransactionsPaginationParams): TablePaginationProps {
-  const { currentBankTransactionsPage: currentPage, setCurrentBankTransactionsPage: setCurrentPage } = useCurrentBankTransactionsPage()
+  const { currentBankTransactionsPage: pageIndex, setCurrentBankTransactionsPage: setPageIndex } = useCurrentBankTransactionsPage()
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BankTransactions)
-  const autoResetPageIndexRef = useAutoResetPageIndex(filters, data)
 
-  const handlePageChange = useCallback((pageIndex: number, source: PaginationChangeSource) => {
-    const page = pageIndex + 1
+  const handlePageChange = useCallback((nextPageIndex: number, source: PaginationChangeSource) => {
+    if (nextPageIndex === pageIndex) return
 
-    if (page === currentPage) return
-
-    setCurrentPage(page)
+    setPageIndex(nextPageIndex)
 
     if (source === PaginationChangeSource.User) {
       emitLayerEvent({
         type: LayerEventType.TransactionsPageChanged,
         version: 1,
-        payload: { page },
+        payload: { page: nextPageIndex + 1 },
       })
     }
-  }, [currentPage, emitLayerEvent, setCurrentPage])
+  }, [pageIndex, emitLayerEvent, setPageIndex])
 
-  return useMemo<TablePaginationProps>(() => ({
-    pageIndex: currentPage - 1,
-    onPageIndexChange: handlePageChange,
+  return useTablePaginationProps({
+    filterParams: filters,
+    data,
     pageSize,
     hasMore,
     fetchMore,
-    autoResetPageIndexRef,
-  }), [autoResetPageIndexRef, currentPage, fetchMore, handlePageChange, hasMore, pageSize])
+    pageIndex,
+    onPageIndexChange: handlePageChange,
+  })
 }
