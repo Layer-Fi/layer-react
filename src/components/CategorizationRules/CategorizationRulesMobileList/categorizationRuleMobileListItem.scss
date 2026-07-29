@@ -1,0 +1,17 @@
+.Layer__CategorizationRuleMobileListItem {
+  min-width: 0;
+}
+
+.Layer__CategorizationRuleMobileListItem__Conditions {
+  min-inline-size: 0;
+}
+
+.Layer__CategorizationRuleMobileListItem__Outcome {
+  padding: var(--spacing-xs) var(--spacing-sm);
+
+  background-color: var(--color-base-50);
+}
+
+.Layer__CategorizationRuleMobileListItem__Outcome__Icon {
+  flex-shrink: 0;
+}
