@@ -127,7 +127,6 @@ export const BankTransactionsMobileCategorySelection = ({
         onSelectedValueChange={handleCategoryDrawerSelect}
         selectedValue={selectedCategory}
         showTooltips={showTooltips}
-        includeExclusions
         isOpen={isDrawerOpen}
         onOpenChange={setIsDrawerOpen}
       />

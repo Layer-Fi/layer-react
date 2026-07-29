@@ -17,6 +17,7 @@ type LedgerAccountComboboxProps = {
   onValueChange: (value: Classification | null) => void
   mode?: CategoriesListMode
   placeholder?: string
+  hideExclusions?: boolean
   isReadOnly?: boolean
   isInvalid?: boolean
   showLabel?: boolean
@@ -30,6 +31,7 @@ export const LedgerAccountCombobox = ({
   mode,
   onValueChange,
   placeholder,
+  hideExclusions,
   isReadOnly,
   isInvalid,
   showLabel,
@@ -37,7 +39,10 @@ export const LedgerAccountCombobox = ({
   className,
 }: LedgerAccountComboboxProps) => {
   const { data: allCategories, isLoading } = useCategories({ mode })
-  const categories = useMemo(() => withoutExclusions(allCategories ?? []), [allCategories])
+  const categories = useMemo(
+    () => hideExclusions ? withoutExclusions(allCategories ?? []) : allCategories ?? [],
+    [allCategories, hideExclusions],
+  )
 
   const groups = useMemo(() => flattenCategories(categories), [categories])
 

@@ -16,7 +16,7 @@ type CategorySelectDrawerWithTriggerProps = {
   onSelectedValueChange: (newValue: BankTransactionNonSuggestedMatchOption | null) => void
   placeholder?: string
   showTooltips: boolean
-  includeExclusions?: boolean
+  hideExclusions?: boolean
   mode?: CategoriesListMode
   slotProps?: {
     TriggerSpan?: TextStyleProps
@@ -28,7 +28,7 @@ export const CategorySelectDrawerWithTrigger = ({
   onSelectedValueChange,
   placeholder,
   showTooltips,
-  includeExclusions,
+  hideExclusions,
   mode,
   slotProps,
 }: CategorySelectDrawerWithTriggerProps) => {
@@ -53,7 +53,7 @@ export const CategorySelectDrawerWithTrigger = ({
         onSelectedValueChange={onSelectedValueChange}
         selectedValue={selectedValue}
         showTooltips={showTooltips}
-        includeExclusions={includeExclusions}
+        hideExclusions={hideExclusions}
         mode={mode}
         isOpen={isDrawerOpen}
         onOpenChange={setIsDrawerOpen}

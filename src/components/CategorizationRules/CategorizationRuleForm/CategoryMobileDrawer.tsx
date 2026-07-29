@@ -14,6 +14,7 @@ type CategoryMobileDrawerProps = {
   value: Classification | null
   onValueChange: (value: Classification | null) => void
   mode: CategoriesListMode
+  hideExclusions?: boolean
   showLabel?: boolean
   placeholder?: string
 }
@@ -23,6 +24,7 @@ export const CategoryMobileDrawer = ({
   value,
   onValueChange,
   mode,
+  hideExclusions,
   showLabel,
   placeholder,
 }: CategoryMobileDrawerProps) => {
@@ -53,6 +55,7 @@ export const CategoryMobileDrawer = ({
         onSelectedValueChange={handleSelectedValueChange}
         showTooltips={false}
         mode={mode}
+        hideExclusions={hideExclusions}
         slotProps={{ TriggerSpan: { size: 'sm' } }}
         placeholder={placeholder}
       />

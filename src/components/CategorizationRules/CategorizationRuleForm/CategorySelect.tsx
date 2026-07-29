@@ -14,7 +14,7 @@ type CategorySelectProps = {
 export const CategorySelect = (props: CategorySelectProps) => {
   const { isMobile } = useSizeClass()
   if (isMobile) {
-    return <CategoryMobileDrawer {...props} mode={CategoriesListMode.Default} />
+    return <CategoryMobileDrawer {...props} mode={CategoriesListMode.Default} hideExclusions />
   }
   return (
     <LedgerAccountCombobox
@@ -22,6 +22,7 @@ export const CategorySelect = (props: CategorySelectProps) => {
       value={props.value}
       onValueChange={props.onValueChange}
       mode={CategoriesListMode.Default}
+      hideExclusions
       showLabel={props.showLabel}
       placeholder={props.placeholder}
     />

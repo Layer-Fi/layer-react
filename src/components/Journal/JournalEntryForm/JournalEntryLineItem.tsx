@@ -46,6 +46,7 @@ export const JournalEntryLineItem = ({ form, index, displayIndex, isReadOnly, on
                 label={t('common:label.account', 'Account')}
                 value={field.state.value}
                 mode={CategoriesListMode.All}
+                hideExclusions
                 onValueChange={onValueChange}
                 isReadOnly={isReadOnly}
                 showLabel={showLabels}

@@ -132,7 +132,6 @@ export const BankTransactionsCategorizeAllModal = ({
                   selectedValue={selectedCategory}
                   onSelectedValueChange={handleSelectedCategoryChange}
                   showTooltips={false}
-                  includeExclusions
                 />
               )
               : (

@@ -14,6 +14,11 @@ export type MobileListItemAction = {
   isDisabled?: boolean
 }
 
+export type MobileListItemActionsMenuConfig<TData> = {
+  ariaLabel: string
+  getActions: (item: TData) => ReadonlyArray<MobileListItemAction>
+}
+
 type MobileListItemActionsMenuProps = {
   ariaLabel: string
   actions: ReadonlyArray<MobileListItemAction>

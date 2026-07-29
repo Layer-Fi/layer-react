@@ -29,7 +29,7 @@ interface CategorySelectDrawerProps {
   showTooltips: boolean
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
-  includeExclusions?: boolean
+  hideExclusions?: boolean
   mode?: CategoriesListMode
 }
 
@@ -39,7 +39,7 @@ export const CategorySelectDrawer = ({
   showTooltips,
   isOpen,
   onOpenChange,
-  includeExclusions = false,
+  hideExclusions,
   mode,
 }: CategorySelectDrawerProps) => {
   const { t } = useTranslation()
@@ -64,8 +64,8 @@ export const CategorySelectDrawer = ({
   const categoryOptions = useMemo(() => {
     if (selectedGroup) return selectedGroup.categories
     const allCategories = categories ?? []
-    return flattenCategories(includeExclusions ? allCategories : withoutExclusions(allCategories))
-  }, [categories, selectedGroup, includeExclusions])
+    return flattenCategories(hideExclusions ? withoutExclusions(allCategories) : allCategories)
+  }, [categories, selectedGroup, hideExclusions])
 
   const filteredOptions = useMemo(
     () => buildFilteredCategoryOptions(categoryOptions, query, selectedId),

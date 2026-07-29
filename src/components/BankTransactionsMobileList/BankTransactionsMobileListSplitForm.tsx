@@ -118,7 +118,6 @@ export const BankTransactionsMobileListSplitForm = ({
                     selectedValue={split.category}
                     onSelectedValueChange={handleCategoryChange(index)}
                     showTooltips={showTooltips}
-                    includeExclusions
                     slotProps={{ TriggerSpan: { size: 'sm' } }}
                   />
                   {hasTaxCodeOptions && (

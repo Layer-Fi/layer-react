@@ -1,9 +1,8 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Trip } from '@schemas/trip'
-import { MobileListItemActionsMenu } from '@ui/MobileList/MobileListItemActionsMenu'
 import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
 import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 import { TripsMobileHeader } from '@components/Trips/TripsMobileHeader/TripsMobileHeader'
@@ -39,25 +38,23 @@ export const TripsMobileList = ({
   const renderItem = useCallback((trip: Trip) => <TripsMobileListItem trip={trip} />, [])
   const renderFooter = useCallback((trip: Trip) => <TripsMobileListItemFooter trip={trip} />, [])
 
-  const renderActions = useCallback((trip: Trip) => (
-    <MobileListItemActionsMenu
-      ariaLabel={t('trips:label.trip_actions', 'Trip actions')}
-      actions={[
-        {
-          key: 'edit',
-          label: t('trips:action.edit_trip', 'Edit Trip'),
-          icon: Pencil,
-          onClick: () => onEditTrip(trip),
-        },
-        {
-          key: 'delete',
-          label: t('trips:action.delete_trip', 'Delete Trip'),
-          icon: Trash2,
-          onClick: () => onDeleteTrip(trip),
-        },
-      ]}
-    />
-  ), [t, onEditTrip, onDeleteTrip])
+  const actionsMenu = useMemo(() => ({
+    ariaLabel: t('trips:label.trip_actions', 'Trip actions'),
+    getActions: (trip: Trip) => [
+      {
+        key: 'edit',
+        label: t('trips:action.edit_trip', 'Edit Trip'),
+        icon: Pencil,
+        onClick: () => onEditTrip(trip),
+      },
+      {
+        key: 'delete',
+        label: t('trips:action.delete_trip', 'Delete Trip'),
+        icon: Trash2,
+        onClick: () => onDeleteTrip(trip),
+      },
+    ],
+  }), [t, onEditTrip, onDeleteTrip])
 
   return (
     <div className='Layer__TripsMobileList'>
@@ -69,7 +66,7 @@ export const TripsMobileList = ({
         isError={isError}
         renderItem={renderItem}
         renderFooter={renderFooter}
-        renderActions={renderActions}
+        slotProps={{ ActionsMenu: actionsMenu }}
         paginationProps={paginationProps}
         slots={slots}
       />

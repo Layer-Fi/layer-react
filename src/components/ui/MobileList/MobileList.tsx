@@ -1,7 +1,8 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { GridList, type Selection } from 'react-aria-components/GridList'
 
 import { MobileListItem } from '@ui/MobileList/MobileListItem'
+import { type MobileListItemActionsMenuConfig } from '@ui/MobileList/MobileListItemActionsMenu'
 import { MobileListSection } from '@ui/MobileList/MobileListSection'
 import { MobileListSkeleton } from '@ui/MobileList/MobileListSkeleton'
 
@@ -27,7 +28,9 @@ interface MobileListBaseProps<TData> {
   renderItem: (item: TData) => React.ReactNode
   renderFooter?: (item: TData) => React.ReactNode
   renderExpandedContent?: (item: TData) => React.ReactNode
-  renderActions?: (item: TData) => React.ReactNode
+  slotProps?: {
+    ActionsMenu?: MobileListItemActionsMenuConfig<TData>
+  }
   expandedKeys?: Set<string>
   exitingKeys?: Set<string>
   onRemoveItem?: (item: TData) => void
@@ -69,7 +72,7 @@ export const MobileList = <TData extends { id: string }>({
   renderItem,
   renderFooter,
   renderExpandedContent,
-  renderActions,
+  slotProps,
   expandedKeys,
   exitingKeys,
   onRemoveItem,
@@ -91,7 +94,11 @@ export const MobileList = <TData extends { id: string }>({
 
   const hasSelection = resolvedSelectionMode !== 'none' && (selectedKeys?.size ?? 0) > 0
 
-  const rowActions = hasSelection ? undefined : renderActions
+  const actionsMenu = hasSelection ? undefined : slotProps?.ActionsMenu
+  const itemSlotProps = useMemo(
+    () => (actionsMenu ? { ActionsMenu: actionsMenu } : undefined),
+    [actionsMenu],
+  )
 
   const renderRow = useCallback((item: TData) => {
     return (
@@ -101,7 +108,7 @@ export const MobileList = <TData extends { id: string }>({
         onClickItem={onClickItem}
         renderFooter={renderFooter}
         renderExpandedContent={renderExpandedContent}
-        renderActions={rowActions}
+        slotProps={itemSlotProps}
         isExpanded={expandedKeys?.has(item.id) ?? false}
         isExiting={exitingKeys?.has(item.id) ?? false}
         onExitComplete={onRemoveItem}
@@ -109,7 +116,7 @@ export const MobileList = <TData extends { id: string }>({
         {renderItem(item)}
       </MobileListItem>
     )
-  }, [exitingKeys, expandedKeys, onClickItem, onRemoveItem, renderExpandedContent, renderFooter, renderItem, rowActions])
+  }, [exitingKeys, expandedKeys, onClickItem, onRemoveItem, renderExpandedContent, renderFooter, renderItem, itemSlotProps])
 
   const renderEmptyState = useCallback(() => {
     return <EmptyState />
@@ -142,7 +149,7 @@ export const MobileList = <TData extends { id: string }>({
             items={group.items}
             renderItem={renderItem}
             renderFooter={renderFooter}
-            renderActions={rowActions}
+            slotProps={itemSlotProps}
             onClickItem={onClickItem}
           />
         ))
