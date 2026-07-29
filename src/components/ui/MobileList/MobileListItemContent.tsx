@@ -11,7 +11,7 @@ type MobileListItemContentProps = PropsWithChildren<{
 }>
 
 export const MobileListItemContent = ({ title, value, children }: MobileListItemContentProps) => (
-  <VStack gap='3xs' className='Layer__UI__MobileListItemContent'>
+  <VStack gap='3xs'>
     <HStack fluid justify='space-between' align='start' gap='sm' className='Layer__UI__MobileListItemContent__TitleRow'>
       <Span weight='bold' ellipsis className='Layer__UI__MobileListItemContent__Title'>{title}</Span>
       {value}

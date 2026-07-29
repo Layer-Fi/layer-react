@@ -89,9 +89,9 @@ export const MobileList = <TData extends { id: string }>({
 
   const resolvedSelectionBehavior = resolvedSelectionMode === 'none' ? 'toggle' : undefined
 
-  const isSelectionActive = resolvedSelectionMode !== 'none' && (selectedKeys?.size ?? 0) > 0
+  const hasSelection = resolvedSelectionMode !== 'none' && (selectedKeys?.size ?? 0) > 0
 
-  const rowActions = isSelectionActive ? undefined : renderActions
+  const rowActions = hasSelection ? undefined : renderActions
 
   const renderRow = useCallback((item: TData) => {
     return (

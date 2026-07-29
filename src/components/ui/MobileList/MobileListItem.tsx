@@ -61,7 +61,7 @@ export const MobileListItem = <TData extends { id: string }>({
             {children}
           </div>
           {renderActions && (
-            <HStack align='center' justify='end' className='Layer__MobileListItem__Action'>
+            <HStack className='Layer__MobileListItem__Action'>
               {renderActions(item)}
             </HStack>
           )}
