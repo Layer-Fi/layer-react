@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { SortOrder } from '@internal-types/utility/pagination'
 import { type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
 import { LedgerEntriesSortBy, type ListLedgerEntriesReturn, useListLedgerEntries } from '@hooks/api/businesses/[business-id]/ledger/entries/useListLedgerEntries'
-import { useAutoResetPageIndex } from '@hooks/utils/pagination/useAutoResetPageIndex'
+import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
@@ -50,14 +50,13 @@ export const useJournal: UseJournal = () => {
     swrOptions: { keepPreviousData: false },
   })
 
-  const autoResetPageIndexRef = useAutoResetPageIndex(dateRange, data)
-
-  const paginationProps = useMemo<TablePaginationProps>(() => ({
+  const paginationProps = useTablePaginationProps({
+    filterParams: dateRange,
+    data,
     pageSize: JOURNAL_PAGE_SIZE,
     hasMore,
     fetchMore,
-    autoResetPageIndexRef,
-  }), [hasMore, fetchMore, autoResetPageIndexRef])
+  })
 
   const closeSelectedEntry = useCallback(() => {
     setSelectedEntryId(undefined)

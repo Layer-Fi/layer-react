@@ -3,7 +3,7 @@ import { Clock, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type ListTimeEntriesFilterParams, useListTimeEntries } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useListTimeEntries'
-import { useAutoResetPageIndex } from '@hooks/utils/pagination/useAutoResetPageIndex'
+import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { TimeEntriesStoreProvider, useTimeEntriesDeleteModal, useTimeEntriesFilters } from '@providers/TimeEntriesStore/TimeEntriesStoreProvider'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { TimeEntriesTable } from '@components/TimeEntries/TimeEntriesTable/TimeEntriesTable'
@@ -74,7 +74,6 @@ const TimeEntriesContent = ({ filterParams }: Pick<TimeEntriesProps, 'filterPara
   }), [filterParams, selectedCustomer, selectedServiceId])
 
   const { data, flattenedData: entries, isLoading, isError, hasMore, fetchMore } = useListTimeEntries(timeEntriesFilterParams)
-  const autoResetPageIndexRef = useAutoResetPageIndex(timeEntriesFilterParams, data)
 
   const tableSlots = useMemo(
     () => ({
@@ -84,12 +83,13 @@ const TimeEntriesContent = ({ filterParams }: Pick<TimeEntriesProps, 'filterPara
     [],
   )
 
-  const paginationProps = useMemo(() => ({
+  const paginationProps = useTablePaginationProps({
+    filterParams: timeEntriesFilterParams,
+    data,
     pageSize: 20,
     hasMore,
     fetchMore,
-    autoResetPageIndexRef,
-  }), [fetchMore, hasMore, autoResetPageIndexRef])
+  })
 
   return (
     <>

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import type { Trip } from '@schemas/trip'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useListTrips } from '@hooks/api/businesses/[business-id]/mileage/trips/useListTrips'
-import { useAutoResetPageIndex } from '@hooks/utils/pagination/useAutoResetPageIndex'
+import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { useCurrentTripsPage, useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import { type DefaultVariant, ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
@@ -67,7 +67,6 @@ export const ResponsiveTripsView = () => {
   }), [query, selectedVehicle, purposeFilter, selectedYear])
 
   const { data, flattenedData: trips, isLoading, isError, hasMore, fetchMore } = useListTrips(filterParams)
-  const autoResetPageIndexRef = useAutoResetPageIndex(filterParams, data)
 
   const onViewOrUpsertTrip = useCallback((trip: Trip | null) => {
     setSelectedTrip(trip)
@@ -78,14 +77,15 @@ export const ResponsiveTripsView = () => {
     setTripToDelete(trip)
   }, [])
 
-  const paginationProps = useMemo(() => ({
-    pageIndex: currentTripsPage,
-    onPageIndexChange: setCurrentTripsPage,
+  const paginationProps = useTablePaginationProps({
+    filterParams,
+    data,
     pageSize: 20,
     hasMore,
     fetchMore,
-    autoResetPageIndexRef,
-  }), [currentTripsPage, setCurrentTripsPage, fetchMore, hasMore, autoResetPageIndexRef])
+    pageIndex: currentTripsPage,
+    onPageIndexChange: setCurrentTripsPage,
+  })
 
   const DesktopView = useMemo(() => (
     <TripsTable
