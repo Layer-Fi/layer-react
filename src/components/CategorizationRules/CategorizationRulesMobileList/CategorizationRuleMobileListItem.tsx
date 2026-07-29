@@ -5,28 +5,15 @@ import type { CategorizationRule } from '@schemas/bankTransactions/categorizatio
 import type { NestedCategorization } from '@schemas/categorization'
 import { getResolvedCategoryName } from '@utils/categories'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { MobileListItemContent } from '@ui/MobileList/MobileListItemContent'
 import { MobileListItemStatusFooter } from '@ui/MobileList/MobileListItemStatusFooter'
-import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BadgeVariant } from '@components/Badge/Badge'
-import { CategorizationRuleActionsMenu } from '@components/CategorizationRules/CategorizationRuleActionsMenu'
 import { getCategorizationRuleAmountLabel, getCategorizationRuleCounterpartyLabel, getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
-
-import './categorizationRuleMobileListItem.scss'
 
 const CONDITION_SEPARATOR = ' · '
 
-type CategorizationRuleMobileListItemProps = {
-  rule: CategorizationRule
-  onEditPress: (rule: CategorizationRule) => void
-  onDeletePress: (rule: CategorizationRule) => void
-}
-
-export const CategorizationRuleMobileListItem = ({
-  rule,
-  onEditPress,
-  onDeletePress,
-}: CategorizationRuleMobileListItemProps) => {
+export const CategorizationRuleMobileListItem = ({ rule }: { rule: CategorizationRule }) => {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
 
@@ -38,17 +25,9 @@ export const CategorizationRuleMobileListItem = ({
   ].join(CONDITION_SEPARATOR)
 
   return (
-    <HStack fluid justify='space-between' align='start' gap='sm' className='Layer__CategorizationRuleMobileListItem'>
-      <VStack gap='3xs' className='Layer__CategorizationRuleMobileListItem__Conditions'>
-        <Span weight='bold' ellipsis>{getCategorizationRuleCounterpartyLabel(rule)}</Span>
-        <Span size='sm' variant='subtle' ellipsis>{conditions}</Span>
-      </VStack>
-      <CategorizationRuleActionsMenu
-        rule={rule}
-        onEditPress={onEditPress}
-        onDeletePress={onDeletePress}
-      />
-    </HStack>
+    <MobileListItemContent title={getCategorizationRuleCounterpartyLabel(rule) ?? ''}>
+      <Span size='sm' variant='subtle' ellipsis>{conditions}</Span>
+    </MobileListItemContent>
   )
 }
 

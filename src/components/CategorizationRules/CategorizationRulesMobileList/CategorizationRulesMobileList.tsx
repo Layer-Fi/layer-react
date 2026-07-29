@@ -1,8 +1,10 @@
 import { useCallback } from 'react'
+import { Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import type { NestedCategorization } from '@schemas/categorization'
+import { MobileListItemActionsMenu } from '@ui/MobileList/MobileListItemActionsMenu'
 import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
 import { CategorizationRuleMobileListItem, CategorizationRuleMobileListItemFooter } from '@components/CategorizationRules/CategorizationRulesMobileList/CategorizationRuleMobileListItem'
 import type { TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
@@ -36,12 +38,28 @@ export const CategorizationRulesMobileList = ({
   const { t } = useTranslation()
 
   const renderItem = useCallback((rule: CategorizationRule) => (
-    <CategorizationRuleMobileListItem
-      rule={rule}
-      onEditPress={onEditRule}
-      onDeletePress={onDeleteRule}
+    <CategorizationRuleMobileListItem rule={rule} />
+  ), [])
+
+  const renderActions = useCallback((rule: CategorizationRule) => (
+    <MobileListItemActionsMenu
+      ariaLabel={t('categorizationRules:label.rule_actions', 'Rule actions')}
+      actions={[
+        {
+          key: 'edit',
+          label: t('categorizationRules:action.edit_rule', 'Edit Rule'),
+          icon: Pencil,
+          onClick: () => onEditRule(rule),
+        },
+        {
+          key: 'delete',
+          label: t('categorizationRules:action.delete_rule', 'Delete Rule'),
+          icon: Trash2,
+          onClick: () => onDeleteRule(rule),
+        },
+      ]}
     />
-  ), [onEditRule, onDeleteRule])
+  ), [t, onEditRule, onDeleteRule])
 
   const renderFooter = useCallback((rule: CategorizationRule) => (
     <CategorizationRuleMobileListItemFooter rule={rule} options={options} />
@@ -56,7 +74,7 @@ export const CategorizationRulesMobileList = ({
         isError={isError}
         renderItem={renderItem}
         renderFooter={renderFooter}
-        onClickItem={onEditRule}
+        renderActions={renderActions}
         paginationProps={paginationProps}
         slots={slots}
       />
