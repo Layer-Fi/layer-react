@@ -110,14 +110,15 @@ export const ResponsiveTripsView = () => {
       isLoading={isLoading}
       isError={isError}
       paginationProps={paginationProps}
-      onViewOrUpsertTrip={onViewOrUpsertTrip}
+      onEditTrip={onViewOrUpsertTrip}
+      onDeleteTrip={onDeleteTrip}
       onRecordTrip={onRecordTrip}
       slots={{
         EmptyState: TripsViewEmptyState,
         ErrorState: TripsViewErrorState,
       }}
     />
-  ), [trips, isLoading, isError, onViewOrUpsertTrip, onRecordTrip, paginationProps])
+  ), [trips, isLoading, isError, onViewOrUpsertTrip, onDeleteTrip, onRecordTrip, paginationProps])
 
   return (
     <>
@@ -127,7 +128,6 @@ export const ResponsiveTripsView = () => {
         onOpenChange={setIsTripDrawerOpen}
         trip={selectedTrip}
         onSuccess={() => setSelectedTrip(null)}
-        onDeleteTrip={onDeleteTrip}
       />
       {tripToDelete && (
         <TripDeleteConfirmationModal

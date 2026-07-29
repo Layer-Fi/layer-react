@@ -56,7 +56,6 @@ export const MileageSummaryCard = () => {
   const onTripDrawerSuccess = () => {
     setIsTripDrawerOpen(false)
   }
-  const onDeleteTrip = () => {}
 
   if (isError) {
     return (
@@ -178,7 +177,6 @@ export const MileageSummaryCard = () => {
         onOpenChange={setIsTripDrawerOpen}
         trip={null}
         onSuccess={onTripDrawerSuccess}
-        onDeleteTrip={onDeleteTrip}
       />
     </VStack>
   )
