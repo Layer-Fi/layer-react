@@ -1,5 +1,6 @@
-import { CategoryAsOption } from '@internal-types/categorizationOption'
+import { type CategoryAsOption } from '@internal-types/categorizationOption'
 import type { NestedCategorization } from '@schemas/categorization'
+import { groupCategoriesByParent } from '@utils/categoryOptions'
 import type { ActionableListOption } from '@components/ActionableList/ActionableList'
 
 export interface CategoryGroup {
@@ -14,29 +15,18 @@ export const isGroup = (item: CategoryOption): item is CategoryGroup => {
   return 'categories' in item
 }
 
-export const flattenCategories = (categories: NestedCategorization[]): Array<CategoryGroup | CategoryAsOption> => {
-  return categories.flatMap((category: NestedCategorization): Array<CategoryGroup | CategoryAsOption> => {
-    const subCategories = category.subCategories
-
-    if (!subCategories || subCategories.length === 0) {
-      return [new CategoryAsOption(category)]
+export const flattenCategories = (categories: NestedCategorization[]): Array<CategoryGroup | CategoryAsOption> =>
+  groupCategoriesByParent(categories).map(({ category, label, options }) => {
+    if (options.length === 1) {
+      return options[0]
     }
 
-    if (subCategories.every(subCategory => !subCategory.subCategories || subCategory.subCategories.length === 0)) {
-      if (subCategories.length === 1) {
-        return [new CategoryAsOption(subCategories[0])]
-      }
-
-      return [{
-        label: category.displayName,
-        id: 'id' in category ? category.id : category.stableName,
-        categories: subCategories.map(cat => new CategoryAsOption(cat)),
-      } satisfies CategoryGroup]
-    }
-
-    return flattenCategories(subCategories)
+    return {
+      label,
+      id: 'id' in category ? category.id : category.stableName,
+      categories: options,
+    } satisfies CategoryGroup
   })
-}
 
 export const buildFilteredCategoryOptions = (
   categoryOptions: CategoryOption[],

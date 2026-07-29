@@ -13,7 +13,9 @@ import './categorySelectDrawerWithTrigger.scss'
 type CategorySelectDrawerWithTriggerProps = {
   selectedValue: BankTransactionNonSuggestedMatchOption | null
   onSelectedValueChange: (newValue: BankTransactionNonSuggestedMatchOption | null) => void
+  placeholder?: string
   showTooltips: boolean
+  includeExclusions?: boolean
   slotProps?: {
     TriggerSpan?: TextStyleProps
   }
@@ -22,7 +24,9 @@ type CategorySelectDrawerWithTriggerProps = {
 export const CategorySelectDrawerWithTrigger = ({
   selectedValue,
   onSelectedValueChange,
+  placeholder,
   showTooltips,
+  includeExclusions,
   slotProps,
 }: CategorySelectDrawerWithTriggerProps) => {
   const { t } = useTranslation()
@@ -36,7 +40,7 @@ export const CategorySelectDrawerWithTrigger = ({
         onClick={() => { setIsDrawerOpen(true) }}
         variant='outlined'
       >
-        <Span ellipsis size='md' {...slotProps?.TriggerSpan}>{selectedValue?.label ?? t('common:action.select_label', 'Select...')}</Span>
+        <Span ellipsis size='md' {...slotProps?.TriggerSpan}>{selectedValue?.label ?? placeholder}</Span>
         <ChevronDown size={16} />
       </Button>
 
@@ -44,6 +48,7 @@ export const CategorySelectDrawerWithTrigger = ({
         onSelectedValueChange={onSelectedValueChange}
         selectedValue={selectedValue}
         showTooltips={showTooltips}
+        includeExclusions={includeExclusions}
         isOpen={isDrawerOpen}
         onOpenChange={setIsDrawerOpen}
       />

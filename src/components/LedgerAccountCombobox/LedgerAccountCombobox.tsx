@@ -3,11 +3,10 @@ import classNames from 'classnames'
 
 import { CategoryAsOption } from '@internal-types/categorizationOption'
 import { type CategoriesListMode, type Classification } from '@schemas/categorization'
-import { findCategoryOption, flattenCategories as flattenAllCategories, getLeafCategories } from '@utils/categories'
-import { flattenCategories } from '@utils/categoryOptions'
+import { findCategoryOption, flattenCategories as flattenAllCategories } from '@utils/categories'
+import { flattenCategories, withoutExclusions } from '@utils/categoryOptions'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { type OptionsOrGroups } from '@ui/ComboBox/types'
 import { Label } from '@ui/Typography/Text'
 
 import './ledgerAccountCombobox.scss'
@@ -18,7 +17,6 @@ type LedgerAccountComboboxProps = {
   onValueChange: (value: Classification | null) => void
   mode?: CategoriesListMode
   placeholder?: string
-  grouped?: boolean
   isReadOnly?: boolean
   isInvalid?: boolean
   showLabel?: boolean
@@ -32,28 +30,21 @@ export const LedgerAccountCombobox = ({
   mode,
   onValueChange,
   placeholder,
-  grouped = false,
   isReadOnly,
   isInvalid,
   showLabel,
   inline,
   className,
 }: LedgerAccountComboboxProps) => {
-  const { data: categories, isLoading } = useCategories({ mode })
+  const { data: allCategories, isLoading } = useCategories({ mode })
+  const categories = useMemo(() => withoutExclusions(allCategories ?? []), [allCategories])
 
-  const options = useMemo(() => {
-    if (!categories) return []
-    return getLeafCategories(categories).map(leaf => new CategoryAsOption(leaf))
-  }, [categories])
+  const groups = useMemo(() => flattenCategories(categories), [categories])
 
-  const groups = useMemo(() => (categories ? flattenCategories(categories) : []), [categories])
-
-  const optionsOrGroups: OptionsOrGroups<CategoryAsOption> = grouped ? { groups } : { options }
-
-  const allOptions = useMemo(() => {
-    if (!categories) return []
-    return flattenAllCategories(categories).map(category => new CategoryAsOption(category))
-  }, [categories])
+  const allOptions = useMemo(
+    () => flattenAllCategories(categories).map(category => new CategoryAsOption(category)),
+    [categories],
+  )
 
   const selectedCategory = useMemo(() => findCategoryOption(allOptions, value), [allOptions, value])
 
@@ -71,7 +62,7 @@ export const LedgerAccountCombobox = ({
         </Label>
       )}
       <ComboBox
-        {...optionsOrGroups}
+        groups={groups}
         onSelectedValueChange={onSelectedValueChange}
         selectedValue={selectedCategory}
         inputId={inputId}

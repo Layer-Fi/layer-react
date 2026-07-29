@@ -8,6 +8,7 @@ type CategorySelectProps = {
   value: Classification | null
   onValueChange: (value: Classification | null) => void
   showLabel?: boolean
+  placeholder?: string
 }
 
 export const CategorySelect = (props: CategorySelectProps) => {
@@ -20,8 +21,9 @@ export const CategorySelect = (props: CategorySelectProps) => {
       label={props.label}
       value={props.value}
       onValueChange={props.onValueChange}
-      mode={CategoriesListMode.All}
+      mode={CategoriesListMode.Default}
       showLabel={props.showLabel}
+      placeholder={props.placeholder}
     />
   )
 }

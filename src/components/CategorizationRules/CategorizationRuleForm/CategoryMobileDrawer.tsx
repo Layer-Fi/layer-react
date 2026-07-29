@@ -14,6 +14,7 @@ type CategoryMobileDrawerProps = {
   value: Classification | null
   onValueChange: (value: Classification | null) => void
   showLabel?: boolean
+  placeholder?: string
 }
 
 export const CategoryMobileDrawer = ({
@@ -21,8 +22,9 @@ export const CategoryMobileDrawer = ({
   value,
   onValueChange,
   showLabel,
+  placeholder,
 }: CategoryMobileDrawerProps) => {
-  const { data: categories } = useCategories({ mode: CategoriesListMode.All })
+  const { data: categories } = useCategories({ mode: CategoriesListMode.Default })
 
   const flatOptions = useMemo(() => {
     if (!categories) return []
@@ -49,6 +51,7 @@ export const CategoryMobileDrawer = ({
         onSelectedValueChange={handleSelectedValueChange}
         showTooltips={false}
         slotProps={{ TriggerSpan: { size: 'sm' } }}
+        placeholder={placeholder}
       />
     </VStack>
   )

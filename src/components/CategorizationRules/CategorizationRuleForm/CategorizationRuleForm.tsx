@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { BankDirectionFilter, type CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { isClassificationAccountIdentifier } from '@schemas/categorization'
 import { amountRangeInOrder, required } from '@utils/form/validators'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { SubmitButton } from '@ui/Button/SubmitButton'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -24,6 +25,7 @@ export type CategorizationRuleFormProps = {
 export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationRuleFormProps) => {
   const { t } = useTranslation()
   const { form, submitError } = useCategorizationRuleForm({ formState, onSuccess })
+  const { formatCurrencyFromCents } = useIntlFormatter()
 
   const blockNativeOnSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -80,6 +82,7 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
               value={field.state.value}
               onValueChange={field.handleChange}
               showLabel
+              placeholder={t('categorizationRules:placeholder.select_account', 'Select account')}
             />
             <FieldErrors errors={field.state.meta.errors} />
           </VStack>
@@ -109,11 +112,11 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
           >
             {field => (
               <field.FormNonRecursiveBigDecimalField
-                label={t('categorizationRules:label.amount_min', 'Minimum amount')}
+                label={t('categorizationRules:label.amount_min_optional', 'Minimum amount (optional)')}
                 mode='currency'
                 allowEmpty
                 showFieldError={false}
-                placeholder={t('categorizationRules:placeholder.no_minimum', 'No minimum')}
+                placeholder={formatCurrencyFromCents(0)}
               />
             )}
           </form.AppField>
@@ -128,11 +131,11 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
           >
             {field => (
               <field.FormNonRecursiveBigDecimalField
-                label={t('categorizationRules:label.amount_max', 'Maximum amount')}
+                label={t('categorizationRules:label.amount_max_optional', 'Maximum amount (optional)')}
                 mode='currency'
                 allowEmpty
                 showFieldError={false}
-                placeholder={t('categorizationRules:placeholder.no_maximum', 'No maximum')}
+                placeholder={t('categorizationRules:placeholder.none', 'None')}
               />
             )}
           </form.AppField>
