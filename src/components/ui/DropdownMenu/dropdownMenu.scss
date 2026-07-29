@@ -31,7 +31,12 @@
   background: var(--color-base-0);
 
   &[data-variant='compact'] {
-    padding: 0;
+    padding: var(--spacing-3xs);
+    border: none;
+    box-shadow:
+      0 4px 12px 0 var(--base-transparent-8),
+      0 2px 4px 0 var(--base-transparent-6),
+      0 0 0 1px var(--base-transparent-4);
   }
 }
 
@@ -46,7 +51,7 @@
   outline: none;
 
   cursor: pointer;
-  transition: background-color 0.1s ease-in-out;
+  transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
 
   &:hover,
   &[data-focused] {
@@ -59,12 +64,17 @@
   }
 
   &[data-variant='compact'] {
-    gap: 0;
-    border-radius: 0;
+    padding: var(--spacing-2xs) var(--spacing-xs);
     border: none;
+    color: var(--color-base-500);
 
-    &:not(:last-child) {
-      border-bottom: 1px solid var(--border-color);
+    .Layer__Span {
+      color: inherit;
+    }
+
+    &:hover,
+    &[data-focused] {
+      color: var(--color-base-800);
     }
   }
 }
@@ -75,6 +85,7 @@
   outline: none;
 
   &[data-variant='compact'] {
-    gap: 0;
+    gap: var(--spacing-3xs);
+    min-width: 10rem;
   }
 }

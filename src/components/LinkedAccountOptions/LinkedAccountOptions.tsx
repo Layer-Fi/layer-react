@@ -1,11 +1,11 @@
-import { type PropsWithChildren } from 'react'
+import { type PropsWithChildren, useCallback } from 'react'
 import classNames from 'classnames'
 import { EllipsisVertical } from 'lucide-react'
 import { Button } from 'react-aria-components/Button'
-import { Menu, MenuItem, MenuTrigger, Popover } from 'react-aria-components/Menu'
 import { useTranslation } from 'react-i18next'
 
 import type { Awaitable } from '@internal-types/utility/promises'
+import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { Span } from '@ui/Typography/Text'
 
 import './linkedAccountOptions.scss'
@@ -26,6 +26,16 @@ export const LinkedAccountOptions = ({
   showLedgerBalance,
 }: LinkedAccountOptionsProps) => {
   const { t } = useTranslation()
+  const accountOptionsLabel = t('linkedAccounts:label.account_options', 'Account options')
+
+  const Trigger = useCallback(() => (
+    <Button
+      aria-label={accountOptionsLabel}
+      className='Layer__linked-accounts__options-overlay-button'
+    >
+      <EllipsisVertical size={16} />
+    </Button>
+  ), [accountOptionsLabel])
 
   const linkedAccountOptionsClassName = classNames(
     'Layer__linked-accounts__options',
@@ -36,30 +46,15 @@ export const LinkedAccountOptions = ({
       <div className='Layer__linked-accounts__options-overlay'>
         {config.length
           ? (
-            <MenuTrigger>
-              <Button
-                aria-label={t('linkedAccounts:label.account_options', 'Account options')}
-                className='Layer__linked-accounts__options-overlay-button'
-              >
-                <EllipsisVertical size={16} />
-              </Button>
-              <Popover placement='bottom end' className='Layer__linked-accounts__options-menu Layer__variables'>
-                <Menu
-                  aria-label={t('linkedAccounts:label.account_options', 'Account options')}
-                  className='Layer__linked-accounts__options-menu-list'
-                >
-                  {config.map(item => (
-                    <MenuItem
-                      key={item.name}
-                      className='Layer__linked-accounts__options-menu-item'
-                      onAction={() => void item.action()}
-                    >
-                      <Span size='sm' variant='inherit'>{item.name}</Span>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Popover>
-            </MenuTrigger>
+            <DropdownMenu ariaLabel={accountOptionsLabel} slots={{ Trigger }} variant='compact'>
+              <MenuList>
+                {config.map(item => (
+                  <MenuItem key={item.name} onClick={() => void item.action()}>
+                    <Span size='sm' variant='inherit'>{item.name}</Span>
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </DropdownMenu>
           )
           : null}
       </div>
