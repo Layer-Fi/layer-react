@@ -1,5 +1,4 @@
-import { BigDecimal as BD, Schema } from 'effect'
-import type { TFunction } from 'i18next'
+import { Schema } from 'effect'
 
 import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
 import {
@@ -12,7 +11,6 @@ import { type Classification, isClassificationAccountIdentifier } from '@schemas
 import {
   convertCentsToNonRecursiveBigDecimal,
   convertNonRecursiveBigDecimalToCents,
-  fromNonRecursiveBigDecimal,
   type NonRecursiveBigDecimal,
 } from '@schemas/nonRecursiveBigDecimal'
 
@@ -60,37 +58,6 @@ export const getCategorizationRuleFormDefaultValues = (
     amountMinFilter: null,
     amountMaxFilter: null,
   }
-}
-
-export const validateCategorizationRuleForm = (
-  values: CategorizationRuleFormValues,
-  t: TFunction,
-) => {
-  const errors: Array<Record<string, string>> = []
-
-  if (!values.counterparty) {
-    errors.push({
-      counterparty: t('categorizationRules:validation.counterparty_required', 'Counterparty is required.'),
-    })
-  }
-
-  if (!values.category || !isClassificationAccountIdentifier(values.category)) {
-    errors.push({
-      category: t('categorizationRules:validation.category_required', 'Category is required.'),
-    })
-  }
-
-  if (values.amountMinFilter && values.amountMaxFilter) {
-    const min = fromNonRecursiveBigDecimal(values.amountMinFilter)
-    const max = fromNonRecursiveBigDecimal(values.amountMaxFilter)
-    if (BD.greaterThan(min, max)) {
-      errors.push({
-        amountMinFilter: t('categorizationRules:validation.amount_min_greater_than_max', 'Minimum amount must be less than or equal to maximum amount.'),
-      })
-    }
-  }
-
-  return errors.length > 0 ? errors : null
 }
 
 export const convertFormToCreateBody = (values: CategorizationRuleFormValues) => {

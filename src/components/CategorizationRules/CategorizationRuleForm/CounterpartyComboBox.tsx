@@ -2,7 +2,7 @@ import { useCallback, useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
-import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { SearchComboBox, useSearchComboBox } from '@ui/ComboBox/SearchComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { type CounterpartyComboBoxOption } from '@components/CategorizationRules/CategorizationRuleForm/counterpartyComboBoxOption'
@@ -29,14 +29,13 @@ export const CounterpartyComboBox = ({
 }: CounterpartyComboBoxProps) => {
   const { t } = useTranslation()
   const inputId = useId()
+  const { searchQuery, searchComboBoxProps } = useSearchComboBox({ minQueryLength: 0 })
   const {
-    searchQuery,
-    handleInputChange,
     options,
     selectedOption,
     isLoading,
     isError: isListError,
-  } = useCounterpartyOptions(value)
+  } = useCounterpartyOptions(value, searchQuery)
 
   const slots = useMemo(() => {
     let emptyMessageContent = t('categorizationRules:empty.no_matching_counterparties', 'No matching counterparties.')
@@ -79,12 +78,11 @@ export const CounterpartyComboBox = ({
           {label}
         </Label>
       )}
-      <ComboBox
+      <SearchComboBox
+        {...searchComboBoxProps}
         options={options}
         selectedValue={selectedOption}
         onSelectedValueChange={handleSelectedValueChange}
-        onInputValueChange={handleInputChange}
-        filterOption={null}
         inputId={inputId}
         isLoading={isLoading}
         isReadOnly={isReadOnly}

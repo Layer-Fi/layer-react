@@ -11,7 +11,6 @@ import {
   convertFormToCreateBody,
   convertFormToPatchBody,
   getCategorizationRuleFormDefaultValues,
-  validateCategorizationRuleForm,
 } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 
 type UseCategorizationRuleFormProps = {
@@ -51,20 +50,10 @@ export const useCategorizationRuleForm = ({ formState, onSuccess }: UseCategoriz
     }
   }, [formState, upsertCategorizationRule, onSuccess, t])
 
-  const onDynamic = useCallback(({ value }: { value: CategorizationRuleFormValues }) => {
-    return validateCategorizationRuleForm(value, t)
-  }, [t])
-
-  const validators = useMemo(() => ({ onDynamic }), [onDynamic])
-
   const form = useAppForm<CategorizationRuleFormValues>({
     defaultValues,
     onSubmit,
-    validators,
-    validationLogic: revalidateLogic({
-      mode: 'submit',
-      modeAfterSubmission: 'submit',
-    }),
+    validationLogic: revalidateLogic(),
     canSubmitWhenInvalid: true,
   })
 

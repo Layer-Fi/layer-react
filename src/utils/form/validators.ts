@@ -20,3 +20,14 @@ export const dateNotInFuture = (message: string) => dateNotAfter(new Date(), mes
 
 export const positiveAmount = (message: string) => (value: NonRecursiveBigDecimal | null) =>
   value !== null && BigDecimal.isPositive(fromNonRecursiveBigDecimal(value)) ? undefined : message
+
+export const amountRangeInOrder = (
+  { min, max }: { min: NonRecursiveBigDecimal | null, max: NonRecursiveBigDecimal | null },
+  message: string,
+) => {
+  if (min === null || max === null) return undefined
+
+  return BigDecimal.greaterThan(fromNonRecursiveBigDecimal(min), fromNonRecursiveBigDecimal(max))
+    ? message
+    : undefined
+}
