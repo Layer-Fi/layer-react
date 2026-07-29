@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 
@@ -53,4 +53,25 @@ export function useDebouncedSearchInput({
     searchQuery,
     handleInputChange,
   }
+}
+
+type UseDebouncedSearchPropsOptions = {
+  query: string
+  setTableFilters: (filters: { query: string }) => void
+}
+
+export function useDebouncedSearchProps({ query, setTableFilters }: UseDebouncedSearchPropsOptions): SearchProps {
+  const onSearchQueryChange = useCallback(
+    (newQuery: string) => setTableFilters({ query: newQuery }),
+    [setTableFilters],
+  )
+  const { inputValue, handleInputChange } = useDebouncedSearchInput({
+    initialInputState: query,
+    onSearchQueryChange,
+  })
+
+  return useMemo(
+    () => ({ value: inputValue, onChange: handleInputChange }),
+    [inputValue, handleInputChange],
+  )
 }

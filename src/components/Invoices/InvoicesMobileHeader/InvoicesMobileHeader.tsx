@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type SearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
+import { useDebouncedSearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useInvoiceTableFilters } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { MobileSelectionDrawerWithTrigger } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
@@ -11,13 +11,14 @@ import { type InvoiceStatusOption, useInvoiceStatusOptions } from '@components/I
 
 interface InvoicesMobileHeaderProps {
   onCreateInvoice: () => void
-  searchProps: SearchProps
 }
 
-export const InvoicesMobileHeader = ({ onCreateInvoice, searchProps }: InvoicesMobileHeaderProps) => {
+export const InvoicesMobileHeader = ({ onCreateInvoice }: InvoicesMobileHeaderProps) => {
   const { t } = useTranslation()
   const { tableFilters, setTableFilters } = useInvoiceTableFilters()
   const { status: selectedInvoiceStatusOption } = tableFilters
+
+  const searchProps = useDebouncedSearchProps({ query: tableFilters.query, setTableFilters })
 
   const options = useInvoiceStatusOptions()
 

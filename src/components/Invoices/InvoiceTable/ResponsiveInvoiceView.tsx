@@ -3,7 +3,6 @@ import { HandCoins, Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
-import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useInvoiceNavigation, useInvoiceTableFilters } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { type DefaultVariant, ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
@@ -18,19 +17,8 @@ const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
 export const ResponsiveInvoiceView = () => {
   const { t } = useTranslation()
   const { toCreateInvoice, toViewInvoice } = useInvoiceNavigation()
-  const { tableFilters, setTableFilters } = useInvoiceTableFilters()
+  const { tableFilters } = useInvoiceTableFilters()
   const { invoices, isLoading, isError, paginationProps, refetch } = useInvoicesList()
-
-  const onSearchQueryChange = useCallback(
-    (query: string) => setTableFilters({ query }),
-    [setTableFilters],
-  )
-  const { inputValue, handleInputChange } = useDebouncedSearchInput({
-    initialInputState: tableFilters.query,
-    onSearchQueryChange,
-  })
-
-  const searchProps = { value: inputValue, onChange: handleInputChange }
 
   const EmptyState = useCallback(() => {
     const isFiltered =
@@ -72,7 +60,6 @@ export const ResponsiveInvoiceView = () => {
       paginationProps={paginationProps}
       onViewInvoice={toViewInvoice}
       onCreateInvoice={toCreateInvoice}
-      searchProps={searchProps}
       slots={slots}
     />
   )
@@ -85,7 +72,6 @@ export const ResponsiveInvoiceView = () => {
       paginationProps={paginationProps}
       onViewInvoice={toViewInvoice}
       onCreateInvoice={toCreateInvoice}
-      searchProps={searchProps}
       slots={slots}
     />
   )

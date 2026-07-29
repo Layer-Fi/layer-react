@@ -11,8 +11,6 @@ import { Span } from '@ui/Typography/Text'
 import { BadgeVariant } from '@components/Badge/Badge'
 import { getCategorizationRuleAmountLabel, getCategorizationRuleCounterpartyLabel, getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
 
-const CONDITION_SEPARATOR = ' · '
-
 export const CategorizationRuleMobileListItem = ({ rule }: { rule: CategorizationRule }) => {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
@@ -22,7 +20,7 @@ export const CategorizationRuleMobileListItem = ({ rule }: { rule: Categorizatio
     ...(rule.amountMinFilter != null || rule.amountMaxFilter != null
       ? [getCategorizationRuleAmountLabel(rule, formatCurrencyFromCents, t)]
       : []),
-  ].join(CONDITION_SEPARATOR)
+  ].join(' · ')
 
   return (
     <MobileListItemContent title={getCategorizationRuleCounterpartyLabel(rule) ?? ''}>

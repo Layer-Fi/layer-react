@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 
 import { CategoryAsOption } from '@internal-types/categorizationOption'
-import { CategoriesListMode, type Classification } from '@schemas/categorization'
+import { type CategoriesListMode, type Classification } from '@schemas/categorization'
 import { findCategoryOption, flattenCategories } from '@utils/categories'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
@@ -13,6 +13,7 @@ type CategoryMobileDrawerProps = {
   label: string
   value: Classification | null
   onValueChange: (value: Classification | null) => void
+  mode: CategoriesListMode
   showLabel?: boolean
   placeholder?: string
 }
@@ -21,10 +22,10 @@ export const CategoryMobileDrawer = ({
   label,
   value,
   onValueChange,
+  mode,
   showLabel,
   placeholder,
 }: CategoryMobileDrawerProps) => {
-  const mode = CategoriesListMode.Default
   const { data: categories } = useCategories({ mode })
 
   const flatOptions = useMemo(() => {

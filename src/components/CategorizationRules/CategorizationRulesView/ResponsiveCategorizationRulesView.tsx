@@ -8,7 +8,7 @@ import { flattenCategories } from '@utils/categories'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import { useArchiveCategorizationRule } from '@hooks/api/businesses/[business-id]/categorization-rules/[categorization-rule-id]/archive/useArchiveCategorizationRule'
-import { type SearchProps, useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
+import { useDebouncedSearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBankTransactionsNavigation, useCategorizationRulesTableFilters } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -63,11 +63,12 @@ type CategorizationRulesHeaderProps = {
   isMobile?: boolean
   onGoBack?: () => void
   onCreateRule: () => void
-  searchProps: SearchProps
 }
 
-const CategorizationRulesHeader = ({ isMobile, onGoBack, onCreateRule, searchProps }: CategorizationRulesHeaderProps) => {
+const CategorizationRulesHeader = ({ isMobile, onGoBack, onCreateRule }: CategorizationRulesHeaderProps) => {
   const { t } = useTranslation()
+  const { tableFilters, setTableFilters } = useCategorizationRulesTableFilters()
+  const searchProps = useDebouncedSearchProps({ query: tableFilters.query, setTableFilters })
   const HeaderActions = useCallback(() => (
     <Button onPress={onCreateRule}>
       {t('common:action.create_label', 'Create')}
@@ -116,19 +117,7 @@ export const ResponsiveCategorizationRulesView = () => {
     return flattenCategories(categories)
   }, [categories])
 
-  const { tableFilters, setTableFilters, isFiltered } = useCategorizationRulesTableFilters()
-  const onSearchQueryChange = useCallback(
-    (query: string) => setTableFilters({ query }),
-    [setTableFilters],
-  )
-  const { inputValue, handleInputChange } = useDebouncedSearchInput({
-    initialInputState: tableFilters.query,
-    onSearchQueryChange,
-  })
-  const searchProps = useMemo(
-    () => ({ value: inputValue, onChange: handleInputChange }),
-    [inputValue, handleInputChange],
-  )
+  const { isFiltered } = useCategorizationRulesTableFilters()
 
   const { categorizationRules, isLoading: rulesAreLoading, isError, paginationProps } = useCategorizationRulesList()
 
@@ -156,31 +145,29 @@ export const ResponsiveCategorizationRulesView = () => {
     [isFiltered],
   )
 
+  const listProps = useMemo(() => ({
+    data: categorizationRules,
+    isLoading,
+    isError,
+    paginationProps,
+    options,
+    onEditRule,
+    onDeleteRule,
+    slots: {
+      EmptyState,
+      ErrorState: CategorizationRulesErrorState,
+    },
+  }), [categorizationRules, isLoading, isError, paginationProps, options, onEditRule, onDeleteRule, EmptyState])
+
   const DesktopView = useMemo(() => (
     <Container name='CategorizationRulesView'>
       <CategorizationRulesHeader
         onGoBack={toBankTransactionsTable}
         onCreateRule={onCreateRule}
-        searchProps={searchProps}
       />
-      <CategorizationRulesTable
-        data={categorizationRules}
-        isLoading={isLoading}
-        isError={isError}
-        paginationProps={paginationProps}
-        options={options}
-        onEditRule={onEditRule}
-        onDeleteRule={onDeleteRule}
-        slots={{
-          EmptyState,
-          ErrorState: CategorizationRulesErrorState,
-        }}
-      />
+      <CategorizationRulesTable {...listProps} />
     </Container>
-  ), [
-    toBankTransactionsTable, onCreateRule, searchProps, categorizationRules, isLoading,
-    isError, paginationProps, options, onEditRule, onDeleteRule, EmptyState,
-  ])
+  ), [toBankTransactionsTable, onCreateRule, listProps])
 
   const MobileView = useMemo(() => (
     <VStack>
@@ -188,26 +175,10 @@ export const ResponsiveCategorizationRulesView = () => {
         isMobile
         onGoBack={toBankTransactionsTable}
         onCreateRule={onCreateRule}
-        searchProps={searchProps}
       />
-      <CategorizationRulesMobileList
-        data={categorizationRules}
-        isLoading={isLoading}
-        isError={isError}
-        paginationProps={paginationProps}
-        options={options}
-        onEditRule={onEditRule}
-        onDeleteRule={onDeleteRule}
-        slots={{
-          EmptyState,
-          ErrorState: CategorizationRulesErrorState,
-        }}
-      />
+      <CategorizationRulesMobileList {...listProps} />
     </VStack>
-  ), [
-    toBankTransactionsTable, onCreateRule, searchProps, categorizationRules, isLoading,
-    isError, paginationProps, options, onEditRule, onDeleteRule, EmptyState,
-  ])
+  ), [toBankTransactionsTable, onCreateRule, listProps])
 
   const selectedRuleCounterpartyLabel = (selectedRule && getCategorizationRuleCounterpartyLabel(selectedRule))
     ?? t('bankTransactions:label.selected_counterparty', 'this counterparty')

@@ -61,7 +61,7 @@ export const TripForm = (props: TripFormProps) => {
             label={t('trips:label.trip_date', 'Trip date')}
             inline={isInline}
             isReadOnly={isReadOnly}
-            className='Layer__TripForm__Field__TripDate'
+            className='Layer__TripForm__Field'
           />
         )}
       </form.AppField>
@@ -74,7 +74,7 @@ export const TripForm = (props: TripFormProps) => {
             onAddressChange={field.handleChange}
             isReadOnly={isReadOnly}
             inline={isInline}
-            className='Layer__TripForm__Field__StartAddress'
+            className='Layer__TripForm__Field'
           />
         )}
       </form.Field>
@@ -87,7 +87,7 @@ export const TripForm = (props: TripFormProps) => {
             onAddressChange={field.handleChange}
             isReadOnly={isReadOnly}
             inline={isInline}
-            className='Layer__TripForm__Field__EndAddress'
+            className='Layer__TripForm__Field'
           />
         )}
       </form.Field>
@@ -101,7 +101,7 @@ export const TripForm = (props: TripFormProps) => {
             maxDecimalPlaces={2}
             allowEmpty
             placeholder={t('trips:label.enter_distance', 'Enter distance')}
-            className='Layer__TripForm__Field__Distance'
+            className='Layer__TripForm__Field'
             errorText={isDistanceIncalculable
               ? t('trips:error.distance_incalculable', 'No route found between these addresses.')
               : undefined}
@@ -117,7 +117,7 @@ export const TripForm = (props: TripFormProps) => {
               onValueChange={value => field.handleChange(value ?? TripPurpose.Unreviewed)}
               isReadOnly={isReadOnly}
               inline={isInline}
-              className='Layer__TripForm__Field__Purpose'
+              className='Layer__TripForm__Field'
             />
             <FieldErrors errors={field.state.meta.errors} className='Layer__TripForm__FieldError' />
           </>
@@ -131,7 +131,7 @@ export const TripForm = (props: TripFormProps) => {
             inline={isInline}
             isReadOnly={isReadOnly}
             placeholder={t('common:action.add_description', 'Add description')}
-            className='Layer__TripForm__Field__Description'
+            className='Layer__TripForm__Field'
           />
         )}
       </form.AppField>
@@ -144,7 +144,7 @@ export const TripForm = (props: TripFormProps) => {
             isReadOnly={isReadOnly}
             inline={isInline}
             placeholder={t('vehicles:action.add_vehicle_label', 'Add vehicle')}
-            containerClassName='Layer__TripForm__Field__Vehicle'
+            containerClassName='Layer__TripForm__Field'
           />
         )}
       </form.Field>

@@ -7,8 +7,7 @@ import { useCategorizationRulesTableFilters, useSetCurrentCategorizationRulesPag
 const PAGE_SIZE = 10
 
 export const useCategorizationRulesList = () => {
-  const { tableFilters } = useCategorizationRulesTableFilters()
-  const filterParams = useMemo(() => ({ query: tableFilters.query }), [tableFilters.query])
+  const { tableFilters: filterParams } = useCategorizationRulesTableFilters()
 
   const {
     data,

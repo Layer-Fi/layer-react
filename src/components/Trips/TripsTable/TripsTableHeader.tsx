@@ -3,7 +3,7 @@ import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { Vehicle } from '@schemas/vehicle'
-import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
+import { useDebouncedSearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
@@ -23,14 +23,7 @@ export const TripsTableHeader = ({ onRecordTrip }: TripsTableHeaderProps) => {
   const { tableFilters, setTableFilters } = useTripsTableFilters()
   const { query, selectedVehicle, purposeFilter } = tableFilters
 
-  const onSearchQueryChange = useCallback(
-    (newQuery: string) => setTableFilters({ query: newQuery }),
-    [setTableFilters],
-  )
-  const { inputValue, handleInputChange } = useDebouncedSearchInput({
-    initialInputState: query,
-    onSearchQueryChange,
-  })
+  const searchProps = useDebouncedSearchProps({ query, setTableFilters })
 
   const handlePurposeFilterChange = useCallback((newPurposeFilter: TripPurposeFilterValue) => {
     setTableFilters({ purposeFilter: newPurposeFilter })
@@ -79,9 +72,8 @@ export const TripsTableHeader = ({ onRecordTrip }: TripsTableHeaderProps) => {
       slotProps={{
         SearchField: {
           label: t('trips:label.search_trips', 'Search trips'),
-          value: inputValue,
-          onChange: handleInputChange,
           className: 'Layer__TripsTable__SearchField',
+          ...searchProps,
         },
       }}
     />

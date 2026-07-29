@@ -26,10 +26,7 @@ const DataTableHeaderName = ({
   name,
   slotProps = {},
 }: Pick<DataTableHeaderProps, 'name'> & {
-  slotProps?: {
-    BackButton?: BackButtonProps
-    Heading?: Omit<ComponentPropsWithoutRef<typeof Heading>, 'children'>
-  }
+  slotProps?: Pick<NonNullable<DataTableHeaderProps['slotProps']>, 'BackButton' | 'Heading'>
 }) => (
   <HStack align='center' gap='md'>
     {slotProps.BackButton && <BackButton {...slotProps.BackButton} />}
@@ -43,10 +40,7 @@ const DesktopDataTableHeader = ({ name, slotProps = {}, slots = {} }: DataTableH
   return (
     <HStack fluid justify='space-between' align='center' gap='xs' className='Layer__DataTableHeader__Header'>
       <HStack pis='md' align='center' gap='xl'>
-        <DataTableHeaderName
-          name={name}
-          slotProps={{ BackButton: slotProps.BackButton, Heading: slotProps.Heading }}
-        />
+        <DataTableHeaderName name={name} slotProps={slotProps} />
         {HeaderFilters && <HeaderFilters />}
       </HStack>
       <HStack pie='md' align='center' gap='xs'>
@@ -64,10 +58,7 @@ const MobileDataTableHeader = ({ name, slotProps = {}, slots = {} }: DataTableHe
     <Header className='Layer__DataTableHeader__Mobile'>
       <VStack gap='sm' pbe='md'>
         <HStack fluid justify='space-between' align='center' gap='sm'>
-          <DataTableHeaderName
-            name={name}
-            slotProps={{ BackButton: slotProps.BackButton, Heading: slotProps.Heading }}
-          />
+          <DataTableHeaderName name={name} slotProps={slotProps} />
           {HeaderActions && <HeaderActions />}
         </HStack>
         {HeaderFilters && <HeaderFilters />}

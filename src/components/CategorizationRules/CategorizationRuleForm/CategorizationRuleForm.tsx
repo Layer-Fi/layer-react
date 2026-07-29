@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { BankDirectionFilter, type CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { isClassificationAccountIdentifier } from '@schemas/categorization'
-import { amountRangeInOrder, required } from '@utils/form/validators'
+import { required } from '@utils/form/validators'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { SubmitButton } from '@ui/Button/SubmitButton'
 import { Form } from '@ui/Form/Form'
@@ -31,11 +31,6 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
     e.preventDefault()
     e.stopPropagation()
   }, [])
-
-  const amountRangeMessage = t(
-    'categorizationRules:validation.amount_min_greater_than_max',
-    'Minimum amount must be less than or equal to maximum amount.',
-  )
 
   const directionOptions = useMemo<Array<{ value: DirectionFormValue, label: string }>>(() => [
     { value: '', label: t('categorizationRules:label.any', 'Any') },
@@ -101,15 +96,7 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
 
       <VStack gap='3xs'>
         <HStack gap='md' className='Layer__CategorizationRuleForm__AmountRow'>
-          <form.AppField
-            name='amountMinFilter'
-            validators={{
-              onDynamic: ({ value, fieldApi }) => amountRangeInOrder(
-                { min: value, max: fieldApi.form.state.values.amountMaxFilter },
-                amountRangeMessage,
-              ),
-            }}
-          >
+          <form.AppField name='amountMinFilter'>
             {field => (
               <field.FormNonRecursiveBigDecimalField
                 label={t('categorizationRules:label.amount_min_optional', 'Minimum amount (optional)')}
@@ -120,15 +107,7 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
               />
             )}
           </form.AppField>
-          <form.AppField
-            name='amountMaxFilter'
-            validators={{
-              onDynamic: ({ value, fieldApi }) => amountRangeInOrder(
-                { min: fieldApi.form.state.values.amountMinFilter, max: value },
-                amountRangeMessage,
-              ),
-            }}
-          >
+          <form.AppField name='amountMaxFilter'>
             {field => (
               <field.FormNonRecursiveBigDecimalField
                 label={t('categorizationRules:label.amount_max_optional', 'Maximum amount (optional)')}
@@ -140,14 +119,8 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
             )}
           </form.AppField>
         </HStack>
-        <form.Subscribe
-          selector={state => state.submissionAttempts > 0
-            && amountRangeInOrder(
-              { min: state.values.amountMinFilter, max: state.values.amountMaxFilter },
-              amountRangeMessage,
-            )}
-        >
-          {error => <FieldErrors errors={error ? [error] : []} />}
+        <form.Subscribe selector={state => state.fieldMeta.amountMinFilter?.errors}>
+          {errors => <FieldErrors errors={errors ?? []} />}
         </form.Subscribe>
       </VStack>
 
