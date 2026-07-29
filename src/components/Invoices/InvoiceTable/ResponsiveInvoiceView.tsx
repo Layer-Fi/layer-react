@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { HandCoins, Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -21,11 +21,14 @@ export const ResponsiveInvoiceView = () => {
   const { tableFilters, setTableFilters } = useInvoiceTableFilters()
   const { invoices, isLoading, isError, paginationProps, refetch } = useInvoicesList()
 
-  const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: tableFilters.query })
-
-  useEffect(() => {
-    setTableFilters({ query: searchQuery })
-  }, [searchQuery, setTableFilters])
+  const onSearchQueryChange = useCallback(
+    (query: string) => setTableFilters({ query }),
+    [setTableFilters],
+  )
+  const { inputValue, handleInputChange } = useDebouncedSearchInput({
+    initialInputState: tableFilters.query,
+    onSearchQueryChange,
+  })
 
   const searchProps = { value: inputValue, onChange: handleInputChange }
 

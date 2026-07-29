@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -23,11 +23,14 @@ export const TripsTableHeader = ({ onRecordTrip }: TripsTableHeaderProps) => {
   const { tableFilters, setTableFilters } = useTripsTableFilters()
   const { query, selectedVehicle, purposeFilter } = tableFilters
 
-  const { inputValue, searchQuery, handleInputChange } = useDebouncedSearchInput({ initialInputState: query })
-
-  useEffect(() => {
-    setTableFilters({ query: searchQuery })
-  }, [searchQuery, setTableFilters])
+  const onSearchQueryChange = useCallback(
+    (newQuery: string) => setTableFilters({ query: newQuery }),
+    [setTableFilters],
+  )
+  const { inputValue, handleInputChange } = useDebouncedSearchInput({
+    initialInputState: query,
+    onSearchQueryChange,
+  })
 
   const handlePurposeFilterChange = useCallback((newPurposeFilter: TripPurposeFilterValue) => {
     setTableFilters({ purposeFilter: newPurposeFilter })
