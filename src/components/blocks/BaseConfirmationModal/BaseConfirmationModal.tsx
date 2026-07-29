@@ -84,7 +84,6 @@ const BaseConfirmationModalContent = memo(function BaseConfirmationModalContent(
           </ModalHeading>
         )}
         onClose={close}
-        hideCloseButton={useDrawer}
       />
       <VStack gap='md'>
         {description && <ModalDescription>{description}</ModalDescription>}
