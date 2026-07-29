@@ -31,6 +31,8 @@
     "account_type": "Type de compte",
     "balance": "Solde actuel",
     "bill_number": "Numéro de facture fournisseur",
+    "closing_action_type": "Action type",
+    "closing_date": "Closing date",
     "enter_account_name": "Saisissez le nom du compte...",
     "enter_institution_name": "Saisissez le nom de l’institution...",
     "entry_date": "Date d’écriture",

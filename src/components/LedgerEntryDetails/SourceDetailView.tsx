@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 import { type LedgerEntrySourceType } from '@schemas/generalLedger/ledgerEntrySource'
+import { humanizeEnum } from '@utils/format'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { DateTime } from '@components/DateTime/DateTime'
 import { EntryDetailField } from '@components/LedgerEntryDetails/EntryDetailSection'
@@ -294,6 +295,19 @@ export const SourceDetailView = ({
               {customerDisplayName}
             </EntryDetailField>
           )}
+        </>
+      )
+    }
+
+    case 'Closing_Action_Ledger_Entry_Source': {
+      return (
+        <>
+          <EntryDetailField label={t('generalLedger:label.closing_action_type', 'Action type')}>
+            {humanizeEnum(source.actionType)}
+          </EntryDetailField>
+          <EntryDetailField label={t('generalLedger:label.closing_date', 'Closing date')}>
+            <DateTime value={source.closingDate} onlyDate />
+          </EntryDetailField>
         </>
       )
     }

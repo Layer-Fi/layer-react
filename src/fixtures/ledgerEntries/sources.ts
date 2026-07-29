@@ -200,4 +200,12 @@ export const ledgerEntrySourceExamples: readonly ExampleSource[] = [
     amount: 20000,
     customer: makeCustomer(),
   }),
+  makeSource(EntryType.ClosingActionRecognizeExternalRevenue, {
+    type: 'Closing_Action_Ledger_Entry_Source',
+    displayDescription: 'Closing Entry: RECOGNIZE_EXTERNAL_REVENUE',
+    entityName: 'Closing entry',
+    closingActionId: '00000000-0000-4000-8000-000000001011',
+    actionType: 'RECOGNIZE_EXTERNAL_REVENUE',
+    closingDate: '2025-08-01',
+  }),
 ]

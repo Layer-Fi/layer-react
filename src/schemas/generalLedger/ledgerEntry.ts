@@ -38,6 +38,7 @@ export enum EntryType {
   BillPayment = 'BILL_PAYMENT',
   VendorCredit = 'VENDOR_CREDIT',
   CustomerCredit = 'CUSTOMER_CREDIT',
+  ClosingActionRecognizeExternalRevenue = 'CLOSING_ACTION_RECOGNIZE_EXTERNAL_REVENUE',
 }
 const EntryTypeSchema = Schema.Enums(EntryType)
 

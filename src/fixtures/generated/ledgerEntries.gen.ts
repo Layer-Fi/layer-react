@@ -1947,8 +1947,8 @@ export const ledgerEntries = [
     "businessId": "00000000-0000-4000-8000-000000000201",
     "ledgerId": "00000000-0000-4000-8000-0000000000ff",
     "entryNumber": 1022,
-    "agent": "LAYER_MANUAL",
-    "entryType": "MANUAL",
+    "agent": "API",
+    "entryType": "CLOSING_ACTION_RECOGNIZE_EXTERNAL_REVENUE",
     "customer": {
       "id": "00000003-f63f-4fcb-858d-1a35ff5a6aa5",
       "externalId": null,
@@ -2060,12 +2060,12 @@ export const ledgerEntries = [
       }
     ],
     "source": {
-      "display_description": "Loan repayment",
-      "entity_name": "Manual journal entry",
-      "type": "Manual_Ledger_Entry_Source",
-      "manual_entry_id": "0000000a-44aa-4807-88f5-d29f22206a13",
-      "memo": "Loan repayment",
-      "created_by": "Layer"
+      "display_description": "Closing Entry: RECOGNIZE_EXTERNAL_REVENUE",
+      "entity_name": "Closing entry",
+      "type": "Closing_Action_Ledger_Entry_Source",
+      "closing_action_id": "00000000-0000-4000-8000-000000001011",
+      "action_type": "RECOGNIZE_EXTERNAL_REVENUE",
+      "closing_date": "2025-08-01"
     },
     "transactionTags": [],
     "memo": "Loan repayment",
