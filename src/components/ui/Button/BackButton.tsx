@@ -1,11 +1,11 @@
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, type LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button, type ButtonProps } from '@ui/Button/Button'
 
 export type BackButtonProps = Pick<ButtonProps, 'onPress'> & {
   slots?: {
-    Icon?: React.ComponentType<{ size?: string | number, color?: string }>
+    Icon?: LucideIcon
   }
 }
 

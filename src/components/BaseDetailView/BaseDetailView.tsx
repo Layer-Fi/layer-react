@@ -1,4 +1,4 @@
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, type LucideIcon } from 'lucide-react'
 import type { PropsWithChildren } from 'react'
 
 import { BackButton } from '@ui/Button/BackButton'
@@ -13,7 +13,7 @@ export type BaseDetailViewProps = PropsWithChildren<{
   onGoBack?: () => void
   slots: {
     Header: React.FC
-    BackIcon?: React.ComponentType<{ size?: string | number, color?: string }>
+    BackIcon?: LucideIcon
   }
 }>
 
