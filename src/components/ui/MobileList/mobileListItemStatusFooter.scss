@@ -1,4 +1,4 @@
-.Layer__InvoicesMobileListItem__StatusFooter {
+.Layer__UI__MobileListItemStatusFooter {
   --status-bar-bg: var(--color-base-50);
   --status-bar-icon-color: var(--color-base-700);
 
@@ -18,11 +18,11 @@
   }
 }
 
-.Layer__InvoicesMobileListItem__StatusFooter__Icon {
+.Layer__UI__MobileListItemStatusFooter__Icon {
   flex-shrink: 0;
 }
 
-.Layer__InvoicesMobileListItem__StatusFooter__Dot {
+.Layer__UI__MobileListItemStatusFooter__Dot {
   flex-shrink: 0;
   block-size: 6px;
   inline-size: 6px;

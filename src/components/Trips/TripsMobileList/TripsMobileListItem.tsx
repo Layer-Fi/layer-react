@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { type Trip } from '@schemas/trip'
 import { formatCalendarDate } from '@utils/time/timeUtils'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { MobileListItemStatusFooter } from '@ui/MobileList/MobileListItemStatusFooter'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { TripsAddressCell } from '@components/Trips/TripAddressCell/TripAddressCell'
@@ -27,17 +28,12 @@ export const TripsMobileListItem = ({ trip }: { trip: Trip }) => {
 
 export const TripsMobileListItemFooter = ({ trip }: { trip: Trip }) => {
   const { t } = useTranslation()
-  const PurposeIcon = getPurposeIcon(trip.purpose)
 
   return (
-    <HStack
-      align='center'
-      gap='2xs'
-      className='Layer__TripsMobileListItem__Purpose'
-      data-purpose-variant={getPurposeBadgeVariant(trip.purpose)}
-    >
-      <PurposeIcon size={14} className='Layer__TripsMobileListItem__Purpose__Icon' />
-      <Span weight='bold' size='sm'>{getPurposeLabel(trip.purpose, t)}</Span>
-    </HStack>
+    <MobileListItemStatusFooter
+      variant={getPurposeBadgeVariant(trip.purpose)}
+      text={getPurposeLabel(trip.purpose, t)}
+      slots={{ Icon: getPurposeIcon(trip.purpose) }}
+    />
   )
 }

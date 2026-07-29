@@ -5,8 +5,10 @@ import type { CategorizationRule } from '@schemas/bankTransactions/categorizatio
 import type { NestedCategorization } from '@schemas/categorization'
 import { getResolvedCategoryName } from '@utils/categories'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { MobileListItemStatusFooter } from '@ui/MobileList/MobileListItemStatusFooter'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import { BadgeVariant } from '@components/Badge/Badge'
 import { CategorizationRuleActionsMenu } from '@components/CategorizationRules/CategorizationRuleActionsMenu'
 import { getCategorizationRuleAmountLabel, getCategorizationRuleCounterpartyLabel, getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
 
@@ -63,11 +65,10 @@ export const CategorizationRuleMobileListItemFooter = ({
   const categoryName = rule.category ? getResolvedCategoryName(rule.category, options) : undefined
 
   return (
-    <HStack align='center' gap='2xs' className='Layer__CategorizationRuleMobileListItem__Outcome'>
-      <CornerDownRight size={14} className='Layer__CategorizationRuleMobileListItem__Outcome__Icon' />
-      <Span weight='bold' size='sm' ellipsis>
-        {categoryName ?? t('categorizationRules:label.suggests_category', 'Suggests a category')}
-      </Span>
-    </HStack>
+    <MobileListItemStatusFooter
+      variant={BadgeVariant.NEUTRAL}
+      text={categoryName ?? t('categorizationRules:label.suggests_category', 'Suggests a category')}
+      slots={{ Icon: CornerDownRight }}
+    />
   )
 }
