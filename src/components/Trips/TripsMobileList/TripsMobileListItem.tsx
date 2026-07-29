@@ -9,16 +9,22 @@ import { Span } from '@ui/Typography/Text'
 import { TripsAddressCell } from '@components/Trips/TripAddressCell/TripAddressCell'
 import { formatDistance, getPurposeBadgeVariant, getPurposeIcon, getPurposeLabel } from '@components/Trips/utils'
 
-export const TripsMobileListItem = ({ trip }: { trip: Trip }) => {
+const TripsMobileListItemDistance = ({ trip }: { trip: Trip }) => {
   const { t } = useTranslation()
-  const { formatDate, formatNumber } = useIntlFormatter()
+  const { formatNumber } = useIntlFormatter()
+
+  return (
+    <Span weight='bold' numeric='tabular-nums'>{formatDistance(trip.distance, t, formatNumber)}</Span>
+  )
+}
+
+export const TripsMobileListItem = ({ trip }: { trip: Trip }) => {
+  const { formatDate } = useIntlFormatter()
 
   return (
     <MobileListItemContent
       title={formatCalendarDate(trip.tripDate, formatDate)}
-      slots={{
-        Value: <Span weight='bold' numeric='tabular-nums'>{formatDistance(trip.distance, t, formatNumber)}</Span>,
-      }}
+      slots={{ Value: <TripsMobileListItemDistance trip={trip} /> }}
     >
       {(trip.startAddress || trip.endAddress) && <TripsAddressCell trip={trip} />}
     </MobileListItemContent>
