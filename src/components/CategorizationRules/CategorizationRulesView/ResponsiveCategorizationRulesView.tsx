@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import { ChevronLeft, PencilRuler, Plus } from 'lucide-react'
+import { PencilRuler, Plus, Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
@@ -8,32 +8,38 @@ import { flattenCategories } from '@utils/categories'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
 import { useArchiveCategorizationRule } from '@hooks/api/businesses/[business-id]/categorization-rules/[categorization-rule-id]/archive/useArchiveCategorizationRule'
-import { useListCategorizationRules } from '@hooks/api/businesses/[business-id]/categorization-rules/useListCategorizationRules'
+import { type SearchProps, useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useBankTransactionsNavigation, useSetCurrentCategorizationRulesPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
+import { useBankTransactionsNavigation, useCategorizationRulesTableFilters } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { BackButton } from '@ui/Button/BackButton'
 import { Button } from '@ui/Button/Button'
 import { ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
-import { HStack, VStack } from '@ui/Stack/Stack'
-import { Heading } from '@ui/Typography/Heading'
+import { VStack } from '@ui/Stack/Stack'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
-import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { CategorizationRuleFormDrawer } from '@components/CategorizationRules/CategorizationRuleForm/CategorizationRuleFormDrawer'
 import { type CategorizationRuleFormState } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 import { CategorizationRulesMobileList } from '@components/CategorizationRules/CategorizationRulesMobileList/CategorizationRulesMobileList'
 import { CategorizationRulesTable } from '@components/CategorizationRules/CategorizationRulesTable/CategorizationRulesTable'
+import { useCategorizationRulesList } from '@components/CategorizationRules/CategorizationRulesView/useCategorizationRulesList'
 import { getCategorizationRuleCounterpartyLabel } from '@components/CategorizationRules/utils'
+import { Container } from '@components/Container/Container'
 import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { DataTableHeader } from '@components/DataTable/DataTableHeader'
 
-const CategorizationRulesEmptyState = () => {
+import './categorizationRulesView.scss'
+
+const CategorizationRulesEmptyState = ({ isFiltered }: { isFiltered: boolean }) => {
   const { t } = useTranslation()
   return (
     <DataState
       status={DataStateStatus.allDone}
-      title={t('categorizationRules:empty.no_rules_found', 'No rules found')}
-      description={t('categorizationRules:empty.no_categorization_rules_yet', 'No categorization rules have been created yet. You will receive suggestions for rules to create as you categorize transactions in the bank feed.')}
-      icon={<PencilRuler />}
+      title={isFiltered
+        ? t('common:empty.results', 'No results found')
+        : t('categorizationRules:empty.no_rules_found', 'No rules found')}
+      description={isFiltered
+        ? t('categorizationRules:empty.no_categorization_rules_match_search', 'We couldn’t find any categorization rules matching your search. Try a different search term.')
+        : t('categorizationRules:empty.no_categorization_rules_yet', 'No categorization rules have been created yet. You will receive suggestions for rules to create as you categorize transactions in the bank feed.')}
+      icon={isFiltered ? <Search /> : <PencilRuler />}
       spacing
       className='Layer__CategorizationRulesView__EmptyState'
     />
@@ -54,25 +60,35 @@ const CategorizationRulesErrorState = () => {
 }
 
 type CategorizationRulesHeaderProps = {
+  isMobile?: boolean
   onGoBack?: () => void
   onCreateRule: () => void
+  searchProps: SearchProps
 }
 
-const CategorizationRulesHeader = ({ onGoBack, onCreateRule }: CategorizationRulesHeaderProps) => {
+const CategorizationRulesHeader = ({ isMobile, onGoBack, onCreateRule, searchProps }: CategorizationRulesHeaderProps) => {
   const { t } = useTranslation()
+  const HeaderActions = useCallback(() => (
+    <Button onPress={onCreateRule}>
+      {t('common:action.create_label', 'Create')}
+      <Plus size={16} />
+    </Button>
+  ), [t, onCreateRule])
+
   return (
-    <HStack fluid justify='space-between' align='center' gap='xs'>
-      <HStack align='center' gap='md'>
-        {onGoBack && <BackButton onPress={onGoBack} />}
-        <Heading size='sm'>{t('categorizationRules:label.categorization_rules', 'Categorization Rules')}</Heading>
-      </HStack>
-      <HStack pie='md' align='center' gap='xs'>
-        <Button onPress={onCreateRule}>
-          {t('categorizationRules:action.create_rule', 'Create Rule')}
-          <Plus size={16} />
-        </Button>
-      </HStack>
-    </HStack>
+    <DataTableHeader
+      isMobile={isMobile}
+      name={t('categorizationRules:label.categorization_rules', 'Categorization Rules')}
+      slots={{ HeaderActions }}
+      slotProps={{
+        SearchField: {
+          label: t('categorizationRules:label.search_rules', 'Search rules'),
+          ...searchProps,
+        },
+        BackButton: onGoBack ? { onPress: onGoBack } : undefined,
+        Heading: { size: 'sm' },
+      }}
+    />
   )
 }
 
@@ -100,17 +116,21 @@ export const ResponsiveCategorizationRulesView = () => {
     return flattenCategories(categories)
   }, [categories])
 
-  const { flattenedData: categorizationRules, hasMore, isLoading: rulesAreLoading, isError, fetchMore } = useListCategorizationRules({})
+  const { tableFilters, setTableFilters, isFiltered } = useCategorizationRulesTableFilters()
+  const onSearchQueryChange = useCallback(
+    (query: string) => setTableFilters({ query }),
+    [setTableFilters],
+  )
+  const { inputValue, handleInputChange } = useDebouncedSearchInput({
+    initialInputState: tableFilters.query,
+    onSearchQueryChange,
+  })
+  const searchProps = useMemo(
+    () => ({ value: inputValue, onChange: handleInputChange }),
+    [inputValue, handleInputChange],
+  )
 
-  const { currentCategorizationRulesPage: currentPage, setCurrentCategorizationRulesPage: setCurrentPage } = useSetCurrentCategorizationRulesPage()
-
-  const paginationProps = useMemo(() => ({
-    pageIndex: currentPage,
-    onPageIndexChange: setCurrentPage,
-    pageSize: 10,
-    hasMore,
-    fetchMore,
-  }), [hasMore, fetchMore, currentPage, setCurrentPage])
+  const { categorizationRules, isLoading: rulesAreLoading, isError, paginationProps } = useCategorizationRulesList()
 
   const onDeleteRule = useCallback((rule: CategorizationRule) => {
     setSelectedRule(rule)
@@ -131,17 +151,18 @@ export const ResponsiveCategorizationRulesView = () => {
   const isLoading = categorizationRules === undefined || rulesAreLoading || categoriesAreLoading
   const { toBankTransactionsTable } = useBankTransactionsNavigation()
 
-  const DesktopHeader = useCallback(
-    () => <CategorizationRulesHeader onCreateRule={onCreateRule} />,
-    [onCreateRule],
+  const EmptyState = useCallback(
+    () => <CategorizationRulesEmptyState isFiltered={isFiltered} />,
+    [isFiltered],
   )
 
   const DesktopView = useMemo(() => (
-    <BaseDetailView
-      slots={{ Header: DesktopHeader, BackIcon: ChevronLeft }}
-      name='CategorizationRulesDrawer'
-      onGoBack={toBankTransactionsTable}
-    >
+    <Container name='CategorizationRulesView'>
+      <CategorizationRulesHeader
+        onGoBack={toBankTransactionsTable}
+        onCreateRule={onCreateRule}
+        searchProps={searchProps}
+      />
       <CategorizationRulesTable
         data={categorizationRules}
         isLoading={isLoading}
@@ -151,16 +172,24 @@ export const ResponsiveCategorizationRulesView = () => {
         onEditRule={onEditRule}
         onDeleteRule={onDeleteRule}
         slots={{
-          EmptyState: CategorizationRulesEmptyState,
+          EmptyState,
           ErrorState: CategorizationRulesErrorState,
         }}
       />
-    </BaseDetailView>
-  ), [DesktopHeader, toBankTransactionsTable, categorizationRules, isLoading, isError, paginationProps, options, onEditRule, onDeleteRule])
+    </Container>
+  ), [
+    toBankTransactionsTable, onCreateRule, searchProps, categorizationRules, isLoading,
+    isError, paginationProps, options, onEditRule, onDeleteRule, EmptyState,
+  ])
 
   const MobileView = useMemo(() => (
-    <VStack gap='md'>
-      <CategorizationRulesHeader onGoBack={toBankTransactionsTable} onCreateRule={onCreateRule} />
+    <VStack>
+      <CategorizationRulesHeader
+        isMobile
+        onGoBack={toBankTransactionsTable}
+        onCreateRule={onCreateRule}
+        searchProps={searchProps}
+      />
       <CategorizationRulesMobileList
         data={categorizationRules}
         isLoading={isLoading}
@@ -170,12 +199,15 @@ export const ResponsiveCategorizationRulesView = () => {
         onEditRule={onEditRule}
         onDeleteRule={onDeleteRule}
         slots={{
-          EmptyState: CategorizationRulesEmptyState,
+          EmptyState,
           ErrorState: CategorizationRulesErrorState,
         }}
       />
     </VStack>
-  ), [toBankTransactionsTable, onCreateRule, categorizationRules, isLoading, isError, paginationProps, options, onEditRule, onDeleteRule])
+  ), [
+    toBankTransactionsTable, onCreateRule, searchProps, categorizationRules, isLoading,
+    isError, paginationProps, options, onEditRule, onDeleteRule, EmptyState,
+  ])
 
   const selectedRuleCounterpartyLabel = (selectedRule && getCategorizationRuleCounterpartyLabel(selectedRule))
     ?? t('bankTransactions:label.selected_counterparty', 'this counterparty')

@@ -10,25 +10,32 @@ type CategorizationRulesTableRouteState = { route: BankTransactionsRoute.Categor
 type BankTransactionsTableRouteState = { route: BankTransactionsRoute.BankTransactionsTable }
 type BankTransactionsRouteState = CategorizationRulesTableRouteState | BankTransactionsTableRouteState
 
+export type CategorizationRulesTableFilters = {
+  query: string
+}
+
 type BankTransactionsRouteStoreShape = {
   routeState: BankTransactionsRouteState
   currentBankTransactionsPage: number
   currentCategorizationRulesPage: number
+  categorizationRulesTableFilters: CategorizationRulesTableFilters
   navigate: {
     toBankTransactionsTable: () => void
     toCategorizationRulesTable: () => void
   }
   actions: {
-    setCurrentBankTransactionsPage: (page: number) => void
-    setCurrentCategorizationRulesPage: (page: number) => void
+    setCurrentBankTransactionsPage: (pageIndex: number) => void
+    setCurrentCategorizationRulesPage: (pageIndex: number) => void
+    setCategorizationRulesTableFilters: (patchFilters: Partial<CategorizationRulesTableFilters>) => void
   }
 }
 
 const BankTransactionsRouteStoreContext = createContext(
   createStore<BankTransactionsRouteStoreShape>(() => ({
     routeState: { route: BankTransactionsRoute.BankTransactionsTable },
-    currentBankTransactionsPage: 1,
-    currentCategorizationRulesPage: 1,
+    currentBankTransactionsPage: 0,
+    currentCategorizationRulesPage: 0,
+    categorizationRulesTableFilters: { query: '' },
     navigate: {
       toBankTransactionsTable: () => {},
       toCategorizationRulesTable: () => {},
@@ -36,6 +43,7 @@ const BankTransactionsRouteStoreContext = createContext(
     actions: {
       setCurrentBankTransactionsPage: () => {},
       setCurrentCategorizationRulesPage: () => {},
+      setCategorizationRulesTableFilters: () => {},
     },
   })),
 )
@@ -68,12 +76,23 @@ export function useSetCurrentCategorizationRulesPage() {
   )
 }
 
+export function useCategorizationRulesTableFilters() {
+  const store = useContext(BankTransactionsRouteStoreContext)
+  const tableFilters = useStore(store, state => state.categorizationRulesTableFilters)
+  const setTableFilters = useStore(store, state => state.actions.setCategorizationRulesTableFilters)
+  return useMemo(
+    () => ({ tableFilters, setTableFilters, isFiltered: tableFilters.query.trim().length > 0 }),
+    [tableFilters, setTableFilters],
+  )
+}
+
 export function BankTransactionsRouteStoreProvider(props: PropsWithChildren) {
   const [store] = useState(() =>
     createStore<BankTransactionsRouteStoreShape>(set => ({
       routeState: { route: BankTransactionsRoute.BankTransactionsTable },
-      currentBankTransactionsPage: 1, // Bank transactions has separate, 1-indexed pagination logic
+      currentBankTransactionsPage: 0,
       currentCategorizationRulesPage: 0,
+      categorizationRulesTableFilters: { query: '' },
       navigate: {
         toCategorizationRulesTable: () => {
           set(() => ({
@@ -91,11 +110,16 @@ export function BankTransactionsRouteStoreProvider(props: PropsWithChildren) {
         },
       },
       actions: {
-        setCurrentBankTransactionsPage: (page: number) => {
-          set({ currentBankTransactionsPage: page })
+        setCurrentBankTransactionsPage: (pageIndex: number) => {
+          set({ currentBankTransactionsPage: pageIndex })
         },
-        setCurrentCategorizationRulesPage: (page: number) => {
-          set({ currentCategorizationRulesPage: page })
+        setCurrentCategorizationRulesPage: (pageIndex: number) => {
+          set({ currentCategorizationRulesPage: pageIndex })
+        },
+        setCategorizationRulesTableFilters: (patchFilters: Partial<CategorizationRulesTableFilters>) => {
+          set(state => ({
+            categorizationRulesTableFilters: { ...state.categorizationRulesTableFilters, ...patchFilters },
+          }))
         },
       },
     })),

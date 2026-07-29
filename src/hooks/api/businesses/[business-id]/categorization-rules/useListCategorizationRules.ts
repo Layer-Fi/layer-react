@@ -10,6 +10,7 @@ export const LIST_CATEGORIZATION_RULES_TAG_KEY = '#list-categorization-rules'
 export type ListCategorizationRulesFilterParams = {
   externalIds?: ReadonlyArray<string>
   includeArchived?: boolean
+  query?: string
 }
 
 enum SortBy {
@@ -29,6 +30,16 @@ export const listCategorizationRules = getWithQuery<
 >(
   ['businessId'],
   ({ businessId }) => `/v1/businesses/${businessId}/categorization-rules`,
+  ({ externalIds, includeArchived, query, sortBy, sortOrder, cursor, limit, showTotalCount }) => ({
+    externalIds,
+    includeArchived,
+    q: query,
+    sortBy,
+    sortOrder,
+    cursor,
+    limit,
+    showTotalCount,
+  }),
 )
 
 export const useListCategorizationRules = createInfiniteQueryHook({
