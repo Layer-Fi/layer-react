@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { type TooltipContentProps } from 'recharts'
 
+import { ChartTooltip, ChartTooltipContent, ChartTooltipRow } from '@ui/Chart/ChartTooltip'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { ChartTooltip, ChartTooltipContent, ChartTooltipRow } from '@components/Chart/ChartTooltip'
 import type { ChartDataPoint } from '@components/ProfitAndLossChart/chartDataPoint'
 
 export interface ProfitAndLossChartTooltipProps {

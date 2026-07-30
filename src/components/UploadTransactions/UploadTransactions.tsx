@@ -6,11 +6,11 @@ import { type BankTransactionDataOnly } from '@schemas/bankTransactions/bankTran
 import { type CustomAccountParseCsvResponse } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
 import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { Heading } from '@ui/Typography/Heading'
+import { Wizard } from '@blocks/Wizard/Wizard'
 import { UploadTransactionsStep } from '@components/UploadTransactions/types'
 import { UploadTransactionsConfirmationStep } from '@components/UploadTransactions/UploadTransactionsConfirmationStep'
 import { type AccountOption, UploadTransactionsUploadCsvStep } from '@components/UploadTransactions/UploadTransactionsUploadCsvStep'
 import { UploadTransactionsValidateCsvStep } from '@components/UploadTransactions/UploadTransactionsValidateCsvStep'
-import { Wizard } from '@components/Wizard/Wizard'
 
 import './uploadTransactions.scss'
 

@@ -23,7 +23,7 @@ export function LinkedAccountToConfirm({
       <VStack justify='center'>
         <Checkbox
           size='lg'
-          variant='success'
+          variant='branded'
           isSelected={isConfirmed}
           onChange={onChangeConfirmed}
           aria-label={t('linkedAccounts:label.confirm_account_inclusion', 'Confirm Account Inclusion')}

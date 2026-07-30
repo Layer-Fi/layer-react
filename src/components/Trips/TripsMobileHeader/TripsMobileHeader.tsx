@@ -6,7 +6,7 @@ import { useDebouncedSearchProps } from '@hooks/utils/debouncing/useDebouncedSea
 import { useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
-import { DataTableHeader } from '@components/DataTable/DataTableHeader'
+import { DataTableHeader } from '@blocks/DataTable/DataTableHeader'
 import { type TripPurposeFilterValue, TripPurposeToggle } from '@components/Trips/TripPurposeToggle/TripPurposeToggle'
 import { TripsTableHeaderMenu } from '@components/Trips/TripsTable/TripsTableHeaderMenu'
 

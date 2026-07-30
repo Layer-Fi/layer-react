@@ -7,11 +7,11 @@ import { LedgerDateStoreProvider } from '@providers/DateStoreProvider/LedgerDate
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
+import { Loader } from '@ui/Loader/Loader'
 import { type ChartOfAccountsTableStringOverrides, ChartOfAccountsTableWithPanel } from '@components/ChartOfAccountsTable/ChartOfAccountsTableWithPanel'
 import { Container } from '@components/Container/Container'
 import { LedgerAccountPanel } from '@components/LedgerAccountPanel/LedgerAccountPanel'
 import { type LedgerAccountStringOverrides } from '@components/LedgerAccountPanel/LedgerAccountPanel'
-import { Loader } from '@components/Loader/Loader'
 
 import './chartOfAccounts.scss'
 

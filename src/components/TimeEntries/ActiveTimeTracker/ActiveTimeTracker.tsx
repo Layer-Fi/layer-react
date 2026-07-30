@@ -6,9 +6,9 @@ import { useActiveTimeTracker } from '@hooks/api/businesses/[business-id]/time-t
 import { useElapsedSeconds } from '@hooks/utils/dates/useElapsedSeconds'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { VStack } from '@ui/Stack/Stack'
 import { Container } from '@components/Container/Container'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { ActiveTimeTrackerBanner } from '@components/TimeEntries/ActiveTimeTracker/ActiveTimeTrackerBanner'
 import { ActiveTimeTrackerStartDrawer } from '@components/TimeEntries/ActiveTimeTracker/ActiveTimeTrackerStartDrawer'
 

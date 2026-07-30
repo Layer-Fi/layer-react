@@ -1,8 +1,8 @@
 import { DateFormat } from '@utils/i18n/date/patterns'
+import { DateTime } from '@ui/DateTime/DateTime'
 import type { Spacing } from '@ui/sharedUITypes'
 import { VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
-import { DateTime } from '@components/DateTime/DateTime'
 
 interface BankTransactionsAmountDateProps {
   amount: number

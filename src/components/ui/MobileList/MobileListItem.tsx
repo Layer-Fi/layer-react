@@ -3,11 +3,11 @@ import classNames from 'classnames'
 import { composeRenderProps } from 'react-aria-components/composeRenderProps'
 import { GridListItem } from 'react-aria-components/GridList'
 
-import { AnimatedElement } from '@ui/AnimatedElement/AnimatedElement'
-import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { MobileListItemActionsMenu, type MobileListItemActionsMenuConfig } from '@ui/MobileList/MobileListItemActionsMenu'
 import { HStack } from '@ui/Stack/Stack'
+import { AnimatedElement } from '@components/utility/AnimatedElement/AnimatedElement'
+import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
 
 import './mobileListItem.scss'
 
@@ -45,7 +45,12 @@ export const MobileListItem = <TData extends { id: string }>({
   }, [onExitComplete, item])
 
   return (
-    <GridListItem key={item.id} id={item.id} onAction={actionsMenu ? undefined : onAction}>
+    <GridListItem
+      key={item.id}
+      id={item.id}
+      className='Layer__MobileListRow'
+      onAction={actionsMenu ? undefined : onAction}
+    >
       {composeRenderProps(children, (children, { selectionMode, selectionBehavior }) => (
         <AnimatedPresenceElement
           variant='fade'

@@ -6,7 +6,7 @@ import { type CreateCategorizationRule, CreateCategorizationRuleSchema } from '@
 import { useCreateCategorizationRule } from '@hooks/api/businesses/[business-id]/categorization-rules/useCreateCategorizationRule'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button, type ButtonProps } from '@ui/Button/Button'
-import { useWizard } from '@components/Wizard/Wizard'
+import { useWizard } from '@blocks/Wizard/Wizard'
 
 interface CreateRuleButtonProps {
   newRule: CreateCategorizationRule

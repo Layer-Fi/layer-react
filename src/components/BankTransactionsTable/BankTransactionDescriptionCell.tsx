@@ -1,11 +1,11 @@
 import { File } from 'lucide-react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
+import { IconBox } from '@ui/IconBox/IconBox'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { EditCustomTransactionButton } from '@components/BankTransactions/RecordManualTransaction/EditCustomTransactionButton'
 import { useIsEditableCustomTransaction } from '@components/BankTransactions/RecordManualTransaction/useIsEditableCustomTransaction'
-import { IconBox } from '@components/IconBox/IconBox'
 
 import './bankTransactionDescriptionCell.scss'
 

@@ -18,7 +18,7 @@ import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
 import { BankAccountsProvider } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { BookkeepingStatusProvider } from '@contexts/BookkeepingStatusContext/BookkeepingStatusContext'
 import { LayerContext } from '@contexts/LayerContext/LayerContext'
-import { type ToastProps, ToastsContainer } from '@components/Toast/Toast'
+import { type ToastProps, ToastsContainer } from '@ui/Toast/Toast'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,

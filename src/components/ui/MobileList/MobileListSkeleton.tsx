@@ -1,6 +1,6 @@
 import type { MobileListVariant } from '@ui/MobileList/MobileList'
+import { SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
 import './mobileListSkeleton.scss'
 
@@ -23,7 +23,7 @@ const MobileListSkeletonItem = ({ variant }: { variant: MobileListVariant }) => 
   if (variant === 'compact') {
     return (
       <HStack className='Layer__MobileListSkeleton__Item' fluid align='center' justify='space-between' gap='sm'>
-        <SkeletonLoader width='60%' height='16px' />
+        <SkeletonLoader width='100%' height='16px' />
       </HStack>
     )
   }

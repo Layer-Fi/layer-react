@@ -10,13 +10,13 @@ import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/ban
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import { Button } from '@ui/Button/Button'
+import { FileInput } from '@ui/Input/FileInput'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { ErrorText } from '@ui/Typography/ErrorText'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { BankTransactionsMobileCategorySelection } from '@components/BankTransactionsMobileCategorySelection/BankTransactionsMobileCategorySelection'
-import { FileInput } from '@components/Input/FileInput'
-import { ErrorText } from '@components/Typography/ErrorText'
 interface BankTransactionsMobileListBusinessFormProps {
   bankTransaction: BankTransaction
   showCategorization?: boolean

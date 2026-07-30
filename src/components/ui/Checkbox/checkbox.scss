@@ -10,22 +10,20 @@
 
     height: var(--size);
     width: var(--size);
-
     border-radius: var(--checkbox-radius);
     border: 2px solid var(--outline-default);
 
     background-color: var(--color-base-50);
     color: transparent;
-
     place-items: center;
     transition: all 100ms ease-out;
 
     --size: 1rem;
     --checkbox-radius: var(--border-radius-3xs);
+  }
 
-    &[data-pressed] {
-      border-color: var(--outline-active);
-    }
+  svg {
+    transition: all 100ms ease-out;
   }
 
   &[data-size='md'] [slot='checkbox'] {
@@ -36,10 +34,6 @@
   &[data-size='lg'] [slot='checkbox'] {
     --size: 1.5rem;
     --checkbox-radius: var(--border-radius-2xs);
-  }
-
-  svg {
-    transition: all 100ms ease-out;
   }
 
   &[data-readonly] [slot='checkbox'] {
@@ -56,65 +50,65 @@
     outline-offset: 2px;
   }
 
-  &[data-selected] [slot='checkbox'],
-  &[data-indeterminate] [slot='checkbox'] {
+  &:is([data-selected], [data-indeterminate]) [slot='checkbox'] {
+    border-color: var(--fg-default);
     background-color: var(--fg-default);
     color: var(--bg-default);
-    border-color: var(--fg-default);
   }
 
-  &[data-selected][data-variant='success'] {
-    [slot='checkbox'] {
-      background-color: var(--bg-brand-accent, var(--color-accent));
-      border-color: var(--bg-brand-accent, var(--color-accent));
-      color: var(--fg-brand-accent, var(--color-primary));
+  &[data-variant='error'] [slot='checkbox'] {
+    border-color: var(--color-info-error);
+  }
+
+  &:is([data-selected], [data-indeterminate])[data-variant='error'] [slot='checkbox'] {
+    background-color: var(--color-info-error);
+  }
+
+  &[data-variant='round'] [slot='checkbox'] {
+    border-radius: 50%;
+    border: 0.5px solid var(--color-base-400);
+    background-color: var(--color-base-0);
+  }
+
+  &:is([data-selected], [data-indeterminate])[data-variant='round'] [slot='checkbox'] {
+    border: 1px solid var(--color-info-success);
+    background-color: var(--color-info-success-bg);
+
+    svg {
+      color: var(--color-info-success);
     }
   }
 
-  &[data-variant='error'] {
-    [slot='checkbox'] {
-      border-color: var(--color-info-error);
-    }
+  &:is([data-selected], [data-indeterminate])[data-variant='branded']:not([data-disabled]) [slot='checkbox'] {
+    border-color: var(--bg-brand-accent, var(--color-accent));
+    background-color: var(--bg-brand-accent, var(--color-accent));
+    color: var(--fg-brand-accent, var(--color-primary));
   }
 
-  &[data-selected][data-variant='error'] {
-    [slot='checkbox'] {
-      background-color: var(--color-info-error);
-    }
-  }
-
-  &[data-variant='round'] {
-    [slot='checkbox'] {
-      border-radius: 50%;
-      border: 0.5px solid var(--color-base-400);
-      background-color: var(--color-base-0);
-    }
-  }
-
-  &[data-selected][data-variant='round'] {
-    [slot='checkbox'] {
-      border: 1px solid var(--color-info-success);
-      background-color: var(--color-info-success-bg);
-
-      svg {
-        color: var(--color-info-success);
-      }
-    }
-  }
-
-  &[data-selected][data-readonly] {
-    [slot='checkbox'] {
-      border-color: var(--fg-subtle);
-      background-color: var(--fg-subtle);
-    }
+  &[data-selected][data-readonly] [slot='checkbox'] {
+    border-color: var(--fg-subtle);
+    background-color: var(--fg-subtle);
   }
 
   &[data-disabled] {
     cursor: not-allowed;
+  }
 
-    [slot='checkbox'] {
-      background-color: var(--color-base-200);
-    }
+  &[data-disabled] [slot='checkbox'] {
+    border-color: transparent;
+    background-color: var(--color-base-200);
+  }
+
+  &:is([data-selected], [data-indeterminate])[data-disabled] [slot='checkbox'] {
+    color: var(--fg-default);
+  }
+
+  &[data-disabled][data-variant='error'] [slot='checkbox'] {
+    background-color: var(--color-info-error-bg);
+  }
+
+  &:is([data-selected], [data-indeterminate])[data-disabled][data-variant='error'] [slot='checkbox'] {
+    color: var(--color-info-error-fg);
   }
 
   &[data-labeled] {

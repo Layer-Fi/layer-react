@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
-import { SmallLoader } from '@components/Loader/SmallLoader'
+import { SmallLoader } from '@ui/Loader/SmallLoader'
 
 import './syncingComponent.scss'
 
@@ -17,23 +17,6 @@ interface SyncingComponentProps {
   hideContent?: boolean
 }
 
-/**
- * SyncingComponent
- * @param titleVariant - Title variant for the component
- * @param onRefresh - Function to refresh the component
- * @param timeSync - Time to sync in minutes
- * @param inProgress - Show progress icon besides button
- * @param hideContent - Hide content of the component
- *
- * @example
- * <SyncingComponent
- *  titleVariant='default'
- *  onRefresh={() => console.log('refresh')}
- *  timeSync={1440}
- *  inProgress={false}
- *  hideContent={false}
- * />
- */
 export const SyncingComponent = ({
   titleVariant = 'default',
   onRefresh,

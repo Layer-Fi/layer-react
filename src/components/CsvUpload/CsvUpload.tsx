@@ -4,11 +4,11 @@ import { CloudUpload } from 'lucide-react'
 import { type FileRejection, useDropzone } from 'react-dropzone'
 import { Trans, useTranslation } from 'react-i18next'
 
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 import { CsvUploadFileRow } from '@components/CsvUpload/CsvUploadFileRow'
 import { validateCsvFile } from '@components/CsvUpload/validateCsvFile'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
 import './csvUpload.scss'
 

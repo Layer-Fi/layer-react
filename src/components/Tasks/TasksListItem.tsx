@@ -13,9 +13,9 @@ import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { Button } from '@ui/Button/Button'
+import { FileInput } from '@ui/Input/FileInput'
 import { TextArea } from '@ui/Input/TextArea'
 import { P } from '@ui/Typography/Text'
-import { FileInput } from '@components/Input/FileInput'
 
 type TasksListItemProps = {
   task: UserVisibleTask

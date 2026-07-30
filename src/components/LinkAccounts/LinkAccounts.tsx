@@ -6,13 +6,13 @@ import { getAccountsNeedingConfirmation } from '@utils/bankAccount'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { Heading } from '@ui/Typography/Heading'
+import { Wizard } from '@blocks/Wizard/Wizard'
 import { LinkAccountsConfirmationStep } from '@components/LinkAccounts/LinkAccountsConfirmationStep'
 import {
   LinkAccountsLinkStep,
   type LinkAccountsStringOverrides,
 } from '@components/LinkAccounts/LinkAccountsLinkStep'
 import { HostedLinkErrorBanner } from '@components/LinkedAccounts/HostedLinkErrorBanner'
-import { Wizard } from '@components/Wizard/Wizard'
 
 import './linkAccounts.scss'
 

@@ -8,10 +8,10 @@ import type { NestedCategorization } from '@schemas/categorization'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
+import type { ColumnConfig } from '@blocks/DataTable/utils/column'
+import { PaginatedTable, type TablePaginationProps } from '@blocks/PaginatedDataTable/PaginatedDataTable'
 import { ResolvedCategoryName } from '@components/CategorizationRules/ResolvedCategoryName'
 import { getCategorizationRuleAmountLabel, getCategorizationRuleCounterpartyLabel, getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
-import type { ColumnConfig } from '@components/DataTable/utils/column'
-import { PaginatedTable, type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
 
 import './categorizationRulesTable.scss'
 

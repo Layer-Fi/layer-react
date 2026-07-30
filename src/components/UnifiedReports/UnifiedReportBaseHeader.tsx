@@ -1,14 +1,14 @@
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
-import { type DefaultVariant, ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
+import { SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { ReportsMegaMenu } from '@components/ReportsNavigation/ReportsMegaMenu'
-import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 import { UnifiedReportControls } from '@components/UnifiedReports/UnifiedReportControls'
 import { UnifiedReportHeaderButtons } from '@components/UnifiedReports/UnifiedReportHeaderButtons'
 import { type UnifiedReportNavigationVariant } from '@components/UnifiedReports/UnifiedReports'
+import { type DefaultVariant, ResponsiveComponent } from '@components/utility/ResponsiveComponent'
 
 import './unifiedReportBaseHeader.scss'
 

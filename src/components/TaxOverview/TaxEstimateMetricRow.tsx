@@ -1,5 +1,5 @@
 import { type TaxOverviewMetric } from '@schemas/taxEstimates/overview'
-import { MetricRow } from '@components/MetricRow/MetricRow'
+import { MetricRow } from '@blocks/MetricRow/MetricRow'
 import { useMetricRowProps } from '@components/TaxOverview/useMetricRowProps'
 
 export function TaxEstimateMetricRow({ metric }: { metric: TaxOverviewMetric }) {

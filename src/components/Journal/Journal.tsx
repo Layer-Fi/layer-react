@@ -8,10 +8,10 @@ import { JournalRoute, JournalStoreProvider, useJournalRouteState } from '@provi
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
+import { Loader } from '@ui/Loader/Loader'
 import { Container } from '@components/Container/Container'
 import { JournalEntryDrawer } from '@components/Journal/JournalEntryDrawer/JournalEntryDrawer'
 import { type JournalTableStringOverrides, JournalTableWithPanel } from '@components/JournalTable/JournalTableWithPanel'
-import { Loader } from '@components/Loader/Loader'
 
 import './journal.scss'
 

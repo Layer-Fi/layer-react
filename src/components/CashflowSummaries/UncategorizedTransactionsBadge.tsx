@@ -7,8 +7,8 @@ import { tPlural } from '@utils/i18n/plural'
 import { useProfitAndLossSummaries } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-summaries/useProfitAndLossSummaries'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
-import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
-import { BadgeLoader } from '@components/BadgeLoader/BadgeLoader'
+import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
+import { BadgeLoader } from '@ui/Badge/BadgeLoader'
 
 type UncategorizedTransactionsBadgeProps = {
   onTransactionsToReviewClick: () => void

@@ -3,6 +3,7 @@ import {
   Button as ReactAriaButton,
   type ButtonProps as ReactAriaButtonProps,
 } from 'react-aria-components/Button'
+import { useTranslation } from 'react-i18next'
 
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'
@@ -74,6 +75,7 @@ const Button = forwardRef<
   },
   ref,
 ) => {
+  const { t } = useTranslation()
   const { isPending = false } = restProps
   const dataProperties = toDataProperties({
     ellipsis,
@@ -96,6 +98,10 @@ const Button = forwardRef<
     >
       {withRenderProp(children, (node) => {
         if (isPending) {
+          if (variant === 'text') {
+            return t('common:state.loading', 'Loading…')
+          }
+
           return (
             <>
               <ButtonTransparentContent>

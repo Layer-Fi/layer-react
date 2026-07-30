@@ -9,10 +9,10 @@ import { type TimeEntry } from '@schemas/timeTracking'
 import { flattenValidationErrors } from '@utils/form'
 import { useTimeTrackingServicesDrawer } from '@providers/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
 import { Button } from '@ui/Button/Button'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { useTimeEntryForm } from '@components/TimeEntries/TimeEntryForm/useTimeEntryForm'
 import { TimeEntryServiceSelector } from '@components/TimeEntries/TimeEntryServiceSelector/TimeEntryServiceSelector'
 
@@ -84,7 +84,7 @@ export const TimeEntryForm = ({ onSuccess, entry, isReadOnly }: TimeEntryFormPro
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize='md'
+                  slotProps={{ Title: { size: 'md' } }}
                   inline
                 />
               </HStack>

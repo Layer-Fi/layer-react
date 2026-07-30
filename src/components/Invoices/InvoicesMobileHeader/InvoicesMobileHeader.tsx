@@ -6,7 +6,7 @@ import { useDebouncedSearchProps } from '@hooks/utils/debouncing/useDebouncedSea
 import { useInvoiceTableFilters } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { MobileSelectionDrawerWithTrigger } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
-import { DataTableHeader } from '@components/DataTable/DataTableHeader'
+import { DataTableHeader } from '@blocks/DataTable/DataTableHeader'
 import { type InvoiceStatusOption, useInvoiceStatusOptions } from '@components/Invoices/utils/invoiceFilters'
 
 interface InvoicesMobileHeaderProps {

@@ -1,10 +1,10 @@
 import { type ReactNode } from 'react'
 import classNames from 'classnames'
 
+import { SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
-import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
 import './entryDetailSection.scss'
 

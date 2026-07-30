@@ -5,7 +5,7 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { isTransferMatch } from '@utils/bankTransactions/shared'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { Badge } from '@components/Badge/Badge'
+import { Badge } from '@ui/Badge/Badge'
 
 import './matchBadge.scss'
 

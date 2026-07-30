@@ -11,10 +11,10 @@ import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { P } from '@ui/Typography/Text'
+import { useWizard } from '@blocks/Wizard/Wizard'
 import { LinkAccountsListContainer } from '@components/LinkAccounts/LinkAccountsListContainer'
 import { LinkedAccountToConfirm } from '@components/LinkedAccounts/ConfirmationModal/LinkedAccountToConfirm'
 import { ConditionalList } from '@components/utility/ConditionalList'
-import { useWizard } from '@components/Wizard/Wizard'
 
 import './linkAccountsConfirmationStep.scss'
 

@@ -6,12 +6,12 @@ import { useStartTimerForm } from '@hooks/features/timeTracking/useStartTimerFor
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useTimeTrackingServicesDrawer } from '@providers/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
 import { Button } from '@ui/Button/Button'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { TimeEntryServiceSelector } from '@components/TimeEntries/TimeEntryServiceSelector/TimeEntryServiceSelector'
 
 type ActiveTimeTrackerStartDrawerProps = {

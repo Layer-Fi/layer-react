@@ -6,10 +6,10 @@ import { type CatalogService } from '@schemas/catalogService'
 import { flattenValidationErrors } from '@utils/form'
 import { useServiceForm } from '@hooks/features/timeTracking/useServiceForm'
 import { Button } from '@ui/Button/Button'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
 type AddServiceFormCardProps = {
   mode: 'create'

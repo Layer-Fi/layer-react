@@ -6,7 +6,7 @@ import { useActiveTimeTracker } from '@hooks/api/businesses/[business-id]/time-t
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { TimeTrackingServicesDrawerProvider, useTimeTrackingServicesDrawer } from '@providers/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
 import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'
-import { DataTableHeaderMenu } from '@components/DataTable/DataTableHeaderMenu'
+import { DataTableHeaderMenu } from '@blocks/DataTable/DataTableHeaderMenu'
 import { ActiveTimeTracker } from '@components/TimeEntries/ActiveTimeTracker/ActiveTimeTracker'
 import { TimeEntries } from '@components/TimeEntries/TimeEntries'
 import { TimeTrackingStats } from '@components/TimeTrackingStats/TimeTrackingStats'

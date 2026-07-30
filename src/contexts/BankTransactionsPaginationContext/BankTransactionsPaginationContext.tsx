@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 
-import { type TablePaginationProps } from '@components/PaginatedDataTable/PaginatedDataTable'
+import { type TablePaginationProps } from '@blocks/PaginatedDataTable/PaginatedDataTable'
 
 export type BankTransactionsPaginationContextType = TablePaginationProps
 

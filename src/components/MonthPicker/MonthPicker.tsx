@@ -11,8 +11,8 @@ import { InputGroup } from '@ui/Input/InputGroup'
 import { PickerDropdownIndicator } from '@ui/PickerDropdownIndicator/PickerDropdownIndicator'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
+import { ResponsivePopover } from '@blocks/ResponsivePopover/ResponsivePopover'
 import { MonthCalendar } from '@components/MonthCalendar/MonthCalendar'
-import { ResponsivePopover } from '@components/ResponsivePopover/ResponsivePopover'
 
 import './monthPicker.scss'
 

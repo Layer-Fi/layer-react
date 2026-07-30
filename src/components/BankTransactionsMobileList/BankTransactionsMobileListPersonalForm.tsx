@@ -9,12 +9,12 @@ import { hasReceipts, isCategorized, isMoneyIn } from '@utils/bankTransactions/s
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import { Button } from '@ui/Button/Button'
+import { FileInput } from '@ui/Input/FileInput'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { ErrorText } from '@ui/Typography/ErrorText'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { FileInput } from '@components/Input/FileInput'
-import { ErrorText } from '@components/Typography/ErrorText'
 
 import { LegacyPersonalCategories, PersonalStableName } from './constants'
 

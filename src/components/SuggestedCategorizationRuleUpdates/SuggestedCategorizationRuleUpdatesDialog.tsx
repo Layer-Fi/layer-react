@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { Drawer, Modal } from '@ui/Modal/Modal'
 import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
+import { Separator } from '@ui/Separator/Separator'
 import { VStack } from '@ui/Stack/Stack'
-import { Separator } from '@components/Separator/Separator'
 import { RuleSuggestionHeader, SuggestedCategorizationRuleUpdates } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdates'
 
 type SuggestedCategorizationRuleUpdatesDialogProps = {

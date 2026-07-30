@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/config/useReportConfig'
 import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Span } from '@ui/Typography/Text'
-import { TreeNavigation } from '@components/NestedNavigation/TreeNavigation/TreeNavigation'
-import { TreeNavigationSkeleton } from '@components/NestedNavigation/TreeNavigation/TreeNavigationSkeleton'
+import { TreeNavigation } from '@blocks/NestedNavigation/TreeNavigation/TreeNavigation'
+import { TreeNavigationSkeleton } from '@blocks/NestedNavigation/TreeNavigation/TreeNavigationSkeleton'
 import { ReportsNavigationSidebarError } from '@components/ReportsNavigation/ReportsNavigationSidebarError'
 import {
   buildRecursiveReportsGroupConfig,

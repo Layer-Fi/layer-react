@@ -9,7 +9,7 @@ import { LedgerAccountEntryDetails } from '@components/LedgerAccountEntryDetails
 import { type LedgerAccountEntryDetailsStringOverrides } from '@components/LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 import { LedgerAccountLineItemsTable, type LedgerAccountLineItemsTableStringOverrides } from '@components/LedgerAccountPanel/LedgerAccountLineItemsTable'
 import { LedgerAccountPanelHeader } from '@components/LedgerAccountPanel/LedgerAccountPanelHeader'
-import { Panel } from '@components/Panel/Panel'
+import { Panel } from '@components/View/Panel/Panel'
 
 import './ledgerAccountPanel.scss'
 

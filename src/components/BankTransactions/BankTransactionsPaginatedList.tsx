@@ -5,7 +5,7 @@ import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useBankTransactionsPaginationContext } from '@contexts/BankTransactionsPaginationContext/BankTransactionsPaginationContext'
-import { Pagination } from '@components/Pagination/Pagination'
+import { Pagination } from '@ui/Pagination/Pagination'
 
 type RenderBankTransactionsList = (bankTransactions?: BankTransaction[]) => ReactNode
 

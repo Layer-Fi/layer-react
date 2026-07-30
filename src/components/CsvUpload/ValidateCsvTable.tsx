@@ -4,8 +4,8 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type PreviewCell, type PreviewCsv, type PreviewRow } from '@schemas/csvUpload'
-import { type ColumnConfig } from '@components/DataTable/utils/column'
-import { VirtualizedDataTable } from '@components/VirtualizedDataTable/VirtualizedDataTable'
+import { type ColumnConfig } from '@blocks/DataTable/utils/column'
+import { VirtualizedDataTable } from '@blocks/VirtualizedDataTable/VirtualizedDataTable'
 
 import './validateCsvTable.scss'
 

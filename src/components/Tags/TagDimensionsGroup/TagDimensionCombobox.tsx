@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next'
 import { type Tag, type TagValueDefinition } from '@schemas/tag'
 import { useTagDimensionByKey } from '@hooks/api/businesses/[business-id]/tags/dimensions/key/[dimension-key]/useTagDimensionByKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { FallbackWithSkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-import { FallbackWithSkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
 type TagValueDefinitionAsOption = {
   id: string

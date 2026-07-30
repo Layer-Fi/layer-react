@@ -10,13 +10,13 @@ import { usePreloadCustomers } from '@hooks/api/businesses/[business-id]/custome
 import { UpsertJournalEntryMode } from '@hooks/api/businesses/[business-id]/ledger/journal-entries/useUpsertJournalEntry'
 import { usePreloadVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
 import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Form } from '@ui/Form/Form'
+import { Separator } from '@ui/Separator/Separator'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { CustomerVendorSelector } from '@components/CustomerVendorSelector/CustomerVendorSelector'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { JournalEntryLineItemsTable } from '@components/Journal/JournalEntryForm/JournalEntryLineItemsTable'
 import { useJournalEntryForm } from '@components/Journal/JournalEntryForm/useJournalEntryForm'
-import { Separator } from '@components/Separator/Separator'
 import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
 
 import './journalEntryForm.scss'
@@ -81,7 +81,7 @@ export const JournalEntryForm = forwardRef<{ submit: () => Promise<void> }, Jour
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize='md'
+                  slotProps={{ Title: { size: 'md' } }}
                   inline
                 />
               </HStack>

@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { ModalHeading } from '@ui/Modal/ModalSlots'
+import { Wizard } from '@blocks/Wizard/Wizard'
 import { RuleUpdatesPromptStep } from '@components/SuggestedCategorizationRuleUpdates/RuleUpdatesPromptStep'
 import { RuleUpdatesReviewStep } from '@components/SuggestedCategorizationRuleUpdates/RuleUpdatesReviewStep'
-import { Wizard } from '@components/Wizard/Wizard'
 
 type SuggestedCategorizationRuleUpdatesProps = {
   close: () => void

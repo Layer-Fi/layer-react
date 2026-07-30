@@ -10,14 +10,14 @@ import { DateFormat } from '@utils/i18n/date/patterns'
 import type { CustomAccountParseCsvResponse } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
 import { useCreateCustomAccountTransactions } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/useCreateCustomAccountTransactions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { Badge, BadgeVariant } from '@ui/Badge/Badge'
 import { Button } from '@ui/Button/Button'
 import { SubmitAction, SubmitButton } from '@ui/Button/SubmitButton'
+import { Separator } from '@ui/Separator/Separator'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
-import { Badge, BadgeVariant } from '@components/Badge/Badge'
+import { useWizard } from '@blocks/Wizard/Wizard'
 import { ValidateCsvTable } from '@components/CsvUpload/ValidateCsvTable'
-import { Separator } from '@components/Separator/Separator'
 import { templateHeaders } from '@components/UploadTransactions/template'
-import { useWizard } from '@components/Wizard/Wizard'
 
 interface UploadTransactionsValidateCsvStepProps {
   parseCsvResponse: CustomAccountParseCsvResponse | null

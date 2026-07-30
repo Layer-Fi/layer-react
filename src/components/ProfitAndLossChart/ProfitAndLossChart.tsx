@@ -25,7 +25,7 @@ import { useGlobalDate, useGlobalDateRangeActions } from '@providers/DateStorePr
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { ChartYAxis } from '@components/Chart/ChartYAxis'
+import { ChartYAxis } from '@ui/Chart/ChartYAxis'
 import { areChartWindowsEqual, getChartWindow } from '@components/ProfitAndLossChart/getChartWindow'
 import { ProfitAndLossChartBar } from '@components/ProfitAndLossChart/ProfitAndLossChartBar'
 import { PROFIT_AND_LOSS_BAR_CONFIG } from '@components/ProfitAndLossChart/profitAndLossChartBarConfig'

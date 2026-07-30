@@ -2,6 +2,14 @@
   display: flex;
   flex-direction: column;
 
+  > .Layer__MobileListRow + .Layer__MobileListRow {
+    margin-block-start: var(--spacing-sm);
+  }
+
+  [data-variant='compact'] & > .Layer__MobileListRow + .Layer__MobileListRow {
+    margin-block-start: 0;
+  }
+
   &__Heading {
     padding-block-end: var(--spacing-xs);
     padding-inline: var(--spacing-3xs);

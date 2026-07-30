@@ -1,14 +1,15 @@
 import { type ReactNode } from 'react'
+import { Loader } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
+import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
 import { Header } from '@components/Container/Header'
 import type { ProfitAndLossDownloadButtonStringOverrides } from '@components/ProfitAndLossDownloadButton/types'
-import { SyncingBadge } from '@components/SyncingBadge/SyncingBadge'
 
 interface ProfitAndLossHeaderStringOverrides {
   title?: string
@@ -44,7 +45,15 @@ export const ProfitAndLossHeader = ({
             <Heading level={3} size='sm' align='left'>
               {stringOverrides?.title || t('common:label.profit_loss', 'Profit & Loss')}
             </Heading>
-            {isSyncing && <SyncingBadge />}
+            {isSyncing && (
+              <Badge
+                icon={<Loader className='Layer__anim--rotating' size={12} />}
+                size={BadgeSize.SMALL}
+                variant={BadgeVariant.INFO}
+              >
+                {t('common:state.syncing', 'Syncing...')}
+              </Badge>
+            )}
           </HStack>
           {trailingContent}
         </HStack>

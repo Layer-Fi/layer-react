@@ -12,11 +12,11 @@ import { flattenValidationErrors } from '@utils/form'
 import type { UpsertDedicatedInvoicePaymentMode } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment/useUpsertDedicatedInvoicePayment'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { useInvoicePaymentForm } from '@components/Invoices/InvoicePaymentForm/useInvoicePaymentForm'
 import { PaymentMethodComboBox } from '@components/PaymentMethod/PaymentMethodComboBox'
 
@@ -68,7 +68,7 @@ export const InvoicePaymentForm = (props: InvoicePaymentFormProps) => {
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize='md'
+                  slotProps={{ Title: { size: 'md' } }}
                   inline
                 />
               </HStack>

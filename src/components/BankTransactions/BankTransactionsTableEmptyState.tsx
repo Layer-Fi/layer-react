@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { DisplayState } from '@internal-types/bankTransactions'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import { DataStateContainer } from '@components/DataStateContainer/DataStateContainer'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
+import { DataStateContainer } from '@ui/DataState/DataStateContainer'
 
 export const BankTransactionsEmptyState = () => {
   const { t } = useTranslation()

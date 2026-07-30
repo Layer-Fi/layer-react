@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next'
 
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { MoneySpan } from '@ui/Typography/MoneySpan'
-import { Span } from '@ui/Typography/Text'
 import {
   ChartTooltip,
   ChartTooltipContent,
   ChartTooltipRow,
-} from '@components/Chart/ChartTooltip'
+} from '@ui/Chart/ChartTooltip'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
+import { Span } from '@ui/Typography/Text'
 import type { MileageDeductionChartDataPoint } from '@components/MileageDeductionChart/MileageDeductionChartDataPoint'
 
 interface MileageDeductionChartTooltipContentProps {

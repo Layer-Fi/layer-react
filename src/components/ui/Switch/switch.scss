@@ -35,4 +35,26 @@
       }
     }
   }
+
+  &[data-disabled] {
+    cursor: not-allowed;
+
+    [slot='indicator'] {
+      border-color: var(--color-base-400);
+      background: var(--color-base-100);
+
+      &::before {
+        background: var(--color-base-400);
+      }
+    }
+
+    &[data-selected] [slot='indicator'] {
+      border-color: var(--color-base-400);
+      background: var(--color-base-400);
+
+      &::before {
+        background: var(--color-base-0);
+      }
+    }
+  }
 }

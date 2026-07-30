@@ -6,10 +6,10 @@ import { Trans, useTranslation } from 'react-i18next'
 import type { CustomerRefund } from '@schemas/invoices/customerRefund'
 import type { Invoice } from '@schemas/invoices/invoice'
 import { flattenValidationErrors } from '@utils/form'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { useInvoiceRefundForm } from '@components/Invoices/InvoiceRefundForm/useInvoiceRefundForm'
 import { PaymentMethodComboBox } from '@components/PaymentMethod/PaymentMethodComboBox'
 
@@ -51,7 +51,7 @@ export const InvoiceRefundForm = forwardRef(({ onSuccess, invoice }: InvoiceRefu
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize='md'
+                  slotProps={{ Title: { size: 'md' } }}
                   inline
                 />
               </HStack>

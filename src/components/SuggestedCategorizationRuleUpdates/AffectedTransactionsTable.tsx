@@ -4,13 +4,13 @@ import { useTranslation } from 'react-i18next'
 
 import type { MinimalBankTransaction } from '@schemas/bankTransactions/base'
 import { BankTransactionDirection } from '@schemas/bankTransactions/base'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
+import { DateTime } from '@ui/DateTime/DateTime'
 import { VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
-import type { ColumnConfig } from '@components/DataTable/utils/column'
-import { DateTime } from '@components/DateTime/DateTime'
-import { VirtualizedDataTable } from '@components/VirtualizedDataTable/VirtualizedDataTable'
+import type { ColumnConfig } from '@blocks/DataTable/utils/column'
+import { VirtualizedDataTable } from '@blocks/VirtualizedDataTable/VirtualizedDataTable'
 
 import './affectedTransactionsTable.scss'
 

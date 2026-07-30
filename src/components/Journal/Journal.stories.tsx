@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { Badge, BadgeVariant } from '@components/Badge/Badge'
+import { Badge, BadgeVariant } from '@ui/Badge/Badge'
 import { Journal, type JournalProps } from '@components/Journal/Journal'
 
 type JournalStoryArgs = {

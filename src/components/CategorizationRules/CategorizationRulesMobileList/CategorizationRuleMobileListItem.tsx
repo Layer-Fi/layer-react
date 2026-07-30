@@ -5,10 +5,10 @@ import type { CategorizationRule } from '@schemas/bankTransactions/categorizatio
 import type { NestedCategorization } from '@schemas/categorization'
 import { getResolvedCategoryName } from '@utils/categories'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { BadgeVariant } from '@ui/Badge/Badge'
 import { MobileListItemContent } from '@ui/MobileList/MobileListItemContent'
 import { MobileListItemStatusFooter } from '@ui/MobileList/MobileListItemStatusFooter'
 import { Span } from '@ui/Typography/Text'
-import { BadgeVariant } from '@components/Badge/Badge'
 import { getCategorizationRuleAmountLabel, getCategorizationRuleCounterpartyLabel, getCategorizationRuleDirectionLabel } from '@components/CategorizationRules/utils'
 
 export const CategorizationRuleMobileListItem = ({ rule }: { rule: CategorizationRule }) => {

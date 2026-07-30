@@ -3,11 +3,11 @@ import type { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
 
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { type ProfitAndLossSummariesMode } from '@components/ProfitAndLossSummaries/useProfitAndLossSummariesMiniChartData'
-import { SkeletonLoader } from '@components/SkeletonLoader/SkeletonLoader'
 
 import './profitAndLossSummariesSummary.scss'
 

@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTimeEntriesDeleteModal, useTimeEntriesDrawer } from '@providers/TimeEntriesStore/TimeEntriesStoreProvider'
+import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
 import { TimeEntryForm } from '@components/TimeEntries/TimeEntryForm/TimeEntryForm'
 
 const TimeEntryDrawerHeader = ({

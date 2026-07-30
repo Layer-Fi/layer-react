@@ -4,10 +4,10 @@ import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@ui/Button/Button'
+import { Separator } from '@ui/Separator/Separator'
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { P } from '@ui/Typography/Text'
-import { Separator } from '@components/Separator/Separator'
 
 import './modalSlots.scss'
 

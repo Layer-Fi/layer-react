@@ -6,9 +6,9 @@ import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ReceiptsProvider } from '@providers/ReceiptsProvider/ReceiptsProvider'
 import { useReceiptsContext } from '@contexts/ReceiptsContext/ReceiptsContext'
+import { FileInput } from '@ui/Input/FileInput'
 import { P } from '@ui/Typography/Text'
-import { FileThumb } from '@components/FileThumb/FileThumb'
-import { FileInput } from '@components/Input/FileInput'
+import { FileThumb } from '@blocks/FileThumb/FileThumb'
 
 const MAX_RECEIPTS_COUNT = 10
 

@@ -8,7 +8,7 @@ import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate, useGlobalDatePeriodAlignedActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
-import { Tabs } from '@components/Tabs/Tabs'
+import { Tabs } from '@ui/Tabs/Tabs'
 import { TaskStatusBadge } from '@components/Tasks/TaskStatusBadge'
 
 type TasksYearsTabsProps = {

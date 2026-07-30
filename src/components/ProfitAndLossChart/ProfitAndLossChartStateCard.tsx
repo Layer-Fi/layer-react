@@ -1,8 +1,8 @@
 import { ChartNoAxesColumn } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { IconBox } from '@ui/IconBox/IconBox'
 import { P } from '@ui/Typography/Text'
-import { IconBox } from '@components/IconBox/IconBox'
 
 import './profitAndLossChartStateCard.scss'
 

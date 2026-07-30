@@ -75,7 +75,12 @@
     cursor: not-allowed;
 
     [slot='radio'] {
+      border-color: transparent;
       background-color: var(--color-base-200);
     }
+  }
+
+  &[data-selected][data-disabled] [slot='radio'] {
+    color: var(--color-base-500);
   }
 }

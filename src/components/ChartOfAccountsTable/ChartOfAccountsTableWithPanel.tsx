@@ -2,12 +2,12 @@ import { type RefObject } from 'react'
 
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useBookkeepingStatusContext } from '@contexts/BookkeepingStatusContext/BookkeepingStatusContext'
+import { ExpandableDataTableProvider } from '@blocks/ExpandableDataTable/ExpandableDataTableProvider'
 import { ChartOfAccountsForm, type ChartOfAccountsFormStringOverrides } from '@components/ChartOfAccountsForm/ChartOfAccountsForm'
 import { useChartOfAccountsFormMode } from '@components/ChartOfAccountsForm/useChartOfAccountsFormMode'
 import { ChartOfAccountsTable } from '@components/ChartOfAccountsTable/ChartOfAccountsTable'
 import { ChartOfAccountsTableHeader } from '@components/ChartOfAccountsTable/ChartOfAccountsTableHeader'
-import { ExpandableDataTableProvider } from '@components/ExpandableDataTable/ExpandableDataTableProvider'
-import { Panel } from '@components/Panel/Panel'
+import { Panel } from '@components/View/Panel/Panel'
 
 export interface ChartOfAccountsTableStringOverrides {
   headerText?: string

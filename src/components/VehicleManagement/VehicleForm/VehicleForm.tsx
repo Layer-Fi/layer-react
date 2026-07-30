@@ -6,9 +6,9 @@ import { useTranslation } from 'react-i18next'
 import { type Vehicle } from '@schemas/vehicle'
 import { flattenValidationErrors } from '@utils/form'
 import { Button } from '@ui/Button/Button'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { useVehicleForm } from '@components/VehicleManagement/VehicleForm/useVehicleForm'
 
 import './vehicleForm.scss'
@@ -45,7 +45,7 @@ export const VehicleForm = (props: VehicleFormProps) => {
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize='md'
+                  slotProps={{ Title: { size: 'md' } }}
                   inline
                 />
               </HStack>

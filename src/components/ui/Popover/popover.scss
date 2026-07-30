@@ -9,6 +9,10 @@
 
   background: var(--color-base-0);
 
+  [role='dialog'] {
+    outline: none;
+  }
+
   &[data-flex-inline] {
     inline-size: auto;
   }

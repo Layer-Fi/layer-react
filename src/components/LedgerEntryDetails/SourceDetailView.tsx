@@ -4,7 +4,7 @@ import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 import { type LedgerEntrySourceType } from '@schemas/generalLedger/ledgerEntrySource'
 import { humanizeEnum } from '@utils/format'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { DateTime } from '@components/DateTime/DateTime'
+import { DateTime } from '@ui/DateTime/DateTime'
 import { EntryDetailField } from '@components/LedgerEntryDetails/EntryDetailSection'
 import { type SourceDetailStringOverrides } from '@components/LedgerEntryDetails/types'
 

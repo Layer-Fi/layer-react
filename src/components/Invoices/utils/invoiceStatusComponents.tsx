@@ -5,7 +5,7 @@ import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { tPlural } from '@utils/i18n/plural'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { getDueDifference } from '@utils/time/timeUtils'
-import { Badge, BadgeSize, BadgeVariant } from '@components/Badge/Badge'
+import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 
 export interface InvoiceStatusComponents {
   variant: BadgeVariant

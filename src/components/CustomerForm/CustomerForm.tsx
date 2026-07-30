@@ -6,11 +6,11 @@ import { useTranslation } from 'react-i18next'
 import { type Customer } from '@schemas/customer'
 import { flattenValidationErrors } from '@utils/form'
 import { Button } from '@ui/Button/Button'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { type CustomerFormState } from '@components/CustomerForm/formUtils'
 import { useCustomerForm } from '@components/CustomerForm/useCustomerForm'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
 import './customerForm.scss'
 
@@ -42,7 +42,7 @@ export const CustomerForm = ({ onSuccess, isReadOnly, ...formState }: CustomerFo
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize='md'
+                  slotProps={{ Title: { size: 'md' } }}
                   inline
                 />
               </HStack>

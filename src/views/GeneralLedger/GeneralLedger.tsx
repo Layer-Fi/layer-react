@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next'
 
 import { LedgerDateStoreProvider } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
+import { Loader } from '@ui/Loader/Loader'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { InternalChartOfAccounts } from '@components/ChartOfAccounts/ChartOfAccounts'
 import { type ChartOfAccountsStringOverrides } from '@components/ChartOfAccounts/ChartOfAccounts'
 import { InternalJournal } from '@components/Journal/Journal'
 import { type JournalStringOverrides } from '@components/Journal/Journal'
-import { Loader } from '@components/Loader/Loader'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { View } from '@components/View/View'
 

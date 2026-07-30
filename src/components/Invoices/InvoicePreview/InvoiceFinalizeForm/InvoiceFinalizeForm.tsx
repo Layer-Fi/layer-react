@@ -11,7 +11,7 @@ import { Button } from '@ui/Button/Button'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
-import { FormErrorBanner } from '@components/FormErrorBanner/FormErrorBanner'
+import { FormErrorBanner } from '@blocks/FormErrorBanner/FormErrorBanner'
 import {
   useInvoiceFinalizeForm,
 } from '@components/Invoices/InvoicePreview/InvoiceFinalizeForm/useInvoiceFinalizeForm'

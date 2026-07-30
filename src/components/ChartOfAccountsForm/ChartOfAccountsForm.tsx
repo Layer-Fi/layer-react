@@ -10,6 +10,7 @@ import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOf
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
 import { CloseButton } from '@ui/Button/CloseButton'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
@@ -21,7 +22,6 @@ import { flattenAccounts } from '@components/ChartOfAccountsForm/flattenAccounts
 import { NormalityComboBox } from '@components/ChartOfAccountsForm/NormalityComboBox'
 import { ParentComboBox } from '@components/ChartOfAccountsForm/ParentComboBox'
 import { useChartOfAccountsForm } from '@components/ChartOfAccountsForm/useChartOfAccountsForm'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 
 import './chartOfAccountsForm.scss'
 
@@ -112,7 +112,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
             icon={<AlertTriangle size={16} />}
             status={DataStateStatus.failed}
             title={submitError}
-            titleSize='md'
+            slotProps={{ Title: { size: 'md' } }}
             inline
           />
         </HStack>

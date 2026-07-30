@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next'
 
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useInvoiceNavigation, useInvoiceTableFilters } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
-import { type DefaultVariant, ResponsiveComponent } from '@ui/ResponsiveComponent/ResponsiveComponent'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { InvoicesMobileList } from '@components/Invoices/InvoicesMobileList/InvoicesMobileList'
 import { InvoiceTable } from '@components/Invoices/InvoiceTable/InvoiceTable'
 import { InvoiceStatusFilter } from '@components/Invoices/utils/invoiceFilters'
 import { useInvoicesList } from '@components/Invoices/utils/useInvoicesList'
+import { type DefaultVariant, ResponsiveComponent } from '@components/utility/ResponsiveComponent'
 
 const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
   width < BREAKPOINTS.TABLET ? 'Mobile' : 'Desktop'

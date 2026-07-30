@@ -53,7 +53,8 @@
     outline: 1px auto -webkit-focus-ring-color;
   }
 
-  &[data-disabled] {
+  &[data-disabled],
+  &[data-pending] {
     cursor: not-allowed;
   }
 
@@ -133,6 +134,11 @@
     border: none;
     background-color: transparent;
 
+    &[data-disabled],
+    &[data-pending] {
+      color: var(--button-fg-disabled);
+    }
+
     &[data-hovered]:not([data-disabled], [data-pressed]) {
       text-decoration: underline;
     }
@@ -153,6 +159,12 @@
   &[data-variant='branded'] {
     background-color: var(--bg-brand-accent, var(--color-accent));
     color: var(--fg-brand-accent, var(--color-primary));
+
+    &[data-disabled],
+    &[data-pending] {
+      background-color: var(--button-bg-disabled);
+      color: var(--button-fg-disabled);
+    }
   }
 
   &[data-status='danger']:not([data-disabled], [data-pending]) {
@@ -168,7 +180,7 @@
 
       &[data-hovered]:not([data-pressed]),
       &[data-pressed]:not([data-focus-visible]) {
-        background-color: var(--color-danger-dark);
+        background-color: var(--color-info-error-fg);
       }
     }
   }

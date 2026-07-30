@@ -8,9 +8,9 @@ import { useTranslation } from 'react-i18next'
 import { type Trip, TripPurpose } from '@schemas/trip'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { DataState, DataStateStatus } from '@components/DataState/DataState'
 import { FieldErrors } from '@components/forms/FieldErrors'
 import { TripAddressComboBox } from '@components/Trips/TripAddressComboBox/TripAddressComboBox'
 import { useTripForm } from '@components/Trips/TripForm/useTripForm'
@@ -49,7 +49,7 @@ export const TripForm = (props: TripFormProps) => {
             icon={<AlertTriangle size={16} />}
             status={DataStateStatus.failed}
             title={submitError}
-            titleSize='md'
+            slotProps={{ Title: { size: 'md' } }}
             inline
           />
         </HStack>

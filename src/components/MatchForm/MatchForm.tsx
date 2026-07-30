@@ -6,9 +6,9 @@ import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
+import { ErrorText } from '@ui/Typography/ErrorText'
 import { Span } from '@ui/Typography/Text'
 import { MatchBadge } from '@components/BankTransactionRow/MatchBadge'
-import { ErrorText } from '@components/Typography/ErrorText'
 
 import './matchForm.scss'
 

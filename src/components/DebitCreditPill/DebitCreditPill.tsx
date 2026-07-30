@@ -2,8 +2,8 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
-import { Badge, BadgeVariant } from '@components/Badge/Badge'
-import { BadgeSize } from '@components/Badge/Badge'
+import { Badge, BadgeVariant } from '@ui/Badge/Badge'
+import { BadgeSize } from '@ui/Badge/Badge'
 
 interface DebitCreditPillProps {
   value: LedgerEntryDirection

@@ -6,7 +6,7 @@ import type {
   Key,
   NestedNavigationLeafConfig,
   RecursiveNestedNavigationGroupConfig,
-} from '@components/NestedNavigation/types'
+} from '@blocks/NestedNavigation/types'
 
 export const isReportGroup = (item: ReportGroup | ReportConfig): item is ReportGroup =>
   'reports' in item

@@ -18,10 +18,11 @@ import { useBankTransactionsCategorizationActions } from '@providers/BankTransac
 import { useBulkSelectionActions, useIdIsSelected } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useBankTransactionsStringOverrides } from '@contexts/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
-import { AnimatedPresenceElement } from '@ui/AnimatedPresenceElement/AnimatedPresenceElement'
 import { SubmitAction } from '@ui/Button/SubmitButton'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
+import { Chevron } from '@ui/Chevron/Chevron'
 import { HStack } from '@ui/Stack/Stack'
+import { ErrorText } from '@ui/Typography/ErrorText'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
@@ -31,9 +32,8 @@ import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankT
 import { EditCustomTransactionButton } from '@components/BankTransactions/RecordManualTransaction/EditCustomTransactionButton'
 import { useIsEditableCustomTransaction } from '@components/BankTransactions/RecordManualTransaction/useIsEditableCustomTransaction'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
-import { Chevron } from '@components/Chevron/Chevron'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
-import { ErrorText } from '@components/Typography/ErrorText'
+import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
 
 import './bankTransactionsListItem.scss'
 

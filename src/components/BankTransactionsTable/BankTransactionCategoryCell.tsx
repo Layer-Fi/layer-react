@@ -14,6 +14,7 @@ import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/Ban
 import { useBankTransactionsStringOverrides } from '@contexts/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
 import { Button } from '@ui/Button/Button'
 import { SubmitAction } from '@ui/Button/SubmitButton'
+import { Chevron } from '@ui/Chevron/Chevron'
 import { HStack, type StackProps } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
@@ -21,7 +22,6 @@ import { type BankTransactionCategoryComboBoxOption } from '@components/BankTran
 import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankTransactionsSubmitButton'
 import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
 import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
-import { Chevron } from '@components/Chevron/Chevron'
 
 type BankTransactionCategoryCellProps = {
   row: Row<BankTransaction>

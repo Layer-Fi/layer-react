@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
 import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
+import { ErrorText } from '@ui/Typography/ErrorText'
 import { MatchFormMobileItem } from '@components/MatchForm/MatchFormMobileItem'
-import { ErrorText } from '@components/Typography/ErrorText'
 
 import './matchFormMobile.scss'
 

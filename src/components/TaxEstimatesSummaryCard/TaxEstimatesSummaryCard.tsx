@@ -1,8 +1,8 @@
 import classNames from 'classnames'
 
 import { DateFormat } from '@utils/i18n/date/patterns'
-import { SummaryCard } from '@ui/SummaryCard/SummaryCard'
-import { type SummaryCardInteractionProps, type SummaryCardStringOverrides, useSummaryCardSlots } from '@ui/SummaryCard/useSummaryCardSlots'
+import { SummaryCard } from '@blocks/SummaryCard/SummaryCard'
+import { type SummaryCardInteractionProps, type SummaryCardStringOverrides, useSummaryCardSlots } from '@blocks/SummaryCard/useSummaryCardSlots'
 import { TaxEstimatesSummaryCardMode } from '@components/TaxEstimatesSummaryCard/constants'
 import { TaxEstimatesSummaryCardError as Error } from '@components/TaxEstimatesSummaryCard/states/TaxEstimatesSummaryCardError'
 import { TaxEstimatesSummaryCardLoading as Loading } from '@components/TaxEstimatesSummaryCard/states/TaxEstimatesSummaryCardLoading'
