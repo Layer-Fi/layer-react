@@ -112,7 +112,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
             icon={<AlertTriangle size={16} />}
             status={DataStateStatus.failed}
             title={submitError}
-            titleSize='md'
+            slotProps={{ Title: { size: 'md' } }}
             inline
           />
         </HStack>

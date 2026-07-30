@@ -84,7 +84,7 @@ export const TimeEntryForm = ({ onSuccess, entry, isReadOnly }: TimeEntryFormPro
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize='md'
+                  slotProps={{ Title: { size: 'md' } }}
                   inline
                 />
               </HStack>

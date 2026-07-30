@@ -49,7 +49,7 @@ export const TripForm = (props: TripFormProps) => {
             icon={<AlertTriangle size={16} />}
             status={DataStateStatus.failed}
             title={submitError}
-            titleSize='md'
+            slotProps={{ Title: { size: 'md' } }}
             inline
           />
         </HStack>

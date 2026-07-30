@@ -9,25 +9,17 @@ import './formErrorBanner.scss'
 type FormErrorBannerProps = {
   message: string
   className?: string
-  slotProps?: {
-    Title?: {
-      size?: DataStateProps['titleSize']
-      ellipsis?: boolean
-    }
-  }
+  slotProps?: DataStateProps['slotProps']
 }
 
 export const FormErrorBanner = ({ message, className, slotProps }: FormErrorBannerProps) => {
-  const { size = 'md', ellipsis = true } = slotProps?.Title ?? {}
-
   return (
     <HStack pis='2xl' className={classNames('Layer__FormErrorBanner', className)}>
       <DataState
         icon={<AlertTriangle size={16} />}
         status={DataStateStatus.failed}
         title={message}
-        titleSize={size}
-        titleEllipsis={ellipsis}
+        slotProps={{ Title: { size: 'md', ellipsis: true, ...slotProps?.Title } }}
         inline
       />
     </HStack>

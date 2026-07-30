@@ -71,6 +71,7 @@
 .Layer__data-state--inline {
   flex-direction: row;
   gap: var(--spacing-xs);
+  min-inline-size: 0;
 
   .Layer__data-state__text > .Layer__Span {
     margin-bottom: 0;

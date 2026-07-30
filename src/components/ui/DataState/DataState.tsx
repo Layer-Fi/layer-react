@@ -25,8 +25,12 @@ export interface DataStateProps {
   isLoading?: boolean
   spacing?: boolean
   inline?: boolean
-  titleEllipsis?: boolean
-  titleSize?: 'sm' | 'md' | 'lg'
+  slotProps?: {
+    Title?: {
+      size?: 'sm' | 'md' | 'lg'
+      ellipsis?: boolean
+    }
+  }
   className?: string
 }
 
@@ -73,11 +77,11 @@ export const DataState = ({
   icon,
   spacing,
   inline,
-  titleEllipsis,
-  titleSize = inline ? 'sm' : 'lg',
+  slotProps,
   className,
 }: DataStateProps) => {
   const { t } = useTranslation()
+  const { size: titleSize = inline ? 'sm' : 'lg', ellipsis: titleEllipsis } = slotProps?.Title ?? {}
   const baseClassName = classNames(
     'Layer__data-state', {
       'Layer__data-state--spacing': spacing,

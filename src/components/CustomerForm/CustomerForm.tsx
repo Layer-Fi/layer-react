@@ -42,7 +42,7 @@ export const CustomerForm = ({ onSuccess, isReadOnly, ...formState }: CustomerFo
                   icon={<AlertTriangle size={16} />}
                   status={DataStateStatus.failed}
                   title={validationErrors[0] || submitError}
-                  titleSize='md'
+                  slotProps={{ Title: { size: 'md' } }}
                   inline
                 />
               </HStack>
