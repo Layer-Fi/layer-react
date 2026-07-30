@@ -16,6 +16,7 @@ interface Option {
   disabled?: boolean
   disabledMessage?: string
   leftIcon?: ReactNode
+  badge?: ReactNode
 }
 
 interface TabsProps {
