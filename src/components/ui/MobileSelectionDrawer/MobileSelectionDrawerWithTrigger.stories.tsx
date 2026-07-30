@@ -65,10 +65,8 @@ export const AllVariants: Story = {
   ),
 }
 
-// The drawer's open state lives inside the component, so it has to be clicked open; a
-// single trigger keeps the query unambiguous.
 export const DrawerOpen: Story = {
-  parameters: { chromatic: { viewports: [1280], delay: 500 } },
+  parameters: { chromatic: { viewports: [499], delay: 500 } },
   render: () => (
     <Gallery minBlockSize={520}>
       <Col label='drawer open, searchable' inlineSize={CELL_SIZE}>
