@@ -1,11 +1,10 @@
-import { Fragment } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { AmountInput } from '@ui/Input/AmountInput'
 
-const noop = () => {}
+import { Gallery, Row } from '@test-utils/storybook/gallery'
 
-const label: React.CSSProperties = { fontSize: 12, opacity: 0.6 }
+const noop = () => {}
 
 const meta: Meta<typeof AmountInput> = {
   title: 'UI/AmountInput',
@@ -16,34 +15,24 @@ export default meta
 
 type Story = StoryObj<typeof AmountInput>
 
+const LABEL_SIZE = 72
+
+const CELLS: { label: string, props: Partial<React.ComponentProps<typeof AmountInput>> }[] = [
+  { label: 'empty', props: { value: '' } },
+  { label: 'value', props: { value: '1234.56' } },
+  { label: 'disabled', props: { value: '1234.56', disabled: true } },
+  { label: 'error', props: { value: '0.00', isInvalid: true, errorMessage: 'Amount is required' } },
+]
+
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '72px max-content',
-        gap: '16px 24px',
-        alignItems: 'center',
-        padding: 24,
-      }}
-    >
-      <Fragment>
-        <span style={label}>empty</span>
-        <AmountInput value='' onChange={noop} />
-      </Fragment>
-      <Fragment>
-        <span style={label}>value</span>
-        <AmountInput value='1234.56' onChange={noop} />
-      </Fragment>
-      <Fragment>
-        <span style={label}>disabled</span>
-        <AmountInput value='1234.56' onChange={noop} disabled />
-      </Fragment>
-      <Fragment>
-        <span style={label}>error</span>
-        <AmountInput value='0.00' onChange={noop} isInvalid errorMessage='Amount is required' />
-      </Fragment>
-    </div>
+    <Gallery gap={16}>
+      {CELLS.map(({ label, props }) => (
+        <Row key={label} label={label} labelSize={LABEL_SIZE}>
+          <AmountInput value='' onChange={noop} {...props} />
+        </Row>
+      ))}
+    </Gallery>
   ),
 }

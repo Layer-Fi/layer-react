@@ -3,6 +3,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { Heading, type HeadingSize } from '@ui/Typography/Heading'
 import { P, Span } from '@ui/Typography/Text'
 
+import { Gallery, Row as BaseRow } from '@test-utils/storybook/gallery'
+
 const HEADING_SIZES: HeadingSize[] = ['2xs', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl']
 const TEXT_SIZES = ['2xs', 'xs', 'sm', 'md', 'lg', 'xl'] as const
 const STATUSES = ['error', 'success', 'warning', 'disabled', 'info'] as const
@@ -16,39 +18,40 @@ export default meta
 
 type Story = StoryObj
 
+const Group = ({ children }: { children: React.ReactNode }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>{children}</div>
+)
+
 const Row = ({ label, children }: { label: string, children: React.ReactNode }) => (
-  <div style={{ display: 'flex', alignItems: 'baseline', gap: 12 }}>
-    <span style={{ width: 96, fontSize: 12, opacity: 0.6 }}>{label}</span>
-    {children}
-  </div>
+  <BaseRow label={label} align='baseline'>{children}</BaseRow>
 )
 
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24, padding: 24 }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <Gallery>
+      <Group>
         {HEADING_SIZES.map(size => (
           <Row key={size} label={`heading ${size}`}>
             <Heading size={size}>{`Heading ${size}`}</Heading>
           </Row>
         ))}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      </Group>
+      <Group>
         {TEXT_SIZES.map(size => (
           <Row key={size} label={`span ${size}`}>
             <Span size={size}>The quick brown fox</Span>
           </Row>
         ))}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      </Group>
+      <Group>
         {STATUSES.map(status => (
           <Row key={status} label={status}>
             <Span status={status}>{`Status ${status}`}</Span>
           </Row>
         ))}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      </Group>
+      <Group>
         {VARIANTS.map(variant => (
           <Row key={variant} label={variant}>
             <Span variant={variant}>{`Variant ${variant}`}</Span>
@@ -57,8 +60,8 @@ export const AllVariants: Story = {
         <Row label='bold'>
           <Span weight='bold'>Bold text</Span>
         </Row>
-      </div>
+      </Group>
       <P>Paragraph text rendered with the P component.</P>
-    </div>
+    </Gallery>
   ),
 }

@@ -2,23 +2,22 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { FormErrorBanner } from '@blocks/FormErrorBanner/FormErrorBanner'
 
-const SHORT = 'Something went wrong. Please try again.'
-const LONG = 'Please enter a valid amount before submitting this form. Amounts must be greater than zero and use no more than two decimal places.'
+import { Col, Frame, Gallery } from '@test-utils/storybook/gallery'
 
-const LABEL: React.CSSProperties = {
-  fontSize: 11,
-  fontWeight: 600,
-  letterSpacing: '0.04em',
-  textTransform: 'uppercase',
-  opacity: 0.55,
+const SHORT = 'Something went wrong. Please try again.'
+const LONG = 'Amounts must be greater than zero and use no more than two decimal places.'
+
+type Cell = {
+  label: string
+  message: string
+  slotProps?: React.ComponentProps<typeof FormErrorBanner>['slotProps']
 }
 
-// The banner lays out inline, so container width is what changes how it reads: the
-// message wraps while the icon holds its square.
-const CELLS: { label: string, message: string, inlineSize: number }[] = [
-  { label: 'default', message: SHORT, inlineSize: 480 },
-  { label: 'wrapping message', message: LONG, inlineSize: 480 },
-  { label: 'narrow container', message: LONG, inlineSize: 280 },
+const CELLS: Cell[] = [
+  { label: 'default', message: SHORT },
+  { label: 'truncated message', message: LONG },
+  { label: 'wrapping title', message: LONG, slotProps: { Title: { ellipsis: false } } },
+  { label: 'large title', message: SHORT, slotProps: { Title: { size: 'lg' } } },
 ]
 
 const meta: Meta<typeof FormErrorBanner> = {
@@ -34,15 +33,16 @@ type Story = StoryObj<typeof FormErrorBanner>
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24, padding: 24 }}>
-      {CELLS.map(({ label, message, inlineSize }) => (
-        <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <span style={LABEL}>{label}</span>
-          <div style={{ inlineSize, border: '1px dotted rgb(0 0 0 / 24%)', borderRadius: 8 }}>
-            <FormErrorBanner message={message} />
-          </div>
-        </div>
+    <Gallery>
+      {CELLS.map(({ label, message, slotProps }) => (
+        <Col key={label} label={label}>
+          <Frame inlineSize={480} padding={0}>
+            <div style={{ paddingBlockEnd: 16 }}>
+              <FormErrorBanner message={message} slotProps={slotProps} />
+            </div>
+          </Frame>
+        </Col>
       ))}
-    </div>
+    </Gallery>
   ),
 }

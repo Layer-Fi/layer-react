@@ -2,6 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { Radio, RadioGroup } from '@ui/RadioGroup/RadioGroup'
 
+import { Col, Gallery } from '@test-utils/storybook/gallery'
+
 const meta: Meta<typeof RadioGroup> = {
   title: 'UI/RadioGroup',
   component: RadioGroup,
@@ -26,17 +28,10 @@ export default meta
 
 type Story = StoryObj<typeof RadioGroup>
 
-const Col = ({ label, children }: { label: string, children: React.ReactNode }) => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-    <span style={{ fontSize: 12, fontWeight: 600 }}>{label}</span>
-    {children}
-  </div>
-)
-
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24, padding: 24 }}>
+    <Gallery>
       <Col label='vertical'>
         <RadioGroup aria-label='Vertical' defaultValue='one'>
           <Radio value='one'>Option one</Radio>
@@ -56,6 +51,6 @@ export const AllVariants: Story = {
           <Radio value='two'>Option two</Radio>
         </RadioGroup>
       </Col>
-    </div>
+    </Gallery>
   ),
 }

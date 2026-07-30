@@ -3,6 +3,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import type { Spacing } from '@ui/sharedUITypes'
 import { HStack, VStack } from '@ui/Stack/Stack'
 
+import { Col, Gallery, Row } from '@test-utils/storybook/gallery'
+
 const GAPS: Spacing[] = ['2xs', 'xs', 'sm', 'md', 'lg', 'xl']
 
 const meta: Meta = {
@@ -20,35 +22,33 @@ const Box = () => (
 export const Horizontal: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: 24 }}>
+    <Gallery gap={12}>
       {GAPS.map(gap => (
-        <div key={gap} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ width: 48, fontSize: 12, opacity: 0.6 }}>{gap}</span>
+        <Row key={gap} label={gap} labelSize={48}>
           <HStack gap={gap}>
             <Box />
             <Box />
             <Box />
           </HStack>
-        </div>
+        </Row>
       ))}
-    </div>
+    </Gallery>
   ),
 }
 
 export const Vertical: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div style={{ display: 'flex', gap: 32, padding: 24 }}>
+    <Gallery direction='row' gap={32}>
       {GAPS.map(gap => (
-        <div key={gap} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 12, opacity: 0.6 }}>{gap}</span>
+        <Col key={gap} label={gap} align='center'>
           <VStack gap={gap}>
             <Box />
             <Box />
             <Box />
           </VStack>
-        </div>
+        </Col>
       ))}
-    </div>
+    </Gallery>
   ),
 }

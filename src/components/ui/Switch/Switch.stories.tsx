@@ -2,6 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { Switch } from '@ui/Switch/Switch'
 
+import { Gallery, Row } from '@test-utils/storybook/gallery'
+
 const meta: Meta<typeof Switch> = {
   title: 'UI/Switch',
   component: Switch,
@@ -18,21 +20,22 @@ export default meta
 
 type Story = StoryObj<typeof Switch>
 
-const Row = ({ label, children }: { label: string, children: React.ReactNode }) => (
-  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-    <span style={{ width: 96, fontSize: 12, opacity: 0.6 }}>{label}</span>
-    {children}
-  </div>
-)
+const CELLS: { label: string, props: React.ComponentProps<typeof Switch> }[] = [
+  { label: 'off', props: { children: 'Off' } },
+  { label: 'on', props: { children: 'On', isSelected: true } },
+  { label: 'disabled off', props: { children: 'Disabled', isDisabled: true } },
+  { label: 'disabled on', props: { children: 'Disabled', isSelected: true, isDisabled: true } },
+]
 
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 24 }}>
-      <Row label='off'><Switch>Off</Switch></Row>
-      <Row label='on'><Switch isSelected>On</Switch></Row>
-      <Row label='disabled off'><Switch isDisabled>Disabled</Switch></Row>
-      <Row label='disabled on'><Switch isSelected isDisabled>Disabled</Switch></Row>
-    </div>
+    <Gallery gap={16}>
+      {CELLS.map(({ label, props }) => (
+        <Row key={label} label={label}>
+          <Switch {...props} />
+        </Row>
+      ))}
+    </Gallery>
   ),
 }

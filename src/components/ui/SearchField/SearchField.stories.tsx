@@ -2,6 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { SearchField } from '@ui/SearchField/SearchField'
 
+import { Gallery, Row } from '@test-utils/storybook/gallery'
+
 const noop = () => {}
 
 const meta: Meta<typeof SearchField> = {
@@ -21,26 +23,25 @@ export default meta
 
 type Story = StoryObj<typeof SearchField>
 
-const Row = ({ label, children }: { label: string, children: React.ReactNode }) => (
-  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-    <span style={{ width: 96, fontSize: 12, opacity: 0.6 }}>{label}</span>
-    <div style={{ width: 240 }}>{children}</div>
-  </div>
+const Field = ({ label, children }: { label: string, children: React.ReactNode }) => (
+  <Row label={label}>
+    <div style={{ inlineSize: 240 }}>{children}</div>
+  </Row>
 )
 
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 24 }}>
-      <Row label='empty'>
+    <Gallery gap={16}>
+      <Field label='empty'>
         <SearchField label='Search' value='' onChange={noop} />
-      </Row>
-      <Row label='value'>
+      </Field>
+      <Field label='value'>
         <SearchField label='Search' value='Office supplies' onChange={noop} />
-      </Row>
-      <Row label='disabled'>
+      </Field>
+      <Field label='disabled'>
         <SearchField label='Search' value='Office supplies' onChange={noop} isDisabled />
-      </Row>
-    </div>
+      </Field>
+    </Gallery>
   ),
 }

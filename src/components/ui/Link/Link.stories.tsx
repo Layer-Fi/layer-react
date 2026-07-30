@@ -2,6 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { Link } from '@ui/Link/Link'
 
+import { Gallery, Row } from '@test-utils/storybook/gallery'
+
 const SIZES = ['xs', 'sm', 'md', 'lg'] as const
 
 const meta: Meta<typeof Link> = {
@@ -21,17 +23,10 @@ export default meta
 
 type Story = StoryObj<typeof Link>
 
-const Row = ({ label, children }: { label: string, children: React.ReactNode }) => (
-  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-    <span style={{ width: 96, fontSize: 12, opacity: 0.6 }}>{label}</span>
-    {children}
-  </div>
-)
-
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 24 }}>
+    <Gallery gap={16}>
       {SIZES.map(size => (
         <Row key={size} label={size}>
           <Link href='#' size={size}>Default</Link>
@@ -39,6 +34,6 @@ export const AllVariants: Story = {
           <Link href='#' size={size} disabled>Disabled</Link>
         </Row>
       ))}
-    </div>
+    </Gallery>
   ),
 }

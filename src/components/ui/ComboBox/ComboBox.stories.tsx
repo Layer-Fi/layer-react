@@ -3,6 +3,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 
+import { Gallery, Row } from '@test-utils/storybook/gallery'
+
 const OPTIONS: ComboBoxOption[] = [
   { label: 'Checking', value: 'checking' },
   { label: 'Savings', value: 'savings' },
@@ -33,37 +35,36 @@ export default meta
 
 type Story = StoryObj<typeof ComboBox<ComboBoxOption>>
 
-const Row = ({ label, children }: { label: string, children: React.ReactNode }) => (
-  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-    <span style={{ width: 96, fontSize: 12, opacity: 0.6 }}>{label}</span>
-    <div style={{ width: 240 }}>{children}</div>
-  </div>
+const Field = ({ label, children }: { label: string, children: React.ReactNode }) => (
+  <Row label={label}>
+    <div style={{ inlineSize: 240 }}>{children}</div>
+  </Row>
 )
 
 // Closed control states; the open menu is covered by the MenuOpen story.
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 24 }}>
-      <Row label='placeholder'>
+    <Gallery gap={16}>
+      <Field label='placeholder'>
         <ComboBox aria-label='Placeholder' options={OPTIONS} selectedValue={null} onSelectedValueChange={noop} placeholder='Select an account' />
-      </Row>
-      <Row label='selected'>
+      </Field>
+      <Field label='selected'>
         <ComboBox aria-label='Selected' options={OPTIONS} selectedValue={OPTIONS[0]} onSelectedValueChange={noop} />
-      </Row>
-      <Row label='clearable'>
+      </Field>
+      <Field label='clearable'>
         <ComboBox aria-label='Clearable' options={OPTIONS} selectedValue={OPTIONS[1]} onSelectedValueChange={noop} isClearable />
-      </Row>
-      <Row label='disabled'>
+      </Field>
+      <Field label='disabled'>
         <ComboBox aria-label='Disabled' options={OPTIONS} selectedValue={OPTIONS[0]} onSelectedValueChange={noop} isDisabled />
-      </Row>
-      <Row label='error'>
+      </Field>
+      <Field label='error'>
         <ComboBox aria-label='Error' options={OPTIONS} selectedValue={null} onSelectedValueChange={noop} isError slots={{ ErrorMessage: 'Required' }} />
-      </Row>
-      <Row label='loading'>
+      </Field>
+      <Field label='loading'>
         <ComboBox aria-label='Loading' options={OPTIONS} selectedValue={null} onSelectedValueChange={noop} isLoading />
-      </Row>
-    </div>
+      </Field>
+    </Gallery>
   ),
 }
 
@@ -71,13 +72,13 @@ export const AllVariants: Story = {
 export const MenuOpen: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div style={{ display: 'flex', gap: 48, padding: 24, minHeight: 320, alignItems: 'flex-start' }}>
+    <Gallery direction='row' gap={48} minBlockSize={320}>
       <div style={{ width: 240 }}>
-        <ComboBox aria-label='Open' options={OPTIONS} selectedValue={null} onSelectedValueChange={noop} placeholder='Select an account' menuIsOpen />
+        <ComboBox aria-label='Open' options={OPTIONS} selectedValue={null} onSelectedValueChange={noop} placeholder='Select an account' menuIsOpen menuPortalTarget={null} />
       </div>
       <div style={{ width: 240 }}>
-        <ComboBox aria-label='Open selected' options={OPTIONS} selectedValue={OPTIONS[0]} onSelectedValueChange={noop} menuIsOpen />
+        <ComboBox aria-label='Open selected' options={OPTIONS} selectedValue={OPTIONS[0]} onSelectedValueChange={noop} menuIsOpen menuPortalTarget={null} />
       </div>
-    </div>
+    </Gallery>
   ),
 }

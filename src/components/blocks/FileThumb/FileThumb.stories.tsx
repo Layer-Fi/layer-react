@@ -2,6 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { FileThumb } from '@blocks/FileThumb/FileThumb'
 
+import { Col, Gallery } from '@test-utils/storybook/gallery'
+
 const meta: Meta<typeof FileThumb> = {
   title: 'Blocks/FileThumb',
   component: FileThumb,
@@ -13,14 +15,11 @@ type Story = StoryObj<typeof FileThumb>
 
 const noop = () => {}
 
-const label: React.CSSProperties = { fontSize: 12, opacity: 0.6 }
-
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, padding: 24 }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: 240 }}>
-        <span style={label}>default, with actions</span>
+    <Gallery direction='row' wrap gap={24}>
+      <Col inlineSize={240} label='default, with actions'>
         <FileThumb
           name='receipt.pdf'
           date='Jul 24, 2026'
@@ -29,19 +28,16 @@ export const AllVariants: Story = {
           onOpen={noop}
           onDelete={noop}
         />
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: 240 }}>
-        <span style={label}>uploading</span>
+      </Col>
+      <Col inlineSize={240} label='uploading'>
         <FileThumb name='invoice.png' uploadPending onDelete={noop} />
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: 240 }}>
-        <span style={label}>deleting</span>
+      </Col>
+      <Col inlineSize={240} label='deleting'>
         <FileThumb name='statement.pdf' deletePending onDelete={noop} />
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: 240 }}>
-        <span style={label}>error</span>
+      </Col>
+      <Col inlineSize={240} label='error'>
         <FileThumb name='corrupt.pdf' error='Upload failed' onDelete={noop} />
-      </div>
-    </div>
+      </Col>
+    </Gallery>
   ),
 }

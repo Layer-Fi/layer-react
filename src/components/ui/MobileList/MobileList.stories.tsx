@@ -3,11 +3,13 @@ import { Car, CircleCheck, Clock, Copy, CornerDownRight, Pencil, Trash2, Triangl
 
 import { BadgeVariant } from '@ui/Badge/Badge'
 import { MobileList, type MobileListData, type MobileListProps } from '@ui/MobileList/MobileList'
-import { MobileListItemActionsMenu, type MobileListItemActionsMenuConfig } from '@ui/MobileList/MobileListItemActionsMenu'
+import { type MobileListItemActionsMenuConfig } from '@ui/MobileList/MobileListItemActionsMenu'
 import { MobileListItemContent } from '@ui/MobileList/MobileListItemContent'
 import { MobileListItemStatusFooter } from '@ui/MobileList/MobileListItemStatusFooter'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+
+import { Col, Frame, Gallery } from '@test-utils/storybook/gallery'
 
 type Row = {
   id: string
@@ -67,7 +69,6 @@ const ROWS: Row[] = [
   },
 ]
 
-// Long enough to force the title-row ellipsis and a wrapping status footer.
 const OVERFLOW_ROW: Row = {
   id: 'r5',
   merchant: 'Pacific Northwest Commercial Interiors & Facilities Management LLC',
@@ -171,34 +172,23 @@ export default meta
 
 type Story = StoryObj<typeof MobileList<Row>>
 
-const PANEL_BORDER = { border: '1px dashed rgb(0 0 0 / 12%)', borderRadius: 8, padding: 12 }
-
-const Gallery = ({ children }: { children: React.ReactNode }) => (
-  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 32, padding: 24, alignItems: 'flex-start' }}>
-    {children}
-  </div>
-)
-
 const Panel = ({
   label,
   note,
   ...overrides
 }: { label: string, note?: string } & Partial<MobileListProps<Row>>) => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: 340 }}>
-    <Span size='xs' weight='bold'>{label}</Span>
+  <Col label={label} inlineSize={340}>
     {note && <Span size='2xs' variant='subtle'>{note}</Span>}
-    <div style={PANEL_BORDER}>
+    <Frame>
       <MobileList<Row> ariaLabel={label} {...BASE_ARGS} {...overrides} />
-    </div>
-  </div>
+    </Frame>
+  </Col>
 )
 
-// Expanded rows animate their height on mount (AnimatedElement 'expand', 250ms), so hold
-// the capture until they settle.
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280], delay: 500 } },
   render: () => (
-    <Gallery>
+    <Gallery direction='row' wrap gap={32}>
       <Panel label='Default' />
       <Panel label='Compact' variant='compact' />
       <Panel label='Grouped' data={GROUPED} />
@@ -245,19 +235,15 @@ export const AllVariants: Story = {
 }
 
 const Anatomy = ({ label, children }: { label: string, children: React.ReactNode }) => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: 300 }}>
-    <Span size='xs' weight='bold'>{label}</Span>
-    <div style={{ ...PANEL_BORDER, padding: 12 }}>{children}</div>
-  </div>
+  <Col label={label} inlineSize={300}>
+    <Frame>{children}</Frame>
+  </Col>
 )
 
-// The row primitives are laid out bare rather than inside a MobileList: a whole list per
-// permutation is unreadable at gallery scale, and these are states of
-// MobileListItemContent / MobileListItemStatusFooter, not of the list.
-export const ItemAnatomy: Story = {
+export const Subcomponents: Story = {
   parameters: { chromatic: { viewports: [1280], delay: 300 } },
   render: () => (
-    <Gallery>
+    <Gallery direction='row' wrap gap={32}>
       <Anatomy label='Title only'>
         <MobileListItemContent title='Staples' />
       </Anatomy>
@@ -302,15 +288,6 @@ export const ItemAnatomy: Story = {
           </VStack>
         </Anatomy>
       ))}
-      <Anatomy label='Actions menu, open'>
-        <div style={{ minBlockSize: 168 }}>
-          <MobileListItemActionsMenu
-            ariaLabel='Transaction actions'
-            actions={ACTIONS_MENU.getActions(ROWS[0])}
-            defaultOpen
-          />
-        </div>
-      </Anatomy>
     </Gallery>
   ),
 }

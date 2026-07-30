@@ -1,11 +1,10 @@
-import { Fragment } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { Pagination } from '@ui/Pagination/Pagination'
 
-const noop = () => {}
+import { Gallery, Row } from '@test-utils/storybook/gallery'
 
-const label: React.CSSProperties = { fontSize: 12, opacity: 0.6 }
+const noop = () => {}
 
 const meta: Meta<typeof Pagination> = {
   title: 'UI/Pagination',
@@ -28,26 +27,17 @@ const CASES: { label: string, currentPage: number }[] = [
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'max-content max-content',
-        gap: '24px 32px',
-        alignItems: 'center',
-        padding: 24,
-      }}
-    >
-      {CASES.map(({ label: caseLabel, currentPage }) => (
-        <Fragment key={caseLabel}>
-          <span style={label}>{caseLabel}</span>
+    <Gallery>
+      {CASES.map(({ label, currentPage }) => (
+        <Row key={label} label={label} labelSize={120}>
           <Pagination
             currentPage={currentPage}
             pageSize={PAGE_SIZE}
             totalCount={TOTAL_COUNT}
             onPageChange={noop}
           />
-        </Fragment>
+        </Row>
       ))}
-    </div>
+    </Gallery>
   ),
 }

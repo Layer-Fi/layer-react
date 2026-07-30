@@ -4,18 +4,10 @@ import { HStack } from '@ui/Stack/Stack'
 import { P, Span } from '@ui/Typography/Text'
 import { ExpandableCard } from '@blocks/ExpandableCard/ExpandableCard'
 
+import { Col, Gallery } from '@test-utils/storybook/gallery'
+
 const noop = () => {}
 
-const LABEL: React.CSSProperties = {
-  fontSize: 11,
-  fontWeight: 600,
-  letterSpacing: '0.04em',
-  textTransform: 'uppercase',
-  opacity: 0.55,
-}
-
-// The card puts the Heading slot in a row with the expand button, so a heading only
-// supplies its own content.
 const Heading = ({ title, value }: { title: string, value?: string }) => (
   <HStack align='center' gap='sm'>
     <Span weight='bold'>{title}</Span>
@@ -75,10 +67,9 @@ type Story = StoryObj<typeof ExpandableCard>
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24, padding: 24, inlineSize: 480 }}>
+    <Gallery inlineSize={480}>
       {CELLS.map(({ label, isExpanded, heading, children }) => (
-        <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <span style={LABEL}>{label}</span>
+        <Col key={label} label={label}>
           <ExpandableCard
             isExpanded={isExpanded}
             onToggleExpanded={noop}
@@ -86,8 +77,8 @@ export const AllVariants: Story = {
           >
             {children}
           </ExpandableCard>
-        </div>
+        </Col>
       ))}
-    </div>
+    </Gallery>
   ),
 }

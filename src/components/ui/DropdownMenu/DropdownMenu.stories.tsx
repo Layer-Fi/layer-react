@@ -1,12 +1,26 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
-import { MoreHorizontal } from 'lucide-react'
+import { Briefcase, ChevronRight, FileText, MenuIcon, MoreHorizontal, Settings } from 'lucide-react'
 
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
+import { Spacer, VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
+
+import { Col, Gallery } from '@test-utils/storybook/gallery'
 
 const Trigger = (props: React.ComponentProps<typeof Button>) => (
   <Button icon variant='ghost' {...props}><MoreHorizontal size={18} /></Button>
 )
+
+const OutlinedTrigger = (props: React.ComponentProps<typeof Button>) => (
+  <Button icon variant='outlined' {...props}><MenuIcon size={14} /></Button>
+)
+
+const ICON_ITEMS = [
+  { key: 'reports', label: 'Reports', Icon: FileText },
+  { key: 'services', label: 'Services', Icon: Briefcase },
+  { key: 'settings', label: 'Settings', Icon: Settings },
+]
 
 const meta: Meta<typeof DropdownMenu> = {
   title: 'UI/DropdownMenu',
@@ -31,18 +45,11 @@ export default meta
 
 type Story = StoryObj<typeof DropdownMenu>
 
-const Col = ({ label, children }: { label: string, children: React.ReactNode }) => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'center' }}>
-    <span style={{ fontSize: 12, fontWeight: 600 }}>{label}</span>
-    {children}
-  </div>
-)
-
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280], delay: 300 } },
   render: () => (
-    <div style={{ display: 'flex', gap: 240, padding: 24, minBlockSize: 260 }}>
-      <Col label='default'>
+    <Gallery direction='row' gap={240} minBlockSize={300}>
+      <Col label='default' align='center'>
         <DropdownMenu ariaLabel='Default' slots={{ Trigger }} defaultOpen>
           <MenuList>
             <MenuItem onClick={() => {}}>Edit</MenuItem>
@@ -51,7 +58,7 @@ export const AllVariants: Story = {
           </MenuList>
         </DropdownMenu>
       </Col>
-      <Col label='compact'>
+      <Col label='compact' align='center'>
         <DropdownMenu ariaLabel='Compact' variant='compact' slots={{ Trigger }} defaultOpen>
           <MenuList>
             <MenuItem onClick={() => {}}>Edit</MenuItem>
@@ -60,6 +67,27 @@ export const AllVariants: Story = {
           </MenuList>
         </DropdownMenu>
       </Col>
-    </div>
+      <Col label='with icons and a dialog width' align='center'>
+        <DropdownMenu
+          ariaLabel='With icons'
+          slots={{ Trigger: OutlinedTrigger }}
+          slotProps={{ Dialog: { width: 250 } }}
+          defaultOpen
+        >
+          <MenuList>
+            {ICON_ITEMS.map(({ key, label, Icon }) => (
+              <MenuItem key={key} onClick={() => {}}>
+                <VStack>
+                  <Icon size={16} strokeWidth={1.5} />
+                </VStack>
+                <Span size='sm'>{label}</Span>
+                <Spacer />
+                <ChevronRight size={12} />
+              </MenuItem>
+            ))}
+          </MenuList>
+        </DropdownMenu>
+      </Col>
+    </Gallery>
   ),
 }

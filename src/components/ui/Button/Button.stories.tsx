@@ -1,8 +1,9 @@
-import { Fragment } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { Star } from 'lucide-react'
 
 import { Button, type ButtonVariant } from '@ui/Button/Button'
+
+import { Gallery, Matrix } from '@test-utils/storybook/gallery'
 
 const VARIANTS: ButtonVariant[] = ['solid', 'ghost', 'outlined', 'text', 'branded']
 
@@ -52,29 +53,16 @@ type Story = StoryObj<typeof Button>
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div
-      style={{
-        ...BRAND_VARS,
-        display: 'grid',
-        gridTemplateColumns: `88px repeat(${COLUMNS.length}, max-content)`,
-        gap: '16px 24px',
-        alignItems: 'center',
-        justifyItems: 'start',
-        padding: 24,
-      }}
-    >
-      <span />
-      {COLUMNS.map(({ label }) => (
-        <span key={label} style={{ fontSize: 12, opacity: 0.6 }}>{label}</span>
-      ))}
-      {VARIANTS.map(variant => (
-        <Fragment key={variant}>
-          <span style={{ fontSize: 12, opacity: 0.6 }}>{variant}</span>
-          {COLUMNS.map(({ label, render }) => (
-            <Fragment key={label}>{render(variant)}</Fragment>
-          ))}
-        </Fragment>
-      ))}
-    </div>
+    <Gallery>
+      <div style={BRAND_VARS}>
+        <Matrix
+          rows={VARIANTS}
+          columns={COLUMNS}
+          rowLabel={variant => variant}
+          columnLabel={column => column.label}
+          renderCell={(variant, column) => column.render(variant)}
+        />
+      </div>
+    </Gallery>
   ),
 }
