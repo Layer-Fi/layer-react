@@ -82,6 +82,7 @@ type BankTransactionCategoryComboBoxBaseProps = {
   isDisabled?: boolean
   isLoading?: boolean
   inputId?: string
+  showAiSparkle?: boolean
 }
 
 type BankTransactionCategoryComboBoxWithMatchesProps = {
@@ -107,6 +108,7 @@ export const BankTransactionCategoryComboBox = ({
   isDisabled = false,
   isLoading = false,
   inputId,
+  showAiSparkle = true,
 }: BankTransactionCategoryComboBoxProps) => {
   const { t } = useTranslation()
   const { data: categories } = useCategories()
@@ -156,10 +158,10 @@ export const BankTransactionCategoryComboBox = ({
     return (
       <BankTransactionsUncategorizedSelectedValue
         selectedValue={selectedValue}
-        showAiSparkle={isSuggestedCategorySelected}
+        showAiSparkle={showAiSparkle && isSuggestedCategorySelected}
       />
     )
-  }, [isSuggestedCategorySelected, selectedValue])
+  }, [isSuggestedCategorySelected, selectedValue, showAiSparkle])
 
   const handleSelectedValueChange = useCallback((value: BankTransactionCategoryComboBoxOption | null) => {
     if (!includeSuggestedMatches) {

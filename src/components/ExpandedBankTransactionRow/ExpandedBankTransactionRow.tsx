@@ -270,6 +270,7 @@ export const ExpandedBankTransactionRow = ({
                             }}
                             isDisabled={!isCategorizationEnabled}
                             includeSuggestedMatches={false}
+                            showAiSparkle={false}
                           />
                           {hasTaxCodeOptions && (
                             <TaxCodeComboBox
