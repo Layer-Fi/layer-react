@@ -7,8 +7,6 @@ import { DatePicker } from '@components/DatePicker/DatePicker'
 import { Col, Gallery } from '@test-utils/storybook/gallery'
 
 const DATE = parseDate('2026-07-23')
-const MIN = parseDate('2026-07-08')
-const MAX = parseDate('2026-07-29')
 
 const noop = () => {}
 
@@ -23,7 +21,6 @@ const CELLS: { label: string, props: Partial<PickerProps> }[] = [
   { label: 'read only', props: { isReadOnly: true } },
   { label: 'disabled', props: { isDisabled: true } },
   { label: 'invalid', props: { isInvalid: true, errorText: 'Enter a date in this period' } },
-  { label: 'restricted range', props: { minDate: MIN, maxDate: MAX } },
 ]
 
 const Picker = (props: Partial<PickerProps>) => (
