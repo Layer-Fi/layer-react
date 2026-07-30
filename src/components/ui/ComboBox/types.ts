@@ -50,6 +50,7 @@ export type BaseComboBoxProps<T extends ComboBoxOption> = {
   isReadOnly?: boolean
 
   menuIsOpen?: boolean
+  menuPortalTarget?: HTMLElement | null
 
   filterOption?: ((option: FilterOptionOption<T>, inputValue: string) => boolean) | null
 
