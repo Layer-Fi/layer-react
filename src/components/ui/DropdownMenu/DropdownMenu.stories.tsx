@@ -38,25 +38,25 @@ const Col = ({ label, children }: { label: string, children: React.ReactNode }) 
   </div>
 )
 
-// MenuTrigger open state is not settable via props here, so the gallery shows
-// closed triggers.
 export const AllVariants: Story = {
-  parameters: { chromatic: { viewports: [1280] } },
+  parameters: { chromatic: { viewports: [1280], delay: 300 } },
   render: () => (
-    <div style={{ display: 'flex', gap: 48, padding: 24 }}>
+    <div style={{ display: 'flex', gap: 240, padding: 24, minBlockSize: 260 }}>
       <Col label='default'>
-        <DropdownMenu ariaLabel='Default' slots={{ Trigger }}>
+        <DropdownMenu ariaLabel='Default' slots={{ Trigger }} defaultOpen>
           <MenuList>
             <MenuItem onClick={() => {}}>Edit</MenuItem>
             <MenuItem onClick={() => {}}>Duplicate</MenuItem>
+            <MenuItem isDisabled onClick={() => {}}>Archive</MenuItem>
           </MenuList>
         </DropdownMenu>
       </Col>
       <Col label='compact'>
-        <DropdownMenu ariaLabel='Compact' variant='compact' slots={{ Trigger }}>
+        <DropdownMenu ariaLabel='Compact' variant='compact' slots={{ Trigger }} defaultOpen>
           <MenuList>
             <MenuItem onClick={() => {}}>Edit</MenuItem>
             <MenuItem onClick={() => {}}>Duplicate</MenuItem>
+            <MenuItem isDisabled onClick={() => {}}>Archive</MenuItem>
           </MenuList>
         </DropdownMenu>
       </Col>
