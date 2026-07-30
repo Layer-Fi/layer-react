@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { CircleAlert } from 'lucide-react'
 
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
@@ -13,18 +14,15 @@ type LinkedAccountPillProps = {
 }
 
 export function LinkedAccountPill({ label, items }: LinkedAccountPillProps) {
+  const Trigger = useCallback(() => (
+    <Pill status='error'>
+      <CircleAlert size={14} />
+      {label}
+    </Pill>
+  ), [label])
+
   return (
-    <DropdownMenu
-      ariaLabel={label}
-      slots={{
-        Trigger: () => (
-          <Pill status='error'>
-            <CircleAlert size={14} />
-            {label}
-          </Pill>
-        ),
-      }}
-    >
+    <DropdownMenu ariaLabel={label} slots={{ Trigger }} variant='compact'>
       <MenuList>
         {items.map(({ action, name }, index) => (
           <MenuItem key={index} onClick={action}>
