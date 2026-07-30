@@ -1,6 +1,5 @@
 {
   "action": {
-    "clear_filters": "Effacer tous les filtres",
     "clear_search": "Effacer la recherche",
     "close_modal": "Fermer la fenêtre modale",
     "get_more_results": "Afficher plus de résultats"

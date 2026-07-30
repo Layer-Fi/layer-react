@@ -1,6 +1,5 @@
 {
   "action": {
-    "clear_filters": "Clear All Filters",
     "clear_search": "Clear search",
     "close_modal": "Close Modal",
     "get_more_results": "Get more results"
