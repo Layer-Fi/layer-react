@@ -9,7 +9,7 @@
     "yes_always_categorize": "Oui, toujours catégoriser"
   },
   "empty": {
-    "no_categorization_rules_match_search": "",
+    "no_categorization_rules_match_search": "Nous n’avons trouvé aucune règle de catégorisation correspondant à votre recherche. Essayez un autre terme de recherche.",
     "no_categorization_rules_yet": "Aucune règle de catégorisation n’a encore été créée. Vous recevrez des suggestions de règles à créer à mesure que vous catégoriserez les transactions dans le flux bancaire.",
     "no_counterparties_yet": "Aucune contrepartie pour le moment. Elles s’afficheront ici automatiquement à mesure que vos transactions seront traitées.",
     "no_matching_counterparties": "Aucune contrepartie correspondante.",
@@ -26,8 +26,8 @@
     "reject_rule_suggestion": "Échec du rejet de la suggestion de règle"
   },
   "label": {
-    "amount_max_optional": "",
-    "amount_min_optional": "",
+    "amount_max_optional": "Montant maximal (facultatif)",
+    "amount_min_optional": "Montant minimal (facultatif)",
     "any": "Peu importe",
     "any_amount": "N’importe quel montant",
     "any_direction": "Entrées et sorties d’argent",
@@ -37,15 +37,15 @@
     "money_in": "Entrées d’argent",
     "money_out": "Sorties d’argent",
     "or": "OU",
-    "rule_actions": "",
-    "search_rules": "",
-    "suggests_category": "",
+    "rule_actions": "Actions de la règle",
+    "search_rules": "Rechercher des règles",
+    "suggests_category": "Suggère une catégorie",
     "transaction_no_longer_automatically_categorized": "Les transactions ne seront plus automatiquement catégorisées par cette règle. Les transactions déjà catégorisées sous {{counterparty}} ne seront pas touchées.",
     "update_categorization_rules": "Mettre à jour les règles de catégorisation"
   },
   "placeholder": {
-    "none": "",
-    "select_account": "",
+    "none": "Aucun",
+    "select_account": "Sélectionner un compte",
     "select_counterparty": "Sélectionner une contrepartie"
   },
   "prompt": {
