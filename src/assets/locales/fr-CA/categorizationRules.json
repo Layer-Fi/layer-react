@@ -9,6 +9,7 @@
     "yes_always_categorize": "Oui, toujours catégoriser"
   },
   "empty": {
+    "no_categorization_rules_match_search": "",
     "no_categorization_rules_yet": "Aucune règle de catégorisation n’a encore été créée. Vous recevrez des suggestions de règles à créer à mesure que vous catégoriserez les transactions dans le flux bancaire.",
     "no_counterparties_yet": "Aucune contrepartie pour le moment. Elles s’afficheront ici automatiquement à mesure que vos transactions seront traitées.",
     "no_matching_counterparties": "Aucune contrepartie correspondante.",
@@ -25,26 +26,26 @@
     "reject_rule_suggestion": "Échec du rejet de la suggestion de règle"
   },
   "label": {
-    "amount_max": "Montant maximal",
-    "amount_min": "Montant minimal",
-    "amount_value": "Montant : {{value}}",
+    "amount_max_optional": "",
+    "amount_min_optional": "",
     "any": "Peu importe",
     "any_amount": "N’importe quel montant",
     "any_direction": "Entrées et sorties d’argent",
     "categorization_rules": "Règles de catégorisation",
-    "category_value": "Catégorie : {{value}}",
-    "direction_value": "Sens : {{value}}",
     "following_count_transactions_one": "La {{displayCount}} transaction suivante sera touchée :",
     "following_count_transactions_other": "Les {{displayCount}} transactions suivantes seront touchées :",
     "money_in": "Entrées d’argent",
     "money_out": "Sorties d’argent",
     "or": "OU",
+    "rule_actions": "",
+    "search_rules": "",
+    "suggests_category": "",
     "transaction_no_longer_automatically_categorized": "Les transactions ne seront plus automatiquement catégorisées par cette règle. Les transactions déjà catégorisées sous {{counterparty}} ne seront pas touchées.",
     "update_categorization_rules": "Mettre à jour les règles de catégorisation"
   },
   "placeholder": {
-    "no_maximum": "Aucun maximum",
-    "no_minimum": "Aucun minimum",
+    "none": "",
+    "select_account": "",
     "select_counterparty": "Sélectionner une contrepartie"
   },
   "prompt": {

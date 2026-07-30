@@ -32,6 +32,8 @@
     "account_type": "Account type",
     "balance": "Current balance",
     "bill_number": "Bill Number",
+    "closing_action_type": "Action type",
+    "closing_date": "Closing date",
     "enter_account_name": "Enter account name...",
     "enter_institution_name": "Enter institution name...",
     "entry_date": "Entry date",
