@@ -11,10 +11,12 @@
 
 .Layer__data-state__icon {
   display: flex;
+
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  height: 32px;
-  width: 32px;
+  height: 2rem;
+  width: 2rem;
   border-radius: var(--spacing-3xs);
   box-shadow: 0 0 0 1px var(--color-base-300);
   margin-bottom: var(--spacing-md);
