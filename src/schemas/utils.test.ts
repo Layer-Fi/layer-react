@@ -1,7 +1,11 @@
 import { Schema } from 'effect'
 import { describe, expect, it } from 'vitest'
 
-import { createOpenEnumSchema, createTransformedEnumSchema } from '@schemas/utils'
+import {
+  createOpenEnumSchema,
+  createTransformedEnumSchema,
+  UnwrappedDataResponseSchema,
+} from '@schemas/utils'
 
 enum TestEnum {
   Known = 'KNOWN',
@@ -50,5 +54,28 @@ describe('createTransformedEnumSchema', () => {
 
   it('encodes back to the raw value', () => {
     expect(Schema.encodeSync(schema)(TestEnum.Known)).toBe('KNOWN')
+  })
+})
+
+describe('UnwrappedDataResponseSchema', () => {
+  const schema = UnwrappedDataResponseSchema(Schema.Struct({ id: Schema.NumberFromString }))
+  const decode = Schema.decodeUnknownSync(schema)
+
+  it('unwraps the data envelope and decodes the inner schema', () => {
+    expect(decode({ data: { id: '1' } })).toEqual({ id: 1 })
+  })
+
+  it('ignores extra keys alongside data', () => {
+    expect(decode({ data: { id: '1' }, meta: { page: 1 } })).toEqual({ id: 1 })
+  })
+
+  it('rejects a missing envelope or an invalid payload', () => {
+    expect(() => decode({ id: '1' })).toThrow()
+    expect(() => decode({ data: { id: 'not-a-number' } })).toThrow()
+    expect(() => decode(null)).toThrow()
+  })
+
+  it('re-wraps in a data envelope on encode', () => {
+    expect(Schema.encodeSync(schema)({ id: 1 })).toEqual({ data: { id: '1' } })
   })
 })
