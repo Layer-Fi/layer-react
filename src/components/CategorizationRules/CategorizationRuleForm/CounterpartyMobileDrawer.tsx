@@ -10,7 +10,7 @@ import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
-import { CounterpartyComboBoxOption, type CounterpartyOption } from '@components/CategorizationRules/CategorizationRuleForm/counterpartyComboBoxOption'
+import { type CounterpartyOption, toCounterpartyValue } from '@components/CategorizationRules/CategorizationRuleForm/counterpartyComboBoxOption'
 import { useCounterpartyOptions } from '@components/CategorizationRules/CategorizationRuleForm/useCounterpartyOptions'
 import { SearchField } from '@components/SearchField/SearchField'
 
@@ -102,7 +102,7 @@ export const CounterpartyMobileDrawer = ({
               options={options}
               selectedValue={selectedOption}
               onSelectedValueChange={(option) => {
-                onValueChange(option instanceof CounterpartyComboBoxOption ? option.original : null)
+                onValueChange(toCounterpartyValue(option))
                 close()
               }}
               isLoading={isLoading}

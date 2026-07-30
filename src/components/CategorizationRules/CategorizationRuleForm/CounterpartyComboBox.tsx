@@ -5,7 +5,7 @@ import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base
 import { SearchComboBox, useSearchComboBox } from '@ui/ComboBox/SearchComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
-import { CounterpartyComboBoxOption, type CounterpartyOption } from '@components/CategorizationRules/CategorizationRuleForm/counterpartyComboBoxOption'
+import { type CounterpartyOption, toCounterpartyValue } from '@components/CategorizationRules/CategorizationRuleForm/counterpartyComboBoxOption'
 import { useCounterpartyOptions } from '@components/CategorizationRules/CategorizationRuleForm/useCounterpartyOptions'
 
 type CounterpartyComboBoxProps = {
@@ -68,7 +68,7 @@ export const CounterpartyComboBox = ({
 
   const handleSelectedValueChange = useCallback(
     (option: CounterpartyOption | null) => {
-      onValueChange(option instanceof CounterpartyComboBoxOption ? option.original : null)
+      onValueChange(toCounterpartyValue(option))
     },
     [onValueChange],
   )

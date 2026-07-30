@@ -1,5 +1,8 @@
+import type { AccountIdentifier } from '@schemas/accountIdentifier'
 import { type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
+import { accountIdentifierIsForCategory } from '@utils/categories'
 
+import { accountCategorizationFields } from '@msw/api/businesses/[business-id]/ledger/accounts/accountCategorizationFields'
 import { ledgerEntryStore } from '@msw/api/businesses/[business-id]/ledger/entries/store'
 import { createMockStore } from '@msw/utils/createMockStore'
 import { PARENT_BY_STABLE_NAME } from '@fixtures/chartOfAccounts/constants'
@@ -11,6 +14,12 @@ export const ledgerAccountStore = createMockStore(
 )
 
 export const accountParentStore = createMockStore<{ id: string, parentAccountId: string }>(() => [])
+
+export const findAccountByIdentifier = (identifier: AccountIdentifier) =>
+  ledgerAccountStore.all().find(account => accountIdentifierIsForCategory(identifier, {
+    type: 'AccountNested',
+    ...accountCategorizationFields(account),
+  }))
 
 export const resolveParentAccountId = (account: SingleChartAccountType): string | null => {
   const runtimeParent = accountParentStore.findById(account.accountId)

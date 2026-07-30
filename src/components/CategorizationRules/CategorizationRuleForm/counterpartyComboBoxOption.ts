@@ -19,8 +19,8 @@ export class CounterpartyComboBoxOption extends BaseComboBoxOption<BankTransacti
   }
 }
 
-/* Legacy rules filter on a transaction description rather than a counterparty. They stay
- * viewable, but the description can never be picked as a value for a new or updated rule. */
+/* Legacy rules filter on a transaction description instead of a counterparty. Never listed as
+ * an option - only ever the current selection - so it cannot be picked. */
 export class TransactionDescriptionComboBoxOption extends BaseComboBoxOption<string> {
   get original() {
     return this.internalValue
@@ -33,14 +33,9 @@ export class TransactionDescriptionComboBoxOption extends BaseComboBoxOption<str
   get value() {
     return `transaction-description:${this.internalValue}`
   }
-
-  get isDisabled() {
-    return true
-  }
-
-  get isHidden() {
-    return true
-  }
 }
 
 export type CounterpartyOption = CounterpartyComboBoxOption | TransactionDescriptionComboBoxOption
+
+export const toCounterpartyValue = (option: CounterpartyOption | null) =>
+  option instanceof CounterpartyComboBoxOption ? option.original : null
