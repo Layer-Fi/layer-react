@@ -29,7 +29,7 @@
     "enter_distance": "Saisissez la distance",
     "search_trips": "Rechercher des voyages",
     "start_address": "Adresse de départ",
-    "trip_actions": "",
+    "trip_actions": "Actions liées au trajet",
     "trip_date": "Date du voyage",
     "trip_end_address": "<bold>Destination :</bold> {{address}}",
     "trip_purpose": "Motif du voyage",
