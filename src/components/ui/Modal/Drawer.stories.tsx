@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
-import { ModalActions, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
+import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { P, Span } from '@ui/Typography/Text'
 
@@ -12,18 +12,17 @@ const Header = () => (
   <ModalTitleWithClose heading={<ModalHeading>Select a report</ModalHeading>} />
 )
 
-// Drawer content carries its own padding at the call site; this matches
-// TimeTrackingServicesDrawer.
+// The dialog sets padding: 0 for both drawer variants, so the call site supplies it, as
+// TimeTrackingServicesDrawer does. ModalActions is deliberately not used: its 3xl top
+// margin is meant to push actions down in a centred modal.
 const Body = () => (
   <VStack gap='md' pbs='md' pbe='lg' pi='md'>
-    <P>Settled drawer content, composed from the Modal subcomponents.</P>
+    <P>Settled drawer content, padded the way the feature drawers pad theirs.</P>
     {ROWS.map(row => <Span key={row} size='sm'>{row}</Span>)}
-    <ModalActions>
-      <HStack justify='space-between' gap='xs'>
-        <Button variant='outlined'>Cancel</Button>
-        <Button>Apply</Button>
-      </HStack>
-    </ModalActions>
+    <HStack justify='space-between' gap='xs'>
+      <Button variant='outlined'>Cancel</Button>
+      <Button>Apply</Button>
+    </HStack>
   </VStack>
 )
 
