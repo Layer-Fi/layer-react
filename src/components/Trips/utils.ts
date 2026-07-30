@@ -39,7 +39,7 @@ export const getPurposeBadgeVariant = (purpose: TripPurpose): BadgeVariant => {
     return BadgeVariant.SUCCESS
   }
   if (purpose === TripPurpose.Personal) {
-    return BadgeVariant.INFO
+    return BadgeVariant.NEUTRAL
   }
   return BadgeVariant.WARNING
 }
