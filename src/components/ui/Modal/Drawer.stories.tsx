@@ -2,28 +2,29 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
-import { ModalActions, ModalContent, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
+import { ModalActions, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { P, Span } from '@ui/Typography/Text'
 
 const ROWS = ['Profit and Loss', 'Balance Sheet', 'Cash Flow']
 
+const Header = () => (
+  <ModalTitleWithClose heading={<ModalHeading>Select a report</ModalHeading>} />
+)
+
+// Drawer content carries its own padding at the call site; this matches
+// TimeTrackingServicesDrawer.
 const Body = () => (
-  <>
-    <ModalTitleWithClose heading={<ModalHeading>Select a report</ModalHeading>} />
-    <ModalContent>
-      <VStack gap='sm'>
-        <P>Settled drawer content, composed from the Modal subcomponents.</P>
-        {ROWS.map(row => <Span key={row} size='sm'>{row}</Span>)}
-      </VStack>
-    </ModalContent>
+  <VStack gap='md' pbs='md' pbe='lg' pi='md'>
+    <P>Settled drawer content, composed from the Modal subcomponents.</P>
+    {ROWS.map(row => <Span key={row} size='sm'>{row}</Span>)}
     <ModalActions>
       <HStack justify='space-between' gap='xs'>
         <Button variant='outlined'>Cancel</Button>
         <Button>Apply</Button>
       </HStack>
     </ModalActions>
-  </>
+  </VStack>
 )
 
 const meta: Meta<typeof Drawer> = {
@@ -50,7 +51,7 @@ type Story = StoryObj<typeof Drawer>
 export const Regular: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: args => (
-    <Drawer {...args} variant='drawer'>
+    <Drawer {...args} variant='drawer' slots={{ Header }}>
       <Body />
     </Drawer>
   ),
@@ -61,7 +62,7 @@ export const Mobile: Story = {
   parameters: { chromatic: { viewports: [499] } },
   args: { fixedHeight: true },
   render: args => (
-    <Drawer {...args} variant='mobile-drawer'>
+    <Drawer {...args} variant='mobile-drawer' slots={{ Header }}>
       <Body />
     </Drawer>
   ),

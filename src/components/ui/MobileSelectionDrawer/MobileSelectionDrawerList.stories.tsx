@@ -46,7 +46,7 @@ export const AllVariants: Story = {
     <Gallery>
       {CELLS.map(({ label, props }) => (
         <Col key={label} label={label} inlineSize={CELL_SIZE}>
-          <Frame padding={0}>
+          <Frame padding={8}>
             <MobileSelectionDrawerList
               ariaLabel='Reports'
               options={OPTIONS}
