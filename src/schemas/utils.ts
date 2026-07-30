@@ -13,6 +13,16 @@ export const UnwrappedDataResponseSchema = <A, I, R>(
     },
   )
 
+// `string & {}` accepts any string without collapsing the union, preserving autocomplete
+// for the known enum members.
+type AnyString = string & {}
+type OpenEnum<T extends string> = T | AnyString
+
+// Accepts values the backend may add before this client knows about them, preserving
+// the raw value for display.
+export const createOpenEnumSchema = <T extends Record<string, string>>(_enumObject: T) =>
+  Schema.String as Schema.Schema<OpenEnum<T[keyof T]>>
+
 // Helper function to create transformed enum schemas with safe defaults.
 export const createTransformedEnumSchema = <T extends Record<string, string>>(
   enumSchema: Schema.Schema<T[keyof T], T[keyof T]>,

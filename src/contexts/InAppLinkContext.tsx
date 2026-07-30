@@ -23,6 +23,7 @@ export enum EntityName {
   InvoiceWriteOff = 'Invoice Write-Off',
   VendorCredit = 'Vendor Credit',
   CustomerCredit = 'Customer Credit',
+  ClosingAction = 'Closing Action',
 }
 
 export interface RelatedEntityLinkingMetadata {
