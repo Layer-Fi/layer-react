@@ -42,6 +42,10 @@
   color: var(--color-info-error-fg);
 }
 
+.Layer__data-state__text {
+  min-inline-size: 0;
+}
+
 .Layer__data-state__text > .Layer__Span:first-child {
   display: block;
   margin-bottom: var(--spacing-2xs);

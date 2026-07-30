@@ -25,6 +25,7 @@ export interface DataStateProps {
   isLoading?: boolean
   spacing?: boolean
   inline?: boolean
+  titleEllipsis?: boolean
   titleSize?: 'sm' | 'md' | 'lg'
   className?: string
 }
@@ -72,6 +73,7 @@ export const DataState = ({
   icon,
   spacing,
   inline,
+  titleEllipsis,
   titleSize = inline ? 'sm' : 'lg',
   className,
 }: DataStateProps) => {
@@ -93,6 +95,7 @@ export const DataState = ({
           weight='bold'
           variant='placeholder'
           align={inline ? undefined : 'center'}
+          withTooltip={titleEllipsis}
         >
           {title}
         </Span>
