@@ -11,17 +11,17 @@ const Header = () => (
 )
 
 const Body = () => (
-  <ModalContent>
-    <VStack gap='md' pbs='xs' pbe='lg' pi='lg'>
+  <VStack gap='md' pbs='xs' pbe='lg' pi='md'>
+    <ModalContent>
       <P>Settled drawer content, padded the way the feature drawers pad theirs.</P>
-      <ModalActions>
-        <HStack justify='end' gap='xs'>
-          <Button variant='outlined'>Cancel</Button>
-          <Button>Apply</Button>
-        </HStack>
-      </ModalActions>
-    </VStack>
-  </ModalContent>
+    </ModalContent>
+    <ModalActions>
+      <HStack justify='end' gap='xs'>
+        <Button variant='outlined'>Cancel</Button>
+        <Button>Apply</Button>
+      </HStack>
+    </ModalActions>
+  </VStack>
 
 )
 
