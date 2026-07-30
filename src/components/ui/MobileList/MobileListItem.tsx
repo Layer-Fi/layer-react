@@ -45,7 +45,12 @@ export const MobileListItem = <TData extends { id: string }>({
   }, [onExitComplete, item])
 
   return (
-    <GridListItem key={item.id} id={item.id} onAction={actionsMenu ? undefined : onAction}>
+    <GridListItem
+      key={item.id}
+      id={item.id}
+      className='Layer__MobileListRow'
+      onAction={actionsMenu ? undefined : onAction}
+    >
       {composeRenderProps(children, (children, { selectionMode, selectionBehavior }) => (
         <AnimatedPresenceElement
           variant='fade'
