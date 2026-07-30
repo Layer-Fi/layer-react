@@ -49,3 +49,17 @@
     transition: none;
   }
 }
+
+.Layer__UI__Calendar[data-readonly] .Layer__UI__CalendarCell {
+  cursor: default;
+  color: var(--color-base-500);
+
+  &[data-hovered] {
+    background-color: transparent;
+  }
+
+  &[data-selected] {
+    background-color: var(--color-base-400);
+    color: var(--color-base-800);
+  }
+}
