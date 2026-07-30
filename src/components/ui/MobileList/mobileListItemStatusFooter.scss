@@ -16,6 +16,16 @@
     --status-bar-bg: color-mix(in srgb, var(--color-info-success-bg) 35%, var(--color-base-0));
     --status-bar-icon-color: var(--badge-fg-color-success);
   }
+
+  &[data-status-variant='error'] {
+    --status-bar-bg: color-mix(in srgb, var(--color-info-error-bg) 50%, var(--color-base-0));
+    --status-bar-icon-color: var(--badge-fg-color-error);
+  }
+
+  &[data-status-variant='info'] {
+    --status-bar-bg: color-mix(in srgb, var(--color-info-bg) 50%, var(--color-base-0));
+    --status-bar-icon-color: var(--badge-fg-color-info);
+  }
 }
 
 .Layer__UI__MobileListItemStatusFooter__Icon {
@@ -27,5 +37,5 @@
   block-size: 6px;
   inline-size: 6px;
   border-radius: var(--border-radius-5xl);
-  background-color: var(--color-base-500);
+  background-color: var(--status-bar-icon-color);
 }
