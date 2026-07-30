@@ -11,6 +11,7 @@ type CounterpartySelectProps = {
   isReadOnly?: boolean
   isError?: boolean
   placeholder?: string
+  transactionDescription?: string | null
 }
 
 export const CounterpartySelect = (props: CounterpartySelectProps) => {

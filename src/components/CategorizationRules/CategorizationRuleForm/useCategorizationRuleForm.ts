@@ -39,7 +39,7 @@ export const useCategorizationRuleForm = ({ formState, onSuccess }: UseCategoriz
   const onSubmit = useCallback(async ({ value }: { value: CategorizationRuleFormValues }) => {
     try {
       const result = formState.mode === 'edit'
-        ? await upsertCategorizationRule(convertFormToPatchBody(value))
+        ? await upsertCategorizationRule(convertFormToPatchBody(value, formState.rule))
         : await upsertCategorizationRule(convertFormToCreateBody(value))
 
       setSubmitError(undefined)

@@ -9,12 +9,16 @@ import {
 } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 
 import { readRequestJson } from '@msw/utils/request'
+import { counterparties } from '@fixtures/generated/counterparties.gen'
 
 const decodeCreateBody = Schema.decodeUnknownSync(CreateCategorizationRuleSchema)
 const decodePatchBody = Schema.decodeUnknownSync(PatchCategorizationRuleSchema)
 
+const resolveCounterparty = (counterpartyId: string) =>
+  counterparties.find(({ id }) => id === counterpartyId) ?? { id: counterpartyId, name: null, mccs: [] }
+
 // The description filter is echoed as the readable filter, and the bare
-// counterparty id becomes a minimal counterparty the real API would resolve.
+// counterparty id is resolved against the counterparties fixture as the real API would.
 const applyRuleFields = (
   base: CategorizationRule,
   body: CreateCategorizationRule | PatchCategorizationRule,
@@ -34,7 +38,7 @@ const applyRuleFields = (
   ...(body.counterpartyFilter !== undefined && {
     counterpartyFilter: body.counterpartyFilter == null
       ? null
-      : { id: body.counterpartyFilter, name: null, mccs: [] },
+      : resolveCounterparty(body.counterpartyFilter),
   }),
   updatedAt: new Date(),
 })

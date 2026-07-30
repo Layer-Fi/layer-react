@@ -2,9 +2,23 @@ import { useMemo } from 'react'
 
 import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
 import { useListCounterparties } from '@hooks/api/businesses/[business-id]/counterparties/useListCounterparties'
-import { CounterpartyComboBoxOption } from '@components/CategorizationRules/CategorizationRuleForm/counterpartyComboBoxOption'
+import {
+  CounterpartyComboBoxOption,
+  type CounterpartyOption,
+  TransactionDescriptionComboBoxOption,
+} from '@components/CategorizationRules/CategorizationRuleForm/counterpartyComboBoxOption'
 
-export const useCounterpartyOptions = (value: BankTransactionCounterparty | null, searchQuery: string) => {
+type UseCounterpartyOptionsProps = {
+  value: BankTransactionCounterparty | null
+  searchQuery: string
+  transactionDescription?: string | null
+}
+
+export const useCounterpartyOptions = ({
+  value,
+  searchQuery,
+  transactionDescription,
+}: UseCounterpartyOptionsProps) => {
   const { flattenedData, isLoading, isError } = useListCounterparties({
     q: searchQuery || undefined,
     limit: 50,
@@ -21,10 +35,14 @@ export const useCounterpartyOptions = (value: BankTransactionCounterparty | null
     return [new CounterpartyComboBoxOption(value), ...fetchedOptions]
   }, [fetchedOptions, value])
 
-  const selectedOption = useMemo(() => {
-    if (!value) return null
+  const selectedOption = useMemo<CounterpartyOption | null>(() => {
+    if (!value) {
+      return transactionDescription
+        ? new TransactionDescriptionComboBoxOption(transactionDescription)
+        : null
+    }
     return options.find(option => option.value === value.id) ?? null
-  }, [options, value])
+  }, [options, value, transactionDescription])
 
   return useMemo(
     () => ({ options, selectedOption, isLoading, isError }),
