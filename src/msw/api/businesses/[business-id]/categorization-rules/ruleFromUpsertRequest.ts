@@ -17,7 +17,6 @@ const decodePatchBody = Schema.decodeUnknownSync(PatchCategorizationRuleSchema)
 const resolveCounterparty = (counterpartyId: string) =>
   counterpartyStore.findById(counterpartyId) ?? { id: counterpartyId, name: null, mccs: [] }
 
-// A posted description filter is echoed back as the rule's readable filter.
 const applyRuleFields = (
   base: CategorizationRule,
   body: CreateCategorizationRule | PatchCategorizationRule,

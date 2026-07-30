@@ -14,7 +14,6 @@ const encodeCategorizationRule = Schema.encodeSync(CategorizationRuleSchema)
 const toResponse = (rules: readonly CategorizationRule[], request: Request) =>
   paginatedApiData(rules.map(rule => encodeCategorizationRule(rule)), request)
 
-/* Untranslated - the mock layer has no access to i18n. */
 const DIRECTION_TEXT: Record<BankDirectionFilter, string> = {
   [BankDirectionFilter.MONEY_IN]: 'Money In',
   [BankDirectionFilter.MONEY_OUT]: 'Money Out',

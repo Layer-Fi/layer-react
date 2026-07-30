@@ -94,8 +94,9 @@ export const convertFormToPatchBody = (
   const parsed = {
     category: values.category,
     bankDirectionFilter: values.bankDirectionFilter === '' ? null : values.bankDirectionFilter,
-    /* Omitting the counterparty preserves a legacy rule's description filter. */
-    ...(values.counterparty ? { counterpartyFilter: values.counterparty.id } : {}),
+    ...(values.counterparty
+      ? { counterpartyFilter: values.counterparty.id, transactionDescriptionFilter: null }
+      : {}),
     amountMinFilter: formAmountToCents(values.amountMinFilter),
     amountMaxFilter: formAmountToCents(values.amountMaxFilter),
   }
@@ -104,4 +105,4 @@ export const convertFormToPatchBody = (
 }
 
 export const getRuleTransactionDescription = (state: CategorizationRuleFormState) =>
-  state.mode === 'edit' ? state.rule.readableTransactionDescriptionFilter ?? null : null
+  state.mode === 'edit' ? state.rule.readableTransactionDescriptionFilter?.trim() || null : null

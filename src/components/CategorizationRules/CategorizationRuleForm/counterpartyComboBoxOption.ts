@@ -19,8 +19,6 @@ export class CounterpartyComboBoxOption extends BaseComboBoxOption<BankTransacti
   }
 }
 
-/* Legacy rules filter on a transaction description instead of a counterparty. Never listed as
- * an option - only ever the current selection - so it cannot be picked. */
 export class TransactionDescriptionComboBoxOption extends BaseComboBoxOption<string> {
   get original() {
     return this.internalValue
@@ -39,3 +37,6 @@ export type CounterpartyOption = CounterpartyComboBoxOption | TransactionDescrip
 
 export const toCounterpartyValue = (option: CounterpartyOption | null) =>
   option instanceof CounterpartyComboBoxOption ? option.original : null
+
+export const isTransactionDescriptionOption = (option: CounterpartyOption | null) =>
+  option instanceof TransactionDescriptionComboBoxOption
