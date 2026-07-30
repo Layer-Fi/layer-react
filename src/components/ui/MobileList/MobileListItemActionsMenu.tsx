@@ -14,9 +14,10 @@ export type MobileListItemActionsMenuConfig<TData> = {
 type MobileListItemActionsMenuProps = {
   ariaLabel: string
   actions: ReadonlyArray<DropdownMenuItem>
+  defaultOpen?: boolean
 }
 
-export const MobileListItemActionsMenu = ({ ariaLabel, actions }: MobileListItemActionsMenuProps) => {
+export const MobileListItemActionsMenu = ({ ariaLabel, actions, defaultOpen }: MobileListItemActionsMenuProps) => {
   const { t } = useTranslation()
 
   const Trigger = useCallback(() => (
@@ -26,7 +27,7 @@ export const MobileListItemActionsMenu = ({ ariaLabel, actions }: MobileListItem
   ), [t])
 
   return (
-    <DropdownMenu ariaLabel={ariaLabel} slots={{ Trigger }} variant='compact'>
+    <DropdownMenu ariaLabel={ariaLabel} slots={{ Trigger }} variant='compact' defaultOpen={defaultOpen}>
       <MenuList>
         {actions.map(({ key, label, onClick, isDisabled, slots }) => (
           <MenuItem key={key} onClick={onClick} isDisabled={isDisabled}>

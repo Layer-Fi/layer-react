@@ -36,6 +36,7 @@ type DropdownMenuProps = PropsWithChildren<{
     }
   }
   variant?: 'compact'
+  defaultOpen?: boolean
 }>
 
 export type DropdownMenuItem = {
@@ -80,14 +81,14 @@ export const MenuList = ({ children }: PropsWithChildren) => {
   )
 }
 
-export const DropdownMenu = ({ children, ariaLabel, variant, slots, slotProps }: DropdownMenuProps) => {
+export const DropdownMenu = ({ children, ariaLabel, variant, slots, slotProps, defaultOpen }: DropdownMenuProps) => {
   const { t } = useTranslation()
   const { Trigger } = slots
   const width = slotProps?.Dialog?.width
   const dataProps = toDataProperties({ variant })
 
   return (
-    <MenuTrigger>
+    <MenuTrigger defaultOpen={defaultOpen}>
       <Trigger aria-label={t('ui:label.menu', 'Menu')} />
       <Popover placement='bottom right' className='Layer__UI__DropdownMenu__Popover Layer__variables'>
         <Dialog className='Layer__UI__DropdownMenu__Dialog' aria-label={ariaLabel} style={{ width }} {...dataProps}>
