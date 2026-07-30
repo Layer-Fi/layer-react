@@ -8,6 +8,7 @@
   gap: 10px;
 
   .Layer__toast {
+    max-inline-size: min(24rem, calc(100vi - 40px));
     padding: var(--spacing-xs) var(--spacing-md);
     border-radius: var(--spacing-3xs);
     box-shadow:
