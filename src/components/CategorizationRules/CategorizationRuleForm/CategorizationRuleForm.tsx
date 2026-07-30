@@ -11,7 +11,7 @@ import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { CategorySelect } from '@components/CategorizationRules/CategorizationRuleForm/CategorySelect'
 import { CounterpartySelect } from '@components/CategorizationRules/CategorizationRuleForm/CounterpartySelect'
-import { type CategorizationRuleFormState, type DirectionFormValue } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
+import { type CategorizationRuleFormState, type DirectionFormValue, getRuleTransactionDescription } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 import { useCategorizationRuleForm } from '@components/CategorizationRules/CategorizationRuleForm/useCategorizationRuleForm'
 import { FieldErrors } from '@components/forms/FieldErrors'
 
@@ -26,6 +26,7 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
   const { t } = useTranslation()
   const { form, submitError } = useCategorizationRuleForm({ formState, onSuccess })
   const { formatCurrencyFromCents } = useIntlFormatter()
+  const transactionDescription = getRuleTransactionDescription(formState)
 
   const blockNativeOnSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -43,9 +44,11 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
       <form.Field
         name='counterparty'
         validators={{
-          onDynamic: ({ value }) => required(
-            t('categorizationRules:validation.counterparty_required', 'Counterparty is required.'),
-          )(value),
+          onDynamic: ({ value }) => transactionDescription
+            ? undefined
+            : required(
+              t('categorizationRules:validation.counterparty_required', 'Counterparty is required.'),
+            )(value),
         }}
       >
         {field => (
@@ -55,6 +58,7 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
               value={field.state.value}
               onValueChange={field.handleChange}
               placeholder={t('categorizationRules:placeholder.select_counterparty', 'Select counterparty')}
+              transactionDescription={transactionDescription}
               showLabel
             />
             <FieldErrors errors={field.state.meta.errors} />

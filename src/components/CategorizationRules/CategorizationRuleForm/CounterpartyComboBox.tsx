@@ -5,7 +5,11 @@ import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base
 import { SearchComboBox, useSearchComboBox } from '@ui/ComboBox/SearchComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
-import { type CounterpartyComboBoxOption } from '@components/CategorizationRules/CategorizationRuleForm/counterpartyComboBoxOption'
+import {
+  type CounterpartyOption,
+  isTransactionDescriptionOption,
+  toCounterpartyValue,
+} from '@components/CategorizationRules/CategorizationRuleForm/counterpartyComboBoxOption'
 import { useCounterpartyOptions } from '@components/CategorizationRules/CategorizationRuleForm/useCounterpartyOptions'
 
 type CounterpartyComboBoxProps = {
@@ -16,6 +20,7 @@ type CounterpartyComboBoxProps = {
   isReadOnly?: boolean
   isError?: boolean
   placeholder?: string
+  transactionDescription?: string | null
 }
 
 export const CounterpartyComboBox = ({
@@ -26,6 +31,7 @@ export const CounterpartyComboBox = ({
   isReadOnly,
   isError,
   placeholder,
+  transactionDescription,
 }: CounterpartyComboBoxProps) => {
   const { t } = useTranslation()
   const inputId = useId()
@@ -35,7 +41,7 @@ export const CounterpartyComboBox = ({
     selectedOption,
     isLoading,
     isError: isListError,
-  } = useCounterpartyOptions(value, searchQuery)
+  } = useCounterpartyOptions({ value, searchQuery, transactionDescription })
 
   const slots = useMemo(() => {
     let emptyMessageContent = t('categorizationRules:empty.no_matching_counterparties', 'No matching counterparties.')
@@ -65,8 +71,8 @@ export const CounterpartyComboBox = ({
   )
 
   const handleSelectedValueChange = useCallback(
-    (option: CounterpartyComboBoxOption | null) => {
-      onValueChange(option?.original ?? null)
+    (option: CounterpartyOption | null) => {
+      onValueChange(toCounterpartyValue(option))
     },
     [onValueChange],
   )
@@ -78,11 +84,12 @@ export const CounterpartyComboBox = ({
           {label}
         </Label>
       )}
-      <SearchComboBox
+      <SearchComboBox<CounterpartyOption>
         {...searchComboBoxProps}
         options={options}
         selectedValue={selectedOption}
         onSelectedValueChange={handleSelectedValueChange}
+        isClearable={!isTransactionDescriptionOption(selectedOption)}
         inputId={inputId}
         isLoading={isLoading}
         isReadOnly={isReadOnly}

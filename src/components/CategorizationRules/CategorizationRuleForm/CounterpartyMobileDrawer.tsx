@@ -10,7 +10,7 @@ import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
-import { type CounterpartyComboBoxOption } from '@components/CategorizationRules/CategorizationRuleForm/counterpartyComboBoxOption'
+import { type CounterpartyOption, toCounterpartyValue } from '@components/CategorizationRules/CategorizationRuleForm/counterpartyComboBoxOption'
 import { useCounterpartyOptions } from '@components/CategorizationRules/CategorizationRuleForm/useCounterpartyOptions'
 import { SearchField } from '@components/SearchField/SearchField'
 
@@ -21,6 +21,7 @@ type CounterpartyMobileDrawerProps = {
   showLabel?: boolean
   isReadOnly?: boolean
   placeholder?: string
+  transactionDescription?: string | null
 }
 
 export const CounterpartyMobileDrawer = ({
@@ -30,6 +31,7 @@ export const CounterpartyMobileDrawer = ({
   showLabel,
   isReadOnly,
   placeholder,
+  transactionDescription,
 }: CounterpartyMobileDrawerProps) => {
   const { t } = useTranslation()
   const inputId = useId()
@@ -40,7 +42,7 @@ export const CounterpartyMobileDrawer = ({
     selectedOption,
     isLoading,
     isError: isListError,
-  } = useCounterpartyOptions(value, searchQuery)
+  } = useCounterpartyOptions({ value, searchQuery, transactionDescription })
 
   const Header = useCallback(() => (
     <ModalTitleWithClose
@@ -95,12 +97,12 @@ export const CounterpartyMobileDrawer = ({
               onChange={handleInputChange}
               label={t('common:action.search_label', 'Search')}
             />
-            <MobileSelectionDrawerList<CounterpartyComboBoxOption>
+            <MobileSelectionDrawerList<CounterpartyOption>
               ariaLabel={label}
               options={options}
               selectedValue={selectedOption}
               onSelectedValueChange={(option) => {
-                onValueChange(option?.original ?? null)
+                onValueChange(toCounterpartyValue(option))
                 close()
               }}
               isLoading={isLoading}

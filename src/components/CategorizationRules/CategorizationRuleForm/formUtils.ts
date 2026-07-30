@@ -80,8 +80,11 @@ export const convertFormToCreateBody = (values: CategorizationRuleFormValues) =>
   return Schema.encodeUnknownSync(CreateCategorizationRuleSchema)(parsed)
 }
 
-export const convertFormToPatchBody = (values: CategorizationRuleFormValues) => {
-  if (!values.counterparty) {
+export const convertFormToPatchBody = (
+  values: CategorizationRuleFormValues,
+  transactionDescription: string | null,
+) => {
+  if (!values.counterparty && !transactionDescription) {
     throw new Error('Counterparty is required to update a categorization rule')
   }
   if (!values.category || !isClassificationAccountIdentifier(values.category)) {
@@ -91,10 +94,15 @@ export const convertFormToPatchBody = (values: CategorizationRuleFormValues) => 
   const parsed = {
     category: values.category,
     bankDirectionFilter: values.bankDirectionFilter === '' ? null : values.bankDirectionFilter,
-    counterpartyFilter: values.counterparty.id,
+    ...(values.counterparty
+      ? { counterpartyFilter: values.counterparty.id, transactionDescriptionFilter: null }
+      : {}),
     amountMinFilter: formAmountToCents(values.amountMinFilter),
     amountMaxFilter: formAmountToCents(values.amountMaxFilter),
   }
 
   return Schema.encodeUnknownSync(PatchCategorizationRuleSchema)(parsed)
 }
+
+export const getRuleTransactionDescription = (state: CategorizationRuleFormState) =>
+  state.mode === 'edit' ? state.rule.readableTransactionDescriptionFilter?.trim() || null : null
