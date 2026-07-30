@@ -5,7 +5,7 @@ import { useFieldContext } from '@hooks/features/forms/useForm'
 import { HStack } from '@ui/Stack/Stack'
 import { Switch } from '@ui/Switch/Switch'
 import { Label } from '@ui/Typography/Text'
-import type { CommonFormFieldProps } from '@components/forms/types'
+import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 import './formSwitchField.scss'
 

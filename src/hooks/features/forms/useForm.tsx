@@ -7,17 +7,17 @@ import {
   useForm as internalUseForm,
 } from '@tanstack/react-form'
 
-import { BaseFormTextField } from '@components/forms/BaseFormTextField'
-import { FormCheckboxField } from '@components/forms/FormCheckboxField'
-import { FormDateField } from '@components/forms/FormDateField'
-import { FormDatePickerField } from '@components/forms/FormDatePickerField'
-import { FormNonRecursiveBigDecimalField } from '@components/forms/FormNonRecursiveBigDecimalField'
-import { FormNumberField } from '@components/forms/FormNumberField'
-import { FormRadioGroupField } from '@components/forms/FormRadioGroupField'
-import { FormRadioGroupYesNoField } from '@components/forms/FormRadioGroupYesNoField'
-import { FormSwitchField } from '@components/forms/FormSwitchField'
-import { FormTextAreaField } from '@components/forms/FormTextAreaField'
-import { FormTextField } from '@components/forms/FormTextField'
+import { BaseFormTextField } from '@blocks/Form/BaseFormTextField'
+import { FormCheckboxField } from '@blocks/Form/FormCheckboxField'
+import { FormDateField } from '@blocks/Form/FormDateField'
+import { FormDatePickerField } from '@blocks/Form/FormDatePickerField'
+import { FormNonRecursiveBigDecimalField } from '@blocks/Form/FormNonRecursiveBigDecimalField'
+import { FormNumberField } from '@blocks/Form/FormNumberField'
+import { FormRadioGroupField } from '@blocks/Form/FormRadioGroupField'
+import { FormRadioGroupYesNoField } from '@blocks/Form/FormRadioGroupYesNoField'
+import { FormSwitchField } from '@blocks/Form/FormSwitchField'
+import { FormTextAreaField } from '@blocks/Form/FormTextAreaField'
+import { FormTextField } from '@blocks/Form/FormTextField'
 
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
   createFormHookContexts()

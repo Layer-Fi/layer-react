@@ -3,7 +3,7 @@ import type { PropsWithChildren } from 'react'
 import { useFieldContext } from '@hooks/features/forms/useForm'
 import { FieldError, TextField, type TextFieldProps } from '@ui/Form/Form'
 import { Label } from '@ui/Typography/Text'
-import type { CommonFormFieldProps } from '@components/forms/types'
+import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 export type BaseFormTextFieldProps = CommonFormFieldProps & {
   inputMode?: TextFieldProps['inputMode']

@@ -6,7 +6,7 @@ import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
 import { NumberField } from '@ui/NumberField/NumberField'
 import { Label } from '@ui/Typography/Text'
-import type { CommonFormFieldProps } from '@components/forms/types'
+import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 export type FormNumberFieldProps = CommonFormFieldProps & {
   minValue?: number

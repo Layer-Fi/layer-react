@@ -1,42 +1,42 @@
 import { type PropsWithChildren, useId } from 'react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 import { useFieldContext } from '@hooks/features/forms/useForm'
 import { FieldError } from '@ui/Form/Form'
 import { Radio, RadioGroup } from '@ui/RadioGroup/RadioGroup'
 import { Stack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
-import type { CommonFormFieldProps } from '@components/forms/types'
+import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 import './formRadioGroupField.scss'
 
-export type RadioOption<T extends string> = {
-  value: T
-  label: string
-}
+type YesNoValue = 'yes' | 'no'
 
-export type FormRadioGroupFieldProps<T extends string> = CommonFormFieldProps & {
-  options: RadioOption<T>[]
+export type FormRadioGroupYesNoFieldProps = CommonFormFieldProps & {
   orientation?: 'horizontal' | 'vertical'
 }
 
 const FORM_RADIO_GROUP_FIELD_CLASSNAME = 'Layer__FormRadioGroupField'
 
-export function FormRadioGroupField<T extends string>({
+export function FormRadioGroupYesNoField({
   label,
   className,
   inline = false,
   showLabel = true,
   showFieldError = true,
   isReadOnly = false,
-  options,
-  orientation = 'vertical',
-}: PropsWithChildren<FormRadioGroupFieldProps<T>>) {
-  const field = useFieldContext<T>()
+  orientation = 'horizontal',
+}: PropsWithChildren<FormRadioGroupYesNoFieldProps>) {
+  const { t } = useTranslation()
+  const field = useFieldContext<boolean>()
 
   const { name, state, handleChange, handleBlur } = field
   const { meta, value } = state
   const { errors, isValid } = meta
+
+  const errorMessage = errors.length !== 0 ? (errors[0] as string) : undefined
+  const shouldShowErrorMessage = showFieldError && errorMessage
 
   const labelId = useId()
   const additionalAriaProps = showLabel
@@ -49,14 +49,17 @@ export function FormRadioGroupField<T extends string>({
     className,
   )
 
-  const errorMessage = errors.length !== 0 ? (errors[0] as string) : undefined
-  const shouldShowErrorMessage = showFieldError && errorMessage
+  const radioValue: YesNoValue = value ? 'yes' : 'no'
+
+  const handleRadioChange = (newValue: YesNoValue) => {
+    handleChange(newValue === 'yes')
+  }
 
   return (
-    <RadioGroup<T>
+    <RadioGroup<YesNoValue>
       slot='radiogroup'
-      value={value}
-      onChange={handleChange}
+      value={radioValue}
+      onChange={handleRadioChange}
       onBlur={handleBlur}
       name={name}
       orientation={orientation}
@@ -68,11 +71,12 @@ export function FormRadioGroupField<T extends string>({
       {showLabel && <Label slot='label' size='sm' id={labelId}>{label}</Label>}
       <VStack slot='options' gap='3xs'>
         <Stack direction={orientation === 'horizontal' ? 'row' : 'column'} gap={orientation === 'horizontal' ? 'sm' : 'xs'}>
-          {options.map(option => (
-            <Radio<T> key={option.value} value={option.value}>
-              <Span slot='description'>{option.label}</Span>
-            </Radio>
-          ))}
+          <Radio<YesNoValue> value='no'>
+            <Span slot='description'>{t('common:label.no', 'No')}</Span>
+          </Radio>
+          <Radio<YesNoValue> value='yes'>
+            <Span slot='description'>{t('common:label.yes', 'Yes')}</Span>
+          </Radio>
         </Stack>
         {shouldShowErrorMessage && <FieldError>{errorMessage}</FieldError>}
       </VStack>

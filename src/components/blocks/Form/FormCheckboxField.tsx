@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import { useFieldContext } from '@hooks/features/forms/useForm'
 import { CheckboxWithTooltip } from '@ui/Checkbox/Checkbox'
 import { Label } from '@ui/Typography/Text'
-import type { CommonFormFieldProps } from '@components/forms/types'
+import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 import './formCheckboxField.scss'
 

@@ -2,9 +2,9 @@ import { useCallback } from 'react'
 
 import { useFieldContext } from '@hooks/features/forms/useForm'
 import { TextArea } from '@ui/Input/TextArea'
-import { BaseFormTextField, type BaseFormTextFieldProps } from '@components/forms/BaseFormTextField'
+import { BaseFormTextField, type BaseFormTextFieldProps } from '@blocks/Form/BaseFormTextField'
 
-type FormTextAreaFieldProps = Omit<BaseFormTextFieldProps, 'isTextArea'> & {
+export type FormTextAreaFieldProps = Omit<BaseFormTextFieldProps, 'isTextArea'> & {
   placeholder?: string
 }
 export function FormTextAreaField({ placeholder, ...props }: FormTextAreaFieldProps) {

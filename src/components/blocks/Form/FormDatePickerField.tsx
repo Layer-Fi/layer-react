@@ -4,7 +4,7 @@ import classNames from 'classnames'
 
 import { useFieldContext } from '@hooks/features/forms/useForm'
 import { DatePicker } from '@ui/DatePickers/DatePicker/DatePicker'
-import type { CommonFormFieldProps } from '@components/forms/types'
+import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 import './formDatePickerField.scss'
 

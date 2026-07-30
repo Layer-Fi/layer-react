@@ -6,7 +6,7 @@ import { DateField, DateInput, DateSegment } from '@ui/Date/Date'
 import { FieldError } from '@ui/Form/Form'
 import { InputGroup } from '@ui/Input/InputGroup'
 import { Label } from '@ui/Typography/Text'
-import type { CommonFormFieldProps } from '@components/forms/types'
+import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 export type FormDateFieldProps = CommonFormFieldProps
 export function FormDateField<T extends DateValue>({
