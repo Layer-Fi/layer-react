@@ -1,14 +1,54 @@
 name: Chromatic
 
+# Only runs on PRs that touch files a snapshot could depend on. Within a run,
+# TurboSnap (onlyChanged) narrows further to the stories whose Vite dependency
+# graph the diff actually reaches, so a change under src/components/ui only
+# re-snapshots that component plus the feature stories rendering it.
+#
+# TurboSnap diffs against the newest ancestor build, so the push-on-main job
+# below keeps a baseline available for PRs branched off main.
+
 on:
   pull_request:
+    paths:
+      - src/**
+      - '!src/**/*.test.ts'
+      - '!src/**/*.test.tsx'
+      - '!src/**/*.test-d.ts'
+      - '!src/**/SKILL.md'
+      - .storybook/**
+      - vite.config.ts
+      - tsconfig.json
+      - package.json
+      - package-lock.json
+      - .github/workflows/chromatic.yml
+  push:
+    branches:
+      - main
+    paths:
+      - src/**
+      - '!src/**/*.test.ts'
+      - '!src/**/*.test.tsx'
+      - '!src/**/*.test-d.ts'
+      - '!src/**/SKILL.md'
+      - .storybook/**
+      - vite.config.ts
+      - tsconfig.json
+      - package.json
+      - package-lock.json
+      - .github/workflows/chromatic.yml
 
 permissions:
   contents: read
 
+concurrency:
+  group: chromatic-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   chromatic:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
     - uses: actions/checkout@v4
@@ -32,3 +72,4 @@ jobs:
         buildScriptName: storybook:build
         onlyChanged: true
         exitZeroOnChanges: true
+        autoAcceptChanges: ${{ github.event_name == 'push' }}
