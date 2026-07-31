@@ -44,6 +44,13 @@ Things to know when the pipeline misbehaves: both Crowdin workflows share a
 runs need the `CROWDIN_AI_PROMPT_ID` variable; and a stale `main/` folder left in the Crowdin
 project causes spurious "omitted" warnings on download.
 
+## Changing the English text of an existing key
+
+**Change the key too.** Editing the default of `label.due_date` from "Due date" to "Payment due"
+without renaming the key risks the stale `fr-CA` translation surviving; a new key
+(`label.payment_due`) is unambiguously untranslated, so Crowdin translates it fresh. Rename the
+key in every call site along with the copy change.
+
 ## Renaming or deleting a key
 
 Change or remove it in the code; extraction reconciles the JSON on its next run. Don't delete
