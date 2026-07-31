@@ -3,7 +3,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import {
   FormRadioGroupYesNoField,
   type FormRadioGroupYesNoFieldProps,
-} from '@blocks/Form/FormRadioGroupYesNoField'
+} from '@blocks/forms/FormRadioGroupYesNoField'
 
 import {
   COMMON_FIELD_VARIANTS,
@@ -22,7 +22,7 @@ const VARIANTS: ReadonlyArray<FormFieldVariant<boolean, FormRadioGroupYesNoField
 ]
 
 const meta: Meta<typeof FormRadioGroupYesNoField> = {
-  title: 'Blocks/Form/FormRadioGroupYesNoField',
+  title: 'Blocks/Forms/FormRadioGroupYesNoField',
   component: FormRadioGroupYesNoField,
   args: { label: LABEL },
 }

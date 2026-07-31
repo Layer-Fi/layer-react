@@ -1,10 +1,7 @@
 import { CalendarDate } from '@internationalized/date'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import {
-  FormDatePickerField,
-  type FormDatePickerFieldProps,
-} from '@blocks/Form/FormDatePickerField'
+import { FormDateField, type FormDateFieldProps } from '@blocks/forms/FormDateField'
 
 import {
   COMMON_FIELD_VARIANTS,
@@ -13,30 +10,24 @@ import {
   FormFieldVariantGallery,
 } from '@test-utils/storybook/formField'
 
-const LABEL = 'Effective date'
+const LABEL = 'Trip date'
 const VALUE = new CalendarDate(2026, 3, 14)
 
-type Variant = FormFieldVariant<CalendarDate | null, FormDatePickerFieldProps>
-
-const VARIANTS: ReadonlyArray<Variant> = [
+const VARIANTS: ReadonlyArray<FormFieldVariant<CalendarDate | null, FormDateFieldProps>> = [
   ...COMMON_FIELD_VARIANTS,
   ...ERROR_FIELD_VARIANTS,
   { label: 'empty', value: null },
-  {
-    label: 'bounded range',
-    props: { minDate: new CalendarDate(2026, 3, 1), maxDate: new CalendarDate(2026, 3, 31) },
-  },
 ]
 
-const meta: Meta<typeof FormDatePickerField> = {
-  title: 'Blocks/Form/FormDatePickerField',
-  component: FormDatePickerField,
+const meta: Meta<typeof FormDateField> = {
+  title: 'Blocks/Forms/FormDateField',
+  component: FormDateField,
   args: { label: LABEL },
 }
 
 export default meta
 
-type Story = StoryObj<typeof FormDatePickerField>
+type Story = StoryObj<typeof FormDateField>
 
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
@@ -44,7 +35,7 @@ export const AllVariants: Story = {
     <FormFieldVariantGallery
       defaultValue={VALUE}
       variants={VARIANTS}
-      renderField={props => <FormDatePickerField<CalendarDate> label={LABEL} {...props} />}
+      renderField={props => <FormDateField<CalendarDate> label={LABEL} {...props} />}
     />
   ),
 }

@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { FormTextAreaField, type FormTextAreaFieldProps } from '@blocks/Form/FormTextAreaField'
+import { FormTextAreaField, type FormTextAreaFieldProps } from '@blocks/forms/FormTextAreaField'
 
 import {
   COMMON_FIELD_VARIANTS,
@@ -19,7 +19,7 @@ const VARIANTS: ReadonlyArray<FormFieldVariant<string, FormTextAreaFieldProps>> 
 ]
 
 const meta: Meta<typeof FormTextAreaField> = {
-  title: 'Blocks/Form/FormTextAreaField',
+  title: 'Blocks/Forms/FormTextAreaField',
   component: FormTextAreaField,
   args: { label: LABEL },
 }

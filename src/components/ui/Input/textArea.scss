@@ -32,6 +32,11 @@
     outline: 2px solid var(--outline-default);
   }
 
+  &[data-invalid] {
+    border-color: var(--color-danger);
+    outline: none;
+  }
+
   &[data-disabled] {
     cursor: not-allowed;
   }

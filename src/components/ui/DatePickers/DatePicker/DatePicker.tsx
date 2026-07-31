@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { type ReactNode, useState } from 'react'
 import { type DateValue } from '@internationalized/date'
 import classNames from 'classnames'
 import { type DatePickerProps as ReactAriaDatePickerProps } from 'react-aria-components/DatePicker'
@@ -13,7 +13,9 @@ import { Label, type TextStyleProps } from '@ui/Typography/Text'
 
 import './datePicker.scss'
 
-type DatePickerProps<T extends DateValue> = {
+type DataAttributes = { [K in `data-${string}`]?: string | number | true }
+
+type DatePickerProps<T extends DateValue> = DataAttributes & {
   label: string
   isReadOnly?: boolean
   showLabel?: boolean
@@ -26,6 +28,9 @@ type DatePickerProps<T extends DateValue> = {
   onChange: (date: T | null) => void
   isDisabled?: boolean
   className?: string
+  slots?: {
+    ErrorMessage?: ReactNode
+  }
   slotProps?: {
     Label?: TextStyleProps
   }
@@ -44,7 +49,9 @@ export const DatePicker = <T extends DateValue>({
   isDisabled,
   isReadOnly,
   className,
+  slots,
   slotProps,
+  ...dataProperties
 }: DatePickerProps<T>) => {
   const additionalAriaProps = !showLabel && { 'aria-label': label }
   const { value } = useSizeClass()
@@ -52,6 +59,7 @@ export const DatePicker = <T extends DateValue>({
 
   return (
     <BaseDatePicker
+      {...dataProperties}
       granularity='day'
       value={date}
       onBlur={onBlur}
@@ -67,6 +75,7 @@ export const DatePicker = <T extends DateValue>({
     >
       {showLabel && <Label slot='label' size='sm' {...slotProps?.Label}>{label}</Label>}
       <DatePickerInput errorText={errorText} variant={value} onClick={() => setPopoverOpen(true)} isReadOnly={isReadOnly} />
+      {slots?.ErrorMessage}
       <ResponsivePopover>
         <Dialog>
           <DateCalendar minDate={minDate} maxDate={maxDate} variant={value} />

@@ -1,7 +1,7 @@
 ---
 name: forms
 description: Building a form — useAppForm, the Form*Field components, validators, submit and error handling, testing
-applies_to: src/components/forms/**, src/hooks/features/forms/**, src/utils/form/**
+applies_to: src/components/blocks/forms/**, src/hooks/features/forms/**, src/utils/form/**
 ---
 
 # Forms
@@ -91,7 +91,7 @@ All of them accept `CommonFormFieldProps`:
   it becomes the `aria-label` rather than disappearing.
 - `showLabel`, `inline`, `showFieldError`, `isReadOnly`, `className`.
 
-Adding a new field type means adding the component to `src/components/forms/` **and** registering
+Adding a new field type means adding the component to `src/components/blocks/forms/` **and** registering
 it in the `createFormHook` `fieldComponents` map in `@hooks/features/forms/useForm` — it isn't
 available on `field.` until then.
 
@@ -117,7 +117,7 @@ Three distinct layers; don't collapse them:
 | an explicit field-level message from outside validation | the field's `errorText` prop |
 | form-level API failure | `FormErrorBanner` (`@blocks/FormErrorBanner`) |
 
-`FieldErrors` (`@components/forms/FieldErrors`) renders the first error of an array for cases
+`FieldErrors` (`@blocks/forms/FieldErrors`) renders the first error of an array for cases
 outside a bound field. `flattenValidationErrors` (`@utils/form`) collapses a TanStack
 `ValidationErrorMap` into a string list.
 
@@ -127,7 +127,7 @@ optionally `withRetry` to turn it into a retry affordance. It supplies its own i
 spinner — don't add either.
 
 For the mutation itself, prefer a per-call `throwOnError: false` and a guard on the result over
-`try`/`catch`; see [`src/hooks/api/SKILL.md`](../../hooks/api/SKILL.md).
+`try`/`catch`; see [`src/hooks/api/SKILL.md`](../../../hooks/api/SKILL.md).
 
 ## Testing
 
@@ -144,11 +144,11 @@ await filler.fill(FORM_DATA)
 ```
 
 Assert on the **request body** the mutation sent via the MSW handler's `onRequest`, not on form
-internals. Details in [`src/test-utils/SKILL.md`](../../test-utils/SKILL.md).
+internals. Details in [`src/test-utils/SKILL.md`](../../../test-utils/SKILL.md).
 
 ## Related
 
-- [`src/components/SKILL.md`](../SKILL.md) — component layering
-- [`src/components/ui/SKILL.md`](../ui/SKILL.md) — the underlying `Input`, `Form`, `Button` primitives
-- [`src/schemas/SKILL.md`](../../schemas/SKILL.md) — `NonRecursiveBigDecimal`, mutation body shapes
-- [`src/assets/locales/SKILL.md`](../../assets/locales/SKILL.md) — translating labels and messages
+- [`src/components/SKILL.md`](../../SKILL.md) — component layering
+- [`src/components/ui/SKILL.md`](../../ui/SKILL.md) — the underlying `Input`, `Form`, `Button` primitives
+- [`src/schemas/SKILL.md`](../../../schemas/SKILL.md) — `NonRecursiveBigDecimal`, mutation body shapes
+- [`src/assets/locales/SKILL.md`](../../../assets/locales/SKILL.md) — translating labels and messages

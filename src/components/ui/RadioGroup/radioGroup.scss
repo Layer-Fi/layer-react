@@ -71,6 +71,15 @@
     background-color: var(--fg-subtle);
   }
 
+  &[data-invalid] [slot='radio'] {
+    border-color: var(--color-danger);
+  }
+
+  &[data-selected][data-invalid] [slot='radio'] {
+    background-color: var(--color-danger);
+    border-color: var(--color-danger);
+  }
+
   &[data-disabled] {
     cursor: not-allowed;
 

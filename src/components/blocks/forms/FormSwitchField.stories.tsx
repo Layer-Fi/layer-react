@@ -1,7 +1,7 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { Sparkles } from 'lucide-react'
 
-import { FormSwitchField, type FormSwitchFieldProps } from '@blocks/Form/FormSwitchField'
+import { FormSwitchField, type FormSwitchFieldProps } from '@blocks/forms/FormSwitchField'
 
 import {
   COMMON_FIELD_VARIANTS,
@@ -19,7 +19,7 @@ const VARIANTS: ReadonlyArray<FormFieldVariant<boolean, FormSwitchFieldProps>> =
 ]
 
 const meta: Meta<typeof FormSwitchField> = {
-  title: 'Blocks/Form/FormSwitchField',
+  title: 'Blocks/Forms/FormSwitchField',
   component: FormSwitchField,
   args: { label: LABEL },
 }

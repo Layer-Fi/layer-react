@@ -4,7 +4,7 @@ import {
   FormRadioGroupField,
   type FormRadioGroupFieldProps,
   type RadioOption,
-} from '@blocks/Form/FormRadioGroupField'
+} from '@blocks/forms/FormRadioGroupField'
 
 import {
   COMMON_FIELD_VARIANTS,
@@ -30,7 +30,7 @@ const VARIANTS: ReadonlyArray<FormFieldVariant<Purpose, FormRadioGroupFieldProps
 ]
 
 const meta: Meta<typeof FormRadioGroupField<Purpose>> = {
-  title: 'Blocks/Form/FormRadioGroupField',
+  title: 'Blocks/Forms/FormRadioGroupField',
   component: FormRadioGroupField,
   args: { label: LABEL, options: OPTIONS },
 }

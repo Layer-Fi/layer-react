@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import { useFieldContext } from '@hooks/features/forms/useForm'
 import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
-import { BaseFormTextField, type BaseFormTextFieldProps } from '@blocks/Form/BaseFormTextField'
+import { BaseFormTextField, type BaseFormTextFieldProps } from '@blocks/forms/BaseFormTextField'
 
 export type FormTextFieldProps = Omit<BaseFormTextFieldProps, 'isTextArea'> & {
   placeholder?: string

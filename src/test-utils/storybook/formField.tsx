@@ -1,7 +1,7 @@
 import { type PropsWithChildren, type ReactNode } from 'react'
 
 import { useAppForm } from '@hooks/features/forms/useForm'
-import type { CommonFormFieldProps } from '@blocks/Form/types'
+import type { CommonFormFieldProps } from '@blocks/forms/types'
 
 import { Col, Gallery } from '@test-utils/storybook/gallery'
 
@@ -40,6 +40,7 @@ export const COMMON_FIELD_VARIANTS: ReadonlyArray<FormFieldVariant<never, Common
   { label: 'no label', props: { showLabel: false } },
   { label: 'inline', props: { inline: true } },
   { label: 'read only', props: { isReadOnly: true } },
+  { label: 'disabled', props: { isDisabled: true } },
 ]
 
 export const ERROR_FIELD_VARIANTS: ReadonlyArray<FormFieldVariant<never, CommonFormFieldProps>> = [

@@ -36,6 +36,15 @@
     }
   }
 
+  &[data-readonly] [slot='indicator'] {
+    background: var(--bg-muted);
+  }
+
+  &[data-selected][data-readonly] [slot='indicator'] {
+    border-color: var(--fg-subtle);
+    background: var(--fg-subtle);
+  }
+
   &[data-disabled] {
     cursor: not-allowed;
 

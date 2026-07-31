@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { FormNumberField, type FormNumberFieldProps } from '@blocks/Form/FormNumberField'
+import { FormNumberField, type FormNumberFieldProps } from '@blocks/forms/FormNumberField'
 
 import {
   COMMON_FIELD_VARIANTS,
@@ -19,7 +19,7 @@ const VARIANTS: ReadonlyArray<FormFieldVariant<number, FormNumberFieldProps>> = 
 ]
 
 const meta: Meta<typeof FormNumberField> = {
-  title: 'Blocks/Form/FormNumberField',
+  title: 'Blocks/Forms/FormNumberField',
   component: FormNumberField,
   args: { label: LABEL },
 }

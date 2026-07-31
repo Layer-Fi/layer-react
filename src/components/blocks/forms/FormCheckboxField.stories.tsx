@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { FormCheckboxField, type FormCheckboxFieldProps } from '@blocks/Form/FormCheckboxField'
+import { FormCheckboxField, type FormCheckboxFieldProps } from '@blocks/forms/FormCheckboxField'
 
 import {
   COMMON_FIELD_VARIANTS,
@@ -18,7 +18,7 @@ const VARIANTS: ReadonlyArray<FormFieldVariant<boolean, FormCheckboxFieldProps>>
 ]
 
 const meta: Meta<typeof FormCheckboxField> = {
-  title: 'Blocks/Form/FormCheckboxField',
+  title: 'Blocks/Forms/FormCheckboxField',
   component: FormCheckboxField,
   args: { label: LABEL },
 }

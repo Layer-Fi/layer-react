@@ -9,7 +9,7 @@ import { Badge, BadgeSize } from '@ui/Badge/Badge'
 import {
   FormNonRecursiveBigDecimalField,
   type FormNonRecursiveBigDecimalFieldProps,
-} from '@blocks/Form/FormNonRecursiveBigDecimalField'
+} from '@blocks/forms/FormNonRecursiveBigDecimalField'
 
 import {
   COMMON_FIELD_VARIANTS,
@@ -38,7 +38,7 @@ const VARIANTS: ReadonlyArray<Variant> = [
 ]
 
 const meta: Meta<typeof FormNonRecursiveBigDecimalField> = {
-  title: 'Blocks/Form/FormNonRecursiveBigDecimalField',
+  title: 'Blocks/Forms/FormNonRecursiveBigDecimalField',
   component: FormNonRecursiveBigDecimalField,
   args: { label: LABEL },
 }

@@ -1,35 +1,25 @@
-import { type PropsWithChildren, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { DateValue } from '@internationalized/date'
-import classNames from 'classnames'
 
 import { useFieldContext } from '@hooks/features/forms/useForm'
 import { DatePicker } from '@ui/DatePickers/DatePicker/DatePicker'
-import type { CommonFormFieldProps } from '@blocks/Form/types'
-
-import './formDatePickerField.scss'
+import { FormFieldError, useFormField } from '@blocks/forms/FormFieldShell'
+import type { CommonFormFieldProps } from '@blocks/forms/types'
 
 export type FormDatePickerFieldProps = CommonFormFieldProps & {
   minDate?: DateValue | null
   maxDate?: DateValue | null
 }
 
-const FORM_DATE_PICKER_FIELD_CLASSNAME = 'Layer__FormDatePickerField'
-
 export function FormDatePickerField<T extends DateValue>({
-  label,
-  className,
-  inline = false,
-  showLabel = true,
-  showFieldError = true,
-  isReadOnly = false,
   minDate,
   maxDate,
-}: PropsWithChildren<FormDatePickerFieldProps>) {
+  ...props
+}: FormDatePickerFieldProps) {
   const field = useFieldContext<T | null>()
 
   const { state, handleChange, handleBlur } = field
-  const { meta, value } = state
-  const { errors, isValid } = meta
+  const { value } = state
   const [localDate, setLocalDate] = useState<T | null>(value)
 
   useEffect(() => {
@@ -45,28 +35,27 @@ export function FormDatePickerField<T extends DateValue>({
     handleBlur()
   }, [handleBlur, handleChange, localDate])
 
-  const errorMessage = errors.length !== 0 ? (errors[0] as string) : undefined
-  const shouldShowErrorMessage = showFieldError && errorMessage
+  const { isInvalid, rootProps, shellProps } = useFormField(props)
+  const { showLabel, showFieldError, errorMessage } = shellProps
 
-  const datePickerClassNames = classNames(
-    FORM_DATE_PICKER_FIELD_CLASSNAME,
-    inline && `${FORM_DATE_PICKER_FIELD_CLASSNAME}--inline`,
-    className,
-  )
-
+  // DatePicker renders its own label and control, so the error is injected through `slots`
+  // rather than composed by `FormFieldShell`.
   return (
     <DatePicker
-      label={label}
+      {...rootProps}
+      label={props.label}
       showLabel={showLabel}
       date={localDate}
       onChange={onChange}
       onBlur={onBlur}
       minDate={minDate}
       maxDate={maxDate}
-      isInvalid={!isValid}
-      errorText={shouldShowErrorMessage ? errorMessage : null}
-      isReadOnly={isReadOnly}
-      className={datePickerClassNames}
+      isInvalid={isInvalid}
+      slots={{
+        ErrorMessage: showFieldError && errorMessage
+          ? <FormFieldError>{errorMessage}</FormFieldError>
+          : null,
+      }}
     />
   )
 }

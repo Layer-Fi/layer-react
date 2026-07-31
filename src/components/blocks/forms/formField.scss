@@ -1,0 +1,15 @@
+@use 'formFieldMixins' as field;
+
+/* Doubled class so field layout wins over the single-class layout of the underlying primitive (e.g. `.Layer__UI__Switch`). */
+.Layer__FormField.Layer__FormField {
+  @include field.stacked-layout;
+  @include field.field-states;
+
+  &[data-inline] {
+    @include field.inline-layout;
+  }
+
+  &[data-align='center'] {
+    @include field.centered-control;
+  }
+}
