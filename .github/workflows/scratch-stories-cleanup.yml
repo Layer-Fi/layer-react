@@ -1,4 +1,4 @@
-name: Storybook / cleanup
+name: Scratch Stories
 
 # Pushes to the PR head branch, not main after the merge: the branch ruleset
 # gives github-actions[bot] no bypass on main.
@@ -18,7 +18,6 @@ jobs:
   cleanup:
     if: >-
       github.event.review.state == 'approved'
-      && github.event.pull_request.state == 'open'
       && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
 
@@ -29,7 +28,9 @@ jobs:
 
     - name: Remove scratch stories
       env:
+        GH_TOKEN: ${{ github.token }}
         HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        PR: ${{ github.event.pull_request.number }}
       run: |
         FILES="$RUNNER_TEMP/scratch-stories.z"
         git ls-files -z '*scratch.stories.tsx' > "$FILES"
@@ -37,11 +38,22 @@ jobs:
           echo "No scratch stories found."
           exit 0
         fi
+        # The webhook payload is frozen at review time, so ask for live state.
+        STATE=$(gh pr view "$PR" --json state --jq .state)
+        if [ "$STATE" != "OPEN" ]; then
+          echo "::error::PR #$PR is $STATE — it merged before cleanup ran, so these scratch stories are now on the base branch and must be removed by hand:" >&2
+          tr '\0' '\n' < "$FILES" | sed 's/^/  - /' >&2
+          exit 1
+        fi
+        ORIG=$(git rev-parse HEAD)
         xargs -0 git rm --quiet -- < "$FILES"
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git commit -m "chore: remove scratch stories"
-        git push origin HEAD:"refs/heads/$HEAD_REF"
+        # Lease pins the push to the ref we checked out: fails if the branch
+        # moved or was deleted by a merge, rather than resurrecting it.
+        git push --force-with-lease="refs/heads/$HEAD_REF:$ORIG" \
+          origin HEAD:"refs/heads/$HEAD_REF"
         {
           echo "Removed:"
           tr '\0' '\n' < "$FILES" | sed 's/^/- /'
