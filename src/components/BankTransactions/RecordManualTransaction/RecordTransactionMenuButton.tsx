@@ -65,7 +65,7 @@ export function RecordTransactionMenuButton({ isDisabled }: RecordTransactionMen
           </MenuItem>
           {showCategorizationRules && (
             <MenuItem onClick={onCreateRule}>
-              <Span size='sm'>{t('bankTransactions:action.create_rule', 'Create a rule')}</Span>
+              <Span size='sm'>{t('bankTransactions:action.create_a_rule', 'Create a rule')}</Span>
               <Spacer />
               <ChevronRight size={12} />
             </MenuItem>

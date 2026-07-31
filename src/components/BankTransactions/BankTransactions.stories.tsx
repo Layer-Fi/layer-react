@@ -215,11 +215,19 @@ export const BookkeepingEnabled: Story = {
 export const BookkeepingDisabled: Story = {}
 
 // The record transaction menu renders its items only while open.
+const openRecordTransactionMenu: Story['play'] = async ({ canvasElement }) => {
+  const canvas = within(canvasElement)
+  await userEvent.click(await canvas.findByLabelText('Record transaction'))
+}
+
 export const RecordTransactionMenuOpen: Story = {
   parameters: { chromatic: { viewports: [1280], delay: 500 } },
   args: { showCategorizationRules: true },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    await userEvent.click(await canvas.findByLabelText('Record transaction'))
-  },
+  play: openRecordTransactionMenu,
+}
+
+export const RecordTransactionMenuOpenWithoutCategorizationRules: Story = {
+  parameters: { chromatic: { viewports: [1280], delay: 500 } },
+  args: { showCategorizationRules: false },
+  play: openRecordTransactionMenu,
 }
