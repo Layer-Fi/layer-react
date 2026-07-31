@@ -1,4 +1,4 @@
-name: Scratch Stories Cleanup
+name: Storybook / cleanup
 
 # Pushes to the PR head branch, not main after the merge: the branch ruleset
 # gives github-actions[bot] no bypass on main.
