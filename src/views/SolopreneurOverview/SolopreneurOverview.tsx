@@ -22,7 +22,7 @@ import {
   TaxEstimatesSummaryCardMode,
 } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
 import { View } from '@components/View/View'
-import { MileageTrackingSummary } from '@features/mileage/MileageTrackingSummary/MileageTrackingSummary'
+import { MileageTrackingSummary } from '@features/mileage/summary/MileageTrackingSummary/MileageTrackingSummary'
 
 import './solopreneurOverview.scss'
 

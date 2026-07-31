@@ -32,13 +32,31 @@ answers "where does this live" in all three trees: bank-transaction components a
 `@schemas/bankTransactions`. **Reuse an existing domain name — do not invent a near-synonym**, and
 add a new domain directory only for a genuinely new domain object.
 
-Two rules keep a domain directory navigable:
+Inside a domain, **case tells you what a directory is**: a `camelCase` directory is a sub-area of the
+domain, a `PascalCase` directory is a single component and its own files. A domain splits into
+sub-areas once it covers more than one surface — `mileage` is the worked example:
 
-- **A directory name equals the component name it contains** —
-  `features/mileage/TripForm/TripForm.tsx`, never a directory whose name matches no component.
-- **A component earns its own subdirectory only once it has 2+ files.** A lone component file sits
-  flat in the domain directory (`features/mileage/MileageSummaryCard.tsx`). Do not create a
-  one-file directory, and do not create a directory that only re-exports another component.
+```
+features/mileage/
+  summary/    MileageSummaryCard/ MileageTrackingSummary/ MileageTrackingStats/ MileageDeductionChart/
+  trips/      Trips.tsx utils.ts TripDrawer.tsx TripForm/ TripsTable/ TripsMobileList/ …
+  vehicles/   VehicleCard/ VehicleForm/ VehicleSelector/ VehicleDrawer.tsx …
+```
+
+Three rules keep that navigable:
+
+- **A directory name equals the component name it contains.** `trips/TripForm/TripForm.tsx`, never a
+  directory whose name matches no component — the old `Trips/TripsView/ResponsiveTripsView.tsx` is
+  what this rule exists to prevent.
+- **A component earns its own directory once it owns 2+ files** — a stylesheet, test, story, or child
+  components. A lone `.tsx` sits flat in its sub-area (`trips/TripDrawer.tsx`). Never create a
+  one-file directory, and never create a directory that only re-exports another component.
+- **Sub-areas are shallow.** One level of `camelCase` grouping per domain; if you want a second,
+  the sub-area is probably its own domain.
+
+Shared pieces sit in the sub-area that owns them, and other sub-areas import across — `summary`
+owns `MileageDeductionChart`, and both `MileageTrackingSummary` and `MileageTrackingStats` use it.
+Only promote to a domain-level file when two sub-areas own it equally.
 
 A component that is *not* domain-specific does not belong here at all — it goes to `@ui`
 (primitive), `@blocks` (composed pattern), or `@components/utility` (rendering helper). "Which
@@ -60,7 +78,7 @@ src/components/features/linkedAccounts/CustomAccountForm/
 ```
 
 Import with the **most specific path alias** available (`@ui/Button/Button`, not
-`@components/ui/Button/Button`; `@features/mileage/Trips/Trips`, not
+`@components/ui/Button/Button`; `@features/mileage/trips/Trips`, not
 `@components/features/mileage/Trips/Trips`). Relative parent imports (`../`) are an ESLint error
 outside the aliases. No barrel `index.ts` re-export files — import the module directly.
 
