@@ -1,9 +1,7 @@
 name: Scratch Stories Cleanup
 
-# Scratch stories (*scratch.stories.tsx) are throwaway harnesses for local
-# development. Once a PR is approved, strip any it adds from the head branch so
-# they never reach main. Pushing to the PR branch (rather than main after the
-# merge) keeps this inside branch protection rather than fighting it.
+# Pushes to the PR head branch, not main after the merge: the branch ruleset
+# gives github-actions[bot] no bypass on main.
 
 on:
   pull_request_review:
