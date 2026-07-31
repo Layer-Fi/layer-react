@@ -34,8 +34,6 @@ Pack variants into a *single* render:
 - Use `Gallery`, `Section`, `Matrix`, `Label` from `@test-utils/storybook/gallery`.
 - Use `parameters: { chromatic: { disableSnapshot: true } }` for any story that adds no visual
   signal.
-- Title primitives `'UI/…'` and blocks `'Blocks/…'`. `preview.tsx` keys off those prefixes to
-  wrap bare components in `.Layer__component`, which is where the CSS variables live.
 
 Reference: `src/components/ui/Button/Button.stories.tsx`.
 
@@ -57,9 +55,6 @@ wouldn't work.
 
 Down-scope a story that gains nothing from three widths:
 `parameters: { chromatic: { viewports: [1280] } }`.
-
-Theme (light/dark) is intentionally deferred; when added it becomes a second dimension here
-with no story changes.
 
 ## Data comes from MSW and fixtures
 

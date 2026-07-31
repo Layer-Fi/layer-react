@@ -131,38 +131,19 @@ than mutating after decode.
 
 ## Recursive schemas (trees)
 
-Reference implementation: `src/schemas/reports/unifiedReport.ts`. The naive
-`columns: Schema.Array(Self)` fails — the schema isn't defined yet when the expression
-evaluates.
+Copy the shape from an existing one rather than deriving it: `UnifiedReportColumnSchema`
+(`src/schemas/reports/unifiedReport.ts`) or `LineItemSchema` (`src/schemas/common/lineItem.ts`).
 
-1. Extract the non-recursive fields into a const bag.
-2. Declare a paired `interface` for the decoded `Type` and the `Encoded` wire shape, each
+The naive `columns: Schema.Array(Self)` fails — the schema isn't defined yet when the expression
+evaluates. Three things make it work:
+
+1. **Extract the non-recursive fields** into a const bag, so both the schema and the interfaces
+   below can refer to them.
+2. **Declare a paired `interface`** for the decoded `Type` and the `Encoded` wire shape, each
    extending `Schema.Struct.{Type,Encoded}<typeof fields>` and adding the recursive
    `ReadonlyArray` by hand. These must be `interface`s — only interfaces can self-reference.
-3. Wrap the recursive arm in `Schema.suspend` with an explicit return-type annotation
-   tying the interfaces back to the schema.
-
-```ts
-const unifiedReportColumnFields = {
-  columnKey: pipe(Schema.propertySignature(Schema.String), Schema.fromKey('column_key')),
-}
-
-export interface UnifiedReportColumn extends Schema.Struct.Type<typeof unifiedReportColumnFields> {
-  columns?: ReadonlyArray<UnifiedReportColumn>
-}
-export interface UnifiedReportColumnEncoded extends Schema.Struct.Encoded<typeof unifiedReportColumnFields> {
-  readonly columns?: ReadonlyArray<UnifiedReportColumnEncoded>
-}
-
-export const UnifiedReportColumnSchema = Schema.Struct({
-  ...unifiedReportColumnFields,
-  columns: Schema.optional(
-    Schema.Array(
-      Schema.suspend((): Schema.Schema<UnifiedReportColumn, UnifiedReportColumnEncoded> => UnifiedReportColumnSchema),
-    ),
-  ),
-})
-```
+3. **Wrap the recursive arm in `Schema.suspend`**, annotated with an explicit return type tying
+   the two interfaces back to the schema. That defers evaluation.
 
 ## Money
 
@@ -177,7 +158,7 @@ Amounts that arrive as integer cents stay integer cents; formatting divides by 1
 
 ## Related
 
-- [`src/hooks/SKILL.md`](../hooks/SKILL.md) — how schemas get wired into query/mutation hooks
+- [`src/hooks/api/SKILL.md`](../hooks/api/SKILL.md) — how schemas get wired into query/mutation hooks
 - [`src/msw/SKILL.md`](../msw/SKILL.md) — mock handlers encode fixtures back through the schema
 - [`src/fixtures/SKILL.md`](../fixtures/SKILL.md) — generators derive `Arbitrary` from the schema
 - [`src/utils/i18n/SKILL.md`](../utils/i18n/SKILL.md) — formatting the values these schemas carry

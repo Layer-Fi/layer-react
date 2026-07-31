@@ -6,17 +6,22 @@ applies_to: src/fixtures/**
 
 # Fixtures
 
-Two kinds of fixture data, for two different jobs. Pick deliberately.
+## Choose the right type of fixture
 
-| Kind | File | Use for |
+| Choose | When | Where it lives |
 | --- | --- | --- |
-| **Factory** | `<domain>/mocks.ts` | tests that assert on values. One explicit base object; readable, stable, hand-tuned. |
-| **Generator** | `<domain>/schema.ts` + `<domain>/generator.ts` → `generated/<domain>.gen.ts` | volume and variety — Storybook, list/table/pagination states. Deterministic, but not something to assert against. |
+| a **factory** | the test asserts on the values | `<domain>/mocks.ts` |
+| a **generator** | you need volume and variety — Storybook, list/table/pagination states | `<domain>/schema.ts` + `<domain>/generator.ts` → `generated/<domain>.gen.ts` |
 
-Fixtures are typed in **decoded** form (`Customer`, not `RawCustomer`); MSW encodes them
-through the schema on the way out.
+Never assert against generated rows: they exist to fill a list, and the values will change the
+moment the generator does. Reach for a factory the moment a test cares what a value is.
 
-## Factories
+Type every fixture in **decoded** form (`Customer`, not `RawCustomer`) — MSW encodes it through the
+schema on the way out.
+
+## Writing a factory
+
+Declare one explicit base object and wrap it in `createFixtureFactory`:
 
 ```ts
 const baseCustomer: Customer = { id: '00000000-0000-4000-8000-000000000001', … }
@@ -24,18 +29,17 @@ const baseCustomer: Customer = { id: '00000000-0000-4000-8000-000000000001', …
 export const { make: makeCustomer, makeMany: makeCustomers } = createFixtureFactory(baseCustomer)
 ```
 
-`createFixtureFactory(base)` returns `make(overrides?)` and
-`makeMany(count, overrides | (index) => overrides)`. Keep rows as keyed objects and reuse
-shared types (`DateRange`, etc.) rather than re-declaring shapes. Because the values are
-fixed and readable, tests can assert on them directly.
+Call `make(overrides?)` for one row and `makeMany(count, overrides | (index) => overrides)` for
+several. Keep the base readable and stable so tests can assert on it directly. Reuse shared types
+(`DateRange`, etc.) instead of re-declaring shapes, and keep rows as keyed objects.
 
-## Generators
+## Writing a generator
 
-A generator derives a FastCheck `Arbitrary` from the domain's schema, so generated rows are
-valid by construction:
+Layer per-field arbitraries onto the domain's schema, so generated rows are valid by construction —
+don't hand-write generated data:
 
 ```ts
-// schema.ts — the schema with per-field arbitraries layered on
+// schema.ts
 const { _local, ...fields } = CustomerSchema.fields
 
 export const schema = Schema.Struct({
@@ -50,41 +54,38 @@ export const generator = createGenerator(schema, {
 })
 ```
 
-- `createGenerator(schema, { uniqueBy?, seed?, numRuns? })` — **fixed seed**, so the same
-  rows every run. Defaults to 10 rows. `uniqueBy` dedupes by the given keys and throws a
-  descriptive error if it can't fill the count, rather than silently returning fewer.
-- `withArbitrary(field, arbitrary)` (`@fixtures/utils/arbitrary/withArbitrary`) re-annotates
-  a schema field's value arbitrary while keeping its type and `fromKey`. It rejects optional
-  fields and fields with defaults — declare those explicitly.
-- Shared arbitraries live in `@fixtures/utils/arbitrary/*`: `id` (with `FixtureIdPrefix`, so
-  generated ids are recognizable per domain), `contactFields`, `amount`, `date`,
-  `calendarDate`, `mask`, `nullable`, `nullableConstantFrom`.
-- Value pools (names, memos, institutions, addresses) go in `<domain>/constants.ts` or
-  `@fixtures/constants/**` and are shared across domains.
-- `createRollTable(cases)` builds a weighted case table for realistic distributions
-  (e.g. mostly-paid invoices with a few overdue) instead of a uniform spread.
-- `spreadDateAcrossYear(year, index, total)` distributes dates evenly across a year.
+- Use `withArbitrary(field, arbitrary)` to re-annotate a field's arbitrary while keeping its type and
+  `fromKey`. Declare optional fields and fields with defaults explicitly — it rejects them.
+- Pass `uniqueBy` whenever duplicate values would look wrong in a list. It throws a descriptive
+  error rather than silently returning fewer rows, so widen the value pool if it does.
+- Leave the seed alone unless you have a reason: it's fixed, which is what keeps generated rows
+  stable across runs. `numRuns` defaults to 10.
+- Prefer the shared arbitraries in `@fixtures/utils/arbitrary/*` — `id` (use `FixtureIdPrefix` so
+  generated ids are recognizable per domain), `contactFields`, `amount`, `date`, `calendarDate`,
+  `mask`, `nullable`, `nullableConstantFrom`.
+- Put value pools (names, memos, institutions, addresses) in `<domain>/constants.ts` or
+  `@fixtures/constants/**` and share them across domains.
+- Reach for `createRollTable(cases)` when a uniform spread would look fake — weight the cases
+  instead (mostly-paid invoices with a few overdue).
+- Use `spreadDateAcrossYear(year, index, total)` to distribute dates across a year.
 
-## Generated files are committed
+## Regenerate and commit
 
-`src/fixtures/generated/*.gen.ts` is checked in, header-marked
-`AUTO-GENERATED … Do not edit by hand`, and excluded from ESLint.
+`src/fixtures/generated/*.gen.ts` is committed and header-marked `AUTO-GENERATED … Do not edit by
+hand`. **Never edit those files** — change the schema or the generator instead, then:
 
 ```
 npm run fixtures:generate     # rewrite the .gen.ts files
 npm run fixtures:check        # fail if any is stale (CI: fixtures.yml)
 ```
 
-Change a schema or a generator → regenerate → commit both. The generator script walks every
-`generator.ts` and serializes `Date`, `BigDecimal`, and `CalendarDate` as real constructor
-calls so values round-trip.
+Commit the regenerated output alongside the change that caused it, or CI fails.
 
-## Dates in fixtures
+## Pin dates
 
-Fixture data is pinned to `FIXTURE_YEAR` / `FIXTURE_YEAR_RANGE`
-(`@fixtures/constants/fixtureYear`), not to the real clock — otherwise stories and snapshots
-drift as time passes. Tests that need a fixed *now* use `NOW` and the derived ranges in
-`@test-utils/fixedDates` together with `setupFakeSystemTime`.
+Anchor fixture dates to `FIXTURE_YEAR` / `FIXTURE_YEAR_RANGE` (`@fixtures/constants/fixtureYear`).
+Never derive fixture data from the real clock — stories and snapshots drift as time passes. When a
+*test* needs a fixed now, use `setupFakeSystemTime` with the constants in `@test-utils/fixedDates`.
 
 ## Related
 

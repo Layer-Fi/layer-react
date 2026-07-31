@@ -1,6 +1,6 @@
 ---
 name: state-management
-description: State management — which tool owns which state, provider-scoped Zustand stores, contexts, feature-visibility providers
+description: State management — choosing between SWR, Zustand, and React Context; provider-scoped store pattern, DI contexts, feature visibility
 applies_to: src/providers/**, src/contexts/**, src/utils/zustand/**
 ---
 
@@ -10,68 +10,91 @@ Three tools, three jobs. Picking the wrong one is the most common architectural 
 
 | Tool | Owns | Examples |
 | --- | --- | --- |
-| **SWR** | server state: fetching, caching, revalidation | `useCustomAccounts`, `useListInvoices` — see [`src/hooks/SKILL.md`](../hooks/SKILL.md) |
-| **Zustand** | UI state: selections, filters, route state | `BankTransactionsCategorizationStore`, `InvoicesRouteStore`, `DateStoreProvider` |
-| **React Context** | dependency injection: config, auth, business data | `LayerProvider`, `BusinessProvider`, `BankTransactionsProvider` |
+| **SWR** | server state: fetching, caching, revalidation, mutation | `useCustomAccounts`, `useListInvoices` — see [`src/hooks/api/SKILL.md`](../hooks/api/SKILL.md) |
+| **Zustand** | client state shared across a feature subtree: route state, filters, selections, page indices, drawer/modal state | `BankTransactionsRouteStore`, `InvoicesRouteStore`, `BulkSelectionStore`, `UnifiedReportStore` |
+| **React Context** | dependency injection: auth, environment, config, string overrides — and distributing a Zustand store instance | `AuthInputProvider`, `EnvironmentInputProvider`, `BankTransactionsStringOverridesContext` |
 
-Never mirror server data into a Zustand store or `useState`. Derive it from the SWR hook,
-and keep only the user's *choices* (which row is selected, which filter is active) in the store.
+Server data lives in the SWR cache and nowhere else — read it through the hook wherever it's
+needed; the cache dedupes. Zustand stores hold the user's *choices* (which row is selected,
+which filter is active, which sub-route is showing), keyed by IDs when they reference server
+entities. `useState` is fine for state local to one component; reach for a store once state
+must be shared across a subtree.
 
-## Stores are provider-scoped, never global singletons
+## Zustand stores are provider-scoped, never global singletons
 
-A consumer may mount two `BankTransactions` on one page; a module-level `create()` store
-would leak state between them. Build every store with `createScopedStore`
-(`@utils/zustand/createScopedStore`):
+A consumer may mount two `BankTransactions` on one page; a module-level store would leak
+state between them. Every store follows the same shape — see
+`BankTransactionsRouteStore/BankTransactionsRouteStoreProvider.tsx` for the canonical example:
 
-```tsx
-const { Provider, useStoreApi, useSelector } = createScopedStore<MyStore>({ storeName: 'MyStore' })
-```
-
-- The `Provider` takes a `createStore` factory and calls it exactly once (`useConstant`).
-- `useStoreApi`/`useSelector` throw a named error if used outside the Provider — that error
-  message is the contract; don't silently fall back to a default store.
-- Export narrow, purpose-named hooks from the provider module rather than exposing the raw
-  store. `DateStoreProvider` is the model: `createScopedDateStore()` returns a
-  `Provider` plus `useGlobalDateRange`, `useGlobalDateRangeActions`, `useGlobalDatePreset`,
-  … and the module re-exports them under domain-specific names.
-- **Split state selectors from action selectors** (`useXRange` vs `useXRangeActions`) so
-  components that only dispatch don't re-render on value changes.
+- A module-level `createContext(createStore(<no-op defaults>))` supplies an inert default
+  so hooks are safe (but dead) outside the Provider.
+- The Provider builds the real store once with `useState(() => createStore(set => ({ ... })))`
+  and passes it through the context.
+- Store shape: flat state fields plus a nested `actions: { ... }` object (and `navigate: { ... }`
+  for route transitions).
+- Consumers never touch the raw store. Export narrow, purpose-named hooks
+  (`useContext` + `useStore(store, selector)`) from the provider module.
+- **Split state selectors from action selectors** so components that only dispatch don't
+  re-render on value changes. Hooks returning multiple values `useMemo` the result object.
 - Select the narrowest slice possible. For `Date` values use `useStoreWithDateSelected`
   (`@utils/zustand/useStoreWithDateSelected`) — it compares by `getTime()`, so a new `Date`
   with the same instant doesn't re-render.
 
+`createScopedStore` (`@utils/zustand/createScopedStore`) is a generic version of this
+pattern that throws instead of falling back to a dead store; today only the date store
+uses it. The hand-rolled shape above is the prevailing idiom for feature stores.
+
 ## Date state
 
-Do not build a new date store. `createScopedDateStore` already handles ranges, presets,
-period-aligned actions, and clamping (`clampToPresentOrPast`, `clampToAfterActivationDate`).
-Presets that resolve against the business activation date (e.g. `AllTime`) require the
-Provider to be mounted **below** `BusinessProvider` and given a `fallback`.
+Do not build a new date store. `createScopedDateStore` already handles ranges, presets, and
+period-aligned actions; `GlobalDateStoreProvider` re-exports its hooks under domain names and
+applies clamping (`clampToPresentOrPast`, `clampToAfterActivationDate` from `@utils/date`),
+as does `LedgerDateStoreProvider` for ledger-scoped dates.
 
 ## Contexts
 
-`src/contexts/**` holds DI contexts, several per feature and deliberately narrow
-(`BankTransactionsFiltersContext`, `BankTransactionsPaginationContext`,
-`BankTransactionsStringOverridesContext`). Prefer adding a new small context over widening
-an existing one — a fat context re-renders every consumer.
+Context is for values that are stable for the life of the subtree: credentials
+(`AuthInputProvider`), environment (`EnvironmentInputProvider`), locale (`LayerI18nProvider`),
+string overrides, feature-flag records — and for carrying store instances. The canonical
+shape is `createContext(defaults)`, a `useMemo`'d value, and a single `useX()` reader.
+
+Don't hold frequently-changing state in a context via `useState`/`useReducer` in the
+provider — every consumer re-renders on any change. Use a Zustand store with selector hooks
+instead. (`BusinessProvider`/`LayerContext` and a few older providers predate this rule;
+don't copy them.)
+
+### One concern per context/provider
+
+Each context or provider owns a single concern; a feature composes several of them rather
+than one omnibus provider. Bank transactions is the model — separate units for routing
+(`BankTransactionsRouteStore`), filters (`BankTransactionsFiltersContext`), pagination
+(`BankTransactionsPaginationContext`), string overrides
+(`BankTransactionsStringOverridesContext`), feature flags
+(`BankTransactionsFeatureVisibilityProvider`), in-flight categorization picks
+(`BankTransactionsCategorizationStore`), and bulk selection (`BulkSelectionStore`).
+Prefer adding a new small context over widening an existing one — a fat context re-renders
+every consumer on any change, and narrow units can be mounted independently where needed.
+`src/contexts/**` holds the bare DI contexts; `src/providers/**` holds the mountable
+providers and store providers.
 
 `LayerContext` is the root: API URL, auth, environment, theme, locale. Read it through
 `useLayerContext` or, better, the purpose-built hooks (`useAuth`, `useBusiness`,
 `useEnvironment`) rather than `useContext` directly.
 
-## Feature visibility
+## Syncing into stores
 
-Optional features are gated by a visibility provider that carries a feature-flag record,
-not by threading booleans through props. `BankTransactionsFeatureVisibilityProvider` is the
-model: a `BankTransactionsFeature` enum, a `DEFAULT_FEATURE_VISIBILITY` record, and a
-`useIsBankTransactionsFeatureEnabled(feature)` accessor. Do not scatter
-`if (props.showX)` conditionals through a component tree.
+Stores may *reconcile* against SWR data or props via an effect — but only narrowly:
 
-## Never set state during render
+- Prune selections that reference entities no longer in the server list
+  (`BankAccountsFilterStore` retains only IDs still present in `useListBankAccounts()`).
+- Seed an initial/default value once (`useHydrateUnifiedReportStore`).
+- Push a prop into the store when the store is the subtree's source of truth for it
+  (`TimeEntriesStore`).
 
-Call `setState` from an effect, not inline in a render body — including "derive on first
-render" shortcuts. If a value depends on props, compute it, or reset via an effect.
+Never copy server data wholesale into a store as a second source of truth — derive from the
+SWR hook at the point of use.
 
 ## Related
 
-- [`src/hooks/SKILL.md`](../hooks/SKILL.md) — the server-state half
+- [`src/hooks/api/SKILL.md`](../hooks/api/SKILL.md) — the server-state half
 - [`src/components/SKILL.md`](../components/SKILL.md) — where providers get mounted

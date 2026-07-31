@@ -68,16 +68,59 @@ desktop above.
 - Mobile-specific surfaces already exist (`@ui/MobilePanel`, `@ui/MobileList`,
   `@ui/MobileSelectionDrawer`); prefer them to reimplementing a drawer.
 
-## Props conventions
+## Don't put state in an effect if you can avoid it
 
-- Injectable content goes through a **`slots` prop** (`slots={{ Icon }}`), not ad-hoc
-  `icon`/`renderIcon` props.
-- Group a component's style/variant props into an exported `*StyleProps` type when the
-  component is a primitive, so wrappers can re-expose them (see `ButtonStyleProps`).
-- Hooks and components taking two or more parameters take a single options object.
-- Don't build `somethingProps` objects out of ternaries and spread them; branch in JSX.
-- Size and layout bounds belong in the component, not in the story or the consumer.
-- Keep `Button` JSX on one line when it fits under ~80 characters.
+`useEffect` + `setState` is the most common source of extra render passes, stale values, and
+flicker in this codebase. Work down this list and stop at the first option that fits:
+
+1. **Derive it during render.** If a value is computable from props, state, or a query result, just
+   compute it — don't mirror it into `useState`. Add `useMemo` only if the computation is genuinely
+   expensive; a cheap expression needs neither state nor memo.
+2. **Compute it in the event handler.** If the value changes in response to a user action, set it
+   where that action happens rather than reacting to the change afterwards in an effect.
+3. **Reset with a `key`.** To clear state when an entity changes, remount by passing a changing
+   `key` instead of an effect that watches the id and resets each field.
+4. **Only then use an effect** — and only for synchronizing with something outside React:
+   subscriptions, timers, imperative DOM or third-party widgets, or a deliberate reset that a `key`
+   can't express. Never call `setState` inline during render to achieve the same thing.
+
+The tell is an effect whose dependency array holds only props or state and whose body is a single
+`setState`. That's derived state, and it belongs in step 1.
+
+`react-hooks/exhaustive-deps` is an error, so an effect written to "run only once" against changing
+values will fight the linter. Treat that as the signal that the state doesn't belong in an effect.
+
+## `slots` and `slotProps`
+
+Two paired conventions, both keyed by **PascalCase slot name**. Never invent ad-hoc
+`icon`/`renderIcon`/`titleSize` props when one of these fits.
+
+**`slots`** injects *what to render* — a node or a component per named region:
+
+```tsx
+slots={{ Icon: CloudDownload }}                      // a component
+slots={{ Heading: <Span weight='bold'>{title}</Span> }}  // a node
+slots={{ EmptyState, ErrorState }}                   // several regions at once
+```
+
+A slot's type is whatever the region needs — `ReactNode` (`ExpandableCard.Heading`),
+`React.FC` (`DataTable.EmptyState`, `DropdownMenu.Trigger`), or a function of state
+(`Overlay.Trigger` receives `{ isOpen }`).
+
+**`slotProps`** configures *how an internal element renders*, without exposing that element:
+
+```tsx
+<DataState slotProps={{ Title: { size: 'md', ellipsis: true } }} />
+<Overlay slotProps={{ Popover: { placement: 'bottom' }, Dialog: { width: 320 } }} />
+```
+
+Three rules that follow:
+
+- **Key names match the element, not the prop.** `Title`, `Popover`, `Dialog`, `Meter` — a reader
+  should be able to find the element the entry configures.
+- **Merge, don't replace, when re-exposing.** A wrapper forwarding `slotProps` spreads the
+  caller's over its own defaults: `slotProps={{ Title: { size: 'md', ...slotProps?.Title } }}`
+- **Memoize a computed `slots`/`slotProps` object**, since it's an object prop.
 
 ## Forms
 
@@ -118,6 +161,6 @@ refactored freely.
 
 - [`src/components/ui/SKILL.md`](ui/SKILL.md) — primitives and their styling props
 - [`src/styles/SKILL.md`](../styles/SKILL.md) — SCSS and BEM rules
-- [`src/hooks/SKILL.md`](../hooks/SKILL.md) · [`src/providers/SKILL.md`](../providers/SKILL.md)
+- [`src/hooks/api/SKILL.md`](../hooks/api/SKILL.md) · [`src/providers/SKILL.md`](../providers/SKILL.md)
 - [`src/assets/locales/SKILL.md`](../assets/locales/SKILL.md) — translated strings
 - [`.storybook/SKILL.md`](../../.storybook/SKILL.md) — stories for new components

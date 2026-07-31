@@ -119,4 +119,4 @@ visible). That delay is the main source of Chromatic flake — see
 
 - [`src/fixtures/SKILL.md`](../fixtures/SKILL.md) — the data these handlers serve
 - [`src/test-utils/SKILL.md`](../test-utils/SKILL.md) — using mocks in tests
-- [`src/hooks/SKILL.md`](../hooks/SKILL.md) — the hooks these endpoints back
+- [`src/hooks/api/SKILL.md`](../hooks/api/SKILL.md) — the hooks these endpoints back

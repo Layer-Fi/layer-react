@@ -23,8 +23,7 @@ Note: the vitest glob excludes `.claude/**`, so agent worktrees are skipped by a
 
 Don't re-implement any of this per file:
 
-- Starts the MSW server with `onUnhandledRequest: 'error'` — **any unmocked request fails the
-  test**.
+- Starts the MSW server with `onUnhandledRequest: 'error'` — **any unmocked request fails the test**.
 - `afterEach`: `cleanup()`, `server.resetHandlers()`, `resetMockStores()`.
 - Stubs `ResizeObserver` globally (jsdom lacks it and the size hooks need it).
 - Loads `@testing-library/jest-dom/vitest` matchers.

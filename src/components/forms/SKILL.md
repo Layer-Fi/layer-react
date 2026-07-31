@@ -127,7 +127,7 @@ optionally `withRetry` to turn it into a retry affordance. It supplies its own i
 spinner — don't add either.
 
 For the mutation itself, prefer a per-call `throwOnError: false` and a guard on the result over
-`try`/`catch`; see [`src/hooks/SKILL.md`](../../hooks/SKILL.md).
+`try`/`catch`; see [`src/hooks/api/SKILL.md`](../../hooks/api/SKILL.md).
 
 ## Testing
 

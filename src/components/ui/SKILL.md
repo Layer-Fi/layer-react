@@ -22,11 +22,6 @@ composes primitives into reusable patterns and is likewise domain-agnostic.
 | a formatted duration | `<DurationSpan>` from `@ui/Typography/DurationSpan` |
 | `<button>` / `<a>` | `Button`, `LinkButton`, `SubmitButton`, `CloseButton`, `BackButton`, `Link` |
 
-Layout `div` wrappers are flagged in review, and the legacy `Text`/`TextSize`/`TextWeight`
-exports from `@components/Typography/Text` are deprecated — use `P`, `Span`, `Label`, or
-`Header` from `@ui/Typography/Text` and the `Span` props (`size`, `weight`, `withTooltip`)
-instead.
-
 ## Style props before CSS
 
 `Stack` and the typography components already express most layout and text styling as

@@ -105,10 +105,40 @@ formatPercent(0.05)                                  // "5%"
 formatPercent(0.0525, { maximumFractionDigits: 2 })  // "5.25%"
 ```
 
-## Formatting is not translation
+## Combining a formatted value with a translated string
 
-Formatted values never go through `t()`, and translated strings never get interpolated with
-hand-formatted numbers. For keys, namespaces, plurals, and the Crowdin pipeline see
+Formatting and translation are separate systems that compose in exactly one direction: **format
+the value, then pass the result into `t()` as an interpolation variable.**
+
+```tsx
+const { t } = useTranslation()
+const { formatDate, formatNumber } = useIntlFormatter()
+
+t('taxEstimates:label.due_at', 'Due on {{date}}', { date: formatDate(data.taxesDueAt) })
+t('bookkeeping:action.show_all_tasks_count', 'Show all tasks ({{tasksCount}})', { tasksCount: formatNumber(tasksCount) })
+```
+
+Three ways to get this wrong:
+
+- **Building the default string with a template literal** — putting `${formatDate(d)}` inside the
+  default. The value becomes part of the key's default, so the extracted English string is
+  polluted with one render's data.
+- **Concatenating in JSX** — `{t('…', 'Due on')} {formatDate(d)}`. This hard-codes English word
+  order; a translation that needs the date first has no way to express it.
+- **Passing a formatted value to `t()`** — `t(formatCurrencyFromCents(amount))`. A formatted value
+  is data, not a translatable string.
+
+Two details that matter:
+
+- **Placeholder names are part of the contract.** `{{date}}` in the default string must match the
+  key in the options object, and renaming it is a translation change — the `fr-CA` value
+  references the same placeholder.
+- **`tPlural`'s `count` stays a raw number.** i18next picks the plural category from it, so don't
+  hand it a formatted string. That means a bare `{{count}}` renders ungrouped — if the number is
+  large enough to need separators, pass a second, formatted variable and reference that in the
+  string instead of `{{count}}`.
+
+For keys, namespaces, plurals, and the Crowdin pipeline see
 [`src/assets/locales/SKILL.md`](../../assets/locales/SKILL.md).
 
 ## Anti-patterns

@@ -24,7 +24,8 @@ Each area has a colocated `SKILL.md`. **Read the relevant one(s) before making c
 | Working on… | Read |
 | --- | --- |
 | API contracts, Effect `Schema`, enums, nullability, envelopes, money types | [`src/schemas/SKILL.md`](src/schemas/SKILL.md) |
-| Fetching, mutating, caching — SWR hook factories, cache tags, invalidation | [`src/hooks/SKILL.md`](src/hooks/SKILL.md) |
+| Fetching, mutating, caching — SWR hook factories, cache tags, invalidation | [`src/hooks/api/SKILL.md`](src/hooks/api/SKILL.md) |
+| Feature/util hooks — which directory, composition and return conventions | [`src/hooks/SKILL.md`](src/hooks/SKILL.md) |
 | Zustand stores, contexts, providers, feature visibility | [`src/providers/SKILL.md`](src/providers/SKILL.md) |
 | Component structure, loading/empty states, responsive UX | [`src/components/SKILL.md`](src/components/SKILL.md) |
 | Design-system primitives, style props, variant data attributes | [`src/components/ui/SKILL.md`](src/components/ui/SKILL.md) |
@@ -90,13 +91,14 @@ schema, a fetching hook, or a feature.
   `businessId` and auth are injected; never pass them from a component. When consuming a new
   backend response, **stop and ask for the API contract** rather than guessing the schema.
 - **State:** SWR owns server state, Zustand owns UI state, Context is for DI. Never mirror
-  server data into a store. Never call `setState` during render.
+  server data into a store. Never call `setState` during render, and avoid `useEffect` and
+  `setState` for values you can derive — see [`src/components/SKILL.md`](src/components/SKILL.md).
 - **Stabilize deliberately:** `useCallback` only for props to `memo()`ed children or hook
   dependency arrays; `useMemo` only for expensive computations, object/array props to
   `memo()`ed children, or dependency-array values. Never memoize primitives. Do memoize object
   literals returned from custom hooks.
 
-## Gotchas that bite
+## Things to avoid
 
 Each of these has broken something before:
 
@@ -138,7 +140,6 @@ Reach for these before writing your own:
 | Pagination state | `@hooks/utils/pagination` (`usePaginationState`, `useTablePaginationProps`) |
 | A GET / paginated GET / write | `createQueryHook` · `createInfiniteQueryHook` · `createMutationHook` |
 | Cache invalidation after a write | `createResourceGlobalCacheActions` + `useOnTriggerSuccess` |
-| A provider-scoped store | `createScopedStore`; for dates, `createScopedDateStore` |
 | Variant styling on a primitive | `toDataProperties` + `data-*` selectors |
 
 ## TypeScript and imports

@@ -1,90 +1,103 @@
 ---
 name: data-tables
-description: Choosing and wiring a data table — variant decision table, BaseDataTableProps contract, column config, row behaviour, pagination
+description: Choosing a data table variant by data shape, and the configuration areas — columns, pinning, expansion, selection, row interaction, pagination
 applies_to: src/components/blocks/DataTable/**, src/components/blocks/*DataTable*/**
 ---
 
 # Data tables
 
 Tables are `@tanstack/react-table` wrapped by blocks. Feature code never builds a TanStack
-instance directly — it picks a wrapper and passes a column config.
+instance directly — pick a variant, pass `data` and a `columnConfig`.
 
-## Pick the narrowest variant that fits
+## Pick a variant by the shape of your data
 
-| Component | Use when | Also needs |
-| --- | --- | --- |
-| `SimpleDataTable` | the default — a flat list that fits on screen | — |
-| `PaginatedDataTable` | rows are paged through a pager control | `paginationProps` from `useTablePaginationProps`; `hasMore`/`fetchMore` to drive an infinite query |
-| `ExpandableDataTable` | hierarchical rows (report trees, nested accounts) | `NestedColumnConfig`, `getSubRows`, `getRowId`; optional `indentSize`, `onRowExpandToggle` |
-| `VirtualizedDataTable` | a list long enough that rendering every row is the bottleneck | an explicit `height` (or `shrinkHeightToFitRows`), plus `rowHeight` / `overscan` |
-| `DataTable` | you have already built the TanStack instance yourself | `headerGroups` and `numColumns` |
-
-`DataTable` is the low-level primitive the other four wrap — reach for it only when a wrapper
-genuinely can't express what you need, not as the default.
-
-## The shared contract
-
-All of them extend `BaseDataTableProps`:
-
-```tsx
-<SimpleDataTable
-  componentName='InvoicesTable'
-  ariaLabel={t('invoices:label.invoices_table', 'Invoices')}
-  isLoading={isLoading}
-  isError={isError}
-  slots={{ EmptyState, ErrorState }}
-  data={data}
-  columnConfig={columnConfig}
-/>
-```
-
-- **The table owns its loading, error, and empty states.** Pass `isLoading`/`isError` and the
-  `slots.EmptyState`/`slots.ErrorState` components — don't wrap a table in `ConditionalList`.
-- `componentName` drives the generated class names; `ariaLabel` is a **translated** string.
-- `dependencies` is forwarded to react-aria's collection components, which cache rendered items.
-  If a cell renderer closes over a value outside the row data and the cell goes stale when that
-  value changes, list it here to invalidate the cache.
-
-## Columns
-
-`ColumnConfig<TData>` is a plain array of
-`{ id, header, cell, alignment?, isRowHeader?, pinning?, preventRowClick? }`
-(`@blocks/DataTable/utils/column`). `cell` receives the TanStack `Row`, not the raw value. Define
-the config as a module constant or a `useMemo` — never inline in JSX, since a new array each
-render rebuilds every column def.
-
-Set `isRowHeader` on the identifying column for screen readers, `pinning` to freeze a column, and
-`preventRowClick` on cells holding their own controls so a row-level `onRowClick` doesn't swallow
-the click.
-
-Cells are composed from primitives like any other JSX — `<MoneySpan>` for amounts, `<Span>` for
-text, `Badge`/`Pill` for status. Headers are translated strings.
-
-## Row behaviour
-
-Opt in through props rather than custom columns:
-
-| Prop | Effect |
+| Your data | Variant |
 | --- | --- |
-| `withClickableRow` | `{ onRowClick, isRowClickable }` — row-level click target |
-| `selectionProps` | `DataTableSelectionProps` — injects the checkbox column for you |
-| `isRowSelected` | highlights a row without owning selection state |
-| `getRowClassName` | per-row class, by row and index |
-| `expandedRowProps` | inline expanded detail under a row |
+| a flat array, short enough to render at once | `SimpleDataTable` |
+| a flat array the user moves through a page at a time | `PaginatedDataTable` |
+| a flat array long enough that rendering every row is the bottleneck | `VirtualizedDataTable` |
+| a **tree** — each row may have child rows | `ExpandableDataTable` |
 
-Don't hand-roll a checkbox or chevron column when `selectionProps` or `ExpandableDataTable`
-covers it.
+Three distinctions worth getting right:
+
+- The two long-list variants differ in **UX, not data shape**: `PaginatedDataTable` chunks the list
+  behind a pager, `VirtualizedDataTable` keeps one continuous scroll and mounts only visible rows.
+- `ExpandableDataTable` is the **only** one that reads a tree. Everything else takes a flat array —
+  flatten before you get here.
+- **Inline detail under a row is not a tree.** That's `expandedRowProps`, available on any variant.
+
+`DataTable` itself is the low-level primitive these wrap; it wants a built TanStack instance
+(`headerGroups`, `numColumns`). Reach for it only when no wrapper can express what you need.
+
+## Configuration areas
+
+Each is opt-in through props. Read the props interface for exact shapes; this is the map of what
+exists and which knob turns it on.
+
+### Columns
+
+`columnConfig` — an array of `{ id, header, cell }` plus per-column flags
+(`@blocks/DataTable/utils/column`). `cell` receives the whole **row**, not a cell value, and returns
+JSX composed from primitives. Headers are translated strings.
+
+Build the config outside the render, as a module-level function or a `useMemo` — a fresh array each
+render rebuilds every column def. `InvoiceTable`'s `getColumnConfig` is the pattern.
+
+### Alignment and pinning
+
+Per-column `alignment`, and `pinning` to freeze a column to one side while the rest scrolls
+horizontally. Both live on the column entry, not on the table.
+
+### Grouped headers
+
+`NestedColumnConfig` allows a group entry — `{ id, header, columns: [...] }` — in place of a leaf
+column, producing a two-tier header. This is about **headers, not rows**; nested rows are the next
+section.
+
+### Expansion — two different features
+
+- **Nested rows**: `ExpandableDataTable` with `getSubRows` and `getRowId`. The tree is in your data,
+  and rows indent by depth (`indentSize`). `getRowId` must be stable — expansion state is keyed on it.
+- **An inline detail panel** beneath a flat row: `expandedRowProps` (`{ render, getRowCanExpand? }`),
+  available on any variant. No tree involved.
+
+Reaching for `ExpandableDataTable` when you only wanted a detail panel is the common mistake.
+
+### Selection
+
+`selectionProps` — supplying it **injects the checkbox column**, so don't add one to your column
+config. You own the state (`rowSelection`, `onRowSelectionChange`), it needs a translated
+`selectAllAriaLabel`, and `enableRowSelection` can be a predicate so only some rows are selectable.
+
+Distinct from `isRowSelected`, which only highlights a row and owns nothing.
+
+### Row interaction
+
+`withClickableRow` makes whole rows a click target. Cells containing their own controls should set
+`preventRowClick`, so a row-level click doesn't swallow theirs. `getRowClassName` styles per row.
+
+### Loading, error, and empty states
+
+The table renders these itself from `isLoading` / `isError` plus `slots.EmptyState` /
+`slots.ErrorState`. Pass the query's flags straight through — don't wrap a table in
+`ConditionalList` or branch on `isLoading` yourself.
+
+### Accessibility
+
+`ariaLabel` on the table, and `isRowHeader` on the column that identifies the row so screen readers
+announce it as that row's header. Both are easy to omit and invisible when you do.
 
 ## Pagination
 
-State lives in `@hooks/utils/pagination`: `usePaginationState`, `useTablePaginationProps`,
-`useAutoResetPageIndex` (reset to page 1 when filters change), and `usePaginatedList` for slicing
-an already-loaded array.
+Two different things, easy to conflate:
 
-Keep the two kinds of pagination straight: these hooks drive **page-index UI**, while
-`createInfiniteQueryHook` drives **cursor fetching**. A screen often uses both — fetch with
-cursors, display with a pager, connecting them through `hasMore`/`fetchMore`. See
-[`src/hooks/SKILL.md`](../../../hooks/SKILL.md).
+- **Page-index UI** — `@hooks/utils/pagination`: `usePaginationState`, `useTablePaginationProps`,
+  `useAutoResetPageIndex` (back to page 1 when filters change), `usePaginatedList` (slice a loaded
+  array). This is what `PaginatedDataTable` consumes.
+- **Cursor fetching** — `createInfiniteQueryHook`, see [`src/hooks/api/SKILL.md`](../../../hooks/api/SKILL.md).
+
+A screen often uses both: fetch by cursor, display with a pager, bridging them with the query's
+`hasMore` / `fetchMore`.
 
 ## Related
 
