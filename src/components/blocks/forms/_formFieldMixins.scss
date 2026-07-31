@@ -18,6 +18,9 @@ $control-slots: "[slot='input'], [slot='checkbox'], [slot='indicator'], [slot='o
     'error';
   grid-template-columns: minmax(0, 1fr);
 
+  /* Primitives like `.Layer__RadioGroup` and `.Layer__UI__Switch` carry a gap for their own flex layout. */
+  gap: 0;
+
   > [slot='label'] {
     grid-area: label;
 
