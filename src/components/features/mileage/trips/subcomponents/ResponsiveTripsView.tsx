@@ -11,11 +11,11 @@ import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStore
 import { useCurrentTripsPage, useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { type DefaultVariant, ResponsiveComponent } from '@components/utility/ResponsiveComponent'
-import { TripDeleteConfirmationModal } from '@features/mileage/trips/TripDeleteConfirmationModal'
-import { TripDrawer } from '@features/mileage/trips/TripDrawer'
-import { TripPurposeFilterValue } from '@features/mileage/trips/TripPurposeToggle'
-import { TripsMobileList } from '@features/mileage/trips/TripsMobileList/TripsMobileList'
-import { TripsTable } from '@features/mileage/trips/TripsTable/TripsTable'
+import { TripDeleteConfirmationModal } from '@features/mileage/trips/subcomponents/TripDeleteConfirmationModal'
+import { TripDrawer } from '@features/mileage/trips/subcomponents/TripDrawer'
+import { TripPurposeFilterValue } from '@features/mileage/trips/subcomponents/TripPurposeToggle'
+import { TripsMobileList } from '@features/mileage/trips/subcomponents/TripsMobileList/TripsMobileList'
+import { TripsTable } from '@features/mileage/trips/subcomponents/TripsTable/TripsTable'
 
 const resolveVariant = ({ width }: { width: number }): DefaultVariant =>
   width < BREAKPOINTS.TABLET ? 'Mobile' : 'Desktop'

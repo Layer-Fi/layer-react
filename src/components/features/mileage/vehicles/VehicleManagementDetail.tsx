@@ -12,8 +12,8 @@ import { Switch } from '@ui/Switch/Switch'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
-import { VehicleDrawer } from '@features/mileage/vehicles/VehicleDrawer'
-import { VehicleManagementGrid } from '@features/mileage/vehicles/VehicleManagementGrid/VehicleManagementGrid'
+import { VehicleDrawer } from '@features/mileage/vehicles/subcomponents/VehicleDrawer'
+import { VehicleManagementGrid } from '@features/mileage/vehicles/subcomponents/VehicleManagementGrid/VehicleManagementGrid'
 
 interface VehicleManagementDetailHeaderProps {
   onAddVehicle: () => void

@@ -13,9 +13,9 @@ import { Separator } from '@ui/Separator/Separator'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
-import { VehicleArchiveConfirmationModal } from '@features/mileage/vehicles/VehicleArchiveConfirmationModal'
-import { VehicleDeleteConfirmationModal } from '@features/mileage/vehicles/VehicleDeleteConfirmationModal'
-import { VehicleReactivateConfirmationModal } from '@features/mileage/vehicles/VehicleReactivateConfirmationModal'
+import { VehicleArchiveConfirmationModal } from '@features/mileage/vehicles/subcomponents/VehicleArchiveConfirmationModal'
+import { VehicleDeleteConfirmationModal } from '@features/mileage/vehicles/subcomponents/VehicleDeleteConfirmationModal'
+import { VehicleReactivateConfirmationModal } from '@features/mileage/vehicles/subcomponents/VehicleReactivateConfirmationModal'
 
 import './vehicleCard.scss'
 

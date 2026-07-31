@@ -6,7 +6,7 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { MobileListItemContent } from '@ui/MobileList/MobileListItemContent'
 import { MobileListItemStatusFooter } from '@ui/MobileList/MobileListItemStatusFooter'
 import { Span } from '@ui/Typography/Text'
-import { TripsAddressCell } from '@features/mileage/trips/TripAddressCell'
+import { TripsAddressCell } from '@features/mileage/trips/subcomponents/TripAddressCell'
 import { formatDistance, getPurposeBadgeVariant, getPurposeIcon, getPurposeLabel } from '@features/mileage/trips/utils'
 
 const TripsMobileListItemDistance = ({ trip }: { trip: Trip }) => {

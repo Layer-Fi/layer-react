@@ -15,7 +15,7 @@ import { SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { TripDrawer } from '@features/mileage/trips/TripDrawer'
+import { TripDrawer } from '@features/mileage/trips/subcomponents/TripDrawer'
 
 import './mileageSummaryCard.scss'
 

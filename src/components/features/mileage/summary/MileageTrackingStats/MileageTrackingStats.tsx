@@ -8,7 +8,7 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
-import { MileageDeductionChart } from '@features/mileage/summary/MileageDeductionChart/MileageDeductionChart'
+import { MileageDeductionChart } from '@features/mileage/summary/subcomponents/MileageDeductionChart/MileageDeductionChart'
 
 import './mileageTrackingStats.scss'
 

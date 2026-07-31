@@ -6,7 +6,7 @@ import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { VStack } from '@ui/Stack/Stack'
-import { VehicleForm } from '@features/mileage/vehicles/VehicleForm/VehicleForm'
+import { VehicleForm } from '@features/mileage/vehicles/subcomponents/VehicleForm/VehicleForm'
 
 interface VehicleDrawerProps {
   isOpen: boolean

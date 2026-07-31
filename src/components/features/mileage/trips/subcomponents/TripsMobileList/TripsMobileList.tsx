@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { type Trip } from '@schemas/trip'
 import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
 import type { TablePaginationProps } from '@blocks/PaginatedDataTable/PaginatedDataTable'
-import { TripsMobileHeader } from '@features/mileage/trips/TripsMobileHeader'
-import { TripsMobileListItem, TripsMobileListItemFooter } from '@features/mileage/trips/TripsMobileList/TripsMobileListItem'
+import { TripsMobileHeader } from '@features/mileage/trips/subcomponents/TripsMobileHeader'
+import { TripsMobileListItem, TripsMobileListItemFooter } from '@features/mileage/trips/subcomponents/TripsMobileList/TripsMobileListItem'
 
 import './tripsMobileList.scss'
 

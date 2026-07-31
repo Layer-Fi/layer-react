@@ -14,7 +14,7 @@ import {
   getVehicleFormDefaultValues,
   validateVehicleForm,
   VehicleFormInvalidReason,
-} from '@features/mileage/vehicles/VehicleForm/formUtils'
+} from '@features/mileage/vehicles/subcomponents/VehicleForm/formUtils'
 
 type onSuccessFn = (vehicle: Vehicle) => void
 type UseVehicleFormProps = { onSuccess: onSuccessFn, vehicle?: Vehicle }

@@ -8,7 +8,7 @@ import { useGetVehicles } from '@api/businesses/[business-id]/mileage/vehicles/g
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { VehicleCard } from '@features/mileage/vehicles/VehicleCard/VehicleCard'
+import { VehicleCard } from '@features/mileage/vehicles/subcomponents/VehicleCard/VehicleCard'
 
 import './vehicleManagementGrid.scss'
 

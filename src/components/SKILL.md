@@ -38,25 +38,35 @@ sub-areas once it covers more than one surface — `mileage` is the worked examp
 
 ```
 features/mileage/
-  summary/    MileageSummaryCard/ MileageTrackingSummary/ MileageTrackingStats/ MileageDeductionChart/
-  trips/      Trips.tsx utils.ts TripDrawer.tsx TripForm/ TripsTable/ TripsMobileList/ …
-  vehicles/   VehicleCard/ VehicleForm/ VehicleSelector/ VehicleDrawer.tsx …
+  summary/    MileageSummaryCard/ MileageTrackingSummary/ MileageTrackingStats/
+                subcomponents/ MileageDeductionChart/
+  trips/      Trips.tsx utils.ts
+                subcomponents/ ResponsiveTripsView.tsx TripDrawer.tsx TripForm/ TripsTable/ …
+  vehicles/   VehicleManagementDetail.tsx
+                subcomponents/ VehicleCard/ VehicleForm/ VehicleSelector/ VehicleDrawer.tsx …
 ```
 
-Three rules keep that navigable:
+Four rules keep that navigable:
 
-- **A directory name equals the component name it contains.** `trips/TripForm/TripForm.tsx`, never a
+- **Only entry points sit at a sub-area's root; everything they compose goes in `subcomponents/`.**
+  The root of a sub-area answers "what can I mount from here" at a glance — `trips/Trips.tsx`,
+  `vehicles/VehicleManagementDetail.tsx` — and the pieces they are built from don't compete with them
+  for attention. A sub-area may have more than one entry point (`summary` has three).
+- **A directory name equals the component name it contains.** `TripForm/TripForm.tsx`, never a
   directory whose name matches no component — the old `Trips/TripsView/ResponsiveTripsView.tsx` is
   what this rule exists to prevent.
 - **A component earns its own directory once it owns 2+ files** — a stylesheet, test, story, or child
-  components. A lone `.tsx` sits flat in its sub-area (`trips/TripDrawer.tsx`). Never create a
-  one-file directory, and never create a directory that only re-exports another component.
-- **Sub-areas are shallow.** One level of `camelCase` grouping per domain; if you want a second,
-  the sub-area is probably its own domain.
+  components. A lone `.tsx` sits flat (`subcomponents/TripDrawer.tsx`). Never create a one-file
+  directory, and never create a directory that only re-exports another component.
+- **Sub-areas are shallow.** One level of `camelCase` grouping per domain, one `subcomponents/`
+  beneath it. If you want to nest further, the sub-area is probably its own domain.
 
-Shared pieces sit in the sub-area that owns them, and other sub-areas import across — `summary`
-owns `MileageDeductionChart`, and both `MileageTrackingSummary` and `MileageTrackingStats` use it.
-Only promote to a domain-level file when two sub-areas own it equally.
+Non-component helpers stay beside the entry point rather than in `subcomponents/` — `trips/utils.ts`
+holds the formatters its table and list both use.
+
+Shared pieces sit in the sub-area that owns them, and other sub-areas import across —
+`summary/subcomponents/MileageDeductionChart` is used by both `MileageTrackingSummary` and
+`MileageTrackingStats`. Only promote to a domain-level file when two sub-areas own it equally.
 
 A component that is *not* domain-specific does not belong here at all — it goes to `@ui`
 (primitive), `@blocks` (composed pattern), or `@components/utility` (rendering helper). "Which

@@ -7,8 +7,8 @@ import { type Trip, type TripForm, UpsertTripSchema } from '@schemas/trip'
 import { useUpsertTrip } from '@api/businesses/[business-id]/mileage/trips/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
-import { convertTripFormToUpsertTrip, getTripFormDefaultValues, validateTripForm } from '@features/mileage/trips/TripForm/formUtils'
-import { useAutofillTripDistance } from '@features/mileage/trips/TripForm/useAutofillTripDistance'
+import { convertTripFormToUpsertTrip, getTripFormDefaultValues, validateTripForm } from '@features/mileage/trips/subcomponents/TripForm/formUtils'
+import { useAutofillTripDistance } from '@features/mileage/trips/subcomponents/TripForm/useAutofillTripDistance'
 
 type onSuccessFn = (trip: Trip) => void
 type UseTripFormProps = { onSuccess: onSuccessFn, trip?: Trip }

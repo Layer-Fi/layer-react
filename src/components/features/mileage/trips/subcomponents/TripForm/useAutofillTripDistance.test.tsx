@@ -6,8 +6,8 @@ import { fromNonRecursiveBigDecimal, toNonRecursiveBigDecimal } from '@schemas/n
 import type { Trip, TripForm, TripPlace } from '@schemas/trip'
 import { useGetMileageDistance } from '@api/businesses/[business-id]/mileage/distance/get'
 import { useAppForm } from '@hooks/features/forms/useForm'
-import { getTripFormDefaultValues } from '@features/mileage/trips/TripForm/formUtils'
-import { useAutofillTripDistance } from '@features/mileage/trips/TripForm/useAutofillTripDistance'
+import { getTripFormDefaultValues } from '@features/mileage/trips/subcomponents/TripForm/formUtils'
+import { useAutofillTripDistance } from '@features/mileage/trips/subcomponents/TripForm/useAutofillTripDistance'
 
 import { makeTrip } from '@fixtures/trips/mocks'
 

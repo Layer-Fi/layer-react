@@ -8,7 +8,7 @@ import {
 } from '@ui/Chart/ChartTooltip'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import type { MileageDeductionChartDataPoint } from '@features/mileage/summary/MileageDeductionChart/MileageDeductionChartDataPoint'
+import type { MileageDeductionChartDataPoint } from '@features/mileage/summary/subcomponents/MileageDeductionChart/MileageDeductionChartDataPoint'
 
 interface MileageDeductionChartTooltipContentProps {
   active?: boolean

@@ -9,7 +9,7 @@ import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { useVehicleForm } from '@features/mileage/vehicles/VehicleForm/useVehicleForm'
+import { useVehicleForm } from '@features/mileage/vehicles/subcomponents/VehicleForm/useVehicleForm'
 
 import './vehicleForm.scss'
 

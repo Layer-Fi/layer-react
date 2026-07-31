@@ -12,10 +12,10 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { ChartYAxis } from '@ui/Chart/ChartYAxis'
 import { VStack } from '@ui/Stack/Stack'
-import type { MileageDeductionChartDataPoint } from '@features/mileage/summary/MileageDeductionChart/MileageDeductionChartDataPoint'
+import type { MileageDeductionChartDataPoint } from '@features/mileage/summary/subcomponents/MileageDeductionChart/MileageDeductionChartDataPoint'
 import {
   MileageDeductionChartTooltip,
-} from '@features/mileage/summary/MileageDeductionChart/MileageDeductionChartTooltip'
+} from '@features/mileage/summary/subcomponents/MileageDeductionChart/MileageDeductionChartTooltip'
 
 import './mileageDeductionChart.scss'
 

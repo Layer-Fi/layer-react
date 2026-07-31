@@ -7,8 +7,8 @@ import { useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStore
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { DataTableHeader } from '@blocks/DataTable/DataTableHeader'
-import { type TripPurposeFilterValue, TripPurposeToggle } from '@features/mileage/trips/TripPurposeToggle'
-import { TripsTableHeaderMenu } from '@features/mileage/trips/TripsTable/TripsTableHeaderMenu'
+import { type TripPurposeFilterValue, TripPurposeToggle } from '@features/mileage/trips/subcomponents/TripPurposeToggle'
+import { TripsTableHeaderMenu } from '@features/mileage/trips/subcomponents/TripsTable/TripsTableHeaderMenu'
 
 interface TripsMobileHeaderProps {
   onRecordTrip: () => void

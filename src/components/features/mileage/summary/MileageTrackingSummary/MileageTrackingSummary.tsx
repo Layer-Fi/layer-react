@@ -10,8 +10,8 @@ import { HStack, Stack, VStack } from '@ui/Stack/Stack'
 import { SummaryCard } from '@blocks/SummaryCard/SummaryCard'
 import { type SummaryCardInteractionProps, type SummaryCardStringOverrides, useSummaryCardSlots } from '@blocks/SummaryCard/useSummaryCardSlots'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
-import { MileageDeductionChart } from '@features/mileage/summary/MileageDeductionChart/MileageDeductionChart'
 import { MileageTrackingStatsCard } from '@features/mileage/summary/MileageTrackingStats/MileageTrackingStats'
+import { MileageDeductionChart } from '@features/mileage/summary/subcomponents/MileageDeductionChart/MileageDeductionChart'
 
 import './mileageTrackingSummary.scss'
 
