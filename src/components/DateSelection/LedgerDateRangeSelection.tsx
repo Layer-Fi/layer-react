@@ -20,6 +20,7 @@ export const LedgerDateRangeSelection = ({ showLabels = false, isCompact = false
       setDatePreset={setDatePreset}
       showLabels={showLabels}
       isCompact={isCompact}
+      showAllTimeFirst
     />
   )
 }

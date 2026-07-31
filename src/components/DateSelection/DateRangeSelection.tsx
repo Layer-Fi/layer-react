@@ -14,6 +14,7 @@ type DateRangeSelectionProps = {
   setDatePreset: (options: { datePreset: SelectableDatePreset }) => void
   showLabels?: boolean
   isCompact?: boolean
+  showAllTimeFirst?: boolean
 }
 
 export const DateRangeSelection = ({
@@ -23,6 +24,7 @@ export const DateRangeSelection = ({
   setDatePreset,
   showLabels = false,
   isCompact = false,
+  showAllTimeFirst = false,
 }: DateRangeSelectionProps) => {
   return (
     <div
@@ -34,6 +36,7 @@ export const DateRangeSelection = ({
         datePreset={datePreset}
         setDatePreset={setDatePreset}
         showLabel={showLabels}
+        showAllTimeFirst={showAllTimeFirst}
       />
       <DateRangePicker
         dateRange={dateRange}
