@@ -47,6 +47,7 @@
     "paths": {
       "@ui/*": ["./src/components/ui/*"],
       "@blocks/*": ["./src/components/blocks/*"],
+      "@features/*": ["./src/components/features/*"],
       "@components/*": ["./src/components/*"],
       "@contexts/*": ["./src/contexts/*"],
       "@api/*": ["./src/hooks/api/*"],

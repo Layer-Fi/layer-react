@@ -12,7 +12,7 @@ applies_to: src/components/**, src/views/**
 | --- | --- | --- | --- |
 | **Primitives** | `src/components/ui/**` | `@ui/*` | nothing domain-specific — see [`ui/SKILL.md`](ui/SKILL.md) |
 | **Blocks** | `src/components/blocks/**` | `@blocks/*` | composed patterns (`DataTable`, `SummaryCard`, `Wizard`, `ActionableList`) — still domain-agnostic |
-| **Features** | `src/components/<Feature>/**` | `@components/*` | one domain; fetches its own data via hooks |
+| **Features** | `src/components/features/<domain>/**` | `@features/*` | one domain; fetches its own data via hooks |
 | **Views** | `src/views/**` | `@views/*` | full pages composing features and mounting providers |
 | **Utilities** | `src/components/utility/**` | `@components/utility/*` | rendering helpers, not UI |
 
@@ -23,10 +23,36 @@ never import a schema, a hook that fetches, or a feature component.
 Build on `@ui` and `@blocks` before writing a new component; a new reusable primitive
 belongs in `src/components/ui`, not next to the feature that first needed it.
 
+## Finding and placing feature code
+
+`src/components/features/` holds one directory per **domain object**, named with the same
+camelCase vocabulary as `src/hooks/features/*` and `src/schemas/*`. So the same domain name
+answers "where does this live" in all three trees: bank-transaction components are in
+`@features/bankTransactions`, its hooks in `@hooks/features/bankTransactions`, its contracts in
+`@schemas/bankTransactions`. **Reuse an existing domain name — do not invent a near-synonym**, and
+add a new domain directory only for a genuinely new domain object.
+
+Two rules keep a domain directory navigable:
+
+- **A directory name equals the component name it contains** —
+  `features/mileage/TripForm/TripForm.tsx`, never a directory whose name matches no component.
+- **A component earns its own subdirectory only once it has 2+ files.** A lone component file sits
+  flat in the domain directory (`features/mileage/MileageSummaryCard.tsx`). Do not create a
+  one-file directory, and do not create a directory that only re-exports another component.
+
+A component that is *not* domain-specific does not belong here at all — it goes to `@ui`
+(primitive), `@blocks` (composed pattern), or `@components/utility` (rendering helper). "Which
+domain owns this?" having no answer is the signal.
+
+> **Migration in progress.** Domains are being moved into `features/` one PR at a time; directories
+> still sitting directly under `src/components/` are un-migrated, not a second convention. Put new
+> work in `features/<domain>/`, and if you touch an un-migrated domain, don't extend it in place —
+> ask before mixing a move into a behavior change.
+
 ## File conventions
 
 ```
-src/components/CustomAccountForm/
+src/components/features/linkedAccounts/CustomAccountForm/
   CustomAccountForm.tsx          PascalCase component file
   customAccountForm.scss         camelCase stylesheet, imported by the .tsx
   CustomAccountForm.test.tsx     colocated test
@@ -34,7 +60,8 @@ src/components/CustomAccountForm/
 ```
 
 Import with the **most specific path alias** available (`@ui/Button/Button`, not
-`@components/ui/Button/Button`). Relative parent imports (`../`) are an ESLint error
+`@components/ui/Button/Button`; `@features/mileage/Trips/Trips`, not
+`@components/features/mileage/Trips/Trips`). Relative parent imports (`../`) are an ESLint error
 outside the aliases. No barrel `index.ts` re-export files — import the module directly.
 
 ## Loading, error, and empty states

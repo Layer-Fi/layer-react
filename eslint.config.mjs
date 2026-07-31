@@ -104,6 +104,7 @@ export default tsEslint.config(
           '@components/',
           '@ui/',
           '@blocks/',
+          '@features/',
           '@contexts/',
           '@api/',
           '@hooks/',
@@ -222,6 +223,7 @@ export default tsEslint.config(
 
             // Reusable and feature-level UI
             '^(?:type:)?@components/',
+            '^(?:type:)?@features/',
             '^(?:type:)?@views/',
 
             // Static resources

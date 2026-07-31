@@ -58,7 +58,7 @@ release process.
 | `src/providers`, `src/contexts` | `@providers/*`, `@contexts/*` | scoped Zustand stores and DI contexts |
 | `src/components/ui` | `@ui/*` | design-system primitives (domain-agnostic) |
 | `src/components/blocks` | `@blocks/*` | composed patterns: tables, cards, wizards (domain-agnostic) |
-| `src/components/<Feature>` | `@components/*` | feature UI; fetches its own data |
+| `src/components/features/<domain>` | `@features/*` | feature UI, one directory per domain object; fetches its own data |
 | `src/components/utility` | `@components/utility/*` | rendering helpers: `ConditionalBlock`, `ResponsiveComponent`, `withRenderProp` |
 | `src/views` | `@views/*` | full-page compositions that mount providers |
 | `src/styles` | — | design tokens and base CSS, bundled to `dist/index.css` |
@@ -68,6 +68,11 @@ release process.
 
 Dependencies point one way: views → features → blocks → ui. A `@ui` component never imports a
 schema, a fetching hook, or a feature.
+
+`features/<domain>` reuses the domain names of `src/hooks/features/*` and `src/schemas/*`, so one
+name locates a domain's components, hooks, and contracts. Domains are being migrated into
+`features/` one PR at a time — directories still directly under `src/components/` are un-migrated,
+not a second convention.
 
 ## Non-negotiables
 
@@ -167,13 +172,13 @@ Reach for these before writing your own:
   receives is a schema.
 - Not yet enabled in `tsconfig.json` but worth honoring: `isolatedModules`, `verbatimModuleSyntax`, `noUncheckedIndexedAccess`.
 
-Aliases, most specific first: `@ui/*`, `@blocks/*`, `@components/*`, `@contexts/*`, `@api/*`, `@hooks/*`,
+Aliases, most specific first: `@ui/*`, `@blocks/*`, `@features/*`, `@components/*`, `@contexts/*`, `@api/*`, `@hooks/*`,
 `@providers/*`, `@utils/*`, `@internal-types/*`, `@schemas/*`, `@views/*`, `@icons/*`,
 `@assets/*`, `@msw/*`, `@fixtures/*`, `@test-utils/*`.
 
 `simple-import-sort` enforces dependency-layer order: react → external →
 (`@internal-types`, `@schemas`) → `@utils` → `@api` → `@hooks` → (`@providers`, `@contexts`) →
-(`@icons`, `@ui`, `@blocks`) → (`@components`, `@views`) → `@assets` →
+(`@icons`, `@ui`, `@blocks`) → (`@components`, `@features`, `@views`) → `@assets` →
 (`@msw`, `@fixtures`, `@test-utils`) → styles.
 
 Type imports are inline-style and enforced: `import { type Foo } from '…'`.
