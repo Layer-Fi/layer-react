@@ -50,10 +50,9 @@ project causes spurious "omitted" warnings on download.
 without renaming the key risks the stale `fr-CA` translation surviving; a new key
 (`label.payment_due`) is unambiguously untranslated, so Crowdin translates it fresh.
 
-Grep for the old key and update **both the key and the default value together at every call
-site** — `t()` calls, `translationKey(...)` constants, and `tPlural`/`tConditional` case maps.
-A half-migrated key leaves two keys in the extracted JSON with conflicting English, and the
-call sites still on the old key keep rendering the old French.
+Grep for the old key and change **both the key and the default value at every call site** —
+`t()`, `translationKey(...)` constants, `tPlural`/`tConditional` case maps. Half-migrating
+leaves two keys with conflicting English, and the stragglers keep rendering the old French.
 
 ```diff
 -t('invoices:label.due_date', 'Due date')
