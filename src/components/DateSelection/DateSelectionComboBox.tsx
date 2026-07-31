@@ -17,29 +17,40 @@ type DateSelectionComboBoxProps = {
   datePreset: DatePreset
   setDatePreset: (options: { datePreset: SelectableDatePreset }) => void
   showLabel?: boolean
+  showAllTimeFirst?: boolean
 }
 
 export const DateSelectionComboBox = ({
   datePreset,
   setDatePreset,
   showLabel = false,
+  showAllTimeFirst = false,
 }: DateSelectionComboBoxProps) => {
   const { t } = useTranslation()
 
   const activationDate = useBusinessActivationDate()
 
   const allOptions = useMemo<DateSelectionOption[]>(
-    () => [
-      { value: DatePreset.ThisMonth, label: t('date:label.this_month', 'This Month') },
-      { value: DatePreset.LastMonth, label: t('date:label.last_month', 'Last Month') },
-      { value: DatePreset.ThisQuarter, label: t('date:label.this_quarter', 'This Quarter') },
-      { value: DatePreset.LastQuarter, label: t('date:label.last_quarter', 'Last Quarter') },
-      { value: DatePreset.ThisYear, label: t('date:label.this_year', 'This Year') },
-      { value: DatePreset.LastYear, label: t('date:label.last_year', 'Last Year') },
-      { value: DatePreset.AllTime, label: t('date:label.all_time', 'All Time'), isDisabled: activationDate == null },
-      { value: DatePreset.Custom, label: t('date:label.custom', 'Custom') },
-    ],
-    [t, activationDate],
+    () => {
+      const allTimeOption: DateSelectionOption = {
+        value: DatePreset.AllTime,
+        label: t('date:label.all_time', 'All Time'),
+        isDisabled: activationDate == null,
+      }
+
+      return [
+        ...(showAllTimeFirst ? [allTimeOption] : []),
+        { value: DatePreset.ThisMonth, label: t('date:label.this_month', 'This Month') },
+        { value: DatePreset.LastMonth, label: t('date:label.last_month', 'Last Month') },
+        { value: DatePreset.ThisQuarter, label: t('date:label.this_quarter', 'This Quarter') },
+        { value: DatePreset.LastQuarter, label: t('date:label.last_quarter', 'Last Quarter') },
+        { value: DatePreset.ThisYear, label: t('date:label.this_year', 'This Year') },
+        { value: DatePreset.LastYear, label: t('date:label.last_year', 'Last Year') },
+        ...(showAllTimeFirst ? [] : [allTimeOption]),
+        { value: DatePreset.Custom, label: t('date:label.custom', 'Custom') },
+      ]
+    },
+    [t, activationDate, showAllTimeFirst],
   )
 
   const options = allOptions.filter(o => o.value !== DatePreset.Custom)
