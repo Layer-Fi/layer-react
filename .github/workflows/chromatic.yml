@@ -1,15 +1,23 @@
 name: Chromatic
 
-# Only runs on PRs that touch files a snapshot could depend on. Within a run,
-# TurboSnap (onlyChanged) narrows further to the stories whose Vite dependency
-# graph the diff actually reaches, so a change under src/components/ui only
-# re-snapshots that component plus the feature stories rendering it.
+# Snapshot budget is controlled at three levels:
+#   1. Trigger — path filters keep test-only, doc-only, and workflow-only PRs
+#      from starting a build at all, and drafts are skipped until review-ready.
+#   2. Concurrency — superseded commits on the same PR cancel the older build.
+#   3. TurboSnap (onlyChanged) — narrows to the stories whose Vite dependency
+#      graph the diff reaches, so a change under src/components/ui re-snapshots
+#      that component plus the feature stories rendering it.
 #
 # TurboSnap diffs against the newest ancestor build, so the push-on-main job
-# below keeps a baseline available for PRs branched off main.
+# keeps a baseline available for PRs branched off main.
 
 on:
   pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
     paths:
       - src/**
       - '!src/**/*.test.ts'
@@ -55,6 +63,10 @@ jobs:
       with:
         # Chromatic's TurboSnap needs full git history to diff against baselines.
         fetch-depth: 0
+        # Check out the PR head instead of the ephemeral merge commit, which is
+        # absent from git history and degrades baseline/dependency analysis.
+        # Assumes same-repo PRs; a fork's head.ref would not resolve here.
+        ref: ${{ github.event.pull_request.head.ref || github.ref }}
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -66,10 +78,20 @@ jobs:
       run: npm ci
 
     - name: Run Chromatic
+      id: chromatic
       uses: chromaui/action@v18
       with:
         projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
         buildScriptName: storybook:build
         onlyChanged: true
         exitZeroOnChanges: true
+        skip: ${{ github.event.pull_request.draft == true }}
         autoAcceptChanges: ${{ github.event_name == 'push' }}
+
+    - name: Link published Storybook
+      if: steps.chromatic.outputs.storybookUrl != ''
+      env:
+        STORYBOOK_URL: ${{ steps.chromatic.outputs.storybookUrl }}
+      run: |
+        echo "## Storybook preview" >> "$GITHUB_STEP_SUMMARY"
+        echo "$STORYBOOK_URL" >> "$GITHUB_STEP_SUMMARY"
