@@ -2,15 +2,12 @@ import { useCallback, useState } from 'react'
 import { ChevronRight, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { Button } from '@ui/Button/Button'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { Spacer } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { RecordTransactionModal } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionModal'
 import { type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
-import { CategorizationRuleFormDrawer } from '@components/CategorizationRules/CategorizationRuleForm/CategorizationRuleFormDrawer'
-import { type CategorizationRuleFormState } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 
 function RecordTransactionTrigger({ isDisabled }: { isDisabled?: boolean }) {
   const { t } = useTranslation()
@@ -29,21 +26,15 @@ function RecordTransactionTrigger({ isDisabled }: { isDisabled?: boolean }) {
 
 type RecordTransactionMenuButtonProps = {
   isDisabled?: boolean
+  showCreateRule?: boolean
+  onCreateRule?: () => void
 }
 
-export function RecordTransactionMenuButton({ isDisabled }: RecordTransactionMenuButtonProps) {
+export function RecordTransactionMenuButton({ isDisabled, showCreateRule, onCreateRule }: RecordTransactionMenuButtonProps) {
   const { t } = useTranslation()
   const [openVariant, setOpenVariant] = useState<RecordTransactionVariant | null>(null)
-  const [ruleFormState, setRuleFormState] = useState<CategorizationRuleFormState | null>(null)
-  const showCategorizationRules = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.CategorizationRules)
 
   const Trigger = useCallback(() => <RecordTransactionTrigger isDisabled={isDisabled} />, [isDisabled])
-
-  const onCreateRule = useCallback(() => setRuleFormState({ mode: 'create' }), [])
-  const onRuleFormDrawerOpenChange = useCallback((isOpen: boolean) => {
-    if (!isOpen) setRuleFormState(null)
-  }, [])
-  const onRuleFormSuccess = useCallback(() => setRuleFormState(null), [])
 
   return (
     <>
@@ -63,7 +54,7 @@ export function RecordTransactionMenuButton({ isDisabled }: RecordTransactionMen
             <Spacer />
             <ChevronRight size={12} />
           </MenuItem>
-          {showCategorizationRules && (
+          {showCreateRule && onCreateRule && (
             <MenuItem onClick={onCreateRule}>
               <Span size='sm'>{t('bankTransactions:action.create_a_rule', 'Create a rule')}</Span>
               <Spacer />
@@ -79,12 +70,6 @@ export function RecordTransactionMenuButton({ isDisabled }: RecordTransactionMen
           onOpenChange={open => setOpenVariant(open ? openVariant : null)}
         />
       )}
-      <CategorizationRuleFormDrawer
-        isOpen={ruleFormState !== null}
-        formState={ruleFormState}
-        onOpenChange={onRuleFormDrawerOpenChange}
-        onSuccess={onRuleFormSuccess}
-      />
     </>
   )
 }
