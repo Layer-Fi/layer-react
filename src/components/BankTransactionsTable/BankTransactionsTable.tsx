@@ -9,6 +9,7 @@ import { Alignment } from '@schemas/reports/unifiedReport'
 import { isMoneyIn } from '@utils/bankTransactions/shared'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useBulkSelectionActions, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
@@ -25,8 +26,11 @@ import { PaginatedTable } from '@blocks/PaginatedDataTable/PaginatedDataTable'
 import { SimpleDataTable } from '@blocks/SimpleDataTable/SimpleDataTable'
 import { BankTransactionsEmptyState, BankTransactionsErrorState } from '@components/BankTransactions/BankTransactionsTableEmptyState'
 import { BankTransactionAccountCell } from '@components/BankTransactionsTable/BankTransactionAccountCell'
+import { BankTransactionActionsCell } from '@components/BankTransactionsTable/BankTransactionActionsCell'
 import { BankTransactionCategoryCell } from '@components/BankTransactionsTable/BankTransactionCategoryCell'
 import { BankTransactionDescriptionCell } from '@components/BankTransactionsTable/BankTransactionDescriptionCell'
+import { CategorizationRuleFormDrawer } from '@components/CategorizationRules/CategorizationRuleForm/CategorizationRuleFormDrawer'
+import { type CategorizationRuleFormState, getCreateCategorizationRuleFormState } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 
 import './bankTransactionsTable.scss'
@@ -48,6 +52,7 @@ enum BankTransactionColumns {
   Account = 'Account',
   Amount = 'Amount',
   Category = 'Category',
+  Actions = 'Actions',
 }
 
 type BankTransactionRowType = Row<BankTransaction>
@@ -66,6 +71,7 @@ type GetColumnConfigParams = {
   display: DisplayState
   isCategorizationEnabled: boolean
   isExpandedRowValid: (id: string) => boolean
+  onCreateRule?: (bankTransaction: BankTransaction) => void
   stringOverrides?: BankTransactionsTableStringOverrides
   t: TFunction
 }
@@ -74,6 +80,7 @@ const getColumnConfig = ({
   display,
   isCategorizationEnabled,
   isExpandedRowValid,
+  onCreateRule,
   stringOverrides,
   t,
 }: GetColumnConfigParams): ColumnConfig<BankTransaction> => [
@@ -119,6 +126,19 @@ const getColumnConfig = ({
       />
     ),
   },
+  ...(onCreateRule
+    ? [{
+      id: BankTransactionColumns.Actions,
+      pinning: 'right' as const,
+      preventRowClick: true,
+      cell: (row: BankTransactionRowType) => (
+        <BankTransactionActionsCell
+          bankTransaction={row.original}
+          onCreateRule={onCreateRule}
+        />
+      ),
+    }]
+    : []),
 ]
 
 const getRowSelectionState = (selectedIds: Set<string>): RowSelectionState => {
@@ -147,6 +167,8 @@ export const BankTransactionsTable = () => {
   const { selectedIds } = useSelectedIds()
   const { selectMultiple, deselectMultiple } = useBulkSelectionActions()
   const [expandedRowValidity, setExpandedRowValidity] = useState<Record<string, boolean>>({})
+  const showCategorizationRules = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.CategorizationRules)
+  const [ruleFormState, setRuleFormState] = useState<CategorizationRuleFormState | null>(null)
   useUpsertBankTransactionsDefaultCategories(bankTransactions)
 
   const rowSelection = useMemo(() => getRowSelectionState(selectedIds), [selectedIds])
@@ -194,16 +216,29 @@ export const BankTransactionsTable = () => {
     [expandedRowValidity],
   )
 
+  const onCreateRule = useCallback((bankTransaction: BankTransaction) => {
+    setRuleFormState(getCreateCategorizationRuleFormState(bankTransaction))
+  }, [])
+
+  const onRuleFormDrawerOpenChange = useCallback((isOpen: boolean) => {
+    if (!isOpen) setRuleFormState(null)
+  }, [])
+
+  const onRuleFormSuccess = useCallback(() => setRuleFormState(null), [])
+
   const columnConfig = useMemo(() => getColumnConfig({
     display,
     isCategorizationEnabled,
     isExpandedRowValid,
+    onCreateRule: showCategorizationRules ? onCreateRule : undefined,
     stringOverrides,
     t,
   }), [
     display,
     isCategorizationEnabled,
     isExpandedRowValid,
+    onCreateRule,
+    showCategorizationRules,
     stringOverrides,
     t,
   ])
@@ -238,7 +273,10 @@ export const BankTransactionsTable = () => {
 
   const tableProps = {
     ariaLabel: t('bankTransactions:label.bank_transactions', 'Bank transactions'),
-    className: 'Layer__bank-transactions__table',
+    className: classNames(
+      'Layer__bank-transactions__table',
+      showCategorizationRules && 'Layer__BankTransactionsTable--WithRowActions',
+    ),
     data: bankTransactions,
     isLoading,
     isError,
@@ -259,6 +297,12 @@ export const BankTransactionsTable = () => {
       {isMonthlyViewMode
         ? <SimpleDataTable {...tableProps} />
         : <PaginatedTable {...tableProps} paginationProps={paginationProps} />}
+      <CategorizationRuleFormDrawer
+        isOpen={!!ruleFormState}
+        formState={ruleFormState}
+        onOpenChange={onRuleFormDrawerOpenChange}
+        onSuccess={onRuleFormSuccess}
+      />
     </div>
   )
 }

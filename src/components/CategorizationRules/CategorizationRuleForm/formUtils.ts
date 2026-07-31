@@ -1,8 +1,9 @@
 import { Schema } from 'effect'
 
+import type { BankTransaction } from '@internal-types/bankTransactions'
 import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
 import {
-  type BankDirectionFilter,
+  BankDirectionFilter,
   type CategorizationRule,
   CreateCategorizationRuleSchema,
   PatchCategorizationRuleSchema,
@@ -13,10 +14,20 @@ import {
   convertNonRecursiveBigDecimalToCents,
   type NonRecursiveBigDecimal,
 } from '@schemas/nonRecursiveBigDecimal'
+import { isMoneyIn } from '@utils/bankTransactions/shared'
 
 export type CategorizationRuleFormState =
-  | { mode: 'create' }
+  | { mode: 'create', bankDirectionFilter?: BankDirectionFilter }
   | { mode: 'edit', rule: CategorizationRule }
+
+export const getCreateCategorizationRuleFormState = (
+  bankTransaction: Pick<BankTransaction, 'direction'>,
+): CategorizationRuleFormState => ({
+  mode: 'create',
+  bankDirectionFilter: isMoneyIn(bankTransaction)
+    ? BankDirectionFilter.MONEY_IN
+    : BankDirectionFilter.MONEY_OUT,
+})
 
 export type DirectionFormValue = '' | BankDirectionFilter
 
@@ -54,7 +65,7 @@ export const getCategorizationRuleFormDefaultValues = (
   return {
     counterparty: null,
     category: null,
-    bankDirectionFilter: '',
+    bankDirectionFilter: state.bankDirectionFilter ?? '',
     amountMinFilter: null,
     amountMaxFilter: null,
   }

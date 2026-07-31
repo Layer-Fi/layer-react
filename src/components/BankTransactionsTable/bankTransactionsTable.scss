@@ -25,6 +25,7 @@
     minmax(0, 8fr)
     minmax(0, 28fr);
   --bank-transactions-table-selection-column: 3.5rem;
+  --bank-transactions-table-actions-column: 3.5rem;
 
   width: 100%;
 
@@ -48,6 +49,26 @@
       var(--bank-transactions-table-fallback-data-columns);
   }
 
+  &.Layer__BankTransactionsTable--WithRowActions.Layer__UI__Table__BankTransactionsTable--6Columns {
+    --bank-transactions-table-columns:
+      var(--bank-transactions-table-data-columns)
+      var(--bank-transactions-table-actions-column);
+    --bank-transactions-table-fallback-columns:
+      var(--bank-transactions-table-fallback-data-columns)
+      var(--bank-transactions-table-actions-column);
+  }
+
+  &.Layer__BankTransactionsTable--WithRowActions.Layer__UI__Table__BankTransactionsTable--7Columns {
+    --bank-transactions-table-columns:
+      var(--bank-transactions-table-selection-column)
+      var(--bank-transactions-table-data-columns)
+      var(--bank-transactions-table-actions-column);
+    --bank-transactions-table-fallback-columns:
+      var(--bank-transactions-table-selection-column)
+      var(--bank-transactions-table-fallback-data-columns)
+      var(--bank-transactions-table-actions-column);
+  }
+
   &.Layer__UI__Table__BankTransactionsTable--fallbackRows {
     --bank-transactions-table-columns: var(--bank-transactions-table-fallback-columns);
 
@@ -65,6 +86,11 @@
 
   .Layer__UI__Table-Column__BankTransactionsTable--Selection,
   .Layer__UI__Table-Cell__BankTransactionsTable--Selection {
+    justify-content: center;
+  }
+
+  .Layer__UI__Table-Column__BankTransactionsTable--Actions,
+  .Layer__UI__Table-Cell__BankTransactionsTable--Actions {
     justify-content: center;
   }
 
