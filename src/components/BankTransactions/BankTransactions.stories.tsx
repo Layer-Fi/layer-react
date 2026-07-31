@@ -1,4 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
+import { userEvent, within } from 'storybook/test'
 
 import { BookkeepingStatus } from '@schemas/bookkeepingStatus'
 import {
@@ -212,3 +213,13 @@ export const BookkeepingEnabled: Story = {
 
 // The global mock's status is NOT_PURCHASED, so categorization is enabled.
 export const BookkeepingDisabled: Story = {}
+
+// The record transaction menu renders its items only while open.
+export const RecordTransactionMenuOpen: Story = {
+  parameters: { chromatic: { viewports: [1280], delay: 500 } },
+  args: { showCategorizationRules: true },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(await canvas.findByLabelText('Record transaction'))
+  },
+}
