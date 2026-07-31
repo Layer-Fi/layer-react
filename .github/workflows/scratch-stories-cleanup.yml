@@ -10,32 +10,39 @@ on:
 permissions:
   contents: write
 
+# A second approval landing mid-run would push from a stale checkout.
+concurrency:
+  group: scratch-stories-cleanup-${{ github.event.pull_request.number }}
+
 jobs:
   cleanup:
-    if: github.event.review.state == 'approved' && github.event.pull_request.state == 'open'
+    if: >-
+      github.event.review.state == 'approved'
+      && github.event.pull_request.state == 'open'
+      && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
       with:
         ref: ${{ github.event.pull_request.head.ref }}
-        repository: ${{ github.event.pull_request.head.repo.full_name }}
 
     - name: Remove scratch stories
       env:
         HEAD_REF: ${{ github.event.pull_request.head.ref }}
       run: |
-        FILES=$(git ls-files '*scratch.stories.tsx')
-        if [ -z "$FILES" ]; then
+        FILES="$RUNNER_TEMP/scratch-stories.z"
+        git ls-files -z '*scratch.stories.tsx' > "$FILES"
+        if [ ! -s "$FILES" ]; then
           echo "No scratch stories found."
           exit 0
         fi
-        echo "$FILES" | xargs git rm --quiet
+        xargs -0 git rm --quiet -- < "$FILES"
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git commit -m "chore: remove scratch stories"
         git push origin HEAD:"refs/heads/$HEAD_REF"
         {
           echo "Removed:"
-          echo "$FILES" | sed 's/^/- /'
+          tr '\0' '\n' < "$FILES" | sed 's/^/- /'
         } >> "$GITHUB_STEP_SUMMARY"
