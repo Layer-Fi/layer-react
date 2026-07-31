@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: read
 
 # A second approval landing mid-run would push from a stale checkout.
 concurrency:
