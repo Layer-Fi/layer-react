@@ -46,9 +46,9 @@ project causes spurious "omitted" warnings on download.
 
 ## Changing the English text of an existing key
 
-**Change the key too.** Editing the default of `label.due_date` from "Due date" to "Payment due"
-without renaming the key risks the stale `fr-CA` translation surviving; a new key
-(`label.payment_due`) is unambiguously untranslated, so Crowdin translates it fresh.
+**Change the key too.** Editing the default of `invoices:label.due_date` from "Due date" to
+"Payment due" without renaming the key risks the stale `fr-CA` translation surviving; a new key
+(`invoices:label.payment_due`) is unambiguously untranslated, so Crowdin translates it fresh.
 
 Grep for the old key and change **both the key and the default value at every call site** —
 `t()`, `translationKey(...)` constants, `tPlural`/`tConditional` case maps. Half-migrating
