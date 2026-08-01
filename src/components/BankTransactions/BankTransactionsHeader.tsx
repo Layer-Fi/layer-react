@@ -27,7 +27,7 @@ import { SelectedBankAccountsChip } from '@components/BankTransactions/SelectedB
 import { TransactionsSearch } from '@components/BankTransactions/TransactionsSearch/TransactionsSearch'
 import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
 import { BulkActionsModule } from '@components/BulkActionsModule/BulkActionsModule'
-import { CategorizationRuleFormDrawer } from '@components/CategorizationRules/CategorizationRuleForm/CategorizationRuleFormDrawer'
+import { CategorizationRuleFormModal } from '@components/CategorizationRules/CategorizationRuleForm/CategorizationRuleFormModal'
 import { type CategorizationRuleFormState } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 import { Header } from '@components/Container/Header'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
@@ -185,8 +185,8 @@ export const BankTransactionsHeader = ({
     )
     : null
 
-  const ruleFormDrawer = (
-    <CategorizationRuleFormDrawer
+  const ruleFormModal = (
+    <CategorizationRuleFormModal
       isOpen={ruleFormState !== null}
       formState={ruleFormState}
       onOpenChange={onRuleFormOpenChange}
@@ -254,7 +254,7 @@ export const BankTransactionsHeader = ({
           </HStack>
 
         </VStack>
-        {ruleFormDrawer}
+        {ruleFormModal}
       </Header>
     )
   }
@@ -293,7 +293,7 @@ export const BankTransactionsHeader = ({
           />
         </HStack>
       </BankTransactionsActions>
-      {ruleFormDrawer}
+      {ruleFormModal}
     </Header>
   )
 }
