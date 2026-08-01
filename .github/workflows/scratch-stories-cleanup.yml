@@ -1,26 +1,57 @@
 name: Scratch Stories
 
-# Pushes to the PR head branch, not main after the merge: the branch ruleset
-# gives github-actions[bot] no bypass on main.
+# Cleanup pushes to the PR head branch, not main: the branch ruleset gives
+# github-actions[bot] no bypass there.
+#
+# A GITHUB_TOKEN push does not re-trigger `guard`, so `cleanup` posts the
+# passing "No scratch stories" status on its own commit. Check runs and commit
+# statuses share a namespace, so that satisfies the same required check.
 
 on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [ main ]
   pull_request_review:
     types: [submitted]
 
-permissions:
-  contents: write
-  pull-requests: read
-
-# A second approval landing mid-run would push from a stale checkout.
-concurrency:
-  group: scratch-stories-cleanup-${{ github.event.pull_request.number }}
-
 jobs:
+  guard:
+    name: No scratch stories
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+
+    - name: Check for scratch stories
+      run: |
+        FILES=$(git ls-files '*scratch.stories.tsx')
+        if [ -z "$FILES" ]; then
+          echo "No scratch stories found."
+          exit 0
+        fi
+        echo "$FILES" | sed 's/^/  - /'
+        echo "::error::Scratch stories must not reach main. Approve the PR and they will be removed automatically, or delete them yourself."
+        exit 1
+
   cleanup:
     if: >-
-      github.event.review.state == 'approved'
+      github.event_name == 'pull_request_review'
+      && github.event.review.state == 'approved'
+      && github.event.pull_request.base.ref == 'main'
       && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    # Two approvals in quick succession must not push from stale checkouts.
+    concurrency:
+      group: scratch-stories-cleanup-${{ github.event.pull_request.number }}
+    permissions:
+      contents: write
+      pull-requests: read
+      statuses: write
 
     steps:
     - uses: actions/checkout@v4
@@ -42,7 +73,7 @@ jobs:
         # The webhook payload is frozen at review time, so ask for live state.
         STATE=$(gh pr view "$PR" --json state --jq .state)
         if [ "$STATE" != "OPEN" ]; then
-          echo "::error::PR #$PR is $STATE — it merged before cleanup ran, so these scratch stories are now on the base branch and must be removed by hand:" >&2
+          echo "::error::PR #$PR is $STATE — remove these from the base branch by hand:" >&2
           tr '\0' '\n' < "$FILES" | sed 's/^/  - /' >&2
           exit 1
         fi
@@ -50,11 +81,14 @@ jobs:
         xargs -0 git rm --quiet -- < "$FILES"
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git commit -m "chore: remove scratch stories"
+        git commit -m "chore: remove scratch stories before merge"
         # Lease pins the push to the ref we checked out: fails if the branch
         # moved or was deleted by a merge, rather than resurrecting it.
         git push --force-with-lease="refs/heads/$HEAD_REF:$ORIG" \
           origin HEAD:"refs/heads/$HEAD_REF"
+        gh api "repos/$GITHUB_REPOSITORY/statuses/$(git rev-parse HEAD)" \
+          -f state=success -f context="No scratch stories" \
+          -f description="Removed by cleanup." >/dev/null
         {
           echo "Removed:"
           tr '\0' '\n' < "$FILES" | sed 's/^/- /'
