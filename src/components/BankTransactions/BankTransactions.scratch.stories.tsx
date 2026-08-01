@@ -18,14 +18,15 @@ const openRecordTransactionMenu: Story['play'] = async ({ canvasElement }) => {
   await userEvent.click(await canvas.findByLabelText('Record transaction'))
 }
 
+// The plus menu only renders when upload options are enabled.
 export const RecordTransactionMenuOpen: Story = {
   parameters: { chromatic: { viewports: [1280], delay: 500 } },
-  args: { showCategorizationRules: true },
+  args: { showUploadOptions: true, showCategorizationRules: true },
   play: openRecordTransactionMenu,
 }
 
 export const RecordTransactionMenuOpenWithoutCategorizationRules: Story = {
   parameters: { chromatic: { viewports: [1280], delay: 500 } },
-  args: { showCategorizationRules: false },
+  args: { showUploadOptions: true, showCategorizationRules: false },
   play: openRecordTransactionMenu,
 }
