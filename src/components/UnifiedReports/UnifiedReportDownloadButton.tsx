@@ -1,7 +1,7 @@
 import { CloudDownload, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useGetUnifiedReportExcel } from '@api/businesses/[business-id]/reports/unified/[report-name]/exports/excel/get'
+import { useUnifiedReportExcelForCurrentControls } from '@hooks/features/reports/useUnifiedReport'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
@@ -19,7 +19,7 @@ export function UnifiedReportDownloadButton({ icon }: UnifiedReportDownloadButto
   const resolvedIcon = icon ?? !isDesktop
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
 
-  const { trigger, isMutating, isError } = useGetUnifiedReportExcel({
+  const { trigger, isMutating, isError } = useUnifiedReportExcelForCurrentControls({
     onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),
   })
 

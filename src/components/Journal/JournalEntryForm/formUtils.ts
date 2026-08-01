@@ -2,11 +2,11 @@ import { fromDate, getLocalTimeZone } from '@internationalized/date'
 import { BigDecimal as BD } from 'effect'
 import type { TFunction } from 'i18next'
 
+import type { ApiCustomJournalEntryWithEntry, CreateCustomJournalEntry, JournalEntryForm, JournalEntryFormLineItem } from '@schemas/generalLedger/journalEntry'
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
 import { convertCentsToNonRecursiveBigDecimal, fromNonRecursiveBigDecimal, NRBD_ZERO, nrbdEquals } from '@schemas/nonRecursiveBigDecimal'
 import { makeTagFromTransactionTag, makeTagKeyValueFromTag } from '@schemas/tag'
 import { BIG_DECIMAL_ZERO, convertBigDecimalToBigIntCents } from '@utils/bigDecimalUtils'
-import type { ApiCustomJournalEntryWithEntry, CreateCustomJournalEntry, JournalEntryForm, JournalEntryFormLineItem } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
 
 /**
  * Determines if a line item is blank (empty).

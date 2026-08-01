@@ -1,10 +1,10 @@
+import { JournalEntryReturnSchema, type UpsertJournalEntrySchema } from '@schemas/generalLedger/journalEntry'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLedgerEntriesCacheActions } from '@api/businesses/[business-id]/ledger/entries/get'
 import { useBalanceSheetGlobalCacheActions } from '@api/businesses/[business-id]/reports/balance-sheet/get'
 import { useStatementOfCashFlowGlobalCacheActions } from '@api/businesses/[business-id]/reports/cashflow-statement/get'
 import { useProfitAndLossGlobalInvalidator } from '@api/businesses/[business-id]/reports/profit-and-loss/useProfitAndLossGlobalInvalidator'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
-import { JournalEntryReturnSchema, type UpsertJournalEntrySchema } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
 
 const UPSERT_JOURNAL_ENTRY_TAG_KEY = '#upsert-journal-entry'
 

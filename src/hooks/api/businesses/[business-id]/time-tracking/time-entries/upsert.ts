@@ -1,6 +1,6 @@
 import type { SWRMutationResult } from '@internal-types/swr/SWRResponseTypes'
 import { type UpdateTimeEntryBody, usePatchTimeEntry } from '@api/businesses/[business-id]/time-tracking/time-entries/[time-entry-id]/patch'
-import { type CreateTimeEntryBody, usePostTimeEntry, type UpsertTimeEntryReturn } from '@api/businesses/[business-id]/time-tracking/time-entries/post'
+import { type CreateTimeEntryBody, type UpsertTimeEntryReturn, usePostTimeEntry } from '@api/businesses/[business-id]/time-tracking/time-entries/post'
 
 export enum UpsertTimeEntryMode {
   Create = 'Create',

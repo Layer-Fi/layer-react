@@ -1,13 +1,10 @@
-import { S3PresignedUrlSchema, type S3PresignedUrlSchemaType } from '@schemas/common/s3PresignedUrl'
+import { S3PresignedUrlSchema } from '@schemas/common/s3PresignedUrl'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getAsMutation } from '@utils/api/getAsMutation'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { type QueryParams } from '@utils/request/toDefinedSearchParameters'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
-import {
-  type UnifiedReportControlParams,
-  useUnifiedReportParams,
-} from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import type { UnifiedReportControlParams } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 
 type GetUnifiedReportExcelParams = {
   businessId: string
@@ -26,7 +23,7 @@ const getUnifiedReportExcel = getWithQuery<
 
 const requestUnifiedReportExcel = getAsMutation(getUnifiedReportExcel)
 
-const useUnifiedReportExcelMutation = createMutationHook({
+export const useGetUnifiedReportExcel = createMutationHook({
   tags: ['#unified-report-excel'],
   request: requestUnifiedReportExcel,
   keyParams: ['route'],
@@ -34,19 +31,3 @@ const useUnifiedReportExcelMutation = createMutationHook({
   schema: UnifiedReportExcelReturnSchema,
   swrOptions: { throwOnError: false },
 })
-
-type UseUnifiedReportExcelOptions = {
-  onSuccess?: (url: S3PresignedUrlSchemaType) => Promise<void> | void
-}
-
-export function useGetUnifiedReportExcel({ onSuccess }: UseUnifiedReportExcelOptions = {}) {
-  const params = useUnifiedReportParams()
-
-  return useUnifiedReportExcelMutation({
-    ...params,
-    route: params?.route ?? '',
-    swrOptions: {
-      onSuccess: (data) => { void onSuccess?.(data) },
-    },
-  })
-}

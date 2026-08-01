@@ -4,7 +4,6 @@ import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction
 import { type CategoryUpdate, type CategoryUpdateEncoded, encodeCategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { put } from '@utils/api/authenticatedHttp'
-import { useBankTransactionTriggerSuccess } from '@hooks/features/bankTransactions/useBankTransactionTriggerSuccess'
 import { type GetBankTransactionsReturn } from '@api/businesses/[business-id]/bank-transactions/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
@@ -42,5 +41,4 @@ export const useCategorizeBankTransaction = createMutationHook({
     encodeCategoryUpdate(rest),
   schema: CategorizeBankTransactionResponseSchema,
   swrOptions: { throwOnError: true },
-  useOnTriggerSuccess: useBankTransactionTriggerSuccess,
 })

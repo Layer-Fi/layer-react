@@ -1,7 +1,7 @@
 import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { del } from '@utils/api/authenticatedHttp'
-import { useRecordTransactionTriggerSuccess } from '@hooks/features/bankTransactions/useBankTransactionTriggerSuccess'
+import { useRecordTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/useBankTransactionCacheActions'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const ARCHIVE_BANK_TRANSACTION_TAG = '#archive-bank-transaction'

@@ -3,12 +3,16 @@ import { useCallback, useMemo } from 'react'
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import { useCategorizeBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/categorize/put'
+import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
+import { useProfitAndLossGlobalInvalidator } from '@api/businesses/[business-id]/reports/profit-and-loss/useProfitAndLossGlobalInvalidator'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export function useCategorizeBankTransactionWithCacheUpdate() {
   const { eventCallbacks } = useLayerContext()
-  const { updateLocalBankTransactions } = useBankTransactionsContext()
+  const { updateLocalBankTransactions, useBankTransactionsOptions } = useBankTransactionsContext()
+  const { forceReloadBackgroundBankTransactions } = useBankTransactionsGlobalCacheActions()
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
   const { trigger: categorizeBankTransaction, isMutating, isError } = useCategorizeBankTransaction()
 
@@ -22,6 +26,9 @@ export function useCategorizeBankTransactionWithCacheUpdate() {
               recentlyCategorized: true,
             }])
 
+            void forceReloadBackgroundBankTransactions(useBankTransactionsOptions)
+            void debouncedInvalidateProfitAndLoss()
+
             eventCallbacks?.onTransactionCategorized?.()
 
             options?.onSuccess?.()
@@ -31,7 +38,14 @@ export function useCategorizeBankTransactionWithCacheUpdate() {
           },
         )
     },
-    [updateLocalBankTransactions, categorizeBankTransaction, eventCallbacks],
+    [
+      updateLocalBankTransactions,
+      categorizeBankTransaction,
+      eventCallbacks,
+      forceReloadBackgroundBankTransactions,
+      useBankTransactionsOptions,
+      debouncedInvalidateProfitAndLoss,
+    ],
   )
 
   return useMemo(

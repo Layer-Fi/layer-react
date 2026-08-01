@@ -7,7 +7,7 @@ import {
 import { type TagFilterInput } from '@internal-types/tags'
 import { BankTransactionDirection, decodeBankTransactionDirection } from '@schemas/bankTransactions/base'
 import { type BankTransactionFilters } from '@utils/bankTransactions/shared'
-import { useGetInfiniteBankTransactions, type UseBankTransactionsOptions } from '@api/businesses/[business-id]/bank-transactions/get'
+import { type UseBankTransactionsOptions, useGetInfiniteBankTransactions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useFilterBankTransactions } from '@hooks/features/bankTransactions/useFilterBankTransactions'
 import { usePollBankTransactions } from '@hooks/features/bankTransactions/usePollBankTransactions'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'

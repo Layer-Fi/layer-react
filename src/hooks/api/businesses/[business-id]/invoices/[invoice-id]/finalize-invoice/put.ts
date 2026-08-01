@@ -2,8 +2,8 @@ import { type FinalizeInvoiceBodyEncoded, FinalizeInvoiceDataSchema } from '@sch
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { put } from '@utils/api/authenticatedHttp'
 import { useInvoicePaymentMethodsGlobalCacheActions } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/get'
-import { useInvoiceSummaryStatsCacheActions } from '@api/businesses/[business-id]/invoices/summary-stats/get'
 import { useInvoicesGlobalCacheActions } from '@api/businesses/[business-id]/invoices/get'
+import { useInvoiceSummaryStatsCacheActions } from '@api/businesses/[business-id]/invoices/summary-stats/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const FINALIZE_INVOICE_TAG_KEY = '#finalize-invoice'

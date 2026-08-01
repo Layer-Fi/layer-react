@@ -6,7 +6,7 @@ import {
   BulkCategorizeRequestSchema,
 } from '@schemas/bankTransactions/bulkCategorize'
 import { post } from '@utils/api/authenticatedHttp'
-import { useBulkBankTransactionsTriggerSuccess } from '@hooks/features/bankTransactions/useBulkBankTransactionsTriggerSuccess'
+import { useBulkBankTransactionsTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/useBankTransactionCacheActions'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const BULK_CATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-categorize-bank-transactions'

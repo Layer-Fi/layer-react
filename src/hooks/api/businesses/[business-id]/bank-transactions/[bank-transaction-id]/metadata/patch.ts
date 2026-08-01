@@ -1,5 +1,4 @@
 import { useCallback } from 'react'
-
 import { Schema } from 'effect'
 
 import type { Awaitable } from '@internal-types/utility/promises'

@@ -1,12 +1,12 @@
 import { Schema } from 'effect'
 
-import { type LedgerEntry, type LedgerEntryLineItem } from '@schemas/generalLedger/ledgerEntry'
 import {
   type ApiCustomJournalEntryLineItem,
   type ApiLedgerEntry,
   CreateCustomJournalEntrySchema,
   JournalEntryReturnSchema,
-} from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
+} from '@schemas/generalLedger/journalEntry'
+import { type LedgerEntry, type LedgerEntryLineItem } from '@schemas/generalLedger/ledgerEntry'
 
 import { ledgerEntryStore } from '@msw/api/businesses/[business-id]/ledger/entries/store'
 import { journalEntryFromCreateRequest } from '@msw/api/businesses/[business-id]/ledger/journal-entries/journalEntryFromCreateRequest'

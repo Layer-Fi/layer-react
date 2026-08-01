@@ -155,6 +155,24 @@ export default tsEslint.config(
     },
   },
   {
+    files: ['src/hooks/api/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': ['error', {
+        patterns: [
+          {
+            group: ['@components/*', '@ui/*', '@blocks/*', '@views/*', '@icons/*', '@assets/*', '@hooks/features/*', '@hooks/legacy/*'],
+            message: 'src/hooks/api is the transport layer: it may not depend on UI or feature code. Move shared contracts to @schemas and feature composition to @hooks/features, which is allowed to import from @api.',
+          },
+          {
+            group: ['@providers/*', '@contexts/*'],
+            message: 'API hooks may not read app state at runtime. Read the store in a @hooks/features wrapper and pass the values in. Type-only imports are fine.',
+            allowTypeImports: true,
+          },
+        ],
+      }],
+    },
+  },
+  {
     files: ['src/msw/**/*.{ts,tsx}'],
     rules: {
       '@typescript-eslint/no-restricted-imports': ['error', {

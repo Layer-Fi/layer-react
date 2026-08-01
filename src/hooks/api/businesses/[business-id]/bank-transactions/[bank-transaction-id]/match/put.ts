@@ -2,7 +2,6 @@ import { MatchSchema } from '@schemas/bankTransactions/match'
 import { type ConfirmMatchUpdateEncoded } from '@schemas/bankTransactions/matchUpdate'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { put } from '@utils/api/authenticatedHttp'
-import { useBankTransactionTriggerSuccess } from '@hooks/features/bankTransactions/useBankTransactionTriggerSuccess'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 export type MatchBankTransactionBody = ConfirmMatchUpdateEncoded
@@ -34,5 +33,4 @@ export const useMatchBankTransaction = createMutationHook({
   argToBody: ({ bankTransactionId: _bankTransactionId, ...body }: MatchBankTransactionArgs) => body,
   schema: MatchBankTransactionResponseSchema,
   swrOptions: { throwOnError: true },
-  useOnTriggerSuccess: useBankTransactionTriggerSuccess,
 })

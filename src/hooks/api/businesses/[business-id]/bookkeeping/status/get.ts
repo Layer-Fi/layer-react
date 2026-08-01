@@ -3,7 +3,6 @@ import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
-import { useLegacyMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
 
 export { BookkeepingStatus }
 
@@ -27,14 +26,3 @@ export const useGetBookkeepingStatus = createQueryHook({
 })
 
 export const useBookkeepingStatusGlobalCacheActions = createResourceGlobalCacheActions<BookkeepingStatusData>(BOOKKEEPING_STATUS_TAG_KEY)
-
-export function useEffectiveBookkeepingStatus(): BookkeepingStatus {
-  const { overrideMode } = useLegacyMode()
-  const { data } = useGetBookkeepingStatus()
-
-  if (overrideMode === 'bookkeeping-client') {
-    return BookkeepingStatus.ACTIVE
-  }
-
-  return data?.status ?? BookkeepingStatus.NOT_PURCHASED
-}
