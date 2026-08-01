@@ -1,10 +1,12 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useId, useMemo } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
 import { useTranslation } from 'react-i18next'
 
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
+import { VStack } from '@ui/Stack/Stack'
+import { Label } from '@ui/Typography/Text'
 
 import './yearPicker.scss'
 
@@ -15,6 +17,7 @@ type YearOption = {
 
 type YearPickerProps = {
   label?: string
+  showLabel?: boolean
   year: number
   onChange: (year: number) => void
   minDate?: ZonedDateTime | null
@@ -24,6 +27,7 @@ type YearPickerProps = {
 
 export const YearPicker = ({
   label,
+  showLabel = false,
   year,
   onChange,
   minDate = null,
@@ -32,6 +36,7 @@ export const YearPicker = ({
 }: YearPickerProps) => {
   const { t } = useTranslation()
   const { formatDate } = useIntlFormatter()
+  const inputId = useId()
   const coercedLabel = label ?? t('date:label.year', 'Year')
   const minYear = minDate?.year ?? null
   const maxYear = maxDate?.year ?? null
@@ -63,16 +68,22 @@ export const YearPicker = ({
     }
   }, [onChange])
 
+  const additionalAriaProps = !showLabel && { 'aria-label': coercedLabel }
+
   return (
-    <ComboBox
-      selectedValue={selectedYearOption}
-      onSelectedValueChange={handleChange}
-      options={yearOptions}
-      isSearchable={false}
-      isClearable={false}
-      isDisabled={isDisabled}
-      aria-label={coercedLabel}
-      className='Layer__YearPicker'
-    />
+    <VStack>
+      {showLabel && <Label pbe='3xs' size='sm' htmlFor={inputId}>{coercedLabel}</Label>}
+      <ComboBox
+        selectedValue={selectedYearOption}
+        onSelectedValueChange={handleChange}
+        options={yearOptions}
+        isSearchable={false}
+        isClearable={false}
+        isDisabled={isDisabled}
+        inputId={inputId}
+        className='Layer__YearPicker'
+        {...additionalAriaProps}
+      />
+    </VStack>
   )
 }
