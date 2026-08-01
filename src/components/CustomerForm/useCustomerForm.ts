@@ -4,7 +4,7 @@ import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
 import { type Customer, type CustomerForm, UpsertCustomerSchema } from '@schemas/customer'
-import { UpsertCustomerMode, useUpsertCustomer } from '@hooks/api/businesses/[business-id]/customers/useUpsertCustomer'
+import { UpsertCustomerMode, useUpsertCustomer } from '@api/businesses/[business-id]/customers/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { convertCustomerFormToUpsertCustomer, type CustomerFormState, getCustomerFormDefaultValues, validateCustomerForm } from '@components/CustomerForm/formUtils'
 

@@ -3,7 +3,7 @@ import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type Tag, type TagValueDefinition } from '@schemas/tag'
-import { useTagDimensionByKey } from '@hooks/api/businesses/[business-id]/tags/dimensions/key/[dimension-key]/useTagDimensionByKey'
+import { useTagDimensionByKey } from '@api/businesses/[business-id]/tags/dimensions/key/[dimension-key]/get'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { FallbackWithSkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { VStack } from '@ui/Stack/Stack'

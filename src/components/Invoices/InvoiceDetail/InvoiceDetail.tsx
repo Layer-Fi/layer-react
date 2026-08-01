@@ -3,7 +3,7 @@ import { ChevronLeft, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice } from '@schemas/invoices/invoice'
-import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
+import { UpsertInvoiceMode } from '@api/businesses/[business-id]/invoices/upsert'
 import { InvoiceDetailStep, useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'

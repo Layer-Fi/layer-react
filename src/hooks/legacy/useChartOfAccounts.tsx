@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { useLedgerBalances } from '@hooks/api/businesses/[business-id]/ledger/balances/useLedgerBalances'
+import { useLedgerBalances } from '@api/businesses/[business-id]/ledger/balances/get'
 import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 
 type Props = {

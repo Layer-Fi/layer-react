@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { useTaxOverview } from '@hooks/api/businesses/[business-id]/tax-estimates/overview/useTaxOverview'
+import { useTaxOverview } from '@api/businesses/[business-id]/tax-estimates/overview/get'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Card } from '@ui/Card/Card'

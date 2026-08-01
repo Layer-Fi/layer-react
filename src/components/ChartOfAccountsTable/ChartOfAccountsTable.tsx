@@ -9,7 +9,7 @@ import {
 } from '@internal-types/chartOfAccounts'
 import { Alignment } from '@schemas/reports/unifiedReport'
 import { asMutable } from '@utils/asMutable'
-import { useDeleteAccountFromLedger } from '@hooks/api/businesses/[business-id]/ledger/accounts/[account-id]/useDeleteLedgerAccount'
+import { useDeleteAccountFromLedger } from '@api/businesses/[business-id]/ledger/accounts/[account-id]/delete'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBookkeepingStatusContext } from '@contexts/BookkeepingStatusContext/BookkeepingStatusContext'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'

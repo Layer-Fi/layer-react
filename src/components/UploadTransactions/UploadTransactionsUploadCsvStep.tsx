@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type CustomAccountParseCsvResponse, useCustomAccountParseCsv } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
+import { type CustomAccountParseCsvResponse, useCustomAccountParseCsv } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/post'
 import { SubmitButton } from '@ui/Button/SubmitButton'
 import { Separator } from '@ui/Separator/Separator'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'

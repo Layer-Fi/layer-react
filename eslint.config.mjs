@@ -105,6 +105,7 @@ export default tsEslint.config(
           '@ui/',
           '@blocks/',
           '@contexts/',
+          '@api/',
           '@hooks/',
           '@providers/',
           '@utils/',
@@ -158,7 +159,7 @@ export default tsEslint.config(
     rules: {
       '@typescript-eslint/no-restricted-imports': ['error', {
         patterns: [{
-          group: ['@hooks/*'],
+          group: ['@api/*', '@hooks/*'],
           message: 'MSW handlers load in every vitest run before per-test mocks apply, so importing hook modules breaks unrelated tests. Share schemas via @schemas instead; type-only imports are fine.',
           allowTypeImports: true,
         }],
@@ -188,7 +189,8 @@ export default tsEslint.config(
             // Cross-cutting helpers (used by api, hooks, components, etc.)
             '^(?:type:)?@utils/',
 
-            // Data layer: hooks
+            // Data layer: API hooks, then the rest
+            '^(?:type:)?@api/',
             '^(?:type:)?@hooks/',
 
             // App wiring & global state (can depend on hooks/api)

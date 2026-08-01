@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { ChevronLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
+import { useTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/get'
 import {
   useTaxEstimatesNavigation,
 } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'

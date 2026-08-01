@@ -1,7 +1,7 @@
 import { createContext, type PropsWithChildren, useContext, useEffect, useState } from 'react'
 import { createStore, useStore } from 'zustand'
 
-import { useListBankAccounts } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
+import { useListBankAccounts } from '@api/businesses/[business-id]/bank-accounts/get'
 
 type BankAccountsFilterStoreShape = {
   isEnabled: boolean

@@ -3,7 +3,7 @@ import { getMonth, getYear } from 'date-fns'
 import { Bell, Check, ChevronRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useProfitAndLossSummaries } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-summaries/useProfitAndLossSummaries'
+import { useProfitAndLossSummaries } from '@api/businesses/[business-id]/reports/profit-and-loss-summaries/get'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { Badge } from '@ui/Badge/Badge'
 import { BadgeSize, BadgeVariant } from '@ui/Badge/Badge'

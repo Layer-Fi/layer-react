@@ -3,7 +3,7 @@ import { ChevronLeft, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
-import { useListVehicles } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
+import { useListVehicles } from '@api/businesses/[business-id]/mileage/vehicles/get'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import { Button } from '@ui/Button/Button'

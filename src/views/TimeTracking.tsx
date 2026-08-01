@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { Briefcase, FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useActiveTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useActiveTimeTracker'
+import { useActiveTimeTracker } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { TimeTrackingServicesDrawerProvider, useTimeTrackingServicesDrawer } from '@providers/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
 import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'

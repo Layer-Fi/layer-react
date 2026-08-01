@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
-import { CallBookingPurpose, useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
+import { useBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods/get'
+import { CallBookingPurpose, useCallBookings } from '@api/businesses/[business-id]/call-bookings/get'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Loader } from '@ui/Loader/Loader'
 import { VStack } from '@ui/Stack/Stack'

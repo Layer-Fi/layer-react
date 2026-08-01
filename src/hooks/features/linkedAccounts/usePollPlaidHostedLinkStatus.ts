@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { type ApiPlaidHostedLinkStatus, PlaidHostedLinkState } from '@schemas/linkedAccounts/plaid'
 import { APIError } from '@utils/api/apiError'
-import { usePlaidHostedLinkStatus } from '@hooks/api/businesses/[business-id]/plaid/hosted-link'
+import { usePlaidHostedLinkStatus } from '@api/businesses/[business-id]/plaid/hosted-link/get'
 import { usePollingConfig } from '@hooks/utils/swr/usePollingConfig'
 
 const TERMINAL_STATES: ReadonlySet<PlaidHostedLinkState> = new Set([

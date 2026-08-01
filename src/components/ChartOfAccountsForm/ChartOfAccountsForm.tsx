@@ -4,7 +4,7 @@ import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type LedgerAccountType, type LedgerEntryDirection, type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
-import { UpsertLedgerAccountMode } from '@hooks/api/businesses/[business-id]/ledger/accounts/useUpsertLedgerAccount'
+import { UpsertLedgerAccountMode } from '@api/businesses/[business-id]/ledger/accounts/upsert'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'

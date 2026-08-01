@@ -3,7 +3,7 @@ import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransactionDataOnly } from '@schemas/bankTransactions/bankTransactionDataOnly'
-import { type CustomAccountParseCsvResponse } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
+import { type CustomAccountParseCsvResponse } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/post'
 import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { Heading } from '@ui/Typography/Heading'
 import { Wizard } from '@blocks/Wizard/Wizard'

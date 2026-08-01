@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { type LedgerAccountForm, UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLedgerAccount'
-import { UpsertLedgerAccountMode, useUpsertLedgerAccount } from '@hooks/api/businesses/[business-id]/ledger/accounts/useUpsertLedgerAccount'
+import { UpsertLedgerAccountMode, useUpsertLedgerAccount } from '@api/businesses/[business-id]/ledger/accounts/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import {

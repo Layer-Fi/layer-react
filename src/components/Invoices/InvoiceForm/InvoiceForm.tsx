@@ -2,7 +2,7 @@ import { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react'
 import type React from 'react'
 
 import type { Invoice } from '@schemas/invoices/invoice'
-import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
+import { UpsertInvoiceMode } from '@api/businesses/[business-id]/invoices/upsert'
 import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Form } from '@ui/Form/Form'

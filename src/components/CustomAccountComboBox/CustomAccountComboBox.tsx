@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import type { CustomAccount } from '@schemas/customAccounts'
-import { useCustomAccounts } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
+import { useCustomAccounts } from '@api/businesses/[business-id]/custom-accounts/get'
 import { CreatableComboBox } from '@ui/ComboBox/CreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'

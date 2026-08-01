@@ -1,4 +1,4 @@
-import { useCashflowStatementDownload } from '@hooks/api/businesses/[business-id]/reports/cashflow-statement/exports/csv/useCashflowStatementDownload'
+import { useCashflowStatementDownload } from '@api/businesses/[business-id]/reports/cashflow-statement/exports/csv/get'
 import { DownloadButton } from '@ui/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 

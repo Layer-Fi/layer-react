@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { getVehicleDisplayName } from '@utils/vehicles'
-import { useReactivateVehicle } from '@hooks/api/businesses/[business-id]/mileage/vehicles/[vehicle-id]/reactivate/useReactivateVehicle'
+import { useReactivateVehicle } from '@api/businesses/[business-id]/mileage/vehicles/[vehicle-id]/reactivate/post'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 

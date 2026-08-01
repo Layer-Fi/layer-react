@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { useAccountBalancesDownload } from '@hooks/api/businesses/[business-id]/ledger/balances/exports/csv/useAccountBalancesDownload'
+import { useAccountBalancesDownload } from '@api/businesses/[business-id]/ledger/balances/exports/csv/get'
 import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { DownloadButton } from '@ui/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'

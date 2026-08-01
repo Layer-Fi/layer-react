@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Clock, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type ListTimeEntriesFilterParams, useListTimeEntries } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useListTimeEntries'
+import { type ListTimeEntriesFilterParams, useListTimeEntries } from '@api/businesses/[business-id]/time-tracking/time-entries/get'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { TimeEntriesStoreProvider, useTimeEntriesDeleteModal, useTimeEntriesFilters } from '@providers/TimeEntriesStore/TimeEntriesStoreProvider'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'

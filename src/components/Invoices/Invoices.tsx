@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { usePreloadCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
+import { usePreloadCustomers } from '@api/businesses/[business-id]/customers/get'
 import { InvoiceRoute, InvoicesRouteStoreProvider, useInvoiceRouteState } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { InvoiceDetail } from '@components/Invoices/InvoiceDetail/InvoiceDetail'
 import { InvoiceOverview } from '@components/Invoices/InvoiceOverview/InvoiceOverview'

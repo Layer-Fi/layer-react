@@ -3,7 +3,7 @@ import useSWR from 'swr'
 import { type SWRInfiniteKeyedMutator } from 'swr/infinite'
 
 import { hasNewSyncingAccounts } from '@utils/bankAccount'
-import { type GetBankTransactionsReturn, useBankTransactionsGlobalCacheActions, type UseBankTransactionsOptions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
+import { type GetBankTransactionsReturn, useBankTransactionsGlobalCacheActions, type UseBankTransactionsOptions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useTriggerOnChange } from '@hooks/utils/useTriggerOnChange'
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'

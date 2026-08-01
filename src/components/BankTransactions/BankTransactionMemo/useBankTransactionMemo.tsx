@@ -2,8 +2,8 @@ import { useMemo } from 'react'
 import { useForm } from '@tanstack/react-form'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { useUpdateBankTransactionMetadata } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useUpdateBankTransactionMetadata'
-import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
+import { useUpdateBankTransactionMetadata } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/patch'
+import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 

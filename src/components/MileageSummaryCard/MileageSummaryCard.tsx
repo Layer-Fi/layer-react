@@ -3,7 +3,7 @@ import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { DateFormat } from '@utils/i18n/date/patterns'
-import { useMileageSummary } from '@hooks/api/businesses/[business-id]/mileage/summary/useMileageSummary'
+import { useMileageSummary } from '@api/businesses/[business-id]/mileage/summary/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDate } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import ArrowRightCircleSubtle from '@icons/ArrowRightCircleSubtle'

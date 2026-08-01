@@ -4,7 +4,7 @@ import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice, type InvoiceForm, UpsertInvoiceSchema } from '@schemas/invoices/invoice'
-import { UpsertInvoiceMode, useUpsertInvoice } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
+import { UpsertInvoiceMode, useUpsertInvoice } from '@api/businesses/[business-id]/invoices/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { convertInvoiceFormToParams, getInvoiceFormDefaultValues, validateInvoiceForm } from '@components/Invoices/InvoiceForm/formUtils'
 import {

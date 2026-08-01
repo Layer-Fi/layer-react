@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type View as ViewType } from '@internal-types/general'
-import { useStatementOfCashFlow } from '@hooks/api/businesses/[business-id]/reports/cashflow-statement/useStatementOfCashFlow'
+import { useStatementOfCashFlow } from '@api/businesses/[business-id]/reports/cashflow-statement/get'
 import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { useResolvedReportView } from '@hooks/features/reports/useResolvedReportView'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'

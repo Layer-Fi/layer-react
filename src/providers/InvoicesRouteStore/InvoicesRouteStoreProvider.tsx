@@ -2,7 +2,7 @@ import { createContext, type PropsWithChildren, useContext, useMemo, useState } 
 import { createStore, useStore } from 'zustand'
 
 import type { Invoice } from '@schemas/invoices/invoice'
-import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
+import { UpsertInvoiceMode } from '@api/businesses/[business-id]/invoices/upsert'
 import { ALL_OPTION, type InvoiceStatusOption } from '@components/Invoices/utils/invoiceFilters'
 
 export type InvoiceTableFilters = {

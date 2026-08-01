@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 
 import type { Customer } from '@schemas/customer'
-import { UpsertCustomerMode } from '@hooks/api/businesses/[business-id]/customers/useUpsertCustomer'
+import { UpsertCustomerMode } from '@api/businesses/[business-id]/customers/upsert'
 import type { CustomerFormState } from '@components/CustomerForm/formUtils'
 import type { InvoiceFormType } from '@components/Invoices/InvoiceForm/useInvoiceForm'
 

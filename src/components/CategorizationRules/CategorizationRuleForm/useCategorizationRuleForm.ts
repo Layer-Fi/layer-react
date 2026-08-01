@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { amountRangeInOrder } from '@utils/form/validators'
-import { UpsertCategorizationRuleMode, useUpsertCategorizationRule } from '@hooks/api/businesses/[business-id]/categorization-rules/useUpsertCategorizationRule'
+import { UpsertCategorizationRuleMode, useUpsertCategorizationRule } from '@api/businesses/[business-id]/categorization-rules/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import {
   type CategorizationRuleFormState,

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { getYear } from 'date-fns'
 
-import { useMileageSummary } from '@hooks/api/businesses/[business-id]/mileage/summary/useMileageSummary'
+import { useMileageSummary } from '@api/businesses/[business-id]/mileage/summary/get'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 
 const EMPTY_MONTHS = Array.from({ length: 12 }, (_, i) => ({

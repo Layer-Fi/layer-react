@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react'
 import { debounce } from 'lodash-es'
 
-import { usePnlDetailLinesInvalidator } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/lines/useProfitAndLossDetailLines'
-import { useProfitAndLossReportCacheActions } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/useProfitAndLossReport'
-import { useProfitAndLossSummariesCacheActions } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-summaries/useProfitAndLossSummaries'
+import { usePnlDetailLinesInvalidator } from '@api/businesses/[business-id]/reports/profit-and-loss/lines/get'
+import { useProfitAndLossReportCacheActions } from '@api/businesses/[business-id]/reports/profit-and-loss/get'
+import { useProfitAndLossSummariesCacheActions } from '@api/businesses/[business-id]/reports/profit-and-loss-summaries/get'
 
 const INVALIDATE_DEBOUNCE_OPTIONS = {
   wait: 1000,

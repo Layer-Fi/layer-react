@@ -17,7 +17,7 @@ import {
 } from '@schemas/reports/unifiedReport'
 import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/tag'
 import type { QueryParams } from '@utils/request/toDefinedSearchParameters'
-import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/config/useReportConfig'
+import { useReportConfig } from '@api/businesses/[business-id]/reports/config/get'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { type DateSelectionMode, useGlobalDate, useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'

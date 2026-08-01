@@ -4,14 +4,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { fromNonRecursiveBigDecimal, toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import type { Trip, TripForm, TripPlace } from '@schemas/trip'
-import { useMileageDistance } from '@hooks/api/businesses/[business-id]/mileage/distance/useMileageDistance'
+import { useMileageDistance } from '@api/businesses/[business-id]/mileage/distance/get'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { getTripFormDefaultValues } from '@components/Trips/TripForm/formUtils'
 import { useAutofillTripDistance } from '@components/Trips/TripForm/useAutofillTripDistance'
 
 import { makeTrip } from '@fixtures/trips/mocks'
 
-vi.mock('@hooks/api/businesses/[business-id]/mileage/distance/useMileageDistance', () => ({
+vi.mock('@api/businesses/[business-id]/mileage/distance/get', () => ({
   useMileageDistance: vi.fn(),
 }))
 

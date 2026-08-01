@@ -10,8 +10,8 @@ import {
   fromNonRecursiveBigDecimal,
   type NonRecursiveBigDecimal,
 } from '@schemas/nonRecursiveBigDecimal'
-import { useUpdateCatalogService } from '@hooks/api/businesses/[business-id]/catalog/services/[service-id]/useUpdateCatalogService'
-import { useCreateCatalogService } from '@hooks/api/businesses/[business-id]/catalog/services/useCreateCatalogService'
+import { useUpdateCatalogService } from '@api/businesses/[business-id]/catalog/services/[service-id]/patch'
+import { useCreateCatalogService } from '@api/businesses/[business-id]/catalog/services/post'
 import { useAppForm } from '@hooks/features/forms/useForm'
 
 type CreateServiceFormProps = {

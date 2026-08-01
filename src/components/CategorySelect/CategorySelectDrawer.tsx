@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { CategoriesListMode } from '@schemas/categorization'
 import { withoutExclusions } from '@utils/categoryOptions'
-import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
+import { useCategories } from '@api/businesses/[business-id]/categories/get'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'

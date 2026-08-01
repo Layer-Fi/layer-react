@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { canCategoryHaveTaxCode, resolveCategoryTaxCode } from '@utils/bankTransactions/taxCode'
 import { tPlural } from '@utils/i18n/plural'
-import { useBulkCategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-categorize/useBulkCategorize'
+import { useBulkCategorize } from '@api/businesses/[business-id]/bank-transactions/bulk-categorize/post'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'

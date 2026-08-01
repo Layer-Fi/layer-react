@@ -4,7 +4,7 @@ import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
 import { type TimeEntry, type TimeEntryForm, UpsertTimeEntrySchema } from '@schemas/timeTracking'
-import { UpsertTimeEntryMode, useUpsertTimeEntry } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useUpsertTimeEntry'
+import { UpsertTimeEntryMode, useUpsertTimeEntry } from '@api/businesses/[business-id]/time-tracking/time-entries/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { convertTimeEntryFormToUpsertTimeEntry, getTimeEntryFormDefaultValues, validateTimeEntryForm } from '@components/TimeEntries/TimeEntryForm/formUtils'
 

@@ -4,7 +4,7 @@ import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
 import { type TaxProfile, TaxProfileRequestSchema } from '@schemas/taxEstimates/profile'
-import { UpsertTaxProfileMode, useUpsertTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useUpsertTaxProfile'
+import { UpsertTaxProfileMode, useUpsertTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { formValuesToTaxProfile, taxProfileToFormValues, validateTaxProfileForm } from '@components/TaxProfileForm/formUtils'
 import { type TaxProfileForm } from '@components/TaxProfileForm/taxProfileFormSchema'

@@ -2,7 +2,7 @@ import { BigDecimal as BD } from 'effect'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { convertBigIntCentsToBigDecimal, convertDecimalToPercent, formatBigDecimalToString, safeDivide } from '@utils/bigDecimalUtils'
-import { useInvoiceSummaryStats } from '@hooks/api/businesses/[business-id]/invoices/summary-stats/useInvoiceSummaryStats'
+import { useInvoiceSummaryStats } from '@api/businesses/[business-id]/invoices/summary-stats/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Meter } from '@ui/Meter/Meter'
 import { FallbackWithSkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'

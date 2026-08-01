@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useBankTransactionsDownload } from '@hooks/api/businesses/[business-id]/reports/transactions/exports/excel/useBankTransactionsDownload'
+import { useBankTransactionsDownload } from '@api/businesses/[business-id]/reports/transactions/exports/excel/get'
 import { bankTransactionFiltersToHookOptions } from '@hooks/features/bankTransactions/useAugmentedBankTransactions'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'

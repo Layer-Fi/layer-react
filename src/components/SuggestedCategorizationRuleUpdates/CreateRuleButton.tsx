@@ -3,7 +3,7 @@ import { Schema } from 'effect/index'
 import { useTranslation } from 'react-i18next'
 
 import { type CreateCategorizationRule, CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { useCreateCategorizationRule } from '@hooks/api/businesses/[business-id]/categorization-rules/useCreateCategorizationRule'
+import { useCreateCategorizationRule } from '@api/businesses/[business-id]/categorization-rules/post'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button, type ButtonProps } from '@ui/Button/Button'
 import { useWizard } from '@blocks/Wizard/Wizard'

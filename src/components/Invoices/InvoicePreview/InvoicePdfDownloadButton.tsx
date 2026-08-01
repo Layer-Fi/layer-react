@@ -1,7 +1,7 @@
 import { Download, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useInvoicePdfDownload } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/pdf/useInvoicePdfDownload'
+import { useInvoicePdfDownload } from '@api/businesses/[business-id]/invoices/[invoice-id]/pdf/get'
 import { Button } from '@ui/Button/Button'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 

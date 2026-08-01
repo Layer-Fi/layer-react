@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
 
 import { type CallBooking, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
-import { useBookkeepingConfiguration } from '@hooks/api/businesses/[business-id]/bookkeeping/config/useBookkeepingConfiguration'
-import { useBookkeepingStatus, useBookkeepingStatusGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
-import { useCallBookings } from '@hooks/api/businesses/[business-id]/call-bookings/useCallBookings'
-import { useCreateCallBooking } from '@hooks/api/businesses/[business-id]/call-bookings/useCreateCallBooking'
+import { useBookkeepingConfiguration } from '@api/businesses/[business-id]/bookkeeping/config/get'
+import { useBookkeepingStatus, useBookkeepingStatusGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/status/get'
+import { useCallBookings } from '@api/businesses/[business-id]/call-bookings/get'
+import { useCreateCallBooking } from '@api/businesses/[business-id]/call-bookings/post'
 import { type CalendlyPayload, useCalendly } from '@hooks/features/calendly/useCalendly'
 import { type CallBookingStringOverrides } from '@components/CallBooking/CallBooking'
 

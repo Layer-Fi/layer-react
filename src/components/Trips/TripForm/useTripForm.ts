@@ -4,7 +4,7 @@ import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
 import { type Trip, type TripForm, UpsertTripSchema } from '@schemas/trip'
-import { UpsertTripMode, useUpsertTrip } from '@hooks/api/businesses/[business-id]/mileage/trips/useUpsertTrip'
+import { UpsertTripMode, useUpsertTrip } from '@api/businesses/[business-id]/mileage/trips/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { convertTripFormToUpsertTrip, getTripFormDefaultValues, validateTripForm } from '@components/Trips/TripForm/formUtils'
 import { useAutofillTripDistance } from '@components/Trips/TripForm/useAutofillTripDistance'

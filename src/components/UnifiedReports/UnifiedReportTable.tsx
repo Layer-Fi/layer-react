@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { asMutable } from '@utils/asMutable'
-import { useUnifiedReport } from '@hooks/api/businesses/[business-id]/reports/unified/report-name/useUnifiedReport'
+import { useUnifiedReport } from '@api/businesses/[business-id]/reports/unified/[report-name]/get'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useActiveUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'

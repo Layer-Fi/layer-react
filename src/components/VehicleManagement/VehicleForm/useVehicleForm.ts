@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { UpsertVehicleSchema, type Vehicle, type VehicleForm } from '@schemas/vehicle'
 import { DateFormat } from '@utils/i18n/date/patterns'
-import { UpsertVehicleMode, useUpsertVehicle } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useUpsertVehicle'
+import { UpsertVehicleMode, useUpsertVehicle } from '@api/businesses/[business-id]/mileage/vehicles/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import {

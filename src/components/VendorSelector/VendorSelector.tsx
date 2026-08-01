@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type Vendor } from '@schemas/vendor'
 import { getVendorName } from '@utils/vendor'
-import { useListVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
+import { useListVendors } from '@api/businesses/[business-id]/vendors/get'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'

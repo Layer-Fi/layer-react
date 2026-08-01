@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { useArchiveBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/useArchiveBankTransaction'
+import { useArchiveBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/delete'
 import { Button } from '@ui/Button/Button'
 import { SubmitButton } from '@ui/Button/SubmitButton'
 import { ModalActions, ModalContent, ModalDescription, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'

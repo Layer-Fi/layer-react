@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/catalogService'
-import { useArchiveCatalogService } from '@hooks/api/businesses/[business-id]/catalog/services/[service-id]/useArchiveCatalogService'
+import { useArchiveCatalogService } from '@api/businesses/[business-id]/catalog/services/[service-id]/archive/post'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
 

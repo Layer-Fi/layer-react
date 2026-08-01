@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
-import { useListCounterparties } from '@hooks/api/businesses/[business-id]/counterparties/useListCounterparties'
+import { useListCounterparties } from '@api/businesses/[business-id]/counterparties/get'
 import {
   CounterpartyComboBoxOption,
   type CounterpartyOption,

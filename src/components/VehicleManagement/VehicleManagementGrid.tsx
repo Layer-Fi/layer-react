@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { asMutable } from '@utils/asMutable'
-import { useListVehicles } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useListVehicles'
+import { useListVehicles } from '@api/businesses/[business-id]/mileage/vehicles/get'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'
 import { HStack, VStack } from '@ui/Stack/Stack'

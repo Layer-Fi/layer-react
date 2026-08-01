@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { Trip } from '@schemas/trip'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
-import { useListTrips } from '@hooks/api/businesses/[business-id]/mileage/trips/useListTrips'
+import { useListTrips } from '@api/businesses/[business-id]/mileage/trips/get'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { useCurrentTripsPage, useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'

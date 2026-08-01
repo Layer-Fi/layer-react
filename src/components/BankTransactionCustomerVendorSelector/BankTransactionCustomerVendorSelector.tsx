@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { type CustomerVendorSchema, makeCustomerVendor } from '@schemas/customerVendor'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
+import { useSetMetadataOnBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/patch'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { CustomerVendorSelector } from '@components/CustomerVendorSelector/CustomerVendorSelector'
 

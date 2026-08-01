@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { BookkeepingStatus } from '@schemas/bookkeepingStatus'
-import { useBankAccountsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
+import { useBankAccountsGlobalCacheActions } from '@api/businesses/[business-id]/bank-accounts/get'
 import { Tasks } from '@components/Tasks/Tasks'
 
 import { get as getBankAccounts } from '@msw/api/businesses/[business-id]/bank-accounts/get'

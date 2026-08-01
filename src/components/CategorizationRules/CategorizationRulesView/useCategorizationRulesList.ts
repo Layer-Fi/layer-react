@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { useListCategorizationRules } from '@hooks/api/businesses/[business-id]/categorization-rules/useListCategorizationRules'
+import { useListCategorizationRules } from '@api/businesses/[business-id]/categorization-rules/get'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { useCategorizationRulesTableFilters, useSetCurrentCategorizationRulesPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 

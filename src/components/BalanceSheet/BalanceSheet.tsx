@@ -2,7 +2,7 @@ import { type PropsWithChildren, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type View as ViewType } from '@internal-types/general'
-import { useBalanceSheet } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/useBalanceSheet'
+import { useBalanceSheet } from '@api/businesses/[business-id]/reports/balance-sheet/get'
 import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { useResolvedReportView } from '@hooks/features/reports/useResolvedReportView'
 import { type DateSelectionMode, useGlobalDate } from '@providers/DateStoreProvider/GlobalDateStoreProvider'

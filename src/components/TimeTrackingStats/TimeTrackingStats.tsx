@@ -4,7 +4,7 @@ import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
 import { type TimeEntrySummary, type TimeEntrySummaryGroup } from '@schemas/timeTracking'
 import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
-import { type TimeTrackingSummaryFilterParams, useTimeTrackingSummary } from '@hooks/api/businesses/[business-id]/time-tracking/summary/useTimeTrackingSummary'
+import { type TimeTrackingSummaryFilterParams, useTimeTrackingSummary } from '@api/businesses/[business-id]/time-tracking/time-entries/summary/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'

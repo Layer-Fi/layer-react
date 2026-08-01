@@ -1,6 +1,6 @@
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { isEditableCustomTransaction } from '@utils/bankTransactions/shared'
-import { useCustomAccounts } from '@hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts'
+import { useCustomAccounts } from '@api/businesses/[business-id]/custom-accounts/get'
 import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 

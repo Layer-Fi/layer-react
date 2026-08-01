@@ -2,8 +2,8 @@ import { useCallback, useState } from 'react'
 
 import type { LedgerAccountBalanceWithNodeType } from '@internal-types/chartOfAccounts'
 import { type LedgerAccountLineItem, type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
-import { type ListLedgerAccountLinesReturn, useListLedgerAccountLines } from '@hooks/api/businesses/[business-id]/ledger/accounts/[account-id]/lines/useListLedgerAccountLines'
-import { useLedgerAccountsEntry } from '@hooks/api/businesses/[business-id]/ledger/entries/[entry-id]/useLedgerAccountsEntry'
+import { type ListLedgerAccountLinesReturn, useListLedgerAccountLines } from '@api/businesses/[business-id]/ledger/accounts/[account-id]/lines/get'
+import { useLedgerAccountsEntry } from '@api/businesses/[business-id]/ledger/entries/[entry-id]/get'
 
 type UseLedgerAccounts = () => {
   data?: LedgerAccountLineItem[] | undefined

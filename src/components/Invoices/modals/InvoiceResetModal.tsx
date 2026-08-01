@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
-import { useResetInvoice } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/reset/useResetInvoice'
+import { useResetInvoice } from '@api/businesses/[business-id]/invoices/[invoice-id]/reset/post'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 

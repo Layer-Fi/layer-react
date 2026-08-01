@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { useListInvoices } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
+import { useListInvoices } from '@api/businesses/[business-id]/invoices/get'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { useInvoiceTableFilters } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { getListInvoiceParamsFromFilters } from '@components/Invoices/utils/invoiceFilters'

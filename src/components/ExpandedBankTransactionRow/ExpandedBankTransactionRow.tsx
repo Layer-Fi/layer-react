@@ -19,9 +19,9 @@ import {
   hasMatch,
 } from '@utils/bankTransactions/shared'
 import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
-import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
-import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
-import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
+import { useSetMetadataOnBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/patch'
+import { useRemoveTagFromBankTransaction } from '@api/businesses/[business-id]/bank-transactions/tags/delete'
+import { useTagBankTransaction } from '@api/businesses/[business-id]/bank-transactions/tags/post'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/config/useReportConfig'
+import { useReportConfig } from '@api/businesses/[business-id]/reports/config/get'
 import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Span } from '@ui/Typography/Text'
 import { TreeNavigation } from '@blocks/NestedNavigation/TreeNavigation/TreeNavigation'

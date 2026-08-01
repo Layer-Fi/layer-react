@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/catalogService'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
-import { useListCatalogServices } from '@hooks/api/businesses/[business-id]/catalog/services/useListCatalogServices'
+import { useListCatalogServices } from '@api/businesses/[business-id]/catalog/services/get'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, P, Span } from '@ui/Typography/Text'

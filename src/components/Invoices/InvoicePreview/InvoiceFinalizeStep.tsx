@@ -3,7 +3,7 @@ import { AlertTriangle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { Invoice } from '@schemas/invoices/invoice'
-import { useInvoicePaymentMethods } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/useInvoicePaymentMethods'
+import { useInvoicePaymentMethods } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/get'
 import {
   useInvoicePreviewRoute,
 } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'

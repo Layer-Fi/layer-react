@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useReportConfig } from '@hooks/api/businesses/[business-id]/reports/config/useReportConfig'
+import { useReportConfig } from '@api/businesses/[business-id]/reports/config/get'
 import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { MobileSelectionDrawerWithTrigger } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
 import { HStack } from '@ui/Stack/Stack'

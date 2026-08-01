@@ -1,6 +1,6 @@
 import { type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
 import { type TaxProfile } from '@schemas/taxEstimates/profile'
-import { useTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useTaxProfile'
+import { useTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/get'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export enum OnboardingStatus {

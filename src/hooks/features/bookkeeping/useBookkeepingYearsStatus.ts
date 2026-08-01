@@ -3,7 +3,7 @@ import { getYear } from 'date-fns'
 
 import { isIncompleteTask, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { getActivationDate } from '@utils/business'
-import { useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { useBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods/get'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const useBookkeepingYearsStatus = () => {

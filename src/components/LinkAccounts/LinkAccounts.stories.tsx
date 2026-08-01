@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { useBankAccountsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-accounts/useListBankAccounts'
+import { useBankAccountsGlobalCacheActions } from '@api/businesses/[business-id]/bank-accounts/get'
 import { LinkAccounts } from '@components/LinkAccounts/LinkAccounts'
 
 import { bankAccountStore } from '@msw/api/businesses/[business-id]/bank-accounts/store'

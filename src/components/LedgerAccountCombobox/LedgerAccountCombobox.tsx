@@ -5,7 +5,7 @@ import { type CategoryAsOption } from '@internal-types/categorizationOption'
 import { type CategoriesListMode, type Classification } from '@schemas/categorization'
 import { findCategoryOption } from '@utils/categories'
 import { flattenCategories, withoutExclusions } from '@utils/categoryOptions'
-import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
+import { useCategories } from '@api/businesses/[business-id]/categories/get'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { Label } from '@ui/Typography/Text'
 

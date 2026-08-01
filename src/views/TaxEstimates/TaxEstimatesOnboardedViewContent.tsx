@@ -2,7 +2,7 @@ import { type Key, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { translationKey } from '@utils/i18n/translationKey'
-import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
+import { useTaxEstimatesBanner } from '@api/businesses/[business-id]/tax-estimates/banner/get'
 import { TaxEstimatesRoute, useFullYearProjection, useTaxEstimatesNavigation, useTaxEstimatesRouteState, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'

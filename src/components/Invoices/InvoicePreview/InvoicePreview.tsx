@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import { useInvoicePreview } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/html/useInvoicePreview'
+import { useInvoicePreview } from '@api/businesses/[business-id]/invoices/[invoice-id]/html/get'
 import { useInvoicePreviewRoute } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 
 import './invoicePreview.scss'

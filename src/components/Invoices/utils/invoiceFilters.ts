@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { InvoiceStatus } from '@schemas/invoices/invoice'
 import { translationKey } from '@utils/i18n/translationKey'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import { type ListInvoicesFilterParams } from '@hooks/api/businesses/[business-id]/invoices/useListInvoices'
+import { type ListInvoicesFilterParams } from '@api/businesses/[business-id]/invoices/get'
 import { type InvoiceTableFilters } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 
 export enum InvoiceStatusFilter {
