@@ -1,19 +1,11 @@
-import { useCallback, useMemo } from 'react'
-import type { FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { BankDirectionFilter, type CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { isClassificationAccountIdentifier } from '@schemas/categorization'
-import { required } from '@utils/form/validators'
-import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { type CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { SubmitButton } from '@ui/Button/SubmitButton'
-import { Form } from '@ui/Form/Form'
-import { HStack, VStack } from '@ui/Stack/Stack'
-import { CategorySelect } from '@components/CategorizationRules/CategorizationRuleForm/CategorySelect'
-import { CounterpartySelect } from '@components/CategorizationRules/CategorizationRuleForm/CounterpartySelect'
-import { type CategorizationRuleFormState, type DirectionFormValue, getRuleTransactionDescription } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
+import { VStack } from '@ui/Stack/Stack'
+import { CategorizationRuleFormFields } from '@components/CategorizationRules/CategorizationRuleForm/CategorizationRuleFormFields'
+import { type CategorizationRuleFormState } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 import { useCategorizationRuleForm } from '@components/CategorizationRules/CategorizationRuleForm/useCategorizationRuleForm'
-import { FieldErrors } from '@components/forms/FieldErrors'
 
 import './categorizationRuleForm.scss'
 
@@ -25,109 +17,9 @@ export type CategorizationRuleFormProps = {
 export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationRuleFormProps) => {
   const { t } = useTranslation()
   const { form, submitError } = useCategorizationRuleForm({ formState, onSuccess })
-  const { formatCurrencyFromCents } = useIntlFormatter()
-  const transactionDescription = getRuleTransactionDescription(formState)
-
-  const blockNativeOnSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    e.stopPropagation()
-  }, [])
-
-  const directionOptions = useMemo<Array<{ value: DirectionFormValue, label: string }>>(() => [
-    { value: '', label: t('categorizationRules:label.any', 'Any') },
-    { value: BankDirectionFilter.MONEY_IN, label: t('common:label.money_in', 'Money in') },
-    { value: BankDirectionFilter.MONEY_OUT, label: t('common:label.money_out', 'Money out') },
-  ], [t])
 
   return (
-    <Form className='Layer__CategorizationRuleForm' onSubmit={blockNativeOnSubmit}>
-      <form.Field
-        name='counterparty'
-        validators={{
-          onDynamic: ({ value }) => transactionDescription
-            ? undefined
-            : required(
-              t('categorizationRules:validation.counterparty_required', 'Counterparty is required.'),
-            )(value),
-        }}
-      >
-        {field => (
-          <VStack gap='3xs'>
-            <CounterpartySelect
-              label={t('common:label.counterparty', 'Counterparty')}
-              value={field.state.value}
-              onValueChange={field.handleChange}
-              placeholder={t('categorizationRules:placeholder.select_counterparty', 'Select counterparty')}
-              transactionDescription={transactionDescription}
-              showLabel
-            />
-            <FieldErrors errors={field.state.meta.errors} />
-          </VStack>
-        )}
-      </form.Field>
-
-      <form.Field
-        name='category'
-        validators={{
-          onDynamic: ({ value }) => value && isClassificationAccountIdentifier(value)
-            ? undefined
-            : t('categorizationRules:validation.category_required', 'Category is required.'),
-        }}
-      >
-        {field => (
-          <VStack gap='3xs'>
-            <CategorySelect
-              label={t('common:label.category', 'Category')}
-              value={field.state.value}
-              onValueChange={field.handleChange}
-              showLabel
-              placeholder={t('categorizationRules:placeholder.select_account', 'Select account')}
-            />
-            <FieldErrors errors={field.state.meta.errors} />
-          </VStack>
-        )}
-      </form.Field>
-
-      <form.AppField name='bankDirectionFilter'>
-        {field => (
-          <field.FormRadioGroupField
-            label={t('common:label.direction', 'Direction')}
-            orientation='vertical'
-            options={directionOptions}
-          />
-        )}
-      </form.AppField>
-
-      <VStack gap='3xs'>
-        <HStack gap='md' className='Layer__CategorizationRuleForm__AmountRow'>
-          <form.AppField name='amountMinFilter'>
-            {field => (
-              <field.FormNonRecursiveBigDecimalField
-                label={t('categorizationRules:label.amount_min_optional', 'Minimum amount (optional)')}
-                mode='currency'
-                allowEmpty
-                showFieldError={false}
-                placeholder={formatCurrencyFromCents(0)}
-              />
-            )}
-          </form.AppField>
-          <form.AppField name='amountMaxFilter'>
-            {field => (
-              <field.FormNonRecursiveBigDecimalField
-                label={t('categorizationRules:label.amount_max_optional', 'Maximum amount (optional)')}
-                mode='currency'
-                allowEmpty
-                showFieldError={false}
-                placeholder={t('categorizationRules:placeholder.none', 'None')}
-              />
-            )}
-          </form.AppField>
-        </HStack>
-        <form.Subscribe selector={state => state.fieldMeta.amountMinFilter?.errors}>
-          {errors => <FieldErrors errors={errors ?? []} />}
-        </form.Subscribe>
-      </VStack>
-
+    <CategorizationRuleFormFields form={form} formState={formState}>
       <VStack justify='end' className='Layer__CategorizationRuleForm__Submit'>
         <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting] as const}>
           {([canSubmit, isSubmitting]) => (
@@ -149,6 +41,6 @@ export const CategorizationRuleForm = ({ formState, onSuccess }: CategorizationR
           )}
         </form.Subscribe>
       </VStack>
-    </Form>
+    </CategorizationRuleFormFields>
   )
 }

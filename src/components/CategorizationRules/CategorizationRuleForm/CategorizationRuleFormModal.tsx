@@ -3,11 +3,60 @@ import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { Button } from '@ui/Button/Button'
+import { SubmitButton } from '@ui/Button/SubmitButton'
 import { Modal } from '@ui/Modal/Modal'
-import { ModalContent, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
-import { VStack } from '@ui/Stack/Stack'
-import { CategorizationRuleForm } from '@components/CategorizationRules/CategorizationRuleForm/CategorizationRuleForm'
+import { ModalActions, ModalContent, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
+import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
+import { CategorizationRuleFormFields } from '@components/CategorizationRules/CategorizationRuleForm/CategorizationRuleFormFields'
 import { type CategorizationRuleFormState } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
+import { useCategorizationRuleForm } from '@components/CategorizationRules/CategorizationRuleForm/useCategorizationRuleForm'
+
+type CategorizationRuleFormModalBodyProps = {
+  formState: CategorizationRuleFormState
+  onSuccess: (rule: CategorizationRule) => void
+  onClose: () => void
+}
+
+const CategorizationRuleFormModalBody = ({ formState, onSuccess, onClose }: CategorizationRuleFormModalBodyProps) => {
+  const { t } = useTranslation()
+  const { form, submitError } = useCategorizationRuleForm({ formState, onSuccess })
+
+  return (
+    <>
+      <ModalContent>
+        <CategorizationRuleFormFields form={form} formState={formState} />
+      </ModalContent>
+      <ModalActions>
+        <HStack gap='sm'>
+          <Spacer />
+          <Button variant='outlined' onPress={onClose}>
+            {t('common:action.cancel_label', 'Cancel')}
+          </Button>
+          <form.Subscribe selector={state => [state.canSubmit, state.isSubmitting] as const}>
+            {([canSubmit, isSubmitting]) => (
+              <SubmitButton
+                onPress={() => { void form.handleSubmit() }}
+                isDisabled={!canSubmit}
+                isPending={isSubmitting}
+                isError={!!submitError}
+                errorMessage={submitError}
+                withRetry
+                noIcon
+              >
+                {submitError
+                  ? t('common:action.retry_label', 'Retry')
+                  : formState.mode === 'edit'
+                    ? t('categorizationRules:action.save_rule', 'Save Rule')
+                    : t('categorizationRules:action.create_rule', 'Create Rule')}
+              </SubmitButton>
+            )}
+          </form.Subscribe>
+        </HStack>
+      </ModalActions>
+    </>
+  )
+}
 
 export type CategorizationRuleFormModalProps = {
   isOpen: boolean
@@ -53,9 +102,11 @@ export const CategorizationRuleFormModal = ({
           onClose={onClose}
         />
         {activeFormState && (
-          <ModalContent>
-            <CategorizationRuleForm formState={activeFormState} onSuccess={onSuccess} />
-          </ModalContent>
+          <CategorizationRuleFormModalBody
+            formState={activeFormState}
+            onSuccess={onSuccess}
+            onClose={onClose}
+          />
         )}
       </VStack>
     </Modal>
