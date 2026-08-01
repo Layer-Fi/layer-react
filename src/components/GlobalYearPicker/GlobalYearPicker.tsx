@@ -6,7 +6,11 @@ import { useBusinessDatePickerBounds } from '@hooks/utils/dates/useBusinessDateP
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { YearPicker } from '@components/YearPicker/YearPicker'
 
-export const GlobalYearPicker = () => {
+type GlobalYearPickerProps = {
+  showLabel?: boolean
+}
+
+export const GlobalYearPicker = ({ showLabel = false }: GlobalYearPickerProps) => {
   const { minDate, maxDate } = useBusinessDatePickerBounds()
   const { setYear } = useGlobalDateRangeActions()
   const { startDate } = useGlobalDateRange({ dateSelectionMode: 'year' })
@@ -22,6 +26,7 @@ export const GlobalYearPicker = () => {
 
   return (
     <YearPicker
+      showLabel={showLabel}
       year={selectedYear}
       onChange={onChange}
       minDate={minDateZdt}

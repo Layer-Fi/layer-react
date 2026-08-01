@@ -80,7 +80,7 @@ export const UnifiedReportControls = () => {
         <UnifiedReportDateSelection isCompact={isCompact} />
         {(hasYear || hasGroupBy || hasReportingBasis || tagControl) && (
           <div className='Layer__UnifiedReports__AdditionalControls'>
-            {hasYear && <GlobalYearPicker />}
+            {hasYear && <GlobalYearPicker showLabel />}
             {hasGroupBy && <DateGroupByComboBox value={groupBy} onValueChange={setGroupBy} />}
             {tagControl && <UnifiedReportTagControl tagControl={tagControl} />}
             {hasReportingBasis && (
