@@ -1,4 +1,4 @@
-import { useCashflowStatementDownload } from '@api/businesses/[business-id]/reports/cashflow-statement/exports/csv/get'
+import { useGetCashflowStatementDownload } from '@api/businesses/[business-id]/reports/cashflow-statement/exports/csv/get'
 import { DownloadButton } from '@ui/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
@@ -14,7 +14,7 @@ export function CashflowStatementDownloadButton({
   icon,
 }: CashflowStatementDownloadButtonProps) {
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
-  const { trigger, isMutating, isError } = useCashflowStatementDownload({
+  const { trigger, isMutating, isError } = useGetCashflowStatementDownload({
     startDate,
     endDate,
     swrOptions: {

@@ -29,7 +29,7 @@ const getAddressSuggestions = getWithQuery<
   }),
 )
 
-export const useMileageAddressSuggestions = createQueryHook({
+export const useGetMileageAddressSuggestions = createQueryHook({
   tags: [ADDRESS_SUGGESTIONS_TAG_KEY],
   request: getAddressSuggestions,
   schema: AddressSuggestionsResponseSchema,

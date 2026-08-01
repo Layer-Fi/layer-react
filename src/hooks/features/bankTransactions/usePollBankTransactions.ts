@@ -60,7 +60,7 @@ export function usePollBankTransactions({
   })
 
   /*
-   * useBankTransactions disables revalidateFirstPage so page changes do not
+   * useGetInfiniteBankTransactions disables revalidateFirstPage so page changes do not
    * refetch already-loaded pages. That also means a refreshInterval on the
    * infinite query would not refresh transactions, so this separate SWR key
    * owns the sync polling timer and explicitly triggers the invalidation of

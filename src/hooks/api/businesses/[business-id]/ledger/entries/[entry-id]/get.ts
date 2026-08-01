@@ -20,7 +20,7 @@ const getLedgerAccountsEntry = getWithQuery<
   ({ businessId, entryId }) => `/v1/businesses/${businessId}/ledger/entries/${entryId}`,
 )
 
-export const useLedgerAccountsEntry = createQueryHook({
+export const useGetLedgerAccountsEntry = createQueryHook({
   tags: [LEDGER_ACCOUNTS_ENTRY_TAG_KEY],
   request: getLedgerAccountsEntry,
   schema: LedgerAccountsEntryResponseSchema,

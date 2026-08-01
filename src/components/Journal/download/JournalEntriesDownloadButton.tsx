@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { useJournalEntriesDownload } from '@api/businesses/[business-id]/ledger/entries/exports/csv/get'
+import { useGetJournalEntriesDownload } from '@api/businesses/[business-id]/ledger/entries/exports/csv/get'
 import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { DownloadButton } from '@ui/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
@@ -18,7 +18,7 @@ export function JournalEntriesDownloadButton({
   const { t } = useTranslation()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
   const { startDate, endDate } = useLedgerDateRange({ dateSelectionMode: 'full' })
-  const { trigger, isMutating, error } = useJournalEntriesDownload({
+  const { trigger, isMutating, error } = useGetJournalEntriesDownload({
     startDate: filterByDateRange ? startDate : undefined,
     endDate: filterByDateRange ? endDate : undefined,
     swrOptions: {

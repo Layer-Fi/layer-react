@@ -29,21 +29,21 @@ const listCustomers = getWithQuery<
 
 export const CUSTOMERS_TAG_KEY = '#customers'
 
-export const useListCustomers = createInfiniteQueryHook({
+export const useGetInfiniteCustomers = createInfiniteQueryHook({
   tags: [CUSTOMERS_TAG_KEY],
   request: listCustomers,
   schema: ListCustomersRawResultSchema,
   keyDefaults: { limit: 100 },
 })
 
-type UseListCustomersParams = Parameters<typeof useListCustomers>[0]
+type UseListCustomersParams = Parameters<typeof useGetInfiniteCustomers>[0]
 
 export function usePreloadCustomers(parameters?: UseListCustomersParams) {
   /*
    * This will initiate a network request to fill the cache, but will not
    * cause a re-render when `data` changes.
    */
-  useListCustomers(parameters)
+  useGetInfiniteCustomers(parameters)
 }
 
 export const useCustomersGlobalCacheActions = createInfiniteQueryGlobalCacheActions<Customer>(CUSTOMERS_TAG_KEY)

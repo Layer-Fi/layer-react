@@ -16,7 +16,7 @@ const getProfitAndLossSummaries = getWithQuery<
   ({ businessId }) => `/v1/businesses/${businessId}/reports/profit-and-loss-summaries`,
 )
 
-export const useProfitAndLossSummaries = createQueryHook({
+export const useGetProfitAndLossSummaries = createQueryHook({
   tags: [PNL_SUMMARIES_TAG_KEY],
   request: getProfitAndLossSummaries,
   schema: ProfitAndLossSummariesResponseSchema,

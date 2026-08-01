@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods/get'
-import { CallBookingPurpose, useCallBookings } from '@api/businesses/[business-id]/call-bookings/get'
+import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods/get'
+import { CallBookingPurpose, useGetInfiniteCallBookings } from '@api/businesses/[business-id]/call-bookings/get'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Loader } from '@ui/Loader/Loader'
 import { VStack } from '@ui/Stack/Stack'
@@ -52,8 +52,8 @@ export function Tasks({
   stringOverrides,
 }: TasksProps) {
   const { t } = useTranslation()
-  const { data, isLoading } = useBookkeepingPeriods()
-  const { flattenedData: callBookings, isLoading: isLoadingCallBookings } = useCallBookings()
+  const { data, isLoading } = useGetBookkeepingPeriods()
+  const { flattenedData: callBookings, isLoading: isLoadingCallBookings } = useGetInfiniteCallBookings()
   const { isMobile } = useSizeClass()
 
   const tasksState: TasksState = useMemo(() => {

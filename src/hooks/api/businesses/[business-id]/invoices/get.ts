@@ -46,7 +46,7 @@ export const listInvoices = getWithQuery<
   }),
 )
 
-export const useListInvoices = createInfiniteQueryHook({
+export const useGetInfiniteInvoices = createInfiniteQueryHook({
   tags: [LIST_INVOICES_TAG_KEY],
   request: listInvoices,
   schema: ListInvoicesReturnSchema,

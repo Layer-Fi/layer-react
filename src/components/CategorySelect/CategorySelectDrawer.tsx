@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { CategoriesListMode } from '@schemas/categorization'
 import { withoutExclusions } from '@utils/categoryOptions'
-import { useCategories } from '@api/businesses/[business-id]/categories/get'
+import { useGetCategories } from '@api/businesses/[business-id]/categories/get'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
@@ -43,7 +43,7 @@ export const CategorySelectDrawer = ({
   mode,
 }: CategorySelectDrawerProps) => {
   const { t } = useTranslation()
-  const { data: categories } = useCategories({ mode })
+  const { data: categories } = useGetCategories({ mode })
   const [query, setQuery] = useState('')
   const [selectedGroup, setSelectedGroup] = useState<CategoryGroup | null>(null)
   const selectedId = selectedValue?.value

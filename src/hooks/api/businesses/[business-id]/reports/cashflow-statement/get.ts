@@ -19,7 +19,7 @@ const getStatementOfCashFlow = getWithQuery<
 
 export const STATEMENT_OF_CASH_FLOW_TAG_KEY = '#statement-of-cash-flow'
 
-export const useStatementOfCashFlow = createQueryHook({
+export const useGetStatementOfCashFlow = createQueryHook({
   tags: [STATEMENT_OF_CASH_FLOW_TAG_KEY],
   request: getStatementOfCashFlow,
   select: ({ data }) => data,

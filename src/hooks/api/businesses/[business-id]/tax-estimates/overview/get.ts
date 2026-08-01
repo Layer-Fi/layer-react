@@ -14,7 +14,7 @@ const getTaxOverview = getWithQuery<
   toTaxEstimatesQuery,
 )
 
-export const useTaxOverview = createQueryHook({
+export const useGetTaxOverview = createQueryHook({
   tags: [TAX_OVERVIEW_TAG_KEY],
   request: getTaxOverview,
   schema: TaxOverviewApiResponseSchema,

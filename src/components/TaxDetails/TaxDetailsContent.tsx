@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { isCurrencyCellValue, isDecimalCellValue, isPercentageCellValue } from '@schemas/reports/unifiedReport'
 import { type TaxDetailsRow } from '@schemas/taxEstimates/details'
 import { asMutable } from '@utils/asMutable'
-import { useTaxDetails } from '@api/businesses/[business-id]/tax-estimates/details/get'
+import { useGetTaxDetails } from '@api/businesses/[business-id]/tax-estimates/details/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
@@ -123,7 +123,7 @@ export function TaxDetailsContent() {
   const { t } = useTranslation()
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
-  const { data, isLoading, isError } = useTaxDetails({ year, fullYearProjection })
+  const { data, isLoading, isError } = useGetTaxDetails({ year, fullYearProjection })
   const { isDesktop } = useSizeClass()
   const columnConfig = useColumnConfig()
 

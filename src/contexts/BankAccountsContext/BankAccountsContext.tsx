@@ -4,7 +4,7 @@ import { type LoadedStatus } from '@internal-types/general'
 import { type SWRQueryResult } from '@internal-types/swr/SWRResponseTypes'
 import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { hasNewSyncingAccounts, isAnyBankAccountSyncing } from '@utils/bankAccount'
-import { useListBankAccounts } from '@api/businesses/[business-id]/bank-accounts/get'
+import { useGetBankAccounts } from '@api/businesses/[business-id]/bank-accounts/get'
 import { usePollingConfig } from '@hooks/utils/swr/usePollingConfig'
 
 type BankAccountsContextValue = Pick<
@@ -59,7 +59,7 @@ export function BankAccountsProvider({ children }: PropsWithChildren) {
     isLoading,
     isValidating,
     refetch,
-  } = useListBankAccounts({ swrOptions: pollingConfig })
+  } = useGetBankAccounts({ swrOptions: pollingConfig })
 
   const value = useMemo<BankAccountsContextValue>(() => {
     const loadingStatus: LoadedStatus = isLoading

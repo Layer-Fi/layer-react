@@ -9,7 +9,7 @@ const getStripeAccountStatus = get<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/stripe/status`)
 
-export const useStripeAccountStatus = createQueryHook({
+export const useGetStripeAccountStatus = createQueryHook({
   tags: [STRIPE_ACCOUNT_STATUS_TAG_KEY],
   request: getStripeAccountStatus,
   schema: StripeAccountStatusResponseSchema,

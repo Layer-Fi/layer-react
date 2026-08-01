@@ -23,7 +23,7 @@ type UseTagDimensionsParameters = {
   isEnabled?: boolean
 }
 
-export const useTagDimensions = createQueryHook({
+export const useGetTagDimensions = createQueryHook({
   tags: [TAG_DIMENSIONS_TAG_KEY],
   request: getTagDimensions,
   schema: TagDimensionsResponseSchema,
@@ -37,5 +37,5 @@ export function usePreloadTagDimensions(parameters?: UseTagDimensionsParameters)
    * This will initiate a network request to fill the cache, but will not
    * cause a re-render when `data` changes.
    */
-  useTagDimensions(parameters)
+  useGetTagDimensions(parameters)
 }

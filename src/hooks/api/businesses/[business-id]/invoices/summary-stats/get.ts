@@ -13,7 +13,7 @@ const getInvoiceSummaryStats = get<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/invoices/summary-stats`)
 
-export const useInvoiceSummaryStats = createQueryHook({
+export const useGetInvoiceSummaryStats = createQueryHook({
   tags: [INVOICE_SUMMARY_STATS_TAG_KEY],
   request: getInvoiceSummaryStats,
   schema: InvoiceSummaryStatsReturnSchema,

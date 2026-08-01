@@ -25,7 +25,7 @@ const getAddressDetails = getWithQuery<
   }),
 )
 
-export const useMileageAddressDetails = createQueryHook({
+export const useGetMileageAddressDetails = createQueryHook({
   tags: [ADDRESS_DETAILS_TAG_KEY],
   request: getAddressDetails,
   schema: AddressDetailsResponseSchema,

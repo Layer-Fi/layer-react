@@ -32,7 +32,7 @@ const fetchAccountingConfiguration = createKeyedFetcher(
   GetAccountingConfigurationResponseSchema,
 )
 
-export function useAccountingConfiguration({ businessId }: GetAccountingConfigurationParams) {
+export function useGetAccountingConfiguration({ businessId }: GetAccountingConfigurationParams) {
   const { data: auth } = useAuth()
 
   const queryKey = buildKey({ ...auth, businessId })

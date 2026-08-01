@@ -22,7 +22,7 @@ const getActiveTimeTracker = get<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/time-tracking/tracker/active`)
 
-export const useActiveTimeTracker = createQueryHook({
+export const useGetActiveTimeTracker = createQueryHook({
   tags: [ACTIVE_TIME_TRACKER_TAG_KEY],
   request: getActiveTimeTracker,
   schema: ActiveTimeTrackerResponseSchema,

@@ -13,7 +13,7 @@ const getMileageSummary = get<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/mileage/summary`)
 
-export const useMileageSummary = createQueryHook({
+export const useGetMileageSummary = createQueryHook({
   tags: [MILEAGE_SUMMARY_TAG_KEY],
   request: getMileageSummary,
   schema: MileageSummaryResponseSchema,

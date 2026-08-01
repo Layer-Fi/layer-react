@@ -16,7 +16,7 @@ const createCatalogService = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/catalog/services`)
 
-export const useCreateCatalogService = createMutationHook({
+export const usePostCatalogService = createMutationHook({
   tags: [CREATE_CATALOG_SERVICE_TAG_KEY],
   request: createCatalogService,
   schema: CreateCatalogServiceResponseSchema,

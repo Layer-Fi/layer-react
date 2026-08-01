@@ -24,7 +24,7 @@ type UseCategoriesOptions = {
   mode?: CategoriesListMode
 }
 
-export const useCategories = createQueryHook({
+export const useGetCategories = createQueryHook({
   tags: [CATEGORIES_TAG_KEY],
   request: getCategories,
   schema: CategoriesResponseSchema,
@@ -36,5 +36,5 @@ export function usePreloadCategories(options?: UseCategoriesOptions) {
    * This will initiate a network request to fill the cache, but will not
    * cause a re-render when `data` changes.
    */
-  useCategories(options)
+  useGetCategories(options)
 }

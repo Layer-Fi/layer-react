@@ -130,7 +130,7 @@ const useUpdateBankTransactionMetadataMutation = createBankTransactionMetadataMu
   ({ memo }: UpdateMemoArg) => ({ memo }),
 )
 
-export function useUpdateBankTransactionMetadata({ bankTransactionId, onSuccess }: { bankTransactionId: string, onSuccess?: () => Awaitable<unknown> }) {
+export function usePatchBankTransactionMetadata({ bankTransactionId, onSuccess }: { bankTransactionId: string, onSuccess?: () => Awaitable<unknown> }) {
   return useUpdateBankTransactionMetadataMutation({
     bankTransactionId,
     swrOptions: {

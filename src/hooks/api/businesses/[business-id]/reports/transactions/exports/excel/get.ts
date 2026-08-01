@@ -58,7 +58,7 @@ const requestBankTransactionsExcel = getAsMutation(getBankTransactionsExcel)
 
 type UseBankTransactionsDownloadOptions = UseBankTransactionsOptions
 
-export const useBankTransactionsDownload = createMutationHook({
+export const useGetBankTransactionsDownload = createMutationHook({
   tags: ['#bank-transactions-download-excel'],
   request: requestBankTransactionsExcel,
   argToParams: (arg: UseBankTransactionsDownloadOptions) => arg,

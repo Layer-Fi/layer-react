@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { Briefcase, FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useActiveTimeTracker } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'
+import { useGetActiveTimeTracker } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { TimeTrackingServicesDrawerProvider, useTimeTrackingServicesDrawer } from '@providers/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
 import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'
@@ -38,7 +38,7 @@ export const TimeTracking = ({ showTitle = true, onReportsClick, stringOverrides
 const TimeTrackingContent = ({ showTitle, onReportsClick, stringOverrides }: TimeTrackingProps) => {
   const { t } = useTranslation()
   const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode: 'full' })
-  const { data: activeTimeEntry, isLoading: isActiveTimeEntryLoading, isError: isActiveTimeEntryError } = useActiveTimeTracker()
+  const { data: activeTimeEntry, isLoading: isActiveTimeEntryLoading, isError: isActiveTimeEntryError } = useGetActiveTimeTracker()
   const { openServicesDrawer } = useTimeTrackingServicesDrawer()
   const [isActiveTimerDrawerOpen, setIsActiveTimerDrawerOpen] = useState(false)
 

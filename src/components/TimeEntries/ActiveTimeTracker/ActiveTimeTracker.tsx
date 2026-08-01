@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
-import { useActiveTimeTracker } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'
+import { useGetActiveTimeTracker } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'
 import { useElapsedSeconds } from '@hooks/utils/dates/useElapsedSeconds'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -24,7 +24,7 @@ export const ActiveTimeTracker = ({ isDrawerOpen, onDrawerOpenChange }: ActiveTi
   const { isMobile } = useSizeClass()
   const { formatSecondsAsDuration } = useIntlFormatter()
 
-  const { data: activeEntry, isLoading, isError, error } = useActiveTimeTracker()
+  const { data: activeEntry, isLoading, isError, error } = useGetActiveTimeTracker()
 
   const elapsedSeconds = useElapsedSeconds(activeEntry?.createdAt)
   const timerDisplayValue = useMemo(

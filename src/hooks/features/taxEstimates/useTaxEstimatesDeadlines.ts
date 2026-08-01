@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type TaxEstimatesBannerQuarter } from '@schemas/taxEstimates/banner'
 import { TaxOverviewDeadlineStatus } from '@schemas/taxEstimates/overview'
-import { useTaxEstimatesBanner } from '@api/businesses/[business-id]/tax-estimates/banner/get'
+import { useGetTaxEstimatesBanner } from '@api/businesses/[business-id]/tax-estimates/banner/get'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 
 export type TaxEstimatesDeadlineRow = {
@@ -46,7 +46,7 @@ export const useTaxEstimatesDeadlines = (): TaxEstimatesDeadlines => {
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
   const { t } = useTranslation()
-  const { data, isLoading, isError } = useTaxEstimatesBanner({
+  const { data, isLoading, isError } = useGetTaxEstimatesBanner({
     year,
     fullYearProjection,
   })

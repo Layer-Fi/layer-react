@@ -14,7 +14,7 @@ const getPlaidHostedLinkStatus = get<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/plaid/hosted-link`)
 
-export const usePlaidHostedLinkStatus = createQueryHook({
+export const useGetPlaidHostedLinkStatus = createQueryHook({
   tags: [PLAID_HOSTED_LINK_TAG_KEY],
   request: getPlaidHostedLinkStatus,
   schema: PlaidHostedLinkStatusResponseSchema,

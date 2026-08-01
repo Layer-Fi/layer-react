@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type View as ViewType } from '@internal-types/general'
-import { useStatementOfCashFlow } from '@api/businesses/[business-id]/reports/cashflow-statement/get'
+import { useGetStatementOfCashFlow } from '@api/businesses/[business-id]/reports/cashflow-statement/get'
 import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { useResolvedReportView } from '@hooks/features/reports/useResolvedReportView'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
@@ -50,7 +50,7 @@ const StatementOfCashFlowView = ({
 }: StatementOfCashFlowViewProps) => {
   const { t } = useTranslation()
   const dateRange = useGlobalDateRange({ dateSelectionMode })
-  const { data, isLoading, isValidating, isError } = useStatementOfCashFlow(dateRange)
+  const { data, isLoading, isValidating, isError } = useGetStatementOfCashFlow(dateRange)
   const { containerRef, isMobileView } = useResolvedReportView(propView)
   const { headerRef, isCompact } = useReportsCompactHeader()
   const tableStringOverrides = stringOverrides?.statementOfCashFlowTable

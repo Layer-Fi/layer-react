@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useProfitAndLossDetailLinesExport } from '@api/businesses/[business-id]/reports/profit-and-loss/lines/exports/excel/get'
+import { useGetProfitAndLossDetailLinesExport } from '@api/businesses/[business-id]/reports/profit-and-loss/lines/exports/excel/get'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { DownloadButton } from '@ui/Button/DownloadButton'
 import type { ProfitAndLossDownloadButtonStringOverrides } from '@components/ProfitAndLossDownloadButton/types'
@@ -22,7 +22,7 @@ export function ProfitAndLossDetailLinesDownloadButton({
   const { tagFilter, dateRange } = useContext(ProfitAndLossContext)
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
 
-  const { trigger, isMutating, isError } = useProfitAndLossDetailLinesExport({
+  const { trigger, isMutating, isError } = useGetProfitAndLossDetailLinesExport({
     startDate: dateRange.startDate,
     endDate: dateRange.endDate,
     pnlStructureLineItemName,

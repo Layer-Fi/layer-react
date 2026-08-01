@@ -3,7 +3,7 @@ import { revalidateLogic, useStore } from '@tanstack/react-form'
 import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { UpsertJournalEntryMode, useUpsertJournalEntry } from '@api/businesses/[business-id]/ledger/journal-entries/post'
+import { UpsertJournalEntryMode, usePostJournalEntry } from '@api/businesses/[business-id]/ledger/journal-entries/post'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { convertJournalEntryFormToParams, getJournalEntryFormDefaultValues, getJournalEntryFormInitialValues, validateJournalEntryForm } from '@components/Journal/JournalEntryForm/formUtils'
@@ -28,7 +28,7 @@ export const useJournalEntryForm = (props: UseJournalEntryFormProps) => {
   const { addToast } = useLayerContext()
 
   const upsertJournalEntryProps = mode === UpsertJournalEntryMode.Update ? { mode, journalEntryId: props.journalEntry.id } : { mode }
-  const { trigger: upsertJournalEntry } = useUpsertJournalEntry(upsertJournalEntryProps)
+  const { trigger: upsertJournalEntry } = usePostJournalEntry(upsertJournalEntryProps)
 
   const defaultValuesRef = useRef<JournalEntryForm>(
     isUpdateMode(props)

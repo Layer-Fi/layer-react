@@ -3,7 +3,7 @@ import { Schema } from 'effect/index'
 import { useTranslation } from 'react-i18next'
 
 import { type CreateCategorizationRule, CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { useCreateCategorizationRule } from '@api/businesses/[business-id]/categorization-rules/post'
+import { usePostCategorizationRule } from '@api/businesses/[business-id]/categorization-rules/post'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button, type ButtonProps } from '@ui/Button/Button'
 import { useWizard } from '@blocks/Wizard/Wizard'
@@ -16,7 +16,7 @@ interface CreateRuleButtonProps {
 export const CreateRuleButton = ({ newRule: ruleSuggestion, slotProps }: CreateRuleButtonProps) => {
   const { t } = useTranslation()
   const { next } = useWizard()
-  const { trigger: createCategorizationRule, isMutating } = useCreateCategorizationRule()
+  const { trigger: createCategorizationRule, isMutating } = usePostCategorizationRule()
   const { addToast } = useLayerContext()
   const handlePress = useCallback(() => {
     void (async () => {

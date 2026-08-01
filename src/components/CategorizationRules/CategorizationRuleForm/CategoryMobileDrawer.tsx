@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react'
 import { CategoryAsOption } from '@internal-types/categorizationOption'
 import { type CategoriesListMode, type Classification } from '@schemas/categorization'
 import { findCategoryOption, flattenCategories } from '@utils/categories'
-import { useCategories } from '@api/businesses/[business-id]/categories/get'
+import { useGetCategories } from '@api/businesses/[business-id]/categories/get'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
@@ -28,7 +28,7 @@ export const CategoryMobileDrawer = ({
   showLabel,
   placeholder,
 }: CategoryMobileDrawerProps) => {
-  const { data: categories } = useCategories({ mode })
+  const { data: categories } = useGetCategories({ mode })
 
   const flatOptions = useMemo(() => {
     if (!categories) return []

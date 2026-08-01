@@ -14,7 +14,7 @@ const createCallBooking = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/call-bookings`)
 
-export const useCreateCallBooking = createMutationHook({
+export const usePostCallBooking = createMutationHook({
   tags: [CREATE_CALL_BOOKING_TAG_KEY],
   request: createCallBooking,
   schema: CallBookingItemResponseSchema,

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { asMutable } from '@utils/asMutable'
-import { useListVehicles } from '@api/businesses/[business-id]/mileage/vehicles/get'
+import { useGetVehicles } from '@api/businesses/[business-id]/mileage/vehicles/get'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -19,7 +19,7 @@ interface VehicleManagementGridProps {
 
 export const VehicleManagementGrid = ({ onEditVehicle, showArchived }: VehicleManagementGridProps) => {
   const { t } = useTranslation()
-  const { data, isLoading, isError } = useListVehicles({ allowArchived: showArchived })
+  const { data, isLoading, isError } = useGetVehicles({ allowArchived: showArchived })
   const vehicles = useMemo(() => data ? asMutable(data) : undefined, [data])
 
   if (isLoading) {

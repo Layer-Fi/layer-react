@@ -1,7 +1,7 @@
 import { createContext, type PropsWithChildren, useContext, useEffect, useState } from 'react'
 import { createStore, useStore } from 'zustand'
 
-import { useListBankAccounts } from '@api/businesses/[business-id]/bank-accounts/get'
+import { useGetBankAccounts } from '@api/businesses/[business-id]/bank-accounts/get'
 
 type BankAccountsFilterStoreShape = {
   isEnabled: boolean
@@ -69,7 +69,7 @@ export function BankAccountsFilterStoreProvider({ children }: PropsWithChildren)
     })),
   )
 
-  const { data: bankAccounts } = useListBankAccounts()
+  const { data: bankAccounts } = useGetBankAccounts()
   useEffect(() => {
     if (!bankAccounts) return
     store.getState().actions.retainBankAccountIds(bankAccounts.map(account => account.id))

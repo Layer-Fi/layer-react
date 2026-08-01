@@ -13,7 +13,7 @@ const createTagDimension = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/tags/dimensions`)
 
-export const useCreateTagDimension = createMutationHook({
+export const usePostTagDimension = createMutationHook({
   tags: [CREATE_TAG_DIMENSION_TAG_KEY],
   request: createTagDimension,
   argToBody: (tagDimension: typeof CreateTagDimensionBodySchema.Type) =>

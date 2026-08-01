@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { getVehicleDisplayName } from '@utils/vehicles'
-import { useListVehicles } from '@api/businesses/[business-id]/mileage/vehicles/get'
+import { useGetVehicles } from '@api/businesses/[business-id]/mileage/vehicles/get'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
@@ -74,7 +74,7 @@ export function VehicleSelector({
     containerClassName,
   )
 
-  const { data, isLoading, isError } = useListVehicles()
+  const { data, isLoading, isError } = useGetVehicles()
 
   const options = useMemo(() => {
     return data?.map(vehicle => new VehicleAsOption(vehicle, t)) || []

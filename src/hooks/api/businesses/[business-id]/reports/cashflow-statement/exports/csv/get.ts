@@ -14,7 +14,7 @@ const getCashflowStatementCSV = getWithQuery<
 
 const requestCashflowStatementCSV = getAsMutation(getCashflowStatementCSV)
 
-export const useCashflowStatementDownload = createMutationHook({
+export const useGetCashflowStatementDownload = createMutationHook({
   tags: ['#download-cashflow-statement'],
   request: requestCashflowStatementCSV,
   keyParams: ['startDate', 'endDate'],

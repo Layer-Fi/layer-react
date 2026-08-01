@@ -18,7 +18,7 @@ const getBalanceSheet = getWithQuery<
 
 export const BALANCE_SHEET_TAG_KEY = '#balance-sheet'
 
-export const useBalanceSheet = createQueryHook({
+export const useGetBalanceSheet = createQueryHook({
   tags: [BALANCE_SHEET_TAG_KEY],
   request: getBalanceSheet,
   select: ({ data }) => data,

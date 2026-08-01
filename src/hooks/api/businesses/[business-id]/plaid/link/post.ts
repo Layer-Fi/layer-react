@@ -18,7 +18,7 @@ const createPlaidLink = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/plaid/link`)
 
-export const useCreatePlaidLink = createMutationHook({
+export const usePostPlaidLink = createMutationHook({
   tags: [CREATE_PLAID_LINK_TAG_KEY],
   request: createPlaidLink,
   argToBody: (params: CreatePlaidLinkParams) => encodeCreatePlaidLinkParams(params),

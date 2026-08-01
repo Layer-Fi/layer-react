@@ -22,7 +22,7 @@ const getLedgerAccountBalances = getWithQuery<
   ({ businessId }) => `/v1/businesses/${businessId}/ledger/balances`,
 )
 
-export const useLedgerBalances = createQueryHook({
+export const useGetLedgerBalances = createQueryHook({
   tags: [LEDGER_BALANCES_TAG_KEY],
   request: getLedgerAccountBalances,
   schema: LedgerBalancesResponseSchema,

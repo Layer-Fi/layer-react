@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useTaxPayments } from '@api/businesses/[business-id]/tax-estimates/payments/get'
+import { useGetTaxPayments } from '@api/businesses/[business-id]/tax-estimates/payments/get'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
@@ -42,7 +42,7 @@ const Header = () => <TaxEstimatesHeader type={TaxEstimatesHeaderType.Payments} 
 export const TaxPayments = () => {
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
-  const { data, isLoading, isError } = useTaxPayments({ year, fullYearProjection })
+  const { data, isLoading, isError } = useGetTaxPayments({ year, fullYearProjection })
   const { isDesktop } = useSizeClass()
   const props = useMemo(() => ({
     data,

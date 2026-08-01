@@ -3,8 +3,8 @@ import { Info } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
-import { useAccountingConfiguration } from '@api/businesses/[business-id]/accounting-config/get'
-import { useTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/get'
+import { useGetAccountingConfiguration } from '@api/businesses/[business-id]/accounting-config/get'
+import { useGetTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/get'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
@@ -111,10 +111,10 @@ export function SolopreneurOnboardingBanner({ onSetupTaxProfile, plaidHostedLink
 
 const useSolopreneurOnboardingBannerState = () => {
   const { businessId } = useLayerContext()
-  const { data: accountingConfiguration, isLoading: isAccountingConfigLoading } = useAccountingConfiguration({ businessId })
+  const { data: accountingConfiguration, isLoading: isAccountingConfigLoading } = useGetAccountingConfiguration({ businessId })
   const { data: linkedAccounts, loadingStatus: linkedAccountsLoadingStatus } = useBankAccountsContext()
   const { isHostedLinkError } = useContext(LinkedAccountsContext)
-  const { data: taxProfile, isLoading: isTaxProfileLoading } = useTaxProfile()
+  const { data: taxProfile, isLoading: isTaxProfileLoading } = useGetTaxProfile()
 
   const isTaxEstimatesEnabled = !!accountingConfiguration?.enableTaxEstimates
 

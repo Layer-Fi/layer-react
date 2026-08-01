@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
 
 import { type CallBooking, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
-import { useBookkeepingConfiguration } from '@api/businesses/[business-id]/bookkeeping/config/get'
-import { useBookkeepingStatus, useBookkeepingStatusGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/status/get'
-import { useCallBookings } from '@api/businesses/[business-id]/call-bookings/get'
-import { useCreateCallBooking } from '@api/businesses/[business-id]/call-bookings/post'
+import { useGetBookkeepingConfiguration } from '@api/businesses/[business-id]/bookkeeping/config/get'
+import { useGetBookkeepingStatus, useBookkeepingStatusGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/status/get'
+import { useGetInfiniteCallBookings } from '@api/businesses/[business-id]/call-bookings/get'
+import { usePostCallBooking } from '@api/businesses/[business-id]/call-bookings/post'
 import { type CalendlyPayload, useCalendly } from '@hooks/features/calendly/useCalendly'
 import { type CallBookingStringOverrides } from '@components/CallBooking/CallBooking'
 
@@ -20,11 +20,11 @@ const getUuidFromCalendlyUri = (uri: string) => {
 }
 
 export const useBookkeepingOnboardingCallBooking = () => {
-  const { data: bookkeepingStatus } = useBookkeepingStatus()
-  const { data: bookkeepingConfiguration } = useBookkeepingConfiguration()
+  const { data: bookkeepingStatus } = useGetBookkeepingStatus()
+  const { data: bookkeepingConfiguration } = useGetBookkeepingConfiguration()
   const { forceReload: forceReloadBookkeepingStatus } = useBookkeepingStatusGlobalCacheActions()
-  const { trigger: createCallBooking } = useCreateCallBooking()
-  const { data: callBookings, isError, isLoading } = useCallBookings({ limit: 1 })
+  const { trigger: createCallBooking } = usePostCallBooking()
+  const { data: callBookings, isError, isLoading } = useGetInfiniteCallBookings({ limit: 1 })
 
   const onboardingCallUrl = bookkeepingStatus?.showEmbeddedOnboarding
     ? bookkeepingStatus.onboardingCallUrl

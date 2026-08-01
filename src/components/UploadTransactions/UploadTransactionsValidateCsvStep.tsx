@@ -8,7 +8,7 @@ import { type PreviewCsv } from '@schemas/csvUpload'
 import { type CustomAccountTransactionRow } from '@schemas/customAccounts'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import type { CustomAccountParseCsvResponse } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/post'
-import { useCreateCustomAccountTransactions } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/post'
+import { usePostCustomAccountTransactions } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/post'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Badge, BadgeVariant } from '@ui/Badge/Badge'
 import { Button } from '@ui/Button/Button'
@@ -52,7 +52,7 @@ export function UploadTransactionsValidateCsvStep(
   const { t } = useTranslation()
   const { formatCurrencyFromCents, formatDate, formatNumber } = useIntlFormatter()
   const { previous, next } = useWizard()
-  const { trigger: uploadTransactions, isMutating, error: uploadTransactionsError } = useCreateCustomAccountTransactions()
+  const { trigger: uploadTransactions, isMutating, error: uploadTransactionsError } = usePostCustomAccountTransactions()
 
   const formatters = useMemo(() => ({
     date: (parsed: string) => formatDate(parsed, DateFormat.DateNumericPadded),

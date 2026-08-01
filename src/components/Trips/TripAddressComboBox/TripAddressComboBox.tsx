@@ -3,8 +3,8 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import type { TripFormAddress } from '@schemas/trip'
-import { useMileageAddressDetails } from '@api/businesses/[business-id]/mileage/address-details/get'
-import { MIN_ADDRESS_QUERY_LENGTH, useMileageAddressSuggestions } from '@api/businesses/[business-id]/mileage/address-suggestions/get'
+import { useGetMileageAddressDetails } from '@api/businesses/[business-id]/mileage/address-details/get'
+import { MIN_ADDRESS_QUERY_LENGTH, useGetMileageAddressSuggestions } from '@api/businesses/[business-id]/mileage/address-suggestions/get'
 import { SearchComboBox, useSearchComboBox } from '@ui/ComboBox/SearchComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { Label, P } from '@ui/Typography/Text'
@@ -40,13 +40,13 @@ export const TripAddressComboBox = ({
     data: suggestions,
     isLoading,
     isError,
-  } = useMileageAddressSuggestions({
+  } = useGetMileageAddressSuggestions({
     query: searchQuery,
     sessionToken,
     isEnabled: isSearchEnabled,
   })
 
-  const { data: details } = useMileageAddressDetails({
+  const { data: details } = useGetMileageAddressDetails({
     placeId: pendingSelection?.placeId ?? '',
     sessionToken,
     isEnabled: pendingSelection !== null,

@@ -10,8 +10,8 @@ import {
   fromNonRecursiveBigDecimal,
   type NonRecursiveBigDecimal,
 } from '@schemas/nonRecursiveBigDecimal'
-import { useUpdateCatalogService } from '@api/businesses/[business-id]/catalog/services/[service-id]/patch'
-import { useCreateCatalogService } from '@api/businesses/[business-id]/catalog/services/post'
+import { usePatchCatalogService } from '@api/businesses/[business-id]/catalog/services/[service-id]/patch'
+import { usePostCatalogService } from '@api/businesses/[business-id]/catalog/services/post'
 import { useAppForm } from '@hooks/features/forms/useForm'
 
 type CreateServiceFormProps = {
@@ -53,8 +53,8 @@ export function useServiceForm(props: ServiceFormProps) {
   const initialName = props.mode === 'create' ? props.initialName : undefined
   const serviceId = service?.id ?? ''
   const [submitError, setSubmitError] = useState<string | null>(null)
-  const { trigger: createService } = useCreateCatalogService()
-  const { trigger: updateService } = useUpdateCatalogService({ serviceId })
+  const { trigger: createService } = usePostCatalogService()
+  const { trigger: updateService } = usePatchCatalogService({ serviceId })
 
   const formDefaults = useMemo(
     () => getServiceFormDefaultValues({ service, initialName }),

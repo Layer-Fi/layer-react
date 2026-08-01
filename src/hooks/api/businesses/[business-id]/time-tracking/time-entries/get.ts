@@ -35,7 +35,7 @@ const listTimeEntries = getWithQuery<
   ({ businessId }) => `/v1/businesses/${businessId}/time-tracking/time-entries`,
 )
 
-export const useListTimeEntries = createInfiniteQueryHook({
+export const useGetInfiniteTimeEntries = createInfiniteQueryHook({
   tags: [LIST_TIME_ENTRIES_TAG_KEY],
   request: listTimeEntries,
   schema: ListTimeEntriesResponseSchema,

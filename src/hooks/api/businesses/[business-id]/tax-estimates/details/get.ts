@@ -15,7 +15,7 @@ const getTaxDetails = getWithQuery<
   toTaxEstimatesQuery,
 )
 
-export const useTaxDetails = createQueryHook({
+export const useGetTaxDetails = createQueryHook({
   tags: [TAX_DETAILS_TAG_KEY],
   request: getTaxDetails,
   schema: TaxDetailsResponseSchema,

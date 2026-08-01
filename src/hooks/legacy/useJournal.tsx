@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { SortOrder } from '@internal-types/utility/pagination'
 import { type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
-import { LedgerEntriesSortBy, type ListLedgerEntriesReturn, useListLedgerEntries } from '@api/businesses/[business-id]/ledger/entries/get'
+import { LedgerEntriesSortBy, type ListLedgerEntriesReturn, useGetInfiniteLedgerEntries } from '@api/businesses/[business-id]/ledger/entries/get'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { type TablePaginationProps } from '@blocks/PaginatedDataTable/PaginatedDataTable'
@@ -41,7 +41,7 @@ export const useJournal: UseJournal = () => {
     refetch,
     hasMore,
     fetchMore,
-  } = useListLedgerEntries({
+  } = useGetInfiniteLedgerEntries({
     sortBy: LedgerEntriesSortBy.EntryAt,
     sortOrder: SortOrder.DESC,
     limit: 150,

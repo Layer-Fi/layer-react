@@ -30,7 +30,7 @@ export const listCounterparties = getWithQuery<
   ({ businessId }) => `/v1/businesses/${businessId}/counterparties`,
 )
 
-export const useListCounterparties = createInfiniteQueryHook({
+export const useGetInfiniteCounterparties = createInfiniteQueryHook({
   tags: [LIST_COUNTERPARTIES_TAG_KEY],
   request: listCounterparties,
   schema: ListCounterpartiesReturnSchema,

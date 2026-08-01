@@ -39,7 +39,7 @@ type UseUnifiedReportExcelOptions = {
   onSuccess?: (url: S3PresignedUrlSchemaType) => Promise<void> | void
 }
 
-export function useUnifiedReportExcel({ onSuccess }: UseUnifiedReportExcelOptions = {}) {
+export function useGetUnifiedReportExcel({ onSuccess }: UseUnifiedReportExcelOptions = {}) {
   const params = useUnifiedReportParams()
 
   return useUnifiedReportExcelMutation({

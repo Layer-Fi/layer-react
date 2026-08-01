@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import { useInvoicePreview } from '@api/businesses/[business-id]/invoices/[invoice-id]/html/get'
+import { useGetInvoicePreview } from '@api/businesses/[business-id]/invoices/[invoice-id]/html/get'
 import { useInvoicePreviewRoute } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 
 import './invoicePreview.scss'
@@ -15,7 +15,7 @@ const getDocumentHeight = (doc: Document) => {
 
 export const InvoicePreview = () => {
   const { invoice } = useInvoicePreviewRoute()
-  const { data: srcDoc } = useInvoicePreview({ invoiceId: invoice.id })
+  const { data: srcDoc } = useGetInvoicePreview({ invoiceId: invoice.id })
   const [previewHeight, setPreviewHeight] = useState<number | null>(null)
 
   const handleLoad = useCallback((event: React.SyntheticEvent<HTMLIFrameElement>) => {

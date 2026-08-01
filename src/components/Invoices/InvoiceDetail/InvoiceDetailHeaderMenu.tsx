@@ -3,7 +3,7 @@ import { Menu as MenuIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
-import { useInvoicePdfDownload } from '@api/businesses/[business-id]/invoices/[invoice-id]/pdf/get'
+import { useGetInvoicePdfDownload } from '@api/businesses/[business-id]/invoices/[invoice-id]/pdf/get'
 import { UpsertInvoiceMode } from '@api/businesses/[business-id]/invoices/upsert'
 import { useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -107,7 +107,7 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
   }, [])
 
   const invoiceId = viewState.mode === UpsertInvoiceMode.Update ? viewState.invoice.id : ''
-  const { trigger: downloadInvoicePdf, isMutating: isDownloadingInvoicePdf } = useInvoicePdfDownload({
+  const { trigger: downloadInvoicePdf, isMutating: isDownloadingInvoicePdf } = useGetInvoicePdfDownload({
     invoiceId,
     onSuccess: ({ presignedUrl, fileName }) => {
       triggerInvisibleDownload({

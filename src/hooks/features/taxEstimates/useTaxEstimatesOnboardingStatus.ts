@@ -1,6 +1,6 @@
 import { type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
 import { type TaxProfile } from '@schemas/taxEstimates/profile'
-import { useTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/get'
+import { useGetTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/get'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export enum OnboardingStatus {
@@ -46,7 +46,7 @@ export function getTaxEstimatesOnboardingStatus(input: GetTaxEstimatesOnboarding
 
 export function useTaxEstimatesOnboardingStatus() {
   const { accountingConfiguration } = useLayerContext()
-  const { data: taxProfile, isLoading, isError } = useTaxProfile()
+  const { data: taxProfile, isLoading, isError } = useGetTaxProfile()
 
   return getTaxEstimatesOnboardingStatus({
     isLoading,

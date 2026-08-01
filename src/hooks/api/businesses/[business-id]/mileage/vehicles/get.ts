@@ -24,7 +24,7 @@ const listVehicles = getWithQuery<
 
 export const VEHICLES_TAG_KEY = '#list-vehicles'
 
-export const useListVehicles = createQueryHook({
+export const useGetVehicles = createQueryHook({
   tags: [VEHICLES_TAG_KEY],
   request: listVehicles,
   schema: ListVehiclesResponseSchema,

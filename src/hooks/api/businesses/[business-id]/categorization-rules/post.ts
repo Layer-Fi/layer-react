@@ -1,41 +1,48 @@
-import { CategorizationRuleSchema, type CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import {
+  CategorizationRuleSchema,
+  type CreateCategorizationRuleSchema,
+  type PatchCategorizationRuleSchema,
+} from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useCategorizationRulesGlobalCacheActions } from '@api/businesses/[business-id]/categorization-rules/get'
-import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
+import { useProfitAndLossGlobalInvalidator } from '@api/businesses/[business-id]/reports/profit-and-loss/useProfitAndLossGlobalInvalidator'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
-const CREATE_CATEGORIZATION_RULE_TAG = '#create-categorization-rule'
+export const UPSERT_CATEGORIZATION_RULE_TAG = '#upsert-categorization-rule'
 
-const CreateCategorizationRuleReturnSchema = UnwrappedDataResponseSchema(CategorizationRuleSchema)
+export const UpsertCategorizationRuleReturnSchema = UnwrappedDataResponseSchema(CategorizationRuleSchema)
 
-type CreateCategorizationRuleBody = typeof CreateCategorizationRuleSchema.Encoded
+export type UpsertCategorizationRuleReturnEncoded = typeof UpsertCategorizationRuleReturnSchema.Encoded
 
-const createCategorizationRule = post<
-  typeof CreateCategorizationRuleReturnSchema.Encoded,
-  CreateCategorizationRuleBody,
-  { businessId: string }
->(
+/*
+ * Create and patch accept different fields; the shared body type keeps both mutations'
+ * triggers call-compatible so the mode-selected response can be returned directly.
+ * Callers pass the body matching the mode the hook was created with.
+ */
+export type UpsertCategorizationRuleBody =
+  | typeof CreateCategorizationRuleSchema.Encoded
+  | typeof PatchCategorizationRuleSchema.Encoded
+
+const createCategorizationRule = post<UpsertCategorizationRuleReturnEncoded, UpsertCategorizationRuleBody>(
   ({ businessId }) =>
     `/v1/businesses/${businessId}/categorization-rules`,
 )
 
-export const useCreateCategorizationRule = createMutationHook({
-  tags: [CREATE_CATEGORIZATION_RULE_TAG],
+export const usePostCategorizationRule = createMutationHook({
+  tags: [UPSERT_CATEGORIZATION_RULE_TAG],
   request: createCategorizationRule,
-  schema: CreateCategorizationRuleReturnSchema,
+  schema: UpsertCategorizationRuleReturnSchema,
+  swrOptions: { throwOnError: true },
   useOnTriggerSuccess: () => {
-    const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
-
-    const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
     const { forceReload: forceReloadCategorizationRules } = useCategorizationRulesGlobalCacheActions()
+    const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
+    const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
     return () => {
-      void forceReloadBankTransactions()
-
       void forceReloadCategorizationRules()
-
+      void forceReloadBankTransactions()
       void debouncedInvalidateProfitAndLoss()
     }
   },

@@ -3,7 +3,7 @@ import { ArchiveRestore, Loader, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/catalogService'
-import { useListCatalogServices } from '@api/businesses/[business-id]/catalog/services/get'
+import { useGetInfiniteCatalogServices } from '@api/businesses/[business-id]/catalog/services/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
@@ -196,7 +196,7 @@ type ArchivedServicesContentProps = {
 
 function ArchivedServicesContent({ isEnabled, formatHourly, onRestore }: ArchivedServicesContentProps) {
   const { t } = useTranslation()
-  const { flattenedData: data, isLoading, isError } = useListCatalogServices({
+  const { flattenedData: data, isLoading, isError } = useGetInfiniteCatalogServices({
     allowArchived: true,
     isEnabled,
   })
@@ -261,7 +261,7 @@ export function TimeTrackingServicesDrawer({
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
   const formatHourly = useFormatHourly()
-  const { flattenedData: data, isLoading, isError } = useListCatalogServices()
+  const { flattenedData: data, isLoading, isError } = useGetInfiniteCatalogServices()
   const [tab, setTab] = useState<ServicesTab>('active')
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [isAdding, setIsAdding] = useState(false)

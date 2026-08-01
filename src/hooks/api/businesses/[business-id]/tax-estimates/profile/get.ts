@@ -14,7 +14,7 @@ export const getTaxProfile = get<
   },
 )
 
-export const useTaxProfile = createQueryHook({
+export const useGetTaxProfile = createQueryHook({
   tags: [TAX_PROFILE_TAG_KEY],
   request: getTaxProfile,
   schema: TaxProfileResponseSchema,

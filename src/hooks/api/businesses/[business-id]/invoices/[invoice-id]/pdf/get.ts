@@ -38,7 +38,7 @@ type UseInvoicePdfDownloadProps = {
   onError?: () => void
 }
 
-export function useInvoicePdfDownload({
+export function useGetInvoicePdfDownload({
   invoiceId,
   onSuccess,
   onError,

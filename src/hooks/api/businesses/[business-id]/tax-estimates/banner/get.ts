@@ -15,7 +15,7 @@ const getTaxEstimatesBanner = getWithQuery<
   toTaxEstimatesQuery,
 )
 
-export const useTaxEstimatesBanner = createQueryHook({
+export const useGetTaxEstimatesBanner = createQueryHook({
   tags: [TAX_ESTIMATES_BANNER_TAG_KEY],
   request: getTaxEstimatesBanner,
   schema: TaxEstimatesBannerResponseSchema,

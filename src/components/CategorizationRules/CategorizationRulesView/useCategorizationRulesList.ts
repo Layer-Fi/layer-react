@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { useListCategorizationRules } from '@api/businesses/[business-id]/categorization-rules/get'
+import { useGetInfiniteCategorizationRules } from '@api/businesses/[business-id]/categorization-rules/get'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { useCategorizationRulesTableFilters, useSetCurrentCategorizationRulesPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 
@@ -16,7 +16,7 @@ export const useCategorizationRulesList = () => {
     isLoading,
     isError,
     fetchMore,
-  } = useListCategorizationRules(filterParams)
+  } = useGetInfiniteCategorizationRules(filterParams)
 
   const {
     currentCategorizationRulesPage: pageIndex,

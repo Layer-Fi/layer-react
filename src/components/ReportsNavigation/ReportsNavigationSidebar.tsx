@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useReportConfig } from '@api/businesses/[business-id]/reports/config/get'
+import { useGetReportConfig } from '@api/businesses/[business-id]/reports/config/get'
 import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Span } from '@ui/Typography/Text'
 import { TreeNavigation } from '@blocks/NestedNavigation/TreeNavigation/TreeNavigation'
@@ -24,7 +24,7 @@ const renderLeafLabel = (leaf: { displayName: string }) => (
 
 export function ReportsNavigationSidebar() {
   const { t } = useTranslation()
-  const { data, isLoading, isError } = useReportConfig()
+  const { data, isLoading, isError } = useGetReportConfig()
   const { baseReport, setBaseReport } = useBaseUnifiedReport()
 
   const leafConfig = useMemo(

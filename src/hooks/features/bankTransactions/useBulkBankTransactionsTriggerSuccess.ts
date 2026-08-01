@@ -1,5 +1,5 @@
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
-import { useProfitAndLossGlobalInvalidator } from '@hooks/features/profitAndLoss/useProfitAndLossGlobalInvalidator'
+import { useProfitAndLossGlobalInvalidator } from '@api/businesses/[business-id]/reports/profit-and-loss/useProfitAndLossGlobalInvalidator'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 /** Shared post-success side effects for the bulk bank transaction categorization mutations. */

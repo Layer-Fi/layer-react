@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useBankTransactionsDownload } from '@api/businesses/[business-id]/reports/transactions/exports/excel/get'
+import { useGetBankTransactionsDownload } from '@api/businesses/[business-id]/reports/transactions/exports/excel/get'
 import { bankTransactionFiltersToHookOptions } from '@hooks/features/bankTransactions/useAugmentedBankTransactions'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
@@ -16,7 +16,7 @@ export function useHandleDownloadTransactions({ isListView }: { isListView: bool
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BankTransactions)
 
-  const { trigger, error, isMutating } = useBankTransactionsDownload()
+  const { trigger, error, isMutating } = useGetBankTransactionsDownload()
 
   const handleDownloadTransactions = useCallback(() => {
     emitLayerEvent({

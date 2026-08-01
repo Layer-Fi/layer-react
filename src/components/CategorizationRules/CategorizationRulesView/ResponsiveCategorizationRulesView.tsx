@@ -6,7 +6,7 @@ import type { CategorizationRule } from '@schemas/bankTransactions/categorizatio
 import { CategoriesListMode } from '@schemas/categorization'
 import { flattenCategories } from '@utils/categories'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
-import { useCategories } from '@api/businesses/[business-id]/categories/get'
+import { useGetCategories } from '@api/businesses/[business-id]/categories/get'
 import { useArchiveCategorizationRule } from '@api/businesses/[business-id]/categorization-rules/[categorization-rule-id]/archive/post'
 import { useDebouncedSearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -111,7 +111,7 @@ export const ResponsiveCategorizationRulesView = () => {
   }, [])
   const onFormSuccess = useCallback(() => setFormState(null), [])
 
-  const { data: categories, isLoading: categoriesAreLoading } = useCategories({ mode: CategoriesListMode.All })
+  const { data: categories, isLoading: categoriesAreLoading } = useGetCategories({ mode: CategoriesListMode.All })
   const options = useMemo(() => {
     if (!categories) return []
     return flattenCategories(categories)

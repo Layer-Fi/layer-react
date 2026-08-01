@@ -11,7 +11,7 @@ type UseInvoicePreviewProps = {
   invoiceId: string
 }
 
-export const useInvoicePreview = createQueryHook({
+export const useGetInvoicePreview = createQueryHook({
   tags: [INVOICE_PREVIEW_TAG_KEY],
   request: getInvoicePreview,
 })
@@ -21,5 +21,5 @@ export function usePreloadInvoicePreview(props: UseInvoicePreviewProps) {
    * This will initiate a network request to fill the cache, but will not
    * cause a re-render when `data` changes.
    */
-  useInvoicePreview(props)
+  useGetInvoicePreview(props)
 }

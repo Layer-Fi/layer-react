@@ -3,7 +3,7 @@ import { createContext, type PropsWithChildren, useContext, useMemo } from 'reac
 import { type SWRQueryResult } from '@internal-types/swr/SWRResponseTypes'
 import { BookkeepingStatus, type BookkeepingStatusData } from '@schemas/bookkeepingStatus'
 import { isActiveBookkeepingStatus as checkIsActiveBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
-import { useBookkeepingStatus } from '@api/businesses/[business-id]/bookkeeping/status/get'
+import { useGetBookkeepingStatus } from '@api/businesses/[business-id]/bookkeeping/status/get'
 
 type BookkeepingStatusContextValue = Pick<
   SWRQueryResult<BookkeepingStatusData>,
@@ -34,7 +34,7 @@ export function BookkeepingStatusProvider({ children }: PropsWithChildren) {
     isLoading,
     isValidating,
     refetch,
-  } = useBookkeepingStatus()
+  } = useGetBookkeepingStatus()
 
   const value = useMemo<BookkeepingStatusContextValue>(() => {
     const status = data?.status ?? BookkeepingStatus.NOT_PURCHASED

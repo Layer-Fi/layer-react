@@ -16,7 +16,7 @@ const getProfitAndLoss = getWithQuery<
   ({ businessId }) => `/v1/businesses/${businessId}/reports/profit-and-loss`,
 )
 
-export const useProfitAndLossReport = createQueryHook({
+export const useGetProfitAndLossReport = createQueryHook({
   tags: [PNL_REPORT_TAG_KEY],
   request: getProfitAndLoss,
   schema: ProfitAndLossReportResponseSchema,

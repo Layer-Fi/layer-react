@@ -11,7 +11,7 @@ import { isActiveBookkeepingPeriod } from '@utils/bookkeeping/periods/getFiltere
 import { getUserVisibleTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import {
   BOOKKEEPING_TAG_KEY,
-  useBookkeepingStatus,
+  useGetBookkeepingStatus,
 } from '@api/businesses/[business-id]/bookkeeping/status/get'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
@@ -60,8 +60,8 @@ const useBookkeepingPeriodsQuery = createQueryHook({
       .filter(period => isActiveBookkeepingPeriod(period)),
 })
 
-export function useBookkeepingPeriods() {
-  const { data, isLoading: isLoadingBookkeepingStatus } = useBookkeepingStatus()
+export function useGetBookkeepingPeriods() {
+  const { data, isLoading: isLoadingBookkeepingStatus } = useGetBookkeepingStatus()
   const isActiveOrPaused = data ? isActiveOrPausedBookkeepingStatus(data.status) : false
 
   const queryResult = useBookkeepingPeriodsQuery({ isEnabled: isActiveOrPaused })

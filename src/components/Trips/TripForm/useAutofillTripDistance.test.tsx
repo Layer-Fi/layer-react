@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { fromNonRecursiveBigDecimal, toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import type { Trip, TripForm, TripPlace } from '@schemas/trip'
-import { useMileageDistance } from '@api/businesses/[business-id]/mileage/distance/get'
+import { useGetMileageDistance } from '@api/businesses/[business-id]/mileage/distance/get'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { getTripFormDefaultValues } from '@components/Trips/TripForm/formUtils'
 import { useAutofillTripDistance } from '@components/Trips/TripForm/useAutofillTripDistance'
@@ -12,7 +12,7 @@ import { useAutofillTripDistance } from '@components/Trips/TripForm/useAutofillT
 import { makeTrip } from '@fixtures/trips/mocks'
 
 vi.mock('@api/businesses/[business-id]/mileage/distance/get', () => ({
-  useMileageDistance: vi.fn(),
+  useGetMileageDistance: vi.fn(),
 }))
 
 const START_PLACE_ID = 'start-a'
@@ -24,10 +24,10 @@ const ROUTES: Record<string, BD.BigDecimal> = {
 }
 
 beforeEach(() => {
-  vi.mocked(useMileageDistance).mockImplementation(params => ({
+  vi.mocked(useGetMileageDistance).mockImplementation(params => ({
     data: params?.isEnabled ? ROUTES[`${params.startPlaceId}|${params.endPlaceId}`] : undefined,
     error: undefined,
-  }) as ReturnType<typeof useMileageDistance>)
+  }) as ReturnType<typeof useGetMileageDistance>)
 })
 
 const renderAutofill = (trip?: Trip) => renderHook(() => {

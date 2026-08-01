@@ -25,7 +25,7 @@ const createCustomAccount = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/custom-accounts`)
 
-export const useCreateCustomAccount = createMutationHook({
+export const usePostCustomAccount = createMutationHook({
   tags: [`${CUSTOM_ACCOUNTS_TAG_KEY}:create`],
   request: createCustomAccount,
   schema: CreateCustomAccountResponseSchema,

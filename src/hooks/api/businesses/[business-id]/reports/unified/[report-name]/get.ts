@@ -26,7 +26,7 @@ const useUnifiedReportQuery = createQueryHook({
   schema: UnifiedReportResponseSchema,
 })
 
-export function useUnifiedReport() {
+export function useGetUnifiedReport() {
   const params = useUnifiedReportParams()
 
   return useUnifiedReportQuery({

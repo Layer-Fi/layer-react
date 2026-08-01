@@ -20,7 +20,7 @@ type CreateTagValueDefinitionArg = {
   displayName?: string
 }
 
-export const useCreateTagDimension = createMutationHook({
+export const usePostTagValueDefinition = createMutationHook({
   tags: [CREATE_TAG_VALUE_DEFINITION_TAG_KEY],
   request: createTagValueDefinition,
   argToParams: ({ dimensionId }: CreateTagValueDefinitionArg) => ({ dimensionId }),

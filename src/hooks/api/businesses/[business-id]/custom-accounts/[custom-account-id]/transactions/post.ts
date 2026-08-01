@@ -27,7 +27,7 @@ const createCustomAccountTransactions = post<
   `/v1/businesses/${businessId}/custom-accounts/${customAccountId}/transactions`,
 )
 
-export const useCreateCustomAccountTransactions = createMutationHook({
+export const usePostCustomAccountTransactions = createMutationHook({
   tags: [`${CUSTOM_ACCOUNTS_TAG_KEY}:create-transactions`],
   request: createCustomAccountTransactions,
   argToParams: ({ customAccountId }: CreateCustomAccountTransactionsArgs) => ({ customAccountId }),

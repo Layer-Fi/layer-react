@@ -10,8 +10,8 @@ import { useConfirmExternalAccount } from '@api/businesses/[business-id]/externa
 import { useExcludeExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/exclude/post'
 import { useBreakPlaidItemConnection } from '@api/businesses/[business-id]/plaid/items/[plaid-item-id]/sandbox-reset-item-login/post'
 import { useUnlinkPlaidItem } from '@api/businesses/[business-id]/plaid/items/[plaid-item-id]/unlink/post'
-import { useCreatePlaidLink } from '@api/businesses/[business-id]/plaid/link/post'
-import { useCreatePlaidUpdateModeLink } from '@api/businesses/[business-id]/plaid/update-mode-link/post'
+import { usePostPlaidLink } from '@api/businesses/[business-id]/plaid/link/post'
+import { usePostPlaidUpdateModeLink } from '@api/businesses/[business-id]/plaid/update-mode-link/post'
 import { type LinkMode, usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
 import { usePollPlaidHostedLinkStatus } from '@hooks/features/linkedAccounts/usePollPlaidHostedLinkStatus'
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
@@ -66,8 +66,8 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
 
   const { refetch } = useBankAccountsContext()
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
-  const { trigger: triggerCreatePlaidLink } = useCreatePlaidLink()
-  const { trigger: triggerCreatePlaidUpdateModeLink } = useCreatePlaidUpdateModeLink()
+  const { trigger: triggerCreatePlaidLink } = usePostPlaidLink()
+  const { trigger: triggerCreatePlaidUpdateModeLink } = usePostPlaidUpdateModeLink()
   const { trigger: triggerConfirmExternalAccount } = useConfirmExternalAccount()
   const { trigger: triggerExcludeExternalAccount } = useExcludeExternalAccount()
   const { trigger: triggerUnlinkPlaidItem } = useUnlinkPlaidItem()

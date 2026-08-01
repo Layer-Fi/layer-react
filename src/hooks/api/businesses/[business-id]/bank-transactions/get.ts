@@ -79,7 +79,7 @@ const getBankTransactions = getWithQuery<
   }),
 )
 
-export const useBankTransactions = createInfiniteQueryHook({
+export const useGetInfiniteBankTransactions = createInfiniteQueryHook({
   tags: [BANK_TRANSACTIONS_TAG_KEY],
   request: getBankTransactions,
   schema: GetBankTransactionsResponseSchema,

@@ -19,7 +19,7 @@ const getBookkeepingStatus = get<
 export const BOOKKEEPING_TAG_KEY = '#bookkeeping'
 export const BOOKKEEPING_STATUS_TAG_KEY = '#bookkeeping-status'
 
-export const useBookkeepingStatus = createQueryHook({
+export const useGetBookkeepingStatus = createQueryHook({
   tags: [BOOKKEEPING_TAG_KEY, BOOKKEEPING_STATUS_TAG_KEY],
   request: getBookkeepingStatus,
   schema: BookkeepingStatusResponseSchema,
@@ -30,7 +30,7 @@ export const useBookkeepingStatusGlobalCacheActions = createResourceGlobalCacheA
 
 export function useEffectiveBookkeepingStatus(): BookkeepingStatus {
   const { overrideMode } = useLegacyMode()
-  const { data } = useBookkeepingStatus()
+  const { data } = useGetBookkeepingStatus()
 
   if (overrideMode === 'bookkeeping-client') {
     return BookkeepingStatus.ACTIVE

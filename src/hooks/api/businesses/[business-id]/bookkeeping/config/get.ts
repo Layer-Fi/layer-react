@@ -26,7 +26,7 @@ const getBookkeepingConfiguration = get<
   return `/v1/businesses/${businessId}/bookkeeping/config`
 })
 
-export const useBookkeepingConfiguration = createQueryHook({
+export const useGetBookkeepingConfiguration = createQueryHook({
   tags: [BOOKKEEPING_CONFIGURATION_TAG_KEY],
   request: getBookkeepingConfiguration,
   schema: BookkeepingConfigurationResponseSchema,

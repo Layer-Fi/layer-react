@@ -2,7 +2,7 @@ import { Check } from 'lucide-react'
 import { Trans } from 'react-i18next'
 
 import { convertBigIntCentsToBigDecimal, formatBigDecimalToString } from '@utils/bigDecimalUtils'
-import { useInvoiceSummaryStats } from '@api/businesses/[business-id]/invoices/summary-stats/get'
+import { useGetInvoiceSummaryStats } from '@api/businesses/[business-id]/invoices/summary-stats/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { FallbackWithSkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
@@ -13,7 +13,7 @@ import './invoicePaymentsSummary.scss'
 
 export const InvoicePaymentsSummary = () => {
   const formatter = useIntlFormatter()
-  const { data, isLoading, isError } = useInvoiceSummaryStats()
+  const { data, isLoading, isError } = useGetInvoiceSummaryStats()
 
   const showSkeleton = !data || isLoading || isError
   const { sumTotal: invoicePaymentsTotal } = data?.invoicePayments ?? {}

@@ -25,7 +25,7 @@ const getTimeTrackingSummary = getWithQuery<
   ({ businessId }) => `/v1/businesses/${businessId}/time-tracking/time-entries/summary`,
 )
 
-export const useTimeTrackingSummary = createQueryHook({
+export const useGetTimeTrackingSummary = createQueryHook({
   tags: [TIME_TRACKING_SUMMARY_TAG_KEY],
   request: getTimeTrackingSummary,
   schema: TimeTrackingSummaryResponseSchema,

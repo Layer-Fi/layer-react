@@ -30,7 +30,7 @@ const getCustomAccounts = getWithQuery<
   ({ businessId }) => `/v1/businesses/${businessId}/custom-accounts`,
 )
 
-export const useCustomAccounts = createQueryHook({
+export const useGetCustomAccounts = createQueryHook({
   tags: [CUSTOM_ACCOUNTS_TAG_KEY],
   request: getCustomAccounts,
   schema: GetCustomAccountsResponseSchema,
@@ -38,10 +38,10 @@ export const useCustomAccounts = createQueryHook({
   keyDefaults: { userCreated: true },
 })
 
-type UseCustomAccountsParams = Parameters<typeof useCustomAccounts>[0]
+type UseCustomAccountsParams = Parameters<typeof useGetCustomAccounts>[0]
 
 export function usePreloadCustomAccounts(parameters?: UseCustomAccountsParams) {
-  useCustomAccounts(parameters)
+  useGetCustomAccounts(parameters)
 }
 
 export const useCustomAccountsGlobalCacheActions =

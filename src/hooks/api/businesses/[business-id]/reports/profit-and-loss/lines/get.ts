@@ -51,7 +51,7 @@ const listProfitAndLossDetailLines = getWithQuery<
   }),
 )
 
-export const useProfitAndLossDetailLines = createQueryHook({
+export const useGetProfitAndLossDetailLines = createQueryHook({
   tags: [LIST_PNL_DETAIL_LINES_TAG_KEY],
   request: listProfitAndLossDetailLines,
   schema: PnlDetailLinesResponseSchema,

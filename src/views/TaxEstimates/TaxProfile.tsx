@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { ChevronLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/get'
+import { useGetTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/get'
 import {
   useTaxEstimatesNavigation,
 } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
@@ -13,7 +13,7 @@ import { TaxProfileForm } from '@components/TaxProfileForm/TaxProfileForm'
 export const TaxProfile = () => {
   const { t } = useTranslation()
   const navigate = useTaxEstimatesNavigation()
-  const { data: taxProfile } = useTaxProfile()
+  const { data: taxProfile } = useGetTaxProfile()
   const hasSavedTaxProfile = taxProfile?.userHasSavedTaxProfile === true
 
   const handleGoBack = useCallback(() => {

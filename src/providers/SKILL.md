@@ -10,7 +10,7 @@ Three tools, three jobs. Picking the wrong one is the most common architectural 
 
 | Tool | Owns | Examples |
 | --- | --- | --- |
-| **SWR** | server state: fetching, caching, revalidation, mutation | `useCustomAccounts`, `useListInvoices` — see [`src/hooks/api/SKILL.md`](../hooks/api/SKILL.md) |
+| **SWR** | server state: fetching, caching, revalidation, mutation | `useGetCustomAccounts`, `useGetInfiniteInvoices` — see [`src/hooks/api/SKILL.md`](../hooks/api/SKILL.md) |
 | **Zustand** | client state shared across a feature subtree: route state, filters, selections, page indices, drawer/modal state | `BankTransactionsRouteStore`, `InvoicesRouteStore`, `BulkSelectionStore`, `UnifiedReportStore` |
 | **React Context** | dependency injection: auth, environment, config, string overrides — and distributing a Zustand store instance | `AuthInputProvider`, `EnvironmentInputProvider`, `BankTransactionsStringOverridesContext` |
 
@@ -78,7 +78,7 @@ every consumer on any change, and narrow units can be mounted independently wher
 providers and store providers.
 
 `LayerContext` is the root: API URL, auth, environment, theme, locale. Read it through
-`useLayerContext` or, better, the purpose-built hooks (`useAuth`, `useBusiness`,
+`useLayerContext` or, better, the purpose-built hooks (`useAuth`, `useGetBusiness`,
 `useEnvironment`) rather than `useContext` directly.
 
 ## Syncing into stores
@@ -86,7 +86,7 @@ providers and store providers.
 Stores may *reconcile* against SWR data or props via an effect — but only narrowly:
 
 - Prune selections that reference entities no longer in the server list
-  (`BankAccountsFilterStore` retains only IDs still present in `useListBankAccounts()`).
+  (`BankAccountsFilterStore` retains only IDs still present in `useGetBankAccounts()`).
 - Seed an initial/default value once (`useHydrateUnifiedReportStore`).
 - Push a prop into the store when the store is the subtree's source of truth for it
   (`TimeEntriesStore`).

@@ -3,7 +3,7 @@ import { ChevronLeft, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
-import { useListVehicles } from '@api/businesses/[business-id]/mileage/vehicles/get'
+import { useGetVehicles } from '@api/businesses/[business-id]/mileage/vehicles/get'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
@@ -69,7 +69,7 @@ export const VehicleManagementDetail = () => {
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | undefined>(undefined)
   const [showArchived, setShowArchived] = useState(false)
   const { isDesktop } = useSizeClass()
-  const { data: allVehicles } = useListVehicles({ allowArchived: true })
+  const { data: allVehicles } = useGetVehicles({ allowArchived: true })
   const hasArchivedVehicles = allVehicles?.some(vehicle => vehicle.archivedAt != null) ?? false
 
   const isMobileVariant = !isDesktop

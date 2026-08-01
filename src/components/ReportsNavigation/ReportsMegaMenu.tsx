@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useReportConfig } from '@api/businesses/[business-id]/reports/config/get'
+import { useGetReportConfig } from '@api/businesses/[business-id]/reports/config/get'
 import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
@@ -24,7 +24,7 @@ const EMPTY_ARRAY: never[] = []
 
 export function ReportsMegaMenu() {
   const { t } = useTranslation()
-  const { data, isLoading, isError } = useReportConfig()
+  const { data, isLoading, isError } = useGetReportConfig()
   const { baseReport, setBaseReport } = useBaseUnifiedReport()
 
   const leafConfig = useMemo(

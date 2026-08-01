@@ -16,7 +16,7 @@ const updateCatalogService = patch<
   { businessId: string, serviceId: string }
 >(({ businessId, serviceId }) => `/v1/businesses/${businessId}/catalog/services/${serviceId}`)
 
-export const useUpdateCatalogService = createMutationHook({
+export const usePatchCatalogService = createMutationHook({
   tags: [UPDATE_CATALOG_SERVICE_TAG_KEY],
   request: updateCatalogService,
   keyParams: ['serviceId'],

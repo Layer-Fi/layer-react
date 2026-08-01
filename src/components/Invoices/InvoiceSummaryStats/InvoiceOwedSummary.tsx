@@ -2,7 +2,7 @@ import { BigDecimal as BD } from 'effect'
 import { Trans, useTranslation } from 'react-i18next'
 
 import { convertBigIntCentsToBigDecimal, convertDecimalToPercent, formatBigDecimalToString, safeDivide } from '@utils/bigDecimalUtils'
-import { useInvoiceSummaryStats } from '@api/businesses/[business-id]/invoices/summary-stats/get'
+import { useGetInvoiceSummaryStats } from '@api/businesses/[business-id]/invoices/summary-stats/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Meter } from '@ui/Meter/Meter'
 import { FallbackWithSkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
@@ -31,7 +31,7 @@ const getPercentageOverdue = (sentTotal: bigint | undefined, overdueTotal: bigin
 export const InvoiceOwedSummary = () => {
   const { t } = useTranslation()
   const formatter = useIntlFormatter()
-  const { data, isLoading, isError } = useInvoiceSummaryStats()
+  const { data, isLoading, isError } = useGetInvoiceSummaryStats()
 
   const showSkeleton = !data || isLoading || isError
   const { overdueCount, overdueTotal, sentCount, sentTotal } = data?.invoices ?? {}

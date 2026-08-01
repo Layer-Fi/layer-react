@@ -28,19 +28,19 @@ const listVendors = getWithQuery<
 
 export const VENDORS_TAG_KEY = '#vendors'
 
-export const useListVendors = createInfiniteQueryHook({
+export const useGetInfiniteVendors = createInfiniteQueryHook({
   tags: [VENDORS_TAG_KEY],
   request: listVendors,
   schema: ListVendorsRawResultSchema,
   keyDefaults: { limit: 100 },
 })
 
-type UseListVendorsParameters = Parameters<typeof useListVendors>[0]
+type UseListVendorsParameters = Parameters<typeof useGetInfiniteVendors>[0]
 
 export function usePreloadVendors(parameters?: UseListVendorsParameters) {
   /*
    * This will initiate a network request to fill the cache, but will not
    * cause a re-render when `data` changes.
    */
-  useListVendors(parameters)
+  useGetInfiniteVendors(parameters)
 }

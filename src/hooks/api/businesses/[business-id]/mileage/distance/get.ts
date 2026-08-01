@@ -25,7 +25,7 @@ const getMileageDistance = getWithQuery<
   }),
 )
 
-export const useMileageDistance = createQueryHook({
+export const useGetMileageDistance = createQueryHook({
   tags: [MILEAGE_DISTANCE_TAG_KEY],
   request: getMileageDistance,
   schema: MileageDistanceResponseSchema,

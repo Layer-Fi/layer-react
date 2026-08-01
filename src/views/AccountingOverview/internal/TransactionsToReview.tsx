@@ -3,7 +3,7 @@ import { getMonth, getYear } from 'date-fns'
 import { Bell, Check, ChevronRight, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useProfitAndLossSummaries } from '@api/businesses/[business-id]/reports/profit-and-loss-summaries/get'
+import { useGetProfitAndLossSummaries } from '@api/businesses/[business-id]/reports/profit-and-loss-summaries/get'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { Badge } from '@ui/Badge/Badge'
 import { BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
@@ -32,7 +32,7 @@ export function TransactionsToReview({
 
   const dateRange = useGlobalDateRange({ dateSelectionMode: 'month' })
 
-  const { data, isLoading, isError, mutate } = useProfitAndLossSummaries({
+  const { data, isLoading, isError, mutate } = useGetProfitAndLossSummaries({
     startYear: dateRange.startDate.getFullYear(),
     startMonth: dateRange.startDate.getMonth() + 1,
     endYear: dateRange.endDate.getFullYear(),

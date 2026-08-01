@@ -15,7 +15,7 @@ const listBankAccounts = get<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/bank-accounts`)
 
-export const useListBankAccounts = createQueryHook({
+export const useGetBankAccounts = createQueryHook({
   tags: [BANK_ACCOUNTS_TAG_KEY],
   request: listBankAccounts,
   schema: ListBankAccountsResponseSchema,

@@ -18,7 +18,7 @@ const buildKey = createBuildKey<{ businessId: string }>([BUSINESS_TAG_KEY])
 
 const fetchBusiness = createKeyedFetcher(getBusiness, BusinessResponseSchema)
 
-export function useBusiness({ businessId }: { businessId: string }) {
+export function useGetBusiness({ businessId }: { businessId: string }) {
   const { data: auth } = useAuth()
 
   const swrResponse = useSWR(

@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { useTaxOverview } from '@api/businesses/[business-id]/tax-estimates/overview/get'
+import { useGetTaxOverview } from '@api/businesses/[business-id]/tax-estimates/overview/get'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Card } from '@ui/Card/Card'
@@ -35,7 +35,7 @@ export const TaxableIncomeCard = () => {
   const className = classNames({ 'Layer__TaxOverview__Card__MetricRow--mobile': !isDesktop })
   const isHeaderVisible = viewportWidth >= TAX_OVERVIEW_MOBILE_BREAKPOINT
 
-  const { data: taxOverviewData, isLoading, isError } = useTaxOverview({
+  const { data: taxOverviewData, isLoading, isError } = useGetTaxOverview({
     year,
     fullYearProjection,
   })

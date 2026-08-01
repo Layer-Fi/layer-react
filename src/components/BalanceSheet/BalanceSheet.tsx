@@ -2,7 +2,7 @@ import { type PropsWithChildren, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type View as ViewType } from '@internal-types/general'
-import { useBalanceSheet } from '@api/businesses/[business-id]/reports/balance-sheet/get'
+import { useGetBalanceSheet } from '@api/businesses/[business-id]/reports/balance-sheet/get'
 import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { useResolvedReportView } from '@hooks/features/reports/useResolvedReportView'
 import { type DateSelectionMode, useGlobalDate } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
@@ -59,7 +59,7 @@ const BalanceSheetView = ({
 }: BalanceSheetViewProps) => {
   const { t } = useTranslation()
   const { date: effectiveDate } = useGlobalDate({ dateSelectionMode })
-  const { data, isLoading, isValidating, isError } = useBalanceSheet({ effectiveDate })
+  const { data, isLoading, isValidating, isError } = useGetBalanceSheet({ effectiveDate })
   const { containerRef, isMobileView } = useResolvedReportView(propView)
   const { headerRef, isCompact } = useReportsCompactHeader()
 

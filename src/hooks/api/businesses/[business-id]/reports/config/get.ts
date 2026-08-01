@@ -16,7 +16,7 @@ const getReportConfig = getWithQuery<
   ({ businessId }) => `/v1/businesses/${businessId}/reports/config`,
 )
 
-export const useReportConfig = createQueryHook({
+export const useGetReportConfig = createQueryHook({
   tags: [REPORT_CONFIG_TAG_KEY],
   request: getReportConfig,
   schema: ReportConfigResponseSchema,

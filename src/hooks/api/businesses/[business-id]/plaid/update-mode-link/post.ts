@@ -17,7 +17,7 @@ const createPlaidUpdateModeLink = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/plaid/update-mode-link`)
 
-export const useCreatePlaidUpdateModeLink = createMutationHook({
+export const usePostPlaidUpdateModeLink = createMutationHook({
   tags: [CREATE_PLAID_UPDATE_MODE_LINK_TAG_KEY],
   request: createPlaidUpdateModeLink,
   argToBody: ({ plaidItemId }: { plaidItemId: string }) => ({ plaid_item_id: plaidItemId }),

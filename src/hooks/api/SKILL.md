@@ -26,8 +26,8 @@ for a schema-validated mutation.
 directory names:
 
 ```
-src/hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts.ts
-src/hooks/api/businesses/[business-id]/custom-accounts/useCreateCustomAccount.ts
+src/hooks/api/businesses/[business-id]/custom-accounts/useGetCustomAccounts.ts
+src/hooks/api/businesses/[business-id]/custom-accounts/usePostCustomAccount.ts
 src/hooks/api/businesses/[business-id]/invoices/[invoice-id]/void/useVoidInvoice.tsx
 ```
 
@@ -42,7 +42,7 @@ Other hook directories:
 
 ## Anatomy of a query hook
 
-A hook module has four parts, in this order. `useCustomAccounts.ts` is the reference.
+A hook module has four parts, in this order. `useGetCustomAccounts.ts` is the reference.
 
 1. **The tag key**, exported as a `const` (`'#custom-accounts'`) so mutations elsewhere can
    reference it.
@@ -52,7 +52,7 @@ A hook module has four parts, in this order. `useCustomAccounts.ts` is the refer
 4. **The factory call**, plus the resource's cache actions.
 
 ```ts
-export const useCustomAccounts = createQueryHook({
+export const useGetCustomAccounts = createQueryHook({
   tags: [CUSTOM_ACCOUNTS_TAG_KEY],
   request: getCustomAccounts,
   schema: GetCustomAccountsResponseSchema,
@@ -82,7 +82,7 @@ Two things to internalize:
 ## Paginated lists (`createInfiniteQueryHook`)
 
 Same four parts, with `PaginatedResponseSchema(T)` as the response schema and
-`createInfiniteQueryGlobalCacheActions<TItem>` for the cache actions. `useListInvoices.tsx` is the
+`createInfiniteQueryGlobalCacheActions<TItem>` for the cache actions. `useGetInfiniteInvoices.tsx` is the
 reference.
 
 Differences from `createQueryHook`:

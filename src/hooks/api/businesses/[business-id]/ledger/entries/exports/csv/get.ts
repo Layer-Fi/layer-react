@@ -19,7 +19,7 @@ const getJournalEntriesCSV = getWithQuery<
 
 const requestJournalEntriesCSV = getAsMutation(getJournalEntriesCSV)
 
-export const useJournalEntriesDownload = createMutationHook({
+export const useGetJournalEntriesDownload = createMutationHook({
   tags: ['#journal-entries', '#exports', '#csv'],
   request: requestJournalEntriesCSV,
   keyParams: ['startDate', 'endDate'],
