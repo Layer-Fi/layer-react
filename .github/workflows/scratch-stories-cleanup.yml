@@ -1,47 +1,21 @@
-name: Scratch Stories
+name: Scratch Stories Cleanup
 
-# Cleanup pushes to the PR head branch, not main: the branch ruleset gives
+# Pushes to the PR head branch, not main: the branch ruleset gives
 # github-actions[bot] no bypass there.
 #
-# A GITHUB_TOKEN push does not re-trigger `guard`, so `cleanup` posts the
-# passing "No scratch stories" status on its own commit. Check runs and commit
-# statuses share a namespace, so that satisfies the same required check.
+# A GITHUB_TOKEN push does not re-trigger the guard workflow, so this posts
+# the passing "No scratch stories" status on its own commit. Check runs and
+# commit statuses share a namespace, so that satisfies the same required
+# check.
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    branches: [ main ]
   pull_request_review:
     types: [submitted]
 
 jobs:
-  guard:
-    name: No scratch stories
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.pull_request.head.sha }}
-
-    - name: Check for scratch stories
-      run: |
-        FILES=$(git ls-files '*scratch.stories.tsx')
-        if [ -z "$FILES" ]; then
-          echo "No scratch stories found."
-          exit 0
-        fi
-        echo "$FILES" | sed 's/^/  - /'
-        echo "::error::Scratch stories must not reach main. Approve the PR and they will be removed automatically, or delete them yourself."
-        exit 1
-
   cleanup:
     if: >-
-      github.event_name == 'pull_request_review'
-      && github.event.review.state == 'approved'
+      github.event.review.state == 'approved'
       && github.event.pull_request.base.ref == 'main'
       && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest

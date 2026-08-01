@@ -1,0 +1,34 @@
+name: Scratch Stories Guard
+
+# Kept separate from scratch-stories-cleanup.yml: a shared workflow would emit
+# a skipped `guard` check run on every review event, and skipped counts as
+# passing for required checks — green on a still-dirty head.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    name: No scratch stories
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+
+    - name: Check for scratch stories
+      run: |
+        FILES=$(git ls-files '*scratch.stories.tsx')
+        if [ -z "$FILES" ]; then
+          echo "No scratch stories found."
+          exit 0
+        fi
+        echo "$FILES" | sed 's/^/  - /'
+        echo "::error::Scratch stories must not reach main. Approve the PR and they will be removed automatically, or delete them yourself."
+        exit 1
