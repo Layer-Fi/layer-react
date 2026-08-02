@@ -1,4 +1,4 @@
-import { type Key, useCallback, useMemo } from 'react'
+import { type Key, useCallback, useMemo, useState } from 'react'
 import type { ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
@@ -27,6 +27,8 @@ import { SelectedBankAccountsChip } from '@components/BankTransactions/SelectedB
 import { TransactionsSearch } from '@components/BankTransactions/TransactionsSearch/TransactionsSearch'
 import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
 import { BulkActionsModule } from '@components/BulkActionsModule/BulkActionsModule'
+import { CategorizationRuleFormModal } from '@components/CategorizationRules/CategorizationRuleForm/CategorizationRuleFormModal'
+import { type CategorizationRuleFormState } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 import { Header } from '@components/Container/Header'
 import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
@@ -71,6 +73,15 @@ export const BankTransactionsHeader = ({
     dateFilterMode,
   } = useBankTransactionsFiltersContext()
   const { value: sizeClass } = useSizeClass()
+  const [ruleFormState, setRuleFormState] = useState<CategorizationRuleFormState | null>(null)
+
+  const onCreateRule = useCallback(() => setRuleFormState({ mode: 'create' }), [])
+  const onRuleFormOpenChange = useCallback((isOpen: boolean) => {
+    if (!isOpen) {
+      setRuleFormState(null)
+    }
+  }, [])
+  const onRuleFormSuccess = useCallback(() => setRuleFormState(null), [])
 
   const withDatePicker = dateFilterMode === BankTransactionsDateFilterMode.MonthlyView
   const monthPickerDate = filters?.dateRange ? convertDateToZonedDateTime(filters.dateRange.startDate) : null
@@ -174,6 +185,15 @@ export const BankTransactionsHeader = ({
     )
     : null
 
+  const ruleFormModal = (
+    <CategorizationRuleFormModal
+      isOpen={ruleFormState !== null}
+      formState={ruleFormState}
+      onOpenChange={onRuleFormOpenChange}
+      onSuccess={onRuleFormSuccess}
+    />
+  )
+
   if (isListView) {
     return (
       <Header
@@ -198,7 +218,12 @@ export const BankTransactionsHeader = ({
               {statusToggle}
               <HStack align='center' gap='xs'>
                 <SelectedBankAccountsChip variant='wide' />
-                {canRecordTransactions && <RecordTransactionMenuButton />}
+                {canRecordTransactions && (
+                  <RecordTransactionMenuButton
+                    showCreateRule={showCategorizationRules}
+                    onCreateRule={onCreateRule}
+                  />
+                )}
                 <BankTransactionsHeaderMenu
                   actions={headerMenuActions}
                   isListView={isListView}
@@ -212,7 +237,13 @@ export const BankTransactionsHeader = ({
             {!isStatusToggleVisible && (
               <>
                 <SelectedBankAccountsChip variant='wide' />
-                {canRecordTransactions && <RecordTransactionMenuButton isDisabled={showBulkActions} />}
+                {canRecordTransactions && (
+                  <RecordTransactionMenuButton
+                    isDisabled={showBulkActions}
+                    showCreateRule={showCategorizationRules}
+                    onCreateRule={onCreateRule}
+                  />
+                )}
                 <BankTransactionsHeaderMenu
                   actions={headerMenuActions}
                   isDisabled={showBulkActions}
@@ -223,6 +254,7 @@ export const BankTransactionsHeader = ({
           </HStack>
 
         </VStack>
+        {ruleFormModal}
       </Header>
     )
   }
@@ -248,13 +280,20 @@ export const BankTransactionsHeader = ({
         <SelectedBankAccountsChip slot='selected-accounts' variant='wide' />
         <TransactionsSearch slot='search' isDisabled={showBulkActions} />
         <HStack slot='download-upload' justify='center' gap='xs'>
-          {canRecordTransactions && <RecordTransactionMenuButton isDisabled={showBulkActions} />}
+          {canRecordTransactions && (
+            <RecordTransactionMenuButton
+              isDisabled={showBulkActions}
+              showCreateRule={showCategorizationRules}
+              onCreateRule={onCreateRule}
+            />
+          )}
           <BankTransactionsHeaderMenu
             actions={headerMenuActions}
             isDisabled={showBulkActions}
           />
         </HStack>
       </BankTransactionsActions>
+      {ruleFormModal}
     </Header>
   )
 }

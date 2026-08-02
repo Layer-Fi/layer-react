@@ -26,9 +26,11 @@ function RecordTransactionTrigger({ isDisabled }: { isDisabled?: boolean }) {
 
 type RecordTransactionMenuButtonProps = {
   isDisabled?: boolean
+  showCreateRule?: boolean
+  onCreateRule?: () => void
 }
 
-export function RecordTransactionMenuButton({ isDisabled }: RecordTransactionMenuButtonProps) {
+export function RecordTransactionMenuButton({ isDisabled, showCreateRule, onCreateRule }: RecordTransactionMenuButtonProps) {
   const { t } = useTranslation()
   const [openVariant, setOpenVariant] = useState<RecordTransactionVariant | null>(null)
 
@@ -52,6 +54,13 @@ export function RecordTransactionMenuButton({ isDisabled }: RecordTransactionMen
             <Spacer />
             <ChevronRight size={12} />
           </MenuItem>
+          {showCreateRule && onCreateRule && (
+            <MenuItem onClick={onCreateRule}>
+              <Span size='sm'>{t('bankTransactions:action.create_a_rule', 'Create a rule')}</Span>
+              <Spacer />
+              <ChevronRight size={12} />
+            </MenuItem>
+          )}
         </MenuList>
       </DropdownMenu>
       {openVariant !== null && (

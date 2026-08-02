@@ -15,6 +15,8 @@ import {
   getRuleTransactionDescription,
 } from '@components/CategorizationRules/CategorizationRuleForm/formUtils'
 
+export type CategorizationRuleFormApi = ReturnType<typeof useAppForm<CategorizationRuleFormValues>>
+
 type UseCategorizationRuleFormProps = {
   formState: CategorizationRuleFormState
   onSuccess: (rule: CategorizationRule) => void
