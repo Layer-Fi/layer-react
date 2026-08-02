@@ -16,11 +16,11 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
+import { AccountNormalityComboBox } from '@features/generalLedger/AccountNormalityComboBox/AccountNormalityComboBox'
 import { AccountSubtypeComboBox } from '@features/generalLedger/AccountSubtypeComboBox/AccountSubtypeComboBox'
 import { AccountTypeComboBox } from '@features/generalLedger/AccountTypeComboBox/AccountTypeComboBox'
 import { useChartOfAccountsForm } from '@features/generalLedger/ChartOfAccountsForm/useChartOfAccountsForm'
-import { NormalityComboBox } from '@features/generalLedger/NormalityComboBox/NormalityComboBox'
-import { ParentComboBox } from '@features/generalLedger/ParentComboBox/ParentComboBox'
+import { ParentAccountComboBox } from '@features/generalLedger/ParentAccountComboBox/ParentAccountComboBox'
 import { flattenAccounts } from '@features/generalLedger/utils'
 
 import './chartOfAccountsForm.scss'
@@ -128,7 +128,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
       <VStack className='Layer__ChartOfAccountsForm__Section' gap='sm'>
         <form.Field name='parent'>
           {field => (
-            <ParentComboBox
+            <ParentAccountComboBox
               label={stringOverrides?.parentLabel || t('chartOfAccounts:label.parent', 'Parent')}
               data={data}
               value={field.state.value}
@@ -197,7 +197,7 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
 
         <form.Field name='normality'>
           {field => (
-            <NormalityComboBox
+            <AccountNormalityComboBox
               label={stringOverrides?.normalityLabel || t('common:label.normality', 'Normality')}
               value={field.state.value}
               onChange={value => field.handleChange(value as LedgerEntryDirection | null)}

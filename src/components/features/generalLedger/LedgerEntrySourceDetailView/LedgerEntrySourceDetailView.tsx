@@ -5,10 +5,10 @@ import { type LedgerEntrySourceType } from '@schemas/generalLedger/ledgerEntrySo
 import { humanizeEnum } from '@utils/format'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { DateTime } from '@ui/DateTime/DateTime'
-import { EntryDetailField } from '@features/generalLedger/EntryDetailSection/EntryDetailSection'
+import { EntryDetailField } from '@components/EntryDetailField/EntryDetailField'
 import { type SourceDetailStringOverrides } from '@features/generalLedger/types'
 
-export const SourceDetailView = ({
+export const LedgerEntrySourceDetailView = ({
   source,
   stringOverrides,
 }: {

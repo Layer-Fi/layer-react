@@ -8,7 +8,7 @@ import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
 import { NORMALITY_CONFIG } from '@features/generalLedger/constants'
 
-type NormalityComboBoxProps = {
+type AccountNormalityComboBoxProps = {
   label: string
   value: string | null
   onChange: (value: string | null) => void
@@ -16,7 +16,7 @@ type NormalityComboBoxProps = {
   inline?: boolean
 }
 
-export const NormalityComboBox = ({ label, value, onChange, error, inline }: NormalityComboBoxProps) => {
+export const AccountNormalityComboBox = ({ label, value, onChange, error, inline }: AccountNormalityComboBoxProps) => {
   const { t } = useTranslation()
   const options = useMemo<ComboBoxOption[]>(
     () => NORMALITY_CONFIG.map(config => ({ value: config.value, label: t(config.i18nKey, config.defaultValue) })),

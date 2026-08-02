@@ -4,7 +4,7 @@ import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAcc
 import { LedgerEntryDetails } from '@features/generalLedger/LedgerEntryDetails/LedgerEntryDetails'
 import { type LedgerEntryDetailStringOverrides } from '@features/generalLedger/types'
 
-export { SourceDetailView } from '@features/generalLedger/SourceDetailView/SourceDetailView'
+export { LedgerEntrySourceDetailView } from '@features/generalLedger/LedgerEntrySourceDetailView/LedgerEntrySourceDetailView'
 
 export type LedgerAccountEntryDetailsStringOverrides = LedgerEntryDetailStringOverrides
 

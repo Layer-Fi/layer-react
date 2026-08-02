@@ -21,8 +21,9 @@ import type { ColumnConfig } from '@blocks/DataTable/utils/column'
 import { VirtualizedDataTable } from '@blocks/VirtualizedDataTable/VirtualizedDataTable'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { type BreadcrumbItem, DetailReportBreadcrumb } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
-import { EntryDetailField, EntryDetailSection } from '@features/generalLedger/EntryDetailSection/EntryDetailSection'
-import { SourceDetailView } from '@features/generalLedger/SourceDetailView/SourceDetailView'
+import { EntryDetailField } from '@components/EntryDetailField/EntryDetailField'
+import { EntryDetailSection } from '@components/EntryDetailSection/EntryDetailSection'
+import { LedgerEntrySourceDetailView } from '@features/generalLedger/LedgerEntrySourceDetailView/LedgerEntrySourceDetailView'
 
 import './profitAndLossDetailReport.scss'
 
@@ -235,7 +236,7 @@ export const ProfitAndLossDetailReport = ({
             <EntryDetailField label={t('common:label.source', 'Source')}>
               {badgeOrInAppLink}
             </EntryDetailField>
-            <SourceDetailView source={selectedSource} />
+            <LedgerEntrySourceDetailView source={selectedSource} />
           </EntryDetailSection>
         </VStack>
       </BaseDetailView>

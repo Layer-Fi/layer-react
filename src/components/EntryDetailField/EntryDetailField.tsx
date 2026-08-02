@@ -3,28 +3,9 @@ import classNames from 'classnames'
 
 import { SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { VStack } from '@ui/Stack/Stack'
-import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 
-import './entryDetailSection.scss'
-
-export interface EntryDetailSectionProps {
-  title?: ReactNode
-  children: ReactNode
-}
-
-export const EntryDetailSection = ({ title, children }: EntryDetailSectionProps) => {
-  return (
-    <section className='Layer__EntryDetailSection'>
-      {title && (
-        <Heading level={3} size='sm' pbe='md'>
-          {title}
-        </Heading>
-      )}
-      <dl className='Layer__EntryDetailSection__Grid'>{children}</dl>
-    </section>
-  )
-}
+import './entryDetailField.scss'
 
 export interface EntryDetailFieldProps {
   label: ReactNode
@@ -48,13 +29,13 @@ const renderValue = (value: ReactNode | string) => {
 
 export const EntryDetailField = ({ label, children, isLoading, fullWidth }: EntryDetailFieldProps) => {
   return (
-    <VStack gap='3xs' className={classNames('Layer__EntryDetailSection__Field', fullWidth && 'Layer__EntryDetailSection__Field--fullWidth')}>
+    <VStack gap='3xs' className={classNames('Layer__EntryDetailField', fullWidth && 'Layer__EntryDetailField--fullWidth')}>
       <dt>
         <Span size='xs' weight='normal' textCase='uppercase' variant='subtle'>
           {label}
         </Span>
       </dt>
-      <dd className='Layer__EntryDetailSection__Value'>
+      <dd className='Layer__EntryDetailField__Value'>
         {isLoading ? <SkeletonLoader /> : renderValue(children)}
       </dd>
     </VStack>

@@ -22,7 +22,7 @@ const compareSpecialCharsLast = (a: string, b: string): number => {
   return a.length - b.length
 }
 
-export const useParentOptions = (
+export const useParentAccountOptions = (
   data?: LedgerBalancesSchemaType,
 ): BaseSelectOption[] =>
   useMemo(() => flattenAccounts(data?.accounts || [])

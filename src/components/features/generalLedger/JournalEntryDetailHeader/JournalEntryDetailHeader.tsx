@@ -7,25 +7,25 @@ import { HeaderCol } from '@ui/Header/HeaderCol'
 import { HeaderRow } from '@ui/Header/HeaderRow'
 import { Heading } from '@ui/Typography/Heading'
 
-import './entryDetailHeader.scss'
+import './journalEntryDetailHeader.scss'
 
-interface EntryDetailHeaderProps {
+interface JournalEntryDetailHeaderProps {
   onClose: () => void
   title: ReactNode
 }
 
-export const EntryDetailHeader = ({ onClose, title }: EntryDetailHeaderProps) => {
+export const JournalEntryDetailHeader = ({ onClose, title }: JournalEntryDetailHeaderProps) => {
   return (
     <Header>
       <HeaderRow>
-        <HeaderCol className='Layer__EntryDetailHeader--HiddenOnLarge'>
+        <HeaderCol className='Layer__JournalEntryDetailHeader--HiddenOnLarge'>
           <BackButton onPress={onClose} />
           <Heading size='sm'>{title}</Heading>
         </HeaderCol>
-        <HeaderCol className='Layer__EntryDetailHeader--VisibleOnLarge'>
+        <HeaderCol className='Layer__JournalEntryDetailHeader--VisibleOnLarge'>
           <Heading size='sm'>{title}</Heading>
         </HeaderCol>
-        <HeaderCol className='Layer__EntryDetailHeader--VisibleOnLarge'>
+        <HeaderCol className='Layer__JournalEntryDetailHeader--VisibleOnLarge'>
           <CloseButton onPress={onClose} />
         </HeaderCol>
       </HeaderRow>

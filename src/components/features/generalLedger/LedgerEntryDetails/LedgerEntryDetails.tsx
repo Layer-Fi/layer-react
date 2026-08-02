@@ -9,11 +9,12 @@ import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { Badge } from '@ui/Badge/Badge'
 import { DateTime } from '@ui/DateTime/DateTime'
 import { VStack } from '@ui/Stack/Stack'
-import { EntryDetailHeader } from '@features/generalLedger/EntryDetailHeader/EntryDetailHeader'
-import { EntryDetailField, EntryDetailSection } from '@features/generalLedger/EntryDetailSection/EntryDetailSection'
+import { EntryDetailField } from '@components/EntryDetailField/EntryDetailField'
+import { EntryDetailSection } from '@components/EntryDetailSection/EntryDetailSection'
+import { JournalEntryDetailHeader } from '@features/generalLedger/JournalEntryDetailHeader/JournalEntryDetailHeader'
 import { LedgerEntryDetailsLineItemsTable } from '@features/generalLedger/LedgerEntryDetails/LedgerEntryDetailsLineItemsTable'
-import { ReverseEntryButton } from '@features/generalLedger/ReverseEntryButton/ReverseEntryButton'
-import { SourceDetailView } from '@features/generalLedger/SourceDetailView/SourceDetailView'
+import { LedgerEntrySourceDetailView } from '@features/generalLedger/LedgerEntrySourceDetailView/LedgerEntrySourceDetailView'
+import { ReverseLedgerEntryButton } from '@features/generalLedger/ReverseLedgerEntryButton/ReverseLedgerEntryButton'
 import { type LedgerEntryDetailStringOverrides } from '@features/generalLedger/types'
 
 export interface LedgerEntryDetailsProps {
@@ -64,7 +65,7 @@ export const LedgerEntryDetails = ({
 
   return (
     <VStack pbe='lg'>
-      <EntryDetailHeader onClose={onClose} title={headerTitle} />
+      <JournalEntryDetailHeader onClose={onClose} title={headerTitle} />
 
       <EntryDetailSection
         title={stringOverrides?.transactionSource?.header || t('bankTransactions:label.transaction_source', 'Transaction source')}
@@ -76,7 +77,7 @@ export const LedgerEntryDetails = ({
           {badgeOrInAppLink}
         </EntryDetailField>
         {ledgerEntrySource && (
-          <SourceDetailView
+          <LedgerEntrySourceDetailView
             source={ledgerEntrySource}
             stringOverrides={stringOverrides?.transactionSource?.details}
           />
@@ -129,7 +130,7 @@ export const LedgerEntryDetails = ({
         />
       </EntryDetailSection>
       {onReverse && (
-        <ReverseEntryButton onReverse={onReverse} alreadyReversed={Boolean(entry?.reversalId)} />
+        <ReverseLedgerEntryButton onReverse={onReverse} alreadyReversed={Boolean(entry?.reversalId)} />
       )}
     </VStack>
   )

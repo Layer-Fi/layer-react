@@ -7,9 +7,9 @@ import { ComboBox } from '@ui/ComboBox/ComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-import { useParentOptions } from '@features/generalLedger/ParentComboBox/useParentOptions'
+import { useParentAccountOptions } from '@features/generalLedger/ParentAccountComboBox/useParentAccountOptions'
 
-type ParentComboBoxProps = {
+type ParentAccountComboBoxProps = {
   label: string
   data?: LedgerBalancesSchemaType
   value: string | null
@@ -18,9 +18,9 @@ type ParentComboBoxProps = {
   inline?: boolean
 }
 
-export const ParentComboBox = ({ label, data, value, onChange, error, inline }: ParentComboBoxProps) => {
+export const ParentAccountComboBox = ({ label, data, value, onChange, error, inline }: ParentAccountComboBoxProps) => {
   const { t } = useTranslation()
-  const parentOptions = useParentOptions(data)
+  const parentOptions = useParentAccountOptions(data)
   const options = useMemo<ComboBoxOption[]>(
     () => parentOptions.map(option => ({ value: String(option.value), label: option.label })),
     [parentOptions],

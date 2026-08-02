@@ -1,0 +1,13 @@
+.Layer__JournalEntryDetailHeader--VisibleOnLarge {
+  display: none;
+}
+
+@container (min-width: 1024px) {
+  .Layer__JournalEntryDetailHeader--HiddenOnLarge {
+    display: none;
+  }
+
+  .Layer__JournalEntryDetailHeader--VisibleOnLarge {
+    display: flex;
+  }
+}
