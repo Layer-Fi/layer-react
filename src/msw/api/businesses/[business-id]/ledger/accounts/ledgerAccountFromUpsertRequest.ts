@@ -7,7 +7,7 @@ import {
 } from '@schemas/generalLedger/ledgerAccount'
 import { UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLedgerAccount'
 import { humanizeEnum } from '@utils/format'
-import { SUBTYPES_CONFIG_BY_TYPE } from '@components/ChartOfAccountsForm/constants'
+import { SUBTYPES_CONFIG_BY_TYPE } from '@features/generalLedger/constants'
 
 import { accountParentStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import { readRequestJson } from '@msw/utils/request'

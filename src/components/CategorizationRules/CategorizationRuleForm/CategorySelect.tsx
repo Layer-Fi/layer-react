@@ -1,7 +1,7 @@
 import { CategoriesListMode, type Classification } from '@schemas/categorization'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { CategoryMobileDrawer } from '@components/CategorizationRules/CategorizationRuleForm/CategoryMobileDrawer'
-import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
+import { LedgerAccountComboBox } from '@features/generalLedger/LedgerAccountComboBox/LedgerAccountComboBox'
 
 type CategorySelectProps = {
   label: string
@@ -17,7 +17,7 @@ export const CategorySelect = (props: CategorySelectProps) => {
     return <CategoryMobileDrawer {...props} mode={CategoriesListMode.Default} hideExclusions />
   }
   return (
-    <LedgerAccountCombobox
+    <LedgerAccountComboBox
       label={props.label}
       value={props.value}
       onValueChange={props.onValueChange}

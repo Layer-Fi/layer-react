@@ -34,7 +34,8 @@ Inside a domain the layout is flat, so **a component's path is its name**:
 `@features/mileage/TripDrawer/TripDrawer`, always `<domain>/<Name>/<Name>.tsx`.
 
 - **Every reusable component gets a directory**, even a one-file one. Its stylesheet, hook, utils,
-  test, and story sit beside it; a helper two components share sits at the domain root instead.
+  test, and story sit beside it. Only a domain-wide helper moves out, into the domain's one
+  `utils.ts` or `constants.ts` at the root.
 - **A part only its parent could ever render nests inside the parent** —
   `TripsMobileList/TripsMobileListItem.tsx`,
   `MileageDeductionChart/MileageDeductionChartTooltip.tsx`. A nested part is private: if a second

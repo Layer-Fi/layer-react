@@ -8,7 +8,7 @@ import {
 } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Heading } from '@ui/Typography/Heading'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
-import { TaxProfileForm } from '@components/TaxProfileForm/TaxProfileForm'
+import { TaxProfileForm } from '@features/taxEstimates/TaxProfileForm/TaxProfileForm'
 
 export const TaxProfile = () => {
   const { t } = useTranslation()

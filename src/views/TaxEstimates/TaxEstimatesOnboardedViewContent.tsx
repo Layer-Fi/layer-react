@@ -8,9 +8,9 @@ import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { P } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
-import { TaxBanner } from '@components/TaxDetails/TaxBanner'
-import { TaxDetails } from '@components/TaxDetails/TaxDetails'
-import { TaxPayments } from '@components/TaxPayments/TaxPayments'
+import { TaxBanner } from '@features/taxEstimates/TaxBanner/TaxBanner'
+import { TaxDetails } from '@features/taxEstimates/TaxDetails/TaxDetails'
+import { TaxPayments } from '@features/taxEstimates/TaxPayments/TaxPayments'
 import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 
 const TAX_ESTIMATES_TAB_CONFIG = [

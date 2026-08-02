@@ -17,12 +17,12 @@ import {
 } from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { ProfitAndLossSummaryCard } from '@components/ProfitAndLossSummaryCard/ProfitAndLossSummaryCard'
 import { SolopreneurOnboardingBanner } from '@components/SolopreneurOnboardingBanner/SolopreneurOnboardingBanner'
+import { View } from '@components/View/View'
+import { MileageTrackingSummary } from '@features/mileage/MileageTrackingSummary/MileageTrackingSummary'
 import {
   TaxEstimatesSummaryCard,
   TaxEstimatesSummaryCardMode,
-} from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
-import { View } from '@components/View/View'
-import { MileageTrackingSummary } from '@features/mileage/MileageTrackingSummary/MileageTrackingSummary'
+} from '@features/taxEstimates/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
 
 import './solopreneurOverview.scss'
 
