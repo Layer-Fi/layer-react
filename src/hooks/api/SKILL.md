@@ -94,7 +94,7 @@ export const useUpsertVehicle = createUpsertHook({
   useCreate: usePostVehicle,
   useUpdate: usePatchVehicle,
   toCreateOptions: () => undefined,
-  toUpdateOptions: (props: { vehicleId?: string }) => ({ vehicleId: props.vehicleId ?? '' }),
+  toUpdateOptions: (props: { vehicleId: string }) => ({ vehicleId: props.vehicleId }),
 })
 ```
 
@@ -112,9 +112,9 @@ Two things the factory guarantees that hand-rolling gets wrong:
 
 - **Both hooks are called on every render**, in a fixed order, so hook order survives a form
   switching between create and update.
-- **The placeholder key.** In create mode the update hook still needs its key params, so it gets
-  `?? ''`. Nothing triggers it, so no request is made — but the reason lives in one place now
-  instead of being re-derived per resource.
+- **The placeholder key.** In create mode the update hook still needs key params to build an SWR
+  key, so the factory substitutes an empty string. Nothing triggers it, so no request is made.
+  Call sites never write that fallback themselves.
 
 Typing is preserved: a literal `mode` narrows the result, so `trigger` takes exactly that
 mutation's body. Pass a `mode` that isn't statically known and `trigger` widens to accept either.
