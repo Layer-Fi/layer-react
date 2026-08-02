@@ -16,7 +16,7 @@ const breakPlaidItemConnection = post<
     `/v1/businesses/${businessId}/plaid/items/${plaidItemId}/sandbox-reset-item-login`,
 )
 
-export const useBreakPlaidItemConnection = createMutationHook({
+export const usePostSandboxResetPlaidItemLogin = createMutationHook({
   tags: [BREAK_PLAID_ITEM_CONNECTION_TAG_KEY],
   request: breakPlaidItemConnection,
   argToParams: ({ plaidItemId }: { plaidItemId: string }) => ({ plaidItemId }),

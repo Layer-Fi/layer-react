@@ -24,7 +24,7 @@ type UseSubmitUserResponseForTaskArg = {
   userResponse: string
 }
 
-export const useSubmitUserResponseForTask = createMutationHook({
+export const usePostTaskUserResponse = createMutationHook({
   tags: ['#submit-user-response-for-task'],
   request: submitUserResponseForTask,
   argToParams: ({ taskId }: UseSubmitUserResponseForTaskArg) => ({ taskId }),

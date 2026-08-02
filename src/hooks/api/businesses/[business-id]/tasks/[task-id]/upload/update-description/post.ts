@@ -25,7 +25,7 @@ type UseUpdateTaskUploadDescriptionArg = {
   description: string
 }
 
-export const useUpdateTaskUploadDescription = createMutationHook({
+export const usePostTaskUploadDescription = createMutationHook({
   tags: ['#update-task-upload-description'],
   request: updateTaskUploadsDescription,
   argToParams: ({ taskId }: UseUpdateTaskUploadDescriptionArg) => ({ taskId }),

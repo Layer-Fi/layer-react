@@ -23,7 +23,7 @@ type ConfirmExternalAccountArg = {
   body?: ConfirmAccountBodyStrict
 }
 
-export const useConfirmExternalAccount = createMutationHook({
+export const usePostConfirmExternalAccount = createMutationHook({
   tags: [CONFIRM_EXTERNAL_ACCOUNT_TAG_KEY],
   request: confirmExternalAccount,
   argToParams: ({ accountId }: ConfirmExternalAccountArg) => ({ accountId }),

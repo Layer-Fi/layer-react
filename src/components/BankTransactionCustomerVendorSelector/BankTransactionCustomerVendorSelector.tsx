@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { type CustomerVendorSchema, makeCustomerVendor } from '@schemas/customerVendor'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
-import { useSetMetadataOnBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/patch'
+import { usePatchBankTransactionCounterparty } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/patch'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { CustomerVendorSelector } from '@components/CustomerVendorSelector/CustomerVendorSelector'
 
@@ -29,7 +29,7 @@ export function BankTransactionCustomerVendorSelector({
     [customer, vendor],
   )
 
-  const { trigger, isMutating } = useSetMetadataOnBankTransaction({ bankTransactionId })
+  const { trigger, isMutating } = usePatchBankTransactionCounterparty({ bankTransactionId })
 
   const triggerSetCustomerVendor = useCallback(
     (customerVendor: typeof CustomerVendorSchema.Type | null) => {

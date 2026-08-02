@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type CatalogService } from '@schemas/catalogService'
-import { useArchiveCatalogService } from '@api/businesses/[business-id]/catalog/services/[service-id]/archive/post'
+import { usePostArchiveCatalogService } from '@api/businesses/[business-id]/catalog/services/[service-id]/archive/post'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { BaseConfirmationModal } from '@components/blocks/BaseConfirmationModal/BaseConfirmationModal'
 
@@ -21,7 +21,7 @@ export function ServiceArchiveModal({
 }: ServiceArchiveModalProps) {
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
-  const { trigger: archiveService } = useArchiveCatalogService({ serviceId: service?.id ?? '' })
+  const { trigger: archiveService } = usePostArchiveCatalogService({ serviceId: service?.id ?? '' })
 
   const onConfirm = useCallback(async () => {
     if (!service) {

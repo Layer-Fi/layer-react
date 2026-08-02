@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import { type CallBooking, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
 import { useGetBookkeepingConfiguration } from '@api/businesses/[business-id]/bookkeeping/config/get'
 import { useBookkeepingStatusGlobalCacheActions, useGetBookkeepingStatus } from '@api/businesses/[business-id]/bookkeeping/status/get'
-import { useGetInfiniteCallBookings } from '@api/businesses/[business-id]/call-bookings/get'
+import { useGetListCallBookings } from '@api/businesses/[business-id]/call-bookings/get'
 import { usePostCallBooking } from '@api/businesses/[business-id]/call-bookings/post'
 import { type CalendlyPayload, useCalendly } from '@hooks/features/calendly/useCalendly'
 import { type CallBookingStringOverrides } from '@components/CallBooking/CallBooking'
@@ -24,7 +24,7 @@ export const useBookkeepingOnboardingCallBooking = () => {
   const { data: bookkeepingConfiguration } = useGetBookkeepingConfiguration()
   const { forceReload: forceReloadBookkeepingStatus } = useBookkeepingStatusGlobalCacheActions()
   const { trigger: createCallBooking } = usePostCallBooking()
-  const { data: callBookings, isError, isLoading } = useGetInfiniteCallBookings({ limit: 1 })
+  const { data: callBookings, isError, isLoading } = useGetListCallBookings({ limit: 1 })
 
   const onboardingCallUrl = bookkeepingStatus?.showEmbeddedOnboarding
     ? bookkeepingStatus.onboardingCallUrl

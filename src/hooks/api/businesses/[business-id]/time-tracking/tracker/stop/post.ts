@@ -24,7 +24,7 @@ const stopTimeTracker = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/time-tracking/tracker/stop`)
 
-export const useStopTimeTracker = createMutationHook({
+export const usePostStopTimeTracker = createMutationHook({
   tags: [STOP_TIME_TRACKER_TAG_KEY],
   request: stopTimeTracker,
   schema: StopTimeTrackerResponseSchema,

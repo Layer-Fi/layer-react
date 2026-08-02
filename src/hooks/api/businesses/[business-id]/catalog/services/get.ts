@@ -27,7 +27,7 @@ export type UseListCatalogServicesOptions = {
   isEnabled?: boolean
 }
 
-export const useGetInfiniteCatalogServices = createInfiniteQueryHook({
+export const useGetListCatalogServices = createInfiniteQueryHook({
   tags: [LIST_CATALOG_SERVICES_TAG_KEY],
   request: listCatalogServices,
   schema: ListCatalogServicesResultSchema,

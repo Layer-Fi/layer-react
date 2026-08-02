@@ -9,7 +9,7 @@ import { type ActiveTimerDraft, type ActiveTimerDraftWithService, getDraftFromEn
 import { useDeleteTimeEntry } from '@api/businesses/[business-id]/time-tracking/time-entries/[time-entry-id]/delete'
 import { UpsertTimeEntryMode, useUpsertTimeEntry } from '@api/businesses/[business-id]/time-tracking/time-entries/upsert'
 import { useActiveTimeTrackerGlobalCacheActions } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'
-import { useStopTimeTracker } from '@api/businesses/[business-id]/time-tracking/tracker/stop/post'
+import { usePostStopTimeTracker } from '@api/businesses/[business-id]/time-tracking/tracker/stop/post'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
 
@@ -29,7 +29,7 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
   const { t } = useTranslation()
   const [actionError, setActionError] = useState<string | null>(null)
 
-  const { trigger: stopTimeTracker, isMutating: isStopping } = useStopTimeTracker()
+  const { trigger: stopTimeTracker, isMutating: isStopping } = usePostStopTimeTracker()
   const { trigger: deleteTimeEntry, isMutating: isCancelling } = useDeleteTimeEntry({ timeEntryId: activeEntry.id })
   const { trigger: updateTimeEntry, isMutating: isUpdating } = useUpsertTimeEntry({
     mode: UpsertTimeEntryMode.Update,

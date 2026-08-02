@@ -25,7 +25,7 @@ const applyRefundToInvoice = (invoiceId: string) => (invoice: Invoice) => {
   return updateInvoiceWithRefund(invoice)
 }
 
-export const useRefundInvoice = createMutationHook({
+export const usePostRefundInvoice = createMutationHook({
   tags: [REFUND_INVOICE_TAG_KEY],
   request: refundInvoice,
   keyParams: ['invoiceId'],

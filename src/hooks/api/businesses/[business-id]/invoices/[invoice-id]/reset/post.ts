@@ -15,7 +15,7 @@ const resetInvoice = post<
   { businessId: string, invoiceId: string }
 >(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/reset`)
 
-export const useResetInvoice = createMutationHook({
+export const usePostResetInvoice = createMutationHook({
   tags: [RESET_INVOICE_TAG_KEY],
   request: resetInvoice,
   keyParams: ['invoiceId'],

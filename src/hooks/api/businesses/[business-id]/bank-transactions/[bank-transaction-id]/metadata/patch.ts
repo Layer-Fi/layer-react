@@ -52,7 +52,7 @@ type SetMetadataOnBankTransactionArg = {
   customer: typeof CustomerSchema.Type | null
 }
 
-const useSetMetadataOnBankTransactionMutation = createBankTransactionMetadataMutationHook(
+const usePatchBankTransactionCounterpartyMutation = createBankTransactionMetadataMutationHook(
   ({ vendor, customer }: SetMetadataOnBankTransactionArg) => ({
     vendor_id: vendor?.id ?? null,
     customer_id: customer?.id ?? null,
@@ -63,10 +63,10 @@ type UseSetMetadataOnBankTransactionParameters = {
   bankTransactionId: string
 }
 
-export function useSetMetadataOnBankTransaction({
+export function usePatchBankTransactionCounterparty({
   bankTransactionId,
 }: UseSetMetadataOnBankTransactionParameters) {
-  const rawMutationResponse = useSetMetadataOnBankTransactionMutation({ bankTransactionId })
+  const rawMutationResponse = usePatchBankTransactionCounterpartyMutation({ bankTransactionId })
   const mutationResponse = useMinMutatingMutation({ swrMutationResponse: rawMutationResponse })
 
   const { debouncedInvalidateBankTransactions, optimisticallyUpdateBankTransactions } = useBankTransactionsGlobalCacheActions()
@@ -125,12 +125,12 @@ export function useSetMetadataOnBankTransaction({
 
 type UpdateMemoArg = { memo: string }
 
-const useUpdateBankTransactionMetadataMutation = createBankTransactionMetadataMutationHook(
+const usePatchBankTransactionMemoMutation = createBankTransactionMetadataMutationHook(
   ({ memo }: UpdateMemoArg) => ({ memo }),
 )
 
-export function usePatchBankTransactionMetadata({ bankTransactionId, onSuccess }: { bankTransactionId: string, onSuccess?: () => Awaitable<unknown> }) {
-  return useUpdateBankTransactionMetadataMutation({
+export function usePatchBankTransactionMemo({ bankTransactionId, onSuccess }: { bankTransactionId: string, onSuccess?: () => Awaitable<unknown> }) {
+  return usePatchBankTransactionMemoMutation({
     bankTransactionId,
     swrOptions: {
       onSuccess: () => {

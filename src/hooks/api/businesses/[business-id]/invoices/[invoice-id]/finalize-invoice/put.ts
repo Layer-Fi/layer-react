@@ -16,7 +16,7 @@ export const finalizeInvoice = put<
   { businessId: string, invoiceId: string }
 >(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/finalize-invoice`)
 
-export const useFinalizeInvoice = createMutationHook({
+export const usePutFinalizeInvoice = createMutationHook({
   tags: [FINALIZE_INVOICE_TAG_KEY],
   request: finalizeInvoice,
   keyParams: ['invoiceId'],

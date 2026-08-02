@@ -33,7 +33,7 @@ export type UseCategorizeBankTransactionOptions = {
   >
 }
 
-export const useCategorizeBankTransaction = createMutationHook({
+export const usePutCategorizeBankTransaction = createMutationHook({
   tags: [CATEGORIZE_BANK_TRANSACTION_TAG],
   request: categorizeBankTransaction,
   argToParams: ({ bankTransactionId }: CategorizeBankTransactionArgs) => ({ bankTransactionId }),

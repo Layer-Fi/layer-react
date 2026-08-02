@@ -17,7 +17,7 @@ const bulkUncategorize = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/bank-transactions/bulk-uncategorize`)
 
-export const useBulkUncategorize = createMutationHook({
+export const usePostBulkUncategorize = createMutationHook({
   tags: [BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY],
   request: bulkUncategorize,
   argToBody: (arg: BulkUncategorizeRequest) => Schema.encodeSync(BulkUncategorizeRequestSchema)(arg),

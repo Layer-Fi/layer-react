@@ -19,7 +19,7 @@ type UseDeleteUploadsOnTaskArg = {
   taskId: string
 }
 
-export const useDeleteUploadsOnTask = createMutationHook({
+export const useDeleteTaskUploads = createMutationHook({
   tags: ['#delete-uploads-on-task'],
   request: deleteUploadsOnTask,
   argToParams: (arg: UseDeleteUploadsOnTaskArg) => arg,

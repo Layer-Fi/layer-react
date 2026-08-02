@@ -12,7 +12,7 @@ const unlinkPlaidItem = post<
     `/v1/businesses/${businessId}/plaid/items/${plaidItemId}/unlink`,
 )
 
-export const useUnlinkPlaidItem = createMutationHook({
+export const usePostUnlinkPlaidItem = createMutationHook({
   tags: [UNLINK_PLAID_ITEM_TAG_KEY],
   request: unlinkPlaidItem,
   argToParams: ({ plaidItemId }: { plaidItemId: string }) => ({ plaidItemId }),

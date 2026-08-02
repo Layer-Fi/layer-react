@@ -16,7 +16,7 @@ const startTimeTracker = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/time-tracking/tracker/start`)
 
-export const useStartTimeTracker = createMutationHook({
+export const usePostStartTimeTracker = createMutationHook({
   tags: [START_TIME_TRACKER_TAG_KEY],
   request: startTimeTracker,
   schema: StartTimeTrackerResponseSchema,

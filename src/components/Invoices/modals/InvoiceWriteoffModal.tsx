@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { Invoice } from '@schemas/invoices/invoice'
-import { updateInvoiceWithWriteoff, useWriteoffInvoice } from '@api/businesses/[business-id]/invoices/[invoice-id]/write-off/post'
+import { updateInvoiceWithWriteoff, usePostWriteoffInvoice } from '@api/businesses/[business-id]/invoices/[invoice-id]/write-off/post'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 
@@ -13,7 +13,7 @@ type InvoiceWriteoffModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
 
 export function InvoiceWriteoffModal({ isOpen, onOpenChange, invoice, onSuccess }: InvoiceWriteoffModalProps) {
   const { t } = useTranslation()
-  const { trigger: writeoffInvoice } = useWriteoffInvoice({ invoiceId: invoice.id })
+  const { trigger: writeoffInvoice } = usePostWriteoffInvoice({ invoiceId: invoice.id })
 
   const onConfirm = useCallback(async () => {
     await writeoffInvoice({

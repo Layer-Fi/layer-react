@@ -36,7 +36,7 @@ const listCallBookings = getWithQuery<
 
 export const CALL_BOOKINGS_TAG_KEY = '#call-bookings'
 
-export const useGetInfiniteCallBookings = createInfiniteQueryHook({
+export const useGetListCallBookings = createInfiniteQueryHook({
   tags: [CALL_BOOKINGS_TAG_KEY],
   request: listCallBookings,
   schema: ListCallBookingsResponseSchema,

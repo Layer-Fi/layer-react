@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { MatchType } from '@schemas/bankTransactions/match'
-import { useMatchBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/match/put'
+import { usePutMatchBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/match/put'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useProfitAndLossGlobalInvalidator } from '@api/businesses/[business-id]/reports/profit-and-loss/useProfitAndLossGlobalInvalidator'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
@@ -15,7 +15,7 @@ export function useMatchBankTransactionWithCacheUpdate() {
   const { forceReloadBackgroundBankTransactions } = useBankTransactionsGlobalCacheActions()
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
-  const { trigger: matchBankTransaction, isMutating, isError } = useMatchBankTransaction()
+  const { trigger: matchBankTransaction, isMutating, isError } = usePutMatchBankTransaction()
 
   const match = useCallback(
     async (bankTransaction: BankTransaction, suggestedMatchId: string, options?: { onSuccess?: () => void }): Promise<void> => {

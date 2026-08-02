@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { Trip } from '@schemas/trip'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
-import { useGetInfiniteTrips } from '@api/businesses/[business-id]/mileage/trips/get'
+import { useGetListTrips } from '@api/businesses/[business-id]/mileage/trips/get'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { useCurrentTripsPage, useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
@@ -66,7 +66,7 @@ export const ResponsiveTripsView = () => {
     ...(purposeFilter !== TripPurposeFilterValue.All && { purpose: purposeFilter }),
   }), [query, selectedVehicle, purposeFilter, selectedYear])
 
-  const { data, flattenedData: trips, isLoading, isError, hasMore, fetchMore } = useGetInfiniteTrips(filterParams)
+  const { data, flattenedData: trips, isLoading, isError, hasMore, fetchMore } = useGetListTrips(filterParams)
 
   const onViewOrUpsertTrip = useCallback((trip: Trip | null) => {
     setSelectedTrip(trip)

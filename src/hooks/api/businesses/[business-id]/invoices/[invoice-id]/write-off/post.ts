@@ -29,7 +29,7 @@ const applyWriteoffToInvoice = (invoiceId: string) => (invoice: Invoice) => {
   return updateInvoiceWithWriteoff(invoice)
 }
 
-export const useWriteoffInvoice = createMutationHook({
+export const usePostWriteoffInvoice = createMutationHook({
   tags: [CREATE_INVOICE_WRITEOFF_TAG_KEY],
   request: writeoffInvoice,
   keyParams: ['invoiceId'],

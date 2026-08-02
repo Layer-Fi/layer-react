@@ -42,7 +42,7 @@ export const listCategorizationRules = getWithQuery<
   }),
 )
 
-export const useGetInfiniteCategorizationRules = createInfiniteQueryHook({
+export const useGetListCategorizationRules = createInfiniteQueryHook({
   tags: [LIST_CATEGORIZATION_RULES_TAG_KEY],
   request: listCategorizationRules,
   schema: ListCategorizationRulesReturnSchema,

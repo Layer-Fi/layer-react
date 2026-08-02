@@ -26,7 +26,7 @@ type MatchBankTransactionArgs = MatchBankTransactionBody & {
   bankTransactionId: string
 }
 
-export const useMatchBankTransaction = createMutationHook({
+export const usePutMatchBankTransaction = createMutationHook({
   tags: [MATCH_BANK_TRANSACTION_TAG],
   request: matchBankTransaction,
   argToParams: ({ bankTransactionId }: MatchBankTransactionArgs) => ({ bankTransactionId }),

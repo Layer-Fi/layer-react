@@ -41,16 +41,36 @@ One file per route + method, but a file may export more than one hook when sever
 need different bodies or cache effects on the same endpoint — see
 `bank-transactions/[bank-transaction-id]/metadata/patch.ts`.
 
-Name the exported hook after the method, not the operation:
+**An endpoint hook leads with its method**, so the name says read-or-write before you read the
+arguments:
 
 | File | Export |
 | --- | --- |
 | `get.ts` (`createQueryHook`) | `useGet<Resource>` |
-| `get.ts` (`createInfiniteQueryHook`) | `useGetInfinite<Resource>` |
+| `get.ts` (`createInfiniteQueryHook`) | `useGetList<Resource>` |
 | `post.ts` / `patch.ts` / `put.ts` / `delete.ts` | `usePost…` / `usePatch…` / `usePut…` / `useDelete…` |
 
-Action endpoints keep their verb (`useVoidInvoice`, `useArchiveVehicle`) — the route segment
-already says what they do.
+Action endpoints keep the route's verb *after* the prefix — `usePostVoidInvoice`,
+`usePostArchiveVehicle`, `usePutMatchBankTransaction`.
+
+**The exception: never let the prefix overwrite what the call actually does.** A few endpoints
+use a method that contradicts their domain meaning, and there the domain verb wins:
+
+| Endpoint | Hook | Why not `useDelete…` |
+| --- | --- | --- |
+| `DELETE /bank-transactions/{id}` | `useArchiveBankTransaction` | archives; the transaction stays queryable and is returned |
+| `DELETE /bank-accounts/{id}` | `useUnlinkBankAccount` | severs the connection; the account is not destroyed |
+| `DELETE /categorization-rules/suggestions/{id}` | `useRejectCategorizationRuleSuggestion` | records a decision on a suggestion |
+| `POST /tasks/{id}/upload/delete` | `useDeleteTaskUploads` | the method is POST but the operation is a delete |
+
+Getting this wrong is not cosmetic — a component calling `useDeleteBankAccount` would reasonably
+put a destructive confirmation in front of an unlink.
+
+When two hooks share one route and method, each names the field it writes —
+`usePatchBankTransactionMemo` and `usePatchBankTransactionCounterparty`.
+
+Hooks that are not endpoints keep descriptive names: `use…GlobalCacheActions`,
+`use…CacheActions`, `usePreload…`, and the invalidators.
 
 ### Upsert hooks
 

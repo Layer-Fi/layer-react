@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { canCategoryHaveTaxCode, resolveCategoryTaxCode } from '@utils/bankTransactions/taxCode'
 import { tPlural } from '@utils/i18n/plural'
-import { useBulkCategorize } from '@api/businesses/[business-id]/bank-transactions/bulk-categorize/post'
+import { usePostBulkCategorize } from '@api/businesses/[business-id]/bank-transactions/bulk-categorize/post'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
@@ -47,7 +47,7 @@ export const BankTransactionsCategorizeAllModal = ({
   const [selectedCategory, setSelectedCategory] = useState<BankTransactionNonSuggestedMatchOption | null>(null)
 
   const [selectedTaxCode, setSelectedTaxCode] = useState<TaxCodeComboBoxOption | null>(null)
-  const { trigger, isMutating } = useBulkCategorize()
+  const { trigger, isMutating } = usePostBulkCategorize()
 
   const bankTransactionsById = useMemo(
     () => getBankTransactionsById(bankTransactions),

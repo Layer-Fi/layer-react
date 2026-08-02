@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 
 import type { LedgerAccountBalanceWithNodeType } from '@internal-types/chartOfAccounts'
 import { type LedgerAccountLineItem, type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
-import { type ListLedgerAccountLinesReturn, useGetInfiniteLedgerAccountLines } from '@api/businesses/[business-id]/ledger/accounts/[account-id]/lines/get'
+import { type ListLedgerAccountLinesReturn, useGetListLedgerAccountLines } from '@api/businesses/[business-id]/ledger/accounts/[account-id]/lines/get'
 import { useGetLedgerAccountsEntry } from '@api/businesses/[business-id]/ledger/entries/[entry-id]/get'
 
 type UseLedgerAccounts = () => {
@@ -37,7 +37,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     mutate,
     hasMore: rawHasMore,
     fetchMore: rawFetchMore,
-  } = useGetInfiniteLedgerAccountLines({
+  } = useGetListLedgerAccountLines({
     accountId: selectedAccountId || '',
     include_child_account_lines: true,
     sort_by: 'entry_at',

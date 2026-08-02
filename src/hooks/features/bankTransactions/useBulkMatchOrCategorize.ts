@@ -5,7 +5,7 @@ import {
   type BulkMatchOrCategorizeRequest,
   type MatchOrCategorizeTransactionRequestSchema,
 } from '@schemas/bankTransactions/bulkMatchOrCategorize'
-import { useBulkMatchOrCategorizeMutation } from '@api/businesses/[business-id]/bank-transactions/bulk-match-or-categorize/post'
+import { usePostBulkMatchOrCategorize } from '@api/businesses/[business-id]/bank-transactions/bulk-match-or-categorize/post'
 import { type BankTransactionCategorization, BankTransactionSelectionVariant, DEFAULT_CATEGORIZATION, useGetAllBankTransactionsCategorizations } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
@@ -97,7 +97,7 @@ export const useBulkMatchOrCategorize = () => {
     return { transactions }
   }, [selectedIds, categorizations])
 
-  const response = useBulkMatchOrCategorizeMutation()
+  const response = usePostBulkMatchOrCategorize()
 
   return {
     response,

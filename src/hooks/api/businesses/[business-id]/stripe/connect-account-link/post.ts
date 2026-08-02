@@ -15,7 +15,7 @@ const createStripeConnectAccountLink = post<
   { businessId: string }
 >(({ businessId }) => `/v1/businesses/${businessId}/stripe/connect-account-link`)
 
-export const useStripeConnectAccountLink = createMutationHook<
+export const usePostStripeConnectAccountLink = createMutationHook<
   typeof StripeConnectAccountLinkSchema.Encoded,
   never,
   { businessId: string },

@@ -7,7 +7,7 @@ import { CategoriesListMode } from '@schemas/categorization'
 import { flattenCategories } from '@utils/categories'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useGetCategories } from '@api/businesses/[business-id]/categories/get'
-import { useArchiveCategorizationRule } from '@api/businesses/[business-id]/categorization-rules/[categorization-rule-id]/archive/post'
+import { usePostArchiveCategorizationRule } from '@api/businesses/[business-id]/categorization-rules/[categorization-rule-id]/archive/post'
 import { useDebouncedSearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBankTransactionsNavigation, useCategorizationRulesTableFilters } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
@@ -100,7 +100,7 @@ export const ResponsiveCategorizationRulesView = () => {
   const [selectedRule, setSelectedRule] = useState<CategorizationRule | null>(null)
   const [showDeletionConfirmationModal, setShowDeletionConfirmationModal] = useState(false)
   const [formState, setFormState] = useState<CategorizationRuleFormState | null>(null)
-  const { trigger: archiveCategorizationRuleTrigger } = useArchiveCategorizationRule()
+  const { trigger: archiveCategorizationRuleTrigger } = usePostArchiveCategorizationRule()
   const { addToast } = useLayerContext()
   const { isMobile } = useSizeClass()
 

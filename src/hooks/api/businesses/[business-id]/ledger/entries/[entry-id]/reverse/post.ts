@@ -13,7 +13,7 @@ const reverseJournalEntry = post<
   { businessId: string, entryId: string }
 >(({ businessId, entryId }) => `/v1/businesses/${businessId}/ledger/entries/${entryId}/reverse`)
 
-export const useReverseJournalEntry = createMutationHook({
+export const usePostReverseJournalEntry = createMutationHook({
   tags: [REVERSE_JOURNAL_ENTRY_TAG_KEY],
   request: reverseJournalEntry,
   argToParams: (entryId: string) => ({ entryId }),

@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { Invoice } from '@schemas/invoices/invoice'
-import { useVoidInvoice } from '@api/businesses/[business-id]/invoices/[invoice-id]/void/post'
+import { usePostVoidInvoice } from '@api/businesses/[business-id]/invoices/[invoice-id]/void/post'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 
@@ -13,7 +13,7 @@ type InvoiceVoidModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
 
 export function InvoiceVoidModal({ isOpen, onOpenChange, invoiceId, onSuccess }: InvoiceVoidModalProps) {
   const { t } = useTranslation()
-  const { trigger: voidInvoice } = useVoidInvoice({ invoiceId })
+  const { trigger: voidInvoice } = usePostVoidInvoice({ invoiceId })
 
   const onConfirm = useCallback(async () => {
     const invoice = await voidInvoice()

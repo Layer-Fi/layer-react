@@ -17,7 +17,7 @@ const archiveCatalogService = post<
     `/v1/businesses/${businessId}/catalog/services/${serviceId}/archive`,
 )
 
-export const useArchiveCatalogService = createMutationHook({
+export const usePostArchiveCatalogService = createMutationHook({
   tags: [ARCHIVE_CATALOG_SERVICE_TAG_KEY],
   request: archiveCatalogService,
   keyParams: ['serviceId'],

@@ -9,7 +9,7 @@ const deleteAccountFromLedger = del<
   { businessId: string, accountId: string }
 >(({ businessId, accountId }) => `/v1/businesses/${businessId}/ledger/accounts/${accountId}`)
 
-export const useDeleteAccountFromLedger = createMutationHook({
+export const useDeleteLedgerAccount = createMutationHook({
   tags: ['#delete-account-from-ledger'],
   request: deleteAccountFromLedger,
   argToParams: (arg: { accountId: string }) => arg,

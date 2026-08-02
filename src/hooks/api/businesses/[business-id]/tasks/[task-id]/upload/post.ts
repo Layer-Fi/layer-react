@@ -45,7 +45,7 @@ type UseUploadDocumentsForTaskArg = {
   description?: string
 }
 
-export const useUploadDocumentsForTask = createMutationHook({
+export const usePostTaskUpload = createMutationHook({
   tags: ['#use-upload-documents-for-task'],
   request: completeTaskWithUpload,
   argToParams: ({ taskId }: UseUploadDocumentsForTaskArg) => ({ taskId }),

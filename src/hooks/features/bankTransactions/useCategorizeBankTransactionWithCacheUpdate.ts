@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
-import { useCategorizeBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/categorize/put'
+import { usePutCategorizeBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/categorize/put'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useProfitAndLossGlobalInvalidator } from '@api/businesses/[business-id]/reports/profit-and-loss/useProfitAndLossGlobalInvalidator'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
@@ -14,7 +14,7 @@ export function useCategorizeBankTransactionWithCacheUpdate() {
   const { forceReloadBackgroundBankTransactions } = useBankTransactionsGlobalCacheActions()
   const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
-  const { trigger: categorizeBankTransaction, isMutating, isError } = useCategorizeBankTransaction()
+  const { trigger: categorizeBankTransaction, isMutating, isError } = usePutCategorizeBankTransaction()
 
   const categorize = useCallback(
     async (bankTransactionId: BankTransaction['id'], newCategory: CategoryUpdate, options?: { onSuccess?: () => void }): Promise<void> => {

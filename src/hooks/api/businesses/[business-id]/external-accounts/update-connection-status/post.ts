@@ -12,7 +12,7 @@ const updateConnectionStatus = post<
     `/v1/businesses/${businessId}/external-accounts/update-connection-status`,
 )
 
-export const useUpdateConnectionStatus = createMutationHook<
+export const usePostUpdateConnectionStatus = createMutationHook<
   Record<string, unknown>,
   Record<string, unknown>,
   { businessId: string },

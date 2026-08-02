@@ -23,7 +23,7 @@ type ExcludeExternalAccountArg = {
   body?: ExcludeAccountBodyStrict
 }
 
-export const useExcludeExternalAccount = createMutationHook({
+export const usePostExcludeExternalAccount = createMutationHook({
   tags: [EXCLUDE_EXTERNAL_ACCOUNT_TAG_KEY],
   request: excludeExternalAccount,
   argToParams: ({ accountId }: ExcludeExternalAccountArg) => ({ accountId }),

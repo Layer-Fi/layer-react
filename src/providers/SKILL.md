@@ -10,7 +10,7 @@ Three tools, three jobs. Picking the wrong one is the most common architectural 
 
 | Tool | Owns | Examples |
 | --- | --- | --- |
-| **SWR** | server state: fetching, caching, revalidation, mutation | `useGetCustomAccounts`, `useGetInfiniteInvoices` — see [`src/hooks/api/SKILL.md`](../hooks/api/SKILL.md) |
+| **SWR** | server state: fetching, caching, revalidation, mutation | `useGetCustomAccounts`, `useGetListInvoices` — see [`src/hooks/api/SKILL.md`](../hooks/api/SKILL.md) |
 | **Zustand** | client state shared across a feature subtree: route state, filters, selections, page indices, drawer/modal state | `BankTransactionsRouteStore`, `InvoicesRouteStore`, `BulkSelectionStore`, `UnifiedReportStore` |
 | **React Context** | dependency injection: auth, environment, config, string overrides — and distributing a Zustand store instance | `AuthInputProvider`, `EnvironmentInputProvider`, `BankTransactionsStringOverridesContext` |
 

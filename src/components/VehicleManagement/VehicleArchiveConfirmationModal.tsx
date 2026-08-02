@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/vehicle'
 import { getVehicleDisplayName } from '@utils/vehicles'
-import { useArchiveVehicle } from '@api/businesses/[business-id]/mileage/vehicles/[vehicle-id]/archive/post'
+import { usePostArchiveVehicle } from '@api/businesses/[business-id]/mileage/vehicles/[vehicle-id]/archive/post'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 
@@ -19,7 +19,7 @@ export function VehicleArchiveConfirmationModal({
   useDrawer,
 }: VehicleArchiveConfirmationModalProps) {
   const { t } = useTranslation()
-  const { trigger: archiveVehicle } = useArchiveVehicle({ vehicleId: vehicle.id })
+  const { trigger: archiveVehicle } = usePostArchiveVehicle({ vehicleId: vehicle.id })
 
   const onConfirm = useCallback(async () => {
     await archiveVehicle()

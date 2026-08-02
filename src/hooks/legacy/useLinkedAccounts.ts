@@ -6,10 +6,10 @@ import type { Awaitable } from '@internal-types/utility/promises'
 import { type PlaidHostedLinkConfig, toCreatePlaidLinkParams } from '@schemas/linkedAccounts/plaid'
 import { useUnlinkBankAccount } from '@api/businesses/[business-id]/bank-accounts/[bank-account-id]/delete'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
-import { useConfirmExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/confirm/post'
-import { useExcludeExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/exclude/post'
-import { useBreakPlaidItemConnection } from '@api/businesses/[business-id]/plaid/items/[plaid-item-id]/sandbox-reset-item-login/post'
-import { useUnlinkPlaidItem } from '@api/businesses/[business-id]/plaid/items/[plaid-item-id]/unlink/post'
+import { usePostConfirmExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/confirm/post'
+import { usePostExcludeExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/exclude/post'
+import { usePostSandboxResetPlaidItemLogin } from '@api/businesses/[business-id]/plaid/items/[plaid-item-id]/sandbox-reset-item-login/post'
+import { usePostUnlinkPlaidItem } from '@api/businesses/[business-id]/plaid/items/[plaid-item-id]/unlink/post'
 import { usePostPlaidLink } from '@api/businesses/[business-id]/plaid/link/post'
 import { usePostPlaidUpdateModeLink } from '@api/businesses/[business-id]/plaid/update-mode-link/post'
 import { type LinkMode, usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
@@ -68,10 +68,10 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
   const { trigger: triggerCreatePlaidLink } = usePostPlaidLink()
   const { trigger: triggerCreatePlaidUpdateModeLink } = usePostPlaidUpdateModeLink()
-  const { trigger: triggerConfirmExternalAccount } = useConfirmExternalAccount()
-  const { trigger: triggerExcludeExternalAccount } = useExcludeExternalAccount()
-  const { trigger: triggerUnlinkPlaidItem } = useUnlinkPlaidItem()
-  const { trigger: triggerBreakPlaidItemConnection } = useBreakPlaidItemConnection()
+  const { trigger: triggerConfirmExternalAccount } = usePostConfirmExternalAccount()
+  const { trigger: triggerExcludeExternalAccount } = usePostExcludeExternalAccount()
+  const { trigger: triggerUnlinkPlaidItem } = usePostUnlinkPlaidItem()
+  const { trigger: triggerBreakPlaidItemConnection } = usePostSandboxResetPlaidItemLogin()
 
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 

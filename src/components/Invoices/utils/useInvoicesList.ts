@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { useGetInfiniteInvoices } from '@api/businesses/[business-id]/invoices/get'
+import { useGetListInvoices } from '@api/businesses/[business-id]/invoices/get'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { useInvoiceTableFilters } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { getListInvoiceParamsFromFilters } from '@components/Invoices/utils/invoiceFilters'
@@ -11,7 +11,7 @@ export const useInvoicesList = () => {
   const { tableFilters } = useInvoiceTableFilters()
   const listInvoiceParams = useMemo(() => getListInvoiceParamsFromFilters(tableFilters), [tableFilters])
 
-  const { data, flattenedData: invoices, isLoading, isError, hasMore, fetchMore, refetch } = useGetInfiniteInvoices(listInvoiceParams)
+  const { data, flattenedData: invoices, isLoading, isError, hasMore, fetchMore, refetch } = useGetListInvoices(listInvoiceParams)
 
   const paginationProps = useTablePaginationProps({
     filterParams: listInvoiceParams,

@@ -12,7 +12,7 @@ export const rejectCategorizationRulesUpdateSuggestion = del<
     `/v1/businesses/${businessId}/categorization-rules/suggestions/${suggestionId}`,
 )
 
-export const useRejectCategorizationRulesUpdateSuggestion = createMutationHook({
+export const useRejectCategorizationRuleSuggestion = createMutationHook({
   tags: [REJECT_CATEGORIZATION_RULE_SUGGESTION_TAG],
   request: rejectCategorizationRulesUpdateSuggestion,
   argToParams: (suggestionId: string) => ({ suggestionId }),

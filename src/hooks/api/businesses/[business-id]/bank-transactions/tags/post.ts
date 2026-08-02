@@ -52,7 +52,7 @@ type TagBankTransactionOptions = {
   bankTransactionId: string
 }
 
-export function useTagBankTransaction({ bankTransactionId }: TagBankTransactionOptions) {
+export function usePostBankTransactionTag({ bankTransactionId }: TagBankTransactionOptions) {
   const mutationResponse = useTagBankTransactionMutation({ bankTransactionId })
 
   const { optimisticallyUpdateBankTransactions, debouncedInvalidateBankTransactions } = useBankTransactionsGlobalCacheActions()

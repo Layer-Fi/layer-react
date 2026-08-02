@@ -17,7 +17,7 @@ const reactivateCatalogService = post<
     `/v1/businesses/${businessId}/catalog/services/${serviceId}/reactivate`,
 )
 
-export const useReactivateCatalogService = createMutationHook({
+export const usePostReactivateCatalogService = createMutationHook({
   tags: [REACTIVATE_CATALOG_SERVICE_TAG_KEY],
   request: reactivateCatalogService,
   keyParams: ['serviceId'],

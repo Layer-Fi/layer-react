@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { useRejectCategorizationRulesUpdateSuggestion } from '@api/businesses/[business-id]/categorization-rules/suggestions/[suggestion-id]/delete'
+import { useRejectCategorizationRuleSuggestion } from '@api/businesses/[business-id]/categorization-rules/suggestions/[suggestion-id]/delete'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
 import { Separator } from '@ui/Separator/Separator'
@@ -21,7 +21,7 @@ export function RuleUpdatesPromptStep({ ruleSuggestion, close, isDrawer }: RuleU
   const { t } = useTranslation()
   const { next } = useWizard()
   const { addToast } = useLayerContext()
-  const { trigger: rejectRuleSuggestion, isMutating } = useRejectCategorizationRulesUpdateSuggestion()
+  const { trigger: rejectRuleSuggestion, isMutating } = useRejectCategorizationRuleSuggestion()
 
   const handleDisableSuggestionPrompt = useCallback(async () => {
     const suggestionId = ruleSuggestion.newRule.createdBySuggestionId

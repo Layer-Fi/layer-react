@@ -15,7 +15,7 @@ const voidInvoice = post<
   { businessId: string, invoiceId: string }
 >(({ businessId, invoiceId }) => `/v1/businesses/${businessId}/invoices/${invoiceId}/void`)
 
-export const useVoidInvoice = createMutationHook({
+export const usePostVoidInvoice = createMutationHook({
   tags: [VOID_INVOICE_TAG_KEY],
   request: voidInvoice,
   keyParams: ['invoiceId'],

@@ -14,7 +14,7 @@ const archiveVehicle = post<
   { businessId: string, vehicleId: string }
 >(({ businessId, vehicleId }) => `/v1/businesses/${businessId}/mileage/vehicles/${vehicleId}/archive`)
 
-export const useArchiveVehicle = createMutationHook({
+export const usePostArchiveVehicle = createMutationHook({
   tags: [ARCHIVE_VEHICLE_TAG_KEY],
   request: archiveVehicle,
   keyParams: ['vehicleId'],

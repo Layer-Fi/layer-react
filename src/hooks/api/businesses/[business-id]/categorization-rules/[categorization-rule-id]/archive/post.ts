@@ -17,7 +17,7 @@ export const archiveCategorizationRule = post<
     `/v1/businesses/${businessId}/categorization-rules/${categorizationRuleId}/archive`,
 )
 
-export const useArchiveCategorizationRule = createMutationHook({
+export const usePostArchiveCategorizationRule = createMutationHook({
   tags: [ARCHIVE_CATEGORIZATION_RULE_TAG],
   request: archiveCategorizationRule,
   argToParams: (categorizationRuleId: string) => ({ categorizationRuleId }),

@@ -14,7 +14,7 @@ const reactivateVehicle = post<
   { businessId: string, vehicleId: string }
 >(({ businessId, vehicleId }) => `/v1/businesses/${businessId}/mileage/vehicles/${vehicleId}/reactivate`)
 
-export const useReactivateVehicle = createMutationHook({
+export const usePostReactivateVehicle = createMutationHook({
   tags: [REACTIVATE_VEHICLE_TAG_KEY],
   request: reactivateVehicle,
   keyParams: ['vehicleId'],

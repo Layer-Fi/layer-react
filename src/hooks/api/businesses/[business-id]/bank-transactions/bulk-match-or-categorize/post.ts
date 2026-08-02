@@ -27,7 +27,7 @@ const bulkMatchOrCategorize = post<
   },
 )
 
-export const useBulkMatchOrCategorizeMutation = createMutationHook({
+export const usePostBulkMatchOrCategorize = createMutationHook({
   tags: [BULK_MATCH_OR_CATEGORIZE_TAG],
   request: bulkMatchOrCategorize,
   argToBody: (arg: BulkMatchOrCategorizeRequest) => Schema.encodeSync(BulkMatchOrCategorizeRequestSchema)(arg),

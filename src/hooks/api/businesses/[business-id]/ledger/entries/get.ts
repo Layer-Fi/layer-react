@@ -36,7 +36,7 @@ export const listLedgerEntries = getWithQuery<
   ({ businessId }) => `/v1/businesses/${businessId}/ledger/entries`,
 )
 
-export const useGetInfiniteLedgerEntries = createInfiniteQueryHook({
+export const useGetListLedgerEntries = createInfiniteQueryHook({
   tags: [LIST_LEDGER_ENTRIES_TAG_KEY],
   request: listLedgerEntries,
   schema: ListLedgerEntriesResponseSchema,

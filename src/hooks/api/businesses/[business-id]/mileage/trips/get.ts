@@ -37,7 +37,7 @@ const listTrips = getWithQuery<
   }),
 )
 
-export const useGetInfiniteTrips = createInfiniteQueryHook({
+export const useGetListTrips = createInfiniteQueryHook({
   tags: [LIST_TRIPS_TAG_KEY],
   request: listTrips,
   schema: ListTripsResponseSchema,

@@ -97,7 +97,7 @@ const parseCsv = (
   )
 }
 
-export const useCustomAccountParseCsv = createMutationHook({
+export const usePostCustomAccountParseCsv = createMutationHook({
   tags: [`${CUSTOM_ACCOUNTS_TAG_KEY}:parse-csv`],
   request: parseCsv,
   argToParams: ({ customAccountId }: CustomAccountParseCsvArgs) => ({ customAccountId }),

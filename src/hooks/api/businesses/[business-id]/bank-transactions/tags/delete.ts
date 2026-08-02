@@ -34,7 +34,7 @@ type RemoveTagFromBankTransactionOptions = {
   bankTransactionId: string
 }
 
-export function useRemoveTagFromBankTransaction({ bankTransactionId }: RemoveTagFromBankTransactionOptions) {
+export function useDeleteBankTransactionTag({ bankTransactionId }: RemoveTagFromBankTransactionOptions) {
   const mutationResponse = useRemoveTagFromBankTransactionMutation({ bankTransactionId })
 
   const { optimisticallyUpdateBankTransactions, debouncedInvalidateBankTransactions } = useBankTransactionsGlobalCacheActions()
