@@ -2,7 +2,7 @@ import { TripsRoute, TripsRouteStoreProvider, useTripsRouteState } from '@provid
 import { TripsView } from '@features/mileage/TripsView/TripsView'
 import { VehiclesView } from '@features/mileage/VehiclesView/VehiclesView'
 
-export const Trips = () => {
+export const TripsRouter = () => {
   return (
     <TripsRouteStoreProvider>
       <TripsContent />
