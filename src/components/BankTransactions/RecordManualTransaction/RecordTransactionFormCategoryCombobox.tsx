@@ -6,7 +6,7 @@ import { type Classification } from '@schemas/categorization'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { Label } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { LedgerAccountCombobox } from '@features/generalLedger/LedgerAccountCombobox/LedgerAccountCombobox'
+import { LedgerAccountComboBox } from '@features/generalLedger/LedgerAccountComboBox/LedgerAccountComboBox'
 
 import './recordTransactionFormCategoryCombobox.scss'
 
@@ -33,7 +33,7 @@ export function RecordTransactionFormCategoryCombobox({
 }: RecordTransactionFormCategoryComboboxProps) {
   if (!transaction) {
     return (
-      <LedgerAccountCombobox
+      <LedgerAccountComboBox
         label={label}
         placeholder={placeholder}
         showLabel

@@ -9,7 +9,7 @@ import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
 import { DebitCreditPill } from '@components/DebitCreditPill/DebitCreditPill'
 import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
-import { LedgerAccountCombobox } from '@features/generalLedger/LedgerAccountCombobox/LedgerAccountCombobox'
+import { LedgerAccountComboBox } from '@features/generalLedger/LedgerAccountComboBox/LedgerAccountComboBox'
 
 import './journalEntryLineItem.scss'
 
@@ -42,7 +42,7 @@ export const JournalEntryLineItem = ({ form, index, displayIndex, isReadOnly, on
               field.setValue(value)
             }
             return (
-              <LedgerAccountCombobox
+              <LedgerAccountComboBox
                 label={t('common:label.account', 'Account')}
                 value={field.state.value}
                 mode={CategoriesListMode.All}

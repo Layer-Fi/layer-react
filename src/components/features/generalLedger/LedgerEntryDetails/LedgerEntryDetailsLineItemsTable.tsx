@@ -12,9 +12,9 @@ import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Span } from '@ui/Typography/Text'
 import { type ColumnConfig } from '@blocks/DataTable/utils/column'
 import { SimpleDataTable } from '@blocks/SimpleDataTable/SimpleDataTable'
-import { type LineItemsTableStringOverrides } from '@features/generalLedger/types'
+import { type LedgerEntryDetailsLineItemsTableStringOverrides } from '@features/generalLedger/types'
 
-import './lineItemsTable.scss'
+import './ledgerEntryDetailsLineItemsTable.scss'
 
 const COMPONENT_NAME = 'LedgerEntryLineItems'
 
@@ -28,11 +28,11 @@ type LineItemRow = {
   isTotal: boolean
 }
 
-interface LineItemsTableProps {
+interface LedgerEntryDetailsLineItemsTableProps {
   lineItems: ReadonlyArray<LineItem> | undefined
   isLoading?: boolean
   isError?: boolean
-  stringOverrides?: LineItemsTableStringOverrides
+  stringOverrides?: LedgerEntryDetailsLineItemsTableStringOverrides
 }
 
 const AmountCell = ({
@@ -55,12 +55,12 @@ const AmountCell = ({
   return <Badge variant={variant}>{formatCurrencyFromCents(amount)}</Badge>
 }
 
-export const LineItemsTable = ({
+export const LedgerEntryDetailsLineItemsTable = ({
   lineItems,
   isLoading,
   isError,
   stringOverrides,
-}: LineItemsTableProps) => {
+}: LedgerEntryDetailsLineItemsTableProps) => {
   const { t } = useTranslation()
 
   const rows = useMemo<LineItemRow[]>(() => {

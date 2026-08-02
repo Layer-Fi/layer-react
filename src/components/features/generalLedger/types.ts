@@ -19,7 +19,7 @@ export interface JournalEntryDetailStringOverrides {
   reversalLabel?: string
 }
 
-export interface LineItemsTableStringOverrides {
+export interface LedgerEntryDetailsLineItemsTableStringOverrides {
   lineItemsColumnHeader?: string
   debitColumnHeader?: string
   creditColumnHeader?: string
@@ -36,5 +36,5 @@ export interface LedgerEntryDetailStringOverrides {
     header?: (entryId?: string) => string
     details?: JournalEntryDetailStringOverrides
   }
-  lineItemsTable?: LineItemsTableStringOverrides
+  lineItemsTable?: LedgerEntryDetailsLineItemsTableStringOverrides
 }

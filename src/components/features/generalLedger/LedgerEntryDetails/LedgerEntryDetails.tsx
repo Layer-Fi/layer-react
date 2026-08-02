@@ -11,7 +11,7 @@ import { DateTime } from '@ui/DateTime/DateTime'
 import { VStack } from '@ui/Stack/Stack'
 import { EntryDetailHeader } from '@features/generalLedger/EntryDetailHeader/EntryDetailHeader'
 import { EntryDetailField, EntryDetailSection } from '@features/generalLedger/EntryDetailSection/EntryDetailSection'
-import { LineItemsTable } from '@features/generalLedger/LedgerEntryDetails/LineItemsTable'
+import { LedgerEntryDetailsLineItemsTable } from '@features/generalLedger/LedgerEntryDetails/LedgerEntryDetailsLineItemsTable'
 import { ReverseEntryButton } from '@features/generalLedger/ReverseEntryButton/ReverseEntryButton'
 import { SourceDetailView } from '@features/generalLedger/SourceDetailView/SourceDetailView'
 import { type LedgerEntryDetailStringOverrides } from '@features/generalLedger/types'
@@ -121,7 +121,7 @@ export const LedgerEntryDetails = ({
       <EntryDetailSection
         title={stringOverrides?.lineItemsTable?.lineItemsColumnHeader || t('generalLedger:label.line_items', 'Line items')}
       >
-        <LineItemsTable
+        <LedgerEntryDetailsLineItemsTable
           lineItems={entry?.lineItems}
           isLoading={isLoading}
           isError={isError}

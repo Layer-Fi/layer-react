@@ -9,9 +9,9 @@ import { useGetCategories } from '@api/businesses/[business-id]/categories/get'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { Label } from '@ui/Typography/Text'
 
-import './ledgerAccountCombobox.scss'
+import './ledgerAccountComboBox.scss'
 
-type LedgerAccountComboboxProps = {
+type LedgerAccountComboBoxProps = {
   label: string
   value: Classification | null
   onValueChange: (value: Classification | null) => void
@@ -25,7 +25,7 @@ type LedgerAccountComboboxProps = {
   className?: string
 }
 
-export const LedgerAccountCombobox = ({
+export const LedgerAccountComboBox = ({
   label,
   value,
   mode,
@@ -37,7 +37,7 @@ export const LedgerAccountCombobox = ({
   showLabel,
   inline,
   className,
-}: LedgerAccountComboboxProps) => {
+}: LedgerAccountComboBoxProps) => {
   const { data: allCategories, isLoading } = useGetCategories({ mode })
   const categories = useMemo(
     () => hideExclusions ? withoutExclusions(allCategories ?? []) : allCategories ?? [],
@@ -58,7 +58,7 @@ export const LedgerAccountCombobox = ({
   const inputId = useId()
   const additionalAriaProps = !showLabel && { 'aria-label': label }
   return (
-    <div className={classNames('Layer__LedgerAccountCombobox', inline && 'Layer__LedgerAccountCombobox--inline', className)}>
+    <div className={classNames('Layer__LedgerAccountComboBox', inline && 'Layer__LedgerAccountComboBox--inline', className)}>
       {showLabel && (
         <Label size='sm' htmlFor={inputId}>
           {label}
