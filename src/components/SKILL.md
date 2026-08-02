@@ -25,75 +25,44 @@ belongs in `src/components/ui`, not next to the feature that first needed it.
 
 ## Finding and placing feature code
 
-`src/components/features/` holds one directory per **domain object**, named with the same
-camelCase vocabulary as `src/hooks/features/*` and `src/schemas/*`. So the same domain name
-answers "where does this live" in all three trees: bank-transaction components are in
-`@features/bankTransactions`, its hooks in `@hooks/features/bankTransactions`, its contracts in
-`@schemas/bankTransactions`. **Reuse an existing domain name — do not invent a near-synonym**, and
-add a new domain directory only for a genuinely new domain object.
+`src/components/features/` holds one directory per **domain object**, using the same camelCase name
+as `src/hooks/features/*` and `src/schemas/*` — mileage is `@features/mileage`,
+`@hooks/features/mileage`, `@schemas/mileage`. Reuse an existing domain name rather than inventing a
+near-synonym.
 
-Inside a domain the layout is **flat**: one `PascalCase` directory per component, directly under the
-domain, no grouping directories between them. `mileage` is the worked example:
+Inside a domain the layout is flat, so **a component's path is its name**:
+`@features/mileage/TripDrawer/TripDrawer`, always `<domain>/<Name>/<Name>.tsx`.
 
-```
-features/mileage/
-  MileageSummaryCard/ MileageTrackingStats/ MileageDeductionChart/ …
-  Trips/ TripsView/ TripsTable/ TripDrawer/ TripForm/ TripPurposeToggle/ …
-  VehiclesView/ VehiclesGrid/ VehicleCard/ VehicleForm/ VehicleSelector/ …
-  tripUtils.ts
-```
+- **Every reusable component gets a directory**, even a one-file one. Its stylesheet, hook, utils,
+  test, and story sit beside it; a helper two components share sits at the domain root instead.
+- **A part only its parent could ever render nests inside the parent** —
+  `TripsMobileList/TripsMobileListItem.tsx`,
+  `MileageDeductionChart/MileageDeductionChartTooltip.tsx`. A nested part is private: if a second
+  component comes to need it, move it out to the domain root rather than importing it from inside.
+  The test is whether another component *could* render it, not how many do today.
+- **Singular for one record, plural for the collection** — `TripDrawer`/`TripForm` against
+  `TripsTable`/`TripsView`.
 
-Five rules keep that navigable:
+A component that is *not* domain-specific belongs in `@ui` (primitive), `@blocks` (composed
+pattern), or `@components/utility` (rendering helper).
 
-- **A component's path is its name.** `@features/mileage/TripDrawer/TripDrawer` — always
-  `<domain>/<Name>/<Name>.tsx`, with no exceptions to look up. You can write the import before you
-  have looked at the tree, and a wrong guess means the component doesn't exist.
-- **Every reusable component gets its own directory, even a one-file one.** Uniformity is the point:
-  a reader never has to know whether `TripDrawer` is a file or a directory. Its stylesheet, hook,
-  `formUtils.ts`, test, and story sit with it.
-- **A part that only its parent can ever render stays inside the parent's directory** — a list's
-  item, a chart's tooltip: `TripsMobileList/TripsMobileListItem.tsx`,
-  `MileageDeductionChart/MileageDeductionChartTooltip.tsx`. The test is whether another component
-  *could* render it, not how many render it today. The moment a second one does, it moves to the
-  domain root — a nested part is private, so nothing reaches into another component's directory.
-- **Don't add grouping directories.** No `subcomponents/`, no `camelCase` sub-areas. Name prefixes
-  already group a domain: `Mileage*`, `Trip*`, `Vehicle*` sort together in any listing, and they do
-  it without forcing a filing decision that a shared component can only get wrong.
-- **Be consistent about singular and plural.** Singular names a surface over one record
-  (`TripDrawer`, `TripForm`, `VehicleCard`), plural one over the collection (`TripsTable`,
-  `TripsView`, `VehiclesGrid`). Parallel surfaces get parallel names — `TripsView`/`VehiclesView`.
-
-Non-component helpers sit at the domain root, prefixed the same way — `tripUtils.ts` holds the
-formatters `TripsTable` and `TripsMobileListItem` share.
-
-Flat means shared components need no special handling: `MileageDeductionChart` is used by both
-`MileageTrackingSummary` and `MileageTrackingStats`, and `VehicleSelector` by `TripForm` and
-`TripsTableHeader`, without either being filed under one consumer. A type two layers need — like
-`TripPurposeFilterValue` — belongs in `@schemas/*`, not exported from the component that renders it.
-
-A component that is *not* domain-specific does not belong here at all — it goes to `@ui`
-(primitive), `@blocks` (composed pattern), or `@components/utility` (rendering helper). "Which
-domain owns this?" having no answer is the signal.
-
-> **Migration in progress.** Domains are being moved into `features/` one PR at a time; directories
-> still sitting directly under `src/components/` are un-migrated, not a second convention. Put new
-> work in `features/<domain>/`, and if you touch an un-migrated domain, don't extend it in place —
-> ask before mixing a move into a behavior change.
+> **Migration in progress.** Directories still sitting directly under `src/components/` are
+> un-migrated, not a second convention. Put new work in `features/<domain>/`, and ask before mixing
+> a move into a behavior change.
 
 ## File conventions
 
 ```
-src/components/features/linkedAccounts/CustomAccountForm/
+src/components/CustomAccountForm/
   CustomAccountForm.tsx          PascalCase component file
   customAccountForm.scss         camelCase stylesheet, imported by the .tsx
   CustomAccountForm.test.tsx     colocated test
-  CustomAccountForm.stories.tsx  colocated story
+  useCustomAccountForm.ts        the hook that owns its state
 ```
 
-Import with the **most specific path alias** available (`@ui/Button/Button`, not
-`@components/ui/Button/Button`; `@features/mileage/Trips/Trips`, not
-`@components/features/mileage/Trips/Trips`). Relative parent imports (`../`) are an ESLint error
-outside the aliases. No barrel `index.ts` re-export files — import the module directly.
+Import with the **most specific alias** (`@ui/Button/Button`, not `@components/ui/Button/Button`).
+Relative parent imports (`../`) are an ESLint error outside the aliases, and there are no barrel
+`index.ts` files.
 
 ## Loading, error, and empty states
 
