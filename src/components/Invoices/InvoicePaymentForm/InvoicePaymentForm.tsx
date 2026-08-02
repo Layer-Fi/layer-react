@@ -9,8 +9,8 @@ import type { InvoicePayment } from '@schemas/invoices/invoicePayment'
 import { fromNonRecursiveBigDecimal, type NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import { convertBigDecimalToCents, convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
 import { flattenValidationErrors } from '@utils/form'
-import type { UpsertDedicatedInvoicePaymentMode } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment/upsert'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { type UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Form } from '@ui/Form/Form'
@@ -26,8 +26,8 @@ const INVOICE_PAYMENT_FORM_CSS_PREFIX = 'Layer__InvoicePaymentForm'
 const INVOICE_PAYMENT_FORM_FIELD_CSS_PREFIX = `${INVOICE_PAYMENT_FORM_CSS_PREFIX}__Field`
 
 export type InvoicePaymentFormMode =
-  | { mode: UpsertDedicatedInvoicePaymentMode.Update, invoice: Invoice, invoicePayment: InvoicePayment }
-  | { mode: UpsertDedicatedInvoicePaymentMode.Create, invoice: Invoice }
+  | { mode: UpsertMode.Update, invoice: Invoice, invoicePayment: InvoicePayment }
+  | { mode: UpsertMode.Create, invoice: Invoice }
 
 export type InvoicePaymentFormProps = InvoicePaymentFormMode & {
   isReadOnly?: boolean

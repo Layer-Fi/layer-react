@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 
 import type { Customer } from '@schemas/customer'
-import { UpsertCustomerMode } from '@api/businesses/[business-id]/customers/upsert'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import type { CustomerFormState } from '@components/CustomerForm/formUtils'
 import type { InvoiceFormType } from '@components/Invoices/InvoiceForm/useInvoiceForm'
 
@@ -11,12 +11,12 @@ export const useCustomerFormDrawer = (form: InvoiceFormType) => {
   const editCustomer = useCallback(() => {
     const customer = form.getFieldValue('customer')
     if (customer) {
-      setCustomerFormState({ mode: UpsertCustomerMode.Update, customer })
+      setCustomerFormState({ mode: UpsertMode.Update, customer })
     }
   }, [form])
 
   const createCustomer = useCallback((initialName: string) => {
-    setCustomerFormState({ mode: UpsertCustomerMode.Create, initialName })
+    setCustomerFormState({ mode: UpsertMode.Create, initialName })
   }, [])
 
   const close = useCallback(() => {

@@ -1,14 +1,14 @@
 import type { TFunction } from 'i18next'
 
 import { type Customer, type CustomerForm } from '@schemas/customer'
-import { UpsertCustomerMode } from '@api/businesses/[business-id]/customers/upsert'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 
 export type CustomerFormState =
-  | { mode: UpsertCustomerMode.Update, customer: Customer }
-  | { mode: UpsertCustomerMode.Create, initialName?: string }
+  | { mode: UpsertMode.Update, customer: Customer }
+  | { mode: UpsertMode.Create, initialName?: string }
 
 export const getCustomerFormDefaultValues = (state: CustomerFormState): CustomerForm => {
-  if (state.mode === UpsertCustomerMode.Update) {
+  if (state.mode === UpsertMode.Update) {
     const { customer } = state
     return {
       individualName: customer.individualName || '',

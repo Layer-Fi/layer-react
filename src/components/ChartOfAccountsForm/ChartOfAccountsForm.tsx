@@ -4,8 +4,8 @@ import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type LedgerAccountType, type LedgerEntryDirection, type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
-import { UpsertLedgerAccountMode } from '@api/businesses/[business-id]/ledger/accounts/upsert'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
@@ -44,8 +44,8 @@ export interface ChartOfAccountsFormStringOverrides {
 }
 
 type ChartOfAccountsFormContentMode =
-  | { mode: UpsertLedgerAccountMode.Create }
-  | { mode: UpsertLedgerAccountMode.Update, account: NestedLedgerAccountType, parentAccountId?: string }
+  | { mode: UpsertMode.Create }
+  | { mode: UpsertMode.Update, account: NestedLedgerAccountType, parentAccountId?: string }
 
 type ChartOfAccountsFormContentProps = ChartOfAccountsFormContentMode & {
   onCancel: () => void
@@ -63,13 +63,13 @@ const ChartOfAccountsFormContent = (props: ChartOfAccountsFormContentProps) => {
 
   const cancelLabel = stringOverrides?.cancelButton || t('common:action.cancel_label', 'Cancel')
 
-  const isEdit = props.mode === UpsertLedgerAccountMode.Update
-  const account = props.mode === UpsertLedgerAccountMode.Update ? props.account : undefined
+  const isEdit = props.mode === UpsertMode.Update
+  const account = props.mode === UpsertMode.Update ? props.account : undefined
 
   const { form, submitError } = useChartOfAccountsForm(
-    props.mode === UpsertLedgerAccountMode.Update
-      ? { mode: UpsertLedgerAccountMode.Update, account: props.account, parentAccountId: props.parentAccountId, onSuccess: onCancel }
-      : { mode: UpsertLedgerAccountMode.Create, onSuccess: onCancel },
+    props.mode === UpsertMode.Update
+      ? { mode: UpsertMode.Update, account: props.account, parentAccountId: props.parentAccountId, onSuccess: onCancel }
+      : { mode: UpsertMode.Create, onSuccess: onCancel },
   )
 
   const allAccounts = useMemo(() => flattenAccounts(data?.accounts ?? []), [data?.accounts])
@@ -241,7 +241,7 @@ export const ChartOfAccountsForm = ({
 
   const contentProps = useMemo((): ChartOfAccountsFormContentMode | undefined => {
     if (!formMode) return undefined
-    if (formMode.action === 'new') return { mode: UpsertLedgerAccountMode.Create }
+    if (formMode.action === 'new') return { mode: UpsertMode.Create }
 
     const allAccounts = flattenAccounts(data?.accounts ?? [])
     const account = allAccounts.find(accountItem => accountItem.accountId === formMode.accountId)
@@ -251,7 +251,7 @@ export const ChartOfAccountsForm = ({
       accountItem => accountItem.subAccounts?.some(child => child.accountId === account.accountId),
     )?.accountId
 
-    return { mode: UpsertLedgerAccountMode.Update, account, parentAccountId }
+    return { mode: UpsertMode.Update, account, parentAccountId }
   }, [data?.accounts, formMode])
 
   // If an account being edited drops out of the loaded data after the panel opened
@@ -270,7 +270,7 @@ export const ChartOfAccountsForm = ({
 
   return (
     <ChartOfAccountsFormContent
-      key={contentProps.mode === UpsertLedgerAccountMode.Update ? contentProps.account.accountId : 'new'}
+      key={contentProps.mode === UpsertMode.Update ? contentProps.account.accountId : 'new'}
       {...contentProps}
       onCancel={onCancel}
       stringOverrides={stringOverrides}

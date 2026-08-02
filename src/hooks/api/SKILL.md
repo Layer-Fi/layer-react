@@ -79,12 +79,39 @@ mode-switching hook lives in `upsert.ts` next to the create, and is the only thi
 import:
 
 ```
-mileage/vehicles/post.ts              usePostVehicle
+mileage/vehicles/post.ts                usePostVehicle
 mileage/vehicles/[vehicle-id]/patch.ts  usePatchVehicle
-mileage/vehicles/upsert.ts            useUpsertVehicle + UpsertVehicleMode
+mileage/vehicles/upsert.ts              useUpsertVehicle
 ```
 
 The shared tag key, response schema, and body types live in `post.ts`; `patch.ts` imports them.
+
+Build the combined hook with `createUpsertHook` (`@hooks/utils/swr/createUpsertHook`) rather than
+by hand — the whole file is the factory call:
+
+```ts
+export const useUpsertVehicle = createUpsertHook({
+  useCreate: usePostVehicle,
+  useUpdate: usePatchVehicle,
+  toCreateOptions: () => undefined,
+  toUpdateOptions: (props: { vehicleId?: string }) => ({ vehicleId: props.vehicleId ?? '' }),
+})
+```
+
+`toCreateOptions` / `toUpdateOptions` map the caller's props onto each mutation's key params;
+return `undefined` when a mutation takes none. There is one shared `UpsertMode` enum — resources
+do not declare their own.
+
+Two things the factory guarantees that hand-rolling gets wrong:
+
+- **Both hooks are called on every render**, in a fixed order, so hook order survives a form
+  switching between create and update.
+- **The placeholder key.** In create mode the update hook still needs its key params, so it gets
+  `?? ''`. Nothing triggers it, so no request is made — but the reason lives in one place now
+  instead of being re-derived per resource.
+
+Typing is preserved: a literal `mode` narrows the result, so `trigger` takes exactly that
+mutation's body. Pass a `mode` that isn't statically known and `trigger` widens to accept either.
 
 ## What may not be imported here
 

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { useGetInvoicePdfDownload } from '@api/businesses/[business-id]/invoices/[invoice-id]/pdf/get'
-import { UpsertInvoiceMode } from '@api/businesses/[business-id]/invoices/upsert'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
@@ -106,7 +106,7 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
     )
   }, [])
 
-  const invoiceId = viewState.mode === UpsertInvoiceMode.Update ? viewState.invoice.id : ''
+  const invoiceId = viewState.mode === UpsertMode.Update ? viewState.invoice.id : ''
   const { trigger: downloadInvoicePdf, isMutating: isDownloadingInvoicePdf } = useGetInvoicePdfDownload({
     invoiceId,
     onSuccess: ({ presignedUrl, fileName }) => {
@@ -124,7 +124,7 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
     void downloadInvoicePdf()
   }
 
-  if (viewState.mode === UpsertInvoiceMode.Create) return null
+  if (viewState.mode === UpsertMode.Create) return null
 
   const invoice = viewState.invoice
   const invoiceActions = getInvoiceActions(invoice)

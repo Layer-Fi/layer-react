@@ -6,9 +6,10 @@ import { useTranslation } from 'react-i18next'
 import { type Invoice } from '@schemas/invoices/invoice'
 import { type DedicatedInvoicePaymentForm, type InvoicePayment, UpsertDedicatedInvoicePaymentSchema } from '@schemas/invoices/invoicePayment'
 import { DateFormat } from '@utils/i18n/date/patterns'
-import { UpsertDedicatedInvoicePaymentMode, useUpsertDedicatedInvoicePayment } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment/upsert'
+import { useUpsertDedicatedInvoicePayment } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import {
   convertInvoicePaymentFormToParams,
   getInvoicePaymentFormDefaultValues,
@@ -25,7 +26,7 @@ export const useInvoicePaymentForm = (props: UseInvoicePaymentFormProps) => {
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { onSuccess, invoice } = props
 
-  const upsertDedicatedInvoicePaymentProps = { mode: UpsertDedicatedInvoicePaymentMode.Create as const, invoiceId: props.invoice.id }
+  const upsertDedicatedInvoicePaymentProps = { mode: UpsertMode.Create as const, invoiceId: props.invoice.id }
   const { trigger: upsertDedicatedInvoicePayment } = useUpsertDedicatedInvoicePayment(upsertDedicatedInvoicePaymentProps)
 
   const defaultValuesRef = useRef<DedicatedInvoicePaymentForm>(getInvoicePaymentFormDefaultValues(invoice))

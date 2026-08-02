@@ -7,11 +7,12 @@ import { type TimeEntry } from '@schemas/timeTracking'
 import { ApiEnumErrorType, APIError } from '@utils/api/apiError'
 import { type ActiveTimerDraft, type ActiveTimerDraftWithService, getDraftFromEntry, hasDraftChanges, toUpdatePayload } from '@utils/timeTracking/activeTimerDraft'
 import { useDeleteTimeEntry } from '@api/businesses/[business-id]/time-tracking/time-entries/[time-entry-id]/delete'
-import { UpsertTimeEntryMode, useUpsertTimeEntry } from '@api/businesses/[business-id]/time-tracking/time-entries/upsert'
+import { useUpsertTimeEntry } from '@api/businesses/[business-id]/time-tracking/time-entries/upsert'
 import { useActiveTimeTrackerGlobalCacheActions } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'
 import { usePostStopTimeTracker } from '@api/businesses/[business-id]/time-tracking/tracker/stop/post'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 
 type UseActiveTimerBannerFormProps = {
   activeEntry: TimeEntry
@@ -32,7 +33,7 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
   const { trigger: stopTimeTracker, isMutating: isStopping } = usePostStopTimeTracker()
   const { trigger: deleteTimeEntry, isMutating: isCancelling } = useDeleteTimeEntry({ timeEntryId: activeEntry.id })
   const { trigger: updateTimeEntry, isMutating: isUpdating } = useUpsertTimeEntry({
-    mode: UpsertTimeEntryMode.Update,
+    mode: UpsertMode.Update,
     timeEntryId: activeEntry.id,
   })
   const { invalidate: invalidateActiveTimeTracker } = useActiveTimeTrackerGlobalCacheActions()

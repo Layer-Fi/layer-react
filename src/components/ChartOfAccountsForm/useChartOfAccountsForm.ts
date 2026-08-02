@@ -5,8 +5,9 @@ import { useTranslation } from 'react-i18next'
 
 import { type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { type LedgerAccountForm, UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLedgerAccount'
-import { UpsertLedgerAccountMode, useUpsertLedgerAccount } from '@api/businesses/[business-id]/ledger/accounts/upsert'
+import { useUpsertLedgerAccount } from '@api/businesses/[business-id]/ledger/accounts/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
 import {
   convertLedgerAccountFormToParams,
@@ -18,8 +19,8 @@ import {
 type UseChartOfAccountsFormProps = {
   onSuccess: () => void
 } & (
-  | { mode: UpsertLedgerAccountMode.Create }
-  | { mode: UpsertLedgerAccountMode.Update, account: NestedLedgerAccountType, parentAccountId?: string }
+  | { mode: UpsertMode.Create }
+  | { mode: UpsertMode.Update, account: NestedLedgerAccountType, parentAccountId?: string }
 )
 
 export const useChartOfAccountsForm = (props: UseChartOfAccountsFormProps) => {
@@ -28,16 +29,16 @@ export const useChartOfAccountsForm = (props: UseChartOfAccountsFormProps) => {
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { onSuccess, mode } = props
 
-  const upsertProps = mode === UpsertLedgerAccountMode.Update
-    ? { mode: UpsertLedgerAccountMode.Update as const, accountId: props.account.accountId }
-    : { mode: UpsertLedgerAccountMode.Create as const }
+  const upsertProps = mode === UpsertMode.Update
+    ? { mode: UpsertMode.Update as const, accountId: props.account.accountId }
+    : { mode: UpsertMode.Create as const }
   const { trigger: upsertLedgerAccount } = useUpsertLedgerAccount(upsertProps)
 
-  const stableName = mode === UpsertLedgerAccountMode.Update ? props.account.stableName : undefined
+  const stableName = mode === UpsertMode.Update ? props.account.stableName : undefined
 
   const defaultValuesRef = useRef<LedgerAccountForm>(
     getLedgerAccountFormDefaultValues(
-      mode === UpsertLedgerAccountMode.Update
+      mode === UpsertMode.Update
         ? { account: props.account, parentAccountId: props.parentAccountId }
         : undefined,
     ),

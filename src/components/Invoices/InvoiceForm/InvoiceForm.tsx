@@ -2,7 +2,7 @@ import { forwardRef, useCallback, useEffect, useImperativeHandle } from 'react'
 import type React from 'react'
 
 import type { Invoice } from '@schemas/invoices/invoice'
-import { UpsertInvoiceMode } from '@api/businesses/[business-id]/invoices/upsert'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Form } from '@ui/Form/Form'
@@ -35,7 +35,7 @@ export const InvoiceForm = forwardRef((props: InvoiceFormProps, ref) => {
     { onSuccess, ...viewState },
   )
 
-  const initialDueAt = mode === UpsertInvoiceMode.Update ? viewState.invoice.dueAt : null
+  const initialDueAt = mode === UpsertMode.Update ? viewState.invoice.dueAt : null
 
   const {
     formState: customerFormState,

@@ -4,8 +4,9 @@ import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
 import { type Trip, type TripForm, UpsertTripSchema } from '@schemas/trip'
-import { UpsertTripMode, useUpsertTrip } from '@api/businesses/[business-id]/mileage/trips/upsert'
+import { useUpsertTrip } from '@api/businesses/[business-id]/mileage/trips/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { convertTripFormToUpsertTrip, getTripFormDefaultValues, validateTripForm } from '@components/Trips/TripForm/formUtils'
 import { useAutofillTripDistance } from '@components/Trips/TripForm/useAutofillTripDistance'
 
@@ -19,8 +20,8 @@ export const useTripForm = (props: UseTripFormProps) => {
 
   const { trigger: upsertTrip } = useUpsertTrip(
     trip
-      ? { mode: UpsertTripMode.Update, tripId: trip.id }
-      : { mode: UpsertTripMode.Create },
+      ? { mode: UpsertMode.Update, tripId: trip.id }
+      : { mode: UpsertMode.Create },
   )
 
   const defaultValuesRef = useRef<TripForm>(getTripFormDefaultValues(trip))

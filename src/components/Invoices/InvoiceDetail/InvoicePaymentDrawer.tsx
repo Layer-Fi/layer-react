@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { type Invoice } from '@schemas/invoices/invoice'
 import { type InvoicePayment } from '@schemas/invoices/invoicePayment'
 import { updateInvoiceWithPayment } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment/post'
-import { UpsertDedicatedInvoicePaymentMode } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment/upsert'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Drawer } from '@ui/Modal/Modal'
@@ -54,7 +54,7 @@ export const InvoicePaymentDrawer = ({
             onSuccess(invoicePayment)
             close()
           }}
-          mode={UpsertDedicatedInvoicePaymentMode.Create}
+          mode={UpsertMode.Create}
           invoice={invoice}
         />
       )}

@@ -4,8 +4,9 @@ import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
 import { type Customer, type CustomerForm, UpsertCustomerSchema } from '@schemas/customer'
-import { UpsertCustomerMode, useUpsertCustomer } from '@api/businesses/[business-id]/customers/upsert'
+import { useUpsertCustomer } from '@api/businesses/[business-id]/customers/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { convertCustomerFormToUpsertCustomer, type CustomerFormState, getCustomerFormDefaultValues, validateCustomerForm } from '@components/CustomerForm/formUtils'
 
 type onSuccessFn = (customer: Customer) => void
@@ -16,21 +17,21 @@ export const useCustomerForm = (props: UseCustomerFormProps) => {
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { onSuccess, mode } = props
 
-  const customer = mode === UpsertCustomerMode.Update ? props.customer : undefined
-  const initialName = mode === UpsertCustomerMode.Create ? props.initialName : undefined
+  const customer = mode === UpsertMode.Update ? props.customer : undefined
+  const initialName = mode === UpsertMode.Create ? props.initialName : undefined
 
   const formDefaults = useMemo((): CustomerForm => {
-    const formState: CustomerFormState = mode === UpsertCustomerMode.Update && customer
-      ? { mode: UpsertCustomerMode.Update, customer }
-      : { mode: UpsertCustomerMode.Create, initialName }
+    const formState: CustomerFormState = mode === UpsertMode.Update && customer
+      ? { mode: UpsertMode.Update, customer }
+      : { mode: UpsertMode.Create, initialName }
 
     return getCustomerFormDefaultValues(formState)
   }, [mode, customer, initialName])
 
   const { trigger: upsertCustomer } = useUpsertCustomer(
-    mode === UpsertCustomerMode.Update
-      ? { mode: UpsertCustomerMode.Update, customerId: props.customer.id }
-      : { mode: UpsertCustomerMode.Create },
+    mode === UpsertMode.Update
+      ? { mode: UpsertMode.Update, customerId: props.customer.id }
+      : { mode: UpsertMode.Create },
   )
 
   const defaultValuesRef = useRef<CustomerForm>(formDefaults)

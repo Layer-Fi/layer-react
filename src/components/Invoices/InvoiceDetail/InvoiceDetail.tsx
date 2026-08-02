@@ -3,7 +3,7 @@ import { ChevronLeft, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice } from '@schemas/invoices/invoice'
-import { UpsertInvoiceMode } from '@api/businesses/[business-id]/invoices/upsert'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { InvoiceDetailStep, useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
@@ -85,7 +85,7 @@ export const InvoiceDetail = () => {
   return (
     <>
       <BaseDetailView slots={{ Header, BackIcon: invoiceFormHasChanges ? X : ChevronLeft }} name='InvoiceDetail' onGoBack={onGoBack}>
-        {viewState.mode === UpsertInvoiceMode.Update && <InvoiceDetailSubHeader invoice={viewState.invoice} />}
+        {viewState.mode === UpsertMode.Update && <InvoiceDetailSubHeader invoice={viewState.invoice} />}
         {showInvoiceForm && (
           <InvoiceForm
             onSuccess={onUpsertInvoiceSuccess}
@@ -102,7 +102,7 @@ export const InvoiceDetail = () => {
         onOpenChange={setIsDiscardChangesModalOpen}
         onConfirm={toInvoiceTable}
       />
-      {viewState.mode === UpsertInvoiceMode.Update && (
+      {viewState.mode === UpsertMode.Update && (
         <InvoicePaymentDrawer
           isOpen={isPaymentDrawerOpen}
           onOpenChange={setIsPaymentDrawerOpen}

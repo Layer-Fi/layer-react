@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Customer } from '@schemas/customer'
-import { UpsertCustomerMode } from '@api/businesses/[business-id]/customers/upsert'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { VStack } from '@ui/Stack/Stack'
@@ -31,7 +31,7 @@ export const CustomerFormDrawer = (props: CustomerFormDrawerProps) => {
   const { t } = useTranslation()
   const { isOpen, onOpenChange, onSuccess, formState } = props
 
-  const title = formState?.mode === UpsertCustomerMode.Update
+  const title = formState?.mode === UpsertMode.Update
     ? t('customerVendor:action.edit_customer_details', 'Edit customer details')
     : t('customerVendor:action.create_new_customer', 'Create new customer')
   const Header = useCallback(({ close }: { close: () => void }) => (
