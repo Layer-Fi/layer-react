@@ -8,6 +8,7 @@ import {
 import { usePostBulkMatchOrCategorize } from '@api/businesses/[business-id]/bank-transactions/bulk-match-or-categorize/post'
 import { type BankTransactionCategorization, BankTransactionSelectionVariant, DEFAULT_CATEGORIZATION, useGetAllBankTransactionsCategorizations } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 type MatchOrCategorizeTransaction = typeof MatchOrCategorizeTransactionRequestSchema.Type
@@ -91,13 +92,20 @@ const buildBulkMatchOrCategorizePayload = (
 export const useBulkMatchOrCategorize = () => {
   const { selectedIds } = useSelectedIds()
   const { categorizations } = useGetAllBankTransactionsCategorizations()
+  const { eventCallbacks } = useLayerContext()
 
   const buildTransactionsPayload: () => BulkMatchOrCategorizeRequest = useCallback(() => {
     const transactions = buildBulkMatchOrCategorizePayload(selectedIds, categorizations)
     return { transactions }
   }, [selectedIds, categorizations])
 
-  const response = usePostBulkMatchOrCategorize()
+  const response = usePostBulkMatchOrCategorize({
+    swrOptions: {
+      onSuccess: () => {
+        eventCallbacks?.onTransactionCategorized?.()
+      },
+    },
+  })
 
   return {
     response,

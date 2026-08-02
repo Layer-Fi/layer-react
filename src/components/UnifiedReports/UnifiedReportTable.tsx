@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { asMutable } from '@utils/asMutable'
-import { useUnifiedReportForCurrentControls } from '@hooks/features/reports/useUnifiedReport'
+import { useUnifiedReport } from '@hooks/features/reports/useUnifiedReport'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useActiveUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
@@ -18,7 +18,7 @@ const COMPONENT_NAME = 'UnifiedReports'
 export const UnifiedReportTable = () => {
   const { t } = useTranslation()
   const { report } = useActiveUnifiedReport()
-  const { data, isLoading, isError, refetch } = useUnifiedReportForCurrentControls()
+  const { data, isLoading, isError, refetch } = useUnifiedReport()
   const { setExpanded } = useContext(ExpandableDataTableContext)
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.UnifiedReports)
   const mutableRows = data?.rows ? asMutable(data.rows) : undefined

@@ -4,7 +4,7 @@ import { useGetUnifiedReport } from '@api/businesses/[business-id]/reports/unifi
 import { useUnifiedReportParams } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 
 /** Binds the unified report query to the report controls held in the store. */
-export function useUnifiedReportForCurrentControls() {
+export function useUnifiedReport() {
   const params = useUnifiedReportParams()
 
   return useGetUnifiedReport({
@@ -18,7 +18,7 @@ type UseUnifiedReportExcelOptions = {
   onSuccess?: (url: S3PresignedUrlSchemaType) => Promise<void> | void
 }
 
-export function useUnifiedReportExcelForCurrentControls({ onSuccess }: UseUnifiedReportExcelOptions = {}) {
+export function useUnifiedReportExcel({ onSuccess }: UseUnifiedReportExcelOptions = {}) {
   const params = useUnifiedReportParams()
 
   return useGetUnifiedReportExcel({
