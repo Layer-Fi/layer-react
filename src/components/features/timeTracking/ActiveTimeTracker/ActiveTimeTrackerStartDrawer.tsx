@@ -12,7 +12,7 @@ import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
-import { TimeEntryServiceSelector } from '@components/TimeEntries/TimeEntryServiceSelector/TimeEntryServiceSelector'
+import { TimeEntryServiceSelector } from '@features/timeTracking/TimeEntryServiceSelector/TimeEntryServiceSelector'
 
 type ActiveTimeTrackerStartDrawerProps = {
   isOpen: boolean

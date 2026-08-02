@@ -15,7 +15,7 @@ import { Span } from '@ui/Typography/Text'
 import type { ColumnConfig } from '@blocks/DataTable/utils/column'
 import { PaginatedTable, type TablePaginationProps } from '@blocks/PaginatedDataTable/PaginatedDataTable'
 import { Container } from '@components/Container/Container'
-import { TimeEntriesTableHeader } from '@components/TimeEntries/TimeEntriesTable/TimeEntriesTableHeader'
+import { TimeEntriesTableHeader } from '@features/timeTracking/TimeEntriesTableHeader/TimeEntriesTableHeader'
 
 import './timeEntriesTable.scss'
 

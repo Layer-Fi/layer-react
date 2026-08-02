@@ -9,7 +9,7 @@ import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { TimeEntryForm } from '@components/TimeEntries/TimeEntryForm/TimeEntryForm'
+import { TimeEntryForm } from '@features/timeTracking/TimeEntryForm/TimeEntryForm'
 
 const TimeEntryDrawerHeader = ({
   title,

@@ -8,7 +8,7 @@ import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
 import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
-import { TimeEntryServiceSelector } from '@components/TimeEntries/TimeEntryServiceSelector/TimeEntryServiceSelector'
+import { TimeEntryServiceSelector } from '@features/timeTracking/TimeEntryServiceSelector/TimeEntryServiceSelector'
 
 type ActiveTimeTrackerBannerProps = {
   activeEntry: TimeEntry

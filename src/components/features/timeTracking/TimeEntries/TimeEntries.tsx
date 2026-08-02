@@ -6,9 +6,9 @@ import { type ListTimeEntriesFilterParams, useGetListTimeEntries } from '@api/bu
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { TimeEntriesStoreProvider, useTimeEntriesDeleteModal, useTimeEntriesFilters } from '@providers/TimeEntriesStore/TimeEntriesStoreProvider'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
-import { TimeEntriesTable } from '@components/TimeEntries/TimeEntriesTable/TimeEntriesTable'
-import { TimeEntryDeleteConfirmationModal } from '@components/TimeEntries/TimeEntryDeleteConfirmationModal/TimeEntryDeleteConfirmationModal'
-import { TimeEntryDrawer } from '@components/TimeEntries/TimeEntryDrawer/TimeEntryDrawer'
+import { TimeEntriesTable } from '@features/timeTracking/TimeEntriesTable/TimeEntriesTable'
+import { TimeEntryDeleteConfirmationModal } from '@features/timeTracking/TimeEntryDeleteConfirmationModal/TimeEntryDeleteConfirmationModal'
+import { TimeEntryDrawer } from '@features/timeTracking/TimeEntryDrawer/TimeEntryDrawer'
 
 interface TimeEntriesProps {
   filterParams?: Omit<ListTimeEntriesFilterParams, 'includeDeleted'>

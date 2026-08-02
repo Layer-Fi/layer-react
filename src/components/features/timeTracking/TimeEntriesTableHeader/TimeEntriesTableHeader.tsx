@@ -7,7 +7,7 @@ import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { DataTableHeader } from '@blocks/DataTable/DataTableHeader'
 import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
-import { TimeEntryServiceSelector } from '@components/TimeEntries/TimeEntryServiceSelector/TimeEntryServiceSelector'
+import { TimeEntryServiceSelector } from '@features/timeTracking/TimeEntryServiceSelector/TimeEntryServiceSelector'
 
 import './timeEntriesTableHeader.scss'
 

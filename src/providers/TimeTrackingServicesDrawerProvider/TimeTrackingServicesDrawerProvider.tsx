@@ -1,7 +1,7 @@
 import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { createStore, useStore } from 'zustand'
 
-import { TimeTrackingServicesDrawer } from '@components/TimeEntries/TimeTrackingServicesDrawer/TimeTrackingServicesDrawer'
+import { TimeTrackingServicesDrawer } from '@features/timeTracking/TimeTrackingServicesDrawer/TimeTrackingServicesDrawer'
 
 type OpenServicesDrawerOptions = {
   startInCreateMode?: boolean

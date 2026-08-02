@@ -7,7 +7,7 @@ import { type TimeEntry, type TimeEntryForm, UpsertTimeEntrySchema } from '@sche
 import { useUpsertTimeEntry } from '@api/businesses/[business-id]/time-tracking/time-entries/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
-import { convertTimeEntryFormToUpsertTimeEntry, getTimeEntryFormDefaultValues, validateTimeEntryForm } from '@components/TimeEntries/TimeEntryForm/formUtils'
+import { convertTimeEntryFormToUpsertTimeEntry, getTimeEntryFormDefaultValues, validateTimeEntryForm } from '@features/timeTracking/TimeEntryForm/formUtils'
 
 type onSuccessFn = (entry: TimeEntry) => void
 type UseTimeEntryFormProps = { onSuccess: onSuccessFn, entry?: TimeEntry }
