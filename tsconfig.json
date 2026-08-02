@@ -49,6 +49,7 @@
       "@blocks/*": ["./src/components/blocks/*"],
       "@components/*": ["./src/components/*"],
       "@contexts/*": ["./src/contexts/*"],
+      "@api/*": ["./src/hooks/api/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@providers/*": ["./src/providers/*"],
       "@utils/*": ["./src/utils/*"],

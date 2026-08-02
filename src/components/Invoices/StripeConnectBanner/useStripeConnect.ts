@@ -1,13 +1,13 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useStripeConnectAccountLink } from '@hooks/api/businesses/[business-id]/stripe/connect-account-link/useStripeConnectAccountLink'
+import { usePostStripeConnectAccountLink } from '@api/businesses/[business-id]/stripe/connect-account-link/post'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export function useStripeConnect() {
   const { t } = useTranslation()
   const { addToast } = useLayerContext()
-  const { trigger, isMutating, isError } = useStripeConnectAccountLink()
+  const { trigger, isMutating, isError } = usePostStripeConnectAccountLink()
 
   const handleConnectStripe = useCallback(async () => {
     try {

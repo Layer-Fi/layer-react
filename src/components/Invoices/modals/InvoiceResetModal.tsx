@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
-import { useResetInvoice } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/reset/useResetInvoice'
+import { usePostResetInvoice } from '@api/businesses/[business-id]/invoices/[invoice-id]/reset/post'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 
@@ -13,7 +13,7 @@ type InvoiceResetModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
 
 export function InvoiceResetModal({ isOpen, onOpenChange, invoice, onSuccess }: InvoiceResetModalProps) {
   const { t } = useTranslation()
-  const { trigger: resetInvoice } = useResetInvoice({ invoiceId: invoice.id })
+  const { trigger: resetInvoice } = usePostResetInvoice({ invoiceId: invoice.id })
 
   const onConfirm = useCallback(async () => {
     const updatedInvoice = await resetInvoice()

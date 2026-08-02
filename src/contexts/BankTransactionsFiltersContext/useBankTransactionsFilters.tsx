@@ -2,7 +2,8 @@ import { useCallback, useMemo, useState } from 'react'
 
 import { DisplayState } from '@internal-types/bankTransactions'
 import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@utils/bankTransactions/shared'
-import { BookkeepingStatus, useEffectiveBookkeepingStatus } from '@hooks/api/businesses/[business-id]/bookkeeping/status/useBookkeepingStatus'
+import { BookkeepingStatus } from '@api/businesses/[business-id]/bookkeeping/status/get'
+import { useEffectiveBookkeepingStatus } from '@hooks/features/bookkeeping/useEffectiveBookkeepingStatus'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 

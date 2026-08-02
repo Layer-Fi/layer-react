@@ -53,7 +53,7 @@ release process.
 | `src/schemas` | `@schemas/*` | Effect schemas — the source of truth for every API contract |
 | `src/types` | `@internal-types/*` | internal-only types (no wire format) + `utility/` type helpers |
 | `src/utils` | `@utils/*` | pure helpers: `api`, `swr`, `i18n`, `date`, `form`, `zustand`, `styleUtils` |
-| `src/hooks/api/**` | `@hooks/*` | one hook per endpoint, in a tree mirroring the REST path |
+| `src/hooks/api/**` | `@api/*` | one file per endpoint in a tree mirroring the REST path, named for the HTTP method (`get.ts`, `post.ts`, …) |
 | `src/hooks/{features,utils,legacy}` | `@hooks/*` | composed feature logic · generic hooks · pre-factory hooks (don't extend) |
 | `src/providers`, `src/contexts` | `@providers/*`, `@contexts/*` | scoped Zustand stores and DI contexts |
 | `src/components/ui` | `@ui/*` | design-system primitives (domain-agnostic) |
@@ -115,8 +115,13 @@ Each of these has broken something before:
   `.Layer__Portal`, …). Portals and bare primitives in stories need one on an ancestor.
 - **Locale is part of every SWR cache key**, so switching locale refetches. Leave
   `isLocalized` at its default.
-- **`src/msw` may not value-import `@hooks/*`** — handlers load before per-test mocks apply and
-  would break unrelated suites. Share contracts via `@schemas`.
+- **`src/msw` may not value-import `@api/*` or `@hooks/*`** — handlers load before per-test mocks
+  apply and would break unrelated suites. Share contracts via `@schemas`.
+- **`@api/**` may not import UI or feature code** (`@components`, `@ui`, `@blocks`, `@views`,
+  `@icons`, `@assets`, `@hooks/features`, `@hooks/legacy`) and may not read `@providers`/
+  `@contexts` at runtime. Wrap the hook in `@hooks/features/**` instead.
+- **Every `@api` method file needs an MSW handler** at the mirrored path in `src/msw/api`;
+  `npm run msw:check-coverage` enforces it in CI.
 - **Production source may not import** `@msw/*`, `@fixtures/*`, `@test-utils/*`, or `*.stories*`.
 - **Responsiveness is measured in JS**, not media queries — hence `ResponsiveComponent` and
   Chromatic's per-width iframe resizing.
@@ -162,12 +167,12 @@ Reach for these before writing your own:
   receives is a schema.
 - Not yet enabled in `tsconfig.json` but worth honoring: `isolatedModules`, `verbatimModuleSyntax`, `noUncheckedIndexedAccess`.
 
-Aliases, most specific first: `@ui/*`, `@blocks/*`, `@components/*`, `@contexts/*`, `@hooks/*`,
+Aliases, most specific first: `@ui/*`, `@blocks/*`, `@components/*`, `@contexts/*`, `@api/*`, `@hooks/*`,
 `@providers/*`, `@utils/*`, `@internal-types/*`, `@schemas/*`, `@views/*`, `@icons/*`,
 `@assets/*`, `@msw/*`, `@fixtures/*`, `@test-utils/*`.
 
 `simple-import-sort` enforces dependency-layer order: react → external →
-(`@internal-types`, `@schemas`) → `@utils` → `@hooks` → (`@providers`, `@contexts`) →
+(`@internal-types`, `@schemas`) → `@utils` → `@api` → `@hooks` → (`@providers`, `@contexts`) →
 (`@icons`, `@ui`, `@blocks`) → (`@components`, `@views`) → `@assets` →
 (`@msw`, `@fixtures`, `@test-utils`) → styles.
 

@@ -31,6 +31,7 @@
     "fixtures:generate": "tsx scripts/generate-fixtures.ts",
     "fixtures:check": "tsx scripts/generate-fixtures.ts --check",
     "lint": "eslint . && stylelint '**/*.{css,scss}'",
+    "msw:check-coverage": "tsx scripts/check-msw-coverage.ts",
     "lint:eslint": "eslint .",
     "lint:fix": "eslint . --fix && stylelint '**/*.{css,scss}' --fix",
     "lint:stylelint": "stylelint '**/*.{css,scss}'",

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
+import { useGetTaxSummary } from '@api/businesses/[business-id]/tax-estimates/summary/get'
 import { useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
@@ -17,7 +17,7 @@ export const TaxSummaryCard = () => {
   const { t } = useTranslation()
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
-  const { data, isLoading, isError } = useTaxSummary({ year, fullYearProjection })
+  const { data, isLoading, isError } = useGetTaxSummary({ year, fullYearProjection })
   const [viewportWidth] = useWindowSize()
   const isDesktop = viewportWidth >= TAX_SUMMARY_CARD_DESKTOP_BREAKPOINT
 

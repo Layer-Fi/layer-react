@@ -2,8 +2,8 @@ import { useCallback, useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { CustomerVendorSchema } from '@schemas/customerVendor'
-import { useListCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
-import { useListVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
+import { useGetListCustomers } from '@api/businesses/[business-id]/customers/get'
+import { useGetListVendors } from '@api/businesses/[business-id]/vendors/get'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack, VStack } from '@ui/Stack/Stack'
@@ -82,12 +82,12 @@ export function CustomerVendorSelector({
     flattenedData: customers,
     isLoading: isLoadingCustomers,
     isError: isErrorLoadingCustomers,
-  } = useListCustomers({ query: effectiveSearchQuery })
+  } = useGetListCustomers({ query: effectiveSearchQuery })
   const {
     flattenedData: vendors,
     isLoading: isLoadingVendors,
     isError: isErrorLoadingVendors,
-  } = useListVendors({ query: effectiveSearchQuery })
+  } = useGetListVendors({ query: effectiveSearchQuery })
 
   const groups = useMemo(
     () => {

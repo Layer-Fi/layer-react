@@ -105,6 +105,7 @@ export default tsEslint.config(
           '@ui/',
           '@blocks/',
           '@contexts/',
+          '@api/',
           '@hooks/',
           '@providers/',
           '@utils/',
@@ -154,11 +155,29 @@ export default tsEslint.config(
     },
   },
   {
+    files: ['src/hooks/api/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': ['error', {
+        patterns: [
+          {
+            group: ['@components/*', '@ui/*', '@blocks/*', '@views/*', '@icons/*', '@assets/*', '@hooks/features/*', '@hooks/legacy/*'],
+            message: 'src/hooks/api is the transport layer: it may not depend on UI or feature code. Move shared contracts to @schemas and feature composition to @hooks/features, which is allowed to import from @api.',
+          },
+          {
+            group: ['@providers/*', '@contexts/*'],
+            message: 'API hooks may not read app state at runtime. Read the store in a @hooks/features wrapper and pass the values in. Type-only imports are fine.',
+            allowTypeImports: true,
+          },
+        ],
+      }],
+    },
+  },
+  {
     files: ['src/msw/**/*.{ts,tsx}'],
     rules: {
       '@typescript-eslint/no-restricted-imports': ['error', {
         patterns: [{
-          group: ['@hooks/*'],
+          group: ['@api/*', '@hooks/*'],
           message: 'MSW handlers load in every vitest run before per-test mocks apply, so importing hook modules breaks unrelated tests. Share schemas via @schemas instead; type-only imports are fine.',
           allowTypeImports: true,
         }],
@@ -188,7 +207,8 @@ export default tsEslint.config(
             // Cross-cutting helpers (used by api, hooks, components, etc.)
             '^(?:type:)?@utils/',
 
-            // Data layer: hooks
+            // Data layer: API hooks, then the rest
+            '^(?:type:)?@api/',
             '^(?:type:)?@hooks/',
 
             // App wiring & global state (can depend on hooks/api)

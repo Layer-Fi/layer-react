@@ -3,7 +3,7 @@ import { type RawCustomTransaction } from '@schemas/customAccounts'
 import {
   type ParseCsvResponseSchema,
   type TransactionPreviewRowSchema,
-} from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
+} from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/post'
 
 type PreviewRowEncoded = typeof TransactionPreviewRowSchema.Encoded
 

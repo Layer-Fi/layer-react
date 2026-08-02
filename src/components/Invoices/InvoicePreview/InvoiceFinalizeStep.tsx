@@ -3,7 +3,7 @@ import { AlertTriangle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { Invoice } from '@schemas/invoices/invoice'
-import { useInvoicePaymentMethods } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/useInvoicePaymentMethods'
+import { useGetInvoicePaymentMethods } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/get'
 import {
   useInvoicePreviewRoute,
 } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
@@ -28,7 +28,7 @@ export const InvoiceFinalizeStep = ({ onSuccess }: InvoiceFinalizeStepProps) => 
   const { accountingConfiguration } = useLayerContext()
   const { invoice } = useInvoicePreviewRoute()
   const showPaymentMethods = !!accountingConfiguration?.enableStripeOnboarding
-  const { data, isLoading, isError } = useInvoicePaymentMethods({
+  const { data, isLoading, isError } = useGetInvoicePaymentMethods({
     invoiceId: invoice.id,
     isEnabled: showPaymentMethods,
   })

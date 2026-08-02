@@ -1,7 +1,7 @@
 import { useCallback, useContext, useMemo } from 'react'
 
 import { EntryType } from '@schemas/generalLedger/ledgerEntry'
-import { useReverseJournalEntry } from '@hooks/api/businesses/[business-id]/ledger/entries/[entry-id]/reverse/useReverseJournalEntry'
+import { usePostReverseJournalEntry } from '@api/businesses/[business-id]/ledger/entries/[entry-id]/reverse/post'
 import { JournalContext } from '@contexts/JournalContext/JournalContext'
 import { LedgerEntryDetails } from '@components/LedgerEntryDetails/LedgerEntryDetails'
 
@@ -13,7 +13,7 @@ export const JournalEntryDetails = () => {
     refetch,
   } = useContext(JournalContext)
 
-  const { trigger: reverseEntry } = useReverseJournalEntry()
+  const { trigger: reverseEntry } = usePostReverseJournalEntry()
 
   const entry = useMemo(
     () => (selectedEntryId && data ? data.find(x => x.id === selectedEntryId) : undefined),

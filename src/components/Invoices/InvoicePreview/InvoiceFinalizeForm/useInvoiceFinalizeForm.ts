@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { FinalizeInvoiceBodySchema } from '@schemas/invoices/finalizeInvoice'
 import type { Invoice } from '@schemas/invoices/invoice'
 import type { InvoicePaymentMethod } from '@schemas/invoices/invoicePaymentMethod'
-import { useFinalizeInvoice } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/finalize-invoice/useFinalizeInvoice'
+import { usePutFinalizeInvoice } from '@api/businesses/[business-id]/invoices/[invoice-id]/finalize-invoice/put'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import {
   convertInvoiceFinalizeFormToParams,
@@ -28,7 +28,7 @@ export const useInvoiceFinalizeForm = ({
 }: UseInvoiceFinalizeFormProps) => {
   const { t } = useTranslation()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
-  const { trigger: finalizeInvoice } = useFinalizeInvoice({ invoiceId: invoice.id })
+  const { trigger: finalizeInvoice } = usePutFinalizeInvoice({ invoiceId: invoice.id })
 
   const defaultValues = useMemo(() => getInvoiceFinalizeFormDefaultValues({
     invoice,

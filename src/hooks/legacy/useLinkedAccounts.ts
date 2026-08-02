@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next'
 import { type AccountSource } from '@internal-types/linkedAccounts'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { type PlaidHostedLinkConfig, toCreatePlaidLinkParams } from '@schemas/linkedAccounts/plaid'
-import { useUnlinkBankAccount } from '@hooks/api/businesses/[business-id]/bank-accounts/useUnlinkBankAccount'
-import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
-import { useConfirmExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/confirm'
-import { useExcludeExternalAccount } from '@hooks/api/businesses/[business-id]/external-accounts/[external-account-id]/exclude'
-import { useBreakPlaidItemConnection } from '@hooks/api/businesses/[business-id]/plaid/items/[plaid-item-id]/sandbox-reset-item-login'
-import { useUnlinkPlaidItem } from '@hooks/api/businesses/[business-id]/plaid/items/[plaid-item-id]/unlink'
-import { useCreatePlaidLink } from '@hooks/api/businesses/[business-id]/plaid/link'
-import { useCreatePlaidUpdateModeLink } from '@hooks/api/businesses/[business-id]/plaid/update-mode-link'
+import { useUnlinkBankAccount } from '@api/businesses/[business-id]/bank-accounts/[bank-account-id]/delete'
+import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
+import { usePostConfirmExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/confirm/post'
+import { usePostExcludeExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/exclude/post'
+import { usePostSandboxResetPlaidItemLogin } from '@api/businesses/[business-id]/plaid/items/[plaid-item-id]/sandbox-reset-item-login/post'
+import { usePostUnlinkPlaidItem } from '@api/businesses/[business-id]/plaid/items/[plaid-item-id]/unlink/post'
+import { usePostPlaidLink } from '@api/businesses/[business-id]/plaid/link/post'
+import { usePostPlaidUpdateModeLink } from '@api/businesses/[business-id]/plaid/update-mode-link/post'
 import { type LinkMode, usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
 import { usePollPlaidHostedLinkStatus } from '@hooks/features/linkedAccounts/usePollPlaidHostedLinkStatus'
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
@@ -66,12 +66,12 @@ export const useLinkedAccounts: UseLinkedAccounts = ({ onPlaidConnectionSuccess,
 
   const { refetch } = useBankAccountsContext()
   const { trigger: triggerUnlinkBankAccount } = useUnlinkBankAccount()
-  const { trigger: triggerCreatePlaidLink } = useCreatePlaidLink()
-  const { trigger: triggerCreatePlaidUpdateModeLink } = useCreatePlaidUpdateModeLink()
-  const { trigger: triggerConfirmExternalAccount } = useConfirmExternalAccount()
-  const { trigger: triggerExcludeExternalAccount } = useExcludeExternalAccount()
-  const { trigger: triggerUnlinkPlaidItem } = useUnlinkPlaidItem()
-  const { trigger: triggerBreakPlaidItemConnection } = useBreakPlaidItemConnection()
+  const { trigger: triggerCreatePlaidLink } = usePostPlaidLink()
+  const { trigger: triggerCreatePlaidUpdateModeLink } = usePostPlaidUpdateModeLink()
+  const { trigger: triggerConfirmExternalAccount } = usePostConfirmExternalAccount()
+  const { trigger: triggerExcludeExternalAccount } = usePostExcludeExternalAccount()
+  const { trigger: triggerUnlinkPlaidItem } = usePostUnlinkPlaidItem()
+  const { trigger: triggerBreakPlaidItemConnection } = usePostSandboxResetPlaidItemLogin()
 
   const { forceReloadBankTransactions } = useBankTransactionsGlobalCacheActions()
 

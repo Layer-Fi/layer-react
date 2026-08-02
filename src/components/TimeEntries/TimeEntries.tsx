@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Clock, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type ListTimeEntriesFilterParams, useListTimeEntries } from '@hooks/api/businesses/[business-id]/time-tracking/time-entries/useListTimeEntries'
+import { type ListTimeEntriesFilterParams, useGetListTimeEntries } from '@api/businesses/[business-id]/time-tracking/time-entries/get'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { TimeEntriesStoreProvider, useTimeEntriesDeleteModal, useTimeEntriesFilters } from '@providers/TimeEntriesStore/TimeEntriesStoreProvider'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
@@ -73,7 +73,7 @@ const TimeEntriesContent = ({ filterParams }: Pick<TimeEntriesProps, 'filterPara
     ...(selectedServiceId && { serviceId: selectedServiceId }),
   }), [filterParams, selectedCustomer, selectedServiceId])
 
-  const { data, flattenedData: entries, isLoading, isError, hasMore, fetchMore } = useListTimeEntries(timeEntriesFilterParams)
+  const { data, flattenedData: entries, isLoading, isError, hasMore, fetchMore } = useGetListTimeEntries(timeEntriesFilterParams)
 
   const tableSlots = useMemo(
     () => ({

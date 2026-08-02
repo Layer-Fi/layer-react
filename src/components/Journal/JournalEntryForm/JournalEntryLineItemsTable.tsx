@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
+import type { JournalEntryForm } from '@schemas/generalLedger/journalEntry'
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
 import type { AppForm } from '@hooks/features/forms/useForm'
 import { Button } from '@ui/Button/Button'
@@ -9,7 +10,6 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { P, Span } from '@ui/Typography/Text'
 import { getJournalEntryLineItemFormDefaultValues } from '@components/Journal/JournalEntryForm/formUtils'
-import type { JournalEntryForm } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
 import { JournalEntryLineItem } from '@components/Journal/JournalEntryForm/JournalEntryLineItem'
 
 export interface JournalEntryLineItemsTableProps {

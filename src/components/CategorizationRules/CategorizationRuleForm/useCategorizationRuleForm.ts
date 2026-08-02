@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { amountRangeInOrder } from '@utils/form/validators'
-import { UpsertCategorizationRuleMode, useUpsertCategorizationRule } from '@hooks/api/businesses/[business-id]/categorization-rules/useUpsertCategorizationRule'
+import { useUpsertCategorizationRule } from '@api/businesses/[business-id]/categorization-rules/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import {
   type CategorizationRuleFormState,
   type CategorizationRuleFormValues,
@@ -25,8 +26,8 @@ export const useCategorizationRuleForm = ({ formState, onSuccess }: UseCategoriz
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
   const { trigger: upsertCategorizationRule } = useUpsertCategorizationRule(
     formState.mode === 'edit'
-      ? { mode: UpsertCategorizationRuleMode.Update, categorizationRuleId: formState.rule.id }
-      : { mode: UpsertCategorizationRuleMode.Create },
+      ? { mode: UpsertMode.Update, categorizationRuleId: formState.rule.id }
+      : { mode: UpsertMode.Create },
   )
 
   const formDefaults = useMemo(

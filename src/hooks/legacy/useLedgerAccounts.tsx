@@ -2,8 +2,8 @@ import { useCallback, useState } from 'react'
 
 import type { LedgerAccountBalanceWithNodeType } from '@internal-types/chartOfAccounts'
 import { type LedgerAccountLineItem, type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
-import { type ListLedgerAccountLinesReturn, useListLedgerAccountLines } from '@hooks/api/businesses/[business-id]/ledger/accounts/[account-id]/lines/useListLedgerAccountLines'
-import { useLedgerAccountsEntry } from '@hooks/api/businesses/[business-id]/ledger/entries/[entry-id]/useLedgerAccountsEntry'
+import { type ListLedgerAccountLinesReturn, useGetListLedgerAccountLines } from '@api/businesses/[business-id]/ledger/accounts/[account-id]/lines/get'
+import { useGetLedgerAccountsEntry } from '@api/businesses/[business-id]/ledger/entries/[entry-id]/get'
 
 type UseLedgerAccounts = () => {
   data?: LedgerAccountLineItem[] | undefined
@@ -37,7 +37,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     mutate,
     hasMore: rawHasMore,
     fetchMore: rawFetchMore,
-  } = useListLedgerAccountLines({
+  } = useGetListLedgerAccountLines({
     accountId: selectedAccountId || '',
     include_child_account_lines: true,
     sort_by: 'entry_at',
@@ -63,7 +63,7 @@ export const useLedgerAccounts: UseLedgerAccounts = () => {
     mutate: mutateEntryData,
     isLoading: isLoadingEntry,
     isError: isErrorEntry,
-  } = useLedgerAccountsEntry({ entryId: selectedEntryId, isEnabled: Boolean(selectedEntryId) })
+  } = useGetLedgerAccountsEntry({ entryId: selectedEntryId, isEnabled: Boolean(selectedEntryId) })
 
   const refetch = () => mutate()
 

@@ -4,8 +4,9 @@ import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice, type InvoiceForm, UpsertInvoiceSchema } from '@schemas/invoices/invoice'
-import { UpsertInvoiceMode, useUpsertInvoice } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
+import { useUpsertInvoice } from '@api/businesses/[business-id]/invoices/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { convertInvoiceFormToParams, getInvoiceFormDefaultValues, validateInvoiceForm } from '@components/Invoices/InvoiceForm/formUtils'
 import {
   computeAdditionalDiscount,
@@ -18,11 +19,11 @@ import {
 
 type onSuccessFn = (invoice: Invoice) => void
 type UseInvoiceFormProps =
-  | { onSuccess: onSuccessFn, mode: UpsertInvoiceMode.Create }
-  | { onSuccess: onSuccessFn, mode: UpsertInvoiceMode.Update, invoice: Invoice }
+  | { onSuccess: onSuccessFn, mode: UpsertMode.Create }
+  | { onSuccess: onSuccessFn, mode: UpsertMode.Update, invoice: Invoice }
 
-function isUpdateMode(props: UseInvoiceFormProps): props is { onSuccess: onSuccessFn, mode: UpsertInvoiceMode.Update, invoice: Invoice } {
-  return props.mode === UpsertInvoiceMode.Update
+function isUpdateMode(props: UseInvoiceFormProps): props is { onSuccess: onSuccessFn, mode: UpsertMode.Update, invoice: Invoice } {
+  return props.mode === UpsertMode.Update
 }
 
 export type InvoiceFormType = ReturnType<typeof useAppForm<InvoiceForm>>
@@ -32,7 +33,7 @@ export const useInvoiceForm = (props: UseInvoiceFormProps) => {
   const { onSuccess, mode } = props
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
 
-  const upsertInvoiceProps = mode === UpsertInvoiceMode.Update ? { mode, invoiceId: props.invoice.id } : { mode }
+  const upsertInvoiceProps = mode === UpsertMode.Update ? { mode, invoiceId: props.invoice.id } : { mode }
   const { trigger: upsertInvoice } = useUpsertInvoice(upsertInvoiceProps)
 
   const invoice = isUpdateMode(props) ? props.invoice : null

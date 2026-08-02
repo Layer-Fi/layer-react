@@ -12,16 +12,21 @@ every endpoint a component touches needs a mock.
 
 ## File layout mirrors the API route
 
-`src/msw/api/**` mirrors the REST path exactly, matching `src/hooks/api/**`, one file per
-HTTP method:
+`src/msw/api/**` mirrors the REST path exactly, matching `src/hooks/api/**` (`@api/*`) file for
+file, one per HTTP method — including bracketed path-param directories:
 
 ```
 src/msw/api/businesses/[business-id]/customers/get.ts
 src/msw/api/businesses/[business-id]/customers/post.ts
-src/msw/api/businesses/[business-id]/customers/patch.ts
+src/msw/api/businesses/[business-id]/customers/[customer-id]/patch.ts
 src/msw/api/businesses/[business-id]/customers/store.ts     stateful seed
 src/msw/api/businesses/[business-id]/customers/handlers.ts  collects this directory
 ```
+
+`npm run msw:check-coverage` fails CI when an `@api` method file has no handler at the matching
+path. `src/msw/unmocked-endpoints.json` grandfathers the endpoints that predate the check — it
+is closed to new entries, and the check also fails if something on it gains a handler and is
+not removed from the list.
 
 Each `handlers.ts` re-exports its directory's handlers; the parent `handlers.ts` spreads the
 children, up to `src/msw/handlers.ts`. **Adding an endpoint means registering it in the

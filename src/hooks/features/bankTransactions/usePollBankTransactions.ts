@@ -3,7 +3,7 @@ import useSWR from 'swr'
 import { type SWRInfiniteKeyedMutator } from 'swr/infinite'
 
 import { hasNewSyncingAccounts } from '@utils/bankAccount'
-import { type GetBankTransactionsReturn, useBankTransactionsGlobalCacheActions, type UseBankTransactionsOptions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
+import { type GetBankTransactionsReturn, useBankTransactionsGlobalCacheActions, type UseBankTransactionsOptions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useTriggerOnChange } from '@hooks/utils/useTriggerOnChange'
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -60,7 +60,7 @@ export function usePollBankTransactions({
   })
 
   /*
-   * useBankTransactions disables revalidateFirstPage so page changes do not
+   * useGetListBankTransactions disables revalidateFirstPage so page changes do not
    * refetch already-loaded pages. That also means a refreshInterval on the
    * infinite query would not refresh transactions, so this separate SWR key
    * owns the sync polling timer and explicitly triggers the invalidation of

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { InvoiceStatus } from '@schemas/invoices/invoice'
 import { translationKey } from '@utils/i18n/translationKey'
-import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { type InvoiceDetailRouteState, InvoiceDetailStep, useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
@@ -93,7 +93,7 @@ export const InvoiceDetailHeader = ({
     </Button>
   )
 
-  if (viewState.mode === UpsertInvoiceMode.Create) {
+  if (viewState.mode === UpsertMode.Create) {
     return (
       <HStack justify='space-between' align='center' fluid pie='md'>
         <Heading>{t('invoices:action.create_invoice', 'Create Invoice')}</Heading>

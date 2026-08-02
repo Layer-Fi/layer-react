@@ -2,7 +2,7 @@ import { createContext, type PropsWithChildren, useContext, useMemo, useState } 
 import { createStore, useStore } from 'zustand'
 
 import type { Invoice } from '@schemas/invoices/invoice'
-import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { ALL_OPTION, type InvoiceStatusOption } from '@components/Invoices/utils/invoiceFilters'
 
 export type InvoiceTableFilters = {
@@ -21,8 +21,8 @@ export enum InvoiceDetailStep {
   Preview = 'Preview',
 }
 
-type InvoiceFormModeCreate = { mode: UpsertInvoiceMode.Create, isReadOnly: false }
-type InvoiceFormModeUpdate = { mode: UpsertInvoiceMode.Update, invoice: Invoice, isReadOnly: boolean }
+type InvoiceFormModeCreate = { mode: UpsertMode.Create, isReadOnly: false }
+type InvoiceFormModeUpdate = { mode: UpsertMode.Update, invoice: Invoice, isReadOnly: boolean }
 
 export type InvoiceFormMode = InvoiceFormModeCreate | InvoiceFormModeUpdate
 
@@ -127,7 +127,7 @@ export function InvoicesRouteStoreProvider(props: PropsWithChildren) {
             routeState: {
               route: InvoiceRoute.Detail,
               step: InvoiceDetailStep.Form,
-              mode: UpsertInvoiceMode.Create,
+              mode: UpsertMode.Create,
               isReadOnly: false,
             },
           }))
@@ -137,7 +137,7 @@ export function InvoicesRouteStoreProvider(props: PropsWithChildren) {
             routeState: {
               route: InvoiceRoute.Detail,
               step: InvoiceDetailStep.Form,
-              mode: UpsertInvoiceMode.Update,
+              mode: UpsertMode.Update,
               invoice,
               isReadOnly: false,
             },
@@ -155,7 +155,7 @@ export function InvoicesRouteStoreProvider(props: PropsWithChildren) {
             routeState: {
               route: InvoiceRoute.Detail,
               step: InvoiceDetailStep.Preview,
-              mode: UpsertInvoiceMode.Update,
+              mode: UpsertMode.Update,
               invoice,
               isReadOnly: false,
             },
@@ -166,7 +166,7 @@ export function InvoicesRouteStoreProvider(props: PropsWithChildren) {
             routeState: {
               route: InvoiceRoute.Detail,
               step: InvoiceDetailStep.Form,
-              mode: UpsertInvoiceMode.Update,
+              mode: UpsertMode.Update,
               invoice,
               isReadOnly: true,
             },

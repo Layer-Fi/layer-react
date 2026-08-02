@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { type Customer } from '@schemas/customer'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
 import { getCustomerName } from '@utils/customer'
-import { useListCustomers } from '@hooks/api/businesses/[business-id]/customers/useListCustomers'
+import { useGetListCustomers } from '@api/businesses/[business-id]/customers/get'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
@@ -65,7 +65,7 @@ export function CustomerSelector({
     ? undefined
     : searchQuery
 
-  const { flattenedData, isLoading, isError, error } = useListCustomers({ query: effectiveSearchQuery })
+  const { flattenedData, isLoading, isError, error } = useGetListCustomers({ query: effectiveSearchQuery })
   const shouldHideError = hideSpecifiedIdNotFoundError && isAPIErrorOfType(error, ApiEnumErrorType.SpecifiedIdNotFound)
   const shouldShowError = isError && !shouldHideError
 

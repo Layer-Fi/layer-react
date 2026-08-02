@@ -5,7 +5,7 @@ import type { GroupBase } from 'react-select'
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
 import { flattenCategories } from '@utils/categoryOptions'
-import { useCategories } from '@hooks/api/businesses/[business-id]/categories/useCategories'
+import { useGetCategories } from '@api/businesses/[business-id]/categories/get'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
@@ -111,7 +111,7 @@ export const BankTransactionCategoryComboBox = ({
   showAiSparkle = true,
 }: BankTransactionCategoryComboBoxProps) => {
   const { t } = useTranslation()
-  const { data: categories } = useCategories()
+  const { data: categories } = useGetCategories()
 
   const matchGroup = useMemo(() => {
     if (!includeSuggestedMatches || !bankTransaction) return null

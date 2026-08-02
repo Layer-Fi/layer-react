@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { Direction } from '@internal-types/general'
 import { convertLedgerEntrySourceToLinkingMetadata, type LedgerEntrySourceType } from '@schemas/generalLedger/ledgerEntrySource'
 import { DateFormat } from '@utils/i18n/date/patterns'
-import type { PnlDetailLine } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/lines/useProfitAndLossDetailLines'
-import { useProfitAndLossDetailLines } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/lines/useProfitAndLossDetailLines'
+import type { PnlDetailLine } from '@api/businesses/[business-id]/reports/profit-and-loss/lines/get'
+import { useGetProfitAndLossDetailLines } from '@api/businesses/[business-id]/reports/profit-and-loss/lines/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
@@ -108,7 +108,7 @@ export const ProfitAndLossDetailReport = ({
     return breadcrumbPath || [{ name: lineItemName, display_name: lineItemName }]
   }, [breadcrumbPath, lineItemName])
 
-  const { data, isLoading, isError } = useProfitAndLossDetailLines({
+  const { data, isLoading, isError } = useGetProfitAndLossDetailLines({
     startDate: dateRange.startDate,
     endDate: dateRange.endDate,
     pnlStructureLineItemName: lineItemName,

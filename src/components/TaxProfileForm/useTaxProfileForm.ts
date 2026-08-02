@@ -4,8 +4,9 @@ import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
 import { type TaxProfile, TaxProfileRequestSchema } from '@schemas/taxEstimates/profile'
-import { UpsertTaxProfileMode, useUpsertTaxProfile } from '@hooks/api/businesses/[business-id]/tax-estimates/profile/useUpsertTaxProfile'
+import { useUpsertTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { formValuesToTaxProfile, taxProfileToFormValues, validateTaxProfileForm } from '@components/TaxProfileForm/formUtils'
 import { type TaxProfileForm } from '@components/TaxProfileForm/taxProfileFormSchema'
 
@@ -21,7 +22,7 @@ export const useTaxProfileForm = ({ taxProfile, onSuccess }: UseTaxProfileFormPr
 
   const isNewProfile = !taxProfile?.userHasSavedTaxProfile
 
-  const mode = isNewProfile ? UpsertTaxProfileMode.Create : UpsertTaxProfileMode.Update
+  const mode = isNewProfile ? UpsertMode.Create : UpsertMode.Update
   const { trigger: upsertProfile } = useUpsertTaxProfile({ mode })
 
   const formDefaults = useMemo(() => taxProfileToFormValues(taxProfile), [taxProfile])

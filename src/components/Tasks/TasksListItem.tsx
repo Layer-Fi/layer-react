@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next'
 import { BusinessTaskStatus, TaskUserResponseType } from '@schemas/businessTasks/businessTask'
 import { isCompletedTask, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { getIconForTask } from '@utils/bookkeeping/tasks/getBookkeepingTaskStatusIcon'
-import { useDeleteUploadsOnTask } from '@hooks/api/businesses/[business-id]/tasks/[task-id]/upload/delete/useDeleteUploadsOnTask'
-import { useUpdateTaskUploadDescription } from '@hooks/api/businesses/[business-id]/tasks/[task-id]/upload/update-description/useUpdateTaskUploadDescription'
-import { useUploadDocumentsForTask } from '@hooks/api/businesses/[business-id]/tasks/[task-id]/upload/useUploadDocumentsForTask'
-import { useSubmitUserResponseForTask } from '@hooks/api/businesses/[business-id]/tasks/[task-id]/user-response/useSubmitResponseForTask'
+import { useDeleteTaskUploads } from '@api/businesses/[business-id]/tasks/[task-id]/upload/delete/post'
+import { usePostTaskUpload } from '@api/businesses/[business-id]/tasks/[task-id]/upload/post'
+import { usePostTaskUploadDescription } from '@api/businesses/[business-id]/tasks/[task-id]/upload/update-description/post'
+import { usePostTaskUserResponse } from '@api/businesses/[business-id]/tasks/[task-id]/user-response/post'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import ChevronDownFill from '@icons/ChevronDownFill'
@@ -33,10 +33,10 @@ export const TasksListItem = forwardRef<HTMLDivElement, TasksListItemProps>((
   const [userResponse, setUserResponse] = useState(task.userResponse ?? '')
   const [selectedFiles, setSelectedFiles] = useState<File[]>()
 
-  const { trigger: handleSubmitUserResponseForTask, isMutating: isSubmittingResponse } = useSubmitUserResponseForTask()
-  const { trigger: handleUploadDocumentsForTask, isMutating: isUploadingDocuments } = useUploadDocumentsForTask()
-  const { trigger: handleDeleteUploadsOnTask } = useDeleteUploadsOnTask()
-  const { trigger: handleUpdateTaskUploadDescription } = useUpdateTaskUploadDescription()
+  const { trigger: handleSubmitUserResponseForTask, isMutating: isSubmittingResponse } = usePostTaskUserResponse()
+  const { trigger: handleUploadDocumentsForTask, isMutating: isUploadingDocuments } = usePostTaskUpload()
+  const { trigger: handleDeleteUploadsOnTask } = useDeleteTaskUploads()
+  const { trigger: handleUpdateTaskUploadDescription } = usePostTaskUploadDescription()
 
   const taskBodyClassName = classNames(
     'Layer__tasks-list-item__body',

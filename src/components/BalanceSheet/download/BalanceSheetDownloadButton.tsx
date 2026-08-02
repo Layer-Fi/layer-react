@@ -1,4 +1,4 @@
-import { useBalanceSheetDownload } from '@hooks/api/businesses/[business-id]/reports/balance-sheet/exports/excel/useBalanceSheetDownload'
+import { useGetBalanceSheetDownload } from '@api/businesses/[business-id]/reports/balance-sheet/exports/excel/get'
 import { DownloadButton } from '@ui/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
@@ -12,7 +12,7 @@ export function BalanceSheetDownloadButton({
   icon,
 }: BalanceSheetDownloadButtonProps) {
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
-  const { trigger, isMutating, isError } = useBalanceSheetDownload({
+  const { trigger, isMutating, isError } = useGetBalanceSheetDownload({
     effectiveDate,
     swrOptions: {
       onSuccess: ({ presignedUrl }) => triggerInvisibleDownload({ url: presignedUrl }),

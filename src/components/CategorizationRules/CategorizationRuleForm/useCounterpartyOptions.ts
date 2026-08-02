@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
-import { useListCounterparties } from '@hooks/api/businesses/[business-id]/counterparties/useListCounterparties'
+import { useGetListCounterparties } from '@api/businesses/[business-id]/counterparties/get'
 import {
   CounterpartyComboBoxOption,
   type CounterpartyOption,
@@ -19,7 +19,7 @@ export const useCounterpartyOptions = ({
   searchQuery,
   transactionDescription,
 }: UseCounterpartyOptionsProps) => {
-  const { flattenedData, isLoading, isError } = useListCounterparties({
+  const { flattenedData, isLoading, isError } = useGetListCounterparties({
     q: searchQuery || undefined,
     limit: 50,
   })

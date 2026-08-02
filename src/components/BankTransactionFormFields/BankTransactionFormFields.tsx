@@ -2,8 +2,8 @@ import { useMemo } from 'react'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { makeTagFromTransactionTag, type Tag } from '@schemas/tag'
-import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
-import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
+import { useDeleteBankTransactionTag } from '@api/businesses/[business-id]/bank-transactions/tags/delete'
+import { usePostBankTransactionTag } from '@api/businesses/[business-id]/bank-transactions/tags/post'
 import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { VStack } from '@ui/Stack/Stack'
@@ -33,8 +33,8 @@ export function BankTransactionFormFields({
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
 
   // Hooks for auto-saving tags
-  const { trigger: tagBankTransaction } = useTagBankTransaction({ bankTransactionId: bankTransaction.id })
-  const { trigger: removeTagFromBankTransaction } = useRemoveTagFromBankTransaction({ bankTransactionId: bankTransaction.id })
+  const { trigger: tagBankTransaction } = usePostBankTransactionTag({ bankTransactionId: bankTransaction.id })
+  const { trigger: removeTagFromBankTransaction } = useDeleteBankTransactionTag({ bankTransactionId: bankTransaction.id })
 
   const selectedTags = useMemo(
     () => bankTransaction.transactionTags.map(makeTagFromTransactionTag),

@@ -3,14 +3,14 @@ import { getYear } from 'date-fns'
 
 import { isIncompleteTask, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { getActivationDate } from '@utils/business'
-import { useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods/get'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export const useBookkeepingYearsStatus = () => {
   const { business } = useLayerContext()
   const activationDate = getActivationDate(business)
 
-  const { data, isLoading } = useBookkeepingPeriods()
+  const { data, isLoading } = useGetBookkeepingPeriods()
 
   const yearStatuses = useMemo(() => {
     const startYear = getYear(activationDate ?? new Date())

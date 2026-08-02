@@ -3,7 +3,7 @@ import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import { type CustomAccount, CustomAccountClassification, type CustomAccountSubtype, getCustomAccountTypeFromSubtype } from '@schemas/customAccounts'
-import { useCreateCustomAccount } from '@hooks/api/businesses/[business-id]/custom-accounts/useCreateCustomAccount'
+import { usePostCustomAccount } from '@api/businesses/[business-id]/custom-accounts/post'
 import { useAppForm } from '@hooks/features/forms/useForm'
 
 type CustomAccountFormData = {
@@ -21,7 +21,7 @@ export const useCustomAccountForm = ({ onSuccess }: UseCustomAccountFormProps) =
   const { t } = useTranslation()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
 
-  const { trigger: createCustomAccount } = useCreateCustomAccount()
+  const { trigger: createCustomAccount } = usePostCustomAccount()
 
   const form = useAppForm<CustomAccountFormData>({
     defaultValues: {

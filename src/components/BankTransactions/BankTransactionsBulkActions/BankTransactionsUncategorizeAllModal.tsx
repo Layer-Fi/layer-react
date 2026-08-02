@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
-import { useBulkUncategorize } from '@hooks/api/businesses/[business-id]/bank-transactions/bulk-uncategorize/useBulkUncategorize'
+import { useBulkUncategorizeBankTransactions } from '@hooks/features/bankTransactions/useBulkBankTransactionMutations'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
@@ -21,7 +21,7 @@ export const BankTransactionsUncategorizeAllModal = ({ isOpen, onOpenChange, isM
   const { count } = useCountSelectedIds()
   const { selectedIds } = useSelectedIds()
   const { clearSelection } = useBulkSelectionActions()
-  const { trigger } = useBulkUncategorize()
+  const { trigger } = useBulkUncategorizeBankTransactions()
   const { clearTransactionCategorizations } = useBankTransactionsCategorizationActions()
 
   const handleConfirm = useCallback(async () => {

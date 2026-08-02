@@ -3,15 +3,19 @@ import { useCallback, useMemo } from 'react'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { MatchType } from '@schemas/bankTransactions/match'
-import { useMatchBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/match/useMatchBankTransaction'
+import { usePutMatchBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/match/put'
+import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
+import { useProfitAndLossGlobalInvalidator } from '@api/businesses/[business-id]/reports/profit-and-loss/useProfitAndLossGlobalInvalidator'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 export function useMatchBankTransactionWithCacheUpdate() {
   const { eventCallbacks } = useLayerContext()
-  const { updateLocalBankTransactions, data } = useBankTransactionsContext()
+  const { updateLocalBankTransactions, data, useBankTransactionsOptions } = useBankTransactionsContext()
+  const { forceReloadBackgroundBankTransactions } = useBankTransactionsGlobalCacheActions()
+  const { debouncedInvalidateProfitAndLoss } = useProfitAndLossGlobalInvalidator()
 
-  const { trigger: matchBankTransaction, isMutating, isError } = useMatchBankTransaction()
+  const { trigger: matchBankTransaction, isMutating, isError } = usePutMatchBankTransaction()
 
   const match = useCallback(
     async (bankTransaction: BankTransaction, suggestedMatchId: string, options?: { onSuccess?: () => void }): Promise<void> => {
@@ -49,6 +53,9 @@ export function useMatchBankTransactionWithCacheUpdate() {
 
             updateLocalBankTransactions(transactionsToUpdate)
 
+            void forceReloadBackgroundBankTransactions(useBankTransactionsOptions)
+            void debouncedInvalidateProfitAndLoss()
+
             eventCallbacks?.onTransactionCategorized?.()
 
             options?.onSuccess?.()
@@ -58,7 +65,15 @@ export function useMatchBankTransactionWithCacheUpdate() {
           },
         )
     },
-    [matchBankTransaction, updateLocalBankTransactions, data, eventCallbacks],
+    [
+      matchBankTransaction,
+      updateLocalBankTransactions,
+      data,
+      eventCallbacks,
+      forceReloadBackgroundBankTransactions,
+      useBankTransactionsOptions,
+      debouncedInvalidateProfitAndLoss,
+    ],
   )
 
   return useMemo(

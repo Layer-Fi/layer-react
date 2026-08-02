@@ -4,7 +4,7 @@ import { ArrowUpRight, Check, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
-import { useProfitAndLossSummaries } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-summaries/useProfitAndLossSummaries'
+import { useGetProfitAndLossSummaries } from '@api/businesses/[business-id]/reports/profit-and-loss-summaries/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
@@ -19,7 +19,7 @@ export function UncategorizedTransactionsBadge({ onTransactionsToReviewClick }: 
   const { formatNumber } = useIntlFormatter()
   const { startDate, endDate } = useGlobalDateRange({ dateSelectionMode: 'month' })
 
-  const { data, isLoading, isError, mutate } = useProfitAndLossSummaries({
+  const { data, isLoading, isError, mutate } = useGetProfitAndLossSummaries({
     startYear: startDate.getFullYear(),
     startMonth: startDate.getMonth() + 1,
     endYear: endDate.getFullYear(),

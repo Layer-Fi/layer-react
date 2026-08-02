@@ -10,8 +10,8 @@ import {
 } from '@internal-types/layerContext'
 import { errorHandler, type LayerError } from '@utils/api/errorHandler'
 import { buildColorsPalette } from '@utils/colors'
-import { useAccountingConfiguration } from '@hooks/api/businesses/[business-id]/accounting-config/useAccountingConfiguration'
-import { useBusiness } from '@hooks/api/businesses/[business-id]/useBusiness'
+import { useGetAccountingConfiguration } from '@api/businesses/[business-id]/accounting-config/get'
+import { useGetBusiness } from '@api/businesses/[business-id]/get'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { type LayerEvent } from '@providers/LayerProvider/layerEvents'
 import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
@@ -109,7 +109,7 @@ export const BusinessProvider = ({
     setRange: setDateRange,
   }), [globalDateRange, setDateRange])
 
-  const { data: businessData } = useBusiness({ businessId })
+  const { data: businessData } = useGetBusiness({ businessId })
 
   useEffect(() => {
     if (!businessData) return
@@ -202,7 +202,7 @@ export const BusinessProvider = ({
     return
   }
 
-  const { data: accountingConfiguration } = useAccountingConfiguration({ businessId })
+  const { data: accountingConfiguration } = useGetAccountingConfiguration({ businessId })
 
   // Deprecated no-op: onboardingStep no longer drives any UI now that the
   // Onboarding component has been removed.

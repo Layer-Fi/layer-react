@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { ApiEnumErrorType, APIError } from '@utils/api/apiError'
 import { type ActiveTimerDraft, EMPTY_DRAFT, toStartPayload } from '@utils/timeTracking/activeTimerDraft'
-import { useStartTimeTracker } from '@hooks/api/businesses/[business-id]/time-tracking/tracker/useStartTimeTracker'
+import { usePostStartTimeTracker } from '@api/businesses/[business-id]/time-tracking/tracker/start/post'
 import { useAppForm } from '@hooks/features/forms/useForm'
 
 type UseStartTimerFormProps = {
@@ -20,7 +20,7 @@ const isActiveTimerAlreadyExistsError = (error: unknown) => {
 export const useStartTimerForm = ({ onStarted }: UseStartTimerFormProps) => {
   const { t } = useTranslation()
   const [actionError, setActionError] = useState<string | null>(null)
-  const { trigger: startTimeTracker, isMutating: isStarting } = useStartTimeTracker()
+  const { trigger: startTimeTracker, isMutating: isStarting } = usePostStartTimeTracker()
 
   const onSubmit = useCallback(async ({
     value,

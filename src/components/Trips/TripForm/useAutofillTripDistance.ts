@@ -4,7 +4,7 @@ import { useStore } from '@tanstack/react-form'
 import { toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import type { TripForm } from '@schemas/trip'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
-import { useMileageDistance } from '@hooks/api/businesses/[business-id]/mileage/distance/useMileageDistance'
+import { useGetMileageDistance } from '@api/businesses/[business-id]/mileage/distance/get'
 import type { AppForm } from '@hooks/features/forms/useForm'
 
 type UseAutofillTripDistanceProps = {
@@ -47,7 +47,7 @@ export function useAutofillTripDistance({ form }: UseAutofillTripDistanceProps) 
     }
   }, [isDistanceEmpty, applyHasChangedAddress])
 
-  const { data: computedDistance, error } = useMileageDistance({
+  const { data: computedDistance, error } = useGetMileageDistance({
     startPlaceId: startPlaceId ?? '',
     endPlaceId: endPlaceId ?? '',
     isEnabled: Boolean(startPlaceId && endPlaceId)

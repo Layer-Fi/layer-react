@@ -3,11 +3,11 @@ import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { CategoriesListMode, type Classification, isClassificationAccountIdentifier } from '@schemas/categorization'
+import type { JournalEntryForm } from '@schemas/generalLedger/journalEntry'
 import type { AppForm } from '@hooks/features/forms/useForm'
 import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
 import { DebitCreditPill } from '@components/DebitCreditPill/DebitCreditPill'
-import type { JournalEntryForm } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
 import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
 import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
 

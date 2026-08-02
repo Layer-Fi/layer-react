@@ -8,7 +8,7 @@ import {
   collectRevenueItems,
   type PnlChartLineItem,
 } from '@utils/profitAndLossUtils'
-import { useProfitAndLossReport } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss/useProfitAndLossReport'
+import { useGetProfitAndLossReport } from '@api/businesses/[business-id]/reports/profit-and-loss/get'
 import {
   type DateSelectionMode,
   useGlobalDateRange,
@@ -77,7 +77,7 @@ export const useProfitAndLoss = ({ tagFilter, reportingBasis }: UseProfitAndLoss
   const [selectedLineItem, setSelectedLineItem] = useState<SelectedLineItem | null>(null)
 
   const { data, isLoading, isValidating, isError, mutate } =
-    useProfitAndLossReport({
+    useGetProfitAndLossReport({
       ...dateRange,
       tagKey: tagFilter?.key,
       tagValues: tagFilter?.values?.join(','),

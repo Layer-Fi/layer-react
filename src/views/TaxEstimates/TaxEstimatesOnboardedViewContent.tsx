@@ -2,7 +2,7 @@ import { type Key, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { translationKey } from '@utils/i18n/translationKey'
-import { useTaxEstimatesBanner } from '@hooks/api/businesses/[business-id]/tax-estimates/banner/useTaxEstimatesBanner'
+import { useGetTaxEstimatesBanner } from '@api/businesses/[business-id]/tax-estimates/banner/get'
 import { TaxEstimatesRoute, useFullYearProjection, useTaxEstimatesNavigation, useTaxEstimatesRouteState, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
@@ -25,7 +25,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
   const navigate = useTaxEstimatesNavigation()
   const { year } = useTaxEstimatesYear()
   const { fullYearProjection } = useFullYearProjection()
-  const { data: taxBannerData } = useTaxEstimatesBanner({ year, fullYearProjection })
+  const { data: taxBannerData } = useGetTaxEstimatesBanner({ year, fullYearProjection })
   const showBanner = !!taxBannerData && taxBannerData.totalUncategorizedCount > 0
 
   const tabOptions = useMemo(

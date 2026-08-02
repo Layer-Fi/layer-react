@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { useLedgerBalances } from '@hooks/api/businesses/[business-id]/ledger/balances/useLedgerBalances'
+import { useGetLedgerBalances } from '@api/businesses/[business-id]/ledger/balances/get'
 import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 
 export const useChartOfAccounts = ({ withDates = false }: Props = {}) => {
   const { startDate, endDate } = useLedgerDateRange({ dateSelectionMode: 'full' })
-  const { data, isLoading, isValidating, isError, mutate } = useLedgerBalances({
+  const { data, isLoading, isValidating, isError, mutate } = useGetLedgerBalances({
     startDate: withDates ? startDate : undefined,
     endDate: withDates ? endDate : undefined,
   })

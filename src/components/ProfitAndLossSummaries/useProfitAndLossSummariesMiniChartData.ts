@@ -6,7 +6,7 @@ import type { ProfitAndLoss } from '@schemas/reports/profitAndLoss'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { calculatePercentageChange } from '@utils/percentageChange'
 import { toMiniChartData } from '@utils/profitAndLossUtils'
-import { useProfitAndLossSummaries } from '@hooks/api/businesses/[business-id]/reports/profit-and-loss-summaries/useProfitAndLossSummaries'
+import { useGetProfitAndLossSummaries } from '@api/businesses/[business-id]/reports/profit-and-loss-summaries/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
@@ -75,7 +75,7 @@ export function useProfitAndLossSummariesMiniChartData({
   const { startDate } = useGlobalDateRange({ dateSelectionMode: 'month' })
 
   const previousMonthStart = sub(startDate, { months: 1 })
-  const { data: previousData, isLoading: isPreviousLoading } = useProfitAndLossSummaries({
+  const { data: previousData, isLoading: isPreviousLoading } = useGetProfitAndLossSummaries({
     startYear: previousMonthStart.getFullYear(),
     startMonth: previousMonthStart.getMonth() + 1,
     endYear: previousMonthStart.getFullYear(),

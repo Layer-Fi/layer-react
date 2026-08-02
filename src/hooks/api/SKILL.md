@@ -17,22 +17,82 @@ not call `fetch` outside `src/utils/api`.
 | `createMutationHook` (`@hooks/utils/swr/createMutationHook`) | POST / PATCH / PUT / DELETE |
 
 Each factory JSDoc-documents every config option at its definition — read that file before
-adding an option you haven't used before. `useVoidInvoice.tsx` is a good end-to-end reference
-for a schema-validated mutation.
+adding an option you haven't used before. `invoices/[invoice-id]/void/post.ts` is a good
+end-to-end reference for a schema-validated mutation.
 
 ## File layout mirrors the API route
 
-`src/hooks/api/**` is a literal mirror of the REST path, with bracketed path params as
-directory names:
+`src/hooks/api/**` is reached through `@api/*` and mirrors the REST path: bracketed path params
+are directory names, and **the filename is the HTTP method**.
 
 ```
-src/hooks/api/businesses/[business-id]/custom-accounts/useCustomAccounts.ts
-src/hooks/api/businesses/[business-id]/custom-accounts/useCreateCustomAccount.ts
-src/hooks/api/businesses/[business-id]/invoices/[invoice-id]/void/useVoidInvoice.tsx
+@api/businesses/[business-id]/custom-accounts/get.ts    GET  /v1/businesses/{id}/custom-accounts
+@api/businesses/[business-id]/custom-accounts/post.ts   POST /v1/businesses/{id}/custom-accounts
+@api/businesses/[business-id]/invoices/[invoice-id]/void/post.ts
 ```
 
-One hook per file, named after the operation. `src/msw/api/**` mirrors the same tree, so
-a new endpoint gets a hook and a mock at matching paths.
+`src/msw/api/**` mirrors the same tree file for file, and `npm run msw:check-coverage` fails CI
+when a method file has no handler at the matching path — see [`src/msw/SKILL.md`](../../msw/SKILL.md).
+
+One file per route + method. A file may export several hooks when call sites need different bodies
+or cache effects on one endpoint (`bank-transactions/[bank-transaction-id]/metadata/patch.ts`).
+
+**Every endpoint hook leads with its method**: `useGet<Resource>`, `useGetList<Resource>` for a
+`createInfiniteQueryHook`, and `usePost…` / `usePatch…` / `usePut…` / `useDelete…`. Action endpoints
+keep the route's verb after the prefix — `usePostVoidInvoice`, `usePutMatchBankTransaction`.
+
+Never let the prefix contradict what the call does. Four endpoints keep their domain verb:
+
+| Endpoint | Hook |
+| --- | --- |
+| `DELETE /bank-transactions/{id}` | `useArchiveBankTransaction` — archives; stays queryable |
+| `DELETE /bank-accounts/{id}` | `useUnlinkBankAccount` — the account is not destroyed |
+| `DELETE /categorization-rules/suggestions/{id}` | `useRejectCategorizationRuleSuggestion` |
+| `POST /tasks/{id}/upload/delete` | `useDeleteTaskUploads` — POST, but it deletes |
+
+`useDeleteBankAccount` would invite a destructive confirmation in front of an unlink.
+
+Non-endpoint hooks keep descriptive names: `use…GlobalCacheActions`, `usePreload…`, invalidators.
+
+### Upsert hooks
+
+Create and update are separate endpoints, so they get separate files; the mode-switching hook in
+`upsert.ts` is what call sites import.
+
+```
+mileage/vehicles/post.ts                usePostVehicle
+mileage/vehicles/[vehicle-id]/patch.ts  usePatchVehicle
+mileage/vehicles/upsert.ts              useUpsertVehicle
+```
+
+The shared tag key, response schema, and body types live in `post.ts`; `patch.ts` imports them.
+Build the combined hook with `createUpsertHook` (`@hooks/utils/swr/createUpsertHook`, JSDoc there)
+rather than by hand, so the whole file is one call:
+
+```ts
+export const useUpsertVehicle = createUpsertHook({
+  useCreate: usePostVehicle,
+  useUpdate: usePatchVehicle,
+  toCreateOptions: () => undefined,
+  toUpdateOptions: (props: { vehicleId: string }) => ({ vehicleId: props.vehicleId }),
+})
+```
+
+Each mapper declares the props its own mode accepts; params both modes need go in both. There is
+one shared `UpsertMode` enum. **Keep the update's keys required** — the mode is the caller's
+decision, not something inferred from whether an id happens to be populated. If a missing id
+silently meant create, a form editing a not-yet-loaded record would POST a duplicate.
+
+## What may not be imported here
+
+`src/hooks/api` is the transport layer. A lint rule blocks `@components`, `@ui`, `@blocks`,
+`@views`, `@icons`, `@assets`, `@hooks/features` and `@hooks/legacy` outright, and blocks runtime
+imports from `@providers` and `@contexts` (type-only is fine).
+
+A hook that needs app state — store params, context callbacks — does not read it here. Export the
+parameterized hook from `@api` and wrap it in `@hooks/features/**`, which may import from `@api`.
+`@hooks/features/reports/useUnifiedReport.ts` is the reference. Shared contracts belong in
+`@schemas`, never in a component folder.
 
 Other hook directories:
 
@@ -42,7 +102,7 @@ Other hook directories:
 
 ## Anatomy of a query hook
 
-A hook module has four parts, in this order. `useCustomAccounts.ts` is the reference.
+A hook module has four parts, in this order. `custom-accounts/get.ts` is the reference.
 
 1. **The tag key**, exported as a `const` (`'#custom-accounts'`) so mutations elsewhere can
    reference it.
@@ -52,7 +112,7 @@ A hook module has four parts, in this order. `useCustomAccounts.ts` is the refer
 4. **The factory call**, plus the resource's cache actions.
 
 ```ts
-export const useCustomAccounts = createQueryHook({
+export const useGetCustomAccounts = createQueryHook({
   tags: [CUSTOM_ACCOUNTS_TAG_KEY],
   request: getCustomAccounts,
   schema: GetCustomAccountsResponseSchema,
@@ -82,7 +142,7 @@ Two things to internalize:
 ## Paginated lists (`createInfiniteQueryHook`)
 
 Same four parts, with `PaginatedResponseSchema(T)` as the response schema and
-`createInfiniteQueryGlobalCacheActions<TItem>` for the cache actions. `useListInvoices.tsx` is the
+`createInfiniteQueryGlobalCacheActions<TItem>` for the cache actions. `invoices/get.ts` is the
 reference.
 
 Differences from `createQueryHook`:

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { CreateCustomerRefundSchema, type CustomerRefund } from '@schemas/invoices/customerRefund'
 import { type Invoice } from '@schemas/invoices/invoice'
 import { DateFormat } from '@utils/i18n/date/patterns'
-import { useRefundInvoice } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/refund/useRefundInvoice'
+import { usePostRefundInvoice } from '@api/businesses/[business-id]/invoices/[invoice-id]/refund/post'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import {
@@ -25,7 +25,7 @@ export const useInvoiceRefundForm = ({ onSuccess, invoice }: UseInvoiceRefundFor
   const { formatDate } = useIntlFormatter()
   const [submitError, setSubmitError] = useState<string | undefined>(undefined)
 
-  const { trigger: refundInvoice } = useRefundInvoice({ invoiceId: invoice.id })
+  const { trigger: refundInvoice } = usePostRefundInvoice({ invoiceId: invoice.id })
 
   const defaultValuesRef = useRef<InvoiceRefundForm>(getInvoiceRefundFormDefaultValues(invoice))
   const defaultValues = defaultValuesRef.current

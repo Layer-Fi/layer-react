@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
 
-import { useBookkeepingPeriods } from '@hooks/api/businesses/[business-id]/bookkeeping/periods/useBookkeepingPeriods'
+import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods/get'
 import { useGlobalDate } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
 
 export function useActiveBookkeepingPeriod() {
   const { date } = useGlobalDate()
-  const { data, isLoading } = useBookkeepingPeriods()
+  const { data, isLoading } = useGetBookkeepingPeriods()
 
   const currentMonth = date.getMonth() + 1
   const currentYear = date.getFullYear()

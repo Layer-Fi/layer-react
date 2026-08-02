@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { useAccountBalancesDownload } from '@hooks/api/businesses/[business-id]/ledger/balances/exports/csv/useAccountBalancesDownload'
+import { useGetAccountBalancesDownload } from '@api/businesses/[business-id]/ledger/balances/exports/csv/get'
 import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
 import { DownloadButton } from '@ui/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
@@ -19,7 +19,7 @@ export function AccountBalancesDownloadButton({
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
   const { startDate, endDate } = useLedgerDateRange({ dateSelectionMode: 'full' })
 
-  const { trigger, isMutating, error } = useAccountBalancesDownload({
+  const { trigger, isMutating, error } = useGetAccountBalancesDownload({
     startDate: filterByDateRange ? startDate : undefined,
     endDate: filterByDateRange ? endDate : undefined,
     swrOptions: {

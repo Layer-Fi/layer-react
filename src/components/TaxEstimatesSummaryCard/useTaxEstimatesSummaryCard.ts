@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type TaxSummary, type TaxSummarySectionType, TaxSummaryState } from '@schemas/taxEstimates/summary'
-import { useTaxSummary } from '@hooks/api/businesses/[business-id]/tax-estimates/summary/useTaxSummary'
+import { useGetTaxSummary } from '@api/businesses/[business-id]/tax-estimates/summary/get'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { useFullYearProjection } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
@@ -20,7 +20,7 @@ export const useTaxEstimatesSummaryCard = () => {
   const { fullYearProjection } = useFullYearProjection()
   const { t } = useTranslation()
   const { isDesktop, isMobile } = useSizeClass()
-  const { data: taxSummaryData, isLoading, isError } = useTaxSummary({ year, fullYearProjection })
+  const { data: taxSummaryData, isLoading, isError } = useGetTaxSummary({ year, fullYearProjection })
 
   const shortenedDisplayName = useCallback((type: TaxSummarySectionType) => {
     if (type === 'federal') return t('taxEstimates:label.federal', 'Federal')

@@ -6,8 +6,9 @@ import { useTranslation } from 'react-i18next'
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import type { Classification } from '@schemas/categorization'
 import type { NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
-import { UpsertCustomAccountTransactionMode, useUpsertCustomAccountTransaction } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/useRecordCustomAccountTransaction'
+import { useUpsertCustomAccountTransaction } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
@@ -50,8 +51,8 @@ export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: Us
   const createExternalId = useMemo(() => crypto.randomUUID(), [])
   const { trigger, isError } = useUpsertCustomAccountTransaction(
     transaction
-      ? { mode: UpsertCustomAccountTransactionMode.Update, transactionId: transaction.id }
-      : { mode: UpsertCustomAccountTransactionMode.Create },
+      ? { mode: UpsertMode.Update, transactionId: transaction.id }
+      : { mode: UpsertMode.Create },
   )
   const { setTransactionCategorization, setTransactionTaxCodeSelection } = useBankTransactionsCategorizationActions()
 

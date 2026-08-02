@@ -1,7 +1,7 @@
 import { Download, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useInvoicePdfDownload } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/pdf/useInvoicePdfDownload'
+import { useGetInvoicePdfDownload } from '@api/businesses/[business-id]/invoices/[invoice-id]/pdf/get'
 import { Button } from '@ui/Button/Button'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
@@ -12,7 +12,7 @@ type InvoicePdfDownloadButtonProps = {
 export const InvoicePdfDownloadButton = ({ invoiceId }: InvoicePdfDownloadButtonProps) => {
   const { t } = useTranslation()
   const { invisibleDownloadRef, triggerInvisibleDownload } = useInvisibleDownload()
-  const { trigger, isMutating, isError } = useInvoicePdfDownload({
+  const { trigger, isMutating, isError } = useGetInvoicePdfDownload({
     invoiceId,
     onSuccess: ({ presignedUrl, fileName }) => triggerInvisibleDownload({
       url: presignedUrl,

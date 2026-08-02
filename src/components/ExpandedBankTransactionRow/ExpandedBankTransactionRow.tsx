@@ -19,9 +19,9 @@ import {
   hasMatch,
 } from '@utils/bankTransactions/shared'
 import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
-import { useSetMetadataOnBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useSetMetadataOnBankTransaction'
-import { useRemoveTagFromBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useRemoveTagFromBankTransaction'
-import { useTagBankTransaction } from '@hooks/api/businesses/[business-id]/bank-transactions/tags/useTagBankTransaction'
+import { usePatchBankTransactionCounterparty } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/patch'
+import { useDeleteBankTransactionTag } from '@api/businesses/[business-id]/bank-transactions/tags/delete'
+import { usePostBankTransactionTag } from '@api/businesses/[business-id]/bank-transactions/tags/post'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
@@ -87,9 +87,9 @@ export const ExpandedBankTransactionRow = ({
 
   const { setTransactionMatchSelection, setTransactionSelectionVariant } = useBankTransactionsCategorizationActions()
   // Hooks for auto-saving tags and customer/vendor in unsplit state
-  const { trigger: tagBankTransaction } = useTagBankTransaction({ bankTransactionId: bankTransaction.id })
-  const { trigger: removeTagFromBankTransaction } = useRemoveTagFromBankTransaction({ bankTransactionId: bankTransaction.id })
-  const { trigger: setMetadataOnBankTransaction } = useSetMetadataOnBankTransaction({ bankTransactionId: bankTransaction.id })
+  const { trigger: tagBankTransaction } = usePostBankTransactionTag({ bankTransactionId: bankTransaction.id })
+  const { trigger: removeTagFromBankTransaction } = useDeleteBankTransactionTag({ bankTransactionId: bankTransaction.id })
+  const { trigger: setMetadataOnBankTransaction } = usePatchBankTransactionCounterparty({ bankTransactionId: bankTransaction.id })
 
   const showTags = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.Tags)
   const showCustomerVendor = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.CustomerVendor)

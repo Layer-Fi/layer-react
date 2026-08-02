@@ -2,8 +2,8 @@ import { useMemo } from 'react'
 import { useForm } from '@tanstack/react-form'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { useUpdateBankTransactionMetadata } from '@hooks/api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/useUpdateBankTransactionMetadata'
-import { useBankTransactionsGlobalCacheActions } from '@hooks/api/businesses/[business-id]/bank-transactions/useBankTransactions'
+import { usePatchBankTransactionMemo } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/patch'
+import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 
@@ -18,7 +18,7 @@ export const useBankTransactionMemo = ({ bankTransactionId, memo }: BankTransact
     isMutating: isUpdatingMemo,
     isError: isErrorUpdatingMemo,
     data: updateResult,
-  } = useUpdateBankTransactionMetadata({ bankTransactionId })
+  } = usePatchBankTransactionMemo({ bankTransactionId })
   const { patchBankTransactionsByTransformation } = useBankTransactionsGlobalCacheActions()
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BankTransactions)
 

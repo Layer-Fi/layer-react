@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { type ApiPlaidHostedLinkStatus, PlaidHostedLinkState } from '@schemas/linkedAccounts/plaid'
 import { APIError } from '@utils/api/apiError'
-import { usePlaidHostedLinkStatus } from '@hooks/api/businesses/[business-id]/plaid/hosted-link'
+import { useGetPlaidHostedLinkStatus } from '@api/businesses/[business-id]/plaid/hosted-link/get'
 import { usePollingConfig } from '@hooks/utils/swr/usePollingConfig'
 
 const TERMINAL_STATES: ReadonlySet<PlaidHostedLinkState> = new Set([
@@ -43,7 +43,7 @@ export function usePollPlaidHostedLinkStatus({ onSuccess, enabled }: UsePollPlai
     isFatalError,
   })
 
-  const { data, mutate } = usePlaidHostedLinkStatus({ isEnabled: enabled, swrOptions: pollingConfig })
+  const { data, mutate } = useGetPlaidHostedLinkStatus({ isEnabled: enabled, swrOptions: pollingConfig })
 
   // Clear a previous session's cached status; polling fetches the current one.
   useEffect(() => {

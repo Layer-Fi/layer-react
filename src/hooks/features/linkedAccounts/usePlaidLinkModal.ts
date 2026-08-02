@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { type PlaidLinkOnSuccessMetadata, usePlaidLink } from 'react-plaid-link'
 
 import type { Awaitable } from '@internal-types/utility/promises'
-import { useUpdateConnectionStatus } from '@hooks/api/businesses/[business-id]/external-accounts/update-connection-status'
-import { useExchangePlaidPublicToken } from '@hooks/api/businesses/[business-id]/plaid/link/exchange'
+import { usePostUpdateConnectionStatus } from '@api/businesses/[business-id]/external-accounts/update-connection-status/post'
+import { usePostExchangePlaidPublicToken } from '@api/businesses/[business-id]/plaid/link/exchange/post'
 import { useAccountConfirmationStoreActions } from '@providers/AccountConfirmationStoreProvider'
 import { useEnvironment } from '@providers/Environment/EnvironmentInputProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
@@ -43,8 +43,8 @@ export function usePlaidLinkModal({
     reset: resetAccountConfirmation,
   } = useAccountConfirmationStoreActions()
 
-  const { trigger: triggerExchangePlaidPublicToken } = useExchangePlaidPublicToken()
-  const { trigger: triggerUpdateConnectionStatus } = useUpdateConnectionStatus()
+  const { trigger: triggerExchangePlaidPublicToken } = usePostExchangePlaidPublicToken()
+  const { trigger: triggerUpdateConnectionStatus } = usePostUpdateConnectionStatus()
 
   const [isLinking, setIsLinking] = useState(false)
   const handleAddConnectionSuccess = onAddConnectionSuccess ?? onSuccess

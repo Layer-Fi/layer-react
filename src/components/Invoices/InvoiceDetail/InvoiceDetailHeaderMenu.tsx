@@ -3,8 +3,8 @@ import { Menu as MenuIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
-import { useInvoicePdfDownload } from '@hooks/api/businesses/[business-id]/invoices/[invoice-id]/pdf/useInvoicePdfDownload'
-import { UpsertInvoiceMode } from '@hooks/api/businesses/[business-id]/invoices/useUpsertInvoice'
+import { useGetInvoicePdfDownload } from '@api/businesses/[business-id]/invoices/[invoice-id]/pdf/get'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
@@ -106,8 +106,8 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
     )
   }, [])
 
-  const invoiceId = viewState.mode === UpsertInvoiceMode.Update ? viewState.invoice.id : ''
-  const { trigger: downloadInvoicePdf, isMutating: isDownloadingInvoicePdf } = useInvoicePdfDownload({
+  const invoiceId = viewState.mode === UpsertMode.Update ? viewState.invoice.id : ''
+  const { trigger: downloadInvoicePdf, isMutating: isDownloadingInvoicePdf } = useGetInvoicePdfDownload({
     invoiceId,
     onSuccess: ({ presignedUrl, fileName }) => {
       triggerInvisibleDownload({
@@ -124,7 +124,7 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
     void downloadInvoicePdf()
   }
 
-  if (viewState.mode === UpsertInvoiceMode.Create) return null
+  if (viewState.mode === UpsertMode.Create) return null
 
   const invoice = viewState.invoice
   const invoiceActions = getInvoiceActions(invoice)

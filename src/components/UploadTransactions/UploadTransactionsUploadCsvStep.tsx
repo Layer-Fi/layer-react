@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type CustomAccountParseCsvResponse, useCustomAccountParseCsv } from '@hooks/api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/useCustomAccountParseCsv'
+import { type CustomAccountParseCsvResponse, usePostCustomAccountParseCsv } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/post'
 import { SubmitButton } from '@ui/Button/SubmitButton'
 import { Separator } from '@ui/Separator/Separator'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
@@ -32,7 +32,7 @@ export function UploadTransactionsUploadCsvStep(
 ) {
   const { t } = useTranslation()
   const { next } = useWizard()
-  const { trigger: parseCsv, isMutating: isParsingCsv } = useCustomAccountParseCsv()
+  const { trigger: parseCsv, isMutating: isParsingCsv } = usePostCustomAccountParseCsv()
   const [hasParseCsvError, setHasParseCsvError] = useState(false)
 
   const onFileSelected = useCallback((file: File | null) => {

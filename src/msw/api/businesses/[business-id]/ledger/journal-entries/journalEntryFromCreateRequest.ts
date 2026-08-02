@@ -1,6 +1,6 @@
 import { type AccountIdentifier } from '@schemas/accountIdentifier'
+import { type CreateCustomJournalEntry } from '@schemas/generalLedger/journalEntry'
 import { EntryType, type LedgerEntry, type LedgerEntryLineItem } from '@schemas/generalLedger/ledgerEntry'
-import { type CreateCustomJournalEntry } from '@components/Journal/JournalEntryForm/journalEntryFormSchemas'
 
 import { ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import { makeManualEntrySource } from '@fixtures/ledgerEntries/sources'

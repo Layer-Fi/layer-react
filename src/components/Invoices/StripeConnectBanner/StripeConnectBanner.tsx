@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { StripeAccountStatus } from '@schemas/stripeAccountStatus'
-import { useStripeAccountStatus } from '@hooks/api/businesses/[business-id]/stripe/status/useStripeAccountStatus'
+import { useGetStripeAccountStatus } from '@api/businesses/[business-id]/stripe/status/get'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Banner, type BannerVariant } from '@ui/Banner/Banner'
 import { ConnectStripeButton } from '@components/Invoices/StripeConnectBanner/ConnectStripeButton'
@@ -11,7 +11,7 @@ import { useStripeConnect } from '@components/Invoices/StripeConnectBanner/useSt
 export const StripeConnectBanner = () => {
   const { t } = useTranslation()
   const { accountingConfiguration } = useLayerContext()
-  const { data, isLoading, isError } = useStripeAccountStatus()
+  const { data, isLoading, isError } = useGetStripeAccountStatus()
   const { handleConnectStripe, isMutating, isStripeConnectError } = useStripeConnect()
 
   const bannerPropConfig = useMemo<Partial<Record<StripeAccountStatus, {

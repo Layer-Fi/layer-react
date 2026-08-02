@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type Vendor } from '@schemas/vendor'
 import { getVendorName } from '@utils/vendor'
-import { useListVendors } from '@hooks/api/businesses/[business-id]/vendors/useListVendors'
+import { useGetListVendors } from '@api/businesses/[business-id]/vendors/get'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
@@ -53,7 +53,7 @@ export function VendorSelector({
 
   const effectiveSearchQuery = searchQuery === '' ? undefined : searchQuery
 
-  const { flattenedData, isLoading, isError } = useListVendors({ query: effectiveSearchQuery })
+  const { flattenedData, isLoading, isError } = useGetListVendors({ query: effectiveSearchQuery })
 
   const options = useMemo(() =>
     flattenedData?.map(vendor => new VendorAsOption(vendor)) ?? [],

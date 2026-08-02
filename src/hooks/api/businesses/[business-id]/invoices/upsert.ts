@@ -1,0 +1,12 @@
+import { type UpdateParams, usePatchInvoice } from '@api/businesses/[business-id]/invoices/[invoice-id]/patch'
+import { type CreateParams, usePostInvoice } from '@api/businesses/[business-id]/invoices/post'
+import { createUpsertHook } from '@hooks/utils/swr/createUpsertHook'
+
+export type UpsertParams = CreateParams | UpdateParams
+
+export const useUpsertInvoice = createUpsertHook({
+  useCreate: usePostInvoice,
+  useUpdate: usePatchInvoice,
+  toCreateOptions: () => undefined,
+  toUpdateOptions: (props: { invoiceId: string }) => ({ invoiceId: props.invoiceId }),
+})

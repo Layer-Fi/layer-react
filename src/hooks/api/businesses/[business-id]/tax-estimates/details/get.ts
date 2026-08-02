@@ -1,0 +1,24 @@
+import { type TaxDetails, TaxDetailsResponseSchema } from '@schemas/taxEstimates/details'
+import { getWithQuery } from '@utils/api/getWithQuery'
+import { type TaxEstimatesRequestParams, toTaxEstimatesQuery } from '@api/businesses/[business-id]/tax-estimates/taxEstimatesParams'
+import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
+
+const TAX_DETAILS_TAG_KEY = '#tax-details'
+
+const getTaxDetails = getWithQuery<
+  typeof TaxDetailsResponseSchema.Encoded,
+  TaxEstimatesRequestParams
+>(
+  ['businessId'],
+  ({ businessId }) => `/v1/businesses/${businessId}/tax-estimates/details`,
+  toTaxEstimatesQuery,
+)
+
+export const useGetTaxDetails = createQueryHook({
+  tags: [TAX_DETAILS_TAG_KEY],
+  request: getTaxDetails,
+  schema: TaxDetailsResponseSchema,
+})
+
+export const useTaxDetailsGlobalCacheActions = createResourceGlobalCacheActions<TaxDetails>(TAX_DETAILS_TAG_KEY)

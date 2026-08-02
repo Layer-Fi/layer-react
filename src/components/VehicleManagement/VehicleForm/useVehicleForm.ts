@@ -5,9 +5,10 @@ import { useTranslation } from 'react-i18next'
 
 import { UpsertVehicleSchema, type Vehicle, type VehicleForm } from '@schemas/vehicle'
 import { DateFormat } from '@utils/i18n/date/patterns'
-import { UpsertVehicleMode, useUpsertVehicle } from '@hooks/api/businesses/[business-id]/mileage/vehicles/useUpsertVehicle'
+import { useUpsertVehicle } from '@api/businesses/[business-id]/mileage/vehicles/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import {
   convertVehicleFormToUpsertVehicle,
   getVehicleFormDefaultValues,
@@ -26,8 +27,8 @@ export const useVehicleForm = (props: UseVehicleFormProps) => {
 
   const { trigger: upsertVehicle } = useUpsertVehicle(
     vehicle
-      ? { mode: UpsertVehicleMode.Update, vehicleId: vehicle.id }
-      : { mode: UpsertVehicleMode.Create },
+      ? { mode: UpsertMode.Update, vehicleId: vehicle.id }
+      : { mode: UpsertMode.Create },
   )
 
   const defaultValuesRef = useRef<VehicleForm>(getVehicleFormDefaultValues(vehicle))
