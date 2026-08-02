@@ -8,7 +8,6 @@ import { HeaderRow } from '@ui/Header/HeaderRow'
 import { type SummaryCardInteractionProps, type SummaryCardStringOverrides } from '@blocks/SummaryCard/useSummaryCardSlots'
 import { ExpensesSummaryCard } from '@components/ExpensesSummaryCard/ExpensesSummaryCard'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
-import { MileageTrackingSummary } from '@components/MileageTrackingSummary/MileageTrackingSummary'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import {
   ProfitAndLossSummaries,
@@ -23,6 +22,7 @@ import {
   TaxEstimatesSummaryCardMode,
 } from '@components/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
 import { View } from '@components/View/View'
+import { MileageTrackingSummary } from '@features/mileage/MileageTrackingSummary/MileageTrackingSummary'
 
 import './solopreneurOverview.scss'
 

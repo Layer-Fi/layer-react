@@ -12,7 +12,7 @@ applies_to: src/components/**, src/views/**
 | --- | --- | --- | --- |
 | **Primitives** | `src/components/ui/**` | `@ui/*` | nothing domain-specific — see [`ui/SKILL.md`](ui/SKILL.md) |
 | **Blocks** | `src/components/blocks/**` | `@blocks/*` | composed patterns (`DataTable`, `SummaryCard`, `Wizard`, `ActionableList`) — still domain-agnostic |
-| **Features** | `src/components/<Feature>/**` | `@components/*` | one domain; fetches its own data via hooks |
+| **Features** | `src/components/features/<domain>/**` | `@features/*` | one domain; fetches its own data via hooks |
 | **Views** | `src/views/**` | `@views/*` | full pages composing features and mounting providers |
 | **Utilities** | `src/components/utility/**` | `@components/utility/*` | rendering helpers, not UI |
 
@@ -23,6 +23,33 @@ never import a schema, a hook that fetches, or a feature component.
 Build on `@ui` and `@blocks` before writing a new component; a new reusable primitive
 belongs in `src/components/ui`, not next to the feature that first needed it.
 
+## Finding and placing feature code
+
+`src/components/features/` holds one directory per **domain object**, using the same camelCase name
+as `src/hooks/features/*` and `src/schemas/*` — mileage is `@features/mileage`,
+`@hooks/features/mileage`, `@schemas/mileage`. Reuse an existing domain name rather than inventing a
+near-synonym.
+
+Inside a domain the layout is flat, so **a component's path is its name**:
+`@features/mileage/TripDrawer/TripDrawer`, always `<domain>/<Name>/<Name>.tsx`.
+
+- **Every reusable component gets a directory**, even a one-file one. Its stylesheet, hook, utils,
+  test, and story sit beside it; a helper two components share sits at the domain root instead.
+- **A part only its parent could ever render nests inside the parent** —
+  `TripsMobileList/TripsMobileListItem.tsx`,
+  `MileageDeductionChart/MileageDeductionChartTooltip.tsx`. A nested part is private: if a second
+  component comes to need it, move it out to the domain root rather than importing it from inside.
+  The test is whether another component *could* render it, not how many do today.
+- **Singular for one record, plural for the collection** — `TripDrawer`/`TripForm` against
+  `TripsTable`/`TripsView`.
+
+A component that is *not* domain-specific belongs in `@ui` (primitive), `@blocks` (composed
+pattern), or `@components/utility` (rendering helper).
+
+> **Migration in progress.** Directories still sitting directly under `src/components/` are
+> un-migrated, not a second convention. Put new work in `features/<domain>/`, and ask before mixing
+> a move into a behavior change.
+
 ## File conventions
 
 ```
@@ -30,12 +57,12 @@ src/components/CustomAccountForm/
   CustomAccountForm.tsx          PascalCase component file
   customAccountForm.scss         camelCase stylesheet, imported by the .tsx
   CustomAccountForm.test.tsx     colocated test
-  CustomAccountForm.stories.tsx  colocated story
+  useCustomAccountForm.ts        the hook that owns its state
 ```
 
-Import with the **most specific path alias** available (`@ui/Button/Button`, not
-`@components/ui/Button/Button`). Relative parent imports (`../`) are an ESLint error
-outside the aliases. No barrel `index.ts` re-export files — import the module directly.
+Import with the **most specific alias** (`@ui/Button/Button`, not `@components/ui/Button/Button`).
+Relative parent imports (`../`) are an ESLint error outside the aliases, and there are no barrel
+`index.ts` files.
 
 ## Loading, error, and empty states
 

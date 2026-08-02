@@ -36,7 +36,7 @@ export { GlobalDateRangeSelection } from './components/DateSelection/GlobalDateR
 export { GlobalMonthPicker } from './components/GlobalMonthPicker/GlobalMonthPicker'
 
 /* --------------------- Cards -------------------------- */
-export { MileageSummaryCard } from './components/MileageSummaryCard/MileageSummaryCard'
+export { MileageSummaryCard } from './components/features/mileage/MileageSummaryCard/MileageSummaryCard'
 
 /*
 ======================= Composite Views =======================
