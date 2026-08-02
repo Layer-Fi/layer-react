@@ -1,9 +1,5 @@
 name: Scratch Stories Guard
 
-# Kept separate from scratch-stories-cleanup.yml: a shared workflow would emit
-# a skipped `guard` check run on every review event, and skipped counts as
-# passing for required checks — green on a still-dirty head.
-
 on:
   pull_request:
     types: [opened, synchronize, reopened]
