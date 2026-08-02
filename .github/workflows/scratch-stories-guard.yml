@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   guard:
-    name: No scratch stories
     runs-on: ubuntu-latest
 
     steps:
