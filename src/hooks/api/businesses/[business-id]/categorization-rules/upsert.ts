@@ -6,7 +6,7 @@ export const useUpsertCategorizationRule = createUpsertHook({
   useCreate: usePostCategorizationRule,
   useUpdate: usePatchCategorizationRule,
   toCreateOptions: () => undefined,
-  toUpdateOptions: (props: { categorizationRuleId?: string }) => ({
-    categorizationRuleId: props.categorizationRuleId ?? '',
+  toUpdateOptions: (props: { categorizationRuleId: string }) => ({
+    categorizationRuleId: props.categorizationRuleId,
   }),
 })

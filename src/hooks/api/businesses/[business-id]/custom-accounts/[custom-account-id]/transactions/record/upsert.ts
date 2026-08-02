@@ -6,5 +6,5 @@ export const useUpsertCustomAccountTransaction = createUpsertHook({
   useCreate: usePostRecordCustomAccountTransaction,
   useUpdate: usePatchRecordCustomAccountTransaction,
   toCreateOptions: () => undefined,
-  toUpdateOptions: (props: { transactionId?: string }) => ({ transactionId: props.transactionId ?? '' }),
+  toUpdateOptions: (props: { transactionId: string }) => ({ transactionId: props.transactionId }),
 })

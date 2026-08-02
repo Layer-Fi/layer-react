@@ -8,5 +8,5 @@ export const useUpsertInvoice = createUpsertHook({
   useCreate: usePostInvoice,
   useUpdate: usePatchInvoice,
   toCreateOptions: () => undefined,
-  toUpdateOptions: (props: { invoiceId?: string }) => ({ invoiceId: props.invoiceId ?? '' }),
+  toUpdateOptions: (props: { invoiceId: string }) => ({ invoiceId: props.invoiceId }),
 })

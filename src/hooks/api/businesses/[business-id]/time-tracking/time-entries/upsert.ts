@@ -6,5 +6,5 @@ export const useUpsertTimeEntry = createUpsertHook({
   useCreate: usePostTimeEntry,
   useUpdate: usePatchTimeEntry,
   toCreateOptions: () => undefined,
-  toUpdateOptions: (props: { timeEntryId?: string }) => ({ timeEntryId: props.timeEntryId ?? '' }),
+  toUpdateOptions: (props: { timeEntryId: string }) => ({ timeEntryId: props.timeEntryId }),
 })

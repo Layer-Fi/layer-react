@@ -6,5 +6,5 @@ export const useUpsertCustomer = createUpsertHook({
   useCreate: usePostCustomer,
   useUpdate: usePatchCustomer,
   toCreateOptions: () => undefined,
-  toUpdateOptions: (props: { customerId?: string }) => ({ customerId: props.customerId ?? '' }),
+  toUpdateOptions: (props: { customerId: string }) => ({ customerId: props.customerId }),
 })

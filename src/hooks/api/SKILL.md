@@ -98,9 +98,15 @@ export const useUpsertVehicle = createUpsertHook({
 })
 ```
 
-`toCreateOptions` / `toUpdateOptions` map the caller's props onto each mutation's key params;
-return `undefined` when a mutation takes none. There is one shared `UpsertMode` enum — resources
-do not declare their own.
+Each mapper declares the props its own mode accepts, and that is what callers must pass —
+`toUpdateOptions: (props: { vehicleId: string })` makes `vehicleId` required under
+`mode: Update` and absent under `mode: Create`. Declare params both modes need in both mappers
+(see the invoice payment hook, where `invoiceId` is shared). Return `undefined` for a mutation
+with no key params. There is one shared `UpsertMode` enum — resources do not declare their own.
+
+Keep the update's key params **required**. The mode is a decision the caller makes, not something
+inferred from whether an id happens to be populated: if a missing id silently meant "create", a
+form editing a not-yet-loaded record would POST a duplicate instead of failing to compile.
 
 Two things the factory guarantees that hand-rolling gets wrong:
 

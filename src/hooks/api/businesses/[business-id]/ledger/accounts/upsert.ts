@@ -6,5 +6,5 @@ export const useUpsertLedgerAccount = createUpsertHook({
   useCreate: usePostLedgerAccount,
   useUpdate: usePutLedgerAccount,
   toCreateOptions: () => undefined,
-  toUpdateOptions: (props: { accountId?: string }) => ({ accountId: props.accountId ?? '' }),
+  toUpdateOptions: (props: { accountId: string }) => ({ accountId: props.accountId }),
 })

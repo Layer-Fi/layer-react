@@ -6,5 +6,5 @@ export const useUpsertVehicle = createUpsertHook({
   useCreate: usePostVehicle,
   useUpdate: usePatchVehicle,
   toCreateOptions: () => undefined,
-  toUpdateOptions: (props: { vehicleId?: string }) => ({ vehicleId: props.vehicleId ?? '' }),
+  toUpdateOptions: (props: { vehicleId: string }) => ({ vehicleId: props.vehicleId }),
 })

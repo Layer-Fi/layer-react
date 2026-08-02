@@ -8,5 +8,5 @@ export const useUpsertTrip = createUpsertHook({
   useCreate: usePostTrip,
   useUpdate: usePatchTrip,
   toCreateOptions: () => undefined,
-  toUpdateOptions: (props: { tripId?: string }) => ({ tripId: props.tripId ?? '' }),
+  toUpdateOptions: (props: { tripId: string }) => ({ tripId: props.tripId }),
 })

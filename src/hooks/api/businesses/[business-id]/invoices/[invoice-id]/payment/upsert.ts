@@ -8,8 +8,8 @@ export const useUpsertDedicatedInvoicePayment = createUpsertHook({
   useCreate: usePostDedicatedInvoicePayment,
   useUpdate: usePutDedicatedInvoicePayment,
   toCreateOptions: (props: { invoiceId: string }) => ({ invoiceId: props.invoiceId }),
-  toUpdateOptions: (props: { invoiceId: string, invoicePaymentId?: string }) => ({
+  toUpdateOptions: (props: { invoiceId: string, invoicePaymentId: string }) => ({
     invoiceId: props.invoiceId,
-    invoicePaymentId: props.invoicePaymentId ?? '',
+    invoicePaymentId: props.invoicePaymentId,
   }),
 })
