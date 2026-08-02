@@ -5,12 +5,12 @@ import { LedgerDateStoreProvider } from '@providers/DateStoreProvider/LedgerDate
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { Loader } from '@ui/Loader/Loader'
 import { Toggle } from '@ui/Toggle/Toggle'
-import { InternalChartOfAccounts } from '@components/ChartOfAccounts/ChartOfAccounts'
-import { type ChartOfAccountsStringOverrides } from '@components/ChartOfAccounts/ChartOfAccounts'
-import { InternalJournal } from '@components/Journal/Journal'
-import { type JournalStringOverrides } from '@components/Journal/Journal'
 import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
 import { View } from '@components/View/View'
+import { InternalChartOfAccounts } from '@features/generalLedger/ChartOfAccounts/ChartOfAccounts'
+import { type ChartOfAccountsStringOverrides } from '@features/generalLedger/ChartOfAccounts/ChartOfAccounts'
+import { InternalJournal } from '@features/generalLedger/Journal/Journal'
+import { type JournalStringOverrides } from '@features/generalLedger/Journal/Journal'
 
 export interface GeneralLedgerStringOverrides {
   title?: string

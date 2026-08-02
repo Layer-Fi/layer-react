@@ -6,7 +6,7 @@ import { type Classification } from '@schemas/categorization'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import { Label } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
+import { LedgerAccountCombobox } from '@features/generalLedger/LedgerAccountCombobox/LedgerAccountCombobox'
 
 import './recordTransactionFormCategoryCombobox.scss'
 

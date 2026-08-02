@@ -1,7 +1,7 @@
 import { CategoriesListMode, type Classification } from '@schemas/categorization'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { CategoryMobileDrawer } from '@components/CategorizationRules/CategorizationRuleForm/CategoryMobileDrawer'
-import { LedgerAccountCombobox } from '@components/LedgerAccountCombobox/LedgerAccountCombobox'
+import { LedgerAccountCombobox } from '@features/generalLedger/LedgerAccountCombobox/LedgerAccountCombobox'
 
 type CategorySelectProps = {
   label: string

@@ -21,8 +21,8 @@ export { BalanceSheet } from './components/BalanceSheet/BalanceSheet'
 export { StatementOfCashFlow } from './components/StatementOfCashFlow/StatementOfCashFlow'
 
 /* ------------------ Ledger ------------------ */
-export { ChartOfAccounts } from './components/ChartOfAccounts/ChartOfAccounts'
-export { Journal } from './components/Journal/Journal'
+export { ChartOfAccounts } from './components/features/generalLedger/ChartOfAccounts/ChartOfAccounts'
+export { Journal } from './components/features/generalLedger/Journal/Journal'
 
 /* ------------------ Account Operations ------------------ */
 export { Tasks } from './components/Tasks/Tasks'

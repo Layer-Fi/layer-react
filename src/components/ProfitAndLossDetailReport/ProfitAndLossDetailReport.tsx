@@ -21,8 +21,8 @@ import type { ColumnConfig } from '@blocks/DataTable/utils/column'
 import { VirtualizedDataTable } from '@blocks/VirtualizedDataTable/VirtualizedDataTable'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
 import { type BreadcrumbItem, DetailReportBreadcrumb } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
-import { EntryDetailField, EntryDetailSection } from '@components/LedgerEntryDetails/EntryDetailSection'
-import { SourceDetailView } from '@components/LedgerEntryDetails/SourceDetailView'
+import { EntryDetailField, EntryDetailSection } from '@features/generalLedger/EntryDetailSection/EntryDetailSection'
+import { SourceDetailView } from '@features/generalLedger/SourceDetailView/SourceDetailView'
 
 import './profitAndLossDetailReport.scss'
 
