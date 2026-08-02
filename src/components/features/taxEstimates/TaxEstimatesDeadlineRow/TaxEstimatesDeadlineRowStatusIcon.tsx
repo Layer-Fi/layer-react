@@ -25,7 +25,7 @@ const getStatusVisuals = (t: TFunction, status: TaxOverviewDeadlineStatus) => {
   }
 }
 
-export const StatusIcon = ({ status }: { status: TaxOverviewDeadlineStatus }) => {
+export const TaxEstimatesDeadlineRowStatusIcon = ({ status }: { status: TaxOverviewDeadlineStatus }) => {
   const { t } = useTranslation()
   const { Icon, label, tone } = getStatusVisuals(t, status)
 

@@ -6,19 +6,19 @@ import { usePostArchiveCatalogService } from '@api/businesses/[business-id]/cata
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 
-type ServiceArchiveModalProps = {
+type ServiceArchiveConfirmationModalProps = {
   service: CatalogService | null
   isOpen: boolean
   onOpenChange: (open: boolean) => void
   onSuccess: () => void
 }
 
-export function ServiceArchiveModal({
+export function ServiceArchiveConfirmationModal({
   service,
   isOpen,
   onOpenChange,
   onSuccess,
-}: ServiceArchiveModalProps) {
+}: ServiceArchiveConfirmationModalProps) {
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
   const { trigger: archiveService } = usePostArchiveCatalogService({ serviceId: service?.id ?? '' })

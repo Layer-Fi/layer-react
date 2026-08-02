@@ -16,9 +16,9 @@ import { Span } from '@ui/Typography/Text'
 import { ExpandableCard } from '@blocks/ExpandableCard/ExpandableCard'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { ConditionalList } from '@components/utility/ConditionalList'
-import { ServiceArchiveModal } from '@features/timeTracking/ServiceArchiveModal/ServiceArchiveModal'
+import { ServiceArchiveConfirmationModal } from '@features/timeTracking/ServiceArchiveConfirmationModal/ServiceArchiveConfirmationModal'
 import { ServiceFormCard } from '@features/timeTracking/ServiceFormCard/ServiceFormCard'
-import { ServiceRestoreModal } from '@features/timeTracking/ServiceRestoreModal/ServiceRestoreModal'
+import { ServiceRestoreConfirmationModal } from '@features/timeTracking/ServiceRestoreConfirmationModal/ServiceRestoreConfirmationModal'
 
 import './timeTrackingServicesDrawer.scss'
 
@@ -430,13 +430,13 @@ export function TimeTrackingServicesDrawer({
           </VStack>
         )}
       </Drawer>
-      <ServiceArchiveModal
+      <ServiceArchiveConfirmationModal
         service={archiveTarget}
         isOpen={isArchiveOpen}
         onOpenChange={handleArchiveOpenChange}
         onSuccess={handleArchiveSuccess}
       />
-      <ServiceRestoreModal
+      <ServiceRestoreConfirmationModal
         service={restoreTarget}
         isOpen={isRestoreOpen}
         onOpenChange={handleRestoreOpenChange}

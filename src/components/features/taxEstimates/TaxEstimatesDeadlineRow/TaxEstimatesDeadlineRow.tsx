@@ -14,7 +14,7 @@ import { HStack, Stack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { StatusIcon } from '@features/taxEstimates/TaxEstimatesDeadlineRow/StatusIcon'
+import { TaxEstimatesDeadlineRowStatusIcon } from '@features/taxEstimates/TaxEstimatesDeadlineRow/TaxEstimatesDeadlineRowStatusIcon'
 
 import './taxEstimatesDeadlineRow.scss'
 
@@ -47,7 +47,7 @@ export const TaxEstimatesDeadlineRow = ({
         <VStack className='Layer__TaxOverview__DeadlineAmountColumn' align='end' gap='xs'>
           <VStack align='end' gap='3xs'>
             <HStack className='Layer__TaxOverview__DeadlineValueRow' align='center' gap='sm'>
-              <StatusIcon status={data.state} />
+              <TaxEstimatesDeadlineRowStatusIcon status={data.state} />
               <MoneySpan size='lg' weight='bold' amount={data.amountOwed} />
             </HStack>
             <VStack align='end' gap='3xs'>

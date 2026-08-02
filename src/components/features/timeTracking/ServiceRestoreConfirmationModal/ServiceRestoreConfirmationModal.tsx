@@ -6,19 +6,19 @@ import { usePostReactivateCatalogService } from '@api/businesses/[business-id]/c
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 
-type ServiceRestoreModalProps = {
+type ServiceRestoreConfirmationModalProps = {
   service: CatalogService | null
   isOpen: boolean
   onOpenChange: (open: boolean) => void
   onSuccess: () => void
 }
 
-export function ServiceRestoreModal({
+export function ServiceRestoreConfirmationModal({
   service,
   isOpen,
   onOpenChange,
   onSuccess,
-}: ServiceRestoreModalProps) {
+}: ServiceRestoreConfirmationModalProps) {
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
   const { trigger: reactivateService } = usePostReactivateCatalogService({ serviceId: service?.id ?? '' })
