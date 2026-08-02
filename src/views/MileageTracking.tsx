@@ -5,8 +5,8 @@ import { HeaderCol } from '@ui/Header/HeaderCol'
 import { HeaderRow } from '@ui/Header/HeaderRow'
 import { GlobalYearPicker } from '@components/GlobalYearPicker/GlobalYearPicker'
 import { View } from '@components/View/View'
-import { MileageTrackingStats } from '@features/mileage/summary/MileageTrackingStats/MileageTrackingStats'
-import { Trips } from '@features/mileage/trips/Trips'
+import { MileageTrackingStats } from '@features/mileage/MileageTrackingStats/MileageTrackingStats'
+import { Trips } from '@features/mileage/Trips/Trips'
 
 export const MileageTracking = ({ showTitle = true }: { showTitle?: boolean }) => {
   const { t } = useTranslation()

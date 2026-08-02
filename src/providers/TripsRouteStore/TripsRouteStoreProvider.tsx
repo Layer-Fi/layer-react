@@ -1,8 +1,8 @@
 import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { createStore, useStore } from 'zustand'
 
+import { TripPurposeFilterValue } from '@schemas/trip'
 import type { Vehicle } from '@schemas/vehicle'
-import { TripPurposeFilterValue } from '@features/mileage/trips/subcomponents/TripPurposeToggle'
 
 export type TripsTableFilters = {
   query: string
@@ -11,13 +11,13 @@ export type TripsTableFilters = {
 }
 
 export enum TripsRoute {
-  TripsTable = 'TripsTable',
-  VehicleManagement = 'VehicleManagement',
+  Trips = 'Trips',
+  Vehicles = 'Vehicles',
 }
 
-type TripsTableRouteState = { route: TripsRoute.TripsTable }
-type VehicleManagementRouteState = { route: TripsRoute.VehicleManagement }
-type TripsRouteState = TripsTableRouteState | VehicleManagementRouteState
+type TripsRouteStateTrips = { route: TripsRoute.Trips }
+type TripsRouteStateVehicles = { route: TripsRoute.Vehicles }
+type TripsRouteState = TripsRouteStateTrips | TripsRouteStateVehicles
 
 type TripsRouteStoreShape = {
   routeState: TripsRouteState
@@ -25,8 +25,8 @@ type TripsRouteStoreShape = {
   currentTripsPage: number
   setTableFilters: (patchFilters: Partial<TripsTableFilters>) => void
   navigate: {
-    toTripsTable: () => void
-    toVehicleManagement: () => void
+    toTrips: () => void
+    toVehicles: () => void
   }
   actions: {
     setCurrentTripsPage: (page: number) => void
@@ -35,7 +35,7 @@ type TripsRouteStoreShape = {
 
 const TripsRouteStoreContext = createContext(
   createStore<TripsRouteStoreShape>(() => ({
-    routeState: { route: TripsRoute.TripsTable },
+    routeState: { route: TripsRoute.Trips },
     tableFilters: {
       query: '',
       selectedVehicle: null,
@@ -44,8 +44,8 @@ const TripsRouteStoreContext = createContext(
     currentTripsPage: 0,
     setTableFilters: () => {},
     navigate: {
-      toTripsTable: () => {},
-      toVehicleManagement: () => {},
+      toTrips: () => {},
+      toVehicles: () => {},
     },
     actions: {
       setCurrentTripsPage: () => {},
@@ -83,7 +83,7 @@ export function useCurrentTripsPage() {
 export function TripsRouteStoreProvider(props: PropsWithChildren) {
   const [store] = useState(() =>
     createStore<TripsRouteStoreShape>(set => ({
-      routeState: { route: TripsRoute.TripsTable },
+      routeState: { route: TripsRoute.Trips },
       tableFilters: {
         query: '',
         selectedVehicle: null,
@@ -99,17 +99,17 @@ export function TripsRouteStoreProvider(props: PropsWithChildren) {
         }))
       },
       navigate: {
-        toVehicleManagement: () => {
+        toVehicles: () => {
           set(() => ({
             routeState: {
-              route: TripsRoute.VehicleManagement,
+              route: TripsRoute.Vehicles,
             },
           }))
         },
-        toTripsTable: () => {
+        toTrips: () => {
           set(() => ({
             routeState: {
-              route: TripsRoute.TripsTable,
+              route: TripsRoute.Trips,
             },
           }))
         },

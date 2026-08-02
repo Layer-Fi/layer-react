@@ -12,6 +12,12 @@ export enum TripPurpose {
   Personal = 'PERSONAL',
 }
 
+export enum TripPurposeFilterValue {
+  All = 'ALL',
+  Business = TripPurpose.Business,
+  Personal = TripPurpose.Personal,
+}
+
 export enum TripDistanceSource {
   Manual = 'MANUAL',
   Computed = 'COMPUTED',

@@ -32,41 +32,40 @@ answers "where does this live" in all three trees: bank-transaction components a
 `@schemas/bankTransactions`. **Reuse an existing domain name — do not invent a near-synonym**, and
 add a new domain directory only for a genuinely new domain object.
 
-Inside a domain, **case tells you what a directory is**: a `camelCase` directory is a sub-area of the
-domain, a `PascalCase` directory is a single component and its own files. A domain splits into
-sub-areas once it covers more than one surface — `mileage` is the worked example:
+Inside a domain the layout is **flat**: one `PascalCase` directory per component, directly under the
+domain, no grouping directories between them. `mileage` is the worked example:
 
 ```
 features/mileage/
-  summary/    MileageSummaryCard/ MileageTrackingSummary/ MileageTrackingStats/
-                subcomponents/ MileageDeductionChart/
-  trips/      Trips.tsx utils.ts
-                subcomponents/ ResponsiveTripsView.tsx TripDrawer.tsx TripForm/ TripsTable/ …
-  vehicles/   VehicleManagementDetail.tsx
-                subcomponents/ VehicleCard/ VehicleForm/ VehicleSelector/ VehicleDrawer.tsx …
+  MileageSummaryCard/ MileageTrackingStats/ MileageDeductionChart/ …
+  Trips/ TripsView/ TripsTable/ TripDrawer/ TripForm/ TripPurposeToggle/ …
+  VehiclesView/ VehiclesGrid/ VehicleCard/ VehicleForm/ VehicleSelector/ …
+  tripUtils.ts
 ```
 
 Four rules keep that navigable:
 
-- **Only entry points sit at a sub-area's root; everything they compose goes in `subcomponents/`.**
-  The root of a sub-area answers "what can I mount from here" at a glance — `trips/Trips.tsx`,
-  `vehicles/VehicleManagementDetail.tsx` — and the pieces they are built from don't compete with them
-  for attention. A sub-area may have more than one entry point (`summary` has three).
-- **A directory name equals the component name it contains.** `TripForm/TripForm.tsx`, never a
-  directory whose name matches no component — the old `Trips/TripsView/ResponsiveTripsView.tsx` is
-  what this rule exists to prevent.
-- **A component earns its own directory once it owns 2+ files** — a stylesheet, test, story, or child
-  components. A lone `.tsx` sits flat (`subcomponents/TripDrawer.tsx`). Never create a one-file
-  directory, and never create a directory that only re-exports another component.
-- **Sub-areas are shallow.** One level of `camelCase` grouping per domain, one `subcomponents/`
-  beneath it. If you want to nest further, the sub-area is probably its own domain.
+- **A component's path is its name.** `@features/mileage/TripDrawer/TripDrawer` — always
+  `<domain>/<Name>/<Name>.tsx`, with no exceptions to look up. You can write the import before you
+  have looked at the tree, and a wrong guess means the component doesn't exist.
+- **Every component gets its own directory, even a one-file one.** Uniformity is the point: a reader
+  never has to know whether `TripDrawer` is a file or a directory. A second *component* in a
+  directory is the signal to split it out, not to nest it; files that exist only to serve the one
+  component — its stylesheet, hook, `formUtils.ts`, test, story — stay with it.
+- **Don't add grouping directories.** No `subcomponents/`, no `camelCase` sub-areas. Name prefixes
+  already group a domain: `Mileage*`, `Trip*`, `Vehicle*` sort together in any listing, and they do
+  it without forcing a filing decision that a shared component can only get wrong.
+- **Be consistent about singular and plural.** Singular names a surface over one record
+  (`TripDrawer`, `TripForm`, `VehicleCard`), plural one over the collection (`TripsTable`,
+  `TripsView`, `VehiclesGrid`). Parallel surfaces get parallel names — `TripsView`/`VehiclesView`.
 
-Non-component helpers stay beside the entry point rather than in `subcomponents/` — `trips/utils.ts`
-holds the formatters its table and list both use.
+Non-component helpers sit at the domain root, prefixed the same way — `tripUtils.ts` holds the
+formatters `TripsTable` and `TripsMobileListItem` share.
 
-Shared pieces sit in the sub-area that owns them, and other sub-areas import across —
-`summary/subcomponents/MileageDeductionChart` is used by both `MileageTrackingSummary` and
-`MileageTrackingStats`. Only promote to a domain-level file when two sub-areas own it equally.
+Flat means shared components need no special handling: `MileageDeductionChart` is used by both
+`MileageTrackingSummary` and `MileageTrackingStats`, and `VehicleSelector` by `TripForm` and
+`TripsTableHeader`, without either being filed under one consumer. A type two layers need — like
+`TripPurposeFilterValue` — belongs in `@schemas/*`, not exported from the component that renders it.
 
 A component that is *not* domain-specific does not belong here at all — it goes to `@ui`
 (primitive), `@blocks` (composed pattern), or `@components/utility` (rendering helper). "Which
@@ -88,7 +87,7 @@ src/components/features/linkedAccounts/CustomAccountForm/
 ```
 
 Import with the **most specific path alias** available (`@ui/Button/Button`, not
-`@components/ui/Button/Button`; `@features/mileage/trips/Trips`, not
+`@components/ui/Button/Button`; `@features/mileage/Trips/Trips`, not
 `@components/features/mileage/Trips/Trips`). Relative parent imports (`../`) are an ESLint error
 outside the aliases. No barrel `index.ts` re-export files — import the module directly.
 
