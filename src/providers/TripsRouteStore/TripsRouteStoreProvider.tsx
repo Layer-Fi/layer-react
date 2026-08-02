@@ -15,9 +15,9 @@ export enum TripsRoute {
   Vehicles = 'Vehicles',
 }
 
-type TripsRouteStateTrips = { route: TripsRoute.Trips }
-type TripsRouteStateVehicles = { route: TripsRoute.Vehicles }
-type TripsRouteState = TripsRouteStateTrips | TripsRouteStateVehicles
+type TripsRouteState =
+  | { route: TripsRoute.Trips }
+  | { route: TripsRoute.Vehicles }
 
 type TripsRouteStoreShape = {
   routeState: TripsRouteState
