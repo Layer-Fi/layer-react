@@ -1,0 +1,29 @@
+name: Scratch Stories Guard
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+
+    - name: Check for scratch stories
+      run: |
+        FILES=$(git ls-files '*scratch.stories.tsx')
+        if [ -z "$FILES" ]; then
+          echo "No scratch stories found."
+          exit 0
+        fi
+        echo "$FILES" | sed 's/^/  - /'
+        echo "::error::Scratch stories must not reach main. Approve the PR and they will be removed automatically, or delete them yourself."
+        exit 1

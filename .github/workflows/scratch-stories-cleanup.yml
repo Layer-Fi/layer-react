@@ -1,0 +1,61 @@
+name: Scratch Stories Cleanup
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  cleanup:
+    if: >-
+      github.event.review.state == 'approved'
+      && github.event.pull_request.base.ref == 'main'
+      && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    # Two approvals in quick succession must not push from stale checkouts.
+    concurrency:
+      group: scratch-stories-cleanup-${{ github.event.pull_request.number }}
+    permissions:
+      contents: write
+      pull-requests: read
+      statuses: write
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+
+    - name: Remove scratch stories
+      env:
+        GH_TOKEN: ${{ github.token }}
+        HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        PR: ${{ github.event.pull_request.number }}
+      run: |
+        FILES="$RUNNER_TEMP/scratch-stories.z"
+        git ls-files -z '*scratch.stories.tsx' > "$FILES"
+        if [ ! -s "$FILES" ]; then
+          echo "No scratch stories found."
+          exit 0
+        fi
+        # The webhook payload is frozen at review time, so ask for live state.
+        STATE=$(gh pr view "$PR" --json state --jq .state)
+        if [ "$STATE" != "OPEN" ]; then
+          echo "::error::PR #$PR is $STATE — remove these from the base branch by hand:" >&2
+          tr '\0' '\n' < "$FILES" | sed 's/^/  - /' >&2
+          exit 1
+        fi
+        ORIG=$(git rev-parse HEAD)
+        xargs -0 git rm --quiet -- < "$FILES"
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git commit -m "chore: remove scratch stories before merge"
+        # Lease pins the push to the ref we checked out: fails if the branch
+        # moved or was deleted by a merge, rather than resurrecting it.
+        git push --force-with-lease="refs/heads/$HEAD_REF:$ORIG" \
+          origin HEAD:"refs/heads/$HEAD_REF"
+        gh api "repos/$GITHUB_REPOSITORY/statuses/$(git rev-parse HEAD)" \
+          -f state=success -f context="No scratch stories" \
+          -f description="Removed by cleanup." >/dev/null
+        {
+          echo "Removed:"
+          tr '\0' '\n' < "$FILES" | sed 's/^/- /'
+        } >> "$GITHUB_STEP_SUMMARY"
