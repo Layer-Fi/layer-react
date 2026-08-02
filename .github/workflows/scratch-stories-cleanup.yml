@@ -1,13 +1,5 @@
 name: Scratch Stories Cleanup
 
-# Pushes to the PR head branch, not main: the branch ruleset gives
-# github-actions[bot] no bypass there.
-#
-# A GITHUB_TOKEN push does not re-trigger the guard workflow, so this posts
-# the passing "No scratch stories" status on its own commit. Check runs and
-# commit statuses share a namespace, so that satisfies the same required
-# check.
-
 on:
   pull_request_review:
     types: [submitted]
