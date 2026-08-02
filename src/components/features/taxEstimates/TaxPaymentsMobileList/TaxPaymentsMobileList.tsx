@@ -8,7 +8,7 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { type CommonTaxPaymentsListProps } from '@features/taxEstimates/taxPaymentsUtils'
+import { type CommonTaxPaymentsListProps } from '@features/taxEstimates/utils'
 
 import './taxPaymentsMobileList.scss'
 

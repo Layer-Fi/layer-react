@@ -10,7 +10,7 @@ import { Span } from '@ui/Typography/Text'
 import { type ColumnConfig } from '@blocks/DataTable/utils/column'
 import { ExpandableDataTable } from '@blocks/ExpandableDataTable/ExpandableDataTable'
 import { ExpandableDataTableProvider } from '@blocks/ExpandableDataTable/ExpandableDataTableProvider'
-import { type CommonTaxPaymentsListProps } from '@features/taxEstimates/taxPaymentsUtils'
+import { type CommonTaxPaymentsListProps } from '@features/taxEstimates/utils'
 
 import './taxPaymentsTable.scss'
 

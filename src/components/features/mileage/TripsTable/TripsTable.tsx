@@ -16,7 +16,7 @@ import { PaginatedTable, type TablePaginationProps } from '@blocks/PaginatedData
 import { Container } from '@components/Container/Container'
 import { TripsAddressCell } from '@features/mileage/TripAddressCell/TripAddressCell'
 import { TripsTableHeader } from '@features/mileage/TripsTableHeader/TripsTableHeader'
-import { formatDistance, getPurposeLabel } from '@features/mileage/tripUtils'
+import { formatDistance, getPurposeLabel } from '@features/mileage/utils'
 
 import './tripsTable.scss'
 

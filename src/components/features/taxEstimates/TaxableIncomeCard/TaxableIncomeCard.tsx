@@ -9,9 +9,9 @@ import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'
 import { VStack } from '@ui/Stack/Stack'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
+import { TAX_OVERVIEW_MOBILE_BREAKPOINT } from '@features/taxEstimates/constants'
 import { TaxEstimateMetricRow } from '@features/taxEstimates/TaxEstimateMetricRow/TaxEstimateMetricRow'
 import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@features/taxEstimates/TaxEstimatesHeader/TaxEstimatesHeader'
-import { TAX_OVERVIEW_MOBILE_BREAKPOINT } from '@features/taxEstimates/taxOverviewConstants'
 
 import './taxableIncomeCard.scss'
 

@@ -7,7 +7,7 @@ import { MobileListItemContent } from '@ui/MobileList/MobileListItemContent'
 import { MobileListItemStatusFooter } from '@ui/MobileList/MobileListItemStatusFooter'
 import { Span } from '@ui/Typography/Text'
 import { TripsAddressCell } from '@features/mileage/TripAddressCell/TripAddressCell'
-import { formatDistance, getPurposeBadgeVariant, getPurposeIcon, getPurposeLabel } from '@features/mileage/tripUtils'
+import { formatDistance, getPurposeBadgeVariant, getPurposeIcon, getPurposeLabel } from '@features/mileage/utils'
 
 const TripsMobileListItemDistance = ({ trip }: { trip: Trip }) => {
   const { t } = useTranslation()

@@ -1,10 +1,10 @@
 import { useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { TAX_OVERVIEW_MOBILE_BREAKPOINT } from '@features/taxEstimates/constants'
 import { TaxableIncomeCard } from '@features/taxEstimates/TaxableIncomeCard/TaxableIncomeCard'
 import { TaxDeadlinesCard } from '@features/taxEstimates/TaxDeadlinesCard/TaxDeadlinesCard'
 import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@features/taxEstimates/TaxEstimatesHeader/TaxEstimatesHeader'
 import { TaxEstimatesSummaryCard } from '@features/taxEstimates/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
-import { TAX_OVERVIEW_MOBILE_BREAKPOINT } from '@features/taxEstimates/taxOverviewConstants'
 
 import './taxOverview.scss'
 
