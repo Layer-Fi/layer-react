@@ -22,61 +22,42 @@ end-to-end reference for a schema-validated mutation.
 
 ## File layout mirrors the API route
 
-`src/hooks/api/**` is reached through the `@api/*` alias and is a literal mirror of the REST
-path: bracketed path params are directory names, and **the filename is the HTTP method**.
+`src/hooks/api/**` is reached through `@api/*` and mirrors the REST path: bracketed path params
+are directory names, and **the filename is the HTTP method**.
 
 ```
-@api/businesses/[business-id]/custom-accounts/get.ts       GET    /v1/businesses/{id}/custom-accounts
-@api/businesses/[business-id]/custom-accounts/post.ts      POST   /v1/businesses/{id}/custom-accounts
+@api/businesses/[business-id]/custom-accounts/get.ts    GET  /v1/businesses/{id}/custom-accounts
+@api/businesses/[business-id]/custom-accounts/post.ts   POST /v1/businesses/{id}/custom-accounts
 @api/businesses/[business-id]/invoices/[invoice-id]/void/post.ts
 ```
 
-The path tells you the endpoint, so you never have to open the file to find out what it calls.
-`src/msw/api/**` mirrors the same tree file-for-file, and CI (`npm run msw:check-coverage`)
-fails when a `get`/`post`/`patch`/`put`/`delete` file has no handler at the matching path.
-`src/msw/unmocked-endpoints.json` lists the endpoints that predate the check; it is closed to
-new entries and the check also fails if an entry on it gains a handler.
+`src/msw/api/**` mirrors the same tree file for file, and `npm run msw:check-coverage` fails CI
+when a method file has no handler at the matching path — see [`src/msw/SKILL.md`](../../msw/SKILL.md).
 
-One file per route + method, but a file may export more than one hook when several call sites
-need different bodies or cache effects on the same endpoint — see
-`bank-transactions/[bank-transaction-id]/metadata/patch.ts`.
+One file per route + method. A file may export several hooks when call sites need different bodies
+or cache effects on one endpoint (`bank-transactions/[bank-transaction-id]/metadata/patch.ts`).
 
-**An endpoint hook leads with its method**, so the name says read-or-write before you read the
-arguments:
+**Every endpoint hook leads with its method**: `useGet<Resource>`, `useGetList<Resource>` for a
+`createInfiniteQueryHook`, and `usePost…` / `usePatch…` / `usePut…` / `useDelete…`. Action endpoints
+keep the route's verb after the prefix — `usePostVoidInvoice`, `usePutMatchBankTransaction`.
 
-| File | Export |
+Never let the prefix contradict what the call does. Four endpoints keep their domain verb:
+
+| Endpoint | Hook |
 | --- | --- |
-| `get.ts` (`createQueryHook`) | `useGet<Resource>` |
-| `get.ts` (`createInfiniteQueryHook`) | `useGetList<Resource>` |
-| `post.ts` / `patch.ts` / `put.ts` / `delete.ts` | `usePost…` / `usePatch…` / `usePut…` / `useDelete…` |
+| `DELETE /bank-transactions/{id}` | `useArchiveBankTransaction` — archives; stays queryable |
+| `DELETE /bank-accounts/{id}` | `useUnlinkBankAccount` — the account is not destroyed |
+| `DELETE /categorization-rules/suggestions/{id}` | `useRejectCategorizationRuleSuggestion` |
+| `POST /tasks/{id}/upload/delete` | `useDeleteTaskUploads` — POST, but it deletes |
 
-Action endpoints keep the route's verb *after* the prefix — `usePostVoidInvoice`,
-`usePostArchiveVehicle`, `usePutMatchBankTransaction`.
+`useDeleteBankAccount` would invite a destructive confirmation in front of an unlink.
 
-**The exception: never let the prefix overwrite what the call actually does.** A few endpoints
-use a method that contradicts their domain meaning, and there the domain verb wins:
-
-| Endpoint | Hook | Why not `useDelete…` |
-| --- | --- | --- |
-| `DELETE /bank-transactions/{id}` | `useArchiveBankTransaction` | archives; the transaction stays queryable and is returned |
-| `DELETE /bank-accounts/{id}` | `useUnlinkBankAccount` | severs the connection; the account is not destroyed |
-| `DELETE /categorization-rules/suggestions/{id}` | `useRejectCategorizationRuleSuggestion` | records a decision on a suggestion |
-| `POST /tasks/{id}/upload/delete` | `useDeleteTaskUploads` | the method is POST but the operation is a delete |
-
-Getting this wrong is not cosmetic — a component calling `useDeleteBankAccount` would reasonably
-put a destructive confirmation in front of an unlink.
-
-When two hooks share one route and method, each names the field it writes —
-`usePatchBankTransactionMemo` and `usePatchBankTransactionCounterparty`.
-
-Hooks that are not endpoints keep descriptive names: `use…GlobalCacheActions`,
-`use…CacheActions`, `usePreload…`, and the invalidators.
+Non-endpoint hooks keep descriptive names: `use…GlobalCacheActions`, `usePreload…`, invalidators.
 
 ### Upsert hooks
 
-Create and update are separate endpoints, so they get separate files. The combined
-mode-switching hook lives in `upsert.ts` next to the create, and is the only thing call sites
-import:
+Create and update are separate endpoints, so they get separate files; the mode-switching hook in
+`upsert.ts` is what call sites import.
 
 ```
 mileage/vehicles/post.ts                usePostVehicle
@@ -85,9 +66,8 @@ mileage/vehicles/upsert.ts              useUpsertVehicle
 ```
 
 The shared tag key, response schema, and body types live in `post.ts`; `patch.ts` imports them.
-
-Build the combined hook with `createUpsertHook` (`@hooks/utils/swr/createUpsertHook`) rather than
-by hand — the whole file is the factory call:
+Build the combined hook with `createUpsertHook` (`@hooks/utils/swr/createUpsertHook`, JSDoc there)
+rather than by hand, so the whole file is one call:
 
 ```ts
 export const useUpsertVehicle = createUpsertHook({
@@ -98,37 +78,21 @@ export const useUpsertVehicle = createUpsertHook({
 })
 ```
 
-Each mapper declares the props its own mode accepts, and that is what callers must pass —
-`toUpdateOptions: (props: { vehicleId: string })` makes `vehicleId` required under
-`mode: Update` and absent under `mode: Create`. Declare params both modes need in both mappers
-(see the invoice payment hook, where `invoiceId` is shared). Return `undefined` for a mutation
-with no key params. There is one shared `UpsertMode` enum — resources do not declare their own.
-
-Keep the update's key params **required**. The mode is a decision the caller makes, not something
-inferred from whether an id happens to be populated: if a missing id silently meant "create", a
-form editing a not-yet-loaded record would POST a duplicate instead of failing to compile.
-
-Two things the factory guarantees that hand-rolling gets wrong:
-
-- **Both hooks are called on every render**, in a fixed order, so hook order survives a form
-  switching between create and update.
-- **The placeholder key.** In create mode the update hook still needs key params to build an SWR
-  key, so the factory substitutes an empty string. Nothing triggers it, so no request is made.
-  Call sites never write that fallback themselves.
-
-Typing is preserved: a literal `mode` narrows the result, so `trigger` takes exactly that
-mutation's body. Pass a `mode` that isn't statically known and `trigger` widens to accept either.
+Each mapper declares the props its own mode accepts; params both modes need go in both. There is
+one shared `UpsertMode` enum. **Keep the update's keys required** — the mode is the caller's
+decision, not something inferred from whether an id happens to be populated. If a missing id
+silently meant create, a form editing a not-yet-loaded record would POST a duplicate.
 
 ## What may not be imported here
 
-`src/hooks/api` is the transport layer. A lint rule blocks imports from `@components`, `@ui`,
-`@blocks`, `@views`, `@icons`, `@assets`, `@hooks/features`, and `@hooks/legacy` outright, and
-blocks runtime imports from `@providers` and `@contexts` (type-only is fine).
+`src/hooks/api` is the transport layer. A lint rule blocks `@components`, `@ui`, `@blocks`,
+`@views`, `@icons`, `@assets`, `@hooks/features` and `@hooks/legacy` outright, and blocks runtime
+imports from `@providers` and `@contexts` (type-only is fine).
 
-A hook that needs app state — store params, context callbacks — does not read it here. Export
-the parameterized hook from `@api` and wrap it in `@hooks/features/**`, which may import from
-`@api`. `@hooks/features/reports/useUnifiedReport.ts` is the reference. Shared contracts belong
-in `@schemas`, never in a component folder.
+A hook that needs app state — store params, context callbacks — does not read it here. Export the
+parameterized hook from `@api` and wrap it in `@hooks/features/**`, which may import from `@api`.
+`@hooks/features/reports/useUnifiedReport.ts` is the reference. Shared contracts belong in
+`@schemas`, never in a component folder.
 
 Other hook directories:
 
