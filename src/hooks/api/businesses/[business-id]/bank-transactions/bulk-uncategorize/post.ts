@@ -6,7 +6,7 @@ import {
   BulkUncategorizeRequestSchema,
 } from '@schemas/bankTransactions/bulkUncategorize'
 import { post } from '@utils/api/authenticatedHttp'
-import { useBulkBankTransactionsTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/useBankTransactionCacheActions'
+import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const BULK_UNCATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-uncategorize-bank-transactions'
@@ -23,5 +23,5 @@ export const usePostBulkUncategorize = createMutationHook({
   argToBody: (arg: BulkUncategorizeRequest) => Schema.encodeSync(BulkUncategorizeRequestSchema)(arg),
   select: ({ data }) => data,
   swrOptions: { throwOnError: true },
-  useOnTriggerSuccess: useBulkBankTransactionsTriggerSuccess,
+  useOnTriggerSuccess: useBankTransactionTriggerSuccess,
 })

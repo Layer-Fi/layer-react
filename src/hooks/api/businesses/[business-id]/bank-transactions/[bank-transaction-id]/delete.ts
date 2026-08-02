@@ -1,7 +1,7 @@
 import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { del } from '@utils/api/authenticatedHttp'
-import { useRecordTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/useBankTransactionCacheActions'
+import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const ARCHIVE_BANK_TRANSACTION_TAG = '#archive-bank-transaction'
@@ -27,5 +27,5 @@ export const useArchiveBankTransaction = createMutationHook({
   argToBody: (_arg: never) => undefined,
   schema: ArchiveBankTransactionResponseSchema,
   swrOptions: { throwOnError: true },
-  useOnTriggerSuccess: useRecordTransactionTriggerSuccess,
+  useOnTriggerSuccess: useBankTransactionTriggerSuccess,
 })

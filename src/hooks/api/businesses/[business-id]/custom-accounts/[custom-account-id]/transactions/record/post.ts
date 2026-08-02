@@ -4,7 +4,7 @@ import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction
 import { type RecordCustomTransaction, RecordCustomTransactionSchema } from '@schemas/customAccounts'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { postWithFormData } from '@utils/api/authenticatedHttp'
-import { useRecordTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/useBankTransactionCacheActions'
+import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@api/businesses/[business-id]/custom-accounts/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
@@ -53,5 +53,5 @@ export const usePostRecordCustomAccountTransaction = createMutationHook({
   argToBody: ({ transaction }: RecordCustomAccountTransactionArgs) => ({ transaction }),
   schema: RecordCustomAccountTransactionResponseSchema,
   swrOptions: { throwOnError: true },
-  useOnTriggerSuccess: useRecordTransactionTriggerSuccess,
+  useOnTriggerSuccess: useBankTransactionTriggerSuccess,
 })

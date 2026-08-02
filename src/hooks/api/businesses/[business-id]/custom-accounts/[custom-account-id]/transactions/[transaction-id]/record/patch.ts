@@ -1,5 +1,5 @@
 import { patchWithFormData } from '@utils/api/authenticatedHttp'
-import { useRecordTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/useBankTransactionCacheActions'
+import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
 import {
   buildTransactionFormData,
   RECORD_CUSTOM_ACCOUNT_TRANSACTION_TAG_KEY,
@@ -35,5 +35,5 @@ export const usePatchRecordCustomAccountTransaction = createMutationHook({
   argToBody: ({ transaction }: RecordCustomAccountTransactionArgs) => ({ transaction }),
   schema: RecordCustomAccountTransactionResponseSchema,
   swrOptions: { throwOnError: true },
-  useOnTriggerSuccess: useRecordTransactionTriggerSuccess,
+  useOnTriggerSuccess: useBankTransactionTriggerSuccess,
 })

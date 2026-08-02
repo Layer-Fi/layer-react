@@ -6,7 +6,7 @@ import {
   BulkMatchOrCategorizeRequestSchema,
 } from '@schemas/bankTransactions/bulkMatchOrCategorize'
 import { post } from '@utils/api/authenticatedHttp'
-import { useBulkBankTransactionsTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/useBankTransactionCacheActions'
+import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const BULK_MATCH_OR_CATEGORIZE_TAG = '#bulk-match-or-categorize'
@@ -33,5 +33,5 @@ export const usePostBulkMatchOrCategorize = createMutationHook({
   argToBody: (arg: BulkMatchOrCategorizeRequest) => Schema.encodeSync(BulkMatchOrCategorizeRequestSchema)(arg),
   select: ({ data }) => data,
   swrOptions: { throwOnError: true },
-  useOnTriggerSuccess: useBulkBankTransactionsTriggerSuccess,
+  useOnTriggerSuccess: useBankTransactionTriggerSuccess,
 })
