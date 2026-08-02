@@ -15,7 +15,7 @@ import { VStack } from '@ui/Stack/Stack'
 import type { MileageDeductionChartDataPoint } from '@features/mileage/MileageDeductionChart/MileageDeductionChartDataPoint'
 import {
   MileageDeductionChartTooltip,
-} from '@features/mileage/MileageDeductionChartTooltip/MileageDeductionChartTooltip'
+} from '@features/mileage/MileageDeductionChart/MileageDeductionChartTooltip'
 
 import './mileageDeductionChart.scss'
 

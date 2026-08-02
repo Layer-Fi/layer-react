@@ -6,7 +6,7 @@ import { type Trip } from '@schemas/trip'
 import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
 import type { TablePaginationProps } from '@blocks/PaginatedDataTable/PaginatedDataTable'
 import { TripsMobileHeader } from '@features/mileage/TripsMobileHeader/TripsMobileHeader'
-import { TripsMobileListItem, TripsMobileListItemFooter } from '@features/mileage/TripsMobileListItem/TripsMobileListItem'
+import { TripsMobileListItem, TripsMobileListItemFooter } from '@features/mileage/TripsMobileList/TripsMobileListItem'
 
 import './tripsMobileList.scss'
 

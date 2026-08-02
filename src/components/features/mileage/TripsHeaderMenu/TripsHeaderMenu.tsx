@@ -6,17 +6,17 @@ import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStorePr
 import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'
 import { DataTableHeaderMenu } from '@blocks/DataTable/DataTableHeaderMenu'
 
-enum TripsTableHeaderMenuActions {
+enum TripsHeaderMenuActions {
   ManageVehicles = 'ManageVehicles',
 }
 
-export const TripsTableHeaderMenu = () => {
+export const TripsHeaderMenu = () => {
   const { t } = useTranslation()
   const { toVehicles } = useTripsNavigation()
 
   const menuItems = useMemo<DropdownMenuItem[]>(() => [
     {
-      key: TripsTableHeaderMenuActions.ManageVehicles,
+      key: TripsHeaderMenuActions.ManageVehicles,
       onClick: toVehicles,
       slots: { Icon: Car },
       label: t('vehicles:action.manage_vehicles', 'Manage vehicles'),

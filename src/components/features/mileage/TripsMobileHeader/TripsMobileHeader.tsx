@@ -9,7 +9,7 @@ import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { DataTableHeader } from '@blocks/DataTable/DataTableHeader'
 import { TripPurposeToggle } from '@features/mileage/TripPurposeToggle/TripPurposeToggle'
-import { TripsTableHeaderMenu } from '@features/mileage/TripsTableHeaderMenu/TripsTableHeaderMenu'
+import { TripsHeaderMenu } from '@features/mileage/TripsHeaderMenu/TripsHeaderMenu'
 
 interface TripsMobileHeaderProps {
   onRecordTrip: () => void
@@ -32,7 +32,7 @@ export const TripsMobileHeader = ({ onRecordTrip }: TripsMobileHeaderProps) => {
         {t('trips:action.record_trip', 'Record Trip')}
         <Plus size={16} />
       </Button>
-      <TripsTableHeaderMenu />
+      <TripsHeaderMenu />
     </HStack>
   ), [t, onRecordTrip])
 

@@ -43,15 +43,19 @@ features/mileage/
   tripUtils.ts
 ```
 
-Four rules keep that navigable:
+Five rules keep that navigable:
 
 - **A component's path is its name.** `@features/mileage/TripDrawer/TripDrawer` — always
   `<domain>/<Name>/<Name>.tsx`, with no exceptions to look up. You can write the import before you
   have looked at the tree, and a wrong guess means the component doesn't exist.
-- **Every component gets its own directory, even a one-file one.** Uniformity is the point: a reader
-  never has to know whether `TripDrawer` is a file or a directory. A second *component* in a
-  directory is the signal to split it out, not to nest it; files that exist only to serve the one
-  component — its stylesheet, hook, `formUtils.ts`, test, story — stay with it.
+- **Every reusable component gets its own directory, even a one-file one.** Uniformity is the point:
+  a reader never has to know whether `TripDrawer` is a file or a directory. Its stylesheet, hook,
+  `formUtils.ts`, test, and story sit with it.
+- **A part that only its parent can ever render stays inside the parent's directory** — a list's
+  item, a chart's tooltip: `TripsMobileList/TripsMobileListItem.tsx`,
+  `MileageDeductionChart/MileageDeductionChartTooltip.tsx`. The test is whether another component
+  *could* render it, not how many render it today. The moment a second one does, it moves to the
+  domain root — a nested part is private, so nothing reaches into another component's directory.
 - **Don't add grouping directories.** No `subcomponents/`, no `camelCase` sub-areas. Name prefixes
   already group a domain: `Mileage*`, `Trip*`, `Vehicle*` sort together in any listing, and they do
   it without forcing a filing decision that a shared component can only get wrong.
