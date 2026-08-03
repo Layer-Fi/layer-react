@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { Alignment } from '@schemas/reports/unifiedReport'
+import { Alignment } from '@schemas/common/table'
 import { Cell, Column, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
 
 import { Col, Gallery, Section } from '@test-utils/storybook/gallery'

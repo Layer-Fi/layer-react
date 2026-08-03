@@ -3,7 +3,7 @@ import type { TFunction } from 'i18next'
 import type { LineItem } from '@schemas/common/lineItem'
 import type { ProfitAndLoss } from '@schemas/reports/profitAndLoss'
 import { type Scope, type SidebarScope } from '@hooks/features/profitAndLoss/useProfitAndLoss'
-import { type DetailedChartStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { type DetailedChartStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 
 export type PnlChartLineItem = LineItem & {
   type: string

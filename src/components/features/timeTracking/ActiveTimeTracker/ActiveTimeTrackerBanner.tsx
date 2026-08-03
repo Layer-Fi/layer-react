@@ -7,7 +7,7 @@ import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@components/Container/Container'
-import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
+import { CustomerSelector } from '@features/customerVendor/CustomerSelector/CustomerSelector'
 import { TimeEntryServiceSelector } from '@features/timeTracking/TimeEntryServiceSelector/TimeEntryServiceSelector'
 
 type ActiveTimeTrackerBannerProps = {

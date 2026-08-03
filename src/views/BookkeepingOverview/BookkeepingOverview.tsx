@@ -13,17 +13,17 @@ import { VStack } from '@ui/Stack/Stack'
 import { CallBooking, type CallBookingStringOverrides } from '@components/CallBooking/CallBooking'
 import { Container } from '@components/Container/Container'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
-import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
-import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
-import { ProfitAndLossHeader } from '@components/ProfitAndLossHeader/ProfitAndLossHeader'
-import { ProfitAndLossOverviewDetailedCharts } from '@components/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
+import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
+import { View } from '@components/View/View'
+import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
+import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossHeader } from '@features/profitAndLoss/ProfitAndLossHeader/ProfitAndLossHeader'
+import { ProfitAndLossLegend } from '@features/profitAndLoss/ProfitAndLossLegend/ProfitAndLossLegend'
+import { ProfitAndLossOverviewDetailedCharts } from '@features/profitAndLoss/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
 import {
   type ProfitAndLossSummariesSlotProps,
   type ProfitAndLossSummariesStringOverrides,
-} from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
-import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
-import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
-import { View } from '@components/View/View'
+} from '@features/profitAndLoss/ProfitAndLossSummaries/ProfitAndLossSummaries'
 import { useKeepInMobileViewport } from '@views/BookkeepingOverview/useKeepInMobileViewport'
 
 import './bookkeepingOverview.scss'
@@ -193,7 +193,7 @@ export const BookkeepingOverview = ({
             <ProfitAndLossHeader
               stringOverrides={{ title: stringOverrides?.profitAndLoss?.header }}
               withStatus
-              trailingContent={<PnlLegend direction='row' />}
+              trailingContent={<ProfitAndLossLegend direction='row' />}
               className='Layer__BookkeepingOverview__ProfitAndLossHeader'
             />
             <VStack pb='md' pi='md' fluid>

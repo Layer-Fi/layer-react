@@ -1,8 +1,8 @@
 import { pipe, Schema } from 'effect'
 
 import { ZonedDateTimeFromSelf } from '@schemas/common/zonedDateTimeFromSelf'
+import { PaymentMethodSchema, TransformedPaymentMethodSchema } from '@schemas/invoices/paymentMethod'
 import { NonRecursiveBigDecimalSchema } from '@schemas/nonRecursiveBigDecimal'
-import { PaymentMethodSchema, TransformedPaymentMethodSchema } from '@components/PaymentMethod/schemas'
 
 export const UpsertDedicatedInvoicePaymentSchema = Schema.Struct({
   amount: Schema.Number,

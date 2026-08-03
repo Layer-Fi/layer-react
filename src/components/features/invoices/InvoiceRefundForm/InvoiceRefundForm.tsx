@@ -1,0 +1,94 @@
+import { forwardRef, useCallback, useImperativeHandle } from 'react'
+import { AlertTriangle } from 'lucide-react'
+import type React from 'react'
+import { Trans, useTranslation } from 'react-i18next'
+
+import type { CustomerRefund } from '@schemas/invoices/customerRefund'
+import type { Invoice } from '@schemas/invoices/invoice'
+import { flattenValidationErrors } from '@utils/form'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
+import { Form } from '@ui/Form/Form'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
+import { useInvoiceRefundForm } from '@features/invoices/InvoiceRefundForm/useInvoiceRefundForm'
+import { PaymentMethodComboBox } from '@features/invoices/PaymentMethodComboBox/PaymentMethodComboBox'
+
+import './invoiceRefundForm.scss'
+
+const INVOICE_REFUND_FORM_CSS_PREFIX = 'Layer__InvoiceRefundForm'
+const INVOICE_REFUND_FORM_FIELD_CSS_PREFIX = `${INVOICE_REFUND_FORM_CSS_PREFIX}__Field`
+
+export type InvoiceRefundFormProps = {
+  onSuccess: (refund: CustomerRefund) => void
+  invoice: Invoice
+}
+
+export const InvoiceRefundForm = forwardRef(({ onSuccess, invoice }: InvoiceRefundFormProps, ref) => {
+  const { t } = useTranslation()
+  const { form, submitError } = useInvoiceRefundForm({ onSuccess, invoice })
+
+  // Prevents default browser form submission behavior since we're handling submission externally
+  // via a custom handler (e.g., onClick). This ensures accidental native submits (like pressing
+  // Enter or using a <button type="submit">) don’t trigger unexpected behavior.
+  const blockNativeOnSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }, [])
+
+  useImperativeHandle(ref, () => ({
+    submit: () => form.handleSubmit(),
+  }))
+
+  return (
+    <Form className={INVOICE_REFUND_FORM_CSS_PREFIX} onSubmit={blockNativeOnSubmit}>
+      <form.Subscribe selector={state => state.errorMap}>
+        {(errorMap) => {
+          const validationErrors = flattenValidationErrors(errorMap)
+          if (validationErrors.length > 0 || submitError) {
+            return (
+              <HStack className={`${INVOICE_REFUND_FORM_CSS_PREFIX}__FormError`}>
+                <DataState
+                  icon={<AlertTriangle size={16} />}
+                  status={DataStateStatus.failed}
+                  title={validationErrors[0] || submitError}
+                  slotProps={{ Title: { size: 'md' } }}
+                  inline
+                />
+              </HStack>
+            )
+          }
+        }}
+      </form.Subscribe>
+      <VStack className={`${INVOICE_REFUND_FORM_CSS_PREFIX}__Section`} gap='sm'>
+        <HStack className={`${INVOICE_REFUND_FORM_FIELD_CSS_PREFIX}__InvoiceNo`} gap='xs' align='center'>
+          <Trans
+            i18nKey='invoices:label.invoice_number_component'
+            defaults='<label>Invoice</label> <value>#{{invoiceNumber}}</value>'
+            values={{ invoiceNumber: invoice.invoiceNumber }}
+            components={{
+              label: <Span size='sm' />,
+              value: <Span size='md' weight='bold' ellipsis />,
+            }}
+          />
+        </HStack>
+        <form.AppField name='completedAt'>
+          {field => <field.FormDateField label={t('invoices:label.refund_date', 'Refund date')} inline className={`${INVOICE_REFUND_FORM_FIELD_CSS_PREFIX}__CompletedAt`} />}
+        </form.AppField>
+        <form.Field name='method'>
+          {field => (
+            <PaymentMethodComboBox
+              className={`${INVOICE_REFUND_FORM_FIELD_CSS_PREFIX}__PaymentMethod`}
+              value={field.state.value}
+              onValueChange={field.handleChange}
+              inline
+            />
+          )}
+        </form.Field>
+        <form.AppField name='amount'>
+          {field => <field.FormNonRecursiveBigDecimalField label={t('common:label.amount', 'Amount')} inline className={`${INVOICE_REFUND_FORM_FIELD_CSS_PREFIX}__Amount`} mode='currency' isReadOnly />}
+        </form.AppField>
+      </VStack>
+    </Form>
+  )
+})
+InvoiceRefundForm.displayName = 'InvoiceRefundForm'

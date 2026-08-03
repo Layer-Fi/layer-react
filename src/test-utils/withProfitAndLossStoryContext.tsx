@@ -1,7 +1,7 @@
 import { type Decorator } from '@storybook/react-vite'
 
 import { type DateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
-import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
+import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 
 import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
 import { handlers } from '@msw/handlers'

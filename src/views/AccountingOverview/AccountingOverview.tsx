@@ -9,17 +9,17 @@ import { HeaderCol } from '@ui/Header/HeaderCol'
 import { HeaderRow } from '@ui/Header/HeaderRow'
 import { Container } from '@components/Container/Container'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
-import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
-import { type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
-import { ProfitAndLossHeader } from '@components/ProfitAndLossHeader/ProfitAndLossHeader'
-import { ProfitAndLossOverviewDetailedCharts } from '@components/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
+import { View } from '@components/View/View'
+import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
+import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossHeader } from '@features/profitAndLoss/ProfitAndLossHeader/ProfitAndLossHeader'
+import { ProfitAndLossLegend } from '@features/profitAndLoss/ProfitAndLossLegend/ProfitAndLossLegend'
+import { ProfitAndLossOverviewDetailedCharts } from '@features/profitAndLoss/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
 import {
   ProfitAndLossSummaries,
   type ProfitAndLossSummariesSlotProps,
   type ProfitAndLossSummariesStringOverrides,
-} from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
-import { PnlLegend } from '@components/ProfitAndLossSummaryCard/PnlLegend'
-import { View } from '@components/View/View'
+} from '@features/profitAndLoss/ProfitAndLossSummaries/ProfitAndLossSummaries'
 
 import './accountingOverview.scss'
 
@@ -107,7 +107,7 @@ export const AccountingOverview = ({
           <ProfitAndLossHeader
             stringOverrides={{ title: stringOverrides?.header }}
             className='Layer__AccountingOverview__ProfitAndLossHeader'
-            trailingContent={<PnlLegend direction='row' />}
+            trailingContent={<ProfitAndLossLegend direction='row' />}
           />
           <ProfitAndLoss.Chart
             tagFilter={profitAndLossTagFilter}

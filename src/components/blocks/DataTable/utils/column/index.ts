@@ -1,6 +1,6 @@
 import { type ColumnDef, createColumnHelper, type Row } from '@tanstack/react-table'
 
-import { type Alignment } from '@schemas/reports/unifiedReport'
+import { type Alignment } from '@schemas/common/table'
 import { type ColumnPinningSide } from '@blocks/DataTable/utils/column/pinning'
 
 export type BaseColumn = {

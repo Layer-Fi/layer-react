@@ -11,7 +11,7 @@ import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
+import { CustomerSelector } from '@features/customerVendor/CustomerSelector/CustomerSelector'
 import { TimeEntryServiceSelector } from '@features/timeTracking/TimeEntryServiceSelector/TimeEntryServiceSelector'
 
 type ActiveTimeTrackerStartDrawerProps = {
