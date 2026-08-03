@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import type { LineItem } from '@schemas/common/lineItem'
 import { useEffectOnMount } from '@hooks/utils/react/useEffectOnMount'
 import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
-import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { ProfitAndLossContext } from '@providers/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { type BreadcrumbItem } from '@features/profitAndLoss/ProfitAndLossDetailReportBreadcrumb/ProfitAndLossDetailReportBreadcrumb'
 import {

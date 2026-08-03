@@ -1,7 +1,7 @@
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { useInvoiceDetail } from '@providers/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
 import { EMPTY_LINE_ITEM } from '@features/invoices/InvoiceForm/formUtils'

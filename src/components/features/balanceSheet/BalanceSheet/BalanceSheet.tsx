@@ -6,7 +6,7 @@ import { useGetBalanceSheet } from '@api/businesses/[business-id]/reports/balanc
 import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { useResolvedReportView } from '@hooks/features/reports/useResolvedReportView'
 import { type DateSelectionMode, useGlobalDate } from '@providers/global/DateStoreProvider/GlobalDateStoreProvider'
-import { TableProvider } from '@contexts/TableContext/TableContext'
+import { TableProvider } from '@providers/reports/TableContext/TableContext'
 import { HStack, Stack } from '@ui/Stack/Stack'
 import { CombinedDateSelection } from '@blocks/DatePickers/DateSelection/CombinedDateSelection'
 import { Header } from '@blocks/Layout/Header/Header'

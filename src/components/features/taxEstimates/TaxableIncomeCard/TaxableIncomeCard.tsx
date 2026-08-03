@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useGetTaxOverview } from '@api/businesses/[business-id]/tax-estimates/overview/get'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
-import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { useFullYearProjection, useTaxEstimatesYear } from '@providers/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Card } from '@ui/Card/Card'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'

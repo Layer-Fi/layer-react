@@ -13,12 +13,12 @@ import { errorHandler, type LayerError } from '@utils/api/errorHandler'
 import { buildColorsPalette } from '@utils/colors'
 import { useGetAccountingConfiguration } from '@api/businesses/[business-id]/accounting-config/get'
 import { useGetBusiness } from '@api/businesses/[business-id]/get'
+import { BookkeepingStatusProvider } from '@providers/bookkeeping/BookkeepingStatusContext/BookkeepingStatusContext'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/global/DateStoreProvider/GlobalDateStoreProvider'
 import { LayerContext } from '@providers/global/LayerContext/LayerContext'
 import { type LayerEvent } from '@providers/global/LayerProvider/layerEvents'
 import { type LayerProviderProps } from '@providers/global/LayerProvider/LayerProvider'
 import { BankAccountsProvider } from '@providers/linkedAccounts/BankAccountsContext/BankAccountsContext'
-import { BookkeepingStatusProvider } from '@contexts/BookkeepingStatusContext/BookkeepingStatusContext'
 import { ToastsContainer } from '@blocks/ToastsContainer/ToastsContainer'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (

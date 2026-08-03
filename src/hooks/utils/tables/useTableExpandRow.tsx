@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react'
 
-import { TableContext } from '@contexts/TableContext/TableContext'
+import { TableContext } from '@providers/reports/TableContext/TableContext'
 
 export const useTableExpandRow = () => {
   const {

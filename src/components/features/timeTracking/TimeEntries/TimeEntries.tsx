@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type ListTimeEntriesFilterParams, useGetListTimeEntries } from '@api/businesses/[business-id]/time-tracking/time-entries/get'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
-import { TimeEntriesStoreProvider, useTimeEntriesDeleteModal, useTimeEntriesFilters } from '@providers/TimeEntriesStore/TimeEntriesStoreProvider'
+import { TimeEntriesStoreProvider, useTimeEntriesDeleteModal, useTimeEntriesFilters } from '@providers/timeTracking/TimeEntriesStore/TimeEntriesStoreProvider'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { TimeEntriesTable } from '@features/timeTracking/TimeEntriesTable/TimeEntriesTable'
 import { TimeEntryDeleteConfirmationModal } from '@features/timeTracking/TimeEntryDeleteConfirmationModal/TimeEntryDeleteConfirmationModal'

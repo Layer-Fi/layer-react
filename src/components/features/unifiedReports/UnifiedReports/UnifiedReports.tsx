@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import type { DateSelectionMode } from '@providers/global/DateStoreProvider/GlobalDateStoreProvider'
-import { UnifiedReportStoreProvider } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import { UnifiedReportStoreProvider } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { ExpandableDataTableProvider } from '@blocks/ExpandableDataTable/ExpandableDataTableProvider'
 import { View } from '@blocks/Layout/View/View'

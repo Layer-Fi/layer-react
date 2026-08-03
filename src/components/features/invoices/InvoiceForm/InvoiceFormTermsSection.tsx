@@ -3,7 +3,7 @@ import { fromDate, toCalendarDate, type ZonedDateTime } from '@internationalized
 import { useTranslation } from 'react-i18next'
 
 import { InvoiceTermsValues } from '@schemas/invoices/invoiceTerms'
-import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { useInvoiceDetail } from '@providers/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'

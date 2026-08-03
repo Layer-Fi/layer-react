@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type TripPurposeFilterValue } from '@schemas/trip'
 import { useDebouncedSearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
-import { useTripsTableFilters } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
+import { useTripsTableFilters } from '@providers/mileage/TripsRouteStore/TripsRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { DataTableHeader } from '@blocks/DataTable/DataTableHeader'

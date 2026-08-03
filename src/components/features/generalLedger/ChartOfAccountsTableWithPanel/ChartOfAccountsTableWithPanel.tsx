@@ -1,7 +1,7 @@
 import { type RefObject } from 'react'
 
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
-import { useBookkeepingStatusContext } from '@contexts/BookkeepingStatusContext/BookkeepingStatusContext'
+import { useBookkeepingStatusContext } from '@providers/bookkeeping/BookkeepingStatusContext/BookkeepingStatusContext'
 import { ExpandableDataTableProvider } from '@blocks/ExpandableDataTable/ExpandableDataTableProvider'
 import { Panel } from '@blocks/Layout/View/Panel/Panel'
 import { ChartOfAccountsForm, type ChartOfAccountsFormStringOverrides } from '@features/generalLedger/ChartOfAccountsForm/ChartOfAccountsForm'

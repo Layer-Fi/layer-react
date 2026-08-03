@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { negateNonRecursiveBigDecimal, type NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
-import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { useInvoiceDetail } from '@providers/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { InvoiceFormTotalRow } from '@features/invoices/InvoiceForm/InvoiceFormTotalRow'
 import type { InvoiceFormType } from '@features/invoices/InvoiceForm/useInvoiceForm'

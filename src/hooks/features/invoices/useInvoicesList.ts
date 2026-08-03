@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import { useGetListInvoices } from '@api/businesses/[business-id]/invoices/get'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
-import { useInvoiceTableFilters } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { useInvoiceTableFilters } from '@providers/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { getListInvoiceParamsFromFilters } from '@features/invoices/utils'
 
 const PAGE_SIZE = 10

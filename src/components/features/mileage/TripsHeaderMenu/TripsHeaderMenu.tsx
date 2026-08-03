@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Car } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useTripsNavigation } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
+import { useTripsNavigation } from '@providers/mileage/TripsRouteStore/TripsRouteStoreProvider'
 import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'
 import { DataTableHeaderMenu } from '@blocks/DataTable/DataTableHeaderMenu'
 

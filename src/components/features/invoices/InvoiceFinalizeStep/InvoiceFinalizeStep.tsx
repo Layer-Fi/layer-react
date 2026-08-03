@@ -7,7 +7,7 @@ import { useGetInvoicePaymentMethods } from '@api/businesses/[business-id]/invoi
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import {
   useInvoicePreviewRoute,
-} from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+} from '@providers/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'
 import { HStack, VStack } from '@ui/Stack/Stack'

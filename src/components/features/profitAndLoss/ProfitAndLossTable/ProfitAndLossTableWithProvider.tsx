@@ -1,4 +1,4 @@
-import { TableProvider } from '@contexts/TableContext/TableContext'
+import { TableProvider } from '@providers/reports/TableContext/TableContext'
 import {
   ProfitAndLossTableComponent,
   type ProfitAndLossTableProps,

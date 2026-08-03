@@ -5,7 +5,7 @@ import { useUnifiedReportExcel } from '@hooks/features/reports/useUnifiedReport'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { LayerEventComponent, LayerEventType } from '@providers/global/LayerProvider/layerEvents'
-import { useActiveUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import { useActiveUnifiedReport } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Button } from '@ui/Button/Button'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 

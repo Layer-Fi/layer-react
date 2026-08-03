@@ -9,7 +9,7 @@ import type { PnlDetailLine } from '@api/businesses/[business-id]/reports/profit
 import { useGetProfitAndLossDetailLines } from '@api/businesses/[business-id]/reports/profit-and-loss/lines/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useInAppLinkContext } from '@providers/global/InAppLink/InAppLinkContext'
-import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { ProfitAndLossContext } from '@providers/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 import { Badge } from '@ui/Badge/Badge'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'

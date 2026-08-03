@@ -3,7 +3,7 @@ import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { type QueryParams } from '@utils/request/toDefinedSearchParameters'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
-import type { UnifiedReportControlParams } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import type { UnifiedReportControlParams } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 
 type GetUnifiedReportParams = {
   businessId: string

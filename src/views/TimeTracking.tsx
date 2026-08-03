@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useGetActiveTimeTracker } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'
 import { useGlobalDateRange } from '@providers/global/DateStoreProvider/GlobalDateStoreProvider'
-import { TimeTrackingServicesDrawerProvider, useTimeTrackingServicesDrawer } from '@providers/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
+import { TimeTrackingServicesDrawerProvider, useTimeTrackingServicesDrawer } from '@providers/timeTracking/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
 import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'
 import { DataTableHeaderMenu } from '@blocks/DataTable/DataTableHeaderMenu'
 import { View } from '@blocks/Layout/View/View'

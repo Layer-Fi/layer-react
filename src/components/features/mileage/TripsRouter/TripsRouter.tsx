@@ -1,4 +1,4 @@
-import { TripsRoute, TripsRouteStoreProvider, useTripsRouteState } from '@providers/TripsRouteStore/TripsRouteStoreProvider'
+import { TripsRoute, TripsRouteStoreProvider, useTripsRouteState } from '@providers/mileage/TripsRouteStore/TripsRouteStoreProvider'
 import { TripsView } from '@features/mileage/TripsView/TripsView'
 import { VehiclesView } from '@features/mileage/VehiclesView/VehiclesView'
 
