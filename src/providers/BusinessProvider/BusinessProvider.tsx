@@ -8,6 +8,7 @@ import {
   type LayerContextValues,
   type LayerThemeConfig,
 } from '@internal-types/layerContext'
+import { type ToastProps } from '@internal-types/toast'
 import { errorHandler, type LayerError } from '@utils/api/errorHandler'
 import { buildColorsPalette } from '@utils/colors'
 import { useGetAccountingConfiguration } from '@api/businesses/[business-id]/accounting-config/get'
@@ -18,7 +19,7 @@ import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
 import { BankAccountsProvider } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { BookkeepingStatusProvider } from '@contexts/BookkeepingStatusContext/BookkeepingStatusContext'
 import { LayerContext } from '@contexts/LayerContext/LayerContext'
-import { type ToastProps, ToastsContainer } from '@ui/Toast/Toast'
+import { ToastsContainer } from '@blocks/ToastsContainer/ToastsContainer'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,

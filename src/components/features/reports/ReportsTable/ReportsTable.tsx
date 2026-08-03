@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type LineItem } from '@internal-types/lineItem'
-import { Alignment } from '@schemas/common/table'
+import { Alignment } from '@internal-types/utility/table'
 import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
 import { Button } from '@ui/Button/Button'
 import { ExpandButton } from '@ui/ExpandButton/ExpandButton'

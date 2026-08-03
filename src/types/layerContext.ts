@@ -1,9 +1,9 @@
 import { type DateRange } from '@internal-types/general'
+import { type ToastProps } from '@internal-types/toast'
 import { type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
 import { type Business } from '@schemas/business'
 import { type LayerError } from '@utils/api/errorHandler'
 import type { EventCallbacks } from '@providers/LayerProvider/LayerProvider'
-import { type ToastProps } from '@ui/Toast/Toast'
 
 export type LayerContextValues = {
   businessId: string

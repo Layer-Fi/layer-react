@@ -1,13 +1,13 @@
 import { useCallback } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
+import { type TablePaginationProps } from '@internal-types/utility/pagination'
 import { type BankTransactionFilters } from '@utils/bankTransactions/shared'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { PaginationChangeSource } from '@hooks/utils/pagination/types'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
-import { type TablePaginationProps } from '@blocks/PaginatedDataTable/PaginatedDataTable'
 
 type UseBankTransactionsPaginationParams = {
   data?: BankTransaction[]

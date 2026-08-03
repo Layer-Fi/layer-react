@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 
+import { type TablePaginationProps } from '@internal-types/utility/pagination'
 import type { PaginationChangeSource } from '@hooks/utils/pagination/types'
 import { useAutoResetPageIndex } from '@hooks/utils/pagination/useAutoResetPageIndex'
-import { type TablePaginationProps } from '@blocks/PaginatedDataTable/PaginatedDataTable'
 
 type UseTablePaginationPropsOptions = {
   // Compared by identity, so this must be memoized by the caller.

@@ -1,4 +1,4 @@
-import { type MutableRefObject, useCallback, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import {
   getCoreRowModel,
   getExpandedRowModel,
@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 
+import { type TablePaginationProps } from '@internal-types/utility/pagination'
 import { PaginationChangeSource } from '@hooks/utils/pagination/types'
 import { Pagination } from '@ui/Pagination/Pagination'
 import { VStack } from '@ui/Stack/Stack'
@@ -18,15 +19,6 @@ import { type DataTableSelectionProps, getColumnDefsWithSelection, getRowSelecti
 import { usePaginatedTableState } from '@blocks/PaginatedDataTable/usePaginatedTableState'
 
 import './paginatedDataTable.scss'
-
-export interface TablePaginationProps {
-  pageIndex?: number
-  onPageIndexChange?: (pageIndex: number, source: PaginationChangeSource) => void
-  pageSize?: number
-  hasMore?: boolean
-  fetchMore?: () => void
-  autoResetPageIndexRef?: MutableRefObject<boolean>
-}
 
 interface PaginatedTableProps<TData> extends BaseDataTableProps {
   data: TData[] | undefined

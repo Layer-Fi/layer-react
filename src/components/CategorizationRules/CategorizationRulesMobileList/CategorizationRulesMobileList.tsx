@@ -2,10 +2,10 @@ import { useCallback, useMemo } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import type { TablePaginationProps } from '@internal-types/utility/pagination'
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import type { NestedCategorization } from '@schemas/categorization'
 import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
-import type { TablePaginationProps } from '@blocks/PaginatedDataTable/PaginatedDataTable'
 import { CategorizationRuleMobileListItem, CategorizationRuleMobileListItemFooter } from '@components/CategorizationRules/CategorizationRulesMobileList/CategorizationRuleMobileListItem'
 
 import './categorizationRulesMobileList.scss'

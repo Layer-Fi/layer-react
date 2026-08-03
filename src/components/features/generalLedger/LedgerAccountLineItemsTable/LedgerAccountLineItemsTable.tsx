@@ -4,7 +4,8 @@ import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { LedgerAccountNodeType } from '@internal-types/chartOfAccounts'
-import { Alignment } from '@schemas/common/table'
+import { type TablePaginationProps } from '@internal-types/utility/pagination'
+import { Alignment } from '@internal-types/utility/table'
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
 import { type LedgerAccountLineItem } from '@schemas/generalLedger/ledgerEntry'
 import { decodeLedgerEntrySource } from '@schemas/generalLedger/ledgerEntrySource'
@@ -15,7 +16,7 @@ import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import type { ColumnConfig } from '@blocks/DataTable/utils/column'
-import { PaginatedTable, type TablePaginationProps } from '@blocks/PaginatedDataTable/PaginatedDataTable'
+import { PaginatedTable } from '@blocks/PaginatedDataTable/PaginatedDataTable'
 
 import './ledgerAccountLineItemsTable.scss'
 
