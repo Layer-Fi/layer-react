@@ -1,7 +1,7 @@
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
-import { type DetailData } from '@components/DetailedCharts/types'
-import type { DetailedTableRow } from '@components/DetailedTable/useDetailedTableRows'
-import { useDetailedTableRows } from '@components/DetailedTable/useDetailedTableRows'
+import { type DetailData } from '@ui/Chart/seriesTypes'
+import type { DetailedTableRow } from '@blocks/DetailedTable/useDetailedTableRows'
+import { useDetailedTableRows } from '@blocks/DetailedTable/useDetailedTableRows'
 
 import { UNCATEGORIZED_TYPES } from './utils'
 

@@ -1,8 +1,7 @@
 import { useMemo } from 'react'
 
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { type DetailData } from '@components/DetailedCharts/types'
-import { type SeriesData } from '@components/DetailedCharts/types'
+import { type DetailData, type SeriesData } from '@ui/Chart/seriesTypes'
 
 export type DetailedTableRow<T extends SeriesData> = {
   key: string

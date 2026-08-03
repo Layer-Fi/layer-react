@@ -1,14 +1,14 @@
 import { type ReactNode, useMemo } from 'react'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
-import { Legend, LegendLayout } from '@ui/Legend/Legend'
-import { VStack } from '@ui/Stack/Stack'
 import {
   type ColorSelector,
   DEFAULT_TYPE_COLOR_MAPPING,
   type DetailData,
   type SeriesData,
-} from '@components/DetailedCharts/types'
+} from '@ui/Chart/seriesTypes'
+import { Legend, LegendLayout } from '@ui/Legend/Legend'
+import { VStack } from '@ui/Stack/Stack'
 
 import './horizontalBarChart.scss'
 

@@ -1,5 +1,5 @@
-import { type SeriesData } from '@components/DetailedCharts/types'
-import { type DetailedTableProps } from '@components/DetailedTable/DetailedTable'
+import { type SeriesData } from '@ui/Chart/seriesTypes'
+import { type DetailedTableProps } from '@blocks/DetailedTable/DetailedTable'
 
 export const NO_OP_INTERACTION_PROPS = {
   hoveredItem: undefined,

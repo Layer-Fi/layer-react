@@ -1,4 +1,5 @@
-import { type ColorSelector, type FallbackFillSelector, type SeriesData, type TypeColorMapping } from '@components/DetailedCharts/types'
+import { type ColorSelector, type SeriesData, type TypeColorMapping } from '@ui/Chart/seriesTypes'
+import { type FallbackFillSelector } from '@blocks/DetailedChart/types'
 
 import './valueIcon.scss'
 

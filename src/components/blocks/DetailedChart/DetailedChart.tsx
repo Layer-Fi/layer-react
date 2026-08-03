@@ -13,8 +13,9 @@ import {
 import type { CartesianViewBox } from 'recharts/types/util/types'
 
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { type ColorSelector, type DetailData, type SeriesData } from '@ui/Chart/seriesTypes'
 import { VStack } from '@ui/Stack/Stack'
-import { type ColorSelector, type DetailData, type FallbackFillSelector, type SeriesData } from '@components/DetailedCharts/types'
+import { type FallbackFillSelector } from '@blocks/DetailedChart/types'
 
 import './detailedChart.scss'
 

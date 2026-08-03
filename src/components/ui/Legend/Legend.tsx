@@ -1,12 +1,12 @@
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { HStack, Stack, VStack } from '@ui/Stack/Stack'
-import { Swatch } from '@ui/Swatch/Swatch'
-import { Span } from '@ui/Typography/Text'
 import {
   type ColorSelector,
   DEFAULT_TYPE_COLOR_MAPPING,
   type SeriesData,
-} from '@components/DetailedCharts/types'
+} from '@ui/Chart/seriesTypes'
+import { HStack, Stack, VStack } from '@ui/Stack/Stack'
+import { Swatch } from '@ui/Swatch/Swatch'
+import { Span } from '@ui/Typography/Text'
 
 import './legend.scss'
 
