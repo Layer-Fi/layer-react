@@ -10,7 +10,7 @@ export function ToastsContainer() {
     <div className='Layer__toasts-container'>
       {toasts.map((toast, idx) => (
         <Toast
-          key={`layer-toast-${idx}`}
+          key={toast.id ?? `layer-toast-${idx}`}
           {...toast}
           onDismiss={() => removeToast(toast)}
         />

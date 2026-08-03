@@ -43,7 +43,7 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
         ...state,
         toasts: state.toasts.map(toast =>
           toast.id === action.payload.toast.id
-            ? { ...toast, isExiting: false }
+            ? { ...toast, isExiting: true }
             : toast,
         ),
       }
@@ -182,9 +182,9 @@ export const BusinessProvider = ({
     setToast(newToast)
 
     setTimeout(() => {
-      removeToast(newToast)
+      setToastExit(newToast)
       setTimeout(() => {
-        setToastExit(newToast)
+        removeToast(newToast)
       }, 1000)
     }, toast.duration || 3000)
   }
