@@ -32,7 +32,7 @@ const toOption = (dv: TagValueDefinition, t: TFunction): TagValueDefinitionAsOpt
   }
 }
 
-type TagDimensionComboboxProps = {
+type TagDimensionComboBoxProps = {
   dimensionKey: string
   value: Tag | null
   onValueChange: (tags: Tag | null) => void
@@ -42,7 +42,7 @@ type TagDimensionComboboxProps = {
   isClearable?: boolean
 }
 
-export const TagDimensionCombobox = ({
+export const TagDimensionComboBox = ({
   dimensionKey,
   value,
   onValueChange,
@@ -50,7 +50,7 @@ export const TagDimensionCombobox = ({
   showLabel,
   className,
   isClearable = true,
-}: TagDimensionComboboxProps) => {
+}: TagDimensionComboBoxProps) => {
   const { t } = useTranslation()
   const { data: tagDimension, isLoading } = useGetTagDimensionByKey({ dimensionKey })
 

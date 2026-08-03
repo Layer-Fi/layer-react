@@ -1,7 +1,7 @@
 import { type Tag } from '@schemas/tag'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { HStack } from '@ui/Stack/Stack'
-import { TagDimensionCombobox } from '@features/tags/TagDimensionsGroup/TagDimensionCombobox'
+import { TagDimensionComboBox } from '@features/tags/TagDimensionComboBox/TagDimensionComboBox'
 
 import './tagDimensionsGroup.scss'
 
@@ -49,7 +49,7 @@ export const TagDimensionsGroup = ({
   return (
     <HStack gap='xs' className={className}>
       {(accountingConfiguration?.platformDisplayTags ?? []).map(dimension => (
-        <TagDimensionCombobox
+        <TagDimensionComboBox
           key={dimension.key}
           dimensionKey={dimension.key}
           isReadOnly={isReadOnly}
