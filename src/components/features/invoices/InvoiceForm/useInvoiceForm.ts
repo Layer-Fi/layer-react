@@ -1,0 +1,124 @@
+import { useCallback, useMemo, useState } from 'react'
+import { revalidateLogic, useStore } from '@tanstack/react-form'
+import { Schema } from 'effect'
+import { useTranslation } from 'react-i18next'
+
+import { type Invoice, type InvoiceForm, UpsertInvoiceSchema } from '@schemas/invoices/invoice'
+import { useUpsertInvoice } from '@api/businesses/[business-id]/invoices/upsert'
+import { useAppForm } from '@hooks/features/forms/useForm'
+import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
+import { convertInvoiceFormToParams, getInvoiceFormDefaultValues, validateInvoiceForm } from '@features/invoices/InvoiceForm/formUtils'
+import {
+  computeAdditionalDiscount,
+  computeGrandTotal,
+  computeRawTaxableSubtotal,
+  computeSubtotal,
+  computeTaxableSubtotal,
+  computeTaxes,
+} from '@features/invoices/InvoiceForm/totalsUtils'
+
+type onSuccessFn = (invoice: Invoice) => void
+type UseInvoiceFormProps =
+  | { onSuccess: onSuccessFn, mode: UpsertMode.Create }
+  | { onSuccess: onSuccessFn, mode: UpsertMode.Update, invoice: Invoice }
+
+function isUpdateMode(props: UseInvoiceFormProps): props is { onSuccess: onSuccessFn, mode: UpsertMode.Update, invoice: Invoice } {
+  return props.mode === UpsertMode.Update
+}
+
+export type InvoiceFormType = ReturnType<typeof useAppForm<InvoiceForm>>
+
+export const useInvoiceForm = (props: UseInvoiceFormProps) => {
+  const { t } = useTranslation()
+  const { onSuccess, mode } = props
+  const [submitError, setSubmitError] = useState<string | undefined>(undefined)
+
+  const upsertInvoiceProps = mode === UpsertMode.Update ? { mode, invoiceId: props.invoice.id } : { mode }
+  const { trigger: upsertInvoice } = useUpsertInvoice(upsertInvoiceProps)
+
+  const invoice = isUpdateMode(props) ? props.invoice : null
+  const defaultValues = useMemo(() => getInvoiceFormDefaultValues(invoice), [invoice])
+
+  const onSubmit = useCallback(
+    async (
+      { value, formApi }: { value: InvoiceForm, formApi: { reset: () => void } },
+    ) => {
+      try {
+        // Convert the `InvoiceForm` schema to the request shape for `upsertInvoice`. This will
+        // throw an error if the request shape is not valid.
+        const upsertInvoiceParams = convertInvoiceFormToParams(value)
+        const upsertInvoiceRequest = Schema.encodeUnknownSync(UpsertInvoiceSchema)(upsertInvoiceParams)
+
+        const upsertedInvoice = await upsertInvoice(upsertInvoiceRequest)
+
+        setSubmitError(undefined)
+        onSuccess(upsertedInvoice)
+
+        formApi.reset()
+      }
+      catch (e) {
+        console.error(e)
+        setSubmitError(t('common:error.something_went_wrong_please_try_again', 'Something went wrong. Please try again.'))
+      }
+    }, [onSuccess, upsertInvoice, t])
+
+  const validators = useMemo(() => ({
+    onDynamic: (arg: { value: InvoiceForm }) => validateInvoiceForm(arg, t),
+  }), [t])
+
+  const form = useAppForm<InvoiceForm>({
+    defaultValues,
+    onSubmit,
+    validators,
+    validationLogic: revalidateLogic({
+      mode: 'submit',
+      modeAfterSubmission: 'submit',
+    }),
+    canSubmitWhenInvalid: true,
+  })
+
+  const isDirty = useStore(form.store, state => state.isDirty)
+  const isSubmitting = useStore(form.store, state => state.isSubmitting)
+
+  const formState = useMemo(() => ({
+    isDirty,
+    isSubmitting,
+  }), [isDirty, isSubmitting])
+
+  const discountRate = useStore(form.store, state => state.values.discountRate)
+  const taxRate = useStore(form.store, state => state.values.taxRate)
+
+  const { subtotal, rawTaxableSubtotal } = useStore(form.store, (state) => {
+    const lineItems = state.values.lineItems
+    return {
+      subtotal: computeSubtotal(lineItems),
+      rawTaxableSubtotal: computeRawTaxableSubtotal(lineItems),
+    }
+  })
+
+  const additionalDiscount = useMemo(() =>
+    computeAdditionalDiscount({ subtotal, discountRate }),
+  [subtotal, discountRate],
+  )
+
+  const taxableSubtotal = useMemo(() =>
+    computeTaxableSubtotal({ rawTaxableSubtotal, discountRate }),
+  [rawTaxableSubtotal, discountRate],
+  )
+
+  const taxes = useMemo(() =>
+    computeTaxes({ taxableSubtotal, taxRate }),
+  [taxableSubtotal, taxRate],
+  )
+
+  const grandTotal = useMemo(() =>
+    computeGrandTotal({ subtotal, additionalDiscount, taxes }),
+  [subtotal, additionalDiscount, taxes],
+  )
+
+  const totals = useMemo(() => ({
+    subtotal, additionalDiscount, taxableSubtotal, taxes, grandTotal,
+  }), [additionalDiscount, grandTotal, subtotal, taxableSubtotal, taxes])
+
+  return useMemo(() => ({ form, formState, totals, submitError }), [form, formState, totals, submitError])
+}

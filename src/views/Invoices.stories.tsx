@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { Invoices } from '@components/Invoices/Invoices'
+import { Invoices } from '@features/invoices/Invoices/Invoices'
 
 import { get as getAccountingConfiguration } from '@msw/api/businesses/[business-id]/accounting-config/get'
 import { handlers } from '@msw/handlers'

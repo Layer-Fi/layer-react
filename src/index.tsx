@@ -41,7 +41,7 @@ export { MileageSummaryCard } from './components/features/mileage/MileageSummary
 /*
 ======================= Composite Views =======================
 */
-export { Invoices } from './components/Invoices/Invoices'
+export { Invoices } from './components/features/invoices/Invoices/Invoices'
 export { UnifiedReports } from './components/UnifiedReports/UnifiedReports'
 export { AccountingOverview } from './views/AccountingOverview/AccountingOverview'
 export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWithLinkedAccounts/BankTransactionsWithLinkedAccounts'
