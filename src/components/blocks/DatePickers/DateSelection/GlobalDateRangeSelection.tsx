@@ -1,5 +1,5 @@
 import { useGlobalDatePreset, useGlobalDatePresetActions, useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
-import { DateRangeSelection } from '@blocks/datePickers/DateSelection/DateRangeSelection'
+import { DateRangeSelection } from '@blocks/DatePickers/DateSelection/DateRangeSelection'
 
 export type GlobalDateRangeSelectionProps = {
   showLabels?: boolean

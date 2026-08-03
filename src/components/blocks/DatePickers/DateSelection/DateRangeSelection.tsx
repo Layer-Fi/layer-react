@@ -3,8 +3,8 @@ import classNames from 'classnames'
 import { type DateRange } from '@utils/date/dateRange'
 import type { DatePreset, SelectableDatePreset } from '@utils/date/dateRangePresets'
 import { useBusinessDatePickerBounds } from '@hooks/utils/dates/useBusinessDatePickerBounds'
-import { DateRangePicker } from '@ui/datePickers/DatePicker/DateRangePicker'
-import { DateSelectionComboBox } from '@blocks/datePickers/DateSelection/DateSelectionComboBox'
+import { DateRangePicker } from '@ui/DatePickers/DatePicker/DateRangePicker'
+import { DateSelectionComboBox } from '@blocks/DatePickers/DateSelection/DateSelectionComboBox'
 
 import './dateRangeSelection.scss'
 

@@ -8,7 +8,7 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { VStack } from '@ui/Stack/Stack'
-import { Container } from '@blocks/layout/Container/Container'
+import { Container } from '@blocks/Layout/Container/Container'
 import { ActiveTimeTrackerBanner } from '@features/timeTracking/ActiveTimeTracker/ActiveTimeTrackerBanner'
 import { ActiveTimeTrackerStartDrawer } from '@features/timeTracking/ActiveTimeTracker/ActiveTimeTrackerStartDrawer'
 

@@ -3,7 +3,7 @@ import type { PropsWithChildren } from 'react'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { VStack } from '@ui/Stack/Stack'
-import { BaseDetailView } from '@blocks/layout/BaseDetailView/BaseDetailView'
+import { BaseDetailView } from '@blocks/Layout/BaseDetailView/BaseDetailView'
 
 import './responsiveDetailView.scss'
 

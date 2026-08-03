@@ -2,7 +2,7 @@ import { parseDate } from '@internationalized/date'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { userEvent, within } from 'storybook/test'
 
-import { DatePicker } from '@ui/datePickers/DatePicker/DatePicker'
+import { DatePicker } from '@ui/DatePickers/DatePicker/DatePicker'
 
 import { Col, Gallery } from '@test-utils/storybook/gallery'
 

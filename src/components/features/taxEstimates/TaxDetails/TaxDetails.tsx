@@ -1,4 +1,4 @@
-import { ResponsiveDetailView } from '@blocks/layout/ResponsiveDetailView/ResponsiveDetailView'
+import { ResponsiveDetailView } from '@blocks/Layout/ResponsiveDetailView/ResponsiveDetailView'
 import { TaxDetailsContent } from '@features/taxEstimates/TaxDetails/TaxDetailsContent'
 import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@features/taxEstimates/TaxEstimatesHeader/TaxEstimatesHeader'
 import { TaxSummaryCard } from '@features/taxEstimates/TaxSummaryCard/TaxSummaryCard'

@@ -9,7 +9,7 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { HStack, Stack } from '@ui/Stack/Stack'
-import { ResponsiveDetailHeader } from '@blocks/layout/ResponsiveDetailView/ResponsiveDetailHeader'
+import { ResponsiveDetailHeader } from '@blocks/Layout/ResponsiveDetailView/ResponsiveDetailHeader'
 import { FullYearProjectionComboBox } from '@features/taxEstimates/FullYearProjectionComboBox/FullYearProjectionComboBox'
 
 import './taxEstimatesHeader.scss'

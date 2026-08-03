@@ -1,8 +1,8 @@
-import type { TablePaginationProps } from '@internal-types/utility/pagination'
+import type { TablePaginationProps } from '@hooks/utils/pagination/types'
 import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
-import { MobileList, type MobileListProps } from '@ui/MobileList/MobileList'
 import { Pagination } from '@ui/Pagination/Pagination'
 import { VStack } from '@ui/Stack/Stack'
+import { MobileList, type MobileListProps } from '@blocks/MobileList/MobileList'
 
 type PaginatedMobileListProps<TData> = Omit<MobileListProps<TData>, 'data'> & {
   data: ReadonlyArray<TData> | undefined

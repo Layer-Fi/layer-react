@@ -11,7 +11,7 @@ import { Separator } from '@ui/Separator/Separator'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
-import { View } from '@blocks/layout/View/View'
+import { View } from '@blocks/Layout/View/View'
 import {
   buildDefaultAccountingOfferingConfig,
   buildDefaultBookkeepingOfferingConfig,

@@ -93,8 +93,8 @@ desktop above.
   function. Avoid inline width ternaries scattered through JSX.
 - To react to element size in logic, use `@hooks/utils/size/useElementSize` or
   `useElementViewSize`.
-- Mobile-specific surfaces already exist (`@ui/MobilePanel`, `@ui/MobileList`,
-  `@ui/MobileSelectionDrawer`); prefer them to reimplementing a drawer.
+- Mobile-specific surfaces already exist (`@blocks/MobileList`,
+  `@blocks/MobileSelectionDrawer`); prefer them to reimplementing a drawer.
 
 ## Don't put state in an effect if you can avoid it
 

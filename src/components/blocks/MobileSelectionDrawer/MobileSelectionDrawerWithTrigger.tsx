@@ -8,13 +8,13 @@ import type {
   OptionsOrGroups,
   SingleSelectComboBoxProps,
 } from '@ui/ComboBox/types'
-import { filterOptionsOrGroups, resolveSelectedOption } from '@ui/MobileSelectionDrawer/filterUtils'
-import { MobileSelectionDrawerList } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerList'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { SearchField } from '@ui/SearchField/SearchField'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import { filterOptionsOrGroups, resolveSelectedOption } from '@blocks/MobileSelectionDrawer/filterUtils'
+import { MobileSelectionDrawerList } from '@blocks/MobileSelectionDrawer/MobileSelectionDrawerList'
 
 import './mobileSelectionDrawerWithTrigger.scss'
 

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
 import { type DateRange } from '@utils/date/dateRange'
-import { DateRangePicker } from '@ui/datePickers/DatePicker/DateRangePicker'
+import { DateRangePicker } from '@ui/DatePickers/DatePicker/DateRangePicker'
 
 import { LayerTestProvider } from '@test-utils/LayerTestProvider'
 

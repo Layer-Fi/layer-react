@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 
-import { type TablePaginationProps } from '@internal-types/utility/pagination'
+import { type TablePaginationProps } from '@hooks/utils/pagination/types'
 
 export type BankTransactionsPaginationContextType = TablePaginationProps
 

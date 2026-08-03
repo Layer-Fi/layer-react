@@ -1,6 +1,6 @@
-import type { MobileListVariant } from '@ui/MobileList/MobileList'
 import { SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import type { MobileListVariant } from '@blocks/MobileList/MobileList'
 
 import './mobileListSkeleton.scss'
 

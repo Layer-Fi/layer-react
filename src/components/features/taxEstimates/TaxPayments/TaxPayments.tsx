@@ -5,7 +5,7 @@ import { useGetTaxPayments } from '@api/businesses/[business-id]/tax-estimates/p
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
-import { ResponsiveDetailView } from '@blocks/layout/ResponsiveDetailView/ResponsiveDetailView'
+import { ResponsiveDetailView } from '@blocks/Layout/ResponsiveDetailView/ResponsiveDetailView'
 import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@features/taxEstimates/TaxEstimatesHeader/TaxEstimatesHeader'
 import { TaxPaymentsMobileList } from '@features/taxEstimates/TaxPaymentsMobileList/TaxPaymentsMobileList'
 import { TaxPaymentsTable } from '@features/taxEstimates/TaxPaymentsTable/TaxPaymentsTable'

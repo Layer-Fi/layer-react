@@ -2,12 +2,12 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { Car, CircleCheck, Clock, Copy, CornerDownRight, Pencil, Trash2, TriangleAlert } from 'lucide-react'
 
 import { BadgeVariant } from '@ui/Badge/Badge'
-import { MobileList, type MobileListData, type MobileListProps } from '@ui/MobileList/MobileList'
-import { type MobileListItemActionsMenuConfig } from '@ui/MobileList/MobileListItemActionsMenu'
-import { MobileListItemContent } from '@ui/MobileList/MobileListItemContent'
-import { MobileListItemStatusFooter } from '@ui/MobileList/MobileListItemStatusFooter'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import { MobileList, type MobileListData, type MobileListProps } from '@blocks/MobileList/MobileList'
+import { type MobileListItemActionsMenuConfig } from '@blocks/MobileList/MobileListItemActionsMenu'
+import { MobileListItemContent } from '@blocks/MobileList/MobileListItemContent'
+import { MobileListItemStatusFooter } from '@blocks/MobileList/MobileListItemStatusFooter'
 
 import { Col, Frame, Gallery } from '@test-utils/storybook/gallery'
 

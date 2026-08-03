@@ -5,9 +5,9 @@ import classNames from 'classnames'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { BackButton } from '@ui/Button/BackButton'
 
-import './mobilePanel.scss'
+import './tasksMobilePanel.scss'
 
-export type MobilePanelProps = {
+export type TasksMobilePanelProps = {
   header?: ReactNode
   children: ReactNode
   open?: boolean
@@ -15,7 +15,7 @@ export type MobilePanelProps = {
   className?: string
 }
 
-export const MobilePanel = ({ header, children, open, onClose, className }: MobilePanelProps) => {
+export const TasksMobilePanel = ({ header, children, open, onClose, className }: TasksMobilePanelProps) => {
   const dataProperties = toDataProperties({ open })
 
   return createPortal(

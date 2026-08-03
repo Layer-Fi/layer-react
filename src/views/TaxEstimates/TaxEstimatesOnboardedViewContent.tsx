@@ -7,7 +7,7 @@ import { TaxEstimatesRoute, useFullYearProjection, useTaxEstimatesNavigation, us
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { P } from '@ui/Typography/Text'
-import { Container } from '@blocks/layout/Container/Container'
+import { Container } from '@blocks/Layout/Container/Container'
 import { TaxBanner } from '@features/taxEstimates/TaxBanner/TaxBanner'
 import { TaxDetails } from '@features/taxEstimates/TaxDetails/TaxDetails'
 import { TaxPayments } from '@features/taxEstimates/TaxPayments/TaxPayments'

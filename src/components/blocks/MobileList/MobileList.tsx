@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from 'react'
 import { GridList, type Selection } from 'react-aria-components/GridList'
 
-import { MobileListItem } from '@ui/MobileList/MobileListItem'
-import { type MobileListItemActionsMenuConfig } from '@ui/MobileList/MobileListItemActionsMenu'
-import { MobileListSection } from '@ui/MobileList/MobileListSection'
-import { MobileListSkeleton } from '@ui/MobileList/MobileListSkeleton'
+import { MobileListItem } from '@blocks/MobileList/MobileListItem'
+import { type MobileListItemActionsMenuConfig } from '@blocks/MobileList/MobileListItemActionsMenu'
+import { MobileListSection } from '@blocks/MobileList/MobileListSection'
+import { MobileListSkeleton } from '@blocks/MobileList/MobileListSkeleton'
 
 import './mobileList.scss'
 

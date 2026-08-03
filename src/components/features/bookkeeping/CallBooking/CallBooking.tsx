@@ -13,7 +13,7 @@ import { DateTile } from '@ui/DateTile/DateTile'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
-import { Container } from '@blocks/layout/Container/Container'
+import { Container } from '@blocks/Layout/Container/Container'
 
 import './callBooking.scss'
 

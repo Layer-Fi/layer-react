@@ -1,8 +1,8 @@
 import { GridListHeader, GridListSection } from 'react-aria-components/GridList'
 
-import { MobileListItem } from '@ui/MobileList/MobileListItem'
-import { type MobileListItemActionsMenuConfig } from '@ui/MobileList/MobileListItemActionsMenu'
 import { Span } from '@ui/Typography/Text'
+import { MobileListItem } from '@blocks/MobileList/MobileListItem'
+import { type MobileListItemActionsMenuConfig } from '@blocks/MobileList/MobileListItemActionsMenu'
 
 import './mobileListSection.scss'
 

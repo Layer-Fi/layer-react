@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type DateRange, isSameDateRange } from '@utils/date/dateRange'
-import { DatePicker } from '@ui/datePickers/DatePicker/DatePicker'
-import { useDatePickerState } from '@ui/datePickers/DatePicker/useDatePickerState'
+import { DatePicker } from '@ui/DatePickers/DatePicker/DatePicker'
+import { useDatePickerState } from '@ui/DatePickers/DatePicker/useDatePickerState'
 
 type DateRangePickerProps = {
   dateRange: DateRange

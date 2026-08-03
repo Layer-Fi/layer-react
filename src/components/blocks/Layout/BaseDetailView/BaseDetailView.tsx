@@ -3,7 +3,7 @@ import type { PropsWithChildren } from 'react'
 
 import { BackButton } from '@ui/Button/BackButton'
 import { HStack } from '@ui/Stack/Stack'
-import { Container } from '@blocks/layout/Container/Container'
+import { Container } from '@blocks/Layout/Container/Container'
 
 import './baseDetailView.scss'
 

@@ -4,8 +4,8 @@ import { composeRenderProps } from 'react-aria-components/composeRenderProps'
 import { GridListItem } from 'react-aria-components/GridList'
 
 import { Checkbox } from '@ui/Checkbox/Checkbox'
-import { MobileListItemActionsMenu, type MobileListItemActionsMenuConfig } from '@ui/MobileList/MobileListItemActionsMenu'
 import { HStack } from '@ui/Stack/Stack'
+import { MobileListItemActionsMenu, type MobileListItemActionsMenuConfig } from '@blocks/MobileList/MobileListItemActionsMenu'
 import { AnimatedElement } from '@components/utility/AnimatedElement/AnimatedElement'
 import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
 

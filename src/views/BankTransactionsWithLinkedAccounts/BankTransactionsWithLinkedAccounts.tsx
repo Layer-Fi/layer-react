@@ -5,7 +5,7 @@ import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
 import { BankAccountsFilterStoreProvider, useSelectedBankAccountIds } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { type BankTransactionsMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
-import { View } from '@blocks/layout/View/View'
+import { View } from '@blocks/Layout/View/View'
 import {
   BankTransactions,
   type BankTransactionsStringOverrides,

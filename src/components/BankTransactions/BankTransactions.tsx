@@ -29,7 +29,7 @@ import { BankTransactionsIsCategorizationEnabledProvider } from '@contexts/BankT
 import { BankTransactionsStringOverridesProvider } from '@contexts/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
 import { CategorizationRulesContext, CategorizationRulesProvider } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
-import { Container } from '@blocks/layout/Container/Container'
+import { Container } from '@blocks/Layout/Container/Container'
 import {
   BankTransactionsHeader,
   type BankTransactionsHeaderStringOverrides,

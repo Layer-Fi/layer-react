@@ -1,5 +1,5 @@
 import { useLedgerDatePreset, useLedgerDatePresetActions, useLedgerDateRange, useLedgerDateRangeActions } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
-import { DateRangeSelection } from '@blocks/datePickers/DateSelection/DateRangeSelection'
+import { DateRangeSelection } from '@blocks/DatePickers/DateSelection/DateRangeSelection'
 
 type LedgerDateRangeSelectionProps = {
   showLabels?: boolean

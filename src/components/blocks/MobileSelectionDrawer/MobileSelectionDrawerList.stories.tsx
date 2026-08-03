@@ -1,7 +1,7 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import type { ComboBoxOption } from '@ui/ComboBox/types'
-import { MobileSelectionDrawerList } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerList'
+import { MobileSelectionDrawerList } from '@blocks/MobileSelectionDrawer/MobileSelectionDrawerList'
 
 import { Col, Frame, Gallery } from '@test-utils/storybook/gallery'
 

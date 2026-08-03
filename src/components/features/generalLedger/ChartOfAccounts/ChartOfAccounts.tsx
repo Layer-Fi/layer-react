@@ -8,7 +8,7 @@ import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOf
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
 import { Loader } from '@ui/Loader/Loader'
-import { Container } from '@blocks/layout/Container/Container'
+import { Container } from '@blocks/Layout/Container/Container'
 import { type ChartOfAccountsTableStringOverrides, ChartOfAccountsTableWithPanel } from '@features/generalLedger/ChartOfAccountsTableWithPanel/ChartOfAccountsTableWithPanel'
 import { LedgerAccountPanel } from '@features/generalLedger/LedgerAccountPanel/LedgerAccountPanel'
 import { type LedgerAccountStringOverrides } from '@features/generalLedger/LedgerAccountPanel/LedgerAccountPanel'

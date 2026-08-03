@@ -7,7 +7,7 @@ import {
   useTaxEstimatesNavigation,
 } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Heading } from '@ui/Typography/Heading'
-import { BaseDetailView } from '@blocks/layout/BaseDetailView/BaseDetailView'
+import { BaseDetailView } from '@blocks/Layout/BaseDetailView/BaseDetailView'
 import { TaxProfileForm } from '@features/taxEstimates/TaxProfileForm/TaxProfileForm'
 
 export const TaxProfile = () => {

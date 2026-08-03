@@ -9,7 +9,7 @@ import type { View } from '@internal-types/general'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
-import { getMonths } from '@ui/datePickers/MonthCalendar/utils'
+import { getMonths } from '@ui/DatePickers/MonthCalendar/utils'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 

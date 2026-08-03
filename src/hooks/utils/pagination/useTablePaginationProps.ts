@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 
-import { type TablePaginationProps } from '@internal-types/utility/pagination'
-import type { PaginationChangeSource } from '@hooks/utils/pagination/types'
+import { type PaginationChangeSource, type TablePaginationProps } from '@hooks/utils/pagination/types'
 import { useAutoResetPageIndex } from '@hooks/utils/pagination/useAutoResetPageIndex'
 
 type UseTablePaginationPropsOptions = {

@@ -3,7 +3,7 @@ import { CalendarDays } from 'lucide-react'
 import { userEvent, within } from 'storybook/test'
 
 import type { ComboBoxOption } from '@ui/ComboBox/types'
-import { MobileSelectionDrawerWithTrigger } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
+import { MobileSelectionDrawerWithTrigger } from '@blocks/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
 
 import { Col, Gallery } from '@test-utils/storybook/gallery'
 

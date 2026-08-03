@@ -6,7 +6,7 @@ import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-import { createDateGroupByOnChange, type GroupByOption } from '@blocks/datePickers/DateSelection/dateGroupByComboBoxUtils'
+import { createDateGroupByOnChange, type GroupByOption } from '@blocks/DatePickers/DateSelection/dateGroupByComboBoxUtils'
 
 import './dateGroupByComboBox.scss'
 

@@ -7,9 +7,9 @@ import type {
   OptionsOrGroups,
   SingleSelectComboBoxProps,
 } from '@ui/ComboBox/types'
-import { MobileList, type MobileListData } from '@ui/MobileList/MobileList'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import { MobileList, type MobileListData } from '@blocks/MobileList/MobileList'
 
 import './mobileSelectionDrawerList.scss'
 

@@ -1,16 +1,3 @@
-import { type MutableRefObject } from 'react'
-
-import { type PaginationChangeSource } from '@hooks/utils/pagination/types'
-
-export interface TablePaginationProps {
-  pageIndex?: number
-  onPageIndexChange?: (pageIndex: number, source: PaginationChangeSource) => void
-  pageSize?: number
-  hasMore?: boolean
-  fetchMore?: () => void
-  autoResetPageIndexRef?: MutableRefObject<boolean>
-}
-
 export enum SortOrder {
   ASC = 'ASC',
   DESC = 'DESC',

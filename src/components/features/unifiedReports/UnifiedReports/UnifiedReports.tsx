@@ -5,7 +5,7 @@ import type { DateSelectionMode } from '@providers/DateStoreProvider/GlobalDateS
 import { UnifiedReportStoreProvider } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { ExpandableDataTableProvider } from '@blocks/ExpandableDataTable/ExpandableDataTableProvider'
-import { View } from '@blocks/layout/View/View'
+import { View } from '@blocks/Layout/View/View'
 import { UnifiedReportsNavigationSidebar } from '@features/unifiedReports/UnifiedReportsNavigationSidebar/UnifiedReportsNavigationSidebar'
 import { UnifiedReportTable } from '@features/unifiedReports/UnifiedReportTable/UnifiedReportTable'
 import { UnifiedReportTableHeader } from '@features/unifiedReports/UnifiedReportTableHeader/UnifiedReportTableHeader'

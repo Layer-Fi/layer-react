@@ -6,7 +6,7 @@ import { useActiveTimerBannerForm } from '@hooks/features/timeTracking/useActive
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { Container } from '@blocks/layout/Container/Container'
+import { Container } from '@blocks/Layout/Container/Container'
 import { CustomerSelector } from '@features/customerVendor/CustomerSelector/CustomerSelector'
 import { TimeEntryServiceSelector } from '@features/timeTracking/TimeEntryServiceSelector/TimeEntryServiceSelector'
 

@@ -7,8 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 
-import { type TablePaginationProps } from '@internal-types/utility/pagination'
-import { PaginationChangeSource } from '@hooks/utils/pagination/types'
+import { PaginationChangeSource, type TablePaginationProps } from '@hooks/utils/pagination/types'
 import { Pagination } from '@ui/Pagination/Pagination'
 import { VStack } from '@ui/Stack/Stack'
 import { type BaseDataTableProps, type ClickableRowProps, DataTable } from '@blocks/DataTable/DataTable'

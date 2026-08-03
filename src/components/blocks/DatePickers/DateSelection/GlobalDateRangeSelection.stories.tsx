@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { GlobalDateRangeSelection, type GlobalDateRangeSelectionProps } from '@blocks/datePickers/DateSelection/GlobalDateRangeSelection'
+import { GlobalDateRangeSelection, type GlobalDateRangeSelectionProps } from '@blocks/DatePickers/DateSelection/GlobalDateRangeSelection'
 
 import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
 import { handlers } from '@msw/handlers'

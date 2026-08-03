@@ -1,6 +1,6 @@
 import type { DateSelectionMode } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
-import { GlobalDateSelection } from '@blocks/datePickers/DateSelection/GlobalDateSelection'
-import { GlobalMonthPicker } from '@blocks/datePickers/GlobalMonthPicker/GlobalMonthPicker'
+import { GlobalDateSelection } from '@blocks/DatePickers/DateSelection/GlobalDateSelection'
+import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 
 export type CombinedDateSelectionProps = {
   mode: DateSelectionMode

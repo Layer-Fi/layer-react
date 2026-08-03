@@ -7,7 +7,7 @@ import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStore
 import { TimeTrackingServicesDrawerProvider, useTimeTrackingServicesDrawer } from '@providers/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
 import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'
 import { DataTableHeaderMenu } from '@blocks/DataTable/DataTableHeaderMenu'
-import { View } from '@blocks/layout/View/View'
+import { View } from '@blocks/Layout/View/View'
 import { ActiveTimeTracker } from '@features/timeTracking/ActiveTimeTracker/ActiveTimeTracker'
 import { TimeEntries } from '@features/timeTracking/TimeEntries/TimeEntries'
 import { TimeTrackingStats } from '@features/timeTracking/TimeTrackingStats/TimeTrackingStats'

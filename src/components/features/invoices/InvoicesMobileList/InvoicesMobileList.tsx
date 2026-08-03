@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type TablePaginationProps } from '@internal-types/utility/pagination'
 import { type Invoice } from '@schemas/invoices/invoice'
-import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
+import { type TablePaginationProps } from '@hooks/utils/pagination/types'
+import { PaginatedMobileList } from '@blocks/MobileList/PaginatedMobileList'
 import { InvoicesMobileHeader } from '@features/invoices/InvoicesMobileHeader/InvoicesMobileHeader'
 import { InvoicesMobileListItem } from '@features/invoices/InvoicesMobileList/InvoicesMobileListItem'
 import { InvoicesMobileListItemStatusFooter } from '@features/invoices/InvoicesMobileList/InvoicesMobileListItemStatusFooter'
