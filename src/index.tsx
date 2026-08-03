@@ -9,7 +9,7 @@ export { BankTransactions } from './components/BankTransactions/BankTransactions
 export { LinkedAccounts } from './components/LinkedAccounts/LinkedAccounts'
 
 /* ------------------ Reporting ------------------ */
-export { ProfitAndLoss } from './components/ProfitAndLoss/ProfitAndLoss'
+export { ProfitAndLoss } from './components/features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 /* Profit and loss contains 5 sub-components:
  * - Chart
  * - Summaries
@@ -17,8 +17,8 @@ export { ProfitAndLoss } from './components/ProfitAndLoss/ProfitAndLoss'
  * - Header
  * - Report
  */
-export { BalanceSheet } from './components/BalanceSheet/BalanceSheet'
-export { StatementOfCashFlow } from './components/StatementOfCashFlow/StatementOfCashFlow'
+export { BalanceSheet } from './components/features/reports/BalanceSheet/BalanceSheet'
+export { StatementOfCashFlow } from './components/features/reports/StatementOfCashFlow/StatementOfCashFlow'
 
 /* ------------------ Ledger ------------------ */
 export { ChartOfAccounts } from './components/features/generalLedger/ChartOfAccounts/ChartOfAccounts'
@@ -42,7 +42,7 @@ export { MileageSummaryCard } from './components/features/mileage/MileageSummary
 ======================= Composite Views =======================
 */
 export { Invoices } from './components/features/invoices/Invoices/Invoices'
-export { UnifiedReports } from './components/UnifiedReports/UnifiedReports'
+export { UnifiedReports } from './components/features/unifiedReports/UnifiedReports/UnifiedReports'
 export { AccountingOverview } from './views/AccountingOverview/AccountingOverview'
 export { BankTransactionsWithLinkedAccounts } from './views/BankTransactionsWithLinkedAccounts/BankTransactionsWithLinkedAccounts'
 export { BookkeepingOverview } from './views/BookkeepingOverview/BookkeepingOverview'

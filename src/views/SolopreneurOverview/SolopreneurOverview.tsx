@@ -8,17 +8,17 @@ import { HeaderRow } from '@ui/Header/HeaderRow'
 import { type SummaryCardInteractionProps, type SummaryCardStringOverrides } from '@blocks/SummaryCard/useSummaryCardSlots'
 import { ExpensesSummaryCard } from '@components/ExpensesSummaryCard/ExpensesSummaryCard'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
-import { ProfitAndLoss } from '@components/ProfitAndLoss/ProfitAndLoss'
+import { SolopreneurOnboardingBanner } from '@components/SolopreneurOnboardingBanner/SolopreneurOnboardingBanner'
+import { View } from '@components/View/View'
+import { MileageTrackingSummary } from '@features/mileage/MileageTrackingSummary/MileageTrackingSummary'
+import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import {
   ProfitAndLossSummaries,
   type ProfitAndLossSummariesReportingVariant,
   type ProfitAndLossSummariesSlotProps,
   type ProfitAndLossSummariesStringOverrides,
-} from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
-import { ProfitAndLossSummaryCard } from '@components/ProfitAndLossSummaryCard/ProfitAndLossSummaryCard'
-import { SolopreneurOnboardingBanner } from '@components/SolopreneurOnboardingBanner/SolopreneurOnboardingBanner'
-import { View } from '@components/View/View'
-import { MileageTrackingSummary } from '@features/mileage/MileageTrackingSummary/MileageTrackingSummary'
+} from '@features/profitAndLoss/ProfitAndLossSummaries/ProfitAndLossSummaries'
+import { ProfitAndLossSummaryCard } from '@features/profitAndLoss/ProfitAndLossSummaryCard/ProfitAndLossSummaryCard'
 import {
   TaxEstimatesSummaryCard,
   TaxEstimatesSummaryCardMode,

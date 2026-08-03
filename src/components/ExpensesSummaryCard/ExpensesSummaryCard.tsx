@@ -8,7 +8,7 @@ import {
   type SummaryCardStringOverrides,
   useSummaryCardSlots,
 } from '@blocks/SummaryCard/useSummaryCardSlots'
-import { ProfitAndLossDetailedCharts, type ProfitAndLossDetailedChartsStringOverrides } from '@components/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
+import { ProfitAndLossDetailedCharts, type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 
 import './expensesSummaryCard.scss'
 

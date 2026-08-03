@@ -4,7 +4,7 @@ import {
   type ProfitAndLossSummariesReportingVariant,
   type ProfitAndLossSummariesSlotProps,
   type ProfitAndLossSummariesStringOverrides,
-} from '@components/ProfitAndLossSummaries/ProfitAndLossSummaries'
+} from '@features/profitAndLoss/ProfitAndLossSummaries/ProfitAndLossSummaries'
 
 export type SummariesStoryArgs = {
   reportingVariant: 'profitAndLoss' | 'cashflow'

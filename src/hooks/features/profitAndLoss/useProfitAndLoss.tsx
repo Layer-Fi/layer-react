@@ -13,7 +13,7 @@ import {
   type DateSelectionMode,
   useGlobalDateRange,
 } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
-import type { BreadcrumbItem } from '@components/DetailReportBreadcrumb/DetailReportBreadcrumb'
+import type { BreadcrumbItem } from '@features/profitAndLoss/ProfitAndLossDetailReportBreadcrumb/ProfitAndLossDetailReportBreadcrumb'
 
 export type Scope = 'expenses' | 'revenue'
 
