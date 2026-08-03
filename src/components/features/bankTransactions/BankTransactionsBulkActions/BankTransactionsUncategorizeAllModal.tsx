@@ -5,7 +5,7 @@ import { tPlural } from '@utils/i18n/plural'
 import { useBulkUncategorizeBankTransactions } from '@hooks/features/bankTransactions/useBulkBankTransactionMutations'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/bankTransactions/BulkSelectionStore/BulkSelectionStoreProvider'
-import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { useBankTransactionsCategorizationActions } from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { Span } from '@ui/Typography/Text'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 

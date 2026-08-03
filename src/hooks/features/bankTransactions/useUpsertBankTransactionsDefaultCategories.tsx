@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { getDefaultCategorizationForBankTransaction } from '@utils/bankTransactions/shared'
-import { type BankTransactionCategorization, useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { type BankTransactionCategorization, useBankTransactionsCategorizationActions } from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 
 export const useUpsertBankTransactionsDefaultCategories = (bankTransactions: BankTransaction[] | undefined) => {
   const { setOnlyNewTransactionCategorizations } = useBankTransactionsCategorizationActions()

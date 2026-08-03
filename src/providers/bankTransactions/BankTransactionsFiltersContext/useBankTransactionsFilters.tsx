@@ -4,8 +4,8 @@ import { DisplayState } from '@internal-types/bankTransactions'
 import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@utils/bankTransactions/shared'
 import { BookkeepingStatus } from '@api/businesses/[business-id]/bookkeeping/status/get'
 import { useEffectiveBookkeepingStatus } from '@hooks/features/bookkeeping/useEffectiveBookkeepingStatus'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@providers/categorization/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useGlobalDateRange } from '@providers/global/DateStoreProvider/GlobalDateStoreProvider'
-import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 
 export type useBankTransactionsFiltersParams = {
   scope?: DisplayState

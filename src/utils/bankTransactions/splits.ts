@@ -9,7 +9,7 @@ import { makeCustomerVendor } from '@schemas/customerVendor'
 import { makeTagFromTransactionTag } from '@schemas/tag'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/bankTransactions/categorizationOption'
 import { toLocalizedCents } from '@utils/i18n/number/input'
-import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 
 export enum ValidateSplitError {
   AmountsMustBeGreaterThanZero = 'AmountsMustBeGreaterThanZero',

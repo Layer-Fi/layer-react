@@ -14,7 +14,7 @@ import { useBankTransactionsFiltersContext } from '@providers/bankTransactions/B
 import { useBankTransactionsPaginationContext } from '@providers/bankTransactions/BankTransactionsPagination/BankTransactionsPaginationContext'
 import { useBankTransactionsStringOverrides } from '@providers/bankTransactions/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
 import { useBulkSelectionActions, useSelectedIds } from '@providers/bankTransactions/BulkSelectionStore/BulkSelectionStoreProvider'
-import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@providers/categorization/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import type { ClickableRowProps } from '@blocks/DataTable/DataTable'

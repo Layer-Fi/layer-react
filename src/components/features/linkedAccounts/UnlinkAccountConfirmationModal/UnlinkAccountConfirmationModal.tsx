@@ -5,7 +5,7 @@ import type { BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { isAllExternalAccountsUserCreatedCustom } from '@utils/bankAccount'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { LayerEventComponent, LayerEventType } from '@providers/global/LayerProvider/layerEvents'
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { LinkedAccountsContext } from '@providers/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 

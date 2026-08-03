@@ -3,7 +3,7 @@ import { type PropsWithChildren } from 'react'
 import type { Awaitable } from '@internal-types/utility/promises'
 import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { LinkedAccountsContext } from '@providers/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 
 type LinkedAccountsProviderProps = PropsWithChildren<{
   onPlaidConnectionSuccess?: () => Awaitable<void>

@@ -1,7 +1,7 @@
 import { type PropsWithChildren, useMemo, useState } from 'react'
 
 import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
-import { OpeningBalanceModalContext } from '@contexts/OpeningBalanceModalContext/OpeningBalanceModalContext'
+import { OpeningBalanceModalContext } from '@providers/linkedAccounts/OpeningBalanceModal/OpeningBalanceModalContext'
 
 export function OpeningBalanceModalProvider({ children }: PropsWithChildren) {
   const [accountsToAddOpeningBalanceInModal, setAccountsToAddOpeningBalanceInModal] =

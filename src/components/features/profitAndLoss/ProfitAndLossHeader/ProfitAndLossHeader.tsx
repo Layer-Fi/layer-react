@@ -3,7 +3,7 @@ import { Loader } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
-import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
+import { useBankAccountsContext } from '@providers/linkedAccounts/BankAccountsContext/BankAccountsContext'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'

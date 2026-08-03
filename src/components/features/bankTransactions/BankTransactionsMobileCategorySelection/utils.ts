@@ -3,7 +3,7 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/categorizationOption'
 import { InputStrategy } from '@schemas/bankTransactions/bankTransaction'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/bankTransactions/categorizationOption'
-import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 import { type BankTransactionsMobileCategorySelectionItemOption } from '@features/bankTransactions/BankTransactionsMobileCategorySelection/BankTransactionsMobileCategorySelectionItem'
 
 const SELECT_CATEGORY_VALUE = 'SELECT_CATEGORY'

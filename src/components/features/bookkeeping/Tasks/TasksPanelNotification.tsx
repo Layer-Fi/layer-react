@@ -6,7 +6,7 @@ import { tPlural } from '@utils/i18n/plural'
 import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDatePeriodAlignedActions } from '@providers/global/DateStoreProvider/GlobalDateStoreProvider'
-import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
+import { useBankAccountsContext } from '@providers/linkedAccounts/BankAccountsContext/BankAccountsContext'
 import { P } from '@ui/Typography/Text'
 
 import './tasksPanelNotification.scss'

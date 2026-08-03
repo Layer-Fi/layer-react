@@ -5,7 +5,7 @@ import {
 import { type MatchSchema, type SuggestedMatchSchema } from '@schemas/bankTransactions/match'
 import type { CustomerVendorSchema } from '@schemas/customerVendor'
 import type { Tag } from '@schemas/tag'
-import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 
 export enum DisplayState {
   all = 'all',

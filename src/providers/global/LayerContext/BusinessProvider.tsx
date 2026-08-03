@@ -17,7 +17,7 @@ import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/global
 import { LayerContext } from '@providers/global/LayerContext/LayerContext'
 import { type LayerEvent } from '@providers/global/LayerProvider/layerEvents'
 import { type LayerProviderProps } from '@providers/global/LayerProvider/LayerProvider'
-import { BankAccountsProvider } from '@contexts/BankAccountsContext/BankAccountsContext'
+import { BankAccountsProvider } from '@providers/linkedAccounts/BankAccountsContext/BankAccountsContext'
 import { BookkeepingStatusProvider } from '@contexts/BookkeepingStatusContext/BookkeepingStatusContext'
 import { ToastsContainer } from '@blocks/ToastsContainer/ToastsContainer'
 

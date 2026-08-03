@@ -15,7 +15,7 @@ import { usePostPlaidUpdateModeLink } from '@api/businesses/[business-id]/plaid/
 import { type LinkMode, usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
 import { usePollPlaidHostedLinkStatus } from '@hooks/features/linkedAccounts/usePollPlaidHostedLinkStatus'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
-import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
+import { useBankAccountsContext } from '@providers/linkedAccounts/BankAccountsContext/BankAccountsContext'
 
 type UseLinkedAccountsOptions = {
   onPlaidConnectionSuccess?: () => Awaitable<void>
