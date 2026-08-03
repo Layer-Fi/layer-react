@@ -19,7 +19,6 @@ const ALIAS_MAP: Array<{ abs: string, alias: string }> = [
   { abs: path.join(SRC, 'components', 'blocks'), alias: '@blocks' },
   { abs: path.join(SRC, 'components', 'features'), alias: '@features' },
   { abs: path.join(SRC, 'components'), alias: '@components' },
-  { abs: path.join(SRC, 'contexts'), alias: '@contexts' },
   { abs: path.join(SRC, 'providers'), alias: '@providers' },
   { abs: path.join(SRC, 'hooks', 'api'), alias: '@api' },
   { abs: path.join(SRC, 'hooks'), alias: '@hooks' },

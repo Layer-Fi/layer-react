@@ -87,7 +87,7 @@ silently meant create, a form editing a not-yet-loaded record would POST a dupli
 
 `src/hooks/api` is the transport layer. A lint rule blocks `@components`, `@ui`, `@blocks`,
 `@views`, `@icons`, `@assets`, `@hooks/features` and `@hooks/legacy` outright, and blocks runtime
-imports from `@providers` and `@contexts` (type-only is fine).
+imports from `@providers` (type-only is fine).
 
 A hook that needs app state — store params, context callbacks — does not read it here. Export the
 parameterized hook from `@api` and wrap it in `@hooks/features/**`, which may import from `@api`.

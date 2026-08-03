@@ -1,7 +1,7 @@
 ---
 name: state-management
 description: State management — choosing between SWR, Zustand, and React Context; provider-scoped store pattern, DI contexts, feature visibility
-applies_to: src/providers/**, src/contexts/**, src/utils/zustand/**
+applies_to: src/providers/**, src/utils/zustand/**
 ---
 
 # State management
@@ -20,11 +20,18 @@ which filter is active, which sub-route is showing), keyed by IDs when they refe
 entities. `useState` is fine for state local to one component; reach for a store once state
 must be shared across a subtree.
 
+## Layout
+
+`src/providers/<domain>/<Concern>/`, with app-wide state under `global/`. A concern's context,
+its provider, and its helpers are colocated in that one directory; a bare context never lives
+apart from the provider that supplies it.
+
 ## Zustand stores are provider-scoped, never global singletons
 
 A consumer may mount two `BankTransactions` on one page; a module-level store would leak
 state between them. Every store follows the same shape — see
-`BankTransactionsRouteStore/BankTransactionsRouteStoreProvider.tsx` for the canonical example:
+`bankTransactions/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider.tsx` for the
+canonical example:
 
 - A module-level `createContext(createStore(<no-op defaults>))` supplies an inert default
   so hooks are safe (but dead) outside the Provider.
@@ -47,9 +54,10 @@ uses it. The hand-rolled shape above is the prevailing idiom for feature stores.
 ## Date state
 
 Do not build a new date store. `createScopedDateStore` already handles ranges, presets, and
-period-aligned actions; `GlobalDateStoreProvider` re-exports its hooks under domain names and
-applies clamping (`clampToPresentOrPast`, `clampToAfterActivationDate` from `@utils/date`),
-as does `LedgerDateStoreProvider` for ledger-scoped dates.
+period-aligned actions; `global/DateStoreProvider/GlobalDateStoreProvider` re-exports its hooks
+under domain names and applies clamping (`clampToPresentOrPast`, `clampToAfterActivationDate`
+from `@utils/date`). A domain that needs different defaults builds its own scoped store in its
+own directory, as `generalLedger/LedgerDateStore` does for its `AllTime` default.
 
 ## Contexts
 
@@ -74,8 +82,6 @@ than one omnibus provider. Bank transactions is the model — separate units for
 (`BankTransactionsCategorizationStore`), and bulk selection (`BulkSelectionStore`).
 Prefer adding a new small context over widening an existing one — a fat context re-renders
 every consumer on any change, and narrow units can be mounted independently where needed.
-`src/contexts/**` holds the bare DI contexts; `src/providers/**` holds the mountable
-providers and store providers.
 
 `LayerContext` is the root: API URL, auth, environment, theme, locale. Read it through
 `useLayerContext` or, better, the purpose-built hooks (`useAuth`, `useGetBusiness`,
