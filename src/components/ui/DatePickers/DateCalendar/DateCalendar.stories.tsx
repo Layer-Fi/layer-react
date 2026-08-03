@@ -22,7 +22,7 @@ const CELLS: { label: string, props: CalendarProps }[] = [
 ]
 
 const meta: Meta<CalendarProps> = {
-  title: 'Date/DateCalendar',
+  title: 'UI/DatePickers/DateCalendar',
   component: DateCalendar,
   decorators: [
     Story => (

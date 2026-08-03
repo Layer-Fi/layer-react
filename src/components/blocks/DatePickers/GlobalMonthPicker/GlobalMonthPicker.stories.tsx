@@ -9,7 +9,7 @@ import { FIXTURE_YEAR, FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYea
 import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
 
 const meta: Meta<GlobalMonthPickerProps> = {
-  title: 'Date/GlobalMonthPicker',
+  title: 'Blocks/DatePickers/GlobalMonthPicker',
   component: GlobalMonthPicker,
   parameters: {
     msw: { handlers: [getBusiness.mock(makeBusiness({ activationAt: new Date(FIXTURE_YEAR - 1, 0, 1) })), ...handlers] },

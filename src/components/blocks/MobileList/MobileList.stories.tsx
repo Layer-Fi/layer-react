@@ -152,7 +152,7 @@ const BASE_ARGS = {
 } satisfies Partial<MobileListProps<Row>>
 
 const meta: Meta<typeof MobileList<Row>> = {
-  title: 'UI/MobileList',
+  title: 'Blocks/MobileList',
   component: MobileList,
   args: {
     ariaLabel: 'Transactions',

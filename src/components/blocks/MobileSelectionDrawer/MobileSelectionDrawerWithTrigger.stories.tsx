@@ -39,7 +39,7 @@ const CELLS: { label: string, props: Partial<TriggerProps> }[] = [
 ]
 
 const meta: Meta<TriggerProps> = {
-  title: 'UI/MobileSelectionDrawerWithTrigger',
+  title: 'Blocks/MobileSelectionDrawer/WithTrigger',
   component: MobileSelectionDrawerWithTrigger,
   args: BASE,
   argTypes: {

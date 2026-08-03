@@ -40,7 +40,7 @@ const colorSelector = (item: SeriesData) => ({
 const formatValue = (value: number) => `$${value.toLocaleString()}`
 
 const meta: Meta<typeof HorizontalBarChart<SeriesData>> = {
-  title: 'UI/HorizontalBarChart',
+  title: 'Blocks/HorizontalBarChart',
   component: HorizontalBarChart,
   args: {
     data: DATA,
