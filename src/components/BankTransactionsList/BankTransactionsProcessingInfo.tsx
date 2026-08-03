@@ -5,7 +5,7 @@ import { BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { HStack } from '@ui/Stack/Stack'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
-import { BookkeepingStatus } from '@components/BookkeepingStatus/BookkeepingStatus'
+import { BookkeepingStatus } from '@features/bookkeeping/BookkeepingStatus/BookkeepingStatus'
 
 import './bankTransactionsProcessingInfo.scss'
 interface BankTransactionsProcessingInfoProps {

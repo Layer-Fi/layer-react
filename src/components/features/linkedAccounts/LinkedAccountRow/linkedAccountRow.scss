@@ -1,0 +1,25 @@
+.Layer__LinkedAccountRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding-block: var(--spacing-xs);
+
+  padding-inline: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--border-radius-xs);
+  border: 1px solid var(--outline-subtle);
+
+  &[data-selected] {
+    background-color: var(--bg-subtle);
+  }
+}
+
+.Layer__LinkedAccountRow__Logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  width: 52px;
+  padding: var(--spacing-3xs) 0;
+  border-radius: var(--border-radius-3xs);
+  background: var(--color-base-0);
+  color: var(--color-base-200);
+}

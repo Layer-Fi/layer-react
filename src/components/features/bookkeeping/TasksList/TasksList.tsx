@@ -1,0 +1,138 @@
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { Smile } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
+import { isCompletedTask, isIncompleteTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { useActiveBookkeepingPeriod } from '@hooks/features/bookkeeping/useActiveBookkeepingPeriod'
+import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
+import { Pagination } from '@ui/Pagination/Pagination'
+import { VStack } from '@ui/Stack/Stack'
+import { P } from '@ui/Typography/Text'
+import { TasksListMobile } from '@features/bookkeeping/TasksList/TasksListMobile'
+import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
+
+import './tasksList.scss'
+
+const TasksEmptyState = () => {
+  const { t } = useTranslation()
+  return (
+    <div className='Layer__tasks-empty-state'>
+      <div className='Layer__tasks-icon'>
+        <Smile size={12} color='#3B9C63' />
+      </div>
+      <P size='sm' variant='subtle'>
+        {t('bookkeeping:label.pending_tasks', 'There are no pending tasks!')}
+        <br />
+        {' '}
+        {t('bookkeeping:label.great_job', 'Great job!')}
+      </P>
+    </div>
+  )
+}
+
+type TasksListProps = {
+  pageSize?: number
+  mobile?: boolean
+}
+
+export const TasksList = ({ pageSize = 8, mobile }: TasksListProps) => {
+  const { activePeriod } = useActiveBookkeepingPeriod()
+  const taskListItemRefs = useRef<Record<string, HTMLDivElement | null>>({})
+  const requestAnimationFrameRef = useRef<number | null>(null)
+
+  const setItemRef = useCallback((id: string) => (el: HTMLDivElement | null) => {
+    taskListItemRefs.current[id] = el
+  }, [])
+
+  const onExpandTask = useCallback((taskId: string) => (isOpen: boolean) => {
+    if (!isOpen) return
+
+    if (requestAnimationFrameRef.current !== null) cancelAnimationFrame(requestAnimationFrameRef.current)
+
+    const scrollNow = () => {
+      const item = taskListItemRefs.current[taskId]
+
+      if (!item) return
+
+      item.scrollIntoView({
+        block: 'nearest',
+        inline: 'nearest',
+        behavior: 'smooth',
+      })
+
+      requestAnimationFrameRef.current = null
+    }
+
+    requestAnimationFrameRef.current = requestAnimationFrame(scrollNow)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (requestAnimationFrameRef.current !== null) cancelAnimationFrame(requestAnimationFrameRef.current)
+    }
+  }, [])
+
+  const sortedTasks = useMemo(() => {
+    const tasksInPeriod = activePeriod?.tasks ?? []
+
+    return tasksInPeriod
+      .sort((taskA, taskB) => {
+        if (isCompletedTask(taskA) && isIncompleteTask(taskB)) {
+          return 1
+        }
+
+        if (isIncompleteTask(taskA) && isCompletedTask(taskB)) {
+          return -1
+        }
+
+        return 0
+      })
+  }, [activePeriod?.tasks])
+
+  const { onPageChange, pageItems, pageIndex } = usePaginatedList({ data: sortedTasks, pageSize })
+
+  const indexFirstIncomplete = pageItems?.findIndex(task => isIncompleteTask(task))
+
+  if (mobile) {
+    return (
+      <TasksListMobile
+        tasksCount={sortedTasks.length}
+        sortedTasks={pageItems}
+        indexFirstIncomplete={indexFirstIncomplete}
+        currentPage={pageIndex + 1}
+        pageSize={pageSize}
+        setCurrentPage={onPageChange}
+      />
+    )
+  }
+
+  return (
+    <VStack className='Layer__tasks-list'>
+      {sortedTasks && sortedTasks.length > 0
+        ? (
+          <>
+            {pageItems.map((task, index) => (
+              <TasksListItem
+                ref={setItemRef(task.id)}
+                key={task.id}
+                task={task}
+                defaultOpen={index === indexFirstIncomplete}
+                onExpandTask={onExpandTask(task.id)}
+              />
+            ))}
+            {sortedTasks.length > pageSize && (
+              <Pagination
+                currentPage={pageIndex + 1}
+                totalCount={sortedTasks.length}
+                pageSize={pageSize}
+                onPageChange={onPageChange}
+              />
+            )}
+          </>
+        )
+        : (
+          <TasksEmptyState />
+        )}
+    </VStack>
+  )
+}

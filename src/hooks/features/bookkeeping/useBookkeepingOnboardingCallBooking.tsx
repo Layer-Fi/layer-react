@@ -6,7 +6,7 @@ import { useBookkeepingStatusGlobalCacheActions, useGetBookkeepingStatus } from 
 import { useGetListCallBookings } from '@api/businesses/[business-id]/call-bookings/get'
 import { usePostCallBooking } from '@api/businesses/[business-id]/call-bookings/post'
 import { type CalendlyPayload, useCalendly } from '@hooks/features/calendly/useCalendly'
-import { type CallBookingStringOverrides } from '@components/CallBooking/CallBooking'
+import { type CallBookingStringOverrides } from '@features/bookkeeping/CallBooking/CallBooking'
 
 const getUuidFromCalendlyUri = (uri: string) => {
   try {

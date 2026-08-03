@@ -6,7 +6,7 @@
 
 /* ------------------ Bank Accounts & Transactions ------------------ */
 export { BankTransactions } from './components/BankTransactions/BankTransactions'
-export { LinkedAccounts } from './components/LinkedAccounts/LinkedAccounts'
+export { LinkedAccounts } from './components/features/linkedAccounts/LinkedAccounts/LinkedAccounts'
 
 /* ------------------ Reporting ------------------ */
 export { ProfitAndLoss } from './components/features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
@@ -25,11 +25,11 @@ export { ChartOfAccounts } from './components/features/generalLedger/ChartOfAcco
 export { Journal } from './components/features/generalLedger/Journal/Journal'
 
 /* ------------------ Account Operations ------------------ */
-export { Tasks } from './components/Tasks/Tasks'
+export { Tasks } from './components/features/bookkeeping/Tasks/Tasks'
 
 /* --------------------- Onboarding ------------------------ */
+export { LinkAccounts } from './components/features/linkedAccounts/LinkAccounts/LinkAccounts'
 export { LandingPage } from './components/LandingPage/LandingPage'
-export { LinkAccounts } from './components/LinkAccounts/LinkAccounts'
 
 /* --------------------- Date Pickers -------------------------- */
 export { GlobalDateRangeSelection } from './components/DateSelection/GlobalDateRangeSelection'

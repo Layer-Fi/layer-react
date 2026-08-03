@@ -1,0 +1,192 @@
+/* stylelint-disable-next-line keyframes-name-pattern */
+@keyframes skeletonSweep {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.Layer__LinkedAccountCard {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3xs);
+  justify-content: space-between;
+  height: 136px;
+  width: 286px;
+  padding: var(--spacing-3xs);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--color-base-0);
+
+  &[data-show-ledger-balance] {
+    height: 162px;
+  }
+
+  .Layer__linked-accounts__grid:not(.--locked) [data-selection-mode='multiple'] & {
+    cursor: pointer;
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+  }
+
+  .Layer__linked-accounts__grid:not(.--locked) [data-selection-mode='multiple']:not([data-selected]) &:hover {
+    border-color: var(--color-base-300);
+    box-shadow: inset 0 0 0 1px var(--color-base-300);
+  }
+
+  [data-focus-visible] & {
+    outline: 1px auto -webkit-focus-ring-color;
+    outline-offset: 2px;
+  }
+
+  [data-selected] & {
+    border-color: var(--bg-brand-accent, var(--color-primary));
+    box-shadow:
+      inset 0 0 0 1px var(--bg-brand-accent, var(--color-primary)),
+      0 0 0 3px var(--base-transparent-12);
+  }
+
+  .Layer__LinkedAccountCard__Header {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1;
+    align-items: flex-start;
+    justify-content: space-between;
+    min-width: 272px;
+    padding: var(--spacing-xs);
+    border-top-left-radius: var(--border-radius-xs);
+    border-top-right-radius: var(--border-radius-xs);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    background: var(--color-base-50);
+    color: var(--text-color-primary);
+
+    &[data-hide-ledger-balance] {
+      padding-bottom: var(--spacing-sm);
+    }
+
+    &[data-syncing] {
+      z-index: 50;
+      background: none;
+      color: var(--color-base-500);
+    }
+
+    .Layer__LinkedAccountCard__HeaderDetails {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4xs);
+      justify-content: stretch;
+      min-width: 0;
+
+      > .Layer__Span:first-child {
+        flex: 1;
+        width: 200px;
+      }
+    }
+
+    .Layer__LinkedAccountCard__HeaderLogo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 28px;
+      width: 52px;
+      padding: var(--spacing-3xs) 0;
+      border-radius: var(--border-radius-3xs);
+      background: var(--color-base-0);
+      color: var(--color-base-200);
+    }
+  }
+
+  .Layer__LinkedAccountCard__Balance {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--spacing-xs);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: var(--border-radius-xs);
+    border-bottom-right-radius: var(--border-radius-xs);
+    background: var(--color-base-50);
+  }
+
+  .Layer__LinkedAccountCard__Syncing {
+    z-index: 100;
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+    padding: var(--spacing-xs);
+    border-bottom-left-radius: var(--border-radius-xs);
+    border-bottom-right-radius: var(--border-radius-xs);
+
+    .Layer__LinkedAccountCard__SyncingText {
+      flex: 1;
+      line-height: 140%;
+    }
+
+    .Layer__LinkedAccountCard__SyncingIcon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 28px;
+      width: 28px;
+      border-radius: 50%;
+      background: var(--color-blue);
+    }
+  }
+
+  .Layer__LinkedAccountCard__Footer {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-3xs) var(--spacing-xs);
+  }
+
+  &[data-syncing] {
+    position: relative;
+    overflow: hidden;
+    background: hsl(200deg 11% 96%);
+
+    &::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      height: 100%;
+      width: 100%;
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          var(--color-base-0),
+          transparent
+        );
+      content: '';
+      transform: translateX(-100%);
+      animation: skeletonSweep 1.5s infinite;
+    }
+  }
+
+  &[data-as-widget] {
+    gap: var(--spacing-2xs);
+
+    .Layer__LinkedAccountCard__Header {
+      border-bottom-left-radius: var(--border-radius-xs);
+      border-bottom-right-radius: var(--border-radius-xs);
+    }
+
+    .Layer__LinkedAccountCard__AccountNumber {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 20px;
+      padding: var(--spacing-3xs) var(--spacing-xs);
+      border-radius: var(--border-radius-xs);
+      background: var(--color-base-50);
+      color: var(--color-base-500);
+    }
+
+    .Layer__LinkedAccountCard__Footer {
+      padding: 0 var(--spacing-xs) 0 0;
+    }
+  }
+}
