@@ -10,8 +10,8 @@ import {
   type SummaryCardStringOverrides,
   useSummaryCardSlots,
 } from '@blocks/SummaryCard/useSummaryCardSlots'
-import { PnlLegend } from '@features/profitAndLoss/PnlLegend/PnlLegend'
 import { ProfitAndLossChart } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChart'
+import { ProfitAndLossLegend } from '@features/profitAndLoss/ProfitAndLossLegend/ProfitAndLossLegend'
 
 import './profitAndLossSummaryCard.scss'
 
@@ -31,7 +31,7 @@ export const ProfitAndLossSummaryCard = ({
   const { tagFilter } = useContext(ProfitAndLossContext)
 
   const legend = useMemo(
-    () => <PnlLegend direction={isDesktop ? 'row' : 'column'} />,
+    () => <ProfitAndLossLegend direction={isDesktop ? 'row' : 'column'} />,
     [isDesktop],
   )
 

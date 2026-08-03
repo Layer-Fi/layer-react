@@ -15,10 +15,10 @@ import { Container } from '@components/Container/Container'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { Tasks, type TasksStringOverrides } from '@components/Tasks/Tasks'
 import { View } from '@components/View/View'
-import { PnlLegend } from '@features/profitAndLoss/PnlLegend/PnlLegend'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossHeader } from '@features/profitAndLoss/ProfitAndLossHeader/ProfitAndLossHeader'
+import { ProfitAndLossLegend } from '@features/profitAndLoss/ProfitAndLossLegend/ProfitAndLossLegend'
 import { ProfitAndLossOverviewDetailedCharts } from '@features/profitAndLoss/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
 import {
   type ProfitAndLossSummariesSlotProps,
@@ -193,7 +193,7 @@ export const BookkeepingOverview = ({
             <ProfitAndLossHeader
               stringOverrides={{ title: stringOverrides?.profitAndLoss?.header }}
               withStatus
-              trailingContent={<PnlLegend direction='row' />}
+              trailingContent={<ProfitAndLossLegend direction='row' />}
               className='Layer__BookkeepingOverview__ProfitAndLossHeader'
             />
             <VStack pb='md' pi='md' fluid>

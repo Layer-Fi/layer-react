@@ -10,10 +10,10 @@ import { HeaderRow } from '@ui/Header/HeaderRow'
 import { Container } from '@components/Container/Container'
 import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
 import { View } from '@components/View/View'
-import { PnlLegend } from '@features/profitAndLoss/PnlLegend/PnlLegend'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 import { ProfitAndLossHeader } from '@features/profitAndLoss/ProfitAndLossHeader/ProfitAndLossHeader'
+import { ProfitAndLossLegend } from '@features/profitAndLoss/ProfitAndLossLegend/ProfitAndLossLegend'
 import { ProfitAndLossOverviewDetailedCharts } from '@features/profitAndLoss/ProfitAndLossOverviewDetailedCharts/ProfitAndLossOverviewDetailedCharts'
 import {
   ProfitAndLossSummaries,
@@ -107,7 +107,7 @@ export const AccountingOverview = ({
           <ProfitAndLossHeader
             stringOverrides={{ title: stringOverrides?.header }}
             className='Layer__AccountingOverview__ProfitAndLossHeader'
-            trailingContent={<PnlLegend direction='row' />}
+            trailingContent={<ProfitAndLossLegend direction='row' />}
           />
           <ProfitAndLoss.Chart
             tagFilter={profitAndLossTagFilter}
