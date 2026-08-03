@@ -1,9 +1,9 @@
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { ReceiptsProvider } from '@providers/ReceiptsProvider/ReceiptsProvider'
-import { BankTransactionsMobileListBusinessForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListBusinessForm'
-import { BankTransactionsMobileListPersonalForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListPersonalForm'
-import { BankTransactionsMobileListSplitAndMatchForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListSplitAndMatchForm'
-import { Purpose } from '@components/BankTransactionsMobileList/purpose'
+import { BankTransactionsMobileListBusinessForm } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileListBusinessForm'
+import { BankTransactionsMobileListPersonalForm } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileListPersonalForm'
+import { BankTransactionsMobileListSplitAndMatchForm } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileListSplitAndMatchForm'
+import { Purpose } from '@features/bankTransactions/BankTransactionsMobileList/purpose'
 
 interface BankTransactionsMobileFormsProps {
   isOpen?: boolean

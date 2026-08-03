@@ -10,11 +10,11 @@ import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFil
 import { VStack } from '@ui/Stack/Stack'
 import { MobileList } from '@blocks/MobileList/MobileList'
 import { useMobileListExpansion } from '@blocks/MobileList/useMobileListExpansion'
-import { BankTransactionsMobileBulkActionsHeader } from '@components/BankTransactionsMobileList/BankTransactionsMobileBulkActionsHeader'
-import { BankTransactionsMobileListItem } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItem'
-import { BankTransactionsMobileListItemExpandedRow } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
-import { BankTransactionsMobileListItemFooter } from '@components/BankTransactionsMobileList/BankTransactionsMobileListItemFooter'
 import { BankTransactionsEmptyState, BankTransactionsErrorState } from '@features/bankTransactions/BankTransactionsDataStates/BankTransactionsDataStates'
+import { BankTransactionsMobileBulkActionsHeader } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileBulkActionsHeader'
+import { BankTransactionsMobileListItem } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileListItem'
+import { BankTransactionsMobileListItemExpandedRow } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileListItemExpandedRow'
+import { BankTransactionsMobileListItemFooter } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileListItemFooter'
 import { BankTransactionsPaginatedList } from '@features/bankTransactions/BankTransactionsPaginatedList/BankTransactionsPaginatedList'
 
 type BankTransactionsMobileListContentProps = {

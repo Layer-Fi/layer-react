@@ -14,8 +14,8 @@ import {
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
-import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
-import { getPurposeFromStore, Purpose } from '@components/BankTransactionsMobileList/purpose'
+import { BankTransactionsMobileForms } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileForms'
+import { getPurposeFromStore, Purpose } from '@features/bankTransactions/BankTransactionsMobileList/purpose'
 import { EditCustomBankTransactionButton } from '@features/bankTransactions/EditCustomBankTransactionButton/EditCustomBankTransactionButton'
 
 const PURPOSE_TOGGLE_CONFIG = [

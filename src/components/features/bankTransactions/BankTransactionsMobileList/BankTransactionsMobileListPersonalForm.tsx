@@ -16,7 +16,7 @@ import { BankTransactionFormFields } from '@features/bankTransactions/BankTransa
 import { BankTransactionReceipts } from '@features/bankTransactions/BankTransactionReceipts/BankTransactionReceipts'
 import { type BankTransactionReceiptsHandle } from '@features/bankTransactions/BankTransactionReceipts/BankTransactionReceipts'
 
-import { LegacyPersonalCategories, PersonalStableName } from './constants'
+import { LegacyPersonalCategories, PersonalStableName } from './personalCategories'
 
 interface BankTransactionsMobileListPersonalFormProps {
   bankTransaction: BankTransaction

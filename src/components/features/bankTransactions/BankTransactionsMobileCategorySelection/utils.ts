@@ -4,7 +4,7 @@ import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/
 import { InputStrategy } from '@schemas/bankTransactions/bankTransaction'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/bankTransactions/categorizationOption'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
-import { type BankTransactionsMobileCategorySelectionItemOption } from '@components/BankTransactionsMobileCategorySelection/BankTransactionsMobileCategorySelectionItem'
+import { type BankTransactionsMobileCategorySelectionItemOption } from '@features/bankTransactions/BankTransactionsMobileCategorySelection/BankTransactionsMobileCategorySelectionItem'
 
 const SELECT_CATEGORY_VALUE = 'SELECT_CATEGORY'
 

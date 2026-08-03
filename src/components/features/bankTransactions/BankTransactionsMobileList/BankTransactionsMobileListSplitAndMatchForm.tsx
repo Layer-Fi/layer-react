@@ -5,8 +5,8 @@ import { hasMatch } from '@utils/bankTransactions/shared'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { BankTransactionSelectionVariant, useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { Button } from '@ui/Button/Button'
-import { BankTransactionsMobileListMatchForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListMatchForm'
-import { BankTransactionsMobileListSplitForm } from '@components/BankTransactionsMobileList/BankTransactionsMobileListSplitForm'
+import { BankTransactionsMobileListMatchForm } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileListMatchForm'
+import { BankTransactionsMobileListSplitForm } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileListSplitForm'
 
 interface BankTransactionsMobileListSplitAndMatchFormProps {
   bankTransaction: BankTransaction
