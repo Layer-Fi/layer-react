@@ -47,9 +47,8 @@ Inside a domain the layout is flat, so **a component's path is its name**:
 A component that is *not* domain-specific belongs in `@ui` (primitive), `@blocks` (composed
 pattern), or `@components/utility` (rendering helper).
 
-> **Migration in progress.** Directories still sitting directly under `src/components/` are
-> un-migrated, not a second convention. Put new work in `features/<domain>/`, and ask before mixing
-> a move into a behavior change.
+> `src/components/` holds only `blocks`, `features`, `forms`, `ui`, and `utility`. Nothing else
+> belongs at that level — a new component goes in one of those, never beside them.
 
 ## File conventions
 
