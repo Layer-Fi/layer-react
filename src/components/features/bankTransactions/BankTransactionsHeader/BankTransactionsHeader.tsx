@@ -28,14 +28,14 @@ import { BankTransactionsHeaderActions } from '@features/bankTransactions/BankTr
 import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@features/bankTransactions/BankTransactionsHeader/BankTransactionsHeaderMenu'
 import { BankTransactionsSearchField } from '@features/bankTransactions/BankTransactionsSearchField/BankTransactionsSearchField'
 import { BankTransactionsSyncingStatus } from '@features/bankTransactions/BankTransactionsSyncingStatus/BankTransactionsSyncingStatus'
-import { BankTransactionsTableContent } from '@features/bankTransactions/constants'
+import { BankTransactionsViewVariant } from '@features/bankTransactions/constants'
 import { RecordBankTransactionMenuButton } from '@features/bankTransactions/RecordBankTransactionMenuButton/RecordBankTransactionMenuButton'
 
 import './bankTransactionsHeader.scss'
 
 export interface BankTransactionsHeaderProps {
   asWidget?: boolean
-  tableContentMode: BankTransactionsTableContent
+  tableContentMode: BankTransactionsViewVariant
   isSyncing?: boolean
   collapseHeader?: boolean
 }
@@ -77,8 +77,8 @@ export const BankTransactionsHeader = ({
   const { count } = useCountSelectedIds()
 
   const showBulkActions = count > 0
-  const isMobileList = tableContentMode === BankTransactionsTableContent.MobileList
-  const isListView = isMobileList || tableContentMode === BankTransactionsTableContent.List
+  const isMobileList = tableContentMode === BankTransactionsViewVariant.MobileList
+  const isListView = isMobileList || tableContentMode === BankTransactionsViewVariant.List
 
   const statusToggleOptions = useMemo(
     () => STATUS_TOGGLE_CONFIG.map(opt => ({

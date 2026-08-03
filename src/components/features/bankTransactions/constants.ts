@@ -2,7 +2,7 @@ import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 
 export type MobileComponentType = 'regularList' | 'mobileList'
 
-export enum BankTransactionsTableContent {
+export enum BankTransactionsViewVariant {
   List = 'List',
   MobileList = 'MobileList',
   Table = 'Table',
