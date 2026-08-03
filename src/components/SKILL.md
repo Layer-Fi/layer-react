@@ -79,8 +79,8 @@ Their prop types are unions: supplying `isLoading` obliges you to supply `Loadin
 catches a half-handled state.
 
 For the state nodes themselves use `DataState` / `DataStateContainer`
-(`@ui/DataState/DataState`) and the skeleton loaders (`@ui/SkeletonLoader/*`,
-`SkeletonTableLoader`) — not ad-hoc spinners or "No data" text.
+(`@ui/DataState/DataState`) and the skeleton loaders (`@ui/SkeletonLoader/*`) — not
+ad-hoc spinners or "No data" text.
 
 ## Responsive UX
 

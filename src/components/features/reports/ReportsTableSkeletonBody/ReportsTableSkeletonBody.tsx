@@ -1,8 +1,8 @@
 import { SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 
-import './skeletonTableLoader.scss'
+import './reportsTableSkeletonBody.scss'
 
-interface SkeletonTableLoaderProps {
+interface ReportsTableSkeletonBodyProps {
   rows: number
   cols: Array<{
     colSpan: number
@@ -14,12 +14,12 @@ interface SkeletonTableLoaderProps {
   width?: number
 }
 
-export const SkeletonTableLoader = ({
+export const ReportsTableSkeletonBody = ({
   rows,
   cols,
   height = 20,
   width = 100,
-}: SkeletonTableLoaderProps) => {
+}: ReportsTableSkeletonBodyProps) => {
   return (
     <tbody className='Layer__skeleton-table-body__loader'>
       {Array.from({ length: rows }).map((_, rowIndex) => (

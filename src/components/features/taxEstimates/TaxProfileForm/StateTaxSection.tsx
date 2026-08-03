@@ -2,9 +2,9 @@ import { useTranslation } from 'react-i18next'
 
 import { VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
-import { UsStateComboBox } from '@components/UsStateComboBox/UsStateComboBox'
 import { FilingStatusComboBox } from '@features/taxEstimates/FilingStatusComboBox/FilingStatusComboBox'
 import { getFormFieldProps, type TaxProfileFormSectionProps } from '@features/taxEstimates/TaxProfileForm/formUtils'
+import { UsStateComboBox } from '@features/taxEstimates/UsStateComboBox/UsStateComboBox'
 
 export const StateTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFormSectionProps) => {
   const { t } = useTranslation()

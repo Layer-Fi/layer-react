@@ -42,8 +42,8 @@ import {
   type BankTransactionsTableStringOverrides,
 } from '@components/BankTransactionsTable/BankTransactionsTable'
 import { ResponsiveCategorizationRulesView } from '@components/CategorizationRules/CategorizationRulesView/ResponsiveCategorizationRulesView'
-import { ErrorBoundary } from '@components/ErrorBoundary/ErrorBoundary'
 import { SuggestedCategorizationRuleUpdatesDialog } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDialog'
+import { ErrorBoundary } from '@components/utility/ErrorBoundary/ErrorBoundary'
 
 import './bankTransactions.scss'
 

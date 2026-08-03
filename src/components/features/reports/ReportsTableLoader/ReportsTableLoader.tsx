@@ -1,5 +1,5 @@
-import { SkeletonTableLoader } from '@components/SkeletonTableLoader/SkeletonTableLoader'
 import { ReportsTable, ReportsTableHeader } from '@features/reports/ReportsTable/ReportsTable'
+import { ReportsTableSkeletonBody } from '@features/reports/ReportsTableSkeletonBody/ReportsTableSkeletonBody'
 
 type ReportsTableLoaderProps = {
   typeColumnHeader?: string
@@ -20,7 +20,7 @@ export const ReportsTableLoader = ({
           totalColumnHeader={totalColumnHeader}
         />
       )}
-      <SkeletonTableLoader
+      <ReportsTableSkeletonBody
         rows={6}
         cols={[
           { colSpan: 1, trimLastXRows: 4 },
