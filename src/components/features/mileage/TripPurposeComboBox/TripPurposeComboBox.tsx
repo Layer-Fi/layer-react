@@ -53,6 +53,7 @@ export const TripPurposeComboBox = ({ value, onValueChange, isReadOnly, inline, 
         {t('common:label.purpose', 'Purpose')}
       </Label>
       <ComboBox
+        slot='input'
         options={options}
         onSelectedValueChange={onSelectedValueChange}
         selectedValue={selectedOption}
