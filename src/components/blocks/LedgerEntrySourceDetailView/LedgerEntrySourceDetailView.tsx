@@ -7,7 +7,7 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { DateTime } from '@ui/DateTime/DateTime'
 import { LedgerEntryDetailField } from '@blocks/LedgerEntryDetailField/LedgerEntryDetailField'
 
-export interface SourceDetailStringOverrides {
+export interface LedgerEntrySourceDetailStringOverrides {
   sourceLabel?: string
   accountNameLabel?: string
   dateLabel?: string
@@ -26,7 +26,7 @@ export const LedgerEntrySourceDetailView = ({
   stringOverrides,
 }: {
   source: LedgerEntrySourceType
-  stringOverrides?: SourceDetailStringOverrides
+  stringOverrides?: LedgerEntrySourceDetailStringOverrides
 }) => {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
