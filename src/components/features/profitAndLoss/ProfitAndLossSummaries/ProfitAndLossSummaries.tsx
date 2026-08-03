@@ -3,8 +3,6 @@ import { useTranslation } from 'react-i18next'
 
 import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
 import type { Variants } from '@utils/styleUtils/sizeVariants'
-import { BaseSummariesBreakdownFooter } from '@features/profitAndLoss/BaseSummariesBreakdownFooter/BaseSummariesBreakdownFooter'
-import { CashflowSummariesNetCashflowFooter } from '@features/profitAndLoss/CashflowSummariesNetCashflowFooter/CashflowSummariesNetCashflowFooter'
 import { UNCATEGORIZED_CHART_COLOR } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
 import {
   SummariesContent,
@@ -12,7 +10,9 @@ import {
   type SummaryTileBreakdown,
   type SummaryTileConfig,
 } from '@features/profitAndLoss/ProfitAndLossSummaries/SummariesContent'
+import { ProfitAndLossSummaryTileFooter } from '@features/profitAndLoss/ProfitAndLossSummaryTileFooter/ProfitAndLossSummaryTileFooter'
 import { TransactionsToReview } from '@features/profitAndLoss/TransactionsToReview/TransactionsToReview'
+import { UncategorizedTransactionsBadge } from '@features/profitAndLoss/UncategorizedTransactionsBadge/UncategorizedTransactionsBadge'
 
 export interface ProfitAndLossSummariesStringOverrides {
   revenueLabel?: string
@@ -77,18 +77,20 @@ export function ProfitAndLossSummaries({
   const categorizedSwatchColor = chartColorsList?.[0] ?? DEFAULT_CHART_COLORS[0]
 
   const renderRevenueFooter = useCallback(({ categorized, uncategorized }: SummaryTileBreakdown, isLoading: boolean) => (
-    <BaseSummariesBreakdownFooter
+    <ProfitAndLossSummaryTileFooter
       isLoading={isLoading}
-      categorized={{
-        label: t('overview:label.categorized_revenue', 'Categorized revenue'),
-        amount: categorized,
-        swatchColor: categorizedSwatchColor,
-      }}
-      uncategorized={{
-        label: uncategorizedLabel,
-        amount: uncategorized,
-        swatchColor: UNCATEGORIZED_CHART_COLOR,
-      }}
+      rows={[
+        {
+          label: t('overview:label.categorized_revenue', 'Categorized revenue'),
+          amount: categorized,
+          swatchColor: categorizedSwatchColor,
+        },
+        {
+          label: uncategorizedLabel,
+          amount: uncategorized,
+          swatchColor: UNCATEGORIZED_CHART_COLOR,
+        },
+      ]}
     />
   ), [
     t,
@@ -97,18 +99,20 @@ export function ProfitAndLossSummaries({
   ])
 
   const renderExpensesFooter = useCallback(({ categorized, uncategorized }: SummaryTileBreakdown, isLoading: boolean) => (
-    <BaseSummariesBreakdownFooter
+    <ProfitAndLossSummaryTileFooter
       isLoading={isLoading}
-      categorized={{
-        label: t('overview:label.categorized_expenses', 'Categorized expenses'),
-        amount: categorized,
-        swatchColor: categorizedSwatchColor,
-      }}
-      uncategorized={{
-        label: uncategorizedLabel,
-        amount: uncategorized,
-        swatchColor: UNCATEGORIZED_CHART_COLOR,
-      }}
+      rows={[
+        {
+          label: t('overview:label.categorized_expenses', 'Categorized expenses'),
+          amount: categorized,
+          swatchColor: categorizedSwatchColor,
+        },
+        {
+          label: uncategorizedLabel,
+          amount: uncategorized,
+          swatchColor: UNCATEGORIZED_CHART_COLOR,
+        },
+      ]}
     />
   ), [
     t,
@@ -117,15 +121,19 @@ export function ProfitAndLossSummaries({
   ])
 
   const renderNetFooter = useCallback(({ categorized }: SummaryTileBreakdown, isLoading: boolean) => (
-    <CashflowSummariesNetCashflowFooter
+    <ProfitAndLossSummaryTileFooter
       isLoading={isLoading}
-      categorized={showProfitAndLossBreakdown
-        ? {
+      rows={showProfitAndLossBreakdown
+        ? [{
           label: t('overview:label.categorized_net_profit', 'Categorized net profit'),
           amount: categorized,
-        }
-        : undefined}
-      onTransactionsToReviewClick={onTransactionsToReviewClick}
+        }]
+        : []}
+      slots={{
+        Trailing: onTransactionsToReviewClick && (
+          <UncategorizedTransactionsBadge onTransactionsToReviewClick={onTransactionsToReviewClick} />
+        ),
+      }}
     />
   ), [
     showProfitAndLossBreakdown,
