@@ -7,7 +7,7 @@ import { Span } from '@ui/Typography/Text'
 
 import './bankTransactionsSelectedValue.scss'
 
-export type BankTransactionsBaseSelectedValueProps = {
+export type BankTransactionsSelectedValueProps = {
   type: 'match' | 'transfer' | 'split' | 'category' | 'placeholder'
   label: string
   showCategoryBadge?: boolean
@@ -21,7 +21,7 @@ export type BankTransactionsBaseSelectedValueProps = {
   }
 }
 
-export const BankTransactionsBaseSelectedValue = (props: BankTransactionsBaseSelectedValueProps) => {
+export const BankTransactionsSelectedValue = (props: BankTransactionsSelectedValueProps) => {
   const { t } = useTranslation()
   const { type, className, label, slotProps, showCategoryBadge = false, showAiSparkle = false, isCategorized = false } = props
 

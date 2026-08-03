@@ -2,7 +2,7 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { type Categorization, isSplitCategorization } from '@schemas/categorization'
 import { isTransferMatch } from '@utils/bankTransactions/shared'
-import { BankTransactionsBaseSelectedValue, type BankTransactionsBaseSelectedValueProps } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
+import { BankTransactionsSelectedValue, type BankTransactionsSelectedValueProps } from '@features/bankTransactions/BankTransactionsSelectedValue/BankTransactionsSelectedValue'
 
 type BankTransactionsCategorizedSelectedValueProps = {
   bankTransaction: BankTransaction
@@ -23,7 +23,7 @@ const extractDescriptionForSplit = (category: Categorization | null | undefined)
   return category.entries.map(c => c.category.displayName).join(', ')
 }
 
-const normalizeFromBankTransaction = (bankTransaction: BankTransaction): BankTransactionsBaseSelectedValueProps => {
+const normalizeFromBankTransaction = (bankTransaction: BankTransaction): BankTransactionsSelectedValueProps => {
   if (bankTransaction.categorizationStatus === CategorizationStatus.MATCHED && bankTransaction.match) {
     return {
       type: isTransferMatch(bankTransaction) ? 'transfer' : 'match',
@@ -49,7 +49,7 @@ export const BankTransactionsCategorizedSelectedValue = (props: BankTransactions
 
   const baseSelectedValue = normalizeFromBankTransaction(bankTransaction)
   return (
-    <BankTransactionsBaseSelectedValue
+    <BankTransactionsSelectedValue
       {...baseSelectedValue}
       slotProps={slotProps}
       className={className}

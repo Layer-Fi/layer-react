@@ -2,8 +2,8 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { isCategorized } from '@utils/bankTransactions/shared'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
-import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
+import { BankTransactionsListItemCategory } from '@features/bankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
+import { BankTransactionsProcessingInfo } from '@features/bankTransactions/BankTransactionsProcessingInfo/BankTransactionsProcessingInfo'
 
 export interface BankTransactionsMobileListItemFooterProps {
   bankTransaction: BankTransaction

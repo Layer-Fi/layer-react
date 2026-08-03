@@ -8,7 +8,7 @@ import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/Ban
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { ErrorText } from '@ui/Typography/ErrorText'
 import { Span } from '@ui/Typography/Text'
-import { MatchBadge } from '@components/BankTransactionRow/MatchBadge'
+import { BankTransactionMatchBadge } from '@features/bankTransactions/BankTransactionMatchBadge/BankTransactionMatchBadge'
 
 import './matchForm.scss'
 
@@ -102,7 +102,7 @@ export const MatchForm = ({
                   )}
                 >
                   {suggestedMatch.details.id === match?.details.id && (
-                    <MatchBadge bankTransaction={bankTransaction} />
+                    <BankTransactionMatchBadge bankTransaction={bankTransaction} />
                   )}
                 </div>
               )

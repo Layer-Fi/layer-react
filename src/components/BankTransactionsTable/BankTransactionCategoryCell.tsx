@@ -19,9 +19,9 @@ import { Chevron } from '@ui/Chevron/Chevron'
 import { HStack, type StackProps } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankTransactionsSubmitButton'
-import { BankTransactionsProcessingInfo } from '@components/BankTransactionsList/BankTransactionsProcessingInfo'
-import { BankTransactionsCategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
+import { BankTransactionsProcessingInfo } from '@features/bankTransactions/BankTransactionsProcessingInfo/BankTransactionsProcessingInfo'
+import { BankTransactionsCategorizedSelectedValue } from '@features/bankTransactions/BankTransactionsSelectedValue/BankTransactionsCategorizedSelectedValue'
+import { BankTransactionsSubmitButton } from '@features/bankTransactions/BankTransactionsSubmitButton/BankTransactionsSubmitButton'
 
 type BankTransactionCategoryCellProps = {
   row: Row<BankTransaction>

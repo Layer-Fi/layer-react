@@ -9,7 +9,7 @@ import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/Ba
 import { type LinkingMetadata, useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { BankTransactionsAmountDate } from '@components/BankTransactions/BankTransactionsAmountDate'
+import { BankTransactionsAmountDate } from '@features/bankTransactions/BankTransactionsAmountDate/BankTransactionsAmountDate'
 
 import './bankTransactionsMobileListItem.scss'
 

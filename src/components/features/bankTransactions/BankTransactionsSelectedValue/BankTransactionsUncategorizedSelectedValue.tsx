@@ -1,7 +1,7 @@
 import { type BankTransactionCategoryComboBoxOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
 import { isSuggestedMatchAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
 import { isSplitAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
-import { BankTransactionsBaseSelectedValue, type BankTransactionsBaseSelectedValueProps } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
+import { BankTransactionsSelectedValue, type BankTransactionsSelectedValueProps } from '@features/bankTransactions/BankTransactionsSelectedValue/BankTransactionsSelectedValue'
 
 type BankTransactionsUncategorizedSelectedValueProps = {
   selectedValue: BankTransactionCategoryComboBoxOption | null
@@ -22,7 +22,7 @@ export const BankTransactionsUncategorizedSelectedValue = (props: BankTransactio
 
   const baseSelectedValue = normalizeFromSelectedValue(selectedValue)
   return (
-    <BankTransactionsBaseSelectedValue
+    <BankTransactionsSelectedValue
       {...baseSelectedValue}
       slotProps={slotProps}
       showAiSparkle={showAiSparkle}
@@ -32,7 +32,7 @@ export const BankTransactionsUncategorizedSelectedValue = (props: BankTransactio
   )
 }
 
-const normalizeFromSelectedValue = (selectedValue: BankTransactionCategoryComboBoxOption): BankTransactionsBaseSelectedValueProps => {
+const normalizeFromSelectedValue = (selectedValue: BankTransactionCategoryComboBoxOption): BankTransactionsSelectedValueProps => {
   if (isSuggestedMatchAsOption(selectedValue)) {
     return {
       type: selectedValue.original.details.type === 'Transfer_Match' ? 'transfer' : 'match',

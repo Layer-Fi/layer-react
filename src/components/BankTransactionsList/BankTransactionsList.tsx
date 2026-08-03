@@ -5,11 +5,11 @@ import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bank
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { Loader } from '@ui/Loader/Loader'
-import { BankTransactionsPaginatedList } from '@components/BankTransactions/BankTransactionsPaginatedList'
-import { BankTransactionsEmptyState, BankTransactionsErrorState } from '@components/BankTransactions/BankTransactionsTableEmptyState'
 import { BankTransactionsListItem } from '@components/BankTransactionsList/BankTransactionsListItem'
 import { BankTransactionsListSelectAllHeader } from '@components/BankTransactionsList/BankTransactionsListSelectAllHeader'
 import { ConditionalList } from '@components/utility/ConditionalList'
+import { BankTransactionsEmptyState, BankTransactionsErrorState } from '@features/bankTransactions/BankTransactionsDataStates/BankTransactionsDataStates'
+import { BankTransactionsPaginatedList } from '@features/bankTransactions/BankTransactionsPaginatedList/BankTransactionsPaginatedList'
 
 import './bankTransactionsList.scss'
 

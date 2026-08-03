@@ -16,7 +16,7 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Header, Span } from '@ui/Typography/Text'
 import { getAllCategoriesGroup, getGroupDisplayLabel, getSuggestedCategoriesGroup, getSuggestedMatchesGroup, isBoldGroupLabel, isLoadingSuggestions } from '@components/BankTransactionCategoryComboBox/utils'
-import { BankTransactionsUncategorizedSelectedValue } from '@components/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
+import { BankTransactionsUncategorizedSelectedValue } from '@features/bankTransactions/BankTransactionsSelectedValue/BankTransactionsUncategorizedSelectedValue'
 
 import './bankTransactionCategoryComboBox.scss'
 

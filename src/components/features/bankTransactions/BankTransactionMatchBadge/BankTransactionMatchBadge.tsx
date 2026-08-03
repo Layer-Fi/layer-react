@@ -7,7 +7,7 @@ import { isTransferMatch } from '@utils/bankTransactions/shared'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Badge } from '@ui/Badge/Badge'
 
-import './matchBadge.scss'
+import './bankTransactionMatchBadge.scss'
 
 interface MatchTooltipProps {
   amount: number
@@ -33,11 +33,11 @@ const MatchTooltip = ({ amount, date, description }: MatchTooltipProps) => {
   )
 }
 
-export interface MatchBadgeProps {
+export interface BankTransactionMatchBadgeProps {
   bankTransaction: BankTransaction
 }
 
-export const MatchBadge = ({ bankTransaction }: MatchBadgeProps) => {
+export const BankTransactionMatchBadge = ({ bankTransaction }: BankTransactionMatchBadgeProps) => {
   const { t } = useTranslation()
 
   const text = isTransferMatch(bankTransaction)
