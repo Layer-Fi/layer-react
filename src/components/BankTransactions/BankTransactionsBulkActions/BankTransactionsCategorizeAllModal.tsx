@@ -15,9 +15,9 @@ import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirm
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { isApiCategorizationAsOption, isCategoryAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { getBankTransactionsById, getFirstBankTransactionWithTaxOptions, getSelectedBankTransactions } from '@components/BankTransactions/BankTransactionsBulkActions/utils'
-import { CategorySelectDrawerWithTrigger } from '@components/CategorySelect/CategorySelectDrawerWithTrigger'
 import type { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 import { TaxCodeSelect } from '@components/TaxCodeSelect/TaxCodeSelect'
+import { CategorySelectDrawerWithTrigger } from '@features/categorization/CategorySelectDrawerWithTrigger/CategorySelectDrawerWithTrigger'
 
 export enum CategorizationMode {
   Categorize = 'Categorize',

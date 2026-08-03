@@ -10,12 +10,12 @@ import { useWizard } from '@blocks/Wizard/Wizard'
 import { CopyTemplateHeadersButtonGroup } from '@components/CsvUpload/CopyTemplateHeadersButtonGroup'
 import { CsvUpload } from '@components/CsvUpload/CsvUpload'
 import { DownloadCsvTemplateButton } from '@components/CsvUpload/DownloadCsvTemplateButton'
-import { type AccountOption } from '@components/CustomAccountComboBox/AccountOption'
-import { CustomAccountComboBox } from '@components/CustomAccountComboBox/CustomAccountComboBox'
-import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
 import { allHeaders, templateExampleTransactions, templateHeaders } from '@components/UploadTransactions/template'
+import { type AccountOption } from '@features/bankAccounts/CustomAccountComboBox/AccountOption'
+import { CustomAccountComboBox } from '@features/bankAccounts/CustomAccountComboBox/CustomAccountComboBox'
+import { isNewAccountOption } from '@features/bankAccounts/CustomAccountComboBox/utils'
 
-export type { AccountOption } from '@components/CustomAccountComboBox/AccountOption'
+export type { AccountOption } from '@features/bankAccounts/CustomAccountComboBox/AccountOption'
 
 interface UploadTransactionsUploadCsvStepProps {
   selectedAccount: AccountOption | null

@@ -11,9 +11,9 @@ import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@p
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { isPlaceholderAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { CategorySelectDrawer } from '@components/CategorySelect/CategorySelectDrawer'
 import type { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 import { TaxCodeMobileDrawer } from '@components/TaxCodeSelect/TaxCodeMobileDrawer'
+import { CategorySelectDrawer } from '@features/categorization/CategorySelectDrawer/CategorySelectDrawer'
 
 import './bankTransactionsMobileCategorySelection.scss'
 

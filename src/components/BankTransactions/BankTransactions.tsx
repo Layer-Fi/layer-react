@@ -41,9 +41,9 @@ import {
   BankTransactionsTable,
   type BankTransactionsTableStringOverrides,
 } from '@components/BankTransactionsTable/BankTransactionsTable'
-import { ResponsiveCategorizationRulesView } from '@components/CategorizationRules/CategorizationRulesView/ResponsiveCategorizationRulesView'
-import { SuggestedCategorizationRuleUpdatesDialog } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDialog'
 import { ErrorBoundary } from '@components/utility/ErrorBoundary/ErrorBoundary'
+import { ResponsiveCategorizationRulesView } from '@features/categorization/ResponsiveCategorizationRulesView/ResponsiveCategorizationRulesView'
+import { SuggestedCategorizationRuleUpdatesDialog } from '@features/categorization/SuggestedCategorizationRuleUpdatesDialog/SuggestedCategorizationRuleUpdatesDialog'
 
 import './bankTransactions.scss'
 

@@ -29,7 +29,7 @@ export { Tasks } from './components/features/bookkeeping/Tasks/Tasks'
 
 /* --------------------- Onboarding ------------------------ */
 export { LinkAccounts } from './components/features/linkedAccounts/LinkAccounts/LinkAccounts'
-export { LandingPage } from './components/LandingPage/LandingPage'
+export { LandingPage } from './views/LandingPage/LandingPage'
 
 /* --------------------- Date Pickers -------------------------- */
 export { GlobalDateRangeSelection } from './components/blocks/DatePickers/DateSelection/GlobalDateRangeSelection'

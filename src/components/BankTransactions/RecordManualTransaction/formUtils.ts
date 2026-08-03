@@ -8,7 +8,7 @@ import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCe
 import { getDefaultSelectedCategoryForBankTransaction } from '@utils/bankTransactions/shared'
 import { getDefaultTaxCodeForBankTransaction } from '@utils/bankTransactions/taxCode'
 import type { RecordTransactionFormValues, RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
-import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
+import { isNewAccountOption } from '@features/bankAccounts/CustomAccountComboBox/utils'
 
 type RecordCustomAccountTransactionParams = {
   customAccountId: string

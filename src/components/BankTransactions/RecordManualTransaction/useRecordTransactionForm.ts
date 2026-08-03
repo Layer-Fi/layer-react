@@ -13,7 +13,7 @@ import { useBankTransactionsCategorizationActions } from '@providers/BankTransac
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 import { convertRecordTransactionFormToParams, getRecordTransactionFormValues } from '@components/BankTransactions/RecordManualTransaction/formUtils'
-import type { AccountOption } from '@components/CustomAccountComboBox/AccountOption'
+import type { AccountOption } from '@features/bankAccounts/CustomAccountComboBox/AccountOption'
 
 export type RecordTransactionVariant = 'income' | 'expense'
 

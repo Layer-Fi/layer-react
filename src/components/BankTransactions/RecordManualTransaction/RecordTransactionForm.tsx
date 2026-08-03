@@ -17,10 +17,10 @@ import { Label } from '@ui/Typography/Text'
 import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { RecordTransactionFormCategoryCombobox } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionFormCategoryCombobox'
 import { type RecordTransactionFormApi, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
-import { CustomAccountComboBox } from '@components/CustomAccountComboBox/CustomAccountComboBox'
-import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
 import { FieldErrors } from '@components/forms/FieldErrors'
 import { TaxCodeComboBox } from '@components/TaxCodeSelect/TaxCodeComboBox'
+import { CustomAccountComboBox } from '@features/bankAccounts/CustomAccountComboBox/CustomAccountComboBox'
+import { isNewAccountOption } from '@features/bankAccounts/CustomAccountComboBox/utils'
 
 import './recordTransactionForm.scss'
 
