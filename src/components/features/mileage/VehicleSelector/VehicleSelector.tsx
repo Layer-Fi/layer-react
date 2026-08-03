@@ -66,7 +66,7 @@ export function VehicleSelector({
   showLabel = true,
 }: VehicleSelectorProps) {
   const { t } = useTranslation()
-  const layoutProps = formFieldLayoutProps({ className: containerClassName, inline })
+  const layoutProps = formFieldLayoutProps({ className: containerClassName, inline, showLabel })
 
   const { data, isLoading, isError } = useGetVehicles()
 

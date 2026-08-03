@@ -106,7 +106,7 @@ export function TimeEntryServiceSelector({
     [servicesResponse, t],
   )
 
-  const layoutProps = formFieldLayoutProps({ className, inline })
+  const layoutProps = formFieldLayoutProps({ className, inline, showLabel })
 
   const handleSelectionChange = useCallback(
     (selectedOption: ServiceAsOption | null) => {

@@ -39,7 +39,7 @@ export function VendorSelector({
 }: VendorSelectorProps) {
   const { t } = useTranslation()
   const resolvedLabel = label ?? t('customerVendor:label.vendor', 'Vendor')
-  const layoutProps = formFieldLayoutProps({ className, inline })
+  const layoutProps = formFieldLayoutProps({ className, inline, showLabel })
 
   const { searchQuery, handleInputChange } = useDebouncedSearchInput({
     initialInputState: () => '',

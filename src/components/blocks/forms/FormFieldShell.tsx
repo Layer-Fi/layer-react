@@ -14,12 +14,14 @@ import './formField.scss'
 const FORM_FIELD_CLASS_NAME = 'Layer__FormField'
 const FIELD_ERROR_CLASS_NAME = 'Layer__UI__FieldError'
 
-type FormFieldLayoutProps = Pick<CommonFormFieldProps, 'className' | 'inline' | 'align'>
+type FormFieldLayoutProps = Pick<CommonFormFieldProps, 'className' | 'inline' | 'align' | 'showLabel'>
 
-export function formFieldLayoutProps({ className, inline = false, align = 'start' }: FormFieldLayoutProps) {
+export function formFieldLayoutProps({ className, inline = false, align = 'start', showLabel = true }: FormFieldLayoutProps) {
   return {
     className: classNames(FORM_FIELD_CLASS_NAME, className),
-    ...toDataProperties({ inline, align: align === 'center' ? align : undefined }),
+    // A hidden label leaves the inline layout with an empty first column and its column gap, so
+    // the field falls back to the stacked single column.
+    ...toDataProperties({ inline: inline && showLabel, align: align === 'center' ? align : undefined }),
   }
 }
 
@@ -98,7 +100,7 @@ export function useFormField({
     rootProps: {
       isReadOnly,
       isDisabled,
-      ...formFieldLayoutProps({ className, inline, align }),
+      ...formFieldLayoutProps({ className, inline, align, showLabel }),
       ...(!showLabel && { 'aria-label': label }),
     },
     shellProps: { name, label, showLabel, showFieldError, errorMessage },

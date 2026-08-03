@@ -49,7 +49,7 @@ export function CustomerSelector({
 }: CustomerSelectorProps) {
   const { t } = useTranslation()
   const resolvedLabel = label ?? t('customerVendor:label.customer', 'Customer')
-  const layoutProps = formFieldLayoutProps({ className, inline })
+  const layoutProps = formFieldLayoutProps({ className, inline, showLabel })
 
   const { searchQuery, handleInputChange } = useDebouncedSearchInput({
     initialInputState: () => '',

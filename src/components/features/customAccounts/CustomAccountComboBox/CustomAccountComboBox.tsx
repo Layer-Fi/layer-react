@@ -77,7 +77,7 @@ export function CustomAccountComboBox({
 
   return (
     <VStack gap='xs' className={className}>
-      <div {...formFieldLayoutProps({ inline })}>
+      <div {...formFieldLayoutProps({ inline, showLabel })}>
         {showLabel && <Label slot='label' size='sm' htmlFor={inputId}>{label}</Label>}
         <CreatableComboBox<AccountOption>
           slot='input'

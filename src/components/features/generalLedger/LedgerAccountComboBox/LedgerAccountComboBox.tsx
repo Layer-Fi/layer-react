@@ -56,7 +56,7 @@ export const LedgerAccountComboBox = ({
   const inputId = useId()
   const additionalAriaProps = !showLabel && { 'aria-label': label }
   return (
-    <div {...formFieldLayoutProps({ className, inline })}>
+    <div {...formFieldLayoutProps({ className, inline, showLabel })}>
       {showLabel && (
         <Label slot='label' size='sm' htmlFor={inputId}>
           {label}
