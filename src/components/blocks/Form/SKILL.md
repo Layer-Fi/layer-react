@@ -1,7 +1,7 @@
 ---
 name: forms
 description: Building a form — useAppForm, the Form*Field components, validators, submit and error handling, testing
-applies_to: src/components/blocks/forms/**, src/hooks/features/forms/**, src/utils/form/**
+applies_to: src/components/blocks/Form/**, src/hooks/features/forms/**, src/utils/form/**
 ---
 
 # Forms
@@ -91,7 +91,7 @@ All of them accept `CommonFormFieldProps`:
   it becomes the `aria-label` rather than disappearing.
 - `showLabel`, `inline`, `showFieldError`, `isReadOnly`, `className`.
 
-Adding a new field type means adding the component to `src/components/blocks/forms/` **and** registering
+Adding a new field type means adding the component to `src/components/blocks/Form/` **and** registering
 it in the `createFormHook` `fieldComponents` map in `@hooks/features/forms/useForm` — it isn't
 available on `field.` until then.
 
@@ -117,7 +117,7 @@ Three distinct layers; don't collapse them:
 | an explicit field-level message from outside validation | the field's `errorText` prop |
 | form-level API failure | `FormErrorBanner` (`@blocks/FormErrorBanner`) |
 
-`FieldErrors` (`@blocks/forms/FieldErrors`) renders the first error of an array for cases
+`FieldErrors` (`@blocks/Form/FieldErrors`) renders the first error of an array for cases
 outside a bound field. `flattenValidationErrors` (`@utils/form`) collapses a TanStack
 `ValidationErrorMap` into a string list.
 

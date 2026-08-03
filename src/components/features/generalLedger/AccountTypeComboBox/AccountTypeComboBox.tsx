@@ -3,9 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
-import { HStack } from '@ui/Stack/Stack'
-import { Label } from '@ui/Typography/Text'
-import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
+import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 import { LEDGER_ACCOUNT_TYPES_CONFIG } from '@features/generalLedger/constants'
 
 type AccountTypeComboBoxProps = {
@@ -25,19 +23,19 @@ export const AccountTypeComboBox = ({ label, value, onChange, isDisabled, error,
   )
 
   return (
-    <HStack {...formFieldLayoutProps({ inline })}>
-      <Label slot='label' size='sm' htmlFor='type'>{label}</Label>
-      <ComboBox
-        slot='input'
-        inputId='type'
-        options={options}
-        selectedValue={options.find(option => option.value === value) ?? null}
-        onSelectedValueChange={option => onChange(option?.value ?? null)}
-        placeholder={t('chartOfAccounts:placeholder.select_type', 'Select a type')}
-        isDisabled={isDisabled}
-        isError={Boolean(error)}
-        slots={{ ErrorMessage: error }}
-      />
-    </HStack>
+    <ComboBoxField label={label} inline={inline}>
+      {controlProps => (
+        <ComboBox
+          {...controlProps}
+          options={options}
+          selectedValue={options.find(option => option.value === value) ?? null}
+          onSelectedValueChange={option => onChange(option?.value ?? null)}
+          placeholder={t('chartOfAccounts:placeholder.select_type', 'Select a type')}
+          isDisabled={isDisabled}
+          isError={Boolean(error)}
+          slots={{ ErrorMessage: error }}
+        />
+      )}
+    </ComboBoxField>
   )
 }

@@ -1,7 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
-import { Sparkles } from 'lucide-react'
 
-import { FormSwitchField, type FormSwitchFieldProps } from '@blocks/forms/FormSwitchField'
+import { FormCheckboxField, type FormCheckboxFieldProps } from '@blocks/Form/FormCheckboxField'
 
 import {
   COMMON_FIELD_VARIANTS,
@@ -10,26 +9,25 @@ import {
   FormFieldVariantGallery,
 } from '@test-utils/storybook/formField'
 
-const LABEL = 'Auto-categorize transactions'
+const LABEL = 'Exclude from reports'
 
-type Variant = FormFieldVariant<boolean, FormSwitchFieldProps>
+type Variant = FormFieldVariant<boolean, FormCheckboxFieldProps>
 
 const VARIANTS: ReadonlyArray<Variant> = [
   ...COMMON_FIELD_VARIANTS,
   ...ERROR_FIELD_VARIANTS,
   { label: 'unselected', value: false },
-  { label: 'label icon', props: { slots: { LabelIcon: <Sparkles size={14} /> } } },
 ]
 
-const meta: Meta<typeof FormSwitchField> = {
-  title: 'Blocks/Forms/FormSwitchField',
-  component: FormSwitchField,
+const meta: Meta<typeof FormCheckboxField> = {
+  title: 'Blocks/Form/FormCheckboxField',
+  component: FormCheckboxField,
   args: { label: LABEL },
 }
 
 export default meta
 
-type Story = StoryObj<typeof FormSwitchField>
+type Story = StoryObj<typeof FormCheckboxField>
 
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
@@ -37,7 +35,7 @@ export const AllVariants: Story = {
     <FormFieldVariantGallery
       defaultValue
       variants={VARIANTS}
-      renderField={props => <FormSwitchField label={LABEL} {...props} />}
+      renderField={props => <FormCheckboxField label={LABEL} {...props} />}
     />
   ),
 }

@@ -12,7 +12,7 @@ import { useFieldContext } from '@hooks/features/forms/useForm'
 import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
 import { HStack } from '@ui/Stack/Stack'
-import { BaseFormTextField, type BaseFormTextFieldProps } from '@blocks/forms/BaseFormTextField'
+import { BaseFormTextField, type BaseFormTextFieldProps } from '@blocks/Form/BaseFormTextField'
 
 export type FormNonRecursiveBigDecimalFieldProps = Omit<BaseFormTextFieldProps, 'inputMode' | 'isTextArea'> & {
   maxValue?: BD.BigDecimal

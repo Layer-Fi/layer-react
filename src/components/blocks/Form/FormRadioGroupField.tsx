@@ -2,8 +2,8 @@ import { useFieldContext } from '@hooks/features/forms/useForm'
 import { Radio, RadioGroup } from '@ui/RadioGroup/RadioGroup'
 import { Stack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { FormFieldShell, useFormField } from '@blocks/forms/FormFieldShell'
-import type { CommonFormFieldProps } from '@blocks/forms/types'
+import { FormFieldShell, useFormField } from '@blocks/Form/FormFieldShell'
+import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 export type RadioOption<T extends string> = {
   value: T

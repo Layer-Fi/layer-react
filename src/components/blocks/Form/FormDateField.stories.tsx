@@ -1,6 +1,7 @@
+import { CalendarDate } from '@internationalized/date'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { FormTextField, type FormTextFieldProps } from '@blocks/forms/FormTextField'
+import { FormDateField, type FormDateFieldProps } from '@blocks/Form/FormDateField'
 
 import {
   COMMON_FIELD_VARIANTS,
@@ -9,27 +10,26 @@ import {
   FormFieldVariantGallery,
 } from '@test-utils/storybook/formField'
 
-const LABEL = 'Vendor name'
-const VALUE = 'Acme Supply Co.'
+const LABEL = 'Trip date'
+const VALUE = new CalendarDate(2026, 3, 14)
 
-type Variant = FormFieldVariant<string, FormTextFieldProps>
+type Variant = FormFieldVariant<CalendarDate | null, FormDateFieldProps>
 
 const VARIANTS: ReadonlyArray<Variant> = [
   ...COMMON_FIELD_VARIANTS,
   ...ERROR_FIELD_VARIANTS,
-  { label: 'empty', value: '' },
-  { label: 'placeholder', value: '', props: { placeholder: 'Enter a vendor' } },
+  { label: 'empty', value: null },
 ]
 
-const meta: Meta<typeof FormTextField> = {
-  title: 'Blocks/Forms/FormTextField',
-  component: FormTextField,
+const meta: Meta<typeof FormDateField> = {
+  title: 'Blocks/Form/FormDateField',
+  component: FormDateField,
   args: { label: LABEL },
 }
 
 export default meta
 
-type Story = StoryObj<typeof FormTextField>
+type Story = StoryObj<typeof FormDateField>
 
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
@@ -37,7 +37,7 @@ export const AllVariants: Story = {
     <FormFieldVariantGallery
       defaultValue={VALUE}
       variants={VARIANTS}
-      renderField={props => <FormTextField label={LABEL} {...props} />}
+      renderField={props => <FormDateField<CalendarDate> label={LABEL} {...props} />}
     />
   ),
 }

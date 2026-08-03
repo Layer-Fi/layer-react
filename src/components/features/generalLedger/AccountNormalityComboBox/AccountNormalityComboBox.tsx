@@ -3,9 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
-import { HStack } from '@ui/Stack/Stack'
-import { Label } from '@ui/Typography/Text'
-import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
+import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 import { NORMALITY_CONFIG } from '@features/generalLedger/constants'
 
 type AccountNormalityComboBoxProps = {
@@ -24,18 +22,18 @@ export const AccountNormalityComboBox = ({ label, value, onChange, error, inline
   )
 
   return (
-    <HStack {...formFieldLayoutProps({ inline })}>
-      <Label slot='label' size='sm' htmlFor='normality'>{label}</Label>
-      <ComboBox
-        slot='input'
-        inputId='normality'
-        options={options}
-        selectedValue={options.find(option => option.value === value) ?? null}
-        onSelectedValueChange={option => onChange(option?.value ?? null)}
-        placeholder={t('chartOfAccounts:placeholder.select_normality', 'Select a normality')}
-        isError={Boolean(error)}
-        slots={{ ErrorMessage: error }}
-      />
-    </HStack>
+    <ComboBoxField label={label} inline={inline}>
+      {controlProps => (
+        <ComboBox
+          {...controlProps}
+          options={options}
+          selectedValue={options.find(option => option.value === value) ?? null}
+          onSelectedValueChange={option => onChange(option?.value ?? null)}
+          placeholder={t('chartOfAccounts:placeholder.select_normality', 'Select a normality')}
+          isError={Boolean(error)}
+          slots={{ ErrorMessage: error }}
+        />
+      )}
+    </ComboBoxField>
   )
 }

@@ -1,12 +1,10 @@
-import { useCallback, useId, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { TripPurpose } from '@schemas/trip'
 import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { HStack } from '@ui/Stack/Stack'
-import { Label } from '@ui/Typography/Text'
-import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
+import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 
 type TripPurposeOption = {
   label: string
@@ -29,8 +27,6 @@ type TripPurposeComboBoxProps = {
 
 export const TripPurposeComboBox = ({ value, onValueChange, isReadOnly, inline, className }: TripPurposeComboBoxProps) => {
   const { t } = useTranslation()
-  const layoutProps = formFieldLayoutProps({ className, inline })
-
   const options = useMemo<TripPurposeOption[]>(
     () => TRIP_PURPOSE_OPTIONS.map(opt => ({
       value: opt.value,
@@ -45,23 +41,19 @@ export const TripPurposeComboBox = ({ value, onValueChange, isReadOnly, inline, 
   }
   const onSelectedValueChange = useCallback(handleChange, [onValueChange])
 
-  const inputId = useId()
-
   return (
-    <HStack {...layoutProps}>
-      <Label slot='label' size='sm' htmlFor={inputId}>
-        {t('common:label.purpose', 'Purpose')}
-      </Label>
-      <ComboBox
-        slot='input'
-        options={options}
-        onSelectedValueChange={onSelectedValueChange}
-        selectedValue={selectedOption}
-        isSearchable={false}
-        inputId={inputId}
-        isReadOnly={isReadOnly}
-        isClearable={false}
-      />
-    </HStack>
+    <ComboBoxField label={t('common:label.purpose', 'Purpose')} className={className} inline={inline}>
+      {controlProps => (
+        <ComboBox
+          {...controlProps}
+          options={options}
+          onSelectedValueChange={onSelectedValueChange}
+          selectedValue={selectedOption}
+          isSearchable={false}
+          isReadOnly={isReadOnly}
+          isClearable={false}
+        />
+      )}
+    </ComboBoxField>
   )
 }

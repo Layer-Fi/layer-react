@@ -1,8 +1,8 @@
 import type { PropsWithChildren } from 'react'
 
 import { TextField, type TextFieldProps } from '@ui/Form/Form'
-import { FormFieldShell, useFormField } from '@blocks/forms/FormFieldShell'
-import type { CommonFormFieldProps } from '@blocks/forms/types'
+import { FormFieldShell, useFormField } from '@blocks/Form/FormFieldShell'
+import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 export type BaseFormTextFieldProps = CommonFormFieldProps & {
   inputMode?: TextFieldProps['inputMode']

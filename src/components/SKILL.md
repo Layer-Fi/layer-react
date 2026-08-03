@@ -156,7 +156,7 @@ pre-bound `Form*Field` components — never a raw input wired to `useState`. Spl
 hook that owns state and submission and a component that renders fields.
 
 Full guide — field components, validators, the three error layers, submit wiring:
-[`blocks/forms/SKILL.md`](blocks/forms/SKILL.md).
+[`blocks/Form/SKILL.md`](blocks/Form/SKILL.md).
 
 ## Tables
 

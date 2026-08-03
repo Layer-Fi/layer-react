@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { FormTextAreaField, type FormTextAreaFieldProps } from '@blocks/forms/FormTextAreaField'
+import { FormTextField, type FormTextFieldProps } from '@blocks/Form/FormTextField'
 
 import {
   COMMON_FIELD_VARIANTS,
@@ -9,27 +9,27 @@ import {
   FormFieldVariantGallery,
 } from '@test-utils/storybook/formField'
 
-const LABEL = 'Description'
-const VALUE = 'Quarterly office supply restock, split across two deliveries.'
+const LABEL = 'Vendor name'
+const VALUE = 'Acme Supply Co.'
 
-type Variant = FormFieldVariant<string, FormTextAreaFieldProps>
+type Variant = FormFieldVariant<string, FormTextFieldProps>
 
 const VARIANTS: ReadonlyArray<Variant> = [
   ...COMMON_FIELD_VARIANTS,
   ...ERROR_FIELD_VARIANTS,
   { label: 'empty', value: '' },
-  { label: 'placeholder', value: '', props: { placeholder: 'Add description' } },
+  { label: 'placeholder', value: '', props: { placeholder: 'Enter a vendor' } },
 ]
 
-const meta: Meta<typeof FormTextAreaField> = {
-  title: 'Blocks/Forms/FormTextAreaField',
-  component: FormTextAreaField,
+const meta: Meta<typeof FormTextField> = {
+  title: 'Blocks/Form/FormTextField',
+  component: FormTextField,
   args: { label: LABEL },
 }
 
 export default meta
 
-type Story = StoryObj<typeof FormTextAreaField>
+type Story = StoryObj<typeof FormTextField>
 
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
@@ -37,7 +37,7 @@ export const AllVariants: Story = {
     <FormFieldVariantGallery
       defaultValue={VALUE}
       variants={VARIANTS}
-      renderField={props => <FormTextAreaField label={LABEL} {...props} />}
+      renderField={props => <FormTextField label={LABEL} {...props} />}
     />
   ),
 }

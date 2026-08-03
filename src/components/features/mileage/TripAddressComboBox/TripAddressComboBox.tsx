@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { TripFormAddress } from '@schemas/trip'
@@ -6,8 +6,8 @@ import { useGetMileageAddressDetails } from '@api/businesses/[business-id]/milea
 import { MIN_ADDRESS_QUERY_LENGTH, useGetMileageAddressSuggestions } from '@api/businesses/[business-id]/mileage/address-suggestions/get'
 import { SearchComboBox, useSearchComboBox } from '@ui/ComboBox/SearchComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
-import { Label, P } from '@ui/Typography/Text'
-import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
+import { P } from '@ui/Typography/Text'
+import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 
 type TripAddressComboBoxProps = {
   label: string
@@ -93,27 +93,25 @@ export const TripAddressComboBox = ({
     [t],
   )
 
-  const inputId = useId()
-
   return (
-    <div {...formFieldLayoutProps({ className, inline })}>
-      <Label slot='label' size='sm' htmlFor={inputId}>{label}</Label>
-      <SearchComboBox
-        slot='input'
-        {...searchComboBoxProps}
-        options={options}
-        selectedValue={selectedValue}
-        onSelectedValueChange={handleSelectedValueChange}
-        inputId={inputId}
-        isReadOnly={isReadOnly}
-        isLoading={isLoading}
-        isError={isError}
-        placeholder={t('trips:label.enter_address', 'Enter address')}
-        slots={{
-          EmptyMessage,
-          ErrorMessage: t('trips:error.load_address_suggestions', 'An error occurred while loading address suggestions.'),
-        }}
-      />
-    </div>
+    <ComboBoxField label={label} className={className} inline={inline}>
+      {controlProps => (
+        <SearchComboBox
+          {...controlProps}
+          {...searchComboBoxProps}
+          options={options}
+          selectedValue={selectedValue}
+          onSelectedValueChange={handleSelectedValueChange}
+          isReadOnly={isReadOnly}
+          isLoading={isLoading}
+          isError={isError}
+          placeholder={t('trips:label.enter_address', 'Enter address')}
+          slots={{
+            EmptyMessage,
+            ErrorMessage: t('trips:error.load_address_suggestions', 'An error occurred while loading address suggestions.'),
+          }}
+        />
+      )}
+    </ComboBoxField>
   )
 }

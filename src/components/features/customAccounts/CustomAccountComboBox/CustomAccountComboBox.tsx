@@ -5,8 +5,7 @@ import type { CustomAccount } from '@schemas/customAccounts'
 import { useGetCustomAccounts } from '@api/businesses/[business-id]/custom-accounts/get'
 import { CreatableComboBox } from '@ui/ComboBox/CreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
-import { Label } from '@ui/Typography/Text'
-import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
+import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 import { type AccountOption } from '@features/customAccounts/CustomAccountComboBox/AccountOption'
 import { AccountOptionSlot, AccountSingleValueSlot } from '@features/customAccounts/CustomAccountComboBox/AccountOptionSlots'
 import { formatCreateLabel, isNewAccountOption, NEW_ACCOUNT_VALUE } from '@features/customAccounts/CustomAccountComboBox/utils'
@@ -31,7 +30,7 @@ export function CustomAccountComboBox({
   label,
   selectedAccount,
   onSelectAccount,
-  inputId = 'account_name',
+  inputId,
   placeholder,
   showLabel = true,
   inline = false,
@@ -77,27 +76,26 @@ export function CustomAccountComboBox({
 
   return (
     <VStack gap='xs' className={className}>
-      <div {...formFieldLayoutProps({ inline, showLabel })}>
-        {showLabel && <Label slot='label' size='sm' htmlFor={inputId}>{label}</Label>}
-        <CreatableComboBox<AccountOption>
-          slot='input'
-          inputId={inputId}
-          placeholder={customAccountsError ? t('common:error.load_options', 'Failed to load options') : (placeholder ?? t('upload:action.select_account', 'Select account...'))}
-          options={accountOptions}
-          onSelectedValueChange={onSelectAccount}
-          onCreateOption={onCreateOption}
-          formatCreateLabel={inputValue => formatCreateLabel(inputValue, t)}
-          isValidNewOption={() => true}
-          selectedValue={selectedAccount}
-          isClearable
-          isLoading={isLoadingCustomAccounts}
-          isDisabled={!!customAccountsError || isReadOnly}
-          isError={!!customAccountsError}
-          isInvalid={isInvalid}
-          slots={{ Option: AccountOptionSlot, SingleValue: AccountSingleValueSlot }}
-          aria-label={showLabel ? undefined : label}
-        />
-      </div>
+      <ComboBoxField label={label} inline={inline} showLabel={showLabel} inputId={inputId}>
+        {controlProps => (
+          <CreatableComboBox<AccountOption>
+            {...controlProps}
+            placeholder={customAccountsError ? t('common:error.load_options', 'Failed to load options') : (placeholder ?? t('upload:action.select_account', 'Select account...'))}
+            options={accountOptions}
+            onSelectedValueChange={onSelectAccount}
+            onCreateOption={onCreateOption}
+            formatCreateLabel={inputValue => formatCreateLabel(inputValue, t)}
+            isValidNewOption={() => true}
+            selectedValue={selectedAccount}
+            isClearable
+            isLoading={isLoadingCustomAccounts}
+            isDisabled={!!customAccountsError || isReadOnly}
+            isError={!!customAccountsError}
+            isInvalid={isInvalid}
+            slots={{ Option: AccountOptionSlot, SingleValue: AccountSingleValueSlot }}
+          />
+        )}
+      </ComboBoxField>
       {isCreatingNewAccount && selectedAccount && (
         <VStack className='Layer__CustomAccountComboBox__CreateForm'>
           <CustomAccountForm

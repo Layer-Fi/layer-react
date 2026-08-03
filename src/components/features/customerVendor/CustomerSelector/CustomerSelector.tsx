@@ -1,4 +1,4 @@
-import { useCallback, useId, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Customer } from '@schemas/customer'
@@ -7,9 +7,8 @@ import { getCustomerName } from '@utils/customer'
 import { useGetListCustomers } from '@api/businesses/[business-id]/customers/get'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
-import { VStack } from '@ui/Stack/Stack'
-import { Label, P } from '@ui/Typography/Text'
-import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
+import { P } from '@ui/Typography/Text'
+import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 import { CustomerAsOption } from '@features/customerVendor/CustomerSelector/CustomerAsOption'
 
 type CustomerSelectorBaseProps = {
@@ -49,7 +48,6 @@ export function CustomerSelector({
 }: CustomerSelectorProps) {
   const { t } = useTranslation()
   const resolvedLabel = label ?? t('customerVendor:label.customer', 'Customer')
-  const layoutProps = formFieldLayoutProps({ className, inline, showLabel })
 
   const { searchQuery, handleInputChange } = useDebouncedSearchInput({
     initialInputState: () => '',
@@ -123,8 +121,6 @@ export function CustomerSelector({
 
   const ErrorMessage = t('customerVendor:error.load_customers', 'An error occurred while loading customers.')
 
-  const inputId = useId()
-
   const isLoadingWithoutFallback = isLoading && !flattenedData
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
@@ -134,7 +130,6 @@ export function CustomerSelector({
     selectedValue: selectedCustomerForComboBox,
     onSelectedValueChange: handleSelectionChange,
     onInputValueChange: handleInputChange,
-    inputId,
     placeholder,
     slots,
     isDisabled: shouldDisableComboBox,
@@ -142,7 +137,6 @@ export function CustomerSelector({
     isInvalid,
     isLoading: isLoadingWithoutFallback,
     isReadOnly,
-    ['aria-label']: showLabel ? undefined : resolvedLabel,
   }
 
   const formatCreateLabel = useCallback((inputValue: string) =>
@@ -165,9 +159,8 @@ export function CustomerSelector({
   )
 
   return (
-    <VStack {...layoutProps}>
-      {showLabel && <Label slot='label' htmlFor={inputId} size='sm'>{resolvedLabel}</Label>}
-      <MaybeCreatableComboBox slot='input' {...sharedProps} {...creatableProps} />
-    </VStack>
+    <ComboBoxField label={resolvedLabel} className={className} inline={inline} showLabel={showLabel}>
+      {controlProps => <MaybeCreatableComboBox {...controlProps} {...sharedProps} {...creatableProps} />}
+    </ComboBoxField>
   )
 }

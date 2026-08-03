@@ -4,8 +4,8 @@ import type { DateValue } from '@internationalized/date'
 import { useFieldContext } from '@hooks/features/forms/useForm'
 import { DateField, DateInput, DateSegment } from '@ui/Date/Date'
 import { InputGroup } from '@ui/Input/InputGroup'
-import { FormFieldShell, useFormField } from '@blocks/forms/FormFieldShell'
-import type { CommonFormFieldProps } from '@blocks/forms/types'
+import { FormFieldShell, useFormField } from '@blocks/Form/FormFieldShell'
+import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 export type FormDateFieldProps = CommonFormFieldProps
 

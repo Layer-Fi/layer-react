@@ -1,12 +1,10 @@
-import { useCallback, useId, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { PaymentMethod } from '@schemas/invoices/paymentMethod'
 import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { HStack } from '@ui/Stack/Stack'
-import { Label } from '@ui/Typography/Text'
-import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
+import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 
 type PaymentMethodOption = {
   label: string
@@ -31,8 +29,6 @@ type PaymentMethodComboBoxProps = {
 
 export const PaymentMethodComboBox = ({ value, onValueChange, isReadOnly, className, inline }: PaymentMethodComboBoxProps) => {
   const { t } = useTranslation()
-  const layoutProps = formFieldLayoutProps({ className, inline })
-
   const options = useMemo<PaymentMethodOption[]>(
     () => PAYMENT_METHOD_OPTIONS.map(opt => ({
       value: opt.value,
@@ -47,22 +43,18 @@ export const PaymentMethodComboBox = ({ value, onValueChange, isReadOnly, classN
   }
   const onSelectedValueChange = useCallback(handleChange, [onValueChange])
 
-  const inputId = useId()
-
   return (
-    <HStack {...layoutProps}>
-      <Label slot='label' size='sm' htmlFor={inputId}>
-        {t('invoices:label.payment_method', 'Payment method')}
-      </Label>
-      <ComboBox
-        slot='input'
-        options={options}
-        onSelectedValueChange={onSelectedValueChange}
-        selectedValue={selectedOption}
-        isSearchable={false}
-        inputId={inputId}
-        isReadOnly={isReadOnly}
-      />
-    </HStack>
+    <ComboBoxField label={t('invoices:label.payment_method', 'Payment method')} className={className} inline={inline}>
+      {controlProps => (
+        <ComboBox
+          {...controlProps}
+          options={options}
+          onSelectedValueChange={onSelectedValueChange}
+          selectedValue={selectedOption}
+          isSearchable={false}
+          isReadOnly={isReadOnly}
+        />
+      )}
+    </ComboBoxField>
   )
 }

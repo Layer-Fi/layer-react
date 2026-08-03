@@ -2,8 +2,8 @@ import { type ReactNode } from 'react'
 
 import { useFieldContext } from '@hooks/features/forms/useForm'
 import { Switch } from '@ui/Switch/Switch'
-import { FormFieldShell, useFormField } from '@blocks/forms/FormFieldShell'
-import type { CommonFormFieldProps } from '@blocks/forms/types'
+import { FormFieldShell, useFormField } from '@blocks/Form/FormFieldShell'
+import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 export type FormSwitchFieldProps = CommonFormFieldProps & {
   slots?: {

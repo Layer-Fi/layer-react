@@ -1,7 +1,7 @@
 import { useFieldContext } from '@hooks/features/forms/useForm'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
-import { FormFieldShell, useFormField } from '@blocks/forms/FormFieldShell'
-import type { CommonFormFieldProps } from '@blocks/forms/types'
+import { FormFieldShell, useFormField } from '@blocks/Form/FormFieldShell'
+import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 export type FormCheckboxFieldProps = CommonFormFieldProps
 

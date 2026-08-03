@@ -10,7 +10,7 @@ import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { ErrorText } from '@ui/Typography/ErrorText'
 import { Label } from '@ui/Typography/Text'
-import { type RadioOption } from '@blocks/forms/FormRadioGroupField'
+import { type RadioOption } from '@blocks/Form/FormRadioGroupField'
 import { useCustomAccountForm } from '@features/customAccounts/CustomAccountForm/useCustomAccountForm'
 
 import './customAccountForm.scss'

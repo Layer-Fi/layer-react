@@ -7,7 +7,7 @@ import { useFieldContext } from '@hooks/features/forms/useForm'
 import { FieldError } from '@ui/Form/Form'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-import type { CommonFormFieldProps } from '@blocks/forms/types'
+import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 import './formField.scss'
 
