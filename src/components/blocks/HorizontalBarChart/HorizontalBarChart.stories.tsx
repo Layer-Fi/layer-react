@@ -1,8 +1,8 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import type { SeriesData } from '@ui/Chart/seriesTypes'
-import { HorizontalBarChart } from '@ui/HorizontalBarChart/HorizontalBarChart'
 import { LegendLayout } from '@ui/Legend/Legend'
+import { HorizontalBarChart } from '@blocks/HorizontalBarChart/HorizontalBarChart'
 
 import { Col, Gallery } from '@test-utils/storybook/gallery'
 

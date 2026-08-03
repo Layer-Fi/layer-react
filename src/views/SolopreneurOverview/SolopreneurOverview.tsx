@@ -8,9 +8,8 @@ import { HeaderRow } from '@ui/Header/HeaderRow'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 import { View } from '@blocks/Layout/View/View'
 import { type SummaryCardInteractionProps, type SummaryCardStringOverrides } from '@blocks/SummaryCard/useSummaryCardSlots'
-import { ExpensesSummaryCard } from '@components/ExpensesSummaryCard/ExpensesSummaryCard'
-import { SolopreneurOnboardingBanner } from '@components/SolopreneurOnboardingBanner/SolopreneurOnboardingBanner'
 import { MileageTrackingSummary } from '@features/mileage/MileageTrackingSummary/MileageTrackingSummary'
+import { ExpensesSummaryCard } from '@features/profitAndLoss/ExpensesSummaryCard/ExpensesSummaryCard'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import {
   ProfitAndLossSummaries,
@@ -23,6 +22,7 @@ import {
   TaxEstimatesSummaryCard,
   TaxEstimatesSummaryCardMode,
 } from '@features/taxEstimates/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
+import { SolopreneurOnboardingBanner } from '@views/SolopreneurOverview/SolopreneurOnboardingBanner/SolopreneurOnboardingBanner'
 
 import './solopreneurOverview.scss'
 

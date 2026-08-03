@@ -11,7 +11,7 @@ import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { ErrorText } from '@ui/Typography/ErrorText'
 import { Label } from '@ui/Typography/Text'
 import { type RadioOption } from '@components/forms/FormRadioGroupField'
-import { useCustomAccountForm } from '@features/bankAccounts/CustomAccountForm/useCustomAccountForm'
+import { useCustomAccountForm } from '@features/customAccounts/CustomAccountForm/useCustomAccountForm'
 
 import './customAccountForm.scss'
 

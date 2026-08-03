@@ -5,7 +5,7 @@ import { humanizeEnum } from '@utils/format'
 import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import type { AccountOption } from '@features/bankAccounts/CustomAccountComboBox/AccountOption'
+import type { AccountOption } from '@features/customAccounts/CustomAccountComboBox/AccountOption'
 
 type AccountOptionSlotProps = {
   option: AccountOption

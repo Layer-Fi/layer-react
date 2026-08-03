@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next'
 
-import type { AccountOption } from '@features/bankAccounts/CustomAccountComboBox/AccountOption'
+import type { AccountOption } from '@features/customAccounts/CustomAccountComboBox/AccountOption'
 
 export const NEW_ACCOUNT_VALUE = 'new_account'
 

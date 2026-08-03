@@ -11,11 +11,11 @@ import { CopyTemplateHeadersButtonGroup } from '@components/CsvUpload/CopyTempla
 import { CsvUpload } from '@components/CsvUpload/CsvUpload'
 import { DownloadCsvTemplateButton } from '@components/CsvUpload/DownloadCsvTemplateButton'
 import { allHeaders, templateExampleTransactions, templateHeaders } from '@components/UploadTransactions/template'
-import { type AccountOption } from '@features/bankAccounts/CustomAccountComboBox/AccountOption'
-import { CustomAccountComboBox } from '@features/bankAccounts/CustomAccountComboBox/CustomAccountComboBox'
-import { isNewAccountOption } from '@features/bankAccounts/CustomAccountComboBox/utils'
+import { type AccountOption } from '@features/customAccounts/CustomAccountComboBox/AccountOption'
+import { CustomAccountComboBox } from '@features/customAccounts/CustomAccountComboBox/CustomAccountComboBox'
+import { isNewAccountOption } from '@features/customAccounts/CustomAccountComboBox/utils'
 
-export type { AccountOption } from '@features/bankAccounts/CustomAccountComboBox/AccountOption'
+export type { AccountOption } from '@features/customAccounts/CustomAccountComboBox/AccountOption'
 
 interface UploadTransactionsUploadCsvStepProps {
   selectedAccount: AccountOption | null

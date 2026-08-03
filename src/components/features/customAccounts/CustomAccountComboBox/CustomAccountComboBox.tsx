@@ -7,10 +7,10 @@ import { useGetCustomAccounts } from '@api/businesses/[business-id]/custom-accou
 import { CreatableComboBox } from '@ui/ComboBox/CreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-import { type AccountOption } from '@features/bankAccounts/CustomAccountComboBox/AccountOption'
-import { AccountOptionSlot, AccountSingleValueSlot } from '@features/bankAccounts/CustomAccountComboBox/AccountOptionSlots'
-import { formatCreateLabel, isNewAccountOption, NEW_ACCOUNT_VALUE } from '@features/bankAccounts/CustomAccountComboBox/utils'
-import { CustomAccountForm } from '@features/bankAccounts/CustomAccountForm/CustomAccountForm'
+import { type AccountOption } from '@features/customAccounts/CustomAccountComboBox/AccountOption'
+import { AccountOptionSlot, AccountSingleValueSlot } from '@features/customAccounts/CustomAccountComboBox/AccountOptionSlots'
+import { formatCreateLabel, isNewAccountOption, NEW_ACCOUNT_VALUE } from '@features/customAccounts/CustomAccountComboBox/utils'
+import { CustomAccountForm } from '@features/customAccounts/CustomAccountForm/CustomAccountForm'
 
 import './customAccountComboBox.scss'
 

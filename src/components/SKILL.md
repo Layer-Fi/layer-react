@@ -54,7 +54,7 @@ pattern), or `@components/utility` (rendering helper).
 ## File conventions
 
 ```
-src/components/features/bankAccounts/CustomAccountForm/
+src/components/features/customAccounts/CustomAccountForm/
   CustomAccountForm.tsx          PascalCase component file
   customAccountForm.scss         camelCase stylesheet, imported by the .tsx
   CustomAccountForm.test.tsx     colocated test

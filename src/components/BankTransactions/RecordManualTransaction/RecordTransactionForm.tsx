@@ -19,8 +19,8 @@ import { RecordTransactionFormCategoryCombobox } from '@components/BankTransacti
 import { type RecordTransactionFormApi, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { FieldErrors } from '@components/forms/FieldErrors'
 import { TaxCodeComboBox } from '@components/TaxCodeSelect/TaxCodeComboBox'
-import { CustomAccountComboBox } from '@features/bankAccounts/CustomAccountComboBox/CustomAccountComboBox'
-import { isNewAccountOption } from '@features/bankAccounts/CustomAccountComboBox/utils'
+import { CustomAccountComboBox } from '@features/customAccounts/CustomAccountComboBox/CustomAccountComboBox'
+import { isNewAccountOption } from '@features/customAccounts/CustomAccountComboBox/utils'
 
 import './recordTransactionForm.scss'
 
