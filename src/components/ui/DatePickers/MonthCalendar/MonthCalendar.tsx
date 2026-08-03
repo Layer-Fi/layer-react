@@ -1,0 +1,139 @@
+import { useCallback, useMemo, useState } from 'react'
+import { CalendarDate, fromDate, getLocalTimeZone, type ZonedDateTime } from '@internationalized/date'
+import classNames from 'classnames'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { GridList, GridListItem } from 'react-aria-components/GridList'
+import { useTranslation } from 'react-i18next'
+
+import type { View } from '@internal-types/general'
+import { DateFormat } from '@utils/i18n/date/patterns'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { Button } from '@ui/Button/Button'
+import { getMonths } from '@ui/DatePickers/MonthCalendar/utils'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
+
+import './monthCalendar.scss'
+
+export function MonthCalendar({
+  date,
+  onChange,
+  minDate,
+  maxDate,
+  variant,
+}: {
+  date: ZonedDateTime | null
+  onChange: (val: ZonedDateTime) => void
+  minDate?: ZonedDateTime | null
+  maxDate?: ZonedDateTime | null
+  variant?: View
+}) {
+  const { t } = useTranslation()
+  const { formatMonthName, formatDate } = useIntlFormatter()
+  const months = useMemo(() => getMonths(formatMonthName), [formatMonthName])
+  const minYear = minDate?.year ?? null
+  const maxYear = maxDate?.year ?? null
+  const [year, setYear] = useState(() => date?.year ?? new Date().getFullYear())
+
+  const clampYear = useCallback((y: number) => {
+    if (minYear != null && y < minYear) return minYear
+    if (maxYear != null && y > maxYear) return maxYear
+    return y
+  }, [minYear, maxYear])
+
+  const isMonthDisabled = useCallback((month: number): boolean => {
+    const date = new CalendarDate(year, month, 1)
+
+    if (minDate) {
+      const minCalendarDate = new CalendarDate(minDate.year, minDate.month, 1)
+      if (date.compare(minCalendarDate) < 0) return true
+    }
+
+    if (maxDate) {
+      const maxCalendarDate = new CalendarDate(maxDate.year, maxDate.month, 1)
+      if (date.compare(maxCalendarDate) > 0) return true
+    }
+
+    return false
+  }, [year, minDate, maxDate])
+
+  const selectMonth = useCallback((m: number) => {
+    if (isMonthDisabled(m)) return
+    const nextDate = new Date(year, m - 1, 1)
+    const zonedNext = fromDate(nextDate, getLocalTimeZone())
+    onChange(zonedNext)
+  }, [year, isMonthDisabled, onChange])
+
+  const isPrevYearDisabled = minYear != null && year <= minYear
+  const isNextYearDisabled = maxYear != null && year >= maxYear
+
+  const goToPreviousYear = useCallback(() => {
+    if (!isPrevYearDisabled) {
+      setYear((y: number) => clampYear(y - 1))
+    }
+  }, [isPrevYearDisabled, clampYear])
+
+  const goToNextYear = useCallback(() => {
+    if (!isNextYearDisabled) {
+      setYear((y: number) => clampYear(y + 1))
+    }
+  }, [isNextYearDisabled, clampYear])
+
+  return (
+    <VStack>
+      <HStack align='center' justify='space-between' pb='xs' pi='xs' className='Layer__MonthCalendar__Header'>
+        <Button
+          icon
+          inset
+          variant='ghost'
+          onPress={goToPreviousYear}
+          isDisabled={isPrevYearDisabled}
+          aria-label={t('date:label.previous_year', 'Previous year')}
+        >
+          <ChevronLeft size={20} />
+        </Button>
+        <Heading weight='normal' size='sm'>{formatDate(new Date(year, 0, 1), DateFormat.Year)}</Heading>
+        <Button
+          icon
+          inset
+          variant='ghost'
+          onPress={goToNextYear}
+          isDisabled={isNextYearDisabled}
+          aria-label={t('date:label.next_year', 'Next year')}
+        >
+          <ChevronRight size={20} />
+        </Button>
+      </HStack>
+      <GridList
+        aria-label={t('date:action.select_a_month', 'Select a month')}
+        selectionMode='single'
+        selectedKeys={date?.year === year ? new Set([date.month]) : new Set()}
+        onSelectionChange={(keys) => {
+          const selectedKey = [...keys][0]
+          if (typeof selectedKey === 'number') {
+            selectMonth(selectedKey)
+          }
+        }}
+        className={classNames(
+          'Layer__MonthCalendar__MonthGrid',
+          variant === 'mobile' && 'Layer__MonthCalendar__MonthGrid--mobile',
+        )}
+      >
+        {months.map(m => (
+          <GridListItem
+            id={m.key}
+            key={m.key}
+            textValue={m.abbreviation}
+            className={classNames(
+              'Layer__MonthCalendar__MonthGridItem',
+              variant === 'mobile' && 'Layer__MonthCalendar__MonthGridItem--mobile',
+            )}
+            isDisabled={isMonthDisabled(m.key)}
+          >
+            {m.abbreviation}
+          </GridListItem>
+        ))}
+      </GridList>
+    </VStack>
+  )
+}

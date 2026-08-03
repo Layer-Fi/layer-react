@@ -7,10 +7,10 @@ import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
 import { TaxEstimatesRoute, useTaxEstimatesNavigation, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
+import { YearPicker } from '@ui/DatePickers/YearPicker/YearPicker'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { YearPicker } from '@components/YearPicker/YearPicker'
 
 const TAX_ESTIMATES_MIN_YEAR = 2024
 

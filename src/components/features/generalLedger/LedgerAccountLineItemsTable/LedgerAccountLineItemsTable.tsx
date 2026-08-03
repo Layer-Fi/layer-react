@@ -4,18 +4,19 @@ import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { LedgerAccountNodeType } from '@internal-types/chartOfAccounts'
-import { Alignment } from '@schemas/common/table'
+import { Alignment } from '@internal-types/utility/table'
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
 import { type LedgerAccountLineItem } from '@schemas/generalLedger/ledgerEntry'
 import { decodeLedgerEntrySource } from '@schemas/generalLedger/ledgerEntrySource'
 import { lineEntryNumber } from '@utils/journal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import type { ColumnConfig } from '@blocks/DataTable/utils/column'
-import { PaginatedTable, type TablePaginationProps } from '@blocks/PaginatedDataTable/PaginatedDataTable'
+import { PaginatedTable } from '@blocks/PaginatedDataTable/PaginatedDataTable'
 
 import './ledgerAccountLineItemsTable.scss'
 
@@ -134,10 +135,13 @@ export const LedgerAccountLineItemsTable = ({
     [nodeType, stringOverrides, formatDate, t],
   )
 
-  const paginationProps: TablePaginationProps = useMemo(
-    () => ({ pageSize, hasMore, fetchMore }),
-    [pageSize, hasMore, fetchMore],
-  )
+  const paginationProps = useTablePaginationProps({
+    filterParams: selectedAccount?.accountId,
+    data,
+    pageSize,
+    hasMore,
+    fetchMore,
+  })
 
   const withClickableRow = useMemo(() => ({
     isRowClickable: () => true,

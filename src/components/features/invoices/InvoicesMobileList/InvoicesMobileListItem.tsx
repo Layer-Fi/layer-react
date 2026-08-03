@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { getCustomerName } from '@utils/customer'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { MobileListItemContent } from '@ui/MobileList/MobileListItemContent'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import { MobileListItemContent } from '@blocks/MobileList/MobileListItemContent'
 
 const InvoicesMobileListItemAmount = ({ invoice }: { invoice: Invoice }) => {
   const { t } = useTranslation()

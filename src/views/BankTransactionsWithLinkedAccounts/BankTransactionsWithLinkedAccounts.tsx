@@ -5,12 +5,12 @@ import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
 import { BankAccountsFilterStoreProvider, useSelectedBankAccountIds } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { type BankTransactionsMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
+import { View } from '@blocks/Layout/View/View'
 import {
   BankTransactions,
   type BankTransactionsStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
 import { type MobileComponentType } from '@components/BankTransactions/constants'
-import { View } from '@components/View/View'
 import { LinkedAccounts } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
 
 interface BankTransactionsWithLinkedAccountsStringOverrides {

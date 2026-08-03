@@ -5,7 +5,7 @@ import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, DisplayState } from '@internal-types/bankTransactions'
-import { Alignment } from '@schemas/common/table'
+import { Alignment } from '@internal-types/utility/table'
 import { isMoneyIn } from '@utils/bankTransactions/shared'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'

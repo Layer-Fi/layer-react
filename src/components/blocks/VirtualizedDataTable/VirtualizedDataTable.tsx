@@ -9,7 +9,7 @@ import {
 import { useVirtualizer } from '@tanstack/react-virtual'
 import classNames from 'classnames'
 
-import { type Alignment } from '@schemas/common/table'
+import { type Alignment } from '@internal-types/utility/table'
 import { Loader } from '@ui/Loader/Loader'
 import { HStack } from '@ui/Stack/Stack'
 import { Cell, Column as TableColumn, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'

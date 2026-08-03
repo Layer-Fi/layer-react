@@ -1,6 +1,6 @@
 import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
 import type { PnlChartLineItem } from '@utils/profitAndLossUtils'
-import { DEFAULT_TYPE_COLOR_MAPPING, type TypeColorMapping } from '@components/DetailedCharts/types'
+import { DEFAULT_TYPE_COLOR_MAPPING, type TypeColorMapping } from '@ui/Chart/seriesTypes'
 
 export const UNCATEGORIZED_TYPES = ['UNCATEGORIZED_INFLOWS', 'UNCATEGORIZED_OUTFLOWS']
 

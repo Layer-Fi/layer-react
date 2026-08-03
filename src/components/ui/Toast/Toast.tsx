@@ -1,21 +1,21 @@
 import classNames from 'classnames'
 
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { type ToastData } from '@internal-types/toast'
 
 import './toast.scss'
 
-export interface ToastProps {
-  id?: string
-  content: string
-  duration?: number
-  isExiting?: boolean
-  type?: 'success' | 'error' | 'default'
+export type ToastProps = ToastData & {
+  isExiting: boolean
+  onDismiss?: () => void
 }
 
-export const Toast = (props: ToastProps & { isExiting: boolean }) => {
-  const { id, content, isExiting, type = 'default' } = props
-  const { removeToast } = useLayerContext()
-
+export const Toast = ({
+  id,
+  content,
+  isExiting,
+  type = 'default',
+  onDismiss,
+}: ToastProps) => {
   return (
     <div
       id={id}
@@ -23,21 +23,9 @@ export const Toast = (props: ToastProps & { isExiting: boolean }) => {
         enter: !isExiting,
         exit: isExiting,
       }, `Layer__toast--${type}`)}
-      onClick={() => removeToast(props)}
+      onClick={onDismiss}
     >
       <p>{content}</p>
-    </div>
-  )
-}
-
-export function ToastsContainer() {
-  const { toasts } = useLayerContext()
-
-  return (
-    <div className='Layer__toasts-container'>
-      {toasts.map((toast, idx) => (
-        <Toast key={`layer-toast-${idx}`} {...toast} />
-      ))}
     </div>
   )
 }

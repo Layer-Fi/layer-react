@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type Invoice } from '@schemas/invoices/invoice'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { MobileListItemStatusFooter } from '@ui/MobileList/MobileListItemStatusFooter'
+import { MobileListItemStatusFooter } from '@blocks/MobileList/MobileListItemStatusFooter'
 import { getInvoiceStatusDisplay } from '@features/invoices/utils'
 
 export const InvoicesMobileListItemStatusFooter = ({ invoice }: { invoice: Invoice }) => {

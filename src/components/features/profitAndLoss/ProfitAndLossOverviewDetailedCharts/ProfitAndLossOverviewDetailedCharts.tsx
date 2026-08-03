@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
-import { Container } from '@components/Container/Container'
+import { Container } from '@blocks/Layout/Container/Container'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import { type ProfitAndLossDetailedChartsStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'
 

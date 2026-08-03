@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { usePreloadCustomers } from '@api/businesses/[business-id]/customers/get'
 import { InvoiceRoute, InvoicesRouteStoreProvider, useInvoiceRouteState } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
-import { View } from '@components/View/View'
+import { View } from '@blocks/Layout/View/View'
 import { InvoiceDetail } from '@features/invoices/InvoiceDetail/InvoiceDetail'
 import { InvoiceOverview } from '@features/invoices/InvoiceOverview/InvoiceOverview'
 

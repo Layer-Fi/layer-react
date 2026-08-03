@@ -8,6 +8,7 @@ import {
   type LayerContextValues,
   type LayerThemeConfig,
 } from '@internal-types/layerContext'
+import { type ToastData } from '@internal-types/toast'
 import { errorHandler, type LayerError } from '@utils/api/errorHandler'
 import { buildColorsPalette } from '@utils/colors'
 import { useGetAccountingConfiguration } from '@api/businesses/[business-id]/accounting-config/get'
@@ -18,7 +19,7 @@ import { type LayerProviderProps } from '@providers/LayerProvider/LayerProvider'
 import { BankAccountsProvider } from '@contexts/BankAccountsContext/BankAccountsContext'
 import { BookkeepingStatusProvider } from '@contexts/BookkeepingStatusContext/BookkeepingStatusContext'
 import { LayerContext } from '@contexts/LayerContext/LayerContext'
-import { type ToastProps, ToastsContainer } from '@ui/Toast/Toast'
+import { ToastsContainer } from '@blocks/ToastsContainer/ToastsContainer'
 
 const reducer: Reducer<LayerContextValues, LayerContextAction> = (
   state,
@@ -42,7 +43,7 @@ const reducer: Reducer<LayerContextValues, LayerContextAction> = (
         ...state,
         toasts: state.toasts.map(toast =>
           toast.id === action.payload.toast.id
-            ? { ...toast, isExiting: false }
+            ? { ...toast, isExiting: true }
             : toast,
         ),
       }
@@ -162,28 +163,28 @@ export const BusinessProvider = ({
     })
   }
 
-  const setToast = (toast: ToastProps) => {
+  const setToast = (toast: ToastData) => {
     dispatch({ type: Action.setToast, payload: { toast: toast } })
   }
 
-  const removeToast = (toast: ToastProps) => {
+  const removeToast = (toast: ToastData) => {
     dispatch({ type: Action.removeToast, payload: { toast: toast } })
   }
 
-  const setToastExit = (toast: ToastProps) => {
+  const setToastExit = (toast: ToastData) => {
     dispatch({ type: Action.setToastExit, payload: { toast: toast } })
   }
 
-  const addToast = (toast: ToastProps) => {
+  const addToast = (toast: ToastData) => {
     const id = `${Date.now()}-${Math.random()}`
     const newToast = { id, isExiting: false, ...toast }
 
     setToast(newToast)
 
     setTimeout(() => {
-      removeToast(newToast)
+      setToastExit(newToast)
       setTimeout(() => {
-        setToastExit(newToast)
+        removeToast(newToast)
       }, 1000)
     }, toast.duration || 3000)
   }

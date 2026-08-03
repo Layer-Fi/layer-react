@@ -79,8 +79,8 @@ Their prop types are unions: supplying `isLoading` obliges you to supply `Loadin
 catches a half-handled state.
 
 For the state nodes themselves use `DataState` / `DataStateContainer`
-(`@ui/DataState/DataState`) and the skeleton loaders (`@ui/SkeletonLoader/*`,
-`SkeletonTableLoader`) — not ad-hoc spinners or "No data" text.
+(`@ui/DataState/DataState`) and the skeleton loaders (`@ui/SkeletonLoader/*`) — not
+ad-hoc spinners or "No data" text.
 
 ## Responsive UX
 
@@ -93,8 +93,8 @@ desktop above.
   function. Avoid inline width ternaries scattered through JSX.
 - To react to element size in logic, use `@hooks/utils/size/useElementSize` or
   `useElementViewSize`.
-- Mobile-specific surfaces already exist (`@ui/MobilePanel`, `@ui/MobileList`,
-  `@ui/MobileSelectionDrawer`); prefer them to reimplementing a drawer.
+- Mobile-specific surfaces already exist (`@blocks/MobileList`,
+  `@blocks/MobileSelectionDrawer`); prefer them to reimplementing a drawer.
 
 ## Don't put state in an effect if you can avoid it
 

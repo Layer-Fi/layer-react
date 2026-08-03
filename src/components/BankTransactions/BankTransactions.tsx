@@ -29,6 +29,7 @@ import { BankTransactionsIsCategorizationEnabledProvider } from '@contexts/BankT
 import { BankTransactionsStringOverridesProvider } from '@contexts/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
 import { CategorizationRulesContext, CategorizationRulesProvider } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
+import { Container } from '@blocks/Layout/Container/Container'
 import {
   BankTransactionsHeader,
   type BankTransactionsHeaderStringOverrides,
@@ -41,9 +42,8 @@ import {
   type BankTransactionsTableStringOverrides,
 } from '@components/BankTransactionsTable/BankTransactionsTable'
 import { ResponsiveCategorizationRulesView } from '@components/CategorizationRules/CategorizationRulesView/ResponsiveCategorizationRulesView'
-import { Container } from '@components/Container/Container'
-import { ErrorBoundary } from '@components/ErrorBoundary/ErrorBoundary'
 import { SuggestedCategorizationRuleUpdatesDialog } from '@components/SuggestedCategorizationRuleUpdates/SuggestedCategorizationRuleUpdatesDialog'
+import { ErrorBoundary } from '@components/utility/ErrorBoundary/ErrorBoundary'
 
 import './bankTransactions.scss'
 

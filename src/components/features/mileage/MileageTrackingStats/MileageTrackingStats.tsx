@@ -4,7 +4,7 @@ import { useMileageTrackingYearlySummary } from '@hooks/features/mileage/useMile
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { Container } from '@components/Container/Container'
+import { Container } from '@blocks/Layout/Container/Container'
 import { MileageDeductionChart } from '@features/mileage/MileageDeductionChart/MileageDeductionChart'
 import { MileageTrackingStatsCard } from '@features/mileage/MileageTrackingStatsCard/MileageTrackingStatsCard'
 

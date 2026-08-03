@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { getIncompleteTasks, type UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
-import { MobilePanel } from '@ui/MobilePanel/MobilePanel'
 import { Pagination } from '@ui/Pagination/Pagination'
+import { TasksMobilePanel } from '@features/bookkeeping/TasksList/TasksMobilePanel'
 import { TasksListItem } from '@features/bookkeeping/TasksListItem/TasksListItem'
 
 const MOBILE_SHOW_UNRESOLVED_TASKS_COUNT = 2
@@ -58,7 +58,7 @@ export const TasksListMobile = ({
           </div>
         )
         : null}
-      <MobilePanel
+      <TasksMobilePanel
         open={showMobilePanel}
         onClose={() => setShowMobilePanel(false)}
         header={<p>{t('bookkeeping:label.tasks', 'Tasks')}</p>}
@@ -83,7 +83,7 @@ export const TasksListMobile = ({
               )}
             </div>
           )}
-      </MobilePanel>
+      </TasksMobilePanel>
     </div>
   )
 }

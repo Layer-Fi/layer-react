@@ -1,7 +1,7 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
+import type { SeriesData } from '@ui/Chart/seriesTypes'
 import { Legend, LegendLayout } from '@ui/Legend/Legend'
-import type { SeriesData } from '@components/DetailedCharts/types'
 
 import { Col, Gallery } from '@test-utils/storybook/gallery'
 

@@ -3,8 +3,8 @@ import { Pencil, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Trip } from '@schemas/trip'
-import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
-import type { TablePaginationProps } from '@blocks/PaginatedDataTable/PaginatedDataTable'
+import type { TablePaginationProps } from '@hooks/utils/pagination/types'
+import { PaginatedMobileList } from '@blocks/MobileList/PaginatedMobileList'
 import { TripsMobileHeader } from '@features/mileage/TripsMobileHeader/TripsMobileHeader'
 import { TripsMobileListItem, TripsMobileListItemFooter } from '@features/mileage/TripsMobileList/TripsMobileListItem'
 

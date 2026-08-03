@@ -2,7 +2,7 @@ import { useCallback, useContext, useLayoutEffect, useMemo } from 'react'
 import { type Row } from '@tanstack/react-table'
 import { useTranslation } from 'react-i18next'
 
-import { Alignment } from '@schemas/common/table'
+import { Alignment } from '@internal-types/utility/table'
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
 import { type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
 import { humanizeEnum } from '@utils/format'

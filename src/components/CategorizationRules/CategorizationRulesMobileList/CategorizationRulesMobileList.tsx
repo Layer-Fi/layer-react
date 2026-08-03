@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 
 import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import type { NestedCategorization } from '@schemas/categorization'
-import { PaginatedMobileList } from '@ui/MobileList/PaginatedMobileList'
-import type { TablePaginationProps } from '@blocks/PaginatedDataTable/PaginatedDataTable'
+import type { TablePaginationProps } from '@hooks/utils/pagination/types'
+import { PaginatedMobileList } from '@blocks/MobileList/PaginatedMobileList'
 import { CategorizationRuleMobileListItem, CategorizationRuleMobileListItemFooter } from '@components/CategorizationRules/CategorizationRulesMobileList/CategorizationRuleMobileListItem'
 
 import './categorizationRulesMobileList.scss'

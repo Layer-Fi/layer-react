@@ -1,0 +1,147 @@
+import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { ChevronDown } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+
+import { Button } from '@ui/Button/Button'
+import type {
+  ComboBoxOption,
+  OptionsOrGroups,
+  SingleSelectComboBoxProps,
+} from '@ui/ComboBox/types'
+import { Drawer } from '@ui/Modal/Modal'
+import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
+import { SearchField } from '@ui/SearchField/SearchField'
+import { HStack, VStack } from '@ui/Stack/Stack'
+import { Span } from '@ui/Typography/Text'
+import { filterOptionsOrGroups, resolveSelectedOption } from '@blocks/MobileSelectionDrawer/filterUtils'
+import { MobileSelectionDrawerList } from '@blocks/MobileSelectionDrawer/MobileSelectionDrawerList'
+
+import './mobileSelectionDrawerWithTrigger.scss'
+
+export type MobileSelectionDrawerWithTriggerProps<T extends ComboBoxOption> =
+  Omit<SingleSelectComboBoxProps<T>, 'slots'>
+  & {
+    ariaLabel: string
+    heading: string
+    searchPlaceholder?: string
+    slotProps?: {
+      Trigger?: {
+        icon?: ReactNode
+        value?: ReactNode | ((selectedValue: T | null) => ReactNode)
+      }
+    }
+  }
+
+export const MobileSelectionDrawerWithTrigger = <T extends ComboBoxOption>({
+  ariaLabel,
+  heading,
+  selectedValue,
+  onSelectedValueChange,
+  placeholder,
+  isLoading = false,
+  isError = false,
+  isDisabled = false,
+  isSearchable = false,
+  searchPlaceholder,
+  slotProps,
+  ...optionOrGroups
+}: MobileSelectionDrawerWithTriggerProps<T>) => {
+  const { t } = useTranslation()
+  const { options, groups } = optionOrGroups as Partial<OptionsOrGroups<T>>
+
+  const [isOpen, setIsOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+
+  useEffect(() => {
+    if (!isOpen) setSearchQuery('')
+  }, [isOpen])
+
+  const openDrawer = useCallback(() => setIsOpen(true), [])
+
+  const resolvedPlaceholder = placeholder ?? t('common:action.select_label', 'Select...')
+  const resolvedSearchPlaceholder = searchPlaceholder ?? t('common:action.search_label', 'Search')
+
+  const triggerIcon = slotProps?.Trigger?.icon ?? <ChevronDown size={16} />
+
+  const filteredOptionsOrGroups = useMemo<OptionsOrGroups<T>>(
+    () => filterOptionsOrGroups(
+      (groups ? { groups } : { options: options ?? [] }) as OptionsOrGroups<T>,
+      searchQuery.trim().toLowerCase(),
+    ),
+    [options, groups, searchQuery],
+  )
+
+  const resolvedSelectedValue = useMemo(() => {
+    return resolveSelectedOption(filteredOptionsOrGroups, selectedValue)
+  }, [filteredOptionsOrGroups, selectedValue])
+
+  const triggerValue = useMemo(() => {
+    const value = slotProps?.Trigger?.value
+    if (!value) {
+      return resolvedSelectedValue?.label ?? resolvedPlaceholder
+    }
+
+    if (typeof value === 'function') {
+      return value(resolvedSelectedValue ?? null)
+    }
+
+    return value
+  }, [slotProps?.Trigger?.value, resolvedSelectedValue, resolvedPlaceholder])
+
+  const Header = useCallback(() => (
+    <ModalTitleWithClose
+      heading={<ModalHeading size='md' weight='bold'>{heading}</ModalHeading>}
+      hideCloseButton
+      hideBottomPadding
+    />
+  ), [heading])
+
+  return (
+    <>
+      <Button onClick={openDrawer} variant='outlined' isDisabled={isDisabled} fullWidth flex>
+        <HStack
+          fluid
+          justify='space-between'
+          className='Layer__MobileSelectionDrawerWithTrigger__Trigger'
+        >
+          <Span size='sm' ellipsis pie='xs'>
+            {triggerValue}
+          </Span>
+          {!isDisabled && triggerIcon}
+        </HStack>
+      </Button>
+
+      <Drawer
+        slots={{ Header }}
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+        variant='mobile-drawer'
+        fixedHeight
+        isDismissable
+      >
+        {({ close }) => (
+          <VStack className='Layer__MobileSelectionDrawerWithTrigger__Drawer' pi='sm' pb='xs' gap='md'>
+            {isSearchable && (
+              <SearchField
+                value={searchQuery}
+                onChange={setSearchQuery}
+                label={resolvedSearchPlaceholder}
+              />
+            )}
+            <MobileSelectionDrawerList<T>
+              ariaLabel={ariaLabel}
+              {...filteredOptionsOrGroups}
+              selectedValue={resolvedSelectedValue}
+              onSelectedValueChange={(value) => {
+                onSelectedValueChange(value)
+                close()
+              }}
+              isLoading={isLoading}
+              isError={isError}
+            />
+          </VStack>
+        )}
+      </Drawer>
+    </>
+  )
+}

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { OnboardingStatus, useTaxEstimatesOnboardingStatus } from '@hooks/features/taxEstimates/useTaxEstimatesOnboardingStatus'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'
-import { Container } from '@components/Container/Container'
+import { Container } from '@blocks/Layout/Container/Container'
 import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 
 import { TaxEstimatesOnboardedViewContent } from './TaxEstimatesOnboardedViewContent'

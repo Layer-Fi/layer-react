@@ -5,7 +5,7 @@ import {
 
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
 import { VStack } from '@ui/Stack/Stack'
-import { Panel } from '@components/View/Panel/Panel'
+import { Panel } from '@blocks/Layout/View/Panel/Panel'
 import { LedgerAccountEntryDetails } from '@features/generalLedger/LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 import { type LedgerAccountEntryDetailsStringOverrides } from '@features/generalLedger/LedgerAccountEntryDetails/LedgerAccountEntryDetails'
 import { LedgerAccountLineItemsTable, type LedgerAccountLineItemsTableStringOverrides } from '@features/generalLedger/LedgerAccountLineItemsTable/LedgerAccountLineItemsTable'

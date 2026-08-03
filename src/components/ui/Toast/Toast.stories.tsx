@@ -24,7 +24,10 @@ type Story = StoryObj<typeof Toast>
 export const AllVariants: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: () => (
-    <div className='Layer__toasts-container' style={{ position: 'static', padding: 24 }}>
+    <div
+      className='Layer__toasts-container'
+      style={{ position: 'static', padding: 24, display: 'flex', flexDirection: 'column', gap: 10 }}
+    >
       {TYPES.map(type => (
         <Toast key={type} content={`This is a ${type} toast`} type={type} isExiting={false} />
       ))}

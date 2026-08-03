@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 
 import { useGetReportConfig } from '@api/businesses/[business-id]/reports/config/get'
 import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
-import { MobileSelectionDrawerWithTrigger } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
 import { HStack } from '@ui/Stack/Stack'
+import { MobileSelectionDrawerWithTrigger } from '@blocks/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
 import { UnifiedReportComboBoxOption } from '@features/unifiedReports/UnifiedReportsMobileSelectionDrawer/unifiedReportComboBoxOption'
 
 import './unifiedReportsMobileSelectionDrawer.scss'
