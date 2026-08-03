@@ -1,5 +1,4 @@
 import { useCallback, useId, useMemo } from 'react'
-import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { FilingStatus } from '@schemas/taxEstimates/filingStatus'
@@ -7,8 +6,7 @@ import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-
-import './filingStatusComboBox.scss'
+import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
 
 const FILING_STATUS_CONFIG = [
   { value: FilingStatus.SINGLE, ...translationKey('taxEstimates:label.single', 'Single') },
@@ -36,11 +34,7 @@ export const FilingStatusComboBox = ({
   inline,
 }: FilingStatusComboBoxProps) => {
   const { t } = useTranslation()
-  const combinedClassName = classNames(
-    'Layer__FilingStatusComboBox',
-    inline && 'Layer__FilingStatusComboBox--inline',
-    className,
-  )
+  const layoutProps = formFieldLayoutProps({ className, inline })
 
   const options = useMemo<FilingStatusOption[]>(
     () => FILING_STATUS_CONFIG.map(opt => ({
@@ -63,11 +57,12 @@ export const FilingStatusComboBox = ({
   const inputId = useId()
 
   return (
-    <HStack className={combinedClassName}>
-      <Label size='sm' htmlFor={inputId}>
+    <HStack {...layoutProps}>
+      <Label slot='label' size='sm' htmlFor={inputId}>
         {t('taxEstimates:label.filing_status', 'Filing status')}
       </Label>
       <ComboBox<FilingStatusOption>
+        slot='input'
         options={options}
         selectedValue={selectedValue}
         onSelectedValueChange={handleChange}

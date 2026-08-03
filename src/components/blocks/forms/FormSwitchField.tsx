@@ -27,7 +27,6 @@ export function FormSwitchField({ slots, ...props }: FormSwitchFieldProps) {
       onBlur={handleBlur}
       name={name}
     >
-      {/* Switch has no invalid state in react-aria, so only the error text reflects validation. */}
       <FormFieldShell {...shellProps} slots={slots} />
     </Switch>
   )

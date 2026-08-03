@@ -1,5 +1,4 @@
 import { useCallback, useId, useMemo } from 'react'
-import classNames from 'classnames'
 import { type TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
@@ -10,8 +9,7 @@ import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
 import { Label } from '@ui/Typography/Text'
-
-import './vehicleSelector.scss'
+import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
 
 class VehicleAsOption {
   private internalVehicle: Vehicle
@@ -68,11 +66,7 @@ export function VehicleSelector({
   showLabel = true,
 }: VehicleSelectorProps) {
   const { t } = useTranslation()
-  const combinedClassName = classNames(
-    'Layer__VehicleSelector',
-    inline && 'Layer__VehicleSelector--inline',
-    containerClassName,
-  )
+  const layoutProps = formFieldLayoutProps({ className: containerClassName, inline })
 
   const { data, isLoading, isError } = useGetVehicles()
 
@@ -113,9 +107,10 @@ export function VehicleSelector({
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
   return (
-    <VStack className={combinedClassName}>
-      {showLabel && <Label htmlFor={inputId} size='sm'>{t('vehicles:label.vehicle', 'Vehicle')}</Label>}
+    <VStack {...layoutProps}>
+      {showLabel && <Label slot='label' htmlFor={inputId} size='sm'>{t('vehicles:label.vehicle', 'Vehicle')}</Label>}
       <ComboBox
+        slot='input'
         selectedValue={selectedVehicleForComboBox}
         onSelectedValueChange={onSelectedValueChange}
 

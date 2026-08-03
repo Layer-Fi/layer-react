@@ -1,21 +1,31 @@
 .Layer__InvoicePaymentForm {
+  --form-field-label-inline-size: 8rem;
+  --form-field-control-inline-size: auto;
+
   .Layer__InvoicePaymentForm__Field__InvoiceNo,
   .Layer__InvoicePaymentForm__Field__PaidAt,
   .Layer__InvoicePaymentForm__Field__PaymentMethod,
   .Layer__InvoicePaymentForm__Field__ReferenceNo,
   .Layer__InvoicePaymentForm__Field__Memo {
-    grid-template-columns: 8rem auto;
     min-width: 16rem;
   }
 
+  .Layer__InvoicePaymentForm__Field__InvoiceNo,
+  .Layer__InvoicePaymentForm__Field__PaymentMethod {
+    display: grid;
+    grid-template-columns: var(--form-field-label-inline-size) var(--form-field-control-inline-size);
+  }
+
   .Layer__InvoicePaymentForm__Field__Amount {
-    grid-template-columns: 8rem 8rem;
+    --form-field-control-inline-size: 8rem;
+
     justify-content: end;
   }
 
   .Layer__InvoicePaymentForm__Field__OutstandingBalance {
     display: grid;
-    grid-template-columns: 8rem 7.5rem;
+    grid-template-columns: var(--form-field-label-inline-size) 7.5rem;
+
     justify-content: end;
   }
 
@@ -24,10 +34,6 @@
 
     padding-inline: var(--spacing-md);
     border-top: 1px solid var(--border-color);
-  }
-
-  .Layer__InvoicePaymentForm__Field__InvoiceNo {
-    display: grid;
   }
 
   .Layer__InvoicePaymentForm__Section {

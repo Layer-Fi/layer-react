@@ -12,10 +12,13 @@ import {
 const LABEL = 'Vendor name'
 const VALUE = 'Acme Supply Co.'
 
-const VARIANTS: ReadonlyArray<FormFieldVariant<string, FormTextFieldProps>> = [
+type Variant = FormFieldVariant<string, FormTextFieldProps>
+
+const VARIANTS: ReadonlyArray<Variant> = [
   ...COMMON_FIELD_VARIANTS,
   ...ERROR_FIELD_VARIANTS,
-  { label: 'empty with placeholder', value: '', props: { placeholder: 'Enter a vendor' } },
+  { label: 'empty', value: '' },
+  { label: 'placeholder', value: '', props: { placeholder: 'Enter a vendor' } },
 ]
 
 const meta: Meta<typeof FormTextField> = {

@@ -1,5 +1,4 @@
 import { useCallback, useId, useMemo } from 'react'
-import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { TripPurpose } from '@schemas/trip'
@@ -7,8 +6,7 @@ import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-
-import './tripPurposeComboBox.scss'
+import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
 
 type TripPurposeOption = {
   label: string
@@ -31,11 +29,7 @@ type TripPurposeComboBoxProps = {
 
 export const TripPurposeComboBox = ({ value, onValueChange, isReadOnly, inline, className }: TripPurposeComboBoxProps) => {
   const { t } = useTranslation()
-  const combinedClassName = classNames(
-    'Layer__TripPurposeComboBox',
-    inline && 'Layer__TripPurposeComboBox--inline',
-    className,
-  )
+  const layoutProps = formFieldLayoutProps({ className, inline })
 
   const options = useMemo<TripPurposeOption[]>(
     () => TRIP_PURPOSE_OPTIONS.map(opt => ({
@@ -54,8 +48,8 @@ export const TripPurposeComboBox = ({ value, onValueChange, isReadOnly, inline, 
   const inputId = useId()
 
   return (
-    <HStack className={combinedClassName}>
-      <Label size='sm' htmlFor={inputId}>
+    <HStack {...layoutProps}>
+      <Label slot='label' size='sm' htmlFor={inputId}>
         {t('common:label.purpose', 'Purpose')}
       </Label>
       <ComboBox

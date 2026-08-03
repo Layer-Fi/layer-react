@@ -6,8 +6,9 @@ import { useTranslation } from 'react-i18next'
 import { InvoiceTermsValues } from '@schemas/invoices/invoiceTerms'
 import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { HStack } from '@ui/Stack/Stack'
+import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
+import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
 
 type InvoiceTermsOption = {
   label: string
@@ -91,11 +92,12 @@ export const InvoiceTermsComboBox = ({ value, onValueChange, isReadOnly }: Invoi
   const inputId = useId()
 
   return (
-    <HStack className='Layer__InvoiceForm__TermsComboBox Layer__InvoiceForm__Field__Terms'>
-      <Label size='sm' htmlFor={inputId}>
+    <VStack {...formFieldLayoutProps({ className: 'Layer__InvoiceForm__Field__Terms', inline: true })}>
+      <Label slot='label' size='sm' htmlFor={inputId}>
         {t('invoices:label.terms', 'Terms')}
       </Label>
       <ComboBox
+        slot='input'
         options={options}
         onSelectedValueChange={onSelectedValueChange}
         selectedValue={selectedOption}
@@ -104,6 +106,6 @@ export const InvoiceTermsComboBox = ({ value, onValueChange, isReadOnly }: Invoi
         inputId={inputId}
         isReadOnly={isReadOnly}
       />
-    </HStack>
+    </VStack>
   )
 }

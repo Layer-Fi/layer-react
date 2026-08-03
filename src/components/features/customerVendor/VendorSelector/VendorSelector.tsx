@@ -1,5 +1,4 @@
 import { useCallback, useId, useMemo } from 'react'
-import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type Vendor } from '@schemas/vendor'
@@ -9,9 +8,8 @@ import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSea
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, P } from '@ui/Typography/Text'
+import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
 import { VendorAsOption } from '@features/customerVendor/VendorSelector/VendorAsOption'
-
-import './vendorSelector.scss'
 
 type VendorSelectorProps = {
   selectedVendor: Vendor | null
@@ -41,11 +39,7 @@ export function VendorSelector({
 }: VendorSelectorProps) {
   const { t } = useTranslation()
   const resolvedLabel = label ?? t('customerVendor:label.vendor', 'Vendor')
-  const combinedClassName = classNames(
-    'Layer__VendorSelector',
-    inline && 'Layer__VendorSelector--inline',
-    className,
-  )
+  const layoutProps = formFieldLayoutProps({ className, inline })
 
   const { searchQuery, handleInputChange } = useDebouncedSearchInput({
     initialInputState: () => '',
@@ -87,9 +81,10 @@ export function VendorSelector({
   const isLoadingWithoutFallback = isLoading && !flattenedData
 
   return (
-    <VStack className={combinedClassName}>
-      {showLabel && <Label htmlFor={inputId} size='sm'>{resolvedLabel}</Label>}
+    <VStack {...layoutProps}>
+      {showLabel && <Label slot='label' htmlFor={inputId} size='sm'>{resolvedLabel}</Label>}
       <ComboBox
+        slot='input'
         options={options}
         selectedValue={selectedVendorForComboBox}
         onSelectedValueChange={handleSelectionChange}

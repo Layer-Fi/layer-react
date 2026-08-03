@@ -1,5 +1,4 @@
 import { useCallback, useId, useMemo } from 'react'
-import classNames from 'classnames'
 import type { TFunction } from 'i18next'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -10,6 +9,7 @@ import { useGetListCatalogServices } from '@api/businesses/[business-id]/catalog
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, P, Span } from '@ui/Typography/Text'
+import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
 
 import './timeEntryServiceSelector.scss'
 
@@ -106,11 +106,7 @@ export function TimeEntryServiceSelector({
     [servicesResponse, t],
   )
 
-  const combinedClassName = classNames(
-    'Layer__TimeEntryServiceSelector',
-    inline && 'Layer__TimeEntryServiceSelector--inline',
-    className,
-  )
+  const layoutProps = formFieldLayoutProps({ className, inline })
 
   const handleSelectionChange = useCallback(
     (selectedOption: ServiceAsOption | null) => {
@@ -170,9 +166,9 @@ export function TimeEntryServiceSelector({
     : { isCreatable: false as const, options: serviceOptions }
 
   return (
-    <VStack className={combinedClassName}>
-      {showLabel && <Label htmlFor={inputId} size='sm'>{t('timeTracking:label.service', 'Service')}</Label>}
-      <MaybeCreatableComboBox {...sharedProps} {...creatableProps} />
+    <VStack {...layoutProps}>
+      {showLabel && <Label slot='label' htmlFor={inputId} size='sm'>{t('timeTracking:label.service', 'Service')}</Label>}
+      <MaybeCreatableComboBox slot='input' {...sharedProps} {...creatableProps} />
     </VStack>
   )
 }

@@ -1,5 +1,4 @@
 import { useCallback, useId, useMemo } from 'react'
-import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type Customer } from '@schemas/customer'
@@ -10,9 +9,8 @@ import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSea
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, P } from '@ui/Typography/Text'
+import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
 import { CustomerAsOption } from '@features/customerVendor/CustomerSelector/CustomerAsOption'
-
-import './customerSelector.scss'
 
 type CustomerSelectorBaseProps = {
   selectedCustomer: Customer | null
@@ -51,11 +49,7 @@ export function CustomerSelector({
 }: CustomerSelectorProps) {
   const { t } = useTranslation()
   const resolvedLabel = label ?? t('customerVendor:label.customer', 'Customer')
-  const combinedClassName = classNames(
-    'Layer__CustomerSelector',
-    inline && 'Layer__CustomerSelector--inline',
-    className,
-  )
+  const layoutProps = formFieldLayoutProps({ className, inline })
 
   const { searchQuery, handleInputChange } = useDebouncedSearchInput({
     initialInputState: () => '',
@@ -171,9 +165,9 @@ export function CustomerSelector({
   )
 
   return (
-    <VStack className={combinedClassName}>
-      {showLabel && <Label htmlFor={inputId} size='sm'>{resolvedLabel}</Label>}
-      <MaybeCreatableComboBox {...sharedProps} {...creatableProps} />
+    <VStack {...layoutProps}>
+      {showLabel && <Label slot='label' htmlFor={inputId} size='sm'>{resolvedLabel}</Label>}
+      <MaybeCreatableComboBox slot='input' {...sharedProps} {...creatableProps} />
     </VStack>
   )
 }

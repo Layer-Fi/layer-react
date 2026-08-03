@@ -1,5 +1,4 @@
 import { useCallback, useId, useMemo } from 'react'
-import classNames from 'classnames'
 
 import { type CategoryAsOption } from '@internal-types/categorizationOption'
 import { type CategoriesListMode, type Classification } from '@schemas/categorization'
@@ -8,8 +7,7 @@ import { flattenCategories, withoutExclusions } from '@utils/categoryOptions'
 import { useGetCategories } from '@api/businesses/[business-id]/categories/get'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { Label } from '@ui/Typography/Text'
-
-import './ledgerAccountComboBox.scss'
+import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
 
 type LedgerAccountComboBoxProps = {
   label: string
@@ -58,13 +56,14 @@ export const LedgerAccountComboBox = ({
   const inputId = useId()
   const additionalAriaProps = !showLabel && { 'aria-label': label }
   return (
-    <div className={classNames('Layer__LedgerAccountComboBox', inline && 'Layer__LedgerAccountComboBox--inline', className)}>
+    <div {...formFieldLayoutProps({ className, inline })}>
       {showLabel && (
-        <Label size='sm' htmlFor={inputId}>
+        <Label slot='label' size='sm' htmlFor={inputId}>
           {label}
         </Label>
       )}
       <ComboBox
+        slot='input'
         groups={groups}
         onSelectedValueChange={onSelectedValueChange}
         selectedValue={selectedCategory}

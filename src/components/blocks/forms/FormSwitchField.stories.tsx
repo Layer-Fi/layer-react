@@ -5,16 +5,19 @@ import { FormSwitchField, type FormSwitchFieldProps } from '@blocks/forms/FormSw
 
 import {
   COMMON_FIELD_VARIANTS,
+  ERROR_FIELD_VARIANTS,
   type FormFieldVariant,
   FormFieldVariantGallery,
 } from '@test-utils/storybook/formField'
 
 const LABEL = 'Auto-categorize transactions'
 
-// This field has no error affordance, so the shared error variants do not apply.
-const VARIANTS: ReadonlyArray<FormFieldVariant<boolean, FormSwitchFieldProps>> = [
+type Variant = FormFieldVariant<boolean, FormSwitchFieldProps>
+
+const VARIANTS: ReadonlyArray<Variant> = [
   ...COMMON_FIELD_VARIANTS,
-  { label: 'off', value: false },
+  ...ERROR_FIELD_VARIANTS,
+  { label: 'unselected', value: false },
   { label: 'label icon', props: { slots: { LabelIcon: <Sparkles size={14} /> } } },
 ]
 

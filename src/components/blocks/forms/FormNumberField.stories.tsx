@@ -12,9 +12,13 @@ import {
 const LABEL = 'Number of employees'
 const VALUE = 42
 
-const VARIANTS: ReadonlyArray<FormFieldVariant<number, FormNumberFieldProps>> = [
+type Variant = FormFieldVariant<number, FormNumberFieldProps>
+
+const VARIANTS: ReadonlyArray<Variant> = [
   ...COMMON_FIELD_VARIANTS,
   ...ERROR_FIELD_VARIANTS,
+  { label: 'empty', value: Number.NaN },
+  { label: 'placeholder', value: Number.NaN, props: { placeholder: 'Enter a count' } },
   { label: 'bounded to 1-10', value: 10, props: { minValue: 1, maxValue: 10 } },
 ]
 

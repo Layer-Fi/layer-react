@@ -38,8 +38,6 @@ export function FormDatePickerField<T extends DateValue>({
   const { isInvalid, rootProps, shellProps } = useFormField(props)
   const { showLabel, showFieldError, errorMessage } = shellProps
 
-  // DatePicker renders its own label and control, so the error is injected through `slots`
-  // rather than composed by `FormFieldShell`.
   return (
     <DatePicker
       {...rootProps}

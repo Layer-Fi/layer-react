@@ -39,6 +39,7 @@ export const COMMON_FIELD_VARIANTS: ReadonlyArray<FormFieldVariant<never, Common
   { label: 'default' },
   { label: 'no label', props: { showLabel: false } },
   { label: 'inline', props: { inline: true } },
+  { label: 'centered', props: { align: 'center' } },
   { label: 'read only', props: { isReadOnly: true } },
   { label: 'disabled', props: { isDisabled: true } },
 ]
@@ -46,6 +47,7 @@ export const COMMON_FIELD_VARIANTS: ReadonlyArray<FormFieldVariant<never, Common
 export const ERROR_FIELD_VARIANTS: ReadonlyArray<FormFieldVariant<never, CommonFormFieldProps>> = [
   { label: 'invalid', errorText: 'Enter a valid value' },
   { label: 'invalid, error hidden', errorText: 'Enter a valid value', props: { showFieldError: false } },
+  { label: 'overridden error text', errorText: 'Enter a valid value', props: { errorText: 'This value is not allowed' } },
 ]
 
 type FormFieldVariantGalleryProps<TValue, TProps> = {

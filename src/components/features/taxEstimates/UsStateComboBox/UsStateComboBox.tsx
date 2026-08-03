@@ -1,13 +1,11 @@
 import { useCallback, useId, useMemo } from 'react'
-import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { US_STATES_CONFIG, type USState, type USStateCode, type USStateConfigRow } from '@internal-types/location'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-
-import './usStateComboBox.scss'
+import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
 
 type UsStateComboBoxProps = {
   value: USStateCode | null
@@ -25,11 +23,7 @@ export const UsStateComboBox = ({
   inline,
 }: UsStateComboBoxProps) => {
   const { t } = useTranslation()
-  const combinedClassName = classNames(
-    'Layer__UsStateComboBox',
-    inline && 'Layer__UsStateComboBox--inline',
-    className,
-  )
+  const layoutProps = formFieldLayoutProps({ className, inline })
 
   const options = useMemo<USState[]>(
     () => (US_STATES_CONFIG as readonly USStateConfigRow[]).map(s => ({
@@ -48,11 +42,12 @@ export const UsStateComboBox = ({
   const inputId = useId()
 
   return (
-    <HStack className={combinedClassName}>
-      <Label size='sm' htmlFor={inputId}>
+    <HStack {...layoutProps}>
+      <Label slot='label' size='sm' htmlFor={inputId}>
         {t('usStates:label.us_state', 'US state')}
       </Label>
       <ComboBox<USState>
+        slot='input'
         options={options}
         selectedValue={selectedValue}
         onSelectedValueChange={handleChange}

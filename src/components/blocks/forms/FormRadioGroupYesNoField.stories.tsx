@@ -14,7 +14,9 @@ import {
 
 const LABEL = 'Do you own this vehicle?'
 
-const VARIANTS: ReadonlyArray<FormFieldVariant<boolean, FormRadioGroupYesNoFieldProps>> = [
+type Variant = FormFieldVariant<boolean, FormRadioGroupYesNoFieldProps>
+
+const VARIANTS: ReadonlyArray<Variant> = [
   ...COMMON_FIELD_VARIANTS,
   ...ERROR_FIELD_VARIANTS,
   { label: 'no selected', value: false },

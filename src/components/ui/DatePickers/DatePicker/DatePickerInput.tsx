@@ -34,7 +34,7 @@ export const DatePickerInput = ({ errorText, variant, onClick, isReadOnly }: Dat
 
   if (variant === 'mobile') {
     return (
-      <InputGroup slot='input' isInvalid={!!errorText} onClick={isReadOnly ? undefined : onClick}>
+      <InputGroup slot='input' onClick={isReadOnly ? undefined : onClick}>
         <DateInput inset pointerEvents='none'>
           {segment => <DateSegment isReadOnly segment={segment} />}
         </DateInput>
@@ -43,7 +43,7 @@ export const DatePickerInput = ({ errorText, variant, onClick, isReadOnly }: Dat
   }
 
   return (
-    <InputGroup slot='input' isInvalid={!!errorText}>
+    <InputGroup slot='input'>
       <DateInput inset>
         {segment => <DateSegment segment={segment} isReadOnly={isReadOnly} />}
       </DateInput>

@@ -13,7 +13,9 @@ import {
 const LABEL = 'Trip date'
 const VALUE = new CalendarDate(2026, 3, 14)
 
-const VARIANTS: ReadonlyArray<FormFieldVariant<CalendarDate | null, FormDateFieldProps>> = [
+type Variant = FormFieldVariant<CalendarDate | null, FormDateFieldProps>
+
+const VARIANTS: ReadonlyArray<Variant> = [
   ...COMMON_FIELD_VARIANTS,
   ...ERROR_FIELD_VARIANTS,
   { label: 'empty', value: null },

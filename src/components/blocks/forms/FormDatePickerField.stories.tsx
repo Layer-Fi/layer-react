@@ -23,7 +23,7 @@ const VARIANTS: ReadonlyArray<Variant> = [
   ...ERROR_FIELD_VARIANTS,
   { label: 'empty', value: null },
   {
-    label: 'bounded range',
+    label: 'bounded to March 2026',
     props: { minDate: new CalendarDate(2026, 3, 1), maxDate: new CalendarDate(2026, 3, 31) },
   },
 ]

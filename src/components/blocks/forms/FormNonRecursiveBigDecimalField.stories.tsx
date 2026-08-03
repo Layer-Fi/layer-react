@@ -27,14 +27,14 @@ type Variant = FormFieldVariant<NonRecursiveBigDecimal | null, FormNonRecursiveB
 const VARIANTS: ReadonlyArray<Variant> = [
   ...COMMON_FIELD_VARIANTS,
   ...ERROR_FIELD_VARIANTS,
+  { label: 'empty', value: null, props: { allowEmpty: true } },
+  { label: 'placeholder', value: null, props: { allowEmpty: true, placeholder: 'Enter amount' } },
   { label: 'currency mode', props: { mode: 'currency' } },
   { label: 'percent mode', value: PERCENT_VALUE, props: { mode: 'percent' } },
-  { label: 'error text prop', props: { errorText: 'No route found between these addresses.' } },
   {
     label: 'badge slot',
     props: { slots: { badge: <Badge size={BadgeSize.SMALL}>miles</Badge> } },
   },
-  { label: 'empty with placeholder', value: null, props: { allowEmpty: true, placeholder: 'Enter amount' } },
 ]
 
 const meta: Meta<typeof FormNonRecursiveBigDecimalField> = {

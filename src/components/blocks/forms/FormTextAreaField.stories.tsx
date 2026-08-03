@@ -12,10 +12,13 @@ import {
 const LABEL = 'Description'
 const VALUE = 'Quarterly office supply restock, split across two deliveries.'
 
-const VARIANTS: ReadonlyArray<FormFieldVariant<string, FormTextAreaFieldProps>> = [
+type Variant = FormFieldVariant<string, FormTextAreaFieldProps>
+
+const VARIANTS: ReadonlyArray<Variant> = [
   ...COMMON_FIELD_VARIANTS,
   ...ERROR_FIELD_VARIANTS,
-  { label: 'empty with placeholder', value: '', props: { placeholder: 'Add description' } },
+  { label: 'empty', value: '' },
+  { label: 'placeholder', value: '', props: { placeholder: 'Add description' } },
 ]
 
 const meta: Meta<typeof FormTextAreaField> = {

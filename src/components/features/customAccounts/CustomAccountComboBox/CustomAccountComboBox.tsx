@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react'
-import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import type { CustomAccount } from '@schemas/customAccounts'
@@ -7,6 +6,7 @@ import { useGetCustomAccounts } from '@api/businesses/[business-id]/custom-accou
 import { CreatableComboBox } from '@ui/ComboBox/CreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
+import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
 import { type AccountOption } from '@features/customAccounts/CustomAccountComboBox/AccountOption'
 import { AccountOptionSlot, AccountSingleValueSlot } from '@features/customAccounts/CustomAccountComboBox/AccountOptionSlots'
 import { formatCreateLabel, isNewAccountOption, NEW_ACCOUNT_VALUE } from '@features/customAccounts/CustomAccountComboBox/utils'
@@ -77,9 +77,10 @@ export function CustomAccountComboBox({
 
   return (
     <VStack gap='xs' className={className}>
-      <div className={classNames('Layer__CustomAccountComboBox__Field', inline && 'Layer__CustomAccountComboBox__Field--inline')}>
-        {showLabel && <Label size='sm' htmlFor={inputId}>{label}</Label>}
+      <div {...formFieldLayoutProps({ inline })}>
+        {showLabel && <Label slot='label' size='sm' htmlFor={inputId}>{label}</Label>}
         <CreatableComboBox<AccountOption>
+          slot='input'
           inputId={inputId}
           placeholder={customAccountsError ? t('common:error.load_options', 'Failed to load options') : (placeholder ?? t('upload:action.select_account', 'Select account...'))}
           options={accountOptions}

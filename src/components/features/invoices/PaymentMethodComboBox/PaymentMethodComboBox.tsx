@@ -1,5 +1,4 @@
 import { useCallback, useId, useMemo } from 'react'
-import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { PaymentMethod } from '@schemas/invoices/paymentMethod'
@@ -7,8 +6,7 @@ import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-
-import './paymentMethodComboBox.scss'
+import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
 
 type PaymentMethodOption = {
   label: string
@@ -33,11 +31,7 @@ type PaymentMethodComboBoxProps = {
 
 export const PaymentMethodComboBox = ({ value, onValueChange, isReadOnly, className, inline }: PaymentMethodComboBoxProps) => {
   const { t } = useTranslation()
-  const combinedClassName = classNames(
-    'Layer__PaymentMethodComboBox',
-    inline && 'Layer__PaymentMethodComboBox--inline',
-    className,
-  )
+  const layoutProps = formFieldLayoutProps({ className, inline })
 
   const options = useMemo<PaymentMethodOption[]>(
     () => PAYMENT_METHOD_OPTIONS.map(opt => ({
@@ -56,11 +50,12 @@ export const PaymentMethodComboBox = ({ value, onValueChange, isReadOnly, classN
   const inputId = useId()
 
   return (
-    <HStack className={combinedClassName}>
-      <Label size='sm' htmlFor={inputId}>
+    <HStack {...layoutProps}>
+      <Label slot='label' size='sm' htmlFor={inputId}>
         {t('invoices:label.payment_method', 'Payment method')}
       </Label>
       <ComboBox
+        slot='input'
         options={options}
         onSelectedValueChange={onSelectedValueChange}
         selectedValue={selectedOption}

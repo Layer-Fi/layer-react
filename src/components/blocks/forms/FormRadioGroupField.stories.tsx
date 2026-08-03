@@ -23,9 +23,12 @@ const OPTIONS: RadioOption<Purpose>[] = [
   { value: 'unreviewed', label: 'Not reviewed' },
 ]
 
-const VARIANTS: ReadonlyArray<FormFieldVariant<Purpose, FormRadioGroupFieldProps<Purpose>>> = [
+type Variant = FormFieldVariant<Purpose | null, FormRadioGroupFieldProps<Purpose>>
+
+const VARIANTS: ReadonlyArray<Variant> = [
   ...COMMON_FIELD_VARIANTS,
   ...ERROR_FIELD_VARIANTS,
+  { label: 'unselected', value: null },
   { label: 'horizontal', props: { orientation: 'horizontal' } },
 ]
 

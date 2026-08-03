@@ -14,6 +14,15 @@ import './formField.scss'
 const FORM_FIELD_CLASS_NAME = 'Layer__FormField'
 const FIELD_ERROR_CLASS_NAME = 'Layer__UI__FieldError'
 
+type FormFieldLayoutProps = Pick<CommonFormFieldProps, 'className' | 'inline' | 'align'>
+
+export function formFieldLayoutProps({ className, inline = false, align = 'start' }: FormFieldLayoutProps) {
+  return {
+    className: classNames(FORM_FIELD_CLASS_NAME, className),
+    ...toDataProperties({ inline, align: align === 'center' ? align : undefined }),
+  }
+}
+
 // `FieldError` renders nothing outside a react-aria field that publishes validation state, which
 // rules out the standalone Checkbox and Switch.
 export function FormFieldError({ children }: PropsWithChildren) {
@@ -79,19 +88,17 @@ export function useFormField({
   const { errors, isValid } = state.meta
 
   const labelId = useId()
-  const errorMessage = errors.length !== 0 ? (errors[0] as string) : errorText
+  const errorMessage = errorText ?? (errors[0] as string | undefined)
 
   return useMemo(() => ({
     name,
     isInvalid: !isValid || Boolean(errorText),
     errorMessage,
-    // For grouped controls, whose label cannot be associated by `htmlFor`.
     labelId,
     rootProps: {
-      className: classNames(FORM_FIELD_CLASS_NAME, className),
       isReadOnly,
       isDisabled,
-      ...toDataProperties({ inline, align: align === 'center' ? align : undefined }),
+      ...formFieldLayoutProps({ className, inline, align }),
       ...(!showLabel && { 'aria-label': label }),
     },
     shellProps: { name, label, showLabel, showFieldError, errorMessage },

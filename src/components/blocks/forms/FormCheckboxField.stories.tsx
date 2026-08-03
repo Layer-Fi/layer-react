@@ -11,7 +11,9 @@ import {
 
 const LABEL = 'Exclude from reports'
 
-const VARIANTS: ReadonlyArray<FormFieldVariant<boolean, FormCheckboxFieldProps>> = [
+type Variant = FormFieldVariant<boolean, FormCheckboxFieldProps>
+
+const VARIANTS: ReadonlyArray<Variant> = [
   ...COMMON_FIELD_VARIANTS,
   ...ERROR_FIELD_VARIANTS,
   { label: 'unselected', value: false },

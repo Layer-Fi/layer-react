@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type LedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
@@ -7,6 +6,7 @@ import { ComboBox } from '@ui/ComboBox/ComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
+import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
 import { SUBTYPES_CONFIG_BY_TYPE } from '@features/generalLedger/constants'
 
 type AccountSubtypeComboBoxProps = {
@@ -29,9 +29,10 @@ export const AccountSubtypeComboBox = ({ label, type, value, onChange, error, in
   }, [t, type])
 
   return (
-    <HStack className={classNames('Layer__ChartOfAccountsForm__ComboBoxField', inline && 'Layer__ChartOfAccountsForm__ComboBoxField--inline')}>
-      <Label size='sm' htmlFor='subType'>{label}</Label>
+    <HStack {...formFieldLayoutProps({ inline })}>
+      <Label slot='label' size='sm' htmlFor='subType'>{label}</Label>
       <ComboBox
+        slot='input'
         inputId='subType'
         options={options}
         selectedValue={options.find(option => option.value === value) ?? null}

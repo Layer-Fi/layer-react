@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useId, useMemo, useState } from 'react'
-import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import type { TripFormAddress } from '@schemas/trip'
@@ -8,8 +7,7 @@ import { MIN_ADDRESS_QUERY_LENGTH, useGetMileageAddressSuggestions } from '@api/
 import { SearchComboBox, useSearchComboBox } from '@ui/ComboBox/SearchComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { Label, P } from '@ui/Typography/Text'
-
-import './tripAddressComboBox.scss'
+import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
 
 type TripAddressComboBoxProps = {
   label: string
@@ -98,15 +96,10 @@ export const TripAddressComboBox = ({
   const inputId = useId()
 
   return (
-    <div
-      className={classNames(
-        'Layer__TripAddressComboBox',
-        inline && 'Layer__TripAddressComboBox--inline',
-        className,
-      )}
-    >
-      <Label size='sm' htmlFor={inputId}>{label}</Label>
+    <div {...formFieldLayoutProps({ className, inline })}>
+      <Label slot='label' size='sm' htmlFor={inputId}>{label}</Label>
       <SearchComboBox
+        slot='input'
         {...searchComboBoxProps}
         options={options}
         selectedValue={selectedValue}

@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type LedgerBalancesSchemaType } from '@schemas/generalLedger/ledgerAccount'
@@ -7,6 +6,7 @@ import { ComboBox } from '@ui/ComboBox/ComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { HStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
+import { formFieldLayoutProps } from '@blocks/forms/FormFieldShell'
 import { useParentAccountOptions } from '@features/generalLedger/ParentAccountComboBox/useParentAccountOptions'
 
 type ParentAccountComboBoxProps = {
@@ -27,9 +27,10 @@ export const ParentAccountComboBox = ({ label, data, value, onChange, error, inl
   )
 
   return (
-    <HStack className={classNames('Layer__ChartOfAccountsForm__ComboBoxField', inline && 'Layer__ChartOfAccountsForm__ComboBoxField--inline')}>
-      <Label size='sm' htmlFor='parent'>{label}</Label>
+    <HStack {...formFieldLayoutProps({ inline })}>
+      <Label slot='label' size='sm' htmlFor='parent'>{label}</Label>
       <ComboBox
+        slot='input'
         inputId='parent'
         options={options}
         selectedValue={options.find(option => option.value === value) ?? null}
