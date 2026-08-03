@@ -1,6 +1,6 @@
 import { useCallback, useContext, useState } from 'react'
 
-import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
+import { ChartOfAccountsContext } from '@providers/generalLedger/ChartOfAccountsContext/ChartOfAccountsContext'
 import { type ChartOfAccountsFormMode } from '@features/generalLedger/ChartOfAccountsForm/ChartOfAccountsForm'
 import { flattenAccounts } from '@features/generalLedger/utils'
 

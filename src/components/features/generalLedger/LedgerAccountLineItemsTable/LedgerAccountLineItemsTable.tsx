@@ -11,7 +11,7 @@ import { decodeLedgerEntrySource } from '@schemas/generalLedger/ledgerEntrySourc
 import { lineEntryNumber } from '@utils/journal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
-import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
+import { LedgerAccountsContext } from '@providers/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'

@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
+import { LedgerAccountsContext } from '@providers/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
 import { BackButton } from '@ui/Button/BackButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'

@@ -2,7 +2,7 @@ import { useCallback, useContext, useMemo } from 'react'
 
 import { EntryType } from '@schemas/generalLedger/ledgerEntry'
 import { usePostReverseJournalEntry } from '@api/businesses/[business-id]/ledger/entries/[entry-id]/reverse/post'
-import { JournalContext } from '@contexts/JournalContext/JournalContext'
+import { JournalContext } from '@providers/generalLedger/JournalContext/JournalContext'
 import { LedgerEntryDetails } from '@features/generalLedger/LedgerEntryDetails/LedgerEntryDetails'
 
 export const JournalEntryDetails = () => {
