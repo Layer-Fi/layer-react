@@ -28,12 +28,12 @@ import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { EditCustomTransactionButton } from '@components/BankTransactions/RecordManualTransaction/EditCustomTransactionButton'
 import { useIsEditableCustomTransaction } from '@components/BankTransactions/RecordManualTransaction/useIsEditableCustomTransaction'
-import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
 import { BankTransactionCategoryComboBox } from '@features/bankTransactions/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { BankTransactionsListItemCategory } from '@features/bankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
 import { BankTransactionsProcessingInfo } from '@features/bankTransactions/BankTransactionsProcessingInfo/BankTransactionsProcessingInfo'
 import { BankTransactionsSubmitButton } from '@features/bankTransactions/BankTransactionsSubmitButton/BankTransactionsSubmitButton'
+import { ExpandedBankTransactionRow } from '@features/bankTransactions/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 
 import './bankTransactionsListItem.scss'
 
