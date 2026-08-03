@@ -15,8 +15,8 @@ import { Button } from '@ui/Button/Button'
 import { SubmitAction, SubmitButton } from '@ui/Button/SubmitButton'
 import { Separator } from '@ui/Separator/Separator'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
+import { ValidateCsvTable } from '@blocks/CsvUpload/ValidateCsvTable/ValidateCsvTable'
 import { useWizard } from '@blocks/Wizard/Wizard'
-import { ValidateCsvTable } from '@components/CsvUpload/ValidateCsvTable'
 import { templateHeaders } from '@components/UploadTransactions/template'
 
 interface UploadTransactionsValidateCsvStepProps {

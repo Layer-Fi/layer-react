@@ -7,8 +7,8 @@ import { Trans, useTranslation } from 'react-i18next'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
-import { CsvUploadFileRow } from '@components/CsvUpload/CsvUploadFileRow'
-import { validateCsvFile } from '@components/CsvUpload/validateCsvFile'
+import { validateCsvFile } from '@blocks/CsvUpload/CsvUpload/validateCsvFile'
+import { CsvUploadFileRow } from '@blocks/CsvUpload/CsvUploadFileRow/CsvUploadFileRow'
 
 import './csvUpload.scss'
 
