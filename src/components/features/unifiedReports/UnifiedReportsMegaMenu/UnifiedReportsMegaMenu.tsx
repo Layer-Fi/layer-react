@@ -10,7 +10,7 @@ import { MegaMenu } from '@blocks/NestedNavigation/MegaMenu/MegaMenu'
 import {
   buildFlatReportsGroupConfig,
   buildReportsLeafConfig,
-} from '@features/unifiedReports/navigationUtils'
+} from '@features/unifiedReports/utils'
 
 const groupConfig = buildFlatReportsGroupConfig(
   group => <Span size='sm' weight='bold' variant='subtle' textCase='uppercase'>{group.displayName}</Span>,
@@ -22,7 +22,7 @@ const renderLeafLabel = (leaf: { displayName: string }) => (
 
 const EMPTY_ARRAY: never[] = []
 
-export function ReportsMegaMenu() {
+export function UnifiedReportsMegaMenu() {
   const { t } = useTranslation()
   const { data, isLoading, isError } = useGetReportConfig()
   const { baseReport, setBaseReport } = useBaseUnifiedReport()

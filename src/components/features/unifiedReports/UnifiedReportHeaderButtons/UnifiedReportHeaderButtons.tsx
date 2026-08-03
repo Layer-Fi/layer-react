@@ -4,8 +4,8 @@ import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { HStack } from '@ui/Stack/Stack'
 import { ExpandableDataTableToggleButton } from '@blocks/ExpandableDataTable/ExpandableDataTableToggleButton'
 import type { DefaultVariant } from '@components/utility/ResponsiveComponent'
-import { ReportsMobileSelectionDrawer } from '@features/unifiedReports/ReportsMobileSelectionDrawer/ReportsMobileSelectionDrawer'
 import { UnifiedReportDownloadButton } from '@features/unifiedReports/UnifiedReportDownloadButton/UnifiedReportDownloadButton'
+import { UnifiedReportsMobileSelectionDrawer } from '@features/unifiedReports/UnifiedReportsMobileSelectionDrawer/UnifiedReportsMobileSelectionDrawer'
 
 import './unifiedReportHeaderButtons.scss'
 
@@ -26,7 +26,7 @@ export const UnifiedReportHeaderButtons = ({ variant }: UnifiedReportHeaderButto
         'Layer__UnifiedReports__HeaderButtons--mobile': isMobile,
       })}
     >
-      {isMobile && <ReportsMobileSelectionDrawer />}
+      {isMobile && <UnifiedReportsMobileSelectionDrawer />}
       <HStack gap='xs'>
         <ExpandableDataTableToggleButton icon={isMobile} />
         <UnifiedReportDownloadButton icon={isMobile} />

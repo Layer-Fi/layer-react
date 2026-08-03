@@ -5,10 +5,10 @@ import { SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { type DefaultVariant, ResponsiveComponent } from '@components/utility/ResponsiveComponent'
-import { ReportsMegaMenu } from '@features/unifiedReports/ReportsMegaMenu/ReportsMegaMenu'
 import { UnifiedReportControls } from '@features/unifiedReports/UnifiedReportControls/UnifiedReportControls'
 import { UnifiedReportHeaderButtons } from '@features/unifiedReports/UnifiedReportHeaderButtons/UnifiedReportHeaderButtons'
 import { type UnifiedReportNavigationVariant } from '@features/unifiedReports/UnifiedReports/UnifiedReports'
+import { UnifiedReportsMegaMenu } from '@features/unifiedReports/UnifiedReportsMegaMenu/UnifiedReportsMegaMenu'
 
 import './unifiedReportBaseHeader.scss'
 
@@ -39,7 +39,7 @@ const UnifiedReportBaseHeaderRow = (props: UnifiedReportBaseHeaderRowProps) => {
           {baseReport
             ? <Heading level={3} size='sm'>{baseReport.displayName}</Heading>
             : <SkeletonLoader width='192px' height='24px' />}
-          {props.navigationVariant === 'menu' && <ReportsMegaMenu />}
+          {props.navigationVariant === 'menu' && <UnifiedReportsMegaMenu />}
         </HStack>
       )}
       <UnifiedReportHeaderButtons variant={props.variant} />

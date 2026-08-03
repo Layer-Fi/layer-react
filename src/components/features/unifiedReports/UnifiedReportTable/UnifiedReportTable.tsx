@@ -9,7 +9,7 @@ import { useActiveUnifiedReport } from '@providers/UnifiedReportStore/UnifiedRep
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { ExpandableDataTable } from '@blocks/ExpandableDataTable/ExpandableDataTable'
 import { ExpandableDataTableContext } from '@blocks/ExpandableDataTable/ExpandableDataTableProvider'
-import { buildNestedColumnConfig, getSubRows } from '@features/unifiedReports/utils'
+import { buildNestedColumnConfig, getSubRows } from '@features/unifiedReports/UnifiedReportTable/utils'
 
 import './unifiedReportTable.scss'
 

@@ -1,7 +1,7 @@
 import type { ReportConfig } from '@schemas/reports/reportConfig'
 import { BaseComboBoxOption } from '@ui/ComboBox/baseComboBoxOption'
 
-export class ReportComboBoxOption extends BaseComboBoxOption<ReportConfig> {
+export class UnifiedReportComboBoxOption extends BaseComboBoxOption<ReportConfig> {
   constructor(report: ReportConfig) {
     super(report)
   }

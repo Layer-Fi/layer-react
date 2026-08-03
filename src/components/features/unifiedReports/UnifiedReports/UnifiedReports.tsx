@@ -6,7 +6,7 @@ import { UnifiedReportStoreProvider } from '@providers/UnifiedReportStore/Unifie
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { ExpandableDataTableProvider } from '@blocks/ExpandableDataTable/ExpandableDataTableProvider'
 import { View } from '@components/View/View'
-import { ReportsNavigationSidebar } from '@features/unifiedReports/ReportsNavigationSidebar/ReportsNavigationSidebar'
+import { UnifiedReportsNavigationSidebar } from '@features/unifiedReports/UnifiedReportsNavigationSidebar/UnifiedReportsNavigationSidebar'
 import { UnifiedReportTable } from '@features/unifiedReports/UnifiedReportTable/UnifiedReportTable'
 import { UnifiedReportTableHeader } from '@features/unifiedReports/UnifiedReportTableHeader/UnifiedReportTableHeader'
 
@@ -32,7 +32,7 @@ const UnifiedReportContent = ({
       <HStack className='Layer__UnifiedReports__Body'>
         {isDesktop && navigationVariant === 'sidebar' && (
           <VStack className='Layer__UnifiedReports__Sidebar'>
-            <ReportsNavigationSidebar />
+            <UnifiedReportsNavigationSidebar />
           </VStack>
         )}
         <VStack fluid className='Layer__UnifiedReports__Content'>

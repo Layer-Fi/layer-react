@@ -5,11 +5,11 @@ import { useGetReportConfig } from '@api/businesses/[business-id]/reports/config
 import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
 import { MobileSelectionDrawerWithTrigger } from '@ui/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
 import { HStack } from '@ui/Stack/Stack'
-import { ReportComboBoxOption } from '@features/unifiedReports/reportComboBoxOption'
+import { UnifiedReportComboBoxOption } from '@features/unifiedReports/UnifiedReportsMobileSelectionDrawer/unifiedReportComboBoxOption'
 
-import './reportsMobileSelectionDrawer.scss'
+import './unifiedReportsMobileSelectionDrawer.scss'
 
-export function ReportsMobileSelectionDrawer() {
+export function UnifiedReportsMobileSelectionDrawer() {
   const { t } = useTranslation()
   const { data, isLoading, isError } = useGetReportConfig()
   const { baseReport, setBaseReport } = useBaseUnifiedReport()
@@ -19,7 +19,7 @@ export function ReportsMobileSelectionDrawer() {
 
     return data.map(group => ({
       label: group.displayName,
-      options: group.reports.map(report => new ReportComboBoxOption(report)),
+      options: group.reports.map(report => new UnifiedReportComboBoxOption(report)),
     }))
   }, [data])
 
@@ -34,13 +34,13 @@ export function ReportsMobileSelectionDrawer() {
     return null
   }, [baseReport, groups])
 
-  const onSelectedValueChange = useCallback((value: ReportComboBoxOption | null) => {
+  const onSelectedValueChange = useCallback((value: UnifiedReportComboBoxOption | null) => {
     if (value) setBaseReport(value.original)
   }, [setBaseReport])
 
   return (
-    <HStack className='Layer__ReportsMobileSelectionDrawer'>
-      <MobileSelectionDrawerWithTrigger<ReportComboBoxOption>
+    <HStack className='Layer__UnifiedReportsMobileSelectionDrawer'>
+      <MobileSelectionDrawerWithTrigger<UnifiedReportComboBoxOption>
         ariaLabel={t('reports:label.reports_navigation', 'Reports navigation')}
         heading={t('reports:label.select_report', 'Select report')}
         groups={groups}
