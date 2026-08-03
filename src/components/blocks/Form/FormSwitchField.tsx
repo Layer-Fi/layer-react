@@ -17,11 +17,12 @@ export function FormSwitchField({ slots, ...props }: FormSwitchFieldProps) {
   const { state, handleChange, handleBlur } = field
   const { value } = state
 
-  const { name, rootProps, shellProps } = useFormField(props)
+  const { name, isInvalid, rootProps, shellProps } = useFormField(props)
 
   return (
     <Switch
       {...rootProps}
+      isInvalid={isInvalid}
       isSelected={value}
       onChange={handleChange}
       onBlur={handleBlur}

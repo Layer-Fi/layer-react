@@ -25,6 +25,8 @@ const CELLS: { label: string, props: React.ComponentProps<typeof Switch> }[] = [
   { label: 'on', props: { children: 'On', isSelected: true } },
   { label: 'disabled off', props: { children: 'Disabled', isDisabled: true } },
   { label: 'disabled on', props: { children: 'Disabled', isSelected: true, isDisabled: true } },
+  { label: 'invalid off', props: { children: 'Invalid', isInvalid: true } },
+  { label: 'invalid on', props: { children: 'Invalid', isSelected: true, isInvalid: true } },
 ]
 
 export const AllVariants: Story = {
