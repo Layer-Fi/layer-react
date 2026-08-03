@@ -7,7 +7,7 @@ import { InputGroup } from '@ui/Input/InputGroup'
 import { TextArea } from '@ui/Input/TextArea'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
-import { useBankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/useBankTransactionMemo'
+import { useBankTransactionMemo } from '@features/bankTransactions/BankTransactionMemo/useBankTransactionMemo'
 
 import './bankTransactionMemo.scss'
 

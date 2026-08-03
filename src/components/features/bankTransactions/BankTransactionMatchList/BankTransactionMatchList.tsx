@@ -5,11 +5,11 @@ import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankT
 import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
 import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { ErrorText } from '@ui/Typography/ErrorText'
-import { MatchFormMobileItem } from '@components/MatchForm/MatchFormMobileItem'
+import { BankTransactionMatchListItem } from '@features/bankTransactions/BankTransactionMatchList/BankTransactionMatchListItem'
 
-import './matchFormMobile.scss'
+import './bankTransactionMatchList.scss'
 
-export interface MatchFormMobileProps {
+export interface BankTransactionMatchListProps {
   bankTransaction: BankTransaction
   selectedMatchId?: string
   setSelectedMatch: (val?: SuggestedMatch) => void
@@ -17,13 +17,13 @@ export interface MatchFormMobileProps {
   readOnly?: boolean
 }
 
-export const MatchFormMobile = ({
+export const BankTransactionMatchList = ({
   bankTransaction,
   selectedMatchId,
   setSelectedMatch,
   matchFormError,
   readOnly,
-}: MatchFormMobileProps) => {
+}: BankTransactionMatchListProps) => {
   const { t } = useTranslation()
   const { renderInAppLink } = useInAppLinkContext()
   const suggestedMatches = bankTransaction.suggestedMatches
@@ -51,7 +51,7 @@ export const MatchFormMobile = ({
           : null
 
         return (
-          <MatchFormMobileItem
+          <BankTransactionMatchListItem
             key={match.id}
             match={match}
             bankTransaction={bankTransaction}

@@ -10,9 +10,9 @@ import { ErrorText } from '@ui/Typography/ErrorText'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionMatchBadge } from '@features/bankTransactions/BankTransactionMatchBadge/BankTransactionMatchBadge'
 
-import './matchForm.scss'
+import './bankTransactionMatchTable.scss'
 
-export interface MatchFormProps {
+export interface BankTransactionMatchTableProps {
   bankTransaction: BankTransaction
   selectedMatchId?: string
   setSelectedMatch: (val?: SuggestedMatch) => void
@@ -20,13 +20,13 @@ export interface MatchFormProps {
   readOnly?: boolean
 }
 
-export const MatchForm = ({
+export const BankTransactionMatchTable = ({
   bankTransaction,
   selectedMatchId,
   setSelectedMatch,
   matchFormError,
   readOnly = false,
-}: MatchFormProps) => {
+}: BankTransactionMatchTableProps) => {
   const { t } = useTranslation()
   const { formatDate, formatCurrencyFromCents } = useIntlFormatter()
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()

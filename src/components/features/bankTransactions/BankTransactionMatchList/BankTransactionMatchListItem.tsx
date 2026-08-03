@@ -7,7 +7,7 @@ import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionsAmountDate } from '@features/bankTransactions/BankTransactionsAmountDate/BankTransactionsAmountDate'
 
-import './matchFormMobileItem.scss'
+import './bankTransactionMatchListItem.scss'
 
 interface MatchFormMobileItemProps {
   match: SuggestedMatch
@@ -15,7 +15,7 @@ interface MatchFormMobileItemProps {
   inAppLink: React.ReactNode
 }
 
-export const MatchFormMobileItem = ({ match, bankTransaction, inAppLink }: MatchFormMobileItemProps) => {
+export const BankTransactionMatchListItem = ({ match, bankTransaction, inAppLink }: MatchFormMobileItemProps) => {
   return (
     <GridListItem
       id={match.id}

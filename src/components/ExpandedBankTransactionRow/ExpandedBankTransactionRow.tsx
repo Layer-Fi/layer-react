@@ -40,11 +40,11 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle, ToggleSize } from '@ui/Toggle/Toggle'
 import { ErrorText } from '@ui/Typography/ErrorText'
 import { Span } from '@ui/Typography/Text'
-import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
-import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { MatchForm } from '@components/MatchForm/MatchForm'
-import { TaxCodeComboBox } from '@components/TaxCodeSelect/TaxCodeComboBox'
+import { BankTransactionCategoryComboBox } from '@features/bankTransactions/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { BankTransactionFormFields } from '@features/bankTransactions/BankTransactionFormFields/BankTransactionFormFields'
+import { BankTransactionMatchTable } from '@features/bankTransactions/BankTransactionMatchTable/BankTransactionMatchTable'
+import { BankTransactionReceiptsWithProvider } from '@features/bankTransactions/BankTransactionReceipts/BankTransactionReceipts'
+import { BankTransactionTaxCodeComboBox } from '@features/bankTransactions/BankTransactionTaxCodeSelect/BankTransactionTaxCodeComboBox'
 import { CustomerVendorSelector } from '@features/customerVendor/CustomerVendorSelector/CustomerVendorSelector'
 import { TagDimensionsGroup } from '@features/tags/TagDimensionsGroup/TagDimensionsGroup'
 
@@ -209,7 +209,7 @@ export const ExpandedBankTransactionRow = ({
                 )}
               >
                 <div className='Layer__expanded-bank-transaction-row__content-panel-container'>
-                  <MatchForm
+                  <BankTransactionMatchTable
                     bankTransaction={bankTransaction}
                     selectedMatchId={selectedMatch?.original.id}
                     readOnly={!isCategorizationEnabled}
@@ -263,7 +263,7 @@ export const ExpandedBankTransactionRow = ({
                             showAiSparkle={false}
                           />
                           {hasTaxCodeOptions && (
-                            <TaxCodeComboBox
+                            <BankTransactionTaxCodeComboBox
                               options={taxCodeOptions}
                               selectedValue={getSelectedTaxCodeOption(split.taxCode)}
                               onSelectedValueChange={(value) => {

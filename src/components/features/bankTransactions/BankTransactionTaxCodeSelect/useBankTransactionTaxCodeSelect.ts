@@ -18,7 +18,7 @@ type UseTaxCodeSelectReturn = {
 
 const EMPTY_ARRAY: ReadonlyArray<TaxCodeComboBoxOption> = []
 
-export const useTaxCodeSelect = ({
+export const useBankTransactionTaxCodeSelect = ({
   options = EMPTY_ARRAY,
   selectedValue,
   onSelectedValueChange,

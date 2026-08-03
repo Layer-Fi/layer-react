@@ -12,7 +12,7 @@ import { useBankTransactionsCategorizationActions } from '@providers/BankTransac
 import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { TaxCodeMobileDrawer } from '@components/TaxCodeSelect/TaxCodeMobileDrawer'
+import { BankTransactionTaxCodeDrawer } from '@features/bankTransactions/BankTransactionTaxCodeSelect/BankTransactionTaxCodeDrawer'
 import { CategorySelectDrawer } from '@features/categorization/CategorySelectDrawer/CategorySelectDrawer'
 
 import './bankTransactionsMobileCategorySelection.scss'
@@ -116,7 +116,7 @@ export const BankTransactionsMobileCategorySelection = ({
         ))}
       </GridList>
       {hasTaxCodeOptions && canCategoryHaveTaxCode(selectedCategory) && (
-        <TaxCodeMobileDrawer
+        <BankTransactionTaxCodeDrawer
           options={taxCodeOptions}
           selectedValue={getSelectedTaxCodeOption(selectedTaxCode)}
           onSelectedValueChange={handleTaxCodeSelect}

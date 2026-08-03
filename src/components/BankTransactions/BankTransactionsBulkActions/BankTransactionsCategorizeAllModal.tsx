@@ -14,9 +14,9 @@ import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/Ba
 import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
-import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { getBankTransactionsById, getFirstBankTransactionWithTaxOptions, getSelectedBankTransactions } from '@components/BankTransactions/BankTransactionsBulkActions/utils'
-import { TaxCodeSelect } from '@components/TaxCodeSelect/TaxCodeSelect'
+import { BankTransactionCategoryComboBox } from '@features/bankTransactions/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { BankTransactionTaxCodeSelect } from '@features/bankTransactions/BankTransactionTaxCodeSelect/BankTransactionTaxCodeSelect'
 import { CategorySelectDrawerWithTrigger } from '@features/categorization/CategorySelectDrawerWithTrigger/CategorySelectDrawerWithTrigger'
 
 export enum CategorizationMode {
@@ -147,7 +147,7 @@ export const BankTransactionsCategorizeAllModal = ({
           {showTaxCodeSelect && (
             <VStack gap='3xs' pbs='sm'>
               <Label size='sm' htmlFor={taxCodeSelectId}>{t('bankTransactions:label.tax_code', 'Tax code')}</Label>
-              <TaxCodeSelect
+              <BankTransactionTaxCodeSelect
                 inputId={taxCodeSelectId}
                 isMobile={isMobileView}
                 options={taxCodeOptions}

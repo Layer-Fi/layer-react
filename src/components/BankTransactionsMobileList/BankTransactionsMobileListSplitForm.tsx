@@ -21,10 +21,10 @@ import { InputGroup } from '@ui/Input/InputGroup'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { ErrorText } from '@ui/Typography/ErrorText'
 import { Label, Span } from '@ui/Typography/Text'
-import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
-import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { TaxCodeMobileDrawer } from '@components/TaxCodeSelect/TaxCodeMobileDrawer'
+import { BankTransactionFormFields } from '@features/bankTransactions/BankTransactionFormFields/BankTransactionFormFields'
+import { BankTransactionReceipts } from '@features/bankTransactions/BankTransactionReceipts/BankTransactionReceipts'
+import { type BankTransactionReceiptsHandle } from '@features/bankTransactions/BankTransactionReceipts/BankTransactionReceipts'
+import { BankTransactionTaxCodeDrawer } from '@features/bankTransactions/BankTransactionTaxCodeSelect/BankTransactionTaxCodeDrawer'
 import { CategorySelectDrawerWithTrigger } from '@features/categorization/CategorySelectDrawerWithTrigger/CategorySelectDrawerWithTrigger'
 
 import './bankTransactionsMobileListSplitForm.scss'
@@ -122,7 +122,7 @@ export const BankTransactionsMobileListSplitForm = ({
                   />
                   {hasTaxCodeOptions && (
                     <VStack className='Layer__BankTransactionsMobileSplitForm__TaxCode'>
-                      <TaxCodeMobileDrawer
+                      <BankTransactionTaxCodeDrawer
                         options={taxCodeOptions}
                         selectedValue={getSelectedTaxCodeOption(split.taxCode)}
                         onSelectedValueChange={(value) => {

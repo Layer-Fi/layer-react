@@ -18,7 +18,7 @@ import { Label } from '@ui/Typography/Text'
 import { RecordTransactionFormCategoryCombobox } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionFormCategoryCombobox'
 import { type RecordTransactionFormApi, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { FieldErrors } from '@components/forms/FieldErrors'
-import { TaxCodeComboBox } from '@components/TaxCodeSelect/TaxCodeComboBox'
+import { BankTransactionTaxCodeSelect } from '@features/bankTransactions/BankTransactionTaxCodeSelect/BankTransactionTaxCodeSelect'
 import { CustomAccountComboBox } from '@features/customAccounts/CustomAccountComboBox/CustomAccountComboBox'
 import { isNewAccountOption } from '@features/customAccounts/CustomAccountComboBox/utils'
 
@@ -180,7 +180,8 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                       {field => (
                         <RecordTransactionFormField>
                           <Label size='sm'>{t('bankTransactions:label.tax_code', 'Tax code')}</Label>
-                          <TaxCodeComboBox
+                          <BankTransactionTaxCodeSelect
+                            isMobile={isMobile}
                             options={taxCodeOptions}
                             selectedValue={getSelectedTaxCodeOption(field.state.value)}
                             onSelectedValueChange={option => field.handleChange(option?.value ?? null)}

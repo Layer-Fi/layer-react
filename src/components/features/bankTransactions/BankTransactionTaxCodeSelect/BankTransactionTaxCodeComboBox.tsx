@@ -1,13 +1,13 @@
 import { type TaxCodeComboBoxOption } from '@internal-types/taxCodeComboBoxOption'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { type TaxCodeSelectCommonProps } from '@components/TaxCodeSelect/types'
-import { useTaxCodeSelect } from '@components/TaxCodeSelect/useTaxCodeSelect'
+import { type TaxCodeSelectCommonProps } from '@features/bankTransactions/BankTransactionTaxCodeSelect/types'
+import { useBankTransactionTaxCodeSelect } from '@features/bankTransactions/BankTransactionTaxCodeSelect/useBankTransactionTaxCodeSelect'
 
 type TaxCodeComboBoxProps = TaxCodeSelectCommonProps & {
   inputId?: string
 }
 
-export const TaxCodeComboBox = ({
+export const BankTransactionTaxCodeComboBox = ({
   className,
   options,
   selectedValue,
@@ -15,7 +15,7 @@ export const TaxCodeComboBox = ({
   isDisabled = false,
   inputId,
 }: TaxCodeComboBoxProps) => {
-  const taxCodeSelectProps = useTaxCodeSelect({
+  const taxCodeSelectProps = useBankTransactionTaxCodeSelect({
     options,
     selectedValue,
     onSelectedValueChange,

@@ -7,8 +7,8 @@ import { usePostBankTransactionTag } from '@api/businesses/[business-id]/bank-tr
 import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { VStack } from '@ui/Stack/Stack'
-import { BankTransactionCustomerVendorSelector } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorSelector'
-import { BankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/BankTransactionMemo'
+import { BankTransactionCustomerVendorSelector } from '@features/bankTransactions/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorSelector'
+import { BankTransactionMemo } from '@features/bankTransactions/BankTransactionMemo/BankTransactionMemo'
 import { TagDimensionsGroup } from '@features/tags/TagDimensionsGroup/TagDimensionsGroup'
 
 type BankTransactionFormFieldProps = {

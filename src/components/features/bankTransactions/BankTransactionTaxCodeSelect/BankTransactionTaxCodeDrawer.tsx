@@ -3,19 +3,19 @@ import { useTranslation } from 'react-i18next'
 
 import { type TaxCodeComboBoxOption } from '@internal-types/taxCodeComboBoxOption'
 import { MobileSelectionDrawerWithTrigger } from '@blocks/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
-import { type TaxCodeSelectCommonProps } from '@components/TaxCodeSelect/types'
-import { useTaxCodeSelect } from '@components/TaxCodeSelect/useTaxCodeSelect'
+import { type TaxCodeSelectCommonProps } from '@features/bankTransactions/BankTransactionTaxCodeSelect/types'
+import { useBankTransactionTaxCodeSelect } from '@features/bankTransactions/BankTransactionTaxCodeSelect/useBankTransactionTaxCodeSelect'
 
 type TaxCodeMobileDrawerProps = TaxCodeSelectCommonProps
 
-export const TaxCodeMobileDrawer = ({
+export const BankTransactionTaxCodeDrawer = ({
   options,
   selectedValue,
   onSelectedValueChange,
   isDisabled = false,
 }: TaxCodeMobileDrawerProps) => {
   const { t } = useTranslation()
-  const taxCodeSelectProps = useTaxCodeSelect({
+  const taxCodeSelectProps = useBankTransactionTaxCodeSelect({
     options,
     selectedValue,
     onSelectedValueChange,

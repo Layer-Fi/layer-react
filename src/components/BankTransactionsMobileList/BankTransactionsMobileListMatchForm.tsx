@@ -18,10 +18,10 @@ import { FileInput } from '@ui/Input/FileInput'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { ErrorText } from '@ui/Typography/ErrorText'
 import { Span } from '@ui/Typography/Text'
-import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
-import { BankTransactionReceipts } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { type BankTransactionReceiptsHandle } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { MatchFormMobile } from '@components/MatchForm/MatchFormMobile'
+import { BankTransactionFormFields } from '@features/bankTransactions/BankTransactionFormFields/BankTransactionFormFields'
+import { BankTransactionMatchList } from '@features/bankTransactions/BankTransactionMatchList/BankTransactionMatchList'
+import { BankTransactionReceipts } from '@features/bankTransactions/BankTransactionReceipts/BankTransactionReceipts'
+import { type BankTransactionReceiptsHandle } from '@features/bankTransactions/BankTransactionReceipts/BankTransactionReceipts'
 
 interface BankTransactionsMobileListMatchFormProps {
   bankTransaction: BankTransaction
@@ -69,7 +69,7 @@ export const BankTransactionsMobileListMatchForm = ({
       <Span size='sm' weight='bold'>
         {t('bankTransactions:label.find_match', 'Find Match')}
       </Span>
-      <MatchFormMobile
+      <BankTransactionMatchList
         readOnly={!showCategorization}
         bankTransaction={bankTransaction}
         selectedMatchId={selectedMatchId}
