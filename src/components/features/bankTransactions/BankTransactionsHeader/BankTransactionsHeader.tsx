@@ -22,12 +22,12 @@ import { Toggle } from '@ui/Toggle/Toggle'
 import { Heading } from '@ui/Typography/Heading'
 import { BulkActionsModule } from '@blocks/BulkActionsModule/BulkActionsModule'
 import { DeprecatedHeader } from '@blocks/Layout/DeprecatedHeader/DeprecatedHeader'
-import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
-import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
-import { SelectedBankAccountsChip } from '@components/BankTransactions/SelectedBankAccountsChip/SelectedBankAccountsChip'
-import { TransactionsSearch } from '@components/BankTransactions/TransactionsSearch/TransactionsSearch'
-import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
-import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
+import { BankTransactionsAccountFilterChip } from '@features/bankTransactions/BankTransactionsAccountFilterChip/BankTransactionsAccountFilterChip'
+import { BankTransactionsBulkActions } from '@features/bankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
+import { BankTransactionsHeaderActions } from '@features/bankTransactions/BankTransactionsHeader/BankTransactionsHeaderActions'
+import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@features/bankTransactions/BankTransactionsHeader/BankTransactionsHeaderMenu'
+import { BankTransactionsSearchField } from '@features/bankTransactions/BankTransactionsSearchField/BankTransactionsSearchField'
+import { BankTransactionsSyncingStatus } from '@features/bankTransactions/BankTransactionsSyncingStatus/BankTransactionsSyncingStatus'
 import { BankTransactionsTableContent } from '@features/bankTransactions/constants'
 import { RecordBankTransactionMenuButton } from '@features/bankTransactions/RecordBankTransactionMenuButton/RecordBankTransactionMenuButton'
 
@@ -94,8 +94,8 @@ export const BankTransactionsHeader = ({
         <Heading level={3} size='sm'>
           {stringOverrides?.header || t('common:label.transactions', 'Transactions')}
         </Heading>
-        {isSyncing && <SyncingComponent timeSync={5} inProgress hideContent={isListView} />}
-        <SelectedBankAccountsChip variant='compact' />
+        {isSyncing && <BankTransactionsSyncingStatus timeSync={5} inProgress hideContent={isListView} />}
+        <BankTransactionsAccountFilterChip variant='compact' />
       </HStack>
       {withDatePicker && monthPickerDate && (
         <MonthPicker
@@ -191,7 +191,7 @@ export const BankTransactionsHeader = ({
             <HStack justify='space-between' align='center' gap='xs'>
               {statusToggle}
               <HStack align='center' gap='xs'>
-                <SelectedBankAccountsChip variant='wide' />
+                <BankTransactionsAccountFilterChip variant='wide' />
                 {canRecordTransactions && <RecordBankTransactionMenuButton />}
                 <BankTransactionsHeaderMenu
                   actions={headerMenuActions}
@@ -202,10 +202,10 @@ export const BankTransactionsHeader = ({
           )}
 
           <HStack className='Layer__bank-transactions__header__search-and-menu' align='center' gap='xs'>
-            <TransactionsSearch isDisabled={showBulkActions} />
+            <BankTransactionsSearchField isDisabled={showBulkActions} />
             {!isStatusToggleVisible && (
               <>
-                <SelectedBankAccountsChip variant='wide' />
+                <BankTransactionsAccountFilterChip variant='wide' />
                 {canRecordTransactions && <RecordBankTransactionMenuButton isDisabled={showBulkActions} />}
                 <BankTransactionsHeaderMenu
                   actions={headerMenuActions}
@@ -230,7 +230,7 @@ export const BankTransactionsHeader = ({
     >
       {!collapseHeader && headerTopRow}
 
-      <BankTransactionsActions>
+      <BankTransactionsHeaderActions>
         {showBulkActions
           ? <BulkActionsModule slots={{ BulkActions }} />
           : (
@@ -239,8 +239,8 @@ export const BankTransactionsHeader = ({
               {statusToggle}
             </HStack>
           )}
-        <SelectedBankAccountsChip slot='selected-accounts' variant='wide' />
-        <TransactionsSearch slot='search' isDisabled={showBulkActions} />
+        <BankTransactionsAccountFilterChip slot='selected-accounts' variant='wide' />
+        <BankTransactionsSearchField slot='search' isDisabled={showBulkActions} />
         <HStack slot='download-upload' justify='center' gap='xs'>
           {canRecordTransactions && <RecordBankTransactionMenuButton isDisabled={showBulkActions} />}
           <BankTransactionsHeaderMenu
@@ -248,7 +248,7 @@ export const BankTransactionsHeader = ({
             isDisabled={showBulkActions}
           />
         </HStack>
-      </BankTransactionsActions>
+      </BankTransactionsHeaderActions>
     </DeprecatedHeader>
   )
 }

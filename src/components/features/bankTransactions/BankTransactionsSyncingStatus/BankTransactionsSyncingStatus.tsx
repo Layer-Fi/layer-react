@@ -7,9 +7,9 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { SmallLoader } from '@ui/Loader/SmallLoader'
 
-import './syncingComponent.scss'
+import './bankTransactionsSyncingStatus.scss'
 
-interface SyncingComponentProps {
+interface BankTransactionsSyncingStatusProps {
   titleVariant?: 'default' | 'historical'
   onRefresh?: () => void
   timeSync?: number
@@ -17,13 +17,13 @@ interface SyncingComponentProps {
   hideContent?: boolean
 }
 
-export const SyncingComponent = ({
+export const BankTransactionsSyncingStatus = ({
   titleVariant = 'default',
   onRefresh,
   inProgress = false,
   timeSync = 1440,
   hideContent = false,
-}: SyncingComponentProps) => {
+}: BankTransactionsSyncingStatusProps) => {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const handleRefresh = () => {

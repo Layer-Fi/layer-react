@@ -12,7 +12,7 @@ type TransactionsSearchProps = {
   isDisabled?: boolean
 }
 
-export function TransactionsSearch({ slot, isDisabled }: TransactionsSearchProps) {
+export function BankTransactionsSearchField({ slot, isDisabled }: TransactionsSearchProps) {
   const { t } = useTranslation()
   const { filters, setFilters } = useBankTransactionsFiltersContext()
   const emitLayerEvent = useEmitLayerEvent(LayerEventComponent.BankTransactions)

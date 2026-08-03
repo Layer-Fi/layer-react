@@ -5,16 +5,16 @@ import { useTranslation } from 'react-i18next'
 import { useBankAccountFilterActions, useIsBankAccountFilterLocked, useSelectedBankAccountIds } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 
-import './selectedBankAccountsChip.scss'
+import './bankTransactionsAccountFilterChip.scss'
 
 const CLASS_NAME = 'Layer__bank-transactions__selected-accounts-chip'
 
-type SelectedBankAccountsChipProps = {
+type BankTransactionsAccountFilterChipProps = {
   slot?: string
   variant: 'wide' | 'compact'
 }
 
-export function SelectedBankAccountsChip({ slot, variant }: SelectedBankAccountsChipProps) {
+export function BankTransactionsAccountFilterChip({ slot, variant }: BankTransactionsAccountFilterChipProps) {
   const { t } = useTranslation()
   const selectedBankAccountIds = useSelectedBankAccountIds()
   const isFilterLocked = useIsBankAccountFilterLocked()

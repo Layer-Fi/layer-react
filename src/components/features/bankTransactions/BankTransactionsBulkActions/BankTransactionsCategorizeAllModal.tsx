@@ -14,8 +14,8 @@ import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/Ba
 import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
-import { getBankTransactionsById, getFirstBankTransactionWithTaxOptions, getSelectedBankTransactions } from '@components/BankTransactions/BankTransactionsBulkActions/utils'
 import { BankTransactionCategoryComboBox } from '@features/bankTransactions/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
+import { getBankTransactionsById, getFirstBankTransactionWithTaxOptions, getSelectedBankTransactions } from '@features/bankTransactions/BankTransactionsBulkActions/utils'
 import { BankTransactionTaxCodeSelect } from '@features/bankTransactions/BankTransactionTaxCodeSelect/BankTransactionTaxCodeSelect'
 import { CategorySelectDrawerWithTrigger } from '@features/categorization/CategorySelectDrawerWithTrigger/CategorySelectDrawerWithTrigger'
 

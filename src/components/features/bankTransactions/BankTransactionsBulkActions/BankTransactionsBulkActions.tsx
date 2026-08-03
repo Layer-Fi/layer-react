@@ -5,10 +5,10 @@ import { DisplayState } from '@internal-types/bankTransactions'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
-import { CategorizationMode } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsCategorizeAllModal'
-import { BankTransactionsCategorizeAllModal } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsCategorizeAllModal'
-import { BankTransactionsConfirmAllModal } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsConfirmAllModal'
-import { BankTransactionsUncategorizeAllModal } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsUncategorizeAllModal'
+import { CategorizationMode } from '@features/bankTransactions/BankTransactionsBulkActions/BankTransactionsCategorizeAllModal'
+import { BankTransactionsCategorizeAllModal } from '@features/bankTransactions/BankTransactionsBulkActions/BankTransactionsCategorizeAllModal'
+import { BankTransactionsConfirmAllModal } from '@features/bankTransactions/BankTransactionsBulkActions/BankTransactionsConfirmAllModal'
+import { BankTransactionsUncategorizeAllModal } from '@features/bankTransactions/BankTransactionsBulkActions/BankTransactionsUncategorizeAllModal'
 
 interface BankTransactionsBulkActionsProps {
   isMobileView?: boolean

@@ -1,10 +1,10 @@
 import type { PropsWithChildren } from 'react'
 
-import './bankTransactionsActions.scss'
+import './bankTransactionsHeaderActions.scss'
 
 const CLASS_NAME = 'Layer__BankTransactionsActions'
 
-export function BankTransactionsActions({ children }: PropsWithChildren) {
+export function BankTransactionsHeaderActions({ children }: PropsWithChildren) {
   return (
     <div className={CLASS_NAME}>
       {children}
