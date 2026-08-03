@@ -6,12 +6,12 @@ import { usePostResetInvoice } from '@api/businesses/[business-id]/invoices/[inv
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 
-type InvoiceResetModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
+type InvoiceResetConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   invoice: Invoice
   onSuccess: (invoice: Invoice) => void
 }
 
-export function InvoiceResetModal({ isOpen, onOpenChange, invoice, onSuccess }: InvoiceResetModalProps) {
+export function InvoiceResetConfirmationModal({ isOpen, onOpenChange, invoice, onSuccess }: InvoiceResetConfirmationModalProps) {
   const { t } = useTranslation()
   const { trigger: resetInvoice } = usePostResetInvoice({ invoiceId: invoice.id })
 

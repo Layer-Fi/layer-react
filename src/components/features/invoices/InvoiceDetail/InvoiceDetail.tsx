@@ -7,9 +7,9 @@ import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { InvoiceDetailStep, useInvoiceDetail, useInvoiceNavigation } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
-import { DiscardInvoiceChangesConfirmationModal } from '@features/invoices/DiscardInvoiceChangesConfirmationModal/DiscardInvoiceChangesConfirmationModal'
 import { InvoiceDetailHeader } from '@features/invoices/InvoiceDetailHeader/InvoiceDetailHeader'
 import { InvoiceDetailSubHeader } from '@features/invoices/InvoiceDetailSubHeader/InvoiceDetailSubHeader'
+import { InvoiceDiscardChangesConfirmationModal } from '@features/invoices/InvoiceDiscardChangesConfirmationModal/InvoiceDiscardChangesConfirmationModal'
 import { InvoiceFinalizeStep } from '@features/invoices/InvoiceFinalizeStep/InvoiceFinalizeStep'
 import type { InvoiceFormState } from '@features/invoices/InvoiceForm/formUtils'
 import { InvoiceForm } from '@features/invoices/InvoiceForm/InvoiceForm'
@@ -97,7 +97,7 @@ export const InvoiceDetail = () => {
           <InvoiceFinalizeStep onSuccess={onFinalizeInvoiceSuccess} />
         )}
       </BaseDetailView>
-      <DiscardInvoiceChangesConfirmationModal
+      <InvoiceDiscardChangesConfirmationModal
         isOpen={isDiscardChangesModalOpen}
         onOpenChange={setIsDiscardChangesModalOpen}
         onConfirm={toInvoiceTable}

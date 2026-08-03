@@ -6,12 +6,12 @@ import { updateInvoiceWithWriteoff, usePostWriteoffInvoice } from '@api/business
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 
-type InvoiceWriteoffModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
+type InvoiceWriteoffConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   invoice: Invoice
   onSuccess: (invoice: Invoice) => void
 }
 
-export function InvoiceWriteoffModal({ isOpen, onOpenChange, invoice, onSuccess }: InvoiceWriteoffModalProps) {
+export function InvoiceWriteoffConfirmationModal({ isOpen, onOpenChange, invoice, onSuccess }: InvoiceWriteoffConfirmationModalProps) {
   const { t } = useTranslation()
   const { trigger: writeoffInvoice } = usePostWriteoffInvoice({ invoiceId: invoice.id })
 

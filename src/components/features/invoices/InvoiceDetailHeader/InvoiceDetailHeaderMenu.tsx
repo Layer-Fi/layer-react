@@ -12,9 +12,9 @@ import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'
 import { Span } from '@ui/Typography/Text'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 import { InvoiceRefundModal } from '@features/invoices/InvoiceRefundModal/InvoiceRefundModal'
-import { InvoiceResetModal } from '@features/invoices/InvoiceResetModal/InvoiceResetModal'
-import { InvoiceVoidModal } from '@features/invoices/InvoiceVoidModal/InvoiceVoidModal'
-import { InvoiceWriteoffModal } from '@features/invoices/InvoiceWriteoffModal/InvoiceWriteoffModal'
+import { InvoiceResetConfirmationModal } from '@features/invoices/InvoiceResetConfirmationModal/InvoiceResetConfirmationModal'
+import { InvoiceVoidConfirmationModal } from '@features/invoices/InvoiceVoidConfirmationModal/InvoiceVoidConfirmationModal'
+import { InvoiceWriteoffConfirmationModal } from '@features/invoices/InvoiceWriteoffConfirmationModal/InvoiceWriteoffConfirmationModal'
 
 enum InvoiceDetailHeaderMenuActions {
   Edit = 'Edit',
@@ -182,19 +182,19 @@ export const InvoiceDetailHeaderMenu = ({ onEditInvoice }: InvoiceDetailHeaderMe
         invoice={invoice}
         onSuccess={onSuccessUpdateInvoice}
       />
-      <InvoiceVoidModal
+      <InvoiceVoidConfirmationModal
         isOpen={openModal === InvoiceDetailHeaderMenuActions.Void}
         onOpenChange={onOpenChangeByMode(InvoiceDetailHeaderMenuActions.Void)}
         invoiceId={invoice.id}
         onSuccess={onSuccessUpdateInvoice}
       />
-      <InvoiceWriteoffModal
+      <InvoiceWriteoffConfirmationModal
         isOpen={openModal === InvoiceDetailHeaderMenuActions.Writeoff}
         onOpenChange={onOpenChangeByMode(InvoiceDetailHeaderMenuActions.Writeoff)}
         invoice={invoice}
         onSuccess={onSuccessUpdateInvoice}
       />
-      <InvoiceResetModal
+      <InvoiceResetConfirmationModal
         isOpen={openModal === InvoiceDetailHeaderMenuActions.Reset}
         onOpenChange={onOpenChangeByMode(InvoiceDetailHeaderMenuActions.Reset)}
         invoice={invoice}

@@ -6,12 +6,12 @@ import { usePostVoidInvoice } from '@api/businesses/[business-id]/invoices/[invo
 import { type ModalProps } from '@ui/Modal/Modal'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 
-type InvoiceVoidModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
+type InvoiceVoidConfirmationModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'> & {
   invoiceId: string
   onSuccess: (invoice: Invoice) => void
 }
 
-export function InvoiceVoidModal({ isOpen, onOpenChange, invoiceId, onSuccess }: InvoiceVoidModalProps) {
+export function InvoiceVoidConfirmationModal({ isOpen, onOpenChange, invoiceId, onSuccess }: InvoiceVoidConfirmationModalProps) {
   const { t } = useTranslation()
   const { trigger: voidInvoice } = usePostVoidInvoice({ invoiceId })
 
