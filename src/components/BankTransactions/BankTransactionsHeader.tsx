@@ -16,6 +16,7 @@ import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/Ba
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useBankTransactionsStringOverrides } from '@contexts/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
+import { MonthPicker } from '@ui/datePickers/MonthPicker/MonthPicker'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Heading } from '@ui/Typography/Heading'
@@ -28,7 +29,6 @@ import { TransactionsSearch } from '@components/BankTransactions/TransactionsSea
 import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
 import { BulkActionsModule } from '@components/BulkActionsModule/BulkActionsModule'
 import { Header } from '@components/Container/Header'
-import { MonthPicker } from '@components/MonthPicker/MonthPicker'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
 
 import './bankTransactionsHeader.scss'

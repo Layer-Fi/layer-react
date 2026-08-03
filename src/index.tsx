@@ -32,8 +32,8 @@ export { LinkAccounts } from './components/features/linkedAccounts/LinkAccounts/
 export { LandingPage } from './components/LandingPage/LandingPage'
 
 /* --------------------- Date Pickers -------------------------- */
-export { GlobalDateRangeSelection } from './components/DateSelection/GlobalDateRangeSelection'
-export { GlobalMonthPicker } from './components/GlobalMonthPicker/GlobalMonthPicker'
+export { GlobalDateRangeSelection } from './components/blocks/datePickers/DateSelection/GlobalDateRangeSelection'
+export { GlobalMonthPicker } from './components/blocks/datePickers/GlobalMonthPicker/GlobalMonthPicker'
 
 /* --------------------- Cards -------------------------- */
 export { MileageSummaryCard } from './components/features/mileage/MileageSummaryCard/MileageSummaryCard'

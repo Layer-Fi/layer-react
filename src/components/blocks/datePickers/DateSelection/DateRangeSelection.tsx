@@ -2,8 +2,8 @@ import classNames from 'classnames'
 
 import { type DateRange } from '@utils/date/dateRange'
 import type { DatePreset, SelectableDatePreset } from '@utils/date/dateRangePresets'
-import { DateRangePicker } from '@components/DatePicker/DateRangePicker'
-import { DateSelectionComboBox } from '@components/DateSelection/DateSelectionComboBox'
+import { DateRangePicker } from '@ui/datePickers/DatePicker/DateRangePicker'
+import { DateSelectionComboBox } from '@blocks/datePickers/DateSelection/DateSelectionComboBox'
 
 import './dateRangeSelection.scss'
 

@@ -4,7 +4,7 @@ import { getYear } from 'date-fns'
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useBusinessDatePickerBounds } from '@hooks/utils/dates/useBusinessDatePickerBounds'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
-import { YearPicker } from '@components/YearPicker/YearPicker'
+import { YearPicker } from '@ui/datePickers/YearPicker/YearPicker'
 
 type GlobalYearPickerProps = {
   showLabel?: boolean

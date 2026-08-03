@@ -3,7 +3,7 @@ import type { DateValue } from '@internationalized/date'
 import classNames from 'classnames'
 
 import { useFieldContext } from '@hooks/features/forms/useForm'
-import { DatePicker } from '@components/DatePicker/DatePicker'
+import { DatePicker } from '@ui/datePickers/DatePicker/DatePicker'
 import type { CommonFormFieldProps } from '@components/forms/types'
 
 import './formDatePickerField.scss'

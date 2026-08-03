@@ -6,7 +6,7 @@ import { CloseButton as UICloseButton } from '@ui/Button/CloseButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
-import { GlobalMonthPicker } from '@components/GlobalMonthPicker/GlobalMonthPicker'
+import { GlobalMonthPicker } from '@blocks/datePickers/GlobalMonthPicker/GlobalMonthPicker'
 
 import './profitAndLossDetailedChartsHeader.scss'
 

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { DateInvalidReason, getDateInvalidReason } from '@components/DatePicker/utils'
+import { DateInvalidReason, getDateInvalidReason } from '@ui/datePickers/DatePicker/utils'
 
 type UseDatePickerStateArgs = {
   date: Date

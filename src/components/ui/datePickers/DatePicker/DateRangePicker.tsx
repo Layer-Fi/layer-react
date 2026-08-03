@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 
 import { type DateRange, isSameDateRange } from '@utils/date/dateRange'
 import { useBusinessDatePickerBounds } from '@hooks/utils/dates/useBusinessDatePickerBounds'
-import { DatePicker } from '@components/DatePicker/DatePicker'
-import { useDatePickerState } from '@components/DatePicker/useDatePickerState'
+import { DatePicker } from '@ui/datePickers/DatePicker/DatePicker'
+import { useDatePickerState } from '@ui/datePickers/DatePicker/useDatePickerState'
 
 type DateRangePickerProps = {
   dateRange: DateRange

@@ -2,7 +2,7 @@ import { parseDate } from '@internationalized/date'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { userEvent, within } from 'storybook/test'
 
-import { DateCalendar } from '@components/DateCalendar/DateCalendar'
+import { DateCalendar } from '@ui/datePickers/DateCalendar/DateCalendar'
 
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { Col, Gallery } from '@test-utils/storybook/gallery'

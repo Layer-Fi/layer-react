@@ -6,10 +6,10 @@ import { Dialog } from 'react-aria-components/Dialog'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { DATE_PICKER_CLASS_NAME, DatePicker as BaseDatePicker } from '@ui/Date/Date'
+import { DateCalendar } from '@ui/datePickers/DateCalendar/DateCalendar'
+import { DatePickerInput } from '@ui/datePickers/DatePicker/DatePickerInput'
 import { Label, type TextStyleProps } from '@ui/Typography/Text'
 import { ResponsivePopover } from '@blocks/ResponsivePopover/ResponsivePopover'
-import { DateCalendar } from '@components/DateCalendar/DateCalendar'
-import { DatePickerInput } from '@components/DatePicker/DatePickerInput'
 
 import './datePicker.scss'
 
