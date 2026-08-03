@@ -23,10 +23,10 @@ import type { DataTableExpandedRowProps } from '@blocks/DataTable/utils/rows/exp
 import type { DataTableSelectionProps } from '@blocks/DataTable/utils/rows/selection'
 import { PaginatedTable } from '@blocks/PaginatedDataTable/PaginatedDataTable'
 import { SimpleDataTable } from '@blocks/SimpleDataTable/SimpleDataTable'
-import { BankTransactionAccountCell } from '@components/BankTransactionsTable/BankTransactionAccountCell'
-import { BankTransactionCategoryCell } from '@components/BankTransactionsTable/BankTransactionCategoryCell'
-import { BankTransactionDescriptionCell } from '@components/BankTransactionsTable/BankTransactionDescriptionCell'
 import { BankTransactionsEmptyState, BankTransactionsErrorState } from '@features/bankTransactions/BankTransactionsDataStates/BankTransactionsDataStates'
+import { BankTransactionAccountCell } from '@features/bankTransactions/BankTransactionsTable/BankTransactionAccountCell'
+import { BankTransactionCategoryCell } from '@features/bankTransactions/BankTransactionsTable/BankTransactionCategoryCell'
+import { BankTransactionDescriptionCell } from '@features/bankTransactions/BankTransactionsTable/BankTransactionDescriptionCell'
 import { ExpandedBankTransactionRow } from '@features/bankTransactions/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 import { type BankTransactionsTableStringOverrides } from '@features/bankTransactions/types'
 
