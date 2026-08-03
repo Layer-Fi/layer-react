@@ -1,6 +1,8 @@
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Toast } from '@ui/Toast/Toast'
 
+import './toastsContainer.scss'
+
 export function ToastsContainer() {
   const { toasts, removeToast } = useLayerContext()
 
