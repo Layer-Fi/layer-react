@@ -13,7 +13,7 @@ import { DurationSpan } from '@ui/Typography/DurationSpan'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
 import { CombinedDateRangeSelection } from '@blocks/datePickers/DateSelection/CombinedDateRangeSelection'
-import { Container } from '@components/Container/Container'
+import { Container } from '@blocks/layout/Container/Container'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 import './timeTrackingStats.scss'

@@ -4,7 +4,7 @@ import { Header } from '@ui/Header/Header'
 import { HeaderCol } from '@ui/Header/HeaderCol'
 import { HeaderRow } from '@ui/Header/HeaderRow'
 import { GlobalYearPicker } from '@blocks/datePickers/GlobalYearPicker/GlobalYearPicker'
-import { View } from '@components/View/View'
+import { View } from '@blocks/layout/View/View'
 import { MileageTrackingStats } from '@features/mileage/MileageTrackingStats/MileageTrackingStats'
 import { TripsRouter } from '@features/mileage/TripsRouter/TripsRouter'
 

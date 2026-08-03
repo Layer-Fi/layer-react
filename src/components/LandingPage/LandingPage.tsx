@@ -11,6 +11,7 @@ import { Separator } from '@ui/Separator/Separator'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
+import { View } from '@blocks/layout/View/View'
 import {
   buildDefaultAccountingOfferingConfig,
   buildDefaultBookkeepingOfferingConfig,
@@ -21,7 +22,6 @@ import {
 import { LandingPageOffer } from '@components/LandingPage/LandingPageOptions'
 import { type DeepPartial, type HeroContentConfig, type LandingPageCardConfig, type LandingPageLink, type LandingPagePlatformConfig as LandingPagePlatformConfig } from '@components/LandingPage/types'
 import { mergeHeroContentConfig, mergeLandingPageConfig } from '@components/LandingPage/utils'
-import { View } from '@components/View/View'
 
 import './landingPage.scss'
 

@@ -7,7 +7,7 @@ import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccoun
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
-import { Header } from '@components/Container/Header'
+import { Header } from '@blocks/layout/Container/Header'
 import { BookkeepingStatus } from '@features/bookkeeping/BookkeepingStatus/BookkeepingStatus'
 import type { ProfitAndLossDownloadButtonStringOverrides } from '@features/profitAndLoss/ProfitAndLossDownloadButton/types'
 

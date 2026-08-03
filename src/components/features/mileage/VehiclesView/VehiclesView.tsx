@@ -11,7 +11,7 @@ import { HStack } from '@ui/Stack/Stack'
 import { Switch } from '@ui/Switch/Switch'
 import { Heading } from '@ui/Typography/Heading'
 import { Span } from '@ui/Typography/Text'
-import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
+import { BaseDetailView } from '@blocks/layout/BaseDetailView/BaseDetailView'
 import { VehicleDrawer } from '@features/mileage/VehicleDrawer/VehicleDrawer'
 import { VehiclesGrid } from '@features/mileage/VehiclesGrid/VehiclesGrid'
 
