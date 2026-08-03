@@ -10,7 +10,7 @@ import { type LedgerAccountLineItem } from '@schemas/generalLedger/ledgerEntry'
 import { decodeLedgerEntrySource } from '@schemas/generalLedger/ledgerEntrySource'
 import { lineEntryNumber } from '@utils/journal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { type TablePaginationProps } from '@hooks/utils/pagination/types'
+import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
@@ -135,10 +135,13 @@ export const LedgerAccountLineItemsTable = ({
     [nodeType, stringOverrides, formatDate, t],
   )
 
-  const paginationProps: TablePaginationProps = useMemo(
-    () => ({ pageSize, hasMore, fetchMore }),
-    [pageSize, hasMore, fetchMore],
-  )
+  const paginationProps = useTablePaginationProps({
+    filterParams: selectedAccount?.accountId,
+    data,
+    pageSize,
+    hasMore,
+    fetchMore,
+  })
 
   const withClickableRow = useMemo(() => ({
     isRowClickable: () => true,
