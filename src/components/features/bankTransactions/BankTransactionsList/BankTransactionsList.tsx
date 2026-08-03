@@ -2,7 +2,7 @@ import { type PropsWithChildren } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { useUpsertBankTransactionsDefaultCategories } from '@hooks/features/bankTransactions/useUpsertBankTransactionsDefaultCategories'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { useBankTransactionsContext } from '@providers/bankTransactions/BankTransactions/BankTransactionsContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { Loader } from '@ui/Loader/Loader'
 import { ConditionalList } from '@components/utility/ConditionalList'

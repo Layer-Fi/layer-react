@@ -26,11 +26,11 @@ import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/
 import { useSplitsForm } from '@hooks/features/bankTransactions/useSplitsForm'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
+import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/bankTransactions/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import {
   BankTransactionSelectionVariant,
   useBankTransactionsCategorizationActions,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { Button } from '@ui/Button/Button'
 import { AmountInput } from '@ui/Input/AmountInput'

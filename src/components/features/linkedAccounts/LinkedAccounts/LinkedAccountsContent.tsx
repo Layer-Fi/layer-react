@@ -5,7 +5,7 @@ import { GridList, type Selection } from 'react-aria-components/GridList'
 import { useTranslation } from 'react-i18next'
 
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
-import { useBankAccountFilterActions, useIsBankAccountFilterEnabled, useIsBankAccountFilterLocked, useSelectedBankAccountIds } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
+import { useBankAccountFilterActions, useIsBankAccountFilterEnabled, useIsBankAccountFilterLocked, useSelectedBankAccountIds } from '@providers/bankTransactions/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { LayerEventComponent, LayerEventType } from '@providers/global/LayerProvider/layerEvents'
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'

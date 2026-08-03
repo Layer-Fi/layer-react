@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution, isAllExternalAccountsUserCreatedCustom } from '@utils/bankAccount'
-import { useIsBankAccountFilterEnabled, useIsBankAccountFilterLocked } from '@providers/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
+import { useIsBankAccountFilterEnabled, useIsBankAccountFilterLocked } from '@providers/bankTransactions/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { useEnvironment } from '@providers/global/Environment/EnvironmentInputProvider'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 import { OpeningBalanceModalContext } from '@contexts/OpeningBalanceModalContext/OpeningBalanceModalContext'

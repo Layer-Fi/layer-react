@@ -1,7 +1,7 @@
 import { type PropsWithChildren } from 'react'
 
 import { useAugmentedBankTransactions } from '@hooks/features/bankTransactions/useAugmentedBankTransactions'
-import { BankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
+import { BankTransactionsContext } from '@providers/bankTransactions/BankTransactions/BankTransactionsContext'
 
 export const BankTransactionsProvider = ({ children }: PropsWithChildren) => {
   const bankTransactionsData = useAugmentedBankTransactions()

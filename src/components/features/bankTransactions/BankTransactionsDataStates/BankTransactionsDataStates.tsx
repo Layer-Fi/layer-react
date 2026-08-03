@@ -2,8 +2,8 @@ import { Inbox, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { DisplayState } from '@internal-types/bankTransactions'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
+import { useBankTransactionsContext } from '@providers/bankTransactions/BankTransactions/BankTransactionsContext'
+import { useBankTransactionsFiltersContext } from '@providers/bankTransactions/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { DataStateContainer } from '@ui/DataState/DataStateContainer'
 

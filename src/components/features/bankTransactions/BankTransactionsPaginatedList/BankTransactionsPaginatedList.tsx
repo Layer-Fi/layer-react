@@ -2,9 +2,9 @@ import type { ReactNode } from 'react'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { usePaginatedList } from '@hooks/utils/pagination/usePaginatedList'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
-import { useBankTransactionsPaginationContext } from '@contexts/BankTransactionsPaginationContext/BankTransactionsPaginationContext'
+import { useBankTransactionsContext } from '@providers/bankTransactions/BankTransactions/BankTransactionsContext'
+import { useBankTransactionsFiltersContext } from '@providers/bankTransactions/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
+import { useBankTransactionsPaginationContext } from '@providers/bankTransactions/BankTransactionsPagination/BankTransactionsPaginationContext'
 import { Pagination } from '@ui/Pagination/Pagination'
 
 type RenderBankTransactionsList = (bankTransactions?: BankTransaction[]) => ReactNode

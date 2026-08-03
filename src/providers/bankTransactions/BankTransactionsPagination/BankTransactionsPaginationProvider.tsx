@@ -1,9 +1,9 @@
 import { type ReactNode } from 'react'
 
 import { useBankTransactionsPagination } from '@hooks/features/bankTransactions/useBankTransactionsPagination'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
-import { BankTransactionsPaginationContext } from '@contexts/BankTransactionsPaginationContext/BankTransactionsPaginationContext'
+import { useBankTransactionsContext } from '@providers/bankTransactions/BankTransactions/BankTransactionsContext'
+import { useBankTransactionsFiltersContext } from '@providers/bankTransactions/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
+import { BankTransactionsPaginationContext } from '@providers/bankTransactions/BankTransactionsPagination/BankTransactionsPaginationContext'
 
 interface BankTransactionsPaginationProviderProps {
   children: ReactNode

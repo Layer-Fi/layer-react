@@ -6,8 +6,8 @@ import { MatchType } from '@schemas/bankTransactions/match'
 import { usePutMatchBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/match/put'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useProfitAndLossGlobalInvalidator } from '@api/businesses/[business-id]/reports/profit-and-loss/useProfitAndLossGlobalInvalidator'
+import { useBankTransactionsContext } from '@providers/bankTransactions/BankTransactions/BankTransactionsContext'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
-import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 
 export function useMatchBankTransactionWithCacheUpdate() {
   const { eventCallbacks } = useLayerContext()

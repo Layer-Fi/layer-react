@@ -2,8 +2,8 @@ import { type ReactNode } from 'react'
 
 import {
   BankTransactionsFiltersContext,
-} from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
-import { useBankTransactionsFilters, type useBankTransactionsFiltersParams } from '@contexts/BankTransactionsFiltersContext/useBankTransactionsFilters'
+} from '@providers/bankTransactions/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
+import { useBankTransactionsFilters, type useBankTransactionsFiltersParams } from '@providers/bankTransactions/BankTransactionsFiltersContext/useBankTransactionsFilters'
 
 type BankTransactionsFiltersProviderProps = {
   children: ReactNode

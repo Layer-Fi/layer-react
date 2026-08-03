@@ -3,7 +3,7 @@ import { CloudDownload, CloudUpload, PencilRuler } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useHandleDownloadTransactions } from '@hooks/features/bankTransactions/useHandleBankTransactionsDownload'
-import { useBankTransactionsNavigation } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
+import { useBankTransactionsNavigation } from '@providers/bankTransactions/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'
 import { DataTableHeaderMenu } from '@blocks/DataTable/DataTableHeaderMenu'
 import InvisibleDownload from '@components/utility/InvisibleDownload'
