@@ -21,7 +21,7 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { Heading } from '@ui/Typography/Heading'
 import { BulkActionsModule } from '@blocks/BulkActionsModule/BulkActionsModule'
-import { Header } from '@blocks/Layout/Container/Header'
+import { DeprecatedHeader } from '@blocks/Layout/DeprecatedHeader/DeprecatedHeader'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
 import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
 import { BankTransactionsTableContent } from '@components/BankTransactions/constants'
@@ -176,7 +176,7 @@ export const BankTransactionsHeader = ({
 
   if (isListView) {
     return (
-      <Header
+      <DeprecatedHeader
         className={classNames(
           'Layer__bank-transactions__header',
           withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
@@ -223,12 +223,12 @@ export const BankTransactionsHeader = ({
           </HStack>
 
         </VStack>
-      </Header>
+      </DeprecatedHeader>
     )
   }
 
   return (
-    <Header
+    <DeprecatedHeader
       className={classNames(
         'Layer__bank-transactions__header',
         withDatePicker && 'Layer__bank-transactions__header--with-date-picker',
@@ -255,6 +255,6 @@ export const BankTransactionsHeader = ({
           />
         </HStack>
       </BankTransactionsActions>
-    </Header>
+    </DeprecatedHeader>
   )
 }

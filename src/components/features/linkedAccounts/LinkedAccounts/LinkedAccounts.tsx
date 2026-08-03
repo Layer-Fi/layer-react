@@ -10,7 +10,7 @@ import { Loader } from '@ui/Loader/Loader'
 import { HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
 import { Container } from '@blocks/Layout/Container/Container'
-import { Header } from '@blocks/Layout/Container/Header'
+import { DeprecatedHeader } from '@blocks/Layout/DeprecatedHeader/DeprecatedHeader'
 import { LinkedAccountsContent } from '@features/linkedAccounts/LinkedAccounts/LinkedAccountsContent'
 import { OpeningBalanceModal } from '@features/linkedAccounts/OpeningBalanceModal/OpeningBalanceModal'
 import { PlaidHostedLinkErrorBanner } from '@features/linkedAccounts/PlaidHostedLinkErrorBanner/PlaidHostedLinkErrorBanner'
@@ -56,11 +56,11 @@ export const LinkedAccountsComponent = ({
 
   return (
     <Container name={COMPONENT_NAME} elevated={elevated}>
-      <Header className='Layer__linked-accounts__header'>
+      <DeprecatedHeader className='Layer__linked-accounts__header'>
         <Heading level={3} size='sm'>
           {stringOverrides?.title || t('linkedAccounts:label.linked_accounts', 'Linked Accounts')}
         </Heading>
-      </Header>
+      </DeprecatedHeader>
 
       <HStack pi='lg'>
         <PlaidHostedLinkErrorBanner />

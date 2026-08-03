@@ -1,4 +1,4 @@
-import { type LedgerEntrySourceDetailStringOverrides } from '@blocks/LedgerEntrySourceDetailView/LedgerEntrySourceDetailView'
+import { type LedgerEntrySourceDetailStringOverrides } from '@blocks/LedgerEntry/LedgerEntrySourceDetailView/LedgerEntrySourceDetailView'
 
 export interface JournalEntryDetailStringOverrides {
   entryTypeLabel?: string
