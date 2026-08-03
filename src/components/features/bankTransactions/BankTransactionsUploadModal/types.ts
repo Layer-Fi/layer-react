@@ -1,4 +1,4 @@
-export enum UploadTransactionsStep {
+export enum BankTransactionsUploadStep {
   UploadCsv,
   ValidateCsv,
   Confirmation,

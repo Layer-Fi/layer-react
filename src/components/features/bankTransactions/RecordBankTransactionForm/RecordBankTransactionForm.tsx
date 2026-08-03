@@ -15,27 +15,27 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Form } from '@ui/Form/Form'
 import { Label } from '@ui/Typography/Text'
-import { RecordTransactionFormCategoryCombobox } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionFormCategoryCombobox'
-import { type RecordTransactionFormApi, type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
 import { FieldErrors } from '@components/forms/FieldErrors'
 import { BankTransactionTaxCodeSelect } from '@features/bankTransactions/BankTransactionTaxCodeSelect/BankTransactionTaxCodeSelect'
+import { RecordBankTransactionFormCategoryComboBox } from '@features/bankTransactions/RecordBankTransactionForm/RecordBankTransactionFormCategoryComboBox'
+import { type RecordBankTransactionFormApi, type RecordBankTransactionVariant } from '@features/bankTransactions/RecordBankTransactionForm/useRecordBankTransactionForm'
 import { CustomAccountComboBox } from '@features/customAccounts/CustomAccountComboBox/CustomAccountComboBox'
 import { isNewAccountOption } from '@features/customAccounts/CustomAccountComboBox/utils'
 
-import './recordTransactionForm.scss'
+import './recordBankTransactionForm.scss'
 
-function RecordTransactionFormField({ withFieldLayout = true, children }: PropsWithChildren<{ withFieldLayout?: boolean }>) {
+function RecordBankTransactionFormField({ withFieldLayout = true, children }: PropsWithChildren<{ withFieldLayout?: boolean }>) {
   if (!withFieldLayout) return <>{children}</>
   return <div className='Layer__RecordTransactionForm__Field'>{children}</div>
 }
 
 type RecordTransactionFormProps = {
-  form: RecordTransactionFormApi
-  variant: RecordTransactionVariant
+  form: RecordBankTransactionFormApi
+  variant: RecordBankTransactionVariant
   transaction?: BankTransaction
 }
 
-export function RecordTransactionForm({ form, variant, transaction }: RecordTransactionFormProps) {
+export function RecordBankTransactionForm({ form, variant, transaction }: RecordTransactionFormProps) {
   const { t } = useTranslation()
   const { formatCurrencyFromCents } = useIntlFormatter()
   const { taxCodeOptions, hasTaxCodeOptions, getSelectedTaxCodeOption } = useTaxCodeOptions(transaction)
@@ -78,7 +78,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
         {(field) => {
           const isCreatingAccount = isNewAccountOption(field.state.value)
           return (
-            <RecordTransactionFormField withFieldLayout={!isCreatingAccount}>
+            <RecordBankTransactionFormField withFieldLayout={!isCreatingAccount}>
               <CustomAccountComboBox
                 inputId='record-transaction-account'
                 label={accountLabel}
@@ -91,7 +91,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                 onSelectAccount={field.handleChange}
               />
               <FieldErrors errors={field.state.meta.errors} className='Layer__RecordTransactionForm__Error' />
-            </RecordTransactionFormField>
+            </RecordBankTransactionFormField>
           )
         }}
       </form.Field>
@@ -157,8 +157,8 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                 validators={{ onDynamic: ({ value }) => isMultiSplit ? undefined : required(t('bankTransactions:recordTransaction.validation.category_required', 'Category is required'))(value) }}
               >
                 {field => (
-                  <RecordTransactionFormField>
-                    <RecordTransactionFormCategoryCombobox
+                  <RecordBankTransactionFormField>
+                    <RecordBankTransactionFormCategoryComboBox
                       label={t('common:label.category', 'Category')}
                       placeholder={t('bankTransactions:recordTransaction.placeholder.category', 'Select category...')}
                       inline={isInline}
@@ -169,7 +169,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                       category={category}
                     />
                     <FieldErrors errors={field.state.meta.errors} className='Layer__RecordTransactionForm__Error' />
-                  </RecordTransactionFormField>
+                  </RecordBankTransactionFormField>
                 )}
               </form.Field>
 
@@ -178,7 +178,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                   {category => (
                     <form.Field name='taxCode'>
                       {field => (
-                        <RecordTransactionFormField>
+                        <RecordBankTransactionFormField>
                           <Label size='sm'>{t('bankTransactions:label.tax_code', 'Tax code')}</Label>
                           <BankTransactionTaxCodeSelect
                             isMobile={isMobile}
@@ -187,7 +187,7 @@ export function RecordTransactionForm({ form, variant, transaction }: RecordTran
                             onSelectedValueChange={option => field.handleChange(option?.value ?? null)}
                             isDisabled={category === null || isClassificationExclusion(category)}
                           />
-                        </RecordTransactionFormField>
+                        </RecordBankTransactionFormField>
                       )}
                     </form.Field>
                   )}

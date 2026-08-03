@@ -8,7 +8,7 @@ import { Label } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@features/bankTransactions/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { LedgerAccountComboBox } from '@features/generalLedger/LedgerAccountComboBox/LedgerAccountComboBox'
 
-import './recordTransactionFormCategoryCombobox.scss'
+import './recordBankTransactionFormCategoryComboBox.scss'
 
 type RecordTransactionFormCategoryComboboxProps = {
   label: string
@@ -21,7 +21,7 @@ type RecordTransactionFormCategoryComboboxProps = {
   category?: BankTransactionNonSuggestedMatchOption | null
 }
 
-export function RecordTransactionFormCategoryCombobox({
+export function RecordBankTransactionFormCategoryComboBox({
   label,
   placeholder,
   value,

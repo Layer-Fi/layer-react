@@ -4,7 +4,7 @@ import { useGetCustomAccounts } from '@api/businesses/[business-id]/custom-accou
 import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 
-export const useIsEditableCustomTransaction = (bankTransaction: BankTransaction) => {
+export const useIsEditableCustomBankTransaction = (bankTransaction: BankTransaction) => {
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
   const showUploadOptions = useIsBankTransactionsFeatureEnabled(BankTransactionsFeature.UploadOptions)
   const { data: customAccounts } = useGetCustomAccounts({ isEnabled: showUploadOptions })

@@ -9,20 +9,20 @@ import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Separator } from '@ui/Separator/Separator'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { useWizard } from '@blocks/Wizard/Wizard'
-import { UploadTransactionsStep } from '@components/UploadTransactions/types'
+import { BankTransactionsUploadStep } from '@features/bankTransactions/BankTransactionsUploadModal/types'
 
-type UploadTransactionsConfirmationStepProps = {
+type BankTransactionsUploadConfirmationStepProps = {
   onRestartFlow: () => void
   uploadedTransactionsCount: number
 }
 
-export function UploadTransactionsConfirmationStep({ onRestartFlow, uploadedTransactionsCount }: UploadTransactionsConfirmationStepProps) {
+export function BankTransactionsUploadConfirmationStep({ onRestartFlow, uploadedTransactionsCount }: BankTransactionsUploadConfirmationStepProps) {
   const { t } = useTranslation()
   const { formatNumber } = useIntlFormatter()
   const { goToStep, next } = useWizard()
   const goRestartFlow = useCallback(() => {
     onRestartFlow()
-    goToStep(UploadTransactionsStep.UploadCsv)
+    goToStep(BankTransactionsUploadStep.UploadCsv)
   }, [onRestartFlow, goToStep])
 
   return (

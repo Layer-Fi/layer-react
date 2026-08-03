@@ -6,8 +6,8 @@ import { useHandleDownloadTransactions } from '@hooks/features/bankTransactions/
 import { useBankTransactionsNavigation } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 import { type DropdownMenuItem } from '@ui/DropdownMenu/DropdownMenu'
 import { DataTableHeaderMenu } from '@blocks/DataTable/DataTableHeaderMenu'
-import { BankTransactionsUploadModal } from '@components/BankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
 import InvisibleDownload from '@components/utility/InvisibleDownload'
+import { BankTransactionsUploadModal } from '@features/bankTransactions/BankTransactionsUploadModal/BankTransactionsUploadModal'
 
 interface BankTransactionsHeaderMenuProps {
   actions: BankTransactionsHeaderMenuActions[]
@@ -16,7 +16,7 @@ interface BankTransactionsHeaderMenuProps {
 }
 
 export enum BankTransactionsHeaderMenuActions {
-  UploadTransactions = 'UploadTransactions',
+  BankTransactionsUploadWizard = 'BankTransactionsUploadWizard',
   ManageCategorizationRules = 'ManageCategorizationRules',
 }
 
@@ -34,9 +34,9 @@ export const BankTransactionsHeaderMenu = ({ actions, isDisabled, isListView = f
       label: t('bankTransactions:action.download_transactions', 'Download transactions'),
     }]
 
-    if (actions.includes(BankTransactionsHeaderMenuActions.UploadTransactions)) {
+    if (actions.includes(BankTransactionsHeaderMenuActions.BankTransactionsUploadWizard)) {
       items.push({
-        key: BankTransactionsHeaderMenuActions.UploadTransactions,
+        key: BankTransactionsHeaderMenuActions.BankTransactionsUploadWizard,
         onClick: () => setIsModalOpen(true),
         slots: { Icon: CloudUpload },
         label: t('bankTransactions:action.upload_transactions_manually', 'Upload transactions manually'),

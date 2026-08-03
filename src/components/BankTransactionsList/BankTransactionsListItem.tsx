@@ -12,6 +12,7 @@ import {
 } from '@utils/bankTransactions/shared'
 import { useDelayedRemoveBankTransaction } from '@hooks/features/bankTransactions/useDelayedRemoveBankTransaction'
 import { useGetBankTransactionMatchOrCategoryWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
+import { useIsEditableCustomBankTransaction } from '@hooks/features/bankTransactions/useIsEditableCustomBankTransaction'
 import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useSaveBankTransactionRow'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
@@ -26,13 +27,12 @@ import { HStack } from '@ui/Stack/Stack'
 import { ErrorText } from '@ui/Typography/ErrorText'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { EditCustomTransactionButton } from '@components/BankTransactions/RecordManualTransaction/EditCustomTransactionButton'
-import { useIsEditableCustomTransaction } from '@components/BankTransactions/RecordManualTransaction/useIsEditableCustomTransaction'
 import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
 import { BankTransactionCategoryComboBox } from '@features/bankTransactions/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { BankTransactionsListItemCategory } from '@features/bankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
 import { BankTransactionsProcessingInfo } from '@features/bankTransactions/BankTransactionsProcessingInfo/BankTransactionsProcessingInfo'
 import { BankTransactionsSubmitButton } from '@features/bankTransactions/BankTransactionsSubmitButton/BankTransactionsSubmitButton'
+import { EditCustomBankTransactionButton } from '@features/bankTransactions/EditCustomBankTransactionButton/EditCustomBankTransactionButton'
 import { ExpandedBankTransactionRow } from '@features/bankTransactions/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
 
 import './bankTransactionsListItem.scss'
@@ -57,7 +57,7 @@ export const BankTransactionsListItem = ({
   const { isDesktop } = useSizeClass()
 
   const isCategorizationEnabled = useBankTransactionsIsCategorizationEnabledContext()
-  const isEditable = useIsEditableCustomTransaction(bankTransaction)
+  const isEditable = useIsEditableCustomBankTransaction(bankTransaction)
 
   const categorized = isCategorized(bankTransaction)
   const { isBeingRemoved } = useDelayedRemoveBankTransaction({ bankTransaction })
@@ -145,7 +145,7 @@ export const BankTransactionsListItem = ({
             </div>
           )}
           <HStack gap='4xs' align='center'>
-            {isEditable && <EditCustomTransactionButton bankTransaction={bankTransaction} />}
+            {isEditable && <EditCustomBankTransactionButton bankTransaction={bankTransaction} />}
             <Span withTooltip>{bankTransaction.description}</Span>
           </HStack>
 

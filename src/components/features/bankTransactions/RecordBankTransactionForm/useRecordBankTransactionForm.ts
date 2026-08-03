@@ -12,12 +12,12 @@ import { useAppForm } from '@hooks/features/forms/useForm'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { convertRecordTransactionFormToParams, getRecordTransactionFormValues } from '@components/BankTransactions/RecordManualTransaction/formUtils'
+import { convertRecordBankTransactionFormToParams, getRecordBankTransactionFormValues } from '@features/bankTransactions/RecordBankTransactionForm/formUtils'
 import type { AccountOption } from '@features/customAccounts/CustomAccountComboBox/AccountOption'
 
-export type RecordTransactionVariant = 'income' | 'expense'
+export type RecordBankTransactionVariant = 'income' | 'expense'
 
-export type RecordTransactionFormValues = {
+export type RecordBankTransactionFormValues = {
   account: AccountOption | null
   description: string
   amount: NonRecursiveBigDecimal | null
@@ -27,9 +27,9 @@ export type RecordTransactionFormValues = {
   memo: string
 }
 
-export type RecordTransactionFormApi = ReturnType<typeof useAppForm<RecordTransactionFormValues>>
+export type RecordBankTransactionFormApi = ReturnType<typeof useAppForm<RecordBankTransactionFormValues>>
 
-const getDefaultValues = (): RecordTransactionFormValues => ({
+const getDefaultValues = (): RecordBankTransactionFormValues => ({
   account: null,
   description: '',
   amount: null,
@@ -39,13 +39,13 @@ const getDefaultValues = (): RecordTransactionFormValues => ({
   memo: '',
 })
 
-type UseRecordTransactionFormProps = {
-  variant: RecordTransactionVariant
+type UseRecordBankTransactionFormProps = {
+  variant: RecordBankTransactionVariant
   transaction?: BankTransaction
   onSuccess?: () => void
 }
 
-export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: UseRecordTransactionFormProps) => {
+export const useRecordBankTransactionForm = ({ variant, transaction, onSuccess }: UseRecordBankTransactionFormProps) => {
   const { t } = useTranslation()
   const { addToast } = useLayerContext()
   const createExternalId = useMemo(() => crypto.randomUUID(), [])
@@ -57,8 +57,8 @@ export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: Us
   const { setTransactionCategorization, setTransactionTaxCodeSelection } = useBankTransactionsCategorizationActions()
 
   const handleSubmit = useCallback(
-    async ({ value, formApi }: { value: RecordTransactionFormValues, formApi: { reset: () => void } }) => {
-      const params = convertRecordTransactionFormToParams(value, variant)
+    async ({ value, formApi }: { value: RecordBankTransactionFormValues, formApi: { reset: () => void } }) => {
+      const params = convertRecordBankTransactionFormToParams(value, variant)
       if (params === null) return
 
       const request = transaction
@@ -91,8 +91,8 @@ export const useRecordTransactionForm = ({ variant, transaction, onSuccess }: Us
     [trigger, variant, transaction, createExternalId, setTransactionCategorization, setTransactionTaxCodeSelection, addToast, t, onSuccess],
   )
 
-  const form = useAppForm<RecordTransactionFormValues>({
-    defaultValues: transaction ? getRecordTransactionFormValues(transaction) : getDefaultValues(),
+  const form = useAppForm<RecordBankTransactionFormValues>({
+    defaultValues: transaction ? getRecordBankTransactionFormValues(transaction) : getDefaultValues(),
     onSubmit: handleSubmit,
     validationLogic: revalidateLogic(),
   })

@@ -4,15 +4,15 @@ import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { Button } from '@ui/Button/Button'
-import { getRecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/formUtils'
-import { RecordTransactionModal } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionModal'
+import { getRecordBankTransactionVariant } from '@features/bankTransactions/RecordBankTransactionForm/formUtils'
+import { RecordBankTransactionModal } from '@features/bankTransactions/RecordBankTransactionModal/RecordBankTransactionModal'
 
-type EditCustomTransactionButtonProps = {
+type EditCustomBankTransactionButtonProps = {
   bankTransaction: BankTransaction
   withLabel?: boolean
 }
 
-export function EditCustomTransactionButton({ bankTransaction, withLabel = false }: EditCustomTransactionButtonProps) {
+export function EditCustomBankTransactionButton({ bankTransaction, withLabel = false }: EditCustomBankTransactionButtonProps) {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const label = t('bankTransactions:action.edit_transaction', 'Edit transaction')
@@ -27,8 +27,8 @@ export function EditCustomTransactionButton({ bankTransaction, withLabel = false
         {withLabel && label}
       </Button>
       {isOpen && (
-        <RecordTransactionModal
-          variant={getRecordTransactionVariant(bankTransaction)}
+        <RecordBankTransactionModal
+          variant={getRecordBankTransactionVariant(bankTransaction)}
           transaction={bankTransaction}
           isOpen
           onOpenChange={setIsOpen}

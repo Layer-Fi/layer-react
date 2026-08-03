@@ -7,54 +7,54 @@ import { type CustomAccountParseCsvResponse } from '@api/businesses/[business-id
 import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { Heading } from '@ui/Typography/Heading'
 import { Wizard } from '@blocks/Wizard/Wizard'
-import { UploadTransactionsStep } from '@components/UploadTransactions/types'
-import { UploadTransactionsConfirmationStep } from '@components/UploadTransactions/UploadTransactionsConfirmationStep'
-import { type AccountOption, UploadTransactionsUploadCsvStep } from '@components/UploadTransactions/UploadTransactionsUploadCsvStep'
-import { UploadTransactionsValidateCsvStep } from '@components/UploadTransactions/UploadTransactionsValidateCsvStep'
+import { BankTransactionsUploadConfirmationStep } from '@features/bankTransactions/BankTransactionsUploadModal/BankTransactionsUploadConfirmationStep'
+import { type AccountOption, BankTransactionsUploadCsvStep } from '@features/bankTransactions/BankTransactionsUploadModal/BankTransactionsUploadCsvStep'
+import { BankTransactionsValidateCsvStep } from '@features/bankTransactions/BankTransactionsUploadModal/BankTransactionsValidateCsvStep'
+import { BankTransactionsUploadStep } from '@features/bankTransactions/BankTransactionsUploadModal/types'
 
-import './uploadTransactions.scss'
+import './bankTransactionsUploadWizard.scss'
 
 type UploadTransactionsHeaderProps = {
-  currentStep: UploadTransactionsStep
+  currentStep: BankTransactionsUploadStep
   isValid: boolean | undefined
   onClose?: () => void
 }
 
 function getTitle(
-  currentStep: UploadTransactionsStep,
+  currentStep: BankTransactionsUploadStep,
   isValid: boolean | undefined,
   t: TFunction,
 ) {
   switch (currentStep) {
-    case UploadTransactionsStep.UploadCsv:
+    case BankTransactionsUploadStep.UploadCsv:
       return t('upload:action.upload_transactions', 'Upload transactions')
-    case UploadTransactionsStep.ValidateCsv:
+    case BankTransactionsUploadStep.ValidateCsv:
       return isValid ? t('upload:label.review_transactions', 'Review transactions') : t('upload:error.could_not_parse_transactions', 'Some transactions couldn’t be parsed')
-    case UploadTransactionsStep.Confirmation:
+    case BankTransactionsUploadStep.Confirmation:
       return ''
   }
 }
 
 function getDescription(
-  currentStep: UploadTransactionsStep,
+  currentStep: BankTransactionsUploadStep,
   isValid: boolean | undefined,
   t: TFunction,
 ) {
   switch (currentStep) {
-    case UploadTransactionsStep.UploadCsv:
+    case BankTransactionsUploadStep.UploadCsv:
       return t('upload:action.import_file_transaction_bank', 'Import a file of transactions from your bank account or credit card')
-    case UploadTransactionsStep.ValidateCsv:
+    case BankTransactionsUploadStep.ValidateCsv:
       if (isValid) {
         return t('upload:label.transactions_parsed_successfully_click_upload', 'All transactions were parsed successfully. Click “Upload transactions” to finalize the import.')
       }
       return t('upload:validation.transactions_formatting_errors', 'We found formatting errors in some transactions. Please correct the highlighted rows in your file and reupload it.')
-    case UploadTransactionsStep.Confirmation:
+    case BankTransactionsUploadStep.Confirmation:
       return ''
   }
 }
 function UploadTransactionsHeader({ currentStep, isValid, onClose }: UploadTransactionsHeaderProps) {
   const { t } = useTranslation()
-  if (currentStep === UploadTransactionsStep.Confirmation) return null
+  if (currentStep === BankTransactionsUploadStep.Confirmation) return null
 
   const title = getTitle(currentStep, isValid, t)
   const description = getDescription(currentStep, isValid, t)
@@ -69,12 +69,12 @@ function UploadTransactionsHeader({ currentStep, isValid, onClose }: UploadTrans
   )
 }
 
-type UploadTransactionsProps = {
+type BankTransactionsUploadWizardProps = {
   onComplete?: () => void
 }
 
-export function UploadTransactions({ onComplete }: UploadTransactionsProps) {
-  const [currentStep, setCurrentStep] = useState<UploadTransactionsStep>(UploadTransactionsStep.UploadCsv)
+export function BankTransactionsUploadWizard({ onComplete }: BankTransactionsUploadWizardProps) {
+  const [currentStep, setCurrentStep] = useState<BankTransactionsUploadStep>(BankTransactionsUploadStep.UploadCsv)
   const [selectedAccount, setSelectedAccount] = useState<AccountOption | null>(null)
   const [file, setFile] = useState<File | null>(null)
   const [parseCsvResponse, setParseCsvResponse] = useState<CustomAccountParseCsvResponse | null>(null)
@@ -112,20 +112,20 @@ export function UploadTransactions({ onComplete }: UploadTransactionsProps) {
         onComplete={onComplete}
         onStepChange={setCurrentStep}
       >
-        <UploadTransactionsUploadCsvStep
+        <BankTransactionsUploadCsvStep
           onSelectAccount={onSelectAccount}
           selectedAccount={selectedAccount}
           onSelectFile={onSelectFile}
           selectedFile={file}
           onParseCsv={onParseCsv}
         />
-        <UploadTransactionsValidateCsvStep
+        <BankTransactionsValidateCsvStep
           selectedAccountId={selectedAccount?.value}
           parseCsvResponse={parseCsvResponse}
           onSelectFile={onSelectFile}
           onUploadTransactionsSuccess={onUploadTransactionsSuccess}
         />
-        <UploadTransactionsConfirmationStep
+        <BankTransactionsUploadConfirmationStep
           onRestartFlow={onRestartFlow}
           uploadedTransactionsCount={uploadedTransactionsCount}
         />

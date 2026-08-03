@@ -17,7 +17,7 @@ import { Separator } from '@ui/Separator/Separator'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
 import { ValidateCsvTable } from '@blocks/CsvUpload/ValidateCsvTable/ValidateCsvTable'
 import { useWizard } from '@blocks/Wizard/Wizard'
-import { templateHeaders } from '@components/UploadTransactions/template'
+import { templateHeaders } from '@features/bankTransactions/BankTransactionsUploadModal/template'
 
 interface UploadTransactionsValidateCsvStepProps {
   parseCsvResponse: CustomAccountParseCsvResponse | null
@@ -46,7 +46,7 @@ const generateDynamicHeaders = (
   }
 }
 
-export function UploadTransactionsValidateCsvStep(
+export function BankTransactionsValidateCsvStep(
   { parseCsvResponse, selectedAccountId, onSelectFile, onUploadTransactionsSuccess }: UploadTransactionsValidateCsvStepProps,
 ) {
   const { t } = useTranslation()

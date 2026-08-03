@@ -6,6 +6,7 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { hasMatch } from '@utils/bankTransactions/shared'
 import { translationKey } from '@utils/i18n/translationKey'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
+import { useIsEditableCustomBankTransaction } from '@hooks/features/bankTransactions/useIsEditableCustomBankTransaction'
 import {
   BankTransactionSelectionVariant,
   useBankTransactionsCategorizationActions,
@@ -13,10 +14,9 @@ import {
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
-import { EditCustomTransactionButton } from '@components/BankTransactions/RecordManualTransaction/EditCustomTransactionButton'
-import { useIsEditableCustomTransaction } from '@components/BankTransactions/RecordManualTransaction/useIsEditableCustomTransaction'
 import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'
 import { getPurposeFromStore, Purpose } from '@components/BankTransactionsMobileList/purpose'
+import { EditCustomBankTransactionButton } from '@features/bankTransactions/EditCustomBankTransactionButton/EditCustomBankTransactionButton'
 
 const PURPOSE_TOGGLE_CONFIG = [
   { value: 'business' as const, ...translationKey('common:label.business', 'Business'), style: { minWidth: 84 } },
@@ -37,7 +37,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
   const selectedCategorization = useGetBankTransactionCategorizationWithDefault(bankTransaction)
   const { setTransactionSelectionVariant } = useBankTransactionsCategorizationActions()
   const showCategorization = useBankTransactionsIsCategorizationEnabledContext()
-  const isEditable = useIsEditableCustomTransaction(bankTransaction)
+  const isEditable = useIsEditableCustomBankTransaction(bankTransaction)
 
   const [purpose, setPurpose] = useState(() => getPurposeFromStore(selectedCategorization))
 
@@ -80,7 +80,7 @@ export const BankTransactionsMobileListItemExpandedRow = ({
           bankTransaction={bankTransaction}
           showCategorization={showCategorization}
         />
-        {isEditable && <EditCustomTransactionButton bankTransaction={bankTransaction} withLabel />}
+        {isEditable && <EditCustomBankTransactionButton bankTransaction={bankTransaction} withLabel />}
       </VStack>
     </VStack>
 

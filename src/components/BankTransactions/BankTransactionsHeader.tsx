@@ -24,12 +24,12 @@ import { BulkActionsModule } from '@blocks/BulkActionsModule/BulkActionsModule'
 import { DeprecatedHeader } from '@blocks/Layout/DeprecatedHeader/DeprecatedHeader'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
 import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
-import { RecordTransactionMenuButton } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionMenuButton'
 import { SelectedBankAccountsChip } from '@components/BankTransactions/SelectedBankAccountsChip/SelectedBankAccountsChip'
 import { TransactionsSearch } from '@components/BankTransactions/TransactionsSearch/TransactionsSearch'
 import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
 import { BankTransactionsTableContent } from '@features/bankTransactions/constants'
+import { RecordBankTransactionMenuButton } from '@features/bankTransactions/RecordBankTransactionMenuButton/RecordBankTransactionMenuButton'
 
 import './bankTransactionsHeader.scss'
 
@@ -134,7 +134,7 @@ export const BankTransactionsHeader = ({
   const headerMenuActions = useMemo(() => {
     const actions: BankTransactionsHeaderMenuActions[] = []
     if (showUploadOptions) {
-      actions.push(BankTransactionsHeaderMenuActions.UploadTransactions)
+      actions.push(BankTransactionsHeaderMenuActions.BankTransactionsUploadWizard)
     }
     if (showCategorizationRules) {
       actions.push(BankTransactionsHeaderMenuActions.ManageCategorizationRules)
@@ -192,7 +192,7 @@ export const BankTransactionsHeader = ({
               {statusToggle}
               <HStack align='center' gap='xs'>
                 <SelectedBankAccountsChip variant='wide' />
-                {canRecordTransactions && <RecordTransactionMenuButton />}
+                {canRecordTransactions && <RecordBankTransactionMenuButton />}
                 <BankTransactionsHeaderMenu
                   actions={headerMenuActions}
                   isListView={isListView}
@@ -206,7 +206,7 @@ export const BankTransactionsHeader = ({
             {!isStatusToggleVisible && (
               <>
                 <SelectedBankAccountsChip variant='wide' />
-                {canRecordTransactions && <RecordTransactionMenuButton isDisabled={showBulkActions} />}
+                {canRecordTransactions && <RecordBankTransactionMenuButton isDisabled={showBulkActions} />}
                 <BankTransactionsHeaderMenu
                   actions={headerMenuActions}
                   isDisabled={showBulkActions}
@@ -242,7 +242,7 @@ export const BankTransactionsHeader = ({
         <SelectedBankAccountsChip slot='selected-accounts' variant='wide' />
         <TransactionsSearch slot='search' isDisabled={showBulkActions} />
         <HStack slot='download-upload' justify='center' gap='xs'>
-          {canRecordTransactions && <RecordTransactionMenuButton isDisabled={showBulkActions} />}
+          {canRecordTransactions && <RecordBankTransactionMenuButton isDisabled={showBulkActions} />}
           <BankTransactionsHeaderMenu
             actions={headerMenuActions}
             isDisabled={showBulkActions}

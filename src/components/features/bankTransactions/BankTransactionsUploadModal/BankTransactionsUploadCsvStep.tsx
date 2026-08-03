@@ -10,7 +10,7 @@ import { CopyTemplateHeadersButtonGroup } from '@blocks/CsvUpload/CopyTemplateHe
 import { CsvUpload } from '@blocks/CsvUpload/CsvUpload/CsvUpload'
 import { DownloadCsvTemplateButton } from '@blocks/CsvUpload/DownloadCsvTemplateButton/DownloadCsvTemplateButton'
 import { useWizard } from '@blocks/Wizard/Wizard'
-import { allHeaders, templateExampleTransactions, templateHeaders } from '@components/UploadTransactions/template'
+import { allHeaders, templateExampleTransactions, templateHeaders } from '@features/bankTransactions/BankTransactionsUploadModal/template'
 import { type AccountOption } from '@features/customAccounts/CustomAccountComboBox/AccountOption'
 import { CustomAccountComboBox } from '@features/customAccounts/CustomAccountComboBox/CustomAccountComboBox'
 import { isNewAccountOption } from '@features/customAccounts/CustomAccountComboBox/utils'
@@ -27,7 +27,7 @@ interface UploadTransactionsUploadCsvStepProps {
   onParseCsv: (parseCsvResponse: CustomAccountParseCsvResponse) => void
 }
 
-export function UploadTransactionsUploadCsvStep(
+export function BankTransactionsUploadCsvStep(
   { selectedAccount, onSelectAccount, selectedFile, onSelectFile, onParseCsv }: UploadTransactionsUploadCsvStepProps,
 ) {
   const { t } = useTranslation()

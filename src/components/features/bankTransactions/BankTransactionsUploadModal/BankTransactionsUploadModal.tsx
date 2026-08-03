@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { Modal, type ModalProps } from '@ui/Modal/Modal'
-import { UploadTransactions } from '@components/UploadTransactions/UploadTransactions'
+import { BankTransactionsUploadWizard } from '@features/bankTransactions/BankTransactionsUploadModal/BankTransactionsUploadWizard'
 
 type BankTransactionsUploadModalProps = Pick<ModalProps, 'isOpen' | 'onOpenChange'>
 export function BankTransactionsUploadModal({ isOpen, onOpenChange }: BankTransactionsUploadModalProps) {
@@ -9,7 +9,7 @@ export function BankTransactionsUploadModal({ isOpen, onOpenChange }: BankTransa
   return (
     <Modal flexBlock isOpen={isOpen} onOpenChange={onOpenChange} size='xl' aria-label={t('upload:action.upload_transactions', 'Upload transactions')}>
       {({ close }) => {
-        return <UploadTransactions onComplete={close} />
+        return <BankTransactionsUploadWizard onComplete={close} />
       }}
     </Modal>
   )

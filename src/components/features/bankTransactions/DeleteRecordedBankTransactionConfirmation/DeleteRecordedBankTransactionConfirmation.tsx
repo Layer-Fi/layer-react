@@ -8,7 +8,7 @@ import { SubmitButton } from '@ui/Button/SubmitButton'
 import { ModalActions, ModalContent, ModalDescription, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, Spacer } from '@ui/Stack/Stack'
 
-type DeleteRecordedTransactionConfirmationProps = {
+type DeleteRecordedBankTransactionConfirmationProps = {
   transaction: BankTransaction
   onCancel: () => void
   onDeleted: () => void
@@ -16,7 +16,7 @@ type DeleteRecordedTransactionConfirmationProps = {
 
 // Rendered as a step inside the record modal (not a nested modal): cancelling returns to the form,
 // confirming archives the transaction and closes the modal.
-export function DeleteRecordedTransactionConfirmation({ transaction, onCancel, onDeleted }: DeleteRecordedTransactionConfirmationProps) {
+export function DeleteRecordedBankTransactionConfirmation({ transaction, onCancel, onDeleted }: DeleteRecordedBankTransactionConfirmationProps) {
   const { t } = useTranslation()
   const { trigger, isError } = useArchiveBankTransaction({ bankTransactionId: transaction.id })
   const [isProcessing, setIsProcessing] = useState(false)

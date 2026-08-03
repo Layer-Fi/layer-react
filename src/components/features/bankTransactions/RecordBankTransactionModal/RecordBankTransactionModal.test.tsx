@@ -7,8 +7,8 @@ import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { BankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
 import type { Categorization } from '@schemas/categorization'
 import { BankTransactionsCategorizationStoreProvider } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import { RecordTransactionModal } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionModal'
-import { type RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
+import { type RecordBankTransactionVariant } from '@features/bankTransactions/RecordBankTransactionForm/useRecordBankTransactionForm'
+import { RecordBankTransactionModal } from '@features/bankTransactions/RecordBankTransactionModal/RecordBankTransactionModal'
 
 import { patch as patchRecordTransaction } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/[transaction-id]/record/patch'
 import { post as postRecordTransaction } from '@msw/api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/post'
@@ -43,7 +43,7 @@ const INCOME_FORM_DATA = [
   { kind: 'text', field: 'Description', value: 'Cash sale' },
 ] satisfies readonly FillFormSpec[]
 
-const renderModal = (variant: RecordTransactionVariant = 'expense') => {
+const renderModal = (variant: RecordBankTransactionVariant = 'expense') => {
   const user = userEvent.setup()
   const onOpenChange = vi.fn()
 
@@ -54,7 +54,7 @@ const renderModal = (variant: RecordTransactionVariant = 'expense') => {
     onOpenChange,
     filler: createFormFiller(user),
     ...render(
-      <RecordTransactionModal variant={variant} isOpen onOpenChange={onOpenChange} />,
+      <RecordBankTransactionModal variant={variant} isOpen onOpenChange={onOpenChange} />,
       { wrapper: RecordModalWrapper },
     ),
   }
@@ -115,7 +115,7 @@ const renderEditModal = (transaction = EDIT_TRANSACTION) => {
     onOpenChange,
     filler: createFormFiller(user),
     ...render(
-      <RecordTransactionModal variant='expense' transaction={transaction} isOpen onOpenChange={onOpenChange} />,
+      <RecordBankTransactionModal variant='expense' transaction={transaction} isOpen onOpenChange={onOpenChange} />,
       { wrapper: RecordModalWrapper },
     ),
   }
@@ -171,7 +171,7 @@ const mockRecordTransactionError = () => {
   return recordRequest
 }
 
-describe('RecordTransactionModal', () => {
+describe('RecordBankTransactionModal', () => {
   it('shows validation errors for required fields', async () => {
     const recordRequest = mockRecordTransaction()
     const { user, onOpenChange } = renderModal()

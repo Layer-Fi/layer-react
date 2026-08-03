@@ -7,7 +7,7 @@ import type { RecordCustomTransaction } from '@schemas/customAccounts'
 import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents } from '@schemas/nonRecursiveBigDecimal'
 import { getDefaultSelectedCategoryForBankTransaction } from '@utils/bankTransactions/shared'
 import { getDefaultTaxCodeForBankTransaction } from '@utils/bankTransactions/taxCode'
-import type { RecordTransactionFormValues, RecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
+import type { RecordBankTransactionFormValues, RecordBankTransactionVariant } from '@features/bankTransactions/RecordBankTransactionForm/useRecordBankTransactionForm'
 import { isNewAccountOption } from '@features/customAccounts/CustomAccountComboBox/utils'
 
 type RecordCustomAccountTransactionParams = {
@@ -15,9 +15,9 @@ type RecordCustomAccountTransactionParams = {
   transaction: RecordCustomTransaction
 }
 
-export function convertRecordTransactionFormToParams(
-  { account, description, amount, date, category, taxCode, memo }: RecordTransactionFormValues,
-  variant: RecordTransactionVariant,
+export function convertRecordBankTransactionFormToParams(
+  { account, description, amount, date, category, taxCode, memo }: RecordBankTransactionFormValues,
+  variant: RecordBankTransactionVariant,
 ): RecordCustomAccountTransactionParams | null {
   if (account === null || isNewAccountOption(account) || amount === null || date === null) return null
 
@@ -36,12 +36,12 @@ export function convertRecordTransactionFormToParams(
   }
 }
 
-export const getRecordTransactionVariant = ({ direction }: BankTransaction): RecordTransactionVariant =>
+export const getRecordBankTransactionVariant = ({ direction }: BankTransaction): RecordBankTransactionVariant =>
   direction === BankTransactionDirection.Debit ? 'expense' : 'income'
 
-export const getRecordTransactionFormValues = (
+export const getRecordBankTransactionFormValues = (
   transaction: BankTransaction,
-): RecordTransactionFormValues => ({
+): RecordBankTransactionFormValues => ({
   account: {
     value: transaction.externalAccountId ?? '',
     label: transaction.accountName ?? '',

@@ -11,26 +11,26 @@ import { SubmitButton } from '@ui/Button/SubmitButton'
 import { Modal } from '@ui/Modal/Modal'
 import { ModalActions, ModalContent, ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { HStack, Spacer, VStack } from '@ui/Stack/Stack'
-import { DeleteRecordedTransactionConfirmation } from '@components/BankTransactions/RecordManualTransaction/DeleteRecordedTransactionConfirmation'
-import { getRecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/formUtils'
-import { RecordTransactionForm } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionForm'
-import { type RecordTransactionVariant, useRecordTransactionForm } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
+import { DeleteRecordedBankTransactionConfirmation } from '@features/bankTransactions/DeleteRecordedBankTransactionConfirmation/DeleteRecordedBankTransactionConfirmation'
+import { getRecordBankTransactionVariant } from '@features/bankTransactions/RecordBankTransactionForm/formUtils'
+import { RecordBankTransactionForm } from '@features/bankTransactions/RecordBankTransactionForm/RecordBankTransactionForm'
+import { type RecordBankTransactionVariant, useRecordBankTransactionForm } from '@features/bankTransactions/RecordBankTransactionForm/useRecordBankTransactionForm'
 import { isNewAccountOption } from '@features/customAccounts/CustomAccountComboBox/utils'
 
-import './recordTransactionModal.scss'
+import './recordBankTransactionModal.scss'
 
 type RecordTransactionModalProps = {
-  variant: RecordTransactionVariant
+  variant: RecordBankTransactionVariant
   transaction?: BankTransaction
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
 }
 
-export function RecordTransactionModal({ variant, transaction, isOpen, onOpenChange }: RecordTransactionModalProps) {
+export function RecordBankTransactionModal({ variant, transaction, isOpen, onOpenChange }: RecordTransactionModalProps) {
   const { t } = useTranslation()
   const { isMobile } = useSizeClass()
 
-  const effectiveVariant = transaction ? getRecordTransactionVariant(transaction) : variant
+  const effectiveVariant = transaction ? getRecordBankTransactionVariant(transaction) : variant
 
   const { setFilters } = useBankTransactionsFiltersContext()
   const isCreating = transaction === undefined
@@ -43,7 +43,7 @@ export function RecordTransactionModal({ variant, transaction, isOpen, onOpenCha
     onOpenChange(false)
   }, [isCreating, setFilters, onOpenChange])
 
-  const { form, isError } = useRecordTransactionForm({ variant: effectiveVariant, transaction, onSuccess })
+  const { form, isError } = useRecordBankTransactionForm({ variant: effectiveVariant, transaction, onSuccess })
 
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
 
@@ -67,7 +67,7 @@ export function RecordTransactionModal({ variant, transaction, isOpen, onOpenCha
             onClose={onCancel}
           />
           <ModalContent>
-            <RecordTransactionForm form={form} variant={effectiveVariant} transaction={transaction} />
+            <RecordBankTransactionForm form={form} variant={effectiveVariant} transaction={transaction} />
           </ModalContent>
           <form.Subscribe
             selector={state => ({
@@ -110,7 +110,7 @@ export function RecordTransactionModal({ variant, transaction, isOpen, onOpenCha
           </form.Subscribe>
         </div>
         {isConfirmingDelete && transaction && (
-          <DeleteRecordedTransactionConfirmation
+          <DeleteRecordedBankTransactionConfirmation
             transaction={transaction}
             onCancel={() => setIsConfirmingDelete(false)}
             onDeleted={() => onOpenChange(false)}
