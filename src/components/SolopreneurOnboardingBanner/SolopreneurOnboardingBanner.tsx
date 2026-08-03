@@ -13,7 +13,7 @@ import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAcc
 import { Banner } from '@ui/Banner/Banner'
 import { Button as LayerButton } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
-import { HostedLinkErrorBanner } from '@components/LinkedAccounts/HostedLinkErrorBanner'
+import { PlaidHostedLinkErrorBanner } from '@features/linkedAccounts/PlaidHostedLinkErrorBanner/PlaidHostedLinkErrorBanner'
 
 import './solopreneurOnboardingBanner.scss'
 
@@ -90,7 +90,7 @@ function SolopreneurOnboardingBannerInternal({ onSetupTaxProfile }: Pick<Solopre
 
   return (
     <HStack className='Layer__SolopreneurLayout__OnboardingBanner'>
-      {state === OnboardingBannerState.HostedLinkError && <HostedLinkErrorBanner showRetryButton />}
+      {state === OnboardingBannerState.HostedLinkError && <PlaidHostedLinkErrorBanner showRetryButton />}
       {state === OnboardingBannerState.NoBankAccountsLinked && <NoBankAccountsLinkedBanner />}
       {state === OnboardingBannerState.NoTaxProfile && <NoTaxProfileBanner onSetupTaxProfile={onSetupTaxProfile} />}
     </HStack>

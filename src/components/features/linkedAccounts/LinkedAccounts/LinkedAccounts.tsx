@@ -1,0 +1,98 @@
+import { useTranslation } from 'react-i18next'
+
+import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
+import { AccountConfirmationStoreProvider } from '@providers/AccountConfirmationStoreProvider'
+import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
+import { OpeningBalanceModalProvider } from '@providers/OpeningBalanceModalProvider/OpeningBalanceModalProvider'
+import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
+import { DataState, DataStateStatus } from '@ui/DataState/DataState'
+import { Loader } from '@ui/Loader/Loader'
+import { HStack } from '@ui/Stack/Stack'
+import { Heading } from '@ui/Typography/Heading'
+import { Container } from '@components/Container/Container'
+import { Header } from '@components/Container/Header'
+import { LinkedAccountsContent } from '@features/linkedAccounts/LinkedAccounts/LinkedAccountsContent'
+import { OpeningBalanceModal } from '@features/linkedAccounts/OpeningBalanceModal/OpeningBalanceModal'
+import { PlaidHostedLinkErrorBanner } from '@features/linkedAccounts/PlaidHostedLinkErrorBanner/PlaidHostedLinkErrorBanner'
+
+import './linkedAccounts.scss'
+
+const COMPONENT_NAME = 'linked-accounts'
+
+export interface LinkedAccountsProps {
+  asWidget?: boolean
+  elevated?: boolean
+  showLedgerBalance?: boolean
+  showUnlinkItem?: boolean
+  showBreakConnection?: boolean
+  plaidHostedLinkConfig?: PlaidHostedLinkConfig
+  stringOverrides?: {
+    title?: string
+  }
+}
+
+export const LinkedAccounts = ({ plaidHostedLinkConfig, ...props }: LinkedAccountsProps) => {
+  return (
+    <AccountConfirmationStoreProvider>
+      <LinkedAccountsProvider plaidHostedLinkConfig={plaidHostedLinkConfig}>
+        <OpeningBalanceModalProvider>
+          <LinkedAccountsComponent {...props} />
+        </OpeningBalanceModalProvider>
+      </LinkedAccountsProvider>
+    </AccountConfirmationStoreProvider>
+  )
+}
+
+export const LinkedAccountsComponent = ({
+  asWidget,
+  elevated = false,
+  showLedgerBalance = true,
+  showUnlinkItem = false,
+  showBreakConnection = false,
+  stringOverrides,
+}: LinkedAccountsProps) => {
+  const { t } = useTranslation()
+  const { isLoading, isError, isValidating, refetch } = useBankAccountsContext()
+
+  return (
+    <Container name={COMPONENT_NAME} elevated={elevated}>
+      <Header className='Layer__linked-accounts__header'>
+        <Heading level={3} size='sm'>
+          {stringOverrides?.title || t('linkedAccounts:label.linked_accounts', 'Linked Accounts')}
+        </Heading>
+      </Header>
+
+      <HStack pi='lg'>
+        <PlaidHostedLinkErrorBanner />
+      </HStack>
+
+      {isLoading && (
+        <div className='Layer__linked-accounts__loader-container'>
+          <Loader />
+        </div>
+      )}
+      {isError && !isLoading
+        ? (
+          <DataState
+            status={DataStateStatus.failed}
+            title={t('common:error.something_went_wrong', 'Something went wrong')}
+            description={t('common:error.couldnt_load_data', 'We couldn’t load your data.')}
+            onRefresh={() => void refetch()}
+            isLoading={isValidating}
+          />
+        )
+        : null}
+      {!isError && !isLoading
+        ? (
+          <LinkedAccountsContent
+            asWidget={asWidget}
+            showLedgerBalance={showLedgerBalance}
+            showUnlinkItem={showUnlinkItem}
+            showBreakConnection={showBreakConnection}
+          />
+        )
+        : null}
+      <OpeningBalanceModal />
+    </Container>
+  )
+}

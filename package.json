@@ -126,7 +126,6 @@
     "@tanstack/react-form": "^1.33.0",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.14.2",
-    "calendar-link": "^2.11.0",
     "classnames": "^2.5.1",
     "date-fns": "^4.1.0",
     "effect": "^3.16.3",
@@ -146,7 +145,6 @@
     "react-select": "^5.10.1",
     "recharts": "^3.6.0",
     "swr": "^2.3.3",
-    "ts-ics": "^2.4.0",
     "uuid": "^11.1.0",
     "zustand": "^5.0.4"
   },

@@ -10,8 +10,8 @@ import {
   type BankTransactionsStringOverrides,
 } from '@components/BankTransactions/BankTransactions'
 import { type MobileComponentType } from '@components/BankTransactions/constants'
-import { LinkedAccounts } from '@components/LinkedAccounts/LinkedAccounts'
 import { View } from '@components/View/View'
+import { LinkedAccounts } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
 
 interface BankTransactionsWithLinkedAccountsStringOverrides {
   title?: string
