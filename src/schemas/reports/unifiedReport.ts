@@ -1,8 +1,8 @@
 import { pipe, Schema } from 'effect'
 
 import { ReportingBasis } from '@schemas/accountingConfiguration'
+import { TransformedAlignmentSchema, TransformedPinningSchema } from '@schemas/common/table'
 import { ReportConfigSchema } from '@schemas/reports/reportConfig'
-import { createTransformedEnumSchema } from '@schemas/utils'
 
 export enum DateGroupBy {
   AllTime = 'ALL_TIME',
@@ -14,34 +14,6 @@ export type UnifiedReportReportingBasis = ReportingBasis.Cash | ReportingBasis.A
 
 export const isUnifiedReportReportingBasis = (value: string | undefined): value is UnifiedReportReportingBasis =>
   value === ReportingBasis.Cash || value === ReportingBasis.Accrual
-
-export enum Alignment {
-  Left = 'LEFT',
-  Right = 'RIGHT',
-  Center = 'CENTER',
-}
-
-const AlignmentSchema = Schema.Enums(Alignment)
-
-const TransformedAlignmentSchema = createTransformedEnumSchema(
-  AlignmentSchema,
-  Alignment,
-  Alignment.Left,
-)
-
-export enum Pinning {
-  Left = 'LEFT',
-  Right = 'RIGHT',
-  Unpinned = 'UNPINNED',
-}
-
-const PinningSchema = Schema.Enums(Pinning)
-
-const TransformedPinningSchema = createTransformedEnumSchema(
-  PinningSchema,
-  Pinning,
-  Pinning.Unpinned,
-)
 
 export const DateQueryParamsSchema = Schema.Struct({
   effectiveDate: pipe(

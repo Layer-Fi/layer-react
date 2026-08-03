@@ -15,7 +15,7 @@ import {
   type TableProps,
 } from 'react-aria-components/Table'
 
-import { Alignment } from '@schemas/reports/unifiedReport'
+import { Alignment } from '@schemas/common/table'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { withRenderProp } from '@components/utility/withRenderProp'
 
