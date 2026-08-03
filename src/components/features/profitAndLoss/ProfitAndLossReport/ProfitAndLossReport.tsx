@@ -3,7 +3,7 @@ import { type ReactNode, useCallback, useContext, useEffect, useMemo } from 'rea
 import { type View as ViewType } from '@internal-types/general'
 import type { TimeRangePickerConfig } from '@internal-types/reports'
 import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
-import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
+import { InAppLinkProvider, type LinkingMetadata } from '@providers/global/InAppLink/InAppLinkContext'
 import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
 import { HStack, Stack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@blocks/DatePickers/DateSelection/CombinedDateRangeSelection'

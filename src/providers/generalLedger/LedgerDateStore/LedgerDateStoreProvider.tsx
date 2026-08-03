@@ -1,5 +1,5 @@
 import { DatePreset } from '@utils/date/dateRangePresets'
-import { createScopedDateStore } from '@providers/DateStoreProvider/internal/createScopedDateStore'
+import { createScopedDateStore } from '@providers/global/DateStoreProvider/internal/createScopedDateStore'
 
 /**
  * Date store scoped to the General Ledger, defaulting to `AllTime`. Resolving

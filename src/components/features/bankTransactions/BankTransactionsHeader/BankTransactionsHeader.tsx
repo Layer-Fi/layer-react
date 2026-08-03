@@ -11,7 +11,7 @@ import { useBusinessActivationDate } from '@hooks/features/business/useBusinessA
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { useCountSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
-import { useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
+import { useGlobalDateRangeActions } from '@providers/global/DateStoreProvider/GlobalDateStoreProvider'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'

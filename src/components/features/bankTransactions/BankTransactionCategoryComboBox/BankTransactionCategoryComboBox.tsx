@@ -8,7 +8,7 @@ import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/
 import { flattenCategories } from '@utils/categoryOptions'
 import { useGetCategories } from '@api/businesses/[business-id]/categories/get'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
-import { useInAppLinkContext } from '@contexts/InAppLinkContext'
+import { useInAppLinkContext } from '@providers/global/InAppLink/InAppLinkContext'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { DateTime } from '@ui/DateTime/DateTime'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'

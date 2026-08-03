@@ -11,7 +11,7 @@ import { hasReceipts } from '@utils/bankTransactions/shared'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
-import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
+import { LayerEventComponent, LayerEventType } from '@providers/global/LayerProvider/layerEvents'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
 
 const listBankTransactionDocuments = get<{

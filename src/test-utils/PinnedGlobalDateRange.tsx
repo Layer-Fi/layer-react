@@ -1,6 +1,6 @@
 import { type PropsWithChildren, useLayoutEffect, useState } from 'react'
 
-import { type DateRange, useGlobalDateRangeActions } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
+import { type DateRange, useGlobalDateRangeActions } from '@providers/global/DateStoreProvider/GlobalDateStoreProvider'
 
 type PinnedGlobalDateRangeProps = PropsWithChildren<{
   dateRange: DateRange

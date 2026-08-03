@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
 
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import {
   type LayerEvent,
   type LayerEventComponent,
   type LayerEventInput,
-} from '@providers/LayerProvider/layerEvents'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+} from '@providers/global/LayerProvider/layerEvents'
 
 // eslint-disable-next-line import/no-relative-parent-imports
 import pkg from '../../package.json'

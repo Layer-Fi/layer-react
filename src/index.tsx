@@ -56,10 +56,10 @@ export { TimeTracking } from './views/TimeTracking'
 /*
 ======================= Layer Provider & Context =======================
 */
-export { EntityName, type LinkingMetadata } from './contexts/InAppLinkContext'
-export { useLayerContext } from './contexts/LayerContext/LayerContext'
-export { type LayerEvent, LayerEventComponent, LayerEventType } from './providers/LayerProvider/layerEvents'
-export { type EventCallbacks, LayerProvider } from './providers/LayerProvider/LayerProvider'
+export { EntityName, type LinkingMetadata } from './providers/global/InAppLink/InAppLinkContext'
+export { useLayerContext } from './providers/global/LayerContext/LayerContext'
+export { type LayerEvent, LayerEventComponent, LayerEventType } from './providers/global/LayerProvider/layerEvents'
+export { type EventCallbacks, LayerProvider } from './providers/global/LayerProvider/LayerProvider'
 export { DisplayState } from './types/bankTransactions'
 export { Direction } from './types/general'
 export { SupportedLocale } from './utils/i18n/supportedLocale'

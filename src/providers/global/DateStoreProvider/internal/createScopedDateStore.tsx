@@ -4,8 +4,8 @@ import { type DateSelectionMode, getEffectiveDateForMode, getEffectiveDateRangeF
 import { DatePreset, type SelectableDatePreset } from '@utils/date/dateRangePresets'
 import { createScopedStore } from '@utils/zustand/createScopedStore'
 import { useStoreWithDateSelected } from '@utils/zustand/useStoreWithDateSelected'
-import { buildDateStore, type MakeDateStoreOptions } from '@providers/DateStoreProvider/internal/buildDateStore'
-import { useBusinessActivationDateSafe, useDerivedInitialDateRange } from '@providers/DateStoreProvider/internal/useResolvedInitialRange'
+import { buildDateStore, type MakeDateStoreOptions } from '@providers/global/DateStoreProvider/internal/buildDateStore'
+import { useBusinessActivationDateSafe, useDerivedInitialDateRange } from '@providers/global/DateStoreProvider/internal/useResolvedInitialRange'
 
 type DateStoreApi = ReturnType<typeof buildDateStore>
 

@@ -1,6 +1,6 @@
 import { createContext, type PropsWithChildren, useContext, useMemo } from 'react'
 
-import { type Environment, type EnvironmentConfigOverride, EnvironmentConfigs } from '@providers/Environment/environmentConfigs'
+import { type Environment, type EnvironmentConfigOverride, EnvironmentConfigs } from '@providers/global/Environment/environmentConfigs'
 
 type EnvironmentInputShape = {
   environment?: Environment

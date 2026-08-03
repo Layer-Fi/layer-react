@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next'
 
 import type { Invoice } from '@schemas/invoices/invoice'
 import { useGetInvoicePaymentMethods } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/get'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import {
   useInvoicePreviewRoute,
 } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'
 import { HStack, VStack } from '@ui/Stack/Stack'

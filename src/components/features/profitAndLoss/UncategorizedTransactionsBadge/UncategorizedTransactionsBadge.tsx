@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { tPlural } from '@utils/i18n/plural'
 import { useGetProfitAndLossSummaries } from '@api/businesses/[business-id]/reports/profit-and-loss-summaries/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
+import { useGlobalDateRange } from '@providers/global/DateStoreProvider/GlobalDateStoreProvider'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { BadgeLoader } from '@ui/Badge/BadgeLoader'
 

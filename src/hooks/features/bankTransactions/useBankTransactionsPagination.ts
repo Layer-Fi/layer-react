@@ -6,7 +6,7 @@ import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { PaginationChangeSource, type TablePaginationProps } from '@hooks/utils/pagination/types'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
 import { useCurrentBankTransactionsPage } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
-import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
+import { LayerEventComponent, LayerEventType } from '@providers/global/LayerProvider/layerEvents'
 
 type UseBankTransactionsPaginationParams = {
   data?: BankTransaction[]

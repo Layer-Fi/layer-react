@@ -1,6 +1,6 @@
 import { BookkeepingStatus } from '@schemas/bookkeepingStatus'
 import { useGetBookkeepingStatus } from '@api/businesses/[business-id]/bookkeeping/status/get'
-import { useLegacyMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
+import { useLegacyMode } from '@providers/global/LegacyModeProvider/LegacyModeProvider'
 
 export function useEffectiveBookkeepingStatus(): BookkeepingStatus {
   const { overrideMode } = useLegacyMode()

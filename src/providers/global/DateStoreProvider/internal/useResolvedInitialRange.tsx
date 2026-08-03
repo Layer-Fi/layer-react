@@ -3,7 +3,7 @@ import { useContext } from 'react'
 import { getActivationDate } from '@utils/business'
 import type { DateRange } from '@utils/date/dateRange'
 import { deriveDateRangeFromPreset, type SelectableDatePreset } from '@utils/date/dateRangePresets'
-import { LayerContext } from '@contexts/LayerContext/LayerContext'
+import { LayerContext } from '@providers/global/LayerContext/LayerContext'
 
 export type ResolvedInitialRange =
   | { status: 'ready', range: DateRange }

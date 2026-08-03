@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { useGetJournalEntriesDownload } from '@api/businesses/[business-id]/ledger/entries/exports/csv/get'
-import { useLedgerDateRange } from '@providers/DateStoreProvider/LedgerDateStoreProvider'
+import { useLedgerDateRange } from '@providers/generalLedger/LedgerDateStore/LedgerDateStoreProvider'
 import { DownloadButton } from '@ui/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 

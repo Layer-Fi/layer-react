@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type CreateCategorizationRule, CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { usePostCategorizationRule } from '@api/businesses/[business-id]/categorization-rules/post'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { Button, type ButtonProps } from '@ui/Button/Button'
 import { useWizard } from '@blocks/Wizard/Wizard'
 

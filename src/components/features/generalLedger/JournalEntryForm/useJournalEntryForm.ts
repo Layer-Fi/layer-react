@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { type ApiCustomJournalEntryWithEntry, type JournalEntryForm, UpsertJournalEntrySchema } from '@schemas/generalLedger/journalEntry'
 import { UpsertJournalEntryMode, usePostJournalEntry } from '@api/businesses/[business-id]/ledger/journal-entries/post'
 import { useAppForm } from '@hooks/features/forms/useForm'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { convertJournalEntryFormToParams, getJournalEntryFormDefaultValues, getJournalEntryFormInitialValues, validateJournalEntryForm } from '@features/generalLedger/JournalEntryForm/formUtils'
 
 type onSuccessFn = (journalEntry: ApiCustomJournalEntryWithEntry) => void

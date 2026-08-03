@@ -11,7 +11,7 @@ import { usePostArchiveCategorizationRule } from '@api/businesses/[business-id]/
 import { useDebouncedSearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBankTransactionsNavigation, useCategorizationRulesTableFilters } from '@providers/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { VStack } from '@ui/Stack/Stack'

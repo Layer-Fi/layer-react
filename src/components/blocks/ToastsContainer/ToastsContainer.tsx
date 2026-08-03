@@ -1,4 +1,4 @@
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { Toast } from '@ui/Toast/Toast'
 
 import './toastsContainer.scss'

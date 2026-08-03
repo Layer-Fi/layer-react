@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { useGetBankTransactionsDownload } from '@api/businesses/[business-id]/reports/transactions/exports/excel/get'
 import { bankTransactionFiltersToHookOptions } from '@hooks/features/bankTransactions/useAugmentedBankTransactions'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
-import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { LayerEventComponent, LayerEventType } from '@providers/global/LayerProvider/layerEvents'
 import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 
 export function useHandleDownloadTransactions({ isListView }: { isListView: boolean }) {

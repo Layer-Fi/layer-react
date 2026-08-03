@@ -2,8 +2,8 @@ import { type PropsWithChildren } from 'react'
 
 import { type LayerThemeConfig } from '@internal-types/layerContext'
 import { type SupportedLocale } from '@utils/i18n/supportedLocale'
-import { type EnvironmentConfigOverride } from '@providers/Environment/environmentConfigs'
-import { LayerProvider } from '@providers/LayerProvider/LayerProvider'
+import { type EnvironmentConfigOverride } from '@providers/global/Environment/environmentConfigs'
+import { LayerProvider } from '@providers/global/LayerProvider/LayerProvider'
 
 export const TEST_LAYER_API_URL = 'https://api.test.layerfi.com'
 export const TEST_LAYER_BUSINESS_ID = 'test-business-id'

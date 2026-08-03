@@ -2,8 +2,8 @@ import { useContext } from 'react'
 
 import { useGetAccountingConfiguration } from '@api/businesses/[business-id]/accounting-config/get'
 import { useGetTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/get'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
 
 export enum OnboardingBannerState {

@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { useLocale } from '@providers/I18nProvider/LayerI18nProvider'
+import { useLocale } from '@providers/global/I18nProvider/LayerI18nProvider'
 
 export const useLocalizedKey = () => {
   const locale = useLocale()

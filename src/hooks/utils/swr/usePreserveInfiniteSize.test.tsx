@@ -4,9 +4,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { SupportedLocale } from '@utils/i18n/supportedLocale'
 import { usePreserveInfiniteSize } from '@hooks/utils/swr/usePreserveInfiniteSize'
-import { useLocale } from '@providers/I18nProvider/LayerI18nProvider'
+import { useLocale } from '@providers/global/I18nProvider/LayerI18nProvider'
 
-vi.mock('@providers/I18nProvider/LayerI18nProvider', () => ({ useLocale: vi.fn() }))
+vi.mock('@providers/global/I18nProvider/LayerI18nProvider', () => ({ useLocale: vi.fn() }))
 
 const mockedUseLocale = vi.mocked(useLocale)
 

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import { getActivationDate } from '@utils/business'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 
 export const useBusinessActivationDate = () => {
   const { business } = useLayerContext()

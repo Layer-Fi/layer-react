@@ -5,8 +5,8 @@ import { type SWRInfiniteKeyedMutator } from 'swr/infinite'
 import { hasNewSyncingAccounts } from '@utils/bankAccount'
 import { type GetBankTransactionsReturn, useBankTransactionsGlobalCacheActions, type UseBankTransactionsOptions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useTriggerOnChange } from '@hooks/utils/useTriggerOnChange'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 
 const INITIAL_POLL_INTERVAL_MS = 2000
 const POLL_INTERVAL_AFTER_TXNS_RECEIVED_MS = 5000
