@@ -79,7 +79,8 @@ than one omnibus provider. Bank transactions is the model — separate units for
 (`BankTransactionsPaginationContext`), string overrides
 (`BankTransactionsStringOverridesContext`), feature flags
 (`BankTransactionsFeatureVisibilityProvider`), in-flight categorization picks
-(`BankTransactionsCategorizationStore`), and bulk selection (`BulkSelectionStore`).
+(`BankTransactionsCategorizationStore`), and bulk selection (`global/BulkSelectionStore`,
+which is domain-agnostic and shared).
 Prefer adding a new small context over widening an existing one — a fat context re-renders
 every consumer on any change, and narrow units can be mounted independently where needed.
 

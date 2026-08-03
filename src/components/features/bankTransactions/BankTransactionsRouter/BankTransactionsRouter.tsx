@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 import { useBankAccountFilterActions } from '@providers/bankTransactions/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { BankTransactionsRoute, useBankTransactionsRouteState } from '@providers/bankTransactions/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
-import { useCountSelectedIds } from '@providers/bankTransactions/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useCountSelectedIds } from '@providers/global/BulkSelectionStore/BulkSelectionStoreProvider'
 import { ResponsiveBankTransactionsView, type ResponsiveBankTransactionsViewProps } from '@features/bankTransactions/ResponsiveBankTransactionsView/ResponsiveBankTransactionsView'
 import { ResponsiveCategorizationRulesView } from '@features/categorization/ResponsiveCategorizationRulesView/ResponsiveCategorizationRulesView'
 

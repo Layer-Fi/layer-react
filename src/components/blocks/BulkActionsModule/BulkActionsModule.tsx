@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { tPlural } from '@utils/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useBulkSelectionActions, useCountSelectedIds } from '@providers/bankTransactions/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useBulkSelectionActions, useCountSelectedIds } from '@providers/global/BulkSelectionStore/BulkSelectionStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { type Selection } from 'react-aria-components/GridList'
 
-import { useBulkSelectionActions, useSelectedIds } from '@providers/bankTransactions/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useBulkSelectionActions, useSelectedIds } from '@providers/global/BulkSelectionStore/BulkSelectionStoreProvider'
 
 type MobileListBulkSelectionProps = {
   enableSelection: boolean
