@@ -10,9 +10,9 @@ import { MonthCalendar } from '@ui/datePickers/MonthCalendar/MonthCalendar'
 import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
 import { PickerDropdownIndicator } from '@ui/PickerDropdownIndicator/PickerDropdownIndicator'
+import { ResponsivePopover } from '@ui/ResponsivePopover/ResponsivePopover'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'
-import { ResponsivePopover } from '@blocks/ResponsivePopover/ResponsivePopover'
 
 import './monthPicker.scss'
 

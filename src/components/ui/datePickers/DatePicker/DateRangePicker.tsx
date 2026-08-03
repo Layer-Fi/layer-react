@@ -2,19 +2,25 @@ import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type DateRange, isSameDateRange } from '@utils/date/dateRange'
-import { useBusinessDatePickerBounds } from '@hooks/utils/dates/useBusinessDatePickerBounds'
 import { DatePicker } from '@ui/datePickers/DatePicker/DatePicker'
 import { useDatePickerState } from '@ui/datePickers/DatePicker/useDatePickerState'
 
 type DateRangePickerProps = {
   dateRange: DateRange
   setDateRange: (range: DateRange) => void
+  minDate?: Date | null
+  maxDate?: Date | null
   showLabels?: boolean
 }
 
-export const DateRangePicker = ({ dateRange, setDateRange, showLabels = false }: DateRangePickerProps) => {
+export const DateRangePicker = ({
+  dateRange,
+  setDateRange,
+  minDate = null,
+  maxDate = null,
+  showLabels = false,
+}: DateRangePickerProps) => {
   const { t } = useTranslation()
-  const { minDate, maxDate } = useBusinessDatePickerBounds()
 
   const {
     localDate: localStartDate,

@@ -8,8 +8,8 @@ import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { DATE_PICKER_CLASS_NAME, DatePicker as BaseDatePicker } from '@ui/Date/Date'
 import { DateCalendar } from '@ui/datePickers/DateCalendar/DateCalendar'
 import { DatePickerInput } from '@ui/datePickers/DatePicker/DatePickerInput'
+import { ResponsivePopover } from '@ui/ResponsivePopover/ResponsivePopover'
 import { Label, type TextStyleProps } from '@ui/Typography/Text'
-import { ResponsivePopover } from '@blocks/ResponsivePopover/ResponsivePopover'
 
 import './datePicker.scss'
 

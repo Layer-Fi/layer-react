@@ -2,6 +2,7 @@ import classNames from 'classnames'
 
 import { type DateRange } from '@utils/date/dateRange'
 import type { DatePreset, SelectableDatePreset } from '@utils/date/dateRangePresets'
+import { useBusinessDatePickerBounds } from '@hooks/utils/dates/useBusinessDatePickerBounds'
 import { DateRangePicker } from '@ui/datePickers/DatePicker/DateRangePicker'
 import { DateSelectionComboBox } from '@blocks/datePickers/DateSelection/DateSelectionComboBox'
 
@@ -26,6 +27,8 @@ export const DateRangeSelection = ({
   isCompact = false,
   showAllTimeFirst = false,
 }: DateRangeSelectionProps) => {
+  const { minDate, maxDate } = useBusinessDatePickerBounds()
+
   return (
     <div
       className={classNames('Layer__DateRangeSelection Layer__variables', {
@@ -41,6 +44,8 @@ export const DateRangeSelection = ({
       <DateRangePicker
         dateRange={dateRange}
         setDateRange={setDateRange}
+        minDate={minDate}
+        maxDate={maxDate}
         showLabels={showLabels}
       />
     </div>
