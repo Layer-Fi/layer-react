@@ -1,10 +1,10 @@
-.Layer__skeleton-loader__row {
+.Layer__ReportsTableSkeletonBody__Row {
   height: var(--data-table-row-height, 3.25rem);
   padding: 0 var(--spacing-md);
   border-bottom: 1px solid var(--border-color);
 }
 
-.Layer__skeleton-loader__row__group {
+.Layer__ReportsTableSkeletonBody__RowGroup {
   display: flex;
   gap: var(--spacing-sm);
   align-items: center;

@@ -11,7 +11,6 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { type FallbackFillSelector } from '@blocks/DetailedChart/types'
-import { NO_OP_INTERACTION_PROPS } from '@blocks/DetailedChart/utils'
 
 import './detailedTable.scss'
 
@@ -51,6 +50,17 @@ export interface DetailedTableProps<T extends SeriesData> extends DetailedTableB
 
 export interface DetailedTableWithDataProps<T extends SeriesData> extends DetailedTableBaseProps<T> {
   data: DetailData<T>
+}
+
+// Compared by identity below to decide whether the table renders sort controls.
+export const NO_OP_INTERACTION_PROPS = {
+  hoveredItem: undefined,
+  setHoveredItem: () => {},
+}
+
+export const NO_SORT_PROPS: Pick<DetailedTableProps<SeriesData>, 'sortParams' | 'sortFunction'> = {
+  sortParams: { sortBy: 'value' },
+  sortFunction: () => {},
 }
 
 export const DetailedTable = <T extends SeriesData>({

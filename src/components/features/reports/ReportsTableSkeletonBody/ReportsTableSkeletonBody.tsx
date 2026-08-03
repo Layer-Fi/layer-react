@@ -21,7 +21,7 @@ export const ReportsTableSkeletonBody = ({
   width = 100,
 }: ReportsTableSkeletonBodyProps) => {
   return (
-    <tbody className='Layer__skeleton-table-body__loader'>
+    <tbody className='Layer__ReportsTableSkeletonBody'>
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <tr key={rowIndex}>
           {cols.map((col, colIndex) => {
@@ -33,7 +33,7 @@ export const ReportsTableSkeletonBody = ({
               <td
                 key={colIndex}
                 colSpan={col.colSpan}
-                className='Layer__skeleton-loader__row'
+                className='Layer__ReportsTableSkeletonBody__Row'
               >
                 {col.colComponent
                   ? (
@@ -41,7 +41,7 @@ export const ReportsTableSkeletonBody = ({
                   )
                   : col.parts && col.parts > 1
                     ? (
-                      <span className='Layer__skeleton-loader__row__group'>
+                      <span className='Layer__ReportsTableSkeletonBody__RowGroup'>
                         {Array.from({ length: col.parts }).map((_, partIndex) => (
                           <SkeletonLoader
                             key={`part-${partIndex}`}

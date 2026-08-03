@@ -19,16 +19,16 @@ export const TasksMobilePanel = ({ header, children, open, onClose, className }:
   const dataProperties = toDataProperties({ open })
 
   return createPortal(
-    <div className={classNames('Layer__Portal Layer__mobile-panel', className)} {...dataProperties}>
-      <div className='Layer__mobile-panel__header'>
+    <div className={classNames('Layer__Portal Layer__TasksMobilePanel', className)} {...dataProperties}>
+      <div className='Layer__TasksMobilePanel__Header'>
         <BackButton onPress={onClose} />
         {header && (
-          <div className='Layer__mobile-panel__header__content'>
+          <div className='Layer__TasksMobilePanel__HeaderContent'>
             {header}
           </div>
         )}
       </div>
-      <div className='Layer__mobile-panel__content'>
+      <div className='Layer__TasksMobilePanel__Content'>
         {children}
       </div>
     </div>,

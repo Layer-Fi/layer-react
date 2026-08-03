@@ -6,7 +6,7 @@ import { Span } from '@ui/Typography/Text'
 
 import './mobileListItemStatusFooter.scss'
 
-const CSS_PREFIX = 'Layer__UI__MobileListItemStatusFooter'
+const CSS_PREFIX = 'Layer__MobileListItemStatusFooter'
 
 type MobileListItemStatusFooterProps = {
   variant: BadgeVariant

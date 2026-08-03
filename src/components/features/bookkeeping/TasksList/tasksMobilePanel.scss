@@ -1,4 +1,4 @@
-.Layer__mobile-panel {
+.Layer__TasksMobilePanel {
   position: fixed;
   z-index: -1;
   top: 0;
@@ -20,7 +20,7 @@
   }
 }
 
-.Layer__mobile-panel__header {
+.Layer__TasksMobilePanel__Header {
   top: 0;
   display: flex;
   gap: var(--spacing-lg);
@@ -30,7 +30,7 @@
   background-color: var(--color-base-0);
 }
 
-.Layer__mobile-panel__content {
+.Layer__TasksMobilePanel__Content {
   flex: 1;
   padding: var(--spacing-lg);
 }

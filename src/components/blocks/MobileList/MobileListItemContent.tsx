@@ -17,8 +17,8 @@ export const MobileListItemContent = ({ title, slots, children }: MobileListItem
 
   return (
     <VStack gap='3xs'>
-      <HStack fluid justify='space-between' align='start' gap='sm' className='Layer__UI__MobileListItemContent__TitleRow'>
-        <Span weight='bold' ellipsis className='Layer__UI__MobileListItemContent__Title'>{title}</Span>
+      <HStack fluid justify='space-between' align='start' gap='sm' className='Layer__MobileListItemContent__TitleRow'>
+        <Span weight='bold' ellipsis className='Layer__MobileListItemContent__Title'>{title}</Span>
         {Value}
       </HStack>
       {children}

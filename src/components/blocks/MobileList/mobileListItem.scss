@@ -21,7 +21,7 @@
     grid-template-columns: auto minmax(0, 1fr);
   }
 
-  &--withActions .Layer__UI__MobileListItemContent__TitleRow {
+  &--withActions .Layer__MobileListItemContent__TitleRow {
     padding-inline-end: var(--spacing-2xl);
   }
 
