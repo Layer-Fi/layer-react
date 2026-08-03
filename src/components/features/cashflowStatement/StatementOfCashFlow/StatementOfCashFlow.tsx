@@ -15,13 +15,13 @@ import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
 import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { View } from '@blocks/Layout/View/View'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
-import { CashflowStatementDownloadButton } from '@features/reports/CashflowStatementDownloadButton/CashflowStatementDownloadButton'
+import { CashflowStatementDownloadButton } from '@features/cashflowStatement/CashflowStatementDownloadButton/CashflowStatementDownloadButton'
+import { STATEMENT_OF_CASH_FLOW_ROWS_CONFIG } from '@features/cashflowStatement/StatementOfCashFlow/constants'
+import { StatementOfCashFlowTable } from '@features/cashflowStatement/StatementOfCashFlowTable/StatementOfCashFlowTable'
+import { type StatementOfCashFlowTableStringOverrides } from '@features/cashflowStatement/StatementOfCashFlowTable/StatementOfCashFlowTable'
 import { ReportsMobileSelectionTrigger } from '@features/reports/ReportsMobileSelectionTrigger/ReportsMobileSelectionTrigger'
 import { ReportsTableErrorState } from '@features/reports/ReportsTableErrorState/ReportsTableErrorState'
 import { ReportsTableLoader } from '@features/reports/ReportsTableLoader/ReportsTableLoader'
-import { STATEMENT_OF_CASH_FLOW_ROWS_CONFIG } from '@features/reports/StatementOfCashFlow/constants'
-import { StatementOfCashFlowTable } from '@features/reports/StatementOfCashFlowTable/StatementOfCashFlowTable'
-import { type StatementOfCashFlowTableStringOverrides } from '@features/reports/StatementOfCashFlowTable/StatementOfCashFlowTable'
 
 export interface StatementOfCashFlowStringOverrides {
   statementOfCashFlowTable?: StatementOfCashFlowTableStringOverrides

@@ -17,8 +17,8 @@ export { ProfitAndLoss } from './components/features/profitAndLoss/ProfitAndLoss
  * - Header
  * - Report
  */
-export { BalanceSheet } from './components/features/reports/BalanceSheet/BalanceSheet'
-export { StatementOfCashFlow } from './components/features/reports/StatementOfCashFlow/StatementOfCashFlow'
+export { BalanceSheet } from './components/features/balanceSheet/BalanceSheet/BalanceSheet'
+export { StatementOfCashFlow } from './components/features/cashflowStatement/StatementOfCashFlow/StatementOfCashFlow'
 
 /* ------------------ Ledger ------------------ */
 export { ChartOfAccounts } from './components/features/generalLedger/ChartOfAccounts/ChartOfAccounts'
