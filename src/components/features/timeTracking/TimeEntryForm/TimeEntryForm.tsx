@@ -12,7 +12,7 @@ import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
+import { CustomerSelector } from '@features/customerVendor/CustomerSelector/CustomerSelector'
 import { useTimeEntryForm } from '@features/timeTracking/TimeEntryForm/useTimeEntryForm'
 import { TimeEntryServiceSelector } from '@features/timeTracking/TimeEntryServiceSelector/TimeEntryServiceSelector'
 

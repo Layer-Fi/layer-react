@@ -7,7 +7,7 @@ import { type Customer, type CustomerForm, UpsertCustomerSchema } from '@schemas
 import { useUpsertCustomer } from '@api/businesses/[business-id]/customers/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
-import { convertCustomerFormToUpsertCustomer, type CustomerFormState, getCustomerFormDefaultValues, validateCustomerForm } from '@components/CustomerForm/formUtils'
+import { convertCustomerFormToUpsertCustomer, type CustomerFormState, getCustomerFormDefaultValues, validateCustomerForm } from '@features/customerVendor/CustomerForm/formUtils'
 
 type onSuccessFn = (customer: Customer) => void
 type UseCustomerFormProps = { onSuccess: onSuccessFn } & CustomerFormState

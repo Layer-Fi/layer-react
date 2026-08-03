@@ -9,7 +9,7 @@ import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSea
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, P } from '@ui/Typography/Text'
-import { VendorAsOption } from '@components/VendorSelector/VendorAsOption'
+import { VendorAsOption } from '@features/customerVendor/VendorSelector/VendorAsOption'
 
 import './vendorSelector.scss'
 

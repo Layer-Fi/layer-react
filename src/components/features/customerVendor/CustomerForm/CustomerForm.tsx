@@ -9,8 +9,8 @@ import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { type CustomerFormState } from '@components/CustomerForm/formUtils'
-import { useCustomerForm } from '@components/CustomerForm/useCustomerForm'
+import { type CustomerFormState } from '@features/customerVendor/CustomerForm/formUtils'
+import { useCustomerForm } from '@features/customerVendor/CustomerForm/useCustomerForm'
 
 import './customerForm.scss'
 

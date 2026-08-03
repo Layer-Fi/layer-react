@@ -7,7 +7,7 @@ import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteSto
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { CustomerSelector } from '@components/CustomerSelector/CustomerSelector'
+import { CustomerSelector } from '@features/customerVendor/CustomerSelector/CustomerSelector'
 import type { InvoiceFormType } from '@features/invoices/InvoiceForm/useInvoiceForm'
 import { getDurationInDaysFromTerms, InvoiceTermsComboBox } from '@features/invoices/InvoiceTermsComboBox/InvoiceTermsComboBox'
 

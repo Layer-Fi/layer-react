@@ -10,7 +10,7 @@ import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSea
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, P } from '@ui/Typography/Text'
-import { CustomerAsOption } from '@components/CustomerSelector/CustomerAsOption'
+import { CustomerAsOption } from '@features/customerVendor/CustomerSelector/CustomerAsOption'
 
 import './customerSelector.scss'
 

@@ -6,8 +6,8 @@ import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { VStack } from '@ui/Stack/Stack'
-import { CustomerForm } from '@components/CustomerForm/CustomerForm'
-import { type CustomerFormState } from '@components/CustomerForm/formUtils'
+import { CustomerForm } from '@features/customerVendor/CustomerForm/CustomerForm'
+import { type CustomerFormState } from '@features/customerVendor/CustomerForm/formUtils'
 
 export type CustomerFormDrawerProps = {
   isOpen: boolean

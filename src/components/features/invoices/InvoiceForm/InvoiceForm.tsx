@@ -7,7 +7,7 @@ import { useInvoiceDetail } from '@providers/InvoicesRouteStore/InvoicesRouteSto
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
 import { Form } from '@ui/Form/Form'
 import { VStack } from '@ui/Stack/Stack'
-import { CustomerFormDrawer } from '@components/CustomerForm/CustomerFormDrawer'
+import { CustomerFormDrawer } from '@features/customerVendor/CustomerFormDrawer/CustomerFormDrawer'
 import { type InvoiceFormState } from '@features/invoices/InvoiceForm/formUtils'
 import { InvoiceFormErrorBanner } from '@features/invoices/InvoiceForm/InvoiceFormErrorBanner'
 import { InvoiceFormLineItemsSection } from '@features/invoices/InvoiceForm/InvoiceFormLineItemsSection'

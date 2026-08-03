@@ -43,10 +43,10 @@ import { Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
-import { CustomerVendorSelector } from '@components/CustomerVendorSelector/CustomerVendorSelector'
 import { MatchForm } from '@components/MatchForm/MatchForm'
 import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
 import { TaxCodeComboBox } from '@components/TaxCodeSelect/TaxCodeComboBox'
+import { CustomerVendorSelector } from '@features/customerVendor/CustomerVendorSelector/CustomerVendorSelector'
 
 import './expandedBankTransactionRow.scss'
 

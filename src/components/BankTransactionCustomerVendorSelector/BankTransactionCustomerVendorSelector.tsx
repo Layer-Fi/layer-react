@@ -6,7 +6,7 @@ import { type CustomerVendorSchema, makeCustomerVendor } from '@schemas/customer
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { usePatchBankTransactionCounterparty } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/patch'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import { CustomerVendorSelector } from '@components/CustomerVendorSelector/CustomerVendorSelector'
+import { CustomerVendorSelector } from '@features/customerVendor/CustomerVendorSelector/CustomerVendorSelector'
 
 type BankTransactionCustomerVendorSelectorProps = {
   bankTransaction: Pick<BankTransaction, 'id' | 'customer' | 'vendor'>
