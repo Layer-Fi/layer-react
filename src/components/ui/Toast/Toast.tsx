@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-import { type ToastProps } from '@internal-types/toast'
+import { type ToastData } from '@internal-types/toast'
 
 import './toast.scss'
 
@@ -10,7 +10,7 @@ export const Toast = ({
   isExiting,
   type = 'default',
   onDismiss,
-}: ToastProps & { isExiting: boolean, onDismiss?: () => void }) => {
+}: ToastData & { isExiting: boolean, onDismiss?: () => void }) => {
   return (
     <div
       id={id}

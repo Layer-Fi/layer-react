@@ -8,7 +8,7 @@ import {
   type LayerContextValues,
   type LayerThemeConfig,
 } from '@internal-types/layerContext'
-import { type ToastProps } from '@internal-types/toast'
+import { type ToastData } from '@internal-types/toast'
 import { errorHandler, type LayerError } from '@utils/api/errorHandler'
 import { buildColorsPalette } from '@utils/colors'
 import { useGetAccountingConfiguration } from '@api/businesses/[business-id]/accounting-config/get'
@@ -163,19 +163,19 @@ export const BusinessProvider = ({
     })
   }
 
-  const setToast = (toast: ToastProps) => {
+  const setToast = (toast: ToastData) => {
     dispatch({ type: Action.setToast, payload: { toast: toast } })
   }
 
-  const removeToast = (toast: ToastProps) => {
+  const removeToast = (toast: ToastData) => {
     dispatch({ type: Action.removeToast, payload: { toast: toast } })
   }
 
-  const setToastExit = (toast: ToastProps) => {
+  const setToastExit = (toast: ToastData) => {
     dispatch({ type: Action.setToastExit, payload: { toast: toast } })
   }
 
-  const addToast = (toast: ToastProps) => {
+  const addToast = (toast: ToastData) => {
     const id = `${Date.now()}-${Math.random()}`
     const newToast = { id, isExiting: false, ...toast }
 

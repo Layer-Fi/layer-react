@@ -1,5 +1,5 @@
 import { type DateRange } from '@internal-types/general'
-import { type ToastProps } from '@internal-types/toast'
+import { type ToastData } from '@internal-types/toast'
 import { type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
 import { type Business } from '@schemas/business'
 import { type LayerError } from '@utils/api/errorHandler'
@@ -12,7 +12,7 @@ export type LayerContextValues = {
   colors: ColorsPalette
   /** @deprecated No longer used; the Onboarding component that consumed this has been removed. */
   onboardingStep?: OnboardingStep
-  toasts: (ToastProps & { isExiting: boolean })[]
+  toasts: (ToastData & { isExiting: boolean })[]
   eventCallbacks?: EventCallbacks
   accountingConfiguration?: AccountingConfigurationSchemaType
 }
@@ -32,8 +32,8 @@ export type LayerContextHelpers = {
   setColors: (colors?: LayerThemeConfigColors) => void
   /** @deprecated No longer used; the Onboarding component that consumed this has been removed. */
   setOnboardingStep: (value: OnboardingStep) => void
-  addToast: (toast: ToastProps) => void
-  removeToast: (toast: ToastProps) => void
+  addToast: (toast: ToastData) => void
+  removeToast: (toast: ToastData) => void
   onError?: (error: LayerError) => void
   setTheme: (theme: LayerThemeConfig) => void
 }
@@ -118,13 +118,13 @@ export type LayerContextAction =
   }
   | {
     type: LayerContextActionName.setToast
-    payload: { toast: ToastProps }
+    payload: { toast: ToastData }
   }
   | {
     type: LayerContextActionName.removeToast
-    payload: { toast: ToastProps }
+    payload: { toast: ToastData }
   }
   | {
     type: LayerContextActionName.setToastExit
-    payload: { toast: ToastProps }
+    payload: { toast: ToastData }
   }

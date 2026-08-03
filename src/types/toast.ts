@@ -1,4 +1,4 @@
-export interface ToastProps {
+export interface ToastData {
   id?: string
   content: string
   duration?: number
