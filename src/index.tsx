@@ -5,7 +5,7 @@
 */
 
 /* ------------------ Bank Accounts & Transactions ------------------ */
-export { BankTransactions } from './components/BankTransactions/BankTransactions'
+export { BankTransactions } from './components/features/bankTransactions/BankTransactions/BankTransactions'
 export { LinkedAccounts } from './components/features/linkedAccounts/LinkedAccounts/LinkedAccounts'
 
 /* ------------------ Reporting ------------------ */

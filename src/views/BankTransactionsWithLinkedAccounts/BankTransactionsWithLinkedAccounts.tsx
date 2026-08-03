@@ -6,11 +6,9 @@ import { BankAccountsFilterStoreProvider, useSelectedBankAccountIds } from '@pro
 import { type BankTransactionsMode } from '@providers/LegacyModeProvider/LegacyModeProvider'
 import { type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { View } from '@blocks/Layout/View/View'
-import {
-  BankTransactions,
-  type BankTransactionsStringOverrides,
-} from '@components/BankTransactions/BankTransactions'
-import { type MobileComponentType } from '@components/BankTransactions/constants'
+import { BankTransactions } from '@features/bankTransactions/BankTransactions/BankTransactions'
+import { type MobileComponentType } from '@features/bankTransactions/constants'
+import { type BankTransactionsStringOverrides } from '@features/bankTransactions/types'
 import { LinkedAccounts } from '@features/linkedAccounts/LinkedAccounts/LinkedAccounts'
 
 interface BankTransactionsWithLinkedAccountsStringOverrides {

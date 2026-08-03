@@ -1,0 +1,137 @@
+import type { TFunction } from 'i18next'
+import { uniqBy } from 'lodash-es'
+
+import { isPlaceholderAsOption, isSplitAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
+import { isApiCategorizationAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
+import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
+import { isSplitCategorization } from '@schemas/categorization'
+import { makeCustomerVendor } from '@schemas/customerVendor'
+import { makeTagFromTransactionTag } from '@schemas/tag'
+import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/bankTransactions/categorizationOption'
+import { toLocalizedCents } from '@utils/i18n/number/input'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
+
+export enum ValidateSplitError {
+  AmountsMustBeGreaterThanZero = 'AmountsMustBeGreaterThanZero',
+  CategoryIsRequired = 'CategoryIsRequired',
+}
+
+const getValidateSplitErrorMessage = (splitError: ValidateSplitError, t: TFunction): string => {
+  switch (splitError) {
+    case ValidateSplitError.AmountsMustBeGreaterThanZero:
+      return t('bankTransactions:validation.splits_amount_greater_than_zero', 'All splits must have an amount greater than $0.00')
+    case ValidateSplitError.CategoryIsRequired:
+      return t('bankTransactions:validation.splits_must_have_category', 'All splits must have a category')
+  }
+}
+
+export const isSplitsValid = (localSplits: Split[]): boolean => {
+  return validateSplit(localSplits)
+    .reduce((acc, splitError) => acc && splitError === undefined, true)
+}
+
+export const getSplitsErrorMessage = (localSplits: Split[], t: TFunction): string => {
+  const firstError = uniqBy(validateSplit(localSplits), error => error?.toString()).find((error): error is ValidateSplitError => error !== undefined)
+  if (!firstError) return ''
+  return getValidateSplitErrorMessage(firstError, t)
+}
+
+export const validateSplit = (localSplits: Split[]): (ValidateSplitError | undefined)[] => {
+  const errors = localSplits.map((split) => {
+    if (split.amount <= 0) {
+      return ValidateSplitError.AmountsMustBeGreaterThanZero
+    }
+
+    if (!split.category) {
+      return ValidateSplitError.CategoryIsRequired
+    }
+
+    return undefined
+  })
+  return uniqBy(errors, error => error?.toString())
+}
+
+export const calculateAddSplit = (
+  initialRowSplits: Split[],
+): Split[] => {
+  const newSplit = {
+    amount: 0,
+    category: null,
+    taxCode: null,
+    tags: [],
+    customerVendor: null,
+  }
+  return [...initialRowSplits, newSplit]
+}
+
+export const calculateRemoveSplit = (
+  initialRowSplits: Split[],
+  { totalAmount, index }: { totalAmount: number, index: number }): Split[] => {
+  const newSplits = initialRowSplits.filter((_v, idx) => idx !== index)
+  const splitTotal = newSplits.reduce((sum, split, index) => {
+    const splitAmount = index === 0 ? 0 : split.amount
+    return sum + splitAmount
+  }, 0)
+  const remaining = totalAmount - splitTotal
+  newSplits[0].amount = remaining
+
+  return newSplits
+}
+
+export const calculateUpdatedAmounts = (
+  initialRowSplits: Split[],
+  { index, newAmountInput, totalAmount, locale }: { index: number, newAmountInput: string, totalAmount: number, locale: string },
+): Split[] => {
+  const newAmount = toLocalizedCents(newAmountInput, locale) ?? 0
+  const splitTotal = initialRowSplits.reduce((sum, split, idx) => {
+    const amount = idx === 0 ? 0 : idx === index ? newAmount : split.amount
+    return sum + amount
+  }, 0)
+
+  const remaining = totalAmount - splitTotal
+
+  initialRowSplits[index].amount = newAmount
+  initialRowSplits[0].amount = remaining
+
+  return [...initialRowSplits]
+}
+
+export const getCustomerVendorForBankTransaction = (bankTransaction: BankTransaction) => {
+  return makeCustomerVendor(bankTransaction.customer, bankTransaction.vendor)
+}
+
+export const getLocalSplitStateForExpandedTransaction = (
+  bankTransaction: BankTransaction,
+  selectedCategory: BankTransactionNonSuggestedMatchOption | null | undefined,
+  selectedTaxCode: string | null,
+): Split[] => {
+  let coercedSelectedCategory = selectedCategory
+  if (!selectedCategory || isPlaceholderAsOption(selectedCategory)) {
+    coercedSelectedCategory = null
+  }
+
+  else if (isApiCategorizationAsOption(selectedCategory) && isSplitCategorization(selectedCategory.original)) {
+    coercedSelectedCategory = convertApiCategorizationToCategoryOrSplitAsOption(selectedCategory.original)
+  }
+
+  // Split Category
+  if (coercedSelectedCategory && isSplitAsOption(coercedSelectedCategory)) {
+    return coercedSelectedCategory.original.map((splitEntry) => {
+      return {
+        amount: splitEntry.amount || 0,
+        category: splitEntry.category,
+        taxCode: splitEntry.taxCode ?? null,
+        tags: splitEntry.tags,
+        customerVendor: splitEntry.customerVendor,
+      }
+    })
+  }
+  // Single category
+  return [{
+    amount: bankTransaction.amount,
+    category: coercedSelectedCategory ?? null,
+    taxCode: selectedTaxCode ?? bankTransaction.taxCode ?? null,
+    tags: bankTransaction.transactionTags.map(tag => makeTagFromTransactionTag(tag)),
+    customerVendor: getCustomerVendorForBankTransaction(bankTransaction),
+  }]
+}

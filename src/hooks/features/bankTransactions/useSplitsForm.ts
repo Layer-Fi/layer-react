@@ -4,12 +4,6 @@ import { useIntl } from 'react-intl'
 
 import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
 import { SplitAsOption } from '@internal-types/categorizationOption'
-import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
-import { convertCentsToDecimalString } from '@utils/format'
-import { toLocalizedNumber } from '@utils/i18n/number/input'
-import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
-import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 import {
   calculateAddSplit,
   calculateRemoveSplit,
@@ -17,7 +11,13 @@ import {
   getLocalSplitStateForExpandedTransaction,
   getSplitsErrorMessage,
   isSplitsValid,
-} from '@components/ExpandedBankTransactionRow/utils'
+} from '@utils/bankTransactions/splits'
+import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
+import { convertCentsToDecimalString } from '@utils/format'
+import { toLocalizedNumber } from '@utils/i18n/number/input'
+import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
+import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 
 interface UseSplitsFormOptions {
   bankTransaction: BankTransaction

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import type { DocumentS3Urls } from '@internal-types/bankTransactions'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import type { FileMetadata } from '@internal-types/fileUpload'
+import { type DocumentWithStatus } from '@internal-types/fileUpload'
 import { type Awaitable } from '@internal-types/utility/promises'
 import { get, post, postWithFormData } from '@utils/api/authenticatedHttp'
 import { hasReceipts } from '@utils/bankTransactions/shared'
@@ -12,7 +13,6 @@ import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
 import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
 import { useBankTransactionsContext } from '@contexts/BankTransactionsContext/BankTransactionsContext'
-import { type DocumentWithStatus } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 
 const listBankTransactionDocuments = get<{
   data: DocumentS3Urls

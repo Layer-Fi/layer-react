@@ -8,11 +8,11 @@ import { BankTransactionDirection, type RawBankTransactionDirection, Transaction
 import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
 import type { CustomAccount } from '@schemas/customAccounts'
 import { makeTagKeyValueFromTag } from '@schemas/tag'
+import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/bankTransactions/categorizationOption'
 import { getDefaultTaxCodeForBankTransaction } from '@utils/bankTransactions/taxCode'
 import { BankTransactionSelectionVariant } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
-import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
-import { CategorizedCategories, ReviewCategories } from '@components/BankTransactions/constants'
+import { CategorizedCategories, ReviewCategories } from '@features/bankTransactions/constants'
 
 export const filterVisibility = (
   scope: DisplayState,
