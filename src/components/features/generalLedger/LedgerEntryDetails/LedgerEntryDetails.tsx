@@ -9,11 +9,11 @@ import { useInAppLinkContext } from '@contexts/InAppLinkContext'
 import { Badge } from '@ui/Badge/Badge'
 import { DateTime } from '@ui/DateTime/DateTime'
 import { VStack } from '@ui/Stack/Stack'
-import { EntryDetailField } from '@components/EntryDetailField/EntryDetailField'
-import { EntryDetailSection } from '@components/EntryDetailSection/EntryDetailSection'
+import { LedgerEntryDetailField } from '@blocks/LedgerEntryDetailField/LedgerEntryDetailField'
+import { LedgerEntryDetailSection } from '@blocks/LedgerEntryDetailSection/LedgerEntryDetailSection'
+import { LedgerEntrySourceDetailView } from '@blocks/LedgerEntrySourceDetailView/LedgerEntrySourceDetailView'
 import { JournalEntryDetailHeader } from '@features/generalLedger/JournalEntryDetailHeader/JournalEntryDetailHeader'
 import { LedgerEntryDetailsLineItemsTable } from '@features/generalLedger/LedgerEntryDetails/LedgerEntryDetailsLineItemsTable'
-import { LedgerEntrySourceDetailView } from '@features/generalLedger/LedgerEntrySourceDetailView/LedgerEntrySourceDetailView'
 import { ReverseLedgerEntryButton } from '@features/generalLedger/ReverseLedgerEntryButton/ReverseLedgerEntryButton'
 import { type LedgerEntryDetailStringOverrides } from '@features/generalLedger/types'
 
@@ -67,59 +67,59 @@ export const LedgerEntryDetails = ({
     <VStack pbe='lg'>
       <JournalEntryDetailHeader onClose={onClose} title={headerTitle} />
 
-      <EntryDetailSection
+      <LedgerEntryDetailSection
         title={stringOverrides?.transactionSource?.header || t('bankTransactions:label.transaction_source', 'Transaction source')}
       >
-        <EntryDetailField
+        <LedgerEntryDetailField
           label={stringOverrides?.transactionSource?.details?.sourceLabel || t('common:label.source', 'Source')}
           isLoading={isLoading}
         >
           {badgeOrInAppLink}
-        </EntryDetailField>
+        </LedgerEntryDetailField>
         {ledgerEntrySource && (
           <LedgerEntrySourceDetailView
             source={ledgerEntrySource}
             stringOverrides={stringOverrides?.transactionSource?.details}
           />
         )}
-      </EntryDetailSection>
+      </LedgerEntryDetailSection>
 
-      <EntryDetailSection
+      <LedgerEntryDetailSection
         title={t('generalLedger:label.entry_details', 'Entry details')}
       >
-        <EntryDetailField label={t('common:label.id', 'ID')} isLoading={isLoading}>
+        <LedgerEntryDetailField label={t('common:label.id', 'ID')} isLoading={isLoading}>
           {id}
-        </EntryDetailField>
-        <EntryDetailField
+        </LedgerEntryDetailField>
+        <LedgerEntryDetailField
           label={stringOverrides?.journalEntry?.details?.entryTypeLabel || t('generalLedger:label.entry_type', 'Entry type')}
           isLoading={isLoading}
         >
           {humanizeEnum(entry?.entryType ?? '')}
-        </EntryDetailField>
-        <EntryDetailField
+        </LedgerEntryDetailField>
+        <LedgerEntryDetailField
           label={stringOverrides?.journalEntry?.details?.dateLabel || t('date:label.effective_date', 'Effective date')}
           isLoading={isLoading}
         >
           {entry?.entryAt && <DateTime valueAsDate={entry.entryAt} />}
-        </EntryDetailField>
-        <EntryDetailField
+        </LedgerEntryDetailField>
+        <LedgerEntryDetailField
           label={stringOverrides?.journalEntry?.details?.creationDateLabel || t('date:label.creation_date', 'Creation date')}
           isLoading={isLoading}
         >
           {entry?.date && <DateTime valueAsDate={entry.date} />}
-        </EntryDetailField>
+        </LedgerEntryDetailField>
         {entry?.reversalId && (
-          <EntryDetailField
+          <LedgerEntryDetailField
             label={stringOverrides?.journalEntry?.details?.reversalLabel || t('generalLedger:label.reversal', 'Reversal')}
             isLoading={isLoading}
             fullWidth
           >
             {t('generalLedger:label.journal_entry_number', 'Journal Entry #{{entryNumber}}', { entryNumber: entry.reversalId.substring(0, 5) })}
-          </EntryDetailField>
+          </LedgerEntryDetailField>
         )}
-      </EntryDetailSection>
+      </LedgerEntryDetailSection>
 
-      <EntryDetailSection
+      <LedgerEntryDetailSection
         title={stringOverrides?.lineItemsTable?.lineItemsColumnHeader || t('generalLedger:label.line_items', 'Line items')}
       >
         <LedgerEntryDetailsLineItemsTable
@@ -128,7 +128,7 @@ export const LedgerEntryDetails = ({
           isError={isError}
           stringOverrides={stringOverrides?.lineItemsTable}
         />
-      </EntryDetailSection>
+      </LedgerEntryDetailSection>
       {onReverse && (
         <ReverseLedgerEntryButton onReverse={onReverse} alreadyReversed={Boolean(entry?.reversalId)} />
       )}

@@ -18,11 +18,11 @@ import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Label, Span } from '@ui/Typography/Text'
 import type { ColumnConfig } from '@blocks/DataTable/utils/column'
+import { LedgerEntryDetailField } from '@blocks/LedgerEntryDetailField/LedgerEntryDetailField'
+import { LedgerEntryDetailSection } from '@blocks/LedgerEntryDetailSection/LedgerEntryDetailSection'
+import { LedgerEntrySourceDetailView } from '@blocks/LedgerEntrySourceDetailView/LedgerEntrySourceDetailView'
 import { VirtualizedDataTable } from '@blocks/VirtualizedDataTable/VirtualizedDataTable'
 import { BaseDetailView } from '@components/BaseDetailView/BaseDetailView'
-import { EntryDetailField } from '@components/EntryDetailField/EntryDetailField'
-import { EntryDetailSection } from '@components/EntryDetailSection/EntryDetailSection'
-import { LedgerEntrySourceDetailView } from '@features/generalLedger/LedgerEntrySourceDetailView/LedgerEntrySourceDetailView'
 import { type BreadcrumbItem, ProfitAndLossDetailReportBreadcrumb } from '@features/profitAndLoss/ProfitAndLossDetailReportBreadcrumb/ProfitAndLossDetailReportBreadcrumb'
 
 import './profitAndLossDetailReport.scss'
@@ -230,14 +230,14 @@ export const ProfitAndLossDetailReport = ({
     return (
       <BaseDetailView slots={{ Header }} name='Profit And Loss Detail Report' onGoBack={handleBackToList} borderless>
         <VStack pi='md'>
-          <EntryDetailSection
+          <LedgerEntryDetailSection
             title={stringOverrides?.sourceDetailsTitle || t('bankTransactions:label.transaction_source', 'Transaction source')}
           >
-            <EntryDetailField label={t('common:label.source', 'Source')}>
+            <LedgerEntryDetailField label={t('common:label.source', 'Source')}>
               {badgeOrInAppLink}
-            </EntryDetailField>
+            </LedgerEntryDetailField>
             <LedgerEntrySourceDetailView source={selectedSource} />
-          </EntryDetailSection>
+          </LedgerEntryDetailSection>
         </VStack>
       </BaseDetailView>
     )

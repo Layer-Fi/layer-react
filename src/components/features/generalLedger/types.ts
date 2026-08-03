@@ -1,16 +1,4 @@
-export interface SourceDetailStringOverrides {
-  sourceLabel?: string
-  accountNameLabel?: string
-  dateLabel?: string
-  amountLabel?: string
-  directionLabel?: string
-  counterpartyLabel?: string
-  invoiceNumberLabel?: string
-  recipientNameLabel?: string
-  memoLabel?: string
-  createdByLabel?: string
-  processorLabel?: string
-}
+import { type SourceDetailStringOverrides } from '@blocks/LedgerEntrySourceDetailView/LedgerEntrySourceDetailView'
 
 export interface JournalEntryDetailStringOverrides {
   entryTypeLabel?: string
