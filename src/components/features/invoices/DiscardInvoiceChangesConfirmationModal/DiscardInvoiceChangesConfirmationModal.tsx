@@ -2,17 +2,17 @@ import { useTranslation } from 'react-i18next'
 
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 
-export type DiscardInvoiceChangesModalProps = {
+export type DiscardInvoiceChangesConfirmationModalProps = {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
   onConfirm: () => void
 }
 
-export const DiscardInvoiceChangesModal = ({
+export const DiscardInvoiceChangesConfirmationModal = ({
   isOpen,
   onOpenChange,
   onConfirm,
-}: DiscardInvoiceChangesModalProps) => {
+}: DiscardInvoiceChangesConfirmationModalProps) => {
   const { t } = useTranslation()
   return (
     <BaseConfirmationModal
