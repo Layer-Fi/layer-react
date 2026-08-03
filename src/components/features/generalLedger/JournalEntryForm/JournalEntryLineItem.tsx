@@ -7,9 +7,9 @@ import type { JournalEntryForm } from '@schemas/generalLedger/journalEntry'
 import type { AppForm } from '@hooks/features/forms/useForm'
 import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'
-import { DebitCreditPill } from '@components/DebitCreditPill/DebitCreditPill'
-import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
+import { DebitCreditPill } from '@features/generalLedger/JournalEntryForm/DebitCreditPill'
 import { LedgerAccountComboBox } from '@features/generalLedger/LedgerAccountComboBox/LedgerAccountComboBox'
+import { TagDimensionsGroup } from '@features/tags/TagDimensionsGroup/TagDimensionsGroup'
 
 import './journalEntryLineItem.scss'
 

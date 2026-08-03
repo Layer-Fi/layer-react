@@ -44,9 +44,9 @@ import { BankTransactionCategoryComboBox } from '@components/BankTransactionCate
 import { BankTransactionFormFields } from '@components/BankTransactionFormFields/BankTransactionFormFields'
 import { BankTransactionReceiptsWithProvider } from '@components/BankTransactionReceipts/BankTransactionReceipts'
 import { MatchForm } from '@components/MatchForm/MatchForm'
-import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
 import { TaxCodeComboBox } from '@components/TaxCodeSelect/TaxCodeComboBox'
 import { CustomerVendorSelector } from '@features/customerVendor/CustomerVendorSelector/CustomerVendorSelector'
+import { TagDimensionsGroup } from '@features/tags/TagDimensionsGroup/TagDimensionsGroup'
 
 import './expandedBankTransactionRow.scss'
 

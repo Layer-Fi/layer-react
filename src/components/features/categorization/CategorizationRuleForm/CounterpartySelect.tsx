@@ -1,0 +1,23 @@
+import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
+import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { CounterpartyComboBox } from '@features/categorization/CategorizationRuleForm/CounterpartyComboBox'
+import { CounterpartyMobileDrawer } from '@features/categorization/CategorizationRuleForm/CounterpartyMobileDrawer'
+
+type CounterpartySelectProps = {
+  label: string
+  value: BankTransactionCounterparty | null
+  onValueChange: (counterparty: BankTransactionCounterparty | null) => void
+  showLabel?: boolean
+  isReadOnly?: boolean
+  isError?: boolean
+  placeholder?: string
+  transactionDescription?: string | null
+}
+
+export const CounterpartySelect = (props: CounterpartySelectProps) => {
+  const { isMobile } = useSizeClass()
+  if (isMobile) {
+    return <CounterpartyMobileDrawer {...props} />
+  }
+  return <CounterpartyComboBox {...props} />
+}

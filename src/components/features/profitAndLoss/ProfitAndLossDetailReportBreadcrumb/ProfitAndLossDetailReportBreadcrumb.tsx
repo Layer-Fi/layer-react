@@ -1,9 +1,9 @@
 import { ChevronRight } from 'lucide-react'
 
 import { Button } from '@ui/Button/Button'
-import { HeaderCol } from '@ui/Header/HeaderCol'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
 
 export interface BreadcrumbItem {
   name: string

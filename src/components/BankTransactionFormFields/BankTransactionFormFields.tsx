@@ -9,7 +9,7 @@ import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/Ban
 import { VStack } from '@ui/Stack/Stack'
 import { BankTransactionCustomerVendorSelector } from '@components/BankTransactionCustomerVendorSelector/BankTransactionCustomerVendorSelector'
 import { BankTransactionMemo } from '@components/BankTransactions/BankTransactionMemo/BankTransactionMemo'
-import { TagDimensionsGroup } from '@components/Tags/TagDimensionsGroup/TagDimensionsGroup'
+import { TagDimensionsGroup } from '@features/tags/TagDimensionsGroup/TagDimensionsGroup'
 
 type BankTransactionFormFieldProps = {
   bankTransaction: Pick<

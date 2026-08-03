@@ -7,7 +7,7 @@ import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccoun
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'
-import { Header } from '@blocks/Layout/Container/Header'
+import { DeprecatedHeader } from '@blocks/Layout/DeprecatedHeader/DeprecatedHeader'
 import { BookkeepingStatus } from '@features/bookkeeping/BookkeepingStatus/BookkeepingStatus'
 import type { ProfitAndLossDownloadButtonStringOverrides } from '@features/profitAndLoss/ProfitAndLossDownloadButton/types'
 
@@ -38,7 +38,7 @@ export const ProfitAndLossHeader = ({
   const activePeriodStatus = activePeriod?.status
 
   return (
-    <Header className={className}>
+    <DeprecatedHeader className={className}>
       <VStack gap='xs' fluid>
         <HStack fluid justify='space-between' align='center'>
           <HStack align='center' gap='sm'>
@@ -61,6 +61,6 @@ export const ProfitAndLossHeader = ({
           <BookkeepingStatus status={activePeriodStatus} monthNumber={activePeriod.month} />
         )}
       </VStack>
-    </Header>
+    </DeprecatedHeader>
   )
 }

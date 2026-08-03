@@ -2,15 +2,14 @@ import { useTranslation } from 'react-i18next'
 
 import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { Header } from '@ui/Header/Header'
-import { HeaderCol } from '@ui/Header/HeaderCol'
-import { HeaderRow } from '@ui/Header/HeaderRow'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
+import { Header } from '@blocks/Layout/Header/Header'
+import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
+import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { View } from '@blocks/Layout/View/View'
 import { type SummaryCardInteractionProps, type SummaryCardStringOverrides } from '@blocks/SummaryCard/useSummaryCardSlots'
-import { ExpensesSummaryCard } from '@components/ExpensesSummaryCard/ExpensesSummaryCard'
-import { SolopreneurOnboardingBanner } from '@components/SolopreneurOnboardingBanner/SolopreneurOnboardingBanner'
 import { MileageTrackingSummary } from '@features/mileage/MileageTrackingSummary/MileageTrackingSummary'
+import { ExpensesSummaryCard } from '@features/profitAndLoss/ExpensesSummaryCard/ExpensesSummaryCard'
 import { ProfitAndLoss } from '@features/profitAndLoss/ProfitAndLoss/ProfitAndLoss'
 import {
   ProfitAndLossSummaries,
@@ -23,6 +22,7 @@ import {
   TaxEstimatesSummaryCard,
   TaxEstimatesSummaryCardMode,
 } from '@features/taxEstimates/TaxEstimatesSummaryCard/TaxEstimatesSummaryCard'
+import { SolopreneurOnboardingBanner } from '@views/SolopreneurOverview/SolopreneurOnboardingBanner/SolopreneurOnboardingBanner'
 
 import './solopreneurOverview.scss'
 

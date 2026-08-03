@@ -17,8 +17,8 @@ export { ProfitAndLoss } from './components/features/profitAndLoss/ProfitAndLoss
  * - Header
  * - Report
  */
-export { BalanceSheet } from './components/features/reports/BalanceSheet/BalanceSheet'
-export { StatementOfCashFlow } from './components/features/reports/StatementOfCashFlow/StatementOfCashFlow'
+export { BalanceSheet } from './components/features/balanceSheet/BalanceSheet/BalanceSheet'
+export { StatementOfCashFlow } from './components/features/cashflowStatement/StatementOfCashFlow/StatementOfCashFlow'
 
 /* ------------------ Ledger ------------------ */
 export { ChartOfAccounts } from './components/features/generalLedger/ChartOfAccounts/ChartOfAccounts'
@@ -29,7 +29,7 @@ export { Tasks } from './components/features/bookkeeping/Tasks/Tasks'
 
 /* --------------------- Onboarding ------------------------ */
 export { LinkAccounts } from './components/features/linkedAccounts/LinkAccounts/LinkAccounts'
-export { LandingPage } from './components/LandingPage/LandingPage'
+export { LandingPage } from './views/LandingPage/LandingPage'
 
 /* --------------------- Date Pickers -------------------------- */
 export { GlobalDateRangeSelection } from './components/blocks/DatePickers/DateSelection/GlobalDateRangeSelection'

@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next'
 
 import { LedgerAccountsContext } from '@contexts/LedgerAccountsContext/LedgerAccountsContext'
 import { BackButton } from '@ui/Button/BackButton'
-import { Header } from '@ui/Header/Header'
-import { HeaderCol } from '@ui/Header/HeaderCol'
-import { HeaderRow } from '@ui/Header/HeaderRow'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
+import { Header } from '@blocks/Layout/Header/Header'
+import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
+import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 
 export interface LedgerAccountHeaderProps {
   onClose: () => void

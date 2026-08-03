@@ -15,7 +15,7 @@ import { DeleteRecordedTransactionConfirmation } from '@components/BankTransacti
 import { getRecordTransactionVariant } from '@components/BankTransactions/RecordManualTransaction/formUtils'
 import { RecordTransactionForm } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionForm'
 import { type RecordTransactionVariant, useRecordTransactionForm } from '@components/BankTransactions/RecordManualTransaction/useRecordTransactionForm'
-import { isNewAccountOption } from '@components/CustomAccountComboBox/utils'
+import { isNewAccountOption } from '@features/customAccounts/CustomAccountComboBox/utils'
 
 import './recordTransactionModal.scss'
 

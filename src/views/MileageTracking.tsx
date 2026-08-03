@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 
-import { Header } from '@ui/Header/Header'
-import { HeaderCol } from '@ui/Header/HeaderCol'
-import { HeaderRow } from '@ui/Header/HeaderRow'
 import { GlobalYearPicker } from '@blocks/DatePickers/GlobalYearPicker/GlobalYearPicker'
+import { Header } from '@blocks/Layout/Header/Header'
+import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
+import { HeaderRow } from '@blocks/Layout/Header/HeaderRow'
 import { View } from '@blocks/Layout/View/View'
 import { MileageTrackingStats } from '@features/mileage/MileageTrackingStats/MileageTrackingStats'
 import { TripsRouter } from '@features/mileage/TripsRouter/TripsRouter'
