@@ -1,15 +1,15 @@
 import type { TFunction } from 'i18next'
 import { uniqBy } from 'lodash-es'
 
+import { isPlaceholderAsOption, isSplitAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
+import { isApiCategorizationAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
 import { type BankTransaction, type Split } from '@internal-types/bankTransactions'
 import { isSplitCategorization } from '@schemas/categorization'
 import { makeCustomerVendor } from '@schemas/customerVendor'
 import { makeTagFromTransactionTag } from '@schemas/tag'
+import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/bankTransactions/categorizationOption'
 import { toLocalizedCents } from '@utils/i18n/number/input'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
-import { isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { isApiCategorizationAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { convertApiCategorizationToCategoryOrSplitAsOption } from '@components/BankTransactionCategoryComboBox/utils'
 
 export enum ValidateSplitError {
   AmountsMustBeGreaterThanZero = 'AmountsMustBeGreaterThanZero',

@@ -24,12 +24,12 @@ import { BulkActionsModule } from '@blocks/BulkActionsModule/BulkActionsModule'
 import { DeprecatedHeader } from '@blocks/Layout/DeprecatedHeader/DeprecatedHeader'
 import { BankTransactionsBulkActions } from '@components/BankTransactions/BankTransactionsBulkActions/BankTransactionsBulkActions'
 import { BankTransactionsHeaderMenu, BankTransactionsHeaderMenuActions } from '@components/BankTransactions/BankTransactionsHeaderMenu'
-import { BankTransactionsTableContent } from '@components/BankTransactions/constants'
 import { RecordTransactionMenuButton } from '@components/BankTransactions/RecordManualTransaction/RecordTransactionMenuButton'
 import { SelectedBankAccountsChip } from '@components/BankTransactions/SelectedBankAccountsChip/SelectedBankAccountsChip'
 import { TransactionsSearch } from '@components/BankTransactions/TransactionsSearch/TransactionsSearch'
 import { BankTransactionsActions } from '@components/BankTransactionsActions/BankTransactionsActions'
 import { SyncingComponent } from '@components/SyncingComponent/SyncingComponent'
+import { BankTransactionsTableContent } from '@features/bankTransactions/constants'
 
 import './bankTransactionsHeader.scss'
 
@@ -38,12 +38,6 @@ export interface BankTransactionsHeaderProps {
   tableContentMode: BankTransactionsTableContent
   isSyncing?: boolean
   collapseHeader?: boolean
-}
-
-export interface BankTransactionsHeaderStringOverrides {
-  header?: string
-  /** @deprecated Download moved into the header menu and no longer supports a custom label. This override is ignored and will be removed. */
-  downloadButton?: string
 }
 
 const STATUS_TOGGLE_CONFIG = [

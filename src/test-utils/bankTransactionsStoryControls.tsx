@@ -1,7 +1,7 @@
 import { type Meta } from '@storybook/react-vite'
 
 import { DEFAULT_FEATURE_VISIBILITY } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
-import { type MobileComponentType } from '@components/BankTransactions/constants'
+import { type MobileComponentType } from '@features/bankTransactions/constants'
 
 // The bank-transactions props shared by every component that embeds the
 // transactions table (BankTransactions, BankTransactionsWithLinkedAccounts).

@@ -1,10 +1,8 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { BookkeepingStatus } from '@schemas/bookkeepingStatus'
-import {
-  BankTransactions,
-  type BankTransactionsStringOverrides,
-} from '@components/BankTransactions/BankTransactions'
+import { BankTransactions } from '@components/BankTransactions/BankTransactions'
+import { type BankTransactionsStringOverrides } from '@features/bankTransactions/types'
 
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { handlers } from '@msw/handlers'

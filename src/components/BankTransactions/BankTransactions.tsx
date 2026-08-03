@@ -30,35 +30,19 @@ import { BankTransactionsStringOverridesProvider } from '@contexts/BankTransacti
 import { CategorizationRulesContext, CategorizationRulesProvider } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
 import { InAppLinkProvider, type LinkingMetadata } from '@contexts/InAppLinkContext'
 import { Container } from '@blocks/Layout/Container/Container'
-import {
-  BankTransactionsHeader,
-  type BankTransactionsHeaderStringOverrides,
-} from '@components/BankTransactions/BankTransactionsHeader'
-import { BankTransactionsTableContent, type MobileComponentType } from '@components/BankTransactions/constants'
+import { BankTransactionsHeader } from '@components/BankTransactions/BankTransactionsHeader'
 import { BankTransactionsList } from '@components/BankTransactionsList/BankTransactionsList'
 import { BankTransactionsMobileList } from '@components/BankTransactionsMobileList/BankTransactionsMobileList'
-import {
-  BankTransactionsTable,
-  type BankTransactionsTableStringOverrides,
-} from '@components/BankTransactionsTable/BankTransactionsTable'
+import { BankTransactionsTable } from '@components/BankTransactionsTable/BankTransactionsTable'
 import { ErrorBoundary } from '@components/utility/ErrorBoundary/ErrorBoundary'
+import { BankTransactionsTableContent, type MobileComponentType } from '@features/bankTransactions/constants'
+import { type BankTransactionsStringOverrides } from '@features/bankTransactions/types'
 import { ResponsiveCategorizationRulesView } from '@features/categorization/ResponsiveCategorizationRulesView/ResponsiveCategorizationRulesView'
 import { SuggestedCategorizationRuleUpdatesDialog } from '@features/categorization/SuggestedCategorizationRuleUpdatesDialog/SuggestedCategorizationRuleUpdatesDialog'
 
 import './bankTransactions.scss'
 
 const COMPONENT_NAME = 'bank-transactions'
-
-export interface BankTransactionsStringOverrides {
-  bankTransactionCTAs?: BankTransactionCTAStringOverrides
-  transactionsTable?: BankTransactionsTableStringOverrides
-  bankTransactionsHeader?: BankTransactionsHeaderStringOverrides
-}
-
-export interface BankTransactionCTAStringOverrides {
-  approveButtonText?: string
-  updateButtonText?: string
-}
 
 export interface BankTransactionsProps {
   asWidget?: boolean

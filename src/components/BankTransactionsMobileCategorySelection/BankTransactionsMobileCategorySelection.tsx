@@ -2,7 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { GridList } from 'react-aria-components/GridList'
 import { useTranslation } from 'react-i18next'
 
+import { isPlaceholderAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
 import { type BankTransaction } from '@internal-types/bankTransactions'
+import type { TaxCodeComboBoxOption } from '@internal-types/taxCodeComboBoxOption'
 import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOptions'
@@ -10,8 +12,6 @@ import { useBankTransactionsCategorizationActions } from '@providers/BankTransac
 import { BankTransactionsFeature, useIsBankTransactionsFeatureEnabled } from '@providers/BankTransactionsFeatureVisibility/BankTransactionsFeatureVisibilityProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
-import { isPlaceholderAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import type { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 import { TaxCodeMobileDrawer } from '@components/TaxCodeSelect/TaxCodeMobileDrawer'
 import { CategorySelectDrawer } from '@features/categorization/CategorySelectDrawer/CategorySelectDrawer'
 

@@ -1,6 +1,7 @@
 import { type Key, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { isSplitAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { hasMatch } from '@utils/bankTransactions/shared'
 import { translationKey } from '@utils/i18n/translationKey'
@@ -12,7 +13,6 @@ import {
 import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
-import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { EditCustomTransactionButton } from '@components/BankTransactions/RecordManualTransaction/EditCustomTransactionButton'
 import { useIsEditableCustomTransaction } from '@components/BankTransactions/RecordManualTransaction/useIsEditableCustomTransaction'
 import { BankTransactionsMobileForms } from '@components/BankTransactionsMobileList/BankTransactionsMobileForms'

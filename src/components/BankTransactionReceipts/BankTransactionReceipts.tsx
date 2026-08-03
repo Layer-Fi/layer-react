@@ -12,16 +12,6 @@ import { FileThumb } from '@blocks/FileThumb/FileThumb'
 
 const MAX_RECEIPTS_COUNT = 10
 
-export interface DocumentWithStatus {
-  id?: string
-  url?: string
-  status: 'pending' | 'uploaded' | 'failed' | 'deleting'
-  type?: string
-  name?: string
-  date?: string
-  error?: string
-}
-
 export interface BankTransactionReceiptsProps {
   classNamePrefix?: string
   floatingActions?: boolean

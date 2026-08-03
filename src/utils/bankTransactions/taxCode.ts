@@ -1,7 +1,7 @@
+import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { type BankTransactionTaxOption } from '@schemas/bankTransactions/bankTransaction'
 import { isClassificationExclusion } from '@schemas/categorization'
-import { type BankTransactionCategoryComboBoxOption, isPlaceholderAsOption, isSplitAsOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export const getBankTransactionTaxOptions = (bankTransaction?: BankTransaction): BankTransactionTaxOption[] => {
   if (!bankTransaction?.taxOptions) return []

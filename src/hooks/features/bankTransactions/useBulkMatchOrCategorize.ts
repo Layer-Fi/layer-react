@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 
+import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
 import { type Split } from '@internal-types/bankTransactions'
 import {
   type BulkMatchOrCategorizeRequest,
@@ -9,7 +10,6 @@ import { usePostBulkMatchOrCategorize } from '@api/businesses/[business-id]/bank
 import { type BankTransactionCategorization, BankTransactionSelectionVariant, DEFAULT_CATEGORIZATION, useGetAllBankTransactionsCategorizations } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useSelectedIds } from '@providers/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { type BankTransactionCategoryComboBoxOption, isApiCategorizationAsOption, isCategoryAsOption, isPlaceholderAsOption, isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 type MatchOrCategorizeTransaction = typeof MatchOrCategorizeTransactionRequestSchema.Type
 

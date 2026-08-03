@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import { File } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { type BankTransactionCategoryComboBoxOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import {
   hasReceipts,
@@ -26,7 +27,6 @@ import { ErrorText } from '@ui/Typography/ErrorText'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { BankTransactionsListItemCategory } from '@components/BankTransactions/BankTransactionsListItemCategory/BankTransactionsListItemCategory'
 import { BankTransactionsSubmitButton } from '@components/BankTransactions/BankTransactionsSubmitButton'
 import { EditCustomTransactionButton } from '@components/BankTransactions/RecordManualTransaction/EditCustomTransactionButton'

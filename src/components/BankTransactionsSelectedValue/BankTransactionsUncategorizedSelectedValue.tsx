@@ -1,6 +1,6 @@
-import { type BankTransactionCategoryComboBoxOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
-import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
+import { type BankTransactionCategoryComboBoxOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
+import { isSuggestedMatchAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
+import { isSplitAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
 import { BankTransactionsBaseSelectedValue, type BankTransactionsBaseSelectedValueProps } from '@components/BankTransactionsSelectedValue/BankTransactionsBaseSelectedValue'
 
 type BankTransactionsUncategorizedSelectedValueProps = {

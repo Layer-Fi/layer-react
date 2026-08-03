@@ -1,14 +1,11 @@
 import type { TFunction } from 'i18next'
 
 import type { BankTransaction, SuggestedMatch } from '@internal-types/bankTransactions'
-import { ApiCategorizationAsOption, PlaceholderAsOption, SplitAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
+import { PlaceholderAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { CategorizationStatus, InputStrategy } from '@schemas/bankTransactions/bankTransaction'
-import { type Categorization, isSplitCategorization } from '@schemas/categorization'
-import { makeCustomerVendor } from '@schemas/customerVendor'
-import { makeTagFromTransactionTag } from '@schemas/tag'
+import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/bankTransactions/categorizationOption'
 import { hasSuggestions } from '@utils/bankTransactions/shared'
 import { translationKey } from '@utils/i18n/translationKey'
-import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
 
 export enum BankTransactionCategoryComboBoxGroup {
   TRANSFER = 'TRANSFER',
@@ -38,22 +35,6 @@ export const getGroupDisplayLabel = (label: string | undefined, t: TFunction): s
 
 export const isBoldGroupLabel = (label: string | undefined): boolean =>
   label !== undefined && BOLD_GROUP_LABELS.has(label as BankTransactionCategoryComboBoxGroup)
-
-export const convertApiCategorizationToCategoryOrSplitAsOption = (categorization: Categorization): BankTransactionNonSuggestedMatchOption => {
-  if (isSplitCategorization(categorization)) {
-    const splits = categorization.entries.map(splitEntry => ({
-      amount: splitEntry.amount || 0,
-      category: splitEntry.category ? new ApiCategorizationAsOption(splitEntry.category) : null,
-      taxCode: splitEntry.taxCode ?? null,
-      tags: splitEntry.tags?.map(makeTagFromTransactionTag) ?? [],
-      customerVendor: makeCustomerVendor(splitEntry.customer, splitEntry.vendor),
-    }))
-
-    return new SplitAsOption(splits)
-  }
-
-  return new ApiCategorizationAsOption(categorization)
-}
 
 const hasOnlyTransferMatches = (bankTransaction: BankTransaction) => {
   return bankTransaction.suggestedMatches?.every(x => x.details.type === 'Transfer_Match') ?? false

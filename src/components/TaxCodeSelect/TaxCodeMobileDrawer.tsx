@@ -1,8 +1,8 @@
 import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { type TaxCodeComboBoxOption } from '@internal-types/taxCodeComboBoxOption'
 import { MobileSelectionDrawerWithTrigger } from '@blocks/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
-import { type TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 import { type TaxCodeSelectCommonProps } from '@components/TaxCodeSelect/types'
 import { useTaxCodeSelect } from '@components/TaxCodeSelect/useTaxCodeSelect'
 

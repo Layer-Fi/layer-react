@@ -28,17 +28,9 @@ import { BankTransactionAccountCell } from '@components/BankTransactionsTable/Ba
 import { BankTransactionCategoryCell } from '@components/BankTransactionsTable/BankTransactionCategoryCell'
 import { BankTransactionDescriptionCell } from '@components/BankTransactionsTable/BankTransactionDescriptionCell'
 import { ExpandedBankTransactionRow } from '@components/ExpandedBankTransactionRow/ExpandedBankTransactionRow'
+import { type BankTransactionsTableStringOverrides } from '@features/bankTransactions/types'
 
 import './bankTransactionsTable.scss'
-
-export interface BankTransactionsTableStringOverrides {
-  dateColumnHeaderText?: string
-  transactionColumnHeaderText?: string
-  accountColumnHeaderText?: string
-  amountColumnHeaderText?: string
-  categorizeColumnHeaderText?: string
-  categoryColumnHeaderText?: string
-}
 
 const COMPONENT_NAME = 'BankTransactionsTable'
 

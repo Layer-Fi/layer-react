@@ -56,16 +56,6 @@ export type ExpandedRowState = {
   file: unknown
 }
 
-export interface DocumentWithStatus {
-  id?: string
-  url?: string
-  status: 'pending' | 'uploaded' | 'failed' | 'deleting'
-  type?: string
-  name?: string
-  date?: string
-  error?: string
-}
-
 type ExpandedBankTransactionRowProps = {
   bankTransaction: BankTransaction
   asListItem?: boolean

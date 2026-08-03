@@ -1,8 +1,8 @@
+import { isSplitAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
 import {
   type BankTransactionCategorization,
   BankTransactionSelectionVariant,
 } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import { isSplitAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export enum Purpose {
   business = 'business',

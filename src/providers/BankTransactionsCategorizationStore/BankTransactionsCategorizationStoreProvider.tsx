@@ -1,10 +1,10 @@
 import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { createStore, useStore } from 'zustand'
 
+import { type BankTransactionCategoryComboBoxOption, isSuggestedMatchAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
 import type { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
-import { type BankTransactionCategoryComboBoxOption, isSuggestedMatchAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 
 export enum BankTransactionSelectionVariant {
   MATCH = 'MATCH',

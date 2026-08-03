@@ -1,6 +1,8 @@
 import { useCallback, useId, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { isApiCategorizationAsOption, isCategoryAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
+import type { TaxCodeComboBoxOption } from '@internal-types/taxCodeComboBoxOption'
 import { canCategoryHaveTaxCode, resolveCategoryTaxCode } from '@utils/bankTransactions/taxCode'
 import { tPlural } from '@utils/i18n/plural'
 import { useBulkCategorizeBankTransactions } from '@hooks/features/bankTransactions/useBulkBankTransactionMutations'
@@ -13,9 +15,7 @@ import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 import { BankTransactionCategoryComboBox } from '@components/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
-import { isApiCategorizationAsOption, isCategoryAsOption } from '@components/BankTransactionCategoryComboBox/bankTransactionCategoryComboBoxOption'
 import { getBankTransactionsById, getFirstBankTransactionWithTaxOptions, getSelectedBankTransactions } from '@components/BankTransactions/BankTransactionsBulkActions/utils'
-import type { TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 import { TaxCodeSelect } from '@components/TaxCodeSelect/TaxCodeSelect'
 import { CategorySelectDrawerWithTrigger } from '@features/categorization/CategorySelectDrawerWithTrigger/CategorySelectDrawerWithTrigger'
 

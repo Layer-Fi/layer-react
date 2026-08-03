@@ -1,5 +1,5 @@
+import { type TaxCodeComboBoxOption } from '@internal-types/taxCodeComboBoxOption'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { type TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
 import { type TaxCodeSelectCommonProps } from '@components/TaxCodeSelect/types'
 import { useTaxCodeSelect } from '@components/TaxCodeSelect/useTaxCodeSelect'
 

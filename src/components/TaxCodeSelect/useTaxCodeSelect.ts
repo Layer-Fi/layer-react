@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { NO_TAX_CODE, TaxCodeComboBoxOption } from '@components/TaxCodeSelect/taxCodeComboBoxOption'
+import { NO_TAX_CODE, TaxCodeComboBoxOption } from '@internal-types/taxCodeComboBoxOption'
 
 type UseTaxCodeSelectParams = {
   options?: ReadonlyArray<TaxCodeComboBoxOption>
