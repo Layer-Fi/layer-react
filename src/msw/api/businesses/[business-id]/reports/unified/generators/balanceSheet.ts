@@ -1,8 +1,9 @@
 import { sumBy } from 'lodash-es'
 
+import { Pinning } from '@internal-types/utility/table'
 import { LedgerAccountType, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { type ReportConfig } from '@schemas/reports/reportConfig'
-import { Pinning, type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
+import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import {
   accountForestRows,

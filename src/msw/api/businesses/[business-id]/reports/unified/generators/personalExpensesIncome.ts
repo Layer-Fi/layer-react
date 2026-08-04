@@ -1,4 +1,5 @@
-import { Pinning, type UnifiedReport } from '@schemas/reports/unifiedReport'
+import { Pinning } from '@internal-types/utility/table'
+import { type UnifiedReport } from '@schemas/reports/unifiedReport'
 
 import { reportRangeFromParams } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'
 import { generateTableReport } from '@msw/api/businesses/[business-id]/reports/unified/generators/tableReport'

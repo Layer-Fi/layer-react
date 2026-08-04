@@ -1,6 +1,7 @@
 import { subDays, subMonths } from 'date-fns'
 
-import { Pinning, type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
+import { Pinning } from '@internal-types/utility/table'
+import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import { netIncomeInRange } from '@msw/api/businesses/[business-id]/reports/unified/generators/balances'
 import { reportRangeFromParams } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'

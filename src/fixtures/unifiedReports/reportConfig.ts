@@ -53,12 +53,6 @@ export const defaultReportGroups: readonly ReportGroup[] = [
         displayName: 'A/R Aging',
         controls: [ReportControl.Date],
       }),
-      makeReport({
-        key: 'AP_AGING',
-        reportRoute: 'ap-aging',
-        displayName: 'A/P Aging',
-        controls: [ReportControl.Date],
-      }),
     ],
   },
   {

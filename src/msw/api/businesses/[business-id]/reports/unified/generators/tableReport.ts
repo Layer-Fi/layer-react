@@ -1,11 +1,8 @@
 import { sumBy } from 'lodash-es'
 
+import { type Pinning } from '@internal-types/utility/table'
 import { type ReportConfig } from '@schemas/reports/reportConfig'
-import {
-  type Pinning,
-  type UnifiedReport,
-  type UnifiedReportRow,
-} from '@schemas/reports/unifiedReport'
+import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import {
   currencyCell,

@@ -1,6 +1,6 @@
 import { type UnifiedReport } from '@schemas/reports/unifiedReport'
 
-import { generateApAging, generateArAging } from '@msw/api/businesses/[business-id]/reports/unified/generators/aging'
+import { generateArAging } from '@msw/api/businesses/[business-id]/reports/unified/generators/aging'
 import { generateBalanceSheet } from '@msw/api/businesses/[business-id]/reports/unified/generators/balanceSheet'
 import {
   generateBusinessExpenses,
@@ -33,7 +33,6 @@ export const unifiedReportGenerators: Readonly<Record<string, UnifiedReportGener
   'trial-balance': generateTrialBalance,
   'trial-balance/lines': generateLineItemDetail,
   'ar-aging': generateArAging,
-  'ap-aging': generateApAging,
   'business-expenses': generateBusinessExpenses,
   'personal-expenses': generatePersonalExpenses,
   'business-income': generateBusinessIncome,

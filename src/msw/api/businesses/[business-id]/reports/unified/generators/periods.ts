@@ -1,8 +1,9 @@
 import { eachMonthOfInterval, eachYearOfInterval, endOfMonth, endOfYear, format, max, min, startOfMonth, startOfYear } from 'date-fns'
 import { sumBy } from 'lodash-es'
 
+import { Pinning } from '@internal-types/utility/table'
 import { type ReportConfig } from '@schemas/reports/reportConfig'
-import { DateGroupBy, Pinning, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
+import { DateGroupBy, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import {
   currencyCell,

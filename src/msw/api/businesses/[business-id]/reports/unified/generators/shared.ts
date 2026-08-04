@@ -1,15 +1,9 @@
 import { format, subMonths } from 'date-fns'
 
+import { Alignment, Pinning } from '@internal-types/utility/table'
 import { LedgerAccountType, LedgerEntryDirection, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { type ReportConfig, type ReportControl } from '@schemas/reports/reportConfig'
-import {
-  Alignment,
-  Pinning,
-  type UnifiedReport,
-  type UnifiedReportCell,
-  type UnifiedReportColumn,
-  type UnifiedReportRow,
-} from '@schemas/reports/unifiedReport'
+import { type UnifiedReport, type UnifiedReportCell, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import { parseDateParam } from '@msw/utils/parseDateParam'
 import { type EntryStreamOptions } from '@fixtures/unifiedReports/deterministicAmounts'

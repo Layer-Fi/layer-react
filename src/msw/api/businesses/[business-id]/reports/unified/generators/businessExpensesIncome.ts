@@ -1,6 +1,7 @@
+import { Pinning } from '@internal-types/utility/table'
 import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { ReportControl } from '@schemas/reports/reportConfig'
-import { Pinning, type UnifiedReport } from '@schemas/reports/unifiedReport'
+import { type UnifiedReport } from '@schemas/reports/unifiedReport'
 
 import {
   accountActivityCents,

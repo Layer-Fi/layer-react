@@ -2,12 +2,11 @@ import { differenceInDays } from 'date-fns'
 import { sum } from 'lodash-es'
 
 import { type UnifiedReport } from '@schemas/reports/unifiedReport'
-import { getInvoiceCustomerName } from '@utils/customerVendor'
+import { getInvoiceCustomerName } from '@utils/customer'
 
 import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
 import { parseEffectiveDateParam } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 import { generateTableReport } from '@msw/api/businesses/[business-id]/reports/unified/generators/tableReport'
-import { allBills } from '@fixtures/bills/mocks'
 
 const BUCKETS = [
   { key: 'current', label: 'Current', max: 30 },
@@ -19,7 +18,7 @@ const BUCKETS = [
 type AgingItem = { entityName: string, dueAt: Date, amountCents: number }
 
 const bucketIndexForDaysPastDue = (daysPastDue: number) =>
-  BUCKETS.findIndex(bucket => daysPastDue <= bucket.max)
+  Math.max(0, BUCKETS.findIndex(bucket => daysPastDue <= bucket.max))
 
 const buildAgingReport = (
   entityColumnKey: string,
@@ -30,9 +29,8 @@ const buildAgingReport = (
   const byEntity = new Map<string, number[]>()
 
   items.forEach((item) => {
-    const bucketIndex = Math.max(0, bucketIndexForDaysPastDue(differenceInDays(effectiveDate, item.dueAt)))
     const amounts = byEntity.get(item.entityName) ?? BUCKETS.map(() => 0)
-    amounts[bucketIndex] += item.amountCents
+    amounts[bucketIndexForDaysPastDue(differenceInDays(effectiveDate, item.dueAt))] += item.amountCents
     byEntity.set(item.entityName, amounts)
   })
 
@@ -70,14 +68,4 @@ export const generateArAging = (params: URLSearchParams): UnifiedReport => {
     }))
 
   return buildAgingReport('customer', 'Customer', items, parseEffectiveDateParam(params))
-}
-
-export const generateApAging = (params: URLSearchParams): UnifiedReport => {
-  const items: AgingItem[] = allBills.map(bill => ({
-    entityName: bill.vendorName,
-    dueAt: bill.dueAt,
-    amountCents: bill.outstandingBalanceCents,
-  }))
-
-  return buildAgingReport('vendor', 'Vendor', items, parseEffectiveDateParam(params))
 }
