@@ -155,6 +155,9 @@ export const entryStreamOptionsFromParams = (
 })
 
 export const accountFlow = (account: SingleChartAccountType): EntryFlow | undefined => {
+  if (account.accountSubtype?.value === 'DISTRIBUTIONS') return 'moneyOut'
+  if (account.accountSubtype?.value === 'CONTRIBUTIONS') return 'moneyIn'
+
   switch (account.accountType.value) {
     case LedgerAccountType.Revenue:
       return 'moneyIn'

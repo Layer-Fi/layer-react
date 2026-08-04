@@ -1,89 +1,50 @@
+import { type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { type UnifiedReport } from '@schemas/reports/unifiedReport'
 
-import {
-  flatGroupedReport,
-} from '@msw/api/businesses/[business-id]/reports/unified/generators/flatGrouped'
+import { ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import { reportRangeFromParams } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'
+import { totalRowLabel } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 import {
-  type ColumnHeaderKey,
-  currencyCell,
-  dateCell,
-  emptyCell,
-  isoDate,
-  textCell,
-  totalRowLabel,
-} from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
-import { entriesInRange, type EntryFlow } from '@fixtures/unifiedReports/deterministicAmounts'
+  type Counterparty,
+  customerCandidates,
+  transactionLineItems,
+  transactionReport,
+  vendorCandidates,
+} from '@msw/api/businesses/[business-id]/reports/unified/generators/transactions'
 
-const PERSONAL_EXPENSE_CATEGORIES = ['Groceries', 'Rent', 'Personal Care', 'Health & Wellness', 'Entertainment', 'Dining Out']
-const PERSONAL_INCOME_CATEGORIES = ['W-2 Salary', 'Interest Income', 'Dividends', 'Gifts']
+const accountsOfSubtype = (subtype: string): SingleChartAccountType[] =>
+  ledgerAccountStore.all().filter(account => account.accountSubtype?.value === subtype)
 
-type PersonalLineItem = {
-  lineItemId: string
-  date: Date
-  accountName: string
-  description: string
-  amountCents: number
-}
-
-// The chart fixture has no personal accounts, so each category drives its own entry stream.
 const generatePersonalReport = (
   params: URLSearchParams,
-  categories: readonly string[],
-  keyPrefix: string,
+  subtype: string,
   counterpartyColumn: 'vendor' | 'customer',
-  flow: EntryFlow,
+  candidates: Counterparty[],
   total: { rowKey: string, label: string },
-): UnifiedReport => {
-  const { startDate, endDate } = reportRangeFromParams(params)
-
-  const items: PersonalLineItem[] = categories
-    .flatMap(category => entriesInRange(`${keyPrefix}:${category}`, startDate, endDate, { magnitude: 2, flow })
-      .map((entry, index) => ({
-        lineItemId: `${keyPrefix}:${category}:${isoDate(entry.date)}:${index}`,
-        date: entry.date,
-        accountName: category,
-        description: entry.description,
-        amountCents: entry.amountCents,
-      })))
-    .sort((a, b) => a.date.getTime() - b.date.getTime() || a.lineItemId.localeCompare(b.lineItemId))
-
-  const columns: ColumnHeaderKey[] = ['date', 'account', counterpartyColumn, 'description', 'amount']
-
-  return flatGroupedReport({
-    columns,
-    measureColumn: 'amount',
-    items,
-    rowFor: item => ({
-      rowKey: item.lineItemId,
-      cells: {
-        date: dateCell(item.date),
-        account: textCell(item.accountName),
-        [counterpartyColumn]: emptyCell(),
-        description: textCell(item.description),
-        amount: currencyCell(item.amountCents),
-      },
-    }),
-    subtotalCell: (groupItems, options) =>
-      currencyCell(groupItems.reduce((sum, item) => sum + item.amountCents, 0), options),
-    total,
-  })
-}
+): UnifiedReport => transactionReport({
+  counterpartyColumn,
+  items: transactionLineItems({
+    accounts: accountsOfSubtype(subtype),
+    candidates,
+    range: reportRangeFromParams(params),
+    params,
+    unsigned: true,
+  }),
+  total,
+})
 
 export const generatePersonalExpenses = (params: URLSearchParams) => generatePersonalReport(
   params,
-  PERSONAL_EXPENSE_CATEGORIES,
-  'personal_expense',
+  'DISTRIBUTIONS',
   'vendor',
-  'moneyOut',
+  vendorCandidates(),
   { rowKey: 'personal_expenses', label: totalRowLabel('Personal Expenses') },
 )
 
 export const generatePersonalIncome = (params: URLSearchParams) => generatePersonalReport(
   params,
-  PERSONAL_INCOME_CATEGORIES,
-  'personal_income',
+  'CONTRIBUTIONS',
   'customer',
-  'moneyIn',
+  customerCandidates(),
   { rowKey: 'personal_income', label: totalRowLabel('Personal Income') },
 )
