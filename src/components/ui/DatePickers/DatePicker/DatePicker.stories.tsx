@@ -28,7 +28,7 @@ const Picker = (props: Partial<PickerProps>) => (
 )
 
 const meta: Meta<PickerProps> = {
-  title: 'Date/DatePicker',
+  title: 'UI/DatePickers/DatePicker',
   component: DatePicker,
   decorators: [
     Story => (

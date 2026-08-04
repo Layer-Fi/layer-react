@@ -13,8 +13,8 @@
     width: 100%;
   }
 
-  &--inline .Layer__TripForm__Field {
-    grid-template-columns: 10rem auto;
+  &--inline {
+    --form-field-label-inline-size: 10rem;
   }
 
   .Layer__TripForm__FieldError {

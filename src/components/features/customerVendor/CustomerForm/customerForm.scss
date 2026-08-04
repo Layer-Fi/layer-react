@@ -13,11 +13,13 @@
     padding-block-start: 1rem;
   }
 
+  --form-field-label-inline-size: 10rem;
+  --form-field-control-inline-size: auto;
+
   .Layer__CustomerForm__Field__IndividualName,
   .Layer__CustomerForm__Field__CompanyName,
   .Layer__CustomerForm__Field__Email,
   .Layer__CustomerForm__Field__Address {
-    grid-template-columns: 10rem auto;
     width: 100%;
   }
 }

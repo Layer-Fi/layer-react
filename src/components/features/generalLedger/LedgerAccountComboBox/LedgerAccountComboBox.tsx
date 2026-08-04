@@ -1,5 +1,4 @@
-import { useCallback, useId, useMemo } from 'react'
-import classNames from 'classnames'
+import { useCallback, useMemo } from 'react'
 
 import { type CategoryAsOption } from '@internal-types/categorizationOption'
 import { type CategoriesListMode, type Classification } from '@schemas/categorization'
@@ -7,9 +6,7 @@ import { findCategoryOption } from '@utils/categories'
 import { flattenCategories, withoutExclusions } from '@utils/categoryOptions'
 import { useGetCategories } from '@api/businesses/[business-id]/categories/get'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { Label } from '@ui/Typography/Text'
-
-import './ledgerAccountComboBox.scss'
+import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 
 type LedgerAccountComboBoxProps = {
   label: string
@@ -55,27 +52,21 @@ export const LedgerAccountComboBox = ({
     onValueChange(option?.classification ?? null)
   }, [onValueChange])
 
-  const inputId = useId()
-  const additionalAriaProps = !showLabel && { 'aria-label': label }
   return (
-    <div className={classNames('Layer__LedgerAccountComboBox', inline && 'Layer__LedgerAccountComboBox--inline', className)}>
-      {showLabel && (
-        <Label size='sm' htmlFor={inputId}>
-          {label}
-        </Label>
+    <ComboBoxField label={label} className={className} inline={inline} showLabel={showLabel}>
+      {controlProps => (
+        <ComboBox
+          {...controlProps}
+          groups={groups}
+          onSelectedValueChange={onSelectedValueChange}
+          selectedValue={selectedCategory}
+          placeholder={placeholder}
+          isReadOnly={isReadOnly}
+          isInvalid={isInvalid}
+          isLoading={isLoading}
+          isClearable={false}
+        />
       )}
-      <ComboBox
-        groups={groups}
-        onSelectedValueChange={onSelectedValueChange}
-        selectedValue={selectedCategory}
-        inputId={inputId}
-        placeholder={placeholder}
-        isReadOnly={isReadOnly}
-        isInvalid={isInvalid}
-        isLoading={isLoading}
-        isClearable={false}
-        {...additionalAriaProps}
-      />
-    </div>
+    </ComboBoxField>
   )
 }

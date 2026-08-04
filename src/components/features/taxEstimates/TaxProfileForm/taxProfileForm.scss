@@ -17,6 +17,7 @@
   }
 
   .Layer__TaxProfileForm__Field--desktop {
-    grid-template-columns: 16rem minmax(auto, 24rem);
+    --form-field-label-inline-size: 16rem;
+    --form-field-control-inline-size: minmax(auto, 24rem);
   }
 }

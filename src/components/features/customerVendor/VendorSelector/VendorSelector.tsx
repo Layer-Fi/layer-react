@@ -1,5 +1,4 @@
-import { useCallback, useId, useMemo } from 'react'
-import classNames from 'classnames'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Vendor } from '@schemas/vendor'
@@ -7,11 +6,9 @@ import { getVendorName } from '@utils/vendor'
 import { useGetListVendors } from '@api/businesses/[business-id]/vendors/get'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { VStack } from '@ui/Stack/Stack'
-import { Label, P } from '@ui/Typography/Text'
+import { P } from '@ui/Typography/Text'
+import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 import { VendorAsOption } from '@features/customerVendor/VendorSelector/VendorAsOption'
-
-import './vendorSelector.scss'
 
 type VendorSelectorProps = {
   selectedVendor: Vendor | null
@@ -41,11 +38,6 @@ export function VendorSelector({
 }: VendorSelectorProps) {
   const { t } = useTranslation()
   const resolvedLabel = label ?? t('customerVendor:label.vendor', 'Vendor')
-  const combinedClassName = classNames(
-    'Layer__VendorSelector',
-    inline && 'Layer__VendorSelector--inline',
-    className,
-  )
 
   const { searchQuery, handleInputChange } = useDebouncedSearchInput({
     initialInputState: () => '',
@@ -83,31 +75,30 @@ export function VendorSelector({
     [options, handleInputChange, selectedVendor, onSelectedVendorChange],
   )
 
-  const inputId = useId()
   const isLoadingWithoutFallback = isLoading && !flattenedData
 
   return (
-    <VStack className={combinedClassName}>
-      {showLabel && <Label htmlFor={inputId} size='sm'>{resolvedLabel}</Label>}
-      <ComboBox
-        options={options}
-        selectedValue={selectedVendorForComboBox}
-        onSelectedValueChange={handleSelectionChange}
-        onInputValueChange={handleInputChange}
-        inputId={inputId}
-        placeholder={placeholder}
-        isDisabled={isLoadingWithoutFallback || isError}
-        isError={isError}
-        isInvalid={isInvalid}
-        isLoading={isLoadingWithoutFallback}
-        isReadOnly={isReadOnly}
-        isClearable
-        slots={{
-          EmptyMessage: <P variant='subtle'>{t('customerVendor:empty.matching_vendors', 'No matching vendors')}</P>,
-          ErrorMessage: t('customerVendor:error.load_vendors', 'An error occurred while loading vendors.'),
-        }}
-        aria-label={showLabel ? undefined : resolvedLabel}
-      />
-    </VStack>
+    <ComboBoxField label={resolvedLabel} className={className} inline={inline} showLabel={showLabel}>
+      {controlProps => (
+        <ComboBox
+          {...controlProps}
+          options={options}
+          selectedValue={selectedVendorForComboBox}
+          onSelectedValueChange={handleSelectionChange}
+          onInputValueChange={handleInputChange}
+          placeholder={placeholder}
+          isDisabled={isLoadingWithoutFallback || isError}
+          isError={isError}
+          isInvalid={isInvalid}
+          isLoading={isLoadingWithoutFallback}
+          isReadOnly={isReadOnly}
+          isClearable
+          slots={{
+            EmptyMessage: <P variant='subtle'>{t('customerVendor:empty.matching_vendors', 'No matching vendors')}</P>,
+            ErrorMessage: t('customerVendor:error.load_vendors', 'An error occurred while loading vendors.'),
+          }}
+        />
+      )}
+    </ComboBoxField>
   )
 }

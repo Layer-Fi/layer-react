@@ -1,5 +1,4 @@
-import { useCallback, useId, useMemo } from 'react'
-import classNames from 'classnames'
+import { useCallback, useMemo } from 'react'
 import { type TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
@@ -7,11 +6,8 @@ import { type Vehicle } from '@schemas/vehicle'
 import { getVehicleDisplayName } from '@utils/vehicles'
 import { useGetVehicles } from '@api/businesses/[business-id]/mileage/vehicles/get'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { VStack } from '@ui/Stack/Stack'
 import { P } from '@ui/Typography/Text'
-import { Label } from '@ui/Typography/Text'
-
-import './vehicleSelector.scss'
+import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 
 class VehicleAsOption {
   private internalVehicle: Vehicle
@@ -68,11 +64,6 @@ export function VehicleSelector({
   showLabel = true,
 }: VehicleSelectorProps) {
   const { t } = useTranslation()
-  const combinedClassName = classNames(
-    'Layer__VehicleSelector',
-    inline && 'Layer__VehicleSelector--inline',
-    containerClassName,
-  )
 
   const { data, isLoading, isError } = useGetVehicles()
 
@@ -106,33 +97,35 @@ export function VehicleSelector({
 
   const ErrorMessage = t('vehicles:error.load_vehicles', 'An error occurred while loading vehicles.')
 
-  const inputId = useId()
-  const additionalAriaProps = !showLabel && { 'aria-label': t('vehicles:label.vehicle', 'Vehicle') }
-
   const isLoadingWithoutFallback = isLoading && !data
   const shouldDisableComboBox = isLoadingWithoutFallback || isError
 
   return (
-    <VStack className={combinedClassName}>
-      {showLabel && <Label htmlFor={inputId} size='sm'>{t('vehicles:label.vehicle', 'Vehicle')}</Label>}
-      <ComboBox
-        selectedValue={selectedVehicleForComboBox}
-        onSelectedValueChange={onSelectedValueChange}
+    <ComboBoxField
+      label={t('vehicles:label.vehicle', 'Vehicle')}
+      className={containerClassName}
+      inline={inline}
+      showLabel={showLabel}
+    >
+      {controlProps => (
+        <ComboBox
+          {...controlProps}
+          selectedValue={selectedVehicleForComboBox}
+          onSelectedValueChange={onSelectedValueChange}
 
-        options={options}
+          options={options}
 
-        inputId={inputId}
-        placeholder={placeholder}
-        slots={{ EmptyMessage, ErrorMessage }}
+          placeholder={placeholder}
+          slots={{ EmptyMessage, ErrorMessage }}
 
-        isDisabled={shouldDisableComboBox}
-        isError={isError}
-        isLoading={isLoadingWithoutFallback}
-        isReadOnly={isReadOnly}
-        isSearchable
-        className={className}
-        {...additionalAriaProps}
-      />
-    </VStack>
+          isDisabled={shouldDisableComboBox}
+          isError={isError}
+          isLoading={isLoadingWithoutFallback}
+          isReadOnly={isReadOnly}
+          isSearchable
+          className={className}
+        />
+      )}
+    </ComboBoxField>
   )
 }

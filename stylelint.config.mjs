@@ -22,6 +22,7 @@ export default {
           'if',
           'include',
           'mixin',
+          'use',
           'while',
         ],
       },

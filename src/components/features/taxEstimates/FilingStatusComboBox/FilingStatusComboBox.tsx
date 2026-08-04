@@ -1,14 +1,10 @@
-import { useCallback, useId, useMemo } from 'react'
-import classNames from 'classnames'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { FilingStatus } from '@schemas/taxEstimates/filingStatus'
 import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { HStack } from '@ui/Stack/Stack'
-import { Label } from '@ui/Typography/Text'
-
-import './filingStatusComboBox.scss'
+import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 
 const FILING_STATUS_CONFIG = [
   { value: FilingStatus.SINGLE, ...translationKey('taxEstimates:label.single', 'Single') },
@@ -36,12 +32,6 @@ export const FilingStatusComboBox = ({
   inline,
 }: FilingStatusComboBoxProps) => {
   const { t } = useTranslation()
-  const combinedClassName = classNames(
-    'Layer__FilingStatusComboBox',
-    inline && 'Layer__FilingStatusComboBox--inline',
-    className,
-  )
-
   const options = useMemo<FilingStatusOption[]>(
     () => FILING_STATUS_CONFIG.map(opt => ({
       value: opt.value,
@@ -60,22 +50,19 @@ export const FilingStatusComboBox = ({
     onChange(option ? option.value : null)
   }, [onChange])
 
-  const inputId = useId()
-
   return (
-    <HStack className={combinedClassName}>
-      <Label size='sm' htmlFor={inputId}>
-        {t('taxEstimates:label.filing_status', 'Filing status')}
-      </Label>
-      <ComboBox<FilingStatusOption>
-        options={options}
-        selectedValue={selectedValue}
-        onSelectedValueChange={handleChange}
-        inputId={inputId}
-        isSearchable={false}
-        isClearable
-        isReadOnly={isReadOnly}
-      />
-    </HStack>
+    <ComboBoxField label={t('taxEstimates:label.filing_status', 'Filing status')} className={className} inline={inline}>
+      {controlProps => (
+        <ComboBox<FilingStatusOption>
+          {...controlProps}
+          options={options}
+          selectedValue={selectedValue}
+          onSelectedValueChange={handleChange}
+          isSearchable={false}
+          isClearable
+          isReadOnly={isReadOnly}
+        />
+      )}
+    </ComboBoxField>
   )
 }

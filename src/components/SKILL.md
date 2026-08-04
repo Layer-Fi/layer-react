@@ -11,7 +11,7 @@ applies_to: src/components/**, src/views/**
 | Layer | Path | Alias | Knows about |
 | --- | --- | --- | --- |
 | **Primitives** | `src/components/ui/**` | `@ui/*` | nothing domain-specific — see [`ui/SKILL.md`](ui/SKILL.md) |
-| **Blocks** | `src/components/blocks/**` | `@blocks/*` | composed patterns (`DataTable`, `SummaryCard`, `Wizard`, `ActionableList`) — still domain-agnostic |
+| **Blocks** | `src/components/blocks/**` | `@blocks/*` | composed patterns (`DataTable`, `SummaryCard`, `Wizard`, `ActionableList`, the `Form*Field` set) — still domain-agnostic |
 | **Features** | `src/components/features/<domain>/**` | `@features/*` | one domain; fetches its own data via hooks |
 | **Views** | `src/views/**` | `@views/*` | full pages composing features and mounting providers |
 | **Utilities** | `src/components/utility/**` | `@components/utility/*` | rendering helpers, not UI |
@@ -47,7 +47,7 @@ Inside a domain the layout is flat, so **a component's path is its name**:
 A component that is *not* domain-specific belongs in `@ui` (primitive), `@blocks` (composed
 pattern), or `@components/utility` (rendering helper).
 
-> `src/components/` holds only `blocks`, `features`, `forms`, `ui`, and `utility`. Nothing else
+> `src/components/` holds only `blocks`, `features`, `ui`, and `utility`. Nothing else
 > belongs at that level — a new component goes in one of those, never beside them.
 
 ## File conventions
@@ -156,7 +156,7 @@ pre-bound `Form*Field` components — never a raw input wired to `useState`. Spl
 hook that owns state and submission and a component that renders fields.
 
 Full guide — field components, validators, the three error layers, submit wiring:
-[`forms/SKILL.md`](forms/SKILL.md).
+[`blocks/Form/SKILL.md`](blocks/Form/SKILL.md).
 
 ## Tables
 

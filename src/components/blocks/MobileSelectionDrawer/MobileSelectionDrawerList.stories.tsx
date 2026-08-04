@@ -26,7 +26,7 @@ const CELLS: { label: string, props: Partial<ListProps> }[] = [
 ]
 
 const meta: Meta<ListProps> = {
-  title: 'UI/MobileSelectionDrawerList',
+  title: 'Blocks/MobileSelectionDrawer/List',
   component: MobileSelectionDrawerList,
   args: {
     ariaLabel: 'Reports',

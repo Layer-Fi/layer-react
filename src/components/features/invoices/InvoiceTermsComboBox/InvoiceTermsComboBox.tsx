@@ -1,4 +1,4 @@
-import { useCallback, useId, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
 import { differenceInDays, startOfDay } from 'date-fns'
 import { useTranslation } from 'react-i18next'
@@ -6,8 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { InvoiceTermsValues } from '@schemas/invoices/invoiceTerms'
 import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
-import { HStack } from '@ui/Stack/Stack'
-import { Label } from '@ui/Typography/Text'
+import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 
 type InvoiceTermsOption = {
   label: string
@@ -88,22 +87,19 @@ export const InvoiceTermsComboBox = ({ value, onValueChange, isReadOnly }: Invoi
   }
   const onSelectedValueChange = useCallback(handleChange, [onValueChange])
 
-  const inputId = useId()
-
   return (
-    <HStack className='Layer__InvoiceForm__TermsComboBox Layer__InvoiceForm__Field__Terms'>
-      <Label size='sm' htmlFor={inputId}>
-        {t('invoices:label.terms', 'Terms')}
-      </Label>
-      <ComboBox
-        options={options}
-        onSelectedValueChange={onSelectedValueChange}
-        selectedValue={selectedOption}
-        isSearchable={false}
-        isClearable={false}
-        inputId={inputId}
-        isReadOnly={isReadOnly}
-      />
-    </HStack>
+    <ComboBoxField label={t('invoices:label.terms', 'Terms')} className='Layer__InvoiceForm__Field__Terms' inline>
+      {controlProps => (
+        <ComboBox
+          {...controlProps}
+          options={options}
+          onSelectedValueChange={onSelectedValueChange}
+          selectedValue={selectedOption}
+          isSearchable={false}
+          isClearable={false}
+          isReadOnly={isReadOnly}
+        />
+      )}
+    </ComboBoxField>
   )
 }

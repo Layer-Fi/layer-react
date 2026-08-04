@@ -9,6 +9,7 @@ import './comboBox.scss'
 
 export function ComboBox<T extends ComboBoxOption>({
   className,
+  slot,
   slots,
   isError,
   selectedValue,
@@ -18,7 +19,7 @@ export function ComboBox<T extends ComboBoxOption>({
   const commonSelectProps = useCommonComboBoxProps<T, false>({ className, slots, isError, ...props })
 
   return (
-    <VStack gap='3xs' fluid className={className ? `${className}__Container` : undefined}>
+    <VStack gap='3xs' fluid slot={slot} className={className ? `${className}__Container` : undefined}>
       <Select {...commonSelectProps} value={selectedValue} onChange={onSelectedValueChange} />
       <ComboBoxErrorMessage isError={isError} errorMessage={slots?.ErrorMessage} />
     </VStack>

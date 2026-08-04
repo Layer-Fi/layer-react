@@ -11,7 +11,7 @@ import {
 } from '@views/LandingPage/landingPageStoryControls'
 
 const meta: Meta<LandingPageStoryArgs> = {
-  title: 'Components/LandingPage',
+  title: 'Views/LandingPage',
   parameters: {
     controls: { include: landingPageStoryControlsInclude },
   },

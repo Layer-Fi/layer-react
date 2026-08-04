@@ -1,8 +1,10 @@
 .Layer__InvoiceForm {
+  --form-field-label-inline-size: 8rem;
+  --form-field-control-inline-size: auto;
+
   .Layer__InvoiceForm__Field__Customer,
   .Layer__InvoiceForm__Field__Email,
   .Layer__InvoiceForm__Field__Address {
-    grid-template-columns: 8rem auto;
     width: clamp(28rem, 100%, 44rem);
   }
 
@@ -10,14 +12,12 @@
   .Layer__InvoiceForm__Field__Terms,
   .Layer__InvoiceForm__Field__SentAt,
   .Layer__InvoiceForm__Field__DueAt {
-    grid-template-columns: 8rem auto;
     width: clamp(16rem, 100%, 24rem);
   }
 
-  min-width: 54rem;
-}
+  .Layer__InvoiceForm__Field__Customer {
+    grid-template-columns: var(--form-field-label-inline-size) var(--form-field-control-inline-size);
+  }
 
-.Layer__InvoiceForm__TermsComboBox {
-  display: grid;
-  align-items: center;
+  min-width: 54rem;
 }

@@ -1,5 +1,4 @@
-import { useCallback, useId, useMemo } from 'react'
-import classNames from 'classnames'
+import { useCallback, useMemo } from 'react'
 import type { TFunction } from 'i18next'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -8,8 +7,8 @@ import { type CatalogService } from '@schemas/catalogService'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
 import { useGetListCatalogServices } from '@api/businesses/[business-id]/catalog/services/get'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'
-import { VStack } from '@ui/Stack/Stack'
-import { Label, P, Span } from '@ui/Typography/Text'
+import { P, Span } from '@ui/Typography/Text'
+import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 
 import './timeEntryServiceSelector.scss'
 
@@ -106,12 +105,6 @@ export function TimeEntryServiceSelector({
     [servicesResponse, t],
   )
 
-  const combinedClassName = classNames(
-    'Layer__TimeEntryServiceSelector',
-    inline && 'Layer__TimeEntryServiceSelector--inline',
-    className,
-  )
-
   const handleSelectionChange = useCallback(
     (selectedOption: ServiceAsOption | null) => {
       onSelectedServiceIdChange(selectedOption?.id ?? null)
@@ -143,12 +136,9 @@ export function TimeEntryServiceSelector({
     ? t('timeTracking:error.load_services', 'Failed to load services.')
     : undefined
 
-  const inputId = useId()
-
   const sharedProps = {
     selectedValue: selectedServiceForComboBox,
     onSelectedValueChange: handleSelectionChange,
-    inputId,
     className: 'Layer__TimeEntryServiceSelector__Input',
     placeholder: placeholder ?? t('timeTracking:label.select_service', 'Select a service'),
     slots: { EmptyMessage, ErrorMessage },
@@ -157,7 +147,6 @@ export function TimeEntryServiceSelector({
     isError: shouldShowError,
     isLoading: isLoadingWithoutFallback,
     isReadOnly,
-    ['aria-label']: showLabel ? undefined : t('timeTracking:label.service', 'Service'),
   }
 
   const creatableProps = isCreatable
@@ -170,9 +159,13 @@ export function TimeEntryServiceSelector({
     : { isCreatable: false as const, options: serviceOptions }
 
   return (
-    <VStack className={combinedClassName}>
-      {showLabel && <Label htmlFor={inputId} size='sm'>{t('timeTracking:label.service', 'Service')}</Label>}
-      <MaybeCreatableComboBox {...sharedProps} {...creatableProps} />
-    </VStack>
+    <ComboBoxField
+      label={t('timeTracking:label.service', 'Service')}
+      className={className}
+      inline={inline}
+      showLabel={showLabel}
+    >
+      {controlProps => <MaybeCreatableComboBox {...controlProps} {...sharedProps} {...creatableProps} />}
+    </ComboBoxField>
   )
 }

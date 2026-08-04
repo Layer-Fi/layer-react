@@ -36,6 +36,28 @@
     }
   }
 
+  &[data-invalid] [slot='indicator'] {
+    border-color: var(--color-danger);
+  }
+
+  &[data-invalid]:not([data-selected]) [slot='indicator']::before {
+    background: var(--color-danger);
+  }
+
+  &[data-selected][data-invalid] [slot='indicator'] {
+    border-color: var(--color-danger);
+    background: var(--color-danger);
+  }
+
+  &[data-readonly] [slot='indicator'] {
+    background: var(--bg-muted);
+  }
+
+  &[data-selected][data-readonly] [slot='indicator'] {
+    border-color: var(--fg-subtle);
+    background: var(--fg-subtle);
+  }
+
   &[data-disabled] {
     cursor: not-allowed;
 

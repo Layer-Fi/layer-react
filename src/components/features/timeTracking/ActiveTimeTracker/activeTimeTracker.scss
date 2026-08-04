@@ -90,13 +90,14 @@
 .Layer__ActiveTimeTracker__Field__Service,
 .Layer__ActiveTimeTracker__Field__Customer,
 .Layer__ActiveTimeTracker__Field__Memo {
-  grid-template-columns: 10rem auto;
+  --form-field-label-inline-size: 10rem;
+  --form-field-control-inline-size: auto;
+
   width: 100%;
 }
 
 .Layer__ActiveTimeTracker__Field--inline {
   flex: 1 1 14rem;
-  grid-template-columns: minmax(0, 1fr);
   width: auto;
   min-inline-size: 0;
   max-inline-size: 18rem;

@@ -9,9 +9,9 @@
     border-top: 1px solid var(--border-color);
   }
 
-  .Layer__FormSwitchField.Layer__FormSwitchField--inline {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
+  // The label takes the free space so the toggle sits hard right.
+  --form-field-label-inline-size: minmax(0, 1fr);
+  --form-field-control-inline-size: auto;
 
   .Layer__InvoiceFinalizeForm__Field__CustomPaymentInstructions {
     min-width: 18rem;

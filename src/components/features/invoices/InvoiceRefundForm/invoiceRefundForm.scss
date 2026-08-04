@@ -1,13 +1,22 @@
 .Layer__InvoiceRefundForm {
+  --form-field-label-inline-size: 8rem;
+  --form-field-control-inline-size: auto;
+
   .Layer__InvoiceRefundForm__Field__InvoiceNo,
   .Layer__InvoiceRefundForm__Field__CompletedAt,
   .Layer__InvoiceRefundForm__Field__PaymentMethod {
-    grid-template-columns: 8rem auto;
     min-width: 16rem;
   }
 
+  .Layer__InvoiceRefundForm__Field__InvoiceNo,
+  .Layer__InvoiceRefundForm__Field__PaymentMethod {
+    display: grid;
+    grid-template-columns: var(--form-field-label-inline-size) var(--form-field-control-inline-size);
+  }
+
   .Layer__InvoiceRefundForm__Field__Amount {
-    grid-template-columns: auto 8rem;
+    --form-field-label-inline-size: auto;
+    --form-field-control-inline-size: 8rem;
   }
 
   .Layer__InvoiceRefundForm__FormError {
@@ -15,10 +24,6 @@
 
     padding-inline: var(--spacing-md);
     border-bottom: 1px solid var(--border-color);
-  }
-
-  .Layer__InvoiceRefundForm__Field__InvoiceNo {
-    display: grid;
   }
 
   .Layer__InvoiceRefundForm__Section {
