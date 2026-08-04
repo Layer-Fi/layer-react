@@ -10,11 +10,11 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 import classNames from 'classnames'
 
 import { type Alignment } from '@internal-types/utility/table'
-import { HStack } from '@ui/Stack/Stack'
 import { Cell, Column as TableColumn, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
 import { DataTableSkeleton } from '@blocks/Table/DataTable/DataTableSkeleton'
 import { type ColumnConfig, getColumnDefs } from '@blocks/Table/DataTable/utils/column'
 
+import '@blocks/Table/DataTable/dataTable.scss'
 import './virtualizedDataTable.scss'
 
 declare module '@tanstack/react-table' {
@@ -127,13 +127,37 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
     </TableHeader>
   )
 
-  if (isError) {
-    return (
-      <HStack align='center' justify='center' className={`${CSS_PREFIX}__state-container`}>
-        <ErrorState />
-      </HStack>
-    )
-  }
+  // The same full-width fallback row DataTable renders. react-aria requires one cell per column,
+  // so the state sits in the first — spanning the row — and the rest are hidden placeholders.
+  const renderFallbackRow = (State: React.FC) => (
+    <div className={`${CSS_PREFIX}__container`} style={{ height: renderedTableHeight }}>
+      <Table className={tableClassName} aria-label={ariaLabel}>
+        {renderHeader()}
+        <TableBody>
+          <Row
+            className={classNames(
+              `${CSS_PREFIX}__row`,
+              `${CSS_PREFIX}__row--static`,
+              'Layer__DataTable__EmptyState__Row',
+            )}
+          >
+            {columnConfig.map((column, index) => (
+              <Cell
+                key={column.id}
+                className={index === 0
+                  ? 'Layer__DataTable__EmptyState__Cell'
+                  : `${CSS_PREFIX}__fallback-placeholder-cell`}
+              >
+                {index === 0 ? <State /> : null}
+              </Cell>
+            ))}
+          </Row>
+        </TableBody>
+      </Table>
+    </div>
+  )
+
+  if (isError) return renderFallbackRow(ErrorState)
 
   if (isLoading) {
     return (
@@ -152,13 +176,7 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
     )
   }
 
-  if (isEmptyTable) {
-    return (
-      <HStack align='center' justify='center' className={`${CSS_PREFIX}__state-container`}>
-        <EmptyState />
-      </HStack>
-    )
-  }
+  if (isEmptyTable) return renderFallbackRow(EmptyState)
 
   const virtualItems = rowVirtualizer.getVirtualItems()
   const totalSize = rowVirtualizer.getTotalSize()

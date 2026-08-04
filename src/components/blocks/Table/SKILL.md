@@ -114,8 +114,8 @@ The table renders these itself from `isLoading` / `isError` plus `slots.EmptySta
 `slots.ErrorState`. Pass the query's flags straight through — don't wrap a table in
 `ConditionalList` or branch on `isLoading` yourself.
 
-Loading is a skeleton table in every variant. The other two states render as a full-width fallback
-row, except in `VirtualizedDataTable`, which replaces the table with a centered state.
+Every variant keeps its header and renders these inside the table — loading as a skeleton, error and
+empty as a full-width fallback row.
 
 ### Accessibility
 

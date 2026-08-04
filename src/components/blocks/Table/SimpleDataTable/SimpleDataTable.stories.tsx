@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import type { Row, RowSelectionState } from '@tanstack/react-table'
+import { userEvent, within } from 'storybook/test'
 
 import { Button } from '@ui/Button/Button'
 import { ExpandButton } from '@ui/ExpandButton/ExpandButton'
@@ -151,6 +152,9 @@ const ClickableRowTable = () => {
  */
 export const Default: Story = {
   parameters: { chromatic: { viewports: [1280] } },
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getAllByRole('button', { name: 'Expand invoice' })[0])
+  },
   render: args => (
     <Gallery gap={32}>
       <Col label='columnConfig — alignment, row header, rich cells'>
@@ -159,7 +163,7 @@ export const Default: Story = {
       <Col label='selectionProps — injected checkbox column, paid rows not selectable'>
         <SelectableTable />
       </Col>
-      <Col label='expandedRowProps — inline detail beneath a flat row'>
+      <Col label='expandedRowProps — inline detail beneath a flat row, first row expanded'>
         <ExpandableRowTable />
       </Col>
       <Col label='withClickableRow + isRowSelected — active row highlighted'>

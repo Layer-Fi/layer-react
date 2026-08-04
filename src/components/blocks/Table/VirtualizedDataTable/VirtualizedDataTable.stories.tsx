@@ -44,9 +44,9 @@ type Story = StoryObj<typeof VirtualizedDataTable<InvoiceRow>>
 
 /**
  * 2,000 rows in one continuous scroll with a sticky header — only the visible window plus
- * `overscan` rows is mounted — then the height knobs, then the data states. Loading is a skeleton
- * table as in the other variants; error and empty replace the table with a centered state rather
- * than rendering as fallback rows, which is where this variant differs.
+ * `overscan` rows is mounted — then the height knobs, then the data states, which render as they do
+ * in every other variant: a skeleton table for loading, a full-width fallback row under a header
+ * that stays put for error and empty.
  */
 export const Default: Story = {
   parameters: { chromatic: { viewports: [1280] } },
