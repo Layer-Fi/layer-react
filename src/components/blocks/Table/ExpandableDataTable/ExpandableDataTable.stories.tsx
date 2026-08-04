@@ -15,7 +15,7 @@ import {
   TableStoryStyles,
 } from '@blocks/Table/tableStoryData'
 
-import { Gallery } from '@test-utils/storybook/gallery'
+import { Col, Gallery } from '@test-utils/storybook/gallery'
 
 const COLUMN_CONFIG = getAccountColumnConfig()
 
@@ -39,9 +39,7 @@ const meta: Meta<typeof ExpandableDataTable<AccountNode>> = {
     Story => (
       <>
         <TableStoryStyles />
-        <ExpandableDataTableProvider defaultExpanded={EXPANDED_TOP_LEVEL}>
-          <Story />
-        </ExpandableDataTableProvider>
+        <Story />
       </>
     ),
   ],
@@ -53,37 +51,24 @@ type Story = StoryObj<typeof ExpandableDataTable<AccountNode>>
 
 /**
  * A three-level tree, partially expanded — rows indent by depth and are clickable by default,
- * toggling expansion.
+ * toggling expansion — then the same tree collapsed beside `ExpandableDataTableToggleButton`,
+ * which reads the same provider to expand or collapse every row at once.
  */
 export const Default: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: args => (
-    <Gallery>
-      <ExpandableDataTable {...args} />
-    </Gallery>
-  ),
-}
-
-/**
- * `ExpandableDataTableToggleButton` reads the same provider as the table, so a header control can
- * expand or collapse every row at once. Collapsed here, which `Default` can't also show.
- */
-export const WithToggleAll: Story = {
-  parameters: { chromatic: { viewports: [1280] } },
-  decorators: [
-    Story => (
-      <>
-        <TableStoryStyles />
-        <ExpandableDataTableProvider>
-          <Story />
+    <Gallery gap={32}>
+      <Col label='nested rows, partially expanded'>
+        <ExpandableDataTableProvider defaultExpanded={EXPANDED_TOP_LEVEL}>
+          <ExpandableDataTable {...args} />
         </ExpandableDataTableProvider>
-      </>
-    ),
-  ],
-  render: args => (
-    <Gallery>
-      <ExpandableDataTableToggleButton />
-      <ExpandableDataTable {...args} />
+      </Col>
+      <Col label='ExpandableDataTableToggleButton — collapsed, expand or collapse every row at once'>
+        <ExpandableDataTableProvider>
+          <ExpandableDataTableToggleButton />
+          <ExpandableDataTable {...args} />
+        </ExpandableDataTableProvider>
+      </Col>
     </Gallery>
   ),
 }
