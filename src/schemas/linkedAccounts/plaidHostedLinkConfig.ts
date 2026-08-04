@@ -1,35 +1,7 @@
-import { pipe, Schema } from 'effect'
+import { Schema } from 'effect'
 
 import type { Awaitable } from '@internal-types/utility/promises'
-import { createTransformedEnumSchema } from '@schemas/common/utils'
-
-export const HostedLinkParamsSchema = Schema.Struct({
-  completionRedirectUri: Schema.optional(Schema.String).pipe(
-    Schema.fromKey('completion_redirect_uri'),
-  ),
-
-  isMobileApp: Schema.optional(Schema.Boolean).pipe(
-    Schema.fromKey('is_mobile_app'),
-  ),
-})
-
-export type HostedLinkParams = typeof HostedLinkParamsSchema.Type
-export type HostedLinkParamsEncoded = typeof HostedLinkParamsSchema.Encoded
-
-export const CreatePlaidLinkParamsSchema = Schema.Struct({
-  redirectUri: Schema.optional(Schema.String).pipe(
-    Schema.fromKey('redirect_uri'),
-  ),
-
-  hostedLinkParams: Schema.optional(HostedLinkParamsSchema).pipe(
-    Schema.fromKey('hosted_link_params'),
-  ),
-})
-
-export type CreatePlaidLinkParams = typeof CreatePlaidLinkParamsSchema.Type
-export type CreatePlaidLinkParamsEncoded = typeof CreatePlaidLinkParamsSchema.Encoded
-
-export const encodeCreatePlaidLinkParams = Schema.encodeSync(CreatePlaidLinkParamsSchema)
+import { type CreatePlaidLinkParams, CreatePlaidLinkParamsSchema } from '@schemas/linkedAccounts/createPlaidLinkParams'
 
 /**
  * Public configuration for the Plaid Hosted Link flow, accepted as a prop by
@@ -89,43 +61,3 @@ const decodeCreatePlaidLinkParamsFromHostedLinkConfig = Schema.decodeSync(
 export function toCreatePlaidLinkParams(config?: PlaidHostedLinkConfig): CreatePlaidLinkParams {
   return config ? decodeCreatePlaidLinkParamsFromHostedLinkConfig(config) : {}
 }
-
-export enum PlaidHostedLinkState {
-  NOT_STARTED = 'NOT_STARTED',
-  CREATED = 'CREATED',
-  PROCESSING = 'PROCESSING',
-  SUCCEEDED = 'SUCCEEDED',
-  EXITED = 'EXITED',
-  FAILED = 'FAILED',
-  UNKNOWN = 'UNKNOWN',
-}
-
-const PlaidHostedLinkStateEnumSchema = Schema.Enums(PlaidHostedLinkState)
-
-export const TransformedPlaidHostedLinkStateSchema = createTransformedEnumSchema(
-  PlaidHostedLinkStateEnumSchema,
-  PlaidHostedLinkState,
-  PlaidHostedLinkState.UNKNOWN,
-)
-
-export const ApiPlaidHostedLinkStatusSchema = Schema.Struct({
-  state: TransformedPlaidHostedLinkStateSchema,
-})
-
-export type ApiPlaidHostedLinkStatus = typeof ApiPlaidHostedLinkStatusSchema.Type
-
-export const ApiLinkTokenSchema = Schema.Struct({
-  type: Schema.Literal('Link_Token'),
-
-  linkToken: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('link_token'),
-  ),
-
-  hostedLink: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('hosted_link'),
-  ),
-})
-
-export type ApiLinkToken = typeof ApiLinkTokenSchema.Type

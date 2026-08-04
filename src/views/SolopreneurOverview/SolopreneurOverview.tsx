@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
+import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaidHostedLinkConfig'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { GlobalMonthPicker } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 import { Header } from '@blocks/Layout/Header/Header'

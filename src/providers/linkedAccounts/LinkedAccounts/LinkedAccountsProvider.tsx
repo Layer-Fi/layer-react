@@ -1,7 +1,7 @@
 import { type PropsWithChildren } from 'react'
 
 import type { Awaitable } from '@internal-types/utility/promises'
-import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
+import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaidHostedLinkConfig'
 import { useLinkedAccounts } from '@hooks/legacy/useLinkedAccounts'
 import { LinkedAccountsContext } from '@providers/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 

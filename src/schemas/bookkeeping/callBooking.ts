@@ -23,9 +23,9 @@ export enum CallBookingPurpose {
 // Schema definitions for the enums
 const CallBookingStateSchema = Schema.Enums(CallBookingState)
 
-const CallBookingTypeSchema = Schema.Enums(CallBookingType)
+export const CallBookingTypeSchema = Schema.Enums(CallBookingType)
 
-const CallBookingPurposeSchema = Schema.Enums(CallBookingPurpose)
+export const CallBookingPurposeSchema = Schema.Enums(CallBookingPurpose)
 
 // Transformed schemas with safe defaults for unknown values
 const TransformedCallBookingStateSchema = createTransformedEnumSchema(
@@ -132,28 +132,3 @@ export const CallBookingItemResponseSchema = Schema.Struct({
 })
 
 export type CallBookingItemResponse = typeof CallBookingItemResponseSchema.Type
-
-// Create call booking request schema
-const CreateCallBookingBodySchemaDefinition = Schema.Struct({
-  externalId: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('external_id'),
-  ),
-
-  inviteeId: pipe(
-    Schema.optional(Schema.String),
-    Schema.fromKey('invitee_id'),
-  ),
-
-  purpose: CallBookingPurposeSchema,
-
-  callType: pipe(
-    Schema.propertySignature(CallBookingTypeSchema),
-    Schema.fromKey('call_type'),
-  ),
-})
-
-export const CreateCallBookingBodySchema = CreateCallBookingBodySchemaDefinition
-export const encodeCreateCallBookingBody = Schema.encodeSync(CreateCallBookingBodySchemaDefinition)
-export type CreateCallBookingBody = typeof CreateCallBookingBodySchemaDefinition.Type
-export type CreateCallBookingBodyEncoded = typeof CreateCallBookingBodySchemaDefinition.Encoded

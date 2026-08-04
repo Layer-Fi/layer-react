@@ -1,10 +1,6 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import {
-  ApiLinkTokenSchema,
-  type CreatePlaidLinkParams,
-  type CreatePlaidLinkParamsEncoded,
-  encodeCreatePlaidLinkParams,
-} from '@schemas/linkedAccounts/plaid'
+import { type CreatePlaidLinkParams, type CreatePlaidLinkParamsEncoded, encodeCreatePlaidLinkParams } from '@schemas/linkedAccounts/createPlaidLinkParams'
+import { ApiLinkTokenSchema } from '@schemas/linkedAccounts/linkToken'
 import { post } from '@utils/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 

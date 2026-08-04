@@ -1,5 +1,5 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { ApiLinkTokenSchema } from '@schemas/linkedAccounts/plaid'
+import { ApiLinkTokenSchema } from '@schemas/linkedAccounts/linkToken'
 import { post } from '@utils/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 

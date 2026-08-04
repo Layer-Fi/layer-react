@@ -1,5 +1,5 @@
 import type { LineItem } from '@schemas/common/lineItem'
-import type { ProfitAndLossSummary } from '@schemas/profitAndLoss/profitAndLoss'
+import type { ProfitAndLossSummary } from '@schemas/profitAndLoss/profitAndLossSummaries'
 
 import { type CategorySplit } from '@fixtures/profitAndLoss/constants'
 

@@ -1,5 +1,5 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { ApiPlaidHostedLinkStatusSchema } from '@schemas/linkedAccounts/plaid'
+import { ApiPlaidHostedLinkStatusSchema } from '@schemas/linkedAccounts/plaidHostedLinkStatus'
 import { get } from '@utils/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 

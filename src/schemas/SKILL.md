@@ -33,10 +33,20 @@ response including the nested structs that exist only inside it. Name the file f
 thing: `invoice.ts` exports `InvoiceSchema`. Unrelated siblings, request bodies, and
 separate endpoints' responses get their own files rather than accumulating in one.
 
+A discriminated union whose arms are full structs in their own right gets a subfolder of
+one arm per file, with the union in the parent — `generalLedger/ledgerEntrySources/*.ts`
+feeding `LedgerEntrySourceSchema` in `generalLedger/ledgerEntrySource.ts`. A union of thin
+`Schema.extend`s over a shared base stays in one file (`bankTransactions/matchDetails.ts`).
+
+Functions belong here only when they operate purely on the schema — `decodeSync` wrappers,
+type guards, `Equivalence`. A function that maps a decoded value onto a UI or provider type
+goes in `src/utils/<domain>/` instead; see
+`src/utils/generalLedger/ledgerEntrySourceLinkingMetadata.ts`.
+
 Import with the `@schemas/*` alias — always the alias, never a relative path, even between
 files in the same domain. `src/schemas` must stay importable from anywhere
-(hooks, components, MSW, fixtures), so it may not import from `@hooks`, `@components`, or
-`@msw`.
+(hooks, components, MSW, fixtures), so it may not import from `@hooks`, `@components`,
+`@providers`, `@views`, or `@msw`.
 
 ## Field naming
 

@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { ProfitAndLossSummariesSchema, type ProfitAndLossSummary } from '@schemas/profitAndLoss/profitAndLoss'
+import { ProfitAndLossSummariesSchema, type ProfitAndLossSummary } from '@schemas/profitAndLoss/profitAndLossSummaries'
 
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
