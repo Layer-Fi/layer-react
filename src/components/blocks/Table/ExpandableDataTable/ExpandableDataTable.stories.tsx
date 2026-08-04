@@ -4,6 +4,8 @@ import type { ExpandedState } from '@tanstack/react-table'
 import { ExpandableDataTable } from '@blocks/Table/ExpandableDataTable/ExpandableDataTable'
 import { ExpandableDataTableProvider } from '@blocks/Table/ExpandableDataTable/ExpandableDataTableProvider'
 import { ExpandableDataTableToggleButton } from '@blocks/Table/ExpandableDataTable/ExpandableDataTableToggleButton'
+
+import { Col, Gallery } from '@test-utils/storybook/gallery'
 import {
   ACCOUNT_TREE,
   type AccountNode,
@@ -13,13 +15,11 @@ import {
   getAccountSubRows,
   TABLE_STORY_SLOTS,
   TableStoryStyles,
-} from '@blocks/Table/tableStoryData'
-
-import { Col, Gallery } from '@test-utils/storybook/gallery'
+} from '@test-utils/storybook/tableStoryData'
 
 const COLUMN_CONFIG = getAccountColumnConfig()
 
-const EXPANDED_TOP_LEVEL: ExpandedState = { 'assets': true, 'assets.current': true, 'liabilities': true }
+const EXPANDED_TOP_LEVEL: ExpandedState = { ASSETS: true, EXPENSES: true, OPERATING_EXPENSES: true }
 
 const meta: Meta<typeof ExpandableDataTable<AccountNode>> = {
   title: 'Blocks/Table/ExpandableDataTable',

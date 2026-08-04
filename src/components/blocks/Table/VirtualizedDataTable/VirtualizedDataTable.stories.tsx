@@ -1,29 +1,29 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import {
-  buildInvoiceRows,
-  getInvoiceColumnConfig,
-  type InvoiceRow,
-  TABLE_STORY_COMPONENT_NAME,
-  TABLE_STORY_SLOTS,
-  TableStoryStyles,
-} from '@blocks/Table/tableStoryData'
 import { VirtualizedDataTable } from '@blocks/Table/VirtualizedDataTable/VirtualizedDataTable'
 
 import { Col, Gallery } from '@test-utils/storybook/gallery'
+import {
+  buildCustomerRows,
+  type CustomerRow,
+  getCustomerColumnConfig,
+  TABLE_STORY_COMPONENT_NAME,
+  TABLE_STORY_SLOTS,
+  TableStoryStyles,
+} from '@test-utils/storybook/tableStoryData'
 
-const COLUMN_CONFIG = getInvoiceColumnConfig()
-const LONG_LIST = buildInvoiceRows(2000)
-const SHORT_LIST = buildInvoiceRows(4)
+const COLUMN_CONFIG = getCustomerColumnConfig()
+const LONG_LIST = buildCustomerRows(2000)
+const SHORT_LIST = buildCustomerRows(4)
 
-const meta: Meta<typeof VirtualizedDataTable<InvoiceRow>> = {
+const meta: Meta<typeof VirtualizedDataTable<CustomerRow>> = {
   title: 'Blocks/Table/VirtualizedDataTable',
   component: VirtualizedDataTable,
   args: {
     data: LONG_LIST,
     columnConfig: COLUMN_CONFIG,
     componentName: TABLE_STORY_COMPONENT_NAME,
-    ariaLabel: 'Invoices',
+    ariaLabel: 'Customers',
     isLoading: false,
     isError: false,
     slots: TABLE_STORY_SLOTS,
@@ -40,7 +40,7 @@ const meta: Meta<typeof VirtualizedDataTable<InvoiceRow>> = {
 
 export default meta
 
-type Story = StoryObj<typeof VirtualizedDataTable<InvoiceRow>>
+type Story = StoryObj<typeof VirtualizedDataTable<CustomerRow>>
 
 /**
  * 2,000 rows in one continuous scroll with a sticky header — only the visible window plus

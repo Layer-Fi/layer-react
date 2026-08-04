@@ -7,29 +7,33 @@ import { Button } from '@ui/Button/Button'
 import { ExpandButton } from '@ui/ExpandButton/ExpandButton'
 import type { ColumnConfig } from '@blocks/Table/DataTable/utils/column'
 import { SimpleDataTable } from '@blocks/Table/SimpleDataTable/SimpleDataTable'
+
+import { Col, Gallery } from '@test-utils/storybook/gallery'
 import {
-  getInvoiceColumnConfig,
-  INVOICE_ROWS,
-  InvoiceExpandedRow,
-  type InvoiceRow,
+  CUSTOMER_ROWS,
+  CustomerExpandedRow,
+  type CustomerRow,
+  getCustomerColumnConfig,
   TABLE_STORY_COMPONENT_NAME,
   TABLE_STORY_SLOTS,
   TableStoryStyles,
-} from '@blocks/Table/tableStoryData'
+} from '@test-utils/storybook/tableStoryData'
 
-import { Col, Gallery } from '@test-utils/storybook/gallery'
+const COLUMN_CONFIG = getCustomerColumnConfig()
+const SHORT_LIST = CUSTOMER_ROWS.slice(0, 4)
 
-const COLUMN_CONFIG = getInvoiceColumnConfig()
-const SHORT_LIST = INVOICE_ROWS.slice(0, 4)
+const PRESELECTED_ROWS: RowSelectionState = Object.fromEntries(
+  CUSTOMER_ROWS.filter(row => row.status !== 'ARCHIVED').slice(0, 2).map(row => [row.id, true]),
+)
 
-const meta: Meta<typeof SimpleDataTable<InvoiceRow>> = {
+const meta: Meta<typeof SimpleDataTable<CustomerRow>> = {
   title: 'Blocks/Table/SimpleDataTable',
   component: SimpleDataTable,
   args: {
-    data: INVOICE_ROWS,
+    data: CUSTOMER_ROWS,
     columnConfig: COLUMN_CONFIG,
     componentName: TABLE_STORY_COMPONENT_NAME,
-    ariaLabel: 'Invoices',
+    ariaLabel: 'Customers',
     isLoading: false,
     isError: false,
     slots: TABLE_STORY_SLOTS,
@@ -46,28 +50,25 @@ const meta: Meta<typeof SimpleDataTable<InvoiceRow>> = {
 
 export default meta
 
-type Story = StoryObj<typeof SimpleDataTable<InvoiceRow>>
+type Story = StoryObj<typeof SimpleDataTable<CustomerRow>>
 
 const SelectableTable = () => {
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({
-    'invoice-1042': true,
-    'invoice-1043': true,
-  })
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>(PRESELECTED_ROWS)
 
   const selectionProps = useMemo(() => ({
     rowSelection,
     onRowSelectionChange: setRowSelection,
-    selectAllAriaLabel: 'Select all invoices',
-    getRowSelectionAriaLabel: (row: Row<InvoiceRow>) => `Select ${row.original.reference}`,
-    enableRowSelection: (row: Row<InvoiceRow>) => row.original.status !== 'Paid',
+    selectAllAriaLabel: 'Select all customers',
+    getRowSelectionAriaLabel: (row: Row<CustomerRow>) => `Select ${row.original.companyName ?? row.original.individualName ?? row.original.id}`,
+    enableRowSelection: (row: Row<CustomerRow>) => row.original.status !== 'ARCHIVED',
   }), [rowSelection])
 
   return (
     <SimpleDataTable
-      data={INVOICE_ROWS}
+      data={CUSTOMER_ROWS}
       columnConfig={COLUMN_CONFIG}
       componentName={TABLE_STORY_COMPONENT_NAME}
-      ariaLabel='Selectable invoices'
+      ariaLabel='Selectable customers'
       isLoading={false}
       isError={false}
       slots={TABLE_STORY_SLOTS}
@@ -78,7 +79,7 @@ const SelectableTable = () => {
 }
 
 const ExpandableRowTable = () => {
-  const columnConfig = useMemo<ColumnConfig<InvoiceRow>>(() => [
+  const columnConfig = useMemo<ColumnConfig<CustomerRow>>(() => [
     {
       id: 'Expand',
       header: '',
@@ -88,7 +89,7 @@ const ExpandableRowTable = () => {
           icon
           inset
           onPress={() => row.toggleExpanded()}
-          aria-label={row.getIsExpanded() ? 'Collapse invoice' : 'Expand invoice'}
+          aria-label={row.getIsExpanded() ? 'Collapse customer' : 'Expand customer'}
         >
           <ExpandButton isExpanded={row.getIsExpanded()} />
         </Button>
@@ -100,7 +101,7 @@ const ExpandableRowTable = () => {
 
   const expandedRowProps = useMemo(() => ({
     getRowCanExpand: () => true,
-    render: (row: Row<InvoiceRow>) => <InvoiceExpandedRow row={row} />,
+    render: (row: Row<CustomerRow>) => <CustomerExpandedRow row={row} />,
   }), [])
 
   return (
@@ -108,7 +109,7 @@ const ExpandableRowTable = () => {
       data={SHORT_LIST}
       columnConfig={columnConfig}
       componentName={TABLE_STORY_COMPONENT_NAME}
-      ariaLabel='Invoices with detail rows'
+      ariaLabel='Customers with detail rows'
       isLoading={false}
       isError={false}
       slots={TABLE_STORY_SLOTS}
@@ -118,15 +119,15 @@ const ExpandableRowTable = () => {
 }
 
 const ClickableRowTable = () => {
-  const [activeId, setActiveId] = useState('invoice-1043')
+  const [activeId, setActiveId] = useState(SHORT_LIST[2].id)
 
   const withClickableRow = useMemo(() => ({
-    onRowClick: (row: Row<InvoiceRow>) => setActiveId(row.original.id),
-    isRowClickable: (row: Row<InvoiceRow>) => row.original.status !== 'Draft',
+    onRowClick: (row: Row<CustomerRow>) => setActiveId(row.original.id),
+    isRowClickable: (row: Row<CustomerRow>) => row.original.status !== 'ARCHIVED',
   }), [])
 
   const isRowSelected = useCallback(
-    (row: Row<InvoiceRow>) => row.original.id === activeId,
+    (row: Row<CustomerRow>) => row.original.id === activeId,
     [activeId],
   )
 
@@ -135,7 +136,7 @@ const ClickableRowTable = () => {
       data={SHORT_LIST}
       columnConfig={COLUMN_CONFIG}
       componentName={TABLE_STORY_COMPONENT_NAME}
-      ariaLabel='Clickable invoices'
+      ariaLabel='Clickable customers'
       isLoading={false}
       isError={false}
       slots={TABLE_STORY_SLOTS}
@@ -153,14 +154,14 @@ const ClickableRowTable = () => {
 export const Default: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   play: async ({ canvasElement }) => {
-    await userEvent.click(within(canvasElement).getAllByRole('button', { name: 'Expand invoice' })[0])
+    await userEvent.click(within(canvasElement).getAllByRole('button', { name: 'Expand customer' })[0])
   },
   render: args => (
     <Gallery gap={32}>
       <Col label='columnConfig — alignment, row header, rich cells'>
         <SimpleDataTable {...args} />
       </Col>
-      <Col label='selectionProps — injected checkbox column, paid rows not selectable'>
+      <Col label='selectionProps — injected checkbox column, archived rows not selectable'>
         <SelectableTable />
       </Col>
       <Col label='expandedRowProps — inline detail beneath a flat row, first row expanded'>

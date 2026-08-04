@@ -1,31 +1,31 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { PaginatedTable } from '@blocks/Table/PaginatedDataTable/PaginatedDataTable'
+
+import { Col, Gallery } from '@test-utils/storybook/gallery'
 import {
-  buildInvoiceRows,
-  getInvoiceColumnConfig,
-  getPinnedInvoiceColumnConfig,
-  type InvoiceRow,
+  buildCustomerRows,
+  type CustomerRow,
+  getCustomerColumnConfig,
+  getPinnedCustomerColumnConfig,
   PINNED_STORY_COMPONENT_NAME,
   TABLE_STORY_COMPONENT_NAME,
   TABLE_STORY_SLOTS,
   TableStoryStyles,
-} from '@blocks/Table/tableStoryData'
+} from '@test-utils/storybook/tableStoryData'
 
-import { Col, Gallery } from '@test-utils/storybook/gallery'
+const COLUMN_CONFIG = getCustomerColumnConfig()
+const PINNED_COLUMN_CONFIG = getPinnedCustomerColumnConfig()
+const ROWS = buildCustomerRows(43)
 
-const COLUMN_CONFIG = getInvoiceColumnConfig()
-const PINNED_COLUMN_CONFIG = getPinnedInvoiceColumnConfig()
-const ROWS = buildInvoiceRows(43)
-
-const meta: Meta<typeof PaginatedTable<InvoiceRow>> = {
+const meta: Meta<typeof PaginatedTable<CustomerRow>> = {
   title: 'Blocks/Table/PaginatedDataTable',
   component: PaginatedTable,
   args: {
     data: ROWS,
     columnConfig: COLUMN_CONFIG,
     componentName: TABLE_STORY_COMPONENT_NAME,
-    ariaLabel: 'Invoices',
+    ariaLabel: 'Customers',
     isLoading: false,
     isError: false,
     slots: TABLE_STORY_SLOTS,
@@ -43,7 +43,7 @@ const meta: Meta<typeof PaginatedTable<InvoiceRow>> = {
 
 export default meta
 
-type Story = StoryObj<typeof PaginatedTable<InvoiceRow>>
+type Story = StoryObj<typeof PaginatedTable<CustomerRow>>
 
 /**
  * 43 rows behind the pager the table renders for you, then the same table with ten columns and
