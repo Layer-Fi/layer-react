@@ -40,6 +40,7 @@
     "prepare": "husky",
     "screenshots:capture": "tsx scripts/capture-docs-screenshots.ts",
     "screenshots:check": "tsx scripts/check-docs-screenshots.ts",
+    "stories:check-render": "tsx scripts/check-stories-render.ts",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
     "test": "vitest",

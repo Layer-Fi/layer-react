@@ -28,3 +28,11 @@ jobs:
     # Renaming a documented story must fail here, not at release time.
     - name: Check documented stories still resolve
       run: npm run screenshots:check
+
+    # Chromatic only snapshots the design system, so this is what catches a broken
+    # feature story or a play function that stopped producing its state.
+    - name: Install Chromium
+      run: npx playwright install --with-deps chromium
+
+    - name: Render every story
+      run: npm run stories:check-render

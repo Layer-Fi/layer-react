@@ -1,5 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
+import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { GlobalDateRangeSelection, type GlobalDateRangeSelectionProps } from '@blocks/DatePickers/DateSelection/GlobalDateRangeSelection'
 
 import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
@@ -46,5 +47,7 @@ export default meta
 type Story = StoryObj<GlobalDateRangeSelectionProps>
 
 export const Default: Story = {
+  // Docs captures this at one width; a lone control gains nothing from three.
+  parameters: { chromatic: { viewports: [BREAKPOINTS.TABLET - 1] } },
   tags: ['docs-screenshot'],
 }

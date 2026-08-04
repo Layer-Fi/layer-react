@@ -16,6 +16,12 @@ export type DocsScreenshot = {
   /** Path under api-documentation/images/. */
   out: string
   viewport: DocsScreenshotViewport
+  /**
+   * Width to run the story's interaction at, when it differs from the capture width — the
+   * Invoices detail view is only reachable from the narrow layout's clickable rows, but reads
+   * clipped below desktop. Navigate narrow, screenshot wide.
+   */
+  interactAt?: DocsScreenshotViewport
   /** The .mdx page that renders this image. Reported in the PR body; never edited. */
   page: string
 }
@@ -147,9 +153,10 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     page: 'embedded-components/components/journal.mdx',
   },
   {
-    storyId: 'views-invoices--creation',
-    out: 'components/invoice-creation.png',
+    storyId: 'views-invoices--detail',
+    out: 'components/invoice-detail.png',
     viewport: 'desktop',
+    interactAt: 'tablet',
     page: 'embedded-components/components/invoices.mdx',
   },
   {

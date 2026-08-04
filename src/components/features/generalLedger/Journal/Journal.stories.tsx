@@ -1,5 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
-import { userEvent, waitFor, within } from 'storybook/test'
+import { userEvent, within } from 'storybook/test'
 
 import { Badge, BadgeVariant } from '@ui/Badge/Badge'
 import { Journal, type JournalProps } from '@features/generalLedger/Journal/Journal'
@@ -97,12 +97,12 @@ export const DrawerOpen: Story = {
   tags: ['docs-screenshot'],
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    // The table re-renders as entries land, which can detach the row between query and
-    // click, so retry the whole click until the detail sidebar is actually up.
-    await waitFor(async () => {
-      const [, firstEntry] = await canvas.findAllByRole('row')
-      await userEvent.click(firstEntry)
-      await canvas.findByText(/Journal Entry #/)
-    }, { timeout: 15_000 })
+    // Wait for entries to land before clicking: the table re-renders as they arrive and
+    // would detach the row. Click exactly once — a second click closes the sidebar, so
+    // retrying the click inside waitFor just toggles it open and shut.
+    await canvas.findByText('1040')
+    const [, firstEntry] = await canvas.findAllByRole('row')
+    await userEvent.click(firstEntry)
+    await canvas.findByText(/Journal Entry #/, undefined, { timeout: 10_000 })
   },
 }

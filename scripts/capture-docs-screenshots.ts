@@ -74,9 +74,9 @@ async function main() {
   const browser = await chromium.launch()
   const failures: string[] = []
 
-  async function capture({ storyId, out: file, viewport }: DocsScreenshot) {
+  async function capture({ storyId, out: file, viewport, interactAt }: DocsScreenshot) {
     const context = await browser.newContext({
-      viewport: { width: DOCS_SCREENSHOT_WIDTHS[viewport], height: 900 },
+      viewport: { width: DOCS_SCREENSHOT_WIDTHS[interactAt ?? viewport], height: 900 },
       deviceScaleFactor: 2,
       reducedMotion: 'reduce',
       colorScheme: 'light',
@@ -101,12 +101,17 @@ async function main() {
       }
       if (crashes.length > 0) throw new Error(crashes.join('\n'))
 
+      if (interactAt && interactAt !== viewport) {
+        await page.setViewportSize({ width: DOCS_SCREENSHOT_WIDTHS[viewport], height: 900 })
+        await page.waitForTimeout(SETTLE_MS)
+      }
+
       const target = path.join(out, file)
       fs.mkdirSync(path.dirname(target), { recursive: true })
       // Scope to the story root, not the page: `layout: 'fullscreen'` stretches the body to the
       // viewport, so a full-page shot pads short components with dead space.
       await page.locator('#storybook-root').screenshot({ path: target, animations: 'disabled' })
-      console.info(`  ${file}  <-  ${storyId} (${viewport})`)
+      console.info(`  ${file}  <-  ${storyId} (${interactAt ? `${interactAt} -> ` : ''}${viewport})`)
     }
     finally {
       await context.close()
