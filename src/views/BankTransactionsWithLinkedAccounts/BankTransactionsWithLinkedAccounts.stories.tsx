@@ -28,6 +28,7 @@ const linkedAccountsControls = makeLinkedAccountsStoryControls({ category: 'Link
 
 const meta: Meta<BankTransactionsWithLinkedAccountsStoryArgs> = {
   title: 'Views/BankTransactions/WithLinkedAccounts',
+  tags: ['public-api'],
   component: BankTransactionsWithLinkedAccounts,
   parameters: {
     controls: {

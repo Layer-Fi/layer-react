@@ -13,6 +13,7 @@ type JournalStoryArgs = {
 
 const meta: Meta<JournalStoryArgs> = {
   title: 'Components/Journal',
+  tags: ['public-api'],
   component: Journal,
   parameters: {
     controls: {
@@ -90,6 +91,9 @@ export const Default: Story = {
 }
 
 export const DrawerOpen: Story = {
+  // Docs captures this at desktop only, and the interaction is desktop-shaped:
+  // the header collapses to icon buttons below the tablet breakpoint.
+  parameters: { chromatic: { viewports: [1280] } },
   tags: ['docs-screenshot'],
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)

@@ -6,6 +6,7 @@ import { profitAndLossStoryHandlers, withProfitAndLossStoryContext } from '@test
 
 const meta: Meta<ProfitAndLossChartProps> = {
   title: 'Components/ProfitAndLoss/Chart',
+  tags: ['public-api'],
   component: ProfitAndLossChart,
   parameters: {
     msw: { handlers: profitAndLossStoryHandlers },

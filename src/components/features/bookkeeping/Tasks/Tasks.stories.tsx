@@ -48,6 +48,7 @@ const SyncDisconnectedAccountMock = ({ disconnected }: { disconnected: boolean }
 
 const meta: Meta<TasksStoryArgs> = {
   title: 'Components/Tasks',
+  tags: ['public-api'],
   component: Tasks,
   parameters: {
     msw: {

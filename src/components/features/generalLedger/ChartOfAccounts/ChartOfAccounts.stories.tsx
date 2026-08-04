@@ -12,6 +12,7 @@ type ChartOfAccountsStoryArgs = {
 
 const meta: Meta<ChartOfAccountsStoryArgs> = {
   title: 'Components/ChartOfAccounts',
+  tags: ['public-api'],
   component: ChartOfAccounts,
   parameters: {
     controls: {

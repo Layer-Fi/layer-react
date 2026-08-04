@@ -1,5 +1,9 @@
 name: Storybook Pages
 
+# Publishes Storybook to GitHub Pages. This is public, so by default it ships only stories
+# for components exported from src/index.tsx (tagged `public-api`). Set `public_only` to
+# false to publish the whole library, internals included.
+
 on:
   workflow_dispatch:
     inputs:
@@ -8,6 +12,10 @@ on:
         required: true
         type: string
         default: main
+      public_only:
+        description: 'Publish only stories for components exported from src/index.tsx'
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -40,6 +48,7 @@ jobs:
       run: npm run storybook:build
       env:
         STORYBOOK_BASE_PATH: /${{ github.event.repository.name }}/
+        STORYBOOK_PUBLIC_ONLY: ${{ inputs.public_only }}
 
     - name: Upload Pages artifact
       uses: actions/upload-pages-artifact@v3

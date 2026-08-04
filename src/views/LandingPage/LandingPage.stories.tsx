@@ -12,6 +12,7 @@ import {
 
 const meta: Meta<LandingPageStoryArgs> = {
   title: 'Views/LandingPage',
+  tags: ['public-api'],
   parameters: {
     controls: { include: landingPageStoryControlsInclude },
   },

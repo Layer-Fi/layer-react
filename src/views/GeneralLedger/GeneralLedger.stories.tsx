@@ -13,6 +13,7 @@ type GeneralLedgerStoryArgs = {
 
 const meta: Meta<GeneralLedgerStoryArgs> = {
   title: 'Views/GeneralLedger',
+  tags: ['public-api'],
   component: GeneralLedgerView,
   parameters: {
     controls: {

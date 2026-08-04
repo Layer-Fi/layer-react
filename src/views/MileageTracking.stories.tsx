@@ -7,6 +7,7 @@ import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
 
 const meta: Meta<typeof MileageTracking> = {
   title: 'Views/MileageTracking',
+  tags: ['public-api'],
   component: MileageTracking,
   args: {
     showTitle: true,

@@ -27,6 +27,7 @@ function RestartingLinkAccounts() {
 
 const meta = {
   title: 'Components/LinkAccounts',
+  tags: ['public-api'],
   component: LinkAccounts,
   render: () => <RestartingLinkAccounts />,
   argTypes: {
@@ -70,10 +71,16 @@ export const Default: Story = {
 // The two states after the Plaid handoff. Both start from the seeded store rather than
 // the cleared one, since the link step renders a card per connected account.
 export const AccountsLinked: Story = {
+  // Docs captures this at desktop only, and the interaction is desktop-shaped:
+  // the header collapses to icon buttons below the tablet breakpoint.
+  parameters: { chromatic: { viewports: [1280] } },
   tags: ['docs-screenshot'],
 }
 
 export const ConfirmingBusinessAccounts: Story = {
+  // Docs captures this at desktop only, and the interaction is desktop-shaped:
+  // the header collapses to icon buttons below the tablet breakpoint.
+  parameters: { chromatic: { viewports: [1280] } },
   tags: ['docs-screenshot'],
   loaders: [
     () => bankAccountStore.all().forEach(

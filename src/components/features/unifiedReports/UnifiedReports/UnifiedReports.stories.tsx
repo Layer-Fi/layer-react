@@ -11,6 +11,7 @@ type UnifiedReportsStoryArgs = {
 
 const meta: Meta<UnifiedReportsStoryArgs> = {
   title: 'Components/UnifiedReports',
+  tags: ['public-api'],
   component: UnifiedReports,
   parameters: {
     controls: { include: ['navigationVariant', 'showTitle', 'dateSelectionMode'] },

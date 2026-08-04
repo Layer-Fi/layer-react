@@ -12,6 +12,7 @@ type ProfitAndLossDetailedChartsStoryArgs = {
 
 const meta: Meta<ProfitAndLossDetailedChartsStoryArgs> = {
   title: 'Components/ProfitAndLoss/DetailedCharts',
+  tags: ['public-api'],
   component: ProfitAndLossDetailedCharts,
   parameters: {
     msw: { handlers: profitAndLossStoryHandlers },

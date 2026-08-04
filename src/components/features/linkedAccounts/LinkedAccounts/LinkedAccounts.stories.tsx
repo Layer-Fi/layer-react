@@ -23,6 +23,7 @@ const linkedAccountsControls = makeLinkedAccountsStoryControls()
 
 const meta: Meta<LinkedAccountsStoryArgs> = {
   title: 'Components/LinkedAccounts',
+  tags: ['public-api'],
   component: LinkedAccounts,
   loaders: [keepTwoAccounts],
   parameters: {

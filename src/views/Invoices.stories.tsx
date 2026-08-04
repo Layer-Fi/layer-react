@@ -14,6 +14,7 @@ const invoicesStoryHandlers = [
 
 const meta: Meta<typeof Invoices> = {
   title: 'Views/Invoices',
+  tags: ['public-api'],
   component: Invoices,
   parameters: {
     msw: { handlers: invoicesStoryHandlers },
@@ -29,6 +30,9 @@ export const Default: Story = {
 }
 
 export const Creation: Story = {
+  // Docs captures this at desktop only, and the interaction is desktop-shaped:
+  // the header collapses to icon buttons below the tablet breakpoint.
+  parameters: { chromatic: { viewports: [1280] } },
   tags: ['docs-screenshot'],
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)

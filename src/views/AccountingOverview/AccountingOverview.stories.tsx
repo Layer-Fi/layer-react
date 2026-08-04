@@ -23,6 +23,7 @@ const summariesControls = makeSummariesStoryControls({
 
 const meta: Meta<AccountingOverviewStoryArgs> = {
   title: 'Views/Overview/Accounting',
+  tags: ['public-api'],
   component: AccountingOverview,
   parameters: {
     msw: { handlers: profitAndLossStoryHandlers },

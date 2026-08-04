@@ -14,6 +14,7 @@ const enableTaxEstimates = getAccountingConfiguration.mock(
 
 const meta: Meta<typeof TaxEstimates> = {
   title: 'Views/TaxEstimates',
+  tags: ['public-api'],
   component: TaxEstimates,
   parameters: { msw: { handlers: [enableTaxEstimates, ...handlers] } },
 }

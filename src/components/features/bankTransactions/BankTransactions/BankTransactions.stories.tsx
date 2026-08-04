@@ -75,6 +75,7 @@ const bankTransactionsControls = makeBankTransactionsStoryControls()
 
 const meta: Meta<BankTransactionsStoryArgs> = {
   title: 'Components/BankTransactions',
+  tags: ['public-api'],
   component: BankTransactions,
   parameters: {
     controls: {

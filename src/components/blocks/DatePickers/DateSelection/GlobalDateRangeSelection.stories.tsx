@@ -10,6 +10,7 @@ import { PinnedGlobalDateRange } from '@test-utils/PinnedGlobalDateRange'
 
 const meta: Meta<GlobalDateRangeSelectionProps> = {
   title: 'Blocks/DatePickers/GlobalDateRangeSelection',
+  tags: ['public-api'],
   component: GlobalDateRangeSelection,
   parameters: {
     msw: { handlers: [getBusiness.mock(makeBusiness({ activationAt: new Date(FIXTURE_YEAR - 1, 0, 1) })), ...handlers] },

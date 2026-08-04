@@ -58,6 +58,7 @@ const summariesControls = makeSummariesStoryControls({
 
 const meta: Meta<BookkeepingOverviewStoryArgs> = {
   title: 'Views/Overview/Bookkeeping',
+  tags: ['public-api'],
   component: BookkeepingOverview,
   parameters: {
     msw: {
