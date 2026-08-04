@@ -123,6 +123,21 @@ export const chartOfAccounts = [
     "accountNumber": null
   },
   {
+    "name": "Payment Processor Clearing Accounts",
+    "stableName": "PAYMENT_PROCESSOR_CLEARING",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "ASSET",
+      "displayName": "Assets"
+    },
+    "accountSubtype": {
+      "value": "PAYMENT_PROCESSOR_CLEARING_ACCOUNT",
+      "displayName": "Payment Clearing Accounts"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000008",
+    "accountNumber": null
+  },
+  {
     "name": "Prepaid Expenses",
     "stableName": "PREPAID_EXPENSES",
     "normality": "DEBIT",
@@ -134,7 +149,22 @@ export const chartOfAccounts = [
       "value": "PREPAID_EXPENSES",
       "displayName": "Prepaid Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000008",
+    "accountId": "00000009-0000-4000-8000-000000000009",
+    "accountNumber": null
+  },
+  {
+    "name": "Development Costs",
+    "stableName": "DEVELOPMENT_COSTS",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "ASSET",
+      "displayName": "Assets"
+    },
+    "accountSubtype": {
+      "value": "DEVELOPMENT_COSTS",
+      "displayName": "Development Costs"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000010",
     "accountNumber": null
   },
   {
@@ -146,10 +176,10 @@ export const chartOfAccounts = [
       "displayName": "Liabilities"
     },
     "accountSubtype": {
-      "value": "OTHER_CURRENT_LIABILITIES",
-      "displayName": "Other Current Liabilities"
+      "value": "OTHER_CURRENT_LIABILITY",
+      "displayName": "Current Liabilities"
     },
-    "accountId": "00000009-0000-4000-8000-000000000009",
+    "accountId": "00000009-0000-4000-8000-000000000011",
     "accountNumber": null
   },
   {
@@ -164,7 +194,22 @@ export const chartOfAccounts = [
       "value": "ACCOUNTS_PAYABLE",
       "displayName": "Accounts Payable"
     },
-    "accountId": "00000009-0000-4000-8000-000000000010",
+    "accountId": "00000009-0000-4000-8000-000000000012",
+    "accountNumber": null
+  },
+  {
+    "name": "Refund Liabilities",
+    "stableName": "REFUND_LIABILITIES",
+    "normality": "CREDIT",
+    "accountType": {
+      "value": "LIABILITY",
+      "displayName": "Liabilities"
+    },
+    "accountSubtype": {
+      "value": "REFUND_LIABILITIES",
+      "displayName": "Refund Liabilities"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000013",
     "accountNumber": null
   },
   {
@@ -179,7 +224,22 @@ export const chartOfAccounts = [
       "value": "CREDIT_CARD",
       "displayName": "Credit Cards"
     },
-    "accountId": "00000009-0000-4000-8000-000000000011",
+    "accountId": "00000009-0000-4000-8000-000000000014",
+    "accountNumber": null
+  },
+  {
+    "name": "Shareholder Loans",
+    "stableName": "SHAREHOLDER_LOANS",
+    "normality": "CREDIT",
+    "accountType": {
+      "value": "LIABILITY",
+      "displayName": "Liabilities"
+    },
+    "accountSubtype": {
+      "value": "SHAREHOLDER_LOAN",
+      "displayName": "Shareholder Loans"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000015",
     "accountNumber": null
   },
   {
@@ -194,7 +254,7 @@ export const chartOfAccounts = [
       "value": "PAYROLL_LIABILITY",
       "displayName": "Payroll Liabilities"
     },
-    "accountId": "00000009-0000-4000-8000-000000000012",
+    "accountId": "00000009-0000-4000-8000-000000000016",
     "accountNumber": null
   },
   {
@@ -209,22 +269,22 @@ export const chartOfAccounts = [
       "value": "SALES_TAXES_PAYABLE",
       "displayName": "Sales Taxes Payable"
     },
-    "accountId": "00000009-0000-4000-8000-000000000013",
+    "accountId": "00000009-0000-4000-8000-000000000017",
     "accountNumber": null
   },
   {
-    "name": "Unearned Revenue",
-    "stableName": "UNEARNED_REVENUE",
+    "name": "Other Taxes Payable",
+    "stableName": "OTHER_TAXES_PAYABLE",
     "normality": "CREDIT",
     "accountType": {
       "value": "LIABILITY",
       "displayName": "Liabilities"
     },
     "accountSubtype": {
-      "value": "UNEARNED_REVENUE",
-      "displayName": "Unearned Revenue"
+      "value": "OTHER_TAXES_PAYABLE",
+      "displayName": "Other Taxes Payable"
     },
-    "accountId": "00000009-0000-4000-8000-000000000014",
+    "accountId": "00000009-0000-4000-8000-000000000018",
     "accountNumber": null
   },
   {
@@ -239,7 +299,7 @@ export const chartOfAccounts = [
       "value": "LINE_OF_CREDIT",
       "displayName": "Lines of Credit"
     },
-    "accountId": "00000009-0000-4000-8000-000000000015",
+    "accountId": "00000009-0000-4000-8000-000000000019",
     "accountNumber": null
   },
   {
@@ -254,7 +314,52 @@ export const chartOfAccounts = [
       "value": "NOTES_PAYABLE",
       "displayName": "Notes Payable"
     },
-    "accountId": "00000009-0000-4000-8000-000000000016",
+    "accountId": "00000009-0000-4000-8000-000000000020",
+    "accountNumber": null
+  },
+  {
+    "name": "Collected Tips",
+    "stableName": "TIPS",
+    "normality": "CREDIT",
+    "accountType": {
+      "value": "LIABILITY",
+      "displayName": "Liabilities"
+    },
+    "accountSubtype": {
+      "value": "TIPS",
+      "displayName": "Tips"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000021",
+    "accountNumber": null
+  },
+  {
+    "name": "Unearned Revenue",
+    "stableName": "UNEARNED_REVENUE",
+    "normality": "CREDIT",
+    "accountType": {
+      "value": "LIABILITY",
+      "displayName": "Liabilities"
+    },
+    "accountSubtype": {
+      "value": "UNEARNED_REVENUE",
+      "displayName": "Unearned Revenue"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000022",
+    "accountNumber": null
+  },
+  {
+    "name": "Undeposited Payments",
+    "stableName": "UNDEPOSITED_PAYMENTS",
+    "normality": "CREDIT",
+    "accountType": {
+      "value": "LIABILITY",
+      "displayName": "Liabilities"
+    },
+    "accountSubtype": {
+      "value": "UNDEPOSITED_OUTFLOWS",
+      "displayName": "Undeposited Outflows"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000023",
     "accountNumber": null
   },
   {
@@ -269,7 +374,7 @@ export const chartOfAccounts = [
       "value": "OTHER_EQUITY",
       "displayName": "Equities"
     },
-    "accountId": "00000009-0000-4000-8000-000000000017",
+    "accountId": "00000009-0000-4000-8000-000000000024",
     "accountNumber": null
   },
   {
@@ -284,7 +389,7 @@ export const chartOfAccounts = [
       "value": "CONTRIBUTIONS",
       "displayName": "Contributions"
     },
-    "accountId": "00000009-0000-4000-8000-000000000018",
+    "accountId": "00000009-0000-4000-8000-000000000025",
     "accountNumber": null
   },
   {
@@ -299,22 +404,22 @@ export const chartOfAccounts = [
       "value": "DISTRIBUTIONS",
       "displayName": "Distributions"
     },
-    "accountId": "00000009-0000-4000-8000-000000000019",
+    "accountId": "00000009-0000-4000-8000-000000000026",
     "accountNumber": null
   },
   {
-    "name": "Common Stock",
-    "stableName": "COMMON_STOCK",
-    "normality": "CREDIT",
+    "name": "Owner's Draw",
+    "stableName": "OWNERS_DRAW",
+    "normality": "DEBIT",
     "accountType": {
       "value": "EQUITY",
       "displayName": "Equities"
     },
     "accountSubtype": {
-      "value": "COMMON_STOCK",
-      "displayName": "Common Stock"
+      "value": "DISTRIBUTIONS",
+      "displayName": "Distributions"
     },
-    "accountId": "00000009-0000-4000-8000-000000000020",
+    "accountId": "00000009-0000-4000-8000-000000000027",
     "accountNumber": null
   },
   {
@@ -329,7 +434,22 @@ export const chartOfAccounts = [
       "value": "RETAINED_EARNINGS",
       "displayName": "Retained Earnings"
     },
-    "accountId": "00000009-0000-4000-8000-000000000021",
+    "accountId": "00000009-0000-4000-8000-000000000028",
+    "accountNumber": null
+  },
+  {
+    "name": "Accumulated Adjustments",
+    "stableName": "ACCUMULATED_ADJUSTMENTS",
+    "normality": "CREDIT",
+    "accountType": {
+      "value": "EQUITY",
+      "displayName": "Equities"
+    },
+    "accountSubtype": {
+      "value": "ACCUMULATED_ADJUSTMENTS",
+      "displayName": "Accumulated Adjustments"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000029",
     "accountNumber": null
   },
   {
@@ -344,7 +464,22 @@ export const chartOfAccounts = [
       "value": "OPENING_BALANCE_EQUITY",
       "displayName": "Opening Balance Equity"
     },
-    "accountId": "00000009-0000-4000-8000-000000000022",
+    "accountId": "00000009-0000-4000-8000-000000000030",
+    "accountNumber": null
+  },
+  {
+    "name": "Owner's Capital",
+    "stableName": "OWNERS_CAPITAL",
+    "normality": "CREDIT",
+    "accountType": {
+      "value": "EQUITY",
+      "displayName": "Equities"
+    },
+    "accountSubtype": {
+      "value": "OWNERS_CAPITAL",
+      "displayName": "Owner's Capital"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000031",
     "accountNumber": null
   },
   {
@@ -359,7 +494,7 @@ export const chartOfAccounts = [
       "value": "OTHER_INCOME",
       "displayName": "Other Income"
     },
-    "accountId": "00000009-0000-4000-8000-000000000023",
+    "accountId": "00000009-0000-4000-8000-000000000032",
     "accountNumber": null
   },
   {
@@ -374,7 +509,7 @@ export const chartOfAccounts = [
       "value": "SALES",
       "displayName": "Sales"
     },
-    "accountId": "00000009-0000-4000-8000-000000000024",
+    "accountId": "00000009-0000-4000-8000-000000000033",
     "accountNumber": null
   },
   {
@@ -389,7 +524,7 @@ export const chartOfAccounts = [
       "value": "UNCATEGORIZED_REVENUE",
       "displayName": "Uncategorized Revenue"
     },
-    "accountId": "00000009-0000-4000-8000-000000000025",
+    "accountId": "00000009-0000-4000-8000-000000000034",
     "accountNumber": null
   },
   {
@@ -404,7 +539,37 @@ export const chartOfAccounts = [
       "value": "RETURNS_ALLOWANCES",
       "displayName": "Returns & Allowances"
     },
-    "accountId": "00000009-0000-4000-8000-000000000026",
+    "accountId": "00000009-0000-4000-8000-000000000035",
+    "accountNumber": null
+  },
+  {
+    "name": "Discounts",
+    "stableName": "DISCOUNTS",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "REVENUE",
+      "displayName": "Revenue"
+    },
+    "accountSubtype": {
+      "value": "RETURNS_ALLOWANCES",
+      "displayName": "Returns & Allowances"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000036",
+    "accountNumber": null
+  },
+  {
+    "name": "Customer Refunds",
+    "stableName": "CUSTOMER_REFUNDS",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "REVENUE",
+      "displayName": "Revenue"
+    },
+    "accountSubtype": {
+      "value": "RETURNS_ALLOWANCES",
+      "displayName": "Returns & Allowances"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000037",
     "accountNumber": null
   },
   {
@@ -419,7 +584,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000027",
+    "accountId": "00000009-0000-4000-8000-000000000038",
     "accountNumber": null
   },
   {
@@ -434,7 +599,37 @@ export const chartOfAccounts = [
       "value": "COGS",
       "displayName": "COGS"
     },
-    "accountId": "00000009-0000-4000-8000-000000000028",
+    "accountId": "00000009-0000-4000-8000-000000000039",
+    "accountNumber": null
+  },
+  {
+    "name": "Items for Resale",
+    "stableName": "ITEMS_FOR_RESALE",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "COGS",
+      "displayName": "COGS"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000040",
+    "accountNumber": null
+  },
+  {
+    "name": "Materials for Sold Goods",
+    "stableName": "MATERIALS",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "COGS",
+      "displayName": "COGS"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000041",
     "accountNumber": null
   },
   {
@@ -449,7 +644,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000029",
+    "accountId": "00000009-0000-4000-8000-000000000042",
     "accountNumber": null
   },
   {
@@ -464,7 +659,7 @@ export const chartOfAccounts = [
       "value": "UNCATEGORIZED_EXPENSE",
       "displayName": "Uncategorized Expense"
     },
-    "accountId": "00000009-0000-4000-8000-000000000030",
+    "accountId": "00000009-0000-4000-8000-000000000043",
     "accountNumber": null
   },
   {
@@ -479,7 +674,7 @@ export const chartOfAccounts = [
       "value": "PAYROLL",
       "displayName": "Payroll"
     },
-    "accountId": "00000009-0000-4000-8000-000000000031",
+    "accountId": "00000009-0000-4000-8000-000000000044",
     "accountNumber": null
   },
   {
@@ -494,7 +689,7 @@ export const chartOfAccounts = [
       "value": "PAYROLL",
       "displayName": "Payroll"
     },
-    "accountId": "00000009-0000-4000-8000-000000000032",
+    "accountId": "00000009-0000-4000-8000-000000000045",
     "accountNumber": null
   },
   {
@@ -509,7 +704,7 @@ export const chartOfAccounts = [
       "value": "PAYROLL",
       "displayName": "Payroll"
     },
-    "accountId": "00000009-0000-4000-8000-000000000033",
+    "accountId": "00000009-0000-4000-8000-000000000046",
     "accountNumber": null
   },
   {
@@ -524,7 +719,7 @@ export const chartOfAccounts = [
       "value": "PAYROLL",
       "displayName": "Payroll"
     },
-    "accountId": "00000009-0000-4000-8000-000000000034",
+    "accountId": "00000009-0000-4000-8000-000000000047",
     "accountNumber": null
   },
   {
@@ -539,7 +734,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000035",
+    "accountId": "00000009-0000-4000-8000-000000000048",
     "accountNumber": null
   },
   {
@@ -554,7 +749,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000036",
+    "accountId": "00000009-0000-4000-8000-000000000049",
     "accountNumber": null
   },
   {
@@ -569,7 +764,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000037",
+    "accountId": "00000009-0000-4000-8000-000000000050",
     "accountNumber": null
   },
   {
@@ -584,7 +779,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000038",
+    "accountId": "00000009-0000-4000-8000-000000000051",
     "accountNumber": null
   },
   {
@@ -599,7 +794,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000039",
+    "accountId": "00000009-0000-4000-8000-000000000052",
     "accountNumber": null
   },
   {
@@ -614,7 +809,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000040",
+    "accountId": "00000009-0000-4000-8000-000000000053",
     "accountNumber": null
   },
   {
@@ -629,7 +824,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000041",
+    "accountId": "00000009-0000-4000-8000-000000000054",
     "accountNumber": null
   },
   {
@@ -644,7 +839,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000042",
+    "accountId": "00000009-0000-4000-8000-000000000055",
     "accountNumber": null
   },
   {
@@ -659,7 +854,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000043",
+    "accountId": "00000009-0000-4000-8000-000000000056",
     "accountNumber": null
   },
   {
@@ -674,12 +869,12 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000044",
+    "accountId": "00000009-0000-4000-8000-000000000057",
     "accountNumber": null
   },
   {
-    "name": "Payment Processing Fees",
-    "stableName": "PAYMENT_PROCESSING_FEES",
+    "name": "Other Fees",
+    "stableName": "OTHER_FEES",
     "normality": "DEBIT",
     "accountType": {
       "value": "EXPENSE",
@@ -689,7 +884,67 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000045",
+    "accountId": "00000009-0000-4000-8000-000000000058",
+    "accountNumber": null
+  },
+  {
+    "name": "Other Business Expenses",
+    "stableName": "OTHER_BUSINESS_EXPENSES",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "OPERATING_EXPENSES",
+      "displayName": "Operating Expenses"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000059",
+    "accountNumber": null
+  },
+  {
+    "name": "Bad Debt",
+    "stableName": "BAD_DEBT",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "OPERATING_EXPENSES",
+      "displayName": "Operating Expenses"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000060",
+    "accountNumber": null
+  },
+  {
+    "name": "Equipment & Machinery",
+    "stableName": "EQUIPMENT",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "OPERATING_EXPENSES",
+      "displayName": "Operating Expenses"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000061",
+    "accountNumber": null
+  },
+  {
+    "name": "Phone",
+    "stableName": "PHONE",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "OPERATING_EXPENSES",
+      "displayName": "Operating Expenses"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000062",
     "accountNumber": null
   },
   {
@@ -704,7 +959,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000046",
+    "accountId": "00000009-0000-4000-8000-000000000063",
     "accountNumber": null
   },
   {
@@ -719,7 +974,82 @@ export const chartOfAccounts = [
       "value": "INTEREST_EXPENSES",
       "displayName": "Interest Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000047",
+    "accountId": "00000009-0000-4000-8000-000000000064",
+    "accountNumber": null
+  },
+  {
+    "name": "Taxes",
+    "stableName": "TAXES",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "TAXES_LICENSES",
+      "displayName": "Taxes & Licenses"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000065",
+    "accountNumber": null
+  },
+  {
+    "name": "Sales Tax",
+    "stableName": "SALES_TAXES",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "TAXES_LICENSES",
+      "displayName": "Taxes & Licenses"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000066",
+    "accountNumber": null
+  },
+  {
+    "name": "Income Tax",
+    "stableName": "INCOME_TAXES",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "TAXES_LICENSES",
+      "displayName": "Taxes & Licenses"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000067",
+    "accountNumber": null
+  },
+  {
+    "name": "Payroll Tax",
+    "stableName": "PAYROLL_TAXES",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "TAXES_LICENSES",
+      "displayName": "Taxes & Licenses"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000068",
+    "accountNumber": null
+  },
+  {
+    "name": "Other Tax",
+    "stableName": "OTHER_TAXES",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "TAXES_LICENSES",
+      "displayName": "Taxes & Licenses"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000069",
     "accountNumber": null
   }
 ] as (typeof schema.Type)[]

@@ -3,8 +3,5 @@
   "businesses/[business-id]/reports/balance-sheet/get.ts",
   "businesses/[business-id]/reports/cashflow-statement/exports/csv/get.ts",
   "businesses/[business-id]/reports/cashflow-statement/get.ts",
-  "businesses/[business-id]/reports/config/get.ts",
-  "businesses/[business-id]/reports/profit-and-loss/lines/exports/excel/get.ts",
-  "businesses/[business-id]/reports/unified/[report-name]/exports/excel/get.ts",
-  "businesses/[business-id]/reports/unified/[report-name]/get.ts"
+  "businesses/[business-id]/reports/profit-and-loss/lines/exports/excel/get.ts"
 ]

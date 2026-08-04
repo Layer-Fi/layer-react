@@ -1,5 +1,6 @@
 import { type BankTransaction } from '@internal-types/bankTransactions'
 
+import { filterBankTransactions, sortBankTransactions } from '@msw/api/businesses/[business-id]/bank-transactions/listQuery'
 import { bankTransactionStore } from '@msw/api/businesses/[business-id]/bank-transactions/store'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { csvPresignedUrlResponse, formatCsvCents, formatCsvDate } from '@msw/utils/csvPresignedUrl'
@@ -15,12 +16,16 @@ const toRow = (transaction: BankTransaction) => [
   transaction.category?.displayName ?? '',
 ]
 
-// Serves CSV via data URL in place of the real endpoint's presigned xlsx.
+// Serves CSV via data URL in place of the real endpoint's presigned xlsx. Applies the
+// same filter and sort as the list endpoint so the download matches the visible table.
 export const get = createMockEndpoint<undefined, ReturnType<typeof csvPresignedUrlResponse>>({
   method: 'get',
   path: '*/v1/businesses/:businessId/reports/transactions/exports/excel',
-  resolve: () => csvPresignedUrlResponse('bank-transactions.csv', [
+  resolve: ({ request }) => csvPresignedUrlResponse('bank-transactions.csv', [
     HEADER,
-    ...bankTransactionStore.all().map(toRow),
+    ...sortBankTransactions(
+      filterBankTransactions(bankTransactionStore.all(), request),
+      request,
+    ).map(toRow),
   ]),
 })

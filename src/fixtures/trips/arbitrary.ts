@@ -27,5 +27,5 @@ export const tripPurposeArbitrary = (fc: typeof FastCheck) =>
 
 export const tripDescriptionArbitrary = nullableConstantFrom(
   tripDescriptions,
-  { nullWeight: 3, valueWeight: 1 },
+  { nullWeight: 1, valueWeight: 6 },
 )
