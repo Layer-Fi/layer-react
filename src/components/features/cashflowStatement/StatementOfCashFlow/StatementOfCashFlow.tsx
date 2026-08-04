@@ -7,7 +7,7 @@ import { useGetStatementOfCashFlow } from '@api/businesses/[business-id]/reports
 import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { useResolvedReportView } from '@hooks/features/reports/useResolvedReportView'
 import { useGlobalDateRange } from '@providers/global/DateStoreProvider/GlobalDateStoreProvider'
-import { TableProvider } from '@providers/reports/TableContext/TableContext'
+import { ReportsTableProvider } from '@providers/reports/ReportsTableContext/ReportsTableContext'
 import { HStack, Stack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@blocks/DatePickers/DateSelection/CombinedDateRangeSelection'
 import { Header } from '@blocks/Layout/Header/Header'
@@ -63,7 +63,7 @@ const StatementOfCashFlowView = ({
   )
 
   return (
-    <TableProvider>
+    <ReportsTableProvider>
       <View
         type='panel'
         ref={containerRef}
@@ -121,6 +121,6 @@ const StatementOfCashFlowView = ({
           ))(data)}
         </ConditionalBlock>
       </View>
-    </TableProvider>
+    </ReportsTableProvider>
   )
 }

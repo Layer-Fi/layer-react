@@ -1,24 +1,24 @@
 import { createContext, type ReactNode, useCallback, useState } from 'react'
 
-export interface TableContextProps {
+export interface ReportsTableContextProps {
   expandedRows: string[]
   setExpandedRows: (rowKey: string) => void
   expandAllRows: (rowKeys: string[]) => void
 }
 
-const defaultValue: TableContextProps = {
+const defaultValue: ReportsTableContextProps = {
   expandedRows: [],
   setExpandedRows: () => {},
   expandAllRows: () => {},
 }
 
-export const TableContext = createContext<TableContextProps>(defaultValue)
+export const ReportsTableContext = createContext<ReportsTableContextProps>(defaultValue)
 
-interface TableProviderProps {
+interface ReportsTableProviderProps {
   children: ReactNode
 }
 
-export const TableProvider: React.FC<TableProviderProps> = ({ children }) => {
+export const ReportsTableProvider: React.FC<ReportsTableProviderProps> = ({ children }) => {
   const [expandedRows, setExpandedRowsState] = useState<string[]>([])
 
   const toggleRow = useCallback((rowKey: string) => {
@@ -38,15 +38,15 @@ export const TableProvider: React.FC<TableProviderProps> = ({ children }) => {
     setExpandedRowsState(rowKeys)
   }, [])
 
-  const contextValue: TableContextProps = {
+  const contextValue: ReportsTableContextProps = {
     expandedRows,
     setExpandedRows: toggleRow,
     expandAllRows,
   }
 
   return (
-    <TableContext.Provider value={contextValue}>
+    <ReportsTableContext.Provider value={contextValue}>
       {children}
-    </TableContext.Provider>
+    </ReportsTableContext.Provider>
   )
 }

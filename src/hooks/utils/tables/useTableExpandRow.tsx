@@ -1,13 +1,13 @@
 import { useCallback, useContext } from 'react'
 
-import { TableContext } from '@providers/reports/TableContext/TableContext'
+import { ReportsTableContext } from '@providers/reports/ReportsTableContext/ReportsTableContext'
 
 export const useTableExpandRow = () => {
   const {
     expandAllRows,
     expandedRows,
     setExpandedRows,
-  } = useContext(TableContext)
+  } = useContext(ReportsTableContext)
 
   const setIsOpen = useCallback((rowKey: string | string[]) => {
     if (Array.isArray(rowKey)) {

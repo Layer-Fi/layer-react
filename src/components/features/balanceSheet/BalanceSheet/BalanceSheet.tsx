@@ -6,7 +6,7 @@ import { useGetBalanceSheet } from '@api/businesses/[business-id]/reports/balanc
 import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { useResolvedReportView } from '@hooks/features/reports/useResolvedReportView'
 import { type DateSelectionMode, useGlobalDate } from '@providers/global/DateStoreProvider/GlobalDateStoreProvider'
-import { TableProvider } from '@providers/reports/TableContext/TableContext'
+import { ReportsTableProvider } from '@providers/reports/ReportsTableContext/ReportsTableContext'
 import { HStack, Stack } from '@ui/Stack/Stack'
 import { CombinedDateSelection } from '@blocks/DatePickers/DateSelection/CombinedDateSelection'
 import { Header } from '@blocks/Layout/Header/Header'
@@ -99,7 +99,7 @@ const BalanceSheetView = ({
   )
 
   return (
-    <TableProvider>
+    <ReportsTableProvider>
       <View
         type='panel'
         ref={containerRef}
@@ -131,6 +131,6 @@ const BalanceSheetView = ({
       >
         {content}
       </View>
-    </TableProvider>
+    </ReportsTableProvider>
   )
 }
