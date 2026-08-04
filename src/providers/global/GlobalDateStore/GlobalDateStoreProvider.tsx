@@ -1,3 +1,4 @@
+import { useBusinessActivationDateSafe } from '@hooks/features/business/useBusinessActivationDateSafe'
 import { createScopedDateStore } from '@providers/common/DateStore/createScopedDateStore'
 
 export type { DateRange, DateSelectionMode } from '@utils/date/dateRange'
@@ -12,7 +13,7 @@ const {
   useDatePreset: useGlobalDatePreset,
   useDatePresetActions: useGlobalDatePresetActions,
   usePeriodAlignedActions: useGlobalDatePeriodAlignedActions,
-} = createScopedDateStore()
+} = createScopedDateStore({ useActivationDate: useBusinessActivationDateSafe })
 
 export {
   GlobalDateStoreProvider,

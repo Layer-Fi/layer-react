@@ -1,4 +1,5 @@
 import { DatePreset } from '@utils/date/dateRangePresets'
+import { useBusinessActivationDateSafe } from '@hooks/features/business/useBusinessActivationDateSafe'
 import { createScopedDateStore } from '@providers/common/DateStore/createScopedDateStore'
 
 /**
@@ -12,7 +13,11 @@ const {
   useDateRangeActions: useLedgerDateRangeActions,
   useDatePreset: useLedgerDatePreset,
   useDatePresetActions: useLedgerDatePresetActions,
-} = createScopedDateStore({ initialDatePreset: DatePreset.AllTime, storeName: 'LedgerDateStore' })
+} = createScopedDateStore({
+  initialDatePreset: DatePreset.AllTime,
+  storeName: 'LedgerDateStore',
+  useActivationDate: useBusinessActivationDateSafe,
+})
 
 export {
   LedgerDateStoreProvider,

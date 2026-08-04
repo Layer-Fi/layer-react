@@ -30,7 +30,9 @@ Two buckets are not domains. `global/` is exactly the provider stack `LayerProvi
 add to it only when you are adding a provider every consumer gets. `common/` is reusable,
 domain-agnostic machinery (`BulkSelectionStore`, the `DateStore` factory, `InAppLink`); put a
 store here rather than in a domain when a `@blocks` component consumes it, since a block may
-not depend on a feature domain.
+not depend on a feature domain. Nothing in `common/` may import `global/` or a domain — inject
+what it needs instead, the way `createScopedDateStore` takes a `useActivationDate` hook rather
+than reading `LayerContext` itself.
 
 ## Zustand stores are provider-scoped, never global singletons
 

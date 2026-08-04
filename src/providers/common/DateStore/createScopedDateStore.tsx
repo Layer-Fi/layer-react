@@ -1,16 +1,26 @@
 import { type PropsWithChildren, type ReactNode, useCallback, useMemo } from 'react'
 
 import { type DateSelectionMode, getEffectiveDateForMode, getEffectiveDateRangeForMode } from '@utils/date/dateRange'
-import { DatePreset, type SelectableDatePreset } from '@utils/date/dateRangePresets'
+import { DatePreset, deriveDateRangeFromPreset, type SelectableDatePreset } from '@utils/date/dateRangePresets'
 import { createScopedStore } from '@utils/zustand/createScopedStore'
 import { useStoreWithDateSelected } from '@utils/zustand/useStoreWithDateSelected'
 import { buildDateStore, type MakeDateStoreOptions } from '@providers/common/DateStore/buildDateStore'
-import { useBusinessActivationDateSafe, useDerivedInitialDateRange } from '@providers/common/DateStore/useResolvedInitialRange'
 
 type DateStoreApi = ReturnType<typeof buildDateStore>
 
+/**
+ * Supplied by the caller so this factory stays free of business/LayerContext knowledge.
+ * `hasBusinessContext` distinguishes "the activation date is still loading" from "it can
+ * never arrive here", which is the difference between the fallback and a thrown error.
+ */
+export type UseActivationDate = () => {
+  activationDate: Date | undefined
+  hasBusinessContext: boolean
+}
+
 export type CreateScopedDateStoreOptions = MakeDateStoreOptions & {
   storeName?: string
+  useActivationDate: UseActivationDate
 }
 
 type ProviderProps = PropsWithChildren<{
@@ -28,19 +38,27 @@ type UseDateRangeParams = {
 export function createScopedDateStore({
   storeName = 'DateStore',
   initialDatePreset = DatePreset.ThisMonth,
-}: CreateScopedDateStoreOptions = {}) {
+  useActivationDate,
+}: CreateScopedDateStoreOptions) {
   const scopedStore = createScopedStore<DateStoreApi>({ storeName })
 
   function Provider({ children, fallback = null }: ProviderProps) {
-    const initialRange = useDerivedInitialDateRange(initialDatePreset)
+    const { activationDate, hasBusinessContext } = useActivationDate()
+    const initialRange = deriveDateRangeFromPreset(initialDatePreset, activationDate)
 
-    if (initialRange.status === 'loading') {
+    if (!initialRange && !hasBusinessContext) {
+      throw new Error(
+        'An AllTime date store must be mounted within a business context (below BusinessProvider).',
+      )
+    }
+
+    if (!initialRange) {
       return <>{fallback}</>
     }
 
     return (
       <scopedStore.Provider
-        createStore={() => buildDateStore({ initialRange: initialRange.range, initialPreset: initialDatePreset })}
+        createStore={() => buildDateStore({ initialRange, initialPreset: initialDatePreset })}
       >
         {children}
       </scopedStore.Provider>
@@ -62,7 +80,7 @@ export function createScopedDateStore({
   }
 
   function useDateActions() {
-    const activationDate = useBusinessActivationDateSafe()
+    const { activationDate } = useActivationDate()
     const setDate = scopedStore.useSelector(
       ({ actions }) => actions.setDate,
     )
@@ -103,7 +121,7 @@ export function createScopedDateStore({
   }
 
   function useDateRangeActions() {
-    const activationDate = useBusinessActivationDateSafe()
+    const { activationDate } = useActivationDate()
 
     const setDateRangeAction = scopedStore.useSelector(
       ({ actions }) => actions.setDateRange,
@@ -139,7 +157,7 @@ export function createScopedDateStore({
   }
 
   function useDatePresetActions() {
-    const activationDate = useBusinessActivationDateSafe()
+    const { activationDate } = useActivationDate()
 
     const setDatePresetAction = scopedStore.useSelector(
       ({ actions }) => actions.setDatePreset,
@@ -157,7 +175,7 @@ export function createScopedDateStore({
   }
 
   function usePeriodAlignedActions() {
-    const activationDate = useBusinessActivationDateSafe()
+    const { activationDate } = useActivationDate()
     const setMonthByPeriod = scopedStore.useSelector(
       ({ actions }) => actions.setMonthByPeriod,
     )

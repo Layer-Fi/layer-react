@@ -4,6 +4,7 @@ import { startOfDay } from 'date-fns'
 import { describe, expect, it, vi } from 'vitest'
 
 import { DatePreset } from '@utils/date/dateRangePresets'
+import { useBusinessActivationDateSafe } from '@hooks/features/business/useBusinessActivationDateSafe'
 import { createScopedDateStore, type CreateScopedDateStoreOptions } from '@providers/common/DateStore/createScopedDateStore'
 
 import { makeBusiness } from '@fixtures/business/mocks'
@@ -23,8 +24,13 @@ import {
 } from '@test-utils/fixedDates'
 import { LayerTestProvider } from '@test-utils/LayerTestProvider'
 
-function setupDateStore(options?: CreateScopedDateStoreOptions) {
-  const dateStore = createScopedDateStore(options)
+type DateStoreTestOptions = Omit<CreateScopedDateStoreOptions, 'useActivationDate'>
+
+function setupDateStore(options?: DateStoreTestOptions) {
+  const dateStore = createScopedDateStore({
+    useActivationDate: useBusinessActivationDateSafe,
+    ...options,
+  })
 
   const {
     Provider,
@@ -186,7 +192,10 @@ describe('createScopedDateStore', () => {
 
 describe('createScopedDateStore AllTime preset', () => {
   it('defers construction until the business loads, then resolves the range from the activation date', async () => {
-    const dateStore = createScopedDateStore({ initialDatePreset: DatePreset.AllTime })
+    const dateStore = createScopedDateStore({
+      initialDatePreset: DatePreset.AllTime,
+      useActivationDate: useBusinessActivationDateSafe,
+    })
 
     function Wrapper({ children }: PropsWithChildren) {
       return (
