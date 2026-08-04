@@ -27,7 +27,7 @@ const EXPANDED_TOP_LEVEL: ExpandedState = { 'assets': true, 'assets.current': tr
 const INDENT_SIZES: readonly ExpandableDataTableIndentSize[] = ['xs', 'sm', 'md']
 
 const meta: Meta<typeof ExpandableDataTable<AccountNode>> = {
-  title: 'Blocks/Tables/ExpandableDataTable',
+  title: 'Blocks/Table/ExpandableDataTable',
   component: ExpandableDataTable,
   args: {
     data: ACCOUNT_TREE,

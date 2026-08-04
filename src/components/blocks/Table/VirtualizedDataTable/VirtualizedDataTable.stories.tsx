@@ -17,7 +17,7 @@ const LONG_LIST = buildInvoiceRows(2000)
 const SHORT_LIST = buildInvoiceRows(4)
 
 const meta: Meta<typeof VirtualizedDataTable<InvoiceRow>> = {
-  title: 'Blocks/Tables/VirtualizedDataTable',
+  title: 'Blocks/Table/VirtualizedDataTable',
   component: VirtualizedDataTable,
   args: {
     data: LONG_LIST,

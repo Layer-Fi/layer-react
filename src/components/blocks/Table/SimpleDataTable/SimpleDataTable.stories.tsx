@@ -22,7 +22,7 @@ const COLUMN_CONFIG = getInvoiceColumnConfig()
 const SHORT_LIST = INVOICE_ROWS.slice(0, 4)
 
 const meta: Meta<typeof SimpleDataTable<InvoiceRow>> = {
-  title: 'Blocks/Tables/SimpleDataTable',
+  title: 'Blocks/Table/SimpleDataTable',
   component: SimpleDataTable,
   args: {
     data: INVOICE_ROWS,

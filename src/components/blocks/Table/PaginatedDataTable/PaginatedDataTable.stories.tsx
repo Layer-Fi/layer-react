@@ -19,7 +19,7 @@ const PINNED_COLUMN_CONFIG = getPinnedInvoiceColumnConfig()
 const ROWS = buildInvoiceRows(43)
 
 const meta: Meta<typeof PaginatedTable<InvoiceRow>> = {
-  title: 'Blocks/Tables/PaginatedDataTable',
+  title: 'Blocks/Table/PaginatedDataTable',
   component: PaginatedTable,
   args: {
     data: ROWS,
