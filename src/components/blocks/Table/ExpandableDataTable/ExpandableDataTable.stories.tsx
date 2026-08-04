@@ -19,7 +19,8 @@ import {
 
 const COLUMN_CONFIG = getAccountColumnConfig()
 
-const EXPANDED_TOP_LEVEL: ExpandedState = { ASSETS: true, EXPENSES: true, OPERATING_EXPENSES: true }
+// PAYROLL is the depth-2 node under EXPENSES, so this opens all three levels.
+const PARTIALLY_EXPANDED: ExpandedState = { ASSETS: true, EXPENSES: true, PAYROLL: true }
 
 const meta: Meta<typeof ExpandableDataTable<AccountNode>> = {
   title: 'Blocks/Table/ExpandableDataTable',
@@ -59,7 +60,7 @@ export const Default: Story = {
   render: args => (
     <Gallery gap={32}>
       <Col label='nested rows, partially expanded'>
-        <ExpandableDataTableProvider defaultExpanded={EXPANDED_TOP_LEVEL}>
+        <ExpandableDataTableProvider defaultExpanded={PARTIALLY_EXPANDED}>
           <ExpandableDataTable {...args} />
         </ExpandableDataTableProvider>
       </Col>
