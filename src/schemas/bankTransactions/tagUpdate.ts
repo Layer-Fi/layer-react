@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { TagKeyValueSchema } from '@schemas/tags/tag'
+import { TagKeyValueSchema } from '@schemas/tags/tagKeyValue'
 
 /** POST tags body - applies tag key/values to a set of transactions. */
 export const TagBankTransactionsUpdateSchema = Schema.Struct({

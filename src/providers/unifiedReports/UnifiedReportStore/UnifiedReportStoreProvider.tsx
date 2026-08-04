@@ -2,7 +2,7 @@ import { createContext, type PropsWithChildren, useCallback, useContext, useEffe
 import { getYear } from 'date-fns'
 import { createStore, type StoreApi, useStore } from 'zustand'
 
-import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/tags/tag'
+import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/tags/tagValueDefinition'
 import {
   type ReportConfig,
   ReportControl,

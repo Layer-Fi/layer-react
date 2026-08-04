@@ -7,7 +7,8 @@ import type { CreateCustomJournalEntry } from '@schemas/generalLedger/createCust
 import type { ApiCustomJournalEntryWithEntry } from '@schemas/generalLedger/journalEntry'
 import type { JournalEntryForm, JournalEntryFormLineItem } from '@schemas/generalLedger/journalEntryForm'
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerEntryDirection'
-import { makeTagFromTransactionTag, makeTagKeyValueFromTag } from '@schemas/tags/tag'
+import { makeTagFromTransactionTag } from '@schemas/tags/tag'
+import { makeTagKeyValueFromTag } from '@schemas/tags/tagKeyValue'
 import { BIG_DECIMAL_ZERO, convertBigDecimalToBigIntCents } from '@utils/bigDecimalUtils'
 
 /**

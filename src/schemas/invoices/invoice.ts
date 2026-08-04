@@ -3,7 +3,7 @@ import { pipe, Schema } from 'effect'
 import { AccountIdentifierSchema } from '@schemas/common/accountIdentifier'
 import { CustomerSchema } from '@schemas/customerVendor/customer'
 import { TransformedInvoiceStatusSchema } from '@schemas/invoices/invoiceStatus'
-import { TransactionTagSchema } from '@schemas/tags/tag'
+import { TransactionTagSchema } from '@schemas/tags/transactionTag'
 
 export const InvoiceLineItemSchema = Schema.Struct({
   id: Schema.UUID,

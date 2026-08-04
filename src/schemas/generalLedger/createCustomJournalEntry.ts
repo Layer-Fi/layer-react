@@ -2,7 +2,7 @@ import { pipe, Schema } from 'effect'
 
 import { AccountIdentifierSchema } from '@schemas/common/accountIdentifier'
 import { LedgerEntryDirectionSchema } from '@schemas/generalLedger/ledgerEntryDirection'
-import { TagKeyValueSchema } from '@schemas/tags/tag'
+import { TagKeyValueSchema } from '@schemas/tags/tagKeyValue'
 
 export const CreateCustomJournalEntryLineItemSchema = Schema.Struct({
   externalId: Schema.optional(Schema.String).pipe(

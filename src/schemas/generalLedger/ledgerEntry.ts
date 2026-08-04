@@ -5,7 +5,7 @@ import { CustomerSchema } from '@schemas/customerVendor/customer'
 import { VendorSchema } from '@schemas/customerVendor/vendor'
 import { SingleChartAccountSchema } from '@schemas/generalLedger/chartOfAccounts'
 import { LedgerEntryDirectionSchema } from '@schemas/generalLedger/ledgerEntryDirection'
-import { TransactionTagSchema } from '@schemas/tags/tag'
+import { TransactionTagSchema } from '@schemas/tags/transactionTag'
 
 export enum ClassifierAgent {
   Sms = 'SMS',

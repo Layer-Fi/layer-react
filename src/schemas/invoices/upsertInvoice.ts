@@ -1,7 +1,7 @@
 import { pipe, Schema } from 'effect'
 
 import { AccountIdentifierSchema } from '@schemas/common/accountIdentifier'
-import { TagKeyValueSchema } from '@schemas/tags/tag'
+import { TagKeyValueSchema } from '@schemas/tags/tagKeyValue'
 
 export const UpsertInvoiceTaxLineItemSchema = Schema.Struct({
   amount: Schema.Number,

@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { TagDimensionStrictnessSchema } from '@schemas/tags/tag'
+import { TagDimensionStrictnessSchema } from '@schemas/tags/tagDimensionStrictness'
 
 export const CreateTagDimensionBodySchema = Schema.Struct({
   key: Schema.NonEmptyTrimmedString,

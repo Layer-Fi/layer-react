@@ -8,7 +8,7 @@ import { AccountInstitutionSchema } from '@schemas/common/accountInstitution'
 import { createTransformedEnumSchema } from '@schemas/common/utils'
 import { CustomerSchema } from '@schemas/customerVendor/customer'
 import { VendorSchema } from '@schemas/customerVendor/vendor'
-import { TransactionTagSchema } from '@schemas/tags/tag'
+import { TransactionTagSchema } from '@schemas/tags/transactionTag'
 
 export enum CategorizationStatus {
   PENDING = 'PENDING',
