@@ -12,7 +12,7 @@ import {
   TableBody,
   TableHeader,
 } from '@ui/Table/Table'
-import { DataTableHeaderSkeleton, DataTableSkeleton, DEFAULT_SKELETON_COLUMNS } from '@blocks/DataTable/DataTableSkeleton'
+import { DataTableHeaderSkeleton, DataTableSkeleton, DEFAULT_SKELETON_COLUMNS } from '@blocks/Table/DataTable/DataTableSkeleton'
 import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
 import { ConditionalList } from '@components/utility/ConditionalList'
 

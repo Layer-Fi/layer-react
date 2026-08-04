@@ -9,8 +9,8 @@ import { DateTime } from '@ui/DateTime/DateTime'
 import { VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import type { ColumnConfig } from '@blocks/DataTable/utils/column'
-import { VirtualizedDataTable } from '@blocks/VirtualizedDataTable/VirtualizedDataTable'
+import type { ColumnConfig } from '@blocks/Table/DataTable/utils/column'
+import { VirtualizedDataTable } from '@blocks/Table/VirtualizedDataTable/VirtualizedDataTable'
 
 import './affectedTransactionsTable.scss'
 

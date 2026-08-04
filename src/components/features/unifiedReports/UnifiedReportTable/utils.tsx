@@ -3,8 +3,8 @@ import { type Row } from '@tanstack/react-table'
 import { Pinning } from '@internal-types/utility/table'
 import { type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 import { asMutable } from '@utils/asMutable'
-import { type ColumnNode, type GroupColumn, type LeafColumn } from '@blocks/DataTable/utils/column/nesting'
-import { type ColumnPinningSide } from '@blocks/DataTable/utils/column/pinning'
+import { type ColumnNode, type GroupColumn, type LeafColumn } from '@blocks/Table/DataTable/utils/column/nesting'
+import { type ColumnPinningSide } from '@blocks/Table/DataTable/utils/column/pinning'
 import { UnifiedReportTableCellContent } from '@features/unifiedReports/UnifiedReportTableCellContent/UnifiedReportTableCellContent'
 
 type RowType = Row<UnifiedReportRow>

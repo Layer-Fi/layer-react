@@ -1,13 +1,17 @@
 ---
 name: data-tables
 description: Choosing a data table variant by data shape, and the configuration areas — columns, pinning, expansion, selection, row interaction, pagination
-applies_to: src/components/blocks/DataTable/**, src/components/blocks/*DataTable*/**
+applies_to: src/components/blocks/Table/**
 ---
 
 # Data tables
 
 Tables are `@tanstack/react-table` wrapped by blocks. Feature code never builds a TanStack
 instance directly — pick a variant, pass `data` and a `columnConfig`.
+
+Everything table-related lives under `@blocks/Table` — one directory per variant, plus `DataTable`
+(the shared primitive and the `utils/` all variants build columns and rows from). Each variant has a
+`*.stories.tsx` next to it; reading the story is the fastest way to see a feature wired up correctly.
 
 ## Pick a variant by the shape of your data
 
@@ -37,11 +41,39 @@ exists and which knob turns it on.
 ### Columns
 
 `columnConfig` — an array of `{ id, header, cell }` plus per-column flags
-(`@blocks/DataTable/utils/column`). `cell` receives the whole **row**, not a cell value, and returns
+(`@blocks/Table/DataTable/utils/column`). `cell` receives the whole **row**, not a cell value, and returns
 JSX composed from primitives. Headers are translated strings.
 
 Build the config outside the render, as a module-level function or a `useMemo` — a fresh array each
 render rebuilds every column def. `InvoiceTable`'s `getColumnConfig` is the pattern.
+
+### Column widths come from your stylesheet, not from the config
+
+**A table with no CSS renders wrong.** Rows and header rows lay out as a CSS grid, and nothing in
+the config sets `grid-template-columns` — every table needs a stylesheet keyed on the classes
+`componentName` generates:
+
+```scss
+.Layer__UI__Table__InvoiceTable {
+  table-layout: fixed;
+  width: 100%;
+
+  // Fallback and detail rows span every column, so they must stay out of the grid
+  .Layer__UI__Table-Row:not(.Layer__DataTable__EmptyState__Row, .Layer__DataTable__ExpandedRow),
+  .Layer__UI__Table-TableHeader > tr {
+    display: grid;
+    grid-template-columns: minmax(8rem, 10%) /* … one track per column … */ 3.75rem;
+  }
+}
+```
+
+Two things to know: the table also gets a `--<n>Columns` modifier class, which is how a table whose
+column count changes (selection injects a column) switches templates — see
+`bankTransactionsTable.scss`. And `VirtualizedDataTable` uses its own row classes
+(`.Layer__UI__VirtualizedTable__row`, `.Layer__UI__VirtualizedTable__header > tr`) instead of
+`.Layer__UI__Table-Row`.
+
+Per-cell tweaks hang off `.Layer__UI__Table-Cell__<componentName>--<columnId>`.
 
 ### Alignment and pinning
 
@@ -81,6 +113,9 @@ Distinct from `isRowSelected`, which only highlights a row and owns nothing.
 The table renders these itself from `isLoading` / `isError` plus `slots.EmptyState` /
 `slots.ErrorState`. Pass the query's flags straight through — don't wrap a table in
 `ConditionalList` or branch on `isLoading` yourself.
+
+Loading is a skeleton table in every variant. The other two states render as a full-width fallback
+row, except in `VirtualizedDataTable`, which replaces the table with a centered state.
 
 ### Accessibility
 

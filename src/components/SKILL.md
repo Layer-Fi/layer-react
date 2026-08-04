@@ -169,7 +169,7 @@ empty states** via `isLoading`/`isError` and `slots.EmptyState`/`slots.ErrorStat
 table in `ConditionalList`.
 
 Variant trade-offs, the `BaseDataTableProps` contract, column config, and row behaviour:
-[`blocks/DataTable/SKILL.md`](blocks/DataTable/SKILL.md).
+[`blocks/Table/SKILL.md`](blocks/Table/SKILL.md).
 
 ## Accessibility
 

@@ -28,4 +28,9 @@
   position: absolute;
   display: grid;
   width: 100%;
+
+  // Skeleton rows aren't virtualized, so they stack in the body instead of being positioned
+  &--static {
+    position: static;
+  }
 }

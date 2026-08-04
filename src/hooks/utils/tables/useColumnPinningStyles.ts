@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { HeaderGroup } from '@tanstack/react-table'
 import type { CSSProperties } from 'react'
 
-import { type ColumnHeaderWidths, computePinningStyles } from '@blocks/DataTable/utils/column/pinning'
+import { type ColumnHeaderWidths, computePinningStyles } from '@blocks/Table/DataTable/utils/column/pinning'
 
 type UseColumnPinningStylesOptions = {
   isEnabled?: boolean

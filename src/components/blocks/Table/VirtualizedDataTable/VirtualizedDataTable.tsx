@@ -10,10 +10,10 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 import classNames from 'classnames'
 
 import { type Alignment } from '@internal-types/utility/table'
-import { Loader } from '@ui/Loader/Loader'
 import { HStack } from '@ui/Stack/Stack'
 import { Cell, Column as TableColumn, Row, Table, TableBody, TableHeader } from '@ui/Table/Table'
-import { type ColumnConfig, getColumnDefs } from '@blocks/DataTable/utils/column'
+import { DataTableSkeleton } from '@blocks/Table/DataTable/DataTableSkeleton'
+import { type ColumnConfig, getColumnDefs } from '@blocks/Table/DataTable/utils/column'
 
 import './virtualizedDataTable.scss'
 
@@ -106,6 +106,27 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
     overscan,
   })
 
+  const tableClassName = classNames(CSS_PREFIX, `Layer__UI__Table__${componentName}`)
+
+  const renderHeader = () => (
+    <TableHeader className={`${CSS_PREFIX}__header`} style={{ height: HEADER_HEIGHT }}>
+      {table.getFlatHeaders().map(header => (
+        <TableColumn
+          key={header.id}
+          isRowHeader={header.column.columnDef.meta?.isRowHeader}
+          alignment={header.column.columnDef.meta?.alignment}
+          className={classNames(
+            `${CSS_PREFIX}__header-cell`,
+            `Layer__UI__Table-Column__${componentName}--${header.id}`,
+          )}
+        >
+          {flexRender(header.column.columnDef.header, header.getContext())}
+        </TableColumn>
+      ),
+      )}
+    </TableHeader>
+  )
+
   if (isError) {
     return (
       <HStack align='center' justify='center' className={`${CSS_PREFIX}__state-container`}>
@@ -116,9 +137,18 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
 
   if (isLoading) {
     return (
-      <HStack align='center' justify='center' className={`${CSS_PREFIX}__state-container`}>
-        <Loader />
-      </HStack>
+      <div className={`${CSS_PREFIX}__container`} style={{ height: renderedTableHeight }}>
+        <Table className={tableClassName} aria-label={ariaLabel}>
+          {renderHeader()}
+          <TableBody>
+            <DataTableSkeleton
+              numColumns={columnConfig.length}
+              nonAria={false}
+              rowClassName={classNames(`${CSS_PREFIX}__row`, `${CSS_PREFIX}__row--static`)}
+            />
+          </TableBody>
+        </Table>
+      </div>
     )
   }
 
@@ -135,23 +165,8 @@ export const VirtualizedDataTable = <TData extends { id: string }>({
 
   return (
     <div className={`${CSS_PREFIX}__container`} ref={containerRef} style={{ height: renderedTableHeight }} aria-label={ariaLabel}>
-      <Table className={classNames(CSS_PREFIX, `Layer__UI__Table__${componentName}`)} aria-label={ariaLabel}>
-        <TableHeader className={`${CSS_PREFIX}__header`} style={{ height: HEADER_HEIGHT }}>
-          {table.getFlatHeaders().map(header => (
-            <TableColumn
-              key={header.id}
-              isRowHeader={header.column.columnDef.meta?.isRowHeader}
-              alignment={header.column.columnDef.meta?.alignment}
-              className={classNames(
-                `${CSS_PREFIX}__header-cell`,
-                `Layer__UI__Table-Column__${componentName}--${header.id}`,
-              )}
-            >
-              {flexRender(header.column.columnDef.header, header.getContext())}
-            </TableColumn>
-          ),
-          )}
-        </TableHeader>
+      <Table className={tableClassName} aria-label={ariaLabel}>
+        {renderHeader()}
         <TableBody style={{ height: totalSize }}>
           {virtualItems.map((virtualRow) => {
             const row = rows[virtualRow.index]

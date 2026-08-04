@@ -15,9 +15,9 @@ import { Loader } from '@ui/Loader/Loader'
 import { VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import { type ColumnConfig } from '@blocks/DataTable/utils/column'
-import { ExpandableDataTable } from '@blocks/ExpandableDataTable/ExpandableDataTable'
-import { ExpandableDataTableProvider } from '@blocks/ExpandableDataTable/ExpandableDataTableProvider'
+import { type ColumnConfig } from '@blocks/Table/DataTable/utils/column'
+import { ExpandableDataTable } from '@blocks/Table/ExpandableDataTable/ExpandableDataTable'
+import { ExpandableDataTableProvider } from '@blocks/Table/ExpandableDataTable/ExpandableDataTableProvider'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 
 enum TaxDetailsColumns {

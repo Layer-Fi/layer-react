@@ -30,7 +30,7 @@ Each area has a colocated `SKILL.md`. **Read the relevant one(s) before making c
 | Component structure, loading/empty states, responsive UX | [`src/components/SKILL.md`](src/components/SKILL.md) |
 | Design-system primitives, style props, variant data attributes | [`src/components/ui/SKILL.md`](src/components/ui/SKILL.md) |
 | Building a form — fields, validators, submit and error handling | [`src/components/blocks/Form/SKILL.md`](src/components/blocks/Form/SKILL.md) |
-| Building a data table — variant choice, columns, row behaviour | [`src/components/blocks/DataTable/SKILL.md`](src/components/blocks/DataTable/SKILL.md) |
+| Building a data table — variant choice, columns, row behaviour | [`src/components/blocks/Table/SKILL.md`](src/components/blocks/Table/SKILL.md) |
 | SCSS, CSS variables, BEM naming, property order | [`src/styles/SKILL.md`](src/styles/SKILL.md) |
 | Translated strings, plurals, the Crowdin pipeline | [`src/assets/locales/SKILL.md`](src/assets/locales/SKILL.md) |
 | Formatting money, numbers, percentages, dates, durations | [`src/utils/i18n/SKILL.md`](src/utils/i18n/SKILL.md) |

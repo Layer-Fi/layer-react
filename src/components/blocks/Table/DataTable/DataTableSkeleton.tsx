@@ -12,6 +12,7 @@ import './dataTableSkeleton.scss'
 type DataTableSkeletonProps = {
   nonAria: boolean
   numColumns: number
+  rowClassName?: string
 }
 
 type DataTableHeaderSkeletonProps = {
@@ -35,7 +36,7 @@ export const DataTableHeaderSkeleton = ({ nonAria, numColumns = DEFAULT_SKELETON
   )
 }
 
-export const DataTableSkeleton = ({ numColumns, nonAria }: DataTableSkeletonProps) => {
+export const DataTableSkeleton = ({ numColumns, nonAria, rowClassName }: DataTableSkeletonProps) => {
   const resolvedNumColumns = numColumns > 0 ? numColumns : DEFAULT_SKELETON_COLUMNS
 
   const loadingColumns = useMemo(
@@ -46,7 +47,7 @@ export const DataTableSkeleton = ({ numColumns, nonAria }: DataTableSkeletonProp
   return (
     <>
       {Array.from({ length: 6 }).map((_, rowIndex) => (
-        <Row key={`loading-${rowIndex}`} nonAria={nonAria}>
+        <Row key={`loading-${rowIndex}`} nonAria={nonAria} className={rowClassName}>
           {loadingColumns.map((column) => {
             const trim = column.index === 0 && rowIndex >= 3
               ? (rowIndex - 2) * 10

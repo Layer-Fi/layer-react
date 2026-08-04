@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { useDebouncedSearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useInvoiceTableFilters } from '@providers/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
-import { DataTableHeader } from '@blocks/DataTable/DataTableHeader'
 import { MobileSelectionDrawerWithTrigger } from '@blocks/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
+import { DataTableHeader } from '@blocks/Table/DataTable/DataTableHeader'
 import { type InvoiceStatusOption, useInvoiceStatusOptions } from '@features/invoices/utils'
 
 interface InvoicesMobileHeaderProps {

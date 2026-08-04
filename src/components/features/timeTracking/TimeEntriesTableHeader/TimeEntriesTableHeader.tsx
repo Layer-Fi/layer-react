@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useTimeEntriesDrawer, useTimeEntriesFilters, useTimeEntriesTimerConfig } from '@providers/timeTracking/TimeEntriesStore/TimeEntriesStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
-import { DataTableHeader } from '@blocks/DataTable/DataTableHeader'
+import { DataTableHeader } from '@blocks/Table/DataTable/DataTableHeader'
 import { CustomerSelector } from '@features/customerVendor/CustomerSelector/CustomerSelector'
 import { TimeEntryServiceSelector } from '@features/timeTracking/TimeEntryServiceSelector/TimeEntryServiceSelector'
 

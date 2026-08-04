@@ -6,7 +6,7 @@ import {
 } from '@tanstack/react-table'
 
 import { Checkbox } from '@ui/Checkbox/Checkbox'
-import { type ColumnConfig, getColumnDefs } from '@blocks/DataTable/utils/column'
+import { type ColumnConfig, getColumnDefs } from '@blocks/Table/DataTable/utils/column'
 
 export const DATA_TABLE_SELECTION_COLUMN_ID = 'Selection'
 
@@ -43,6 +43,8 @@ export const getSelectionColumnDef = <TData,>(
 
     return (
       <Checkbox
+        // react-aria's Table provides a 'selection' CheckboxContext; opt out — selection is TanStack's
+        slot={null}
         isSelected={isAllSelected}
         isIndeterminate={isPartiallySelected}
         onChange={selected => table.toggleAllPageRowsSelected(selected)}
@@ -52,6 +54,7 @@ export const getSelectionColumnDef = <TData,>(
   },
   cell: ({ row }) => (
     <Checkbox
+      slot={null}
       isSelected={row.getIsSelected()}
       isIndeterminate={row.getIsSomeSelected()}
       isDisabled={!row.getCanSelect()}

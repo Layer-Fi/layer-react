@@ -1,7 +1,7 @@
 import { type HeaderGroup } from '@tanstack/react-table'
 import type { CSSProperties } from 'react'
 
-import { isLeafColumn, type NestedColumnConfig } from '@blocks/DataTable/utils/column/nesting'
+import { isLeafColumn, type NestedColumnConfig } from '@blocks/Table/DataTable/utils/column/nesting'
 
 export type ColumnPinningSide = 'left' | 'right'
 export type ColumnHeaderWidths = Readonly<Record<string, number>>
