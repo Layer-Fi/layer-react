@@ -1,4 +1,4 @@
-import { type BusinessTask, BusinessTaskStatus } from '@schemas/businessTasks/businessTask'
+import { type BusinessTask, BusinessTaskStatus } from '@schemas/bookkeeping/businessTask'
 
 export function isIncompleteTask<T extends Pick<BusinessTask, 'status'>>(
   task: T,

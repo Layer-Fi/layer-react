@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { BusinessTaskSchema } from '@schemas/businessTasks/businessTask'
+import { BusinessTaskSchema } from '@schemas/bookkeeping/businessTask'
 
 export enum BookkeepingPeriodStatus {
   BOOKKEEPING_NOT_ACTIVE = 'BOOKKEEPING_NOT_ACTIVE',

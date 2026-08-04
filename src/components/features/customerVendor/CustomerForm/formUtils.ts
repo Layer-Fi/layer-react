@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next'
 
-import { type Customer, type CustomerForm } from '@schemas/customer'
+import { type Customer, type CustomerForm } from '@schemas/customerVendor/customer'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 
 export type CustomerFormState =

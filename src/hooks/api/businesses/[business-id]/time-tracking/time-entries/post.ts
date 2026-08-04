@@ -1,4 +1,4 @@
-import { TimeEntrySchema, type UpsertTimeEntryEncoded } from '@schemas/timeTracking'
+import { TimeEntrySchema, type UpsertTimeEntryEncoded } from '@schemas/timeTracking/timeTracking'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { useTimeEntriesGlobalCacheActions } from '@api/businesses/[business-id]/time-tracking/time-entries/get'

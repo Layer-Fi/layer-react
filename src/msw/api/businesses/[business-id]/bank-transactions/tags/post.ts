@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 
 import { TagBankTransactionsUpdateSchema } from '@schemas/bankTransactions/tagUpdate'
-import { type TransactionTag, TransactionTagSchema } from '@schemas/tag'
+import { type TransactionTag, TransactionTagSchema } from '@schemas/tags/tag'
 
 import { bankTransactionStore, findOrSeedBankTransaction } from '@msw/api/businesses/[business-id]/bank-transactions/store'
 import { transactionTagFromKeyValue } from '@msw/api/businesses/[business-id]/bank-transactions/transactionTagFromKeyValue'

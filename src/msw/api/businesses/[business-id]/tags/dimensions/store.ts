@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type TagDimension, TagDimensionSchema } from '@schemas/tag'
+import { type TagDimension, TagDimensionSchema } from '@schemas/tags/tag'
 
 import { createMockStore } from '@msw/utils/createMockStore'
 import { tagDimensions } from '@fixtures/tagDimensions/mocks'

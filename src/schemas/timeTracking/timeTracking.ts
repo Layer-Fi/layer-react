@@ -1,8 +1,7 @@
 import { pipe, Schema } from 'effect'
 
-import { CustomerSchema } from '@schemas/customer'
-
-import { CalendarDateFromSelf, CalendarDateSchema } from './common/calendarDateFromSelf'
+import { CalendarDateFromSelf, CalendarDateSchema } from '@schemas/common/calendarDateFromSelf'
+import { CustomerSchema } from '@schemas/customerVendor/customer'
 
 export const TimeEntryServiceSchema = Schema.Struct({
   id: Schema.UUID,

@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type TagDimension, TagDimensionSchema } from '@schemas/tag'
+import { type TagDimension, TagDimensionSchema } from '@schemas/tags/tag'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'

@@ -1,4 +1,4 @@
-import { type StartTrackerEncoded, TimeEntrySchema } from '@schemas/timeTracking'
+import { type StartTrackerEncoded, TimeEntrySchema } from '@schemas/timeTracking/timeTracking'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { useActiveTimeTrackerGlobalCacheActions } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'

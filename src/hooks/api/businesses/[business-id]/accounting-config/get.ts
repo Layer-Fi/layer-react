@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 
 import { SWRQueryResult } from '@internal-types/swr/SWRResponseTypes'
-import { AccountingConfigurationSchema } from '@schemas/accountingConfiguration'
+import { AccountingConfigurationSchema } from '@schemas/business/accountingConfiguration'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'

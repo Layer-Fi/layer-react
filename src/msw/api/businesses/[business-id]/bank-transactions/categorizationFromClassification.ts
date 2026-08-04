@@ -2,7 +2,7 @@ import {
   type AccountCategorizationSchema,
   type Classification,
   type ExclusionCategorizationSchema,
-} from '@schemas/categorization'
+} from '@schemas/categorization/categorization'
 import { type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { humanizeEnum } from '@utils/format'
 

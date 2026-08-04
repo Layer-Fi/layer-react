@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useStore } from '@tanstack/react-form'
 
+import type { TripForm } from '@schemas/mileage/trip'
 import { toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
-import type { TripForm } from '@schemas/trip'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
 import { useGetMileageDistance } from '@api/businesses/[business-id]/mileage/distance/get'
 import type { AppForm } from '@hooks/features/forms/useForm'

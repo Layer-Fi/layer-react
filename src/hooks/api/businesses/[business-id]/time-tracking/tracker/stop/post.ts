@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type StopTrackerEncoded } from '@schemas/timeTracking'
+import { type StopTrackerEncoded } from '@schemas/timeTracking/timeTracking'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { useTimeEntriesGlobalCacheActions } from '@api/businesses/[business-id]/time-tracking/time-entries/get'

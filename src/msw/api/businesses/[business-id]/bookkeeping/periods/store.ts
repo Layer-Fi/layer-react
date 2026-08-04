@@ -1,5 +1,5 @@
-import { BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
-import { type BusinessTask, BusinessTaskStatus } from '@schemas/businessTasks/businessTask'
+import { BookkeepingPeriodStatus } from '@schemas/bookkeeping/bookkeepingPeriods'
+import { type BusinessTask, BusinessTaskStatus } from '@schemas/bookkeeping/businessTask'
 
 import { createMockStore } from '@msw/utils/createMockStore'
 import { makeBookkeepingPeriods } from '@fixtures/bookkeeping/mocks'

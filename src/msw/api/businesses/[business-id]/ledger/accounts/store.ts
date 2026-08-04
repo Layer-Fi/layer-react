@@ -1,4 +1,4 @@
-import type { AccountIdentifier } from '@schemas/accountIdentifier'
+import type { AccountIdentifier } from '@schemas/common/accountIdentifier'
 import { type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { accountIdentifierIsForCategory } from '@utils/categories'
 

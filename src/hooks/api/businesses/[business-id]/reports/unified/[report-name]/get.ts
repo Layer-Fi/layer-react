@@ -1,4 +1,4 @@
-import { UnifiedReportSchema } from '@schemas/reports/unifiedReport'
+import { UnifiedReportSchema } from '@schemas/unifiedReports/unifiedReport'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { type QueryParams } from '@utils/request/toDefinedSearchParameters'

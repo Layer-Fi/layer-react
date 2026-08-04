@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { StripeAccountStatus } from '@schemas/stripeAccountStatus'
+import { StripeAccountStatus } from '@schemas/invoices/stripeAccountStatus'
 import { useGetStripeAccountStatus } from '@api/businesses/[business-id]/stripe/status/get'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { Banner, type BannerVariant } from '@ui/Banner/Banner'

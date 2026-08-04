@@ -1,4 +1,4 @@
-import { MileageDistanceSchema } from '@schemas/mileage'
+import { MileageDistanceSchema } from '@schemas/mileage/mileage'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'

@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import type { ReportConfig } from '@schemas/reports/reportConfig'
+import type { ReportConfig } from '@schemas/unifiedReports/reportConfig'
 import { useDetailUnifiedReport } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Breadcrumb, Breadcrumbs } from '@ui/Breadcrumbs/Breadcrumbs'
 

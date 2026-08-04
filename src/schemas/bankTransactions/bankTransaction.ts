@@ -1,14 +1,14 @@
 import { pipe, Schema } from 'effect/index'
 
 import { BankTransactionDirectionSchema, TransactionSourceSchema } from '@schemas/bankTransactions/base'
-import { UpdateCategorizationRulesSuggestionSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
 import { MatchSchema, SuggestedMatchSchema } from '@schemas/bankTransactions/match'
-import { CategorizationSchema } from '@schemas/categorization'
+import { CategorizationSchema } from '@schemas/categorization/categorization'
+import { UpdateCategorizationRulesSuggestionSchema } from '@schemas/categorization/categorizationRule'
 import { AccountInstitutionSchema } from '@schemas/common/accountInstitution'
-import { CustomerSchema } from '@schemas/customer'
-import { TransactionTagSchema } from '@schemas/tag'
+import { CustomerSchema } from '@schemas/customerVendor/customer'
+import { VendorSchema } from '@schemas/customerVendor/vendor'
+import { TransactionTagSchema } from '@schemas/tags/tag'
 import { createTransformedEnumSchema } from '@schemas/utils'
-import { VendorSchema } from '@schemas/vendor'
 
 export enum CategorizationStatus {
   PENDING = 'PENDING',

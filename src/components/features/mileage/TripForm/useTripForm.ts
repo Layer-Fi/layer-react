@@ -3,7 +3,7 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { type Trip, type TripForm, UpsertTripSchema } from '@schemas/trip'
+import { type Trip, type TripForm, UpsertTripSchema } from '@schemas/mileage/trip'
 import { useUpsertTrip } from '@api/businesses/[business-id]/mileage/trips/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'

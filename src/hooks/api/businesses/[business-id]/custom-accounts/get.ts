@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { CustomAccountSchema } from '@schemas/customAccounts'
+import { CustomAccountSchema } from '@schemas/customAccounts/customAccounts'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'

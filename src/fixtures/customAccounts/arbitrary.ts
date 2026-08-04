@@ -1,6 +1,6 @@
 import { type FastCheck } from 'effect'
 
-import { CustomAccountSubtype } from '@schemas/customAccounts'
+import { CustomAccountSubtype } from '@schemas/customAccounts/customAccounts'
 
 import { accountNames } from '@fixtures/constants/bank/accountNames'
 import { institutionNames } from '@fixtures/constants/bank/institutionNames'

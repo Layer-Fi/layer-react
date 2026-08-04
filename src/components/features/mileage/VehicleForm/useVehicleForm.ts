@@ -3,7 +3,7 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { UpsertVehicleSchema, type Vehicle, type VehicleForm } from '@schemas/vehicle'
+import { UpsertVehicleSchema, type Vehicle, type VehicleForm } from '@schemas/mileage/vehicle'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { useUpsertVehicle } from '@api/businesses/[business-id]/mileage/vehicles/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'

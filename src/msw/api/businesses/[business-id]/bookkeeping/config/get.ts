@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type BookkeepingConfiguration, BookkeepingConfigurationSchema } from '@schemas/bookkeepingConfiguration'
+import { type BookkeepingConfiguration, BookkeepingConfigurationSchema } from '@schemas/bookkeeping/bookkeepingConfiguration'
 
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'

@@ -1,5 +1,5 @@
-import type { AccountIdentifier } from '@schemas/accountIdentifier'
-import type { NestedCategorization } from '@schemas/categorization'
+import type { NestedCategorization } from '@schemas/categorization/categorization'
+import type { AccountIdentifier } from '@schemas/common/accountIdentifier'
 import { getResolvedCategoryName } from '@utils/categories'
 import { Span, type TextStyleProps } from '@ui/Typography/Text'
 

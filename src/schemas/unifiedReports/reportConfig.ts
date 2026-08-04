@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { TagDimensionSchema, TagValueDefinitionSchema } from '@schemas/tag'
+import { TagDimensionSchema, TagValueDefinitionSchema } from '@schemas/tags/tag'
 import { createTransformedEnumSchema, UnwrappedDataResponseSchema } from '@schemas/utils'
 
 export enum ReportControl {

@@ -2,7 +2,7 @@ import { addDays, endOfMonth, formatISO, isValid, parseISO, startOfMonth } from 
 import { Schema } from 'effect'
 
 import { Direction } from '@internal-types/general'
-import { PnlDetailLinesDataSchema } from '@schemas/reports/profitAndLoss'
+import { PnlDetailLinesDataSchema } from '@schemas/profitAndLoss/profitAndLoss'
 
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'

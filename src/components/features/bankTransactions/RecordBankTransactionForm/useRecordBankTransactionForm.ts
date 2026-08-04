@@ -4,7 +4,7 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import type { Classification } from '@schemas/categorization'
+import type { Classification } from '@schemas/categorization/categorization'
 import type { NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/bankTransactions/categorizationOption'
 import { useUpsertCustomAccountTransaction } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/upsert'

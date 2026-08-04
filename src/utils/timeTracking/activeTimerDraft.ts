@@ -1,5 +1,5 @@
-import { type Customer } from '@schemas/customer'
-import { type StartTrackerEncoded, type TimeEntry, type UpsertTimeEntryEncoded } from '@schemas/timeTracking'
+import { type Customer } from '@schemas/customerVendor/customer'
+import { type StartTrackerEncoded, type TimeEntry, type UpsertTimeEntryEncoded } from '@schemas/timeTracking/timeTracking'
 
 export type ActiveTimerDraft = {
   selectedServiceId: string | null

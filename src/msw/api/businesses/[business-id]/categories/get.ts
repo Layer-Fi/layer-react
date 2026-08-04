@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { CategoryListSchema, type NestedCategorization } from '@schemas/categorization'
+import { CategoryListSchema, type NestedCategorization } from '@schemas/categorization/categorization'
 import { type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 
 import { accountCategorizationFields } from '@msw/api/businesses/[business-id]/ledger/accounts/accountCategorizationFields'

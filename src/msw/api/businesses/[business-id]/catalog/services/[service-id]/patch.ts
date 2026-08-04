@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type CatalogService, CatalogServiceSchema } from '@schemas/catalogService'
+import { type CatalogService, CatalogServiceSchema } from '@schemas/timeTracking/catalogService'
 
 import { catalogServiceFromRequest } from '@msw/api/businesses/[business-id]/catalog/services/catalogServiceFromRequest'
 import { catalogServiceStore } from '@msw/api/businesses/[business-id]/catalog/services/store'

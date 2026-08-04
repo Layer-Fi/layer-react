@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Trip } from '@schemas/trip'
+import { type Trip } from '@schemas/mileage/trip'
 import { useDeleteTrip } from '@api/businesses/[business-id]/mileage/trips/[trip-id]/delete'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { type ModalProps } from '@ui/Modal/Modal'

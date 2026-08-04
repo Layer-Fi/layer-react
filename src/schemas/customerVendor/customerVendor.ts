@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 
-import { type Customer, CustomerSchema } from '@schemas/customer'
-import { type Vendor, VendorSchema } from '@schemas/vendor'
+import { type Customer, CustomerSchema } from '@schemas/customerVendor/customer'
+import { type Vendor, VendorSchema } from '@schemas/customerVendor/vendor'
 
 export const CustomerVendorTypeSchema = Schema.Literal('CUSTOMER', 'VENDOR')
 

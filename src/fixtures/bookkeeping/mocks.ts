@@ -1,11 +1,11 @@
-import { type BookkeepingConfiguration, BookkeepingStatus as ConfigurationBookkeepingStatus } from '@schemas/bookkeepingConfiguration'
-import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
-import { BookkeepingStatus, type BookkeepingStatusData } from '@schemas/bookkeepingStatus'
+import { type BookkeepingConfiguration, BookkeepingStatus as ConfigurationBookkeepingStatus } from '@schemas/bookkeeping/bookkeepingConfiguration'
+import { type BookkeepingPeriod, BookkeepingPeriodStatus } from '@schemas/bookkeeping/bookkeepingPeriods'
+import { BookkeepingStatus, type BookkeepingStatusData } from '@schemas/bookkeeping/bookkeepingStatus'
 import {
   type BusinessTask,
   BusinessTaskStatus,
   TaskUserResponseType,
-} from '@schemas/businessTasks/businessTask'
+} from '@schemas/bookkeeping/businessTask'
 
 import { PeriodIdSchema, schema } from '@fixtures/bookkeeping/schema'
 import { formatDollars, formatTaskDate } from '@fixtures/bookkeeping/utils'

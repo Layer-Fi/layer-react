@@ -6,7 +6,7 @@ import {
   CreateCategorizationRuleSchema,
   type PatchCategorizationRule,
   PatchCategorizationRuleSchema,
-} from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+} from '@schemas/categorization/categorizationRule'
 
 import { counterpartyStore } from '@msw/api/businesses/[business-id]/counterparties/store'
 import { readRequestJson } from '@msw/utils/request'

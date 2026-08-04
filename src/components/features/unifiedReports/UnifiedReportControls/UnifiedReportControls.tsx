@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { ReportControl } from '@schemas/reports/reportConfig'
+import { ReportControl } from '@schemas/unifiedReports/reportConfig'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import {

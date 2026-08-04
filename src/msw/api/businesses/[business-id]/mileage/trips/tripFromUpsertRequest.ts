@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type Trip, TripDistanceSource, TripPurpose, UpsertTripSchema } from '@schemas/trip'
+import { type Trip, TripDistanceSource, TripPurpose, UpsertTripSchema } from '@schemas/mileage/trip'
 
 import { vehicleStore } from '@msw/api/businesses/[business-id]/mileage/vehicles/store'
 import { readRequestJson } from '@msw/utils/request'

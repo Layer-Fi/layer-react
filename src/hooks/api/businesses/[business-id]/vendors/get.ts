@@ -1,5 +1,5 @@
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
-import { VendorSchema } from '@schemas/vendor'
+import { VendorSchema } from '@schemas/customerVendor/vendor'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 

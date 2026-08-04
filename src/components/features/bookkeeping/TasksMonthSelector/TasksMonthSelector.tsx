@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { getMonth, getYear, set } from 'date-fns'
 
-import { BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
+import { BookkeepingPeriodStatus } from '@schemas/bookkeeping/bookkeepingPeriods'
 import { getCompletedTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { useGetBookkeepingPeriods } from '@api/businesses/[business-id]/bookkeeping/periods/get'

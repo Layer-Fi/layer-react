@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type PlaceDetails, PlaceDetailsSchema } from '@schemas/place'
+import { type PlaceDetails, PlaceDetailsSchema } from '@schemas/mileage/place'
 
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'

@@ -1,4 +1,4 @@
-import { CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { CategorizationRuleSchema } from '@schemas/categorization/categorizationRule'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { useCategorizationRulesGlobalCacheActions } from '@api/businesses/[business-id]/categorization-rules/get'

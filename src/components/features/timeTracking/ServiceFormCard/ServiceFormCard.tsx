@@ -2,7 +2,7 @@ import { type FormEvent, useCallback } from 'react'
 import { AlertTriangle, Archive } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type CatalogService } from '@schemas/catalogService'
+import { type CatalogService } from '@schemas/timeTracking/catalogService'
 import { flattenValidationErrors } from '@utils/form'
 import { useServiceForm } from '@hooks/features/timeTracking/useServiceForm'
 import { Button } from '@ui/Button/Button'

@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from 'react'
 import { ChevronLeft, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type Vehicle } from '@schemas/vehicle'
+import { type Vehicle } from '@schemas/mileage/vehicle'
 import { useGetVehicles } from '@api/businesses/[business-id]/mileage/vehicles/get'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useTripsNavigation } from '@providers/mileage/TripsRouteStore/TripsRouteStoreProvider'

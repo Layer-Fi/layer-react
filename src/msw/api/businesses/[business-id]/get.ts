@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type Business, BusinessSchema } from '@schemas/business'
+import { type Business, BusinessSchema } from '@schemas/business/business'
 
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'

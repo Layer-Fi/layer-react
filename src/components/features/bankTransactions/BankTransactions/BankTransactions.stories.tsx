@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { BookkeepingStatus } from '@schemas/bookkeepingStatus'
+import { BookkeepingStatus } from '@schemas/bookkeeping/bookkeepingStatus'
 import { BankTransactions } from '@features/bankTransactions/BankTransactions/BankTransactions'
 import { type BankTransactionsStringOverrides } from '@features/bankTransactions/types'
 

@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type UpdateCategorizationRulesSuggestion } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { type UpdateCategorizationRulesSuggestion } from '@schemas/categorization/categorizationRule'
 import { useRejectCategorizationRuleSuggestion } from '@api/businesses/[business-id]/categorization-rules/suggestions/[suggestion-id]/delete'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { Button } from '@ui/Button/Button'

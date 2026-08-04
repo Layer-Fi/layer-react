@@ -1,4 +1,4 @@
-import { CustomerSchema, type UpsertCustomerEncoded } from '@schemas/customer'
+import { CustomerSchema, type UpsertCustomerEncoded } from '@schemas/customerVendor/customer'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { CUSTOMERS_TAG_KEY, useCustomersGlobalCacheActions } from '@api/businesses/[business-id]/customers/get'

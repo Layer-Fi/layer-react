@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 
 import { CategoryAsOption } from '@internal-types/categorizationOption'
-import { type CategoriesListMode, type Classification } from '@schemas/categorization'
+import { type CategoriesListMode, type Classification } from '@schemas/categorization/categorization'
 import { findCategoryOption, flattenCategories } from '@utils/categories'
 import { useGetCategories } from '@api/businesses/[business-id]/categories/get'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'

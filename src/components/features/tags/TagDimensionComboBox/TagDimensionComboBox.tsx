@@ -2,7 +2,7 @@ import { useCallback, useId, useMemo } from 'react'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
-import { type Tag, type TagValueDefinition } from '@schemas/tag'
+import { type Tag, type TagValueDefinition } from '@schemas/tags/tag'
 import { useGetTagDimensionByKey } from '@api/businesses/[business-id]/tags/dimensions/key/[dimension-key]/get'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { FallbackWithSkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'

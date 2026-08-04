@@ -1,4 +1,4 @@
-import { CatalogServiceSchema, type UpdateCatalogServiceEncoded } from '@schemas/catalogService'
+import { CatalogServiceSchema, type UpdateCatalogServiceEncoded } from '@schemas/timeTracking/catalogService'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { patch } from '@utils/api/authenticatedHttp'
 import { useCatalogServicesGlobalCacheActions } from '@api/businesses/[business-id]/catalog/services/get'

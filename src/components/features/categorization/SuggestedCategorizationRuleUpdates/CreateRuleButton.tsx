@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { Schema } from 'effect/index'
 import { useTranslation } from 'react-i18next'
 
-import { type CreateCategorizationRule, CreateCategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { type CreateCategorizationRule, CreateCategorizationRuleSchema } from '@schemas/categorization/categorizationRule'
 import { usePostCategorizationRule } from '@api/businesses/[business-id]/categorization-rules/post'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { Button, type ButtonProps } from '@ui/Button/Button'

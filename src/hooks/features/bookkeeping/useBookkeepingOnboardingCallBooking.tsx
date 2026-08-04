@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { type CallBooking, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
+import { type CallBooking, CallBookingPurpose, CallBookingType } from '@schemas/bookkeeping/callBooking'
 import { useGetBookkeepingConfiguration } from '@api/businesses/[business-id]/bookkeeping/config/get'
 import { useBookkeepingStatusGlobalCacheActions, useGetBookkeepingStatus } from '@api/businesses/[business-id]/bookkeeping/status/get'
 import { useGetListCallBookings } from '@api/businesses/[business-id]/call-bookings/get'

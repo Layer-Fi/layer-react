@@ -1,8 +1,8 @@
 import { pipe, Schema } from 'effect'
 
-import { ReportingBasis } from '@schemas/accountingConfiguration'
+import { ReportingBasis } from '@schemas/business/accountingConfiguration'
 import { TransformedAlignmentSchema, TransformedPinningSchema } from '@schemas/common/table'
-import { ReportConfigSchema } from '@schemas/reports/reportConfig'
+import { ReportConfigSchema } from '@schemas/unifiedReports/reportConfig'
 
 export enum DateGroupBy {
   AllTime = 'ALL_TIME',

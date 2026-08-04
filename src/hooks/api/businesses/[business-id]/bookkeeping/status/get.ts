@@ -1,4 +1,4 @@
-import { BookkeepingStatus, type BookkeepingStatusData, BookkeepingStatusDataSchema } from '@schemas/bookkeepingStatus'
+import { BookkeepingStatus, type BookkeepingStatusData, BookkeepingStatusDataSchema } from '@schemas/bookkeeping/bookkeepingStatus'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'

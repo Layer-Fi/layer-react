@@ -2,11 +2,12 @@ import { createContext, type PropsWithChildren, useCallback, useContext, useEffe
 import { getYear } from 'date-fns'
 import { createStore, type StoreApi, useStore } from 'zustand'
 
+import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/tags/tag'
 import {
   type ReportConfig,
   ReportControl,
   type ReportGroup,
-} from '@schemas/reports/reportConfig'
+} from '@schemas/unifiedReports/reportConfig'
 import {
   DateGroupBy,
   type DateQueryParams,
@@ -14,8 +15,7 @@ import {
   isUnifiedReportReportingBasis,
   type UnifiedReportColumn,
   type UnifiedReportReportingBasis,
-} from '@schemas/reports/unifiedReport'
-import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/tag'
+} from '@schemas/unifiedReports/unifiedReport'
 import type { QueryParams } from '@utils/request/toDefinedSearchParameters'
 import { useGetReportConfig } from '@api/businesses/[business-id]/reports/config/get'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'

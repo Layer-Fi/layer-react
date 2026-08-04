@@ -3,13 +3,13 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { BigDecimal as BD } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { type CatalogService } from '@schemas/catalogService'
 import {
   convertCentsToNonRecursiveBigDecimal,
   convertNonRecursiveBigDecimalToCents,
   fromNonRecursiveBigDecimal,
   type NonRecursiveBigDecimal,
 } from '@schemas/nonRecursiveBigDecimal'
+import { type CatalogService } from '@schemas/timeTracking/catalogService'
 import { usePatchCatalogService } from '@api/businesses/[business-id]/catalog/services/[service-id]/patch'
 import { usePostCatalogService } from '@api/businesses/[business-id]/catalog/services/post'
 import { useAppForm } from '@hooks/features/forms/useForm'

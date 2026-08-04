@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { PlaceSuggestionSchema } from '@schemas/place'
+import { PlaceSuggestionSchema } from '@schemas/mileage/place'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'

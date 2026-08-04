@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { TripFormAddress } from '@schemas/trip'
+import type { TripFormAddress } from '@schemas/mileage/trip'
 import { useGetMileageAddressDetails } from '@api/businesses/[business-id]/mileage/address-details/get'
 import { MIN_ADDRESS_QUERY_LENGTH, useGetMileageAddressSuggestions } from '@api/businesses/[business-id]/mileage/address-suggestions/get'
 import { SearchComboBox, useSearchComboBox } from '@ui/ComboBox/SearchComboBox'

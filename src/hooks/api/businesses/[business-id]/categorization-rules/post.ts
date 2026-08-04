@@ -2,7 +2,7 @@ import {
   CategorizationRuleSchema,
   type CreateCategorizationRuleSchema,
   type PatchCategorizationRuleSchema,
-} from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+} from '@schemas/categorization/categorizationRule'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'

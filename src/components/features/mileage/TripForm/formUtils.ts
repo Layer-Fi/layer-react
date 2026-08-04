@@ -1,8 +1,8 @@
 import { getLocalTimeZone, today } from '@internationalized/date'
 import type { TFunction } from 'i18next'
 
+import { type Trip, type TripForm, type TripPlace, TripPurpose } from '@schemas/mileage/trip'
 import { fromNonRecursiveBigDecimal, toNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
-import { type Trip, type TripForm, type TripPlace, TripPurpose } from '@schemas/trip'
 import { dateNotInFuture, positiveAmount, required } from '@utils/form/validators'
 
 const getTripPlace = (

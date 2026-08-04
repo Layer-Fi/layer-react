@@ -1,4 +1,4 @@
-import { StripeConnectAccountLinkDataSchema } from '@schemas/stripeConnectAccountLink'
+import { StripeConnectAccountLinkDataSchema } from '@schemas/invoices/stripeConnectAccountLink'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'

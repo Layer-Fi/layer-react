@@ -17,11 +17,18 @@ contract.** Do not guess field names, nullability, or enum members.
 
 | Thing | Location |
 | --- | --- |
-| Schema definitions | `src/schemas/**` (`src/schemas/customer.ts`, `src/schemas/invoices/invoice.ts`) |
-| Shared building blocks | `src/schemas/utils.ts`, `src/schemas/common/pagination.ts` |
+| Schema definitions | `src/schemas/<domain>/**` (`src/schemas/customerVendor/customer.ts`, `src/schemas/invoices/invoice.ts`) |
+| Shared building blocks | `src/schemas/utils.ts`, `src/schemas/nonRecursiveBigDecimal.ts`, `src/schemas/common/**` |
 | Internal-only TS types (no wire format) | `src/types/**` — a plain `type`/`interface` is correct here; don't reach for Schema |
 
-Import with the `@schemas/*` alias. `src/schemas` must stay importable from anywhere
+`schemas/<domain>` reuses the domain names of `src/hooks/features/*` and
+`src/components/features/*`, so one domain has the same folder name in all three trees. A
+schema shared by several domains belongs in `common/`, not in whichever domain reached for
+it first. Nothing new goes at the root — that level is only for `utils.ts` and
+`nonRecursiveBigDecimal.ts`.
+
+Import with the `@schemas/*` alias — always the alias, never a relative path, even between
+files in the same domain. `src/schemas` must stay importable from anywhere
 (hooks, components, MSW, fixtures), so it may not import from `@hooks`, `@components`, or
 `@msw`.
 
@@ -126,13 +133,16 @@ than mutating after decode.
 
 - `@schemas/common/accountInstitution` — `AccountInstitutionSchema` (`name`, nullish `logo`)
 - `@schemas/common/s3PresignedUrl` — `S3PresignedUrlSchema` for upload/download flows
-- `@schemas/accountIdentifier`, `@schemas/tag`, `@schemas/place` — cross-domain value objects
-  reused by several features; check here before writing a new struct.
+- `@schemas/common/accountIdentifier` — the account reference reused by categorization,
+  journal entries, and invoices
+- `@schemas/common/csvUpload` — the generic `PreviewCell`/`PreviewRow` builders
+- `@schemas/tags/tag` — tag dimensions and values, reused by several features; check here
+  before writing a new struct.
 
 ## Recursive schemas (trees)
 
 Copy the shape from an existing one rather than deriving it: `UnifiedReportColumnSchema`
-(`src/schemas/reports/unifiedReport.ts`) or `LineItemSchema` (`src/schemas/common/lineItem.ts`).
+(`src/schemas/unifiedReports/unifiedReport.ts`) or `LineItemSchema` (`src/schemas/common/lineItem.ts`).
 
 The naive `columns: Schema.Array(Self)` fails — the schema isn't defined yet when the expression
 evaluates. Three things make it work:

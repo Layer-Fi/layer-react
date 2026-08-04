@@ -1,5 +1,5 @@
-import { type CatalogService, CatalogServiceSchema } from '@schemas/catalogService'
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
+import { type CatalogService, CatalogServiceSchema } from '@schemas/timeTracking/catalogService'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'

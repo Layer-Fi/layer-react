@@ -4,7 +4,7 @@ import {
   CustomAccountSchema,
   type CustomAccountSubtype,
   getCustomAccountTypeFromSubtype,
-} from '@schemas/customAccounts'
+} from '@schemas/customAccounts/customAccounts'
 
 import {
   accountNameArbitrary,

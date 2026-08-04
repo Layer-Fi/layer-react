@@ -3,7 +3,7 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { type Customer, type CustomerForm, UpsertCustomerSchema } from '@schemas/customer'
+import { type Customer, type CustomerForm, UpsertCustomerSchema } from '@schemas/customerVendor/customer'
 import { useUpsertCustomer } from '@api/businesses/[business-id]/customers/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'

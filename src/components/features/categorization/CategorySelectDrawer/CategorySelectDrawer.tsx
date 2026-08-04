@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { ChevronLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { CategoriesListMode } from '@schemas/categorization'
+import type { CategoriesListMode } from '@schemas/categorization/categorization'
 import { withoutExclusions } from '@utils/categoryOptions'
 import { useGetCategories } from '@api/businesses/[business-id]/categories/get'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'

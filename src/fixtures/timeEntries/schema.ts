@@ -1,6 +1,6 @@
 import { Arbitrary, Schema } from 'effect'
 
-import { TimeEntrySchema } from '@schemas/timeTracking'
+import { TimeEntrySchema } from '@schemas/timeTracking/timeTracking'
 
 import { makeBusiness } from '@fixtures/business/mocks'
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'

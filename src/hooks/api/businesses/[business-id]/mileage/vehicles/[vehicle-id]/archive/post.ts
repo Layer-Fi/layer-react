@@ -1,5 +1,5 @@
+import { VehicleSchema } from '@schemas/mileage/vehicle'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
-import { VehicleSchema } from '@schemas/vehicle'
 import { post } from '@utils/api/authenticatedHttp'
 import { useVehiclesGlobalCacheActions } from '@api/businesses/[business-id]/mileage/vehicles/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'

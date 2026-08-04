@@ -1,4 +1,4 @@
-import { CustomAccountSchema, type RawCustomAccount } from '@schemas/customAccounts'
+import { CustomAccountSchema, type RawCustomAccount } from '@schemas/customAccounts/customAccounts'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { useBankAccountsGlobalCacheActions } from '@api/businesses/[business-id]/bank-accounts/get'

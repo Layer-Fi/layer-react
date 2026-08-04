@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking'
+import { type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking/timeTracking'
 
 import { findActiveTimeEntry } from '@msw/api/businesses/[business-id]/time-tracking/tracker/activeTimeEntry'
 import { apiData } from '@msw/utils/apiResponse'

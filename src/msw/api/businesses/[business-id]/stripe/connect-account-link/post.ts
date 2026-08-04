@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { StripeConnectAccountLinkDataSchema } from '@schemas/stripeConnectAccountLink'
+import { StripeConnectAccountLinkDataSchema } from '@schemas/invoices/stripeConnectAccountLink'
 
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'

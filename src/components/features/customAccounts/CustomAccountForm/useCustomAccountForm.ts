@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
-import { type CustomAccount, CustomAccountClassification, type CustomAccountSubtype, getCustomAccountTypeFromSubtype } from '@schemas/customAccounts'
+import { type CustomAccount, CustomAccountClassification, type CustomAccountSubtype, getCustomAccountTypeFromSubtype } from '@schemas/customAccounts/customAccounts'
 import { usePostCustomAccount } from '@api/businesses/[business-id]/custom-accounts/post'
 import { useAppForm } from '@hooks/features/forms/useForm'
 

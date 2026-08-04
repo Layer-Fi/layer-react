@@ -1,4 +1,4 @@
-import type { DateGroupBy } from '@schemas/reports/unifiedReport'
+import type { DateGroupBy } from '@schemas/unifiedReports/unifiedReport'
 
 export type GroupByOption = {
   label: string

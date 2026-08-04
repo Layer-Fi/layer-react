@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { AccountIdentifierSchema } from '@schemas/accountIdentifier'
+import { AccountIdentifierSchema } from '@schemas/common/accountIdentifier'
 
 export const CatalogServiceSchema = Schema.Struct({
   id: Schema.UUID,

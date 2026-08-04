@@ -3,7 +3,7 @@ import {
   CustomAccountClassification,
   CustomAccountSubtype,
   CustomAccountType,
-} from '@schemas/customAccounts'
+} from '@schemas/customAccounts/customAccounts'
 
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 

@@ -1,4 +1,4 @@
-import { type CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { type CategorizationRule } from '@schemas/categorization/categorizationRule'
 
 import { createMockStore } from '@msw/utils/createMockStore'
 import { categorizationRules } from '@fixtures/categorizationRules/mocks'

@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type MileageSummary, MileageSummarySchema } from '@schemas/mileage'
+import { type MileageSummary, MileageSummarySchema } from '@schemas/mileage/mileage'
 
 import { tripStore } from '@msw/api/businesses/[business-id]/mileage/trips/store'
 import { apiData } from '@msw/utils/apiResponse'

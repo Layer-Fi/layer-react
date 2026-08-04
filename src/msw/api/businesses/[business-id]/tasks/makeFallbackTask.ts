@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type BusinessTask, BusinessTaskSchema } from '@schemas/businessTasks/businessTask'
+import { type BusinessTask, BusinessTaskSchema } from '@schemas/bookkeeping/businessTask'
 
 const decodeBusinessTask = Schema.decodeSync(BusinessTaskSchema)
 

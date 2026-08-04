@@ -1,5 +1,5 @@
 import { type ReportingBasis } from '@internal-types/general'
-import { type PnlDetailLineSchema, PnlDetailLinesDataSchema } from '@schemas/reports/profitAndLoss'
+import { type PnlDetailLineSchema, PnlDetailLinesDataSchema } from '@schemas/profitAndLoss/profitAndLoss'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { getWithQuery } from '@utils/api/getWithQuery'

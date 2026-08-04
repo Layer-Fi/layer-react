@@ -1,8 +1,8 @@
 import { useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { TagControl } from '@schemas/reports/reportConfig'
-import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/tag'
+import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/tags/tag'
+import type { TagControl } from '@schemas/unifiedReports/reportConfig'
 import { capitalizeFirstLetter } from '@utils/format'
 import { useUnifiedReportTagSelection } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { MultiSelectComboBox } from '@ui/ComboBox/MultiSelectComboBox'

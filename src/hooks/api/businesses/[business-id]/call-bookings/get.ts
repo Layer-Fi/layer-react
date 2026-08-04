@@ -1,13 +1,13 @@
 import type {
   CallBooking,
   CreateCallBookingBody,
-} from '@schemas/callBooking'
+} from '@schemas/bookkeeping/callBooking'
 import {
   CallBookingPurpose,
   CallBookingState,
   CallBookingType,
   ListCallBookingsResponseSchema,
-} from '@schemas/callBooking'
+} from '@schemas/bookkeeping/callBooking'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'

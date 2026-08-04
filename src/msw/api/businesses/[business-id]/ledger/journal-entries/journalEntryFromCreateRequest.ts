@@ -1,4 +1,4 @@
-import { type AccountIdentifier } from '@schemas/accountIdentifier'
+import { type AccountIdentifier } from '@schemas/common/accountIdentifier'
 import { type CreateCustomJournalEntry } from '@schemas/generalLedger/journalEntry'
 import { EntryType, type LedgerEntry, type LedgerEntryLineItem } from '@schemas/generalLedger/ledgerEntry'
 

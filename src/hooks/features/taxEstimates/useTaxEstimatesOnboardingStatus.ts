@@ -1,4 +1,4 @@
-import { type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
+import { type AccountingConfigurationSchemaType } from '@schemas/business/accountingConfiguration'
 import { type TaxProfile } from '@schemas/taxEstimates/profile'
 import { useGetTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/get'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'

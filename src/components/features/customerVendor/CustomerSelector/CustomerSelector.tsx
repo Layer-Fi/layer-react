@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Customer } from '@schemas/customer'
+import { type Customer } from '@schemas/customerVendor/customer'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
 import { getCustomerName } from '@utils/customer'
 import { useGetListCustomers } from '@api/businesses/[business-id]/customers/get'

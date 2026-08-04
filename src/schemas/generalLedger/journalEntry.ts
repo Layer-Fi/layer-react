@@ -1,12 +1,12 @@
 import { pipe, Schema } from 'effect'
 
-import { AccountIdentifierSchema } from '@schemas/accountIdentifier'
+import { AccountIdentifierSchema } from '@schemas/common/accountIdentifier'
 import { ZonedDateTimeFromSelf } from '@schemas/common/zonedDateTimeFromSelf'
-import { CustomerSchema } from '@schemas/customer'
+import { CustomerSchema } from '@schemas/customerVendor/customer'
+import { VendorSchema } from '@schemas/customerVendor/vendor'
 import { LedgerEntryDirectionSchema, SingleChartAccountSchema } from '@schemas/generalLedger/ledgerAccount'
 import { NonRecursiveBigDecimalSchema } from '@schemas/nonRecursiveBigDecimal'
-import { TagKeyValueSchema, TagSchema, TransactionTagSchema } from '@schemas/tag'
-import { VendorSchema } from '@schemas/vendor'
+import { TagKeyValueSchema, TagSchema, TransactionTagSchema } from '@schemas/tags/tag'
 
 export const JournalEntryFormLineItemSchema = Schema.Struct({
   externalId: Schema.NullOr(Schema.String),

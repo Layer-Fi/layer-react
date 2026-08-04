@@ -1,7 +1,7 @@
 import { pipe, Schema } from 'effect'
 
-import { PreviewCellSchema, type PreviewCsv, PreviewRowSchema } from '@schemas/csvUpload'
-import type { CustomAccountTransactionRow, RawCustomTransaction } from '@schemas/customAccounts'
+import { PreviewCellSchema, type PreviewCsv, PreviewRowSchema } from '@schemas/common/csvUpload'
+import type { CustomAccountTransactionRow, RawCustomTransaction } from '@schemas/customAccounts/customAccounts'
 import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { postWithFormData } from '@utils/api/authenticatedHttp'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@api/businesses/[business-id]/custom-accounts/get'

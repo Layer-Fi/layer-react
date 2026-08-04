@@ -1,10 +1,10 @@
 import { pipe, Schema } from 'effect'
 
-import { CustomerSchema } from '@schemas/customer'
+import { CustomerSchema } from '@schemas/customerVendor/customer'
+import { VendorSchema } from '@schemas/customerVendor/vendor'
 import { LedgerEntryDirectionSchema, SingleChartAccountSchema } from '@schemas/generalLedger/ledgerAccount'
-import { TransactionTagSchema } from '@schemas/tag'
+import { TransactionTagSchema } from '@schemas/tags/tag'
 import { createOpenEnumSchema } from '@schemas/utils'
-import { VendorSchema } from '@schemas/vendor'
 
 export enum ClassifierAgent {
   Sms = 'SMS',

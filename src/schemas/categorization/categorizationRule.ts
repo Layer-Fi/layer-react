@@ -1,7 +1,7 @@
 import { pipe, Schema } from 'effect/index'
 
-import { AccountIdentifierSchema } from '@schemas/accountIdentifier'
 import { BankTransactionCounterpartySchema, MinimalBankTransactionSchema } from '@schemas/bankTransactions/base'
+import { AccountIdentifierSchema } from '@schemas/common/accountIdentifier'
 
 export enum BankDirectionFilter {
   MONEY_IN = 'MONEY_IN',

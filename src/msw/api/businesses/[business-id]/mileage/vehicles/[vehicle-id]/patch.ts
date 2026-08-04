@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type Vehicle, VehicleSchema } from '@schemas/vehicle'
+import { type Vehicle, VehicleSchema } from '@schemas/mileage/vehicle'
 
 import { enforceSinglePrimaryVehicle, vehicleStore } from '@msw/api/businesses/[business-id]/mileage/vehicles/store'
 import { vehicleFromUpsertRequest } from '@msw/api/businesses/[business-id]/mileage/vehicles/vehicleFromUpsertRequest'

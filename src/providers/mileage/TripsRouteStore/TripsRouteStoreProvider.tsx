@@ -1,8 +1,8 @@
 import { createContext, type PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { createStore, useStore } from 'zustand'
 
-import { TripPurposeFilterValue } from '@schemas/trip'
-import type { Vehicle } from '@schemas/vehicle'
+import { TripPurposeFilterValue } from '@schemas/mileage/trip'
+import type { Vehicle } from '@schemas/mileage/vehicle'
 
 export type TripsTableFilters = {
   query: string

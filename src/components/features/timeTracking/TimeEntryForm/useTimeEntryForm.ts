@@ -3,7 +3,7 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { type TimeEntry, type TimeEntryForm, UpsertTimeEntrySchema } from '@schemas/timeTracking'
+import { type TimeEntry, type TimeEntryForm, UpsertTimeEntrySchema } from '@schemas/timeTracking/timeTracking'
 import { useUpsertTimeEntry } from '@api/businesses/[business-id]/time-tracking/time-entries/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'

@@ -5,7 +5,7 @@ import {
   CallBookingItemResponseSchema,
   CallBookingState,
   CreateCallBookingBodySchema,
-} from '@schemas/callBooking'
+} from '@schemas/bookkeeping/callBooking'
 
 import { callBookingStore } from '@msw/api/businesses/[business-id]/call-bookings/store'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
