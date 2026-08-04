@@ -1,0 +1,128 @@
+name: Docs — Screenshots
+
+# Captures the stories listed in scripts/docs-screenshots.manifest.ts from a headless
+# Storybook build and opens a PR in Layer-Fi/api-documentation with the refreshed
+# PNGs. Never edits .mdx — a page picks up a new image once, by hand, and then the
+# image refreshes on every release.
+#
+# Called by Release — Publish after a stable publish, or dispatched manually.
+#
+# Auth: a GitHub App installed on Layer-Fi/api-documentation only, with
+# contents:write + pull-requests:write. Secrets: DOCS_BOT_APP_ID,
+# DOCS_BOT_PRIVATE_KEY. The installation token is minted per run and expires with it.
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: 'Ref to capture from (a release tag)'
+        type: string
+        required: true
+      dry_run:
+        type: boolean
+        default: false
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Ref to capture from'
+        type: string
+        default: main
+      dry_run:
+        description: 'Capture and upload artifacts, but open no PR'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.ref }}
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Install Chromium
+      run: npx playwright install --with-deps chromium
+
+    - name: Build Storybook
+      run: npm run storybook:build
+
+    - name: Check documented stories still resolve
+      run: npm run screenshots:check
+
+    - name: Capture screenshots
+      run: npm run screenshots:capture -- --out "$RUNNER_TEMP/shots"
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: docs-screenshots
+        path: ${{ runner.temp }}/shots
+
+    - name: Mint a token for api-documentation
+      if: ${{ !inputs.dry_run }}
+      id: docs_token
+      uses: actions/create-github-app-token@v1
+      with:
+        app-id: ${{ secrets.DOCS_BOT_APP_ID }}
+        private-key: ${{ secrets.DOCS_BOT_PRIVATE_KEY }}
+        owner: Layer-Fi
+        repositories: api-documentation
+
+    - name: Check out api-documentation
+      if: ${{ !inputs.dry_run }}
+      uses: actions/checkout@v4
+      with:
+        repository: Layer-Fi/api-documentation
+        token: ${{ steps.docs_token.outputs.token }}
+        path: api-documentation
+
+    - name: Copy screenshots into the docs repo
+      if: ${{ !inputs.dry_run }}
+      run: cp -R "$RUNNER_TEMP/shots/." api-documentation/images/
+
+    - name: Summarize the refresh
+      if: ${{ !inputs.dry_run }}
+      id: body
+      run: |
+        {
+          echo 'text<<PR_BODY'
+          echo "Regenerated from Storybook at \`${{ inputs.ref }}\` in Layer-Fi/layer-react."
+          echo ''
+          echo '| image | story | page |'
+          echo '| --- | --- | --- |'
+          npx tsx -e '
+            import { DOCS_SCREENSHOTS } from "./scripts/docs-screenshots.manifest"
+            for (const s of DOCS_SCREENSHOTS) {
+              console.log("| `images/" + s.out + "` | `" + s.storyId + "` | `" + s.page + "` |")
+            }
+          '
+          echo ''
+          echo 'Only images already referenced by a page will visibly change.'
+          echo 'Source manifest: `scripts/docs-screenshots.manifest.ts`.'
+          echo 'PR_BODY'
+        } >> "$GITHUB_OUTPUT"
+
+    - name: Open the docs PR
+      if: ${{ !inputs.dry_run }}
+      uses: peter-evans/create-pull-request@v7
+      with:
+        path: api-documentation
+        token: ${{ steps.docs_token.outputs.token }}
+        branch: docs/screenshots-${{ inputs.ref }}
+        base: main
+        title: 'docs: refresh component screenshots for ${{ inputs.ref }}'
+        body: ${{ steps.body.outputs.text }}
+        commit-message: 'docs: refresh component screenshots for ${{ inputs.ref }}'
+        add-paths: images
+        delete-branch: true

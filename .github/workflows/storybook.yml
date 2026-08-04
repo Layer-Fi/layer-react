@@ -24,3 +24,7 @@ jobs:
 
     - name: Build Storybook
       run: npm run storybook:build
+
+    # Renaming a documented story must fail here, not at release time.
+    - name: Check documented stories still resolve
+      run: npm run screenshots:check

@@ -72,6 +72,13 @@ everything in `LayerTestProvider`. So:
 Constrain size and layout **in the component**, not in the story — a story that has to box a
 component to look right is reporting a component bug.
 
+## Some stories are load-bearing for the public docs
+
+`scripts/docs-screenshots.manifest.ts` maps a handful of story ids to images in
+`Layer-Fi/api-documentation`; every stable release recaptures them and opens a docs PR
+(`.github/workflows/docs-screenshots.yml`). Renaming or deleting one of those stories fails
+`npm run screenshots:check` on the PR — update the manifest in the same change.
+
 ## Flakiness
 
 Two sources: the 250ms `setMinimumResponseDelay` in `preview.tsx` (loading-vs-loaded races)
