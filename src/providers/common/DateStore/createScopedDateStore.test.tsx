@@ -4,7 +4,7 @@ import { startOfDay } from 'date-fns'
 import { describe, expect, it, vi } from 'vitest'
 
 import { DatePreset } from '@utils/date/dateRangePresets'
-import { createScopedDateStore, type CreateScopedDateStoreOptions } from '@providers/global/DateStoreProvider/internal/createScopedDateStore'
+import { createScopedDateStore, type CreateScopedDateStoreOptions } from '@providers/common/DateStore/createScopedDateStore'
 
 import { makeBusiness } from '@fixtures/business/mocks'
 import { setupFakeSystemTime } from '@test-utils/fakeSystemTime'

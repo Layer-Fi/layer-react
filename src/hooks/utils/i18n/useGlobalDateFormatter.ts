@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 
 import { type DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useGlobalDate } from '@providers/global/DateStoreProvider/GlobalDateStoreProvider'
+import { useGlobalDate } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 
 export const useGlobalDateFormatter = () => {
   const { formatDate } = useIntlFormatter()

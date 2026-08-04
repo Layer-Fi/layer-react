@@ -2,7 +2,7 @@ import { pipe, Schema } from 'effect'
 
 import { MinimalBankTransactionSchema } from '@schemas/bankTransactions/base'
 import { createTransformedEnumSchema } from '@schemas/utils'
-import { EntityName, type LinkingMetadata } from '@providers/global/InAppLink/InAppLinkContext'
+import { EntityName, type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
 
 export const MatchAdjustmentSchema = Schema.Struct({
   amount: Schema.Number,

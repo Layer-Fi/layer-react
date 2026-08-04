@@ -5,7 +5,7 @@ import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankT
 import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@providers/categorization/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import { useInAppLinkContext } from '@providers/global/InAppLink/InAppLinkContext'
+import { useInAppLinkContext } from '@providers/common/InAppLink/InAppLinkContext'
 import { ErrorText } from '@ui/Typography/ErrorText'
 import { Span } from '@ui/Typography/Text'
 import { BankTransactionMatchBadge } from '@features/bankTransactions/BankTransactionMatchBadge/BankTransactionMatchBadge'

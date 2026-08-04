@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 
 import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
+import { useBankAccountsContext } from '@providers/global/BankAccountsContext/BankAccountsContext'
 import { AccountConfirmationStoreProvider } from '@providers/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
-import { useBankAccountsContext } from '@providers/linkedAccounts/BankAccountsContext/BankAccountsContext'
 import { LinkedAccountsProvider } from '@providers/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { OpeningBalanceModalProvider } from '@providers/linkedAccounts/OpeningBalanceModal/OpeningBalanceModalProvider'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'

@@ -1,6 +1,6 @@
 import { createContext, type PropsWithChildren, useContext } from 'react'
 
-import { useBookkeepingStatusContext } from '@providers/bookkeeping/BookkeepingStatusContext/BookkeepingStatusContext'
+import { useBookkeepingStatusContext } from '@providers/global/BookkeepingStatusContext/BookkeepingStatusContext'
 
 type BankTransactionsIsCategorizationEnabledContextType = boolean
 

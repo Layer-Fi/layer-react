@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-import { useGlobalDatePreset, useGlobalDatePresetActions } from '@providers/global/DateStoreProvider/GlobalDateStoreProvider'
+import { useGlobalDatePreset, useGlobalDatePresetActions } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { DateSelectionComboBox } from '@blocks/DatePickers/DateSelection/DateSelectionComboBox'
 import { GlobalDatePicker } from '@blocks/DatePickers/GlobalDatePicker/GlobalDatePicker'
 

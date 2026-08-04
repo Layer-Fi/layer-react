@@ -1,4 +1,4 @@
-import { createScopedDateStore } from '@providers/global/DateStoreProvider/internal/createScopedDateStore'
+import { createScopedDateStore } from '@providers/common/DateStore/createScopedDateStore'
 
 export type { DateRange, DateSelectionMode } from '@utils/date/dateRange'
 export { clampToAfterActivationDate, clampToPresentOrPast } from '@utils/date/dateRange'

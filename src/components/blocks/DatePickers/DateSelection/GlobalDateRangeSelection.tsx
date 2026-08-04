@@ -1,4 +1,4 @@
-import { useGlobalDatePreset, useGlobalDatePresetActions, useGlobalDateRange, useGlobalDateRangeActions } from '@providers/global/DateStoreProvider/GlobalDateStoreProvider'
+import { useGlobalDatePreset, useGlobalDatePresetActions, useGlobalDateRange, useGlobalDateRangeActions } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { DateRangeSelection } from '@blocks/DatePickers/DateSelection/DateRangeSelection'
 
 export type GlobalDateRangeSelectionProps = {

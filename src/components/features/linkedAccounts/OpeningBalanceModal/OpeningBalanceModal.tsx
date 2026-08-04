@@ -11,8 +11,8 @@ import {
   type OpeningBalanceData,
   useBulkSetOpeningBalanceAndDate,
 } from '@hooks/legacy/useUpdateOpeningBalanceAndDate'
+import { useBankAccountsContext } from '@providers/global/BankAccountsContext/BankAccountsContext'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
-import { useBankAccountsContext } from '@providers/linkedAccounts/BankAccountsContext/BankAccountsContext'
 import { OpeningBalanceModalContext } from '@providers/linkedAccounts/OpeningBalanceModal/OpeningBalanceModalContext'
 import { Button } from '@ui/Button/Button'
 import { Modal } from '@ui/Modal/Modal'

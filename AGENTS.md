@@ -55,7 +55,7 @@ release process.
 | `src/utils` | `@utils/*` | pure helpers: `api`, `swr`, `i18n`, `date`, `form`, `zustand`, `styleUtils` |
 | `src/hooks/api/**` | `@api/*` | one file per endpoint in a tree mirroring the REST path, named for the HTTP method (`get.ts`, `post.ts`, …) |
 | `src/hooks/{features,utils,legacy}` | `@hooks/*` | composed feature logic · generic hooks · pre-factory hooks (don't extend) |
-| `src/providers` | `@providers/*` | scoped Zustand stores and DI contexts, one directory per domain plus `global/` |
+| `src/providers` | `@providers/*` | scoped Zustand stores and DI contexts, one directory per domain plus `global/` (the `LayerProvider` stack) and `common/` (domain-agnostic) |
 | `src/components/ui` | `@ui/*` | design-system primitives (domain-agnostic) |
 | `src/components/blocks` | `@blocks/*` | composed patterns: tables, cards, wizards (domain-agnostic) |
 | `src/components/features/<domain>` | `@features/*` | feature UI, one directory per domain object; fetches its own data |

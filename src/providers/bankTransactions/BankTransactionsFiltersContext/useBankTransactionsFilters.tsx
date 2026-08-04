@@ -5,7 +5,7 @@ import { type BankTransactionFilters, BankTransactionsDateFilterMode } from '@ut
 import { BookkeepingStatus } from '@api/businesses/[business-id]/bookkeeping/status/get'
 import { useEffectiveBookkeepingStatus } from '@hooks/features/bookkeeping/useEffectiveBookkeepingStatus'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@providers/categorization/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import { useGlobalDateRange } from '@providers/global/DateStoreProvider/GlobalDateStoreProvider'
+import { useGlobalDateRange } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 
 export type useBankTransactionsFiltersParams = {
   scope?: DisplayState

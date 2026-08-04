@@ -56,7 +56,7 @@ export { TimeTracking } from './views/TimeTracking'
 /*
 ======================= Layer Provider & Context =======================
 */
-export { EntityName, type LinkingMetadata } from './providers/global/InAppLink/InAppLinkContext'
+export { EntityName, type LinkingMetadata } from './providers/common/InAppLink/InAppLinkContext'
 export { useLayerContext } from './providers/global/LayerContext/LayerContext'
 export { type LayerEvent, LayerEventComponent, LayerEventType } from './providers/global/LayerProvider/layerEvents'
 export { type EventCallbacks, LayerProvider } from './providers/global/LayerProvider/LayerProvider'

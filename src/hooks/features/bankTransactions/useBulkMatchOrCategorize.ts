@@ -8,7 +8,7 @@ import {
 } from '@schemas/bankTransactions/bulkMatchOrCategorize'
 import { usePostBulkMatchOrCategorize } from '@api/businesses/[business-id]/bank-transactions/bulk-match-or-categorize/post'
 import { type BankTransactionCategorization, BankTransactionSelectionVariant, DEFAULT_CATEGORIZATION, useGetAllBankTransactionsCategorizations } from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import { useSelectedIds } from '@providers/global/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useSelectedIds } from '@providers/common/BulkSelectionStore/BulkSelectionStoreProvider'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 
 type MatchOrCategorizeTransaction = typeof MatchOrCategorizeTransactionRequestSchema.Type

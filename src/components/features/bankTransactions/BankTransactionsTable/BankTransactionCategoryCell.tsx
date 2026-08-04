@@ -12,7 +12,7 @@ import { useSaveBankTransactionRow } from '@hooks/features/bankTransactions/useS
 import { useBankTransactionsStringOverrides } from '@providers/bankTransactions/BankTransactionsStringOverridesContext/BankTransactionsStringOverridesContext'
 import { useBankTransactionsCategorizationActions } from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@providers/categorization/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
-import { useBulkSelectionActions, useCountSelectedIds } from '@providers/global/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useBulkSelectionActions, useCountSelectedIds } from '@providers/common/BulkSelectionStore/BulkSelectionStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { SubmitAction } from '@ui/Button/SubmitButton'
 import { Chevron } from '@ui/Chevron/Chevron'

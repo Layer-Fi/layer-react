@@ -10,7 +10,7 @@ import { useTaxCodeOptions } from '@hooks/features/bankTransactions/useTaxCodeOp
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankTransactionsContext } from '@providers/bankTransactions/BankTransactions/BankTransactionsContext'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
-import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/global/BulkSelectionStore/BulkSelectionStoreProvider'
+import { useBulkSelectionActions, useCountSelectedIds, useSelectedIds } from '@providers/common/BulkSelectionStore/BulkSelectionStoreProvider'
 import { VStack } from '@ui/Stack/Stack'
 import { Label, Span } from '@ui/Typography/Text'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
