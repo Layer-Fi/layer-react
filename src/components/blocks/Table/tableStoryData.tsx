@@ -475,6 +475,13 @@ const STORY_STYLES = `
     grid-template-columns: var(--table-story-columns);
   }
 
+  /* The detail row's colSpan cell is a real table cell, so it would otherwise drive the table's
+     column widths and collapse the grid rows to its content. */
+  .Layer__UI__Table__TableStory .Layer__DataTable__ExpandedRow {
+    display: grid;
+    grid-template-columns: 100%;
+  }
+
   /* The grouped header's Balance group sits above three leaf columns. */
   .Layer__UI__Table-Column__TableStoryAccounts--Balance {
     grid-column: span 3;

@@ -1,6 +1,6 @@
-import { useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useLayoutEffect, useMemo, useState } from 'react'
 import type { HeaderGroup } from '@tanstack/react-table'
-import type { CSSProperties } from 'react'
+import type { CSSProperties, RefObject } from 'react'
 
 import { type ColumnHeaderWidths, computePinningStyles } from '@blocks/Table/DataTable/utils/column/pinning'
 
@@ -10,8 +10,10 @@ type UseColumnPinningStylesOptions = {
 
 const EMPTY_PINNING_STYLES = new Map<string, CSSProperties>()
 
-const getLeafHeaderCells = (header: HTMLElement | null): HTMLElement[] => {
-  const leafRow = header?.lastElementChild
+// Read the header out of the DOM rather than through a ref — react-aria's TableHeader doesn't
+// forward one, so the ARIA path would never measure and pinning would silently do nothing.
+const getLeafHeaderCells = (container: HTMLElement | null): HTMLElement[] => {
+  const leafRow = container?.querySelector('.Layer__UI__Table-TableHeader')?.lastElementChild
   if (!leafRow) return []
   return Array.from(leafRow.children) as HTMLElement[]
 }
@@ -46,10 +48,10 @@ const arePinningStylesEqual = (
 }
 
 export const useColumnPinningStyles = <TData>(
+  containerRef: RefObject<HTMLElement | null>,
   headerGroups: HeaderGroup<TData>[],
   { isEnabled = true }: UseColumnPinningStylesOptions = {},
 ) => {
-  const headerRef = useRef<HTMLTableSectionElement>(null)
   const [pinningStyles, setPinningStyles] = useState<ReadonlyMap<string, CSSProperties>>(EMPTY_PINNING_STYLES)
 
   const leafColumnIds = useMemo(
@@ -64,23 +66,37 @@ export const useColumnPinningStyles = <TData>(
       return
     }
 
-    const cells = getLeafHeaderCells(headerRef.current)
-    if (cells.length === 0) return
+    const container = containerRef.current
+    if (!container) return
+
+    const resizeObserver = new ResizeObserver(() => measure())
 
     // Measure and compute sticky offsets before paint so pinned columns move together.
-    const updatePinningStyles = () => {
+    const measure = () => {
+      const cells = getLeafHeaderCells(container)
+      if (cells.length === 0) return
+
+      // Keep offsets in sync when column widths change after the initial layout.
+      resizeObserver.disconnect()
+      cells.forEach(cell => resizeObserver.observe(cell))
+
       const widths = getColumnHeaderWidths(leafColumnIds, cells)
       const nextPinningStyles = computePinningStyles(headerGroups, widths)
       setPinningStyles(current => arePinningStylesEqual(current, nextPinningStyles) ? current : nextPinningStyles)
     }
 
-    updatePinningStyles()
+    measure()
 
-    // Keep offsets in sync when column widths change after the initial layout.
-    const observer = new ResizeObserver(updatePinningStyles)
-    cells.forEach(cell => observer.observe(cell))
-    return () => observer.disconnect()
-  }, [headerGroups, isEnabled, leafColumnIds])
+    // react-aria builds its collection after the first commit, so the header cells this measures
+    // don't exist yet on the ARIA path — watch for them instead of measuring once.
+    const mutationObserver = new MutationObserver(() => measure())
+    mutationObserver.observe(container, { childList: true, subtree: true })
 
-  return { headerRef, pinningStyles }
+    return () => {
+      resizeObserver.disconnect()
+      mutationObserver.disconnect()
+    }
+  }, [containerRef, headerGroups, isEnabled, leafColumnIds])
+
+  return { pinningStyles }
 }
