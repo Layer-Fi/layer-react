@@ -7,7 +7,6 @@ import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import type { ColumnConfig } from '@blocks/Table/DataTable/utils/column'
-import type { NestedColumnConfig } from '@blocks/Table/DataTable/utils/column/nesting'
 
 export type InvoiceRow = {
   id: string
@@ -371,7 +370,7 @@ const DeltaCell = ({ node }: { node: AccountNode }) => {
 }
 
 /** Two-tier header: a leaf `Account` column beside a `Balance` group of three leaves. */
-export const getAccountColumnConfig = (): NestedColumnConfig<AccountNode> => [
+export const getAccountColumnConfig = (): ColumnConfig<AccountNode> => [
   {
     id: 'Account',
     header: 'Account',
@@ -384,29 +383,22 @@ export const getAccountColumnConfig = (): NestedColumnConfig<AccountNode> => [
     cell: row => <Span variant='subtle'>{row.original.accountType}</Span>,
   },
   {
-    id: 'Balance',
-    header: 'Balance',
-    alignment: Alignment.Center,
-    columns: [
-      {
-        id: 'PriorBalance',
-        header: 'Prior period',
-        cell: row => <Span variant='subtle'>{formatCents(row.original.priorBalance)}</Span>,
-        alignment: Alignment.Right,
-      },
-      {
-        id: 'CurrentBalance',
-        header: 'Current',
-        cell: row => <Span weight='bold'>{formatCents(row.original.currentBalance)}</Span>,
-        alignment: Alignment.Right,
-      },
-      {
-        id: 'Delta',
-        header: 'Change',
-        cell: row => <DeltaCell node={row.original} />,
-        alignment: Alignment.Right,
-      },
-    ],
+    id: 'PriorBalance',
+    header: 'Prior period',
+    cell: row => <Span variant='subtle'>{formatCents(row.original.priorBalance)}</Span>,
+    alignment: Alignment.Right,
+  },
+  {
+    id: 'CurrentBalance',
+    header: 'Current',
+    cell: row => <Span weight='bold'>{formatCents(row.original.currentBalance)}</Span>,
+    alignment: Alignment.Right,
+  },
+  {
+    id: 'Delta',
+    header: 'Change',
+    cell: row => <DeltaCell node={row.original} />,
+    alignment: Alignment.Right,
   },
 ]
 
@@ -480,11 +472,6 @@ const STORY_STYLES = `
   .Layer__UI__Table__TableStory .Layer__DataTable__ExpandedRow {
     display: grid;
     grid-template-columns: 100%;
-  }
-
-  /* The grouped header's Balance group sits above three leaf columns. */
-  .Layer__UI__Table-Column__TableStoryAccounts--Balance {
-    grid-column: span 3;
   }
 `
 
