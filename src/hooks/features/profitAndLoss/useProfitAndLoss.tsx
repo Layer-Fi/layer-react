@@ -12,7 +12,7 @@ import { useGetProfitAndLossReport } from '@api/businesses/[business-id]/reports
 import {
   type DateSelectionMode,
   useGlobalDateRange,
-} from '@providers/DateStoreProvider/GlobalDateStoreProvider'
+} from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import type { BreadcrumbItem } from '@features/profitAndLoss/ProfitAndLossDetailReportBreadcrumb/ProfitAndLossDetailReportBreadcrumb'
 
 export type Scope = 'expenses' | 'revenue'

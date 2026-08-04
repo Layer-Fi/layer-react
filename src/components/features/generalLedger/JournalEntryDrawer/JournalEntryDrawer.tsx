@@ -2,7 +2,7 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { ChevronLeft, Save, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useJournalNavigation } from '@providers/JournalStore/JournalStoreProvider'
+import { useJournalNavigation } from '@providers/generalLedger/JournalStore/JournalStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'

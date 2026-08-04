@@ -1,5 +1,5 @@
 import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
-import { LinkedAccountsProvider } from '@providers/LinkedAccountsProvider/LinkedAccountsProvider'
+import { LinkedAccountsProvider } from '@providers/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { HStack } from '@ui/Stack/Stack'
 import { PlaidHostedLinkErrorBanner } from '@features/linkedAccounts/PlaidHostedLinkErrorBanner/PlaidHostedLinkErrorBanner'
 import { NoBankAccountsLinkedBanner } from '@views/SolopreneurOverview/SolopreneurOnboardingBanner/NoBankAccountsLinkedBanner'

@@ -9,7 +9,7 @@ import {
   useUnifiedReportDateSelectionMode,
   useUnifiedReportGroupByParam,
   useUnifiedReportReportingBasisParam,
-} from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+} from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@blocks/DatePickers/DateSelection/CombinedDateRangeSelection'
 import { CombinedDateSelection } from '@blocks/DatePickers/DateSelection/CombinedDateSelection'

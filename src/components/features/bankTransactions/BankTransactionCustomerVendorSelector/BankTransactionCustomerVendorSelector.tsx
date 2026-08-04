@@ -5,7 +5,7 @@ import type { BankTransaction } from '@internal-types/bankTransactions'
 import { type CustomerVendorSchema, makeCustomerVendor } from '@schemas/customerVendor'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { usePatchBankTransactionCounterparty } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/patch'
-import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@providers/categorization/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { CustomerVendorSelector } from '@features/customerVendor/CustomerVendorSelector/CustomerVendorSelector'
 
 type BankTransactionCustomerVendorSelectorProps = {

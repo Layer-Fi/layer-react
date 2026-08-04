@@ -10,7 +10,7 @@ import { translationKey } from '@utils/i18n/translationKey'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { getDueDifference } from '@utils/time/timeUtils'
 import { type ListInvoicesFilterParams } from '@api/businesses/[business-id]/invoices/get'
-import { type InvoiceTableFilters } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { type InvoiceTableFilters } from '@providers/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { BadgeVariant } from '@ui/Badge/Badge'
 
 export enum InvoiceStatusFilter {

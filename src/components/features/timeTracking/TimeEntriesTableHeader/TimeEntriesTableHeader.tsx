@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { Clock3, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useTimeEntriesDrawer, useTimeEntriesFilters, useTimeEntriesTimerConfig } from '@providers/TimeEntriesStore/TimeEntriesStoreProvider'
+import { useTimeEntriesDrawer, useTimeEntriesFilters, useTimeEntriesTimerConfig } from '@providers/timeTracking/TimeEntriesStore/TimeEntriesStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { DataTableHeader } from '@blocks/DataTable/DataTableHeader'

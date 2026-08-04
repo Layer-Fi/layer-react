@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { BankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
 import type { Categorization } from '@schemas/categorization'
-import { BankTransactionsCategorizationStoreProvider } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { BankTransactionsCategorizationStoreProvider } from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { type RecordBankTransactionVariant } from '@features/bankTransactions/RecordBankTransactionForm/useRecordBankTransactionForm'
 import { RecordBankTransactionModal } from '@features/bankTransactions/RecordBankTransactionModal/RecordBankTransactionModal'
 

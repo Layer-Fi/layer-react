@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { type MoneyFormat } from '@internal-types/general'
 import { getProfitAndLossExcel } from '@hooks/legacy/useDownloadProfitAndLoss'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
-import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { ProfitAndLossContext } from '@providers/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 import { DownloadButton as DownloadButtonComponent } from '@ui/Button/DownloadButton'
 import type { ProfitAndLossDownloadButtonStringOverrides } from '@features/profitAndLoss/ProfitAndLossDownloadButton/types'
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import type { SWRInfiniteResponse } from 'swr/infinite'
 
-import { useLocale } from '@providers/I18nProvider/LayerI18nProvider'
+import { useLocale } from '@providers/global/I18nProvider/LayerI18nProvider'
 
 /**
  * Preserves the page size of a useSWRInfinite response across locale changes.

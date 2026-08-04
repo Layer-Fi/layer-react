@@ -105,7 +105,6 @@ export default tsEslint.config(
           '@ui/',
           '@blocks/',
           '@features/',
-          '@contexts/',
           '@api/',
           '@hooks/',
           '@providers/',
@@ -165,7 +164,7 @@ export default tsEslint.config(
             message: 'src/hooks/api is the transport layer: it may not depend on UI or feature code. Move shared contracts to @schemas and feature composition to @hooks/features, which is allowed to import from @api.',
           },
           {
-            group: ['@providers/*', '@contexts/*'],
+            group: ['@providers/**'],
             message: 'API hooks may not read app state at runtime. Read the store in a @hooks/features wrapper and pass the values in. Type-only imports are fine.',
             allowTypeImports: true,
           },
@@ -214,7 +213,6 @@ export default tsEslint.config(
 
             // App wiring & global state (can depend on hooks/api)
             '^(?:type:)?@providers/',
-            '^(?:type:)?@contexts/',
 
             // Design system primitives
             '^(?:type:)?@icons/',

@@ -8,7 +8,7 @@ import { type LedgerAccountForm, UpsertLedgerAccountSchema } from '@schemas/gene
 import { useUpsertLedgerAccount } from '@api/businesses/[business-id]/ledger/accounts/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
-import { ChartOfAccountsContext } from '@contexts/ChartOfAccountsContext/ChartOfAccountsContext'
+import { ChartOfAccountsContext } from '@providers/generalLedger/ChartOfAccountsContext/ChartOfAccountsContext'
 import {
   convertLedgerAccountFormToParams,
   getLedgerAccountFormDefaultValues,

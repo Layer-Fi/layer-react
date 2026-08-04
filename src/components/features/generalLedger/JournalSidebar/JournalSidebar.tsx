@@ -1,6 +1,6 @@
 import { type RefObject, useContext } from 'react'
 
-import { JournalContext } from '@contexts/JournalContext/JournalContext'
+import { JournalContext } from '@providers/generalLedger/JournalContext/JournalContext'
 import { JournalEntryDetails } from '@features/generalLedger/JournalEntryDetails/JournalEntryDetails'
 
 export const JournalSidebar = ({

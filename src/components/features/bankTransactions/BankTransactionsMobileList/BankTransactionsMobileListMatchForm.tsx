@@ -12,7 +12,7 @@ import { useMatchBankTransactionWithCacheUpdate } from '@hooks/features/bankTran
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import {
   useBankTransactionsCategorizationActions,
-} from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+} from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { FileInput } from '@ui/Input/FileInput'
 import { HStack, VStack } from '@ui/Stack/Stack'

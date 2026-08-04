@@ -3,7 +3,7 @@ import { type ToastData } from '@internal-types/toast'
 import { type AccountingConfigurationSchemaType } from '@schemas/accountingConfiguration'
 import { type Business } from '@schemas/business'
 import { type LayerError } from '@utils/api/errorHandler'
-import type { EventCallbacks } from '@providers/LayerProvider/LayerProvider'
+import type { EventCallbacks } from '@providers/global/LayerProvider/LayerProvider'
 
 export type LayerContextValues = {
   businessId: string

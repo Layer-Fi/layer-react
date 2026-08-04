@@ -3,7 +3,7 @@ import classNames from 'classnames'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { type Classification } from '@schemas/categorization'
-import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 import { Label } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@features/bankTransactions/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'
 import { LedgerAccountComboBox } from '@features/generalLedger/LedgerAccountComboBox/LedgerAccountComboBox'

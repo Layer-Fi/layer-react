@@ -3,7 +3,7 @@ import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useDebouncedSearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
-import { useInvoiceTableFilters } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { useInvoiceTableFilters } from '@providers/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { DataTableHeader } from '@blocks/DataTable/DataTableHeader'
 import { MobileSelectionDrawerWithTrigger } from '@blocks/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'

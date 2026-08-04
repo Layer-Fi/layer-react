@@ -9,7 +9,7 @@ import {
 
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { ChartYAxis } from '@ui/Chart/ChartYAxis'
 import { VStack } from '@ui/Stack/Stack'
 import type { MileageDeductionChartDataPoint } from '@features/mileage/MileageDeductionChart/MileageDeductionChartDataPoint'

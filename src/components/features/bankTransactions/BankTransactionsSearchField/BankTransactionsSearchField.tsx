@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { useDebounce } from '@hooks/utils/debouncing/useDebounce'
-import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
-import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
+import { useBankTransactionsFiltersContext } from '@providers/bankTransactions/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
+import { LayerEventComponent, LayerEventType } from '@providers/global/LayerProvider/layerEvents'
 import { SearchField } from '@ui/SearchField/SearchField'
 
 type TransactionsSearchProps = {

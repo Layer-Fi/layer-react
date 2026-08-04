@@ -10,7 +10,7 @@ import { usePostTaskUpload } from '@api/businesses/[business-id]/tasks/[task-id]
 import { usePostTaskUploadDescription } from '@api/businesses/[business-id]/tasks/[task-id]/upload/update-description/post'
 import { usePostTaskUserResponse } from '@api/businesses/[business-id]/tasks/[task-id]/user-response/post'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
-import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
+import { LayerEventComponent, LayerEventType } from '@providers/global/LayerProvider/layerEvents'
 import ChevronDownFill from '@icons/ChevronDownFill'
 import { Button } from '@ui/Button/Button'
 import { FileInput } from '@ui/Input/FileInput'

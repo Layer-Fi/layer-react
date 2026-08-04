@@ -1,5 +1,5 @@
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { ReceiptsProvider } from '@providers/ReceiptsProvider/ReceiptsProvider'
+import { ReceiptsProvider } from '@providers/bankTransactions/Receipts/ReceiptsProvider'
 import { BankTransactionsMobileListBusinessForm } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileListBusinessForm'
 import { BankTransactionsMobileListPersonalForm } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileListPersonalForm'
 import { BankTransactionsMobileListSplitAndMatchForm } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileListSplitAndMatchForm'

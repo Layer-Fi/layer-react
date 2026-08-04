@@ -9,7 +9,7 @@ import {
   type UnifiedReportColumn,
 } from '@schemas/reports/unifiedReport'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useOpenDetailReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import { useOpenDetailReport } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { DurationSpan } from '@ui/Typography/DurationSpan'
 import { MoneySpan } from '@ui/Typography/MoneySpan'

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useInvoicesList } from '@hooks/features/invoices/useInvoicesList'
-import { useInvoiceNavigation, useInvoiceTableFilters } from '@providers/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { useInvoiceNavigation, useInvoiceTableFilters } from '@providers/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { type DefaultVariant, ResponsiveComponent } from '@components/utility/ResponsiveComponent'
 import { InvoicesMobileList } from '@features/invoices/InvoicesMobileList/InvoicesMobileList'

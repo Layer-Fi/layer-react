@@ -10,8 +10,8 @@ import type { CustomAccount } from '@schemas/customAccounts'
 import { makeTagKeyValueFromTag } from '@schemas/tag'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/bankTransactions/categorizationOption'
 import { getDefaultTaxCodeForBankTransaction } from '@utils/bankTransactions/taxCode'
-import { BankTransactionSelectionVariant } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
+import { BankTransactionSelectionVariant } from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 import { CategorizedCategories, ReviewCategories } from '@features/bankTransactions/constants'
 
 export const filterVisibility = (

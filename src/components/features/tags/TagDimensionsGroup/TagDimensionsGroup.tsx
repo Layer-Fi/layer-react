@@ -1,5 +1,5 @@
 import { type Tag } from '@schemas/tag'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { HStack } from '@ui/Stack/Stack'
 import { TagDimensionComboBox } from '@features/tags/TagDimensionComboBox/TagDimensionComboBox'
 

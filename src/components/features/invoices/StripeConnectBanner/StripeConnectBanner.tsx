@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { StripeAccountStatus } from '@schemas/stripeAccountStatus'
 import { useGetStripeAccountStatus } from '@api/businesses/[business-id]/stripe/status/get'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { Banner, type BannerVariant } from '@ui/Banner/Banner'
 import { ConnectStripeButton } from '@features/invoices/StripeConnectBanner/ConnectStripeButton'
 import { useStripeConnect } from '@features/invoices/StripeConnectBanner/useStripeConnect'

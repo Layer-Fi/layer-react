@@ -1,4 +1,4 @@
-import { TableProvider } from '@contexts/TableContext/TableContext'
+import { ReportsTableProvider } from '@providers/reports/ReportsTableContext/ReportsTableContext'
 import {
   ProfitAndLossTableComponent,
   type ProfitAndLossTableProps,
@@ -8,8 +8,8 @@ export const ProfitAndLossTableWithProvider = (
   props: ProfitAndLossTableProps,
 ) => {
   return (
-    <TableProvider>
+    <ReportsTableProvider>
       <ProfitAndLossTableComponent {...props} />
-    </TableProvider>
+    </ReportsTableProvider>
   )
 }

@@ -5,7 +5,7 @@ import { type BankTransaction } from '@internal-types/bankTransactions'
 import { usePatchBankTransactionMemo } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/patch'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
-import { LayerEventComponent, LayerEventType } from '@providers/LayerProvider/layerEvents'
+import { LayerEventComponent, LayerEventType } from '@providers/global/LayerProvider/layerEvents'
 
 interface BankTransactionMemoProps {
   bankTransactionId: BankTransaction['id']

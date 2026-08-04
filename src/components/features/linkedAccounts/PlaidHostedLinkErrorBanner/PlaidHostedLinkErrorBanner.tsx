@@ -2,7 +2,7 @@ import { useCallback, useContext, useMemo } from 'react'
 import { RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { LinkedAccountsContext } from '@providers/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 import { Banner } from '@ui/Banner/Banner'
 import { Button } from '@ui/Button/Button'
 

@@ -10,8 +10,8 @@ import { useIsEditableCustomBankTransaction } from '@hooks/features/bankTransact
 import {
   BankTransactionSelectionVariant,
   useBankTransactionsCategorizationActions,
-} from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import { useBankTransactionsIsCategorizationEnabledContext } from '@contexts/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+} from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@providers/categorization/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactionsMobileForms } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileForms'

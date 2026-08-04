@@ -1,0 +1,28 @@
+import { DatePreset } from '@utils/date/dateRangePresets'
+import { useBusinessActivationDateSafe } from '@hooks/features/business/useBusinessActivationDateSafe'
+import { createScopedDateStore } from '@providers/common/DateStore/createScopedDateStore'
+
+/**
+ * Date store scoped to the General Ledger, defaulting to `AllTime`. Resolving
+ * `AllTime` needs the business activation date, so mount the Provider below
+ * `BusinessProvider` and give it a `fallback`.
+ */
+const {
+  Provider: LedgerDateStoreProvider,
+  useDateRange: useLedgerDateRange,
+  useDateRangeActions: useLedgerDateRangeActions,
+  useDatePreset: useLedgerDatePreset,
+  useDatePresetActions: useLedgerDatePresetActions,
+} = createScopedDateStore({
+  initialDatePreset: DatePreset.AllTime,
+  storeName: 'LedgerDateStore',
+  useActivationDate: useBusinessActivationDateSafe,
+})
+
+export {
+  LedgerDateStoreProvider,
+  useLedgerDatePreset,
+  useLedgerDatePresetActions,
+  useLedgerDateRange,
+  useLedgerDateRangeActions,
+}

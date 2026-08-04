@@ -6,8 +6,8 @@ import type { TimeRangePickerConfig } from '@internal-types/reports'
 import { useGetStatementOfCashFlow } from '@api/businesses/[business-id]/reports/cashflow-statement/get'
 import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { useResolvedReportView } from '@hooks/features/reports/useResolvedReportView'
-import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
-import { TableProvider } from '@contexts/TableContext/TableContext'
+import { useGlobalDateRange } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
+import { ReportsTableProvider } from '@providers/reports/ReportsTableContext/ReportsTableContext'
 import { HStack, Stack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@blocks/DatePickers/DateSelection/CombinedDateRangeSelection'
 import { Header } from '@blocks/Layout/Header/Header'
@@ -63,7 +63,7 @@ const StatementOfCashFlowView = ({
   )
 
   return (
-    <TableProvider>
+    <ReportsTableProvider>
       <View
         type='panel'
         ref={containerRef}
@@ -121,6 +121,6 @@ const StatementOfCashFlowView = ({
           ))(data)}
         </ConditionalBlock>
       </View>
-    </TableProvider>
+    </ReportsTableProvider>
   )
 }

@@ -10,8 +10,8 @@ import { type BankTransactionFilters } from '@utils/bankTransactions/shared'
 import { type UseBankTransactionsOptions, useGetListBankTransactions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useFilterBankTransactions } from '@hooks/features/bankTransactions/useFilterBankTransactions'
 import { usePollBankTransactions } from '@hooks/features/bankTransactions/usePollBankTransactions'
-import { useBankTransactionsFiltersContext } from '@contexts/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
-import { CategorizationRulesContext } from '@contexts/CategorizationRulesContext/CategorizationRulesContext'
+import { useBankTransactionsFiltersContext } from '@providers/bankTransactions/BankTransactionsFiltersContext/BankTransactionsFiltersContext'
+import { CategorizationRulesContext } from '@providers/categorization/CategorizationRulesContext/CategorizationRulesContext'
 
 const tagFilterToParams = (tagFilter: TagFilterInput): Pick<UseBankTransactionsOptions, 'tagKey' | 'tagValues'> => {
   if (tagFilter != 'None' && tagFilter.tagValues.length > 0) {

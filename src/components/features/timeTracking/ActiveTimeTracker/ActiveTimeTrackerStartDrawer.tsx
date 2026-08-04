@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useStartTimerForm } from '@hooks/features/timeTracking/useStartTimerForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useTimeTrackingServicesDrawer } from '@providers/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
+import { useTimeTrackingServicesDrawer } from '@providers/timeTracking/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Drawer } from '@ui/Modal/Modal'

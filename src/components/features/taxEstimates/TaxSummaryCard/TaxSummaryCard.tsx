@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useGetTaxSummary } from '@api/businesses/[business-id]/tax-estimates/summary/get'
 import { useWindowSize } from '@hooks/utils/size/useWindowSize'
-import { useFullYearProjection, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { useFullYearProjection, useTaxEstimatesYear } from '@providers/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'

@@ -3,7 +3,7 @@ import { pipe, Schema } from 'effect'
 import { BankTransactionDirectionSchema } from '@schemas/bankTransactions/base'
 import { CustomerSchema } from '@schemas/customer'
 import { VendorSchema } from '@schemas/vendor'
-import { EntityName, type LinkingMetadata } from '@contexts/InAppLinkContext'
+import { EntityName, type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
 
 export const FinancialEventIdentifiersSchema = Schema.Struct({
   id: Schema.String,

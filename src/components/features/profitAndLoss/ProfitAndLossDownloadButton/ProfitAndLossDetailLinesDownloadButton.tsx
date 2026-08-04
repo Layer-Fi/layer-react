@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useGetProfitAndLossDetailLinesExport } from '@api/businesses/[business-id]/reports/profit-and-loss/lines/exports/excel/get'
-import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { ProfitAndLossContext } from '@providers/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 import { DownloadButton } from '@ui/Button/DownloadButton'
 import InvisibleDownload, { useInvisibleDownload } from '@components/utility/InvisibleDownload'
 import type { ProfitAndLossDownloadButtonStringOverrides } from '@features/profitAndLoss/ProfitAndLossDownloadButton/types'

@@ -16,8 +16,8 @@ import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
 import { convertCentsToDecimalString } from '@utils/format'
 import { toLocalizedNumber } from '@utils/i18n/number/input'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
-import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import type { BankTransactionNonSuggestedMatchOption } from '@providers/BankTransactionsCategorizationStore/utils'
+import { useBankTransactionsCategorizationActions } from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 
 interface UseSplitsFormOptions {
   bankTransaction: BankTransaction

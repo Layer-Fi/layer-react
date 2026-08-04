@@ -10,8 +10,8 @@ import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/bankTr
 import { useUpsertCustomAccountTransaction } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
-import { useBankTransactionsCategorizationActions } from '@providers/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
+import { useBankTransactionsCategorizationActions } from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { convertRecordBankTransactionFormToParams, getRecordBankTransactionFormValues } from '@features/bankTransactions/RecordBankTransactionForm/formUtils'
 import type { AccountOption } from '@features/customAccounts/CustomAccountComboBox/AccountOption'
 

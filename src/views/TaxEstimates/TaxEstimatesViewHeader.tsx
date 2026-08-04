@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
 import { useBusinessActivationDate } from '@hooks/features/business/useBusinessActivationDate'
-import { TaxEstimatesRoute, useTaxEstimatesNavigation, useTaxEstimatesYear } from '@providers/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { TaxEstimatesRoute, useTaxEstimatesNavigation, useTaxEstimatesYear } from '@providers/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { YearPicker } from '@ui/DatePickers/YearPicker/YearPicker'
 import { DropdownMenu, MenuItem, MenuList } from '@ui/DropdownMenu/DropdownMenu'

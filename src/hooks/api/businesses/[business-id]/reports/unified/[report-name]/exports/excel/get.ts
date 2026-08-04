@@ -4,7 +4,7 @@ import { getAsMutation } from '@utils/api/getAsMutation'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { type QueryParams } from '@utils/request/toDefinedSearchParameters'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
-import type { UnifiedReportControlParams } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import type { UnifiedReportControlParams } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 
 type GetUnifiedReportExcelParams = {
   businessId: string

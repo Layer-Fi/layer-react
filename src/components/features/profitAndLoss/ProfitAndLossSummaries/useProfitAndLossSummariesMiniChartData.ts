@@ -8,8 +8,8 @@ import { calculatePercentageChange } from '@utils/percentageChange'
 import { toMiniChartData } from '@utils/profitAndLossUtils'
 import { useGetProfitAndLossSummaries } from '@api/businesses/[business-id]/reports/profit-and-loss-summaries/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
-import { useGlobalDateRange } from '@providers/DateStoreProvider/GlobalDateStoreProvider'
-import { ProfitAndLossContext } from '@contexts/ProfitAndLossContext/ProfitAndLossContext'
+import { useGlobalDateRange } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
+import { ProfitAndLossContext } from '@providers/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 
 const emptyLineItem = (name: string): LineItem => ({
   name,

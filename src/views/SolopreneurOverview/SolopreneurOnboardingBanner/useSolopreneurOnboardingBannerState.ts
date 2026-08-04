@@ -2,9 +2,9 @@ import { useContext } from 'react'
 
 import { useGetAccountingConfiguration } from '@api/businesses/[business-id]/accounting-config/get'
 import { useGetTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/get'
-import { useBankAccountsContext } from '@contexts/BankAccountsContext/BankAccountsContext'
-import { useLayerContext } from '@contexts/LayerContext/LayerContext'
-import { LinkedAccountsContext } from '@contexts/LinkedAccountsContext/LinkedAccountsContext'
+import { useBankAccountsContext } from '@providers/global/BankAccountsContext/BankAccountsContext'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { LinkedAccountsContext } from '@providers/linkedAccounts/LinkedAccounts/LinkedAccountsContext'
 
 export enum OnboardingBannerState {
   Loading = 'Loading',

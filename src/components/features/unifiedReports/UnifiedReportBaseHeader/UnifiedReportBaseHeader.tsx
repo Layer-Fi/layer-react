@@ -1,6 +1,6 @@
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import { useBaseUnifiedReport } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'

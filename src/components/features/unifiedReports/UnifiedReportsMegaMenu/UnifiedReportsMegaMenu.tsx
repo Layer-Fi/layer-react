@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useGetReportConfig } from '@api/businesses/[business-id]/reports/config/get'
-import { useBaseUnifiedReport } from '@providers/UnifiedReportStore/UnifiedReportStoreProvider'
+import { useBaseUnifiedReport } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
 import { MegaMenu } from '@blocks/NestedNavigation/MegaMenu/MegaMenu'
