@@ -5,7 +5,7 @@ import { spreadDateAcrossYear } from '@fixtures/utils/spreadDateAcrossYear'
 
 const generateTrips = createGenerator(schema, {
   uniqueBy: [trip => trip.id],
-  numRuns: 60,
+  numRuns: 120,
 })
 
 export const generator: typeof generateTrips = (overrides) => {

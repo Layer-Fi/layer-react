@@ -8,7 +8,6 @@ import { distanceArbitrary, tripDescriptionArbitrary, tripPurposeArbitrary, trip
 import { calendarDateArbitrary } from '@fixtures/utils/arbitrary/calendarDate'
 import { dateArbitrary } from '@fixtures/utils/arbitrary/date'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'
-import { nullableConstantFrom } from '@fixtures/utils/arbitrary/nullableConstantFrom'
 import { withArbitrary } from '@fixtures/utils/arbitrary/withArbitrary'
 
 const fields = TripSchema.fields
@@ -21,8 +20,8 @@ const base = Schema.Struct({
   distance: withArbitrary(fields.distance, () => distanceArbitrary),
   tripDate: withArbitrary(fields.tripDate, () => calendarDateArbitrary(FIXTURE_YEAR)),
   purpose: withArbitrary(fields.purpose, () => tripPurposeArbitrary),
-  startAddress: withArbitrary(fields.startAddress, () => nullableConstantFrom(addresses)),
-  endAddress: withArbitrary(fields.endAddress, () => nullableConstantFrom(addresses)),
+  startAddress: withArbitrary(fields.startAddress, () => fc => fc.constantFrom(...addresses)),
+  endAddress: withArbitrary(fields.endAddress, () => fc => fc.constantFrom(...addresses)),
   googleStartPlaceId: withArbitrary(fields.googleStartPlaceId, () => fc => fc.constant(null)),
   googleEndPlaceId: withArbitrary(fields.googleEndPlaceId, () => fc => fc.constant(null)),
   startLatitude: withArbitrary(fields.startLatitude, () => fc => fc.constant(null)),
