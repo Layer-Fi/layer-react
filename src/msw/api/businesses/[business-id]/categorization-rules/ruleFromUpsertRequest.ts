@@ -1,12 +1,8 @@
 import { Schema } from 'effect'
 
-import {
-  type CategorizationRule,
-  type CreateCategorizationRule,
-  CreateCategorizationRuleSchema,
-  type PatchCategorizationRule,
-  PatchCategorizationRuleSchema,
-} from '@schemas/categorization/categorizationRule'
+import { type CategorizationRule } from '@schemas/categorization/categorizationRule'
+import { type CreateCategorizationRule, CreateCategorizationRuleSchema } from '@schemas/categorization/createCategorizationRule'
+import { type PatchCategorizationRule, PatchCategorizationRuleSchema } from '@schemas/categorization/patchCategorizationRule'
 
 import { counterpartyStore } from '@msw/api/businesses/[business-id]/counterparties/store'
 import { readRequestJson } from '@msw/utils/request'

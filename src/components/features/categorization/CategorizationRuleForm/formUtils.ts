@@ -1,13 +1,11 @@
 import { Schema } from 'effect'
 
 import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
-import { type Classification, isClassificationAccountIdentifier } from '@schemas/categorization/categorization'
-import {
-  type BankDirectionFilter,
-  type CategorizationRule,
-  CreateCategorizationRuleSchema,
-  PatchCategorizationRuleSchema,
-} from '@schemas/categorization/categorizationRule'
+import { type CategorizationRule } from '@schemas/categorization/categorizationRule'
+import { type BankDirectionFilter } from '@schemas/categorization/categorizationRuleFilters'
+import { type Classification, isClassificationAccountIdentifier } from '@schemas/categorization/classification'
+import { CreateCategorizationRuleSchema } from '@schemas/categorization/createCategorizationRule'
+import { PatchCategorizationRuleSchema } from '@schemas/categorization/patchCategorizationRule'
 import {
   convertCentsToNonRecursiveBigDecimal,
   convertNonRecursiveBigDecimalToCents,

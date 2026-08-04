@@ -2,7 +2,7 @@ import { fromDate, toCalendarDate } from '@internationalized/date'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import { BankTransactionDirection } from '@schemas/bankTransactions/base'
-import { isClassificationExclusion } from '@schemas/categorization/categorization'
+import { isClassificationExclusion } from '@schemas/categorization/classification'
 import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents } from '@schemas/common/nonRecursiveBigDecimal'
 import type { RecordCustomTransaction } from '@schemas/customAccounts/recordCustomTransaction'
 import { getDefaultSelectedCategoryForBankTransaction } from '@utils/bankTransactions/shared'

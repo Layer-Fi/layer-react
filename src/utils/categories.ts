@@ -1,5 +1,6 @@
 import { type CategoryAsOption } from '@internal-types/categorizationOption'
-import { type Classification, ClassificationEquivalence, isClassificationAccountIdentifier, type NestedCategorization } from '@schemas/categorization/categorization'
+import { type Classification, ClassificationEquivalence, isClassificationAccountIdentifier } from '@schemas/categorization/classification'
+import { type NestedCategorization } from '@schemas/categorization/nestedCategorization'
 import { type AccountIdentifier, AccountIdEquivalence, AccountStableNameEquivalence, makeAccountId, makeStableName } from '@schemas/common/accountIdentifier'
 
 export const accountIdentifierIsForCategory = (accountIdentifier: AccountIdentifier, category: NestedCategorization): boolean => {

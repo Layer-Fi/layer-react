@@ -3,7 +3,8 @@ import { pick } from 'lodash-es'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus, InputStrategy } from '@schemas/bankTransactions/bankTransaction'
 import { BankTransactionDirection } from '@schemas/bankTransactions/base'
-import { type MatchDetailsType, MatchType } from '@schemas/bankTransactions/match'
+import { MatchType } from '@schemas/bankTransactions/match'
+import { type MatchDetailsType } from '@schemas/bankTransactions/matchDetails'
 import { type AccountCategorizationSchema } from '@schemas/categorization/categorization'
 
 import {

@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
-import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
+import { convertMatchDetailsToLinkingMetadata } from '@utils/bankTransactions/matchLinkingMetadata'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBankTransactionsIsCategorizationEnabledContext } from '@providers/categorization/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { useInAppLinkContext } from '@providers/common/InAppLink/InAppLinkContext'

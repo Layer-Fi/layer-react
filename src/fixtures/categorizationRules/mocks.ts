@@ -1,7 +1,5 @@
-import {
-  BankDirectionFilter,
-  type CategorizationRule,
-} from '@schemas/categorization/categorizationRule'
+import { type CategorizationRule } from '@schemas/categorization/categorizationRule'
+import { BankDirectionFilter } from '@schemas/categorization/categorizationRuleFilters'
 import { makeStableName } from '@schemas/common/accountIdentifier'
 
 import { makeBusiness } from '@fixtures/business/mocks'

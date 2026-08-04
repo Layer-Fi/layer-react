@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type UpdateCategorizationRulesSuggestion } from '@schemas/categorization/categorizationRule'
+import { type UpdateCategorizationRulesSuggestion } from '@schemas/categorization/createCategorizationRule'
 import { Drawer, Modal } from '@ui/Modal/Modal'
 import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { Separator } from '@ui/Separator/Separator'
