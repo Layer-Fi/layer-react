@@ -7,6 +7,7 @@ import { Invoices } from '@features/invoices/Invoices/Invoices'
 import { get as getAccountingConfiguration } from '@msw/api/businesses/[business-id]/accounting-config/get'
 import { handlers } from '@msw/handlers'
 import { makeAccountingConfiguration } from '@fixtures/accountingConfiguration/mocks'
+import { invoices } from '@fixtures/generated/invoices.gen'
 import { findEntryRows } from '@test-utils/storybook/findEntryRows'
 
 const invoicesStoryHandlers = [
@@ -31,6 +32,21 @@ export const Default: Story = {
   tags: ['docs-screenshot'],
 }
 
+// Cash sales carry `customer: null`, which leaves the detail view's customer and email blank —
+// and one of those sorts to the top of the table. Derived from the fixtures rather than hardcoded
+// so regenerating them can renumber the invoices without silently reselecting an empty one.
+const INVOICE_NUMBERS_WITH_CUSTOMER = invoices.flatMap(invoice =>
+  invoice.customer !== null && invoice.invoiceNumber !== null ? [invoice.invoiceNumber] : [],
+)
+
+const findInvoiceRowWithCustomer = (rows: ReadonlyArray<HTMLElement>) => {
+  for (const row of rows) {
+    const number = INVOICE_NUMBERS_WITH_CUSTOMER.find(value => row.textContent?.includes(value))
+    if (number) return { row, number }
+  }
+  throw new Error('no invoice row with a customer is on the first page')
+}
+
 // A populated invoice, not the empty create form. Only the narrow layouts navigate to the
 // detail view — the desktop table's rows aren't clickable — so this is a tablet story.
 export const Detail: Story = {
@@ -38,8 +54,9 @@ export const Detail: Story = {
   parameters: { chromatic: { viewports: [BREAKPOINTS.TABLET - 1] }, responseDelay: 0 },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const [, firstInvoice] = await findEntryRows(canvas)
-    await userEvent.click(firstInvoice)
-    await canvas.findByText(/Invoice #INV-/, undefined, { timeout: 10_000 })
+    const { row, number } = findInvoiceRowWithCustomer(await findEntryRows(canvas))
+
+    await userEvent.click(row)
+    await canvas.findByText(`Invoice #${number}`, undefined, { timeout: 10_000 })
   },
 }

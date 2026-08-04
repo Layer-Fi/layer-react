@@ -52,8 +52,16 @@ async function main() {
     try {
       await page.goto(`${origin}/iframe.html?viewMode=story&id=${storyId}`)
       await page.waitForSelector('#storybook-root > *', { timeout: 30_000 })
+      // Collapse durations rather than removing animations: elements that start at opacity 0 and
+      // rely on a `forwards` fill (the landing page hero) never become visible under
+      // `animation: none`, but a 0s animation still applies its end state.
       await page.addStyleTag({
-        content: '*, *::before, *::after { animation: none !important; transition: none !important; }',
+        content: `*, *::before, *::after {
+          animation-duration: 0s !important;
+          animation-delay: 0s !important;
+          transition-duration: 0s !important;
+          transition-delay: 0s !important;
+        }`,
       })
       await page.waitForLoadState('networkidle')
       await page.waitForTimeout(SETTLE_MS)

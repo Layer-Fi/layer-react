@@ -119,7 +119,8 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
   {
     storyId: 'components-tasks--default',
     out: 'components/tasks.png',
-    viewport: 'desktop',
+    // The card tops out near 740px, so a desktop capture is mostly empty space beside it.
+    viewport: 'tablet',
     page: 'embedded-components/components/tasks.mdx',
   },
   {
