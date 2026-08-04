@@ -10,7 +10,8 @@ import {
   type UnifiedReportRow,
 } from '@schemas/reports/unifiedReport'
 
-import { formatCsvCents, formatCsvDate } from '@msw/utils/csvPresignedUrl'
+import { isoDate } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
+import { formatCsvCents } from '@msw/utils/csvPresignedUrl'
 
 // Column groups nest only to build a multi-level rendered header; a CSV has one
 // field per leaf column.
@@ -25,7 +26,9 @@ const formatCellValue = (cell: UnifiedReportCell | null | undefined): string => 
   const cellValue = cell.value
 
   if (isCurrencyCellValue(cellValue)) return formatCsvCents(cellValue.value)
-  if (isDateCellValue(cellValue)) return formatCsvDate(cellValue.value)
+  // Report dates are local midnight (`CalendarDate.toDate(getLocalTimeZone())`), so they
+  // must format in the local zone; a UTC ISO slice lands a day early east of Greenwich.
+  if (isDateCellValue(cellValue)) return isoDate(cellValue.value)
   if (isDecimalCellValue(cellValue)) return String(cellValue.value)
   if (isDurationCellValue(cellValue)) return String(cellValue.value)
   if (isEmptyCellValue(cellValue)) return ''
