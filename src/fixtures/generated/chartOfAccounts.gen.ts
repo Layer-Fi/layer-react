@@ -453,81 +453,6 @@ export const chartOfAccounts = [
     "accountNumber": null
   },
   {
-    "name": "Uncategorized Expenses",
-    "stableName": "UNCATEGORIZED_EXPENSES",
-    "normality": "DEBIT",
-    "accountType": {
-      "value": "EXPENSE",
-      "displayName": "Expenses"
-    },
-    "accountSubtype": {
-      "value": "UNCATEGORIZED_EXPENSE",
-      "displayName": "Uncategorized Expense"
-    },
-    "accountId": "00000009-0000-4000-8000-000000000030",
-    "accountNumber": null
-  },
-  {
-    "name": "Payroll and Contractors",
-    "stableName": "PAYROLL",
-    "normality": "DEBIT",
-    "accountType": {
-      "value": "EXPENSE",
-      "displayName": "Expenses"
-    },
-    "accountSubtype": {
-      "value": "PAYROLL",
-      "displayName": "Payroll"
-    },
-    "accountId": "00000009-0000-4000-8000-000000000031",
-    "accountNumber": null
-  },
-  {
-    "name": "Employee Wages",
-    "stableName": "PAYROLL_REGULAR_WAGES",
-    "normality": "DEBIT",
-    "accountType": {
-      "value": "EXPENSE",
-      "displayName": "Expenses"
-    },
-    "accountSubtype": {
-      "value": "PAYROLL",
-      "displayName": "Payroll"
-    },
-    "accountId": "00000009-0000-4000-8000-000000000032",
-    "accountNumber": null
-  },
-  {
-    "name": "Contractors",
-    "stableName": "PAYROLL_CONTRACTORS",
-    "normality": "DEBIT",
-    "accountType": {
-      "value": "EXPENSE",
-      "displayName": "Expenses"
-    },
-    "accountSubtype": {
-      "value": "PAYROLL",
-      "displayName": "Payroll"
-    },
-    "accountId": "00000009-0000-4000-8000-000000000033",
-    "accountNumber": null
-  },
-  {
-    "name": "Payroll Fees",
-    "stableName": "PAYROLL_FEES",
-    "normality": "DEBIT",
-    "accountType": {
-      "value": "EXPENSE",
-      "displayName": "Expenses"
-    },
-    "accountSubtype": {
-      "value": "PAYROLL",
-      "displayName": "Payroll"
-    },
-    "accountId": "00000009-0000-4000-8000-000000000034",
-    "accountNumber": null
-  },
-  {
     "name": "Rent",
     "stableName": "RENT",
     "normality": "DEBIT",
@@ -539,7 +464,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000035",
+    "accountId": "00000009-0000-4000-8000-000000000030",
     "accountNumber": null
   },
   {
@@ -554,7 +479,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000036",
+    "accountId": "00000009-0000-4000-8000-000000000031",
     "accountNumber": null
   },
   {
@@ -569,7 +494,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000037",
+    "accountId": "00000009-0000-4000-8000-000000000032",
     "accountNumber": null
   },
   {
@@ -584,7 +509,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000038",
+    "accountId": "00000009-0000-4000-8000-000000000033",
     "accountNumber": null
   },
   {
@@ -599,7 +524,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000039",
+    "accountId": "00000009-0000-4000-8000-000000000034",
     "accountNumber": null
   },
   {
@@ -614,7 +539,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000040",
+    "accountId": "00000009-0000-4000-8000-000000000035",
     "accountNumber": null
   },
   {
@@ -629,7 +554,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000041",
+    "accountId": "00000009-0000-4000-8000-000000000036",
     "accountNumber": null
   },
   {
@@ -644,7 +569,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000042",
+    "accountId": "00000009-0000-4000-8000-000000000037",
     "accountNumber": null
   },
   {
@@ -659,7 +584,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000043",
+    "accountId": "00000009-0000-4000-8000-000000000038",
     "accountNumber": null
   },
   {
@@ -674,7 +599,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000044",
+    "accountId": "00000009-0000-4000-8000-000000000039",
     "accountNumber": null
   },
   {
@@ -689,7 +614,7 @@ export const chartOfAccounts = [
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000045",
+    "accountId": "00000009-0000-4000-8000-000000000040",
     "accountNumber": null
   },
   {
@@ -703,6 +628,81 @@ export const chartOfAccounts = [
     "accountSubtype": {
       "value": "OPERATING_EXPENSES",
       "displayName": "Operating Expenses"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000041",
+    "accountNumber": null
+  },
+  {
+    "name": "Uncategorized Expenses",
+    "stableName": "UNCATEGORIZED_EXPENSES",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "UNCATEGORIZED_EXPENSE",
+      "displayName": "Uncategorized Expense"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000042",
+    "accountNumber": null
+  },
+  {
+    "name": "Payroll and Contractors",
+    "stableName": "PAYROLL",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "PAYROLL",
+      "displayName": "Payroll"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000043",
+    "accountNumber": null
+  },
+  {
+    "name": "Employee Wages",
+    "stableName": "PAYROLL_REGULAR_WAGES",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "PAYROLL",
+      "displayName": "Payroll"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000044",
+    "accountNumber": null
+  },
+  {
+    "name": "Contractors",
+    "stableName": "PAYROLL_CONTRACTORS",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "PAYROLL",
+      "displayName": "Payroll"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000045",
+    "accountNumber": null
+  },
+  {
+    "name": "Payroll Fees",
+    "stableName": "PAYROLL_FEES",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "PAYROLL",
+      "displayName": "Payroll"
     },
     "accountId": "00000009-0000-4000-8000-000000000046",
     "accountNumber": null

@@ -27,6 +27,8 @@ export type EntryStreamOptions = {
   magnitude?: number
   /** Cash basis shrinks every entry by a deterministic per-key factor so drill-downs still reconcile. */
   cashBasis?: boolean
+  /** Picks the entry type and description wording; amounts are unaffected. */
+  flow?: EntryFlow
 }
 
 export const monthlyAmountCents = (
@@ -48,16 +50,22 @@ const cashBasisScale = (stableKey: string) => 0.8 + (hashString(`${stableKey}:ca
 const ENTRY_DAYS = [5, 14, 25]
 const LEADING_ENTRY_WEIGHTS = [0.5, 0.3]
 
-const ENTRY_TYPES = ['Invoice', 'Expense', 'Payment', 'Journal Entry']
+export type EntryFlow = 'moneyIn' | 'moneyOut'
 
-const ENTRY_DESCRIPTIONS = [
-  'Card payment',
-  'ACH transfer',
-  'Monthly service',
-  'Recurring charge',
-  'Vendor payment',
-  'Customer payment',
-]
+const ENTRY_NARRATION: Record<EntryFlow | 'neutral', { types: readonly string[], descriptions: readonly string[] }> = {
+  moneyIn: {
+    types: ['Invoice', 'Payment', 'Journal Entry'],
+    descriptions: ['Customer payment', 'Invoice payment', 'Card settlement', 'ACH deposit'],
+  },
+  moneyOut: {
+    types: ['Expense', 'Bill Payment', 'Journal Entry'],
+    descriptions: ['Vendor payment', 'Card payment', 'ACH transfer', 'Monthly service', 'Recurring charge'],
+  },
+  neutral: {
+    types: ['Journal Entry', 'Payment', 'Transfer'],
+    descriptions: ['Transfer', 'Card payment', 'ACH transfer', 'Monthly service'],
+  },
+}
 
 const pickFrom = (values: readonly string[], key: string) => values[hashString(key) % values.length]
 
@@ -65,8 +73,9 @@ export const monthEntries = (
   stableKey: string,
   year: number,
   monthIndex: number,
-  { magnitude = 1, cashBasis = false }: EntryStreamOptions = {},
+  { magnitude = 1, cashBasis = false, flow }: EntryStreamOptions = {},
 ): MockReportEntry[] => {
+  const narration = ENTRY_NARRATION[flow ?? 'neutral']
   const monthTotal = monthlyAmountCents(stableKey, year, monthIndex, magnitude)
   const scale = cashBasis ? cashBasisScale(stableKey) : 1
 
@@ -82,8 +91,8 @@ export const monthEntries = (
     return {
       date: new Date(year, monthIndex, day),
       amountCents: Math.round(rawAmount * scale),
-      entryType: pickFrom(ENTRY_TYPES, `${entryKey}:type`),
-      description: pickFrom(ENTRY_DESCRIPTIONS, `${entryKey}:description`),
+      entryType: pickFrom(narration.types, `${entryKey}:type`),
+      description: pickFrom(narration.descriptions, `${entryKey}:description`),
     }
   })
 }

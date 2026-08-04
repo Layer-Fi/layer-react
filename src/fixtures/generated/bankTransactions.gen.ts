@@ -215,14 +215,14 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000040",
+          "id": "00000009-0000-4000-8000-000000000035",
           "stableName": "TRAVEL",
           "category": "TRAVEL",
           "displayName": "Business Travel"
         },
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000041",
+          "id": "00000009-0000-4000-8000-000000000036",
           "stableName": "MEALS",
           "category": "MEALS",
           "displayName": "Business Meals"
@@ -318,7 +318,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000040",
+          "id": "00000009-0000-4000-8000-000000000035",
           "stableName": "TRAVEL",
           "category": "TRAVEL",
           "displayName": "Business Travel"
@@ -514,7 +514,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000037",
+          "id": "00000009-0000-4000-8000-000000000032",
           "stableName": "INSURANCE",
           "category": "INSURANCE",
           "displayName": "Business Insurance"
@@ -555,7 +555,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000039",
+      "id": "00000009-0000-4000-8000-000000000034",
       "stableName": "OFFICE_EXPENSES",
       "category": "OFFICE_EXPENSES",
       "displayName": "Office Expenses"
@@ -666,7 +666,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000039",
+      "id": "00000009-0000-4000-8000-000000000034",
       "stableName": "OFFICE_EXPENSES",
       "category": "OFFICE_EXPENSES",
       "displayName": "Office Expenses"
@@ -787,7 +787,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000039",
+      "id": "00000009-0000-4000-8000-000000000034",
       "stableName": "OFFICE_EXPENSES",
       "category": "OFFICE_EXPENSES",
       "displayName": "Office Expenses"
@@ -903,14 +903,14 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000041",
+          "id": "00000009-0000-4000-8000-000000000036",
           "stableName": "MEALS",
           "category": "MEALS",
           "displayName": "Business Meals"
         },
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000040",
+          "id": "00000009-0000-4000-8000-000000000035",
           "stableName": "TRAVEL",
           "category": "TRAVEL",
           "displayName": "Business Travel"
@@ -966,7 +966,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000039",
+          "id": "00000009-0000-4000-8000-000000000034",
           "stableName": "OFFICE_EXPENSES",
           "category": "OFFICE_EXPENSES",
           "displayName": "Office Expenses"
@@ -1019,7 +1019,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000036",
+          "id": "00000009-0000-4000-8000-000000000031",
           "stableName": "UTILITIES",
           "category": "UTILITIES",
           "displayName": "Utilities"
@@ -1140,7 +1140,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000039",
+      "id": "00000009-0000-4000-8000-000000000034",
       "stableName": "OFFICE_EXPENSES",
       "category": "OFFICE_EXPENSES",
       "displayName": "Office Expenses"
@@ -1195,7 +1195,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000042",
+          "id": "00000009-0000-4000-8000-000000000037",
           "stableName": "SOFTWARE",
           "category": "SOFTWARE",
           "displayName": "Software"
@@ -1253,7 +1253,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000040",
+      "id": "00000009-0000-4000-8000-000000000035",
       "stableName": "TRAVEL",
       "category": "TRAVEL",
       "displayName": "Business Travel"
@@ -1454,7 +1454,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000042",
+      "id": "00000009-0000-4000-8000-000000000037",
       "stableName": "SOFTWARE",
       "category": "SOFTWARE",
       "displayName": "Software"
@@ -1494,7 +1494,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000036",
+      "id": "00000009-0000-4000-8000-000000000031",
       "stableName": "UTILITIES",
       "category": "UTILITIES",
       "displayName": "Utilities"
@@ -1580,7 +1580,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000042",
+      "id": "00000009-0000-4000-8000-000000000037",
       "stableName": "SOFTWARE",
       "category": "SOFTWARE",
       "displayName": "Software"
@@ -1741,7 +1741,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000037",
+      "id": "00000009-0000-4000-8000-000000000032",
       "stableName": "INSURANCE",
       "category": "INSURANCE",
       "displayName": "Business Insurance"
@@ -1791,7 +1791,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000035",
+      "id": "00000009-0000-4000-8000-000000000030",
       "stableName": "RENT",
       "category": "RENT",
       "displayName": "Rent"
@@ -1841,7 +1841,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000039",
+      "id": "00000009-0000-4000-8000-000000000034",
       "stableName": "OFFICE_EXPENSES",
       "category": "OFFICE_EXPENSES",
       "displayName": "Office Expenses"
@@ -2287,7 +2287,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000037",
+          "id": "00000009-0000-4000-8000-000000000032",
           "stableName": "INSURANCE",
           "category": "INSURANCE",
           "displayName": "Business Insurance"
@@ -2419,7 +2419,7 @@ export const bankTransactions = [
           "amount": 17200,
           "category": {
             "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000039",
+            "id": "00000009-0000-4000-8000-000000000034",
             "stableName": "OFFICE_EXPENSES",
             "category": "OFFICE_EXPENSES",
             "displayName": "Office Expenses"
@@ -2480,7 +2480,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000039",
+          "id": "00000009-0000-4000-8000-000000000034",
           "stableName": "OFFICE_EXPENSES",
           "category": "OFFICE_EXPENSES",
           "displayName": "Office Expenses"
@@ -2533,7 +2533,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000036",
+          "id": "00000009-0000-4000-8000-000000000031",
           "stableName": "UTILITIES",
           "category": "UTILITIES",
           "displayName": "Utilities"
@@ -2591,7 +2591,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000040",
+      "id": "00000009-0000-4000-8000-000000000035",
       "stableName": "TRAVEL",
       "category": "TRAVEL",
       "displayName": "Business Travel"
@@ -2636,14 +2636,14 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000042",
+          "id": "00000009-0000-4000-8000-000000000037",
           "stableName": "SOFTWARE",
           "category": "SOFTWARE",
           "displayName": "Software"
         },
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000039",
+          "id": "00000009-0000-4000-8000-000000000034",
           "stableName": "OFFICE_EXPENSES",
           "category": "OFFICE_EXPENSES",
           "displayName": "Office Expenses"
@@ -2699,7 +2699,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000040",
+          "id": "00000009-0000-4000-8000-000000000035",
           "stableName": "TRAVEL",
           "category": "TRAVEL",
           "displayName": "Business Travel"
@@ -2816,7 +2816,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000042",
+          "id": "00000009-0000-4000-8000-000000000037",
           "stableName": "SOFTWARE",
           "category": "SOFTWARE",
           "displayName": "Software"
@@ -2862,7 +2862,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000039",
+          "id": "00000009-0000-4000-8000-000000000034",
           "stableName": "OFFICE_EXPENSES",
           "category": "OFFICE_EXPENSES",
           "displayName": "Office Expenses"
@@ -2915,7 +2915,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000036",
+          "id": "00000009-0000-4000-8000-000000000031",
           "stableName": "UTILITIES",
           "category": "UTILITIES",
           "displayName": "Utilities"
@@ -3140,7 +3140,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000038",
+          "id": "00000009-0000-4000-8000-000000000033",
           "stableName": "MARKETING",
           "category": "MARKETING",
           "displayName": "Marketing"
@@ -3278,14 +3278,14 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000039",
+          "id": "00000009-0000-4000-8000-000000000034",
           "stableName": "OFFICE_EXPENSES",
           "category": "OFFICE_EXPENSES",
           "displayName": "Office Expenses"
         },
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000041",
+          "id": "00000009-0000-4000-8000-000000000036",
           "stableName": "MEALS",
           "category": "MEALS",
           "displayName": "Business Meals"
@@ -3343,7 +3343,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000038",
+      "id": "00000009-0000-4000-8000-000000000033",
       "stableName": "MARKETING",
       "category": "MARKETING",
       "displayName": "Marketing"
@@ -3388,7 +3388,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000040",
+          "id": "00000009-0000-4000-8000-000000000035",
           "stableName": "TRAVEL",
           "category": "TRAVEL",
           "displayName": "Business Travel"
@@ -3499,7 +3499,7 @@ export const bankTransactions = [
           "amount": 4832,
           "category": {
             "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000040",
+            "id": "00000009-0000-4000-8000-000000000035",
             "stableName": "TRAVEL",
             "category": "TRAVEL",
             "displayName": "Business Travel"
@@ -3511,7 +3511,7 @@ export const bankTransactions = [
           "amount": 2602,
           "category": {
             "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000041",
+            "id": "00000009-0000-4000-8000-000000000036",
             "stableName": "MEALS",
             "category": "MEALS",
             "displayName": "Business Meals"
@@ -3641,7 +3641,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000040",
+      "id": "00000009-0000-4000-8000-000000000035",
       "stableName": "TRAVEL",
       "category": "TRAVEL",
       "displayName": "Business Travel"
@@ -3681,7 +3681,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000040",
+      "id": "00000009-0000-4000-8000-000000000035",
       "stableName": "TRAVEL",
       "category": "TRAVEL",
       "displayName": "Business Travel"
@@ -3808,14 +3808,14 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000032",
+          "id": "00000009-0000-4000-8000-000000000044",
           "stableName": "PAYROLL_REGULAR_WAGES",
           "category": "PAYROLL_REGULAR_WAGES",
           "displayName": "Employee Wages"
         },
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000033",
+          "id": "00000009-0000-4000-8000-000000000045",
           "stableName": "PAYROLL_CONTRACTORS",
           "category": "PAYROLL_CONTRACTORS",
           "displayName": "Contractors"
@@ -3951,7 +3951,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000039",
+      "id": "00000009-0000-4000-8000-000000000034",
       "stableName": "OFFICE_EXPENSES",
       "category": "OFFICE_EXPENSES",
       "displayName": "Office Expenses"
@@ -4062,7 +4062,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000040",
+      "id": "00000009-0000-4000-8000-000000000035",
       "stableName": "TRAVEL",
       "category": "TRAVEL",
       "displayName": "Business Travel"
@@ -4173,7 +4173,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000036",
+      "id": "00000009-0000-4000-8000-000000000031",
       "stableName": "UTILITIES",
       "category": "UTILITIES",
       "displayName": "Utilities"
@@ -4274,7 +4274,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000041",
+      "id": "00000009-0000-4000-8000-000000000036",
       "stableName": "MEALS",
       "category": "MEALS",
       "displayName": "Business Meals"
@@ -4329,7 +4329,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000042",
+          "id": "00000009-0000-4000-8000-000000000037",
           "stableName": "SOFTWARE",
           "category": "SOFTWARE",
           "displayName": "Software"
@@ -4370,7 +4370,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000035",
+      "id": "00000009-0000-4000-8000-000000000030",
       "stableName": "RENT",
       "category": "RENT",
       "displayName": "Rent"
@@ -4415,7 +4415,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000039",
+          "id": "00000009-0000-4000-8000-000000000034",
           "stableName": "OFFICE_EXPENSES",
           "category": "OFFICE_EXPENSES",
           "displayName": "Office Expenses"
@@ -4482,7 +4482,7 @@ export const bankTransactions = [
           "amount": 31341,
           "category": {
             "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000042",
+            "id": "00000009-0000-4000-8000-000000000037",
             "stableName": "SOFTWARE",
             "category": "SOFTWARE",
             "displayName": "Software"
@@ -4494,7 +4494,7 @@ export const bankTransactions = [
           "amount": 104926,
           "category": {
             "type": "Account",
-            "id": "00000009-0000-4000-8000-000000000039",
+            "id": "00000009-0000-4000-8000-000000000034",
             "stableName": "OFFICE_EXPENSES",
             "category": "OFFICE_EXPENSES",
             "displayName": "Office Expenses"
@@ -4615,7 +4615,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000038",
+      "id": "00000009-0000-4000-8000-000000000033",
       "stableName": "MARKETING",
       "category": "MARKETING",
       "displayName": "Marketing"
@@ -4748,7 +4748,7 @@ export const bankTransactions = [
       "suggestions": [
         {
           "type": "Account",
-          "id": "00000009-0000-4000-8000-000000000040",
+          "id": "00000009-0000-4000-8000-000000000035",
           "stableName": "TRAVEL",
           "category": "TRAVEL",
           "displayName": "Business Travel"
@@ -5046,7 +5046,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000040",
+      "id": "00000009-0000-4000-8000-000000000035",
       "stableName": "TRAVEL",
       "category": "TRAVEL",
       "displayName": "Business Travel"
@@ -5276,7 +5276,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000039",
+      "id": "00000009-0000-4000-8000-000000000034",
       "stableName": "OFFICE_EXPENSES",
       "category": "OFFICE_EXPENSES",
       "displayName": "Office Expenses"
@@ -5419,7 +5419,7 @@ export const bankTransactions = [
     "categorizationStatus": "CATEGORIZED",
     "category": {
       "type": "Account",
-      "id": "00000009-0000-4000-8000-000000000037",
+      "id": "00000009-0000-4000-8000-000000000032",
       "stableName": "INSURANCE",
       "category": "INSURANCE",
       "displayName": "Business Insurance"

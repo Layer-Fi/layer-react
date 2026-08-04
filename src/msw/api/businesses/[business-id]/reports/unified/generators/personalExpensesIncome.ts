@@ -13,7 +13,7 @@ import {
   textCell,
   totalRowLabel,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
-import { entriesInRange } from '@fixtures/unifiedReports/deterministicAmounts'
+import { entriesInRange, type EntryFlow } from '@fixtures/unifiedReports/deterministicAmounts'
 
 const PERSONAL_EXPENSE_CATEGORIES = ['Groceries', 'Rent', 'Personal Care', 'Health & Wellness', 'Entertainment', 'Dining Out']
 const PERSONAL_INCOME_CATEGORIES = ['W-2 Salary', 'Interest Income', 'Dividends', 'Gifts']
@@ -32,12 +32,13 @@ const generatePersonalReport = (
   categories: readonly string[],
   keyPrefix: string,
   counterpartyColumn: 'vendor' | 'customer',
+  flow: EntryFlow,
   total: { rowKey: string, label: string },
 ): UnifiedReport => {
   const { startDate, endDate } = reportRangeFromParams(params)
 
   const items: PersonalLineItem[] = categories
-    .flatMap(category => entriesInRange(`${keyPrefix}:${category}`, startDate, endDate, { magnitude: 2 })
+    .flatMap(category => entriesInRange(`${keyPrefix}:${category}`, startDate, endDate, { magnitude: 2, flow })
       .map((entry, index) => ({
         lineItemId: `${keyPrefix}:${category}:${isoDate(entry.date)}:${index}`,
         date: entry.date,
@@ -74,6 +75,7 @@ export const generatePersonalExpenses = (params: URLSearchParams) => generatePer
   PERSONAL_EXPENSE_CATEGORIES,
   'personal_expense',
   'vendor',
+  'moneyOut',
   { rowKey: 'personal_expenses', label: totalRowLabel('Personal Expenses') },
 )
 
@@ -82,5 +84,6 @@ export const generatePersonalIncome = (params: URLSearchParams) => generatePerso
   PERSONAL_INCOME_CATEGORIES,
   'personal_income',
   'customer',
+  'moneyIn',
   { rowKey: 'personal_income', label: totalRowLabel('Personal Income') },
 )

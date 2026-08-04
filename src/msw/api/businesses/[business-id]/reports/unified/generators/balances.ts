@@ -7,6 +7,7 @@ import {
   sumActivityCents,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import {
+  accountFlow,
   accountMagnitude,
   entryStreamOptionsFromParams,
   type ReportDateRange,
@@ -36,7 +37,7 @@ export const accumulatedMagnitudeCents = (
   accountStreamKey(account),
   inceptionFor(effectiveDate),
   effectiveDate,
-  entryStreamOptionsFromParams(params, accountMagnitude(account)),
+  entryStreamOptionsFromParams(params, accountMagnitude(account), accountFlow(account)),
 )
 
 // Signed, so contra accounts reduce their section the same way the P&L signs them.

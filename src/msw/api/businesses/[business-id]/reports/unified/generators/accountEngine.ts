@@ -9,6 +9,7 @@ import {
   resolveParentAccountId,
 } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import {
+  accountFlow,
   accountMagnitude,
   entryStreamOptionsFromParams,
   isContraAccount,
@@ -68,7 +69,7 @@ export const accountMagnitudeEntriesInRange = (
   accountStreamKey(account),
   startDate,
   endDate,
-  entryStreamOptionsFromParams(params, accountMagnitude(account)),
+  entryStreamOptionsFromParams(params, accountMagnitude(account), accountFlow(account)),
 )
 
 // Signed so contra accounts subtract from section totals, in summary cells and drill-downs alike.

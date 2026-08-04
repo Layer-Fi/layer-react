@@ -6,7 +6,7 @@ import { type ReportConfig, type ReportControl } from '@schemas/reports/reportCo
 import { type UnifiedReport, type UnifiedReportCell, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 
 import { parseDateParam } from '@msw/utils/parseDateParam'
-import { type EntryStreamOptions } from '@fixtures/unifiedReports/deterministicAmounts'
+import { type EntryFlow, type EntryStreamOptions } from '@fixtures/unifiedReports/deterministicAmounts'
 
 // The story business id is not a UUID, so reports return a fixed one instead of echoing the path param.
 export const MOCK_REPORT_BUSINESS_ID = '00000000-0000-4000-8000-000000000201'
@@ -147,10 +147,23 @@ export const trailingRangeFrom = (effectiveDate: Date): ReportDateRange => ({
 export const entryStreamOptionsFromParams = (
   params: URLSearchParams,
   magnitude?: number,
+  flow?: EntryFlow,
 ): EntryStreamOptions => ({
   magnitude,
   cashBasis: params.get('reporting_basis') === 'CASH',
+  flow,
 })
+
+export const accountFlow = (account: SingleChartAccountType): EntryFlow | undefined => {
+  switch (account.accountType.value) {
+    case LedgerAccountType.Revenue:
+      return 'moneyIn'
+    case LedgerAccountType.Expense:
+      return 'moneyOut'
+    default:
+      return undefined
+  }
+}
 
 // Propagate reporting basis into drill-down base parameters so cash-basis detail reconciles with its parent cell.
 export const reportingBasisBaseParams = (params: URLSearchParams): Record<string, string> => {
