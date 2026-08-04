@@ -3,7 +3,7 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
+import { type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerBalances'
 import { type LedgerAccountForm, UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLedgerAccount'
 import { useUpsertLedgerAccount } from '@api/businesses/[business-id]/ledger/accounts/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type LedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
+import { type LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'

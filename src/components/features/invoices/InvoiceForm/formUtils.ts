@@ -12,7 +12,8 @@ import {
   nrbdEquals,
   toNonRecursiveBigDecimal,
 } from '@schemas/common/nonRecursiveBigDecimal'
-import { type Invoice, type InvoiceForm, type InvoiceFormLineItem, InvoiceFormLineItemEquivalence, type InvoiceLineItem } from '@schemas/invoices/invoice'
+import { type Invoice, type InvoiceLineItem } from '@schemas/invoices/invoice'
+import { type InvoiceForm, type InvoiceFormLineItem, InvoiceFormLineItemEquivalence } from '@schemas/invoices/invoiceForm'
 import { InvoiceTermsValues } from '@schemas/invoices/invoiceTerms'
 import {
   BIG_DECIMAL_ZERO,

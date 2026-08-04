@@ -1,6 +1,7 @@
 import { BigDecimal, type FastCheck } from 'effect'
 
-import { type InvoiceLineItem, InvoiceStatus } from '@schemas/invoices/invoice'
+import { type InvoiceLineItem } from '@schemas/invoices/invoice'
+import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
 
 import { customers as customerPool } from '@fixtures/generated/customers.gen'
 import { invoiceLineItemDescriptions } from '@fixtures/invoices/constants'

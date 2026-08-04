@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 
 import { CreateCustomerRefundSchema, type CustomerRefund, CustomerRefundSchema, CustomerRefundStatus } from '@schemas/invoices/customerRefund'
-import { InvoiceStatus } from '@schemas/invoices/invoice'
+import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
 
 import { findOrSeedInvoice, invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
 import { apiData } from '@msw/utils/apiResponse'

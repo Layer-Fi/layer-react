@@ -1,4 +1,4 @@
-import { type TimeEntry } from '@schemas/timeTracking/timeTracking'
+import { type TimeEntry } from '@schemas/timeTracking/timeEntry'
 
 import { isActiveTimeEntry, timeEntryStore } from '@msw/api/businesses/[business-id]/time-tracking/time-entries/store'
 

@@ -1,10 +1,6 @@
 import { Arbitrary, Schema } from 'effect'
 
-import {
-  CustomAccountSchema,
-  type CustomAccountSubtype,
-  getCustomAccountTypeFromSubtype,
-} from '@schemas/customAccounts/customAccounts'
+import { CustomAccountSchema, type CustomAccountSubtype, getCustomAccountTypeFromSubtype } from '@schemas/customAccounts/customAccount'
 
 import {
   accountNameArbitrary,

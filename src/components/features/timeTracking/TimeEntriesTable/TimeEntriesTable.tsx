@@ -4,7 +4,7 @@ import type { TFunction } from 'i18next'
 import { Edit, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { TimeEntry } from '@schemas/timeTracking/timeTracking'
+import type { TimeEntry } from '@schemas/timeTracking/timeEntry'
 import { formatCalendarDate } from '@utils/time/timeUtils'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { type TablePaginationProps } from '@hooks/utils/pagination/types'

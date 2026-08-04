@@ -1,5 +1,5 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { SingleChartAccountSchema } from '@schemas/generalLedger/ledgerAccount'
+import { SingleChartAccountSchema } from '@schemas/generalLedger/chartOfAccounts'
 import { type UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLedgerAccount'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLedgerBalancesCacheActions } from '@api/businesses/[business-id]/ledger/balances/get'

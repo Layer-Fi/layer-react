@@ -5,7 +5,7 @@ import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Customer } from '@schemas/customerVendor/customer'
-import { type TimeEntry } from '@schemas/timeTracking/timeTracking'
+import { type TimeEntry } from '@schemas/timeTracking/timeEntry'
 import { flattenValidationErrors } from '@utils/form'
 import { useTimeTrackingServicesDrawer } from '@providers/timeTracking/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
 import { Button } from '@ui/Button/Button'

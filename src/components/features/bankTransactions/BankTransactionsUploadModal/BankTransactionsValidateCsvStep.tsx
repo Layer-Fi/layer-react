@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransactionDataOnly } from '@schemas/bankTransactions/bankTransactionDataOnly'
 import { type PreviewCsv } from '@schemas/common/csvUpload'
-import { type CustomAccountTransactionRow } from '@schemas/customAccounts/customAccounts'
+import { type CustomAccountTransactionRow } from '@schemas/customAccounts/customAccountTransactionRow'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import type { CustomAccountParseCsvResponse } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/post'
 import { usePostCustomAccountTransactions } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/post'

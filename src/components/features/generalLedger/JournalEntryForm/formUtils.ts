@@ -3,8 +3,10 @@ import { BigDecimal as BD } from 'effect'
 import type { TFunction } from 'i18next'
 
 import { convertCentsToNonRecursiveBigDecimal, fromNonRecursiveBigDecimal, NRBD_ZERO, nrbdEquals } from '@schemas/common/nonRecursiveBigDecimal'
-import type { ApiCustomJournalEntryWithEntry, CreateCustomJournalEntry, JournalEntryForm, JournalEntryFormLineItem } from '@schemas/generalLedger/journalEntry'
-import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
+import type { CreateCustomJournalEntry } from '@schemas/generalLedger/createCustomJournalEntry'
+import type { ApiCustomJournalEntryWithEntry } from '@schemas/generalLedger/journalEntry'
+import type { JournalEntryForm, JournalEntryFormLineItem } from '@schemas/generalLedger/journalEntryForm'
+import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerEntryDirection'
 import { makeTagFromTransactionTag, makeTagKeyValueFromTag } from '@schemas/tags/tag'
 import { BIG_DECIMAL_ZERO, convertBigDecimalToBigIntCents } from '@utils/bigDecimalUtils'
 

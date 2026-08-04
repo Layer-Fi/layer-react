@@ -1,7 +1,5 @@
 import { pipe, Schema } from 'effect'
 
-import { BankTransactionDirectionSchema } from '@schemas/bankTransactions/base'
-import { SingleCategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
 import { createTransformedEnumSchema } from '@schemas/common/utils'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 
@@ -103,47 +101,3 @@ export const CustomAccountSchema = Schema.Struct({
 
 export type CustomAccount = typeof CustomAccountSchema.Type
 export type RawCustomAccount = typeof CustomAccountSchema.Encoded
-
-export const CustomTransactionSchema = Schema.Struct({
-  externalId: Schema.optional(Schema.NullishOr(Schema.String)).pipe(
-    Schema.fromKey('external_id'),
-  ),
-  amount: Schema.Number,
-  direction: BankTransactionDirectionSchema,
-  date: Schema.String,
-  description: Schema.String,
-  referenceNumber: Schema.optional(Schema.NullishOr(Schema.String)).pipe(
-    Schema.fromKey('reference_number'),
-  ),
-})
-
-export type CustomTransaction = typeof CustomTransactionSchema.Type
-export type RawCustomTransaction = typeof CustomTransactionSchema.Encoded
-
-export const RecordCustomTransactionSchema = Schema.Struct({
-  externalId: Schema.optional(Schema.String).pipe(Schema.fromKey('external_id')),
-  amount: Schema.Number,
-  direction: BankTransactionDirectionSchema,
-  date: Schema.String,
-  description: Schema.optional(Schema.String),
-  memo: Schema.optional(Schema.NullOr(Schema.String)),
-  customerId: Schema.optional(Schema.UUID).pipe(Schema.fromKey('customer_id')),
-  vendorId: Schema.optional(Schema.UUID).pipe(Schema.fromKey('vendor_id')),
-  categorization: Schema.optional(SingleCategoryUpdateSchema),
-})
-
-export type RecordCustomTransaction = typeof RecordCustomTransactionSchema.Type
-
-export const CustomAccountTransactionRowSchema = Schema.Struct({
-  date: Schema.String,
-  description: Schema.String,
-  amount: Schema.Number,
-  externalId: Schema.optional(Schema.NullishOr(Schema.String)).pipe(
-    Schema.fromKey('external_id'),
-  ),
-  referenceNumber: Schema.optional(Schema.NullishOr(Schema.String)).pipe(
-    Schema.fromKey('reference_number'),
-  ),
-})
-
-export type CustomAccountTransactionRow = typeof CustomAccountTransactionRowSchema.Type

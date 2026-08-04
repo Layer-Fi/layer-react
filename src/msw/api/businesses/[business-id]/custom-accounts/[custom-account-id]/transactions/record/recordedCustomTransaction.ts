@@ -3,7 +3,7 @@ import { Schema } from 'effect'
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
 import { TransactionSource } from '@schemas/bankTransactions/base'
-import { type RecordCustomTransaction, RecordCustomTransactionSchema } from '@schemas/customAccounts/customAccounts'
+import { type RecordCustomTransaction, RecordCustomTransactionSchema } from '@schemas/customAccounts/recordCustomTransaction'
 import { getCustomerName } from '@utils/customer'
 import { getVendorName } from '@utils/vendor'
 

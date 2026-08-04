@@ -3,7 +3,7 @@ import {
   type Classification,
   type ExclusionCategorizationSchema,
 } from '@schemas/categorization/categorization'
-import { type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
+import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
 import { humanizeEnum } from '@utils/format'
 
 import { accountCategorizationFields } from '@msw/api/businesses/[business-id]/ledger/accounts/accountCategorizationFields'

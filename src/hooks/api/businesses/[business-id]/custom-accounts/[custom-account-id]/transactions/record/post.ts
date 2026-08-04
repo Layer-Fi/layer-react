@@ -2,7 +2,7 @@ import { Schema } from 'effect'
 
 import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { type RecordCustomTransaction, RecordCustomTransactionSchema } from '@schemas/customAccounts/customAccounts'
+import { type RecordCustomTransaction, RecordCustomTransactionSchema } from '@schemas/customAccounts/recordCustomTransaction'
 import { postWithFormData } from '@utils/api/authenticatedHttp'
 import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@api/businesses/[business-id]/custom-accounts/get'

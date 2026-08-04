@@ -2,7 +2,7 @@ import { createContext, type PropsWithChildren, useContext, useEffect, useMemo, 
 import { createStore, useStore } from 'zustand'
 
 import type { Customer } from '@schemas/customerVendor/customer'
-import type { TimeEntry } from '@schemas/timeTracking/timeTracking'
+import type { TimeEntry } from '@schemas/timeTracking/timeEntry'
 
 type TimeEntriesStoreShape = {
   isDrawerOpen: boolean

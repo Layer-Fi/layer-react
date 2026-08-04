@@ -1,5 +1,5 @@
 import type { AccountIdentifier } from '@schemas/common/accountIdentifier'
-import { type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
+import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
 import { accountIdentifierIsForCategory } from '@utils/categories'
 
 import { accountCategorizationFields } from '@msw/api/businesses/[business-id]/ledger/accounts/accountCategorizationFields'

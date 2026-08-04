@@ -1,7 +1,8 @@
 import { pipe, Schema } from 'effect'
 
 import { AccountIdSchema, StableNameSchema } from '@schemas/common/accountIdentifier'
-import { LedgerAccountTypeSchema, LedgerEntryDirectionSchema } from '@schemas/generalLedger/ledgerAccount'
+import { LedgerAccountTypeSchema } from '@schemas/generalLedger/ledgerAccountType'
+import { LedgerEntryDirectionSchema } from '@schemas/generalLedger/ledgerEntryDirection'
 
 export const UpsertLedgerAccountSchema = Schema.Struct({
   name: Schema.String,

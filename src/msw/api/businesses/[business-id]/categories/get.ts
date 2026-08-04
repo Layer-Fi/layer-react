@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 
 import { CategoryListSchema, type NestedCategorization } from '@schemas/categorization/categorization'
-import { type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
+import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
 
 import { accountCategorizationFields } from '@msw/api/businesses/[business-id]/ledger/accounts/accountCategorizationFields'
 import { groupByParentAccountId, ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'

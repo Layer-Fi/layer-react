@@ -2,7 +2,8 @@ import { addDays } from 'date-fns'
 import { Schema } from 'effect'
 
 import { FinalizeInvoiceBodySchema, FinalizeInvoiceDataSchema } from '@schemas/invoices/finalizeInvoice'
-import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
+import { type Invoice } from '@schemas/invoices/invoice'
+import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
 
 import { invoicePaymentMethodsStore } from '@msw/api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/store'
 import { findOrSeedInvoice, invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'

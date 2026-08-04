@@ -2,7 +2,7 @@ import { Schema } from 'effect'
 
 import { BankTransactionDataOnlySchema } from '@schemas/bankTransactions/bankTransactionDataOnly'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import type { RawCustomTransaction } from '@schemas/customAccounts/customAccounts'
+import type { RawCustomTransaction } from '@schemas/customAccounts/customTransaction'
 import { post } from '@utils/api/authenticatedHttp'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@api/businesses/[business-id]/custom-accounts/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'

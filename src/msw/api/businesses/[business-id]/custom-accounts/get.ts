@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type CustomAccount, CustomAccountSchema } from '@schemas/customAccounts/customAccounts'
+import { type CustomAccount, CustomAccountSchema } from '@schemas/customAccounts/customAccount'
 
 import { customAccountStore } from '@msw/api/businesses/[business-id]/custom-accounts/store'
 import { apiData } from '@msw/utils/apiResponse'

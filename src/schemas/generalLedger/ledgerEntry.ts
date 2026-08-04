@@ -3,7 +3,8 @@ import { pipe, Schema } from 'effect'
 import { createOpenEnumSchema } from '@schemas/common/utils'
 import { CustomerSchema } from '@schemas/customerVendor/customer'
 import { VendorSchema } from '@schemas/customerVendor/vendor'
-import { LedgerEntryDirectionSchema, SingleChartAccountSchema } from '@schemas/generalLedger/ledgerAccount'
+import { SingleChartAccountSchema } from '@schemas/generalLedger/chartOfAccounts'
+import { LedgerEntryDirectionSchema } from '@schemas/generalLedger/ledgerEntryDirection'
 import { TransactionTagSchema } from '@schemas/tags/tag'
 
 export enum ClassifierAgent {

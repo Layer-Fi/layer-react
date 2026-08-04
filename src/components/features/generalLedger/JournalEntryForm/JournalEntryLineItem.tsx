@@ -3,7 +3,7 @@ import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { CategoriesListMode, type Classification, isClassificationAccountIdentifier } from '@schemas/categorization/categorization'
-import type { JournalEntryForm } from '@schemas/generalLedger/journalEntry'
+import type { JournalEntryForm } from '@schemas/generalLedger/journalEntryForm'
 import type { AppForm } from '@hooks/features/forms/useForm'
 import { Button } from '@ui/Button/Button'
 import { VStack } from '@ui/Stack/Stack'

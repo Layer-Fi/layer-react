@@ -1,7 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { CalendarDateFromSelf, CalendarDateSchema } from '@schemas/common/calendarDateFromSelf'
-import { NonRecursiveBigDecimalSchema } from '@schemas/common/nonRecursiveBigDecimal'
+import { CalendarDateSchema } from '@schemas/common/calendarDateFromSelf'
 import { createTransformedEnumSchema } from '@schemas/common/utils'
 import { VehicleSchema } from '@schemas/mileage/vehicle'
 
@@ -21,7 +20,7 @@ export enum TripDistanceSource {
   Manual = 'MANUAL',
   Computed = 'COMPUTED',
 }
-const TripPurposeSchema = Schema.Enums(TripPurpose)
+export const TripPurposeSchema = Schema.Enums(TripPurpose)
 
 const TransformedTripPurposeSchema = createTransformedEnumSchema(
   TripPurposeSchema,
@@ -119,79 +118,3 @@ export const TripSchema = Schema.Struct({
 
 export type Trip = typeof TripSchema.Type
 export type TripEncoded = typeof TripSchema.Encoded
-
-export const TripPlaceSchema = Schema.Struct({
-  placeId: Schema.String,
-  latitude: Schema.NullishOr(Schema.String),
-  longitude: Schema.NullishOr(Schema.String),
-})
-
-export type TripPlace = typeof TripPlaceSchema.Type
-
-export const TripFormAddressSchema = Schema.Struct({
-  address: Schema.String,
-  place: Schema.NullOr(TripPlaceSchema),
-})
-
-export type TripFormAddress = typeof TripFormAddressSchema.Type
-
-export const TripFormSchema = Schema.Struct({
-  vehicle: Schema.NullOr(VehicleSchema),
-  tripDate: Schema.NullOr(CalendarDateFromSelf),
-  distance: Schema.NullOr(NonRecursiveBigDecimalSchema),
-  purpose: TripPurposeSchema,
-  start: TripFormAddressSchema,
-  end: TripFormAddressSchema,
-  description: Schema.String,
-})
-
-export type TripForm = typeof TripFormSchema.Type
-
-export const UpsertTripSchema = Schema.Struct({
-  vehicleId: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.UUID)),
-    Schema.fromKey('vehicle_id'),
-  ),
-  tripDate: pipe(
-    Schema.propertySignature(CalendarDateSchema),
-    Schema.fromKey('trip_date'),
-  ),
-  distance: Schema.BigDecimal,
-  purpose: Schema.String,
-  startAddress: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('start_address'),
-  ),
-  endAddress: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('end_address'),
-  ),
-  googleStartPlaceId: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('google_start_place_id'),
-  ),
-  googleEndPlaceId: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('google_end_place_id'),
-  ),
-  startLatitude: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('start_latitude'),
-  ),
-  startLongitude: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('start_longitude'),
-  ),
-  endLatitude: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('end_latitude'),
-  ),
-  endLongitude: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('end_longitude'),
-  ),
-  description: Schema.NullishOr(Schema.String),
-})
-
-export type UpsertTrip = typeof UpsertTripSchema.Type
-export type UpsertTripEncoded = typeof UpsertTripSchema.Encoded

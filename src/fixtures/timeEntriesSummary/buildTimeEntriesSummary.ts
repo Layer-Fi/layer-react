@@ -1,4 +1,5 @@
-import { type TimeEntry, type TimeEntrySummary, type TimeEntrySummaryGroup } from '@schemas/timeTracking/timeTracking'
+import { type TimeEntry } from '@schemas/timeTracking/timeEntry'
+import { type TimeEntrySummary, type TimeEntrySummaryGroup } from '@schemas/timeTracking/timeEntrySummary'
 
 const MINUTES_PER_HOUR = 60
 const UNASSIGNED_SERVICE_NAME = 'Unassigned'
