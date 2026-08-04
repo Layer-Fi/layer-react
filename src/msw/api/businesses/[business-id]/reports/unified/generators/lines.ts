@@ -9,27 +9,31 @@ import {
 import {
   currencyCell,
   dateCell,
-  numericColumn,
+  headerColumn,
+  paddedCells,
   parseDateRangeParams,
   parseEffectiveDateParam,
   type ReportDateRange,
-  rowHeaderColumn,
   textCell,
-  textColumn,
+  totalRowKey,
+  totalRowLabel,
   trailingRangeFrom,
   unifiedReport,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 
+const COLUMN_KEYS = ['date', 'type', 'account', 'description', 'amount', 'balance'] as const
+
+// The date header is the row header but is not pinned, unlike the summary reports'.
 const columns = () => [
-  rowHeaderColumn('date', 'Date'),
-  textColumn('type', 'Type'),
-  textColumn('account', 'Account'),
-  textColumn('description', 'Description'),
-  numericColumn('amount', 'Amount'),
-  numericColumn('balance', 'Balance'),
+  headerColumn('date', { isRowHeader: true }),
+  headerColumn('type'),
+  headerColumn('account'),
+  headerColumn('description'),
+  headerColumn('amount'),
+  headerColumn('balance'),
 ]
 
-// date-controlled parents (balance sheet, trial balance) pass effective_date; range parents pass start/end.
+// Date-controlled parents (balance sheet, trial balance) pass effective_date; range parents pass start/end.
 const detailRange = (params: URLSearchParams): ReportDateRange =>
   params.get('start_date')
     ? parseDateRangeParams(params, trailingRangeFrom(parseEffectiveDateParam(params)))
@@ -37,8 +41,7 @@ const detailRange = (params: URLSearchParams): ReportDateRange =>
 
 const resolveAccount = (params: URLSearchParams): SingleChartAccountType | undefined => {
   const accountId = params.get('account_id')
-  if (accountId) return ledgerAccountStore.findById(accountId)
-  return undefined
+  return accountId ? ledgerAccountStore.findById(accountId) : undefined
 }
 
 export const generateLineItemDetail = (params: URLSearchParams): UnifiedReport => {
@@ -69,17 +72,16 @@ export const generateLineItemDetail = (params: URLSearchParams): UnifiedReport =
     }
   })
 
-  rows.push({
-    rowKey: 'total_line_item_detail',
-    cells: {
-      date: textCell('Total', { bold: true }),
-      type: textCell('', { bold: true }),
-      account: textCell('', { bold: true }),
-      description: textCell('', { bold: true }),
-      amount: currencyCell(runningBalance, { bold: true }),
-      balance: currencyCell(runningBalance, { bold: true }),
-    },
-  })
+  // The backend omits the total row entirely when the drill-down has no lines.
+  if (rows.length > 0) {
+    rows.push({
+      rowKey: totalRowKey('line_item_detail'),
+      cells: paddedCells(COLUMN_KEYS, {
+        date: textCell(totalRowLabel(account.name), { bold: true }),
+        amount: currencyCell(runningBalance, { bold: true }),
+      }),
+    })
+  }
 
   return unifiedReport(columns(), rows)
 }

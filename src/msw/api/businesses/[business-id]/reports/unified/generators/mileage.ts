@@ -1,40 +1,68 @@
-import { format } from 'date-fns'
+import { BigDecimal } from 'effect'
 
-import { Pinning } from '@internal-types/utility/table'
 import { type UnifiedReport } from '@schemas/reports/unifiedReport'
+import { type Trip, TripPurpose } from '@schemas/trip'
 
-import { monthsInRange, reportRangeFromParams } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'
-import { generateTableReport } from '@msw/api/businesses/[business-id]/reports/unified/generators/tableReport'
-import { hashString } from '@fixtures/unifiedReports/deterministicAmounts'
+import { tripStore } from '@msw/api/businesses/[business-id]/mileage/trips/store'
+import {
+  flatGroupedReport,
+} from '@msw/api/businesses/[business-id]/reports/unified/generators/flatGrouped'
+import { reportRangeFromParams } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'
+import {
+  type ColumnHeaderKey,
+  dateCell,
+  decimalCell,
+  emptyCell,
+  textCellOrEmpty,
+  totalRowLabel,
+} from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 
-const MILEAGE_RATE_CENTS = 67
+const COLUMNS: ColumnHeaderKey[] = ['date', 'customer', 'description', 'distance']
 
-const roundToTenth = (value: number) => Math.round(value * 10) / 10
+const tripDate = (trip: Trip) => trip.tripDate.toDate('UTC')
 
-const generateMileage = (params: URLSearchParams, keyPrefix: string, tripsBase: number): UnifiedReport => {
-  const months = monthsInRange(reportRangeFromParams(params)).map((month) => {
-    const seed = hashString(`${keyPrefix}:${format(month, 'yyyy-MM')}`)
-    const trips = tripsBase + (seed % 10)
-    const miles = roundToTenth(trips * (12 + (seed % 25)))
+const totalDistance = (trips: readonly Trip[]) =>
+  trips.reduce((total, trip) => total + BigDecimal.unsafeToNumber(trip.distance), 0)
 
-    return { month, trips, miles, deduction: Math.round(miles * MILEAGE_RATE_CENTS) }
-  })
+const generateMileage = (
+  params: URLSearchParams,
+  purpose: TripPurpose,
+  total: { rowKey: string, label: string },
+): UnifiedReport => {
+  const { startDate, endDate } = reportRangeFromParams(params)
 
-  return generateTableReport({
-    rowHeader: { columnKey: 'month', displayName: 'Month', label: ({ month }) => format(month, 'MMM yyyy') },
-    rowKey: ({ month }) => format(month, 'yyyy-MM'),
-    items: months,
-    valueColumns: [
-      { columnKey: 'trips', displayName: 'Trips', cellType: 'decimal', value: ({ trips }) => trips },
-      { columnKey: 'miles', displayName: 'Miles', cellType: 'decimal', value: ({ miles }) => miles, formatTotal: roundToTenth },
-      { columnKey: 'deduction', displayName: 'Deduction', value: ({ deduction }) => deduction, pinning: Pinning.Right },
-    ],
-    total: { rowKey: 'total_mileage', label: 'Total' },
+  const trips = tripStore.all()
+    .filter(trip => trip.deletedAt == null && trip.purpose === purpose)
+    .filter(trip => tripDate(trip) >= startDate && tripDate(trip) <= endDate)
+    .sort((a, b) => tripDate(a).getTime() - tripDate(b).getTime() || a.id.localeCompare(b.id))
+
+  return flatGroupedReport({
+    columns: COLUMNS,
+    measureColumn: 'distance',
+    items: trips,
+    rowFor: trip => ({
+      rowKey: trip.id,
+      // Mock trips carry no customer, which the backend renders as an empty cell.
+      cells: {
+        date: dateCell(tripDate(trip)),
+        customer: emptyCell(),
+        description: textCellOrEmpty(trip.description),
+        distance: decimalCell(BigDecimal.unsafeToNumber(trip.distance)),
+      },
+    }),
+    subtotalCell: (groupTrips, options) => decimalCell(totalDistance(groupTrips), options),
+    total,
   })
 }
 
-export const generateBusinessMileage = (params: URLSearchParams) =>
-  generateMileage(params, 'business_mileage', 8)
+export const generateBusinessMileage = (params: URLSearchParams) => generateMileage(
+  params,
+  TripPurpose.Business,
+  { rowKey: 'business_mileage', label: totalRowLabel('Business Mileage') },
+)
 
-export const generatePersonalMileage = (params: URLSearchParams) =>
-  generateMileage(params, 'personal_mileage', 3)
+export const generatePersonalMileage = (params: URLSearchParams) => generateMileage(
+  params,
+  TripPurpose.Personal,
+  { rowKey: 'personal_mileage', label: totalRowLabel('Personal Mileage') },
+)

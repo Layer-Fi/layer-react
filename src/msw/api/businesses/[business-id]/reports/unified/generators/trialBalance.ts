@@ -1,5 +1,6 @@
 import { sumBy } from 'lodash-es'
 
+import { Pinning } from '@internal-types/utility/table'
 import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { type ReportConfig } from '@schemas/reports/reportConfig'
 import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
@@ -15,15 +16,14 @@ import {
   currencyCell,
   detailBaseParams,
   emptyCell,
+  headerColumn,
   linesReportConfig,
-  numericColumn,
   parseEffectiveDateParam,
-  rowHeaderColumn,
   textCell,
+  totalRowKey,
   unifiedReport,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 
-const ACCOUNT_COLUMN_KEY = 'account'
 const DEBIT_COLUMN_KEY = 'debit'
 const CREDIT_COLUMN_KEY = 'credit'
 
@@ -68,9 +68,10 @@ export const generateTrialBalance = (params: URLSearchParams): UnifiedReport => 
     onDebit: boolean,
     drillDown: boolean = true,
   ): UnifiedReportRow => ({
-    rowKey: account.accountId,
+    rowKey: account.stableName ?? account.accountId,
     cells: {
-      [ACCOUNT_COLUMN_KEY]: textCell(account.name),
+      account: textCell(account.name),
+      account_type: textCell(account.accountType.displayName),
       ...sideCells(magnitude, onDebit, drillDown ? linesReportConfig(LINES_ROUTE, account, [], baseParams) : undefined),
     },
   })
@@ -87,9 +88,10 @@ export const generateTrialBalance = (params: URLSearchParams): UnifiedReport => 
   const totalCredit = creditSum + (plugOnDebit ? 0 : plugMagnitude)
 
   rows.push({
-    rowKey: 'total_trial_balance',
+    rowKey: totalRowKey('trial_balance'),
     cells: {
-      [ACCOUNT_COLUMN_KEY]: textCell('Total', { bold: true }),
+      account: textCell('Total', { bold: true }),
+      account_type: emptyCell(),
       [DEBIT_COLUMN_KEY]: currencyCell(totalDebit, { bold: true }),
       [CREDIT_COLUMN_KEY]: currencyCell(totalCredit, { bold: true }),
     },
@@ -97,9 +99,10 @@ export const generateTrialBalance = (params: URLSearchParams): UnifiedReport => 
 
   return unifiedReport(
     [
-      rowHeaderColumn(ACCOUNT_COLUMN_KEY, 'Account'),
-      numericColumn(DEBIT_COLUMN_KEY, 'Debit'),
-      numericColumn(CREDIT_COLUMN_KEY, 'Credit'),
+      headerColumn('account', { isRowHeader: true, pinning: Pinning.Left }),
+      headerColumn('account_type'),
+      headerColumn('debit'),
+      headerColumn('credit'),
     ],
     rows,
   )

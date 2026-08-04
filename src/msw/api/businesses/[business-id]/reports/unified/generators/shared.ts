@@ -1,6 +1,6 @@
 import { format, subMonths } from 'date-fns'
 
-import { Alignment, Pinning } from '@internal-types/utility/table'
+import { Alignment, type Pinning } from '@internal-types/utility/table'
 import { LedgerAccountType, LedgerEntryDirection, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
 import { type ReportConfig, type ReportControl } from '@schemas/reports/reportConfig'
 import { type UnifiedReport, type UnifiedReportCell, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
@@ -16,29 +16,49 @@ export const unifiedReport = (
   rows: UnifiedReportRow[],
 ): UnifiedReport => ({ businessId: MOCK_REPORT_BUSINESS_ID, columns, rows })
 
-export const rowHeaderColumn = (columnKey: string, displayName: string): UnifiedReportColumn => ({
-  columnKey,
-  displayName,
-  isRowHeader: true,
-  alignment: Alignment.Left,
-  pinning: Pinning.Left,
-})
+// Mirrors the backend's UnifiedReportColumnHeader enum.
+const COLUMN_HEADERS = {
+  account: { displayName: 'Account', alignment: Alignment.Left },
+  account_type: { displayName: 'Account Type', alignment: Alignment.Left },
+  debit: { displayName: 'Debit', alignment: Alignment.Right },
+  credit: { displayName: 'Credit', alignment: Alignment.Right },
+  total: { displayName: 'Total', alignment: Alignment.Right },
+  date: { displayName: 'Date', alignment: Alignment.Left },
+  type: { displayName: 'Type', alignment: Alignment.Left },
+  description: { displayName: 'Description', alignment: Alignment.Left },
+  amount: { displayName: 'Amount', alignment: Alignment.Right },
+  balance: { displayName: 'Balance', alignment: Alignment.Right },
+  customer: { displayName: 'Customer', alignment: Alignment.Left },
+  vendor: { displayName: 'Vendor', alignment: Alignment.Left },
+  distance: { displayName: 'Distance', alignment: Alignment.Right },
+  service: { displayName: 'Service', alignment: Alignment.Left },
+  duration: { displayName: 'Duration', alignment: Alignment.Right },
+} as const
 
-export const textColumn = (columnKey: string, displayName: string): UnifiedReportColumn => ({
-  columnKey,
-  displayName,
-  alignment: Alignment.Left,
-})
+export type ColumnHeaderKey = keyof typeof COLUMN_HEADERS
 
-export const numericColumn = (
-  columnKey: string,
-  displayName: string,
-  pinning?: Pinning,
+type HeaderColumnOptions = {
+  columnKey?: string
+  displayName?: string
+  isRowHeader?: boolean
+  pinning?: Pinning
+}
+
+export const headerColumn = (
+  header: ColumnHeaderKey,
+  { columnKey = header, displayName, isRowHeader, pinning }: HeaderColumnOptions = {},
 ): UnifiedReportColumn => ({
+  columnKey,
+  displayName: displayName ?? COLUMN_HEADERS[header].displayName,
+  ...(isRowHeader && { isRowHeader }),
+  alignment: COLUMN_HEADERS[header].alignment,
+  ...(pinning && { pinning }),
+})
+
+export const numericColumn = (columnKey: string, displayName: string): UnifiedReportColumn => ({
   columnKey,
   displayName,
   alignment: Alignment.Right,
-  ...(pinning && { pinning }),
 })
 
 type CellOptions = {
@@ -72,18 +92,23 @@ export const textCell = (value: string, options?: CellOptions) =>
 
 export const emptyCell = (options?: CellOptions) => withOptions({ type: 'Empty' }, options)
 
-export const labeledCurrencyRowFor = (labelColumnKey: string, amountColumnKey: string) => (
-  rowKey: string,
-  label: string,
-  amount: number,
-  options?: CellOptions,
-): UnifiedReportRow => ({
-  rowKey,
-  cells: {
-    [labelColumnKey]: textCell(label, { bold: options?.bold }),
-    [amountColumnKey]: currencyCell(amount, options),
-  },
-})
+export const textCellOrEmpty = (value: string | null | undefined, options?: CellOptions) =>
+  value != null ? textCell(value, options) : emptyCell()
+
+export const counterpartyName = (
+  counterparty: { companyName?: string | null, individualName?: string | null, externalId?: string | null },
+) => counterparty.companyName ?? counterparty.individualName ?? counterparty.externalId ?? null
+
+export const totalRowKey = (name: string) => `total_${name}`
+
+export const totalRowLabel = (name: string) => `Total ${name}`
+
+// Total and group rows carry an explicit empty cell for every column they don't fill.
+export const paddedCells = (
+  columnKeys: readonly string[],
+  overrides: Record<string, UnifiedReportCell>,
+): UnifiedReportRow['cells'] =>
+  Object.fromEntries(columnKeys.map(columnKey => [columnKey, overrides[columnKey] ?? emptyCell()]))
 
 export const linesReportConfig = (
   linesRoute: string,

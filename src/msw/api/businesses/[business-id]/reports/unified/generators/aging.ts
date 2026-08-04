@@ -1,71 +1,88 @@
 import { differenceInDays } from 'date-fns'
 import { sum } from 'lodash-es'
 
-import { type UnifiedReport } from '@schemas/reports/unifiedReport'
+import { Pinning } from '@internal-types/utility/table'
+import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
 import { getInvoiceCustomerName } from '@utils/customer'
 
 import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
-import { parseEffectiveDateParam } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
-import { generateTableReport } from '@msw/api/businesses/[business-id]/reports/unified/generators/tableReport'
+import {
+  currencyCell,
+  headerColumn,
+  numericColumn,
+  parseEffectiveDateParam,
+  textCell,
+  totalRowKey,
+  unifiedReport,
+} from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 
+// Column keys and labels come from the backend's AgingBucket enum.
 const BUCKETS = [
-  { key: 'current', label: 'Current', max: 30 },
-  { key: 'days_31_60', label: '31–60 days', max: 60 },
-  { key: 'days_61_90', label: '61–90 days', max: 90 },
-  { key: 'days_over_90', label: '90+ days', max: Infinity },
+  { key: 'current_0_30', label: '0-30', max: 30 },
+  { key: 'days_31_60', label: '31-60', max: 60 },
+  { key: 'days_61_90', label: '61-90', max: 90 },
+  { key: 'days_90_plus', label: '90+', max: Infinity },
 ] as const
 
-type AgingItem = { entityName: string, dueAt: Date, amountCents: number }
+type AgingItem = { entityKey: string, entityName: string, dueAt: Date, amountCents: number }
 
 const bucketIndexForDaysPastDue = (daysPastDue: number) =>
   Math.max(0, BUCKETS.findIndex(bucket => daysPastDue <= bucket.max))
 
 const buildAgingReport = (
-  entityColumnKey: string,
-  entityColumnLabel: string,
+  entityColumn: 'customer' | 'vendor',
+  totalRowName: string,
   items: readonly AgingItem[],
   effectiveDate: Date,
 ): UnifiedReport => {
-  const byEntity = new Map<string, number[]>()
+  const byEntity = new Map<string, { entityName: string, amounts: number[] }>()
 
   items.forEach((item) => {
-    const amounts = byEntity.get(item.entityName) ?? BUCKETS.map(() => 0)
-    amounts[bucketIndexForDaysPastDue(differenceInDays(effectiveDate, item.dueAt))] += item.amountCents
-    byEntity.set(item.entityName, amounts)
+    const entity = byEntity.get(item.entityKey) ?? { entityName: item.entityName, amounts: BUCKETS.map(() => 0) }
+    entity.amounts[bucketIndexForDaysPastDue(differenceInDays(effectiveDate, item.dueAt))] += item.amountCents
+    byEntity.set(item.entityKey, entity)
   })
 
-  const entities = [...byEntity.entries()]
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([entityName, amounts]) => ({ entityName, amounts }))
+  const entities = [...byEntity.entries()].sort(([, a], [, b]) => a.entityName.localeCompare(b.entityName))
 
-  return generateTableReport({
-    rowHeader: { columnKey: entityColumnKey, displayName: entityColumnLabel, label: ({ entityName }) => entityName },
-    rowKey: ({ entityName }) => entityName,
-    items: entities,
-    valueColumns: [
-      ...BUCKETS.map((bucket, index) => ({
-        columnKey: bucket.key,
-        displayName: bucket.label,
-        value: ({ amounts }: (typeof entities)[number]) => amounts[index],
-      })),
-      {
-        columnKey: 'total',
-        displayName: 'Total',
-        value: ({ amounts }) => sum(amounts),
-      },
+  const entityRow = (
+    rowKey: string,
+    label: string,
+    amounts: readonly number[],
+    bold?: boolean,
+  ): UnifiedReportRow => ({
+    rowKey,
+    cells: {
+      [entityColumn]: textCell(label, { bold }),
+      ...Object.fromEntries(BUCKETS.map((bucket, index) => [bucket.key, currencyCell(amounts[index], { bold })])),
+      total: currencyCell(sum(amounts), { bold }),
+    },
+  })
+
+  const bucketTotals = BUCKETS.map((_, index) => sum(entities.map(([, entity]) => entity.amounts[index])))
+
+  return unifiedReport(
+    [
+      headerColumn(entityColumn, { isRowHeader: true, pinning: Pinning.Left }),
+      ...BUCKETS.map(bucket => numericColumn(bucket.key, bucket.label)),
+      headerColumn('total'),
     ],
-    total: { rowKey: `total_${entityColumnKey}_aging`, label: 'Total Outstanding' },
-  })
+    [
+      ...entities.map(([entityKey, entity]) => entityRow(entityKey, entity.entityName, entity.amounts)),
+      entityRow(totalRowKey(totalRowName), 'Total Outstanding', bucketTotals, true),
+    ],
+  )
 }
 
 export const generateArAging = (params: URLSearchParams): UnifiedReport => {
   const items: AgingItem[] = invoiceStore.all()
     .filter(invoice => invoice.voidedAt == null && invoice.outstandingBalance > 0 && invoice.dueAt != null)
     .map(invoice => ({
-      entityName: getInvoiceCustomerName(invoice),
+      entityKey: invoice.customer?.id ?? 'unassigned',
+      entityName: getInvoiceCustomerName(invoice) ?? 'Unnamed Customer',
       dueAt: invoice.dueAt as Date,
       amountCents: invoice.outstandingBalance,
     }))
 
-  return buildAgingReport('customer', 'Customer', items, parseEffectiveDateParam(params))
+  return buildAgingReport('customer', 'ar_aging', items, parseEffectiveDateParam(params))
 }

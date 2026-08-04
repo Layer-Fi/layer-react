@@ -2,11 +2,11 @@ import { type UnifiedReport } from '@schemas/reports/unifiedReport'
 
 import { generateArAging } from '@msw/api/businesses/[business-id]/reports/unified/generators/aging'
 import { generateBalanceSheet } from '@msw/api/businesses/[business-id]/reports/unified/generators/balanceSheet'
+import { generateCashflow } from '@msw/api/businesses/[business-id]/reports/unified/generators/cashflow'
 import {
   generateBusinessExpenses,
   generateBusinessIncome,
-} from '@msw/api/businesses/[business-id]/reports/unified/generators/businessExpensesIncome'
-import { generateCashflow } from '@msw/api/businesses/[business-id]/reports/unified/generators/cashflow'
+} from '@msw/api/businesses/[business-id]/reports/unified/generators/expensesIncome'
 import { generateLineItemDetail } from '@msw/api/businesses/[business-id]/reports/unified/generators/lines'
 import {
   generateBusinessMileage,

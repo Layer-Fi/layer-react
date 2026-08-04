@@ -1,12 +1,8 @@
 import { eachMonthOfInterval, eachYearOfInterval, endOfMonth, endOfYear, format, max, min, startOfMonth, startOfYear } from 'date-fns'
-import { sumBy } from 'lodash-es'
 
-import { Pinning } from '@internal-types/utility/table'
-import { type ReportConfig } from '@schemas/reports/reportConfig'
-import { DateGroupBy, type UnifiedReportColumn, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
+import { DateGroupBy, type UnifiedReportColumn } from '@schemas/reports/unifiedReport'
 
 import {
-  currencyCell,
   numericColumn,
   parseDateRangeParams,
   type ReportDateRange,
@@ -14,7 +10,7 @@ import {
 
 export const TOTAL_COLUMN_KEY = 'total'
 
-export type PnlPeriod = { columnKey: string, label: string, range: ReportDateRange }
+export type ReportPeriod = { columnKey: string, label: string, range: ReportDateRange }
 
 export const currentYearFallback = (): ReportDateRange => {
   const now = new Date()
@@ -32,7 +28,7 @@ const clippedPeriod = (
   label: string,
   unit: ReportDateRange,
   range: ReportDateRange,
-): PnlPeriod => ({
+): ReportPeriod => ({
   columnKey,
   label,
   range: {
@@ -41,54 +37,34 @@ const clippedPeriod = (
   },
 })
 
-/*
- * ALL_TIME collapses to a single total column; MONTH and YEAR fan the
- * requested range out into one column per unit, keyed so cells line up.
- */
-export const resolvePeriods = (range: ReportDateRange, groupBy: string | null): PnlPeriod[] => {
-  switch (groupBy) {
-    case DateGroupBy.Month:
-      return eachMonthOfInterval({ start: range.startDate, end: range.endDate }).map(month => clippedPeriod(
-        `month_${format(month, 'yyyy_MM')}`,
-        format(month, 'MMM yyyy'),
-        { startDate: startOfMonth(month), endDate: endOfMonth(month) },
-        range,
-      ))
-    case DateGroupBy.Year:
-      return eachYearOfInterval({ start: range.startDate, end: range.endDate }).map(year => clippedPeriod(
-        `year_${format(year, 'yyyy')}`,
+// Matches generateTimePeriods: a range spanning a single unit collapses to `total` alone.
+export const resolvePeriods = (range: ReportDateRange, groupBy: string | null): ReportPeriod[] => {
+  const totalPeriod = { columnKey: TOTAL_COLUMN_KEY, label: 'Total', range }
+
+  const units = groupBy === DateGroupBy.Month
+    ? monthsInRange(range).map(month => clippedPeriod(
+      format(month, 'yyyy-MM'),
+      format(month, 'MMM yyyy'),
+      { startDate: startOfMonth(month), endDate: endOfMonth(month) },
+      range,
+    ))
+    : groupBy === DateGroupBy.Year
+      ? eachYearOfInterval({ start: range.startDate, end: range.endDate }).map(year => clippedPeriod(
+        format(year, 'yyyy'),
         format(year, 'yyyy'),
         { startDate: startOfYear(year), endDate: endOfYear(year) },
         range,
       ))
-    default:
-      return [{ columnKey: TOTAL_COLUMN_KEY, label: 'Total', range }]
-  }
+      : []
+
+  return units.length > 1 ? [...units, totalPeriod] : [totalPeriod]
 }
 
-const isSingleTotal = (periods: readonly PnlPeriod[]) =>
-  periods.length === 1 && periods[0].columnKey === TOTAL_COLUMN_KEY
+export const periodColumns = (periods: readonly ReportPeriod[]): UnifiedReportColumn[] =>
+  periods.map(period => numericColumn(period.columnKey, period.label))
 
-export const periodValueColumns = (periods: readonly PnlPeriod[]): UnifiedReportColumn[] => {
-  if (isSingleTotal(periods)) return [numericColumn(TOTAL_COLUMN_KEY, 'Total', Pinning.Right)]
-
-  return [
-    ...periods.map(period => numericColumn(period.columnKey, period.label)),
-    numericColumn(TOTAL_COLUMN_KEY, 'Total', Pinning.Right),
-  ]
-}
-
-export const periodCells = (
+export const periodAmounts = (
+  periods: readonly ReportPeriod[],
   amountFor: (range: ReportDateRange) => number,
-  periods: readonly PnlPeriod[],
-  options: { bold?: boolean, reportConfig?: ReportConfig } = {},
-): UnifiedReportRow['cells'] => {
-  const amounts = periods.map(period => ({ columnKey: period.columnKey, amount: amountFor(period.range) }))
-
-  return {
-    ...Object.fromEntries(amounts
-      .filter(({ columnKey }) => columnKey !== TOTAL_COLUMN_KEY)
-      .map(({ columnKey, amount }) => [columnKey, currencyCell(amount, options)])),
-    [TOTAL_COLUMN_KEY]: currencyCell(sumBy(amounts, ({ amount }) => amount), options),
-  }
-}
+): Record<string, number> =>
+  Object.fromEntries(periods.map(period => [period.columnKey, amountFor(period.range)]))

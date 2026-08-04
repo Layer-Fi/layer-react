@@ -1,12 +1,10 @@
+import { format } from 'date-fns'
 import { sumBy } from 'lodash-es'
 
-import { Pinning } from '@internal-types/utility/table'
 import { LedgerAccountType, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
-import { type ReportConfig } from '@schemas/reports/reportConfig'
-import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
+import { type UnifiedReport } from '@schemas/reports/unifiedReport'
 
 import {
-  accountForestRows,
   type AccountNode,
   accountsOfTypes,
   buildAccountForest,
@@ -20,35 +18,32 @@ import {
   RETAINED_EARNINGS_STABLE_NAME,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/balances'
 import {
-  currencyCell,
+  lineItemTreeReport,
+  type ReportLineItem,
+} from '@msw/api/businesses/[business-id]/reports/unified/generators/lineItemTree'
+import { TOTAL_COLUMN_KEY } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'
+import {
   detailBaseParams,
-  labeledCurrencyRowFor,
   linesReportConfig,
   numericColumn,
   parseEffectiveDateParam,
-  rowHeaderColumn,
-  unifiedReport,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
-
-const NAME_COLUMN_KEY = 'name'
-const BALANCE_COLUMN_KEY = 'balance'
 
 const LINES_ROUTE = 'balance-sheet/lines'
 
+// The backend prefixes its synthetic balance-sheet row keys; account rows keep their stable name.
+const syntheticRowKey = (name: string) => `balance-sheet-${name}`
+
+const CURRENT_ASSET_SUBTYPES = ['CASH', 'BANK_ACCOUNTS', 'ACCOUNTS_RECEIVABLE', 'INVENTORY', 'UNDEPOSITED_FUNDS', 'PREPAID_EXPENSES']
+const CURRENT_LIABILITY_SUBTYPES = ['ACCOUNTS_PAYABLE', 'CREDIT_CARD', 'PAYROLL_LIABILITY', 'SALES_TAXES_PAYABLE', 'UNEARNED_REVENUE']
+
 type BalanceByAccountId = ReadonlyMap<string, number>
-type DrillDownFor = (account: SingleChartAccountType) => ReportConfig | undefined
 
 const subtreeTotal = (node: AccountNode, balances: BalanceByAccountId): number =>
   node.children.length === 0
     ? balances.get(node.account.accountId) ?? 0
     : sumBy(node.children, child => subtreeTotal(child, balances))
 
-const balanceSheetRow = labeledCurrencyRowFor(NAME_COLUMN_KEY, BALANCE_COLUMN_KEY)
-
-const sectionTotalRow = (rowKey: string, label: string, amount: number) =>
-  balanceSheetRow(rowKey, label, amount, { bold: true })
-
-// Sums leaf balances only; parent rows are subtotals, so summing them too would double-count.
 const sumForType = (
   leaves: readonly SingleChartAccountType[],
   type: LedgerAccountType,
@@ -66,7 +61,6 @@ export const generateBalanceSheet = (params: URLSearchParams): UnifiedReport => 
     leaves.map(account => [account.accountId, leafBalanceCents(account, effectiveDate, params)]),
   )
 
-  // Retained earnings mirrors net income, and opening balance equity plugs Assets = Liabilities + Equity.
   const retainedEarnings = leaves.find(a => a.stableName === RETAINED_EARNINGS_STABLE_NAME)
   const openingBalanceEquity = leaves.find(a => a.stableName === OPENING_BALANCE_EQUITY_STABLE_NAME)
   if (retainedEarnings) balances.set(retainedEarnings.accountId, cumulativeNetIncomeCents(effectiveDate, params))
@@ -74,45 +68,88 @@ export const generateBalanceSheet = (params: URLSearchParams): UnifiedReport => 
   const assetsTotal = sumForType(leaves, LedgerAccountType.Asset, balances)
   const liabilitiesTotal = sumForType(leaves, LedgerAccountType.Liability, balances)
 
-  if (openingBalanceEquity) balances.set(openingBalanceEquity.accountId, 0)
-  const equityBeforePlug = sumForType(leaves, LedgerAccountType.Equity, balances)
+  // Opening balance equity plugs Assets = Liabilities + Equity, so it carries no stream of its own.
   if (openingBalanceEquity) {
-    balances.set(openingBalanceEquity.accountId, assetsTotal - liabilitiesTotal - equityBeforePlug)
+    balances.set(openingBalanceEquity.accountId, 0)
+    balances.set(
+      openingBalanceEquity.accountId,
+      assetsTotal - liabilitiesTotal - sumForType(leaves, LedgerAccountType.Equity, balances),
+    )
   }
 
-  const equityTotal = sumForType(leaves, LedgerAccountType.Equity, balances)
-
-  // Drill-downs bake the accumulation window + reporting basis so detail totals match the parent cell.
-  // Retained earnings and opening balance equity are computed/plugged, not stream-backed, so they don't drill down.
-  const range = balanceSheetRange(effectiveDate)
-  const baseParams = detailBaseParams(range, params)
+  const baseParams = detailBaseParams(balanceSheetRange(effectiveDate), params)
   const pluggedIds = new Set([retainedEarnings?.accountId, openingBalanceEquity?.accountId])
-  const drillDownFor: DrillDownFor = account =>
-    pluggedIds.has(account.accountId)
-      ? undefined
-      : linesReportConfig(LINES_ROUTE, account, [], baseParams)
 
-  const sectionRows = (type: LedgerAccountType) => accountForestRows(buildAccountForest(accountsOfTypes([type])), {
-    nameColumnKey: NAME_COLUMN_KEY,
-    valueCells: (node, isLeaf) => ({
-      [BALANCE_COLUMN_KEY]: currencyCell(subtreeTotal(node, balances), {
-        reportConfig: isLeaf ? drillDownFor(node.account) : undefined,
-      }),
+  const accountLineItem = (node: AccountNode): ReportLineItem => ({
+    name: node.account.stableName ?? node.account.accountId,
+    displayName: node.account.name,
+    amounts: { [TOTAL_COLUMN_KEY]: subtreeTotal(node, balances) },
+    ...(node.children.length === 0 && !pluggedIds.has(node.account.accountId) && {
+      reportConfig: linesReportConfig(LINES_ROUTE, node.account, [], baseParams),
     }),
+    childItems: node.children.map(accountLineItem),
   })
 
-  const rows: UnifiedReportRow[] = [
-    ...sectionRows(LedgerAccountType.Asset),
-    sectionTotalRow('total_assets', 'Total Assets', assetsTotal),
-    ...sectionRows(LedgerAccountType.Liability),
-    sectionTotalRow('total_liabilities', 'Total Liabilities', liabilitiesTotal),
-    ...sectionRows(LedgerAccountType.Equity),
-    sectionTotalRow('total_equity', 'Total Equity', equityTotal),
-    sectionTotalRow('total_liabilities_and_equity', 'Total Liabilities & Equity', liabilitiesTotal + equityTotal),
-  ]
+  const subtypeGroup = (
+    name: string,
+    displayName: string,
+    type: LedgerAccountType,
+    currentSubtypes: readonly string[],
+    wantCurrent: boolean,
+  ): ReportLineItem => {
+    const forest = buildAccountForest(accountsOfTypes([type]))
+      .flatMap(root => root.children)
+      .filter(node => currentSubtypes.includes(node.account.accountSubtype?.value ?? '') === wantCurrent)
 
-  return unifiedReport(
-    [rowHeaderColumn(NAME_COLUMN_KEY, 'Account'), numericColumn(BALANCE_COLUMN_KEY, 'Balance', Pinning.Right)],
-    rows,
-  )
+    return {
+      name: syntheticRowKey(name),
+      displayName,
+      amounts: { [TOTAL_COLUMN_KEY]: sumBy(forest, node => subtreeTotal(node, balances)) },
+      childItems: forest.map(accountLineItem),
+    }
+  }
+
+  const assets = [
+    subtypeGroup('CURRENT_ASSETS', 'Current Assets', LedgerAccountType.Asset, CURRENT_ASSET_SUBTYPES, true),
+    subtypeGroup('NON_CURRENT_ASSETS', 'Non-current Assets', LedgerAccountType.Asset, CURRENT_ASSET_SUBTYPES, false),
+  ]
+  const liabilities = [
+    subtypeGroup('CURRENT_LIABILITIES', 'Current Liabilities', LedgerAccountType.Liability, CURRENT_LIABILITY_SUBTYPES, true),
+    subtypeGroup('NON_CURRENT_LIABILITIES', 'Non-current Liabilities', LedgerAccountType.Liability, CURRENT_LIABILITY_SUBTYPES, false),
+  ]
+  const equities: ReportLineItem = {
+    name: syntheticRowKey('EQUITIES'),
+    displayName: 'Equities',
+    amounts: { [TOTAL_COLUMN_KEY]: sumForType(leaves, LedgerAccountType.Equity, balances) },
+    childItems: buildAccountForest(accountsOfTypes([LedgerAccountType.Equity]))
+      .flatMap(root => root.children)
+      .map(accountLineItem),
+  }
+
+  const sumOf = (items: readonly ReportLineItem[]) =>
+    sumBy(items, item => item.amounts[TOTAL_COLUMN_KEY])
+
+  // The balance-sheet column is labelled with its as-of date rather than "Total".
+  return lineItemTreeReport([numericColumn(TOTAL_COLUMN_KEY, format(effectiveDate, 'MMMM d, yyyy'))], [
+    {
+      name: syntheticRowKey('ASSETS'),
+      displayName: 'Assets',
+      amounts: { [TOTAL_COLUMN_KEY]: sumOf(assets) },
+      childItems: assets,
+    },
+    {
+      name: syntheticRowKey('LIABILITIES_AND_EQUITY'),
+      displayName: 'Liabilities and Equity',
+      amounts: { [TOTAL_COLUMN_KEY]: sumOf(liabilities) + equities.amounts[TOTAL_COLUMN_KEY] },
+      childItems: [
+        {
+          name: syntheticRowKey('LIABILITIES'),
+          displayName: 'Liabilities',
+          amounts: { [TOTAL_COLUMN_KEY]: sumOf(liabilities) },
+          childItems: liabilities,
+        },
+        equities,
+      ],
+    },
+  ])
 }
