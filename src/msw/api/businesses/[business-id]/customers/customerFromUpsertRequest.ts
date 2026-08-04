@@ -1,6 +1,7 @@
 import { Schema } from 'effect'
 
-import { type Customer, UpsertCustomerSchema } from '@schemas/customerVendor/customer'
+import { type Customer } from '@schemas/customerVendor/customer'
+import { UpsertCustomerSchema } from '@schemas/customerVendor/upsertCustomer'
 
 import { createRequestBodyEcho } from '@msw/utils/createRequestBodyEcho'
 

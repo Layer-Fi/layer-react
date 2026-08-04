@@ -1,7 +1,8 @@
 import { Schema } from 'effect'
 
-import { type InvoicePayment, UpsertDedicatedInvoicePaymentSchema } from '@schemas/invoices/invoicePayment'
+import { type InvoicePayment } from '@schemas/invoices/invoicePayment'
 import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
+import { UpsertDedicatedInvoicePaymentSchema } from '@schemas/invoices/upsertDedicatedInvoicePayment'
 
 import { paymentFromUpsertBody, toPaymentResponse } from '@msw/api/businesses/[business-id]/invoices/[invoice-id]/payment/toPaymentResponse'
 import { findOrSeedInvoice, invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'

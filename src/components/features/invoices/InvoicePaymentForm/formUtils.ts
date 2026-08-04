@@ -4,7 +4,7 @@ import { BigDecimal as BD } from 'effect'
 
 import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents, fromNonRecursiveBigDecimal } from '@schemas/common/nonRecursiveBigDecimal'
 import { type Invoice } from '@schemas/invoices/invoice'
-import { type DedicatedInvoicePaymentForm } from '@schemas/invoices/invoicePayment'
+import { type DedicatedInvoicePaymentForm } from '@schemas/invoices/invoicePaymentForm'
 import { convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
 
 export const getInvoicePaymentFormDefaultValues = (invoice: Invoice): DedicatedInvoicePaymentForm => {

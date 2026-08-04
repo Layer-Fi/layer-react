@@ -62,35 +62,3 @@ export const VehicleSchema = Schema.Struct({
 
 export type Vehicle = typeof VehicleSchema.Type
 export type VehicleEncoded = typeof VehicleSchema.Encoded
-
-export const VehicleFormSchema = Schema.Struct({
-  makeAndModel: Schema.String,
-  year: Schema.NullishOr(Schema.Number),
-  licensePlate: Schema.String,
-  vin: Schema.String,
-  description: Schema.String,
-  isPrimary: Schema.Boolean,
-})
-
-export type VehicleForm = typeof VehicleFormSchema.Type
-
-export const UpsertVehicleSchema = Schema.Struct({
-  makeAndModel: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('make_and_model'),
-  ),
-  year: Schema.NullishOr(Schema.Number),
-  licensePlate: pipe(
-    Schema.propertySignature(Schema.NullishOr(Schema.String)),
-    Schema.fromKey('license_plate'),
-  ),
-  vin: Schema.NullishOr(Schema.String),
-  description: Schema.NullishOr(Schema.String),
-  isPrimary: pipe(
-    Schema.propertySignature(Schema.Boolean),
-    Schema.fromKey('is_primary'),
-  ),
-})
-
-export type UpsertVehicle = typeof UpsertVehicleSchema.Type
-export type UpsertVehicleEncoded = typeof UpsertVehicleSchema.Encoded

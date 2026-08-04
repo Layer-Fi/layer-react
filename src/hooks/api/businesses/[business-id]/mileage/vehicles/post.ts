@@ -1,5 +1,6 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { type UpsertVehicleEncoded, VehicleSchema } from '@schemas/mileage/vehicle'
+import { type UpsertVehicleEncoded } from '@schemas/mileage/upsertVehicle'
+import { VehicleSchema } from '@schemas/mileage/vehicle'
 import { post } from '@utils/api/authenticatedHttp'
 import { useVehiclesGlobalCacheActions } from '@api/businesses/[business-id]/mileage/vehicles/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'

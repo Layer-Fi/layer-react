@@ -1,4 +1,5 @@
-import { type Vehicle, type VehicleForm } from '@schemas/mileage/vehicle'
+import { type Vehicle } from '@schemas/mileage/vehicle'
+import { type VehicleForm } from '@schemas/mileage/vehicleForm'
 
 export const getVehicleFormDefaultValues = (vehicle?: Vehicle): VehicleForm => {
   if (vehicle) {

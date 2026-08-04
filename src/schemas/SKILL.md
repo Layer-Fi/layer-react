@@ -27,21 +27,25 @@ schema shared by several domains belongs in `common/`, not in whichever domain r
 it first. Nothing sits at the root of `src/schemas` — every file is under a domain or
 `common/`.
 
-A file holds **one schema, or one cohesive collection of schemas** — an entity plus its
-`Type`/`Encoded` aliases and the enums only it uses, or the full shape of a single API
-response including the nested structs that exist only inside it. Name the file for that
-thing: `invoice.ts` exports `InvoiceSchema`. Unrelated siblings, request bodies, and
-separate endpoints' responses get their own files rather than accumulating in one.
+A file holds **one schema, or one cohesive collection** — an entity with its `Type`/`Encoded`
+aliases and own-use enums, or one API response including the structs nested only inside it.
+Name the file for that thing. Unrelated siblings, request bodies, and other endpoints'
+responses get their own file.
 
-A discriminated union whose arms are full structs in their own right gets a subfolder of
-one arm per file, with the union in the parent — `generalLedger/ledgerEntrySources/*.ts`
-feeding `LedgerEntrySourceSchema` in `generalLedger/ledgerEntrySource.ts`. A union of thin
-`Schema.extend`s over a shared base stays in one file (`bankTransactions/matchDetails.ts`).
+Keep an entity's three shapes in three files: `vehicle.ts` (GET response), `upsertVehicle.ts`
+(POST/PATCH body, wire shape), `vehicleForm.ts` (form state). They diverge in nullability and
+value types. Form schemas never carry `Schema.fromKey`, and are the only place
+`CalendarDateFromSelf`, `ZonedDateTimeFromSelf`, and `NonRecursiveBigDecimalSchema` belong —
+one of those in an API schema means a form schema leaked in.
 
-Functions belong here only when they operate purely on the schema — `decodeSync` wrappers,
-type guards, `Equivalence`. A function that maps a decoded value onto a UI or provider type
-goes in `src/utils/<domain>/` instead; see
-`src/utils/generalLedger/ledgerEntrySourceLinkingMetadata.ts`.
+A union whose arms are full structs gets a subfolder of one arm per file, union in the parent
+(`generalLedger/ledgerEntrySources/*` → `ledgerEntrySource.ts`). Where the backend declares a
+base contract — a Kotlin `sealed interface` with its own properties — mirror it as one
+`Schema.Struct` the arms `Schema.extend`, instead of repeating the fields per arm.
+
+Functions belong here only if they operate purely on the schema — `decodeSync` wrappers, type
+guards, `Equivalence`. One that maps a decoded value onto a UI or provider type goes in
+`src/utils/<domain>/`.
 
 Import with the `@schemas/*` alias — always the alias, never a relative path, even between
 files in the same domain. `src/schemas` must stay importable from anywhere
