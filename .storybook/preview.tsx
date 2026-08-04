@@ -24,10 +24,18 @@ initialize({
   },
 })
 
-setMinimumResponseDelay(250)
+// Mocked responses resolve instantly, so a floor keeps loading states visible instead of
+// flashing. Stories that capture settled UI opt out with `parameters.responseDelay: 0`.
+const DEFAULT_RESPONSE_DELAY = 250
+
+setMinimumResponseDelay(DEFAULT_RESPONSE_DELAY)
 
 const preview: Preview = {
   loaders: [() => resetMockStores(), mswLoader],
+  beforeEach: ({ parameters }: { parameters: { responseDelay?: number } }) => {
+    setMinimumResponseDelay(parameters.responseDelay ?? DEFAULT_RESPONSE_DELAY)
+    return () => setMinimumResponseDelay(DEFAULT_RESPONSE_DELAY)
+  },
   parameters: {
     msw: { handlers },
     layout: 'fullscreen',

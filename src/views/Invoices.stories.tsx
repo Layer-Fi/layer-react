@@ -35,7 +35,7 @@ export const Default: Story = {
 // detail view — the desktop table's rows aren't clickable — so this is a tablet story.
 export const Detail: Story = {
   tags: ['docs-screenshot'],
-  parameters: { chromatic: { viewports: [BREAKPOINTS.TABLET - 1] } },
+  parameters: { chromatic: { viewports: [BREAKPOINTS.TABLET - 1] }, responseDelay: 0 },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const [, firstInvoice] = await findEntryRows(canvas)
