@@ -35,8 +35,19 @@ const LINES_ROUTE = 'balance-sheet/lines'
 // The backend prefixes its synthetic balance-sheet row keys; account rows keep their stable name.
 const syntheticRowKey = (name: string) => `balance-sheet-${name}`
 
-const CURRENT_ASSET_SUBTYPES = ['CASH', 'BANK_ACCOUNTS', 'ACCOUNTS_RECEIVABLE', 'INVENTORY', 'UNDEPOSITED_FUNDS', 'PREPAID_EXPENSES']
-const CURRENT_LIABILITY_SUBTYPES = ['ACCOUNTS_PAYABLE', 'CREDIT_CARD', 'PAYROLL_LIABILITY', 'SALES_TAXES_PAYABLE', 'UNEARNED_REVENUE']
+// Subtypes whose backend SubtypeGroup is current: ACCOUNTS_RECEIVABLE, BANK,
+// PAYMENT_CLEARING, or OTHER_CURRENT_ASSETS. Everything else is non-current.
+const CURRENT_ASSET_SUBTYPES = [
+  'ACCOUNTS_RECEIVABLE', 'BANK_ACCOUNTS', 'CASH', 'CURRENT_ASSET', 'INVENTORY',
+  'PAYMENT_PROCESSOR_CLEARING_ACCOUNT', 'PREPAID_EXPENSES', 'UNDEPOSITED_FUNDS',
+]
+// Subtypes whose backend SubtypeGroup is current: ACCOUNTS_PAYABLE, CREDIT_CARD,
+// or OTHER_CURRENT_LIABILITIES. LONG_TERM_LIABILITY subtypes are non-current.
+const CURRENT_LIABILITY_SUBTYPES = [
+  'ACCOUNTS_PAYABLE', 'CREDIT_CARD', 'LINE_OF_CREDIT', 'OTHER_CURRENT_LIABILITY',
+  'OTHER_TAXES_PAYABLE', 'PAYROLL_LIABILITY', 'REFUND_LIABILITIES', 'SALES_TAXES_PAYABLE',
+  'TIPS', 'UNDEPOSITED_OUTFLOWS', 'UNEARNED_REVENUE',
+]
 
 type BalanceByAccountId = ReadonlyMap<string, number>
 

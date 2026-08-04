@@ -38,7 +38,7 @@ const SUMMARY_LINES = {
 } as const
 
 const isCogs = (account: SingleChartAccountType) => account.accountSubtype?.value === 'COGS'
-const isTaxes = (account: SingleChartAccountType) => account.stableName === 'TAXES'
+const isTaxes = (account: SingleChartAccountType) => account.accountSubtype?.value === 'TAXES_LICENSES'
 
 export const generateProfitAndLoss = (params: URLSearchParams): UnifiedReport => {
   const range = reportRangeFromParams(params)

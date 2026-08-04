@@ -8,8 +8,10 @@ import { type ReportConfig } from '@schemas/unifiedReports/reportConfig'
 import { type UnifiedReport, type UnifiedReportRow } from '@schemas/unifiedReports/unifiedReport'
 
 import {
-  accountActivityCents,
+  type AccountNode,
   accountsOfTypes,
+  buildAccountForest,
+  nodeActivityCents,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import { TOTAL_COLUMN_KEY } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'
 import {
@@ -81,18 +83,27 @@ const boxRowKey = (lineNumber: string) => `line_${lineNumber.toLowerCase().repla
 
 export const generateScheduleC = (params: URLSearchParams): UnifiedReport => {
   const range = yearRange(params)
-  const accounts = [
+  const forest = buildAccountForest([
     ...accountsOfTypes([LedgerAccountType.Revenue]),
     ...accountsOfTypes([LedgerAccountType.Expense]),
-  ]
+  ])
+
+  const nodesByStableName = new Map<string, AccountNode>()
+  const indexNodes = (nodes: readonly AccountNode[]) => nodes.forEach((node) => {
+    if (node.account.stableName) nodesByStableName.set(node.account.stableName, node)
+    indexNodes(node.children)
+  })
+  indexNodes(forest)
 
   const amountFor = (box: BoxLine) => {
-    const account = accounts.find(candidate => candidate.stableName === box.stableName)
-    if (!account) return { amount: 0, reportConfig: undefined }
+    const node = nodesByStableName.get(box.stableName)
+    if (!node) return { amount: 0, reportConfig: undefined }
 
     return {
-      amount: Math.abs(accountActivityCents(account, range, params)),
-      reportConfig: linesConfig(account, range),
+      // Leaf-only, matching how the P&L totals a parent, so a box that maps to an
+      // account with children (COST_OF_GOODS_SOLD, RETURNS_AND_ALLOWANCES) reconciles.
+      amount: Math.abs(nodeActivityCents(node, range, params)),
+      reportConfig: linesConfig(node.account, range),
     }
   }
 
