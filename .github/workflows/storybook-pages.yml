@@ -48,7 +48,7 @@ jobs:
       run: npm run storybook:build
       env:
         STORYBOOK_BASE_PATH: /${{ github.event.repository.name }}/
-        STORYBOOK_PUBLIC_ONLY: ${{ inputs.public_only }}
+        STORYBOOK_SCOPE: ${{ inputs.public_only && 'public' || '' }}
 
     - name: Upload Pages artifact
       uses: actions/upload-pages-artifact@v3
