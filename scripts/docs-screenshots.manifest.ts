@@ -49,6 +49,13 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     page: 'embedded-components/components/bank-transactions.mdx',
   },
   {
+    storyId: 'components-banktransactions--bookkeeping-disabled',
+    out: 'components/bank-transactions-categorization.png',
+    viewport: 'desktop',
+    maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,
+    page: 'embedded-components/components/bank-transactions.mdx',
+  },
+  {
     storyId: 'components-chartofaccounts--default',
     out: 'components/chart-of-accounts.png',
     viewport: 'desktop',
@@ -101,7 +108,8 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
   {
     storyId: 'components-profitandloss-detailedcharts--revenue',
     out: 'components/pnl-breakdown-charts.png',
-    viewport: 'desktop',
+    // The donut and its three-column table leave wide gaps at desktop width.
+    viewport: 'tablet',
     page: 'embedded-components/components/pnl-breakdown-charts.mdx',
   },
   {

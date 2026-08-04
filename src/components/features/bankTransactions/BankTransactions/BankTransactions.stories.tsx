@@ -1,4 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
+import { userEvent, within } from 'storybook/test'
 
 import { BookkeepingStatus } from '@schemas/bookkeeping/bookkeepingStatus'
 import { BankTransactions } from '@features/bankTransactions/BankTransactions/BankTransactions'
@@ -210,5 +211,21 @@ export const BookkeepingEnabled: Story = {
   },
 }
 
-// The global mock's status is NOT_PURCHASED, so categorization is enabled.
-export const BookkeepingDisabled: Story = {}
+// The global mock's status is NOT_PURCHASED, so categorization is enabled. The second row is
+// expanded to show the categorize/match form the first row's collapsed state can't convey.
+export const BookkeepingDisabled: Story = {
+  tags: ['docs-screenshot'],
+  parameters: { responseDelay: 0 },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    // The table sets `nonAria` to render expanded rows, so there are no `role="row"` nodes to
+    // count — the per-row toggles appearing is the signal that real transactions have landed.
+    const toggles = await canvas.findAllByRole(
+      'button',
+      { name: 'Toggle details' },
+      { timeout: 15_000 },
+    )
+    await userEvent.click(toggles[1])
+    await canvas.findByLabelText('Categorize or match transaction')
+  },
+}
