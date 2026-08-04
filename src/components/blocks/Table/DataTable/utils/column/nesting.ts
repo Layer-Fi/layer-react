@@ -1,6 +1,6 @@
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
-import { type BaseColumn, type DataTableColumn, getColumnMeta } from '@blocks/DataTable/utils/column'
+import { type BaseColumn, type DataTableColumn, getColumnMeta } from '@blocks/Table/DataTable/utils/column'
 
 export type GroupColumn<TData> = BaseColumn & {
   columns: ColumnNode<TData>[]

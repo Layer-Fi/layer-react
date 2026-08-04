@@ -6,11 +6,11 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 
-import { type BaseDataTableProps, type ClickableRowProps, DataTable } from '@blocks/DataTable/DataTable'
-import { type ColumnConfig } from '@blocks/DataTable/utils/column'
-import { getColumnPinning } from '@blocks/DataTable/utils/column/pinning'
-import { type DataTableExpandedRowProps } from '@blocks/DataTable/utils/rows/expandedRows'
-import { type DataTableSelectionProps, getColumnDefsWithSelection, getRowSelectionState } from '@blocks/DataTable/utils/rows/selection'
+import { type BaseDataTableProps, type ClickableRowProps, DataTable } from '@blocks/Table/DataTable/DataTable'
+import { type ColumnConfig } from '@blocks/Table/DataTable/utils/column'
+import { getColumnPinning } from '@blocks/Table/DataTable/utils/column/pinning'
+import { type DataTableExpandedRowProps } from '@blocks/Table/DataTable/utils/rows/expandedRows'
+import { type DataTableSelectionProps, getColumnDefsWithSelection, getRowSelectionState } from '@blocks/Table/DataTable/utils/rows/selection'
 
 const EMPTY_ARRAY: [] = []
 

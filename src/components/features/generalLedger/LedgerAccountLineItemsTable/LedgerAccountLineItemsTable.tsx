@@ -15,8 +15,8 @@ import { LedgerAccountsContext } from '@providers/generalLedger/LedgerAccountsCo
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
-import type { ColumnConfig } from '@blocks/DataTable/utils/column'
-import { PaginatedTable } from '@blocks/PaginatedDataTable/PaginatedDataTable'
+import type { ColumnConfig } from '@blocks/Table/DataTable/utils/column'
+import { PaginatedTable } from '@blocks/Table/PaginatedDataTable/PaginatedDataTable'
 
 import './ledgerAccountLineItemsTable.scss'
 

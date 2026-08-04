@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
-import { ExpandableDataTableContext } from '@blocks/ExpandableDataTable/ExpandableDataTableProvider'
+import { ExpandableDataTableContext } from '@blocks/Table/ExpandableDataTable/ExpandableDataTableProvider'
 
 type ExpandableDataTableToggleButtonProps = {
   icon?: boolean

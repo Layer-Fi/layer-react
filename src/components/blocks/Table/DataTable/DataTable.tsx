@@ -12,7 +12,7 @@ import {
   TableBody,
   TableHeader,
 } from '@ui/Table/Table'
-import { DataTableHeaderSkeleton, DataTableSkeleton, DEFAULT_SKELETON_COLUMNS } from '@blocks/DataTable/DataTableSkeleton'
+import { DataTableHeaderSkeleton, DataTableSkeleton, DEFAULT_SKELETON_COLUMNS } from '@blocks/Table/DataTable/DataTableSkeleton'
 import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
 import { ConditionalList } from '@components/utility/ConditionalList'
 
@@ -72,7 +72,7 @@ export const DataTable = <TData extends object>({
   const showLoadingFallbackHeaders = isLoading && numColumns === 0
   const isShowingFallbackRows = isLoading || isError || (data?.length ?? 0) === 0
 
-  const { headerRef, pinningStyles } = useColumnPinningStyles(headerGroups, { isEnabled: !isShowingFallbackRows })
+  const { pinningStyles } = useColumnPinningStyles(scrollContainerRef, headerGroups, { isEnabled: !isShowingFallbackRows })
   const getEffectivePinnedSide = useCallback(
     (pinned: false | 'left' | 'right') => isShowingFallbackRows ? false : pinned,
     [isShowingFallbackRows],
@@ -144,7 +144,7 @@ export const DataTable = <TData extends object>({
         )}
         nonAria={nonAria}
       >
-        <TableHeader ref={headerRef} nonAria={nonAria} dependencies={dependencies}>
+        <TableHeader nonAria={nonAria} dependencies={dependencies}>
           {renderHeaderContent}
         </TableHeader>
         <TableBody dependencies={dependencies} nonAria={nonAria}>

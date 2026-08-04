@@ -13,10 +13,10 @@ import {
   type BaseDataTableProps,
   type ClickableRowProps,
   DataTable,
-} from '@blocks/DataTable/DataTable'
-import { getColumnDefs, isLeafColumn, type NestedColumnConfig } from '@blocks/DataTable/utils/column/nesting'
-import { getColumnPinning } from '@blocks/DataTable/utils/column/pinning'
-import { ExpandableDataTableContext } from '@blocks/ExpandableDataTable/ExpandableDataTableProvider'
+} from '@blocks/Table/DataTable/DataTable'
+import { getColumnDefs, isLeafColumn, type NestedColumnConfig } from '@blocks/Table/DataTable/utils/column/nesting'
+import { getColumnPinning } from '@blocks/Table/DataTable/utils/column/pinning'
+import { ExpandableDataTableContext } from '@blocks/Table/ExpandableDataTable/ExpandableDataTableProvider'
 
 import './expandableDataTable.scss'
 

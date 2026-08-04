@@ -7,7 +7,7 @@ import { useDebouncedSearchProps } from '@hooks/utils/debouncing/useDebouncedSea
 import { useTripsTableFilters } from '@providers/mileage/TripsRouteStore/TripsRouteStoreProvider'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
-import { DataTableHeader } from '@blocks/DataTable/DataTableHeader'
+import { DataTableHeader } from '@blocks/Table/DataTable/DataTableHeader'
 import { TripPurposeToggle } from '@features/mileage/TripPurposeToggle/TripPurposeToggle'
 import { TripsHeaderMenu } from '@features/mileage/TripsHeaderMenu/TripsHeaderMenu'
 
