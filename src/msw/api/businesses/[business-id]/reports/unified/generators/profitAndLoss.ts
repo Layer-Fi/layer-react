@@ -39,6 +39,13 @@ const SUMMARY_LINES = {
 const isCogs = (account: SingleChartAccountType) => account.accountSubtype?.value === 'COGS'
 const isTaxes = (account: SingleChartAccountType) => account.stableName === 'TAXES'
 
+// A section rooted at its own chart account is that account, so the root is not repeated as a child.
+const sectionChildren = (name: string, forest: readonly AccountNode[]): readonly AccountNode[] => {
+  const [root] = forest
+
+  return forest.length === 1 && root.account.stableName === name ? root.children : forest
+}
+
 export const generateProfitAndLoss = (params: URLSearchParams): UnifiedReport => {
   const range = reportRangeFromParams(params)
   const periods = resolvePeriods(range, params.get('group_by'))
@@ -74,7 +81,7 @@ export const generateProfitAndLoss = (params: URLSearchParams): UnifiedReport =>
     name,
     displayName,
     amounts: periodAmounts(periods, sectionTotal(sections[name])),
-    childItems: sections[name].map(node => accountLineItem(node, periods)),
+    childItems: sectionChildren(name, sections[name]).map(node => accountLineItem(node, periods)),
   })
 
   const summaryLineItem = (

@@ -138,10 +138,7 @@ export const parseDateRangeParams = (params: URLSearchParams, fallback: ReportDa
 export const parseEffectiveDateParam = (params: URLSearchParams) =>
   parseDateParam(params.get('effective_date'), new Date())
 
-/*
- * Reports driven by a single effective date (balance sheet, trial balance)
- * hand their drill-downs a trailing window so detail rows have data to show.
- */
+// Effective-date reports hand drill-downs a trailing window so detail rows have data to show.
 export const trailingRangeFrom = (effectiveDate: Date): ReportDateRange => ({
   startDate: subMonths(effectiveDate, 11),
   endDate: effectiveDate,
@@ -161,22 +158,14 @@ export const reportingBasisBaseParams = (params: URLSearchParams): Record<string
   return reportingBasis ? { reporting_basis: reportingBasis } : {}
 }
 
-/*
- * Base parameters for a date-controlled report's drill-down: bake the exact
- * accumulation window and reporting basis so detail totals match the parent
- * cell (the detail route is date-range based, unlike the as-of parent).
- */
+// The detail route is date-range based, so bake the parent's exact window in to reconcile.
 export const detailBaseParams = (range: ReportDateRange, params: URLSearchParams): Record<string, string> => ({
   start_date: isoDate(range.startDate),
   end_date: isoDate(range.endDate),
   ...reportingBasisBaseParams(params),
 })
 
-/*
- * Scales the shared amount engine per account class so mock financials look
- * plausible: revenue dominates the (more numerous) expense accounts, and
- * contra accounts stay small.
- */
+// Keeps mock financials plausible: revenue dominates the more numerous expense accounts.
 export const isContraAccount = (account: SingleChartAccountType): boolean =>
   account.normality !== (
     account.accountType.value === LedgerAccountType.Asset || account.accountType.value === LedgerAccountType.Expense

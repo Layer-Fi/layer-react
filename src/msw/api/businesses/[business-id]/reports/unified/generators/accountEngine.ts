@@ -59,11 +59,7 @@ export const accountStreamKey = (account: SingleChartAccountType): string =>
 export const accountSign = (account: SingleChartAccountType): number =>
   isContraAccount(account) ? -1 : 1
 
-/*
- * Only leaf accounts have entry streams; parent rows are pure subtotals of
- * their descendants. Positive magnitudes on the account's normal side, so the
- * trial balance (which signs via the debit/credit column) reconciles here.
- */
+// Unsigned magnitudes on the account's normal side, so the trial balance can sign via its column.
 export const accountMagnitudeEntriesInRange = (
   account: SingleChartAccountType,
   { startDate, endDate }: ReportDateRange,
@@ -75,10 +71,7 @@ export const accountMagnitudeEntriesInRange = (
   entryStreamOptionsFromParams(params, accountMagnitude(account)),
 )
 
-/*
- * Entries carry the account's sign so contra accounts subtract from section
- * totals, in both summary cells and drill-down lines.
- */
+// Signed so contra accounts subtract from section totals, in summary cells and drill-downs alike.
 export const accountEntriesInRange = (
   account: SingleChartAccountType,
   range: ReportDateRange,
@@ -112,7 +105,7 @@ export const sumActivityCents = (
 
 type ForestRowOptions = {
   nameColumnKey: string
-  /** isLeaf lets callers put drill-downs on leaf amounts only; parent rows are subtotals with nothing to drill into. */
+  /** Parent rows are subtotals with nothing to drill into, so only leaves take a drill-down. */
   valueCells: (node: AccountNode, isLeaf: boolean) => UnifiedReportRow['cells']
 }
 

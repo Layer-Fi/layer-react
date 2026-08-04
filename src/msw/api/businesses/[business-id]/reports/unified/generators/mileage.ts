@@ -1,3 +1,4 @@
+import { getLocalTimeZone } from '@internationalized/date'
 import { BigDecimal } from 'effect'
 
 import { type UnifiedReport } from '@schemas/reports/unifiedReport'
@@ -19,7 +20,8 @@ import {
 
 const COLUMNS: ColumnHeaderKey[] = ['date', 'customer', 'description', 'distance']
 
-const tripDate = (trip: Trip) => trip.tripDate.toDate('UTC')
+// Range bounds arrive as local dates, so the calendar date resolves in the same zone.
+const tripDate = (trip: Trip) => trip.tripDate.toDate(getLocalTimeZone())
 
 const totalDistance = (trips: readonly Trip[]) =>
   trips.reduce((total, trip) => total + BigDecimal.unsafeToNumber(trip.distance), 0)

@@ -129,7 +129,6 @@ export const generateBalanceSheet = (params: URLSearchParams): UnifiedReport => 
   const sumOf = (items: readonly ReportLineItem[]) =>
     sumBy(items, item => item.amounts[TOTAL_COLUMN_KEY])
 
-  // The balance-sheet column is labelled with its as-of date rather than "Total".
   return lineItemTreeReport([numericColumn(TOTAL_COLUMN_KEY, format(effectiveDate, 'MMMM d, yyyy'))], [
     {
       name: syntheticRowKey('ASSETS'),

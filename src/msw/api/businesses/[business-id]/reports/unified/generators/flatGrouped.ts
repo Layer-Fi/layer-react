@@ -10,7 +10,6 @@ import {
   unifiedReport,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 
-// The shape shared by the transaction-level reports: expenses, income, mileage, time tracking.
 export type FlatGroup<Item> = {
   rowKey: string
   label: string

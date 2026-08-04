@@ -58,8 +58,7 @@ export const generateTrialBalance = (params: URLSearchParams): UnifiedReport => 
   const plugMagnitude = Math.abs(debitSum - creditSum)
   const plugOnDebit = debitSum < creditSum
 
-  // Drill-downs bake the same accumulation window as the parent so detail totals match the account's balance.
-  // unsigned keeps detail rows on the account's normal side, matching the magnitude shown in the debit/credit cell.
+  // Bake the parent's window, and keep detail unsigned to match the debit/credit magnitude shown.
   const baseParams = { ...detailBaseParams(balanceSheetRange(effectiveDate), params), unsigned: 'true' }
 
   const accountRow = (

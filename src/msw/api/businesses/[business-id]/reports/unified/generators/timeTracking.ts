@@ -1,3 +1,5 @@
+import { getLocalTimeZone } from '@internationalized/date'
+
 import { type UnifiedReport } from '@schemas/reports/unifiedReport'
 import { type TimeEntry } from '@schemas/timeTracking'
 
@@ -18,7 +20,8 @@ import { timeEntryStore } from '@msw/api/businesses/[business-id]/time-tracking/
 
 const COLUMNS: ColumnHeaderKey[] = ['date', 'service', 'customer', 'description', 'duration']
 
-const entryDate = (entry: TimeEntry) => entry.date.toDate('UTC')
+// Range bounds arrive as local dates, so the calendar date resolves in the same zone.
+const entryDate = (entry: TimeEntry) => entry.date.toDate(getLocalTimeZone())
 
 const totalMinutes = (entries: readonly TimeEntry[]) =>
   entries.reduce((total, entry) => total + entry.durationMinutes, 0)

@@ -27,11 +27,7 @@ export const balanceSheetRange = (effectiveDate: Date): ReportDateRange => ({
   endDate: effectiveDate,
 })
 
-/*
- * Positive magnitude of a leaf account's accumulated activity through the
- * effective date. The trial balance places this on the account's normal side,
- * so the sign lives in the column, not the number.
- */
+// Unsigned: the trial balance carries the sign in its debit/credit column, not the number.
 export const accumulatedMagnitudeCents = (
   account: SingleChartAccountType,
   effectiveDate: Date,
@@ -43,11 +39,7 @@ export const accumulatedMagnitudeCents = (
   entryStreamOptionsFromParams(params, accountMagnitude(account)),
 )
 
-/*
- * Signed leaf balance for the balance sheet: contra accounts (accumulated
- * depreciation, distributions) subtract from their section, matching how the
- * P&L signs the same accounts.
- */
+// Signed, so contra accounts reduce their section the same way the P&L signs them.
 export const leafBalanceCents = (
   account: SingleChartAccountType,
   effectiveDate: Date,
