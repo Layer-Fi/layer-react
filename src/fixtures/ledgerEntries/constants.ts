@@ -1,6 +1,6 @@
 export const zeroBalanceStableNames = [
   'PREPAID_EXPENSES',
-  'PAYMENT_PROCESSING_FEES',
+  'OTHER_FEES',
   'OPENING_BALANCE_EQUITY',
 ]
 

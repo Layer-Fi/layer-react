@@ -36,7 +36,7 @@ const PART_I_INCOME: BoxLine[] = [
 
 const PART_II_EXPENSES: BoxLine[] = [
   { lineNumber: '8', lineName: 'Advertising', stableName: 'MARKETING' },
-  { lineNumber: '17', lineName: 'Legal and professional services', stableName: 'PROFESSIONAL_SERVICES' },
+  { lineNumber: '17', lineName: 'Legal and professional services', stableName: 'OTHER_BUSINESS_EXPENSES' },
   { lineNumber: '18', lineName: 'Office expense', stableName: 'OFFICE_EXPENSES' },
   { lineNumber: '20b', lineName: 'Rent or lease (other business property)', stableName: 'RENT' },
   { lineNumber: '22', lineName: 'Supplies', stableName: 'SOFTWARE' },
@@ -51,7 +51,7 @@ const PART_III_COGS: BoxLine[] = [
 ]
 
 const PART_V_OTHER_EXPENSES: BoxLine[] = [
-  { lineNumber: '48a', lineName: 'Interest and bank fees', stableName: 'INTEREST_EXPENSE' },
+  { lineNumber: '48a', lineName: 'Interest and bank fees', stableName: 'BANK_FEES' },
 ]
 
 const SYNTHETIC_LINES = {

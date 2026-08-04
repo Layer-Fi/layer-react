@@ -20,18 +20,18 @@ export const ledgerEntries = [
         "id": "0000000a-0fe8-46b0-8615-ec8a604b7930",
         "entryId": "0000000a-8cd8-4655-87c6-902892731c77",
         "account": {
-          "name": "Legal and Professional Services",
-          "stableName": "PROFESSIONAL_SERVICES",
+          "name": "Other Tax",
+          "stableName": "OTHER_TAXES",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
             "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "TAXES_LICENSES",
+            "displayName": "Taxes & Licenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000041",
+          "accountId": "00000009-0000-4000-8000-000000000067",
           "accountNumber": null
         },
         "amount": 150000,
@@ -47,18 +47,18 @@ export const ledgerEntries = [
         "id": "0000000a-2b87-4e2e-89b9-4c6bccd5ff2a",
         "entryId": "0000000a-8cd8-4655-87c6-902892731c77",
         "account": {
-          "name": "Uncategorized Expenses",
-          "stableName": "UNCATEGORIZED_EXPENSES",
+          "name": "Cash",
+          "stableName": "CASH",
           "normality": "DEBIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "ASSET",
+            "displayName": "Assets"
           },
           "accountSubtype": {
-            "value": "UNCATEGORIZED_EXPENSE",
-            "displayName": "Uncategorized Expense"
+            "value": "CASH",
+            "displayName": "Cash"
           },
-          "accountId": "00000009-0000-4000-8000-000000000042",
+          "accountId": "00000009-0000-4000-8000-000000000001",
           "accountNumber": null
         },
         "amount": 279600,
@@ -74,18 +74,18 @@ export const ledgerEntries = [
         "id": "0000000a-7311-499c-84ea-6182068c156a",
         "entryId": "0000000a-8cd8-4655-87c6-902892731c77",
         "account": {
-          "name": "Employee Wages",
-          "stableName": "PAYROLL_REGULAR_WAGES",
+          "name": "Bank Accounts",
+          "stableName": "BANK_ACCOUNTS",
           "normality": "DEBIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "ASSET",
+            "displayName": "Assets"
           },
           "accountSubtype": {
-            "value": "PAYROLL",
-            "displayName": "Payroll"
+            "value": "BANK_ACCOUNTS",
+            "displayName": "Bank Accounts"
           },
-          "accountId": "00000009-0000-4000-8000-000000000044",
+          "accountId": "00000009-0000-4000-8000-000000000002",
           "accountNumber": null
         },
         "amount": 150000,
@@ -101,18 +101,18 @@ export const ledgerEntries = [
         "id": "0000000a-9231-4c21-88b9-655b7703f901",
         "entryId": "0000000a-8cd8-4655-87c6-902892731c77",
         "account": {
-          "name": "Contractors",
-          "stableName": "PAYROLL_CONTRACTORS",
+          "name": "Accounts Receivable (A/R)",
+          "stableName": "ACCOUNTS_RECEIVABLE",
           "normality": "DEBIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "ASSET",
+            "displayName": "Assets"
           },
           "accountSubtype": {
-            "value": "PAYROLL",
-            "displayName": "Payroll"
+            "value": "ACCOUNTS_RECEIVABLE",
+            "displayName": "Accounts Receivable"
           },
-          "accountId": "00000009-0000-4000-8000-000000000045",
+          "accountId": "00000009-0000-4000-8000-000000000003",
           "accountNumber": null
         },
         "amount": 279600,
@@ -158,24 +158,24 @@ export const ledgerEntries = [
     "reversalId": null,
     "lineItems": [
       {
-        "id": "0000000a-dde8-4017-8398-6eb3fb5b9b12",
+        "id": "0000000a-7e3d-4e88-8171-9836eb3fb5b9",
         "entryId": "0000000a-a997-44b8-81cd-da3f2f6c628d",
         "account": {
-          "name": "Software",
-          "stableName": "SOFTWARE",
+          "name": "Income Tax",
+          "stableName": "INCOME_TAXES",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
             "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "TAXES_LICENSES",
+            "displayName": "Taxes & Licenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000037",
+          "accountId": "00000009-0000-4000-8000-000000000065",
           "accountNumber": null
         },
-        "amount": 397200,
+        "amount": 282100,
         "direction": "DEBIT",
         "customer": null,
         "vendor": null,
@@ -185,24 +185,24 @@ export const ledgerEntries = [
         "entryReversedBy": null
       },
       {
-        "id": "0000000a-9540-433f-8bd8-4f327ff007ea",
+        "id": "0000000a-1249-440f-83ff-d814f327ff00",
         "entryId": "0000000a-a997-44b8-81cd-da3f2f6c628d",
         "account": {
-          "name": "Bank Fees",
-          "stableName": "BANK_FEES",
+          "name": "Payroll Tax",
+          "stableName": "PAYROLL_TAXES",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
             "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "TAXES_LICENSES",
+            "displayName": "Taxes & Licenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000039",
+          "accountId": "00000009-0000-4000-8000-000000000066",
           "accountNumber": null
         },
-        "amount": 397200,
+        "amount": 282100,
         "direction": "CREDIT",
         "customer": null,
         "vendor": null,
@@ -224,7 +224,7 @@ export const ledgerEntries = [
       "amount": 250000
     },
     "transactionTags": [],
-    "memo": "Software subscription",
+    "memo": "Owner contribution",
     "metadata": null,
     "referenceNumber": null
   },
@@ -246,8 +246,8 @@ export const ledgerEntries = [
         "id": "0000000a-0873-4567-8925-29362dd304ef",
         "entryId": "0000000a-1ede-4b9a-853e-e140dedfaae9",
         "account": {
-          "name": "Business Travel",
-          "stableName": "TRAVEL",
+          "name": "Phone",
+          "stableName": "PHONE",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
@@ -257,7 +257,7 @@ export const ledgerEntries = [
             "value": "OPERATING_EXPENSES",
             "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000035",
+          "accountId": "00000009-0000-4000-8000-000000000062",
           "accountNumber": null
         },
         "amount": 1200,
@@ -273,18 +273,18 @@ export const ledgerEntries = [
         "id": "0000000a-2928-46f1-8f9d-52c0a42d61cb",
         "entryId": "0000000a-1ede-4b9a-853e-e140dedfaae9",
         "account": {
-          "name": "Business Meals",
-          "stableName": "MEALS",
+          "name": "Sales Tax",
+          "stableName": "SALES_TAXES",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
             "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "TAXES_LICENSES",
+            "displayName": "Taxes & Licenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000036",
+          "accountId": "00000009-0000-4000-8000-000000000064",
           "accountNumber": null
         },
         "amount": 1200,
@@ -332,11 +332,11 @@ export const ledgerEntries = [
     "reversalId": null,
     "lineItems": [
       {
-        "id": "0000000a-951f-43a4-835f-efef913589e8",
+        "id": "0000000a-c951-413a-8435-2efef913589e",
         "entryId": "0000000a-9674-4a09-8be5-e44adb62d3a5",
         "account": {
-          "name": "Marketing",
-          "stableName": "MARKETING",
+          "name": "Bad Debt",
+          "stableName": "BAD_DEBT",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
@@ -346,10 +346,10 @@ export const ledgerEntries = [
             "value": "OPERATING_EXPENSES",
             "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000033",
+          "accountId": "00000009-0000-4000-8000-000000000060",
           "accountNumber": null
         },
-        "amount": 6600,
+        "amount": 144700,
         "direction": "DEBIT",
         "customer": null,
         "vendor": null,
@@ -359,11 +359,11 @@ export const ledgerEntries = [
         "entryReversedBy": null
       },
       {
-        "id": "0000000a-3937-486d-8477-248957c5d17a",
+        "id": "0000000a-2393-4e86-8a47-6248957c5d17",
         "entryId": "0000000a-9674-4a09-8be5-e44adb62d3a5",
         "account": {
-          "name": "Office Expenses",
-          "stableName": "OFFICE_EXPENSES",
+          "name": "Equipment & Machinery",
+          "stableName": "EQUIPMENT",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
@@ -373,10 +373,10 @@ export const ledgerEntries = [
             "value": "OPERATING_EXPENSES",
             "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000034",
+          "accountId": "00000009-0000-4000-8000-000000000061",
           "accountNumber": null
         },
-        "amount": 6600,
+        "amount": 144700,
         "direction": "CREDIT",
         "customer": null,
         "vendor": null,
@@ -399,7 +399,7 @@ export const ledgerEntries = [
       }
     },
     "transactionTags": [],
-    "memo": "Owner contribution",
+    "memo": "Loan repayment",
     "metadata": null,
     "referenceNumber": null
   },
@@ -421,18 +421,18 @@ export const ledgerEntries = [
         "id": "0000000a-1fa7-4f5f-8c79-fed2f23c0cf4",
         "entryId": "0000000a-68f6-46d7-8157-9fe9416cf7c8",
         "account": {
-          "name": "Cost of Goods Sold",
-          "stableName": "COST_OF_GOODS_SOLD",
+          "name": "Business Meals",
+          "stableName": "MEALS",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
             "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "COGS",
-            "displayName": "COGS"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000028",
+          "accountId": "00000009-0000-4000-8000-000000000054",
           "accountNumber": null
         },
         "amount": 284900,
@@ -448,8 +448,8 @@ export const ledgerEntries = [
         "id": "0000000a-d5b6-429d-8b2e-fdef1652e6d2",
         "entryId": "0000000a-68f6-46d7-8157-9fe9416cf7c8",
         "account": {
-          "name": "Rent",
-          "stableName": "RENT",
+          "name": "Software",
+          "stableName": "SOFTWARE",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
@@ -459,7 +459,7 @@ export const ledgerEntries = [
             "value": "OPERATING_EXPENSES",
             "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000030",
+          "accountId": "00000009-0000-4000-8000-000000000055",
           "accountNumber": null
         },
         "amount": 2200,
@@ -475,8 +475,8 @@ export const ledgerEntries = [
         "id": "0000000a-39db-4dc9-87be-774a068e1ba4",
         "entryId": "0000000a-68f6-46d7-8157-9fe9416cf7c8",
         "account": {
-          "name": "Utilities",
-          "stableName": "UTILITIES",
+          "name": "Bank Fees",
+          "stableName": "BANK_FEES",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
@@ -486,7 +486,7 @@ export const ledgerEntries = [
             "value": "OPERATING_EXPENSES",
             "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000031",
+          "accountId": "00000009-0000-4000-8000-000000000057",
           "accountNumber": null
         },
         "amount": 284900,
@@ -502,8 +502,8 @@ export const ledgerEntries = [
         "id": "0000000a-378f-4170-8ac8-0ec903906355",
         "entryId": "0000000a-68f6-46d7-8157-9fe9416cf7c8",
         "account": {
-          "name": "Business Insurance",
-          "stableName": "INSURANCE",
+          "name": "Other Business Expenses",
+          "stableName": "OTHER_BUSINESS_EXPENSES",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
@@ -513,7 +513,7 @@ export const ledgerEntries = [
             "value": "OPERATING_EXPENSES",
             "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000032",
+          "accountId": "00000009-0000-4000-8000-000000000059",
           "accountNumber": null
         },
         "amount": 2200,
@@ -562,18 +562,18 @@ export const ledgerEntries = [
         "id": "0000000a-ba32-4009-8bbe-3a1005817b33",
         "entryId": "0000000a-cf92-4618-8c78-1eb1d384fe4e",
         "account": {
-          "name": "Sales",
-          "stableName": "SALES",
-          "normality": "CREDIT",
+          "name": "Marketing",
+          "stableName": "MARKETING",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "REVENUE",
-            "displayName": "Revenue"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "SALES",
-            "displayName": "Sales"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000024",
+          "accountId": "00000009-0000-4000-8000-000000000051",
           "accountNumber": null
         },
         "amount": 1600,
@@ -589,18 +589,18 @@ export const ledgerEntries = [
         "id": "0000000a-93f3-4ae3-8aee-d53f078c975d",
         "entryId": "0000000a-cf92-4618-8c78-1eb1d384fe4e",
         "account": {
-          "name": "Uncategorized Revenue",
-          "stableName": "UNCATEGORIZED_REVENUE",
-          "normality": "CREDIT",
+          "name": "Office Expenses",
+          "stableName": "OFFICE_EXPENSES",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "REVENUE",
-            "displayName": "Revenue"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "UNCATEGORIZED_REVENUE",
-            "displayName": "Uncategorized Revenue"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000025",
+          "accountId": "00000009-0000-4000-8000-000000000052",
           "accountNumber": null
         },
         "amount": 1400,
@@ -616,18 +616,18 @@ export const ledgerEntries = [
         "id": "0000000a-ba58-47f2-89ff-44bba40632df",
         "entryId": "0000000a-cf92-4618-8c78-1eb1d384fe4e",
         "account": {
-          "name": "Returns and Allowances",
-          "stableName": "RETURNS_AND_ALLOWANCES",
+          "name": "Business Travel",
+          "stableName": "TRAVEL",
           "normality": "DEBIT",
           "accountType": {
-            "value": "REVENUE",
-            "displayName": "Revenue"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "RETURNS_ALLOWANCES",
-            "displayName": "Returns & Allowances"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000026",
+          "accountId": "00000009-0000-4000-8000-000000000053",
           "accountNumber": null
         },
         "amount": 3000,
@@ -680,18 +680,18 @@ export const ledgerEntries = [
         "id": "0000000a-21d1-4801-89ee-99f5ec757c45",
         "entryId": "0000000a-d7ab-4b6c-89b3-4d8e1ad387a3",
         "account": {
-          "name": "Distributions",
-          "stableName": "DISTRIBUTIONS",
+          "name": "Rent",
+          "stableName": "RENT",
           "normality": "DEBIT",
           "accountType": {
-            "value": "EQUITY",
-            "displayName": "Equities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "DISTRIBUTIONS",
-            "displayName": "Distributions"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000019",
+          "accountId": "00000009-0000-4000-8000-000000000048",
           "accountNumber": null
         },
         "amount": 266700,
@@ -707,18 +707,18 @@ export const ledgerEntries = [
         "id": "0000000a-24ff-461d-8edb-d02217c1d82a",
         "entryId": "0000000a-d7ab-4b6c-89b3-4d8e1ad387a3",
         "account": {
-          "name": "Common Stock",
-          "stableName": "COMMON_STOCK",
-          "normality": "CREDIT",
+          "name": "Utilities",
+          "stableName": "UTILITIES",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "EQUITY",
-            "displayName": "Equities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "COMMON_STOCK",
-            "displayName": "Common Stock"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000020",
+          "accountId": "00000009-0000-4000-8000-000000000049",
           "accountNumber": null
         },
         "amount": 1400,
@@ -734,18 +734,18 @@ export const ledgerEntries = [
         "id": "0000000a-61a3-433e-8515-41e87080ee43",
         "entryId": "0000000a-d7ab-4b6c-89b3-4d8e1ad387a3",
         "account": {
-          "name": "Retained Earnings",
-          "stableName": "RETAINED_EARNINGS",
-          "normality": "CREDIT",
+          "name": "Business Insurance",
+          "stableName": "INSURANCE",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "EQUITY",
-            "displayName": "Equities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "RETAINED_EARNINGS",
-            "displayName": "Retained Earnings"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000021",
+          "accountId": "00000009-0000-4000-8000-000000000050",
           "accountNumber": null
         },
         "amount": 265300,
@@ -791,18 +791,18 @@ export const ledgerEntries = [
         "id": "0000000a-7335-431e-8dcb-0b87b39899c6",
         "entryId": "0000000a-8d1f-4435-8000-20503d7a5a9a",
         "account": {
-          "name": "Notes Payable",
-          "stableName": "NOTES_PAYABLE",
-          "normality": "CREDIT",
+          "name": "Contractors",
+          "stableName": "PAYROLL_CONTRACTORS",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "LIABILITY",
-            "displayName": "Liabilities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "NOTES_PAYABLE",
-            "displayName": "Notes Payable"
+            "value": "PAYROLL",
+            "displayName": "Payroll"
           },
-          "accountId": "00000009-0000-4000-8000-000000000016",
+          "accountId": "00000009-0000-4000-8000-000000000046",
           "accountNumber": null
         },
         "amount": 70500,
@@ -818,18 +818,18 @@ export const ledgerEntries = [
         "id": "0000000a-4645-4162-8ea4-66314e377aa2",
         "entryId": "0000000a-8d1f-4435-8000-20503d7a5a9a",
         "account": {
-          "name": "Contributions",
-          "stableName": "CONTRIBUTIONS",
-          "normality": "CREDIT",
+          "name": "Payroll Fees",
+          "stableName": "PAYROLL_FEES",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "EQUITY",
-            "displayName": "Equities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "CONTRIBUTIONS",
-            "displayName": "Contributions"
+            "value": "PAYROLL",
+            "displayName": "Payroll"
           },
-          "accountId": "00000009-0000-4000-8000-000000000018",
+          "accountId": "00000009-0000-4000-8000-000000000047",
           "accountNumber": null
         },
         "amount": 70500,
@@ -869,24 +869,24 @@ export const ledgerEntries = [
     "reversalId": null,
     "lineItems": [
       {
-        "id": "0000000a-4dc4-4bb7-877d-6b857595610a",
+        "id": "0000000a-a4dc-4cbb-8677-a6b857595610",
         "entryId": "0000000a-a03b-4bdd-83a9-ee08b83c7bf1",
         "account": {
-          "name": "Sales Taxes Payable",
-          "stableName": "SALES_TAXES_PAYABLE",
-          "normality": "CREDIT",
+          "name": "Uncategorized Expenses",
+          "stableName": "UNCATEGORIZED_EXPENSES",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "LIABILITY",
-            "displayName": "Liabilities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "SALES_TAXES_PAYABLE",
-            "displayName": "Sales Taxes Payable"
+            "value": "UNCATEGORIZED_EXPENSE",
+            "displayName": "Uncategorized Expense"
           },
-          "accountId": "00000009-0000-4000-8000-000000000013",
+          "accountId": "00000009-0000-4000-8000-000000000043",
           "accountNumber": null
         },
-        "amount": 143000,
+        "amount": 267100,
         "direction": "DEBIT",
         "customer": null,
         "vendor": null,
@@ -896,51 +896,24 @@ export const ledgerEntries = [
         "entryReversedBy": null
       },
       {
-        "id": "0000000a-8d5e-4dcc-8b33-22ce8a74986a",
+        "id": "0000000a-78d5-4adc-82b3-a22ce8a74986",
         "entryId": "0000000a-a03b-4bdd-83a9-ee08b83c7bf1",
         "account": {
-          "name": "Unearned Revenue",
-          "stableName": "UNEARNED_REVENUE",
-          "normality": "CREDIT",
+          "name": "Employee Wages",
+          "stableName": "PAYROLL_REGULAR_WAGES",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "LIABILITY",
-            "displayName": "Liabilities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "UNEARNED_REVENUE",
-            "displayName": "Unearned Revenue"
+            "value": "PAYROLL",
+            "displayName": "Payroll"
           },
-          "accountId": "00000009-0000-4000-8000-000000000014",
+          "accountId": "00000009-0000-4000-8000-000000000045",
           "accountNumber": null
         },
-        "amount": 1900,
-        "direction": "CREDIT",
-        "customer": null,
-        "vendor": null,
-        "entryAt": new Date("2025-10-10T12:00:00.000Z"),
-        "createdAt": new Date("2025-10-10T12:00:00.000Z"),
-        "entryReversalOf": null,
-        "entryReversedBy": null
-      },
-      {
-        "id": "0000000a-de3c-477b-80b9-528789dd8218",
-        "entryId": "0000000a-a03b-4bdd-83a9-ee08b83c7bf1",
-        "account": {
-          "name": "Lines of Credit",
-          "stableName": "LINE_OF_CREDIT",
-          "normality": "CREDIT",
-          "accountType": {
-            "value": "LIABILITY",
-            "displayName": "Liabilities"
-          },
-          "accountSubtype": {
-            "value": "LINE_OF_CREDIT",
-            "displayName": "Lines of Credit"
-          },
-          "accountId": "00000009-0000-4000-8000-000000000015",
-          "accountNumber": null
-        },
-        "amount": 141100,
+        "amount": 267100,
         "direction": "CREDIT",
         "customer": null,
         "vendor": null,
@@ -965,7 +938,7 @@ export const ledgerEntries = [
       }
     },
     "transactionTags": [],
-    "memo": "Client invoice payment",
+    "memo": "Owner contribution",
     "metadata": null,
     "referenceNumber": null
   },
@@ -987,18 +960,18 @@ export const ledgerEntries = [
         "id": "0000000a-d724-45ed-8e24-acf37af43d98",
         "entryId": "0000000a-68f0-4b4d-8a23-03561dbb5a03",
         "account": {
-          "name": "Accounts Payable (A/P)",
-          "stableName": "ACCOUNTS_PAYABLE",
-          "normality": "CREDIT",
+          "name": "Customer Refunds",
+          "stableName": "CUSTOMER_REFUNDS",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "LIABILITY",
-            "displayName": "Liabilities"
+            "value": "REVENUE",
+            "displayName": "Revenue"
           },
           "accountSubtype": {
-            "value": "ACCOUNTS_PAYABLE",
-            "displayName": "Accounts Payable"
+            "value": "RETURNS_ALLOWANCES",
+            "displayName": "Returns & Allowances"
           },
-          "accountId": "00000009-0000-4000-8000-000000000010",
+          "accountId": "00000009-0000-4000-8000-000000000037",
           "accountNumber": null
         },
         "amount": 129900,
@@ -1014,18 +987,18 @@ export const ledgerEntries = [
         "id": "0000000a-fe15-4a00-8ba2-865721db48db",
         "entryId": "0000000a-68f0-4b4d-8a23-03561dbb5a03",
         "account": {
-          "name": "Credit Cards",
-          "stableName": "CREDIT_CARDS",
-          "normality": "CREDIT",
+          "name": "Items for Resale",
+          "stableName": "ITEMS_FOR_RESALE",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "LIABILITY",
-            "displayName": "Liabilities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "CREDIT_CARD",
-            "displayName": "Credit Cards"
+            "value": "COGS",
+            "displayName": "COGS"
           },
-          "accountId": "00000009-0000-4000-8000-000000000011",
+          "accountId": "00000009-0000-4000-8000-000000000040",
           "accountNumber": null
         },
         "amount": 46000,
@@ -1041,18 +1014,18 @@ export const ledgerEntries = [
         "id": "0000000a-8ba3-4850-8b41-1427c757bc9e",
         "entryId": "0000000a-68f0-4b4d-8a23-03561dbb5a03",
         "account": {
-          "name": "Payroll Liabilities",
-          "stableName": "PAYROLL_LIABILITIES",
-          "normality": "CREDIT",
+          "name": "Materials for Sold Goods",
+          "stableName": "MATERIALS",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "LIABILITY",
-            "displayName": "Liabilities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "PAYROLL_LIABILITY",
-            "displayName": "Payroll Liabilities"
+            "value": "COGS",
+            "displayName": "COGS"
           },
-          "accountId": "00000009-0000-4000-8000-000000000012",
+          "accountId": "00000009-0000-4000-8000-000000000041",
           "accountNumber": null
         },
         "amount": 175900,
@@ -1099,18 +1072,18 @@ export const ledgerEntries = [
         "id": "0000000a-3822-4c9f-83fe-d5b46ee6573a",
         "entryId": "0000000a-609d-4548-858a-34df2ddedba5",
         "account": {
-          "name": "Fixed Assets",
-          "stableName": "FIXED_ASSETS",
-          "normality": "DEBIT",
+          "name": "Sales",
+          "stableName": "SALES",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "ASSET",
-            "displayName": "Assets"
+            "value": "REVENUE",
+            "displayName": "Revenue"
           },
           "accountSubtype": {
-            "value": "FIXED_ASSET",
-            "displayName": "Fixed Assets"
+            "value": "SALES",
+            "displayName": "Sales"
           },
-          "accountId": "00000009-0000-4000-8000-000000000005",
+          "accountId": "00000009-0000-4000-8000-000000000033",
           "accountNumber": null
         },
         "amount": 349700,
@@ -1126,18 +1099,18 @@ export const ledgerEntries = [
         "id": "0000000a-2d41-4d2b-85e1-ef9386419a4d",
         "entryId": "0000000a-609d-4548-858a-34df2ddedba5",
         "account": {
-          "name": "Accumulated Depreciation",
-          "stableName": "ACCUMULATED_DEPRECIATION",
+          "name": "Uncategorized Revenue",
+          "stableName": "UNCATEGORIZED_REVENUE",
           "normality": "CREDIT",
           "accountType": {
-            "value": "ASSET",
-            "displayName": "Assets"
+            "value": "REVENUE",
+            "displayName": "Revenue"
           },
           "accountSubtype": {
-            "value": "ACCUMULATED_DEPRECIATION",
-            "displayName": "Accumulated Depreciation"
+            "value": "UNCATEGORIZED_REVENUE",
+            "displayName": "Uncategorized Revenue"
           },
-          "accountId": "00000009-0000-4000-8000-000000000006",
+          "accountId": "00000009-0000-4000-8000-000000000034",
           "accountNumber": null
         },
         "amount": 341900,
@@ -1153,18 +1126,18 @@ export const ledgerEntries = [
         "id": "0000000a-6dd9-41b2-8c7e-60d03cd079a0",
         "entryId": "0000000a-609d-4548-858a-34df2ddedba5",
         "account": {
-          "name": "Undeposited Funds",
-          "stableName": "UNDEPOSITED_FUNDS",
+          "name": "Discounts",
+          "stableName": "DISCOUNTS",
           "normality": "DEBIT",
           "accountType": {
-            "value": "ASSET",
-            "displayName": "Assets"
+            "value": "REVENUE",
+            "displayName": "Revenue"
           },
           "accountSubtype": {
-            "value": "UNDEPOSITED_FUNDS",
-            "displayName": "Undeposited Funds"
+            "value": "RETURNS_ALLOWANCES",
+            "displayName": "Returns & Allowances"
           },
-          "accountId": "00000009-0000-4000-8000-000000000007",
+          "accountId": "00000009-0000-4000-8000-000000000036",
           "accountNumber": null
         },
         "amount": 7800,
@@ -1212,18 +1185,18 @@ export const ledgerEntries = [
         "id": "0000000a-4d3f-4954-8df1-86ddd8f68586",
         "entryId": "0000000a-3979-41f3-85a1-e65e38ed9769",
         "account": {
-          "name": "Accounts Receivable (A/R)",
-          "stableName": "ACCOUNTS_RECEIVABLE",
-          "normality": "DEBIT",
+          "name": "Accumulated Adjustments",
+          "stableName": "ACCUMULATED_ADJUSTMENTS",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "ASSET",
-            "displayName": "Assets"
+            "value": "EQUITY",
+            "displayName": "Equities"
           },
           "accountSubtype": {
-            "value": "ACCOUNTS_RECEIVABLE",
-            "displayName": "Accounts Receivable"
+            "value": "ACCUMULATED_ADJUSTMENTS",
+            "displayName": "Accumulated Adjustments"
           },
-          "accountId": "00000009-0000-4000-8000-000000000003",
+          "accountId": "00000009-0000-4000-8000-000000000029",
           "accountNumber": null
         },
         "amount": 287300,
@@ -1239,18 +1212,18 @@ export const ledgerEntries = [
         "id": "0000000a-fd81-43c4-8b3b-8dd4c9cd2256",
         "entryId": "0000000a-3979-41f3-85a1-e65e38ed9769",
         "account": {
-          "name": "Inventory",
-          "stableName": "INVENTORY",
-          "normality": "DEBIT",
+          "name": "Owner's Capital",
+          "stableName": "OWNERS_CAPITAL",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "ASSET",
-            "displayName": "Assets"
+            "value": "EQUITY",
+            "displayName": "Equities"
           },
           "accountSubtype": {
-            "value": "INVENTORY",
-            "displayName": "Inventory"
+            "value": "OWNERS_CAPITAL",
+            "displayName": "Owner's Capital"
           },
-          "accountId": "00000009-0000-4000-8000-000000000004",
+          "accountId": "00000009-0000-4000-8000-000000000031",
           "accountNumber": null
         },
         "amount": 287300,
@@ -1295,21 +1268,21 @@ export const ledgerEntries = [
         "id": "0000000a-9fc9-4e01-8461-c290685e488b",
         "entryId": "0000000a-72b3-4e93-8d05-3090f16f4e0e",
         "account": {
-          "name": "Cash",
-          "stableName": "CASH",
+          "name": "Owner's Draw",
+          "stableName": "OWNERS_DRAW",
           "normality": "DEBIT",
           "accountType": {
-            "value": "ASSET",
-            "displayName": "Assets"
+            "value": "EQUITY",
+            "displayName": "Equities"
           },
           "accountSubtype": {
-            "value": "CASH",
-            "displayName": "Cash"
+            "value": "DISTRIBUTIONS",
+            "displayName": "Distributions"
           },
-          "accountId": "00000009-0000-4000-8000-000000000001",
+          "accountId": "00000009-0000-4000-8000-000000000027",
           "accountNumber": null
         },
-        "amount": 499600,
+        "amount": 90700,
         "direction": "DEBIT",
         "customer": null,
         "vendor": null,
@@ -1322,21 +1295,21 @@ export const ledgerEntries = [
         "id": "0000000a-58b6-4a39-8b91-2faa48297acf",
         "entryId": "0000000a-72b3-4e93-8d05-3090f16f4e0e",
         "account": {
-          "name": "Bank Accounts",
-          "stableName": "BANK_ACCOUNTS",
-          "normality": "DEBIT",
+          "name": "Retained Earnings",
+          "stableName": "RETAINED_EARNINGS",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "ASSET",
-            "displayName": "Assets"
+            "value": "EQUITY",
+            "displayName": "Equities"
           },
           "accountSubtype": {
-            "value": "BANK_ACCOUNTS",
-            "displayName": "Bank Accounts"
+            "value": "RETAINED_EARNINGS",
+            "displayName": "Retained Earnings"
           },
-          "accountId": "00000009-0000-4000-8000-000000000002",
+          "accountId": "00000009-0000-4000-8000-000000000028",
           "accountNumber": null
         },
-        "amount": 499600,
+        "amount": 90700,
         "direction": "CREDIT",
         "customer": null,
         "vendor": null,
@@ -1376,18 +1349,18 @@ export const ledgerEntries = [
         "id": "0000000a-a9f4-4df9-883f-152dbaff1ec3",
         "entryId": "0000000a-854d-406b-8f18-bd5f1fde8cbc",
         "account": {
-          "name": "Contractors",
-          "stableName": "PAYROLL_CONTRACTORS",
-          "normality": "DEBIT",
+          "name": "Unearned Revenue",
+          "stableName": "UNEARNED_REVENUE",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "PAYROLL",
-            "displayName": "Payroll"
+            "value": "UNEARNED_REVENUE",
+            "displayName": "Unearned Revenue"
           },
-          "accountId": "00000009-0000-4000-8000-000000000045",
+          "accountId": "00000009-0000-4000-8000-000000000022",
           "accountNumber": null
         },
         "amount": 453000,
@@ -1403,18 +1376,18 @@ export const ledgerEntries = [
         "id": "0000000a-ecfc-4363-8270-cef94690aecc",
         "entryId": "0000000a-854d-406b-8f18-bd5f1fde8cbc",
         "account": {
-          "name": "Payroll Fees",
-          "stableName": "PAYROLL_FEES",
-          "normality": "DEBIT",
+          "name": "Undeposited Payments",
+          "stableName": "UNDEPOSITED_PAYMENTS",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "PAYROLL",
-            "displayName": "Payroll"
+            "value": "UNDEPOSITED_OUTFLOWS",
+            "displayName": "Undeposited Outflows"
           },
-          "accountId": "00000009-0000-4000-8000-000000000046",
+          "accountId": "00000009-0000-4000-8000-000000000023",
           "accountNumber": null
         },
         "amount": 10200,
@@ -1430,18 +1403,18 @@ export const ledgerEntries = [
         "id": "0000000a-9b38-4d2b-8a5f-e59ed2388c0a",
         "entryId": "0000000a-854d-406b-8f18-bd5f1fde8cbc",
         "account": {
-          "name": "Interest Expense",
-          "stableName": "INTEREST_EXPENSE",
-          "normality": "DEBIT",
+          "name": "Contributions",
+          "stableName": "CONTRIBUTIONS",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "EQUITY",
+            "displayName": "Equities"
           },
           "accountSubtype": {
-            "value": "INTEREST_EXPENSES",
-            "displayName": "Interest Expenses"
+            "value": "CONTRIBUTIONS",
+            "displayName": "Contributions"
           },
-          "accountId": "00000009-0000-4000-8000-000000000047",
+          "accountId": "00000009-0000-4000-8000-000000000025",
           "accountNumber": null
         },
         "amount": 463200,
@@ -1495,18 +1468,18 @@ export const ledgerEntries = [
         "id": "0000000a-0e22-4597-8c68-25d8d420c11d",
         "entryId": "0000000a-1013-41aa-859b-ffa1eb1a7987",
         "account": {
-          "name": "Uncategorized Expenses",
-          "stableName": "UNCATEGORIZED_EXPENSES",
-          "normality": "DEBIT",
+          "name": "Notes Payable",
+          "stableName": "NOTES_PAYABLE",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "UNCATEGORIZED_EXPENSE",
-            "displayName": "Uncategorized Expense"
+            "value": "NOTES_PAYABLE",
+            "displayName": "Notes Payable"
           },
-          "accountId": "00000009-0000-4000-8000-000000000042",
+          "accountId": "00000009-0000-4000-8000-000000000020",
           "accountNumber": null
         },
         "amount": 78000,
@@ -1522,18 +1495,18 @@ export const ledgerEntries = [
         "id": "0000000a-2ed8-4b39-8e81-2ccca56bf600",
         "entryId": "0000000a-1013-41aa-859b-ffa1eb1a7987",
         "account": {
-          "name": "Employee Wages",
-          "stableName": "PAYROLL_REGULAR_WAGES",
-          "normality": "DEBIT",
+          "name": "Collected Tips",
+          "stableName": "TIPS",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "PAYROLL",
-            "displayName": "Payroll"
+            "value": "TIPS",
+            "displayName": "Tips"
           },
-          "accountId": "00000009-0000-4000-8000-000000000044",
+          "accountId": "00000009-0000-4000-8000-000000000021",
           "accountNumber": null
         },
         "amount": 78000,
@@ -1579,18 +1552,18 @@ export const ledgerEntries = [
         "id": "0000000a-5f33-4659-8977-a6ab96d58461",
         "entryId": "0000000a-e061-4639-8f32-29537a0649b2",
         "account": {
-          "name": "Business Meals",
-          "stableName": "MEALS",
-          "normality": "DEBIT",
+          "name": "Payroll Liabilities",
+          "stableName": "PAYROLL_LIABILITIES",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "PAYROLL_LIABILITY",
+            "displayName": "Payroll Liabilities"
           },
-          "accountId": "00000009-0000-4000-8000-000000000036",
+          "accountId": "00000009-0000-4000-8000-000000000016",
           "accountNumber": null
         },
         "amount": 1300,
@@ -1606,18 +1579,18 @@ export const ledgerEntries = [
         "id": "0000000a-b356-4d71-8f14-8520fec0ab51",
         "entryId": "0000000a-e061-4639-8f32-29537a0649b2",
         "account": {
-          "name": "Software",
-          "stableName": "SOFTWARE",
-          "normality": "DEBIT",
+          "name": "Sales Taxes Payable",
+          "stableName": "SALES_TAXES_PAYABLE",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "SALES_TAXES_PAYABLE",
+            "displayName": "Sales Taxes Payable"
           },
-          "accountId": "00000009-0000-4000-8000-000000000037",
+          "accountId": "00000009-0000-4000-8000-000000000017",
           "accountNumber": null
         },
         "amount": 1900,
@@ -1633,18 +1606,18 @@ export const ledgerEntries = [
         "id": "0000000a-0fd9-44d9-88d0-8490f4b6e189",
         "entryId": "0000000a-e061-4639-8f32-29537a0649b2",
         "account": {
-          "name": "Bank Fees",
-          "stableName": "BANK_FEES",
-          "normality": "DEBIT",
+          "name": "Other Taxes Payable",
+          "stableName": "OTHER_TAXES_PAYABLE",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "OTHER_TAXES_PAYABLE",
+            "displayName": "Other Taxes Payable"
           },
-          "accountId": "00000009-0000-4000-8000-000000000039",
+          "accountId": "00000009-0000-4000-8000-000000000018",
           "accountNumber": null
         },
         "amount": 1300,
@@ -1660,18 +1633,18 @@ export const ledgerEntries = [
         "id": "0000000a-8fd8-4f30-8eef-9339cf56714e",
         "entryId": "0000000a-e061-4639-8f32-29537a0649b2",
         "account": {
-          "name": "Legal and Professional Services",
-          "stableName": "PROFESSIONAL_SERVICES",
-          "normality": "DEBIT",
+          "name": "Lines of Credit",
+          "stableName": "LINE_OF_CREDIT",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "LINE_OF_CREDIT",
+            "displayName": "Lines of Credit"
           },
-          "accountId": "00000009-0000-4000-8000-000000000041",
+          "accountId": "00000009-0000-4000-8000-000000000019",
           "accountNumber": null
         },
         "amount": 1900,
@@ -1721,18 +1694,18 @@ export const ledgerEntries = [
         "id": "0000000a-a5f6-4cf3-81ba-dda8f039132f",
         "entryId": "0000000a-19d8-4f55-81bc-de0fb4ed7094",
         "account": {
-          "name": "Marketing",
-          "stableName": "MARKETING",
-          "normality": "DEBIT",
+          "name": "Refund Liabilities",
+          "stableName": "REFUND_LIABILITIES",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "REFUND_LIABILITIES",
+            "displayName": "Refund Liabilities"
           },
-          "accountId": "00000009-0000-4000-8000-000000000033",
+          "accountId": "00000009-0000-4000-8000-000000000013",
           "accountNumber": null
         },
         "amount": 51200,
@@ -1748,18 +1721,18 @@ export const ledgerEntries = [
         "id": "0000000a-c63c-4020-8c4b-85a9fd69441b",
         "entryId": "0000000a-19d8-4f55-81bc-de0fb4ed7094",
         "account": {
-          "name": "Office Expenses",
-          "stableName": "OFFICE_EXPENSES",
-          "normality": "DEBIT",
+          "name": "Credit Cards",
+          "stableName": "CREDIT_CARDS",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "CREDIT_CARD",
+            "displayName": "Credit Cards"
           },
-          "accountId": "00000009-0000-4000-8000-000000000034",
+          "accountId": "00000009-0000-4000-8000-000000000014",
           "accountNumber": null
         },
         "amount": 1700,
@@ -1775,18 +1748,18 @@ export const ledgerEntries = [
         "id": "0000000a-3e98-480b-837e-338566a402db",
         "entryId": "0000000a-19d8-4f55-81bc-de0fb4ed7094",
         "account": {
-          "name": "Business Travel",
-          "stableName": "TRAVEL",
-          "normality": "DEBIT",
+          "name": "Shareholder Loans",
+          "stableName": "SHAREHOLDER_LOANS",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "SHAREHOLDER_LOAN",
+            "displayName": "Shareholder Loans"
           },
-          "accountId": "00000009-0000-4000-8000-000000000035",
+          "accountId": "00000009-0000-4000-8000-000000000015",
           "accountNumber": null
         },
         "amount": 52900,
@@ -1840,18 +1813,18 @@ export const ledgerEntries = [
         "id": "0000000a-4856-48ed-8ff4-3042d55fc50e",
         "entryId": "0000000a-5161-4dfa-832b-f99fb5e15712",
         "account": {
-          "name": "Rent",
-          "stableName": "RENT",
+          "name": "Payment Processor Clearing Accounts",
+          "stableName": "PAYMENT_PROCESSOR_CLEARING",
           "normality": "DEBIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "ASSET",
+            "displayName": "Assets"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "PAYMENT_PROCESSOR_CLEARING_ACCOUNT",
+            "displayName": "Payment Clearing Accounts"
           },
-          "accountId": "00000009-0000-4000-8000-000000000030",
+          "accountId": "00000009-0000-4000-8000-000000000008",
           "accountNumber": null
         },
         "amount": 372400,
@@ -1867,18 +1840,18 @@ export const ledgerEntries = [
         "id": "0000000a-b4fe-41ea-800f-343cd873f2ba",
         "entryId": "0000000a-5161-4dfa-832b-f99fb5e15712",
         "account": {
-          "name": "Utilities",
-          "stableName": "UTILITIES",
+          "name": "Development Costs",
+          "stableName": "DEVELOPMENT_COSTS",
           "normality": "DEBIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "ASSET",
+            "displayName": "Assets"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "DEVELOPMENT_COSTS",
+            "displayName": "Development Costs"
           },
-          "accountId": "00000009-0000-4000-8000-000000000031",
+          "accountId": "00000009-0000-4000-8000-000000000010",
           "accountNumber": null
         },
         "amount": 420300,
@@ -1894,18 +1867,18 @@ export const ledgerEntries = [
         "id": "0000000a-2ea2-4ab9-8333-e3f44852f650",
         "entryId": "0000000a-5161-4dfa-832b-f99fb5e15712",
         "account": {
-          "name": "Business Insurance",
-          "stableName": "INSURANCE",
-          "normality": "DEBIT",
+          "name": "Accounts Payable (A/P)",
+          "stableName": "ACCOUNTS_PAYABLE",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "ACCOUNTS_PAYABLE",
+            "displayName": "Accounts Payable"
           },
-          "accountId": "00000009-0000-4000-8000-000000000032",
+          "accountId": "00000009-0000-4000-8000-000000000012",
           "accountNumber": null
         },
         "amount": 792700,
@@ -1981,21 +1954,21 @@ export const ledgerEntries = [
         "id": "0000000a-5295-4b4d-89c5-b9bba4dd877c",
         "entryId": "0000000a-44aa-4807-88f5-d29f22206a13",
         "account": {
-          "name": "Uncategorized Revenue",
-          "stableName": "UNCATEGORIZED_REVENUE",
-          "normality": "CREDIT",
+          "name": "Inventory",
+          "stableName": "INVENTORY",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "REVENUE",
-            "displayName": "Revenue"
+            "value": "ASSET",
+            "displayName": "Assets"
           },
           "accountSubtype": {
-            "value": "UNCATEGORIZED_REVENUE",
-            "displayName": "Uncategorized Revenue"
+            "value": "INVENTORY",
+            "displayName": "Inventory"
           },
-          "accountId": "00000009-0000-4000-8000-000000000025",
+          "accountId": "00000009-0000-4000-8000-000000000004",
           "accountNumber": null
         },
-        "amount": 239200,
+        "amount": 499600,
         "direction": "DEBIT",
         "customer": null,
         "vendor": null,
@@ -2008,18 +1981,18 @@ export const ledgerEntries = [
         "id": "0000000a-3cd3-478b-87b1-0f050481d6d7",
         "entryId": "0000000a-44aa-4807-88f5-d29f22206a13",
         "account": {
-          "name": "Returns and Allowances",
-          "stableName": "RETURNS_AND_ALLOWANCES",
-          "normality": "DEBIT",
+          "name": "Accumulated Depreciation",
+          "stableName": "ACCUMULATED_DEPRECIATION",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "REVENUE",
-            "displayName": "Revenue"
+            "value": "ASSET",
+            "displayName": "Assets"
           },
           "accountSubtype": {
-            "value": "RETURNS_ALLOWANCES",
-            "displayName": "Returns & Allowances"
+            "value": "ACCUMULATED_DEPRECIATION",
+            "displayName": "Accumulated Depreciation"
           },
-          "accountId": "00000009-0000-4000-8000-000000000026",
+          "accountId": "00000009-0000-4000-8000-000000000006",
           "accountNumber": null
         },
         "amount": 113600,
@@ -2035,21 +2008,21 @@ export const ledgerEntries = [
         "id": "0000000a-1e72-4061-8445-92b7cb626ce9",
         "entryId": "0000000a-44aa-4807-88f5-d29f22206a13",
         "account": {
-          "name": "Cost of Goods Sold",
-          "stableName": "COST_OF_GOODS_SOLD",
+          "name": "Undeposited Funds",
+          "stableName": "UNDEPOSITED_FUNDS",
           "normality": "DEBIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "ASSET",
+            "displayName": "Assets"
           },
           "accountSubtype": {
-            "value": "COGS",
-            "displayName": "COGS"
+            "value": "UNDEPOSITED_FUNDS",
+            "displayName": "Undeposited Funds"
           },
-          "accountId": "00000009-0000-4000-8000-000000000028",
+          "accountId": "00000009-0000-4000-8000-000000000007",
           "accountNumber": null
         },
-        "amount": 352800,
+        "amount": 613200,
         "direction": "CREDIT",
         "customer": null,
         "vendor": null,
@@ -2087,24 +2060,24 @@ export const ledgerEntries = [
     "reversalId": null,
     "lineItems": [
       {
-        "id": "0000000a-372d-420b-838f-21420b00d9de",
+        "id": "0000000a-72dd-40b0-88f0-1420b00d9de3",
         "entryId": "0000000a-5371-4353-8e78-44f4307cd20c",
         "account": {
-          "name": "Common Stock",
-          "stableName": "COMMON_STOCK",
-          "normality": "CREDIT",
+          "name": "Cash",
+          "stableName": "CASH",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "EQUITY",
-            "displayName": "Equities"
+            "value": "ASSET",
+            "displayName": "Assets"
           },
           "accountSubtype": {
-            "value": "COMMON_STOCK",
-            "displayName": "Common Stock"
+            "value": "CASH",
+            "displayName": "Cash"
           },
-          "accountId": "00000009-0000-4000-8000-000000000020",
+          "accountId": "00000009-0000-4000-8000-000000000001",
           "accountNumber": null
         },
-        "amount": 116900,
+        "amount": 2100,
         "direction": "DEBIT",
         "customer": null,
         "vendor": null,
@@ -2114,25 +2087,25 @@ export const ledgerEntries = [
         "entryReversedBy": null
       },
       {
-        "id": "0000000a-bf06-45da-8d1c-54272b73bce7",
+        "id": "0000000a-f065-4da1-81cc-4272b73bce74",
         "entryId": "0000000a-5371-4353-8e78-44f4307cd20c",
         "account": {
-          "name": "Retained Earnings",
-          "stableName": "RETAINED_EARNINGS",
-          "normality": "CREDIT",
+          "name": "Bank Accounts",
+          "stableName": "BANK_ACCOUNTS",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "EQUITY",
-            "displayName": "Equities"
+            "value": "ASSET",
+            "displayName": "Assets"
           },
           "accountSubtype": {
-            "value": "RETAINED_EARNINGS",
-            "displayName": "Retained Earnings"
+            "value": "BANK_ACCOUNTS",
+            "displayName": "Bank Accounts"
           },
-          "accountId": "00000009-0000-4000-8000-000000000021",
+          "accountId": "00000009-0000-4000-8000-000000000002",
           "accountNumber": null
         },
-        "amount": 2200,
-        "direction": "CREDIT",
+        "amount": 144100,
+        "direction": "DEBIT",
         "customer": null,
         "vendor": null,
         "entryAt": new Date("2025-07-02T12:00:00.000Z"),
@@ -2141,24 +2114,24 @@ export const ledgerEntries = [
         "entryReversedBy": null
       },
       {
-        "id": "0000000a-1bf8-405b-8411-d65eaa304eb0",
+        "id": "0000000a-bf8f-45bc-8112-65eaa304eb0a",
         "entryId": "0000000a-5371-4353-8e78-44f4307cd20c",
         "account": {
-          "name": "Sales",
-          "stableName": "SALES",
-          "normality": "CREDIT",
+          "name": "Accounts Receivable (A/R)",
+          "stableName": "ACCOUNTS_RECEIVABLE",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "REVENUE",
-            "displayName": "Revenue"
+            "value": "ASSET",
+            "displayName": "Assets"
           },
           "accountSubtype": {
-            "value": "SALES",
-            "displayName": "Sales"
+            "value": "ACCOUNTS_RECEIVABLE",
+            "displayName": "Accounts Receivable"
           },
-          "accountId": "00000009-0000-4000-8000-000000000024",
+          "accountId": "00000009-0000-4000-8000-000000000003",
           "accountNumber": null
         },
-        "amount": 114700,
+        "amount": 146200,
         "direction": "CREDIT",
         "customer": null,
         "vendor": null,
@@ -2169,15 +2142,15 @@ export const ledgerEntries = [
       }
     ],
     "source": {
-      "display_description": "Manual journal entry",
+      "display_description": "Owner contribution",
       "entity_name": "Manual journal entry",
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-5371-4353-8e78-44f4307cd20c",
-      "memo": null,
+      "memo": "Owner contribution",
       "created_by": "Layer"
     },
     "transactionTags": [],
-    "memo": null,
+    "memo": "Owner contribution",
     "metadata": null,
     "referenceNumber": null
   },
@@ -2199,18 +2172,18 @@ export const ledgerEntries = [
         "id": "0000000a-33eb-49a0-8121-816aba0f8f5f",
         "entryId": "0000000a-43c6-4c2b-87d2-3e93124654b2",
         "account": {
-          "name": "Contributions",
-          "stableName": "CONTRIBUTIONS",
-          "normality": "CREDIT",
+          "name": "Payroll Tax",
+          "stableName": "PAYROLL_TAXES",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "EQUITY",
-            "displayName": "Equities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "CONTRIBUTIONS",
-            "displayName": "Contributions"
+            "value": "TAXES_LICENSES",
+            "displayName": "Taxes & Licenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000018",
+          "accountId": "00000009-0000-4000-8000-000000000066",
           "accountNumber": null
         },
         "amount": 29400,
@@ -2226,18 +2199,18 @@ export const ledgerEntries = [
         "id": "0000000a-f9d2-4492-8e02-841aa6102d10",
         "entryId": "0000000a-43c6-4c2b-87d2-3e93124654b2",
         "account": {
-          "name": "Distributions",
-          "stableName": "DISTRIBUTIONS",
+          "name": "Other Tax",
+          "stableName": "OTHER_TAXES",
           "normality": "DEBIT",
           "accountType": {
-            "value": "EQUITY",
-            "displayName": "Equities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "DISTRIBUTIONS",
-            "displayName": "Distributions"
+            "value": "TAXES_LICENSES",
+            "displayName": "Taxes & Licenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000019",
+          "accountId": "00000009-0000-4000-8000-000000000067",
           "accountNumber": null
         },
         "amount": 29400,
@@ -2292,18 +2265,18 @@ export const ledgerEntries = [
         "id": "0000000a-bc59-4b83-837c-6d3d0382d216",
         "entryId": "0000000a-9587-4a5c-8947-50d21ae5e346",
         "account": {
-          "name": "Sales Taxes Payable",
-          "stableName": "SALES_TAXES_PAYABLE",
-          "normality": "CREDIT",
+          "name": "Equipment & Machinery",
+          "stableName": "EQUIPMENT",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "LIABILITY",
-            "displayName": "Liabilities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "SALES_TAXES_PAYABLE",
-            "displayName": "Sales Taxes Payable"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000013",
+          "accountId": "00000009-0000-4000-8000-000000000061",
           "accountNumber": null
         },
         "amount": 275100,
@@ -2319,18 +2292,18 @@ export const ledgerEntries = [
         "id": "0000000a-84dc-45cb-889c-41f3ff2e6570",
         "entryId": "0000000a-9587-4a5c-8947-50d21ae5e346",
         "account": {
-          "name": "Unearned Revenue",
-          "stableName": "UNEARNED_REVENUE",
-          "normality": "CREDIT",
+          "name": "Phone",
+          "stableName": "PHONE",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "LIABILITY",
-            "displayName": "Liabilities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "UNEARNED_REVENUE",
-            "displayName": "Unearned Revenue"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000014",
+          "accountId": "00000009-0000-4000-8000-000000000062",
           "accountNumber": null
         },
         "amount": 461700,
@@ -2346,18 +2319,18 @@ export const ledgerEntries = [
         "id": "0000000a-b294-4ef4-88d6-35a4a30d4976",
         "entryId": "0000000a-9587-4a5c-8947-50d21ae5e346",
         "account": {
-          "name": "Lines of Credit",
-          "stableName": "LINE_OF_CREDIT",
-          "normality": "CREDIT",
+          "name": "Sales Tax",
+          "stableName": "SALES_TAXES",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "LIABILITY",
-            "displayName": "Liabilities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "LINE_OF_CREDIT",
-            "displayName": "Lines of Credit"
+            "value": "TAXES_LICENSES",
+            "displayName": "Taxes & Licenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000015",
+          "accountId": "00000009-0000-4000-8000-000000000064",
           "accountNumber": null
         },
         "amount": 275100,
@@ -2373,18 +2346,18 @@ export const ledgerEntries = [
         "id": "0000000a-f62e-4111-811a-a03747d04142",
         "entryId": "0000000a-9587-4a5c-8947-50d21ae5e346",
         "account": {
-          "name": "Notes Payable",
-          "stableName": "NOTES_PAYABLE",
-          "normality": "CREDIT",
+          "name": "Income Tax",
+          "stableName": "INCOME_TAXES",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "LIABILITY",
-            "displayName": "Liabilities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "NOTES_PAYABLE",
-            "displayName": "Notes Payable"
+            "value": "TAXES_LICENSES",
+            "displayName": "Taxes & Licenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000016",
+          "accountId": "00000009-0000-4000-8000-000000000065",
           "accountNumber": null
         },
         "amount": 461700,
@@ -2438,18 +2411,18 @@ export const ledgerEntries = [
         "id": "0000000a-c5c7-4ce6-862d-e448c6a8b639",
         "entryId": "0000000a-af2f-44b5-8041-16556aa96b32",
         "account": {
-          "name": "Accounts Payable (A/P)",
-          "stableName": "ACCOUNTS_PAYABLE",
-          "normality": "CREDIT",
+          "name": "Bank Fees",
+          "stableName": "BANK_FEES",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "LIABILITY",
-            "displayName": "Liabilities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "ACCOUNTS_PAYABLE",
-            "displayName": "Accounts Payable"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000010",
+          "accountId": "00000009-0000-4000-8000-000000000057",
           "accountNumber": null
         },
         "amount": 54200,
@@ -2465,18 +2438,18 @@ export const ledgerEntries = [
         "id": "0000000a-b19d-4d5a-83d7-dd14abb1232c",
         "entryId": "0000000a-af2f-44b5-8041-16556aa96b32",
         "account": {
-          "name": "Credit Cards",
-          "stableName": "CREDIT_CARDS",
-          "normality": "CREDIT",
+          "name": "Other Business Expenses",
+          "stableName": "OTHER_BUSINESS_EXPENSES",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "LIABILITY",
-            "displayName": "Liabilities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "CREDIT_CARD",
-            "displayName": "Credit Cards"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000011",
+          "accountId": "00000009-0000-4000-8000-000000000059",
           "accountNumber": null
         },
         "amount": 1800,
@@ -2492,18 +2465,18 @@ export const ledgerEntries = [
         "id": "0000000a-b0ff-43f1-8ef1-820b10f80739",
         "entryId": "0000000a-af2f-44b5-8041-16556aa96b32",
         "account": {
-          "name": "Payroll Liabilities",
-          "stableName": "PAYROLL_LIABILITIES",
-          "normality": "CREDIT",
+          "name": "Bad Debt",
+          "stableName": "BAD_DEBT",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "LIABILITY",
-            "displayName": "Liabilities"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "PAYROLL_LIABILITY",
-            "displayName": "Payroll Liabilities"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000012",
+          "accountId": "00000009-0000-4000-8000-000000000060",
           "accountNumber": null
         },
         "amount": 56000,
@@ -2544,24 +2517,24 @@ export const ledgerEntries = [
     "reversalId": null,
     "lineItems": [
       {
-        "id": "0000000a-f346-4f78-889c-d101d0ad54db",
+        "id": "0000000a-ff34-4cf7-8589-3d101d0ad54d",
         "entryId": "0000000a-50c7-452c-8308-fe23abebd9bc",
         "account": {
-          "name": "Fixed Assets",
-          "stableName": "FIXED_ASSETS",
+          "name": "Business Meals",
+          "stableName": "MEALS",
           "normality": "DEBIT",
           "accountType": {
-            "value": "ASSET",
-            "displayName": "Assets"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "FIXED_ASSET",
-            "displayName": "Fixed Assets"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000005",
+          "accountId": "00000009-0000-4000-8000-000000000054",
           "accountNumber": null
         },
-        "amount": 126000,
+        "amount": 429200,
         "direction": "DEBIT",
         "customer": null,
         "vendor": null,
@@ -2571,51 +2544,24 @@ export const ledgerEntries = [
         "entryReversedBy": null
       },
       {
-        "id": "0000000a-feed-4dbb-8628-4d5fd8f173c8",
+        "id": "0000000a-afee-4ddb-8662-e4d5fd8f173c",
         "entryId": "0000000a-50c7-452c-8308-fe23abebd9bc",
         "account": {
-          "name": "Accumulated Depreciation",
-          "stableName": "ACCUMULATED_DEPRECIATION",
-          "normality": "CREDIT",
-          "accountType": {
-            "value": "ASSET",
-            "displayName": "Assets"
-          },
-          "accountSubtype": {
-            "value": "ACCUMULATED_DEPRECIATION",
-            "displayName": "Accumulated Depreciation"
-          },
-          "accountId": "00000009-0000-4000-8000-000000000006",
-          "accountNumber": null
-        },
-        "amount": 1900,
-        "direction": "DEBIT",
-        "customer": null,
-        "vendor": null,
-        "entryAt": new Date("2025-05-27T12:00:00.000Z"),
-        "createdAt": new Date("2025-05-27T12:00:00.000Z"),
-        "entryReversalOf": null,
-        "entryReversedBy": null
-      },
-      {
-        "id": "0000000a-be5b-4865-8abb-326285f385f3",
-        "entryId": "0000000a-50c7-452c-8308-fe23abebd9bc",
-        "account": {
-          "name": "Undeposited Funds",
-          "stableName": "UNDEPOSITED_FUNDS",
+          "name": "Software",
+          "stableName": "SOFTWARE",
           "normality": "DEBIT",
           "accountType": {
-            "value": "ASSET",
-            "displayName": "Assets"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "UNDEPOSITED_FUNDS",
-            "displayName": "Undeposited Funds"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000007",
+          "accountId": "00000009-0000-4000-8000-000000000055",
           "accountNumber": null
         },
-        "amount": 127900,
+        "amount": 429200,
         "direction": "CREDIT",
         "customer": null,
         "vendor": null,
@@ -2626,15 +2572,15 @@ export const ledgerEntries = [
       }
     ],
     "source": {
-      "display_description": "Client invoice payment",
+      "display_description": "Opening balance entry",
       "entity_name": "Manual journal entry",
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-50c7-452c-8308-fe23abebd9bc",
-      "memo": "Client invoice payment",
+      "memo": "Opening balance entry",
       "created_by": "Layer"
     },
     "transactionTags": [],
-    "memo": "Client invoice payment",
+    "memo": "Opening balance entry",
     "metadata": null,
     "referenceNumber": null
   },
@@ -2653,21 +2599,21 @@ export const ledgerEntries = [
     "reversalId": null,
     "lineItems": [
       {
-        "id": "0000000a-318f-4987-8747-2f9ed702762f",
+        "id": "0000000a-1318-4d98-8b74-82f9ed702762",
         "entryId": "0000000a-3049-4e54-8212-f21b2c8de4ad",
         "account": {
-          "name": "Accounts Receivable (A/R)",
-          "stableName": "ACCOUNTS_RECEIVABLE",
+          "name": "Office Expenses",
+          "stableName": "OFFICE_EXPENSES",
           "normality": "DEBIT",
           "accountType": {
-            "value": "ASSET",
-            "displayName": "Assets"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "ACCOUNTS_RECEIVABLE",
-            "displayName": "Accounts Receivable"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000003",
+          "accountId": "00000009-0000-4000-8000-000000000052",
           "accountNumber": null
         },
         "amount": 1700,
@@ -2680,21 +2626,21 @@ export const ledgerEntries = [
         "entryReversedBy": null
       },
       {
-        "id": "0000000a-6c53-4170-871e-3b99b44c9991",
+        "id": "0000000a-d6c5-4117-8d71-f3b99b44c999",
         "entryId": "0000000a-3049-4e54-8212-f21b2c8de4ad",
         "account": {
-          "name": "Inventory",
-          "stableName": "INVENTORY",
+          "name": "Business Travel",
+          "stableName": "TRAVEL",
           "normality": "DEBIT",
           "accountType": {
-            "value": "ASSET",
-            "displayName": "Assets"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "INVENTORY",
-            "displayName": "Inventory"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000004",
+          "accountId": "00000009-0000-4000-8000-000000000053",
           "accountNumber": null
         },
         "amount": 1700,
@@ -2708,15 +2654,15 @@ export const ledgerEntries = [
       }
     ],
     "source": {
-      "display_description": "Manual journal entry",
+      "display_description": "Loan repayment",
       "entity_name": "Manual journal entry",
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-3049-4e54-8212-f21b2c8de4ad",
-      "memo": null,
+      "memo": "Loan repayment",
       "created_by": "Layer"
     },
     "transactionTags": [],
-    "memo": null,
+    "memo": "Loan repayment",
     "metadata": null,
     "referenceNumber": null
   },
@@ -2745,24 +2691,24 @@ export const ledgerEntries = [
     "reversalId": null,
     "lineItems": [
       {
-        "id": "0000000a-ec79-44ac-8424-9aee9d743113",
+        "id": "0000000a-eec7-4a4a-8b42-d9aee9d74311",
         "entryId": "0000000a-fc88-4772-837c-4dcc6744b7a0",
         "account": {
-          "name": "Cash",
-          "stableName": "CASH",
+          "name": "Business Insurance",
+          "stableName": "INSURANCE",
           "normality": "DEBIT",
           "accountType": {
-            "value": "ASSET",
-            "displayName": "Assets"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "CASH",
-            "displayName": "Cash"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000001",
+          "accountId": "00000009-0000-4000-8000-000000000050",
           "accountNumber": null
         },
-        "amount": 36500,
+        "amount": 52300,
         "direction": "DEBIT",
         "customer": null,
         "vendor": null,
@@ -2772,24 +2718,24 @@ export const ledgerEntries = [
         "entryReversedBy": null
       },
       {
-        "id": "0000000a-9a58-4986-87a9-338977db3287",
+        "id": "0000000a-69a5-4398-817a-a338977db328",
         "entryId": "0000000a-fc88-4772-837c-4dcc6744b7a0",
         "account": {
-          "name": "Bank Accounts",
-          "stableName": "BANK_ACCOUNTS",
+          "name": "Marketing",
+          "stableName": "MARKETING",
           "normality": "DEBIT",
           "accountType": {
-            "value": "ASSET",
-            "displayName": "Assets"
+            "value": "EXPENSE",
+            "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "BANK_ACCOUNTS",
-            "displayName": "Bank Accounts"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000002",
+          "accountId": "00000009-0000-4000-8000-000000000051",
           "accountNumber": null
         },
-        "amount": 36500,
+        "amount": 52300,
         "direction": "CREDIT",
         "customer": null,
         "vendor": null,
@@ -2800,15 +2746,15 @@ export const ledgerEntries = [
       }
     ],
     "source": {
-      "display_description": "Manual journal entry",
+      "display_description": "Payroll run",
       "entity_name": "Manual journal entry",
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-fc88-4772-837c-4dcc6744b7a0",
-      "memo": null,
+      "memo": "Payroll run",
       "created_by": "Layer"
     },
     "transactionTags": [],
-    "memo": null,
+    "memo": "Payroll run",
     "metadata": null,
     "referenceNumber": null
   },
@@ -2841,8 +2787,8 @@ export const ledgerEntries = [
         "id": "0000000a-c1fa-4724-8f3e-89aac2b2c95a",
         "entryId": "0000000a-3684-4f65-8a63-f3931738b577",
         "account": {
-          "name": "Contractors",
-          "stableName": "PAYROLL_CONTRACTORS",
+          "name": "Payroll Fees",
+          "stableName": "PAYROLL_FEES",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
@@ -2852,7 +2798,7 @@ export const ledgerEntries = [
             "value": "PAYROLL",
             "displayName": "Payroll"
           },
-          "accountId": "00000009-0000-4000-8000-000000000045",
+          "accountId": "00000009-0000-4000-8000-000000000047",
           "accountNumber": null
         },
         "amount": 46800,
@@ -2868,18 +2814,18 @@ export const ledgerEntries = [
         "id": "0000000a-03fc-448b-8d24-cf7afc10b821",
         "entryId": "0000000a-3684-4f65-8a63-f3931738b577",
         "account": {
-          "name": "Payroll Fees",
-          "stableName": "PAYROLL_FEES",
+          "name": "Rent",
+          "stableName": "RENT",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
             "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "PAYROLL",
-            "displayName": "Payroll"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000046",
+          "accountId": "00000009-0000-4000-8000-000000000048",
           "accountNumber": null
         },
         "amount": 497000,
@@ -2895,18 +2841,18 @@ export const ledgerEntries = [
         "id": "0000000a-147d-45e1-8581-4bdb3d4bffef",
         "entryId": "0000000a-3684-4f65-8a63-f3931738b577",
         "account": {
-          "name": "Interest Expense",
-          "stableName": "INTEREST_EXPENSE",
+          "name": "Utilities",
+          "stableName": "UTILITIES",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
             "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "INTEREST_EXPENSES",
-            "displayName": "Interest Expenses"
+            "value": "OPERATING_EXPENSES",
+            "displayName": "Operating Expenses"
           },
-          "accountId": "00000009-0000-4000-8000-000000000047",
+          "accountId": "00000009-0000-4000-8000-000000000049",
           "accountNumber": null
         },
         "amount": 543800,
@@ -2950,18 +2896,18 @@ export const ledgerEntries = [
         "id": "0000000a-f1f0-427a-8a83-33f484e62bba",
         "entryId": "0000000a-965f-4841-8d6b-5520a8b1bd8b",
         "account": {
-          "name": "Uncategorized Expenses",
-          "stableName": "UNCATEGORIZED_EXPENSES",
+          "name": "Employee Wages",
+          "stableName": "PAYROLL_REGULAR_WAGES",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
             "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "UNCATEGORIZED_EXPENSE",
-            "displayName": "Uncategorized Expense"
+            "value": "PAYROLL",
+            "displayName": "Payroll"
           },
-          "accountId": "00000009-0000-4000-8000-000000000042",
+          "accountId": "00000009-0000-4000-8000-000000000045",
           "accountNumber": null
         },
         "amount": 447900,
@@ -2977,8 +2923,8 @@ export const ledgerEntries = [
         "id": "0000000a-4b68-413e-8858-6339b63154ef",
         "entryId": "0000000a-965f-4841-8d6b-5520a8b1bd8b",
         "account": {
-          "name": "Employee Wages",
-          "stableName": "PAYROLL_REGULAR_WAGES",
+          "name": "Contractors",
+          "stableName": "PAYROLL_CONTRACTORS",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
@@ -2988,7 +2934,7 @@ export const ledgerEntries = [
             "value": "PAYROLL",
             "displayName": "Payroll"
           },
-          "accountId": "00000009-0000-4000-8000-000000000044",
+          "accountId": "00000009-0000-4000-8000-000000000046",
           "accountNumber": null
         },
         "amount": 447900,
@@ -3032,18 +2978,18 @@ export const ledgerEntries = [
         "id": "0000000a-11a3-4517-804f-573160fba891",
         "entryId": "0000000a-9b7e-4a66-8d73-8bc0efe6531f",
         "account": {
-          "name": "Software",
-          "stableName": "SOFTWARE",
+          "name": "Items for Resale",
+          "stableName": "ITEMS_FOR_RESALE",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
             "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "COGS",
+            "displayName": "COGS"
           },
-          "accountId": "00000009-0000-4000-8000-000000000037",
+          "accountId": "00000009-0000-4000-8000-000000000040",
           "accountNumber": null
         },
         "amount": 999500,
@@ -3059,18 +3005,18 @@ export const ledgerEntries = [
         "id": "0000000a-f60d-426f-8224-19e82bdb8515",
         "entryId": "0000000a-9b7e-4a66-8d73-8bc0efe6531f",
         "account": {
-          "name": "Bank Fees",
-          "stableName": "BANK_FEES",
+          "name": "Materials for Sold Goods",
+          "stableName": "MATERIALS",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
             "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "COGS",
+            "displayName": "COGS"
           },
-          "accountId": "00000009-0000-4000-8000-000000000039",
+          "accountId": "00000009-0000-4000-8000-000000000041",
           "accountNumber": null
         },
         "amount": 499700,
@@ -3086,18 +3032,18 @@ export const ledgerEntries = [
         "id": "0000000a-5494-44b5-84a6-58315d0265fb",
         "entryId": "0000000a-9b7e-4a66-8d73-8bc0efe6531f",
         "account": {
-          "name": "Legal and Professional Services",
-          "stableName": "PROFESSIONAL_SERVICES",
+          "name": "Uncategorized Expenses",
+          "stableName": "UNCATEGORIZED_EXPENSES",
           "normality": "DEBIT",
           "accountType": {
             "value": "EXPENSE",
             "displayName": "Expenses"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "UNCATEGORIZED_EXPENSE",
+            "displayName": "Uncategorized Expense"
           },
-          "accountId": "00000009-0000-4000-8000-000000000041",
+          "accountId": "00000009-0000-4000-8000-000000000043",
           "accountNumber": null
         },
         "amount": 499800,
@@ -3151,21 +3097,21 @@ export const ledgerEntries = [
         "id": "0000000a-ddd3-4842-8294-e1f89368f44c",
         "entryId": "0000000a-fd84-4927-88a5-157968562abc",
         "account": {
-          "name": "Office Expenses",
-          "stableName": "OFFICE_EXPENSES",
-          "normality": "DEBIT",
+          "name": "Uncategorized Revenue",
+          "stableName": "UNCATEGORIZED_REVENUE",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "REVENUE",
+            "displayName": "Revenue"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "UNCATEGORIZED_REVENUE",
+            "displayName": "Uncategorized Revenue"
           },
           "accountId": "00000009-0000-4000-8000-000000000034",
           "accountNumber": null
         },
-        "amount": 389400,
+        "amount": 590100,
         "direction": "DEBIT",
         "customer": null,
         "vendor": null,
@@ -3178,21 +3124,21 @@ export const ledgerEntries = [
         "id": "0000000a-40d8-4815-8788-fcbec63f844a",
         "entryId": "0000000a-fd84-4927-88a5-157968562abc",
         "account": {
-          "name": "Business Travel",
-          "stableName": "TRAVEL",
+          "name": "Discounts",
+          "stableName": "DISCOUNTS",
           "normality": "DEBIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "REVENUE",
+            "displayName": "Revenue"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "RETURNS_ALLOWANCES",
+            "displayName": "Returns & Allowances"
           },
-          "accountId": "00000009-0000-4000-8000-000000000035",
+          "accountId": "00000009-0000-4000-8000-000000000036",
           "accountNumber": null
         },
-        "amount": 163600,
+        "amount": 90300,
         "direction": "CREDIT",
         "customer": null,
         "vendor": null,
@@ -3205,21 +3151,21 @@ export const ledgerEntries = [
         "id": "0000000a-bcaa-4092-8230-95eb752b0484",
         "entryId": "0000000a-fd84-4927-88a5-157968562abc",
         "account": {
-          "name": "Business Meals",
-          "stableName": "MEALS",
+          "name": "Customer Refunds",
+          "stableName": "CUSTOMER_REFUNDS",
           "normality": "DEBIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "REVENUE",
+            "displayName": "Revenue"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "RETURNS_ALLOWANCES",
+            "displayName": "Returns & Allowances"
           },
-          "accountId": "00000009-0000-4000-8000-000000000036",
+          "accountId": "00000009-0000-4000-8000-000000000037",
           "accountNumber": null
         },
-        "amount": 225800,
+        "amount": 499800,
         "direction": "CREDIT",
         "customer": null,
         "vendor": null,
@@ -3271,18 +3217,18 @@ export const ledgerEntries = [
         "id": "0000000a-cae7-4e12-8416-20c4b58e1b50",
         "entryId": "0000000a-b7c9-450b-8b6d-5083ebc76ca0",
         "account": {
-          "name": "Business Insurance",
-          "stableName": "INSURANCE",
-          "normality": "DEBIT",
+          "name": "Owner's Capital",
+          "stableName": "OWNERS_CAPITAL",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "EQUITY",
+            "displayName": "Equities"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "OWNERS_CAPITAL",
+            "displayName": "Owner's Capital"
           },
-          "accountId": "00000009-0000-4000-8000-000000000032",
+          "accountId": "00000009-0000-4000-8000-000000000031",
           "accountNumber": null
         },
         "amount": 322400,
@@ -3298,16 +3244,16 @@ export const ledgerEntries = [
         "id": "0000000a-417c-4dca-8ac8-987980b883c7",
         "entryId": "0000000a-b7c9-450b-8b6d-5083ebc76ca0",
         "account": {
-          "name": "Marketing",
-          "stableName": "MARKETING",
-          "normality": "DEBIT",
+          "name": "Sales",
+          "stableName": "SALES",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "REVENUE",
+            "displayName": "Revenue"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "SALES",
+            "displayName": "Sales"
           },
           "accountId": "00000009-0000-4000-8000-000000000033",
           "accountNumber": null
@@ -3353,18 +3299,18 @@ export const ledgerEntries = [
         "id": "0000000a-62d8-41f2-8d62-467f3c7cb404",
         "entryId": "0000000a-9368-428d-8acc-fb8379c48b8d",
         "account": {
-          "name": "Cost of Goods Sold",
-          "stableName": "COST_OF_GOODS_SOLD",
+          "name": "Owner's Draw",
+          "stableName": "OWNERS_DRAW",
           "normality": "DEBIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "EQUITY",
+            "displayName": "Equities"
           },
           "accountSubtype": {
-            "value": "COGS",
-            "displayName": "COGS"
+            "value": "DISTRIBUTIONS",
+            "displayName": "Distributions"
           },
-          "accountId": "00000009-0000-4000-8000-000000000028",
+          "accountId": "00000009-0000-4000-8000-000000000027",
           "accountNumber": null
         },
         "amount": 335600,
@@ -3380,18 +3326,18 @@ export const ledgerEntries = [
         "id": "0000000a-e26f-4dab-8552-0d3005d8ab2f",
         "entryId": "0000000a-9368-428d-8acc-fb8379c48b8d",
         "account": {
-          "name": "Rent",
-          "stableName": "RENT",
-          "normality": "DEBIT",
+          "name": "Retained Earnings",
+          "stableName": "RETAINED_EARNINGS",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "EQUITY",
+            "displayName": "Equities"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "RETAINED_EARNINGS",
+            "displayName": "Retained Earnings"
           },
-          "accountId": "00000009-0000-4000-8000-000000000030",
+          "accountId": "00000009-0000-4000-8000-000000000028",
           "accountNumber": null
         },
         "amount": 1500,
@@ -3407,18 +3353,18 @@ export const ledgerEntries = [
         "id": "0000000a-2993-4041-8144-caa87118c8a3",
         "entryId": "0000000a-9368-428d-8acc-fb8379c48b8d",
         "account": {
-          "name": "Utilities",
-          "stableName": "UTILITIES",
-          "normality": "DEBIT",
+          "name": "Accumulated Adjustments",
+          "stableName": "ACCUMULATED_ADJUSTMENTS",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EXPENSE",
-            "displayName": "Expenses"
+            "value": "EQUITY",
+            "displayName": "Equities"
           },
           "accountSubtype": {
-            "value": "OPERATING_EXPENSES",
-            "displayName": "Operating Expenses"
+            "value": "ACCUMULATED_ADJUSTMENTS",
+            "displayName": "Accumulated Adjustments"
           },
-          "accountId": "00000009-0000-4000-8000-000000000031",
+          "accountId": "00000009-0000-4000-8000-000000000029",
           "accountNumber": null
         },
         "amount": 337100,
@@ -3462,18 +3408,18 @@ export const ledgerEntries = [
         "id": "0000000a-1ee1-44d7-8e04-e47870a8869c",
         "entryId": "0000000a-d9bf-4bf5-8b24-6ad05d207d62",
         "account": {
-          "name": "Uncategorized Revenue",
-          "stableName": "UNCATEGORIZED_REVENUE",
+          "name": "Undeposited Payments",
+          "stableName": "UNDEPOSITED_PAYMENTS",
           "normality": "CREDIT",
           "accountType": {
-            "value": "REVENUE",
-            "displayName": "Revenue"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "UNCATEGORIZED_REVENUE",
-            "displayName": "Uncategorized Revenue"
+            "value": "UNDEPOSITED_OUTFLOWS",
+            "displayName": "Undeposited Outflows"
           },
-          "accountId": "00000009-0000-4000-8000-000000000025",
+          "accountId": "00000009-0000-4000-8000-000000000023",
           "accountNumber": null
         },
         "amount": 1100,
@@ -3489,18 +3435,18 @@ export const ledgerEntries = [
         "id": "0000000a-c457-4c68-892e-5f7032ad84d1",
         "entryId": "0000000a-d9bf-4bf5-8b24-6ad05d207d62",
         "account": {
-          "name": "Returns and Allowances",
-          "stableName": "RETURNS_AND_ALLOWANCES",
-          "normality": "DEBIT",
+          "name": "Contributions",
+          "stableName": "CONTRIBUTIONS",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "REVENUE",
-            "displayName": "Revenue"
+            "value": "EQUITY",
+            "displayName": "Equities"
           },
           "accountSubtype": {
-            "value": "RETURNS_ALLOWANCES",
-            "displayName": "Returns & Allowances"
+            "value": "CONTRIBUTIONS",
+            "displayName": "Contributions"
           },
-          "accountId": "00000009-0000-4000-8000-000000000026",
+          "accountId": "00000009-0000-4000-8000-000000000025",
           "accountNumber": null
         },
         "amount": 1100,
@@ -3555,16 +3501,16 @@ export const ledgerEntries = [
         "id": "0000000a-3fbc-469a-81b5-985a75527846",
         "entryId": "0000000a-c7a3-486f-8340-342524b2d9ba",
         "account": {
-          "name": "Distributions",
-          "stableName": "DISTRIBUTIONS",
-          "normality": "DEBIT",
+          "name": "Lines of Credit",
+          "stableName": "LINE_OF_CREDIT",
+          "normality": "CREDIT",
           "accountType": {
-            "value": "EQUITY",
-            "displayName": "Equities"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "DISTRIBUTIONS",
-            "displayName": "Distributions"
+            "value": "LINE_OF_CREDIT",
+            "displayName": "Lines of Credit"
           },
           "accountId": "00000009-0000-4000-8000-000000000019",
           "accountNumber": null
@@ -3582,16 +3528,16 @@ export const ledgerEntries = [
         "id": "0000000a-5d30-4fef-8e14-61ca1d9e507a",
         "entryId": "0000000a-c7a3-486f-8340-342524b2d9ba",
         "account": {
-          "name": "Common Stock",
-          "stableName": "COMMON_STOCK",
+          "name": "Notes Payable",
+          "stableName": "NOTES_PAYABLE",
           "normality": "CREDIT",
           "accountType": {
-            "value": "EQUITY",
-            "displayName": "Equities"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "COMMON_STOCK",
-            "displayName": "Common Stock"
+            "value": "NOTES_PAYABLE",
+            "displayName": "Notes Payable"
           },
           "accountId": "00000009-0000-4000-8000-000000000020",
           "accountNumber": null
@@ -3609,16 +3555,16 @@ export const ledgerEntries = [
         "id": "0000000a-27e6-479b-8352-2a74567844fa",
         "entryId": "0000000a-c7a3-486f-8340-342524b2d9ba",
         "account": {
-          "name": "Retained Earnings",
-          "stableName": "RETAINED_EARNINGS",
+          "name": "Collected Tips",
+          "stableName": "TIPS",
           "normality": "CREDIT",
           "accountType": {
-            "value": "EQUITY",
-            "displayName": "Equities"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "RETAINED_EARNINGS",
-            "displayName": "Retained Earnings"
+            "value": "TIPS",
+            "displayName": "Tips"
           },
           "accountId": "00000009-0000-4000-8000-000000000021",
           "accountNumber": null
@@ -3636,18 +3582,18 @@ export const ledgerEntries = [
         "id": "0000000a-9712-4c64-81e5-d3e9989b4aeb",
         "entryId": "0000000a-c7a3-486f-8340-342524b2d9ba",
         "account": {
-          "name": "Sales",
-          "stableName": "SALES",
+          "name": "Unearned Revenue",
+          "stableName": "UNEARNED_REVENUE",
           "normality": "CREDIT",
           "accountType": {
-            "value": "REVENUE",
-            "displayName": "Revenue"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "SALES",
-            "displayName": "Sales"
+            "value": "UNEARNED_REVENUE",
+            "displayName": "Unearned Revenue"
           },
-          "accountId": "00000009-0000-4000-8000-000000000024",
+          "accountId": "00000009-0000-4000-8000-000000000022",
           "accountNumber": null
         },
         "amount": 499400,
@@ -3702,18 +3648,18 @@ export const ledgerEntries = [
         "id": "0000000a-0c8d-4e53-8560-f83c13f84eda",
         "entryId": "0000000a-54ba-4703-827f-c760f70146fb",
         "account": {
-          "name": "Notes Payable",
-          "stableName": "NOTES_PAYABLE",
+          "name": "Sales Taxes Payable",
+          "stableName": "SALES_TAXES_PAYABLE",
           "normality": "CREDIT",
           "accountType": {
             "value": "LIABILITY",
             "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "NOTES_PAYABLE",
-            "displayName": "Notes Payable"
+            "value": "SALES_TAXES_PAYABLE",
+            "displayName": "Sales Taxes Payable"
           },
-          "accountId": "00000009-0000-4000-8000-000000000016",
+          "accountId": "00000009-0000-4000-8000-000000000017",
           "accountNumber": null
         },
         "amount": 468000,
@@ -3729,16 +3675,16 @@ export const ledgerEntries = [
         "id": "0000000a-4d68-4dcd-8847-0bc2ff4509d5",
         "entryId": "0000000a-54ba-4703-827f-c760f70146fb",
         "account": {
-          "name": "Contributions",
-          "stableName": "CONTRIBUTIONS",
+          "name": "Other Taxes Payable",
+          "stableName": "OTHER_TAXES_PAYABLE",
           "normality": "CREDIT",
           "accountType": {
-            "value": "EQUITY",
-            "displayName": "Equities"
+            "value": "LIABILITY",
+            "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "CONTRIBUTIONS",
-            "displayName": "Contributions"
+            "value": "OTHER_TAXES_PAYABLE",
+            "displayName": "Other Taxes Payable"
           },
           "accountId": "00000009-0000-4000-8000-000000000018",
           "accountNumber": null
@@ -3794,18 +3740,18 @@ export const ledgerEntries = [
         "id": "0000000a-e968-49f1-8c59-d56d9206f395",
         "entryId": "0000000a-98da-4862-898c-3559b33f72d8",
         "account": {
-          "name": "Sales Taxes Payable",
-          "stableName": "SALES_TAXES_PAYABLE",
+          "name": "Credit Cards",
+          "stableName": "CREDIT_CARDS",
           "normality": "CREDIT",
           "accountType": {
             "value": "LIABILITY",
             "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "SALES_TAXES_PAYABLE",
-            "displayName": "Sales Taxes Payable"
+            "value": "CREDIT_CARD",
+            "displayName": "Credit Cards"
           },
-          "accountId": "00000009-0000-4000-8000-000000000013",
+          "accountId": "00000009-0000-4000-8000-000000000014",
           "accountNumber": null
         },
         "amount": 115500,
@@ -3821,18 +3767,18 @@ export const ledgerEntries = [
         "id": "0000000a-f91f-4beb-8874-f38e04d0d7ad",
         "entryId": "0000000a-98da-4862-898c-3559b33f72d8",
         "account": {
-          "name": "Unearned Revenue",
-          "stableName": "UNEARNED_REVENUE",
+          "name": "Shareholder Loans",
+          "stableName": "SHAREHOLDER_LOANS",
           "normality": "CREDIT",
           "accountType": {
             "value": "LIABILITY",
             "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "UNEARNED_REVENUE",
-            "displayName": "Unearned Revenue"
+            "value": "SHAREHOLDER_LOAN",
+            "displayName": "Shareholder Loans"
           },
-          "accountId": "00000009-0000-4000-8000-000000000014",
+          "accountId": "00000009-0000-4000-8000-000000000015",
           "accountNumber": null
         },
         "amount": 453700,
@@ -3848,18 +3794,18 @@ export const ledgerEntries = [
         "id": "0000000a-08fb-41d2-8b75-e069d5175b5a",
         "entryId": "0000000a-98da-4862-898c-3559b33f72d8",
         "account": {
-          "name": "Lines of Credit",
-          "stableName": "LINE_OF_CREDIT",
+          "name": "Payroll Liabilities",
+          "stableName": "PAYROLL_LIABILITIES",
           "normality": "CREDIT",
           "accountType": {
             "value": "LIABILITY",
             "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "LINE_OF_CREDIT",
-            "displayName": "Lines of Credit"
+            "value": "PAYROLL_LIABILITY",
+            "displayName": "Payroll Liabilities"
           },
-          "accountId": "00000009-0000-4000-8000-000000000015",
+          "accountId": "00000009-0000-4000-8000-000000000016",
           "accountNumber": null
         },
         "amount": 569200,
@@ -3903,18 +3849,18 @@ export const ledgerEntries = [
         "id": "0000000a-aa8d-4556-8ca5-d9b50ed788dd",
         "entryId": "0000000a-3482-4f61-82d9-cf4407825bf0",
         "account": {
-          "name": "Credit Cards",
-          "stableName": "CREDIT_CARDS",
+          "name": "Accounts Payable (A/P)",
+          "stableName": "ACCOUNTS_PAYABLE",
           "normality": "CREDIT",
           "accountType": {
             "value": "LIABILITY",
             "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "CREDIT_CARD",
-            "displayName": "Credit Cards"
+            "value": "ACCOUNTS_PAYABLE",
+            "displayName": "Accounts Payable"
           },
-          "accountId": "00000009-0000-4000-8000-000000000011",
+          "accountId": "00000009-0000-4000-8000-000000000012",
           "accountNumber": null
         },
         "amount": 499300,
@@ -3930,18 +3876,18 @@ export const ledgerEntries = [
         "id": "0000000a-60a5-4d2b-8521-c240317c49a0",
         "entryId": "0000000a-3482-4f61-82d9-cf4407825bf0",
         "account": {
-          "name": "Payroll Liabilities",
-          "stableName": "PAYROLL_LIABILITIES",
+          "name": "Refund Liabilities",
+          "stableName": "REFUND_LIABILITIES",
           "normality": "CREDIT",
           "accountType": {
             "value": "LIABILITY",
             "displayName": "Liabilities"
           },
           "accountSubtype": {
-            "value": "PAYROLL_LIABILITY",
-            "displayName": "Payroll Liabilities"
+            "value": "REFUND_LIABILITIES",
+            "displayName": "Refund Liabilities"
           },
-          "accountId": "00000009-0000-4000-8000-000000000012",
+          "accountId": "00000009-0000-4000-8000-000000000013",
           "accountNumber": null
         },
         "amount": 499300,
@@ -3985,18 +3931,18 @@ export const ledgerEntries = [
         "id": "0000000a-686b-4fb4-8d24-27e16eacc5c0",
         "entryId": "0000000a-0637-4015-80dc-7630d0ac161b",
         "account": {
-          "name": "Accumulated Depreciation",
-          "stableName": "ACCUMULATED_DEPRECIATION",
-          "normality": "CREDIT",
+          "name": "Undeposited Funds",
+          "stableName": "UNDEPOSITED_FUNDS",
+          "normality": "DEBIT",
           "accountType": {
             "value": "ASSET",
             "displayName": "Assets"
           },
           "accountSubtype": {
-            "value": "ACCUMULATED_DEPRECIATION",
-            "displayName": "Accumulated Depreciation"
+            "value": "UNDEPOSITED_FUNDS",
+            "displayName": "Undeposited Funds"
           },
-          "accountId": "00000009-0000-4000-8000-000000000006",
+          "accountId": "00000009-0000-4000-8000-000000000007",
           "accountNumber": null
         },
         "amount": 114800,
@@ -4012,18 +3958,18 @@ export const ledgerEntries = [
         "id": "0000000a-2c91-4641-82e6-547fdb17e08b",
         "entryId": "0000000a-0637-4015-80dc-7630d0ac161b",
         "account": {
-          "name": "Undeposited Funds",
-          "stableName": "UNDEPOSITED_FUNDS",
+          "name": "Payment Processor Clearing Accounts",
+          "stableName": "PAYMENT_PROCESSOR_CLEARING",
           "normality": "DEBIT",
           "accountType": {
             "value": "ASSET",
             "displayName": "Assets"
           },
           "accountSubtype": {
-            "value": "UNDEPOSITED_FUNDS",
-            "displayName": "Undeposited Funds"
+            "value": "PAYMENT_PROCESSOR_CLEARING_ACCOUNT",
+            "displayName": "Payment Clearing Accounts"
           },
-          "accountId": "00000009-0000-4000-8000-000000000007",
+          "accountId": "00000009-0000-4000-8000-000000000008",
           "accountNumber": null
         },
         "amount": 102600,
@@ -4039,16 +3985,16 @@ export const ledgerEntries = [
         "id": "0000000a-7901-4584-8a0c-e6464fcc4ec2",
         "entryId": "0000000a-0637-4015-80dc-7630d0ac161b",
         "account": {
-          "name": "Accounts Payable (A/P)",
-          "stableName": "ACCOUNTS_PAYABLE",
-          "normality": "CREDIT",
+          "name": "Development Costs",
+          "stableName": "DEVELOPMENT_COSTS",
+          "normality": "DEBIT",
           "accountType": {
-            "value": "LIABILITY",
-            "displayName": "Liabilities"
+            "value": "ASSET",
+            "displayName": "Assets"
           },
           "accountSubtype": {
-            "value": "ACCOUNTS_PAYABLE",
-            "displayName": "Accounts Payable"
+            "value": "DEVELOPMENT_COSTS",
+            "displayName": "Development Costs"
           },
           "accountId": "00000009-0000-4000-8000-000000000010",
           "accountNumber": null
@@ -4121,18 +4067,18 @@ export const ledgerEntries = [
         "id": "0000000a-a6d2-4b05-842e-3e5afd3b7bed",
         "entryId": "0000000a-db92-4483-8d55-6765962b7e9c",
         "account": {
-          "name": "Fixed Assets",
-          "stableName": "FIXED_ASSETS",
-          "normality": "DEBIT",
+          "name": "Accumulated Depreciation",
+          "stableName": "ACCUMULATED_DEPRECIATION",
+          "normality": "CREDIT",
           "accountType": {
             "value": "ASSET",
             "displayName": "Assets"
           },
           "accountSubtype": {
-            "value": "FIXED_ASSET",
-            "displayName": "Fixed Assets"
+            "value": "ACCUMULATED_DEPRECIATION",
+            "displayName": "Accumulated Depreciation"
           },
-          "accountId": "00000009-0000-4000-8000-000000000005",
+          "accountId": "00000009-0000-4000-8000-000000000006",
           "accountNumber": null
         },
         "amount": 128900,
