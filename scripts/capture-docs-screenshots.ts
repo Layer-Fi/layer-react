@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { chromium } from 'playwright'
 import { type DocsScreenshot, DOCS_SCREENSHOT_WIDTHS, DOCS_SCREENSHOTS } from './docs-screenshots.manifest'
-import { requireStorybookBuild, serveStorybookStatic, STATIC_ROOT } from './serveStorybookStatic'
+import { requireStorybookBuild, serveStorybookStatic, STATIC_ROOT } from './serve-storybook-static'
 
 // The story is rendered before its data lands, so settle after the network goes quiet.
 // preview.tsx adds a 250ms floor to every mocked response.

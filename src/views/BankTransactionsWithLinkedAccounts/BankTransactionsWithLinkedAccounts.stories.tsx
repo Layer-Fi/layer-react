@@ -87,7 +87,6 @@ type Story = StoryObj<BankTransactionsWithLinkedAccountsStoryArgs>
 
 // ACTIVE (a bookkeeping client) disables self-serve categorization.
 export const BookkeepingEnabled: Story = {
-  tags: ['docs-screenshot'],
   parameters: {
     msw: {
       handlers: [
@@ -99,4 +98,7 @@ export const BookkeepingEnabled: Story = {
 }
 
 // The global mock's status is NOT_PURCHASED, so categorization is enabled.
-export const BookkeepingDisabled: Story = {}
+export const BookkeepingDisabled: Story = {
+  tags: ['docs-screenshot'],
+  parameters: { responseDelay: 0 },
+}

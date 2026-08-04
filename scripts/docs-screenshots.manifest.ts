@@ -138,7 +138,7 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     page: 'embedded-components/pages/accounting-overview.mdx',
   },
   {
-    storyId: 'views-banktransactions-withlinkedaccounts--bookkeeping-enabled',
+    storyId: 'views-banktransactions-withlinkedaccounts--bookkeeping-disabled',
     out: 'pages/bank-transactions-with-linked-accounts.png',
     viewport: 'desktop',
     maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,

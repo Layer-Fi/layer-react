@@ -32,19 +32,24 @@ export const Default: Story = {
   tags: ['docs-screenshot'],
 }
 
-// Cash sales carry `customer: null`, which leaves the detail view's customer and email blank —
-// and one of those sorts to the top of the table. Derived from the fixtures rather than hardcoded
-// so regenerating them can renumber the invoices without silently reselecting an empty one.
-const INVOICE_NUMBERS_WITH_CUSTOMER = invoices.flatMap(invoice =>
-  invoice.customer !== null && invoice.invoiceNumber !== null ? [invoice.invoiceNumber] : [],
+// Cash sales carry `customer: null`, which leaves the detail view's customer and email blank, and
+// one of those sorts to the top of the table. Prefer an individual over a company, since the view
+// renders `companyName ?? individualName` and a person reads better in the docs. Derived from the
+// fixtures rather than hardcoded so regenerating them can renumber the invoices freely.
+const INVOICE_NUMBERS_WITH_NAMED_PERSON = invoices.flatMap(invoice =>
+  invoice.customer?.individualName != null
+  && invoice.customer.companyName == null
+  && invoice.invoiceNumber !== null
+    ? [invoice.invoiceNumber]
+    : [],
 )
 
-const findInvoiceRowWithCustomer = (rows: ReadonlyArray<HTMLElement>) => {
+const findInvoiceRowWithNamedPerson = (rows: ReadonlyArray<HTMLElement>) => {
   for (const row of rows) {
-    const number = INVOICE_NUMBERS_WITH_CUSTOMER.find(value => row.textContent?.includes(value))
+    const number = INVOICE_NUMBERS_WITH_NAMED_PERSON.find(value => row.textContent?.includes(value))
     if (number) return { row, number }
   }
-  throw new Error('no invoice row with a customer is on the first page')
+  throw new Error('no invoice row for an individual customer is on the first page')
 }
 
 // A populated invoice, not the empty create form. Only the narrow layouts navigate to the
@@ -54,7 +59,7 @@ export const Detail: Story = {
   parameters: { chromatic: { viewports: [BREAKPOINTS.TABLET - 1] }, responseDelay: 0 },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const { row, number } = findInvoiceRowWithCustomer(await findEntryRows(canvas))
+    const { row, number } = findInvoiceRowWithNamedPerson(await findEntryRows(canvas))
 
     await userEvent.click(row)
     await canvas.findByText(`Invoice #${number}`, undefined, { timeout: 10_000 })

@@ -8,11 +8,13 @@ import { type BankTransactionsStringOverrides } from '@features/bankTransactions
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { handlers } from '@msw/handlers'
 import { makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
+import { bankTransactions } from '@fixtures/generated/bankTransactions.gen'
 import {
   type BankTransactionsStoryArgs as SharedBankTransactionsArgs,
   bankTransactionsStoryDefaultArgs,
   makeBankTransactionsStoryControls,
 } from '@test-utils/bankTransactionsStoryControls'
+import { findEntryRows } from '@test-utils/storybook/findEntryRows'
 
 type BankTransactionsStoryArgs = SharedBankTransactionsArgs & {
   pageSize: number
@@ -211,21 +213,25 @@ export const BookkeepingEnabled: Story = {
   },
 }
 
-// The global mock's status is NOT_PURCHASED, so categorization is enabled. The second row is
-// expanded to show the categorize/match form the first row's collapsed state can't convey.
+const CATEGORIZABLE_DESCRIPTIONS = bankTransactions.flatMap(transaction =>
+  (transaction.suggestedMatches ?? []).length === 0 && transaction.description
+    ? [transaction.description]
+    : [],
+)
+
 export const BookkeepingDisabled: Story = {
   tags: ['docs-screenshot'],
   parameters: { responseDelay: 0 },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    // The table sets `nonAria` to render expanded rows, so there are no `role="row"` nodes to
-    // count — the per-row toggles appearing is the signal that real transactions have landed.
-    const toggles = await canvas.findAllByRole(
-      'button',
-      { name: 'Toggle details' },
-      { timeout: 15_000 },
+    const rows = await findEntryRows(canvas)
+    const row = rows.find(candidate =>
+      CATEGORIZABLE_DESCRIPTIONS.some(description => candidate.textContent?.includes(description)),
     )
-    await userEvent.click(toggles[1])
+    if (!row) throw new Error('no categorizable transaction row is on the first page')
+
+    const toggle = within(row).getByRole('button', { name: 'Toggle details' })
+    await userEvent.click(toggle)
     await canvas.findByLabelText('Categorize or match transaction')
   },
 }

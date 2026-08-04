@@ -7,11 +7,11 @@ export const vendors = [
     "externalId": null,
     "individualName": null,
     "companyName": "Vandelay Industries",
-    "email": null,
+    "email": "contact@vandelayindustries.test",
     "mobilePhone": null,
     "officePhone": null,
-    "status": "ARCHIVED",
-    "memo": null
+    "status": "ACTIVE",
+    "memo": "Requires PO number"
   },
   {
     "id": "00000004-db92-4483-8d55-6765962b7e9c",
@@ -19,7 +19,7 @@ export const vendors = [
     "individualName": "Kenji Tanaka",
     "companyName": "Initech",
     "email": "kenji.tanaka@initech.test",
-    "mobilePhone": "+15425550146",
+    "mobilePhone": "+13775550198",
     "officePhone": null,
     "status": "ACTIVE",
     "memo": null
@@ -29,9 +29,9 @@ export const vendors = [
     "externalId": null,
     "individualName": "Liam O'Brien",
     "companyName": null,
-    "email": null,
-    "mobilePhone": "+18015550123",
-    "officePhone": "+18535550185",
+    "email": "liam.o.brien@example.com",
+    "mobilePhone": null,
+    "officePhone": "+18015550123",
     "status": "ARCHIVED",
     "memo": null
   },
@@ -40,11 +40,11 @@ export const vendors = [
     "externalId": null,
     "individualName": "Diego Hernandez",
     "companyName": "Soylent Corp",
-    "email": null,
-    "mobilePhone": "+12035550102",
-    "officePhone": null,
+    "email": "diego.hernandez@soylentcorp.test",
+    "mobilePhone": null,
+    "officePhone": "+12035550102",
     "status": "ACTIVE",
-    "memo": "Net 30 terms"
+    "memo": "Requires PO number"
   },
   {
     "id": "00000004-98da-4862-898c-3559b33f72d8",
@@ -52,8 +52,8 @@ export const vendors = [
     "individualName": "Jane Doe",
     "companyName": null,
     "email": "jane.doe@example.com",
-    "mobilePhone": null,
-    "officePhone": "+12035550103",
+    "mobilePhone": "+19945550103",
+    "officePhone": null,
     "status": "ACTIVE",
     "memo": null
   },
@@ -62,9 +62,9 @@ export const vendors = [
     "externalId": null,
     "individualName": "Lucas Silva",
     "companyName": null,
-    "email": null,
-    "mobilePhone": "+12065550197",
-    "officePhone": null,
+    "email": "lucas.silva@example.com",
+    "mobilePhone": null,
+    "officePhone": "+12065550197",
     "status": "ACTIVE",
     "memo": null
   },
@@ -73,10 +73,10 @@ export const vendors = [
     "externalId": null,
     "individualName": "John Smith",
     "companyName": "Massive Dynamic",
-    "email": null,
-    "mobilePhone": "+19765550181",
-    "officePhone": null,
-    "status": "ARCHIVED",
+    "email": "john.smith@massivedynamic.test",
+    "mobilePhone": null,
+    "officePhone": "+19765550181",
+    "status": "ACTIVE",
     "memo": null
   },
   {
@@ -84,10 +84,10 @@ export const vendors = [
     "externalId": null,
     "individualName": null,
     "companyName": "Initech",
-    "email": null,
-    "mobilePhone": "+12085550102",
-    "officePhone": "+12075550102",
-    "status": "ACTIVE",
+    "email": "contact@initech.test",
+    "mobilePhone": null,
+    "officePhone": "+12085550102",
+    "status": "ARCHIVED",
     "memo": null
   },
   {
@@ -96,8 +96,8 @@ export const vendors = [
     "individualName": "Sofia Rossi",
     "companyName": null,
     "email": "sofia.rossi@example.com",
-    "mobilePhone": null,
-    "officePhone": null,
+    "mobilePhone": "+17505550168",
+    "officePhone": "+19935550141",
     "status": "ARCHIVED",
     "memo": null
   },
@@ -106,7 +106,7 @@ export const vendors = [
     "externalId": null,
     "individualName": "Aisha Bello",
     "companyName": null,
-    "email": null,
+    "email": "aisha.bello@example.com",
     "mobilePhone": null,
     "officePhone": null,
     "status": "ACTIVE",

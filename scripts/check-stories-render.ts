@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import { chromium, type Page } from 'playwright'
 import { DOCS_SCREENSHOT_WIDTHS } from './docs-screenshots.manifest'
-import { requireStorybookBuild, serveStorybookStatic, STATIC_ROOT } from './serveStorybookStatic'
+import { requireStorybookBuild, serveStorybookStatic, STATIC_ROOT } from './serve-storybook-static'
 
 // Renders every story headlessly and fails on a render error, an unhandled exception, or a
 // play function that throws. Chromatic covers only the design system, so without this a
