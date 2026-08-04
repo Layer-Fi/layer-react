@@ -19,8 +19,7 @@ import {
 
 const COLUMN_CONFIG = getAccountColumnConfig()
 
-// PAYROLL is the depth-2 node under EXPENSES, so this opens all three levels.
-const PARTIALLY_EXPANDED: ExpandedState = { ASSETS: true, EXPENSES: true, PAYROLL: true }
+const PARTIALLY_EXPANDED: ExpandedState = { 'assets': true, 'assets.current': true, 'liabilities': true }
 
 const meta: Meta<typeof ExpandableDataTable<AccountNode>> = {
   title: 'Blocks/Table/ExpandableDataTable',

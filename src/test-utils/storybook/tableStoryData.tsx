@@ -5,10 +5,10 @@ import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import type { ColumnConfig } from '@blocks/Table/DataTable/utils/column'
 
-import { BASE_CHART_OF_ACCOUNTS, type BaseChartAccountNode } from '@fixtures/chartOfAccounts/constants'
 import { customers } from '@fixtures/generated/customers.gen'
 
 export type CustomerRow = (typeof customers)[number]
@@ -161,12 +161,83 @@ export const CustomerExpandedRow = ({ row }: { row: Row<CustomerRow> }) => (
   </VStack>
 )
 
-export type AccountNode = BaseChartAccountNode
+export type AccountNode = {
+  accountId: string
+  name: string
+  accountType: string
+  currentBalance: number
+  priorBalance: number
+  subAccounts?: AccountNode[]
+}
 
-export const ACCOUNT_TREE = BASE_CHART_OF_ACCOUNTS as AccountNode[]
+export const ACCOUNT_TREE: AccountNode[] = [
+  {
+    accountId: 'assets',
+    name: 'Assets',
+    accountType: 'Asset',
+    currentBalance: 412_800_00,
+    priorBalance: 388_140_00,
+    subAccounts: [
+      {
+        accountId: 'assets.current',
+        name: 'Current assets',
+        accountType: 'Asset',
+        currentBalance: 214_300_00,
+        priorBalance: 201_050_00,
+        subAccounts: [
+          { accountId: 'assets.current.checking', name: 'Business checking', accountType: 'Bank', currentBalance: 88_420_00, priorBalance: 79_310_00 },
+          { accountId: 'assets.current.savings', name: 'Business savings', accountType: 'Bank', currentBalance: 95_000_00, priorBalance: 95_000_00 },
+          { accountId: 'assets.current.ar', name: 'Accounts receivable', accountType: 'Receivable', currentBalance: 30_880_00, priorBalance: 26_740_00 },
+        ],
+      },
+      {
+        accountId: 'assets.fixed',
+        name: 'Fixed assets',
+        accountType: 'Asset',
+        currentBalance: 198_500_00,
+        priorBalance: 187_090_00,
+        subAccounts: [
+          { accountId: 'assets.fixed.equipment', name: 'Equipment', accountType: 'Asset', currentBalance: 142_500_00, priorBalance: 138_200_00 },
+          { accountId: 'assets.fixed.vehicles', name: 'Vehicles', accountType: 'Asset', currentBalance: 56_000_00, priorBalance: 48_890_00 },
+        ],
+      },
+    ],
+  },
+  {
+    accountId: 'liabilities',
+    name: 'Liabilities',
+    accountType: 'Liability',
+    currentBalance: 96_240_00,
+    priorBalance: 104_610_00,
+    subAccounts: [
+      { accountId: 'liabilities.ap', name: 'Accounts payable', accountType: 'Payable', currentBalance: 41_240_00, priorBalance: 52_610_00 },
+      { accountId: 'liabilities.card', name: 'Corporate card', accountType: 'Credit card', currentBalance: 15_000_00, priorBalance: 12_000_00 },
+      { accountId: 'liabilities.loan', name: 'Equipment loan', accountType: 'Loan', currentBalance: 40_000_00, priorBalance: 40_000_00 },
+    ],
+  },
+  {
+    accountId: 'equity',
+    name: 'Equity',
+    accountType: 'Equity',
+    currentBalance: 316_560_00,
+    priorBalance: 283_530_00,
+    subAccounts: [
+      { accountId: 'equity.retained', name: 'Retained earnings', accountType: 'Equity', currentBalance: 268_560_00, priorBalance: 243_530_00 },
+      { accountId: 'equity.contributions', name: 'Owner contributions', accountType: 'Equity', currentBalance: 48_000_00, priorBalance: 40_000_00 },
+    ],
+  },
+]
 
-export const getAccountSubRows = (node: AccountNode) => node.subAccounts as AccountNode[]
-export const getAccountRowId = (node: AccountNode) => node.stableName ?? node.name
+export const getAccountSubRows = (node: AccountNode) => node.subAccounts
+export const getAccountRowId = (node: AccountNode) => node.accountId
+
+const DeltaCell = ({ node }: { node: AccountNode }) => {
+  const delta = node.currentBalance - node.priorBalance
+
+  if (delta === 0) return <Span variant='subtle'>—</Span>
+
+  return <MoneySpan variant={delta > 0 ? 'inherit' : 'subtle'} amount={delta} displayPlusSign />
+}
 
 export const getAccountColumnConfig = (): ColumnConfig<AccountNode> => [
   {
@@ -178,17 +249,24 @@ export const getAccountColumnConfig = (): ColumnConfig<AccountNode> => [
   {
     id: 'AccountType',
     header: 'Type',
-    cell: row => <Span variant='subtle'>{row.original.accountType.displayName}</Span>,
+    cell: row => <Span variant='subtle'>{row.original.accountType}</Span>,
   },
   {
-    id: 'AccountSubtype',
-    header: 'Subtype',
-    cell: row => <Span variant='subtle'>{row.original.accountSubtype.displayName}</Span>,
+    id: 'PriorBalance',
+    header: 'Prior period',
+    cell: row => <MoneySpan variant='subtle' amount={row.original.priorBalance} />,
+    alignment: Alignment.Right,
   },
   {
-    id: 'Normality',
-    header: 'Normality',
-    cell: row => <Span variant='subtle'>{row.original.normality}</Span>,
+    id: 'CurrentBalance',
+    header: 'Current',
+    cell: row => <MoneySpan weight='bold' amount={row.original.currentBalance} />,
+    alignment: Alignment.Right,
+  },
+  {
+    id: 'Delta',
+    header: 'Change',
+    cell: row => <DeltaCell node={row.original} />,
     alignment: Alignment.Right,
   },
 ]
@@ -243,7 +321,7 @@ const STORY_STYLES = `
   }
 
   .Layer__UI__Table__TableStoryAccounts {
-    --table-story-columns: minmax(12rem, 1fr) 9rem 12rem 8rem;
+    --table-story-columns: minmax(12rem, 1fr) 9rem 9rem 9rem 9rem;
   }
 
   .Layer__UI__Table__TableStory .Layer__UI__Table-Row:not(.Layer__DataTable__EmptyState__Row, .Layer__DataTable__ExpandedRow),
