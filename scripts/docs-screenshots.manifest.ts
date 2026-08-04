@@ -20,6 +20,10 @@ export type DocsScreenshot = {
   page: string
 }
 
+// Doc pages with no story to shoot yet, so their images stay hand-managed:
+//   components/balance-sheet, components/cash-flow-statement, components/pnl-table,
+//   pages/unified-reports. (pages/reports is deprecated and intentionally skipped.)
+// Add the story, then add the entry here.
 export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
   {
     storyId: 'components-banktransactions--bookkeeping-enabled',
@@ -34,10 +38,58 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     page: 'embedded-components/components/chart-of-accounts.mdx',
   },
   {
+    storyId: 'blocks-datepickers-globaldaterangeselection--default',
+    out: 'components/global-date-range-selection.png',
+    viewport: 'tablet',
+    page: 'embedded-components/components/global-date-range-selection.mdx',
+  },
+  {
+    storyId: 'blocks-datepickers-globalmonthpicker--default',
+    out: 'components/global-month-picker.png',
+    viewport: 'tablet',
+    page: 'embedded-components/components/global-month-picker.mdx',
+  },
+  {
+    storyId: 'views-invoices--default',
+    out: 'components/invoices.png',
+    viewport: 'desktop',
+    page: 'embedded-components/components/invoices.mdx',
+  },
+  {
+    storyId: 'components-journal--default',
+    out: 'components/journal.png',
+    viewport: 'desktop',
+    page: 'embedded-components/components/journal.mdx',
+  },
+  {
+    storyId: 'views-landingpage--default',
+    out: 'components/landing-page.png',
+    viewport: 'desktop',
+    page: 'embedded-components/components/landing-page.mdx',
+  },
+  {
+    storyId: 'components-linkaccounts--default',
+    out: 'components/link-accounts.png',
+    viewport: 'desktop',
+    page: 'embedded-components/components/link-accounts.mdx',
+  },
+  {
     storyId: 'components-linkedaccounts--default',
     out: 'components/linked-accounts.png',
     viewport: 'desktop',
     page: 'embedded-components/components/linked-accounts.mdx',
+  },
+  {
+    storyId: 'components-profitandloss-detailedcharts--revenue',
+    out: 'components/pnl-breakdown-charts.png',
+    viewport: 'desktop',
+    page: 'embedded-components/components/pnl-breakdown-charts.mdx',
+  },
+  {
+    storyId: 'components-profitandloss-summaries--profit-and-loss',
+    out: 'components/pnl-cards.png',
+    viewport: 'desktop',
+    page: 'embedded-components/components/pnl-cards.mdx',
   },
   {
     storyId: 'components-profitandloss-chart--default',
@@ -46,9 +98,45 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     page: 'embedded-components/components/pnl-chart.mdx',
   },
   {
+    storyId: 'components-tasks--default',
+    out: 'components/tasks.png',
+    viewport: 'desktop',
+    page: 'embedded-components/components/tasks.mdx',
+  },
+  {
+    storyId: 'views-overview-accounting--default',
+    out: 'pages/accounting-overview.png',
+    viewport: 'desktop',
+    page: 'embedded-components/pages/accounting-overview.mdx',
+  },
+  {
+    storyId: 'views-banktransactions-withlinkedaccounts--bookkeeping-enabled',
+    out: 'pages/bank-transactions-with-linked-accounts.png',
+    viewport: 'desktop',
+    page: 'embedded-components/pages/bank-transactions-with-linked-accounts.mdx',
+  },
+  {
+    storyId: 'views-overview-bookkeeping--default',
+    out: 'pages/bookkeeping-overview.png',
+    viewport: 'desktop',
+    page: 'embedded-components/pages/bookkeeping-overview.mdx',
+  },
+  {
     storyId: 'views-generalledger--default',
-    out: 'components/general-ledger-view.png',
+    out: 'pages/general-ledger-view.png',
     viewport: 'desktop',
     page: 'embedded-components/pages/general-ledger-view.mdx',
+  },
+  {
+    storyId: 'views-mileagetracking--default',
+    out: 'pages/mileage-tracking.png',
+    viewport: 'desktop',
+    page: 'embedded-components/pages/mileage-tracking.mdx',
+  },
+  {
+    storyId: 'views-taxestimates--default',
+    out: 'pages/tax-estimates.png',
+    viewport: 'desktop',
+    page: 'embedded-components/pages/tax-estimates.mdx',
   },
 ]

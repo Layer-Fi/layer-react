@@ -1,18 +1,30 @@
 name: Docs — Screenshots
 
-# Manual button. Captures the stories listed in scripts/docs-screenshots.manifest.ts
-# from a headless Storybook build and opens a PR in Layer-Fi/api-documentation with
-# the refreshed PNGs. Never edits .mdx — a page picks up a new image once, by hand,
-# and refreshes from then on.
+# Captures the stories listed in scripts/docs-screenshots.manifest.ts from a headless
+# Storybook build and opens a PR in Layer-Fi/api-documentation with the refreshed
+# PNGs. Never edits .mdx — a page picks up a new image once, by hand, and refreshes
+# from then on.
 #
-# Point `ref` at a release tag (e.g. v0.1.144) to publish the UI as shipped, or leave
-# it on main to preview what the next release will look like.
+# Runs automatically after a stable npm publish, so the published docs images track
+# the shipped UI. Also dispatchable by hand: point `ref` at main to preview what the
+# next release will look like, or re-run after a capture flake.
+#
+# Unchanged bytes open no PR, so a release that moved no pixels is silent.
 #
 # Auth: a GitHub App installed on Layer-Fi/api-documentation only, with
 # contents:write + pull-requests:write. Secrets: DOCS_BOT_APP_ID,
 # DOCS_BOT_PRIVATE_KEY. The installation token is minted per run and expires with it.
 
 on:
+  workflow_call:
+    inputs:
+      ref:
+        description: 'Ref to capture from (a release tag)'
+        type: string
+        required: true
+      dry_run:
+        type: boolean
+        default: false
   workflow_dispatch:
     inputs:
       ref:

@@ -75,9 +75,8 @@ component to look right is reporting a component bug.
 ## Some stories are load-bearing for the public docs
 
 `scripts/docs-screenshots.manifest.ts` maps a handful of story ids to images in
-`Layer-Fi/api-documentation`; the manually-run `Docs — Screenshots` workflow
-(`.github/workflows/docs-screenshots.yml`) recaptures them and opens a docs PR. Renaming or
-deleting one of those stories fails
+`Layer-Fi/api-documentation`; every stable release recaptures them and opens a docs PR
+(`.github/workflows/docs-screenshots.yml`). Renaming or deleting one of those stories fails
 `npm run screenshots:check` on the PR — update the manifest in the same change.
 
 ## Flakiness
