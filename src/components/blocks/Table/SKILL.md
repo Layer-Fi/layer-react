@@ -58,7 +58,6 @@ the config sets `grid-template-columns` — every table needs a stylesheet keyed
   table-layout: fixed;
   width: 100%;
 
-  // Fallback and detail rows span every column, so they must stay out of the grid
   .Layer__UI__Table-Row:not(.Layer__DataTable__EmptyState__Row, .Layer__DataTable__ExpandedRow),
   .Layer__UI__Table-TableHeader > tr {
     display: grid;
@@ -66,12 +65,6 @@ the config sets `grid-template-columns` — every table needs a stylesheet keyed
   }
 }
 ```
-
-Two things to know: the table also gets a `--<n>Columns` modifier class, which is how a table whose
-column count changes (selection injects a column) switches templates — see
-`bankTransactionsTable.scss`. And `VirtualizedDataTable` uses its own row classes
-(`.Layer__UI__VirtualizedTable__row`, `.Layer__UI__VirtualizedTable__header > tr`) instead of
-`.Layer__UI__Table-Row`.
 
 Per-cell tweaks hang off `.Layer__UI__Table-Cell__<componentName>--<columnId>`.
 

@@ -3,6 +3,7 @@ import type { ExpandedState } from '@tanstack/react-table'
 
 import { ExpandableDataTable } from '@blocks/Table/ExpandableDataTable/ExpandableDataTable'
 import { ExpandableDataTableProvider } from '@blocks/Table/ExpandableDataTable/ExpandableDataTableProvider'
+import { ExpandableDataTableToggleButton } from '@blocks/Table/ExpandableDataTable/ExpandableDataTableToggleButton'
 import {
   ACCOUNT_TREE,
   type AccountNode,
@@ -58,6 +59,30 @@ export const Default: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: args => (
     <Gallery>
+      <ExpandableDataTable {...args} />
+    </Gallery>
+  ),
+}
+
+/**
+ * `ExpandableDataTableToggleButton` reads the same provider as the table, so a header control can
+ * expand or collapse every row at once. Collapsed here, which `Default` can't also show.
+ */
+export const WithToggleAll: Story = {
+  parameters: { chromatic: { viewports: [1280] } },
+  decorators: [
+    Story => (
+      <>
+        <TableStoryStyles />
+        <ExpandableDataTableProvider>
+          <Story />
+        </ExpandableDataTableProvider>
+      </>
+    ),
+  ],
+  render: args => (
+    <Gallery>
+      <ExpandableDataTableToggleButton />
       <ExpandableDataTable {...args} />
     </Gallery>
   ),

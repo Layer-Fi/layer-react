@@ -1,10 +1,12 @@
 import type { Row } from '@tanstack/react-table'
 
 import { Alignment } from '@internal-types/utility/table'
+import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { HStack, VStack } from '@ui/Stack/Stack'
+import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import type { ColumnConfig } from '@blocks/Table/DataTable/utils/column'
 
@@ -121,9 +123,6 @@ const BASE_ROWS: readonly Omit<InvoiceRow, 'id'>[] = [
   },
 ]
 
-const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
-const formatCents = (cents: number) => currencyFormatter.format(cents / 100)
-
 export const buildInvoiceRows = (count: number): InvoiceRow[] =>
   Array.from({ length: count }, (_unused, index) => {
     const base = BASE_ROWS[index % BASE_ROWS.length]
@@ -157,14 +156,18 @@ const CustomerCell = ({ row }: { row: InvoiceRow }) => (
   </VStack>
 )
 
-const AmountCell = ({ row }: { row: InvoiceRow }) => (
-  <VStack>
-    <Span>{formatCents(row.amountCents)}</Span>
-    {row.outstandingCents > 0 && row.outstandingCents < row.amountCents && (
-      <Span size='sm' variant='subtle'>{`${formatCents(row.outstandingCents)} outstanding`}</Span>
-    )}
-  </VStack>
-)
+const AmountCell = ({ row }: { row: InvoiceRow }) => {
+  const { formatCurrencyFromCents } = useIntlFormatter()
+
+  return (
+    <VStack>
+      <MoneySpan amount={row.amountCents} />
+      {row.outstandingCents > 0 && row.outstandingCents < row.amountCents && (
+        <Span size='sm' variant='subtle'>{`${formatCurrencyFromCents(row.outstandingCents)} outstanding`}</Span>
+      )}
+    </VStack>
+  )
+}
 
 const noop = () => {}
 
@@ -251,13 +254,13 @@ export const getPinnedInvoiceColumnConfig = (): ColumnConfig<InvoiceRow> => [
   {
     id: 'Outstanding',
     header: 'Outstanding',
-    cell: row => <Span>{formatCents(row.original.outstandingCents)}</Span>,
+    cell: row => <MoneySpan amount={row.original.outstandingCents} />,
     alignment: Alignment.Right,
   },
   {
     id: 'Amount',
     header: 'Invoice total',
-    cell: row => <Span>{formatCents(row.original.amountCents)}</Span>,
+    cell: row => <MoneySpan amount={row.original.amountCents} />,
     alignment: Alignment.Right,
   },
   {
@@ -276,16 +279,20 @@ export const getPinnedInvoiceColumnConfig = (): ColumnConfig<InvoiceRow> => [
   },
 ]
 
-export const InvoiceExpandedRow = ({ row }: { row: Row<InvoiceRow> }) => (
-  <VStack gap='xs' pi='md' pb='sm'>
-    <Span weight='bold'>{`${row.original.reference} · ${row.original.customer}`}</Span>
-    <HStack gap='lg'>
-      <Span size='sm' variant='subtle'>{`Owner: ${row.original.owner}`}</Span>
-      <Span size='sm' variant='subtle'>{`Line items: ${row.original.lineItems}`}</Span>
-      <Span size='sm' variant='subtle'>{`Outstanding: ${formatCents(row.original.outstandingCents)}`}</Span>
-    </HStack>
-  </VStack>
-)
+export const InvoiceExpandedRow = ({ row }: { row: Row<InvoiceRow> }) => {
+  const { formatCurrencyFromCents } = useIntlFormatter()
+
+  return (
+    <VStack gap='xs' pi='md' pb='sm'>
+      <Span weight='bold'>{`${row.original.reference} · ${row.original.customer}`}</Span>
+      <HStack gap='lg'>
+        <Span size='sm' variant='subtle'>{`Owner: ${row.original.owner}`}</Span>
+        <Span size='sm' variant='subtle'>{`Line items: ${row.original.lineItems}`}</Span>
+        <Span size='sm' variant='subtle'>{`Outstanding: ${formatCurrencyFromCents(row.original.outstandingCents)}`}</Span>
+      </HStack>
+    </VStack>
+  )
+}
 
 export type AccountNode = {
   accountId: string
@@ -362,11 +369,7 @@ const DeltaCell = ({ node }: { node: AccountNode }) => {
 
   if (delta === 0) return <Span variant='subtle'>—</Span>
 
-  return (
-    <Span variant={delta > 0 ? 'inherit' : 'subtle'}>
-      {`${delta > 0 ? '+' : '−'}${formatCents(Math.abs(delta))}`}
-    </Span>
-  )
+  return <MoneySpan variant={delta > 0 ? 'inherit' : 'subtle'} amount={delta} displayPlusSign />
 }
 
 /** Two-tier header: a leaf `Account` column beside a `Balance` group of three leaves. */
@@ -385,13 +388,13 @@ export const getAccountColumnConfig = (): ColumnConfig<AccountNode> => [
   {
     id: 'PriorBalance',
     header: 'Prior period',
-    cell: row => <Span variant='subtle'>{formatCents(row.original.priorBalance)}</Span>,
+    cell: row => <MoneySpan variant='subtle' amount={row.original.priorBalance} />,
     alignment: Alignment.Right,
   },
   {
     id: 'CurrentBalance',
     header: 'Current',
-    cell: row => <Span weight='bold'>{formatCents(row.original.currentBalance)}</Span>,
+    cell: row => <MoneySpan weight='bold' amount={row.original.currentBalance} />,
     alignment: Alignment.Right,
   },
   {
