@@ -10,6 +10,13 @@ export const DOCS_SCREENSHOT_WIDTHS = {
 
 export type DocsScreenshotViewport = keyof typeof DOCS_SCREENSHOT_WIDTHS
 
+/**
+ * Table views run to several thousand CSS pixels, which reads as an unusable strip once the docs
+ * site scales it to page width. Enough rows to show the shape is the point, so cap the entries
+ * below at this height. Overviews and dashboards stay uncapped — their full length is the layout.
+ */
+export const DOCS_SCREENSHOT_TABLE_HEIGHT = 1200
+
 export type DocsScreenshot = {
   /** Storybook story id, as it appears in storybook-static/index.json. */
   storyId: string
@@ -22,6 +29,8 @@ export type DocsScreenshot = {
    * clipped below desktop. Navigate narrow, screenshot wide.
    */
   interactAt?: DocsScreenshotViewport
+  /** Clips the capture to this many CSS pixels. Omit to capture the component's full height. */
+  maxHeight?: number
   /** The .mdx page that renders this image. Reported in the PR body; never edited. */
   page: string
 }
@@ -36,12 +45,14 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     storyId: 'components-banktransactions--bookkeeping-enabled',
     out: 'components/bank-transactions.png',
     viewport: 'desktop',
+    maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,
     page: 'embedded-components/components/bank-transactions.mdx',
   },
   {
     storyId: 'components-chartofaccounts--default',
     out: 'components/chart-of-accounts.png',
     viewport: 'desktop',
+    maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,
     page: 'embedded-components/components/chart-of-accounts.mdx',
   },
   {
@@ -66,6 +77,7 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     storyId: 'components-journal--default',
     out: 'components/journal.png',
     viewport: 'desktop',
+    maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,
     page: 'embedded-components/components/journal.mdx',
   },
   {
@@ -120,6 +132,7 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     storyId: 'views-banktransactions-withlinkedaccounts--bookkeeping-enabled',
     out: 'pages/bank-transactions-with-linked-accounts.png',
     viewport: 'desktop',
+    maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,
     page: 'embedded-components/pages/bank-transactions-with-linked-accounts.mdx',
   },
   {
@@ -132,6 +145,7 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     storyId: 'views-generalledger--default',
     out: 'pages/general-ledger-view.png',
     viewport: 'desktop',
+    maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,
     page: 'embedded-components/pages/general-ledger-view.mdx',
   },
   {
@@ -150,6 +164,7 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     storyId: 'components-journal--drawer-open',
     out: 'components/journal-sidebar.png',
     viewport: 'desktop',
+    maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,
     page: 'embedded-components/components/journal.mdx',
   },
   {

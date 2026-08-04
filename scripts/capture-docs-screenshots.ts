@@ -37,7 +37,7 @@ async function main() {
   const browser = await chromium.launch()
   const failures: string[] = []
 
-  async function capture({ storyId, out: file, viewport, interactAt }: DocsScreenshot) {
+  async function capture({ storyId, out: file, viewport, interactAt, maxHeight }: DocsScreenshot) {
     const context = await browser.newContext({
       viewport: { width: DOCS_SCREENSHOT_WIDTHS[interactAt ?? viewport], height: 900 },
       deviceScaleFactor: 2,
@@ -73,8 +73,25 @@ async function main() {
       fs.mkdirSync(path.dirname(target), { recursive: true })
       // Scoped to the story root: `layout: 'fullscreen'` stretches the body to the viewport,
       // so a full-page shot pads short components with dead space.
-      await page.locator('#storybook-root').screenshot({ path: target, animations: 'disabled' })
-      console.info(`  ${file}  <-  ${storyId} (${interactAt ? `${interactAt} -> ` : ''}${viewport})`)
+      const root = page.locator('#storybook-root')
+      const box = maxHeight ? await root.boundingBox() : null
+      const clipped = maxHeight !== undefined && box !== null && box.height > maxHeight
+
+      if (clipped) {
+        // `clip` is page-relative and only covers the viewport unless the whole page is captured.
+        await page.screenshot({
+          path: target,
+          fullPage: true,
+          animations: 'disabled',
+          clip: { x: box.x, y: box.y, width: box.width, height: maxHeight },
+        })
+      }
+      else {
+        await root.screenshot({ path: target, animations: 'disabled' })
+      }
+
+      const size = clipped ? `clipped ${Math.round(box.height)}px -> ${maxHeight}px` : `${interactAt ? `${interactAt} -> ` : ''}${viewport}`
+      console.info(`  ${file}  <-  ${storyId} (${size})`)
     }
     finally {
       await context.close()
