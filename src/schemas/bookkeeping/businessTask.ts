@@ -43,8 +43,8 @@ const TaskDocumentSchema = Schema.Struct({
   ),
 })
 
-// We currently treat every business task as a human task; the automated task
-// automated variants are not yet surfaced in the UI.
+// Every business task is treated as a human task; the automated variants are not
+// yet surfaced in the UI.
 export const BusinessTaskSchema = Schema.Struct({
   id: Schema.UUID,
   status: TransformedBusinessTaskStatusSchema,
