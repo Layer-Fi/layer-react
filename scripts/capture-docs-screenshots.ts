@@ -1,25 +1,12 @@
 import fs from 'node:fs'
-import http from 'node:http'
 import path from 'node:path'
 import { chromium } from 'playwright'
 import { type DocsScreenshot, DOCS_SCREENSHOT_WIDTHS, DOCS_SCREENSHOTS } from './docs-screenshots.manifest'
+import { requireStorybookBuild, serveStorybookStatic, STATIC_ROOT } from './serveStorybookStatic'
 
-const STATIC_ROOT = 'storybook-static'
-const PORT = 6007
 // The story is rendered before its data lands, so settle after the network goes quiet.
 // preview.tsx adds a 250ms floor to every mocked response.
 const SETTLE_MS = 750
-
-const MIME: Record<string, string> = {
-  '.html': 'text/html',
-  '.js': 'text/javascript',
-  '.mjs': 'text/javascript',
-  '.css': 'text/css',
-  '.json': 'application/json',
-  '.svg': 'image/svg+xml',
-  '.png': 'image/png',
-  '.woff2': 'font/woff2',
-}
 
 function parseArgs() {
   const args = process.argv.slice(2)
@@ -32,34 +19,10 @@ function parseArgs() {
   return { out, filter }
 }
 
-function serve() {
-  const server = http.createServer((req, res) => {
-    const requested = decodeURIComponent(new URL(req.url ?? '/', 'http://localhost').pathname)
-    const file = path.join(STATIC_ROOT, requested === '/' ? 'index.html' : requested)
-
-    if (!path.resolve(file).startsWith(path.resolve(STATIC_ROOT)) || !fs.existsSync(file)) {
-      res.writeHead(404).end()
-      return
-    }
-
-    res.writeHead(200, {
-      'Content-Type': MIME[path.extname(file)] ?? 'application/octet-stream',
-      // The MSW worker is served from the root, but claim the whole scope anyway.
-      'Service-Worker-Allowed': '/',
-    })
-    fs.createReadStream(file).pipe(res)
-  })
-
-  return new Promise<http.Server>(resolve => server.listen(PORT, () => resolve(server)))
-}
-
 async function main() {
   const { out, filter } = parseArgs()
 
-  if (!fs.existsSync(STATIC_ROOT)) {
-    console.error(`${STATIC_ROOT} not found. Run \`npm run storybook:build\` first.`)
-    process.exit(1)
-  }
+  requireStorybookBuild(STATIC_ROOT)
 
   const targets = filter
     ? DOCS_SCREENSHOTS.filter(({ storyId, out: file }) => storyId.includes(filter) || file.includes(filter))
@@ -70,7 +33,7 @@ async function main() {
     process.exit(1)
   }
 
-  const server = await serve()
+  const { server, origin } = await serveStorybookStatic()
   const browser = await chromium.launch()
   const failures: string[] = []
 
@@ -87,7 +50,7 @@ async function main() {
     page.on('pageerror', error => crashes.push(error.message))
 
     try {
-      await page.goto(`http://localhost:${PORT}/iframe.html?viewMode=story&id=${storyId}`)
+      await page.goto(`${origin}/iframe.html?viewMode=story&id=${storyId}`)
       await page.waitForSelector('#storybook-root > *', { timeout: 30_000 })
       await page.addStyleTag({
         content: '*, *::before, *::after { animation: none !important; transition: none !important; }',
@@ -108,8 +71,8 @@ async function main() {
 
       const target = path.join(out, file)
       fs.mkdirSync(path.dirname(target), { recursive: true })
-      // Scope to the story root, not the page: `layout: 'fullscreen'` stretches the body to the
-      // viewport, so a full-page shot pads short components with dead space.
+      // Scoped to the story root: `layout: 'fullscreen'` stretches the body to the viewport,
+      // so a full-page shot pads short components with dead space.
       await page.locator('#storybook-root').screenshot({ path: target, animations: 'disabled' })
       console.info(`  ${file}  <-  ${storyId} (${interactAt ? `${interactAt} -> ` : ''}${viewport})`)
     }
@@ -123,8 +86,7 @@ async function main() {
       await capture(target)
     }
     catch {
-      // One retry: a story that renders identically on every run can still lose a race
-      // against networkidle on a loaded CI box.
+      // A story that renders identically every run can still lose a race on a loaded CI box.
       try {
         await capture(target)
       }

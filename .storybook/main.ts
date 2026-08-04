@@ -2,6 +2,8 @@ import { join } from 'node:path'
 import { type StorybookConfig } from '@storybook/react-vite'
 import { type Alias, type AliasOptions } from 'vite'
 
+import { PUBLIC_API_TAG } from '../src/test-utils/storybook/tags'
+
 // Plaid's hosted iframe can't run in Storybook; the mock fakes a successful link.
 // Calendly is NOT mocked: stories point CTAs at Calendly's public demo page
 // (calendly.com/calendly-demo), which renders the real widget.
@@ -25,11 +27,10 @@ const withPlaidLinkAlias = (alias: AliasOptions | undefined): AliasOptions =>
 //   chromatic — the design system plus agent scratch stories. Features and views compose
 //               these primitives, so a regression generally surfaces here first.
 const SCOPE = process.env.STORYBOOK_SCOPE
-const PUBLIC_TAG = 'public-api'
 const CHROMATIC_PATHS = /\/src\/components\/(ui|blocks)\/|scratch\.stories\./
 
 const inScope = (fileName: string, tags: string[] | undefined) => {
-  if (SCOPE === 'public') return tags?.includes(PUBLIC_TAG) ?? false
+  if (SCOPE === 'public') return tags?.includes(PUBLIC_API_TAG) ?? false
   if (SCOPE === 'chromatic') return CHROMATIC_PATHS.test(fileName)
   return true
 }

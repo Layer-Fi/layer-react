@@ -4,6 +4,8 @@ import { userEvent, within } from 'storybook/test'
 import { Badge, BadgeVariant } from '@ui/Badge/Badge'
 import { Journal, type JournalProps } from '@features/generalLedger/Journal/Journal'
 
+import { findEntryRows } from '@test-utils/storybook/findEntryRows'
+
 type JournalStoryArgs = {
   showTags: boolean
   showCustomerVendor: boolean
@@ -91,18 +93,11 @@ export const Default: Story = {
 }
 
 export const DrawerOpen: Story = {
-  // Docs captures this at desktop only, and the interaction is desktop-shaped:
-  // the header collapses to icon buttons below the tablet breakpoint.
   parameters: { chromatic: { viewports: [1280] } },
   tags: ['docs-screenshot'],
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    // Wait for entries to land before clicking: the table re-renders as they arrive and
-    // would detach the row. Click exactly once — a second click closes the sidebar, so
-    // retrying the click inside waitFor just toggles it open and shut.
-    // Generous timeout: findBy* defaults to 1s, which a loaded CI runner overruns.
-    await canvas.findByText('1040', undefined, { timeout: 15_000 })
-    const [, firstEntry] = await canvas.findAllByRole('row')
+    const [, firstEntry] = await findEntryRows(canvas)
     await userEvent.click(firstEntry)
     await canvas.findByText(/Journal Entry #/, undefined, { timeout: 10_000 })
   },

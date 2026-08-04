@@ -1,8 +1,8 @@
 import fs from 'node:fs'
 import { DOCS_SCREENSHOTS } from './docs-screenshots.manifest'
+import { DOCS_SCREENSHOT_TAG } from '../src/test-utils/storybook/tags'
 
 const INDEX_PATH = 'storybook-static/index.json'
-const TAG = 'docs-screenshot'
 
 if (!fs.existsSync(INDEX_PATH)) {
   console.error(`${INDEX_PATH} not found. Run \`npm run storybook:build\` first.`)
@@ -22,19 +22,18 @@ for (const { out, storyId } of DOCS_SCREENSHOTS) {
 }
 const duplicates = [...seen].filter(([, ids]) => ids.length > 1)
 
-// The tag is what makes the docs set browsable in Storybook's sidebar filter, so it has
-// to agree with the manifest in both directions or the filter lies.
+// Tag and manifest must agree in both directions or the sidebar filter lies.
 const inManifest = new Set(DOCS_SCREENSHOTS.map(({ storyId }) => storyId))
 const tagged = Object.entries(index.entries)
-  .filter(([, entry]) => entry.tags?.includes(TAG))
+  .filter(([, entry]) => entry.tags?.includes(DOCS_SCREENSHOT_TAG))
   .map(([id]) => id)
 const untagged = DOCS_SCREENSHOTS
-  .filter(({ storyId }) => known.has(storyId) && !index.entries[storyId].tags?.includes(TAG))
+  .filter(({ storyId }) => known.has(storyId) && !index.entries[storyId].tags?.includes(DOCS_SCREENSHOT_TAG))
   .map(({ storyId }) => storyId)
 const unlisted = tagged.filter(id => !inManifest.has(id))
 
 if (missing.length === 0 && duplicates.length === 0 && untagged.length === 0 && unlisted.length === 0) {
-  console.info(`All ${DOCS_SCREENSHOTS.length} documented stories resolve and carry the \`${TAG}\` tag.`)
+  console.info(`All ${DOCS_SCREENSHOTS.length} documented stories resolve and carry the \`${DOCS_SCREENSHOT_TAG}\` tag.`)
   process.exit(0)
 }
 
@@ -47,13 +46,13 @@ if (missing.length > 0) {
 }
 
 if (untagged.length > 0) {
-  console.error(`${untagged.length} manifest entr(ies) are missing the \`${TAG}\` tag:\n`)
+  console.error(`${untagged.length} manifest entr(ies) are missing the \`${DOCS_SCREENSHOT_TAG}\` tag:\n`)
   for (const storyId of untagged) console.error(`  ${storyId}`)
-  console.error(`\nAdd \`tags: ['${TAG}']\` to the story so it shows up under Storybook's tag filter.\n`)
+  console.error(`\nAdd \`tags: ['${DOCS_SCREENSHOT_TAG}']\` to the story so it shows up under Storybook's tag filter.\n`)
 }
 
 if (unlisted.length > 0) {
-  console.error(`${unlisted.length} story(ies) are tagged \`${TAG}\` but absent from the manifest:\n`)
+  console.error(`${unlisted.length} story(ies) are tagged \`${DOCS_SCREENSHOT_TAG}\` but absent from the manifest:\n`)
   for (const storyId of unlisted) console.error(`  ${storyId}`)
   console.error('\nEither add a manifest entry or drop the tag.\n')
 }

@@ -47,7 +47,6 @@ export default meta
 type Story = StoryObj<GlobalDateRangeSelectionProps>
 
 export const Default: Story = {
-  // Docs captures this at one width; a lone control gains nothing from three.
   parameters: { chromatic: { viewports: [BREAKPOINTS.TABLET - 1] } },
   tags: ['docs-screenshot'],
 }

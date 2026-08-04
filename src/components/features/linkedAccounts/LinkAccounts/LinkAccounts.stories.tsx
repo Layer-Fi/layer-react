@@ -68,11 +68,8 @@ export const Default: Story = {
   loaders: [clearBankAccounts],
 }
 
-// The two states after the Plaid handoff. Both start from the seeded store rather than
-// the cleared one, since the link step renders a card per connected account.
+// Both start from the seeded store; the link step renders a card per connected account.
 export const AccountsLinked: Story = {
-  // Docs captures this at desktop only, and the interaction is desktop-shaped:
-  // the header collapses to icon buttons below the tablet breakpoint.
   parameters: { chromatic: { viewports: [1280] } },
   tags: ['docs-screenshot'],
 }
