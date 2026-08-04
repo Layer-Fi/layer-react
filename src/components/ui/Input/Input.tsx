@@ -4,7 +4,7 @@ import {
   type InputProps as ReactAriaInputProps,
 } from 'react-aria-components/Input'
 
-import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 
 import './input.scss'
 

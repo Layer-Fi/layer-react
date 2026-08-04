@@ -16,7 +16,7 @@ import {
   type SingleValueProps,
 } from 'react-select'
 
-import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'
 import type { ComboBoxOption, ComboBoxSlots } from '@ui/ComboBox/types'
 import { LoadingSpinner } from '@ui/Loading/LoadingSpinner'

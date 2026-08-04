@@ -1,7 +1,7 @@
 import { forwardRef, type PropsWithChildren, type ReactNode } from 'react'
 import { AlertTriangle, CheckCircle, Info, XCircle } from 'lucide-react'
 
-import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { Button, type ButtonProps } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'

@@ -1,7 +1,7 @@
 import { forwardRef } from 'react'
 import { Popover as ReactAriaPopover, type PopoverProps as ReactAriaPopoverProps } from 'react-aria-components/Popover'
 
-import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 
 import './popover.scss'
 

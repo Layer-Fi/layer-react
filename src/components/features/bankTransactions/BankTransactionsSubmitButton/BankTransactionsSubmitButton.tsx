@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 
-import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { SubmitAction, SubmitButton, type SubmitButtonProps } from '@ui/Button/SubmitButton'
 
 import './bankTransactionsSubmitButton.scss'

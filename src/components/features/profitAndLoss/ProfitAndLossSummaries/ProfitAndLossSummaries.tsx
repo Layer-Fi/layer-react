@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { DEFAULT_CHART_COLORS } from '@utils/shared/styleUtils/chartColors'
+import { DEFAULT_CHART_COLORS } from '@utils/shared/styles/chartColors'
 import { UNCATEGORIZED_CHART_COLOR } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
 import {
   SummariesContent,

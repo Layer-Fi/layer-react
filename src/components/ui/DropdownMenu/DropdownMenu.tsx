@@ -10,7 +10,7 @@ import {
 } from 'react-aria-components/Menu'
 import { useTranslation } from 'react-i18next'
 
-import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 
 import './dropdownMenu.scss'
 

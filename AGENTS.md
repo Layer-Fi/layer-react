@@ -53,7 +53,7 @@ release process.
 | --- | --- | --- |
 | `src/schemas` | `@schemas/*` | Effect schemas — the source of truth for every API contract |
 | `src/types` | `@internal-types/*` | internal-only types (no wire format) + `utility/` type helpers |
-| `src/utils` | `@utils/*` | pure helpers, split into `features/<domain>/` (domain-aware) and `shared/<capability>/` (`api`, `swr`, `i18n`, `date`, `form`, `number`, `zustand`, `styleUtils`, …) |
+| `src/utils` | `@utils/*` | pure helpers, split into `features/<domain>/` (domain-aware) and `shared/<capability>/` (`api`, `swr`, `i18n`, `date`, `form`, `number`, `zustand`, `styles`, …) |
 | `src/hooks/api/**` | `@api/*` | one file per endpoint in a tree mirroring the REST path, named for the HTTP method (`get.ts`, `post.ts`, …) |
 | `src/hooks/{features,utils,legacy}` | `@hooks/*` | composed feature logic · generic hooks · pre-factory hooks (don't extend) |
 | `src/providers` | `@providers/*` | scoped Zustand stores and DI contexts, one directory per domain plus `global/` (the `LayerProvider` stack) and `common/` (domain-agnostic) |

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
 import { getBankAccountDisplayName, getBankAccountInstitution, isBankAccountSyncing } from '@utils/features/bankAccounts/bankAccount'
-import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { VStack } from '@ui/Stack/Stack'
 import { MoneySpan } from '@ui/Typography/MoneySpan'

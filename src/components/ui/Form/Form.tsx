@@ -13,7 +13,7 @@ import {
   type TextFieldProps as ReactAriaTextFieldProps,
 } from 'react-aria-components/TextField'
 
-import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { withRenderProp } from '@components/utility/withRenderProp'
 
 import './form.scss'

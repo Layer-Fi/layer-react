@@ -48,7 +48,7 @@ one; never invent a near-synonym.
 
 Capability directories name *what the helper operates on*, not where it is used:
 `api`, `array`, `date`, `delay`, `form`, `i18n`, `number`, `request`, `size`, `string`,
-`styleUtils`, `switch`, `swr`, `time`, `zustand`.
+`styles`, `switch`, `swr`, `time`, `zustand`.
 
 ## Conventions
 

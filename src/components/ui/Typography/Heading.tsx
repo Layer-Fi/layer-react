@@ -4,7 +4,7 @@ import {
   type HeadingProps as ReactAriaHeadingProps,
 } from 'react-aria-components/Heading'
 
-import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import type { Spacing } from '@ui/sharedUITypes'
 
 import './heading.scss'
