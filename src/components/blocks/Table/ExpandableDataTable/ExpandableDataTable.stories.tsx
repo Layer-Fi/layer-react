@@ -18,7 +18,7 @@ import {
   TableStoryStyles,
 } from '@blocks/Table/tableStoryData'
 
-import { Col, Gallery, Section } from '@test-utils/storybook/gallery'
+import { Col, Gallery } from '@test-utils/storybook/gallery'
 
 const COLUMN_CONFIG = getAccountColumnConfig()
 
@@ -62,31 +62,25 @@ type Story = StoryObj<typeof ExpandableDataTable<AccountNode>>
 export const Default: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: args => (
-    <Gallery>
-      <Section title='grouped header, partially expanded'>
+    <Gallery gap={32}>
+      <Col label='grouped header, partially expanded'>
         <ExpandableDataTableProvider defaultExpanded={EXPANDED_TOP_LEVEL}>
           <ExpandableDataTable {...args} />
         </ExpandableDataTableProvider>
-      </Section>
-      <Section title='indentSize — per-depth inset, absorbed by the chevron column'>
-        <Gallery>
-          {INDENT_SIZES.map(indentSize => (
-            <Col key={indentSize} label={`indentSize="${indentSize}"`}>
-              <ExpandableDataTableProvider defaultExpanded>
-                <ExpandableDataTable {...args} indentSize={indentSize} />
-              </ExpandableDataTableProvider>
-            </Col>
-          ))}
-        </Gallery>
-      </Section>
-      <Section title='ExpandableDataTableToggleButton — collapsed, expand or collapse every row at once'>
+      </Col>
+      {INDENT_SIZES.map(indentSize => (
+        <Col key={indentSize} label={`indentSize="${indentSize}" — per-depth inset, absorbed by the chevron column`}>
+          <ExpandableDataTableProvider defaultExpanded>
+            <ExpandableDataTable {...args} indentSize={indentSize} />
+          </ExpandableDataTableProvider>
+        </Col>
+      ))}
+      <Col label='ExpandableDataTableToggleButton — collapsed, expand or collapse every row at once'>
         <ExpandableDataTableProvider>
-          <Gallery>
-            <ExpandableDataTableToggleButton />
-            <ExpandableDataTable {...args} />
-          </Gallery>
+          <ExpandableDataTableToggleButton />
+          <ExpandableDataTable {...args} />
         </ExpandableDataTableProvider>
-      </Section>
+      </Col>
     </Gallery>
   ),
 }

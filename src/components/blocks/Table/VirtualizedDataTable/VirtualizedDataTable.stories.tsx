@@ -10,7 +10,7 @@ import {
 } from '@blocks/Table/tableStoryData'
 import { VirtualizedDataTable } from '@blocks/Table/VirtualizedDataTable/VirtualizedDataTable'
 
-import { Col, Gallery, Section } from '@test-utils/storybook/gallery'
+import { Col, Gallery } from '@test-utils/storybook/gallery'
 
 const COLUMN_CONFIG = getInvoiceColumnConfig()
 const LONG_LIST = buildInvoiceRows(2000)
@@ -51,33 +51,25 @@ type Story = StoryObj<typeof VirtualizedDataTable<InvoiceRow>>
 export const Default: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: args => (
-    <Gallery>
-      <Section title='2,000 rows, sticky header'>
+    <Gallery gap={32}>
+      <Col label='2,000 rows, sticky header'>
         <VirtualizedDataTable {...args} />
-      </Section>
-      <Section title='height and rowHeight'>
-        <Gallery>
-          <Col label='shrinkHeightToFitRows, 4 rows'>
-            <VirtualizedDataTable {...args} data={SHORT_LIST} shrinkHeightToFitRows />
-          </Col>
-          <Col label='height=320, rowHeight=72'>
-            <VirtualizedDataTable {...args} height={320} rowHeight={72} />
-          </Col>
-        </Gallery>
-      </Section>
-      <Section title='data states'>
-        <Gallery>
-          <Col label='isLoading'>
-            <VirtualizedDataTable {...args} data={undefined} isLoading />
-          </Col>
-          <Col label='isError'>
-            <VirtualizedDataTable {...args} data={undefined} isError />
-          </Col>
-          <Col label='empty'>
-            <VirtualizedDataTable {...args} data={[]} />
-          </Col>
-        </Gallery>
-      </Section>
+      </Col>
+      <Col label='shrinkHeightToFitRows, 4 rows'>
+        <VirtualizedDataTable {...args} data={SHORT_LIST} shrinkHeightToFitRows />
+      </Col>
+      <Col label='height=320, rowHeight=72'>
+        <VirtualizedDataTable {...args} height={320} rowHeight={72} />
+      </Col>
+      <Col label='isLoading'>
+        <VirtualizedDataTable {...args} data={undefined} isLoading />
+      </Col>
+      <Col label='isError'>
+        <VirtualizedDataTable {...args} data={undefined} isError />
+      </Col>
+      <Col label='empty'>
+        <VirtualizedDataTable {...args} data={[]} />
+      </Col>
     </Gallery>
   ),
 }

@@ -12,7 +12,7 @@ import {
   TableStoryStyles,
 } from '@blocks/Table/tableStoryData'
 
-import { Gallery, Section } from '@test-utils/storybook/gallery'
+import { Col, Gallery } from '@test-utils/storybook/gallery'
 
 const COLUMN_CONFIG = getInvoiceColumnConfig()
 const PINNED_COLUMN_CONFIG = getPinnedInvoiceColumnConfig()
@@ -52,18 +52,18 @@ type Story = StoryObj<typeof PaginatedTable<InvoiceRow>>
 export const Default: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: args => (
-    <Gallery>
-      <Section title='paginationProps — 8 rows per page'>
+    <Gallery gap={32}>
+      <Col label='paginationProps — 8 rows per page'>
         <PaginatedTable {...args} />
-      </Section>
-      <Section title='pinning — left and right columns frozen while the middle scrolls'>
+      </Col>
+      <Col label='pinning — left and right columns frozen while the middle scrolls'>
         <PaginatedTable
           {...args}
           columnConfig={PINNED_COLUMN_CONFIG}
           componentName={PINNED_STORY_COMPONENT_NAME}
           paginationProps={{ pageSize: 6 }}
         />
-      </Section>
+      </Col>
     </Gallery>
   ),
 }

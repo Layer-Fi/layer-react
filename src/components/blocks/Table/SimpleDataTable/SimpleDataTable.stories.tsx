@@ -16,7 +16,7 @@ import {
   TableStoryStyles,
 } from '@blocks/Table/tableStoryData'
 
-import { Gallery, Section } from '@test-utils/storybook/gallery'
+import { Col, Gallery } from '@test-utils/storybook/gallery'
 
 const COLUMN_CONFIG = getInvoiceColumnConfig()
 const SHORT_LIST = INVOICE_ROWS.slice(0, 4)
@@ -152,28 +152,28 @@ const ClickableRowTable = () => {
 export const Default: Story = {
   parameters: { chromatic: { viewports: [1280] } },
   render: args => (
-    <Gallery>
-      <Section title='columnConfig — alignment, row header, rich cells'>
+    <Gallery gap={32}>
+      <Col label='columnConfig — alignment, row header, rich cells'>
         <SimpleDataTable {...args} />
-      </Section>
-      <Section title='selectionProps — injected checkbox column, paid rows not selectable'>
+      </Col>
+      <Col label='selectionProps — injected checkbox column, paid rows not selectable'>
         <SelectableTable />
-      </Section>
-      <Section title='expandedRowProps — inline detail beneath a flat row'>
+      </Col>
+      <Col label='expandedRowProps — inline detail beneath a flat row'>
         <ExpandableRowTable />
-      </Section>
-      <Section title='withClickableRow + isRowSelected — whole row is a target, active row highlighted'>
+      </Col>
+      <Col label='withClickableRow + isRowSelected — active row highlighted'>
         <ClickableRowTable />
-      </Section>
-      <Section title='isLoading'>
+      </Col>
+      <Col label='isLoading'>
         <SimpleDataTable {...args} data={undefined} isLoading />
-      </Section>
-      <Section title='isError — slots.ErrorState'>
+      </Col>
+      <Col label='isError — slots.ErrorState'>
         <SimpleDataTable {...args} data={undefined} isError />
-      </Section>
-      <Section title='empty — slots.EmptyState'>
+      </Col>
+      <Col label='empty — slots.EmptyState'>
         <SimpleDataTable {...args} data={[]} />
-      </Section>
+      </Col>
     </Gallery>
   ),
 }
