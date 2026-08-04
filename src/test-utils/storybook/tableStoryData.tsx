@@ -180,19 +180,19 @@ export const ACCOUNT_TREE: AccountNode[] = [
     subAccounts: [
       {
         accountId: 'assets.current',
-        name: 'Current assets',
+        name: 'Current Assets',
         accountType: 'Asset',
         currentBalance: 214_300_00,
         priorBalance: 201_050_00,
         subAccounts: [
-          { accountId: 'assets.current.checking', name: 'Business checking', accountType: 'Bank', currentBalance: 88_420_00, priorBalance: 79_310_00 },
-          { accountId: 'assets.current.savings', name: 'Business savings', accountType: 'Bank', currentBalance: 95_000_00, priorBalance: 95_000_00 },
-          { accountId: 'assets.current.ar', name: 'Accounts receivable', accountType: 'Receivable', currentBalance: 30_880_00, priorBalance: 26_740_00 },
+          { accountId: 'assets.current.checking', name: 'Business Checking', accountType: 'Bank', currentBalance: 88_420_00, priorBalance: 79_310_00 },
+          { accountId: 'assets.current.savings', name: 'Business Savings', accountType: 'Bank', currentBalance: 95_000_00, priorBalance: 95_000_00 },
+          { accountId: 'assets.current.ar', name: 'Accounts Receivable', accountType: 'Receivable', currentBalance: 30_880_00, priorBalance: 26_740_00 },
         ],
       },
       {
         accountId: 'assets.fixed',
-        name: 'Fixed assets',
+        name: 'Fixed Assets',
         accountType: 'Asset',
         currentBalance: 198_500_00,
         priorBalance: 187_090_00,
@@ -210,9 +210,9 @@ export const ACCOUNT_TREE: AccountNode[] = [
     currentBalance: 96_240_00,
     priorBalance: 104_610_00,
     subAccounts: [
-      { accountId: 'liabilities.ap', name: 'Accounts payable', accountType: 'Payable', currentBalance: 41_240_00, priorBalance: 52_610_00 },
-      { accountId: 'liabilities.card', name: 'Corporate card', accountType: 'Credit card', currentBalance: 15_000_00, priorBalance: 12_000_00 },
-      { accountId: 'liabilities.loan', name: 'Equipment loan', accountType: 'Loan', currentBalance: 40_000_00, priorBalance: 40_000_00 },
+      { accountId: 'liabilities.ap', name: 'Accounts Payable', accountType: 'Payable', currentBalance: 41_240_00, priorBalance: 52_610_00 },
+      { accountId: 'liabilities.card', name: 'Corporate Card', accountType: 'Credit Card', currentBalance: 15_000_00, priorBalance: 12_000_00 },
+      { accountId: 'liabilities.loan', name: 'Equipment Loan', accountType: 'Loan', currentBalance: 40_000_00, priorBalance: 40_000_00 },
     ],
   },
   {
@@ -222,8 +222,8 @@ export const ACCOUNT_TREE: AccountNode[] = [
     currentBalance: 316_560_00,
     priorBalance: 283_530_00,
     subAccounts: [
-      { accountId: 'equity.retained', name: 'Retained earnings', accountType: 'Equity', currentBalance: 268_560_00, priorBalance: 243_530_00 },
-      { accountId: 'equity.contributions', name: 'Owner contributions', accountType: 'Equity', currentBalance: 48_000_00, priorBalance: 40_000_00 },
+      { accountId: 'equity.retained', name: 'Retained Earnings', accountType: 'Equity', currentBalance: 268_560_00, priorBalance: 243_530_00 },
+      { accountId: 'equity.contributions', name: 'Owner Contributions', accountType: 'Equity', currentBalance: 48_000_00, priorBalance: 40_000_00 },
     ],
   },
 ]
