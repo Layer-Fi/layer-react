@@ -126,11 +126,11 @@ export const ledgerEntries = [
       }
     ],
     "source": {
+      "external_id": null,
       "display_description": "Office supplies at Staples",
       "entity_name": "Bank transaction",
       "type": "Transaction_Ledger_Entry_Source",
       "transaction_id": "00000000-0000-4000-8000-000000001001",
-      "external_id": null,
       "account_name": "Business Checking",
       "date": "2025-03-12",
       "amount": 8250,
@@ -213,11 +213,11 @@ export const ledgerEntries = [
       }
     ],
     "source": {
+      "external_id": null,
       "display_description": "Invoice #1042 to Acme Corp",
       "entity_name": "Invoice",
       "type": "Invoice_Ledger_Entry_Source",
       "invoice_id": "00000000-0000-4000-8000-000000001002",
-      "external_id": null,
       "invoice_number": "1042",
       "recipient_name": "Acme Corp",
       "date": "2025-02-01",
@@ -298,10 +298,10 @@ export const ledgerEntries = [
       }
     ],
     "source": {
+      "external_id": null,
       "display_description": "Payment for invoice #1042",
       "entity_name": "Invoice payment",
       "type": "Invoice_Payment_Ledger_Entry_Source",
-      "external_id": null,
       "invoice_id": "00000000-0000-4000-8000-000000001002",
       "invoice_payment_id": "00000000-0000-4000-8000-000000001003",
       "invoice_number": "1042",
@@ -759,11 +759,11 @@ export const ledgerEntries = [
       }
     ],
     "source": {
+      "external_id": null,
       "display_description": "Stripe payout",
       "entity_name": "Payout",
       "type": "Payout_Ledger_Entry_Source",
       "payout_id": "00000000-0000-4000-8000-000000001007",
-      "external_id": null,
       "paid_out_amount": 187500,
       "processor": "STRIPE",
       "completed_at": "2025-04-03T00:00:00Z"
@@ -2171,9 +2171,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Manual journal entry",
       "entity_name": "Manual journal entry",
+      "memo": null,
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-5371-4353-8e78-44f4307cd20c",
-      "memo": null,
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -2253,9 +2253,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Client invoice payment",
       "entity_name": "Manual journal entry",
+      "memo": "Client invoice payment",
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-43c6-4c2b-87d2-3e93124654b2",
-      "memo": "Client invoice payment",
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -2400,9 +2400,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Bank fee adjustment",
       "entity_name": "Manual journal entry",
+      "memo": "Bank fee adjustment",
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-9587-4a5c-8947-50d21ae5e346",
-      "memo": "Bank fee adjustment",
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -2519,9 +2519,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Bank fee adjustment",
       "entity_name": "Manual journal entry",
+      "memo": "Bank fee adjustment",
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-af2f-44b5-8041-16556aa96b32",
-      "memo": "Bank fee adjustment",
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -2628,9 +2628,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Client invoice payment",
       "entity_name": "Manual journal entry",
+      "memo": "Client invoice payment",
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-50c7-452c-8308-fe23abebd9bc",
-      "memo": "Client invoice payment",
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -2710,9 +2710,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Manual journal entry",
       "entity_name": "Manual journal entry",
+      "memo": null,
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-3049-4e54-8212-f21b2c8de4ad",
-      "memo": null,
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -2802,9 +2802,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Manual journal entry",
       "entity_name": "Manual journal entry",
+      "memo": null,
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-fc88-4772-837c-4dcc6744b7a0",
-      "memo": null,
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -2922,9 +2922,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Manual journal entry",
       "entity_name": "Manual journal entry",
+      "memo": null,
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-3684-4f65-8a63-f3931738b577",
-      "memo": null,
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -3004,9 +3004,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Monthly rent payment",
       "entity_name": "Manual journal entry",
+      "memo": "Monthly rent payment",
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-965f-4841-8d6b-5520a8b1bd8b",
-      "memo": "Monthly rent payment",
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -3113,9 +3113,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Manual journal entry",
       "entity_name": "Manual journal entry",
+      "memo": null,
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-9b7e-4a66-8d73-8bc0efe6531f",
-      "memo": null,
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -3232,9 +3232,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Monthly rent payment",
       "entity_name": "Manual journal entry",
+      "memo": "Monthly rent payment",
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-fd84-4927-88a5-157968562abc",
-      "memo": "Monthly rent payment",
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -3325,9 +3325,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Loan repayment",
       "entity_name": "Manual journal entry",
+      "memo": "Loan repayment",
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-b7c9-450b-8b6d-5083ebc76ca0",
-      "memo": "Loan repayment",
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -3434,9 +3434,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Software subscription",
       "entity_name": "Manual journal entry",
+      "memo": "Software subscription",
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-9368-428d-8acc-fb8379c48b8d",
-      "memo": "Software subscription",
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -3516,9 +3516,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Software subscription",
       "entity_name": "Manual journal entry",
+      "memo": "Software subscription",
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-d9bf-4bf5-8b24-6ad05d207d62",
-      "memo": "Software subscription",
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -3663,9 +3663,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Manual journal entry",
       "entity_name": "Manual journal entry",
+      "memo": null,
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-c7a3-486f-8340-342524b2d9ba",
-      "memo": null,
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -3756,9 +3756,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Bank fee adjustment",
       "entity_name": "Manual journal entry",
+      "memo": "Bank fee adjustment",
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-54ba-4703-827f-c760f70146fb",
-      "memo": "Bank fee adjustment",
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -3875,9 +3875,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Monthly rent payment",
       "entity_name": "Manual journal entry",
+      "memo": "Monthly rent payment",
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-98da-4862-898c-3559b33f72d8",
-      "memo": "Monthly rent payment",
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -3957,9 +3957,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Manual journal entry",
       "entity_name": "Manual journal entry",
+      "memo": null,
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-3482-4f61-82d9-cf4407825bf0",
-      "memo": null,
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -4066,9 +4066,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Manual journal entry",
       "entity_name": "Manual journal entry",
+      "memo": null,
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-0637-4015-80dc-7630d0ac161b",
-      "memo": null,
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -4148,9 +4148,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Manual journal entry",
       "entity_name": "Manual journal entry",
+      "memo": null,
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-db92-4483-8d55-6765962b7e9c",
-      "memo": null,
       "created_by": "Layer"
     },
     "transactionTags": [],
@@ -4257,9 +4257,9 @@ export const ledgerEntries = [
     "source": {
       "display_description": "Client invoice payment",
       "entity_name": "Manual journal entry",
+      "memo": "Client invoice payment",
       "type": "Manual_Ledger_Entry_Source",
       "manual_entry_id": "0000000a-ae8f-4cb9-89b4-d567e9c4d7ea",
-      "memo": "Client invoice payment",
       "created_by": "Layer"
     },
     "transactionTags": [],

@@ -1,4 +1,4 @@
-import type { ReportConfig } from '@schemas/reports/reportConfig'
+import type { ReportConfig } from '@schemas/unifiedReports/reportConfig'
 import { BaseComboBoxOption } from '@ui/ComboBox/baseComboBoxOption'
 
 export class UnifiedReportComboBoxOption extends BaseComboBoxOption<ReportConfig> {

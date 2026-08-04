@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type CustomAccount, CustomAccountSchema } from '@schemas/customAccounts'
+import { type CustomAccount, CustomAccountSchema } from '@schemas/customAccounts/customAccount'
 
 import { createRequestBodyEcho } from '@msw/utils/createRequestBodyEcho'
 

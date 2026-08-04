@@ -2,7 +2,7 @@ import { BigDecimal as BD } from 'effect'
 import { type TFunction } from 'i18next'
 import { Briefcase, CircleHelp, House, type LucideIcon } from 'lucide-react'
 
-import { TripPurpose } from '@schemas/trip'
+import { TripPurpose } from '@schemas/mileage/trip'
 import { type NumberFormatFn } from '@utils/i18n/number/formatters'
 import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { BadgeVariant } from '@ui/Badge/Badge'

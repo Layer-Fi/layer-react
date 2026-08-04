@@ -1,9 +1,4 @@
-import {
-  type CustomAccount,
-  CustomAccountClassification,
-  CustomAccountSubtype,
-  CustomAccountType,
-} from '@schemas/customAccounts'
+import { type CustomAccount, CustomAccountClassification, CustomAccountSubtype, CustomAccountType } from '@schemas/customAccounts/customAccount'
 
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 

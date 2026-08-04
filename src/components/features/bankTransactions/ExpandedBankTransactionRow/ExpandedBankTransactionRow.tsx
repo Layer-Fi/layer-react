@@ -13,8 +13,8 @@ import {
 } from '@internal-types/bankTransactions'
 import { type Split } from '@internal-types/bankTransactions'
 import { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
-import { type CustomerVendorSchema } from '@schemas/customerVendor'
-import { type Tag } from '@schemas/tag'
+import { type CustomerVendorSchema } from '@schemas/customerVendor/customerVendor'
+import { type Tag } from '@schemas/tags/tag'
 import {
   hasMatch,
 } from '@utils/bankTransactions/shared'

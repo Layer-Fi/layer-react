@@ -1,6 +1,7 @@
 import { Schema } from 'effect'
 
-import { CreateTagDimensionBodySchema, type TagDimensionSchema } from '@schemas/tag'
+import { CreateTagDimensionBodySchema } from '@schemas/tags/createTagDimensionBody'
+import { type TagDimensionSchema } from '@schemas/tags/tagDimension'
 import { post } from '@utils/api/authenticatedHttp'
 import { useTagDimensionsGlobalCacheActions } from '@api/businesses/[business-id]/tags/dimensions/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'

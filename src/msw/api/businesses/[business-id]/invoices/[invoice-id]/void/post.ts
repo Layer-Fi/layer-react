@@ -1,4 +1,5 @@
-import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
+import { type Invoice } from '@schemas/invoices/invoice'
+import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
 
 import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
 import { toInvoiceResponse } from '@msw/api/businesses/[business-id]/invoices/toInvoiceResponse'

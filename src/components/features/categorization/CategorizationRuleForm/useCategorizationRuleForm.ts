@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { revalidateLogic } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
-import type { CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import type { CategorizationRule } from '@schemas/categorization/categorizationRule'
 import { amountRangeInOrder } from '@utils/form/validators'
 import { useUpsertCategorizationRule } from '@api/businesses/[business-id]/categorization-rules/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'

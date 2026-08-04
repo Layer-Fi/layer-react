@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-import type { ReportConfig, ReportGroup } from '@schemas/reports/reportConfig'
+import type { ReportConfig, ReportGroup } from '@schemas/unifiedReports/reportConfig'
 import type {
   FlatNestedNavigationGroupConfig,
   Key,

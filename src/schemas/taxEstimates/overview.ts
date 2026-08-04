@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { createTransformedEnumSchema, UnwrappedDataResponseSchema } from '@schemas/utils'
+import { createTransformedEnumSchema, UnwrappedDataResponseSchema } from '@schemas/common/utils'
 
 import { type TaxSummarySectionType } from './summary'
 

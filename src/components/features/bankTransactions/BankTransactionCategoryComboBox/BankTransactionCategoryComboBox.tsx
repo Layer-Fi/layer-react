@@ -4,7 +4,7 @@ import type { GroupBase } from 'react-select'
 
 import { type BankTransactionCategoryComboBoxOption, isSuggestedMatchAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
+import { convertMatchDetailsToLinkingMetadata } from '@utils/bankTransactions/matchLinkingMetadata'
 import { flattenCategories } from '@utils/categoryOptions'
 import { useGetCategories } from '@api/businesses/[business-id]/categories/get'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'

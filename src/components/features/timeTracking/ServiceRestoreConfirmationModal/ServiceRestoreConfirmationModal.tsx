@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type CatalogService } from '@schemas/catalogService'
+import { type CatalogService } from '@schemas/timeTracking/catalogService'
 import { usePostReactivateCatalogService } from '@api/businesses/[business-id]/catalog/services/[service-id]/reactivate/post'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'

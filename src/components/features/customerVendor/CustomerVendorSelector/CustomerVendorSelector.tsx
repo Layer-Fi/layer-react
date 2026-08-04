@@ -1,7 +1,7 @@
 import { useCallback, useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { CustomerVendorSchema } from '@schemas/customerVendor'
+import type { CustomerVendorSchema } from '@schemas/customerVendor/customerVendor'
 import { useGetListCustomers } from '@api/businesses/[business-id]/customers/get'
 import { useGetListVendors } from '@api/businesses/[business-id]/vendors/get'
 import { useDebouncedSearchInput } from '@hooks/utils/debouncing/useDebouncedSearchQuery'

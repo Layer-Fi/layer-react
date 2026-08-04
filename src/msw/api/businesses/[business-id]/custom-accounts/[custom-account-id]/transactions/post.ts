@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 
 import { type BankTransactionDataOnly, BankTransactionDataOnlySchema } from '@schemas/bankTransactions/bankTransactionDataOnly'
-import { CustomTransactionSchema } from '@schemas/customAccounts'
+import { CustomTransactionSchema } from '@schemas/customAccounts/customTransaction'
 
 import { bankTransactionStore } from '@msw/api/businesses/[business-id]/bank-transactions/store'
 import { apiData } from '@msw/utils/apiResponse'

@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next'
 
-import type { Vehicle } from '@schemas/vehicle'
+import type { Vehicle } from '@schemas/mileage/vehicle'
 
 import { translationKey } from './i18n/translationKey'
 

@@ -1,12 +1,8 @@
 import type { Split, SuggestedMatch } from '@internal-types/bankTransactions'
-import { makeAccountId, makeStableName } from '@schemas/accountIdentifier'
-import {
-  type Categorization,
-  type Classification,
-  getClassificationFromCategorization,
-  makeExclusion,
-  type NestedCategorization,
-} from '@schemas/categorization'
+import { type Categorization } from '@schemas/categorization/categorization'
+import { type Classification, getClassificationFromCategorization, makeExclusion } from '@schemas/categorization/classification'
+import { type NestedCategorization } from '@schemas/categorization/nestedCategorization'
+import { makeAccountId, makeStableName } from '@schemas/common/accountIdentifier'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 import { BaseComboBoxOption } from '@ui/ComboBox/baseComboBoxOption'
 

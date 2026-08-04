@@ -1,8 +1,6 @@
-import {
-  LedgerAccountType,
-  LedgerEntryDirection,
-  SingleChartAccountSchema,
-} from '@schemas/generalLedger/ledgerAccount'
+import { SingleChartAccountSchema } from '@schemas/generalLedger/chartOfAccounts'
+import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
+import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerEntryDirection'
 
 const BaseChartAccountSchema = SingleChartAccountSchema.omit('accountId', 'accountNumber')
 

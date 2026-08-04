@@ -1,4 +1,4 @@
-import type { Vendor } from '@schemas/vendor'
+import type { Vendor } from '@schemas/customerVendor/vendor'
 
 export function getVendorName(
   vendor?: Vendor | null,

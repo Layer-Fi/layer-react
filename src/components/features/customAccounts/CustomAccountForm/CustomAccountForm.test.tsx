@@ -2,12 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
-import {
-  type CustomAccount,
-  CustomAccountClassification,
-  CustomAccountSubtype,
-  CustomAccountType,
-} from '@schemas/customAccounts'
+import { type CustomAccount, CustomAccountClassification, CustomAccountSubtype, CustomAccountType } from '@schemas/customAccounts/customAccount'
 import { CustomAccountForm, type CustomAccountsFormProps } from '@features/customAccounts/CustomAccountForm/CustomAccountForm'
 
 import { post as postCustomAccount } from '@msw/api/businesses/[business-id]/custom-accounts/post'

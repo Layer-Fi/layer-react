@@ -1,4 +1,4 @@
-import { type BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
+import { type BookkeepingPeriodStatus } from '@schemas/bookkeeping/bookkeepingPeriods'
 import { toDataProperties } from '@utils/styleUtils/toDataProperties'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'

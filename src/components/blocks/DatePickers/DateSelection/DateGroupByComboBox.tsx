@@ -1,7 +1,7 @@
 import { useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { DateGroupBy } from '@schemas/reports/unifiedReport'
+import { DateGroupBy } from '@schemas/unifiedReports/unifiedReport'
 import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'

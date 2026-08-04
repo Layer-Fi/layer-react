@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
-import { type TimeEntrySummary, type TimeEntrySummaryGroup } from '@schemas/timeTracking'
+import { type TimeEntrySummary, type TimeEntrySummaryGroup } from '@schemas/timeTracking/timeEntrySummary'
 import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
 import { type TimeTrackingSummaryFilterParams, useGetTimeTrackingSummary } from '@api/businesses/[business-id]/time-tracking/time-entries/summary/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'

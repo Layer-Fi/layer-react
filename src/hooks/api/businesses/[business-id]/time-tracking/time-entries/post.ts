@@ -1,5 +1,6 @@
-import { TimeEntrySchema, type UpsertTimeEntryEncoded } from '@schemas/timeTracking'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import { TimeEntrySchema } from '@schemas/timeTracking/timeEntry'
+import { type UpsertTimeEntryEncoded } from '@schemas/timeTracking/upsertTimeEntry'
 import { post } from '@utils/api/authenticatedHttp'
 import { useTimeEntriesGlobalCacheActions } from '@api/businesses/[business-id]/time-tracking/time-entries/get'
 import { useTimeTrackingSummaryGlobalCacheActions } from '@api/businesses/[business-id]/time-tracking/time-entries/summary/get'

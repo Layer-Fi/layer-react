@@ -1,5 +1,6 @@
-import { type StartTrackerEncoded, TimeEntrySchema } from '@schemas/timeTracking'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import { TimeEntrySchema } from '@schemas/timeTracking/timeEntry'
+import { type StartTrackerEncoded } from '@schemas/timeTracking/tracker'
 import { post } from '@utils/api/authenticatedHttp'
 import { useActiveTimeTrackerGlobalCacheActions } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'

@@ -1,4 +1,4 @@
-import type { BusinessTaskEncoded } from '@schemas/businessTasks/businessTask'
+import type { BusinessTaskEncoded } from '@schemas/bookkeeping/businessTask'
 import { post } from '@utils/api/authenticatedHttp'
 import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'

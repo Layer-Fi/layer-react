@@ -1,7 +1,7 @@
 import { endOfMonth, isValid, parseISO, startOfMonth } from 'date-fns'
 import { Schema } from 'effect'
 
-import { type ProfitAndLoss, ProfitAndLossReportSchema } from '@schemas/reports/profitAndLoss'
+import { type ProfitAndLoss, ProfitAndLossReportSchema } from '@schemas/profitAndLoss/profitAndLoss'
 
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'

@@ -1,8 +1,8 @@
 import useSWR from 'swr'
 
 import { SWRQueryResult } from '@internal-types/swr/SWRResponseTypes'
-import { AccountingConfigurationSchema } from '@schemas/accountingConfiguration'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { AccountingConfigurationSchema } from '@schemas/business/accountingConfiguration'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { createBuildKey } from '@utils/swr/createBuildKey'
 import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'

@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { InvoiceStatus } from '@schemas/invoices/invoice'
+import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
 import { CreateInvoiceWriteoffSchema, type InvoiceWriteoff, InvoiceWriteoffMode, InvoiceWriteoffSchema } from '@schemas/invoices/invoiceWriteoff'
 
 import { findOrSeedInvoice, invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'

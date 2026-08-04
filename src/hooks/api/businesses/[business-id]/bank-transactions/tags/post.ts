@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
 import { type TagBankTransactionsUpdateEncoded } from '@schemas/bankTransactions/tagUpdate'
-import type { TransactionTagEncoded } from '@schemas/tag'
+import type { TransactionTagEncoded } from '@schemas/tags/transactionTag'
 import { post } from '@utils/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/swr/withStableTrigger'
 import {

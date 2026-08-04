@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type CallBooking, ListCallBookingsResponseSchema } from '@schemas/callBooking'
+import { type CallBooking, ListCallBookingsResponseSchema } from '@schemas/bookkeeping/callBooking'
 
 import { callBookingStore } from '@msw/api/businesses/[business-id]/call-bookings/store'
 import { paginatedApiData } from '@msw/utils/apiResponse'

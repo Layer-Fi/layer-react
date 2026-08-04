@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from 'react'
 
 import { type CategoryAsOption } from '@internal-types/categorizationOption'
-import { type CategoriesListMode, type Classification } from '@schemas/categorization'
+import { type CategoriesListMode } from '@schemas/categorization/categoryList'
+import { type Classification } from '@schemas/categorization/classification'
 import { findCategoryOption } from '@utils/categories'
 import { flattenCategories, withoutExclusions } from '@utils/categoryOptions'
 import { useGetCategories } from '@api/businesses/[business-id]/categories/get'

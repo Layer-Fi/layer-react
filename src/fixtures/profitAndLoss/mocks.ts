@@ -1,7 +1,5 @@
-import type {
-  ProfitAndLoss,
-  ProfitAndLossSummary,
-} from '@schemas/reports/profitAndLoss'
+import type { ProfitAndLoss } from '@schemas/profitAndLoss/profitAndLoss'
+import type { ProfitAndLossSummary } from '@schemas/profitAndLoss/profitAndLossSummaries'
 
 import { hasCompletedBooks } from '@fixtures/bookkeeping/mocks'
 import {

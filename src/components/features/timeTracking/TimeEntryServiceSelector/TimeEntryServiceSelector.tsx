@@ -3,7 +3,7 @@ import type { TFunction } from 'i18next'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type CatalogService } from '@schemas/catalogService'
+import { type CatalogService } from '@schemas/timeTracking/catalogService'
 import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
 import { useGetListCatalogServices } from '@api/businesses/[business-id]/catalog/services/get'
 import { MaybeCreatableComboBox } from '@ui/ComboBox/MaybeCreatableComboBox'

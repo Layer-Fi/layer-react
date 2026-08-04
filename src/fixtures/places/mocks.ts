@@ -1,4 +1,4 @@
-import type { PlaceDetails, PlaceSuggestion } from '@schemas/place'
+import type { PlaceDetails, PlaceSuggestion } from '@schemas/mileage/place'
 
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 

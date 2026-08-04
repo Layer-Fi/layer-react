@@ -1,4 +1,5 @@
-import { type TagKeyValueSchema, type TransactionTag } from '@schemas/tag'
+import { type TagKeyValueSchema } from '@schemas/tags/tagKeyValue'
+import { type TransactionTag } from '@schemas/tags/transactionTag'
 
 export const transactionTagFromKeyValue = (
   { key, value, dimensionDisplayName, valueDisplayName }: typeof TagKeyValueSchema.Type,

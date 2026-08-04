@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArchiveRestore, Loader, Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type CatalogService } from '@schemas/catalogService'
+import { type CatalogService } from '@schemas/timeTracking/catalogService'
 import { useGetListCatalogServices } from '@api/businesses/[business-id]/catalog/services/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'

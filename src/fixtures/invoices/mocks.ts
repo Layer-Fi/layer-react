@@ -1,6 +1,7 @@
 import { BigDecimal } from 'effect'
 
-import { type Invoice, type InvoiceLineItem, InvoiceStatus } from '@schemas/invoices/invoice'
+import { type Invoice, type InvoiceLineItem } from '@schemas/invoices/invoice'
+import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
 
 import { makeBusiness } from '@fixtures/business/mocks'
 import { makeCustomer } from '@fixtures/customers/mocks'

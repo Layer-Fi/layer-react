@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Archive, Car, Edit, RotateCcw, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type Vehicle } from '@schemas/vehicle'
+import { type Vehicle } from '@schemas/mileage/vehicle'
 import { translationKey } from '@utils/i18n/translationKey'
 import { getVehicleDisplayName } from '@utils/vehicles'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'

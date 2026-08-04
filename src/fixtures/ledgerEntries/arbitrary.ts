@@ -1,6 +1,6 @@
 import { type FastCheck } from 'effect'
 
-import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerAccount'
+import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerEntryDirection'
 
 import { ROOT_STABLE_NAMES } from '@fixtures/chartOfAccounts/constants'
 import { chartOfAccounts } from '@fixtures/generated/chartOfAccounts.gen'

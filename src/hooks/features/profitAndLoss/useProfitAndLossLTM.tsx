@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { type ReportingBasis } from '@internal-types/general'
-import type { ProfitAndLossSummary } from '@schemas/reports/profitAndLoss'
+import type { ProfitAndLossSummary } from '@schemas/profitAndLoss/profitAndLossSummaries'
 import { useGetProfitAndLossSummaries } from '@api/businesses/[business-id]/reports/profit-and-loss-summaries/get'
 import type { ChartWindow } from '@features/profitAndLoss/ProfitAndLossChart/getChartWindow'
 

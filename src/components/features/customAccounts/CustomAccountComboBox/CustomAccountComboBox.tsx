@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { CustomAccount } from '@schemas/customAccounts'
+import type { CustomAccount } from '@schemas/customAccounts/customAccount'
 import { useGetCustomAccounts } from '@api/businesses/[business-id]/custom-accounts/get'
 import { CreatableComboBox } from '@ui/ComboBox/CreatableComboBox'
 import { VStack } from '@ui/Stack/Stack'

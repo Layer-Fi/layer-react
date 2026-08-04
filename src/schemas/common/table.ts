@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 
 import { Alignment, Pinning } from '@internal-types/utility/table'
-import { createTransformedEnumSchema } from '@schemas/utils'
+import { createTransformedEnumSchema } from '@schemas/common/utils'
 
 const AlignmentSchema = Schema.Enums(Alignment)
 

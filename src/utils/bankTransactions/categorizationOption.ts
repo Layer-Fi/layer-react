@@ -1,7 +1,7 @@
 import { ApiCategorizationAsOption, SplitAsOption } from '@internal-types/categorizationOption'
-import { type Categorization, isSplitCategorization } from '@schemas/categorization'
-import { makeCustomerVendor } from '@schemas/customerVendor'
-import { makeTagFromTransactionTag } from '@schemas/tag'
+import { type Categorization, isSplitCategorization } from '@schemas/categorization/categorization'
+import { makeCustomerVendor } from '@schemas/customerVendor/customerVendor'
+import { makeTagFromTransactionTag } from '@schemas/tags/tag'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 
 export const convertApiCategorizationToCategoryOrSplitAsOption = (categorization: Categorization): BankTransactionNonSuggestedMatchOption => {

@@ -1,10 +1,7 @@
 import { Schema } from 'effect'
 
-import {
-  LedgerBalancesSchema,
-  type NestedLedgerAccountType,
-  type SingleChartAccountType,
-} from '@schemas/generalLedger/ledgerAccount'
+import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
+import { LedgerBalancesSchema, type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerBalances'
 
 import { groupByParentAccountId, isAccountDeletable, ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import { ledgerEntryStore } from '@msw/api/businesses/[business-id]/ledger/entries/store'

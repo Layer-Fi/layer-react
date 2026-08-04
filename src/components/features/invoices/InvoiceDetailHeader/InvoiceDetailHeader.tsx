@@ -3,7 +3,7 @@ import { ArrowRight, HandCoins, Save } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { Awaitable } from '@internal-types/utility/promises'
-import { InvoiceStatus } from '@schemas/invoices/invoice'
+import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
 import { translationKey } from '@utils/i18n/translationKey'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'

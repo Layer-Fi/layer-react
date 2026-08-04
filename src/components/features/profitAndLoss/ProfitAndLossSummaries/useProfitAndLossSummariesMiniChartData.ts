@@ -2,7 +2,7 @@ import { useContext, useMemo } from 'react'
 import { sub } from 'date-fns'
 
 import type { LineItem } from '@schemas/common/lineItem'
-import type { ProfitAndLoss } from '@schemas/reports/profitAndLoss'
+import type { ProfitAndLoss } from '@schemas/profitAndLoss/profitAndLoss'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { calculatePercentageChange } from '@utils/percentageChange'
 import { toMiniChartData } from '@utils/profitAndLossUtils'

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { isSplitAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { isClassificationExclusion } from '@schemas/categorization'
+import { isClassificationExclusion } from '@schemas/categorization/classification'
 import { getDefaultSelectedCategoryForBankTransaction } from '@utils/bankTransactions/shared'
 import { dateNotBefore, dateNotInFuture, positiveAmount, required } from '@utils/form/validators'
 import { convertDateToLocalCalendarDate } from '@utils/time/timeUtils'

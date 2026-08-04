@@ -1,4 +1,4 @@
-import { type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerAccount'
+import { type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerBalances'
 
 export type AugmentedLedgerAccountBalance = NestedLedgerAccountType & { isMatching?: true }
 

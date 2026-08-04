@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import { Trash } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { nrbdEquals } from '@schemas/nonRecursiveBigDecimal'
+import { nrbdEquals } from '@schemas/common/nonRecursiveBigDecimal'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { computeLineItemAmount, computeLineItemUnitPrice } from '@features/invoices/InvoiceForm/formUtils'

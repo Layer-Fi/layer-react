@@ -1,4 +1,4 @@
-import { type Customer } from '@schemas/customer'
+import { type Customer } from '@schemas/customerVendor/customer'
 
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 

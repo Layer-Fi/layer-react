@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { BookkeepingStatus } from '@schemas/bookkeepingStatus'
+import { BookkeepingStatus } from '@schemas/bookkeeping/bookkeepingStatus'
 import { useBankAccountsGlobalCacheActions } from '@api/businesses/[business-id]/bank-accounts/get'
 import { Tasks } from '@features/bookkeeping/Tasks/Tasks'
 

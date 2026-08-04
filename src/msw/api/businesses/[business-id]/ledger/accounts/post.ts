@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { SingleChartAccountSchema, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
+import { SingleChartAccountSchema, type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
 
 import { ledgerAccountFromUpsertRequest } from '@msw/api/businesses/[business-id]/ledger/accounts/ledgerAccountFromUpsertRequest'
 import { ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'

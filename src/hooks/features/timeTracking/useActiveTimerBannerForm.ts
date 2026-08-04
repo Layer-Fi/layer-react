@@ -3,7 +3,7 @@ import { getLocalTimeZone, today } from '@internationalized/date'
 import { useStore } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 
-import { type TimeEntry } from '@schemas/timeTracking'
+import { type TimeEntry } from '@schemas/timeTracking/timeEntry'
 import { ApiEnumErrorType, APIError } from '@utils/api/apiError'
 import { type ActiveTimerDraft, type ActiveTimerDraftWithService, getDraftFromEntry, hasDraftChanges, toUpdatePayload } from '@utils/timeTracking/activeTimerDraft'
 import { useDeleteTimeEntry } from '@api/businesses/[business-id]/time-tracking/time-entries/[time-entry-id]/delete'
