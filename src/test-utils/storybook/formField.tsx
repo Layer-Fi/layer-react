@@ -5,6 +5,15 @@ import type { CommonFormFieldProps } from '@blocks/Form/types'
 
 import { Col, Gallery } from '@test-utils/storybook/gallery'
 
+/*
+ * A real form sets these on its container: a fixed label column is what separates label from
+ * control, since the field grid has no column gap of its own. Stories have no such container.
+ */
+const INLINE_FIELD_STYLE = {
+  '--form-field-label-inline-size': '7rem',
+  '--form-field-inline-column-gap': 'var(--spacing-xs)',
+} as React.CSSProperties
+
 type FormFieldHarnessProps = {
   // Typed as `unknown` on purpose: a generic value type makes useAppForm hit TS2589.
   defaultValue: unknown
@@ -67,12 +76,14 @@ export function FormFieldVariantGallery<TValue, TProps>({
     <Gallery direction='row' wrap gap={32}>
       {variants.map(({ label, value, errorText, props }) => (
         <Col key={label} label={label} inlineSize={inlineSize}>
-          <FormFieldHarness
-            defaultValue={value === undefined ? defaultValue : value}
-            errorText={errorText}
-          >
-            {renderField(props ?? {})}
-          </FormFieldHarness>
+          <div style={INLINE_FIELD_STYLE}>
+            <FormFieldHarness
+              defaultValue={value === undefined ? defaultValue : value}
+              errorText={errorText}
+            >
+              {renderField(props ?? {})}
+            </FormFieldHarness>
+          </div>
         </Col>
       ))}
     </Gallery>
