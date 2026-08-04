@@ -55,5 +55,6 @@ type Story = StoryObj<ProfitAndLossDetailedChartsStoryArgs>
 export const Expenses: Story = {}
 
 export const Revenue: Story = {
+  tags: ['docs-screenshot'],
   args: { scope: 'revenue' },
 }

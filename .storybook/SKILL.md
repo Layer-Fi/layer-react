@@ -74,10 +74,21 @@ component to look right is reporting a component bug.
 
 ## Some stories are load-bearing for the public docs
 
-`scripts/docs-screenshots.manifest.ts` maps a handful of story ids to images in
+`scripts/docs-screenshots.manifest.ts` maps story ids to images in
 `Layer-Fi/api-documentation`; every stable release recaptures them and opens a docs PR
 (`.github/workflows/docs-screenshots.yml`). Renaming or deleting one of those stories fails
 `npm run screenshots:check` on the PR — update the manifest in the same change.
+
+Every one of them also carries `tags: ['docs-screenshot']`, which is what surfaces the set
+under Storybook's sidebar tag filter. A CSF file has a single `title`, so a story can't also
+live in a `Docs/` folder without becoming a second story (and a second Chromatic snapshot) —
+the tag is the filterable stand-in. `screenshots:check` enforces tag ↔ manifest parity both
+ways.
+
+A story that exists only to back a docs image still belongs next to its component, as the
+overlay-state exception above (`DrawerOpen`, `Creation`, `ConfirmingBusinessAccounts`). Drive
+it with a `play` function, and make the play *assert* the state it set up — the table can
+re-render as data lands and detach the node you just clicked.
 
 ## Flakiness
 

@@ -75,4 +75,6 @@ export default meta
 
 type Story = StoryObj<LinkedAccountsStoryArgs>
 
-export const Default: Story = {}
+export const Default: Story = {
+  tags: ['docs-screenshot'],
+}

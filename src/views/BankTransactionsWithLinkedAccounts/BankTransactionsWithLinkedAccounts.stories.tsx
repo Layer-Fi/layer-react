@@ -86,6 +86,7 @@ type Story = StoryObj<BankTransactionsWithLinkedAccountsStoryArgs>
 
 // ACTIVE (a bookkeeping client) disables self-serve categorization.
 export const BookkeepingEnabled: Story = {
+  tags: ['docs-screenshot'],
   parameters: {
     msw: {
       handlers: [

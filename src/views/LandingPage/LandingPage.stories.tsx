@@ -31,7 +31,9 @@ export default meta
 
 type Story = StoryObj<LandingPageStoryArgs>
 
-export const Default: Story = {}
+export const Default: Story = {
+  tags: ['docs-screenshot'],
+}
 
 export const AccountingOnly: Story = {
   args: { availableOffers: ['accounting'] },

@@ -30,4 +30,6 @@ export default meta
 
 type Story = StoryObj<typeof MileageTracking>
 
-export const Default: Story = {}
+export const Default: Story = {
+  tags: ['docs-screenshot'],
+}

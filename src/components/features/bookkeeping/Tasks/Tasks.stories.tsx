@@ -124,4 +124,6 @@ export default meta
 
 type Story = StoryObj<TasksStoryArgs>
 
-export const Default: Story = {}
+export const Default: Story = {
+  tags: ['docs-screenshot'],
+}

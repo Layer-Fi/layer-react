@@ -44,4 +44,6 @@ export default meta
 
 type Story = StoryObj<GlobalDateRangeSelectionProps>
 
-export const Default: Story = {}
+export const Default: Story = {
+  tags: ['docs-screenshot'],
+}

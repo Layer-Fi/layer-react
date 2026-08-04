@@ -22,7 +22,9 @@ export default meta
 
 type Story = StoryObj<typeof TaxEstimates>
 
-export const Default: Story = {}
+export const Default: Story = {
+  tags: ['docs-screenshot'],
+}
 
 export const Onboarding: Story = {
   parameters: {

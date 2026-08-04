@@ -93,7 +93,9 @@ export default meta
 
 type Story = StoryObj<BookkeepingOverviewStoryArgs>
 
-export const Default: Story = {}
+export const Default: Story = {
+  tags: ['docs-screenshot'],
+}
 
 export const OnboardingCallCard: Story = {
   name: 'Onboarding call card (empty)',

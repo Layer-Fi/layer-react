@@ -1,4 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
+import { userEvent, waitFor, within } from 'storybook/test'
 
 import { Badge, BadgeVariant } from '@ui/Badge/Badge'
 import { Journal, type JournalProps } from '@features/generalLedger/Journal/Journal'
@@ -84,4 +85,20 @@ export default meta
 
 type Story = StoryObj<JournalStoryArgs>
 
-export const Default: Story = {}
+export const Default: Story = {
+  tags: ['docs-screenshot'],
+}
+
+export const DrawerOpen: Story = {
+  tags: ['docs-screenshot'],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    // The table re-renders as entries land, which can detach the row between query and
+    // click, so retry the whole click until the detail sidebar is actually up.
+    await waitFor(async () => {
+      const [, firstEntry] = await canvas.findAllByRole('row')
+      await userEvent.click(firstEntry)
+      await canvas.findByText(/Journal Entry #/)
+    }, { timeout: 15_000 })
+  },
+}

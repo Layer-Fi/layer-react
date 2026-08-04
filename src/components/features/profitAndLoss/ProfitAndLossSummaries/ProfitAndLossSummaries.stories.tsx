@@ -74,7 +74,9 @@ export default meta
 
 type Story = StoryObj<ProfitAndLossSummariesStoryArgs>
 
-export const ProfitAndLoss: Story = {}
+export const ProfitAndLoss: Story = {
+  tags: ['docs-screenshot'],
+}
 
 export const CashFlow: Story = {
   parameters: {

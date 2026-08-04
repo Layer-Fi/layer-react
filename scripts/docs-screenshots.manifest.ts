@@ -21,9 +21,10 @@ export type DocsScreenshot = {
 }
 
 // Doc pages with no story to shoot yet, so their images stay hand-managed:
-//   components/balance-sheet, components/cash-flow-statement, components/pnl-table,
-//   pages/unified-reports. (pages/reports is deprecated and intentionally skipped.)
-// Add the story, then add the entry here.
+//   components/balance-sheet, components/cash-flow-statement, components/pnl-table.
+// (pages/reports is deprecated and intentionally skipped.)
+// Add the story, then add the entry here — check-docs-screenshots enforces that every
+// story tagged `docs-screenshot` appears below, and vice versa.
 export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
   {
     storyId: 'components-banktransactions--bookkeeping-enabled',
@@ -138,5 +139,35 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     out: 'pages/tax-estimates.png',
     viewport: 'desktop',
     page: 'embedded-components/pages/tax-estimates.mdx',
+  },
+  {
+    storyId: 'components-journal--drawer-open',
+    out: 'components/journal-sidebar.png',
+    viewport: 'desktop',
+    page: 'embedded-components/components/journal.mdx',
+  },
+  {
+    storyId: 'views-invoices--creation',
+    out: 'components/invoice-creation.png',
+    viewport: 'desktop',
+    page: 'embedded-components/components/invoices.mdx',
+  },
+  {
+    storyId: 'components-linkaccounts--accounts-linked',
+    out: 'components/link-accounts-after-linking.png',
+    viewport: 'desktop',
+    page: 'embedded-components/components/link-accounts.mdx',
+  },
+  {
+    storyId: 'components-linkaccounts--confirming-business-accounts',
+    out: 'components/link-accounts-confirming.png',
+    viewport: 'desktop',
+    page: 'embedded-components/components/link-accounts.mdx',
+  },
+  {
+    storyId: 'components-unifiedreports--default',
+    out: 'pages/unified-reports.png',
+    viewport: 'desktop',
+    page: 'embedded-components/pages/unified-reports.mdx',
   },
 ]
