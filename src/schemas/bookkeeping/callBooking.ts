@@ -3,7 +3,6 @@ import { pipe, Schema } from 'effect'
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
 import { createTransformedEnumSchema } from '@schemas/common/utils'
 
-// Enums matching the frontend types
 export enum CallBookingState {
   SCHEDULED = 'SCHEDULED',
   CANCELLED = 'CANCELLED',
@@ -20,14 +19,12 @@ export enum CallBookingPurpose {
   ADHOC = 'ADHOC',
 }
 
-// Schema definitions for the enums
 const CallBookingStateSchema = Schema.Enums(CallBookingState)
 
 export const CallBookingTypeSchema = Schema.Enums(CallBookingType)
 
 export const CallBookingPurposeSchema = Schema.Enums(CallBookingPurpose)
 
-// Transformed schemas with safe defaults for unknown values
 const TransformedCallBookingStateSchema = createTransformedEnumSchema(
   CallBookingStateSchema,
   CallBookingState,
@@ -121,12 +118,10 @@ const CallBookingSchema = Schema.Struct({
 
 export type CallBooking = typeof CallBookingSchema.Type
 
-// List response schema
 export const ListCallBookingsResponseSchema = PaginatedResponseSchema(CallBookingSchema)
 
 export type ListCallBookingsResponse = typeof ListCallBookingsResponseSchema.Type
 
-// Single item response schema (for create/update operations)
 export const CallBookingItemResponseSchema = Schema.Struct({
   data: CallBookingSchema,
 })

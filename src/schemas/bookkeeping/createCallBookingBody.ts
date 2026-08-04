@@ -2,8 +2,7 @@ import { pipe, Schema } from 'effect'
 
 import { CallBookingPurposeSchema, CallBookingTypeSchema } from '@schemas/bookkeeping/callBooking'
 
-// Create call booking request schema
-const CreateCallBookingBodySchemaDefinition = Schema.Struct({
+export const CreateCallBookingBodySchema = Schema.Struct({
   externalId: pipe(
     Schema.propertySignature(Schema.String),
     Schema.fromKey('external_id'),
@@ -22,7 +21,6 @@ const CreateCallBookingBodySchemaDefinition = Schema.Struct({
   ),
 })
 
-export const CreateCallBookingBodySchema = CreateCallBookingBodySchemaDefinition
-export const encodeCreateCallBookingBody = Schema.encodeSync(CreateCallBookingBodySchemaDefinition)
-export type CreateCallBookingBody = typeof CreateCallBookingBodySchemaDefinition.Type
-export type CreateCallBookingBodyEncoded = typeof CreateCallBookingBodySchemaDefinition.Encoded
+export const encodeCreateCallBookingBody = Schema.encodeSync(CreateCallBookingBodySchema)
+export type CreateCallBookingBody = typeof CreateCallBookingBodySchema.Type
+export type CreateCallBookingBodyEncoded = typeof CreateCallBookingBodySchema.Encoded
