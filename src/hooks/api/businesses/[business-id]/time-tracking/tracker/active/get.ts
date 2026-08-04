@@ -1,7 +1,7 @@
 import { pipe, Schema } from 'effect'
 
-import { type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import { type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking/timeEntry'
 import { get } from '@utils/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'

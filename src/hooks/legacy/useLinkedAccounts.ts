@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type AccountSource } from '@internal-types/linkedAccounts'
 import type { Awaitable } from '@internal-types/utility/promises'
-import { type PlaidHostedLinkConfig, toCreatePlaidLinkParams } from '@schemas/linkedAccounts/plaid'
+import { type PlaidHostedLinkConfig, toCreatePlaidLinkParams } from '@schemas/linkedAccounts/plaidHostedLinkConfig'
 import { useUnlinkBankAccount } from '@api/businesses/[business-id]/bank-accounts/[bank-account-id]/delete'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { usePostConfirmExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/confirm/post'

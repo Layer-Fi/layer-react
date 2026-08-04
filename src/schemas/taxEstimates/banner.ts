@@ -1,8 +1,8 @@
 import { pipe, Schema } from 'effect'
 
 import { CalendarDateSchema } from '@schemas/common/calendarDateFromSelf'
+import { createTransformedEnumSchema, UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { TaxOverviewDeadlineStatus } from '@schemas/taxEstimates/overview'
-import { createTransformedEnumSchema, UnwrappedDataResponseSchema } from '@schemas/utils'
 
 const TransformedTaxOverviewDeadlineStatusSchema = createTransformedEnumSchema(
   Schema.Enums(TaxOverviewDeadlineStatus),

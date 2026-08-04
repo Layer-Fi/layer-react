@@ -5,7 +5,7 @@ import {
   fromNonRecursiveBigDecimal,
   type NonRecursiveBigDecimal,
   toNonRecursiveBigDecimal,
-} from '@schemas/nonRecursiveBigDecimal'
+} from '@schemas/common/nonRecursiveBigDecimal'
 import { BIG_DECIMAL_ONE } from '@utils/bigDecimalUtils'
 import { useBigDecimalInput } from '@hooks/features/forms/useBigDecimalInput'
 import { useFieldContext } from '@hooks/features/forms/useForm'

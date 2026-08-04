@@ -1,6 +1,6 @@
 import { Arbitrary, Schema } from 'effect'
 
-import { VehicleSchema } from '@schemas/vehicle'
+import { VehicleSchema } from '@schemas/mileage/vehicle'
 
 import { makeBusiness } from '@fixtures/business/mocks'
 import { dateArbitrary } from '@fixtures/utils/arbitrary/date'

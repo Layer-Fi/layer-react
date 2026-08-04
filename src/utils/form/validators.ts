@@ -1,7 +1,7 @@
 import { type CalendarDate, type DateValue, toCalendarDate } from '@internationalized/date'
 import { BigDecimal } from 'effect'
 
-import { fromNonRecursiveBigDecimal, type NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
+import { fromNonRecursiveBigDecimal, type NonRecursiveBigDecimal } from '@schemas/common/nonRecursiveBigDecimal'
 import { convertDateToLocalCalendarDate } from '@utils/time/timeUtils'
 
 export const required = (message: string) => (value: unknown) =>

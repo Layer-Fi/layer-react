@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { getMonth } from 'date-fns'
 
-import { BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
+import { BookkeepingPeriodStatus } from '@schemas/bookkeeping/bookkeepingPeriods'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { useBookkeepingYearsStatus } from '@hooks/features/bookkeeping/useBookkeepingYearsStatus'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'

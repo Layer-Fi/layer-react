@@ -3,7 +3,7 @@ import { type Row } from '@tanstack/react-table'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { type PreviewCell, type PreviewCsv, type PreviewRow } from '@schemas/csvUpload'
+import { type PreviewCell, type PreviewCsv, type PreviewRow } from '@schemas/common/csvUpload'
 import { type ColumnConfig } from '@blocks/Table/DataTable/utils/column'
 import { VirtualizedDataTable } from '@blocks/Table/VirtualizedDataTable/VirtualizedDataTable'
 

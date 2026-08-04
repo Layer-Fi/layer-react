@@ -1,4 +1,4 @@
-import type { CustomAccount } from '@schemas/customAccounts'
+import type { CustomAccount } from '@schemas/customAccounts/customAccount'
 
 export type AccountOption = {
   value: string

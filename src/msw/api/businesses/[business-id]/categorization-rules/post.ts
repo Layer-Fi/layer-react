@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type CategorizationRule, CategorizationRuleSchema } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { type CategorizationRule, CategorizationRuleSchema } from '@schemas/categorization/categorizationRule'
 
 import { ruleFromCreateRequest } from '@msw/api/businesses/[business-id]/categorization-rules/ruleFromUpsertRequest'
 import { categorizationRuleStore } from '@msw/api/businesses/[business-id]/categorization-rules/store'

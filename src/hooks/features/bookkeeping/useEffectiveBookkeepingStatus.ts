@@ -1,4 +1,4 @@
-import { BookkeepingStatus } from '@schemas/bookkeepingStatus'
+import { BookkeepingStatus } from '@schemas/bookkeeping/bookkeepingStatus'
 import { useGetBookkeepingStatus } from '@api/businesses/[business-id]/bookkeeping/status/get'
 import { useLegacyMode } from '@providers/bankTransactions/LegacyMode/LegacyModeProvider'
 

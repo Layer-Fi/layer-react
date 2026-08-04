@@ -1,6 +1,6 @@
 import { CalendarDate } from '@internationalized/date'
 
-import { type TimeEntry } from '@schemas/timeTracking'
+import { type TimeEntry } from '@schemas/timeTracking/timeEntry'
 
 import { makeBusiness } from '@fixtures/business/mocks'
 import { makeCatalogService } from '@fixtures/catalogServices/mocks'

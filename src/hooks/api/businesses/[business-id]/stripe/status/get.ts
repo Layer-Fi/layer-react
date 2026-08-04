@@ -1,4 +1,4 @@
-import { StripeAccountStatusResponseSchema } from '@schemas/stripeAccountStatus'
+import { StripeAccountStatusResponseSchema } from '@schemas/invoices/stripeAccountStatus'
 import { get } from '@utils/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 

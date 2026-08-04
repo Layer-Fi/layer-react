@@ -1,7 +1,7 @@
 import { Schema } from 'effect/index'
 
-import { ClassificationSchema } from '@schemas/categorization'
-import { TagKeyValueSchema } from '@schemas/tag'
+import { ClassificationSchema } from '@schemas/categorization/classification'
+import { TagKeyValueSchema } from '@schemas/tags/tagKeyValue'
 
 export const SingleCategoryUpdateSchema = Schema.Struct({
   type: Schema.Literal('Category'),

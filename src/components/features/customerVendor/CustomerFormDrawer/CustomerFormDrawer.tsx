@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Customer } from '@schemas/customer'
+import { type Customer } from '@schemas/customerVendor/customer'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { Drawer } from '@ui/Modal/Modal'
 import { ModalHeading, ModalTitleWithClose } from '@ui/Modal/ModalSlots'

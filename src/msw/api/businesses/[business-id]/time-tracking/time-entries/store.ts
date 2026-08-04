@@ -1,4 +1,4 @@
-import { type TimeEntry } from '@schemas/timeTracking'
+import { type TimeEntry } from '@schemas/timeTracking/timeEntry'
 
 import { createMockStore } from '@msw/utils/createMockStore'
 import { timeEntries } from '@fixtures/generated/timeEntries.gen'

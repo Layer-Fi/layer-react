@@ -1,4 +1,4 @@
-import { type UnifiedReport } from '@schemas/reports/unifiedReport'
+import { type UnifiedReport } from '@schemas/unifiedReports/unifiedReport'
 
 import { generateArAging } from '@msw/api/businesses/[business-id]/reports/unified/generators/aging'
 import { generateBalanceSheet } from '@msw/api/businesses/[business-id]/reports/unified/generators/balanceSheet'

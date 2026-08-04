@@ -1,5 +1,5 @@
 import { Pinning } from '@internal-types/utility/table'
-import { type UnifiedReport, type UnifiedReportCell, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
+import { type UnifiedReport, type UnifiedReportCell, type UnifiedReportRow } from '@schemas/unifiedReports/unifiedReport'
 
 import {
   type ColumnHeaderKey,

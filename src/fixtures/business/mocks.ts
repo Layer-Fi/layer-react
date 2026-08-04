@@ -1,4 +1,4 @@
-import { type Business } from '@schemas/business'
+import { type Business } from '@schemas/business/business'
 
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 

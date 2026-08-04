@@ -1,6 +1,6 @@
 import { BigDecimal, type FastCheck } from 'effect'
 
-import { TripPurpose } from '@schemas/trip'
+import { TripPurpose } from '@schemas/mileage/trip'
 
 import { vehicles as vehiclePool } from '@fixtures/generated/vehicles.gen'
 import { tripDescriptions } from '@fixtures/trips/constants'

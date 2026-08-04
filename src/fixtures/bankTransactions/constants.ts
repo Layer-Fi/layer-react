@@ -1,5 +1,5 @@
 import { BankTransactionDirection } from '@schemas/bankTransactions/base'
-import { type MatchDetailsType } from '@schemas/bankTransactions/match'
+import { type MatchDetailsType } from '@schemas/bankTransactions/matchDetails'
 
 import { chartOfAccounts } from '@fixtures/generated/chartOfAccounts.gen'
 

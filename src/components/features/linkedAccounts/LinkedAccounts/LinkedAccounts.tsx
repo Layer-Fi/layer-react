@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
+import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaidHostedLinkConfig'
 import { useBankAccountsContext } from '@providers/global/BankAccountsContext/BankAccountsContext'
 import { AccountConfirmationStoreProvider } from '@providers/linkedAccounts/AccountConfirmationStore/AccountConfirmationStoreProvider'
 import { LinkedAccountsProvider } from '@providers/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'

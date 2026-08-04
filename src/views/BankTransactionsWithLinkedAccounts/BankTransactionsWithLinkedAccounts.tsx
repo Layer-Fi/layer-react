@@ -1,7 +1,7 @@
 import { type ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
+import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaidHostedLinkConfig'
 import { BankAccountsFilterStoreProvider, useSelectedBankAccountIds } from '@providers/bankTransactions/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { type BankTransactionsMode } from '@providers/bankTransactions/LegacyMode/LegacyModeProvider'
 import { type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'

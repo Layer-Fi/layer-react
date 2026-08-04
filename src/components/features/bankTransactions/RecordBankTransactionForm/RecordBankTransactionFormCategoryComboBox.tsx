@@ -2,7 +2,7 @@ import { useCallback, useId, useState } from 'react'
 import classNames from 'classnames'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
-import { type Classification } from '@schemas/categorization'
+import { type Classification } from '@schemas/categorization/classification'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 import { Label } from '@ui/Typography/Text'
 import { BankTransactionCategoryComboBox } from '@features/bankTransactions/BankTransactionCategoryComboBox/BankTransactionCategoryComboBox'

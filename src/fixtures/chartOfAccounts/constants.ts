@@ -1,8 +1,6 @@
-import {
-  LedgerAccountType,
-  LedgerEntryDirection,
-  SingleChartAccountSchema,
-} from '@schemas/generalLedger/ledgerAccount'
+import { SingleChartAccountSchema } from '@schemas/generalLedger/chartOfAccounts'
+import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
+import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerEntryDirection'
 
 const BaseChartAccountSchema = SingleChartAccountSchema.omit('accountId', 'accountNumber')
 
@@ -49,7 +47,8 @@ const { Asset, Liability, Equity, Revenue, Expense } = LedgerAccountType
 
 // Exactly the RequiredTemplateAccount entries of the backend's generic chart
 // (BASE_CHART_OF_ACCOUNTS plus the modules genericCoa() adds), with its display
-// names, subtypes, and nesting. Optional template accounts are deliberately absent.
+// names, subtypes, and nesting. Optional template accounts are otherwise absent, except
+// PROFESSIONAL_SERVICES and INTEREST_EXPENSE, which Schedule C maps dedicated lines to.
 export const BASE_CHART_OF_ACCOUNTS: readonly BaseChartAccountNode[] = [
   makeAccount({
     name: 'Assets',
@@ -206,6 +205,8 @@ export const BASE_CHART_OF_ACCOUNTS: readonly BaseChartAccountNode[] = [
           makeAccount({ name: 'Bad Debt', stableName: 'BAD_DEBT', accountType: Expense, accountSubtype: { value: 'OPERATING_EXPENSES', displayName: 'Operating Expenses' }, normality: Debit }),
           makeAccount({ name: 'Equipment & Machinery', stableName: 'EQUIPMENT', accountType: Expense, accountSubtype: { value: 'OPERATING_EXPENSES', displayName: 'Operating Expenses' }, normality: Debit }),
           makeAccount({ name: 'Phone', stableName: 'PHONE', accountType: Expense, accountSubtype: { value: 'OPERATING_EXPENSES', displayName: 'Operating Expenses' }, normality: Debit }),
+          makeAccount({ name: 'Legal and Professional Services', stableName: 'PROFESSIONAL_SERVICES', accountType: Expense, accountSubtype: { value: 'OPERATING_EXPENSES', displayName: 'Operating Expenses' }, normality: Debit }),
+          makeAccount({ name: 'Interest Expense', stableName: 'INTEREST_EXPENSE', accountType: Expense, accountSubtype: { value: 'INTEREST_EXPENSES', displayName: 'Interest Expenses' }, normality: Debit }),
         ],
       }),
       makeAccount({

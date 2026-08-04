@@ -1,9 +1,7 @@
-import {
-  CategorizationRuleSchema,
-  type CreateCategorizationRuleSchema,
-  type PatchCategorizationRuleSchema,
-} from '@schemas/bankTransactions/categorizationRules/categorizationRule'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { CategorizationRuleSchema } from '@schemas/categorization/categorizationRule'
+import { type CreateCategorizationRuleSchema } from '@schemas/categorization/createCategorizationRule'
+import { type PatchCategorizationRuleSchema } from '@schemas/categorization/patchCategorizationRule'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useCategorizationRulesGlobalCacheActions } from '@api/businesses/[business-id]/categorization-rules/get'

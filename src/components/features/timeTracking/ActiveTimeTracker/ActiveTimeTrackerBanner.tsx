@@ -1,7 +1,7 @@
 import { AlertTriangle, Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type TimeEntry } from '@schemas/timeTracking'
+import { type TimeEntry } from '@schemas/timeTracking/timeEntry'
 import { useActiveTimerBannerForm } from '@hooks/features/timeTracking/useActiveTimerBannerForm'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'

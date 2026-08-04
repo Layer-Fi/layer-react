@@ -1,7 +1,7 @@
 import { subDays, subMonths } from 'date-fns'
 import { sumBy } from 'lodash-es'
 
-import { type UnifiedReport } from '@schemas/reports/unifiedReport'
+import { type UnifiedReport } from '@schemas/unifiedReports/unifiedReport'
 
 import { netIncomeInRange } from '@msw/api/businesses/[business-id]/reports/unified/generators/balances'
 import {

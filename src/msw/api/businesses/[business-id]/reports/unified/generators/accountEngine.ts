@@ -1,7 +1,8 @@
 import { sumBy } from 'lodash-es'
 
-import { type LedgerAccountType, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
-import { type UnifiedReportRow } from '@schemas/reports/unifiedReport'
+import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
+import { type LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
+import { type UnifiedReportRow } from '@schemas/unifiedReports/unifiedReport'
 
 import {
   groupByParentAccountId,

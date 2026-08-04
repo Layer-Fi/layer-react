@@ -1,6 +1,6 @@
 import { differenceInCalendarMonths, startOfMonth } from 'date-fns'
 
-import { type Business } from '@schemas/business'
+import { type Business } from '@schemas/business/business'
 
 export const getActivationDate = (business?: Business) => {
   return business?.activationAt

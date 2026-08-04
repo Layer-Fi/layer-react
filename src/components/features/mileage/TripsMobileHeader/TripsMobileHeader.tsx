@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type TripPurposeFilterValue } from '@schemas/trip'
+import { type TripPurposeFilterValue } from '@schemas/mileage/trip'
 import { useDebouncedSearchProps } from '@hooks/utils/debouncing/useDebouncedSearchQuery'
 import { useTripsTableFilters } from '@providers/mileage/TripsRouteStore/TripsRouteStoreProvider'
 import { Button } from '@ui/Button/Button'

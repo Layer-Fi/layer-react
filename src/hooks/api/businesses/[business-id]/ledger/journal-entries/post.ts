@@ -1,4 +1,5 @@
-import { JournalEntryReturnSchema, type UpsertJournalEntrySchema } from '@schemas/generalLedger/journalEntry'
+import { type UpsertJournalEntrySchema } from '@schemas/generalLedger/createCustomJournalEntry'
+import { JournalEntryReturnSchema } from '@schemas/generalLedger/journalEntry'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLedgerEntriesCacheActions } from '@api/businesses/[business-id]/ledger/entries/get'
 import { useBalanceSheetGlobalCacheActions } from '@api/businesses/[business-id]/reports/balance-sheet/get'

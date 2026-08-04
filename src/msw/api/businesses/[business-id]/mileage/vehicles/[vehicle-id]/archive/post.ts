@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type Vehicle, VehicleSchema } from '@schemas/vehicle'
+import { type Vehicle, VehicleSchema } from '@schemas/mileage/vehicle'
 
 import { vehicleStore } from '@msw/api/businesses/[business-id]/mileage/vehicles/store'
 import { apiData } from '@msw/utils/apiResponse'

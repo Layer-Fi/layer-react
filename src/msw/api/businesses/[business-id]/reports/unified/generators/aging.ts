@@ -2,7 +2,7 @@ import { differenceInDays } from 'date-fns'
 import { sum } from 'lodash-es'
 
 import { Pinning } from '@internal-types/utility/table'
-import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
+import { type UnifiedReport, type UnifiedReportRow } from '@schemas/unifiedReports/unifiedReport'
 import { getInvoiceCustomerName } from '@utils/customer'
 
 import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'

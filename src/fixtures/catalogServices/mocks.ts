@@ -1,4 +1,4 @@
-import { type CatalogService } from '@schemas/catalogService'
+import { type CatalogService } from '@schemas/timeTracking/catalogService'
 
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 

@@ -1,6 +1,7 @@
 import { Schema } from 'effect'
 
-import { CreateTagDimensionBodySchema, type TagDimension, TagDimensionSchema } from '@schemas/tag'
+import { CreateTagDimensionBodySchema } from '@schemas/tags/createTagDimensionBody'
+import { type TagDimension, TagDimensionSchema } from '@schemas/tags/tagDimension'
 
 import { findOrSeedTagDimension, tagDimensionStore } from '@msw/api/businesses/[business-id]/tags/dimensions/store'
 import { apiData } from '@msw/utils/apiResponse'

@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react'
 import { Schema } from 'effect'
 
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
-import { type Vehicle, VehicleSchema } from '@schemas/vehicle'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import { type Vehicle, VehicleSchema } from '@schemas/mileage/vehicle'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'

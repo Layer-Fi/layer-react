@@ -4,7 +4,7 @@ import {
   type BusinessTask,
   BusinessTaskSchema,
   BusinessTaskStatus,
-} from '@schemas/businessTasks/businessTask'
+} from '@schemas/bookkeeping/businessTask'
 
 import { patchTaskInStore } from '@msw/api/businesses/[business-id]/bookkeeping/periods/store'
 import { makeFallbackTask } from '@msw/api/businesses/[business-id]/tasks/makeFallbackTask'

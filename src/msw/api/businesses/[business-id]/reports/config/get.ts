@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type ReportGroup, ReportGroupSchema } from '@schemas/reports/reportConfig'
+import { type ReportGroup, ReportGroupSchema } from '@schemas/unifiedReports/reportConfig'
 
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'

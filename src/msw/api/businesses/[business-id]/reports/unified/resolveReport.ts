@@ -1,4 +1,4 @@
-import { type UnifiedReport } from '@schemas/reports/unifiedReport'
+import { type UnifiedReport } from '@schemas/unifiedReports/unifiedReport'
 
 import {
   emptyReport,

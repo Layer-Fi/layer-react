@@ -1,6 +1,8 @@
 import { BigDecimal, Schema } from 'effect'
 
-import { type Invoice, type InvoiceLineItem, InvoiceStatus, type UpsertInvoiceLineItem, UpsertInvoiceSchema } from '@schemas/invoices/invoice'
+import { type Invoice, type InvoiceLineItem } from '@schemas/invoices/invoice'
+import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
+import { type UpsertInvoiceLineItem, UpsertInvoiceSchema } from '@schemas/invoices/upsertInvoice'
 
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'
 import { readRequestJson } from '@msw/utils/request'

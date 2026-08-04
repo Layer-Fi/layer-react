@@ -3,8 +3,8 @@ import {
   BookkeepingConfigurationSchema,
   BookkeepingStatus,
   TransactionTaggingStrategy,
-} from '@schemas/bookkeepingConfiguration'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
+} from '@schemas/bookkeeping/bookkeepingConfiguration'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 

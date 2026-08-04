@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import type { PropsWithChildren } from 'react'
 
-import { convertNonRecursiveBigDecimalToCents, type NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
+import { convertNonRecursiveBigDecimalToCents, type NonRecursiveBigDecimal } from '@schemas/common/nonRecursiveBigDecimal'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'

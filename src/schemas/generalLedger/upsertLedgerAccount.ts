@@ -1,7 +1,7 @@
 import { pipe, Schema } from 'effect'
 
-import { AccountIdSchema, StableNameSchema } from '@schemas/accountIdentifier'
-import { LedgerAccountTypeSchema, LedgerEntryDirectionSchema } from '@schemas/generalLedger/ledgerAccount'
+import { AccountIdSchema, StableNameSchema } from '@schemas/common/accountIdentifier'
+import { LedgerEntryDirectionSchema } from '@schemas/generalLedger/ledgerEntryDirection'
 
 export const UpsertLedgerAccountSchema = Schema.Struct({
   name: Schema.String,
@@ -24,13 +24,3 @@ export const UpsertLedgerAccountSchema = Schema.Struct({
   ),
 })
 export type UpsertLedgerAccount = typeof UpsertLedgerAccountSchema.Type
-
-export const LedgerAccountFormSchema = Schema.Struct({
-  parent: Schema.NullOr(Schema.String),
-  name: Schema.String,
-  accountNumber: Schema.String,
-  type: Schema.NullOr(LedgerAccountTypeSchema),
-  subType: Schema.NullOr(Schema.String),
-  normality: Schema.NullOr(LedgerEntryDirectionSchema),
-})
-export type LedgerAccountForm = typeof LedgerAccountFormSchema.Type

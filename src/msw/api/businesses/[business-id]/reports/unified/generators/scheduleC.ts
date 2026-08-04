@@ -2,9 +2,10 @@ import { getYear } from 'date-fns'
 import { sumBy } from 'lodash-es'
 
 import { Pinning } from '@internal-types/utility/table'
-import { LedgerAccountType, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
-import { type ReportConfig } from '@schemas/reports/reportConfig'
-import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
+import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
+import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
+import { type ReportConfig } from '@schemas/unifiedReports/reportConfig'
+import { type UnifiedReport, type UnifiedReportRow } from '@schemas/unifiedReports/unifiedReport'
 
 import {
   accountActivityCents,
@@ -36,7 +37,7 @@ const PART_I_INCOME: BoxLine[] = [
 
 const PART_II_EXPENSES: BoxLine[] = [
   { lineNumber: '8', lineName: 'Advertising', stableName: 'MARKETING' },
-  { lineNumber: '17', lineName: 'Legal and professional services', stableName: 'OTHER_BUSINESS_EXPENSES' },
+  { lineNumber: '17', lineName: 'Legal and professional services', stableName: 'PROFESSIONAL_SERVICES' },
   { lineNumber: '18', lineName: 'Office expense', stableName: 'OFFICE_EXPENSES' },
   { lineNumber: '20b', lineName: 'Rent or lease (other business property)', stableName: 'RENT' },
   { lineNumber: '22', lineName: 'Supplies', stableName: 'SOFTWARE' },
@@ -51,7 +52,7 @@ const PART_III_COGS: BoxLine[] = [
 ]
 
 const PART_V_OTHER_EXPENSES: BoxLine[] = [
-  { lineNumber: '48a', lineName: 'Interest and bank fees', stableName: 'BANK_FEES' },
+  { lineNumber: '48a', lineName: 'Interest and bank fees', stableName: 'INTEREST_EXPENSE' },
 ]
 
 const SYNTHETIC_LINES = {

@@ -1,4 +1,4 @@
-import { type BookkeepingPeriodStatus } from '@schemas/bookkeepingPeriods'
+import { type BookkeepingPeriodStatus } from '@schemas/bookkeeping/bookkeepingPeriods'
 import type { UserVisibleTask } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
 
 export type MonthData = {

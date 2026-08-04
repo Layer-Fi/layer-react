@@ -3,8 +3,8 @@ import {
   type BankTransactionSchema,
 } from '@schemas/bankTransactions/bankTransaction'
 import { type MatchSchema, type SuggestedMatchSchema } from '@schemas/bankTransactions/match'
-import type { CustomerVendorSchema } from '@schemas/customerVendor'
-import type { Tag } from '@schemas/tag'
+import type { CustomerVendorSchema } from '@schemas/customerVendor/customerVendor'
+import type { Tag } from '@schemas/tags/tag'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 
 export enum DisplayState {

@@ -1,5 +1,5 @@
-import { type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
-import { type UnifiedReport, type UnifiedReportRow } from '@schemas/reports/unifiedReport'
+import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
+import { type UnifiedReport, type UnifiedReportRow } from '@schemas/unifiedReports/unifiedReport'
 
 import { ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import {

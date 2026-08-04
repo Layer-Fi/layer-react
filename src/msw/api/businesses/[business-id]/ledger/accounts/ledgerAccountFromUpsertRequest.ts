@@ -1,10 +1,7 @@
 import { Schema } from 'effect'
 
-import {
-  type LedgerAccountType,
-  LedgerAccountTypeSchema,
-  type SingleChartAccountType,
-} from '@schemas/generalLedger/ledgerAccount'
+import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
+import { type LedgerAccountType, LedgerAccountTypeSchema } from '@schemas/generalLedger/ledgerAccountType'
 import { UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLedgerAccount'
 import { humanizeEnum } from '@utils/format'
 import { SUBTYPES_CONFIG_BY_TYPE } from '@features/generalLedger/constants'

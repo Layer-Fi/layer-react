@@ -1,8 +1,8 @@
 import { fromDate, getLocalTimeZone, toCalendarDate, today } from '@internationalized/date'
 import { startOfToday } from 'date-fns'
 
+import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents } from '@schemas/common/nonRecursiveBigDecimal'
 import { type Invoice } from '@schemas/invoices/invoice'
-import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents } from '@schemas/nonRecursiveBigDecimal'
 import type { InvoiceRefundForm } from '@features/invoices/InvoiceRefundForm/invoiceRefundFormSchemas'
 
 export const getInvoiceRefundFormDefaultValues = (invoice: Invoice): InvoiceRefundForm => {

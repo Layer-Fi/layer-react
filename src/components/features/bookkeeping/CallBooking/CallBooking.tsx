@@ -1,7 +1,7 @@
 import { Check, Clock3, Video } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingType } from '@schemas/callBooking'
+import { type CallBooking as CallBookingData, CallBookingPurpose, CallBookingType } from '@schemas/bookkeeping/callBooking'
 import { DateFormat } from '@utils/i18n/date/patterns'
 import { translationKey } from '@utils/i18n/translationKey'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'

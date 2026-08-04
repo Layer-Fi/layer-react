@@ -1,106 +1,10 @@
 import { pipe, Schema } from 'effect'
 
-import { AccountIdentifierSchema } from '@schemas/accountIdentifier'
-import { ZonedDateTimeFromSelf } from '@schemas/common/zonedDateTimeFromSelf'
-import { CustomerSchema } from '@schemas/customer'
-import { LedgerEntryDirectionSchema, SingleChartAccountSchema } from '@schemas/generalLedger/ledgerAccount'
-import { NonRecursiveBigDecimalSchema } from '@schemas/nonRecursiveBigDecimal'
-import { TagKeyValueSchema, TagSchema, TransactionTagSchema } from '@schemas/tag'
-import { VendorSchema } from '@schemas/vendor'
-
-export const JournalEntryFormLineItemSchema = Schema.Struct({
-  externalId: Schema.NullOr(Schema.String),
-  accountIdentifier: AccountIdentifierSchema,
-  amount: NonRecursiveBigDecimalSchema,
-  direction: LedgerEntryDirectionSchema,
-  memo: Schema.NullOr(Schema.String),
-  tags: Schema.Array(TagSchema),
-
-  customer: Schema.NullOr(CustomerSchema),
-  vendor: Schema.NullOr(VendorSchema),
-})
-
-export const JournalEntryFormSchema = Schema.Struct({
-  externalId: Schema.NullOr(Schema.String),
-  entryAt: ZonedDateTimeFromSelf,
-  createdBy: Schema.String,
-  memo: Schema.String,
-  tags: Schema.Array(TagSchema),
-  metadata: Schema.NullOr(Schema.Unknown),
-  referenceNumber: Schema.NullOr(Schema.String),
-  lineItems: Schema.Array(JournalEntryFormLineItemSchema),
-
-  customer: Schema.NullOr(CustomerSchema),
-  vendor: Schema.NullOr(VendorSchema),
-})
-
-export type JournalEntryFormLineItem = typeof JournalEntryFormLineItemSchema.Type
-export type JournalEntryForm = Omit<typeof JournalEntryFormSchema.Type, 'lineItems'> & {
-  // Purposefully allow lineItems to be mutable for `field.pushValue` in the form
-  lineItems: JournalEntryFormLineItem[]
-}
-
-export const CreateCustomJournalEntryLineItemSchema = Schema.Struct({
-  externalId: Schema.optional(Schema.String).pipe(
-    Schema.fromKey('external_id'),
-  ),
-  accountIdentifier: pipe(
-    Schema.propertySignature(AccountIdentifierSchema),
-    Schema.fromKey('account_identifier'),
-  ),
-  amount: Schema.BigInt,
-  direction: LedgerEntryDirectionSchema,
-  memo: Schema.optional(Schema.String),
-  customerId: Schema.optional(Schema.UUID).pipe(
-    Schema.fromKey('customer_id'),
-  ),
-  customerExternalId: Schema.optional(Schema.String).pipe(
-    Schema.fromKey('customer_external_id'),
-  ),
-  vendorId: Schema.optional(Schema.UUID).pipe(
-    Schema.fromKey('vendor_id'),
-  ),
-  vendorExternalId: Schema.optional(Schema.String).pipe(
-    Schema.fromKey('vendor_external_id'),
-  ),
-  tags: Schema.optional(Schema.Array(TagKeyValueSchema)),
-})
-
-export const CreateCustomJournalEntrySchema = Schema.Struct({
-  externalId: Schema.optional(Schema.String).pipe(
-    Schema.fromKey('external_id'),
-  ),
-  entryAt: pipe(
-    Schema.propertySignature(Schema.Date),
-    Schema.fromKey('entry_at'),
-  ),
-  createdBy: pipe(
-    Schema.propertySignature(Schema.String),
-    Schema.fromKey('created_by'),
-  ),
-  memo: Schema.String,
-  customerId: Schema.optional(Schema.UUID).pipe(
-    Schema.fromKey('customer_id'),
-  ),
-  customerExternalId: Schema.optional(Schema.String).pipe(
-    Schema.fromKey('customer_external_id'),
-  ),
-  vendorId: Schema.optional(Schema.UUID).pipe(
-    Schema.fromKey('vendor_id'),
-  ),
-  vendorExternalId: Schema.optional(Schema.String).pipe(
-    Schema.fromKey('vendor_external_id'),
-  ),
-  tags: Schema.optional(Schema.Array(TagKeyValueSchema)),
-  metadata: Schema.optional(Schema.Unknown),
-  referenceNumber: Schema.optional(Schema.String).pipe(
-    Schema.fromKey('reference_number'),
-  ),
-  lineItems: pipe(
-    Schema.propertySignature(Schema.Array(CreateCustomJournalEntryLineItemSchema)),
-    Schema.fromKey('line_items'),
-  ),
-})
+import { CustomerSchema } from '@schemas/customerVendor/customer'
+import { VendorSchema } from '@schemas/customerVendor/vendor'
+import { SingleChartAccountSchema } from '@schemas/generalLedger/chartOfAccounts'
+import { LedgerEntryDirectionSchema } from '@schemas/generalLedger/ledgerEntryDirection'
+import { TransactionTagSchema } from '@schemas/tags/transactionTag'
 
 export const ApiLineItemSchema = Schema.Struct({
   id: pipe(
@@ -245,12 +149,6 @@ export const ApiCustomJournalEntryWithEntrySchema = Schema.Struct({
 export const JournalEntryReturnSchema = Schema.Struct({
   data: ApiCustomJournalEntryWithEntrySchema,
 })
-
-export const UpsertJournalEntrySchema = CreateCustomJournalEntrySchema
-
-export type CreateCustomJournalEntry = typeof CreateCustomJournalEntrySchema.Type
-export type CreateCustomJournalEntryLineItem = typeof CreateCustomJournalEntryLineItemSchema.Type
-export type UpsertJournalEntry = typeof UpsertJournalEntrySchema.Type
 export type ApiLineItem = typeof ApiLineItemSchema.Type
 export type ApiCustomJournalEntryLineItem = typeof ApiCustomJournalEntryLineItemSchema.Type
 export type ApiLedgerEntry = typeof ApiLedgerEntrySchema.Type

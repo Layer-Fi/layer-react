@@ -3,7 +3,7 @@ import { getYear } from 'date-fns'
 import { Car } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type Trip, TripPurposeFilterValue } from '@schemas/trip'
+import { type Trip, TripPurposeFilterValue } from '@schemas/mileage/trip'
 import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
 import { useGetListTrips } from '@api/businesses/[business-id]/mileage/trips/get'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'

@@ -3,8 +3,8 @@ import {
   type BookkeepingPeriod,
   BookkeepingPeriodsSchema,
   BookkeepingPeriodStatus,
-} from '@schemas/bookkeepingPeriods'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
+} from '@schemas/bookkeeping/bookkeepingPeriods'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
 import { isActiveBookkeepingPeriod } from '@utils/bookkeeping/periods/getFilteredBookkeepingPeriods'

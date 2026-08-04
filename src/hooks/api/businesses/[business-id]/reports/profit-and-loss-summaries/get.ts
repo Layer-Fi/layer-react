@@ -1,5 +1,6 @@
-import { type ProfitAndLossSummaries, type ProfitAndLossSummariesRequestParams, ProfitAndLossSummariesSchema } from '@schemas/reports/profitAndLoss'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import { type ProfitAndLossSummariesRequestParams } from '@schemas/profitAndLoss/profitAndLossRequestParams'
+import { type ProfitAndLossSummaries, ProfitAndLossSummariesSchema } from '@schemas/profitAndLoss/profitAndLossSummaries'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'

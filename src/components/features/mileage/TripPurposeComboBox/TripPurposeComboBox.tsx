@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { TripPurpose } from '@schemas/trip'
+import { TripPurpose } from '@schemas/mileage/trip'
 import { translationKey } from '@utils/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'

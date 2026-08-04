@@ -1,5 +1,5 @@
-import { CatalogServiceSchema, type CreateCatalogServiceEncoded } from '@schemas/catalogService'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import { CatalogServiceSchema, type CreateCatalogServiceEncoded } from '@schemas/timeTracking/catalogService'
 import { post } from '@utils/api/authenticatedHttp'
 import { useCatalogServicesGlobalCacheActions } from '@api/businesses/[business-id]/catalog/services/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'

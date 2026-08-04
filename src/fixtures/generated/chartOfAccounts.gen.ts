@@ -948,6 +948,36 @@ export const chartOfAccounts = [
     "accountNumber": null
   },
   {
+    "name": "Legal and Professional Services",
+    "stableName": "PROFESSIONAL_SERVICES",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "OPERATING_EXPENSES",
+      "displayName": "Operating Expenses"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000063",
+    "accountNumber": null
+  },
+  {
+    "name": "Interest Expense",
+    "stableName": "INTEREST_EXPENSE",
+    "normality": "DEBIT",
+    "accountType": {
+      "value": "EXPENSE",
+      "displayName": "Expenses"
+    },
+    "accountSubtype": {
+      "value": "INTEREST_EXPENSES",
+      "displayName": "Interest Expenses"
+    },
+    "accountId": "00000009-0000-4000-8000-000000000064",
+    "accountNumber": null
+  },
+  {
     "name": "Taxes",
     "stableName": "TAXES",
     "normality": "DEBIT",
@@ -959,7 +989,7 @@ export const chartOfAccounts = [
       "value": "TAXES_LICENSES",
       "displayName": "Taxes & Licenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000063",
+    "accountId": "00000009-0000-4000-8000-000000000065",
     "accountNumber": null
   },
   {
@@ -974,7 +1004,7 @@ export const chartOfAccounts = [
       "value": "TAXES_LICENSES",
       "displayName": "Taxes & Licenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000064",
+    "accountId": "00000009-0000-4000-8000-000000000066",
     "accountNumber": null
   },
   {
@@ -989,7 +1019,7 @@ export const chartOfAccounts = [
       "value": "TAXES_LICENSES",
       "displayName": "Taxes & Licenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000065",
+    "accountId": "00000009-0000-4000-8000-000000000067",
     "accountNumber": null
   },
   {
@@ -1004,7 +1034,7 @@ export const chartOfAccounts = [
       "value": "TAXES_LICENSES",
       "displayName": "Taxes & Licenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000066",
+    "accountId": "00000009-0000-4000-8000-000000000068",
     "accountNumber": null
   },
   {
@@ -1019,7 +1049,7 @@ export const chartOfAccounts = [
       "value": "TAXES_LICENSES",
       "displayName": "Taxes & Licenses"
     },
-    "accountId": "00000009-0000-4000-8000-000000000067",
+    "accountId": "00000009-0000-4000-8000-000000000069",
     "accountNumber": null
   }
 ] as (typeof schema.Type)[]

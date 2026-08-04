@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type Customer, CustomerSchema } from '@schemas/customer'
+import { type Customer, CustomerSchema } from '@schemas/customerVendor/customer'
 
 import { customerFromUpsertRequest } from '@msw/api/businesses/[business-id]/customers/customerFromUpsertRequest'
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'

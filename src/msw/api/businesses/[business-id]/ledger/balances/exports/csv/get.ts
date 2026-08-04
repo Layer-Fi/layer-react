@@ -1,4 +1,4 @@
-import { type NestedLedgerAccountEncoded } from '@schemas/generalLedger/ledgerAccount'
+import { type NestedLedgerAccountEncoded } from '@schemas/generalLedger/ledgerBalances'
 
 import { ledgerAccountStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'
 import { toBalancesResponse } from '@msw/api/businesses/[business-id]/ledger/balances/get'

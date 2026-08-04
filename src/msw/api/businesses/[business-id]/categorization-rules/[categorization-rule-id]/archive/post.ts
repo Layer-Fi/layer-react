@@ -1,4 +1,4 @@
-import { type CategorizationRule } from '@schemas/bankTransactions/categorizationRules/categorizationRule'
+import { type CategorizationRule } from '@schemas/categorization/categorizationRule'
 
 import { toCategorizationRuleResponse } from '@msw/api/businesses/[business-id]/categorization-rules/post'
 import { categorizationRuleStore } from '@msw/api/businesses/[business-id]/categorization-rules/store'

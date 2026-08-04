@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { BookkeepingStatus } from '@schemas/bookkeepingStatus'
+import { BookkeepingStatus } from '@schemas/bookkeeping/bookkeepingStatus'
 import { BankTransactionsWithLinkedAccounts } from '@views/BankTransactionsWithLinkedAccounts/BankTransactionsWithLinkedAccounts'
 
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'

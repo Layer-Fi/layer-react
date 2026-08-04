@@ -1,6 +1,7 @@
 import { Schema } from 'effect'
 
-import { type TimeEntry, type UpsertTimeEntry, UpsertTimeEntrySchema } from '@schemas/timeTracking'
+import { type TimeEntry } from '@schemas/timeTracking/timeEntry'
+import { type UpsertTimeEntry, UpsertTimeEntrySchema } from '@schemas/timeTracking/upsertTimeEntry'
 
 import { catalogServiceStore } from '@msw/api/businesses/[business-id]/catalog/services/store'
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'

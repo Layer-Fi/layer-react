@@ -4,7 +4,7 @@ import { BigDecimal as BD } from 'effect'
 import {
   type NonRecursiveBigDecimal,
   toNonRecursiveBigDecimal,
-} from '@schemas/nonRecursiveBigDecimal'
+} from '@schemas/common/nonRecursiveBigDecimal'
 import { Badge, BadgeSize } from '@ui/Badge/Badge'
 import {
   FormNonRecursiveBigDecimalField,

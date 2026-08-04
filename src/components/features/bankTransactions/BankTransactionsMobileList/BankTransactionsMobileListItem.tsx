@@ -3,7 +3,7 @@ import { File } from 'lucide-react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { convertMatchDetailsToLinkingMetadata } from '@schemas/bankTransactions/match'
+import { convertMatchDetailsToLinkingMetadata } from '@utils/bankTransactions/matchLinkingMetadata'
 import { hasReceipts, isCategorized, isMoneyIn } from '@utils/bankTransactions/shared'
 import { useBankTransactionsContext } from '@providers/bankTransactions/BankTransactions/BankTransactionsContext'
 import { type LinkingMetadata, useInAppLinkContext } from '@providers/common/InAppLink/InAppLinkContext'

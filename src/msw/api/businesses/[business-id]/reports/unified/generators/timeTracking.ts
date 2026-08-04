@@ -1,7 +1,7 @@
 import { getLocalTimeZone } from '@internationalized/date'
 
-import { type UnifiedReport } from '@schemas/reports/unifiedReport'
-import { type TimeEntry } from '@schemas/timeTracking'
+import { type TimeEntry } from '@schemas/timeTracking/timeEntry'
+import { type UnifiedReport } from '@schemas/unifiedReports/unifiedReport'
 
 import {
   type FlatGroup,

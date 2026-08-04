@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import type { Awaitable } from '@internal-types/utility/promises'
-import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
+import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaidHostedLinkConfig'
 import { getAccountsNeedingConfirmation } from '@utils/bankAccount'
 import { useBankAccountsContext } from '@providers/global/BankAccountsContext/BankAccountsContext'
 import { LinkedAccountsProvider } from '@providers/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'

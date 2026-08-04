@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 
 const taxPaymentBreakdownFields = {
   rowKey: pipe(

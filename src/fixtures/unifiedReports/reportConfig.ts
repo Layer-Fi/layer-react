@@ -1,4 +1,4 @@
-import { type ReportConfig, ReportControl, type ReportGroup } from '@schemas/reports/reportConfig'
+import { type ReportConfig, ReportControl, type ReportGroup } from '@schemas/unifiedReports/reportConfig'
 
 const makeReport = (config: {
   key: string

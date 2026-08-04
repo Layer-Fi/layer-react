@@ -1,4 +1,6 @@
-import { LedgerAccountType, LedgerEntryDirection, type SingleChartAccountType } from '@schemas/generalLedger/ledgerAccount'
+import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
+import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
+import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerEntryDirection'
 
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 

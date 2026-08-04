@@ -3,7 +3,7 @@ import { Schema } from 'effect'
 import {
   AccountingConfigurationSchema,
   type AccountingConfigurationSchemaType,
-} from '@schemas/accountingConfiguration'
+} from '@schemas/business/accountingConfiguration'
 
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'

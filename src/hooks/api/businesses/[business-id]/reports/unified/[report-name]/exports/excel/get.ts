@@ -1,5 +1,5 @@
 import { S3PresignedUrlSchema } from '@schemas/common/s3PresignedUrl'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { getAsMutation } from '@utils/api/getAsMutation'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { type QueryParams } from '@utils/request/toDefinedSearchParameters'

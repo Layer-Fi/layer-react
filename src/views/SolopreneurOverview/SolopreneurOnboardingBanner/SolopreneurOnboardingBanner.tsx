@@ -1,4 +1,4 @@
-import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaid'
+import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaidHostedLinkConfig'
 import { LinkedAccountsProvider } from '@providers/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { HStack } from '@ui/Stack/Stack'
 import { PlaidHostedLinkErrorBanner } from '@features/linkedAccounts/PlaidHostedLinkErrorBanner/PlaidHostedLinkErrorBanner'
