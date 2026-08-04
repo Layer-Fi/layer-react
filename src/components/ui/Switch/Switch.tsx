@@ -5,7 +5,7 @@ import {
   type SwitchProps as ReactAriaSwitchProps,
 } from 'react-aria-components/Switch'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
 import { withRenderProp } from '@components/utility/withRenderProp'
 
 import './switch.scss'

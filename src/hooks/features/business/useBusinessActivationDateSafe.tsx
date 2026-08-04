@@ -1,6 +1,6 @@
 import { useContext, useMemo } from 'react'
 
-import { getActivationDate } from '@utils/business'
+import { getActivationDate } from '@utils/features/business/business'
 import type { UseActivationDate } from '@providers/common/DateStore/createScopedDateStore'
 import { LayerContext } from '@providers/global/LayerContext/LayerContext'
 

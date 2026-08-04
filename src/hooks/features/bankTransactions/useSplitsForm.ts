@@ -11,10 +11,10 @@ import {
   getLocalSplitStateForExpandedTransaction,
   getSplitsErrorMessage,
   isSplitsValid,
-} from '@utils/bankTransactions/splits'
-import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
-import { convertCentsToDecimalString } from '@utils/format'
-import { toLocalizedNumber } from '@utils/i18n/number/input'
+} from '@utils/features/bankTransactions/splits'
+import { canCategoryHaveTaxCode } from '@utils/features/bankTransactions/taxCode'
+import { toLocalizedNumber } from '@utils/shared/i18n/number/input'
+import { convertCentsToDecimalString } from '@utils/shared/string/format'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
 import { useBankTransactionsCategorizationActions } from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'

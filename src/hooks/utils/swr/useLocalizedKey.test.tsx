@@ -2,7 +2,7 @@ import { type PropsWithChildren } from 'react'
 import { renderHook } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { SupportedLocale } from '@utils/i18n/supportedLocale'
+import { SupportedLocale } from '@utils/shared/i18n/supportedLocale'
 import { useLocalizedKey } from '@hooks/utils/swr/useLocalizedKey'
 
 import { LayerTestProvider } from '@test-utils/LayerTestProvider'

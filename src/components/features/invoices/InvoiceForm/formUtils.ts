@@ -19,7 +19,7 @@ import {
   BIG_DECIMAL_ZERO,
   convertCentsToBigDecimal,
   safeDivide,
-} from '@utils/bigDecimalUtils'
+} from '@utils/shared/number/bigDecimal'
 import {
   computeAdditionalDiscount,
   computeRawTaxableSubtotal,

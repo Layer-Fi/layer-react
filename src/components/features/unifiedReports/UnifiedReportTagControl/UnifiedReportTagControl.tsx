@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { isActiveTagValueDefinition, type TagValueDefinition } from '@schemas/tags/tagValueDefinition'
 import type { TagControl } from '@schemas/unifiedReports/reportConfig'
-import { capitalizeFirstLetter } from '@utils/format'
+import { capitalizeFirstLetter } from '@utils/shared/string/format'
 import { useUnifiedReportTagSelection } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { MultiSelectComboBox } from '@ui/ComboBox/MultiSelectComboBox'
 import { VStack } from '@ui/Stack/Stack'

@@ -9,7 +9,7 @@ import type { JournalEntryForm, JournalEntryFormLineItem } from '@schemas/genera
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerEntryDirection'
 import { makeTagFromTransactionTag } from '@schemas/tags/tag'
 import { makeTagKeyValueFromTag } from '@schemas/tags/tagKeyValue'
-import { BIG_DECIMAL_ZERO, convertBigDecimalToBigIntCents } from '@utils/bigDecimalUtils'
+import { BIG_DECIMAL_ZERO, convertBigDecimalToBigIntCents } from '@utils/shared/number/bigDecimal'
 
 /**
  * Determines if a line item is blank (empty).

@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 
 import { type RemoveBankTransactionTagsUpdateEncoded } from '@schemas/bankTransactions/tagUpdate'
-import { del } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
+import { del } from '@utils/shared/api/authenticatedHttp'
+import { withStableTrigger } from '@utils/shared/swr/withStableTrigger'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 

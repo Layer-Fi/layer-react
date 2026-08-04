@@ -5,10 +5,10 @@ import {
   BookkeepingPeriodStatus,
 } from '@schemas/bookkeeping/bookkeepingPeriods'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { get } from '@utils/api/authenticatedHttp'
-import { isActiveOrPausedBookkeepingStatus } from '@utils/bookkeeping/bookkeepingStatusFilters'
-import { isActiveBookkeepingPeriod } from '@utils/bookkeeping/periods/getFilteredBookkeepingPeriods'
-import { getUserVisibleTasks } from '@utils/bookkeeping/tasks/bookkeepingTasksFilters'
+import { isActiveOrPausedBookkeepingStatus } from '@utils/features/bookkeeping/bookkeepingStatusFilters'
+import { getUserVisibleTasks } from '@utils/features/bookkeeping/bookkeepingTasksFilters'
+import { isActiveBookkeepingPeriod } from '@utils/features/bookkeeping/periods'
+import { get } from '@utils/shared/api/authenticatedHttp'
 import {
   BOOKKEEPING_TAG_KEY,
   useGetBookkeepingStatus,

@@ -3,7 +3,7 @@ import { createStore, useStore } from 'zustand'
 
 import { type BankTransactionCategoryComboBoxOption, isSuggestedMatchAsOption } from '@internal-types/bankTransactionCategoryComboBoxOption'
 import type { SuggestedMatchAsOption } from '@internal-types/categorizationOption'
-import { canCategoryHaveTaxCode } from '@utils/bankTransactions/taxCode'
+import { canCategoryHaveTaxCode } from '@utils/features/bankTransactions/taxCode'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 
 export enum BankTransactionSelectionVariant {

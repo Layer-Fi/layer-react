@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { CustomerVendorSchema } from '@schemas/customerVendor/customerVendor'
 import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerEntryDirection'
-import { flattenValidationErrors } from '@utils/form'
+import { flattenValidationErrors } from '@utils/shared/form/errors'
 import { usePreloadCustomers } from '@api/businesses/[business-id]/customers/get'
 import { UpsertJournalEntryMode } from '@api/businesses/[business-id]/ledger/journal-entries/post'
 import { usePreloadVendors } from '@api/businesses/[business-id]/vendors/get'

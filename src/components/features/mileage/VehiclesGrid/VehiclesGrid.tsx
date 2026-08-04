@@ -3,7 +3,7 @@ import { Car } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/mileage/vehicle'
-import { asMutable } from '@utils/asMutable'
+import { asMutable } from '@utils/shared/array/asMutable'
 import { useGetVehicles } from '@api/businesses/[business-id]/mileage/vehicles/get'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'

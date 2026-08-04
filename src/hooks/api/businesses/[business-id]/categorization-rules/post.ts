@@ -2,7 +2,7 @@ import { CategorizationRuleSchema } from '@schemas/categorization/categorization
 import { type CreateCategorizationRuleSchema } from '@schemas/categorization/createCategorizationRule'
 import { type PatchCategorizationRuleSchema } from '@schemas/categorization/patchCategorizationRule'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { post } from '@utils/api/authenticatedHttp'
+import { post } from '@utils/shared/api/authenticatedHttp'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useCategorizationRulesGlobalCacheActions } from '@api/businesses/[business-id]/categorization-rules/get'
 import { useProfitAndLossGlobalInvalidator } from '@api/businesses/[business-id]/reports/profit-and-loss/useProfitAndLossGlobalInvalidator'

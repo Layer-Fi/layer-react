@@ -1,4 +1,4 @@
-import { post } from '@utils/api/authenticatedHttp'
+import { post } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const UNLINK_PLAID_ITEM_TAG_KEY = '#unlink-plaid-item'

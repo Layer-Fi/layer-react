@@ -1,4 +1,4 @@
-import { del } from '@utils/api/authenticatedHttp'
+import { del } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const UNLINK_BANK_ACCOUNT_TAG_KEY = '#unlink-bank-account'

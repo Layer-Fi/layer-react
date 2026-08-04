@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 
-import { createKeyMatcher } from '@utils/swr/createKeyMatcher'
+import { createKeyMatcher } from '@utils/shared/swr/createKeyMatcher'
 import { useGlobalCacheActions } from '@hooks/utils/swr/useGlobalCacheActions'
 import { useLocale } from '@providers/global/I18nProvider/LayerI18nProvider'
 

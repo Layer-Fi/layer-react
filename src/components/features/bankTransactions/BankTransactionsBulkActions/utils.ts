@@ -1,5 +1,5 @@
 import { type BankTransaction } from '@internal-types/bankTransactions'
-import { getBankTransactionTaxOptions } from '@utils/bankTransactions/taxCode'
+import { getBankTransactionTaxOptions } from '@utils/features/bankTransactions/taxCode'
 
 export const getBankTransactionsById = (
   bankTransactions?: readonly BankTransaction[],

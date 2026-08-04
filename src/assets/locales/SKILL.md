@@ -85,10 +85,10 @@ t('taxEstimates:label.tax_details', 'Tax Details')
 
 For a translation key defined in a constant, options list, or column definition — anywhere
 `t()` can't be called at declaration time — use `translationKey`
-(`@utils/i18n/translationKey`) so extraction still sees it:
+(`@utils/shared/i18n/translationKey`) so extraction still sees it:
 
 ```ts
-import { translationKey } from '@utils/i18n/translationKey'
+import { translationKey } from '@utils/shared/i18n/translationKey'
 
 const OPTIONS = [
   { value: PaymentMethod.Cash, ...translationKey('common:label.cash', 'Cash') },
@@ -111,31 +111,31 @@ tConditional(t, 'bankTransactions:state.status', {
 ```
 
 `tConditional` maps a condition onto i18next `context` variants; `tPlural` onto
-`_one`/`_other` suffixes. Both live in `@utils/i18n/{conditional,plural}.ts`.
+`_one`/`_other` suffixes. Both live in `@utils/shared/i18n/{conditional,plural}.ts`.
 
-For joining a list of labels, use `formatList` (`@utils/i18n/list/formatters`) — it wraps
+For joining a list of labels, use `formatList` (`@utils/shared/i18n/list/formatters`) — it wraps
 `Intl.ListFormat`, so don't `join(', ')`.
 
 ## Formatting is separate from translation
 
 Numbers, currency, percentages, dates, and durations never go through `t()` — they go through
-`useIntlFormatter()`. Full details in [`src/utils/i18n/SKILL.md`](../../utils/i18n/SKILL.md).
+`useIntlFormatter()`. Full details in [`src/utils/shared/i18n/SKILL.md`](../../utils/shared/i18n/SKILL.md).
 Short version: `<MoneySpan>` in JSX, `formatCurrencyFromCents` for raw strings (input is
 **cents**), `formatPercent` (input is a **fraction**), `formatDate` with a `DateFormat` enum
 value — never a custom format string, never `toLocaleString`/`toFixed`.
 
 ## Locale plumbing
 
-- `SupportedLocale` / `DEFAULT_LOCALE` / `getIntlLocale` in `@utils/i18n/supportedLocale`.
+- `SupportedLocale` / `DEFAULT_LOCALE` / `getIntlLocale` in `@utils/shared/i18n/supportedLocale`.
 - `LayerI18nProvider` wires i18next, `react-intl`, and react-aria's `I18nProvider` together
   and exposes `useLocale()`.
 - The locale is sent as a `Layer-Locale` header and is part of every SWR cache key, so
   switching locale refetches; `StaleLocaleCacheInvalidator` drops the previous locale's cache.
   This is why new query hooks should leave `isLocalized` at its default.
-- `i18next-pseudo` (`@utils/i18n/pseudoConfig`) can pseudo-localize to expose untranslated
+- `i18next-pseudo` (wired in `@utils/shared/i18n/init`) can pseudo-localize to expose untranslated
   strings and layouts that break under longer text.
 
 ## Related
 
-- [`src/utils/i18n/SKILL.md`](../../utils/i18n/SKILL.md) — formatting money, dates, numbers
+- [`src/utils/shared/i18n/SKILL.md`](../../utils/shared/i18n/SKILL.md) — formatting money, dates, numbers
 - [`src/components/ui/SKILL.md`](../../components/ui/SKILL.md) — primitives translate too

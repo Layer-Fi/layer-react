@@ -1,5 +1,5 @@
 import { type TagValueDefinitionSchema } from '@schemas/tags/tagValueDefinition'
-import { post } from '@utils/api/authenticatedHttp'
+import { post } from '@utils/shared/api/authenticatedHttp'
 import { useTagDimensionsGlobalCacheActions } from '@api/businesses/[business-id]/tags/dimensions/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 

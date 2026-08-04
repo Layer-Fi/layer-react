@@ -1,6 +1,6 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { TagDimensionSchema } from '@schemas/tags/tagDimension'
-import { get } from '@utils/api/authenticatedHttp'
+import { get } from '@utils/shared/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const TAG_DIMENSION_BY_KEY_TAG_KEY = '#tag-dimension-by-key'

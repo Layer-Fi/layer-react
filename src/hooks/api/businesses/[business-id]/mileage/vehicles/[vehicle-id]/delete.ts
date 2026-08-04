@@ -1,4 +1,4 @@
-import { del } from '@utils/api/authenticatedHttp'
+import { del } from '@utils/shared/api/authenticatedHttp'
 import { useVehiclesGlobalCacheActions } from '@api/businesses/[business-id]/mileage/vehicles/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 

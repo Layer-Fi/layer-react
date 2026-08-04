@@ -1,4 +1,4 @@
-import { del } from '@utils/api/authenticatedHttp'
+import { del } from '@utils/shared/api/authenticatedHttp'
 import { useMileageSummaryGlobalCacheActions } from '@api/businesses/[business-id]/mileage/summary/get'
 import { useTripsGlobalCacheActions } from '@api/businesses/[business-id]/mileage/trips/get'
 import { useVehiclesGlobalCacheActions } from '@api/businesses/[business-id]/mileage/vehicles/get'

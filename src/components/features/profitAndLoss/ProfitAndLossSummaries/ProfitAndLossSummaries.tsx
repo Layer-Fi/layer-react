@@ -1,8 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { DEFAULT_CHART_COLORS } from '@utils/chartColors'
-import type { Variants } from '@utils/styleUtils/sizeVariants'
+import { DEFAULT_CHART_COLORS } from '@utils/shared/styleUtils/chartColors'
 import { UNCATEGORIZED_CHART_COLOR } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/utils'
 import {
   SummariesContent,
@@ -10,6 +9,7 @@ import {
   type SummaryTileBreakdown,
   type SummaryTileConfig,
 } from '@features/profitAndLoss/ProfitAndLossSummaries/SummariesContent'
+import type { Variants } from '@features/profitAndLoss/ProfitAndLossSummaries/types'
 import { ProfitAndLossSummaryTileFooter } from '@features/profitAndLoss/ProfitAndLossSummaryTileFooter/ProfitAndLossSummaryTileFooter'
 import { TransactionsToReview } from '@features/profitAndLoss/TransactionsToReview/TransactionsToReview'
 import { UncategorizedTransactionsBadge } from '@features/profitAndLoss/UncategorizedTransactionsBadge/UncategorizedTransactionsBadge'

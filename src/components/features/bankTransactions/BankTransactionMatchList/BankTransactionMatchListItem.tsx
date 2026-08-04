@@ -1,7 +1,7 @@
 import { GridListItem } from 'react-aria-components/GridList'
 
 import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
-import { isMoneyIn } from '@utils/bankTransactions/shared'
+import { isMoneyIn } from '@utils/features/bankTransactions/shared'
 import { Checkbox } from '@ui/Checkbox/Checkbox'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'

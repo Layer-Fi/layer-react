@@ -1,4 +1,4 @@
-import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
+import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { useBaseUnifiedReport } from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { SkeletonLoader } from '@ui/SkeletonLoader/SkeletonLoader'

@@ -6,7 +6,7 @@ import {
   type CheckboxProps as AriaCheckboxProps,
 } from 'react-aria-components/Checkbox'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { withRenderProp } from '@components/utility/withRenderProp'
 

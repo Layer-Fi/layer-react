@@ -4,7 +4,7 @@ import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 import { type TaxPaymentRow } from '@schemas/taxEstimates/payments'
-import { asMutable } from '@utils/asMutable'
+import { asMutable } from '@utils/shared/array/asMutable'
 import { MoneySpan } from '@ui/Typography/MoneySpan'
 import { Span } from '@ui/Typography/Text'
 import { type ColumnConfig } from '@blocks/Table/DataTable/utils/column'

@@ -7,7 +7,7 @@ import {
   collectExpensesItems,
   collectRevenueItems,
   type PnlChartLineItem,
-} from '@utils/profitAndLossUtils'
+} from '@utils/features/profitAndLoss/profitAndLoss'
 import { useGetProfitAndLossReport } from '@api/businesses/[business-id]/reports/profit-and-loss/get'
 import {
   type DateSelectionMode,

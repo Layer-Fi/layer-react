@@ -1,5 +1,5 @@
-import type { MonthNameFormatFn } from '@utils/i18n/date/formatters'
-import { MonthPattern } from '@utils/i18n/date/patterns'
+import type { MonthNameFormatFn } from '@utils/shared/i18n/date/formatters'
+import { MonthPattern } from '@utils/shared/i18n/date/patterns'
 import { type ProfitAndLossSummaryData } from '@hooks/features/profitAndLoss/useProfitAndLossLTM'
 import type { ChartDataPoint } from '@features/profitAndLoss/ProfitAndLossChart/chartDataPoint'
 

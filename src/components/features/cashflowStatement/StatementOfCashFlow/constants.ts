@@ -1,4 +1,4 @@
-import { translationKey } from '@utils/i18n/translationKey'
+import { translationKey } from '@utils/shared/i18n/translationKey'
 
 export const STATEMENT_OF_CASH_FLOW_ROWS_CONFIG = [
   {

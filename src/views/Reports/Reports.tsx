@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type View as ViewType } from '@internal-types/general'
 import type { TimeRangePickerConfig } from '@internal-types/reports'
-import { translationKey } from '@utils/i18n/translationKey'
+import { translationKey } from '@utils/shared/i18n/translationKey'
 import { useElementViewSize } from '@hooks/utils/size/useElementViewSize'
 import { type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
 import { type ReportOption, ReportsHeaderContextProvider, type ReportType } from '@providers/reports/ReportsHeaderContext/ReportsHeaderContext'

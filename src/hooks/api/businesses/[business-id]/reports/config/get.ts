@@ -1,5 +1,5 @@
 import { ReportConfigResponseSchema } from '@schemas/unifiedReports/reportConfig'
-import { getWithQuery } from '@utils/api/getWithQuery'
+import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const REPORT_CONFIG_TAG_KEY = '#report-config'

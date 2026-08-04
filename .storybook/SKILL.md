@@ -48,7 +48,7 @@ controls already cover.
 ## Cross-cutting dimensions → viewports, never duplicate stories
 
 Size classes are configured once globally in `.storybook/preview.tsx`
-(`parameters.chromatic.viewports`), sourced from `@utils/screenSizeBreakpoints`, so every
+(`parameters.chromatic.viewports`), sourced from `@utils/shared/size/screenSizeBreakpoints`, so every
 story is captured at mobile / tablet / desktop widths. Responsiveness is computed from
 measured width in JS, so Chromatic resizes the capture iframe per width — a CSS-only viewport
 wouldn't work.

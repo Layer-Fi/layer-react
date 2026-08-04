@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react'
 import { type Cache, useSWRConfig } from 'swr'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { type CacheKeyInfo } from '@utils/swr/withSWRKeyTags'
+import { type CacheKeyInfo } from '@utils/shared/swr/withSWRKeyTags'
 import { useGlobalCacheActions } from '@hooks/utils/swr/useGlobalCacheActions'
 
 // The hook only consumes useSWRConfig from swr, so a minimal mock suffices.

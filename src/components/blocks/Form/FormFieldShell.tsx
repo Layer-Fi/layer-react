@@ -2,7 +2,7 @@ import { type PropsWithChildren, type ReactNode, useContext, useId, useMemo } fr
 import classNames from 'classnames'
 import { FieldErrorContext } from 'react-aria-components/FieldError'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
 import { useFieldContext } from '@hooks/features/forms/useForm'
 import { FieldError } from '@ui/Form/Form'
 import { HStack } from '@ui/Stack/Stack'

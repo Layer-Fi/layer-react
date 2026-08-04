@@ -1,5 +1,5 @@
-import { toDate } from '@utils/i18n/date/input'
-import { DateFormat } from '@utils/i18n/date/patterns'
+import { toDate } from '@utils/shared/i18n/date/input'
+import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { HStack } from '@ui/Stack/Stack'
 import { Span, type TextStyleProps } from '@ui/Typography/Text'

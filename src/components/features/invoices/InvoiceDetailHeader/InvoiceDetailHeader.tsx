@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { Awaitable } from '@internal-types/utility/promises'
 import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
-import { translationKey } from '@utils/i18n/translationKey'
+import { translationKey } from '@utils/shared/i18n/translationKey'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { type InvoiceDetailRouteState, InvoiceDetailStep, useInvoiceDetail, useInvoiceNavigation } from '@providers/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'

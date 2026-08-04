@@ -1,4 +1,4 @@
-import { del } from '@utils/api/authenticatedHttp'
+import { del } from '@utils/shared/api/authenticatedHttp'
 import { useLedgerBalancesCacheActions } from '@api/businesses/[business-id]/ledger/balances/get'
 import { useLedgerEntriesCacheActions } from '@api/businesses/[business-id]/ledger/entries/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'

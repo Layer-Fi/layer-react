@@ -1,4 +1,4 @@
-import { put } from '@utils/api/authenticatedHttp'
+import { put } from '@utils/shared/api/authenticatedHttp'
 import {
   UPSERT_LEDGER_ACCOUNT_TAG_KEY,
   type UpsertLedgerAccountBody,

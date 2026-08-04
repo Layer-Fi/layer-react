@@ -1,6 +1,6 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { PlaceDetailsSchema } from '@schemas/mileage/place'
-import { getWithQuery } from '@utils/api/getWithQuery'
+import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const ADDRESS_DETAILS_TAG_KEY = '#mileage-address-details'

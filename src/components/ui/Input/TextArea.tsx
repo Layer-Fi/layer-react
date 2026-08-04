@@ -1,7 +1,7 @@
 import { type ComponentProps, forwardRef } from 'react'
 import { TextArea as ReactAriaTextArea } from 'react-aria-components/TextArea'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
 
 import './textArea.scss'
 

@@ -8,7 +8,7 @@ import {
   type MultiValueProps,
 } from 'react-select'
 
-import { type ListFormatFn } from '@utils/i18n/list/formatters'
+import { type ListFormatFn } from '@utils/shared/i18n/list/formatters'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { COMBO_BOX_CLASS_NAMES } from '@ui/ComboBox/classnames'

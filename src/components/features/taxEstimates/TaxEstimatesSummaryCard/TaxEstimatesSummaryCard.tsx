@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-import { DateFormat } from '@utils/i18n/date/patterns'
+import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { SummaryCard } from '@blocks/SummaryCard/SummaryCard'
 import { type SummaryCardInteractionProps, type SummaryCardStringOverrides, useSummaryCardSlots } from '@blocks/SummaryCard/useSummaryCardSlots'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'

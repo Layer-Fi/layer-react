@@ -1,4 +1,4 @@
-import { del } from '@utils/api/authenticatedHttp'
+import { del } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const REJECT_CATEGORIZATION_RULE_SUGGESTION_TAG = '#reject-categorization-rule-suggestion'

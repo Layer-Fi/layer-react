@@ -1,6 +1,6 @@
 import { Direction } from '@internal-types/general'
 import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
-import { translationKey } from '@utils/i18n/translationKey'
+import { translationKey } from '@utils/shared/i18n/translationKey'
 
 export type OptionConfig = { value: string, i18nKey: string, defaultValue: string }
 

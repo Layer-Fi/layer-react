@@ -3,8 +3,8 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { type TagBankTransactionsUpdateEncoded } from '@schemas/bankTransactions/tagUpdate'
 import type { TransactionTagEncoded } from '@schemas/tags/transactionTag'
-import { post } from '@utils/api/authenticatedHttp'
-import { withStableTrigger } from '@utils/swr/withStableTrigger'
+import { post } from '@utils/shared/api/authenticatedHttp'
+import { withStableTrigger } from '@utils/shared/swr/withStableTrigger'
 import {
   useBankTransactionsGlobalCacheActions,
 } from '@api/businesses/[business-id]/bank-transactions/get'

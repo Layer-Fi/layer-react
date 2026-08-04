@@ -1,4 +1,4 @@
-import { post } from '@utils/api/authenticatedHttp'
+import { post } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const BREAK_PLAID_ITEM_CONNECTION_TAG_KEY = '#break-plaid-item-connection'

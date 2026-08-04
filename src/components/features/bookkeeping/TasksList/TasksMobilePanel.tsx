@@ -2,7 +2,7 @@ import { type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import classNames from 'classnames'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
 import { BackButton } from '@ui/Button/BackButton'
 
 import './tasksMobilePanel.scss'

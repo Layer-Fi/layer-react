@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useInterpolateTemplate } from '@utils/i18n/useInterpolateTemplate'
+import { useInterpolateTemplate } from '@utils/shared/i18n/useInterpolateTemplate'
 import { isCalendlyLink } from '@hooks/features/calendly/useCalendly'
 import { Badge } from '@ui/Badge/Badge'
 import { BadgeSize, BadgeVariant } from '@ui/Badge/Badge'

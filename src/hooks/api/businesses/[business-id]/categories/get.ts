@@ -1,6 +1,6 @@
 import { type CategoriesListMode, CategoryListSchema } from '@schemas/categorization/categoryList'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { getWithQuery } from '@utils/api/getWithQuery'
+import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const CATEGORIES_TAG_KEY = '#categories'

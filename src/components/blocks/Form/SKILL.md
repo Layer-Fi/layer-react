@@ -100,9 +100,9 @@ available on `field.` until then.
 Per-field validators go in the `validators` prop, keyed by trigger (`onChange`, `onBlur`,
 `onSubmit`). A validator returns a **translated message** on failure and `undefined` on success.
 
-Shared validators live in `@utils/form/validators`: `required`, `dateNotBefore`, `dateNotAfter`,
-`dateNotInFuture`, `positiveAmount`, `amountRangeInOrder`. String emptiness uses `notEmpty` from
-`@utils/form`. Add new reusable rules there rather than inlining a second copy.
+Shared validators live in `@utils/shared/form/validators`: `required`, `dateNotBefore`, `dateNotAfter`,
+`dateNotInFuture`, `positiveAmount`, `amountRangeInOrder`, and `notEmpty` for string emptiness.
+Add new reusable rules there rather than inlining a second copy.
 
 Because validators take the message as an argument, call them with `t()` at the call site —
 that's what keeps the copy translatable.
@@ -118,7 +118,7 @@ Three distinct layers; don't collapse them:
 | form-level API failure | `FormErrorBanner` (`@blocks/FormErrorBanner`) |
 
 `FieldErrors` (`@blocks/Form/FieldErrors`) renders the first error of an array for cases
-outside a bound field. `flattenValidationErrors` (`@utils/form`) collapses a TanStack
+outside a bound field. `flattenValidationErrors` (`@utils/shared/form/errors`) collapses a TanStack
 `ValidationErrorMap` into a string list.
 
 Submit with `SubmitButton` (`@ui/Button/SubmitButton`), driving it from the derived store values:

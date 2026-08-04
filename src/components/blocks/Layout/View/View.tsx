@@ -1,7 +1,7 @@
 import { forwardRef, type ReactNode } from 'react'
 import classNames from 'classnames'
 
-import { parseStylesFromThemeConfig } from '@utils/colors'
+import { parseStylesFromThemeConfig } from '@utils/shared/styleUtils/colors'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { Panel } from '@blocks/Layout/View/Panel/Panel'
 import { ViewHeader } from '@blocks/Layout/View/ViewHeader/ViewHeader'

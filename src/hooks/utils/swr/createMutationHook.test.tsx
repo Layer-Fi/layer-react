@@ -3,9 +3,9 @@ import { act, waitFor } from '@testing-library/react'
 import { pipe, Schema } from 'effect'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import * as authenticatedHttp from '@utils/api/authenticatedHttp'
-import { type MutationRequest } from '@utils/api/getAsMutation'
-import { SupportedLocale } from '@utils/i18n/supportedLocale'
+import * as authenticatedHttp from '@utils/shared/api/authenticatedHttp'
+import { type MutationRequest } from '@utils/shared/api/getAsMutation'
+import { SupportedLocale } from '@utils/shared/i18n/supportedLocale'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 import { getRequestOptions } from '@test-utils/getRequestOptions'

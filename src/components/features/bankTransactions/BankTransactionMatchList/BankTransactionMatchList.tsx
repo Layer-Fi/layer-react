@@ -2,7 +2,7 @@ import { GridList } from 'react-aria-components/GridList'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction, type SuggestedMatch } from '@internal-types/bankTransactions'
-import { convertMatchDetailsToLinkingMetadata } from '@utils/bankTransactions/matchLinkingMetadata'
+import { convertMatchDetailsToLinkingMetadata } from '@utils/features/bankTransactions/matchLinkingMetadata'
 import { useInAppLinkContext } from '@providers/common/InAppLink/InAppLinkContext'
 import { ErrorText } from '@ui/Typography/ErrorText'
 import { BankTransactionMatchListItem } from '@features/bankTransactions/BankTransactionMatchList/BankTransactionMatchListItem'

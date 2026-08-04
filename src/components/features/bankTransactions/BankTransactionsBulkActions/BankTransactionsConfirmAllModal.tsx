@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { tPlural } from '@utils/i18n/plural'
+import { tPlural } from '@utils/shared/i18n/plural'
 import { useBulkMatchOrCategorize } from '@hooks/features/bankTransactions/useBulkMatchOrCategorize'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBulkSelectionActions, useCountSelectedIds } from '@providers/common/BulkSelectionStore/BulkSelectionStoreProvider'

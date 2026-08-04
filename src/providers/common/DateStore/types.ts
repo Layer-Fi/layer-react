@@ -1,5 +1,5 @@
-import type { DateRange } from '@utils/date/dateRange'
-import type { DatePreset, SelectableDatePreset } from '@utils/date/dateRangePresets'
+import type { DateRange } from '@utils/shared/date/dateRange'
+import type { DatePreset, SelectableDatePreset } from '@utils/shared/date/dateRangePresets'
 
 export type DateRangeWithPreset = DateRange & { preset: DatePreset }
 

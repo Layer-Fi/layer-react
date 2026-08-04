@@ -1,8 +1,8 @@
 import { FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { tPlural } from '@utils/i18n/plural'
-import { formatCalendarDate } from '@utils/time/timeUtils'
+import { tPlural } from '@utils/shared/i18n/plural'
+import { formatCalendarDate } from '@utils/shared/time/timeUtils'
 import { type TaxEstimatesDeadlineRow as TaxEstimatesDeadlineRowData } from '@hooks/features/taxEstimates/useTaxEstimatesDeadlines'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'

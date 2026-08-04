@@ -4,7 +4,7 @@ import {
   type LinkProps as ReactAriaLinkProps,
 } from 'react-aria-components/Link'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
 import { BUTTON_CLASS_NAMES, type ButtonStyleProps } from '@ui/Button/Button'
 
 import './button.scss'

@@ -8,7 +8,7 @@ import {
   LedgerAccountNodeType,
 } from '@internal-types/chartOfAccounts'
 import { Alignment } from '@internal-types/utility/table'
-import { asMutable } from '@utils/asMutable'
+import { asMutable } from '@utils/shared/array/asMutable'
 import { useDeleteLedgerAccount } from '@api/businesses/[business-id]/ledger/accounts/[account-id]/delete'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { ChartOfAccountsContext } from '@providers/generalLedger/ChartOfAccountsContext/ChartOfAccountsContext'

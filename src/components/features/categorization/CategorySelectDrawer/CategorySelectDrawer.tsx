@@ -3,7 +3,7 @@ import { ChevronLeft } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { CategoriesListMode } from '@schemas/categorization/categoryList'
-import { withoutExclusions } from '@utils/categoryOptions'
+import { withoutExclusions } from '@utils/features/categorization/categoryOptions'
 import { useGetCategories } from '@api/businesses/[business-id]/categories/get'
 import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 import { Button } from '@ui/Button/Button'

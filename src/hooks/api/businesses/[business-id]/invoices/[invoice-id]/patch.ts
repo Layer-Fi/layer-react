@@ -1,4 +1,4 @@
-import { patch } from '@utils/api/authenticatedHttp'
+import { patch } from '@utils/shared/api/authenticatedHttp'
 import { useInvoicesGlobalCacheActions } from '@api/businesses/[business-id]/invoices/get'
 import {
   UPSERT_INVOICE_TAG_KEY,

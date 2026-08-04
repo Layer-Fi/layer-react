@@ -10,7 +10,7 @@ import {
   type ModalOverlayProps,
 } from 'react-aria-components/Modal'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
 import { useVirtualKeyboardHeight } from '@hooks/utils/size/useVirtualKeyboardHeight'
 
 import './modal.scss'

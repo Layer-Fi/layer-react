@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { hasReceipts, isCategorized, isMoneyIn } from '@utils/bankTransactions/shared'
+import { hasReceipts, isCategorized, isMoneyIn } from '@utils/features/bankTransactions/shared'
 import { useCategorizeBankTransactionWithCacheUpdate } from '@hooks/features/bankTransactions/useCategorizeBankTransactionWithCacheUpdate'
 import { RECEIPT_ALLOWED_INPUT_FILE_TYPES } from '@hooks/legacy/useReceipts'
 import { Button } from '@ui/Button/Button'

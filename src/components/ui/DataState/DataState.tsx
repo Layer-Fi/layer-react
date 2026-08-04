@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { CircleCheckBig, OctagonAlert, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { Button } from '@ui/Button/Button'
 import { Span } from '@ui/Typography/Text'
 

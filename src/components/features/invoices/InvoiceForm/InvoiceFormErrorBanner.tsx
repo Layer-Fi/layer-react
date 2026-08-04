@@ -1,4 +1,4 @@
-import { flattenValidationErrors } from '@utils/form'
+import { flattenValidationErrors } from '@utils/shared/form/errors'
 import { useFormContext } from '@hooks/features/forms/useForm'
 import { FormErrorBanner } from '@blocks/FormErrorBanner/FormErrorBanner'
 

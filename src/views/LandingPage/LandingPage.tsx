@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { PopupModal } from 'react-calendly'
 import { useTranslation } from 'react-i18next'
 
-import { useInterpolateTemplate } from '@utils/i18n/useInterpolateTemplate'
+import { useInterpolateTemplate } from '@utils/shared/i18n/useInterpolateTemplate'
 import { isCalendlyLink, useCalendly } from '@hooks/features/calendly/useCalendly'
 import { useSizeClass, useWindowSize } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'

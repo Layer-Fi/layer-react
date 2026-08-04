@@ -1,4 +1,4 @@
-import { type CacheKeyInfo } from '@utils/swr/withSWRKeyTags'
+import { type CacheKeyInfo } from '@utils/shared/swr/withSWRKeyTags'
 
 export type InvalidateOptions = { withPrecedingOptimisticUpdate?: boolean }
 export type PatchOptions = { withRevalidate: boolean }

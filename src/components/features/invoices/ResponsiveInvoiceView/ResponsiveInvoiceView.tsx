@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { HandCoins, Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
+import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
 import { useInvoicesList } from '@hooks/features/invoices/useInvoicesList'
 import { useInvoiceNavigation, useInvoiceTableFilters } from '@providers/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'

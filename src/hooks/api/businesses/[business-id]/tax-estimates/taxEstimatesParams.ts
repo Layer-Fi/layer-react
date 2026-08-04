@@ -1,5 +1,5 @@
 import type { ReportingBasis } from '@internal-types/general'
-import { type QueryParams } from '@utils/request/toDefinedSearchParameters'
+import { type QueryParams } from '@utils/shared/request/toDefinedSearchParameters'
 
 export type TaxReportingBasis = Exclude<ReportingBasis, 'CASH_COLLECTED'>
 

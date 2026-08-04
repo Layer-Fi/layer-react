@@ -1,7 +1,7 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { CustomerSchema } from '@schemas/customerVendor/customer'
 import { type UpsertCustomerEncoded } from '@schemas/customerVendor/upsertCustomer'
-import { post } from '@utils/api/authenticatedHttp'
+import { post } from '@utils/shared/api/authenticatedHttp'
 import { CUSTOMERS_TAG_KEY, useCustomersGlobalCacheActions } from '@api/businesses/[business-id]/customers/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 

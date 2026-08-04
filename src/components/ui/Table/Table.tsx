@@ -16,7 +16,7 @@ import {
 } from 'react-aria-components/Table'
 
 import { Alignment } from '@internal-types/utility/table'
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styleUtils/toDataProperties'
 import { withRenderProp } from '@components/utility/withRenderProp'
 
 import './table.scss'
