@@ -1,12 +1,15 @@
 name: Chromatic
 
-# Snapshot budget is controlled at three levels:
+# Snapshot budget is controlled at four levels:
 #   1. Trigger — path filters keep test-only, doc-only, and workflow-only PRs
 #      from starting a build at all, and drafts are skipped until review-ready.
 #   2. Concurrency — superseded commits on the same PR cancel the older build.
-#   3. TurboSnap (onlyChanged) — narrows to the stories whose Vite dependency
-#      graph the diff reaches, so a change under src/components/ui re-snapshots
-#      that component plus the feature stories rendering it.
+#   3. Scope (onlyStoryFiles) — only the design system (ui/, blocks/) and agent
+#      scratch stories are snapshotted. Feature and view stories compose those
+#      primitives, so a regression in one surfaces in its primitive's snapshot,
+#      at a fraction of the cost.
+#   4. TurboSnap (onlyChanged) — narrows further to the stories whose Vite
+#      dependency graph the diff reaches.
 #
 # TurboSnap diffs against the newest ancestor build, so the push-on-main job
 # keeps a baseline available for PRs branched off main.
@@ -83,6 +86,13 @@ jobs:
       with:
         projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
         buildScriptName: storybook:build
+        # Scratch stories are the throwaway ones agents create; they're worth a
+        # snapshot while they exist, and scratch-stories-cleanup deletes them on
+        # approval.
+        onlyStoryFiles: |
+          src/components/ui/**/*.stories.tsx
+          src/components/blocks/**/*.stories.tsx
+          src/**/*scratch.stories.tsx
         onlyChanged: true
         exitZeroOnChanges: true
         skip: ${{ github.event.pull_request.draft == true }}

@@ -12,8 +12,11 @@ npm run storybook:build
 npm run chromatic          # needs CHROMATIC_PROJECT_TOKEN
 ```
 
-Every story is a Chromatic snapshot on every PR (`.github/workflows/chromatic.yml`, with
-TurboSnap so only affected stories re-snapshot). That makes story count a real cost.
+Chromatic snapshots the design system only — `src/components/ui/**`, `src/components/blocks/**`,
+and `*scratch.stories.tsx` (`onlyStoryFiles` in `.github/workflows/chromatic.yml`, plus
+TurboSnap so only affected stories re-snapshot). Feature and view stories compose those
+primitives, so a regression usually surfaces in the primitive's snapshot at a fraction of the
+cost. Story count in `ui/` and `blocks/` is therefore still a real cost; elsewhere it is not.
 
 ## The one rule
 
