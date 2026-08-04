@@ -1,5 +1,5 @@
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { InvoiceSchema, type UpsertInvoiceSchema } from '@schemas/invoices/invoice'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { useInvoicesGlobalCacheActions } from '@api/businesses/[business-id]/invoices/get'
 import { useInvoiceSummaryStatsCacheActions } from '@api/businesses/[business-id]/invoices/summary-stats/get'

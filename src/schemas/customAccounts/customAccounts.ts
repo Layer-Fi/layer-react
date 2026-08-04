@@ -2,7 +2,7 @@ import { pipe, Schema } from 'effect'
 
 import { BankTransactionDirectionSchema } from '@schemas/bankTransactions/base'
 import { SingleCategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
-import { createTransformedEnumSchema } from '@schemas/utils'
+import { createTransformedEnumSchema } from '@schemas/common/utils'
 import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
 
 export enum CustomAccountSubtype {

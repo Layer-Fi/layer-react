@@ -1,8 +1,8 @@
 import { pipe, Schema } from 'effect'
 
 import { US_STATE_VALUES } from '@internal-types/location'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { FilingStatusSchema } from '@schemas/taxEstimates/filingStatus'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
 
 const USStateCodeSchema = Schema.Literal(...US_STATE_VALUES)
 

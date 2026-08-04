@@ -1,7 +1,7 @@
 import { pipe, Schema } from 'effect'
 
 import type { Awaitable } from '@internal-types/utility/promises'
-import { createTransformedEnumSchema } from '@schemas/utils'
+import { createTransformedEnumSchema } from '@schemas/common/utils'
 
 export const HostedLinkParamsSchema = Schema.Struct({
   completionRedirectUri: Schema.optional(Schema.String).pipe(

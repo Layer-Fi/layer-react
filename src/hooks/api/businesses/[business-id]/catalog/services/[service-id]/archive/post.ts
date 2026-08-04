@@ -1,5 +1,5 @@
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { CatalogServiceSchema } from '@schemas/timeTracking/catalogService'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { useCatalogServicesGlobalCacheActions } from '@api/businesses/[business-id]/catalog/services/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'

@@ -1,7 +1,7 @@
 import { pipe, Schema } from 'effect'
 
 import { S3PresignedUrlSchema } from '@schemas/common/s3PresignedUrl'
-import { createTransformedEnumSchema } from '@schemas/utils'
+import { createTransformedEnumSchema } from '@schemas/common/utils'
 
 export enum BusinessTaskStatus {
   Todo = 'TODO',

@@ -1,7 +1,7 @@
 import { pipe, Schema } from 'effect'
 
+import { createTransformedEnumSchema, UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { TagDimensionSchema, TagValueDefinitionSchema } from '@schemas/tags/tag'
-import { createTransformedEnumSchema, UnwrappedDataResponseSchema } from '@schemas/utils'
 
 export enum ReportControl {
   Date = 'date',

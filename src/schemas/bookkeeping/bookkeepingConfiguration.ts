@@ -1,6 +1,6 @@
 import { pipe, Schema } from 'effect'
 
-import { createTransformedEnumSchema } from '@schemas/utils'
+import { createTransformedEnumSchema } from '@schemas/common/utils'
 
 export enum TransactionTaggingStrategy {
   PC_MSO = 'PC_MSO',

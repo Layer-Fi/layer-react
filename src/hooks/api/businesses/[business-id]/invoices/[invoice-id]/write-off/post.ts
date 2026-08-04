@@ -1,8 +1,8 @@
 import { Schema } from 'effect'
 
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { type Invoice, InvoiceStatus } from '@schemas/invoices/invoice'
 import { type CreateInvoiceWriteoff, CreateInvoiceWriteoffSchema, InvoiceWriteoffSchema } from '@schemas/invoices/invoiceWriteoff'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { useInvoicesGlobalCacheActions } from '@api/businesses/[business-id]/invoices/get'
 import { useInvoiceSummaryStatsCacheActions } from '@api/businesses/[business-id]/invoices/summary-stats/get'

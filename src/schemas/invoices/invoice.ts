@@ -1,10 +1,10 @@
 import { pipe, Schema } from 'effect'
 
 import { AccountIdentifierSchema } from '@schemas/common/accountIdentifier'
+import { NonRecursiveBigDecimalSchema } from '@schemas/common/nonRecursiveBigDecimal'
 import { ZonedDateTimeFromSelf } from '@schemas/common/zonedDateTimeFromSelf'
 import { CustomerSchema } from '@schemas/customerVendor/customer'
 import { InvoiceTermsValues } from '@schemas/invoices/invoiceTerms'
-import { NonRecursiveBigDecimalSchema } from '@schemas/nonRecursiveBigDecimal'
 import { TagKeyValueSchema, TransactionTagSchema } from '@schemas/tags/tag'
 
 export enum InvoiceStatus {

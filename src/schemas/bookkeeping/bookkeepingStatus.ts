@@ -1,7 +1,7 @@
 import { pipe, Schema } from 'effect'
 
 import { BookkeepingStatus } from '@schemas/bookkeeping/bookkeepingConfiguration'
-import { createTransformedEnumSchema } from '@schemas/utils'
+import { createTransformedEnumSchema } from '@schemas/common/utils'
 
 export { BookkeepingStatus }
 

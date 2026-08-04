@@ -12,7 +12,7 @@ import {
   convertCentsToNonRecursiveBigDecimal,
   convertNonRecursiveBigDecimalToCents,
   type NonRecursiveBigDecimal,
-} from '@schemas/nonRecursiveBigDecimal'
+} from '@schemas/common/nonRecursiveBigDecimal'
 
 export type CategorizationRuleFormState =
   | { mode: 'create' }

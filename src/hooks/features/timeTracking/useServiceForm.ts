@@ -8,7 +8,7 @@ import {
   convertNonRecursiveBigDecimalToCents,
   fromNonRecursiveBigDecimal,
   type NonRecursiveBigDecimal,
-} from '@schemas/nonRecursiveBigDecimal'
+} from '@schemas/common/nonRecursiveBigDecimal'
 import { type CatalogService } from '@schemas/timeTracking/catalogService'
 import { usePatchCatalogService } from '@api/businesses/[business-id]/catalog/services/[service-id]/patch'
 import { usePostCatalogService } from '@api/businesses/[business-id]/catalog/services/post'

@@ -1,5 +1,5 @@
 import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { del } from '@utils/api/authenticatedHttp'
 import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'

@@ -5,7 +5,7 @@ import {
   createOpenEnumSchema,
   createTransformedEnumSchema,
   UnwrappedDataResponseSchema,
-} from '@schemas/utils'
+} from '@schemas/common/utils'
 
 enum TestEnum {
   Known = 'KNOWN',

@@ -1,7 +1,7 @@
 import { pipe, Schema } from 'effect'
 
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
-import { createTransformedEnumSchema } from '@schemas/utils'
+import { createTransformedEnumSchema } from '@schemas/common/utils'
 
 // Enums matching the frontend types
 export enum CallBookingState {

@@ -18,14 +18,20 @@ contract.** Do not guess field names, nullability, or enum members.
 | Thing | Location |
 | --- | --- |
 | Schema definitions | `src/schemas/<domain>/**` (`src/schemas/customerVendor/customer.ts`, `src/schemas/invoices/invoice.ts`) |
-| Shared building blocks | `src/schemas/utils.ts`, `src/schemas/nonRecursiveBigDecimal.ts`, `src/schemas/common/**` |
+| Shared building blocks | `src/schemas/common/**` (`utils.ts`, `pagination.ts`, `nonRecursiveBigDecimal.ts`, …) |
 | Internal-only TS types (no wire format) | `src/types/**` — a plain `type`/`interface` is correct here; don't reach for Schema |
 
 `schemas/<domain>` reuses the domain names of `src/hooks/features/*` and
 `src/components/features/*`, so one domain has the same folder name in all three trees. A
 schema shared by several domains belongs in `common/`, not in whichever domain reached for
-it first. Nothing new goes at the root — that level is only for `utils.ts` and
-`nonRecursiveBigDecimal.ts`.
+it first. Nothing sits at the root of `src/schemas` — every file is under a domain or
+`common/`.
+
+A file holds **one schema, or one cohesive collection of schemas** — an entity plus its
+`Type`/`Encoded` aliases and the enums only it uses, or the full shape of a single API
+response including the nested structs that exist only inside it. Name the file for that
+thing: `invoice.ts` exports `InvoiceSchema`. Unrelated siblings, request bodies, and
+separate endpoints' responses get their own files rather than accumulating in one.
 
 Import with the `@schemas/*` alias — always the alias, never a relative path, even between
 files in the same domain. `src/schemas` must stay importable from anywhere
@@ -77,7 +83,7 @@ e.g. a PATCH body where `null` means "clear this field" and absent means "leave 
 
 ## The shared schema utils
 
-### `@schemas/utils`
+### `@schemas/common/utils`
 
 | Util | What it does |
 | --- | --- |
@@ -110,7 +116,7 @@ day or a zoned instant:
 
 Use `Schema.Date` only for true timestamps.
 
-### `@schemas/nonRecursiveBigDecimal`
+### `@schemas/common/nonRecursiveBigDecimal`
 
 `BigDecimal`'s type is recursive enough to blow up TS inference in React state and TanStack
 Form values (TS2589). `NonRecursiveBigDecimal` is the flat `{ value: bigint, scale: number }`
@@ -158,7 +164,7 @@ evaluates. Three things make it work:
 ## Money
 
 Monetary values that must not lose precision use `NonRecursiveBigDecimal`
-(`src/schemas/nonRecursiveBigDecimal.ts`) with the `fromNonRecursiveBigDecimal` /
+(`src/schemas/common/nonRecursiveBigDecimal.ts`) with the `fromNonRecursiveBigDecimal` /
 `toNonRecursiveBigDecimal` converters in the same module and the helpers in
 `@utils/bigDecimalUtils`. A plain `BigDecimal` in form state or React state is recursive
 enough to blow up TS inference — hence the non-recursive wrapper.

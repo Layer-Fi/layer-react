@@ -1,5 +1,5 @@
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { UnifiedReportSchema } from '@schemas/unifiedReports/unifiedReport'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { type QueryParams } from '@utils/request/toDefinedSearchParameters'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'

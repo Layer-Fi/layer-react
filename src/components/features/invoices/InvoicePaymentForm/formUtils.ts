@@ -2,9 +2,9 @@ import { fromDate, getLocalTimeZone, toCalendarDate, today } from '@internationa
 import { startOfToday } from 'date-fns'
 import { BigDecimal as BD } from 'effect'
 
+import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents, fromNonRecursiveBigDecimal } from '@schemas/common/nonRecursiveBigDecimal'
 import { type Invoice } from '@schemas/invoices/invoice'
 import { type DedicatedInvoicePaymentForm } from '@schemas/invoices/invoicePayment'
-import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents, fromNonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
 import { convertCentsToBigDecimal } from '@utils/bigDecimalUtils'
 
 export const getInvoicePaymentFormDefaultValues = (invoice: Invoice): DedicatedInvoicePaymentForm => {

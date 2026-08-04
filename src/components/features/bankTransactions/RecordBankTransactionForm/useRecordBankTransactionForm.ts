@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/bankTransactions'
 import type { Classification } from '@schemas/categorization/categorization'
-import type { NonRecursiveBigDecimal } from '@schemas/nonRecursiveBigDecimal'
+import type { NonRecursiveBigDecimal } from '@schemas/common/nonRecursiveBigDecimal'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/bankTransactions/categorizationOption'
 import { useUpsertCustomAccountTransaction } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/transactions/record/upsert'
 import { useAppForm } from '@hooks/features/forms/useForm'

@@ -1,5 +1,5 @@
 import { type CategoriesListMode, CategoryListSchema } from '@schemas/categorization/categorization'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { getWithQuery } from '@utils/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 

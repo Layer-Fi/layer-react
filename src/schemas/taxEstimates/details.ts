@@ -1,5 +1,6 @@
 import { pipe, Schema } from 'effect'
 
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { TransformedTaxSummaryStateSchema } from '@schemas/taxEstimates/summary'
 import {
   UnifiedCellValueCurrencySchema,
@@ -7,7 +8,6 @@ import {
   UnifiedCellValuePercentageSchema,
   UnifiedCellValueUnknownSchema,
 } from '@schemas/unifiedReports/unifiedReport'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
 
 const TaxDetailsValueSchema = Schema.Union(
   UnifiedCellValueCurrencySchema,

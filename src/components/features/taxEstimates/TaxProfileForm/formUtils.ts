@@ -8,7 +8,7 @@ import {
   type NonRecursiveBigDecimal,
   NRBD_ZERO,
   toNonRecursiveBigDecimal,
-} from '@schemas/nonRecursiveBigDecimal'
+} from '@schemas/common/nonRecursiveBigDecimal'
 import { type TaxProfile } from '@schemas/taxEstimates/profile'
 import type { AppForm } from '@hooks/features/forms/useForm'
 import type { TaxProfileForm } from '@features/taxEstimates/TaxProfileForm/taxProfileFormSchema'

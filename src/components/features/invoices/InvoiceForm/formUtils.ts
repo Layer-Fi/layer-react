@@ -3,8 +3,6 @@ import { startOfToday } from 'date-fns'
 import { BigDecimal as BD } from 'effect'
 import type { TFunction } from 'i18next'
 
-import { type Invoice, type InvoiceForm, type InvoiceFormLineItem, InvoiceFormLineItemEquivalence, type InvoiceLineItem } from '@schemas/invoices/invoice'
-import { InvoiceTermsValues } from '@schemas/invoices/invoiceTerms'
 import {
   convertCentsToNonRecursiveBigDecimal,
   convertNonRecursiveBigDecimalToCents,
@@ -13,7 +11,9 @@ import {
   NRBD_ZERO,
   nrbdEquals,
   toNonRecursiveBigDecimal,
-} from '@schemas/nonRecursiveBigDecimal'
+} from '@schemas/common/nonRecursiveBigDecimal'
+import { type Invoice, type InvoiceForm, type InvoiceFormLineItem, InvoiceFormLineItemEquivalence, type InvoiceLineItem } from '@schemas/invoices/invoice'
+import { InvoiceTermsValues } from '@schemas/invoices/invoiceTerms'
 import {
   BIG_DECIMAL_ZERO,
   convertCentsToBigDecimal,

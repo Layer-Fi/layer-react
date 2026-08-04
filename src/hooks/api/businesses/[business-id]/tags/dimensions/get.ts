@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { type TagDimension, TagDimensionSchema } from '@schemas/tags/tag'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { get } from '@utils/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'

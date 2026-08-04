@@ -1,9 +1,9 @@
 import { pipe, Schema } from 'effect'
 
 import { CalendarDateFromSelf, CalendarDateSchema } from '@schemas/common/calendarDateFromSelf'
+import { NonRecursiveBigDecimalSchema } from '@schemas/common/nonRecursiveBigDecimal'
+import { createTransformedEnumSchema } from '@schemas/common/utils'
 import { VehicleSchema } from '@schemas/mileage/vehicle'
-import { NonRecursiveBigDecimalSchema } from '@schemas/nonRecursiveBigDecimal'
-import { createTransformedEnumSchema } from '@schemas/utils'
 
 export enum TripPurpose {
   Unreviewed = 'UNREVIEWED',

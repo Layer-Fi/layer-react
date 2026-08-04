@@ -1,5 +1,5 @@
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { TripSchema, type UpsertTripEncoded } from '@schemas/mileage/trip'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { useMileageSummaryGlobalCacheActions } from '@api/businesses/[business-id]/mileage/summary/get'
 import { useTripsGlobalCacheActions } from '@api/businesses/[business-id]/mileage/trips/get'

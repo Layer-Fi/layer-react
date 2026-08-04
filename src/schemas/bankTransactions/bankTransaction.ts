@@ -5,10 +5,10 @@ import { MatchSchema, SuggestedMatchSchema } from '@schemas/bankTransactions/mat
 import { CategorizationSchema } from '@schemas/categorization/categorization'
 import { UpdateCategorizationRulesSuggestionSchema } from '@schemas/categorization/categorizationRule'
 import { AccountInstitutionSchema } from '@schemas/common/accountInstitution'
+import { createTransformedEnumSchema } from '@schemas/common/utils'
 import { CustomerSchema } from '@schemas/customerVendor/customer'
 import { VendorSchema } from '@schemas/customerVendor/vendor'
 import { TransactionTagSchema } from '@schemas/tags/tag'
-import { createTransformedEnumSchema } from '@schemas/utils'
 
 export enum CategorizationStatus {
   PENDING = 'PENDING',

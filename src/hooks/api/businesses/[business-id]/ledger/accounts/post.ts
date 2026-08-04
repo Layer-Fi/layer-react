@@ -1,6 +1,6 @@
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { SingleChartAccountSchema } from '@schemas/generalLedger/ledgerAccount'
 import { type UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLedgerAccount'
-import { UnwrappedDataResponseSchema } from '@schemas/utils'
 import { post } from '@utils/api/authenticatedHttp'
 import { useLedgerBalancesCacheActions } from '@api/businesses/[business-id]/ledger/balances/get'
 import { useLedgerEntriesCacheActions } from '@api/businesses/[business-id]/ledger/entries/get'
