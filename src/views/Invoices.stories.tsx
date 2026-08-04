@@ -39,7 +39,7 @@ export const Detail: Story = {
     const canvas = within(canvasElement)
     // Wait for invoices to land before clicking: the table re-renders as they arrive and
     // would detach the row. Click exactly once — a second click navigates back.
-    const invoice = await canvas.findByText('INV-1048')
+    const invoice = await canvas.findByText('INV-1048', undefined, { timeout: 15_000 })
     await userEvent.click(invoice)
     await canvas.findByText(/Invoice #INV-1048/, undefined, { timeout: 10_000 })
   },

@@ -100,7 +100,8 @@ export const DrawerOpen: Story = {
     // Wait for entries to land before clicking: the table re-renders as they arrive and
     // would detach the row. Click exactly once — a second click closes the sidebar, so
     // retrying the click inside waitFor just toggles it open and shut.
-    await canvas.findByText('1040')
+    // Generous timeout: findBy* defaults to 1s, which a loaded CI runner overruns.
+    await canvas.findByText('1040', undefined, { timeout: 15_000 })
     const [, firstEntry] = await canvas.findAllByRole('row')
     await userEvent.click(firstEntry)
     await canvas.findByText(/Journal Entry #/, undefined, { timeout: 10_000 })
