@@ -1,8 +1,12 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
+import { userEvent, within } from 'storybook/test'
 
 import { TimeTracking, type TimeTrackingProps } from '@views/TimeTracking'
 
-import { FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
+import { get as getActiveTimeTracker } from '@msw/api/businesses/[business-id]/time-tracking/tracker/active/get'
+import { handlers } from '@msw/handlers'
+import { FIXTURE_YEAR, FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
+import { makeTimeEntry } from '@fixtures/timeEntries/mocks'
 import { PinnedGlobalDateRange } from '@testUtils/storybook/decorators/PinnedGlobalDateRange'
 
 type TimeTrackingStoryArgs = {
@@ -77,4 +81,47 @@ type Story = StoryObj<TimeTrackingStoryArgs>
 
 export const Default: Story = {
   tags: ['docs-screenshot'],
+}
+
+// Stories pin "now" to noon on the last day of the fixture year, so a timer started at 10:47
+// that morning reads as a stable hour-and-change of elapsed time.
+const runningTimer = getActiveTimeTracker.mock(
+  makeTimeEntry({
+    status: 'ACTIVE',
+    description: null,
+    memo: null,
+    durationMinutes: 0,
+    createdAt: new Date(FIXTURE_YEAR, 11, 31, 10, 47, 0),
+  }),
+)
+
+export const ActiveTimer: Story = {
+  tags: ['docs-screenshot'],
+  parameters: {
+    chromatic: { viewports: [1280] },
+    msw: { handlers: [runningTimer, ...handlers] },
+  },
+}
+
+export const EntryCreation: Story = {
+  tags: ['docs-screenshot'],
+  parameters: { chromatic: { viewports: [1280] } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(await canvas.findByRole('button', { name: /Add Entry/ }))
+    await canvas.findByRole('button', { name: /Save Entry/ }, { timeout: 10_000 })
+  },
+}
+
+export const ServicesDrawer: Story = {
+  tags: ['docs-screenshot'],
+  parameters: { chromatic: { viewports: [1280] } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(
+      await canvas.findByRole('button', { name: /Additional time tracking actions/ }),
+    )
+    await userEvent.click(await canvas.findByRole('menuitem', { name: /Services/ }))
+    await canvas.findByRole('heading', { name: /Services/ }, { timeout: 10_000 })
+  },
 }

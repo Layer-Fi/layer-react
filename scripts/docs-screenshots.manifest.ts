@@ -254,4 +254,32 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,
     page: 'embedded-components/pages/time-tracking.mdx',
   },
+  {
+    storyId: 'views-timetracking--active-timer',
+    out: 'pages/time-tracking-active-timer.png',
+    viewport: 'desktop',
+    maxHeight: DOCS_SCREENSHOT_TABLE_HEIGHT,
+    page: 'embedded-components/pages/time-tracking.mdx',
+  },
+  {
+    storyId: 'views-timetracking--entry-creation',
+    out: 'pages/time-tracking-add-entry.png',
+    viewport: 'desktop',
+    captureViewport: true,
+    page: 'embedded-components/pages/time-tracking.mdx',
+  },
+  {
+    storyId: 'views-timetracking--services-drawer',
+    out: 'pages/time-tracking-services.png',
+    viewport: 'desktop',
+    captureViewport: true,
+    page: 'embedded-components/pages/time-tracking.mdx',
+  },
+  {
+    storyId: 'components-unifiedreports--mega-menu-open',
+    out: 'pages/unified-reports-mega-menu.png',
+    viewport: 'desktop',
+    captureViewport: true,
+    page: 'embedded-components/pages/unified-reports.mdx',
+  },
 ]
