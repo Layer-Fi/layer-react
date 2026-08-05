@@ -12,6 +12,8 @@ All you need to get started is sandbox development credentials - reach out [here
 - Layer home: https://www.layerfi.com
 - Documentation: https://docs.layerfi.com/introduction
 - NPM: https://www.npmjs.com/package/@layerfi/components
+- Dependency & vulnerability policy: [docs/dependency-policy.md](docs/dependency-policy.md)
+- Release process: [PUBLISHING.md](PUBLISHING.md)
 
 <br />
 
