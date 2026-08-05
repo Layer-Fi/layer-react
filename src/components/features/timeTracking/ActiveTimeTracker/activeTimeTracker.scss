@@ -1,9 +1,10 @@
-.Layer__component-container.Layer__ActiveTimeTracker {
+/* Themes the surrounding Container dark by overriding the colors it reads. */
+.Layer__ActiveTimeTracker {
   --border-color: var(--color-base-1000);
   --bg-color: var(--color-base-1000);
 }
 
-.Layer__component-container.Layer__ActiveTimeTracker.Layer__ActiveTimeTracker__Container {
+.Layer__ActiveTimeTracker__Container {
   display: flex;
   flex-direction: column;
   overflow: hidden;

@@ -33,10 +33,15 @@
   }
 }
 
+/*
+ * `--view-panel-content-max-inline-size` is the extension point for a caller that wants
+ * to cap the content column; set it on an ancestor rather than out-specifying this rule.
+ */
 .Layer__ViewPanel__Content {
   display: flex;
   flex-direction: column;
   min-inline-size: 0;
+  max-inline-size: var(--view-panel-content-max-inline-size, none);
   padding-block-end: var(--spacing-lg);
   border-start-start-radius: var(--view-panel-radius, 0);
   border-end-start-radius: var(--view-panel-radius, 0);

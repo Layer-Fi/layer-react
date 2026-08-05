@@ -1,3 +1,5 @@
+@use 'roots';
+
 .Layer__AmountInput {
   box-sizing: border-box;
   position: relative;
@@ -35,10 +37,9 @@
   flex: 0;
 }
 
+/* Scoped to the Layer roots so the mobile-zoom guard can't leak into a consumer page. */
 @media screen and (resolution >= 2dppx) {
-  .Layer__view,
-  .Layer__component,
-  .Layer__Portal {
+  @include roots.internal-token-roots {
     .Layer__AmountInput {
       height: 36px;
       font-size: 16px;
