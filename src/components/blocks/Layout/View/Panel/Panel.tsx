@@ -1,6 +1,8 @@
 import { type ReactNode, type RefObject, useEffect, useState } from 'react'
 import classNames from 'classnames'
 
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
+
 import './panel.scss'
 
 export interface PanelProps {
@@ -12,6 +14,8 @@ export interface PanelProps {
   parentRef?: RefObject<HTMLDivElement>
   defaultSidebarHeight?: boolean
   floating?: boolean
+  /** `plain` drops the sidebar's own border and background. */
+  sidebarVariant?: 'default' | 'plain'
 }
 
 export const Panel = ({
@@ -23,6 +27,7 @@ export const Panel = ({
   parentRef,
   defaultSidebarHeight = false,
   floating = false,
+  sidebarVariant = 'default',
 }: PanelProps) => {
   const [sidebarHeight, setSidebarHeight] = useState(0)
 
@@ -52,6 +57,7 @@ export const Panel = ({
       </div>
       {sidebar && (
         <div
+          {...toDataProperties({ variant: sidebarVariant })}
           className={sidebarClass}
           style={
             !defaultSidebarHeight

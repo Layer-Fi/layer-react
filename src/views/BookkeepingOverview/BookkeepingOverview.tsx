@@ -129,10 +129,11 @@ export const BookkeepingOverview = ({
       tagFilter={profitAndLossTagFilter}
     >
       <View
-        viewClassName='Layer__bookkeeping-overview--view Layer__BookkeepingOverview'
+        className='Layer__bookkeeping-overview--view Layer__BookkeepingOverview'
         title={stringOverrides?.title || title || t('views:BookkeepingOverview.label.bookkeeping_overview', 'Bookkeeping overview')}
         header={<GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />}
         withSidebar={width > 1100}
+        sidebarVariant='plain'
         sidebar={(
           <VStack gap='lg'>
             <BookkeepingOverviewTasksContent

@@ -1,24 +1,31 @@
 import { forwardRef, type ReactNode } from 'react'
-import classNames from 'classnames'
 
 import { parseStylesFromThemeConfig } from '@utils/shared/styles/colors'
+import { withLegacy } from '@utils/shared/styles/legacyClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { LAYOUT_CLASS_NAMES } from '@blocks/Layout/layoutClassNames'
 import { Panel } from '@blocks/Layout/View/Panel/Panel'
 import { ViewHeader } from '@blocks/Layout/View/ViewHeader/ViewHeader'
 
 import './view.scss'
+
+export type ViewLayout = 'default' | 'panel'
+export type ViewPadding = 'default' | 'none'
 
 export interface ViewProps {
   children: ReactNode
   title?: string
   showHeader?: boolean
   header?: ReactNode
-  headerControls?: ReactNode // @deprecated
-  type?: 'default' | 'panel'
+  layout?: ViewLayout
+  /** `none` lets the body run to the edge, for a view that draws its own chrome. */
+  padding?: ViewPadding
   withSidebar?: boolean
   sidebar?: ReactNode
-  viewClassName?: string
-  notification?: ReactNode
+  /** Renders the sidebar without its own border or background. */
+  sidebarVariant?: 'default' | 'plain'
+  className?: string
 }
 
 const View = forwardRef<HTMLDivElement, ViewProps>(
@@ -27,48 +34,52 @@ const View = forwardRef<HTMLDivElement, ViewProps>(
       title,
       showHeader = true,
       children,
-      headerControls,
       header,
-      type,
+      layout = 'default',
+      padding = 'default',
       withSidebar = false,
       sidebar,
-      viewClassName,
-      notification,
+      sidebarVariant = 'default',
+      className,
     },
     ref,
   ) => {
     const { theme } = useLayerContext()
-    const styles = parseStylesFromThemeConfig(theme)
 
-    const viewClassNames = classNames(
-      'Layer__view',
-      type === 'panel' && 'Layer__view--panel',
-      viewClassName,
+    const main = (
+      <div
+        {...toDataProperties({ padding, 'with-sidebar': withSidebar })}
+        className={withLegacy(LAYOUT_CLASS_NAMES.VIEW_MAIN)}
+      >
+        {children}
+      </div>
     )
 
     return (
-      <div className={viewClassNames} style={{ ...styles }} ref={ref}>
-        {notification && (
-          <div className='Layer__view-notifications'>
-            {notification}
-          </div>
+      <div
+        ref={ref}
+        {...toDataProperties({ layout })}
+        className={withLegacy(
+          LAYOUT_CLASS_NAMES.VIEW,
+          layout === 'panel' && LAYOUT_CLASS_NAMES.VIEW_PANEL_LAYOUT.legacy,
+          className,
         )}
+        style={parseStylesFromThemeConfig(theme)}
+      >
         {showHeader && (
           <ViewHeader
             title={title}
-            padding={type === 'panel' ? 'none' : 'default'}
-            slots={{ Actions: header ?? headerControls }}
+            padding={layout === 'panel' ? 'none' : 'default'}
+            slots={{ Actions: header }}
           />
         )}
         {withSidebar
           ? (
-            <Panel sidebarIsOpen={true} sidebar={sidebar} defaultSidebarHeight>
-              <div className='Layer__view-main'>{children}</div>
+            <Panel sidebarIsOpen sidebar={sidebar} sidebarVariant={sidebarVariant} defaultSidebarHeight>
+              {main}
             </Panel>
           )
-          : (
-            <div className='Layer__view-main'>{children}</div>
-          )}
+          : main}
       </div>
     )
   },

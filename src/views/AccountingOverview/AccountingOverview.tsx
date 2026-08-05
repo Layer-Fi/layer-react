@@ -77,7 +77,7 @@ export const AccountingOverview = ({
     >
       <View
         title={stringOverrides?.title || title || t('views:AccountingOverview.label.accounting_overview', 'Accounting overview')}
-        viewClassName='Layer__AccountingOverview'
+        className='Layer__AccountingOverview'
         showHeader={showTitle}
         header={<GlobalMonthPicker truncateMonth={sizeClass === 'mobile'} />}
       >

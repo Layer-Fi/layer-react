@@ -54,7 +54,7 @@ describe('layout legacy class names', () => {
     })
 
     it('emits the panel layout modifier alongside the view class', () => {
-      const container = renderLayout(<View type='panel'>body</View>)
+      const container = renderLayout(<View layout='panel'>body</View>)
 
       expectLegacyOn(
         queryLegacy(container, LAYOUT_CLASS_NAMES.VIEW),

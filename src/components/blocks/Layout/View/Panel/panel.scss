@@ -52,6 +52,12 @@
   }
 }
 
+.Layer__panel__sidebar[data-variant='plain'] {
+  padding: var(--spacing-lg);
+  border-left-width: 0;
+  background: none;
+}
+
 .Layer__panel__sidebar--default {
   flex: 1;
   width: 100%;

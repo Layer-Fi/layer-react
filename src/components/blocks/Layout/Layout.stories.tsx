@@ -145,10 +145,18 @@ export const Views: Story = {
         <View showHeader={false}><Body /></View>
       </Section>
       <Section title='panel type'>
-        <View title='Balance sheet' type='panel'><Body /></View>
+        <View title='Balance sheet' layout='panel'><Body /></View>
       </Section>
       <Section title='with sidebar'>
         <View title='Bookkeeping' withSidebar sidebar={<Sidebar />}><Body /></View>
+      </Section>
+      <Section title='with a plain sidebar'>
+        <View title='Bookkeeping' withSidebar sidebarVariant='plain' sidebar={<Sidebar />}>
+          <Body />
+        </View>
+      </Section>
+      <Section title='no body padding'>
+        <View title='Reports' padding='none'><Body /></View>
       </Section>
     </Gallery>
   ),

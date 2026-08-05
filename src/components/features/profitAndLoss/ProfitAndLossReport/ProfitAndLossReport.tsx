@@ -107,7 +107,7 @@ export const ProfitAndLossReport = ({
 
   return (
     <InAppLinkProvider renderInAppLink={renderInAppLink}>
-      <View type='panel' header={header}>
+      <View layout='panel' header={header}>
         {selectedLineItem
           ? (
             <ProfitAndLossDetailReport

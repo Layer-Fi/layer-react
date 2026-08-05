@@ -1,21 +1,13 @@
-.Layer__view.Layer__UnifiedReports {
+.Layer__UnifiedReports {
   container: unified-reports / inline-size;
 
   overflow: hidden;
   max-height: 100vh;
-  min-width: clamp(23rem, 100%, 1406px);
-
-  .Layer__view-main.Layer__view-main {
-    padding: 0;
-  }
-
-  .Layer__view-header__children.Layer__view-header__children {
-    width: max-content;
-  }
+  min-width: clamp(23rem, 100%, var(--layout-max-content-width));
 }
 
 .Layer__UnifiedReports__Body {
-  max-height: calc(100vh - 76px);
+  max-height: calc(100vh - var(--layout-header-height-lg));
 }
 
 .Layer__UnifiedReports__Sidebar {

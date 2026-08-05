@@ -98,7 +98,7 @@ const BalanceSheetView = ({
   return (
     <ReportsTableProvider>
       <View
-        type='panel'
+        layout='panel'
         ref={containerRef}
         header={(
           <Stack
