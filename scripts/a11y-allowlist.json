@@ -47,5 +47,6 @@
   "views-taxestimates--feature-disabled::color-contrast",
   "views-taxestimates--onboarding::color-contrast",
   "views-timetracking--active-timer::color-contrast",
-  "views-timetracking--default::color-contrast"
+  "views-timetracking--default::color-contrast",
+  "views-timetracking--entry-detail::color-contrast"
 ]

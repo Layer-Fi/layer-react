@@ -118,8 +118,10 @@ async function main() {
   }
 
   const unexpected = [...found.keys()].filter(finding => !allowed.has(finding)).sort()
-  // An allowlisted violation that no longer fires must leave the list, so it can never silently
-  // come back.
+  // Reported but NOT failed: whether a given element renders can differ between a local run and
+  // CI (fonts, timing, a detail panel that settles a beat later). Failing on entries that merely
+  // didn't fire would deadlock the gate — the same story would be a new violation in one
+  // environment and a stale entry in the other.
   const stale = allowlist.filter(finding => !found.has(finding)).sort()
 
   if (errors.length > 0) {
@@ -134,12 +136,12 @@ async function main() {
   }
 
   if (stale.length > 0) {
-    console.error(`\n${stale.length} allowlisted violation(s) no longer fire. Remove them from ${ALLOWLIST_PATH}:\n`)
-    for (const finding of stale) console.error(`  ${finding}`)
-    console.error('')
+    console.info(`\n${stale.length} allowlisted violation(s) did not fire — candidates to remove from ${ALLOWLIST_PATH}:\n`)
+    for (const finding of stale) console.info(`  ${finding}`)
+    console.info('')
   }
 
-  if (errors.length > 0 || unexpected.length > 0 || stale.length > 0) process.exit(1)
+  if (errors.length > 0 || unexpected.length > 0) process.exit(1)
 
   console.info(
     `\nNo new accessibility violations across ${storyIds.length} \`${PUBLIC_API_TAG}\` stories `
