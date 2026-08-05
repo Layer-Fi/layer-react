@@ -3,6 +3,12 @@
     "action": {
       "save_customer": "Enregistrer le client"
     },
+    "formUtils": {
+      "validation": {
+        "either_individual_required": "Le nom de la personne ou le nom de l’entreprise est requis.",
+        "email_required": "L’adresse courriel est obligatoire."
+      }
+    },
     "label": {
       "company_name": "Nom de l’entreprise",
       "enter_address": "Saisissez l’adresse",
@@ -10,10 +16,6 @@
       "enter_email_address": "Saisissez l’adresse courriel",
       "enter_individual_name": "Saisissez le nom de la personne",
       "individual_name": "Nom de la personne"
-    },
-    "validation": {
-      "either_individual_required": "Le nom de la personne ou le nom de l’entreprise est requis.",
-      "email_required": "L’adresse courriel est obligatoire."
     }
   },
   "CustomerFormDrawer": {

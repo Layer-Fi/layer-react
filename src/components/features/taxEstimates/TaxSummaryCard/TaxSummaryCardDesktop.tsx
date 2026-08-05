@@ -36,7 +36,7 @@ export const TaxSummaryCardDesktop = ({ data }: TaxSummaryCardDesktopProps) => {
     <div className='Layer__TaxSummaryCard'>
       <VStack className='Layer__TaxSummaryCard__Cell Layer__TaxSummaryCard__Cell--header'>
         <Span size='md'>
-          {tConditional(t, 'taxEstimates:TaxSummaryCard.label.taxes_owed', {
+          {tConditional(t, 'taxEstimates:TaxSummaryCard.TaxSummaryCardDesktop.label.taxes_owed', {
             condition: projectedCondition,
             cases: {
               default: 'Taxes Owed',
@@ -63,7 +63,7 @@ export const TaxSummaryCardDesktop = ({ data }: TaxSummaryCardDesktopProps) => {
       <VStack className='Layer__TaxSummaryCard__Cell' gap='2xs' align='start'>
         <MoneySpan size='xl' weight='bold' amount={data.projectedTaxesOwed} />
         <Span size='sm' variant='subtle'>
-          {t('taxEstimates:TaxSummaryCard.label.due_at', 'Due on {{date}}', { date: formatDate(data.taxesDueAt) })}
+          {t('taxEstimates:TaxSummaryCard.TaxSummaryCardDesktop.label.due_at', 'Due on {{date}}', { date: formatDate(data.taxesDueAt) })}
         </Span>
       </VStack>
       {data.sections.map(section => (

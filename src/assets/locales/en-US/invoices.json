@@ -8,21 +8,27 @@
   "InvoiceDetailHeader": {
     "action": {
       "create_invoice": "Create Invoice",
-      "download_pdf": "Download PDF",
       "mark_paid": "Mark as paid",
-      "mark_void": "Mark as void",
-      "refund_invoice": "Issue refund",
-      "reset_to_saved": "Reset to saved",
-      "view_invoice": "View Invoice",
-      "write_off": "Write off"
+      "view_invoice": "View Invoice"
     },
-    "error": {
-      "download_failed": "Download failed"
+    "InvoiceDetailHeaderMenu": {
+      "action": {
+        "download_pdf": "Download PDF",
+        "mark_void": "Mark as void",
+        "refund_invoice": "Issue refund",
+        "reset_to_saved": "Reset to saved",
+        "write_off": "Write off"
+      },
+      "error": {
+        "download_failed": "Download failed"
+      },
+      "label": {
+        "additional_invoice_actions": "Additional invoice actions",
+        "download_started": "Download started",
+        "download_successful": "Download successful"
+      }
     },
     "label": {
-      "additional_invoice_actions": "Additional invoice actions",
-      "download_started": "Download started",
-      "download_successful": "Download successful",
       "editing_invoice": "Editing Invoice",
       "editing_invoice_number": "Editing Invoice #{{invoiceNumber}}",
       "invoice_number": "Invoice #{{invoiceNumber}}"
@@ -40,13 +46,15 @@
     }
   },
   "InvoiceFinalizeForm": {
+    "formUtils": {
+      "validation": {
+        "either_payment_must": "Either a payment method or custom payment instructions must be set on an invoice"
+      }
+    },
     "label": {
       "add_custom_payment_instructions": "Add custom payment instructions",
       "custom_payment_instructions": "Custom Payment Instructions",
       "payment_methods": "Payment methods"
-    },
-    "validation": {
-      "either_payment_must": "Either a payment method or custom payment instructions must be set on an invoice"
     }
   },
   "InvoiceFinalizeStep": {
@@ -55,33 +63,51 @@
     }
   },
   "InvoiceForm": {
-    "action": {
-      "add_line_item": "Add line item",
-      "edit_customer_details": "Edit customer details"
+    "formUtils": {
+      "label": {
+        "invoice_negative_total": "Invoice has a negative total."
+      },
+      "validation": {
+        "customer_required": "Customer is a required field.",
+        "due_date_must": "Due date must be after invoice date.",
+        "due_date_required": "Due date is a required field.",
+        "invoice_date_required": "Invoice date is a required field.",
+        "invoice_incomplete_required": "Invoice has incomplete line items. Please include required field: Description.",
+        "invoice_number_required": "Invoice number is a required field.",
+        "invoice_requires_empty": "Invoice requires at least one non-empty line item."
+      }
     },
-    "label": {
-      "billing_address": "Billing address",
-      "discount": "Discount",
-      "due_date": "Due date",
-      "invoice_date": "Invoice date",
-      "invoice_negative_total": "Invoice has a negative total.",
-      "invoice_number_label": "Invoice number",
-      "quantity": "Quantity",
-      "rate": "Rate",
-      "subtotal": "Subtotal",
-      "tax_rate": "Tax rate",
-      "tax_rate_title_case": "Tax Rate",
-      "taxable": "Taxable",
-      "taxable_subtotal": "Taxable subtotal"
+    "InvoiceFormLineItemRow": {
+      "label": {
+        "quantity": "Quantity",
+        "rate": "Rate",
+        "taxable": "Taxable"
+      }
     },
-    "validation": {
-      "customer_required": "Customer is a required field.",
-      "due_date_must": "Due date must be after invoice date.",
-      "due_date_required": "Due date is a required field.",
-      "invoice_date_required": "Invoice date is a required field.",
-      "invoice_incomplete_required": "Invoice has incomplete line items. Please include required field: Description.",
-      "invoice_number_required": "Invoice number is a required field.",
-      "invoice_requires_empty": "Invoice requires at least one non-empty line item."
+    "InvoiceFormLineItemsSection": {
+      "action": {
+        "add_line_item": "Add line item"
+      }
+    },
+    "InvoiceFormMetadataSection": {
+      "label": {
+        "discount": "Discount",
+        "subtotal": "Subtotal",
+        "tax_rate": "Tax rate",
+        "tax_rate_title_case": "Tax Rate",
+        "taxable_subtotal": "Taxable subtotal"
+      }
+    },
+    "InvoiceFormTermsSection": {
+      "action": {
+        "edit_customer_details": "Edit customer details"
+      },
+      "label": {
+        "billing_address": "Billing address",
+        "due_date": "Due date",
+        "invoice_date": "Invoice date",
+        "invoice_number_label": "Invoice number"
+      }
     }
   },
   "InvoicePaymentDrawer": {
@@ -103,13 +129,15 @@
       "payment_date": "Payment date",
       "payment_details": "Payment details"
     },
-    "validation": {
-      "payment_amount_max_outstanding": "Payment amount cannot be greater than the outstanding invoice balance.",
-      "payment_amount_must": "Payment amount must be greater than zero.",
-      "payment_date_not_before_invoice": "Payment date cannot be before the invoice date ({{invoiceDate}}).",
-      "payment_date_not_future": "Payment date cannot be in the future.",
-      "payment_date_required": "Payment date is a required field.",
-      "payment_method_required": "Payment method is a required field."
+    "useInvoicePaymentForm": {
+      "validation": {
+        "payment_amount_max_outstanding": "Payment amount cannot be greater than the outstanding invoice balance.",
+        "payment_amount_must": "Payment amount must be greater than zero.",
+        "payment_date_not_before_invoice": "Payment date cannot be before the invoice date ({{invoiceDate}}).",
+        "payment_date_not_future": "Payment date cannot be in the future.",
+        "payment_date_required": "Payment date is a required field.",
+        "payment_method_required": "Payment method is a required field."
+      }
     }
   },
   "InvoicePdfDownloadButton": {
@@ -122,11 +150,13 @@
       "invoice_number_component": "<label>Invoice</label> <value>#{{invoiceNumber}}</value>",
       "refund_date": "Refund date"
     },
-    "validation": {
-      "payment_method_required": "Payment method is a required field.",
-      "refund_date_before_last_payment": "Refund date cannot be before the last invoice payment ({{lastPaymentDate}}).",
-      "refund_date_future": "Refund date cannot be in the future.",
-      "refund_date_required": "Refund date is a required field."
+    "useInvoiceRefundForm": {
+      "validation": {
+        "payment_method_required": "Payment method is a required field.",
+        "refund_date_before_last_payment": "Refund date cannot be before the last invoice payment ({{lastPaymentDate}}).",
+        "refund_date_future": "Refund date cannot be in the future.",
+        "refund_date_required": "Refund date is a required field."
+      }
     }
   },
   "InvoiceRefundModal": {
@@ -162,8 +192,12 @@
     }
   },
   "InvoicesMobileList": {
+    "InvoicesMobileListItem": {
+      "label": {
+        "amount_outstanding": "{{amount}} outstanding"
+      }
+    },
     "label": {
-      "amount_outstanding": "{{amount}} outstanding",
       "invoices": "Invoices"
     }
   },
@@ -180,14 +214,24 @@
     }
   },
   "InvoiceSummaryStats": {
-    "label": {
-      "invoices_count_one": "{{displayCount}} invoice",
-      "invoices_count_other": "{{displayCount}} invoices",
-      "overdue": "Overdue",
-      "owed_last_12_months": "<owed>Owed to you</owed> <period>last 12 months</period>",
-      "paid_last_30_days": "<paid>Paid</paid> <period>last 30 days</period>",
-      "percentage_invoices_overdue": "Percentage of invoices overdue",
-      "upcoming": "Upcoming"
+    "InvoiceOwedSummary": {
+      "label": {
+        "overdue": "Overdue",
+        "owed_last_12_months": "<owed>Owed to you</owed> <period>last 12 months</period>",
+        "percentage_invoices_overdue": "Percentage of invoices overdue",
+        "upcoming": "Upcoming"
+      }
+    },
+    "InvoiceOwedSummaryStatCard": {
+      "label": {
+        "invoices_count_one": "{{displayCount}} invoice",
+        "invoices_count_other": "{{displayCount}} invoices"
+      }
+    },
+    "InvoicePaymentsSummary": {
+      "label": {
+        "paid_last_30_days": "<paid>Paid</paid> <period>last 30 days</period>"
+      }
     }
   },
   "InvoiceTable": {
@@ -257,12 +301,10 @@
     }
   },
   "StripeConnectBanner": {
-    "action": {
-      "connect_stripe_label": "Connect Stripe"
-    },
-    "error": {
-      "stripe_sent_misconfigured_link": "Stripe has sent a misconfigured connect account onboarding link. Please try again.",
-      "unable_to_connect_to_stripe": "Unable to connect to Stripe. Please try again."
+    "ConnectStripeButton": {
+      "action": {
+        "connect_stripe_label": "Connect Stripe"
+      }
     },
     "label": {
       "finish_setting_up_stripe_account": "Finish setting up your Stripe account to start accepting card and bank payments for your invoices.",
@@ -273,6 +315,12 @@
       "stripe_account_review": "Stripe account under review",
       "stripe_payment_not_enabled": "Stripe payments not enabled",
       "stripe_setup_incomplete": "Stripe setup incomplete"
+    },
+    "useStripeConnect": {
+      "error": {
+        "stripe_sent_misconfigured_link": "Stripe has sent a misconfigured connect account onboarding link. Please try again.",
+        "unable_to_connect_to_stripe": "Unable to connect to Stripe. Please try again."
+      }
     }
   },
   "utils": {

@@ -156,7 +156,7 @@ export function validateTaxProfileForm({ value }: { value: TaxProfileForm }, t: 
   const errors: Array<Record<string, string>> = []
 
   if (!value.acknowledgedDisclaimer) {
-    errors.push({ acknowledgedDisclaimer: t('taxEstimates:TaxProfileForm.error.disclaimer_required', 'You must acknowledge the disclaimer to continue.') })
+    errors.push({ acknowledgedDisclaimer: t('taxEstimates:TaxProfileForm.formUtils.error.disclaimer_required', 'You must acknowledge the disclaimer to continue.') })
   }
 
   return errors.length > 0 ? errors : null

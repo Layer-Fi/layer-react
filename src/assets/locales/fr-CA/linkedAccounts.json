@@ -5,41 +5,53 @@
     }
   },
   "LinkAccounts": {
-    "action": {
-      "confirm_accounts_one": "Confirmer le compte",
-      "confirm_accounts_other": "Confirmer tous les comptes",
-      "confirm_accounts_selected_one": "Confirmer {{displayCount}} compte sélectionné",
-      "confirm_accounts_selected_other": "Confirmer {{displayCount}} comptes sélectionnés",
-      "connect_my_bank": "Connecter ma banque",
-      "exclude_all_accounts_one": "Exclure le compte",
-      "exclude_all_accounts_other": "Exclure tous les comptes",
-      "im_done_linking": "J’ai terminé de connecter mes banques",
-      "link_another_bank": "Connecter une autre banque",
-      "reconnect_another_bank": "Reconnecter une autre banque",
-      "reconnect_my_accounts": "Reconnecter mes comptes"
-    },
-    "error": {
-      "load_accounts": "Impossible de charger les comptes"
-    },
     "label": {
-      "accounts_successfully_linked": "Comptes connectés avec succès",
-      "connect_bank_accounts_and_credit_cards": "Connectez vos comptes bancaires et vos cartes de crédit pour importer automatiquement vos transactions d’entreprise.",
-      "connected_accounts_count_one": "Vous avez connecté {{displayCount}} compte",
-      "connected_accounts_count_other": "Vous avez connecté {{displayCount}} comptes",
-      "deselect_unused_accounts": "Veuillez désélectionner tous les comptes que vous n’utilisez pas pour votre entreprise.",
-      "found_accounts_count_one": "Nous avons trouvé {{displayCount}} compte",
-      "found_accounts_count_other": "Nous avons trouvé {{displayCount}} comptes",
       "link_bank_accounts_and_credit_cards": "Connectez vos comptes bancaires et vos cartes de crédit",
-      "link_more_accounts_any_time": "Vous pouvez lier d’autres comptes en tout temps à partir de la section Activité bancaire",
-      "reconnect_bank_accounts_and_credit_cards": "Reconnectez vos comptes bancaires et vos cartes de crédit",
-      "reconnect_bank_accounts_and_credit_cards_description": "Reconnectez vos comptes bancaires et vos cartes de crédit pour importer automatiquement vos transactions d’entreprise.",
-      "remove_accounts_new_dashboard": "Vous aurez la possibilité de retirer des comptes dans le nouveau tableau de bord.",
-      "remove_unused_accounts_next_step": "Vous aurez la possibilité de supprimer les comptes que vous n’utilisez pas pour votre entreprise à l’étape suivante."
+      "reconnect_bank_accounts_and_credit_cards": "Reconnectez vos comptes bancaires et vos cartes de crédit"
     },
-    "prompt": {
-      "connect_all_bank_accounts_for_bookkeeping": "Veuillez connecter tous vos comptes bancaires pour la tenue de livres",
-      "use_other_bank_accounts_or_cards": "Utilisez-vous d’autres comptes bancaires ou cartes de crédit pour votre entreprise?",
-      "which_accounts_for_business": "Quels comptes utilisez-vous pour votre entreprise?"
+    "LinkAccountsConfirmationStep": {
+      "action": {
+        "confirm_accounts_one": "Confirmer le compte",
+        "confirm_accounts_other": "Confirmer tous les comptes",
+        "confirm_accounts_selected_one": "Confirmer {{displayCount}} compte sélectionné",
+        "confirm_accounts_selected_other": "Confirmer {{displayCount}} comptes sélectionnés",
+        "exclude_all_accounts_one": "Exclure le compte",
+        "exclude_all_accounts_other": "Exclure tous les comptes"
+      },
+      "label": {
+        "accounts_successfully_linked": "Comptes connectés avec succès",
+        "deselect_unused_accounts": "Veuillez désélectionner tous les comptes que vous n’utilisez pas pour votre entreprise.",
+        "link_more_accounts_any_time": "Vous pouvez lier d’autres comptes en tout temps à partir de la section Activité bancaire"
+      },
+      "prompt": {
+        "which_accounts_for_business": "Quels comptes utilisez-vous pour votre entreprise?"
+      }
+    },
+    "LinkAccountsLinkStep": {
+      "action": {
+        "connect_my_bank": "Connecter ma banque",
+        "im_done_linking": "J’ai terminé de connecter mes banques",
+        "link_another_bank": "Connecter une autre banque",
+        "reconnect_another_bank": "Reconnecter une autre banque",
+        "reconnect_my_accounts": "Reconnecter mes comptes"
+      },
+      "error": {
+        "load_accounts": "Impossible de charger les comptes"
+      },
+      "label": {
+        "connect_bank_accounts_and_credit_cards": "Connectez vos comptes bancaires et vos cartes de crédit pour importer automatiquement vos transactions d’entreprise.",
+        "connected_accounts_count_one": "Vous avez connecté {{displayCount}} compte",
+        "connected_accounts_count_other": "Vous avez connecté {{displayCount}} comptes",
+        "found_accounts_count_one": "Nous avons trouvé {{displayCount}} compte",
+        "found_accounts_count_other": "Nous avons trouvé {{displayCount}} comptes",
+        "reconnect_bank_accounts_and_credit_cards_description": "Reconnectez vos comptes bancaires et vos cartes de crédit pour importer automatiquement vos transactions d’entreprise.",
+        "remove_accounts_new_dashboard": "Vous aurez la possibilité de retirer des comptes dans le nouveau tableau de bord.",
+        "remove_unused_accounts_next_step": "Vous aurez la possibilité de supprimer les comptes que vous n’utilisez pas pour votre entreprise à l’étape suivante."
+      },
+      "prompt": {
+        "connect_all_bank_accounts_for_bookkeeping": "Veuillez connecter tous vos comptes bancaires pour la tenue de livres",
+        "use_other_bank_accounts_or_cards": "Utilisez-vous d’autres comptes bancaires ou cartes de crédit pour votre entreprise?"
+      }
     }
   },
   "LinkedAccountCard": {
@@ -79,12 +91,16 @@
     }
   },
   "LinkedAccounts": {
-    "action": {
-      "add_account": "Ajouter un compte"
-    },
     "label": {
-      "linked_accounts": "Comptes connectés",
-      "linked_accounts_list": "Comptes connectés"
+      "linked_accounts": "Comptes connectés"
+    },
+    "LinkedAccountsContent": {
+      "action": {
+        "add_account": "Ajouter un compte"
+      },
+      "label": {
+        "linked_accounts_list": "Comptes connectés"
+      }
     }
   },
   "LinkedAccountsConfirmationModal": {

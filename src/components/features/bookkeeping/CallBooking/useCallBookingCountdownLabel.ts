@@ -52,21 +52,21 @@ export const useCallBookingCountdownLabel = (eventStartAt: Date | undefined) => 
 
   switch (descriptor.kind) {
     case CountdownKind.Days:
-      return tPlural(t, 'bookkeeping:CallBooking.state.call_in_count_days', {
+      return tPlural(t, 'bookkeeping:CallBooking.useCallBookingCountdownLabel.state.call_in_count_days', {
         count: descriptor.value,
         displayCount: descriptor.value,
         one: 'in {{displayCount}} day',
         other: 'in {{displayCount}} days',
       })
     case CountdownKind.Hours:
-      return tPlural(t, 'bookkeeping:CallBooking.state.call_in_count_hours', {
+      return tPlural(t, 'bookkeeping:CallBooking.useCallBookingCountdownLabel.state.call_in_count_hours', {
         count: descriptor.value,
         displayCount: descriptor.value,
         one: 'in {{displayCount}} hour',
         other: 'in {{displayCount}} hours',
       })
     case CountdownKind.StartingSoon:
-      return t('bookkeeping:CallBooking.state.starting_soon', 'starting soon')
+      return t('bookkeeping:CallBooking.useCallBookingCountdownLabel.state.starting_soon', 'starting soon')
     case CountdownKind.None:
     default:
       return ''

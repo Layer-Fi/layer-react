@@ -1,8 +1,10 @@
 {
   "ProfitAndLossChart": {
-    "label": {
-      "data_is_syncing": "Les données sont en cours de synchronisation",
-      "may_take_few_minutes": "Cela peut prendre quelques minutes"
+    "ProfitAndLossChartStateCard": {
+      "label": {
+        "data_is_syncing": "Les données sont en cours de synchronisation",
+        "may_take_few_minutes": "Cela peut prendre quelques minutes"
+      }
     }
   },
   "ProfitAndLossDetailedCharts": {
@@ -10,8 +12,12 @@
       "no_transactions_found": "Aucune transaction trouvée"
     },
     "label": {
-      "profit_loss_detail_report": "Rapport détaillé de l’état des résultats",
       "upload_transactions_or_wait_for_bank_sync": "Importez vos transactions ou attendez qu’elles soient synchronisées depuis votre banque."
+    },
+    "ProfitAndLossDetailReportModal": {
+      "label": {
+        "profit_loss_detail_report": "Rapport détaillé de l’état des résultats"
+      }
     }
   },
   "ProfitAndLossDetailReport": {
@@ -38,13 +44,19 @@
       "categorized_expenses": "Dépenses catégorisées",
       "categorized_net_profit": "Bénéfice net catégorisé",
       "categorized_revenue": "Revenus catégorisés",
-      "net_cash_flow": "Flux de trésorerie net",
-      "vs_comparison_month": "p/r à {{comparisonMonth}}"
+      "net_cash_flow": "Flux de trésorerie net"
+    },
+    "ProfitAndLossSummariesSummary": {
+      "label": {
+        "vs_comparison_month": "p/r à {{comparisonMonth}}"
+      }
     }
   },
   "ProfitAndLossTable": {
-    "label": {
-      "profit_before_taxes": "Bénéfice avant impôts"
+    "ProfitAndLossTableComponent": {
+      "label": {
+        "profit_before_taxes": "Bénéfice avant impôts"
+      }
     }
   },
   "TransactionsToReview": {

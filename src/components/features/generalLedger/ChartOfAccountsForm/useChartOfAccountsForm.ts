@@ -66,15 +66,15 @@ export const useChartOfAccountsForm = (props: UseChartOfAccountsFormProps) => {
   const getErrorText = useCallback((reason: LedgerAccountInvalidReason): string => {
     switch (reason) {
       case LedgerAccountInvalidReason.ParentRequired:
-        return t('generalLedger:ChartOfAccountsForm.validation.parent_required', 'Select a parent account')
+        return t('generalLedger:ChartOfAccountsForm.useChartOfAccountsForm.validation.parent_required', 'Select a parent account')
       case LedgerAccountInvalidReason.NameRequired:
-        return t('generalLedger:ChartOfAccountsForm.validation.name_required', 'Enter an account name')
+        return t('generalLedger:ChartOfAccountsForm.useChartOfAccountsForm.validation.name_required', 'Enter an account name')
       case LedgerAccountInvalidReason.TypeRequired:
-        return t('generalLedger:ChartOfAccountsForm.validation.type_required', 'Select an account type')
+        return t('generalLedger:ChartOfAccountsForm.useChartOfAccountsForm.validation.type_required', 'Select an account type')
       case LedgerAccountInvalidReason.SubTypeRequired:
-        return t('generalLedger:ChartOfAccountsForm.validation.subtype_required', 'Select a sub-type')
+        return t('generalLedger:ChartOfAccountsForm.useChartOfAccountsForm.validation.subtype_required', 'Select a sub-type')
       case LedgerAccountInvalidReason.NormalityRequired:
-        return t('generalLedger:ChartOfAccountsForm.validation.normality_required', 'Select a normality')
+        return t('generalLedger:ChartOfAccountsForm.useChartOfAccountsForm.validation.normality_required', 'Select a normality')
       default:
         return ''
     }

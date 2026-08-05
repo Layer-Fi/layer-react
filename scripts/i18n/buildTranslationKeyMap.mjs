@@ -56,17 +56,14 @@ const renameKey = ({ oldKey, zone }) => {
 
   if (SHARED_NAMESPACES.includes(namespace)) return oldKey
 
+  // Everything before the category is the old owner (absent, or wrong) and gets replaced.
   const segments = rest.split('.')
+  const at = segments.findIndex(segment => CATEGORIES.has(segment))
   let category
   let leaf
-  if (CATEGORIES.has(segments[0])) {
-    category = segments[0]
-    leaf = segments.slice(1)
-  }
-  else if (CATEGORIES.has(segments[1])) {
-    // A sub-namespace that the owner segment now makes redundant, e.g. `recordTransaction.title.x`.
-    category = segments[1]
-    leaf = segments.slice(2)
+  if (at >= 0) {
+    category = segments[at]
+    leaf = segments.slice(at + 1)
   }
   else if (CATEGORY_OVERRIDES[oldKey]) {
     category = CATEGORY_OVERRIDES[oldKey]

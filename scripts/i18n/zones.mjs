@@ -41,16 +41,22 @@ export const isExempt = (file) => TEST_FILE.test(file)
 const toPosix = (file) => file.split(path.sep).join('/')
 
 /**
- * The unit that owns a key: the containing directory, except when that directory is the domain
- * itself (non-component tiers put modules directly in the domain folder), where it's the basename.
+ * The unit that owns a key, named after the file that actually uses it.
+ *
+ * A directory's namesake is the component itself (`InvoiceTable/InvoiceTable.tsx` → `InvoiceTable`).
+ * Any other file in that directory is a sub-part — a sub-component, a colocated hook, a form
+ * helper — and is qualified by its parent so the key names the file rather than its neighbour
+ * (`Tasks/TasksPanelNotification.tsx` → `Tasks.TasksPanelNotification`). Qualifying is what keeps
+ * generic filenames such as `formUtils.ts` distinct across components.
  */
 const ownerFor = (file, domainDir) => {
-  const dir = path.dirname(file)
-  const containing = path.basename(dir)
-  if (containing === domainDir) {
-    return path.basename(file).replace(/\.[jt]sx?$/, '')
-  }
-  return containing
+  const containing = path.basename(path.dirname(file))
+  const base = path.basename(file).replace(/\.[jt]sx?$/, '')
+
+  // Non-component tiers put modules directly in the domain folder; those own their keys alone.
+  if (containing === domainDir) return base
+
+  return base === containing ? containing : `${containing}.${base}`
 }
 
 /**
@@ -75,14 +81,8 @@ export const zoneFor = (rawFile) => {
     return { namespace: tier[1], owner: ownerFor(file, tier[1]), allowsAnyDomain: false }
   }
 
-  const view = file.match(/^src\/views\/([^/]+)\//)
-  if (view) {
-    return { namespace: 'views', owner: view[1], allowsAnyDomain: true }
-  }
-
-  const flatView = file.match(/^src\/views\/[^/]+\.[jt]sx?$/)
-  if (flatView) {
-    return { namespace: 'views', owner: path.basename(file).replace(/\.[jt]sx?$/, ''), allowsAnyDomain: true }
+  if (/^src\/views\//.test(file)) {
+    return { namespace: 'views', owner: ownerFor(file, 'views'), allowsAnyDomain: true }
   }
 
   return undefined

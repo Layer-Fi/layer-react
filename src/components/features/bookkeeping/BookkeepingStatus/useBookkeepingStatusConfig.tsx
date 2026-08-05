@@ -34,7 +34,7 @@ export function useBookkeepingStatusConfig(
 
   const monthName = monthNumber !== undefined ? formatMonthName(monthNumber) : ''
   const inProgressDescription = incompleteTasksCount !== undefined && incompleteTasksCount > 0
-    ? tPlural(t, 'bookkeeping:BookkeepingStatus.label.working_on_books_please_complete_tasks', {
+    ? tPlural(t, 'bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.label.working_on_books_please_complete_tasks', {
       count: incompleteTasksCount,
       displayCount: formatNumber(incompleteTasksCount),
       monthName,
@@ -42,7 +42,7 @@ export function useBookkeepingStatusConfig(
       other: 'We’re working on your {{monthName}} books. Please complete the {{displayCount}} open tasks.',
     })
     : t(
-      'bookkeeping:BookkeepingStatus.label.working_on_books_no_action_needed',
+      'bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.label.working_on_books_no_action_needed',
       'We’re working on your {{monthName}} books. No action is needed from you right now.',
       { monthName },
     )
@@ -53,7 +53,7 @@ export function useBookkeepingStatusConfig(
     case BookkeepingPeriodStatus.CLOSING_OPEN_ITEMS:
     case BookkeepingPeriodStatus.CLOSING_IN_REVIEW: {
       return {
-        label: t('bookkeeping:BookkeepingStatus.state.books_in_progress', 'Books in progress'),
+        label: t('bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.state.books_in_progress', 'Books in progress'),
         description: inProgressDescription,
         color: 'info',
         icon: <Clock size={12} />,
@@ -62,16 +62,16 @@ export function useBookkeepingStatusConfig(
     case BookkeepingPeriodStatus.IN_PROGRESS_AWAITING_CUSTOMER:
     case BookkeepingPeriodStatus.CLOSED_OPEN_TASKS: {
       return {
-        label: t('bookkeeping:BookkeepingStatus.state.action_required', 'Action required'),
-        description: t('bookkeeping:BookkeepingStatus.label.respond_to_below_tasks', 'Please respond to the below tasks to help us complete your {{monthName}} books.', { monthName }),
+        label: t('bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.state.action_required', 'Action required'),
+        description: t('bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.label.respond_to_below_tasks', 'Please respond to the below tasks to help us complete your {{monthName}} books.', { monthName }),
         color: 'warning',
         icon: <CircleAlert size={12} />,
       }
     }
     case BookkeepingPeriodStatus.CLOSED_COMPLETE: {
       return {
-        label: t('bookkeeping:BookkeepingStatus.state.books_completed', 'Books completed'),
-        description: t('bookkeeping:BookkeepingStatus.label.month_name_books_complete', 'Your {{monthName}} books are complete and ready to view!', { monthName }),
+        label: t('bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.state.books_completed', 'Books completed'),
+        description: t('bookkeeping:BookkeepingStatus.useBookkeepingStatusConfig.label.month_name_books_complete', 'Your {{monthName}} books are complete and ready to view!', { monthName }),
         color: 'success',
         icon: <CircleCheckBig size={12} />,
       }

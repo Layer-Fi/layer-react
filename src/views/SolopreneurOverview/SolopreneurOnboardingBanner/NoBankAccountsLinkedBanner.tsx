@@ -15,8 +15,8 @@ export const NoBankAccountsLinkedBanner = () => {
     void addConnection('PLAID')
   }, [addConnection])
   const Icon = isMobile ? null : <Info size={16} />
-  const title = t('views:SolopreneurOverview.label.link_your_bank_accounts', 'Link your bank accounts')
-  const description = t('views:SolopreneurOverview.label.link_your_bank_accounts_description', 'Linking your bank accounts allows us to load your bank transactions and automatically categorize them.')
+  const title = t('views:SolopreneurOnboardingBanner.NoBankAccountsLinkedBanner.label.link_your_bank_accounts', 'Link your bank accounts')
+  const description = t('views:SolopreneurOnboardingBanner.NoBankAccountsLinkedBanner.label.link_your_bank_accounts_description', 'Linking your bank accounts allows us to load your bank transactions and automatically categorize them.')
   const Button = <LayerButton onPress={handleLinkBankAccounts} variant='outlined'>{title}</LayerButton>
   return <Banner title={title} description={description} slots={{ Icon, Button }} />
 }

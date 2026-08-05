@@ -23,12 +23,12 @@ export const BankTransactionTaxCodeDrawer = ({
 
   return (
     <MobileSelectionDrawerWithTrigger<TaxCodeComboBoxOption>
-      ariaLabel={t('bankTransactions:BankTransactionTaxCodeSelect.action.select_tax_code', 'Select tax code')}
-      heading={t('bankTransactions:BankTransactionTaxCodeSelect.action.select_tax_code', 'Select tax code')}
+      ariaLabel={t('bankTransactions:BankTransactionTaxCodeSelect.BankTransactionTaxCodeDrawer.action.select_tax_code', 'Select tax code')}
+      heading={t('bankTransactions:BankTransactionTaxCodeSelect.BankTransactionTaxCodeDrawer.action.select_tax_code', 'Select tax code')}
       {...taxCodeSelectProps}
       isDisabled={isDisabled}
       isSearchable
-      searchPlaceholder={t('bankTransactions:BankTransactionTaxCodeSelect.action.search_tax_codes', 'Search tax codes...')}
+      searchPlaceholder={t('bankTransactions:BankTransactionTaxCodeSelect.BankTransactionTaxCodeDrawer.action.search_tax_codes', 'Search tax codes...')}
       slotProps={{
         Trigger: {
           icon: <ChevronRight size={16} />,

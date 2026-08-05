@@ -21,12 +21,14 @@
     }
   },
   "UnifiedReportsNavigationSidebar": {
-    "error": {
-      "couldnt_load_reports": "Failed to load reports",
-      "load_reports_navigation": "Something went wrong while loading this navigation. Please try again."
-    },
     "label": {
       "reports_navigation": "Reports navigation"
+    },
+    "UnifiedReportsNavigationSidebarError": {
+      "error": {
+        "couldnt_load_reports": "Failed to load reports",
+        "load_reports_navigation": "Something went wrong while loading this navigation. Please try again."
+      }
     }
   },
   "UnifiedReportTable": {

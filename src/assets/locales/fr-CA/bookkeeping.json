@@ -1,16 +1,18 @@
 {
   "BookkeepingStatus": {
-    "label": {
-      "month_name_books_complete": "Vos livres de {{monthName}} sont terminés et prêts à être consultés!",
-      "respond_to_below_tasks": "Veuillez répondre aux tâches ci-dessous afin de nous aider à terminer vos livres de {{monthName}}.",
-      "working_on_books_no_action_needed": "Nous travaillons sur vos livres de {{monthName}}. Aucune action de votre part n’est requise pour le moment.",
-      "working_on_books_please_complete_tasks_one": "Nous travaillons sur votre tenue de livres de {{monthName}}. Veuillez terminer la {{displayCount}} tâche en attente.",
-      "working_on_books_please_complete_tasks_other": "Nous travaillons sur votre tenue de livres de {{monthName}}. Veuillez terminer les {{displayCount}} tâches en attente."
-    },
-    "state": {
-      "action_required": "Action requise",
-      "books_completed": "Livres terminés",
-      "books_in_progress": "Livres en cours"
+    "useBookkeepingStatusConfig": {
+      "label": {
+        "month_name_books_complete": "Vos livres de {{monthName}} sont terminés et prêts à être consultés!",
+        "respond_to_below_tasks": "Veuillez répondre aux tâches ci-dessous afin de nous aider à terminer vos livres de {{monthName}}.",
+        "working_on_books_no_action_needed": "Nous travaillons sur vos livres de {{monthName}}. Aucune action de votre part n’est requise pour le moment.",
+        "working_on_books_please_complete_tasks_one": "Nous travaillons sur votre tenue de livres de {{monthName}}. Veuillez terminer la {{displayCount}} tâche en attente.",
+        "working_on_books_please_complete_tasks_other": "Nous travaillons sur votre tenue de livres de {{monthName}}. Veuillez terminer les {{displayCount}} tâches en attente."
+      },
+      "state": {
+        "action_required": "Action requise",
+        "books_completed": "Livres terminés",
+        "books_in_progress": "Livres en cours"
+      }
     }
   },
   "CallBooking": {
@@ -31,43 +33,61 @@
     "prompt": {
       "ready_to_get_started": "Prêt à commencer?"
     },
-    "state": {
-      "call_in_count_days_one": "dans {{displayCount}} jour",
-      "call_in_count_days_other": "dans {{displayCount}} jours",
-      "call_in_count_hours_one": "dans {{displayCount}} heure",
-      "call_in_count_hours_other": "dans {{displayCount}} heures",
-      "starting_soon": "commence bientôt"
+    "useCallBookingCountdownLabel": {
+      "state": {
+        "call_in_count_days_one": "dans {{displayCount}} jour",
+        "call_in_count_days_other": "dans {{displayCount}} jours",
+        "call_in_count_hours_one": "dans {{displayCount}} heure",
+        "call_in_count_hours_other": "dans {{displayCount}} heures",
+        "starting_soon": "commence bientôt"
+      }
     }
   },
   "Tasks": {
-    "action": {
-      "view_and_complete": "Voir et terminer"
-    },
     "label": {
-      "bank_accounts_disconnected_one": "{{displayCount}} compte bancaire est déconnecté",
-      "bank_accounts_disconnected_other": "{{displayCount}} comptes bancaires sont déconnectés",
-      "bookkeeping_tasks": "Tâches de tenue de livres",
       "complete_bookkeeping_onboarding_call": "Quand votre appel d’intégration à la tenue de livres sera terminé, vos tâches de tenue de livres s’afficheront ici.",
-      "completed_over_total_done_one": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminée",
-      "completed_over_total_done_many": "",
-      "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminées",
-      "count_open_tasks_one": "{{displayCount}} tâche ouverte en {{displayYear}}",
-      "count_open_tasks_other": "{{displayCount}} tâches ouvertes en {{displayYear}}",
       "not_enrolled_in_bookkeeping": "Non inscrit à la tenue de livres",
-      "please_contact_support": "Si vous pensez qu’il y a une erreur, veuillez contacter le support.",
-      "reconnect_count_accounts_one": "Reconnecter {{displayCount}} compte",
-      "reconnect_count_accounts_other": "Reconnecter {{displayCount}} comptes"
+      "please_contact_support": "Si vous pensez qu’il y a une erreur, veuillez contacter le support."
+    },
+    "TasksHeader": {
+      "label": {
+        "bookkeeping_tasks": "Tâches de tenue de livres"
+      }
+    },
+    "TasksPanelNotification": {
+      "action": {
+        "view_and_complete": "Voir et terminer"
+      },
+      "label": {
+        "bank_accounts_disconnected_one": "{{displayCount}} compte bancaire est déconnecté",
+        "bank_accounts_disconnected_other": "{{displayCount}} comptes bancaires sont déconnectés",
+        "count_open_tasks_one": "{{displayCount}} tâche ouverte en {{displayYear}}",
+        "count_open_tasks_other": "{{displayCount}} tâches ouvertes en {{displayYear}}",
+        "reconnect_count_accounts_one": "Reconnecter {{displayCount}} compte",
+        "reconnect_count_accounts_other": "Reconnecter {{displayCount}} comptes"
+      }
+    },
+    "TasksPending": {
+      "label": {
+        "completed_over_total_done_one": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminée",
+        "completed_over_total_done_many": "",
+        "completed_over_total_done_other": "<completed>{{displayCompletedTaskCount}}</completed>/{{displayTotalTaskCount}} terminées"
+      }
     }
   },
   "TasksList": {
-    "action": {
-      "show_all_tasks_count": "Afficher toutes les tâches ({{tasksCount}})",
-      "show_completed_tasks": "Afficher les tâches terminées"
-    },
     "label": {
       "great_job": "Excellent travail!",
-      "pending_tasks": "Il n’y a aucune tâche en attente!",
-      "tasks": "Tâches"
+      "pending_tasks": "Il n’y a aucune tâche en attente!"
+    },
+    "TasksListMobile": {
+      "action": {
+        "show_all_tasks_count": "Afficher toutes les tâches ({{tasksCount}})",
+        "show_completed_tasks": "Afficher les tâches terminées"
+      },
+      "label": {
+        "tasks": "Tâches"
+      }
     }
   },
   "TasksListItem": {

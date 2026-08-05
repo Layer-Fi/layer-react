@@ -15,8 +15,8 @@ import { TaxProfile } from '@views/TaxEstimates/TaxProfile'
 
 const TAX_ESTIMATES_TAB_CONFIG = [
   // { value: TaxEstimatesRoute.Overview, ...translationKey('common:label.overview', 'Overview') },
-  { value: TaxEstimatesRoute.Estimates, ...translationKey('views:TaxEstimates.label.estimates', 'Estimates') },
-  { value: TaxEstimatesRoute.Payments, ...translationKey('views:TaxEstimates.label.payments', 'Payments') },
+  { value: TaxEstimatesRoute.Estimates, ...translationKey('views:TaxEstimates.TaxEstimatesOnboardedViewContent.label.estimates', 'Estimates') },
+  { value: TaxEstimatesRoute.Payments, ...translationKey('views:TaxEstimates.TaxEstimatesOnboardedViewContent.label.payments', 'Payments') },
 ]
 
 export const TaxEstimatesOnboardedViewContent = () => {
@@ -60,7 +60,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
   return (
     <VStack gap='md'>
       <Toggle
-        ariaLabel={t('views:TaxEstimates.label.tax_estimate_view', 'Tax estimate view')}
+        ariaLabel={t('views:TaxEstimates.TaxEstimatesOnboardedViewContent.label.tax_estimate_view', 'Tax estimate view')}
         options={tabOptions}
         selectedKey={route}
         onSelectionChange={handleTabChange}
@@ -77,7 +77,7 @@ export const TaxEstimatesOnboardedViewContent = () => {
         <P size='xs' variant='subtle'>
           <em>
             {t(
-              'views:TaxEstimates.disclaimer.content',
+              'views:TaxEstimates.TaxEstimatesOnboardedViewContent.disclaimer.content',
               'The Tax Estimates tool and related content are for informational purposes only, and are not intended as legal, accounting, or tax advice, or a substitute for professional counsel. We are not a financial planner or tax advisor, and users assume sole responsibility for their tax obligations, accuracy of data, and compliance with laws. All calculations are estimated and may contain errors, and are based only on the information you provide to us.',
             )}
           </em>

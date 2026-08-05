@@ -25,7 +25,7 @@ export const useBankTransactionTaxCodeSelect = ({
 }: UseTaxCodeSelectParams): UseTaxCodeSelectReturn => {
   const { t } = useTranslation()
   const noTaxCodeOption = useMemo<TaxCodeComboBoxOption>(
-    () => TaxCodeComboBoxOption.noTaxCode(t('bankTransactions:BankTransactionTaxCodeSelect.action.no_tax_code', 'No tax code')),
+    () => TaxCodeComboBoxOption.noTaxCode(t('bankTransactions:BankTransactionTaxCodeSelect.useBankTransactionTaxCodeSelect.action.no_tax_code', 'No tax code')),
     [t],
   )
 
@@ -55,7 +55,7 @@ export const useBankTransactionTaxCodeSelect = ({
   }, [onSelectedValueChange, options])
 
   const placeholder = useMemo(
-    () => t('bankTransactions:BankTransactionTaxCodeSelect.action.select_tax_code', 'Select tax code'),
+    () => t('bankTransactions:BankTransactionTaxCodeSelect.useBankTransactionTaxCodeSelect.action.select_tax_code', 'Select tax code'),
     [t],
   )
 

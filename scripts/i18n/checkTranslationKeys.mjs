@@ -22,6 +22,18 @@ import {
 /** `usStates` is a data table of 53 state names, declared once outside any component. */
 const OWNER_EXEMPT_NAMESPACES = ['usStates']
 
+const CATEGORIES = new Set([
+  'action', 'banner', 'delete', 'disclaimer', 'empty', 'error', 'label', 'placeholder', 'prompt',
+  'services', 'state', 'title', 'toast', 'tooltip', 'validation',
+])
+
+/** The owner is every segment before the category, so it may be dotted (`Tasks.TasksHeader`). */
+const ownerOf = (key) => {
+  const segments = key.slice(key.indexOf(':') + 1).split('.')
+  const at = segments.findIndex(segment => CATEGORIES.has(segment))
+  return at > 0 ? segments.slice(0, at).join('.') : undefined
+}
+
 const KEY_WITH_DEFAULT = /(?:\bt|translationKey|tPlural|tConditional)\(\s*(?:t\s*,\s*)?(['"])([a-z][A-Za-z]*:[A-Za-z0-9_.]+)\1\s*,\s*(['"])((?:[^\\]|\\.)*?)\3/gs
 const ANY_KEY = /(['"])([a-z][A-Za-z]*:[A-Za-z0-9_]+(?:\.[A-Za-z0-9_]+)*)\1/g
 
@@ -82,9 +94,8 @@ const checkKeyLocation = (sites, fail) => {
       continue
     }
 
-    const owner = key.slice(separator + 1).split('.')[0]
     // A view may reach into a domain namespace, and then the owner is that domain's component.
-    if (namespace === zone.namespace && owner !== zone.owner) {
+    if (namespace === zone.namespace && ownerOf(key) !== zone.owner) {
       fail(`${file}:${line} uses '${key}' but keys owned by this file must start with '${namespace}:${zone.owner}.'`)
     }
   }

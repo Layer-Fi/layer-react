@@ -134,39 +134,39 @@ export function validateJournalEntryForm({ value }: { value: JournalEntryForm },
   const errors = []
 
   if (!value.entryAt) {
-    errors.push({ entryAt: t('generalLedger:JournalEntryForm.validation.entry_date_required', 'Entry date is a required field.') })
+    errors.push({ entryAt: t('generalLedger:JournalEntryForm.formUtils.validation.entry_date_required', 'Entry date is a required field.') })
   }
 
   if (!value.createdBy.trim()) {
-    errors.push({ createdBy: t('generalLedger:JournalEntryForm.validation.create_required', 'Created by is a required field.') })
+    errors.push({ createdBy: t('generalLedger:JournalEntryForm.formUtils.validation.create_required', 'Created by is a required field.') })
   }
 
   if (!value.memo.trim()) {
-    errors.push({ memo: t('generalLedger:JournalEntryForm.validation.memo_required', 'Memo is a required field.') })
+    errors.push({ memo: t('generalLedger:JournalEntryForm.formUtils.validation.memo_required', 'Memo is a required field.') })
   }
 
   const nonBlankLineItems = value.lineItems.filter(lineItem => !isLineItemBlank(lineItem))
 
   if (!value.lineItems || nonBlankLineItems.length === 0) {
-    errors.push({ lineItems: t('generalLedger:JournalEntryForm.validation.least_one_required_line', 'At least one line item is required.') })
+    errors.push({ lineItems: t('generalLedger:JournalEntryForm.formUtils.validation.least_one_required_line', 'At least one line item is required.') })
   }
   else {
     const nonBlankDebits = nonBlankLineItems.filter(item => item.direction === LedgerEntryDirection.Debit)
     const nonBlankCredits = nonBlankLineItems.filter(item => item.direction === LedgerEntryDirection.Credit)
 
     if (nonBlankDebits.length === 0) {
-      errors.push({ lineItems: t('generalLedger:JournalEntryForm.validation.least_one_required_one', 'At least one debit line item is required.') })
+      errors.push({ lineItems: t('generalLedger:JournalEntryForm.formUtils.validation.least_one_required_one', 'At least one debit line item is required.') })
     }
 
     if (nonBlankCredits.length === 0) {
-      errors.push({ lineItems: t('generalLedger:JournalEntryForm.validation.least_one_required', 'At least one credit line item is required.') })
+      errors.push({ lineItems: t('generalLedger:JournalEntryForm.formUtils.validation.least_one_required', 'At least one credit line item is required.') })
     }
 
     const debitTotal = nonBlankDebits.reduce((sum, item) => BD.sum(sum, fromNonRecursiveBigDecimal(item.amount)), BIG_DECIMAL_ZERO)
     const creditTotal = nonBlankCredits.reduce((sum, item) => BD.sum(sum, fromNonRecursiveBigDecimal(item.amount)), BIG_DECIMAL_ZERO)
 
     if (!BD.equals(debitTotal, creditTotal)) {
-      errors.push({ lineItems: t('generalLedger:JournalEntryForm.validation.debit_credit_must', 'Debit and credit amounts must be equal') })
+      errors.push({ lineItems: t('generalLedger:JournalEntryForm.formUtils.validation.debit_credit_must', 'Debit and credit amounts must be equal') })
     }
 
     value.lineItems.forEach((lineItem, index) => {
@@ -177,19 +177,19 @@ export function validateJournalEntryForm({ value }: { value: JournalEntryForm },
       const accountId = lineItem.accountIdentifier
       if (accountId.type === 'AccountId' && 'id' in accountId) {
         if (!accountId.id) {
-          errors.push({ [`lineItems[${index}].accountIdentifier`]: t('generalLedger:JournalEntryForm.validation.account_required', 'Account is a required field.') })
+          errors.push({ [`lineItems[${index}].accountIdentifier`]: t('generalLedger:JournalEntryForm.formUtils.validation.account_required', 'Account is a required field.') })
         }
       }
       else if (accountId.type === 'StableName' && 'stableName' in accountId) {
         if (!accountId.stableName) {
-          errors.push({ [`lineItems[${index}].accountIdentifier`]: t('generalLedger:JournalEntryForm.validation.account_required', 'Account is a required field.') })
+          errors.push({ [`lineItems[${index}].accountIdentifier`]: t('generalLedger:JournalEntryForm.formUtils.validation.account_required', 'Account is a required field.') })
         }
       }
       else {
-        errors.push({ [`lineItems[${index}].accountIdentifier`]: t('generalLedger:JournalEntryForm.validation.account_required', 'Account is a required field.') })
+        errors.push({ [`lineItems[${index}].accountIdentifier`]: t('generalLedger:JournalEntryForm.formUtils.validation.account_required', 'Account is a required field.') })
       }
       if (BD.lessThan(fromNonRecursiveBigDecimal(lineItem.amount), BIG_DECIMAL_ZERO)) {
-        errors.push({ [`lineItems[${index}].amount`]: t('generalLedger:JournalEntryForm.validation.amount_greater_must', 'Amount must be greater than zero.') })
+        errors.push({ [`lineItems[${index}].amount`]: t('generalLedger:JournalEntryForm.formUtils.validation.amount_greater_must', 'Amount must be greater than zero.') })
       }
     })
   }

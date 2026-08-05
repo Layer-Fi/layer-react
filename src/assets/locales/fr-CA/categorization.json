@@ -4,12 +4,17 @@
       "create_rule": "Créer une règle",
       "save_rule": "Enregistrer la règle"
     },
-    "empty": {
-      "no_counterparties_yet": "Aucune contrepartie pour le moment. Elles s’afficheront ici automatiquement à mesure que vos transactions seront traitées.",
-      "no_matching_counterparties": "Aucune contrepartie correspondante."
-    },
-    "error": {
-      "load_counterparties": "Impossible de charger les contreparties. Veuillez réessayer."
+    "CounterpartyComboBox": {
+      "empty": {
+        "no_counterparties_yet": "Aucune contrepartie pour le moment. Elles s’afficheront ici automatiquement à mesure que vos transactions seront traitées.",
+        "no_matching_counterparties": "Aucune contrepartie correspondante."
+      },
+      "error": {
+        "load_counterparties": "Impossible de charger les contreparties. Veuillez réessayer."
+      },
+      "validation": {
+        "counterparty_required": "La contrepartie est obligatoire."
+      }
     },
     "label": {
       "amount_max_optional": "Montant maximal (facultatif)",
@@ -21,8 +26,12 @@
       "select_account": "Sélectionner un compte",
       "select_counterparty": "Sélectionner une contrepartie"
     },
+    "useCategorizationRuleForm": {
+      "validation": {
+        "amount_min_greater_than_max": "Le montant minimal doit être inférieur ou égal au montant maximal."
+      }
+    },
     "validation": {
-      "amount_min_greater_than_max": "Le montant minimal doit être inférieur ou égal au montant maximal.",
       "category_required": "La catégorie est obligatoire.",
       "counterparty_required": "La contrepartie est obligatoire."
     }
@@ -38,10 +47,14 @@
       "delete_rule": "Supprimer la règle",
       "edit_rule": "Modifier la règle"
     },
+    "CategorizationRuleMobileListItem": {
+      "label": {
+        "suggests_category": "Suggère une catégorie"
+      }
+    },
     "label": {
       "categorization_rules": "Règles de catégorisation",
-      "rule_actions": "Actions de la règle",
-      "suggests_category": "Suggère une catégorie"
+      "rule_actions": "Actions de la règle"
     }
   },
   "CategorizationRulesTable": {
@@ -86,29 +99,45 @@
     }
   },
   "SuggestedCategorizationRuleUpdates": {
-    "action": {
-      "dont_ask_again": "Ne plus demander",
-      "no_decide_each_time": "Non, je vais décider chaque fois",
-      "yes_always_categorize": "Oui, toujours catégoriser"
+    "AffectedTransactionsTable": {
+      "empty": {
+        "no_transactions_found": "Aucune transaction trouvée"
+      },
+      "error": {
+        "load_affected_transactions": "Une erreur s’est produite lors du chargement des transactions concernées",
+        "load_transactions": "Erreur lors du chargement des transactions"
+      },
+      "label": {
+        "affected_transaction_display": "Il n’y a aucune transaction concernée à afficher",
+        "affected_transactions": "Transactions concernées"
+      }
     },
-    "empty": {
-      "no_transactions_found": "Aucune transaction trouvée"
-    },
-    "error": {
-      "create_categorization_rule": "Échec de la création de la règle de catégorisation",
-      "load_affected_transactions": "Une erreur s’est produite lors du chargement des transactions concernées",
-      "load_transactions": "Erreur lors du chargement des transactions",
-      "reject_rule_suggestion": "Échec du rejet de la suggestion de règle"
-    },
-    "label": {
-      "affected_transaction_display": "Il n’y a aucune transaction concernée à afficher",
-      "affected_transactions": "Transactions concernées",
-      "following_count_transactions_one": "La {{displayCount}} transaction suivante sera touchée :",
-      "following_count_transactions_other": "Les {{displayCount}} transactions suivantes seront touchées :",
-      "or": "OU"
+    "CreateRuleButton": {
+      "error": {
+        "create_categorization_rule": "Échec de la création de la règle de catégorisation"
+      }
     },
     "prompt": {
       "always_use_category": "Toujours utiliser cette catégorie?"
+    },
+    "RuleUpdatesPromptStep": {
+      "action": {
+        "dont_ask_again": "Ne plus demander",
+        "no_decide_each_time": "Non, je vais décider chaque fois",
+        "yes_always_categorize": "Oui, toujours catégoriser"
+      },
+      "error": {
+        "reject_rule_suggestion": "Échec du rejet de la suggestion de règle"
+      },
+      "label": {
+        "or": "OU"
+      }
+    },
+    "RuleUpdatesReviewStep": {
+      "label": {
+        "following_count_transactions_one": "La {{displayCount}} transaction suivante sera touchée :",
+        "following_count_transactions_other": "Les {{displayCount}} transactions suivantes seront touchées :"
+      }
     }
   },
   "SuggestedCategorizationRuleUpdatesDialog": {

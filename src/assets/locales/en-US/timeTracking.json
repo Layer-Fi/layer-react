@@ -1,29 +1,45 @@
 {
   "ActiveTimeTracker": {
-    "action": {
-      "cancel_timer": "Cancel",
-      "complete_timer": "Complete",
-      "start_timer": "Start Timer"
+    "ActiveTimeTrackerBanner": {
+      "action": {
+        "cancel_timer": "Cancel",
+        "complete_timer": "Complete"
+      },
+      "label": {
+        "select_customer": "Select a customer (optional)"
+      }
+    },
+    "ActiveTimeTrackerStartDrawer": {
+      "action": {
+        "start_timer": "Start Timer"
+      },
+      "label": {
+        "add_memo": "Add memo",
+        "customer_optional": "Customer (optional)",
+        "duration": "Duration",
+        "memo": "Memo",
+        "select_customer_short": "Select a customer"
+      }
     },
     "error": {
-      "cancel_timer": "Failed to cancel timer. Please try again.",
-      "complete_timer": "Failed to complete timer. Please try again.",
-      "complete_timer_stale": "This timer was already completed or cancelled. Reload the page.",
-      "load_active_timer": "Failed to load active timer. Please check your connection and try again.",
-      "start_timer": "Failed to start timer. Please try again.",
-      "start_timer_already_active": "A timer is already running. Please reload the page.",
-      "update_timer": "Failed to update timer. Please try again."
+      "load_active_timer": "Failed to load active timer. Please check your connection and try again."
     },
-    "label": {
-      "add_memo": "Add memo",
-      "customer_optional": "Customer (optional)",
-      "duration": "Duration",
-      "memo": "Memo",
-      "select_customer": "Select a customer (optional)",
-      "select_customer_short": "Select a customer"
+    "useActiveTimerBannerForm": {
+      "error": {
+        "cancel_timer": "Failed to cancel timer. Please try again.",
+        "complete_timer": "Failed to complete timer. Please try again.",
+        "complete_timer_stale": "This timer was already completed or cancelled. Reload the page.",
+        "update_timer": "Failed to update timer. Please try again."
+      }
     },
-    "validation": {
-      "service_required": "Service is a required field."
+    "useStartTimerForm": {
+      "error": {
+        "start_timer": "Failed to start timer. Please try again.",
+        "start_timer_already_active": "A timer is already running. Please reload the page."
+      },
+      "validation": {
+        "service_required": "Service is a required field."
+      }
     }
   },
   "ServiceArchiveConfirmationModal": {
@@ -37,10 +53,6 @@
     }
   },
   "ServiceFormCard": {
-    "error": {
-      "create_service": "Failed to create service. Please try again.",
-      "update_service": "Could not save this service. Please try again."
-    },
     "services": {
       "add": "Add",
       "add_service": "Add service",
@@ -50,9 +62,15 @@
       "save": "Save",
       "service_name": "Service name"
     },
-    "validation": {
-      "hourly_rate_positive": "Default hourly rate must be greater than zero.",
-      "service_name_required": "Service name is a required field."
+    "useServiceForm": {
+      "error": {
+        "create_service": "Failed to create service. Please try again.",
+        "update_service": "Could not save this service. Please try again."
+      },
+      "validation": {
+        "hourly_rate_positive": "Default hourly rate must be greater than zero.",
+        "service_name_required": "Service name is a required field."
+      }
     }
   },
   "ServiceRestoreConfirmationModal": {
@@ -132,6 +150,14 @@
     "action": {
       "save_entry": "Save Entry"
     },
+    "formUtils": {
+      "validation": {
+        "duration_whole_minutes": "Duration must be a whole number of minutes greater than zero.",
+        "entry_date_not_future": "Entry date cannot be in the future.",
+        "entry_date_required": "Entry date is a required field.",
+        "service_required": "Service is a required field."
+      }
+    },
     "label": {
       "add_memo": "Add memo",
       "customer_optional": "Customer (optional)",
@@ -140,12 +166,6 @@
       "entry_date": "Entry date",
       "memo": "Memo",
       "select_customer_short": "Select a customer"
-    },
-    "validation": {
-      "duration_whole_minutes": "Duration must be a whole number of minutes greater than zero.",
-      "entry_date_not_future": "Entry date cannot be in the future.",
-      "entry_date_required": "Entry date is a required field.",
-      "service_required": "Service is a required field."
     }
   },
   "TimeEntryServiceSelector": {

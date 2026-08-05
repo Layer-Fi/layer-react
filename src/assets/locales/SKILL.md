@@ -93,11 +93,19 @@ The **namespace** is the JSON file, and it is derived from where the string is u
 | `src/components/ui/**` | `ui` |
 | `src/views/<View>/**` | `views`, or any feature domain it composes |
 
-The **owner** is the component directory the string belongs to — `InvoiceTable`,
-`LedgerEntrySourceDetailView`, `TaxPayments` — or, for a module sitting directly in a domain
-folder, its filename (`utils/features/generalLedger/constants.ts` → `constants`). A private
-sub-part keys under its parent component directory, matching
-[`src/components/SKILL.md`](../../components/SKILL.md).
+The **owner** names the file that uses the string, so a key always leads you back to it:
+
+| file | owner |
+|---|---|
+| `InvoiceTable/InvoiceTable.tsx` — the directory's namesake | `InvoiceTable` |
+| `Tasks/TasksPanelNotification.tsx` — a sub-component | `Tasks.TasksPanelNotification` |
+| `CallBooking/useCallBookingCountdownLabel.ts` — a colocated hook | `CallBooking.useCallBookingCountdownLabel` |
+| `InvoiceForm/formUtils.ts` — a colocated helper | `InvoiceForm.formUtils` |
+| `utils/features/generalLedger/constants.ts` — a module in the domain folder | `constants` |
+
+Anything that is not its directory's namesake is a sub-part and is qualified by its parent. That
+keeps the key pointing at the right file, and keeps generic filenames like `formUtils.ts` distinct
+between components.
 
 The **category** is one of `action`, `label`, `state`, `error`, `validation`, `empty`,
 `placeholder`, `banner`, `tooltip`, `title`, `disclaimer`, `prompt`.
@@ -105,6 +113,9 @@ The **category** is one of `action`, `label`, `state`, `error`, `validation`, `e
 ```tsx
 // src/components/features/invoices/InvoiceTable/InvoiceTable.tsx
 t('invoices:InvoiceTable.action.view_invoice', 'View invoice')
+
+// src/components/features/bookkeeping/Tasks/TasksPanelNotification.tsx
+t('bookkeeping:Tasks.TasksPanelNotification.action.view_and_complete', 'View and complete')
 ```
 
 **A component owns its keys — never reuse another component's.** The owner segment is what stops

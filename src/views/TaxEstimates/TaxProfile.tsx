@@ -23,7 +23,7 @@ export const TaxProfile = () => {
   }, [navigate, hasSavedTaxProfile])
 
   const TaxProfileHeader = useCallback(() => {
-    return <Heading size='md'>{t('views:TaxEstimates.label.tax_profile', 'Tax Profile')}</Heading>
+    return <Heading size='md'>{t('views:TaxEstimates.TaxProfile.label.tax_profile', 'Tax Profile')}</Heading>
   }, [t])
 
   return (

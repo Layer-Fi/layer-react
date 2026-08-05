@@ -30,7 +30,7 @@ export const TasksPanelNotification = ({
         <div className='Layer__tasks-header__notification__text'>
           <P variant='inherit'><CircleAlert size={11} /></P>
           <P weight='bold' variant='inherit'>
-            {tPlural(t, 'bookkeeping:Tasks.label.bank_accounts_disconnected', {
+            {tPlural(t, 'bookkeeping:Tasks.TasksPanelNotification.label.bank_accounts_disconnected', {
               count: disconnectedAccountsRequiringNotification,
               displayCount: formatNumber(disconnectedAccountsRequiringNotification),
               one: '{{displayCount}} bank account is disconnected',
@@ -46,7 +46,7 @@ export const TasksPanelNotification = ({
             }}
           >
             <P size='sm' weight='bold' variant='inherit'>
-              {tPlural(t, 'bookkeeping:Tasks.label.reconnect_count_accounts', {
+              {tPlural(t, 'bookkeeping:Tasks.TasksPanelNotification.label.reconnect_count_accounts', {
                 count: disconnectedAccountsRequiringNotification,
                 displayCount: formatNumber(disconnectedAccountsRequiringNotification),
                 one: 'Reconnect {{displayCount}} account',
@@ -68,7 +68,7 @@ export const TasksPanelNotification = ({
         <div className='Layer__tasks-header__notification__text'>
           <P status='warning' invert><CircleAlert size={11} /></P>
           <P size='sm' weight='bold' status='warning' invert>
-            {tPlural(t, 'bookkeeping:Tasks.label.count_open_tasks', {
+            {tPlural(t, 'bookkeeping:Tasks.TasksPanelNotification.label.count_open_tasks', {
               count: unresolvedTasksCount,
               displayCount: formatNumber(unresolvedTasksCount),
               displayYear,
@@ -87,7 +87,7 @@ export const TasksPanelNotification = ({
           }}
         >
           <P size='sm' weight='bold' status='warning' invert>
-            {t('bookkeeping:Tasks.action.view_and_complete', 'View and complete')}
+            {t('bookkeeping:Tasks.TasksPanelNotification.action.view_and_complete', 'View and complete')}
           </P>
           <CircleArrowRight size={14} />
         </button>

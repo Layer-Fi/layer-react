@@ -40,18 +40,20 @@
     }
   },
   "TaxDetails": {
-    "empty": {
-      "no_tax_details": "No tax details",
-      "no_tax_details_description": "No tax details found"
-    },
-    "error": {
-      "load_tax_details": "We couldn’t load your tax details",
-      "while_loading_tax_details": "An error occurred while loading your tax details. Please check your connection and try again."
-    },
-    "label": {
-      "tax_details": "Tax Details",
-      "tax_details_amount": "Amount",
-      "tax_details_label": "Label"
+    "TaxDetailsContent": {
+      "empty": {
+        "no_tax_details": "No tax details",
+        "no_tax_details_description": "No tax details found"
+      },
+      "error": {
+        "load_tax_details": "We couldn’t load your tax details",
+        "while_loading_tax_details": "An error occurred while loading your tax details. Please check your connection and try again."
+      },
+      "label": {
+        "tax_details": "Tax Details",
+        "tax_details_amount": "Amount",
+        "tax_details_label": "Label"
+      }
     }
   },
   "TaxEstimatesDeadlineRow": {
@@ -59,16 +61,21 @@
       "review_banner": "Review"
     },
     "label": {
-      "categorization_incomplete": "Categorization incomplete",
-      "due": "Due",
       "due_with_date": "Due: {{date}}",
       "estimated_taxes": "Estimated taxes",
-      "paid": "Paid",
-      "payment_past_due": "Payment past due",
       "uncategorized_transactions_one": "{{count}} uncategorized transaction",
       "uncategorized_transactions_other": "{{count}} uncategorized transactions",
       "uncategorized_transactions_with_year_one": "{{count}} uncategorized transaction ({{year}})",
       "uncategorized_transactions_with_year_other": "{{count}} uncategorized transactions ({{year}})"
+    },
+    "TaxEstimatesDeadlineRowStatusIcon": {
+      "label": {
+        "categorization_incomplete": "Categorization incomplete",
+        "due": "Due",
+        "estimated_taxes": "Estimated taxes",
+        "paid": "Paid",
+        "payment_past_due": "Payment past due"
+      }
     }
   },
   "TaxEstimatesHeader": {
@@ -87,20 +94,30 @@
     }
   },
   "TaxEstimatesSummaryCard": {
-    "empty": {
-      "no_tax_estimates_summary": "Get started with your tax estimates",
-      "no_tax_estimates_summary_description": "Start by importing and categorizing your bank transactions.",
-      "tax_due_is_negative_or_zero": "No taxes owed this year",
-      "tax_due_is_negative_or_zero_description": "Your deductible losses exceed your income for this period, bringing your tax liability to zero."
+    "TaxEstimatesSummaryCardEmpty": {
+      "empty": {
+        "no_tax_estimates_summary": "Get started with your tax estimates",
+        "no_tax_estimates_summary_description": "Start by importing and categorizing your bank transactions."
+      }
     },
-    "error": {
-      "load_tax_estimates_summary": "We couldn’t load your tax summary",
-      "while_loading_tax_estimates_summary": "An error occurred while loading your tax summary. Please check your connection and try again."
+    "TaxEstimatesSummaryCardError": {
+      "error": {
+        "load_tax_estimates_summary": "We couldn’t load your tax summary",
+        "while_loading_tax_estimates_summary": "An error occurred while loading your tax summary. Please check your connection and try again."
+      }
     },
-    "label": {
-      "federal": "Federal",
-      "state": "State",
-      "tax_summary": "Tax Summary"
+    "TaxEstimatesSummaryCardNegativeOrZero": {
+      "empty": {
+        "tax_due_is_negative_or_zero": "No taxes owed this year",
+        "tax_due_is_negative_or_zero_description": "Your deductible losses exceed your income for this period, bringing your tax liability to zero."
+      }
+    },
+    "useTaxEstimatesSummaryCard": {
+      "label": {
+        "federal": "Federal",
+        "state": "State",
+        "tax_summary": "Tax Summary"
+      }
     }
   },
   "TaxPayments": {
@@ -136,6 +153,15 @@
     "action": {
       "save_profile": "Save Profile"
     },
+    "DeductionsSection": {
+      "label": {
+        "deductions": "Deductions",
+        "enter_area": "Enter area",
+        "home_office_area_sq": "Home office area (sq ft)",
+        "use_simplified_home_office": "Use simplified home office deduction?",
+        "use_standard_mileage_deduction": "Use standard mileage deduction?"
+      }
+    },
     "disclaimer": {
       "acknowledgment": "By continuing, I certify that I understand the above.",
       "content": "The Tax Estimates tool and related content are for informational purposes only, and are not intended as legal, accounting, or tax advice, or a substitute for professional counsel. We are not a financial planner or tax advisor, and users assume sole responsibility for their tax obligations, accuracy of data, and compliance with laws. All calculations are estimated and may contain errors, and are based only on the information you provide to us."
@@ -143,21 +169,34 @@
     "error": {
       "disclaimer_required": "You must acknowledge the disclaimer to continue."
     },
-    "label": {
-      "annual_w2_income": "Annual W-2 income",
-      "deductions": "Deductions",
-      "enter_amount": "Enter amount",
-      "enter_area": "Enter area",
-      "federal_tax_information": "Federal Tax Information",
-      "home_office_area_sq": "Home office area (sq ft)",
-      "overtime_income": "Overtime income",
-      "tax_information": "State Tax Information",
-      "tax_profile_saved": "Tax profile saved",
-      "tip_income": "Tip income",
-      "use_custom_withholding": "Use custom withholding?",
-      "use_simplified_home_office": "Use simplified home office deduction?",
-      "use_standard_mileage_deduction": "Use standard mileage deduction?",
-      "withholding_amount": "Withholding amount"
+    "FederalTaxSection": {
+      "label": {
+        "annual_w2_income": "Annual W-2 income",
+        "enter_amount": "Enter amount",
+        "federal_tax_information": "Federal Tax Information",
+        "overtime_income": "Overtime income",
+        "tip_income": "Tip income",
+        "use_custom_withholding": "Use custom withholding?",
+        "withholding_amount": "Withholding amount"
+      }
+    },
+    "formUtils": {
+      "error": {
+        "disclaimer_required": "You must acknowledge the disclaimer to continue."
+      }
+    },
+    "StateTaxSection": {
+      "label": {
+        "enter_amount": "Enter amount",
+        "tax_information": "State Tax Information",
+        "use_custom_withholding": "Use custom withholding?",
+        "withholding_amount": "Withholding amount"
+      }
+    },
+    "useTaxProfileForm": {
+      "label": {
+        "tax_profile_saved": "Tax profile saved"
+      }
     }
   },
   "TaxSummaryCard": {
@@ -165,11 +204,25 @@
       "load_tax_estimates_summary": "We couldn’t load your tax summary",
       "while_loading_tax_summary": "An error occurred while loading your tax summary. Please check your connection and try again."
     },
-    "label": {
-      "due_at": "Due on {{date}}",
-      "taxes_owed": "Taxes Owed",
-      "taxes_owed_projected": "Projected Taxes Owed",
-      "taxes_paid": "Taxes Paid"
+    "TaxSummaryCardDesktop": {
+      "label": {
+        "due_at": "Due on {{date}}",
+        "taxes_owed": "Taxes Owed",
+        "taxes_owed_projected": "Projected Taxes Owed"
+      }
+    },
+    "TaxSummaryCardEquation": {
+      "label": {
+        "taxes_owed": "Taxes Owed",
+        "taxes_paid": "Taxes Paid"
+      }
+    },
+    "TaxSummaryCardMobile": {
+      "label": {
+        "due_at": "Due on {{date}}",
+        "taxes_owed": "Taxes Owed",
+        "taxes_owed_projected": "Projected Taxes Owed"
+      }
     }
   },
   "useTaxBanner": {

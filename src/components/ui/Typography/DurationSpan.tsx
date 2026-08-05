@@ -16,8 +16,8 @@ const DurationSpan = forwardRef<HTMLSpanElement, DurationSpanProps>(
     const formattedDuration = durationMinutes !== 0
       ? formatMinutesAsDuration(durationMinutes)
       : showLessThanOneMinuteForZero
-        ? t('ui:Typography.label.less_than_one_minute', '< 1 min')
-        : t('ui:Typography.label.zero_minutes', '0 min')
+        ? t('ui:Typography.DurationSpan.label.less_than_one_minute', '< 1 min')
+        : t('ui:Typography.DurationSpan.label.zero_minutes', '0 min')
 
     return (
       <Span {...restProps} className={className} ref={ref}>

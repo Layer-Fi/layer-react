@@ -11,7 +11,7 @@ export const FederalTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
 
   return (
     <VStack className='Layer__TaxProfileForm__Section' gap='md'>
-      <Heading level={3}>{t('taxEstimates:TaxProfileForm.label.federal_tax_information', 'Federal Tax Information')}</Heading>
+      <Heading level={3}>{t('taxEstimates:TaxProfileForm.FederalTaxSection.label.federal_tax_information', 'Federal Tax Information')}</Heading>
 
       <form.Field name='usConfiguration.federal.filingStatus'>
         {field => (
@@ -27,10 +27,10 @@ export const FederalTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
       <form.AppField name='usConfiguration.federal.annualW2Income'>
         {field => (
           <field.FormNonRecursiveBigDecimalField
-            label={t('taxEstimates:TaxProfileForm.label.annual_w2_income', 'Annual W-2 income')}
+            label={t('taxEstimates:TaxProfileForm.FederalTaxSection.label.annual_w2_income', 'Annual W-2 income')}
             mode='currency'
             isReadOnly={isReadOnly}
-            placeholder={t('taxEstimates:TaxProfileForm.label.enter_amount', 'Enter amount')}
+            placeholder={t('taxEstimates:TaxProfileForm.FederalTaxSection.label.enter_amount', 'Enter amount')}
             {...desktopFieldProps}
           />
         )}
@@ -39,10 +39,10 @@ export const FederalTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
       <form.AppField name='usConfiguration.federal.tipIncome'>
         {field => (
           <field.FormNonRecursiveBigDecimalField
-            label={t('taxEstimates:TaxProfileForm.label.tip_income', 'Tip income')}
+            label={t('taxEstimates:TaxProfileForm.FederalTaxSection.label.tip_income', 'Tip income')}
             mode='currency'
             isReadOnly={isReadOnly}
-            placeholder={t('taxEstimates:TaxProfileForm.label.enter_amount', 'Enter amount')}
+            placeholder={t('taxEstimates:TaxProfileForm.FederalTaxSection.label.enter_amount', 'Enter amount')}
             {...desktopFieldProps}
           />
         )}
@@ -51,10 +51,10 @@ export const FederalTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
       <form.AppField name='usConfiguration.federal.overtimeIncome'>
         {field => (
           <field.FormNonRecursiveBigDecimalField
-            label={t('taxEstimates:TaxProfileForm.label.overtime_income', 'Overtime income')}
+            label={t('taxEstimates:TaxProfileForm.FederalTaxSection.label.overtime_income', 'Overtime income')}
             mode='currency'
             isReadOnly={isReadOnly}
-            placeholder={t('taxEstimates:TaxProfileForm.label.enter_amount', 'Enter amount')}
+            placeholder={t('taxEstimates:TaxProfileForm.FederalTaxSection.label.enter_amount', 'Enter amount')}
             {...desktopFieldProps}
           />
         )}
@@ -63,7 +63,7 @@ export const FederalTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
       <form.AppField name='usConfiguration.federal.withholding.useCustomWithholding'>
         {field => (
           <field.FormRadioGroupYesNoField
-            label={t('taxEstimates:TaxProfileForm.label.use_custom_withholding', 'Use custom withholding?')}
+            label={t('taxEstimates:TaxProfileForm.FederalTaxSection.label.use_custom_withholding', 'Use custom withholding?')}
             isReadOnly={isReadOnly}
             {...desktopFieldProps}
           />
@@ -75,10 +75,10 @@ export const FederalTaxSection = ({ form, isReadOnly, isDesktop }: TaxProfileFor
           <form.AppField name='usConfiguration.federal.withholding.amount'>
             {field => (
               <field.FormNonRecursiveBigDecimalField
-                label={t('taxEstimates:TaxProfileForm.label.withholding_amount', 'Withholding amount')}
+                label={t('taxEstimates:TaxProfileForm.FederalTaxSection.label.withholding_amount', 'Withholding amount')}
                 mode='currency'
                 isReadOnly={isReadOnly}
-                placeholder={t('taxEstimates:TaxProfileForm.label.enter_amount', 'Enter amount')}
+                placeholder={t('taxEstimates:TaxProfileForm.FederalTaxSection.label.enter_amount', 'Enter amount')}
                 {...desktopFieldProps}
               />
             )}

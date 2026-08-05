@@ -26,12 +26,14 @@
       "parent": "Parent",
       "sub_type": "Sous-type"
     },
-    "validation": {
-      "name_required": "Saisissez un nom de compte",
-      "normality_required": "Sélectionner une normalité",
-      "parent_required": "Sélectionner un compte parent",
-      "subtype_required": "Sélectionner un sous-type",
-      "type_required": "Sélectionner un type de compte"
+    "useChartOfAccountsForm": {
+      "validation": {
+        "name_required": "Saisissez un nom de compte",
+        "normality_required": "Sélectionner une normalité",
+        "parent_required": "Sélectionner un compte parent",
+        "subtype_required": "Sélectionner un sous-type",
+        "type_required": "Sélectionner un type de compte"
+      }
     }
   },
   "ChartOfAccountsTable": {
@@ -143,27 +145,37 @@
     "action": {
       "add_credits": "Ajouter des crédits",
       "add_debits": "Ajouter des débits",
-      "add_next_line": "Ajouter la ligne suivante",
       "select_customer_vendor": "Sélectionner un client ou un fournisseur"
     },
-    "empty": {
-      "credit_line_items": "Aucune ligne de crédit n’a encore été ajoutée. Cliquez sur « Ajouter la ligne suivante » pour commencer.",
-      "debit_line_items": "Aucune ligne de débit n’a encore été ajoutée. Cliquez sur « Ajouter la ligne suivante » pour commencer."
+    "formUtils": {
+      "validation": {
+        "account_required": "Le compte est un champ obligatoire.",
+        "amount_greater_must": "Le montant doit être supérieur à zéro.",
+        "create_required": "Le créateur est obligatoire.",
+        "debit_credit_must": "Les montants au débit et au crédit doivent être égaux",
+        "entry_date_required": "La date d’écriture est un champ obligatoire.",
+        "least_one_required": "Au moins une ligne de crédit est obligatoire.",
+        "least_one_required_line": "Au moins une ligne est obligatoire.",
+        "least_one_required_one": "Au moins une ligne de débit est obligatoire.",
+        "memo_required": "Le mémo est un champ obligatoire."
+      }
+    },
+    "JournalEntryLineItemsTable": {
+      "action": {
+        "add_next_line": "Ajouter la ligne suivante"
+      },
+      "empty": {
+        "credit_line_items": "Aucune ligne de crédit n’a encore été ajoutée. Cliquez sur « Ajouter la ligne suivante » pour commencer.",
+        "debit_line_items": "Aucune ligne de débit n’a encore été ajoutée. Cliquez sur « Ajouter la ligne suivante » pour commencer."
+      }
     },
     "label": {
-      "entry_date": "Date d’écriture",
-      "journal_entry_posted": "Écriture de journal no {{journalEntryNumber}} comptabilisée"
+      "entry_date": "Date d’écriture"
     },
-    "validation": {
-      "account_required": "Le compte est un champ obligatoire.",
-      "amount_greater_must": "Le montant doit être supérieur à zéro.",
-      "create_required": "Le créateur est obligatoire.",
-      "debit_credit_must": "Les montants au débit et au crédit doivent être égaux",
-      "entry_date_required": "La date d’écriture est un champ obligatoire.",
-      "least_one_required": "Au moins une ligne de crédit est obligatoire.",
-      "least_one_required_line": "Au moins une ligne est obligatoire.",
-      "least_one_required_one": "Au moins une ligne de débit est obligatoire.",
-      "memo_required": "Le mémo est un champ obligatoire."
+    "useJournalEntryForm": {
+      "label": {
+        "journal_entry_posted": "Écriture de journal no {{journalEntryNumber}} comptabilisée"
+      }
     }
   },
   "JournalTable": {
@@ -206,10 +218,6 @@
     }
   },
   "LedgerEntryDetails": {
-    "empty": {
-      "line_items": "Aucune ligne",
-      "line_items_description": "Cette écriture ne comporte aucune ligne."
-    },
     "label": {
       "entry_details": "Détails de l’écriture",
       "entry_type": "Type d’écriture",
@@ -218,6 +226,15 @@
       "line_items": "Lignes",
       "reversal": "Contrepassation",
       "transaction_source": "Source de la transaction"
+    },
+    "LedgerEntryDetailsLineItemsTable": {
+      "empty": {
+        "line_items": "Aucune ligne",
+        "line_items_description": "Cette écriture ne comporte aucune ligne."
+      },
+      "label": {
+        "line_items": "Lignes"
+      }
     }
   },
   "ParentAccountComboBox": {

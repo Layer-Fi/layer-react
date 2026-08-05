@@ -21,12 +21,14 @@
     }
   },
   "UnifiedReportsNavigationSidebar": {
-    "error": {
-      "couldnt_load_reports": "Impossible de charger les rapports",
-      "load_reports_navigation": "Une erreur s’est produite lors du chargement de cette navigation. Veuillez réessayer."
-    },
     "label": {
       "reports_navigation": "Navigation des rapports"
+    },
+    "UnifiedReportsNavigationSidebarError": {
+      "error": {
+        "couldnt_load_reports": "Impossible de charger les rapports",
+        "load_reports_navigation": "Une erreur s’est produite lors du chargement de cette navigation. Veuillez réessayer."
+      }
     }
   },
   "UnifiedReportTable": {

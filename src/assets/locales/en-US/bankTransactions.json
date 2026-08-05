@@ -5,12 +5,16 @@
       "select_category": "Select category"
     },
     "label": {
-      "all_categories_uppercase": "ALL CATEGORIES",
-      "generating_suggestions": "Generating suggestions...",
-      "generating_suggestions_transaction": "Generating suggestions for transaction...",
-      "match_uppercase": "MATCH",
-      "suggestions_uppercase": "SUGGESTIONS",
-      "transfer_uppercase": "TRANSFER"
+      "generating_suggestions": "Generating suggestions..."
+    },
+    "utils": {
+      "label": {
+        "all_categories_uppercase": "ALL CATEGORIES",
+        "generating_suggestions_transaction": "Generating suggestions for transaction...",
+        "match_uppercase": "MATCH",
+        "suggestions_uppercase": "SUGGESTIONS",
+        "transfer_uppercase": "TRANSFER"
+      }
     }
   },
   "BankTransactionCustomerVendorSelector": {
@@ -46,38 +50,63 @@
   },
   "BankTransactionsBulkActions": {
     "action": {
-      "categorize_all": "Categorize All",
-      "confirm_all": "Confirm all",
-      "recategorize_all": "Recategorize All",
-      "select_category": "Select category",
-      "uncategorize_all": "Uncategorize All"
+      "confirm_all": "Confirm all"
     },
-    "error": {
-      "categorize_transactions": "Failed to categorize transactions",
-      "confirm_transactions": "Failed to confirm transactions",
-      "recategorize_transactions": "Failed to recategorize transactions",
-      "uncategorize_transactions": "Failed to uncategorize transactions"
+    "BankTransactionsCategorizeAllModal": {
+      "action": {
+        "categorize_all": "Categorize All",
+        "recategorize_all": "Recategorize All",
+        "select_category": "Select category"
+      },
+      "error": {
+        "categorize_transactions": "Failed to categorize transactions",
+        "recategorize_transactions": "Failed to recategorize transactions"
+      },
+      "label": {
+        "categorize_count_selected_one": "This will categorize {{displayCount}} selected transaction as {{category}}.",
+        "categorize_count_selected_other": "This will categorize {{displayCount}} selected transactions as {{category}}.",
+        "recategorize_count_selected_one": "This will recategorize {{displayCount}} selected transaction as {{category}}.",
+        "recategorize_count_selected_other": "This will recategorize {{displayCount}} selected transactions as {{category}}.",
+        "tax_code": "Tax code"
+      },
+      "prompt": {
+        "categorize_selected_transactions": "Categorize all selected transactions?",
+        "recategorize_selected_transactions": "Recategorize all selected transactions?"
+      }
     },
-    "label": {
-      "actionable_count_transactions_will_be_confirmed_one": "{{displayActionableCount}} of {{displayCount}} transaction will be confirmed.",
-      "actionable_count_transactions_will_be_confirmed_other": "{{displayActionableCount}} of {{displayCount}} transactions will be confirmed.",
-      "categorize_count_selected_one": "This will categorize {{displayCount}} selected transaction as {{category}}.",
-      "categorize_count_selected_other": "This will categorize {{displayCount}} selected transactions as {{category}}.",
-      "count_transactions_will_be_skipped_one": "{{displayCount}} transaction will be skipped due to missing category.",
-      "count_transactions_will_be_skipped_other": "{{displayCount}} transactions will be skipped due to missing category.",
-      "recategorize_count_selected_one": "This will recategorize {{displayCount}} selected transaction as {{category}}.",
-      "recategorize_count_selected_other": "This will recategorize {{displayCount}} selected transactions as {{category}}.",
-      "tax_code": "Tax code",
-      "this_will_confirm_count_transactions_one": "This will confirm {{displayCount}} transaction.",
-      "this_will_confirm_count_transactions_other": "This will confirm {{displayCount}} transactions.",
-      "uncategorize_count_selected_one": "This will uncategorize {{displayCount}} selected transaction.",
-      "uncategorize_count_selected_other": "This will uncategorize {{displayCount}} selected transactions."
+    "BankTransactionsConfirmAllModal": {
+      "action": {
+        "confirm_all": "Confirm all"
+      },
+      "error": {
+        "confirm_transactions": "Failed to confirm transactions"
+      },
+      "label": {
+        "actionable_count_transactions_will_be_confirmed_one": "{{displayActionableCount}} of {{displayCount}} transaction will be confirmed.",
+        "actionable_count_transactions_will_be_confirmed_other": "{{displayActionableCount}} of {{displayCount}} transactions will be confirmed.",
+        "count_transactions_will_be_skipped_one": "{{displayCount}} transaction will be skipped due to missing category.",
+        "count_transactions_will_be_skipped_other": "{{displayCount}} transactions will be skipped due to missing category.",
+        "this_will_confirm_count_transactions_one": "This will confirm {{displayCount}} transaction.",
+        "this_will_confirm_count_transactions_other": "This will confirm {{displayCount}} transactions."
+      },
+      "prompt": {
+        "confirm_all_suggestions": "Confirm all suggestions?"
+      }
     },
-    "prompt": {
-      "categorize_selected_transactions": "Categorize all selected transactions?",
-      "confirm_all_suggestions": "Confirm all suggestions?",
-      "recategorize_selected_transactions": "Recategorize all selected transactions?",
-      "uncategorize_selected_transactions": "Uncategorize all selected transactions?"
+    "BankTransactionsUncategorizeAllModal": {
+      "action": {
+        "uncategorize_all": "Uncategorize All"
+      },
+      "error": {
+        "uncategorize_transactions": "Failed to uncategorize transactions"
+      },
+      "label": {
+        "uncategorize_count_selected_one": "This will uncategorize {{displayCount}} selected transaction.",
+        "uncategorize_count_selected_other": "This will uncategorize {{displayCount}} selected transactions."
+      },
+      "prompt": {
+        "uncategorize_selected_transactions": "Uncategorize all selected transactions?"
+      }
     }
   },
   "BankTransactionsDataStates": {
@@ -95,24 +124,34 @@
   },
   "BankTransactionsHeader": {
     "action": {
-      "confirm_all": "Confirm all",
-      "download_transactions": "Download transactions",
-      "manage_categorization_rules": "Manage categorization rules",
-      "upload_transactions_manually": "Upload transactions manually"
+      "confirm_all": "Confirm all"
+    },
+    "BankTransactionsHeaderMenu": {
+      "action": {
+        "download_transactions": "Download transactions",
+        "manage_categorization_rules": "Manage categorization rules",
+        "upload_transactions_manually": "Upload transactions manually"
+      },
+      "label": {
+        "additional_bank_transaction_actions": "Additional bank transactions actions"
+      }
     },
     "label": {
-      "additional_bank_transaction_actions": "Additional bank transactions actions",
       "categorization_status": "Categorization status",
       "categorized": "Categorized",
       "to_review": "To Review"
     }
   },
   "BankTransactionsList": {
-    "error": {
-      "approval_failed_check_connection": "Approval failed. Check connection and retry in a few seconds."
+    "BankTransactionsListItem": {
+      "error": {
+        "approval_failed_check_connection": "Approval failed. Check connection and retry in a few seconds."
+      }
     },
-    "label": {
-      "select_all_transactions": "Select all transactions on this page"
+    "BankTransactionsListSelectAllHeader": {
+      "label": {
+        "select_all_transactions": "Select all transactions on this page"
+      }
     }
   },
   "BankTransactionsListItemCategory": {
@@ -128,23 +167,68 @@
     }
   },
   "BankTransactionsMobileList": {
-    "action": {
-      "approve_match": "Approve match",
-      "mark_as_personal": "Mark as Personal",
-      "or_find_match": "or find match",
-      "or_split_transaction": "or split transaction",
-      "split_label": "Split",
-      "split_transaction": "Split transaction",
-      "upload_receipt": "Upload receipt"
+    "BankTransactionsMobileBulkActionsHeader": {
+      "label": {
+        "select_all_transactions": "Select all transactions on this page"
+      }
     },
-    "error": {
-      "approval_failed_check_connection": "Approval failed. Check connection and retry in a few seconds.",
-      "select_option_match_transaction": "Select an option to match the transaction"
+    "BankTransactionsMobileListBusinessForm": {
+      "action": {
+        "upload_receipt": "Upload receipt"
+      },
+      "error": {
+        "approval_failed_check_connection": "Approval failed. Check connection and retry in a few seconds."
+      },
+      "label": {
+        "receipts": "Receipts"
+      }
+    },
+    "BankTransactionsMobileListMatchForm": {
+      "action": {
+        "approve_match": "Approve match",
+        "upload_receipt": "Upload receipt"
+      },
+      "error": {
+        "approval_failed_check_connection": "Approval failed. Check connection and retry in a few seconds.",
+        "select_option_match_transaction": "Select an option to match the transaction"
+      },
+      "label": {
+        "find_match": "Find Match",
+        "receipts": "Receipts"
+      }
+    },
+    "BankTransactionsMobileListPersonalForm": {
+      "action": {
+        "mark_as_personal": "Mark as Personal",
+        "upload_receipt": "Upload receipt"
+      },
+      "error": {
+        "approval_failed_check_connection": "Approval failed. Check connection and retry in a few seconds."
+      },
+      "label": {
+        "receipts": "Receipts"
+      }
+    },
+    "BankTransactionsMobileListSplitAndMatchForm": {
+      "action": {
+        "or_find_match": "or find match",
+        "or_split_transaction": "or split transaction"
+      }
+    },
+    "BankTransactionsMobileListSplitForm": {
+      "action": {
+        "split_label": "Split",
+        "split_transaction": "Split transaction",
+        "upload_receipt": "Upload receipt"
+      },
+      "error": {
+        "approval_failed_check_connection": "Approval failed. Check connection and retry in a few seconds."
+      },
+      "label": {
+        "receipts": "Receipts"
+      }
     },
     "label": {
-      "find_match": "Find Match",
-      "receipts": "Receipts",
-      "select_all_transactions": "Select all transactions on this page",
       "transactions": "Transactions"
     }
   },
@@ -181,11 +265,13 @@
     }
   },
   "BankTransactionsTable": {
-    "action": {
-      "toggle_details": "Toggle details"
-    },
-    "error": {
-      "approval_failed_check_connection": "Approval failed. Check connection and retry in a few seconds."
+    "BankTransactionCategoryCell": {
+      "action": {
+        "toggle_details": "Toggle details"
+      },
+      "error": {
+        "approval_failed_check_connection": "Approval failed. Check connection and retry in a few seconds."
+      }
     },
     "label": {
       "bank_transactions": "Bank transactions",
@@ -194,10 +280,17 @@
     }
   },
   "BankTransactionTaxCodeSelect": {
-    "action": {
-      "no_tax_code": "No tax code",
-      "search_tax_codes": "Search tax codes...",
-      "select_tax_code": "Select tax code"
+    "BankTransactionTaxCodeDrawer": {
+      "action": {
+        "search_tax_codes": "Search tax codes...",
+        "select_tax_code": "Select tax code"
+      }
+    },
+    "useBankTransactionTaxCodeSelect": {
+      "action": {
+        "no_tax_code": "No tax code",
+        "select_tax_code": "Select tax code"
+      }
     }
   },
   "DeleteRecordedBankTransactionConfirmation": {
@@ -241,9 +334,11 @@
       "payee": "Who you paid",
       "payer": "Who paid you"
     },
-    "toast": {
-      "transaction_recorded": "Transaction recorded",
-      "transaction_updated": "Transaction updated"
+    "useRecordBankTransactionForm": {
+      "toast": {
+        "transaction_recorded": "Transaction recorded",
+        "transaction_updated": "Transaction updated"
+      }
     },
     "validation": {
       "account_required": "Account is required",

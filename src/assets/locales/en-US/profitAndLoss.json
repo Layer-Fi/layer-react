@@ -1,8 +1,10 @@
 {
   "ProfitAndLossChart": {
-    "label": {
-      "data_is_syncing": "Data is syncing",
-      "may_take_few_minutes": "This may take a few minutes"
+    "ProfitAndLossChartStateCard": {
+      "label": {
+        "data_is_syncing": "Data is syncing",
+        "may_take_few_minutes": "This may take a few minutes"
+      }
     }
   },
   "ProfitAndLossDetailedCharts": {
@@ -10,8 +12,12 @@
       "no_transactions_found": "No transactions found"
     },
     "label": {
-      "profit_loss_detail_report": "Profit and Loss Detail Report",
       "upload_transactions_or_wait_for_bank_sync": "Upload your transactions or wait for transactions to be synced from your bank."
+    },
+    "ProfitAndLossDetailReportModal": {
+      "label": {
+        "profit_loss_detail_report": "Profit and Loss Detail Report"
+      }
     }
   },
   "ProfitAndLossDetailReport": {
@@ -38,13 +44,19 @@
       "categorized_expenses": "Categorized expenses",
       "categorized_net_profit": "Categorized net profit",
       "categorized_revenue": "Categorized revenue",
-      "net_cash_flow": "Net cash flow",
-      "vs_comparison_month": "vs. {{comparisonMonth}}"
+      "net_cash_flow": "Net cash flow"
+    },
+    "ProfitAndLossSummariesSummary": {
+      "label": {
+        "vs_comparison_month": "vs. {{comparisonMonth}}"
+      }
     }
   },
   "ProfitAndLossTable": {
-    "label": {
-      "profit_before_taxes": "Profit Before Taxes"
+    "ProfitAndLossTableComponent": {
+      "label": {
+        "profit_before_taxes": "Profit Before Taxes"
+      }
     }
   },
   "TransactionsToReview": {

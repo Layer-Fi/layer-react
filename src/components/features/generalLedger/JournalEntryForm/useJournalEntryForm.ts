@@ -48,7 +48,7 @@ export const useJournalEntryForm = (props: UseJournalEntryFormProps) => {
 
       const journalEntryNumber = journalEntry.entry.entryNumber
       addToast({
-        content: t('generalLedger:JournalEntryForm.label.journal_entry_posted', 'Journal entry #{{journalEntryNumber}} posted', { journalEntryNumber }),
+        content: t('generalLedger:JournalEntryForm.useJournalEntryForm.label.journal_entry_posted', 'Journal entry #{{journalEntryNumber}} posted', { journalEntryNumber }),
         type: 'success',
       })
 

@@ -31,7 +31,7 @@ export const InvoiceOwedSummaryStatCard = ({ variant, label, total, count, showS
       <div className='Layer__InvoiceOwedSummary__StatCard__Count'>
         <FallbackWithSkeletonLoader isLoading={showSkeleton} height='14px' width='60px'>
           <Span size='sm' variant='subtle'>
-            {count !== undefined && tPlural(t, 'invoices:InvoiceSummaryStats.label.invoices_count', {
+            {count !== undefined && tPlural(t, 'invoices:InvoiceSummaryStats.InvoiceOwedSummaryStatCard.label.invoices_count', {
               count,
               displayCount: formatter.formatNumber(count),
               one: '{{displayCount}} invoice',

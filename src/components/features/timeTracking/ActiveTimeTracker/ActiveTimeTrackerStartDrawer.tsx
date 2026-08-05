@@ -37,7 +37,7 @@ const ActiveTimerDurationDisplay = () => {
     <VStack align='center' gap='2xs' pb='md'>
       <Span className='Layer__ActiveTimeTracker__DurationValue' numeric='tabular-nums'>{formatSecondsAsDuration(0)}</Span>
       <Span className='Layer__ActiveTimeTracker__DurationLabel' size='xs' weight='bold'>
-        {t('timeTracking:ActiveTimeTracker.label.duration', 'Duration')}
+        {t('timeTracking:ActiveTimeTracker.ActiveTimeTrackerStartDrawer.label.duration', 'Duration')}
       </Span>
     </VStack>
   )
@@ -75,11 +75,11 @@ export const ActiveTimeTrackerStartDrawer = ({
       isDismissable
       variant={isMobile ? 'mobile-drawer' : 'drawer'}
       flexBlock={isMobile}
-      aria-label={t('timeTracking:ActiveTimeTracker.action.start_timer', 'Start Timer')}
+      aria-label={t('timeTracking:ActiveTimeTracker.ActiveTimeTrackerStartDrawer.action.start_timer', 'Start Timer')}
       slots={{
         Header: ({ close }) => (
           <ActiveTimeTrackerDrawerHeader
-            title={t('timeTracking:ActiveTimeTracker.action.start_timer', 'Start Timer')}
+            title={t('timeTracking:ActiveTimeTracker.ActiveTimeTrackerStartDrawer.action.start_timer', 'Start Timer')}
             close={close}
             isMobile={isMobile}
           />
@@ -117,8 +117,8 @@ export const ActiveTimeTrackerStartDrawer = ({
                 selectedCustomer={field.state.value}
                 onSelectedCustomerChange={field.handleChange}
                 inline
-                label={t('timeTracking:ActiveTimeTracker.label.customer_optional', 'Customer (optional)')}
-                placeholder={t('timeTracking:ActiveTimeTracker.label.select_customer_short', 'Select a customer')}
+                label={t('timeTracking:ActiveTimeTracker.ActiveTimeTrackerStartDrawer.label.customer_optional', 'Customer (optional)')}
+                placeholder={t('timeTracking:ActiveTimeTracker.ActiveTimeTrackerStartDrawer.label.select_customer_short', 'Select a customer')}
                 className='Layer__ActiveTimeTracker__Field__Customer'
               />
             )}
@@ -127,9 +127,9 @@ export const ActiveTimeTrackerStartDrawer = ({
           <form.AppField name='memo'>
             {field => (
               <field.FormTextAreaField
-                label={t('timeTracking:ActiveTimeTracker.label.memo', 'Memo')}
+                label={t('timeTracking:ActiveTimeTracker.ActiveTimeTrackerStartDrawer.label.memo', 'Memo')}
                 inline
-                placeholder={t('timeTracking:ActiveTimeTracker.label.add_memo', 'Add memo')}
+                placeholder={t('timeTracking:ActiveTimeTracker.ActiveTimeTrackerStartDrawer.label.add_memo', 'Add memo')}
                 className='Layer__ActiveTimeTracker__Field__Memo'
               />
             )}
@@ -144,7 +144,7 @@ export const ActiveTimeTrackerStartDrawer = ({
                   isDisabled={!selectedServiceId}
                 >
                   <Play size={16} />
-                  {t('timeTracking:ActiveTimeTracker.action.start_timer', 'Start Timer')}
+                  {t('timeTracking:ActiveTimeTracker.ActiveTimeTrackerStartDrawer.action.start_timer', 'Start Timer')}
                 </Button>
               </HStack>
             )}

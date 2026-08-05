@@ -1,8 +1,10 @@
 {
   "BalanceSheet": {
-    "label": {
-      "assets": "Assets",
-      "liabilities_equity": "Liabilities & Equity"
+    "constants": {
+      "label": {
+        "assets": "Assets",
+        "liabilities_equity": "Liabilities & Equity"
+      }
     }
   }
 }

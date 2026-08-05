@@ -50,7 +50,7 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
         await updateTimeEntry(toUpdatePayload(activeEntry, draft))
       }
       catch {
-        setActionError(t('timeTracking:ActiveTimeTracker.error.update_timer', 'Failed to update timer. Please try again.'))
+        setActionError(t('timeTracking:ActiveTimeTracker.useActiveTimerBannerForm.error.update_timer', 'Failed to update timer. Please try again.'))
         return
       }
     }
@@ -62,13 +62,13 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
       if (isNoActiveTimerResponse(error)) {
         setActionError(
           t(
-            'timeTracking:ActiveTimeTracker.error.complete_timer_stale',
+            'timeTracking:ActiveTimeTracker.useActiveTimerBannerForm.error.complete_timer_stale',
             'This timer was already completed or cancelled. Reload the page.',
           ),
         )
       }
       else {
-        setActionError(t('timeTracking:ActiveTimeTracker.error.complete_timer', 'Failed to complete timer. Please try again.'))
+        setActionError(t('timeTracking:ActiveTimeTracker.useActiveTimerBannerForm.error.complete_timer', 'Failed to complete timer. Please try again.'))
       }
     }
   }, [activeEntry, stopTimeTracker, t, updateTimeEntry])
@@ -85,7 +85,7 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
 
   const debouncedUpdateTimeEntry = useDebounce((draft: ActiveTimerDraftWithService) => {
     void updateTimeEntry(toUpdatePayload(activeEntry, draft)).catch(() => {
-      setActionError(t('timeTracking:ActiveTimeTracker.error.update_timer', 'Failed to update timer. Please try again.'))
+      setActionError(t('timeTracking:ActiveTimeTracker.useActiveTimerBannerForm.error.update_timer', 'Failed to update timer. Please try again.'))
     })
   })
 
@@ -106,7 +106,7 @@ export const useActiveTimerBannerForm = ({ activeEntry }: UseActiveTimerBannerFo
       void invalidateActiveTimeTracker()
     }
     catch {
-      setActionError(t('timeTracking:ActiveTimeTracker.error.cancel_timer', 'Failed to cancel timer. Please try again.'))
+      setActionError(t('timeTracking:ActiveTimeTracker.useActiveTimerBannerForm.error.cancel_timer', 'Failed to cancel timer. Please try again.'))
     }
   }, [deleteTimeEntry, invalidateActiveTimeTracker, t])
 

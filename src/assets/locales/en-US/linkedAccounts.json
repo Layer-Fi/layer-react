@@ -5,41 +5,53 @@
     }
   },
   "LinkAccounts": {
-    "action": {
-      "confirm_accounts_one": "Confirm Account",
-      "confirm_accounts_other": "Confirm All Accounts",
-      "confirm_accounts_selected_one": "Confirm {{displayCount}} Selected Account",
-      "confirm_accounts_selected_other": "Confirm {{displayCount}} Selected Accounts",
-      "connect_my_bank": "Connect my bank",
-      "exclude_all_accounts_one": "Exclude Account",
-      "exclude_all_accounts_other": "Exclude All Accounts",
-      "im_done_linking": "I’m done linking my banks",
-      "link_another_bank": "Link another bank",
-      "reconnect_another_bank": "Reconnect another bank",
-      "reconnect_my_accounts": "Reconnect My Accounts"
-    },
-    "error": {
-      "load_accounts": "Failed to load accounts"
-    },
     "label": {
-      "accounts_successfully_linked": "Accounts Successfully Linked",
-      "connect_bank_accounts_and_credit_cards": "Connect your bank accounts and credit cards to automatically import your business transactions.",
-      "connected_accounts_count_one": "You’ve connected {{displayCount}} account",
-      "connected_accounts_count_other": "You’ve connected {{displayCount}} accounts",
-      "deselect_unused_accounts": "Please deselect any accounts you don’t use for your business.",
-      "found_accounts_count_one": "We’ve found {{displayCount}} account",
-      "found_accounts_count_other": "We’ve found {{displayCount}} accounts",
       "link_bank_accounts_and_credit_cards": "Link your bank accounts and credit cards",
-      "link_more_accounts_any_time": "You can link more accounts at any time from the Bank Transactions section",
-      "reconnect_bank_accounts_and_credit_cards": "Reconnect your bank accounts and credit cards",
-      "reconnect_bank_accounts_and_credit_cards_description": "Reconnect your bank accounts and credit cards to automatically import your business transactions.",
-      "remove_accounts_new_dashboard": "You’ll have the chance to remove any accounts in the new dashboard.",
-      "remove_unused_accounts_next_step": "You’ll have the chance to remove any accounts you don’t use for your business in the next step."
+      "reconnect_bank_accounts_and_credit_cards": "Reconnect your bank accounts and credit cards"
     },
-    "prompt": {
-      "connect_all_bank_accounts_for_bookkeeping": "Please connect all your bank accounts for bookkeeping",
-      "use_other_bank_accounts_or_cards": "Do you use any other bank accounts or credit cards for your business?",
-      "which_accounts_for_business": "Which accounts do you use for businesses?"
+    "LinkAccountsConfirmationStep": {
+      "action": {
+        "confirm_accounts_one": "Confirm Account",
+        "confirm_accounts_other": "Confirm All Accounts",
+        "confirm_accounts_selected_one": "Confirm {{displayCount}} Selected Account",
+        "confirm_accounts_selected_other": "Confirm {{displayCount}} Selected Accounts",
+        "exclude_all_accounts_one": "Exclude Account",
+        "exclude_all_accounts_other": "Exclude All Accounts"
+      },
+      "label": {
+        "accounts_successfully_linked": "Accounts Successfully Linked",
+        "deselect_unused_accounts": "Please deselect any accounts you don’t use for your business.",
+        "link_more_accounts_any_time": "You can link more accounts at any time from the Bank Transactions section"
+      },
+      "prompt": {
+        "which_accounts_for_business": "Which accounts do you use for businesses?"
+      }
+    },
+    "LinkAccountsLinkStep": {
+      "action": {
+        "connect_my_bank": "Connect my bank",
+        "im_done_linking": "I’m done linking my banks",
+        "link_another_bank": "Link another bank",
+        "reconnect_another_bank": "Reconnect another bank",
+        "reconnect_my_accounts": "Reconnect My Accounts"
+      },
+      "error": {
+        "load_accounts": "Failed to load accounts"
+      },
+      "label": {
+        "connect_bank_accounts_and_credit_cards": "Connect your bank accounts and credit cards to automatically import your business transactions.",
+        "connected_accounts_count_one": "You’ve connected {{displayCount}} account",
+        "connected_accounts_count_other": "You’ve connected {{displayCount}} accounts",
+        "found_accounts_count_one": "We’ve found {{displayCount}} account",
+        "found_accounts_count_other": "We’ve found {{displayCount}} accounts",
+        "reconnect_bank_accounts_and_credit_cards_description": "Reconnect your bank accounts and credit cards to automatically import your business transactions.",
+        "remove_accounts_new_dashboard": "You’ll have the chance to remove any accounts in the new dashboard.",
+        "remove_unused_accounts_next_step": "You’ll have the chance to remove any accounts you don’t use for your business in the next step."
+      },
+      "prompt": {
+        "connect_all_bank_accounts_for_bookkeeping": "Please connect all your bank accounts for bookkeeping",
+        "use_other_bank_accounts_or_cards": "Do you use any other bank accounts or credit cards for your business?"
+      }
     }
   },
   "LinkedAccountCard": {
@@ -79,12 +91,16 @@
     }
   },
   "LinkedAccounts": {
-    "action": {
-      "add_account": "Add Account"
-    },
     "label": {
-      "linked_accounts": "Linked Accounts",
-      "linked_accounts_list": "Linked accounts"
+      "linked_accounts": "Linked Accounts"
+    },
+    "LinkedAccountsContent": {
+      "action": {
+        "add_account": "Add Account"
+      },
+      "label": {
+        "linked_accounts_list": "Linked accounts"
+      }
     }
   },
   "LinkedAccountsConfirmationModal": {

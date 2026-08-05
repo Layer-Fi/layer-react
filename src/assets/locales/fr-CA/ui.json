@@ -1,10 +1,14 @@
 {
   "ComboBox": {
-    "empty": {
-      "matching_options": "Aucune option correspondante"
+    "ComboBoxErrorMessage": {
+      "error": {
+        "generic": "Une erreur s’est produite."
+      }
     },
-    "error": {
-      "generic": "Une erreur s’est produite."
+    "useComboBoxSubcomponents": {
+      "empty": {
+        "matching_options": "Aucune option correspondante"
+      }
     }
   },
   "DropdownMenu": {
@@ -13,8 +17,10 @@
     }
   },
   "Modal": {
-    "action": {
-      "close_modal": "Fermer la fenêtre modale"
+    "ModalSlots": {
+      "action": {
+        "close_modal": "Fermer la fenêtre modale"
+      }
     }
   },
   "Pagination": {
@@ -34,9 +40,11 @@
     }
   },
   "Typography": {
-    "label": {
-      "less_than_one_minute": "< 1 min",
-      "zero_minutes": "0 min"
+    "DurationSpan": {
+      "label": {
+        "less_than_one_minute": "< 1 min",
+        "zero_minutes": "0 min"
+      }
     }
   }
 }

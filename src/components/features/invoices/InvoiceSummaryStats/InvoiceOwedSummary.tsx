@@ -44,7 +44,7 @@ export const InvoiceOwedSummary = () => {
       <HStack gap='md' align='end' justify='space-between'>
         <HStack align='center' gap='3xs'>
           <Trans
-            i18nKey='invoices:InvoiceSummaryStats.label.owed_last_12_months'
+            i18nKey='invoices:InvoiceSummaryStats.InvoiceOwedSummary.label.owed_last_12_months'
             defaults='<owed>Owed to you</owed> <period>last 12 months</period>'
             components={{
               owed: <Span size='sm' pbe='3xs' />,
@@ -59,19 +59,19 @@ export const InvoiceOwedSummary = () => {
         </FallbackWithSkeletonLoader>
       </HStack>
 
-      <Meter label={t('invoices:InvoiceSummaryStats.label.percentage_invoices_overdue', 'Percentage of invoices overdue')} minValue={0} maxValue={100} value={percentageOverdue} meterOnly className='Layer__InvoiceSummaryStats__Meter' />
+      <Meter label={t('invoices:InvoiceSummaryStats.InvoiceOwedSummary.label.percentage_invoices_overdue', 'Percentage of invoices overdue')} minValue={0} maxValue={100} value={percentageOverdue} meterOnly className='Layer__InvoiceSummaryStats__Meter' />
 
       <div className='Layer__InvoiceOwedSummary__StatCards'>
         <InvoiceOwedSummaryStatCard
           variant='overdue'
-          label={t('invoices:InvoiceSummaryStats.label.overdue', 'Overdue')}
+          label={t('invoices:InvoiceSummaryStats.InvoiceOwedSummary.label.overdue', 'Overdue')}
           total={overdueTotal}
           count={overdueCount}
           showSkeleton={showSkeleton}
         />
         <InvoiceOwedSummaryStatCard
           variant='upcoming'
-          label={t('invoices:InvoiceSummaryStats.label.upcoming', 'Upcoming')}
+          label={t('invoices:InvoiceSummaryStats.InvoiceOwedSummary.label.upcoming', 'Upcoming')}
           total={sentTotal}
           count={sentCount}
           showSkeleton={showSkeleton}

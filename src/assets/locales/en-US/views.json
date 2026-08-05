@@ -28,32 +28,40 @@
     }
   },
   "LandingPage": {
-    "action": {
-      "book_call": "Book a call",
-      "learn_more": "Learn more"
+    "content": {
+      "action": {
+        "book_call": "Book a call",
+        "learn_more": "Learn more"
+      },
+      "label": {
+        "all_finances_in_one_place": "All your finances in one place",
+        "best_accounting_software_for_industry": "The best accounting software for {{industry}} businesses. Fast to set up and easy to use.",
+        "built_for_industry": "Built for {{industry}}",
+        "complete_bookkeeping_service": "A complete bookkeeping service",
+        "directly_integrated_with_platform_name": "Directly integrated with your {{platformName}} data, so you can see your business performance and profit in real-time.",
+        "easy_to_use_software": "Easy to use software",
+        "full_service_bookkeeping": "Full-service Bookkeeping",
+        "get_dedicated_bookkeeper": "Get a dedicated bookkeeper who will organize and manage your books for you.",
+        "platform_name_accounting": "{{platformName}} Accounting",
+        "self_service_accounting_business_health": "Self-service accounting to understand your business health",
+        "track_business_finances_within_platform": "Track your business finances, right within {{platformName}}.",
+        "track_expenses_and_get_reports": "Track your expenses and get easy to understand reports designed specifically for {{industry}} businesses.",
+        "use_platform_name_accounting": "Use {{platformName}} Accounting yourself, or let our team of experts handle bookkeeping for you"
+      }
     },
     "label": {
-      "all_finances_in_one_place": "All your finances in one place",
-      "best_accounting_software_for_industry": "The best accounting software for {{industry}} businesses. Fast to set up and easy to use.",
-      "built_for_industry": "Built for {{industry}}",
-      "complete_bookkeeping_service": "A complete bookkeeping service",
-      "complete_financial_reports": "Complete financial reports and end of year tax packet",
-      "direct_integration_with_platform_name": "Direct integration with {{platformName}}",
-      "directly_integrated_with_platform_name": "Directly integrated with your {{platformName}} data, so you can see your business performance and profit in real-time.",
-      "easy_to_understand_profitability_charts": "Easy to understand profitability charts and reports",
-      "easy_to_use_software": "Easy to use software",
-      "full_service_bookkeeping": "Full-service Bookkeeping",
-      "get_dedicated_bookkeeper": "Get a dedicated bookkeeper who will organize and manage your books for you.",
-      "monthly_books_done_for_you": "Monthly books done for you",
-      "personalized_setup_bookkeeper": "Personalized setup with your bookkeeper",
-      "platform_name_accounting": "{{platformName}} Accounting",
-      "platform_name_accounting_dashboard": "{{platformName}} Accounting dashboard interface showing financial data and business insights",
-      "self_service_accounting_business_health": "Self-service accounting to understand your business health",
-      "starting_at": "Starting at",
-      "track_business_finances_within_platform": "Track your business finances, right within {{platformName}}.",
-      "track_expenses_and_get_reports": "Track your expenses and get easy to understand reports designed specifically for {{industry}} businesses.",
-      "track_expenses_and_receipts": "Track expenses and receipts",
-      "use_platform_name_accounting": "Use {{platformName}} Accounting yourself, or let our team of experts handle bookkeeping for you"
+      "platform_name_accounting_dashboard": "{{platformName}} Accounting dashboard interface showing financial data and business insights"
+    },
+    "LandingPageOptions": {
+      "label": {
+        "complete_financial_reports": "Complete financial reports and end of year tax packet",
+        "direct_integration_with_platform_name": "Direct integration with {{platformName}}",
+        "easy_to_understand_profitability_charts": "Easy to understand profitability charts and reports",
+        "monthly_books_done_for_you": "Monthly books done for you",
+        "personalized_setup_bookkeeper": "Personalized setup with your bookkeeper",
+        "starting_at": "Starting at",
+        "track_expenses_and_receipts": "Track expenses and receipts"
+      }
     }
   },
   "MileageTracking": {
@@ -65,36 +73,58 @@
     "label": {
       "balance_sheet": "Balance Sheet",
       "cash_flow_statement": "Cash Flow Statement",
-      "report_type": "Report type",
       "reports": "Reports"
+    },
+    "ReportsToggle": {
+      "label": {
+        "report_type": "Report type"
+      }
     }
   },
-  "SolopreneurOverview": {
-    "label": {
-      "link_your_bank_accounts": "Link your bank accounts",
-      "link_your_bank_accounts_description": "Linking your bank accounts allows us to load your bank transactions and automatically categorize them.",
-      "set_up_your_tax_profile": "Set up your tax profile",
-      "set_up_your_tax_profile_description": "Configuring your tax profile allows us to provide you with tax estimates and avoid any surprises come tax time."
+  "SolopreneurOnboardingBanner": {
+    "NoBankAccountsLinkedBanner": {
+      "label": {
+        "link_your_bank_accounts": "Link your bank accounts",
+        "link_your_bank_accounts_description": "Linking your bank accounts allows us to load your bank transactions and automatically categorize them."
+      }
+    },
+    "NoTaxProfileBanner": {
+      "label": {
+        "set_up_your_tax_profile": "Set up your tax profile",
+        "set_up_your_tax_profile_description": "Configuring your tax profile allows us to provide you with tax estimates and avoid any surprises come tax time."
+      }
     }
   },
   "TaxEstimates": {
-    "action": {
-      "update_tax_profile": "Update tax profile"
+    "TaxEstimatesOnboardedViewContent": {
+      "disclaimer": {
+        "content": "The Tax Estimates tool and related content are for informational purposes only, and are not intended as legal, accounting, or tax advice, or a substitute for professional counsel. We are not a financial planner or tax advisor, and users assume sole responsibility for their tax obligations, accuracy of data, and compliance with laws. All calculations are estimated and may contain errors, and are based only on the information you provide to us."
+      },
+      "label": {
+        "estimates": "Estimates",
+        "payments": "Payments",
+        "tax_estimate_view": "Tax estimate view"
+      }
     },
-    "disclaimer": {
-      "content": "The Tax Estimates tool and related content are for informational purposes only, and are not intended as legal, accounting, or tax advice, or a substitute for professional counsel. We are not a financial planner or tax advisor, and users assume sole responsibility for their tax obligations, accuracy of data, and compliance with laws. All calculations are estimated and may contain errors, and are based only on the information you provide to us."
+    "TaxEstimatesViewContent": {
+      "error": {
+        "feature_not_enabled": "Tax estimates are not enabled.",
+        "load_tax_information": "Unable to load tax information",
+        "retrieve_tax_profile": "We couldn’t retrieve your tax profile. Please check your connection and try again."
+      }
     },
-    "error": {
-      "feature_not_enabled": "Tax estimates are not enabled.",
-      "load_tax_information": "Unable to load tax information",
-      "retrieve_tax_profile": "We couldn’t retrieve your tax profile. Please check your connection and try again."
+    "TaxEstimatesViewHeader": {
+      "action": {
+        "update_tax_profile": "Update tax profile"
+      },
+      "label": {
+        "additional_actions": "Additional actions"
+      }
     },
-    "label": {
-      "additional_actions": "Additional actions",
-      "estimates": "Estimates",
-      "payments": "Payments",
-      "tax_estimate_view": "Tax estimate view",
-      "tax_profile": "Tax Profile"
+    "TaxProfile": {
+      "label": {
+        "tax_profile": "Tax Profile"
+      }
     }
   },
   "TimeTracking": {

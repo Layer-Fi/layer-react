@@ -1,8 +1,14 @@
 {
   "DateSelection": {
-    "label": {
-      "group": "Grouper par",
-      "report_period": "Période du rapport"
+    "DateGroupByComboBox": {
+      "label": {
+        "group": "Grouper par"
+      }
+    },
+    "DateSelectionComboBox": {
+      "label": {
+        "report_period": "Période du rapport"
+      }
     }
   },
   "LedgerEntrySourceDetailView": {

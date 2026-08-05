@@ -42,7 +42,7 @@ export const DateGroupByComboBox = ({ value, onValueChange }: DateGroupByComboBo
 
   return (
     <VStack className='Layer__DateGroupByComboBox__Container'>
-      <Label pbe='3xs' size='sm' htmlFor={inputId}>{t('blocks:DateSelection.label.group', 'Group by')}</Label>
+      <Label pbe='3xs' size='sm' htmlFor={inputId}>{t('blocks:DateSelection.DateGroupByComboBox.label.group', 'Group by')}</Label>
       <ComboBox
         className='Layer__DateGroupByComboBox'
         options={options}

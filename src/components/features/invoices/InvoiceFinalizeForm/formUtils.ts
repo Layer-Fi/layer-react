@@ -40,7 +40,7 @@ export const validateInvoiceFinalizeForm = (
   const errors = []
   if (!creditCardEnabled && !customPaymentInstructions.trim()) {
     errors.push({
-      creditCardEnabled: t('invoices:InvoiceFinalizeForm.validation.either_payment_must', 'Either a payment method or custom payment instructions must be set on an invoice'),
+      creditCardEnabled: t('invoices:InvoiceFinalizeForm.formUtils.validation.either_payment_must', 'Either a payment method or custom payment instructions must be set on an invoice'),
     })
   }
 

@@ -1,8 +1,14 @@
 {
   "DateSelection": {
-    "label": {
-      "group": "Group by",
-      "report_period": "Report period"
+    "DateGroupByComboBox": {
+      "label": {
+        "group": "Group by"
+      }
+    },
+    "DateSelectionComboBox": {
+      "label": {
+        "report_period": "Report period"
+      }
     }
   },
   "LedgerEntrySourceDetailView": {

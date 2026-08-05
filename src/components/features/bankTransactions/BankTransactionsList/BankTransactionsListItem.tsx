@@ -191,7 +191,7 @@ export const BankTransactionsListItem = ({
               isPending={isProcessing}
               action={!displayAsCategorized ? SubmitAction.SAVE : SubmitAction.UPDATE}
               isError={isError}
-              errorMessage={t('bankTransactions:BankTransactionsList.error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
+              errorMessage={t('bankTransactions:BankTransactionsList.BankTransactionsListItem.error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
             >
               {isError
                 ? t('common:action.retry_label', 'Retry')
@@ -209,7 +209,7 @@ export const BankTransactionsListItem = ({
         && (
           <HStack pis='md' pbe='md'>
             <ErrorText>
-              {t('bankTransactions:BankTransactionsList.error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
+              {t('bankTransactions:BankTransactionsList.BankTransactionsListItem.error.approval_failed_check_connection', 'Approval failed. Check connection and retry in a few seconds.')}
             </ErrorText>
           </HStack>
         )}

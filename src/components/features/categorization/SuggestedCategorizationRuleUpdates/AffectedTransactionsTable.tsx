@@ -34,8 +34,8 @@ const ErrorState = () => {
     <DataState
       spacing
       status={DataStateStatus.failed}
-      title={t('categorization:SuggestedCategorizationRuleUpdates.error.load_transactions', 'Error loading transactions')}
-      description={t('categorization:SuggestedCategorizationRuleUpdates.error.load_affected_transactions', 'There was an error loading the affected transactions')}
+      title={t('categorization:SuggestedCategorizationRuleUpdates.AffectedTransactionsTable.error.load_transactions', 'Error loading transactions')}
+      description={t('categorization:SuggestedCategorizationRuleUpdates.AffectedTransactionsTable.error.load_affected_transactions', 'There was an error loading the affected transactions')}
     />
   )
 }
@@ -46,8 +46,8 @@ const EmptyState = () => {
     <DataState
       spacing
       status={DataStateStatus.info}
-      title={t('categorization:SuggestedCategorizationRuleUpdates.empty.no_transactions_found', 'No transactions found')}
-      description={t('categorization:SuggestedCategorizationRuleUpdates.label.affected_transaction_display', 'There are no affected transactions to display')}
+      title={t('categorization:SuggestedCategorizationRuleUpdates.AffectedTransactionsTable.empty.no_transactions_found', 'No transactions found')}
+      description={t('categorization:SuggestedCategorizationRuleUpdates.AffectedTransactionsTable.label.affected_transaction_display', 'There are no affected transactions to display')}
     />
   )
 }
@@ -98,7 +98,7 @@ export const AffectedTransactionsTable = ({
     <VStack className='Layer__AffectedTransactionsTable'>
       <VirtualizedDataTable<MinimalBankTransaction>
         componentName={COMPONENT_NAME}
-        ariaLabel={t('categorization:SuggestedCategorizationRuleUpdates.label.affected_transactions', 'Affected transactions')}
+        ariaLabel={t('categorization:SuggestedCategorizationRuleUpdates.AffectedTransactionsTable.label.affected_transactions', 'Affected transactions')}
         columnConfig={columnConfig}
         data={transactions}
         isLoading={isLoading}

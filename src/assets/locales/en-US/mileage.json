@@ -1,8 +1,10 @@
 {
   "MileageDeductionChart": {
-    "label": {
-      "deduction_colon": "Deduction:",
-      "miles_colon": "Miles:"
+    "MileageDeductionChartTooltip": {
+      "label": {
+        "deduction_colon": "Deduction:",
+        "miles_colon": "Miles:"
+      }
     }
   },
   "MileageSummaryCard": {
@@ -89,18 +91,20 @@
     "error": {
       "distance_incalculable": "No route found between these addresses."
     },
+    "formUtils": {
+      "validation": {
+        "distance_greater_than_zero": "Distance must be greater than 0 miles.",
+        "purpose_required": "Purpose is a required field.",
+        "trip_date_not_future": "Trip date cannot be in the future.",
+        "trip_date_required": "Trip date is a required field."
+      }
+    },
     "label": {
       "distance_miles": "Distance (miles)",
       "end_address": "End address",
       "enter_distance": "Enter distance",
       "start_address": "Start address",
       "trip_date": "Trip date"
-    },
-    "validation": {
-      "distance_greater_than_zero": "Distance must be greater than 0 miles.",
-      "purpose_required": "Purpose is a required field.",
-      "trip_date_not_future": "Trip date cannot be in the future.",
-      "trip_date_required": "Trip date is a required field."
     }
   },
   "TripPurposeToggle": {
@@ -226,10 +230,12 @@
       "make_model": "Make and model",
       "vin": "VIN"
     },
-    "validation": {
-      "make_model_required": "Make and model is a required field.",
-      "year_range": "Year must be between 1900 and {{maxYear}}.",
-      "year_required": "Year is a required field."
+    "useVehicleForm": {
+      "validation": {
+        "make_model_required": "Make and model is a required field.",
+        "year_range": "Year must be between 1900 and {{maxYear}}.",
+        "year_required": "Year is a required field."
+      }
     }
   },
   "VehicleReactivateConfirmationModal": {

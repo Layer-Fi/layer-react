@@ -1,8 +1,10 @@
 {
   "MileageDeductionChart": {
-    "label": {
-      "deduction_colon": "Déduction :",
-      "miles_colon": "Kilomètres :"
+    "MileageDeductionChartTooltip": {
+      "label": {
+        "deduction_colon": "Déduction :",
+        "miles_colon": "Kilomètres :"
+      }
     }
   },
   "MileageSummaryCard": {
@@ -89,18 +91,20 @@
     "error": {
       "distance_incalculable": "Aucun trajet trouvé entre ces adresses."
     },
+    "formUtils": {
+      "validation": {
+        "distance_greater_than_zero": "La distance doit être supérieure à 0 kilomètre.",
+        "purpose_required": "Le motif est un champ obligatoire.",
+        "trip_date_not_future": "La date du voyage ne peut pas être dans le futur.",
+        "trip_date_required": "La date du voyage est un champ obligatoire."
+      }
+    },
     "label": {
       "distance_miles": "Distance (kilomètres)",
       "end_address": "Adresse de destination",
       "enter_distance": "Saisissez la distance",
       "start_address": "Adresse de départ",
       "trip_date": "Date du voyage"
-    },
-    "validation": {
-      "distance_greater_than_zero": "La distance doit être supérieure à 0 kilomètre.",
-      "purpose_required": "Le motif est un champ obligatoire.",
-      "trip_date_not_future": "La date du voyage ne peut pas être dans le futur.",
-      "trip_date_required": "La date du voyage est un champ obligatoire."
     }
   },
   "TripPurposeToggle": {
@@ -226,10 +230,12 @@
       "make_model": "Marque et modèle",
       "vin": "NIV"
     },
-    "validation": {
-      "make_model_required": "Le champ Marque et modèle est obligatoire.",
-      "year_range": "L’année doit être comprise entre 1900 et {{maxYear}}.",
-      "year_required": "Le champ Année est obligatoire."
+    "useVehicleForm": {
+      "validation": {
+        "make_model_required": "Le champ Marque et modèle est obligatoire.",
+        "year_range": "L’année doit être comprise entre 1900 et {{maxYear}}.",
+        "year_required": "Le champ Année est obligatoire."
+      }
     }
   },
   "VehicleReactivateConfirmationModal": {

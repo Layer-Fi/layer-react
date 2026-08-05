@@ -26,12 +26,14 @@
       "parent": "Parent",
       "sub_type": "Sub-Type"
     },
-    "validation": {
-      "name_required": "Enter an account name",
-      "normality_required": "Select a normality",
-      "parent_required": "Select a parent account",
-      "subtype_required": "Select a sub-type",
-      "type_required": "Select an account type"
+    "useChartOfAccountsForm": {
+      "validation": {
+        "name_required": "Enter an account name",
+        "normality_required": "Select a normality",
+        "parent_required": "Select a parent account",
+        "subtype_required": "Select a sub-type",
+        "type_required": "Select an account type"
+      }
     }
   },
   "ChartOfAccountsTable": {
@@ -143,27 +145,37 @@
     "action": {
       "add_credits": "Add Credits",
       "add_debits": "Add Debits",
-      "add_next_line": "Add next line",
       "select_customer_vendor": "Select customer or vendor"
     },
-    "empty": {
-      "credit_line_items": "No credit line items added yet. Click \"Add next line\" to get started.",
-      "debit_line_items": "No debit line items added yet. Click \"Add next line\" to get started."
+    "formUtils": {
+      "validation": {
+        "account_required": "Account is a required field.",
+        "amount_greater_must": "Amount must be greater than zero.",
+        "create_required": "Created by is a required field.",
+        "debit_credit_must": "Debit and credit amounts must be equal",
+        "entry_date_required": "Entry date is a required field.",
+        "least_one_required": "At least one credit line item is required.",
+        "least_one_required_line": "At least one line item is required.",
+        "least_one_required_one": "At least one debit line item is required.",
+        "memo_required": "Memo is a required field."
+      }
+    },
+    "JournalEntryLineItemsTable": {
+      "action": {
+        "add_next_line": "Add next line"
+      },
+      "empty": {
+        "credit_line_items": "No credit line items added yet. Click \"Add next line\" to get started.",
+        "debit_line_items": "No debit line items added yet. Click \"Add next line\" to get started."
+      }
     },
     "label": {
-      "entry_date": "Entry date",
-      "journal_entry_posted": "Journal entry #{{journalEntryNumber}} posted"
+      "entry_date": "Entry date"
     },
-    "validation": {
-      "account_required": "Account is a required field.",
-      "amount_greater_must": "Amount must be greater than zero.",
-      "create_required": "Created by is a required field.",
-      "debit_credit_must": "Debit and credit amounts must be equal",
-      "entry_date_required": "Entry date is a required field.",
-      "least_one_required": "At least one credit line item is required.",
-      "least_one_required_line": "At least one line item is required.",
-      "least_one_required_one": "At least one debit line item is required.",
-      "memo_required": "Memo is a required field."
+    "useJournalEntryForm": {
+      "label": {
+        "journal_entry_posted": "Journal entry #{{journalEntryNumber}} posted"
+      }
     }
   },
   "JournalTable": {
@@ -206,10 +218,6 @@
     }
   },
   "LedgerEntryDetails": {
-    "empty": {
-      "line_items": "No line items",
-      "line_items_description": "This entry has no line items."
-    },
     "label": {
       "entry_details": "Entry details",
       "entry_type": "Entry type",
@@ -218,6 +226,15 @@
       "line_items": "Line items",
       "reversal": "Reversal",
       "transaction_source": "Transaction source"
+    },
+    "LedgerEntryDetailsLineItemsTable": {
+      "empty": {
+        "line_items": "No line items",
+        "line_items_description": "This entry has no line items."
+      },
+      "label": {
+        "line_items": "Line items"
+      }
     }
   },
   "ParentAccountComboBox": {

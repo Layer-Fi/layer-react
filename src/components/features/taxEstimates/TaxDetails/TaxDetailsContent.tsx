@@ -35,8 +35,8 @@ const EmptyState = () => {
   return (
     <DataState
       status={DataStateStatus.allDone}
-      title={t('taxEstimates:TaxDetails.empty.no_tax_details', 'No tax details')}
-      description={t('taxEstimates:TaxDetails.empty.no_tax_details_description', 'No tax details found')}
+      title={t('taxEstimates:TaxDetails.TaxDetailsContent.empty.no_tax_details', 'No tax details')}
+      description={t('taxEstimates:TaxDetails.TaxDetailsContent.empty.no_tax_details_description', 'No tax details found')}
       spacing
     />
   )
@@ -47,8 +47,8 @@ const ErrorState = () => {
   return (
     <DataState
       status={DataStateStatus.failed}
-      title={t('taxEstimates:TaxDetails.error.load_tax_details', 'We couldn’t load your tax details')}
-      description={t('taxEstimates:TaxDetails.error.while_loading_tax_details', 'An error occurred while loading your tax details. Please check your connection and try again.')}
+      title={t('taxEstimates:TaxDetails.TaxDetailsContent.error.load_tax_details', 'We couldn’t load your tax details')}
+      description={t('taxEstimates:TaxDetails.TaxDetailsContent.error.while_loading_tax_details', 'An error occurred while loading your tax details. Please check your connection and try again.')}
       spacing
     />
   )
@@ -99,13 +99,13 @@ const useColumnConfig = (): ColumnConfig<TaxDetailsRow> => {
   return useMemo(() => [
     {
       id: TaxDetailsColumns.Label,
-      header: t('taxEstimates:TaxDetails.label.tax_details_label', 'Label'),
+      header: t('taxEstimates:TaxDetails.TaxDetailsContent.label.tax_details_label', 'Label'),
       cell: TaxDetailsRowLabelCell,
       isRowHeader: true,
     },
     {
       id: TaxDetailsColumns.Amount,
-      header: t('taxEstimates:TaxDetails.label.tax_details_amount', 'Amount'),
+      header: t('taxEstimates:TaxDetails.TaxDetailsContent.label.tax_details_amount', 'Amount'),
       cell: makeAmountCellRenderer({ formatNumber, formatPercent }),
     },
   ], [t, formatNumber, formatPercent])
@@ -143,7 +143,7 @@ export function TaxDetailsContent() {
             <ExpandableDataTableProvider>
               <ExpandableDataTable<TaxDetailsRow>
                 componentName={COMPONENT_NAME}
-                ariaLabel={t('taxEstimates:TaxDetails.label.tax_details', 'Tax Details')}
+                ariaLabel={t('taxEstimates:TaxDetails.TaxDetailsContent.label.tax_details', 'Tax Details')}
                 data={asMutable(details.rows)}
                 columnConfig={columnConfig}
                 isLoading={isLoading}

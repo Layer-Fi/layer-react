@@ -3,6 +3,12 @@
     "action": {
       "save_customer": "Save Customer"
     },
+    "formUtils": {
+      "validation": {
+        "either_individual_required": "Either individual name or company name is required.",
+        "email_required": "Email is a required field."
+      }
+    },
     "label": {
       "company_name": "Company name",
       "enter_address": "Enter address",
@@ -10,10 +16,6 @@
       "enter_email_address": "Enter email address",
       "enter_individual_name": "Enter individual name",
       "individual_name": "Individual name"
-    },
-    "validation": {
-      "either_individual_required": "Either individual name or company name is required.",
-      "email_required": "Email is a required field."
     }
   },
   "CustomerFormDrawer": {

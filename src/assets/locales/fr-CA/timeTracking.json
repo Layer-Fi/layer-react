@@ -1,29 +1,45 @@
 {
   "ActiveTimeTracker": {
-    "action": {
-      "cancel_timer": "Annuler",
-      "complete_timer": "Terminer",
-      "start_timer": "Commencer le minuteur"
+    "ActiveTimeTrackerBanner": {
+      "action": {
+        "cancel_timer": "Annuler",
+        "complete_timer": "Terminer"
+      },
+      "label": {
+        "select_customer": "Sélectionner un client (facultatif)"
+      }
+    },
+    "ActiveTimeTrackerStartDrawer": {
+      "action": {
+        "start_timer": "Commencer le minuteur"
+      },
+      "label": {
+        "add_memo": "Ajouter une note",
+        "customer_optional": "Client (facultatif)",
+        "duration": "Durée",
+        "memo": "Note",
+        "select_customer_short": "Sélectionner un client"
+      }
     },
     "error": {
-      "cancel_timer": "Impossible d’annuler le minuteur. Veuillez réessayer.",
-      "complete_timer": "Impossible de terminer le minuteur. Veuillez réessayer.",
-      "complete_timer_stale": "Ce minuteur a déjà été terminé ou annulé. Rechargez la page.",
-      "load_active_timer": "Impossible de charger le minuteur actif. Veuillez vérifier votre connexion et réessayer.",
-      "start_timer": "Impossible de démarrer le minuteur. Veuillez réessayer.",
-      "start_timer_already_active": "Un minuteur est déjà en cours. Veuillez recharger la page.",
-      "update_timer": "Impossible de mettre à jour le minuteur. Veuillez réessayer."
+      "load_active_timer": "Impossible de charger le minuteur actif. Veuillez vérifier votre connexion et réessayer."
     },
-    "label": {
-      "add_memo": "Ajouter une note",
-      "customer_optional": "Client (facultatif)",
-      "duration": "Durée",
-      "memo": "Note",
-      "select_customer": "Sélectionner un client (facultatif)",
-      "select_customer_short": "Sélectionner un client"
+    "useActiveTimerBannerForm": {
+      "error": {
+        "cancel_timer": "Impossible d’annuler le minuteur. Veuillez réessayer.",
+        "complete_timer": "Impossible de terminer le minuteur. Veuillez réessayer.",
+        "complete_timer_stale": "Ce minuteur a déjà été terminé ou annulé. Rechargez la page.",
+        "update_timer": "Impossible de mettre à jour le minuteur. Veuillez réessayer."
+      }
     },
-    "validation": {
-      "service_required": "Le service est un champ obligatoire."
+    "useStartTimerForm": {
+      "error": {
+        "start_timer": "Impossible de démarrer le minuteur. Veuillez réessayer.",
+        "start_timer_already_active": "Un minuteur est déjà en cours. Veuillez recharger la page."
+      },
+      "validation": {
+        "service_required": "Le service est un champ obligatoire."
+      }
     }
   },
   "ServiceArchiveConfirmationModal": {
@@ -37,10 +53,6 @@
     }
   },
   "ServiceFormCard": {
-    "error": {
-      "create_service": "Impossible de créer le service. Veuillez réessayer.",
-      "update_service": "Impossible d’enregistrer ce service. Veuillez réessayer."
-    },
     "services": {
       "add": "Ajouter",
       "add_service": "Ajouter un service",
@@ -50,9 +62,15 @@
       "save": "Enregistrer",
       "service_name": "Nom du service"
     },
-    "validation": {
-      "hourly_rate_positive": "Le taux horaire par défaut doit être supérieur à zéro.",
-      "service_name_required": "Le nom du service est un champ obligatoire."
+    "useServiceForm": {
+      "error": {
+        "create_service": "Impossible de créer le service. Veuillez réessayer.",
+        "update_service": "Impossible d’enregistrer ce service. Veuillez réessayer."
+      },
+      "validation": {
+        "hourly_rate_positive": "Le taux horaire par défaut doit être supérieur à zéro.",
+        "service_name_required": "Le nom du service est un champ obligatoire."
+      }
     }
   },
   "ServiceRestoreConfirmationModal": {
@@ -132,6 +150,14 @@
     "action": {
       "save_entry": "Enregistrer l’entrée"
     },
+    "formUtils": {
+      "validation": {
+        "duration_whole_minutes": "La durée doit être un nombre entier de minutes supérieur à zéro.",
+        "entry_date_not_future": "La date de l’entrée ne peut pas être dans le futur.",
+        "entry_date_required": "La date de l’entrée est un champ obligatoire.",
+        "service_required": "Le service est un champ obligatoire."
+      }
+    },
     "label": {
       "add_memo": "Ajouter une note",
       "customer_optional": "Client (facultatif)",
@@ -140,12 +166,6 @@
       "entry_date": "Date de l’entrée",
       "memo": "Note",
       "select_customer_short": "Sélectionner un client"
-    },
-    "validation": {
-      "duration_whole_minutes": "La durée doit être un nombre entier de minutes supérieur à zéro.",
-      "entry_date_not_future": "La date de l’entrée ne peut pas être dans le futur.",
-      "entry_date_required": "La date de l’entrée est un champ obligatoire.",
-      "service_required": "Le service est un champ obligatoire."
     }
   },
   "TimeEntryServiceSelector": {
