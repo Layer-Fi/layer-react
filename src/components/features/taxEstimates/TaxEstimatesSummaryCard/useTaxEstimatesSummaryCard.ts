@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type TaxSummary, type TaxSummarySectionType, TaxSummaryState } from '@schemas/taxEstimates/summary'
-import { useGetTaxSummary } from '@api/businesses/[business-id]/tax-estimates/summary/get'
+import { type TaxSummary, type TaxSummarySectionType, TaxSummaryState } from '@schemas/features/taxEstimates/summary'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useTaxEstimatesYear } from '@providers/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
-import { useFullYearProjection } from '@providers/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { useGetTaxSummary } from '@api/businesses/[business-id]/tax-estimates/summary/get'
+import { useTaxEstimatesYear } from '@providers/features/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { useFullYearProjection } from '@providers/features/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 
 const prepareTaxSummaryData = (taxSummaryData: TaxSummary, shortenedDisplayName: (type: TaxSummarySectionType) => string, isMobile: boolean) => {
   return taxSummaryData.sections.map(section => ({

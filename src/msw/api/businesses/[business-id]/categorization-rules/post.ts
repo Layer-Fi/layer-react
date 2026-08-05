@@ -1,13 +1,13 @@
 import { Schema } from 'effect'
 
-import { type CategorizationRule, CategorizationRuleSchema } from '@schemas/categorization/categorizationRule'
+import { type CategorizationRule, CategorizationRuleSchema } from '@schemas/features/categorization/categorizationRule'
 
+import { makeCategorizationRule } from '@fixtures/categorizationRules/mocks'
 import { ruleFromCreateRequest } from '@msw/api/businesses/[business-id]/categorization-rules/ruleFromUpsertRequest'
 import { categorizationRuleStore } from '@msw/api/businesses/[business-id]/categorization-rules/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { createStoreCreateResolver } from '@msw/utils/createStoreResolvers'
-import { makeCategorizationRule } from '@fixtures/categorizationRules/mocks'
 
 const encodeCategorizationRule = Schema.encodeSync(CategorizationRuleSchema)
 

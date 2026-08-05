@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type CatalogService, CatalogServiceSchema } from '@schemas/timeTracking/catalogService'
+import { type CatalogService, CatalogServiceSchema } from '@schemas/features/timeTracking/catalogService'
 
 import { createRequestBodyEcho } from '@msw/utils/createRequestBodyEcho'
 

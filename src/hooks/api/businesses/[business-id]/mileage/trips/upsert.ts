@@ -1,6 +1,6 @@
+import { createUpsertHook } from '@hooks/utils/swr/createUpsertHook'
 import { type UpdateParams, usePatchTrip } from '@api/businesses/[business-id]/mileage/trips/[trip-id]/patch'
 import { type CreateParams, usePostTrip } from '@api/businesses/[business-id]/mileage/trips/post'
-import { createUpsertHook } from '@hooks/utils/swr/createUpsertHook'
 
 export type UpsertParams = CreateParams | UpdateParams
 

@@ -2,7 +2,7 @@ import { Minimize2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
-import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
+import { CategorizationStatus } from '@schemas/features/bankTransactions/bankTransaction'
 import { isTransferMatch } from '@utils/features/bankTransactions/shared'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Badge } from '@ui/Badge/Badge'

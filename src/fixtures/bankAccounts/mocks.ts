@@ -1,5 +1,5 @@
-import { type BankAccount } from '@schemas/bankAccounts/bankAccount'
-import { type ExternalAccountConnection } from '@schemas/bankAccounts/externalAccountConnection'
+import { type BankAccount } from '@schemas/features/bankAccounts/bankAccount'
+import { type ExternalAccountConnection } from '@schemas/features/bankAccounts/externalAccountConnection'
 
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 

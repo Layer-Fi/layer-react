@@ -3,15 +3,15 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { type Invoice } from '@schemas/invoices/invoice'
-import { type InvoicePayment } from '@schemas/invoices/invoicePayment'
-import { type DedicatedInvoicePaymentForm } from '@schemas/invoices/invoicePaymentForm'
-import { UpsertDedicatedInvoicePaymentSchema } from '@schemas/invoices/upsertDedicatedInvoicePayment'
+import { type Invoice } from '@schemas/features/invoices/invoice'
+import { type InvoicePayment } from '@schemas/features/invoices/invoicePayment'
+import { type DedicatedInvoicePaymentForm } from '@schemas/features/invoices/invoicePaymentForm'
+import { UpsertDedicatedInvoicePaymentSchema } from '@schemas/features/invoices/upsertDedicatedInvoicePayment'
 import { DateFormat } from '@utils/shared/i18n/date/patterns'
-import { useUpsertDedicatedInvoicePayment } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment/upsert'
-import { useAppForm } from '@hooks/features/forms/useForm'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
+import { useUpsertDedicatedInvoicePayment } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment/upsert'
+import { useAppForm } from '@blocks/Form/useForm'
 import {
   convertInvoicePaymentFormToParams,
   getInvoicePaymentFormDefaultValues,

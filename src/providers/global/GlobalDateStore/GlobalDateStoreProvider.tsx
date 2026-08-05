@@ -1,5 +1,5 @@
-import { useBusinessActivationDateSafe } from '@hooks/features/business/useBusinessActivationDateSafe'
 import { createScopedDateStore } from '@providers/common/DateStore/createScopedDateStore'
+import { useBusinessActivationDateSafe } from '@providers/common/DateStore/useBusinessActivationDateSafe'
 
 export type { DateRange, DateSelectionMode } from '@utils/shared/date/dateRange'
 export { clampToAfterActivationDate, clampToPresentOrPast } from '@utils/shared/date/dateRange'

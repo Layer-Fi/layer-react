@@ -7,7 +7,7 @@ import {
   type BankTransactionCategorization,
   BankTransactionSelectionVariant,
   useGetBankTransactionCategorizationByTransactionId,
-} from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+} from '@providers/features/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 
 export const useGetBankTransactionCategorizationWithDefault = (bankTransaction: BankTransaction): BankTransactionCategorization => {
   const selectedCategorization = useGetBankTransactionCategorizationByTransactionId(bankTransaction.id)

@@ -1,5 +1,5 @@
-import { type LedgerAccountForm } from '@schemas/generalLedger/ledgerAccountForm'
-import { type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerBalances'
+import { type LedgerAccountForm } from '@schemas/features/generalLedger/ledgerAccountForm'
+import { type NestedLedgerAccountType } from '@schemas/features/generalLedger/ledgerBalances'
 
 export type EditLedgerAccountContext = {
   account: NestedLedgerAccountType

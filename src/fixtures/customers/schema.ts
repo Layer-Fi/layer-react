@@ -1,6 +1,6 @@
 import { Arbitrary, Schema } from 'effect'
 
-import { CustomerSchema } from '@schemas/customerVendor/customer'
+import { CustomerSchema } from '@schemas/features/customerVendor/customer'
 
 import { addresses } from '@fixtures/constants/personal/addresses'
 import { customerMemos } from '@fixtures/customers/constants'

@@ -1,7 +1,7 @@
-import { TaxOverviewApiResponseSchema } from '@schemas/taxEstimates/overview'
+import { TaxOverviewApiResponseSchema } from '@schemas/features/taxEstimates/overview'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
-import { type TaxEstimatesRequestParams, toTaxEstimatesQuery } from '@api/businesses/[business-id]/tax-estimates/taxEstimatesParams'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
+import { type TaxEstimatesRequestParams, toTaxEstimatesQuery } from '@api/businesses/[business-id]/tax-estimates/taxEstimatesParams'
 
 const TAX_OVERVIEW_TAG_KEY = '#tax-overview'
 

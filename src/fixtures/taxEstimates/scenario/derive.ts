@@ -1,10 +1,10 @@
 import { getLocalTimeZone, today } from '@internationalized/date'
 
-import { type TaxEstimatesBanner, type TaxEstimatesBannerQuarter } from '@schemas/taxEstimates/banner'
-import { type TaxDetails, type TaxDetailsRow } from '@schemas/taxEstimates/details'
-import { type TaxOverviewApiData, TaxOverviewDeadlineStatus, TaxOverviewMetricType } from '@schemas/taxEstimates/overview'
-import { type TaxPaymentRow } from '@schemas/taxEstimates/payments'
-import { type TaxSummary } from '@schemas/taxEstimates/summary'
+import { type TaxEstimatesBanner, type TaxEstimatesBannerQuarter } from '@schemas/features/taxEstimates/banner'
+import { type TaxDetails, type TaxDetailsRow } from '@schemas/features/taxEstimates/details'
+import { type TaxOverviewApiData, TaxOverviewDeadlineStatus, TaxOverviewMetricType } from '@schemas/features/taxEstimates/overview'
+import { type TaxPaymentRow } from '@schemas/features/taxEstimates/payments'
+import { type TaxSummary } from '@schemas/features/taxEstimates/summary'
 
 import { type TaxScenario } from '@fixtures/taxEstimates/scenario/types'
 import {

@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next'
 
-import type { Vehicle } from '@schemas/mileage/vehicle'
+import type { Vehicle } from '@schemas/features/mileage/vehicle'
 import { translationKey } from '@utils/shared/i18n/translationKey'
 
 const unnamedVehicle = translationKey('vehicles:label.unnamed_vehicle', 'Unnamed vehicle')

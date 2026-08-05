@@ -1,6 +1,6 @@
 import { type ReportingBasis } from '@internal-types/shared/reportingBasis'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { type PnlDetailLineSchema, PnlDetailLinesDataSchema } from '@schemas/profitAndLoss/pnlDetailLines'
+import { type PnlDetailLineSchema, PnlDetailLinesDataSchema } from '@schemas/features/profitAndLoss/pnlDetailLines'
 import { get } from '@utils/shared/api/authenticatedHttp'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { toDefinedSearchParameters } from '@utils/shared/request/toDefinedSearchParameters'

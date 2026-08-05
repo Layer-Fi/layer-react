@@ -1,5 +1,5 @@
-import { CategoriesListMode } from '@schemas/categorization/categoryList'
-import { type Classification } from '@schemas/categorization/classification'
+import { CategoriesListMode } from '@schemas/features/categorization/categoryList'
+import { type Classification } from '@schemas/features/categorization/classification'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { CategoryMobileDrawer } from '@features/categorization/CategorizationRuleForm/CategoryMobileDrawer'
 import { LedgerAccountComboBox } from '@features/generalLedger/LedgerAccountComboBox/LedgerAccountComboBox'

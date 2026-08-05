@@ -3,7 +3,7 @@ import { type ZonedDateTime } from '@internationalized/date'
 import { differenceInDays, startOfDay } from 'date-fns'
 import { useTranslation } from 'react-i18next'
 
-import { InvoiceTermsValues } from '@schemas/invoices/invoiceTerms'
+import { InvoiceTermsValues } from '@schemas/features/invoices/invoiceTerms'
 import { translationKey } from '@utils/shared/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'

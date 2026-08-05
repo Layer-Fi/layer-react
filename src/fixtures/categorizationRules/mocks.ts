@@ -1,8 +1,8 @@
-import { BankTransactionDirection } from '@schemas/bankTransactions/base'
-import { type CategorizationRule } from '@schemas/categorization/categorizationRule'
-import { BankDirectionFilter } from '@schemas/categorization/categorizationRuleFilters'
-import { type UpdateCategorizationRulesSuggestion } from '@schemas/categorization/createCategorizationRule'
 import { makeStableName } from '@schemas/common/accountIdentifier'
+import { BankTransactionDirection } from '@schemas/features/bankTransactions/base'
+import { type CategorizationRule } from '@schemas/features/categorization/categorizationRule'
+import { BankDirectionFilter } from '@schemas/features/categorization/categorizationRuleFilters'
+import { type UpdateCategorizationRulesSuggestion } from '@schemas/features/categorization/createCategorizationRule'
 
 import { makeBusiness } from '@fixtures/business/mocks'
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'

@@ -1,4 +1,4 @@
-import { type AccountingConfigurationSchemaType } from '@schemas/business/accountingConfiguration'
+import { type AccountingConfigurationSchemaType } from '@schemas/features/business/accountingConfiguration'
 
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 

@@ -1,6 +1,7 @@
-import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
-import { type UnifiedReport, type UnifiedReportRow } from '@schemas/unifiedReports/unifiedReport'
+import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
+import { type UnifiedReport, type UnifiedReportRow } from '@schemas/features/unifiedReports/unifiedReport'
 
+import { hashString } from '@fixtures/unifiedReports/deterministicAmounts'
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'
 import {
   accountEntriesInRange,
@@ -22,7 +23,6 @@ import {
   textCellOrEmpty,
 } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 import { vendorStore } from '@msw/api/businesses/[business-id]/vendors/store'
-import { hashString } from '@fixtures/unifiedReports/deterministicAmounts'
 
 export type Counterparty = { id: string, name: string | null }
 

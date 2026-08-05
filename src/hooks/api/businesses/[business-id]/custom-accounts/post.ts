@@ -1,9 +1,9 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { CustomAccountSchema, type RawCustomAccount } from '@schemas/customAccounts/customAccount'
+import { CustomAccountSchema, type RawCustomAccount } from '@schemas/features/customAccounts/customAccount'
 import { post } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useBankAccountsGlobalCacheActions } from '@api/businesses/[business-id]/bank-accounts/get'
 import { CUSTOM_ACCOUNTS_TAG_KEY, useCustomAccountsGlobalCacheActions } from '@api/businesses/[business-id]/custom-accounts/get'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 type CreateCustomAccountBody = Pick<
   RawCustomAccount,

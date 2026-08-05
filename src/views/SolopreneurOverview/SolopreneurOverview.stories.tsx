@@ -2,8 +2,8 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 
 import { SolopreneurOverview, type SolopreneurOverviewProps } from '@views/SolopreneurOverview/SolopreneurOverview'
 
-import { get as getAccountingConfiguration } from '@msw/api/businesses/[business-id]/accounting-config/get'
 import { makeAccountingConfiguration } from '@fixtures/accountingConfiguration/mocks'
+import { get as getAccountingConfiguration } from '@msw/api/businesses/[business-id]/accounting-config/get'
 import {
   buildSummariesSlotProps,
   buildSummariesStringOverrides,

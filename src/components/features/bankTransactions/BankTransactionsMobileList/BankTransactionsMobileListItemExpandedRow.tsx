@@ -5,13 +5,13 @@ import { type BankTransaction } from '@internal-types/features/bankTransactions/
 import { isSplitAsOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
 import { hasMatch } from '@utils/features/bankTransactions/shared'
 import { translationKey } from '@utils/shared/i18n/translationKey'
-import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
-import { useIsEditableCustomBankTransaction } from '@hooks/features/bankTransactions/useIsEditableCustomBankTransaction'
 import {
   BankTransactionSelectionVariant,
   useBankTransactionsCategorizationActions,
-} from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import { useBankTransactionsIsCategorizationEnabledContext } from '@providers/categorization/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+} from '@providers/features/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@providers/features/categorization/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
+import { useIsEditableCustomBankTransaction } from '@hooks/features/bankTransactions/useIsEditableCustomBankTransaction'
 import { VStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 import { BankTransactionsMobileForms } from '@features/bankTransactions/BankTransactionsMobileList/BankTransactionsMobileForms'

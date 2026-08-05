@@ -1,6 +1,6 @@
 import { Trans } from 'react-i18next'
 
-import { type Trip } from '@schemas/mileage/trip'
+import { type Trip } from '@schemas/features/mileage/trip'
 import { VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 

@@ -1,8 +1,8 @@
-import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+import { BankTransactionSchema } from '@schemas/features/bankTransactions/bankTransaction'
 import { del } from '@utils/shared/api/authenticatedHttp'
-import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
 
 const ARCHIVE_BANK_TRANSACTION_TAG = '#archive-bank-transaction'
 

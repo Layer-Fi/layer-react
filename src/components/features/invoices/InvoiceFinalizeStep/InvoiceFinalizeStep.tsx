@@ -2,16 +2,16 @@ import classNames from 'classnames'
 import { AlertTriangle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { Invoice } from '@schemas/invoices/invoice'
-import { useGetInvoicePaymentMethods } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/get'
+import type { Invoice } from '@schemas/features/invoices/invoice'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { useGetInvoicePaymentMethods } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/get'
 import {
   useInvoicePreviewRoute,
-} from '@providers/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
+} from '@providers/features/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import {
   InvoiceFinalizeForm,
 } from '@features/invoices/InvoiceFinalizeForm/InvoiceFinalizeForm'

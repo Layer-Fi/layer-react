@@ -8,7 +8,7 @@ import {
   type UnifiedReportCell,
   type UnifiedReportColumn,
   type UnifiedReportRow,
-} from '@schemas/unifiedReports/unifiedReport'
+} from '@schemas/features/unifiedReports/unifiedReport'
 
 import { isoDate } from '@msw/api/businesses/[business-id]/reports/unified/generators/shared'
 import { formatCsvCents } from '@msw/utils/csvPresignedUrl'

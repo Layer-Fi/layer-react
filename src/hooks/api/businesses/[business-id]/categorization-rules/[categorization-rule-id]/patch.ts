@@ -1,4 +1,5 @@
 import { patch } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useCategorizationRulesGlobalCacheActions } from '@api/businesses/[business-id]/categorization-rules/get'
 import {
   UPSERT_CATEGORIZATION_RULE_TAG,
@@ -6,7 +7,6 @@ import {
   type UpsertCategorizationRuleReturnEncoded,
   UpsertCategorizationRuleReturnSchema,
 } from '@api/businesses/[business-id]/categorization-rules/post'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const updateCategorizationRule = patch<
   UpsertCategorizationRuleReturnEncoded,

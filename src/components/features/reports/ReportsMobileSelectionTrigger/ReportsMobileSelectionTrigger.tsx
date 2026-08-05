@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { type ReportOption, useReportsHeaderContext } from '@providers/reports/ReportsHeaderContext/ReportsHeaderContext'
+import { type ReportOption, useReportsHeaderContext } from '@providers/features/reports/ReportsHeaderContext/ReportsHeaderContext'
 import { MobileSelectionDrawerWithTrigger } from '@blocks/MobileSelectionDrawer/MobileSelectionDrawerWithTrigger'
 
 export const ReportsMobileSelectionTrigger = () => {

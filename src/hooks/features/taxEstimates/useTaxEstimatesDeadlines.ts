@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 import { type TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
-import { type TaxEstimatesBannerQuarter } from '@schemas/taxEstimates/banner'
-import { TaxOverviewDeadlineStatus } from '@schemas/taxEstimates/overview'
+import { type TaxEstimatesBannerQuarter } from '@schemas/features/taxEstimates/banner'
+import { TaxOverviewDeadlineStatus } from '@schemas/features/taxEstimates/overview'
 import { useGetTaxEstimatesBanner } from '@api/businesses/[business-id]/tax-estimates/banner/get'
-import { useFullYearProjection, useTaxEstimatesYear } from '@providers/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { useFullYearProjection, useTaxEstimatesYear } from '@providers/features/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 
 export type TaxEstimatesDeadlineRow = {
   type: 'quarter' | 'annual'

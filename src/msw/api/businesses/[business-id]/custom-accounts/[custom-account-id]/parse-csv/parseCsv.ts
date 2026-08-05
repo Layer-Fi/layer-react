@@ -1,5 +1,5 @@
 import { type PreviewCellEncoded } from '@schemas/common/csvUpload'
-import { type RawCustomTransaction } from '@schemas/customAccounts/customTransaction'
+import { type RawCustomTransaction } from '@schemas/features/customAccounts/customTransaction'
 import {
   type ParseCsvResponseSchema,
   type TransactionPreviewRowSchema,

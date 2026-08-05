@@ -1,8 +1,8 @@
 import { useId } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ReportingBasis } from '@schemas/business/accountingConfiguration'
-import type { UnifiedReportReportingBasis } from '@schemas/unifiedReports/unifiedReport'
+import { ReportingBasis } from '@schemas/features/business/accountingConfiguration'
+import type { UnifiedReportReportingBasis } from '@schemas/features/unifiedReports/unifiedReport'
 import { translationKey } from '@utils/shared/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'

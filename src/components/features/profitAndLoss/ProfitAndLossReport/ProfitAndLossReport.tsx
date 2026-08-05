@@ -2,9 +2,9 @@ import { type ReactNode, useCallback, useContext, useEffect, useMemo } from 'rea
 
 import type { TimeRangePickerConfig } from '@internal-types/features/reports/timeRangePickerConfig'
 import { type View as ViewType } from '@internal-types/shared/view'
-import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { InAppLinkProvider, type LinkingMetadata } from '@providers/common/InAppLink/InAppLinkContext'
-import { ProfitAndLossContext } from '@providers/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
+import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
+import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { HStack, Stack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@blocks/DatePickers/DateSelection/CombinedDateRangeSelection'
 import { Header } from '@blocks/Layout/Header/Header'

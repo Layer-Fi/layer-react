@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { RemoveBankTransactionTagsUpdateSchema } from '@schemas/bankTransactions/tagUpdate'
+import { RemoveBankTransactionTagsUpdateSchema } from '@schemas/features/bankTransactions/tagUpdate'
 
 import { bankTransactionStore } from '@msw/api/businesses/[business-id]/bank-transactions/store'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'

@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 
 import type { LineItem } from '@schemas/common/lineItem'
 import { useEffectOnMount } from '@hooks/utils/react/useEffectOnMount'
-import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
-import { ProfitAndLossContext } from '@providers/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
+import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
+import { useTableExpandRow } from '@hooks/features/reports/useTableExpandRow'
 import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { type BreadcrumbItem } from '@features/profitAndLoss/ProfitAndLossDetailReportBreadcrumb/ProfitAndLossDetailReportBreadcrumb'
 import {

@@ -1,6 +1,6 @@
 import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
-import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { BankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
+import { CategorizationStatus } from '@schemas/features/bankTransactions/bankTransaction'
+import { BankTransactionDirection, TransactionSource } from '@schemas/features/bankTransactions/base'
 
 import { createListFilter, matchesAnyOf, matchesBoolean, matchesOnOrAfter, matchesOnOrBefore, matchesQuery } from '@msw/utils/createListFilter'
 import { createListSorter } from '@msw/utils/createListSorter'

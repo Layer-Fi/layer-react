@@ -5,7 +5,7 @@ import { AlertTriangle, Save } from 'lucide-react'
 import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Trip, TripPurpose } from '@schemas/mileage/trip'
+import { type Trip, TripPurpose } from '@schemas/features/mileage/trip'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'

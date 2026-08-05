@@ -1,8 +1,8 @@
 import { getLocalTimeZone } from '@internationalized/date'
 import { BigDecimal } from 'effect'
 
-import { type Trip, TripPurpose } from '@schemas/mileage/trip'
-import { type UnifiedReport } from '@schemas/unifiedReports/unifiedReport'
+import { type Trip, TripPurpose } from '@schemas/features/mileage/trip'
+import { type UnifiedReport } from '@schemas/features/unifiedReports/unifiedReport'
 
 import { tripStore } from '@msw/api/businesses/[business-id]/mileage/trips/store'
 import {

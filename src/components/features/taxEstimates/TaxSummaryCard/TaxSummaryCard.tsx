@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next'
 
-import { useGetTaxSummary } from '@api/businesses/[business-id]/tax-estimates/summary/get'
 import { useWindowSize } from '@hooks/utils/size/useWindowSize'
-import { useFullYearProjection, useTaxEstimatesYear } from '@providers/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { useGetTaxSummary } from '@api/businesses/[business-id]/tax-estimates/summary/get'
+import { useFullYearProjection, useTaxEstimatesYear } from '@providers/features/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Loader } from '@ui/Loader/Loader'
-import { ConditionalBlock } from '@components/utility/ConditionalBlock'
 import { TaxSummaryCardDesktop } from '@features/taxEstimates/TaxSummaryCard/TaxSummaryCardDesktop'
 import { TaxSummaryCardMobile } from '@features/taxEstimates/TaxSummaryCard/TaxSummaryCardMobile'
 

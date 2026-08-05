@@ -1,5 +1,5 @@
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
-import { type TimeEntry, TimeEntrySchema } from '@schemas/timeTracking/timeEntry'
+import { type TimeEntry, TimeEntrySchema } from '@schemas/features/timeTracking/timeEntry'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'

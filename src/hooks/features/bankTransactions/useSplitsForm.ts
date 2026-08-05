@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useIntl } from 'react-intl'
 
 import { type BankTransaction, type Split } from '@internal-types/features/bankTransactions/bankTransaction'
+import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/features/categorization/bankTransactionMatchOption'
 import { SplitAsOption } from '@internal-types/features/categorization/categorizationOption'
 import {
   calculateAddSplit,
@@ -15,9 +16,8 @@ import {
 import { canCategoryHaveTaxCode } from '@utils/features/bankTransactions/taxCode'
 import { toLocalizedNumber } from '@utils/shared/i18n/number/input'
 import { convertCentsToDecimalString } from '@utils/shared/string/format'
+import { useBankTransactionsCategorizationActions } from '@providers/features/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
 import { useGetBankTransactionCategorizationWithDefault } from '@hooks/features/bankTransactions/useGetBankTransactionCategorizationWithDefault'
-import { useBankTransactionsCategorizationActions } from '@providers/categorization/BankTransactionsCategorizationStore/BankTransactionsCategorizationStoreProvider'
-import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 
 interface UseSplitsFormOptions {
   bankTransaction: BankTransaction

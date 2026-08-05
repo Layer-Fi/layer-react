@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
-import { type SelectedLineItem } from '@hooks/features/profitAndLoss/useProfitAndLoss'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { type SelectedLineItem } from '@providers/features/profitAndLoss/ProfitAndLossContext/useProfitAndLoss'
 import { Drawer } from '@ui/Modal/Modal'
 import { ProfitAndLossDetailReport, type ProfitAndLossDetailReportStringOverrides } from '@features/profitAndLoss/ProfitAndLossDetailReport/ProfitAndLossDetailReport'
 

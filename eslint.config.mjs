@@ -1,3 +1,5 @@
+import { readdirSync } from 'node:fs'
+
 import globals from 'globals'
 
 import js from '@eslint/js'
@@ -8,6 +10,225 @@ import tsEslint from 'typescript-eslint'
 import unusedImportsPlugin from 'eslint-plugin-unused-imports'
 import pluginImport from 'eslint-plugin-import'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
+
+// Import boundaries. See src/SKILL.md.
+const BOUNDARY_SEVERITY = 'error'
+
+const TEST_FILES = ['src/**/*.{test,spec}.{ts,tsx}', 'src/**/*.stories.tsx', 'src/**/*.storyData.tsx']
+
+// Lowest tier first. Drives the import-sort groups and the
+// `no-relative-parent-imports` ignore list.
+const TIER_ALIASES = [
+  '@internal-types', '@schemas/common', '@schemas/features', '@schemas', '@utils', '@icons', '@assets',
+  '@providers/global', '@providers/common',
+  '@hooks/utils',
+  '@api', '@hooks/api',
+  '@providers/features', '@providers',
+  '@hooks/legacy', '@hooks/features', '@hooks',
+  '@components/utility', '@ui', '@components/ui', '@blocks', '@components/blocks',
+  '@features', '@components/features', '@components',
+  '@views',
+]
+
+const TEST_ALIASES = ['@fixtures', '@msw', '@testUtils']
+
+const ALIASES = [...TIER_ALIASES, ...TEST_ALIASES]
+
+/** @type {(alias: string) => string} */
+const aliasSortGroup = alias => `^(?:type:)?${alias.replaceAll('/', '\\/')}\\/`
+
+/**
+ * @typedef {{ name: string, files: string[], imports: string[], nested?: string[] }} Layer
+ * @typedef {{ dir: string, tier: string, aliases: string[], shared: string[], skipDomains?: string[] }} Partition
+ * @typedef {{ group: string[], message: string }} RestrictedPattern
+ */
+
+/**
+ * Lowest tier first; a tier may import strictly lower tiers only. `files` are the
+ * tier's own sources, `imports` the specifiers that reach it.
+ *
+ * @type {Layer[]}
+ */
+const LAYERS = [
+  {
+    name: 'foundation',
+    files: ['src/{types,schemas,utils,assets}/**/*.{ts,tsx}', 'src/components/icons/**/*.{ts,tsx}'],
+    imports: ['@internal-types/**', '@schemas/**', '@utils/**', '@icons/**', '@assets/**'],
+  },
+  {
+    name: 'context',
+    files: ['src/providers/{global,common}/**/*.{ts,tsx}'],
+    nested: ['src/providers/global/LayerProvider/**/*.{ts,tsx}'],
+    imports: ['@providers/global/**', '@providers/common/**'],
+  },
+  {
+    name: 'generic hooks',
+    files: ['src/hooks/utils/**/*.{ts,tsx}'],
+    imports: ['@hooks/utils/**'],
+  },
+  {
+    name: 'data loading',
+    files: ['src/hooks/api/**/*.{ts,tsx}'],
+    imports: ['@api/**', '@hooks/api/**'],
+  },
+  {
+    name: 'stores',
+    files: ['src/providers/features/**/*.{ts,tsx}', 'src/hooks/legacy/**/*.{ts,tsx}'],
+    nested: [
+      // Frozen and being deleted: reachable from this tier, unchecked itself.
+      'src/hooks/legacy/**/*.{ts,tsx}',
+    ],
+    imports: ['@providers/features/**', '@hooks/legacy/**'],
+  },
+  {
+    name: 'feature hooks',
+    files: ['src/hooks/features/**/*.{ts,tsx}'],
+    imports: ['@hooks/features/**'],
+  },
+  {
+    name: 'render helpers',
+    files: ['src/components/utility/**/*.{ts,tsx}'],
+    imports: ['@components/utility/**'],
+  },
+  {
+    name: 'primitives',
+    files: ['src/components/ui/**/*.{ts,tsx}'],
+    imports: ['@ui/**', '@components/ui/**'],
+  },
+  {
+    name: 'patterns',
+    files: ['src/components/blocks/**/*.{ts,tsx}'],
+    imports: ['@blocks/**', '@components/blocks/**'],
+  },
+  {
+    name: 'feature UI',
+    files: ['src/components/features/**/*.{ts,tsx}'],
+    imports: ['@features/**', '@components/features/**'],
+  },
+  {
+    name: 'views',
+    files: ['src/views/**/*.{ts,tsx}'],
+    imports: ['@views/**'],
+  },
+  {
+    name: 'app root',
+    files: ['src/providers/global/LayerProvider/**/*.{ts,tsx}', 'src/index.tsx'],
+    imports: ['@providers/global/LayerProvider/**'],
+  },
+]
+
+/**
+ * A domain may import itself plus `shared`. Domain lists are read from disk.
+ *
+ * @type {Partition[]}
+ */
+const DOMAIN_PARTITIONS = [
+  {
+    dir: 'src/schemas/features',
+    tier: 'foundation',
+    aliases: ['@schemas/features'],
+    // Accounting primitives every other contract builds on.
+    shared: ['customerVendor', 'tags', 'business', 'generalLedger', 'bankTransactions'],
+  },
+  { dir: 'src/utils/features', tier: 'foundation', aliases: ['@utils/features'], shared: [] },
+  {
+    dir: 'src/components/features',
+    tier: 'feature UI',
+    aliases: ['@features', '@components/features'],
+    // Reusable scaffolding: report shells, entity pickers, status badges.
+    shared: ['reports', 'customerVendor', 'tags', 'customAccounts', 'bookkeeping', 'generalLedger'],
+  },
+  {
+    dir: 'src/hooks/features',
+    tier: 'feature hooks',
+    aliases: ['@hooks/features'],
+    shared: ['forms', 'calendly', 'business'],
+  },
+  {
+    dir: 'src/providers/features',
+    tier: 'stores',
+    aliases: ['@providers/features'],
+    // App-wide singletons; they fetch, so they sit here rather than global/.
+    shared: ['business', 'bankAccounts', 'bookkeeping'],
+  },
+]
+
+// Treated as one boundary.
+const DOMAIN_GROUPS = [['bankTransactions', 'categorization']]
+
+/** @type {(dir: string) => string[]} */
+const domainsOf = (dir) => {
+  // node:fs is untyped under the tsconfig that lints this file.
+  /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
+  const entries = /** @type {{ name: string, isDirectory: () => boolean }[]} */ (
+    readdirSync(dir, { withFileTypes: true })
+  )
+  /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
+
+  return entries
+    .filter(entry => entry.isDirectory())
+    .map(entry => entry.name)
+    .sort()
+}
+
+/** @type {(domain: string) => string[]} */
+const groupFor = domain => DOMAIN_GROUPS.find(group => group.includes(domain)) ?? [domain]
+
+/** @type {(layer: Layer) => RestrictedPattern[]} */
+const tierPatterns = (layer) => {
+  const index = LAYERS.indexOf(layer)
+  return LAYERS.slice(index + 1).map(higher => ({
+    group: higher.imports,
+    message: `Import boundary: ${layer.name} may not import ${higher.name}. Dependencies point down the tier stack — move the shared code down to a tier both sides reach, or pass it in at runtime. See AGENTS.md.`,
+  }))
+}
+
+/** @type {(partition: Partition, domain: string, domains: string[]) => RestrictedPattern[]} */
+const domainPatterns = (partition, domain, domains) => {
+  const reachable = new Set([...groupFor(domain), ...partition.shared])
+  const forbidden = domains.filter(other => !reachable.has(other))
+  if (forbidden.length === 0) return []
+  return [{
+    group: partition.aliases.flatMap(alias => forbidden.map(other => `${alias}/${other}/**`)),
+    message: `Import boundary: the ${domain} domain may not import sibling domains. It may reach itself plus ${partition.shared.join(', ') || '(no shared domains)'}. Move the shared code down a tier, or add the target to this partition's shared set in eslint.config.mjs.`,
+  }]
+}
+
+// One object per zone: flat config replaces rule options rather than merging them,
+// so a file must never be matched by two objects setting the same rule.
+const boundaryConfigs = LAYERS.flatMap((layer) => {
+  const partitions = DOMAIN_PARTITIONS.filter(partition => partition.tier === layer.name)
+  const domainZones = partitions.flatMap((partition) => {
+    const domains = domainsOf(partition.dir)
+    return domains
+      .filter(domain => !(partition.skipDomains ?? []).includes(domain))
+      .map(domain => ({
+        files: [`${partition.dir}/${domain}/**/*.{ts,tsx}`],
+        ignores: TEST_FILES,
+        rules: {
+          '@typescript-eslint/no-restricted-imports': [BOUNDARY_SEVERITY, {
+            patterns: [...tierPatterns(layer), ...domainPatterns(partition, domain, domains)],
+          }],
+        },
+      }))
+  })
+
+  const patterns = tierPatterns(layer)
+
+  if (patterns.length === 0) return domainZones
+
+  const tierZone = {
+    files: layer.files,
+    ignores: [
+      ...TEST_FILES,
+      ...(layer.nested ?? []),
+      ...domainZones.flatMap(zone => zone.files),
+    ],
+    rules: { '@typescript-eslint/no-restricted-imports': [BOUNDARY_SEVERITY, { patterns }] },
+  }
+
+  return [tierZone, ...domainZones]
+})
 
 export default tsEslint.config(
   {
@@ -37,10 +258,10 @@ export default tsEslint.config(
         projectService: {
           allowDefaultProject: [
             '.storybook/main.ts',
+            '.storybook/tags.ts',
             '.storybook/mocks/react-plaid-link.ts',
             '.storybook/mocks/systemDate.ts',
             '.storybook/preview.tsx',
-            '.storybook/tags.ts',
             'eslint.config.mjs',
             'i18next.config.ts',
             'vite.config.ts',
@@ -99,28 +320,8 @@ export default tsEslint.config(
     plugins: { import: pluginImport },
     settings: { 'import/resolver': { typescript: true, node: true } },
     rules: {
-      'import/no-relative-parent-imports': [
-        'error',
-        { ignore: [
-          '@components/',
-          '@ui/',
-          '@blocks/',
-          '@features/',
-          '@api/',
-          '@hooks/',
-          '@providers/',
-          '@utils/',
-          '@internal-types/',
-          '@schemas/',
-          '@views/',
-          '@icons/',
-          '@assets/',
-          '@msw/',
-          '@fixtures/',
-          '@testUtils/',
-        ],
-        },
-      ],
+      // Resolves specifiers, so aliased imports match too and must be ignored.
+      'import/no-relative-parent-imports': ['error', { ignore: ALIASES.map(alias => `${alias}/`) }],
     },
   },
   {
@@ -140,6 +341,8 @@ export default tsEslint.config(
     },
   },
   {
+    // The `../*` pattern backs `import/no-relative-parent-imports`, which skips
+    // specifiers it cannot resolve.
     files: ['src/**/*.{ts,tsx}'],
     ignores: [
       'src/**/*.test.ts',
@@ -151,37 +354,65 @@ export default tsEslint.config(
       'src/msw/**/*',
       'src/fixtures/**/*',
       'src/testUtils/**/*',
+      'src/utils/shared/env/packageVersion.ts',
     ],
     rules: {
-      'no-restricted-imports': ['error', { patterns: ['*.css', '*.stories*', '*.storyData*', '@msw/*', '@fixtures/*', '@testUtils/*'] }],
-    },
-  },
-  {
-    files: ['src/hooks/api/**/*.{ts,tsx}'],
-    rules: {
-      '@typescript-eslint/no-restricted-imports': ['error', {
+      'no-restricted-imports': ['error', {
         patterns: [
           {
-            group: ['@components/*', '@ui/*', '@blocks/*', '@views/*', '@icons/*', '@assets/*', '@hooks/features/*', '@hooks/legacy/*'],
-            message: 'src/hooks/api is the transport layer: it may not depend on UI or feature code. Move shared contracts to @schemas and feature composition to @hooks/features, which is allowed to import from @api.',
+            group: ['*.css', '*.stories*', '*.storyData*', '@msw/*', '@fixtures/*', '@testUtils/*'],
+            message: 'Production source may not import test-only code or stylesheets by path.',
           },
           {
-            group: ['@providers/**'],
-            message: 'API hooks may not read app state at runtime. Read the store in a @hooks/features wrapper and pass the values in. Type-only imports are fine.',
-            allowTypeImports: true,
+            group: ['../*'],
+            message: 'No parent-relative imports — use the most specific path alias.',
           },
         ],
       }],
     },
   },
   {
+    // Exempt from the boundary rules, but not from the relative-import rule.
+    files: [
+      'src/**/*.{test,spec}.{ts,tsx}',
+      'src/**/*.stories.tsx',
+      'src/**/*.storyData.tsx',
+      'src/{msw,fixtures,testUtils}/**/*.{ts,tsx}',
+    ],
+    rules: {
+      'no-restricted-imports': ['error', {
+        patterns: [{
+          group: ['../*'],
+          message: 'No parent-relative imports — use the most specific path alias.',
+        }],
+      }],
+    },
+  },
+  {
     files: ['src/msw/**/*.{ts,tsx}'],
     rules: {
-      '@typescript-eslint/no-restricted-imports': ['error', {
+      '@typescript-eslint/no-restricted-imports': [BOUNDARY_SEVERITY, {
+        patterns: [
+          {
+            group: ['@api/*', '@hooks/*'],
+            message: 'MSW handlers load in every vitest run before per-test mocks apply, so importing hook modules breaks unrelated tests. Share schemas via @schemas instead; type-only imports are fine.',
+            allowTypeImports: true,
+          },
+          {
+            group: ['@providers/**', '@components/**', '@ui/**', '@blocks/**', '@features/**', '@views/**'],
+            message: 'MSW handlers describe the API surface, so they may only reach contracts (@schemas, @internal-types), pure helpers (@utils) and @fixtures.',
+          },
+        ],
+      }],
+    },
+  },
+  {
+    files: ['src/fixtures/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': [BOUNDARY_SEVERITY, {
         patterns: [{
-          group: ['@api/*', '@hooks/*'],
-          message: 'MSW handlers load in every vitest run before per-test mocks apply, so importing hook modules breaks unrelated tests. Share schemas via @schemas instead; type-only imports are fine.',
-          allowTypeImports: true,
+          group: ['@providers/**', '@hooks/**', '@api/**', '@components/**', '@ui/**', '@blocks/**', '@features/**', '@views/**', '@msw/**', '@testUtils/**'],
+          message: 'Fixtures are data, so they may only reach contracts (@schemas, @internal-types) and pure helpers (@utils).',
         }],
       }],
     },
@@ -201,40 +432,10 @@ export default tsEslint.config(
             '^(?:type:)?node:',
             '^(?:type:)?@?\\w',
           ],
-          [
-            // Domain & data contracts
-            '^(?:type:)?@internal-types/',
-            '^(?:type:)?@schemas/',
-
-            // Cross-cutting helpers (used by api, hooks, components, etc.)
-            '^(?:type:)?@utils/',
-
-            // Data layer: API hooks, then the rest
-            '^(?:type:)?@api/',
-            '^(?:type:)?@hooks/',
-
-            // App wiring & global state (can depend on hooks/api)
-            '^(?:type:)?@providers/',
-
-            // Design system primitives
-            '^(?:type:)?@icons/',
-            '^(?:type:)?@ui/',
-            '^(?:type:)?@blocks/',
-
-            // Reusable and feature-level UI
-            '^(?:type:)?@components/',
-            '^(?:type:)?@features/',
-            '^(?:type:)?@views/',
-
-            // Static resources
-            '^(?:type:)?@assets/',
-          ],
-          [
-            // Test resources and fixtures
-            '^(?:type:)?@msw/',
-            '^(?:type:)?@fixtures/',
-            '^(?:type:)?@testUtils/',
-          ],
+          // Tier order. Each regex is its own sub-block; only outer arrays get a
+          // blank line between them.
+          TIER_ALIASES.map(aliasSortGroup),
+          TEST_ALIASES.map(aliasSortGroup),
           [
             // Styles
             '.*\\.s?css$',
@@ -244,4 +445,5 @@ export default tsEslint.config(
       'simple-import-sort/exports': 'error',
     },
   },
+  ...boundaryConfigs,
 )

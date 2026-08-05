@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type Trip, TripSchema } from '@schemas/mileage/trip'
+import { type Trip, TripSchema } from '@schemas/features/mileage/trip'
 
 import { tripStore } from '@msw/api/businesses/[business-id]/mileage/trips/store'
 import { paginatedApiData } from '@msw/utils/apiResponse'

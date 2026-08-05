@@ -1,13 +1,13 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { BookkeepingStatus } from '@schemas/bookkeeping/bookkeepingStatus'
-import { type CallBooking, CallBookingPurpose, CallBookingState, CallBookingType } from '@schemas/bookkeeping/callBooking'
+import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
+import { type CallBooking, CallBookingPurpose, CallBookingState, CallBookingType } from '@schemas/features/bookkeeping/callBooking'
 import { BookkeepingOverview } from '@views/BookkeepingOverview/BookkeepingOverview'
 
+import { makeBookkeepingConfiguration, makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 import { get as getBookkeepingConfiguration } from '@msw/api/businesses/[business-id]/bookkeeping/config/get'
 import { get as getBookkeepingStatus } from '@msw/api/businesses/[business-id]/bookkeeping/status/get'
 import { get as getCallBookings } from '@msw/api/businesses/[business-id]/call-bookings/get'
-import { makeBookkeepingConfiguration, makeBookkeepingStatus } from '@fixtures/bookkeeping/mocks'
 import {
   buildSummariesSlotProps,
   buildSummariesStringOverrides,

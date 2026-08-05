@@ -3,12 +3,12 @@ import { revalidateLogic } from '@tanstack/react-form'
 import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { type Customer } from '@schemas/customerVendor/customer'
-import { type CustomerForm } from '@schemas/customerVendor/customerForm'
-import { UpsertCustomerSchema } from '@schemas/customerVendor/upsertCustomer'
-import { useUpsertCustomer } from '@api/businesses/[business-id]/customers/upsert'
-import { useAppForm } from '@hooks/features/forms/useForm'
+import { type Customer } from '@schemas/features/customerVendor/customer'
+import { type CustomerForm } from '@schemas/features/customerVendor/customerForm'
+import { UpsertCustomerSchema } from '@schemas/features/customerVendor/upsertCustomer'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
+import { useUpsertCustomer } from '@api/businesses/[business-id]/customers/upsert'
+import { useAppForm } from '@blocks/Form/useForm'
 import { convertCustomerFormToUpsertCustomer, type CustomerFormState, getCustomerFormDefaultValues, validateCustomerForm } from '@features/customerVendor/CustomerForm/formUtils'
 
 type onSuccessFn = (customer: Customer) => void

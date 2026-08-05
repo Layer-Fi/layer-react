@@ -1,7 +1,7 @@
 import { Arbitrary, Schema } from 'effect'
 
-import { InvoiceSchema } from '@schemas/invoices/invoice'
-import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
+import { InvoiceSchema } from '@schemas/features/invoices/invoice'
+import { InvoiceStatus } from '@schemas/features/invoices/invoiceStatus'
 
 import { makeBusiness } from '@fixtures/business/mocks'
 import {

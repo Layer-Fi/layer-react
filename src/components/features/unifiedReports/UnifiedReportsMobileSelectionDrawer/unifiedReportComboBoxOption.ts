@@ -1,5 +1,5 @@
-import type { ReportConfig } from '@schemas/unifiedReports/reportConfig'
-import { BaseComboBoxOption } from '@ui/ComboBox/baseComboBoxOption'
+import { BaseComboBoxOption } from '@internal-types/utility/comboBoxOption'
+import type { ReportConfig } from '@schemas/features/unifiedReports/reportConfig'
 
 export class UnifiedReportComboBoxOption extends BaseComboBoxOption<ReportConfig> {
   constructor(report: ReportConfig) {

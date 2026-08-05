@@ -1,6 +1,6 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { type ProfitAndLoss, ProfitAndLossReportSchema } from '@schemas/profitAndLoss/profitAndLoss'
-import { type ProfitAndLossReportRequestParams } from '@schemas/profitAndLoss/profitAndLossRequestParams'
+import { type ProfitAndLoss, ProfitAndLossReportSchema } from '@schemas/features/profitAndLoss/profitAndLoss'
+import { type ProfitAndLossReportRequestParams } from '@schemas/features/profitAndLoss/profitAndLossRequestParams'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'

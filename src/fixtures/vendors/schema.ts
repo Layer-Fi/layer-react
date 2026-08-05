@@ -1,6 +1,6 @@
 import { Arbitrary, Schema } from 'effect'
 
-import { VendorSchema } from '@schemas/customerVendor/vendor'
+import { VendorSchema } from '@schemas/features/customerVendor/vendor'
 
 import {
   applyContactInvariants,

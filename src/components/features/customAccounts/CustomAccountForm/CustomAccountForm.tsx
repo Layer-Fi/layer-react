@@ -1,7 +1,7 @@
 import { useEffect, useId, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type CustomAccount, CustomAccountClassification, CustomAccountSubtype } from '@schemas/customAccounts/customAccount'
+import { type CustomAccount, CustomAccountClassification, CustomAccountSubtype } from '@schemas/features/customAccounts/customAccount'
 import { notEmpty } from '@utils/shared/form/validators'
 import { translationKey } from '@utils/shared/i18n/translationKey'
 import { Button } from '@ui/Button/Button'

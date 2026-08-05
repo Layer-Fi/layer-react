@@ -1,4 +1,4 @@
-import { useLedgerDatePreset, useLedgerDatePresetActions, useLedgerDateRange, useLedgerDateRangeActions } from '@providers/generalLedger/LedgerDateStore/LedgerDateStoreProvider'
+import { useLedgerDatePreset, useLedgerDatePresetActions, useLedgerDateRange, useLedgerDateRangeActions } from '@providers/features/generalLedger/LedgerDateStore/LedgerDateStoreProvider'
 import { DateRangeSelection } from '@blocks/DatePickers/DateSelection/DateRangeSelection'
 
 type LedgerDateRangeSelectionProps = {

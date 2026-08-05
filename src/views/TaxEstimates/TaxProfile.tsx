@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useGetTaxProfile } from '@api/businesses/[business-id]/tax-estimates/profile/get'
 import {
   useTaxEstimatesNavigation,
-} from '@providers/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+} from '@providers/features/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { Heading } from '@ui/Typography/Heading'
 import { BaseDetailView } from '@blocks/Layout/BaseDetailView/BaseDetailView'
 import { TaxProfileForm } from '@features/taxEstimates/TaxProfileForm/TaxProfileForm'

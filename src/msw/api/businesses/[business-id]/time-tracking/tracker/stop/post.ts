@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { StopTrackerSchema } from '@schemas/timeTracking/tracker'
+import { StopTrackerSchema } from '@schemas/features/timeTracking/tracker'
 
 import { timeEntryStore } from '@msw/api/businesses/[business-id]/time-tracking/time-entries/store'
 import { findActiveTimeEntry } from '@msw/api/businesses/[business-id]/time-tracking/tracker/activeTimeEntry'

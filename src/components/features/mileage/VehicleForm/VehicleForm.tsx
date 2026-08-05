@@ -3,7 +3,7 @@ import { AlertTriangle } from 'lucide-react'
 import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Vehicle } from '@schemas/mileage/vehicle'
+import { type Vehicle } from '@schemas/features/mileage/vehicle'
 import { flattenValidationErrors } from '@utils/shared/form/errors'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'

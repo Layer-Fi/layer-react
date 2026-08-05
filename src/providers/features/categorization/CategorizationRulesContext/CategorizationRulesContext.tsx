@@ -1,0 +1,26 @@
+import { createContext, type PropsWithChildren, useMemo, useState } from 'react'
+
+import { type UpdateCategorizationRulesSuggestion } from '@schemas/features/categorization/createCategorizationRule'
+
+export interface CategorizationRulesContextType {
+  ruleSuggestion: UpdateCategorizationRulesSuggestion | null
+  setRuleSuggestion: React.Dispatch<React.SetStateAction<UpdateCategorizationRulesSuggestion | null>>
+}
+
+const defaultContextValue: CategorizationRulesContextType = {
+  ruleSuggestion: null,
+  setRuleSuggestion: () => {},
+}
+
+export const CategorizationRulesContext = createContext<CategorizationRulesContextType>(defaultContextValue)
+export function CategorizationRulesProvider({ children }: PropsWithChildren) {
+  const [ruleSuggestion, setRuleSuggestion] = useState<UpdateCategorizationRulesSuggestion | null>(null)
+
+  const value = useMemo(() => ({ ruleSuggestion, setRuleSuggestion }), [ruleSuggestion])
+
+  return (
+    <CategorizationRulesContext.Provider value={value}>
+      {children}
+    </CategorizationRulesContext.Provider>
+  )
+}

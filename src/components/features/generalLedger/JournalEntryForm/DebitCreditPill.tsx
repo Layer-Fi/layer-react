@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerEntryDirection'
+import { LedgerEntryDirection } from '@schemas/features/generalLedger/ledgerEntryDirection'
 import { Badge, BadgeVariant } from '@ui/Badge/Badge'
 import { BadgeSize } from '@ui/Badge/Badge'
 

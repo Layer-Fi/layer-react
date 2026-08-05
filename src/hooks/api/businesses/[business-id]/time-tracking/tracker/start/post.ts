@@ -1,9 +1,9 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { TimeEntrySchema } from '@schemas/timeTracking/timeEntry'
-import { type StartTrackerEncoded } from '@schemas/timeTracking/tracker'
+import { TimeEntrySchema } from '@schemas/features/timeTracking/timeEntry'
+import { type StartTrackerEncoded } from '@schemas/features/timeTracking/tracker'
 import { post } from '@utils/shared/api/authenticatedHttp'
-import { useActiveTimeTrackerGlobalCacheActions } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { useActiveTimeTrackerGlobalCacheActions } from '@api/businesses/[business-id]/time-tracking/tracker/active/get'
 
 const START_TIME_TRACKER_TAG_KEY = '#start-time-tracker'
 

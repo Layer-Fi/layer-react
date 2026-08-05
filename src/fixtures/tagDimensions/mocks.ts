@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 
-import { type TagDimension } from '@schemas/tags/tagDimension'
-import { type TagValueDefinition, TagValueDefinitionSchema } from '@schemas/tags/tagValueDefinition'
+import { type TagDimension } from '@schemas/features/tags/tagDimension'
+import { type TagValueDefinition, TagValueDefinitionSchema } from '@schemas/features/tags/tagValueDefinition'
 
 const decodeTagValueDefinition = Schema.decodeSync(TagValueDefinitionSchema)
 

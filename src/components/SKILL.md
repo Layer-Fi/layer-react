@@ -151,7 +151,7 @@ Three rules that follow:
 
 ## Forms
 
-Forms use TanStack Form through `useAppForm` (`@hooks/features/forms/useForm`) with the
+Forms use TanStack Form through `useAppForm` (`@blocks/Form/useForm`) with the
 pre-bound `Form*Field` components — never a raw input wired to `useState`. Split each form into a
 hook that owns state and submission and a component that renders fields.
 

@@ -1,5 +1,5 @@
 import { CategoryAsOption } from '@internal-types/features/categorization/categorizationOption'
-import { type NestedCategorization } from '@schemas/categorization/nestedCategorization'
+import { type NestedCategorization } from '@schemas/features/categorization/nestedCategorization'
 import { getLeafCategories } from '@utils/features/categorization/categories'
 
 export type CategoryOptionGroup = {

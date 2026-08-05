@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
+import type { BankTransactionCounterparty } from '@schemas/features/bankTransactions/base'
 import { useGetListCounterparties } from '@api/businesses/[business-id]/counterparties/get'
 import {
   CounterpartyComboBoxOption,

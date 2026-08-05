@@ -1,14 +1,14 @@
 import { Schema } from 'effect'
 
-import { CreateCustomJournalEntrySchema } from '@schemas/generalLedger/createCustomJournalEntry'
-import { type ApiCustomJournalEntryLineItem, type ApiLedgerEntry, JournalEntryReturnSchema } from '@schemas/generalLedger/journalEntry'
-import { type LedgerEntry, type LedgerEntryLineItem } from '@schemas/generalLedger/ledgerEntry'
+import { CreateCustomJournalEntrySchema } from '@schemas/features/generalLedger/createCustomJournalEntry'
+import { type ApiCustomJournalEntryLineItem, type ApiLedgerEntry, JournalEntryReturnSchema } from '@schemas/features/generalLedger/journalEntry'
+import { type LedgerEntry, type LedgerEntryLineItem } from '@schemas/features/generalLedger/ledgerEntry'
 
+import { makeLedgerEntry } from '@fixtures/ledgerEntries/mocks'
 import { ledgerEntryStore } from '@msw/api/businesses/[business-id]/ledger/entries/store'
 import { journalEntryFromCreateRequest } from '@msw/api/businesses/[business-id]/ledger/journal-entries/journalEntryFromCreateRequest'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
-import { makeLedgerEntry } from '@fixtures/ledgerEntries/mocks'
 
 const decodeCreateRequest = Schema.decodeUnknownSync(CreateCustomJournalEntrySchema)
 const encodeResponse = Schema.encodeSync(JournalEntryReturnSchema)

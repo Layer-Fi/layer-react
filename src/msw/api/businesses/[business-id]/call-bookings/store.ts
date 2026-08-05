@@ -1,4 +1,4 @@
-import { type CallBooking } from '@schemas/bookkeeping/callBooking'
+import { type CallBooking } from '@schemas/features/bookkeeping/callBooking'
 
 import { createMockStore } from '@msw/utils/createMockStore'
 

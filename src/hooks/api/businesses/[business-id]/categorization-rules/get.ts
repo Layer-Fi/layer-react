@@ -1,6 +1,6 @@
 import { type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
-import { type CategorizationRule, CategorizationRuleSchema } from '@schemas/categorization/categorizationRule'
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
+import { type CategorizationRule, CategorizationRuleSchema } from '@schemas/features/categorization/categorizationRule'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createInfiniteQueryGlobalCacheActions } from '@hooks/utils/swr/createInfiniteQueryGlobalCacheActions'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'

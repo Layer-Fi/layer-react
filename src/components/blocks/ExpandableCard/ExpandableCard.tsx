@@ -1,9 +1,9 @@
 import { type ReactNode } from 'react'
 
+import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
 import { Card } from '@ui/Card/Card'
 import { ExpandButton } from '@ui/ExpandButton/ExpandButton'
 import { HStack, VStack } from '@ui/Stack/Stack'
-import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
 
 import './expandableCard.scss'
 

@@ -1,11 +1,11 @@
+import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/features/categorization/bankTransactionMatchOption'
 import { type S3PresignedUrl } from '@internal-types/shared/s3PresignedUrl'
 import {
   type BankTransactionSchema,
-} from '@schemas/bankTransactions/bankTransaction'
-import { type MatchSchema, type SuggestedMatchSchema } from '@schemas/bankTransactions/match'
-import type { CustomerVendorSchema } from '@schemas/customerVendor/customerVendor'
-import type { Tag } from '@schemas/tags/tag'
-import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
+} from '@schemas/features/bankTransactions/bankTransaction'
+import { type MatchSchema, type SuggestedMatchSchema } from '@schemas/features/bankTransactions/match'
+import type { CustomerVendorSchema } from '@schemas/features/customerVendor/customerVendor'
+import type { Tag } from '@schemas/features/tags/tag'
 
 export enum DisplayState {
   all = 'all',

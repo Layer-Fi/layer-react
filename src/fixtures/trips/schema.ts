@@ -1,6 +1,6 @@
 import { Arbitrary, Schema } from 'effect'
 
-import { TripSchema } from '@schemas/mileage/trip'
+import { TripSchema } from '@schemas/features/mileage/trip'
 
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { addresses } from '@fixtures/constants/personal/addresses'

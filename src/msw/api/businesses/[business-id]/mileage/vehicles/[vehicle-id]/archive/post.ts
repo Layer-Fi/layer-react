@@ -1,12 +1,12 @@
 import { Schema } from 'effect'
 
-import { type Vehicle, VehicleSchema } from '@schemas/mileage/vehicle'
+import { type Vehicle, VehicleSchema } from '@schemas/features/mileage/vehicle'
 
+import { makeVehicle } from '@fixtures/vehicles/mocks'
 import { vehicleStore } from '@msw/api/businesses/[business-id]/mileage/vehicles/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { createStoreTransformResolver } from '@msw/utils/createStoreResolvers'
-import { makeVehicle } from '@fixtures/vehicles/mocks'
 
 const encodeVehicle = Schema.encodeSync(VehicleSchema)
 

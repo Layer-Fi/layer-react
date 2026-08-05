@@ -1,5 +1,5 @@
-import { createMockStore } from '@msw/utils/createMockStore'
 import { vehicles } from '@fixtures/generated/vehicles.gen'
+import { createMockStore } from '@msw/utils/createMockStore'
 
 export const vehicleStore = createMockStore(() => vehicles)
 

@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw'
 
-import { type Invoice } from '@schemas/invoices/invoice'
+import { type Invoice } from '@schemas/features/invoices/invoice'
 
 import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
 

@@ -1,10 +1,10 @@
 import { Schema } from 'effect'
 
-import { type PlaceSuggestion, PlaceSuggestionSchema } from '@schemas/mileage/place'
+import { type PlaceSuggestion, PlaceSuggestionSchema } from '@schemas/features/mileage/place'
 
+import { placeSuggestions } from '@fixtures/places/mocks'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { placeSuggestions } from '@fixtures/places/mocks'
 
 const encodePlaceSuggestion = Schema.encodeSync(PlaceSuggestionSchema)
 

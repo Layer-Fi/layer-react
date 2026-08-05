@@ -3,10 +3,10 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
 import { GlobalMonthPicker, type GlobalMonthPickerProps } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 
-import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
-import { handlers } from '@msw/handlers'
 import { makeBusiness } from '@fixtures/business/mocks'
 import { FIXTURE_YEAR, FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
+import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'
+import { handlers } from '@msw/handlers'
 import { PinnedGlobalDateRange } from '@testUtils/storybook/decorators/PinnedGlobalDateRange'
 
 const meta: Meta<GlobalMonthPickerProps> = {

@@ -1,12 +1,12 @@
 import { Schema } from 'effect'
 
-import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { type RecordCustomTransaction, RecordCustomTransactionSchema } from '@schemas/customAccounts/recordCustomTransaction'
+import { BankTransactionSchema } from '@schemas/features/bankTransactions/bankTransaction'
+import { type RecordCustomTransaction, RecordCustomTransactionSchema } from '@schemas/features/customAccounts/recordCustomTransaction'
 import { postWithFormData } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
 import { CUSTOM_ACCOUNTS_TAG_KEY } from '@api/businesses/[business-id]/custom-accounts/get'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 export const RECORD_CUSTOM_ACCOUNT_TRANSACTION_TAG_KEY = `${CUSTOM_ACCOUNTS_TAG_KEY}:record-transaction`
 

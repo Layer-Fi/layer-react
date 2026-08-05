@@ -1,8 +1,8 @@
 import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 
-import { createMockStore } from '@msw/utils/createMockStore'
 import { makeBankTransaction } from '@fixtures/bankTransactions/mocks'
 import { bankTransactions } from '@fixtures/generated/bankTransactions.gen'
+import { createMockStore } from '@msw/utils/createMockStore'
 
 export const bankTransactionStore = createMockStore<BankTransaction>(() => bankTransactions)
 

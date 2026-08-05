@@ -3,8 +3,8 @@ import { startOfToday } from 'date-fns'
 import { BigDecimal as BD } from 'effect'
 
 import { convertCentsToNonRecursiveBigDecimal, convertNonRecursiveBigDecimalToCents, fromNonRecursiveBigDecimal } from '@schemas/common/nonRecursiveBigDecimal'
-import { type Invoice } from '@schemas/invoices/invoice'
-import { type DedicatedInvoicePaymentForm } from '@schemas/invoices/invoicePaymentForm'
+import { type Invoice } from '@schemas/features/invoices/invoice'
+import { type DedicatedInvoicePaymentForm } from '@schemas/features/invoices/invoicePaymentForm'
 import { convertCentsToBigDecimal } from '@utils/shared/number/bigDecimal'
 
 export const getInvoicePaymentFormDefaultValues = (invoice: Invoice): DedicatedInvoicePaymentForm => {

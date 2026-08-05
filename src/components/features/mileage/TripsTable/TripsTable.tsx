@@ -4,7 +4,7 @@ import type { TFunction } from 'i18next'
 import { Edit, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type Trip } from '@schemas/mileage/trip'
+import { type Trip } from '@schemas/features/mileage/trip'
 import { getVehicleDisplayName } from '@utils/features/mileage/vehicles'
 import { formatCalendarDate } from '@utils/shared/time/timeUtils'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'

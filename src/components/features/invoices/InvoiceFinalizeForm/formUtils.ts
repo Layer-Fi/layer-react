@@ -1,8 +1,8 @@
 import type { TFunction } from 'i18next'
 
-import type { Invoice } from '@schemas/invoices/invoice'
-import type { InvoicePaymentMethod as InvoicePaymentMethodType } from '@schemas/invoices/invoicePaymentMethod'
-import { InvoicePaymentMethod } from '@schemas/invoices/invoicePaymentMethod'
+import type { Invoice } from '@schemas/features/invoices/invoice'
+import type { InvoicePaymentMethod as InvoicePaymentMethodType } from '@schemas/features/invoices/invoicePaymentMethod'
+import { InvoicePaymentMethod } from '@schemas/features/invoices/invoicePaymentMethod'
 
 export type InvoiceFinalizeFormValues = {
   creditCardEnabled: boolean

@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
-import { decodeLedgerEntrySource } from '@schemas/generalLedger/ledgerEntrySource'
+import { type LedgerEntry } from '@schemas/features/generalLedger/ledgerEntry'
+import { decodeLedgerEntrySource } from '@schemas/features/generalLedger/ledgerEntrySource'
 import { entryNumber } from '@utils/features/generalLedger/journal'
 import { convertLedgerEntrySourceToLinkingMetadata } from '@utils/features/generalLedger/ledgerEntrySourceLinkingMetadata'
 import { humanizeEnum } from '@utils/shared/string/format'

@@ -1,8 +1,8 @@
 import { CornerDownRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import type { CategorizationRule } from '@schemas/categorization/categorizationRule'
-import type { NestedCategorization } from '@schemas/categorization/nestedCategorization'
+import type { CategorizationRule } from '@schemas/features/categorization/categorizationRule'
+import type { NestedCategorization } from '@schemas/features/categorization/nestedCategorization'
 import { getResolvedCategoryName } from '@utils/features/categorization/categories'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { BadgeVariant } from '@ui/Badge/Badge'

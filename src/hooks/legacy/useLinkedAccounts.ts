@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next'
 
 import { type AccountSource } from '@internal-types/features/linkedAccounts/linkedAccount'
 import type { Awaitable } from '@internal-types/utility/awaitable'
-import { type PlaidHostedLinkConfig, toCreatePlaidLinkParams } from '@schemas/linkedAccounts/plaidHostedLinkConfig'
+import { type PlaidHostedLinkConfig, toCreatePlaidLinkParams } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { useUnlinkBankAccount } from '@api/businesses/[business-id]/bank-accounts/[bank-account-id]/delete'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { usePostConfirmExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/confirm/post'
@@ -12,10 +13,9 @@ import { usePostSandboxResetPlaidItemLogin } from '@api/businesses/[business-id]
 import { usePostUnlinkPlaidItem } from '@api/businesses/[business-id]/plaid/items/[plaid-item-id]/unlink/post'
 import { usePostPlaidLink } from '@api/businesses/[business-id]/plaid/link/post'
 import { usePostPlaidUpdateModeLink } from '@api/businesses/[business-id]/plaid/update-mode-link/post'
+import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
 import { type LinkMode, usePlaidLinkModal } from '@hooks/features/linkedAccounts/usePlaidLinkModal'
 import { usePollPlaidHostedLinkStatus } from '@hooks/features/linkedAccounts/usePollPlaidHostedLinkStatus'
-import { useBankAccountsContext } from '@providers/global/BankAccountsContext/BankAccountsContext'
-import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 
 type UseLinkedAccountsOptions = {
   onPlaidConnectionSuccess?: () => Awaitable<void>

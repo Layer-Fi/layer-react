@@ -1,7 +1,7 @@
-import { type TimeEntry } from '@schemas/timeTracking/timeEntry'
+import { type TimeEntry } from '@schemas/features/timeTracking/timeEntry'
 
-import { createMockStore } from '@msw/utils/createMockStore'
 import { timeEntries } from '@fixtures/generated/timeEntries.gen'
+import { createMockStore } from '@msw/utils/createMockStore'
 
 export const timeEntryStore = createMockStore(() => timeEntries)
 

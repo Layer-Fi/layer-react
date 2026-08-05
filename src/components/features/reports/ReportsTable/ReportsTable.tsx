@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type LineItem } from '@internal-types/features/reports/lineItem'
 import { Alignment } from '@internal-types/utility/table'
-import { useTableExpandRow } from '@hooks/utils/tables/useTableExpandRow'
+import { useTableExpandRow } from '@hooks/features/reports/useTableExpandRow'
 import { Button } from '@ui/Button/Button'
 import { ExpandButton } from '@ui/ExpandButton/ExpandButton'
 import { HStack } from '@ui/Stack/Stack'

@@ -3,13 +3,13 @@ import { userEvent, within } from 'storybook/test'
 
 import { TaxEstimates } from '@views/TaxEstimates/TaxEstimates'
 
+import { makeAccountingConfiguration } from '@fixtures/accountingConfiguration/mocks'
+import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
+import { makeTaxBanner, makeTaxProfile } from '@fixtures/taxEstimates/mocks'
 import { get as getAccountingConfiguration } from '@msw/api/businesses/[business-id]/accounting-config/get'
 import { get as getTaxBanner } from '@msw/api/businesses/[business-id]/tax-estimates/banner/get'
 import { get as getTaxProfile } from '@msw/api/businesses/[business-id]/tax-estimates/profile/get'
 import { handlers } from '@msw/handlers'
-import { makeAccountingConfiguration } from '@fixtures/accountingConfiguration/mocks'
-import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
-import { makeTaxBanner, makeTaxProfile } from '@fixtures/taxEstimates/mocks'
 
 const enableTaxEstimates = getAccountingConfiguration.mock(
   makeAccountingConfiguration({ enableTaxEstimates: true }),

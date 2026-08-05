@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useBusinessDatePickerBounds } from '@hooks/utils/dates/useBusinessDatePickerBounds'
 import { useGlobalDate, useGlobalDateActions } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { DatePicker } from '@ui/DatePickers/DatePicker/DatePicker'
 import { useDatePickerState } from '@ui/DatePickers/DatePicker/useDatePickerState'
+import { useBusinessDatePickerBounds } from '@blocks/DatePickers/useBusinessDatePickerBounds'
 
 export const GlobalDatePicker = ({ showLabel = false }: { showLabel?: boolean }) => {
   const { t } = useTranslation()

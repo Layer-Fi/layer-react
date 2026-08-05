@@ -1,4 +1,4 @@
-import { type LedgerEntry, type LedgerEntryLineItem } from '@schemas/generalLedger/ledgerEntry'
+import { type LedgerEntry, type LedgerEntryLineItem } from '@schemas/features/generalLedger/ledgerEntry'
 
 import { ledgerEntryStore } from '@msw/api/businesses/[business-id]/ledger/entries/store'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'

@@ -1,10 +1,10 @@
 import { Schema } from 'effect'
 
-import { type Business, BusinessSchema } from '@schemas/business/business'
+import { type Business, BusinessSchema } from '@schemas/features/business/business'
 
+import { makeBusiness } from '@fixtures/business/mocks'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { makeBusiness } from '@fixtures/business/mocks'
 
 const encodeBusiness = Schema.encodeSync(BusinessSchema)
 

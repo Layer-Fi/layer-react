@@ -1,7 +1,7 @@
 import type { ExpandedState } from '@tanstack/react-table'
 
 import type { AugmentedLedgerAccountBalance } from '@internal-types/features/generalLedger/chartOfAccounts'
-import { type NestedLedgerAccountType } from '@schemas/generalLedger/ledgerBalances'
+import { type NestedLedgerAccountType } from '@schemas/features/generalLedger/ledgerBalances'
 import type { CurrencyFormatFn } from '@utils/shared/i18n/number/formatters'
 
 const accountMatchesQuery = (

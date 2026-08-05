@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useGetTaxPayments } from '@api/businesses/[business-id]/tax-estimates/payments/get'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useFullYearProjection, useTaxEstimatesYear } from '@providers/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
+import { useGetTaxPayments } from '@api/businesses/[business-id]/tax-estimates/payments/get'
+import { useFullYearProjection, useTaxEstimatesYear } from '@providers/features/taxEstimates/TaxEstimatesRouteStore/TaxEstimatesRouteStoreProvider'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { ResponsiveDetailView } from '@blocks/Layout/ResponsiveDetailView/ResponsiveDetailView'
 import { TaxEstimatesHeader, TaxEstimatesHeaderType } from '@features/taxEstimates/TaxEstimatesHeader/TaxEstimatesHeader'

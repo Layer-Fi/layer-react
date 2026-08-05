@@ -9,8 +9,8 @@ import {
   NRBD_ZERO,
   toNonRecursiveBigDecimal,
 } from '@schemas/common/nonRecursiveBigDecimal'
-import { type TaxProfile } from '@schemas/taxEstimates/profile'
-import type { AppForm } from '@hooks/features/forms/useForm'
+import { type TaxProfile } from '@schemas/features/taxEstimates/profile'
+import type { AppForm } from '@blocks/Form/useForm'
 import type { TaxProfileForm } from '@features/taxEstimates/TaxProfileForm/taxProfileFormSchema'
 
 export type TaxProfileFormSectionProps = {

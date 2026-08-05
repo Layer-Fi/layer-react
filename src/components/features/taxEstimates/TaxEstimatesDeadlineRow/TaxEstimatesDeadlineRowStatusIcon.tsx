@@ -2,7 +2,7 @@ import type { TFunction } from 'i18next'
 import { Check, CircleAlert, Clock3 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { TaxOverviewDeadlineStatus } from '@schemas/taxEstimates/overview'
+import { TaxOverviewDeadlineStatus } from '@schemas/features/taxEstimates/overview'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { Span } from '@ui/Typography/Text'
 

@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
 
 import type { Awaitable } from '@internal-types/utility/awaitable'
-import { type PlaidHostedLinkConfig } from '@schemas/linkedAccounts/plaidHostedLinkConfig'
+import { type PlaidHostedLinkConfig } from '@schemas/features/linkedAccounts/plaidHostedLinkConfig'
 import { getAccountsNeedingConfirmation } from '@utils/features/bankAccounts/bankAccount'
-import { useBankAccountsContext } from '@providers/global/BankAccountsContext/BankAccountsContext'
-import { LinkedAccountsProvider } from '@providers/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
+import { useBankAccountsContext } from '@providers/features/bankAccounts/BankAccountsContext/BankAccountsContext'
+import { LinkedAccountsProvider } from '@providers/features/linkedAccounts/LinkedAccounts/LinkedAccountsProvider'
 import { Heading } from '@ui/Typography/Heading'
 import { Wizard } from '@blocks/Wizard/Wizard'
 import { LinkAccountsConfirmationStep } from '@features/linkedAccounts/LinkAccounts/LinkAccountsConfirmationStep'

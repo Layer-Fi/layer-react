@@ -1,4 +1,4 @@
-import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
+import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
 
 export const accountCategorizationFields = (account: SingleChartAccountType) => ({
   id: account.accountId,

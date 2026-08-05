@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { type ReportType, useReportsHeaderContext } from '@providers/reports/ReportsHeaderContext/ReportsHeaderContext'
+import { type ReportType, useReportsHeaderContext } from '@providers/features/reports/ReportsHeaderContext/ReportsHeaderContext'
 import { HStack } from '@ui/Stack/Stack'
 import { Toggle } from '@ui/Toggle/Toggle'
 

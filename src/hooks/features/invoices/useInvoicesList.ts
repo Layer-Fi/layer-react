@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 
-import { useGetListInvoices } from '@api/businesses/[business-id]/invoices/get'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
-import { useInvoiceTableFilters } from '@providers/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
-import { getListInvoiceParamsFromFilters } from '@features/invoices/utils'
+import { useGetListInvoices } from '@api/businesses/[business-id]/invoices/get'
+import { useInvoiceTableFilters } from '@providers/features/invoices/InvoicesRouteStore/InvoicesRouteStoreProvider'
+import { getListInvoiceParamsFromFilters } from '@providers/features/invoices/InvoicesRouteStore/listInvoiceParams'
 
 const PAGE_SIZE = 10
 

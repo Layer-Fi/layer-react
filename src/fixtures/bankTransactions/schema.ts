@@ -3,8 +3,8 @@ import { Arbitrary, Schema } from 'effect'
 import {
   BankTransactionSchema,
   CategorizationStatus,
-} from '@schemas/bankTransactions/bankTransaction'
-import { BankTransactionDirection, TransactionSource } from '@schemas/bankTransactions/base'
+} from '@schemas/features/bankTransactions/bankTransaction'
+import { BankTransactionDirection, TransactionSource } from '@schemas/features/bankTransactions/base'
 
 import {
   bankTransactionCustomerArbitrary,

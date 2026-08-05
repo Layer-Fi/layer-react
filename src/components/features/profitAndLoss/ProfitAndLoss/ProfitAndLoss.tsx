@@ -1,8 +1,8 @@
 import { type PropsWithChildren } from 'react'
 
 import { type ReportingBasis } from '@internal-types/shared/reportingBasis'
-import { useProfitAndLoss } from '@hooks/features/profitAndLoss/useProfitAndLoss'
-import { ProfitAndLossContext } from '@providers/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
+import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
+import { useProfitAndLoss } from '@providers/features/profitAndLoss/ProfitAndLossContext/useProfitAndLoss'
 import { Container } from '@blocks/Layout/Container/Container'
 import { ProfitAndLossChart } from '@features/profitAndLoss/ProfitAndLossChart/ProfitAndLossChart'
 import { ProfitAndLossDetailedCharts } from '@features/profitAndLoss/ProfitAndLossDetailedCharts/ProfitAndLossDetailedCharts'

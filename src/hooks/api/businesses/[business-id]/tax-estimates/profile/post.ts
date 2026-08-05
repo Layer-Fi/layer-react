@@ -1,9 +1,9 @@
-import { type TaxProfileRequest, TaxProfileResponseSchema } from '@schemas/taxEstimates/profile'
+import { type TaxProfileRequest, TaxProfileResponseSchema } from '@schemas/features/taxEstimates/profile'
 import { post } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useTaxDetailsGlobalCacheActions } from '@api/businesses/[business-id]/tax-estimates/details/get'
 import { useTaxPaymentsGlobalCacheActions } from '@api/businesses/[business-id]/tax-estimates/payments/get'
 import { useTaxProfileGlobalCacheActions } from '@api/businesses/[business-id]/tax-estimates/profile/get'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 export const UPSERT_TAX_PROFILE_TAG_KEY = '#upsert-tax-profile'
 

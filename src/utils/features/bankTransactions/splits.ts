@@ -4,12 +4,12 @@ import { uniqBy } from 'lodash-es'
 import { type BankTransaction, type Split } from '@internal-types/features/bankTransactions/bankTransaction'
 import { isPlaceholderAsOption, isSplitAsOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
 import { isApiCategorizationAsOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
-import { isSplitCategorization } from '@schemas/categorization/categorization'
-import { makeCustomerVendor } from '@schemas/customerVendor/customerVendor'
-import { makeTagFromTransactionTag } from '@schemas/tags/tag'
+import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/features/categorization/bankTransactionMatchOption'
+import { isSplitCategorization } from '@schemas/features/categorization/categorization'
+import { makeCustomerVendor } from '@schemas/features/customerVendor/customerVendor'
+import { makeTagFromTransactionTag } from '@schemas/features/tags/tag'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/features/bankTransactions/categorizationOption'
 import { toLocalizedCents } from '@utils/shared/i18n/number/input'
-import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 
 export enum ValidateSplitError {
   AmountsMustBeGreaterThanZero = 'AmountsMustBeGreaterThanZero',

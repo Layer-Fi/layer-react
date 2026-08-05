@@ -1,4 +1,5 @@
 import { patch } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { CUSTOMERS_TAG_KEY, useCustomersGlobalCacheActions } from '@api/businesses/[business-id]/customers/get'
 import {
   UPSERT_CUSTOMER_TAG_KEY,
@@ -7,7 +8,6 @@ import {
   UpsertCustomerReturnSchema,
 } from '@api/businesses/[business-id]/customers/post'
 import { useInvoicesGlobalCacheActions } from '@api/businesses/[business-id]/invoices/get'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const updateCustomer = patch<
   UpsertCustomerReturnEncoded,

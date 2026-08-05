@@ -3,7 +3,8 @@ import { flexRender, type Header, type HeaderGroup, type Row as RowType } from '
 import classNames from 'classnames'
 
 import { useHorizontalOverflow } from '@hooks/utils/size/useHorizontalOverflow'
-import { useColumnPinningStyles } from '@hooks/utils/tables/useColumnPinningStyles'
+import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
+import { ConditionalList } from '@components/utility/ConditionalList'
 import {
   Cell,
   Column,
@@ -13,8 +14,7 @@ import {
   TableHeader,
 } from '@ui/Table/Table'
 import { DataTableHeaderSkeleton, DataTableSkeleton, DEFAULT_SKELETON_COLUMNS } from '@blocks/Table/DataTable/DataTableSkeleton'
-import { AnimatedPresenceElement } from '@components/utility/AnimatedPresenceElement/AnimatedPresenceElement'
-import { ConditionalList } from '@components/utility/ConditionalList'
+import { useColumnPinningStyles } from '@blocks/Table/DataTable/useColumnPinningStyles'
 
 import './dataTable.scss'
 

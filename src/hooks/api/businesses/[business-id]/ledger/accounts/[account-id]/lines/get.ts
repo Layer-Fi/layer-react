@@ -1,5 +1,5 @@
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
-import { LedgerAccountLineItemSchema } from '@schemas/generalLedger/ledgerEntry'
+import { LedgerAccountLineItemSchema } from '@schemas/features/generalLedger/ledgerEntry'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 

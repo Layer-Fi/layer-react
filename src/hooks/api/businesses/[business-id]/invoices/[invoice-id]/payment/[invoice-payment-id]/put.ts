@@ -1,4 +1,5 @@
 import { put } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import {
   UPSERT_INVOICE_PAYMENT_TAG_KEY,
   type UpsertDedicatedInvoicePaymentBody,
@@ -6,7 +7,6 @@ import {
   UpsertDedicatedInvoicePaymentReturnSchema,
   useDedicatedInvoicePaymentTriggerSuccess,
 } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment/post'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 export type UpdateParams = {
   readonly businessId: string

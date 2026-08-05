@@ -1,4 +1,4 @@
-import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
+import type { BankTransactionCounterparty } from '@schemas/features/bankTransactions/base'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { CounterpartyComboBox } from '@features/categorization/CategorizationRuleForm/CounterpartyComboBox'
 import { CounterpartyMobileDrawer } from '@features/categorization/CategorizationRuleForm/CounterpartyMobileDrawer'

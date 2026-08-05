@@ -1,7 +1,7 @@
-import type { BusinessTaskEncoded } from '@schemas/bookkeeping/businessTask'
+import type { BusinessTaskEncoded } from '@schemas/features/bookkeeping/businessTask'
 import { post } from '@utils/shared/api/authenticatedHttp'
-import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { useBookkeepingPeriodsGlobalCacheActions } from '@api/businesses/[business-id]/bookkeeping/periods/get'
 
 type UpdateTaskUploadsDescriptionBody = {
   type: 'FreeResponse'

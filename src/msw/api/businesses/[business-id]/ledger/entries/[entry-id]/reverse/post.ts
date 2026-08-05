@@ -1,9 +1,9 @@
-import { EntryType, type LedgerEntry, type LedgerEntryLineItem } from '@schemas/generalLedger/ledgerEntry'
-import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerEntryDirection'
+import { EntryType, type LedgerEntry, type LedgerEntryLineItem } from '@schemas/features/generalLedger/ledgerEntry'
+import { LedgerEntryDirection } from '@schemas/features/generalLedger/ledgerEntryDirection'
 
+import { makeManualEntrySource } from '@fixtures/ledgerEntries/sources'
 import { ledgerEntryStore } from '@msw/api/businesses/[business-id]/ledger/entries/store'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { makeManualEntrySource } from '@fixtures/ledgerEntries/sources'
 
 const flip = (direction: LedgerEntryDirection) =>
   direction === LedgerEntryDirection.Debit ? LedgerEntryDirection.Credit : LedgerEntryDirection.Debit

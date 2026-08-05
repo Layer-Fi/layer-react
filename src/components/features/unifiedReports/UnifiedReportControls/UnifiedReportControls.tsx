@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { ReportControl } from '@schemas/unifiedReports/reportConfig'
+import { ReportControl } from '@schemas/features/unifiedReports/reportConfig'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import {
@@ -9,7 +9,7 @@ import {
   useUnifiedReportDateSelectionMode,
   useUnifiedReportGroupByParam,
   useUnifiedReportReportingBasisParam,
-} from '@providers/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
+} from '@providers/features/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { CombinedDateRangeSelection } from '@blocks/DatePickers/DateSelection/CombinedDateRangeSelection'
 import { CombinedDateSelection } from '@blocks/DatePickers/DateSelection/CombinedDateSelection'

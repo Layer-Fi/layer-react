@@ -1,16 +1,16 @@
 import { Schema } from 'effect'
 
-import type { BankTransactionCounterparty } from '@schemas/bankTransactions/base'
-import { type CategorizationRule } from '@schemas/categorization/categorizationRule'
-import { type BankDirectionFilter } from '@schemas/categorization/categorizationRuleFilters'
-import { type Classification, isClassificationAccountIdentifier } from '@schemas/categorization/classification'
-import { CreateCategorizationRuleSchema } from '@schemas/categorization/createCategorizationRule'
-import { PatchCategorizationRuleSchema } from '@schemas/categorization/patchCategorizationRule'
 import {
   convertCentsToNonRecursiveBigDecimal,
   convertNonRecursiveBigDecimalToCents,
   type NonRecursiveBigDecimal,
 } from '@schemas/common/nonRecursiveBigDecimal'
+import type { BankTransactionCounterparty } from '@schemas/features/bankTransactions/base'
+import { type CategorizationRule } from '@schemas/features/categorization/categorizationRule'
+import { type BankDirectionFilter } from '@schemas/features/categorization/categorizationRuleFilters'
+import { type Classification, isClassificationAccountIdentifier } from '@schemas/features/categorization/classification'
+import { CreateCategorizationRuleSchema } from '@schemas/features/categorization/createCategorizationRule'
+import { PatchCategorizationRuleSchema } from '@schemas/features/categorization/patchCategorizationRule'
 
 export type CategorizationRuleFormState =
   | { mode: 'create' }

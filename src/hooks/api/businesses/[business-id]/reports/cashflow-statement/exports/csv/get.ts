@@ -1,8 +1,8 @@
 import type { S3PresignedUrl } from '@internal-types/shared/s3PresignedUrl'
 import { getAsMutation } from '@utils/shared/api/getAsMutation'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
-import type { GetStatementOfCashFlowParams } from '@api/businesses/[business-id]/reports/cashflow-statement/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import type { GetStatementOfCashFlowParams } from '@api/businesses/[business-id]/reports/cashflow-statement/get'
 
 const getCashflowStatementCSV = getWithQuery<
   { data: S3PresignedUrl },

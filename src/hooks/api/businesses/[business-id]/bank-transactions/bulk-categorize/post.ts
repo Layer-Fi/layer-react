@@ -4,10 +4,10 @@ import {
   type BulkCategorizeRequest,
   type BulkCategorizeRequestEncoded,
   BulkCategorizeRequestSchema,
-} from '@schemas/bankTransactions/bulkCategorize'
+} from '@schemas/features/bankTransactions/bulkCategorize'
 import { post } from '@utils/shared/api/authenticatedHttp'
-import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { useBankTransactionTriggerSuccess } from '@api/businesses/[business-id]/bank-transactions/triggerSuccess'
 
 const BULK_CATEGORIZE_BANK_TRANSACTIONS_TAG_KEY = '#bulk-categorize-bank-transactions'
 

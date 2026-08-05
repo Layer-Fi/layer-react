@@ -1,6 +1,6 @@
 import { eachMonthOfInterval, eachYearOfInterval, endOfMonth, endOfYear, format, max, min, startOfMonth, startOfYear } from 'date-fns'
 
-import { DateGroupBy, type UnifiedReportColumn } from '@schemas/unifiedReports/unifiedReport'
+import { DateGroupBy, type UnifiedReportColumn } from '@schemas/features/unifiedReports/unifiedReport'
 
 import {
   numericColumn,

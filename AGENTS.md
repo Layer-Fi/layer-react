@@ -23,6 +23,7 @@ Each area has a colocated `SKILL.md`. **Read the relevant one(s) before making c
 
 | Working on… | Read |
 | --- | --- |
+| Which layer code belongs in, feature-domain boundaries, fixing a boundary error | [`src/SKILL.md`](src/SKILL.md) |
 | API contracts, Effect `Schema`, enums, nullability, envelopes, money types | [`src/schemas/SKILL.md`](src/schemas/SKILL.md) |
 | Fetching, mutating, caching — SWR hook factories, cache tags, invalidation | [`src/hooks/api/SKILL.md`](src/hooks/api/SKILL.md) |
 | Feature/util hooks — which directory, composition and return conventions | [`src/hooks/SKILL.md`](src/hooks/SKILL.md) |
@@ -52,12 +53,12 @@ release process.
 
 | Path | Alias | Contains |
 | --- | --- | --- |
-| `src/schemas` | `@schemas/*` | Effect schemas — the source of truth for every API contract |
+| `src/schemas` | `@schemas/*` | Effect schemas — the source of truth for every API contract, split into `features/<domain>/` and `common/` |
 | `src/types` | `@internal-types/*` | internal-only types (no wire format), split into `features/<domain>/`, `shared/<capability>`, `utility/` (type-level helpers) and `ambient/` (global declarations) |
 | `src/utils` | `@utils/*` | pure helpers, split into `features/<domain>/` (domain-aware) and `shared/<capability>/` (`api`, `swr`, `i18n`, `date`, `form`, `number`, `zustand`, `styles`, …) |
 | `src/hooks/api/**` | `@api/*` | one file per endpoint in a tree mirroring the REST path, named for the HTTP method (`get.ts`, `post.ts`, …) |
 | `src/hooks/{features,utils,legacy}` | `@hooks/*` | composed feature logic · generic hooks · pre-factory hooks (don't extend) |
-| `src/providers` | `@providers/*` | scoped Zustand stores and DI contexts, one directory per domain plus `global/` (the `LayerProvider` stack) and `common/` (domain-agnostic) |
+| `src/providers` | `@providers/*` | scoped Zustand stores and DI contexts, split into `features/<domain>/`, `global/` (the `LayerProvider` stack) and `common/` (domain-agnostic) |
 | `src/components/ui` | `@ui/*` | design-system primitives (domain-agnostic) |
 | `src/components/blocks` | `@blocks/*` | composed patterns: tables, cards, wizards (domain-agnostic) |
 | `src/components/features/<domain>` | `@features/*` | feature UI, one directory per domain object; fetches its own data |
@@ -68,13 +69,35 @@ release process.
 | `src/fixtures` | `@fixtures/*` | fixture factories, generators, and committed `generated/*.gen.ts` |
 | `src/testUtils` | `@testUtils/*` | `LayerTestProvider`, form fillers, fixed dates, story helpers |
 
-Dependencies point one way: views → features → blocks → ui. A `@ui` component never imports a
-schema, a fetching hook, or a feature.
+## Import boundaries
 
-`features/<domain>` reuses the domain names of `src/hooks/features/*` and `src/schemas/*`, so one
-name locates a domain's components, hooks, and contracts. Domains are being migrated into
-`features/` one PR at a time — directories still directly under `src/components/` are un-migrated,
-not a second convention.
+Two lint-enforced rules. Full detail, including why each layer sits where it does and how to fix a
+violation, is in [`src/SKILL.md`](src/SKILL.md) — read it before moving code between directories.
+
+**Layers.** Every file belongs to one layer and may import strictly lower layers only:
+
+1. foundation — `@internal-types` `@schemas` `@utils` `@icons` `@assets`
+2. context — `@providers/global` `@providers/common` (never fetches)
+3. generic hooks — `@hooks/utils`
+4. data loading — `@api`
+5. stores — `@providers/features` `@hooks/legacy`
+6. feature hooks — `@hooks/features`
+7. render helpers — `@components/utility`
+8. primitives — `@ui`
+9. patterns — `@blocks`
+10. feature UI — `@features`
+11. views — `@views`
+12. app root — `LayerProvider`, `src/index.tsx`
+
+Context sits below the hooks because the SWR factories read `LayerContext`; stores sit below
+feature hooks because that is the direction the dependency already ran, 38 to 7.
+
+**Feature domains.** In `schemas`, `components`, `hooks`, `providers` and `utils`, a domain under
+`features/` may import itself plus that partition's declared shared set — nothing else. The sets
+live in `eslint.config.mjs`.
+
+Tests and stories are exempt from both rules; production source still may not import `@msw`,
+`@fixtures`, `@testUtils` or story modules. A domain name means the same thing in every partition.
 
 ## Non-negotiables
 
@@ -124,12 +147,12 @@ Each of these has broken something before:
   `isLocalized` at its default.
 - **`src/msw` may not value-import `@api/*` or `@hooks/*`** — handlers load before per-test mocks
   apply and would break unrelated suites. Share contracts via `@schemas`.
-- **`@api/**` may not import UI or feature code** (`@components`, `@ui`, `@blocks`, `@views`,
-  `@icons`, `@assets`, `@hooks/features`, `@hooks/legacy`) and may not read `@providers`
-  at runtime. Wrap the hook in `@hooks/features/**` instead.
+- **Import boundaries are lint-enforced on both axes** — tiers and feature domains. See
+  [Import boundaries](#import-boundaries); the table lives at the top of `eslint.config.mjs`.
 - **Every `@api` method file needs an MSW handler** at the mirrored path in `src/msw/api`;
   `npm run msw:check-coverage` enforces it in CI.
 - **Production source may not import** `@msw/*`, `@fixtures/*`, `@testUtils/*`, or `*.stories*`.
+  Tests and stories are exempt from the tier and domain rules, but not from this one.
 - **Responsiveness is measured in JS**, not media queries — hence `ResponsiveComponent` and
   Chromatic's per-width iframe resizing.
 - **Every story is a Chromatic snapshot.** Pack primitive variants into one gallery story
@@ -179,10 +202,9 @@ Aliases, most specific first: `@ui/*`, `@blocks/*`, `@features/*`, `@components/
 `@providers/*`, `@utils/*`, `@internal-types/*`, `@schemas/*`, `@views/*`, `@icons/*`,
 `@assets/*`, `@msw/*`, `@fixtures/*`, `@testUtils/*`.
 
-`simple-import-sort` enforces dependency-layer order: react → external →
-(`@internal-types`, `@schemas`) → `@utils` → `@api` → `@hooks` → `@providers` →
-(`@icons`, `@ui`, `@blocks`) → (`@components`, `@features`, `@views`) → `@assets` →
-(`@msw`, `@fixtures`, `@testUtils`) → styles.
+`simple-import-sort` sorts imports by layer, lowest first, so a block reads bottom-up through the
+stack. Run `lint:fix`; never sort by hand. Adding an alias touches two files — see
+[`src/SKILL.md`](src/SKILL.md#import-order).
 
 Type imports are inline-style and enforced: `import { type Foo } from '…'`.
 

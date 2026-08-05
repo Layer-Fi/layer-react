@@ -4,8 +4,8 @@ import { startOfDay } from 'date-fns'
 import { describe, expect, it, vi } from 'vitest'
 
 import { DatePreset } from '@utils/shared/date/dateRangePresets'
-import { useBusinessActivationDateSafe } from '@hooks/features/business/useBusinessActivationDateSafe'
 import { createScopedDateStore, type CreateScopedDateStoreOptions } from '@providers/common/DateStore/createScopedDateStore'
+import { useBusinessActivationDateSafe } from '@providers/common/DateStore/useBusinessActivationDateSafe'
 
 import { makeBusiness } from '@fixtures/business/mocks'
 import { setupFakeSystemTime } from '@testUtils/dates/fakeSystemTime'

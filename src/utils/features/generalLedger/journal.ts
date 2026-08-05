@@ -1,5 +1,5 @@
-import { type LedgerAccountLineItem, type LedgerEntry } from '@schemas/generalLedger/ledgerEntry'
-import { type LedgerEntryDirection } from '@schemas/generalLedger/ledgerEntryDirection'
+import { type LedgerAccountLineItem, type LedgerEntry } from '@schemas/features/generalLedger/ledgerEntry'
+import { type LedgerEntryDirection } from '@schemas/features/generalLedger/ledgerEntryDirection'
 
 export const entryNumber = (entry: LedgerEntry): string =>
   entry.entryNumber?.toString() ?? entry.id.substring(0, 5)

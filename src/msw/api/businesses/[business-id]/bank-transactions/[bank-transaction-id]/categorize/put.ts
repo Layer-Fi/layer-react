@@ -1,8 +1,8 @@
 import { Schema } from 'effect'
 
 import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
-import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
-import { CategoryUpdateSchema } from '@schemas/bankTransactions/categoryUpdate'
+import { BankTransactionSchema } from '@schemas/features/bankTransactions/bankTransaction'
+import { CategoryUpdateSchema } from '@schemas/features/bankTransactions/categoryUpdate'
 
 import { applyCategoryUpdate } from '@msw/api/businesses/[business-id]/bank-transactions/applyCategoryUpdate'
 import { bankTransactionStore, findOrSeedBankTransaction } from '@msw/api/businesses/[business-id]/bank-transactions/store'

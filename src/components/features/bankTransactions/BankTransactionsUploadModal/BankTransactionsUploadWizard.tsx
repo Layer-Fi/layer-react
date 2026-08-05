@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
-import { type BankTransactionDataOnly } from '@schemas/bankTransactions/bankTransactionDataOnly'
+import { type BankTransactionDataOnly } from '@schemas/features/bankTransactions/bankTransactionDataOnly'
 import { type CustomAccountParseCsvResponse } from '@api/businesses/[business-id]/custom-accounts/[custom-account-id]/parse-csv/post'
 import { ModalTitleWithClose } from '@ui/Modal/ModalSlots'
 import { Heading } from '@ui/Typography/Heading'

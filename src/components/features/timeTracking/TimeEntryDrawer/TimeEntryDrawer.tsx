@@ -3,7 +3,7 @@ import { Edit, Lock, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useTimeEntriesDeleteModal, useTimeEntriesDrawer } from '@providers/timeTracking/TimeEntriesStore/TimeEntriesStoreProvider'
+import { useTimeEntriesDeleteModal, useTimeEntriesDrawer } from '@providers/features/timeTracking/TimeEntriesStore/TimeEntriesStoreProvider'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 import { Button } from '@ui/Button/Button'
 import { Drawer } from '@ui/Modal/Modal'

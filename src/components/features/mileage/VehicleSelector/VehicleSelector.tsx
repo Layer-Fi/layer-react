@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { type TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
-import { type Vehicle } from '@schemas/mileage/vehicle'
+import { type Vehicle } from '@schemas/features/mileage/vehicle'
 import { getVehicleDisplayName } from '@utils/features/mileage/vehicles'
 import { useGetVehicles } from '@api/businesses/[business-id]/mileage/vehicles/get'
 import { ComboBox } from '@ui/ComboBox/ComboBox'

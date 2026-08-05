@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { usePostBulkCategorize } from '@api/businesses/[business-id]/bank-transactions/bulk-categorize/post'
 import { usePostBulkUncategorize } from '@api/businesses/[business-id]/bank-transactions/bulk-uncategorize/post'
-import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 
 /*
  * The @api hooks own cache invalidation; notifying the host app is wiring that belongs out here,

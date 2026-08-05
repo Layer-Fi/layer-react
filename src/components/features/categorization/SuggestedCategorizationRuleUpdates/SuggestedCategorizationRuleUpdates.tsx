@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { type UpdateCategorizationRulesSuggestion } from '@schemas/categorization/createCategorizationRule'
+import { type UpdateCategorizationRulesSuggestion } from '@schemas/features/categorization/createCategorizationRule'
 import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { ModalHeading } from '@ui/Modal/ModalSlots'
 import { Wizard } from '@blocks/Wizard/Wizard'

@@ -1,10 +1,10 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { SingleChartAccountSchema } from '@schemas/generalLedger/chartOfAccounts'
-import { type UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLedgerAccount'
+import { SingleChartAccountSchema } from '@schemas/features/generalLedger/chartOfAccounts'
+import { type UpsertLedgerAccountSchema } from '@schemas/features/generalLedger/upsertLedgerAccount'
 import { post } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useLedgerBalancesCacheActions } from '@api/businesses/[business-id]/ledger/balances/get'
 import { useLedgerEntriesCacheActions } from '@api/businesses/[business-id]/ledger/entries/get'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 export const UPSERT_LEDGER_ACCOUNT_TAG_KEY = '#upsert-ledger-account'
 

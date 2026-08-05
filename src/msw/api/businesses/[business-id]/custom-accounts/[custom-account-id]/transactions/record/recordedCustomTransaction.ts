@@ -1,17 +1,17 @@
 import { Schema } from 'effect'
 
 import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
-import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { TransactionSource } from '@schemas/bankTransactions/base'
-import { type RecordCustomTransaction, RecordCustomTransactionSchema } from '@schemas/customAccounts/recordCustomTransaction'
+import { CategorizationStatus } from '@schemas/features/bankTransactions/bankTransaction'
+import { TransactionSource } from '@schemas/features/bankTransactions/base'
+import { type RecordCustomTransaction, RecordCustomTransactionSchema } from '@schemas/features/customAccounts/recordCustomTransaction'
 import { getCustomerName } from '@utils/features/customerVendor/customer'
 import { getVendorName } from '@utils/features/customerVendor/vendor'
 
+import { makeBankTransaction } from '@fixtures/bankTransactions/mocks'
 import { categorizationFromClassification } from '@msw/api/businesses/[business-id]/bank-transactions/categorizationFromClassification'
 import { customAccountStore } from '@msw/api/businesses/[business-id]/custom-accounts/store'
 import { customerStore } from '@msw/api/businesses/[business-id]/customers/store'
 import { vendorStore } from '@msw/api/businesses/[business-id]/vendors/store'
-import { makeBankTransaction } from '@fixtures/bankTransactions/mocks'
 
 const decodeTransaction = Schema.decodeUnknownSync(RecordCustomTransactionSchema)
 

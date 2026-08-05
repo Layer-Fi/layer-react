@@ -1,9 +1,9 @@
 import { format } from 'date-fns'
 import { sumBy } from 'lodash-es'
 
-import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
-import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
-import { type UnifiedReport } from '@schemas/unifiedReports/unifiedReport'
+import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
+import { LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccountType'
+import { type UnifiedReport } from '@schemas/features/unifiedReports/unifiedReport'
 
 import {
   type AccountNode,

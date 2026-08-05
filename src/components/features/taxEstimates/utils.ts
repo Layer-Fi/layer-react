@@ -1,4 +1,4 @@
-import { type TaxPaymentsResponse } from '@schemas/taxEstimates/payments'
+import { type TaxPaymentsResponse } from '@schemas/features/taxEstimates/payments'
 
 export interface CommonTaxPaymentsListProps {
   data: TaxPaymentsResponse['data'] | undefined

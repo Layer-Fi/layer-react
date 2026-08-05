@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { type LedgerBalancesSchemaType } from '@schemas/generalLedger/ledgerBalances'
+import { type LedgerBalancesSchemaType } from '@schemas/features/generalLedger/ledgerBalances'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { flattenAccounts } from '@features/generalLedger/utils'
 

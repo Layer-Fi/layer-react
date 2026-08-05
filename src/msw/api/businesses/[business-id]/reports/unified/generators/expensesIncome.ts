@@ -1,5 +1,5 @@
-import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
-import { type UnifiedReport } from '@schemas/unifiedReports/unifiedReport'
+import { LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccountType'
+import { type UnifiedReport } from '@schemas/features/unifiedReports/unifiedReport'
 
 import { leafAccountsOfTypes } from '@msw/api/businesses/[business-id]/reports/unified/generators/accountEngine'
 import { reportRangeFromParams } from '@msw/api/businesses/[business-id]/reports/unified/generators/periods'

@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import { X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { useBankAccountFilterActions, useIsBankAccountFilterLocked, useSelectedBankAccountIds } from '@providers/bankTransactions/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
+import { useBankAccountFilterActions, useIsBankAccountFilterLocked, useSelectedBankAccountIds } from '@providers/features/bankTransactions/BankAccountsFilterStore/BankAccountsFilterStoreProvider'
 import { Badge, BadgeSize, BadgeVariant } from '@ui/Badge/Badge'
 
 import './bankTransactionsAccountFilterChip.scss'

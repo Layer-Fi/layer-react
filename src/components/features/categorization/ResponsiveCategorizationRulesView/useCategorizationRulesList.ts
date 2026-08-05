@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 
-import { useGetListCategorizationRules } from '@api/businesses/[business-id]/categorization-rules/get'
 import { useTablePaginationProps } from '@hooks/utils/pagination/useTablePaginationProps'
-import { useCategorizationRulesTableFilters, useSetCurrentCategorizationRulesPage } from '@providers/bankTransactions/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
+import { useGetListCategorizationRules } from '@api/businesses/[business-id]/categorization-rules/get'
+import { useCategorizationRulesTableFilters, useSetCurrentCategorizationRulesPage } from '@providers/features/bankTransactions/BankTransactionsRouteStore/BankTransactionsRouteStoreProvider'
 
 const PAGE_SIZE = 10
 

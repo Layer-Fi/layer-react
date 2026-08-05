@@ -1,7 +1,7 @@
 import { CalendarDate } from '@internationalized/date'
 import { BigDecimal } from 'effect'
 
-import { type Trip, TripDistanceSource, TripPurpose } from '@schemas/mileage/trip'
+import { type Trip, TripDistanceSource, TripPurpose } from '@schemas/features/mileage/trip'
 
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'
 import { makeVehicle } from '@fixtures/vehicles/mocks'

@@ -1,14 +1,15 @@
 import { AlertTriangle, Check } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type TimeEntry } from '@schemas/timeTracking/timeEntry'
-import { useActiveTimerBannerForm } from '@hooks/features/timeTracking/useActiveTimerBannerForm'
+import { type TimeEntry } from '@schemas/features/timeTracking/timeEntry'
 import { Button } from '@ui/Button/Button'
 import { HStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { Container } from '@blocks/Layout/Container/Container'
 import { CustomerSelector } from '@features/customerVendor/CustomerSelector/CustomerSelector'
 import { TimeEntryServiceSelector } from '@features/timeTracking/TimeEntryServiceSelector/TimeEntryServiceSelector'
+
+import { useActiveTimerBannerForm } from './useActiveTimerBannerForm'
 
 type ActiveTimeTrackerBannerProps = {
   activeEntry: TimeEntry

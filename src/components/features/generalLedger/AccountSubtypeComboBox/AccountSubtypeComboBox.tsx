@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
+import { type LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccountType'
+import { SUBTYPES_CONFIG_BY_TYPE } from '@utils/features/generalLedger/constants'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'
-import { SUBTYPES_CONFIG_BY_TYPE } from '@features/generalLedger/constants'
 
 type AccountSubtypeComboBoxProps = {
   label: string

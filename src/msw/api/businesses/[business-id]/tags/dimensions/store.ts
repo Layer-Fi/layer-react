@@ -1,9 +1,9 @@
 import { Schema } from 'effect'
 
-import { type TagDimension, TagDimensionSchema } from '@schemas/tags/tagDimension'
+import { type TagDimension, TagDimensionSchema } from '@schemas/features/tags/tagDimension'
 
-import { createMockStore } from '@msw/utils/createMockStore'
 import { tagDimensions } from '@fixtures/tagDimensions/mocks'
+import { createMockStore } from '@msw/utils/createMockStore'
 
 export const tagDimensionStore = createMockStore<TagDimension>(() => tagDimensions)
 

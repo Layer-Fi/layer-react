@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { type Trip } from '@schemas/mileage/trip'
+import { type Trip } from '@schemas/features/mileage/trip'
 import { formatCalendarDate } from '@utils/shared/time/timeUtils'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Span } from '@ui/Typography/Text'

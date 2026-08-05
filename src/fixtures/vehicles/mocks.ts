@@ -1,4 +1,4 @@
-import { type Vehicle } from '@schemas/mileage/vehicle'
+import { type Vehicle } from '@schemas/features/mileage/vehicle'
 
 import { makeBusiness } from '@fixtures/business/mocks'
 import { createFixtureFactory } from '@fixtures/utils/createFixtureFactory'

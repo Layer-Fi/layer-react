@@ -1,10 +1,10 @@
 import { Schema } from 'effect'
 
-import { type TaxDetails, TaxDetailsResponseSchema } from '@schemas/taxEstimates/details'
+import { type TaxDetails, TaxDetailsResponseSchema } from '@schemas/features/taxEstimates/details'
 
+import { makeTaxDetails } from '@fixtures/taxEstimates/mocks'
 import { resolveYearParam } from '@msw/api/businesses/[business-id]/tax-estimates/resolveYearParam'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { makeTaxDetails } from '@fixtures/taxEstimates/mocks'
 
 const toResponse = Schema.encodeSync(TaxDetailsResponseSchema)
 

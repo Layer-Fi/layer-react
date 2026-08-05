@@ -1,7 +1,7 @@
 import { type PropsWithChildren, type ReactNode } from 'react'
 
-import { useAppForm } from '@hooks/features/forms/useForm'
 import type { CommonFormFieldProps } from '@blocks/Form/types'
+import { useAppForm } from '@blocks/Form/useForm'
 
 import { Col } from '@testUtils/storybook/layout/Col'
 import { Gallery } from '@testUtils/storybook/layout/Gallery'

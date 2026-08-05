@@ -2,9 +2,9 @@ import { useCallback } from 'react'
 import { Schema } from 'effect/index'
 import { useTranslation } from 'react-i18next'
 
-import { type CreateCategorizationRule, CreateCategorizationRuleSchema } from '@schemas/categorization/createCategorizationRule'
-import { usePostCategorizationRule } from '@api/businesses/[business-id]/categorization-rules/post'
+import { type CreateCategorizationRule, CreateCategorizationRuleSchema } from '@schemas/features/categorization/createCategorizationRule'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { usePostCategorizationRule } from '@api/businesses/[business-id]/categorization-rules/post'
 import { Button, type ButtonProps } from '@ui/Button/Button'
 import { useWizard } from '@blocks/Wizard/Wizard'
 

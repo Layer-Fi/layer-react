@@ -6,13 +6,13 @@ import { type BankTransaction } from '@internal-types/features/bankTransactions/
 import type { FileMetadata } from '@internal-types/shared/fileUpload'
 import { type DocumentWithStatus } from '@internal-types/shared/fileUpload'
 import { type Awaitable } from '@internal-types/utility/awaitable'
+import { LayerEventComponent, LayerEventType } from '@schemas/common/layerEvents'
 import { hasReceipts } from '@utils/features/bankTransactions/shared'
 import { get, post, postWithFormData } from '@utils/shared/api/authenticatedHttp'
-import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
+import { useEmitLayerEvent } from '@hooks/utils/events/useEmitLayerEvent'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useBuildKeyInputs } from '@hooks/utils/swr/useBuildKeyInputs'
-import { useBankTransactionsContext } from '@providers/bankTransactions/BankTransactions/BankTransactionsContext'
-import { LayerEventComponent, LayerEventType } from '@providers/global/LayerProvider/layerEvents'
+import { useBankTransactionsContext } from '@providers/features/bankTransactions/BankTransactions/BankTransactionsContext'
 
 const listBankTransactionDocuments = get<{
   data: DocumentS3Urls

@@ -1,6 +1,6 @@
 import { type USStateCode } from '@internal-types/features/taxEstimates/location'
-import { type FilingStatus } from '@schemas/taxEstimates/filingStatus'
-import { type TaxPaymentRow } from '@schemas/taxEstimates/payments'
+import { type FilingStatus } from '@schemas/features/taxEstimates/filingStatus'
+import { type TaxPaymentRow } from '@schemas/features/taxEstimates/payments'
 
 export type LineItem = {
   rowKey: string

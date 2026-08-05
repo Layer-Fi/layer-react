@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type Invoice, InvoiceSchema } from '@schemas/invoices/invoice'
+import { type Invoice, InvoiceSchema } from '@schemas/features/invoices/invoice'
 
 import { apiData } from '@msw/utils/apiResponse'
 

@@ -3,9 +3,9 @@ import { type ZonedDateTime } from '@internationalized/date'
 import { useTranslation } from 'react-i18next'
 
 import { convertDateToZonedDateTime } from '@utils/shared/time/timeUtils'
-import { useBusinessDatePickerBounds } from '@hooks/utils/dates/useBusinessDatePickerBounds'
 import { useGlobalDate, useGlobalDateRangeActions } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { MonthPicker } from '@ui/DatePickers/MonthPicker/MonthPicker'
+import { useBusinessDatePickerBounds } from '@blocks/DatePickers/useBusinessDatePickerBounds'
 
 export type GlobalMonthPickerProps = {
   truncateMonth?: boolean

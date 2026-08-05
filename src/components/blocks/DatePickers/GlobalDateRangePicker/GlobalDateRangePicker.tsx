@@ -1,6 +1,6 @@
-import { useBusinessDatePickerBounds } from '@hooks/utils/dates/useBusinessDatePickerBounds'
 import { useGlobalDateRange, useGlobalDateRangeActions } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { DateRangePicker } from '@ui/DatePickers/DatePicker/DateRangePicker'
+import { useBusinessDatePickerBounds } from '@blocks/DatePickers/useBusinessDatePickerBounds'
 
 export const GlobalDateRangePicker = ({ showLabels = false }: { showLabels?: boolean }) => {
   const dateRange = useGlobalDateRange({ dateSelectionMode: 'full' })

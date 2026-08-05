@@ -1,10 +1,10 @@
 import { Schema } from 'effect'
 
-import { type ReportGroup, ReportGroupSchema } from '@schemas/unifiedReports/reportConfig'
+import { type ReportGroup, ReportGroupSchema } from '@schemas/features/unifiedReports/reportConfig'
 
+import { defaultReportGroups } from '@fixtures/unifiedReports/reportConfig'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
-import { defaultReportGroups } from '@fixtures/unifiedReports/reportConfig'
 
 const encodeReportGroups = Schema.encodeSync(Schema.Array(ReportGroupSchema))
 

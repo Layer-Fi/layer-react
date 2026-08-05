@@ -1,7 +1,7 @@
 import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
-import { CategorizationStatus } from '@schemas/bankTransactions/bankTransaction'
-import { type CategoryUpdate, type SplitCategoryEntrySchema } from '@schemas/bankTransactions/categoryUpdate'
-import { type SplitCategorizationEntrySchema } from '@schemas/categorization/categorization'
+import { CategorizationStatus } from '@schemas/features/bankTransactions/bankTransaction'
+import { type CategoryUpdate, type SplitCategoryEntrySchema } from '@schemas/features/bankTransactions/categoryUpdate'
+import { type SplitCategorizationEntrySchema } from '@schemas/features/categorization/categorization'
 
 import { categorizationFromClassification } from '@msw/api/businesses/[business-id]/bank-transactions/categorizationFromClassification'
 import { transactionTagFromKeyValue } from '@msw/api/businesses/[business-id]/bank-transactions/transactionTagFromKeyValue'

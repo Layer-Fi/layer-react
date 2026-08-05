@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { usePostStripeConnectAccountLink } from '@api/businesses/[business-id]/stripe/connect-account-link/post'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { usePostStripeConnectAccountLink } from '@api/businesses/[business-id]/stripe/connect-account-link/post'
 
 export function useStripeConnect() {
   const { t } = useTranslation()

@@ -1,8 +1,8 @@
-import { type TaxPaymentRow, TaxPaymentsResponseSchema } from '@schemas/taxEstimates/payments'
+import { type TaxPaymentRow, TaxPaymentsResponseSchema } from '@schemas/features/taxEstimates/payments'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
-import { type TaxEstimatesRequestParams, toTaxEstimatesQuery } from '@api/businesses/[business-id]/tax-estimates/taxEstimatesParams'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
+import { type TaxEstimatesRequestParams, toTaxEstimatesQuery } from '@api/businesses/[business-id]/tax-estimates/taxEstimatesParams'
 
 const TAX_PAYMENTS_TAG_KEY = '#tax-payments'
 

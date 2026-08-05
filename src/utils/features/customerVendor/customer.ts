@@ -1,4 +1,4 @@
-import type { Customer } from '@schemas/customerVendor/customer'
+import type { Customer } from '@schemas/features/customerVendor/customer'
 
 function getCustomerNameOrNull(customer?: Customer | null) {
   return customer?.individualName ?? customer?.companyName ?? null

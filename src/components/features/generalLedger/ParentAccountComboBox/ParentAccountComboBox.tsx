@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { type LedgerBalancesSchemaType } from '@schemas/generalLedger/ledgerBalances'
+import { type LedgerBalancesSchemaType } from '@schemas/features/generalLedger/ledgerBalances'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'
 import { useParentAccountOptions } from '@features/generalLedger/ParentAccountComboBox/useParentAccountOptions'

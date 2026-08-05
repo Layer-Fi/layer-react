@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type Vendor, VendorSchema } from '@schemas/customerVendor/vendor'
+import { type Vendor, VendorSchema } from '@schemas/features/customerVendor/vendor'
 
 import { vendorStore } from '@msw/api/businesses/[business-id]/vendors/store'
 import { paginatedApiData } from '@msw/utils/apiResponse'

@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { type LedgerEntry, LedgerEntrySchema } from '@schemas/generalLedger/ledgerEntry'
+import { type LedgerEntry, LedgerEntrySchema } from '@schemas/features/generalLedger/ledgerEntry'
 
 import { ledgerEntryStore } from '@msw/api/businesses/[business-id]/ledger/entries/store'
 import { paginatedApiData } from '@msw/utils/apiResponse'

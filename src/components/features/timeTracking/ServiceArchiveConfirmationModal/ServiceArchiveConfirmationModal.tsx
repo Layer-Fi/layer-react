@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type CatalogService } from '@schemas/timeTracking/catalogService'
-import { usePostArchiveCatalogService } from '@api/businesses/[business-id]/catalog/services/[service-id]/archive/post'
+import { type CatalogService } from '@schemas/features/timeTracking/catalogService'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
+import { usePostArchiveCatalogService } from '@api/businesses/[business-id]/catalog/services/[service-id]/archive/post'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 
 type ServiceArchiveConfirmationModalProps = {

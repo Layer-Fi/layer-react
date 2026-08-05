@@ -1,8 +1,8 @@
 import { BigDecimal as BD, Option } from 'effect'
 
+import type { IntlFormatter } from '@utils/shared/i18n/intlFormatter'
 import { getLocaleCurrencySymbol } from '@utils/shared/i18n/number/currency'
 import { getLocaleNumberSeparators } from '@utils/shared/i18n/number/input'
-import type { IntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 
 export const BIG_DECIMAL_ZERO = BD.fromBigInt(BigInt(0))
 export const BIG_DECIMAL_ONE = BD.fromBigInt(BigInt(1))

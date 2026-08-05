@@ -1,5 +1,5 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { type MileageSummary, MileageSummarySchema } from '@schemas/mileage/mileage'
+import { type MileageSummary, MileageSummarySchema } from '@schemas/features/mileage/mileage'
 import { get } from '@utils/shared/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'

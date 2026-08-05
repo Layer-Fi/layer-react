@@ -1,8 +1,8 @@
 import { CalendarDate } from '@internationalized/date'
 import { sum } from 'lodash-es'
 
-import { type TaxDetailsValue } from '@schemas/taxEstimates/details'
-import { TaxSummaryState } from '@schemas/taxEstimates/summary'
+import { type TaxDetailsValue } from '@schemas/features/taxEstimates/details'
+import { TaxSummaryState } from '@schemas/features/taxEstimates/summary'
 
 import { FIXTURE_YEAR } from '@fixtures/constants/fixtureYear'
 import { type QuarterBalance, type TaxScenario } from '@fixtures/taxEstimates/scenario/types'

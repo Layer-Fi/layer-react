@@ -1,4 +1,4 @@
-import { BookkeepingStatus } from '@api/businesses/[business-id]/bookkeeping/status/get'
+import { BookkeepingStatus } from '@schemas/features/bookkeeping/bookkeepingStatus'
 
 type ActiveBookkeepingStatus = BookkeepingStatus.ACTIVE | BookkeepingStatus.ONBOARDING
 export function isActiveBookkeepingStatus(status: BookkeepingStatus): status is ActiveBookkeepingStatus {

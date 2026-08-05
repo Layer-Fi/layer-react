@@ -2,7 +2,7 @@ import type { TFunction } from 'i18next'
 
 import type { BankTransaction, SuggestedMatch } from '@internal-types/features/bankTransactions/bankTransaction'
 import { PlaceholderAsOption, SuggestedMatchAsOption } from '@internal-types/features/categorization/categorizationOption'
-import { CategorizationStatus, InputStrategy } from '@schemas/bankTransactions/bankTransaction'
+import { CategorizationStatus, InputStrategy } from '@schemas/features/bankTransactions/bankTransaction'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/features/bankTransactions/categorizationOption'
 import { hasSuggestions } from '@utils/features/bankTransactions/shared'
 import { translationKey } from '@utils/shared/i18n/translationKey'

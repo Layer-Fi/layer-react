@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
 
-import { type RemoveBankTransactionTagsUpdateEncoded } from '@schemas/bankTransactions/tagUpdate'
+import { type RemoveBankTransactionTagsUpdateEncoded } from '@schemas/features/bankTransactions/tagUpdate'
 import { del } from '@utils/shared/api/authenticatedHttp'
 import { withStableTrigger } from '@utils/shared/swr/withStableTrigger'
-import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 
 const REMOVE_TAG_FROM_BANK_TRANSACTION_TAG_KEY = '#remove-tag-from-bank-transaction'
 

@@ -1,4 +1,5 @@
 import { patch } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useMileageSummaryGlobalCacheActions } from '@api/businesses/[business-id]/mileage/summary/get'
 import { useTripsGlobalCacheActions } from '@api/businesses/[business-id]/mileage/trips/get'
 import {
@@ -8,7 +9,6 @@ import {
   UpsertTripReturnSchema,
 } from '@api/businesses/[business-id]/mileage/trips/post'
 import { useVehiclesGlobalCacheActions } from '@api/businesses/[business-id]/mileage/vehicles/get'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 export type UpdateParams = { readonly businessId: string, readonly tripId: string }
 

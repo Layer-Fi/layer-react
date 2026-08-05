@@ -1,9 +1,9 @@
 import { endOfYesterday } from 'date-fns'
 import { Schema } from 'effect'
 
-import { type Invoice } from '@schemas/invoices/invoice'
-import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
-import { type InvoiceSummaryStatsResponse, InvoiceSummaryStatsResponseSchema } from '@schemas/invoices/invoiceSummaryStats'
+import { type Invoice } from '@schemas/features/invoices/invoice'
+import { InvoiceStatus } from '@schemas/features/invoices/invoiceStatus'
+import { type InvoiceSummaryStatsResponse, InvoiceSummaryStatsResponseSchema } from '@schemas/features/invoices/invoiceSummaryStats'
 
 import { invoiceStore } from '@msw/api/businesses/[business-id]/invoices/store'
 import { apiData } from '@msw/utils/apiResponse'

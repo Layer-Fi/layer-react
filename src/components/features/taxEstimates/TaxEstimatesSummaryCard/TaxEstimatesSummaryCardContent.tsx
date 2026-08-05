@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
-import { type TaxSummarySectionType, TaxSummaryState } from '@schemas/taxEstimates/summary'
+import { type TaxSummarySectionType, TaxSummaryState } from '@schemas/features/taxEstimates/summary'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { type DetailData, type SeriesData } from '@ui/Chart/seriesTypes'

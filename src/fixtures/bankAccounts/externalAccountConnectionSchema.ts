@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { ExternalAccountConnectionSchema } from '@schemas/bankAccounts/externalAccountConnection'
+import { ExternalAccountConnectionSchema } from '@schemas/features/bankAccounts/externalAccountConnection'
 
 import { accountNameKinds, institutions } from '@fixtures/bankAccounts/constants'
 import { maskArbitrary } from '@fixtures/utils/arbitrary/mask'

@@ -1,6 +1,6 @@
 import { Arbitrary, Schema } from 'effect'
 
-import { BankTransactionCounterpartySchema } from '@schemas/bankTransactions/base'
+import { BankTransactionCounterpartySchema } from '@schemas/features/bankTransactions/base'
 
 import { mccArbitrary, merchantNameArbitrary } from '@fixtures/counterparties/arbitrary'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'

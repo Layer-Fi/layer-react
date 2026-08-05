@@ -1,6 +1,6 @@
 import { Schema } from 'effect'
 
-import { CatalogServiceSchema } from '@schemas/timeTracking/catalogService'
+import { CatalogServiceSchema } from '@schemas/features/timeTracking/catalogService'
 
 import { billableRatePerHourArbitrary, serviceNameArbitrary } from '@fixtures/catalogServices/arbitrary'
 import { FixtureIdPrefix, idArbitrary } from '@fixtures/utils/arbitrary/id'

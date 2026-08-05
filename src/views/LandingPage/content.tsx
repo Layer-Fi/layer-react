@@ -2,8 +2,8 @@ import { type ReactNode } from 'react'
 import type { TFunction } from 'i18next'
 
 import { translationKey } from '@utils/shared/i18n/translationKey'
-import { type HeroContentConfig, type LandingPageCardConfig, type LandingPageConfig } from '@views/LandingPage/types'
 import { imagePartnerAccountingImage } from '@assets/images'
+import { type HeroContentConfig, type LandingPageCardConfig, type LandingPageConfig } from '@views/LandingPage/types'
 
 export type CoreValueProposition = {
   icon: ReactNode

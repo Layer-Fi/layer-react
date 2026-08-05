@@ -1,11 +1,12 @@
 import { useCallback } from 'react'
 
-import { useFieldContext } from '@hooks/features/forms/useForm'
 import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
 import { NumberField } from '@ui/NumberField/NumberField'
 import { FormFieldShell, useFormField } from '@blocks/Form/FormFieldShell'
 import type { CommonFormFieldProps } from '@blocks/Form/types'
+
+import { useFieldContext } from './formContexts'
 
 export type FormNumberFieldProps = CommonFormFieldProps & {
   minValue?: number

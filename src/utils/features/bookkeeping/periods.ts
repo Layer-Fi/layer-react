@@ -1,5 +1,5 @@
-import { BookkeepingPeriodStatus } from '@schemas/bookkeeping/bookkeepingPeriods'
-import { type BookkeepingPeriod } from '@schemas/bookkeeping/bookkeepingPeriods'
+import { BookkeepingPeriodStatus } from '@schemas/features/bookkeeping/bookkeepingPeriods'
+import { type BookkeepingPeriod } from '@schemas/features/bookkeeping/bookkeepingPeriods'
 
 type ActiveBookkeepingPeriodStatus = Exclude<BookkeepingPeriodStatus, BookkeepingPeriodStatus.BOOKKEEPING_NOT_ACTIVE>
 

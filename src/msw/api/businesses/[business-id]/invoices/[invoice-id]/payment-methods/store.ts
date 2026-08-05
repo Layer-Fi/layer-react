@@ -1,4 +1,4 @@
-import { InvoicePaymentMethod } from '@schemas/invoices/invoicePaymentMethod'
+import { InvoicePaymentMethod } from '@schemas/features/invoices/invoicePaymentMethod'
 
 import { createMockStore } from '@msw/utils/createMockStore'
 

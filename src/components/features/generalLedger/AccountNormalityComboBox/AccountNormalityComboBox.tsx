@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { NORMALITY_CONFIG } from '@utils/features/generalLedger/constants'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import type { ComboBoxOption } from '@ui/ComboBox/types'
 import { ComboBoxField } from '@blocks/Form/ComboBoxField'
-import { NORMALITY_CONFIG } from '@features/generalLedger/constants'
 
 type AccountNormalityComboBoxProps = {
   label: string

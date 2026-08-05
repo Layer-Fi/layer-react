@@ -1,10 +1,10 @@
+import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import {
   type BookkeepingConfiguration,
   BookkeepingConfigurationSchema,
   BookkeepingStatus,
   TransactionTaggingStrategy,
-} from '@schemas/bookkeeping/bookkeepingConfiguration'
-import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
+} from '@schemas/features/bookkeeping/bookkeepingConfiguration'
 import { get } from '@utils/shared/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 

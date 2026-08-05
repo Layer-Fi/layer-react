@@ -1,12 +1,12 @@
 import { Schema } from 'effect'
 
-import { type TagValueDefinition, TagValueDefinitionSchema } from '@schemas/tags/tagValueDefinition'
+import { type TagValueDefinition, TagValueDefinitionSchema } from '@schemas/features/tags/tagValueDefinition'
 
+import { makeTagValueDefinition } from '@fixtures/tagDimensions/mocks'
 import { findOrSeedTagDimension, tagDimensionStore } from '@msw/api/businesses/[business-id]/tags/dimensions/store'
 import { apiData } from '@msw/utils/apiResponse'
 import { createMockEndpoint } from '@msw/utils/createMockEndpoint'
 import { readRequestJson } from '@msw/utils/request'
-import { makeTagValueDefinition } from '@fixtures/tagDimensions/mocks'
 
 const CreateTagValueDefinitionBodySchema = Schema.Struct({
   value: Schema.NonEmptyTrimmedString,

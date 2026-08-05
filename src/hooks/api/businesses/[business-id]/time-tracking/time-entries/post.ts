@@ -1,10 +1,10 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { TimeEntrySchema } from '@schemas/timeTracking/timeEntry'
-import { type UpsertTimeEntryEncoded } from '@schemas/timeTracking/upsertTimeEntry'
+import { TimeEntrySchema } from '@schemas/features/timeTracking/timeEntry'
+import { type UpsertTimeEntryEncoded } from '@schemas/features/timeTracking/upsertTimeEntry'
 import { post } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useTimeEntriesGlobalCacheActions } from '@api/businesses/[business-id]/time-tracking/time-entries/get'
 import { useTimeTrackingSummaryGlobalCacheActions } from '@api/businesses/[business-id]/time-tracking/time-entries/summary/get'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 export const UPSERT_TIME_ENTRY_TAG_KEY = '#upsert-time-entry'
 

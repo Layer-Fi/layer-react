@@ -2,11 +2,11 @@ import { pipe, Schema } from 'effect'
 
 import { PreviewCellSchema, type PreviewCsv, PreviewRowSchema } from '@schemas/common/csvUpload'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import type { CustomAccountTransactionRow } from '@schemas/customAccounts/customAccountTransactionRow'
-import type { RawCustomTransaction } from '@schemas/customAccounts/customTransaction'
+import type { CustomAccountTransactionRow } from '@schemas/features/customAccounts/customAccountTransactionRow'
+import type { RawCustomTransaction } from '@schemas/features/customAccounts/customTransaction'
 import { postWithFormData } from '@utils/shared/api/authenticatedHttp'
-import { CUSTOM_ACCOUNTS_TAG_KEY } from '@api/businesses/[business-id]/custom-accounts/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { CUSTOM_ACCOUNTS_TAG_KEY } from '@api/businesses/[business-id]/custom-accounts/get'
 
 type CustomAccountParseCsvArgs = {
   file: File

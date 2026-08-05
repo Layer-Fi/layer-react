@@ -1,7 +1,7 @@
 import { type ReactNode, useCallback, useContext, useMemo } from 'react'
 
 import type { PnlChartLineItem } from '@utils/features/profitAndLoss/profitAndLoss'
-import { ProfitAndLossContext } from '@providers/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
+import { ProfitAndLossContext } from '@providers/features/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 import {
   ProfitAndLossSummariesList,
   ProfitAndLossSummariesListItem,

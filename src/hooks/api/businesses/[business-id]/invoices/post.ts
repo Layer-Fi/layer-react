@@ -1,10 +1,10 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { InvoiceSchema } from '@schemas/invoices/invoice'
-import { type UpsertInvoiceSchema } from '@schemas/invoices/upsertInvoice'
+import { InvoiceSchema } from '@schemas/features/invoices/invoice'
+import { type UpsertInvoiceSchema } from '@schemas/features/invoices/upsertInvoice'
 import { post } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useInvoicesGlobalCacheActions } from '@api/businesses/[business-id]/invoices/get'
 import { useInvoiceSummaryStatsCacheActions } from '@api/businesses/[business-id]/invoices/summary-stats/get'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 export const UPSERT_INVOICE_TAG_KEY = '#upsert-invoice'
 

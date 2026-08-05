@@ -2,14 +2,15 @@ import { type FormEvent, useCallback } from 'react'
 import { AlertTriangle, Archive } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type CatalogService } from '@schemas/timeTracking/catalogService'
+import { type CatalogService } from '@schemas/features/timeTracking/catalogService'
 import { flattenValidationErrors } from '@utils/shared/form/errors'
-import { useServiceForm } from '@hooks/features/timeTracking/useServiceForm'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
+
+import { useServiceForm } from './useServiceForm'
 
 type AddServiceFormCardProps = {
   mode: 'create'

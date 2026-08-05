@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type UpdateCategorizationRulesSuggestion } from '@schemas/categorization/createCategorizationRule'
-import { useRejectCategorizationRuleSuggestion } from '@api/businesses/[business-id]/categorization-rules/suggestions/[suggestion-id]/delete'
+import { type UpdateCategorizationRulesSuggestion } from '@schemas/features/categorization/createCategorizationRule'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { useRejectCategorizationRuleSuggestion } from '@api/businesses/[business-id]/categorization-rules/suggestions/[suggestion-id]/delete'
 import { Button } from '@ui/Button/Button'
 import { Separator } from '@ui/Separator/Separator'
 import { HStack, VStack } from '@ui/Stack/Stack'

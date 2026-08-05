@@ -1,22 +1,11 @@
 import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
 
 import { runDelayedSync } from '@utils/shared/delay/runDelayed'
+import { type InvisibleDownloadHandle } from '@hooks/utils/download/useInvisibleDownload'
 
 import './invisibleDownload.scss'
 
-export type InvisibleDownloadHandle = {
-  trigger: (options: { url: string, filename?: string }) => Promise<void>
-}
-
-export function useInvisibleDownload() {
-  const invisibleDownloadRef = useRef<InvisibleDownloadHandle>(null)
-
-  const triggerInvisibleDownload = useCallback((options: { url: string, filename?: string }) => {
-    void invisibleDownloadRef.current?.trigger(options)
-  }, [])
-
-  return { invisibleDownloadRef, triggerInvisibleDownload }
-}
+export { type InvisibleDownloadHandle, useInvisibleDownload } from '@hooks/utils/download/useInvisibleDownload'
 
 const CLASS_NAME = 'Layer__InvisibleDownload'
 

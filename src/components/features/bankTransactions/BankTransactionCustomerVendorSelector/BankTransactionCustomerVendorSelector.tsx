@@ -2,10 +2,10 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
-import { type CustomerVendorSchema, makeCustomerVendor } from '@schemas/customerVendor/customerVendor'
+import { type CustomerVendorSchema, makeCustomerVendor } from '@schemas/features/customerVendor/customerVendor'
 import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { usePatchBankTransactionCounterparty } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/metadata/patch'
-import { useBankTransactionsIsCategorizationEnabledContext } from '@providers/categorization/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
+import { useBankTransactionsIsCategorizationEnabledContext } from '@providers/features/categorization/BankTransactionsIsCategorizationEnabledContext/BankTransactionsIsCategorizationEnabledContext'
 import { CustomerVendorSelector } from '@features/customerVendor/CustomerVendorSelector/CustomerVendorSelector'
 
 type BankTransactionCustomerVendorSelectorProps = {

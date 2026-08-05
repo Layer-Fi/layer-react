@@ -1,8 +1,8 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { VehicleSchema } from '@schemas/mileage/vehicle'
+import { VehicleSchema } from '@schemas/features/mileage/vehicle'
 import { post } from '@utils/shared/api/authenticatedHttp'
-import { useVehiclesGlobalCacheActions } from '@api/businesses/[business-id]/mileage/vehicles/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
+import { useVehiclesGlobalCacheActions } from '@api/businesses/[business-id]/mileage/vehicles/get'
 
 const REACTIVATE_VEHICLE_TAG_KEY = '#reactivate-vehicle'
 

@@ -1,13 +1,13 @@
 import { Schema } from 'effect'
 
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
-import { type Invoice } from '@schemas/invoices/invoice'
-import { InvoiceStatus } from '@schemas/invoices/invoiceStatus'
-import { type CreateInvoiceWriteoff, CreateInvoiceWriteoffSchema, InvoiceWriteoffSchema } from '@schemas/invoices/invoiceWriteoff'
+import { type Invoice } from '@schemas/features/invoices/invoice'
+import { InvoiceStatus } from '@schemas/features/invoices/invoiceStatus'
+import { type CreateInvoiceWriteoff, CreateInvoiceWriteoffSchema, InvoiceWriteoffSchema } from '@schemas/features/invoices/invoiceWriteoff'
 import { post } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useInvoicesGlobalCacheActions } from '@api/businesses/[business-id]/invoices/get'
 import { useInvoiceSummaryStatsCacheActions } from '@api/businesses/[business-id]/invoices/summary-stats/get'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const CREATE_INVOICE_WRITEOFF_TAG_KEY = '#writeoff-invoice'
 

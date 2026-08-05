@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Invoice } from '@schemas/invoices/invoice'
+import { type Invoice } from '@schemas/features/invoices/invoice'
 import { type TablePaginationProps } from '@hooks/utils/pagination/types'
 import { PaginatedMobileList } from '@blocks/MobileList/PaginatedMobileList'
 import { InvoicesMobileHeader } from '@features/invoices/InvoicesMobileHeader/InvoicesMobileHeader'

@@ -1,7 +1,7 @@
 import { Schema } from 'effect'
 
 import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
-import { BankTransactionSchema } from '@schemas/bankTransactions/bankTransaction'
+import { BankTransactionSchema } from '@schemas/features/bankTransactions/bankTransaction'
 
 import { filterBankTransactions, sortBankTransactions } from '@msw/api/businesses/[business-id]/bank-transactions/listQuery'
 import { bankTransactionStore } from '@msw/api/businesses/[business-id]/bank-transactions/store'

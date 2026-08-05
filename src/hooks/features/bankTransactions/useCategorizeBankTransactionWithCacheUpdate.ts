@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from 'react'
 
 import type { BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
-import type { CategoryUpdate } from '@schemas/bankTransactions/categoryUpdate'
+import type { CategoryUpdate } from '@schemas/features/bankTransactions/categoryUpdate'
+import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
 import { usePutCategorizeBankTransaction } from '@api/businesses/[business-id]/bank-transactions/[bank-transaction-id]/categorize/put'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useProfitAndLossGlobalInvalidator } from '@api/businesses/[business-id]/reports/profit-and-loss/useProfitAndLossGlobalInvalidator'
-import { useBankTransactionsContext } from '@providers/bankTransactions/BankTransactions/BankTransactionsContext'
-import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { useBankTransactionsContext } from '@providers/features/bankTransactions/BankTransactions/BankTransactionsContext'
 
 export function useCategorizeBankTransactionWithCacheUpdate() {
   const { eventCallbacks } = useLayerContext()

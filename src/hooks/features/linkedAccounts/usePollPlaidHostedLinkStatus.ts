@@ -1,10 +1,10 @@
 import { useCallback, useEffect } from 'react'
 
 import type { Awaitable } from '@internal-types/utility/awaitable'
-import { type ApiPlaidHostedLinkStatus, PlaidHostedLinkState } from '@schemas/linkedAccounts/plaidHostedLinkStatus'
+import { type ApiPlaidHostedLinkStatus, PlaidHostedLinkState } from '@schemas/features/linkedAccounts/plaidHostedLinkStatus'
 import { APIError } from '@utils/shared/api/apiError'
-import { useGetPlaidHostedLinkStatus } from '@api/businesses/[business-id]/plaid/hosted-link/get'
 import { usePollingConfig } from '@hooks/utils/swr/usePollingConfig'
+import { useGetPlaidHostedLinkStatus } from '@api/businesses/[business-id]/plaid/hosted-link/get'
 
 const TERMINAL_STATES: ReadonlySet<PlaidHostedLinkState> = new Set([
   PlaidHostedLinkState.NOT_STARTED,

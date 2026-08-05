@@ -1,7 +1,7 @@
-import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
-import { LedgerAccountType } from '@schemas/generalLedger/ledgerAccountType'
-import { ClassifierAgent, EntryType, type LedgerEntry, type LedgerEntryLineItem } from '@schemas/generalLedger/ledgerEntry'
-import { LedgerEntryDirection } from '@schemas/generalLedger/ledgerEntryDirection'
+import { type SingleChartAccountType } from '@schemas/features/generalLedger/chartOfAccounts'
+import { LedgerAccountType } from '@schemas/features/generalLedger/ledgerAccountType'
+import { ClassifierAgent, EntryType, type LedgerEntry, type LedgerEntryLineItem } from '@schemas/features/generalLedger/ledgerEntry'
+import { LedgerEntryDirection } from '@schemas/features/generalLedger/ledgerEntryDirection'
 
 import { makeBusiness } from '@fixtures/business/mocks'
 import { makeChartAccount } from '@fixtures/chartOfAccounts/mocks'

@@ -1,9 +1,9 @@
 import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import { isPlaceholderAsOption, isSplitAsOption } from '@internal-types/features/categorization/bankTransactionCategoryComboBoxOption'
+import type { BankTransactionNonSuggestedMatchOption } from '@internal-types/features/categorization/bankTransactionMatchOption'
 import { ApiCategorizationAsOption, PlaceholderAsOption } from '@internal-types/features/categorization/categorizationOption'
-import { InputStrategy } from '@schemas/bankTransactions/bankTransaction'
+import { InputStrategy } from '@schemas/features/bankTransactions/bankTransaction'
 import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/features/bankTransactions/categorizationOption'
-import type { BankTransactionNonSuggestedMatchOption } from '@providers/categorization/BankTransactionsCategorizationStore/utils'
 import { type BankTransactionsMobileCategorySelectionItemOption } from '@features/bankTransactions/BankTransactionsMobileCategorySelection/BankTransactionsMobileCategorySelectionItem'
 
 const SELECT_CATEGORY_VALUE = 'SELECT_CATEGORY'

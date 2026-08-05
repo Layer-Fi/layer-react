@@ -1,4 +1,5 @@
 import { patch } from '@utils/shared/api/authenticatedHttp'
+import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 import { useTripsGlobalCacheActions } from '@api/businesses/[business-id]/mileage/trips/get'
 import { useVehiclesGlobalCacheActions } from '@api/businesses/[business-id]/mileage/vehicles/get'
 import {
@@ -7,7 +8,6 @@ import {
   type UpsertVehicleReturnEncoded,
   UpsertVehicleReturnSchema,
 } from '@api/businesses/[business-id]/mileage/vehicles/post'
-import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const updateVehicle = patch<
   UpsertVehicleReturnEncoded,

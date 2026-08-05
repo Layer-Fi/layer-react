@@ -1,7 +1,7 @@
 import type { TFunction } from 'i18next'
 
-import type { CategorizationRule } from '@schemas/categorization/categorizationRule'
-import { BankDirectionFilter } from '@schemas/categorization/categorizationRuleFilters'
+import type { CategorizationRule } from '@schemas/features/categorization/categorizationRule'
+import { BankDirectionFilter } from '@schemas/features/categorization/categorizationRuleFilters'
 import { translationKey } from '@utils/shared/i18n/translationKey'
 
 export const DIRECTION_CONFIG = [

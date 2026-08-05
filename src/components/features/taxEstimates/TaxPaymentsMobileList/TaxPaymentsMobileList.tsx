@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type TaxPaymentRow } from '@schemas/taxEstimates/payments'
+import { type TaxPaymentRow } from '@schemas/features/taxEstimates/payments'
 import { Separator } from '@ui/Separator/Separator'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Heading } from '@ui/Typography/Heading'

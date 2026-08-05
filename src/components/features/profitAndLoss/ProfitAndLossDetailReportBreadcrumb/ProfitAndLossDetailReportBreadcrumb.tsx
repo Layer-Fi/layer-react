@@ -1,14 +1,12 @@
 import { ChevronRight } from 'lucide-react'
 
+import type { BreadcrumbItem } from '@internal-types/features/profitAndLoss/profitAndLoss'
 import { Button } from '@ui/Button/Button'
 import { HStack, VStack } from '@ui/Stack/Stack'
 import { Span } from '@ui/Typography/Text'
 import { HeaderCol } from '@blocks/Layout/Header/HeaderCol'
 
-export interface BreadcrumbItem {
-  name: string
-  display_name: string
-}
+export type { BreadcrumbItem }
 
 export interface ProfitAndLossDetailReportBreadcrumbProps {
   breadcrumbs: BreadcrumbItem[]

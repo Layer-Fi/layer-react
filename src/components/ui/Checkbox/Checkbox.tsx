@@ -7,8 +7,8 @@ import {
 } from 'react-aria-components/Checkbox'
 
 import { toDataProperties } from '@utils/shared/styles/toDataProperties'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 import { withRenderProp } from '@components/utility/withRenderProp'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'
 
 import './checkbox.scss'
 

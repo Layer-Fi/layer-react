@@ -3,12 +3,12 @@ import { revalidateLogic, useStore } from '@tanstack/react-form'
 import { Schema } from 'effect'
 import { useTranslation } from 'react-i18next'
 
-import { type Invoice } from '@schemas/invoices/invoice'
-import { type InvoiceForm } from '@schemas/invoices/invoiceForm'
-import { UpsertInvoiceSchema } from '@schemas/invoices/upsertInvoice'
-import { useUpsertInvoice } from '@api/businesses/[business-id]/invoices/upsert'
-import { useAppForm } from '@hooks/features/forms/useForm'
+import { type Invoice } from '@schemas/features/invoices/invoice'
+import { type InvoiceForm } from '@schemas/features/invoices/invoiceForm'
+import { UpsertInvoiceSchema } from '@schemas/features/invoices/upsertInvoice'
 import { UpsertMode } from '@hooks/utils/swr/createUpsertHook'
+import { useUpsertInvoice } from '@api/businesses/[business-id]/invoices/upsert'
+import { useAppForm } from '@blocks/Form/useForm'
 import { convertInvoiceFormToParams, getInvoiceFormDefaultValues, validateInvoiceForm } from '@features/invoices/InvoiceForm/formUtils'
 import {
   computeAdditionalDiscount,

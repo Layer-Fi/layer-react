@@ -8,11 +8,12 @@ import {
 } from '@schemas/common/nonRecursiveBigDecimal'
 import { BIG_DECIMAL_ONE } from '@utils/shared/number/bigDecimal'
 import { useBigDecimalInput } from '@hooks/features/forms/useBigDecimalInput'
-import { useFieldContext } from '@hooks/features/forms/useForm'
 import { Input } from '@ui/Input/Input'
 import { InputGroup } from '@ui/Input/InputGroup'
 import { HStack } from '@ui/Stack/Stack'
 import { BaseFormTextField, type BaseFormTextFieldProps } from '@blocks/Form/BaseFormTextField'
+
+import { useFieldContext } from './formContexts'
 
 export type FormNonRecursiveBigDecimalFieldProps = Omit<BaseFormTextFieldProps, 'inputMode' | 'isTextArea'> & {
   maxValue?: BD.BigDecimal

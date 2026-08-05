@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type TimeEntry } from '@schemas/timeTracking/timeEntry'
-import { useDeleteTimeEntry } from '@api/businesses/[business-id]/time-tracking/time-entries/[time-entry-id]/delete'
+import { type TimeEntry } from '@schemas/features/timeTracking/timeEntry'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useTimeEntriesDeleteModal } from '@providers/timeTracking/TimeEntriesStore/TimeEntriesStoreProvider'
+import { useDeleteTimeEntry } from '@api/businesses/[business-id]/time-tracking/time-entries/[time-entry-id]/delete'
+import { useTimeEntriesDeleteModal } from '@providers/features/timeTracking/TimeEntriesStore/TimeEntriesStoreProvider'
 import { BaseConfirmationModal } from '@blocks/BaseConfirmationModal/BaseConfirmationModal'
 
 interface TimeEntryDeleteConfirmationModalProps {

@@ -3,7 +3,7 @@ import {
   useContext,
 } from 'react'
 
-import { LedgerAccountsContext } from '@providers/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
+import { LedgerAccountsContext } from '@providers/features/generalLedger/LedgerAccountsContext/LedgerAccountsContext'
 import { VStack } from '@ui/Stack/Stack'
 import { Panel } from '@blocks/Layout/View/Panel/Panel'
 import { LedgerAccountEntryDetails } from '@features/generalLedger/LedgerAccountEntryDetails/LedgerAccountEntryDetails'

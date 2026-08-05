@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { type Invoice } from '@schemas/invoices/invoice'
+import { type Invoice } from '@schemas/features/invoices/invoice'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { DataPoint } from '@ui/DataPoint/DataPoint'
 import { HStack } from '@ui/Stack/Stack'

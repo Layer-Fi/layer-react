@@ -1,10 +1,10 @@
 import { FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { type TaxEstimatesBanner } from '@schemas/taxEstimates/banner'
-import { useTaxBanner } from '@hooks/features/taxEstimates/useTaxBanner'
+import { type TaxEstimatesBanner } from '@schemas/features/taxEstimates/banner'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
-import { useTaxEstimatesContext } from '@providers/taxEstimates/TaxEstimatesContext/TaxEstimatesContextProvider'
+import { useTaxEstimatesContext } from '@providers/features/taxEstimates/TaxEstimatesContext/TaxEstimatesContextProvider'
+import { useTaxBanner } from '@hooks/features/taxEstimates/useTaxBanner'
 import { Banner, BannerButton } from '@ui/Banner/Banner'
 import { VStack } from '@ui/Stack/Stack'
 
