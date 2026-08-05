@@ -86,7 +86,14 @@ async function main() {
       const clipped = maxHeight !== undefined && box !== null && box.height > maxHeight
 
       if (captureViewport) {
-        await page.screenshot({ path: target, animations: 'disabled' })
+        // A viewport shot starts at the top of the page, so `maxHeight` just trims the bottom.
+        await page.screenshot({
+          path: target,
+          animations: 'disabled',
+          ...(maxHeight === undefined
+            ? {}
+            : { clip: { x: 0, y: 0, width: DOCS_SCREENSHOT_WIDTHS[viewport], height: maxHeight } }),
+        })
       }
       else if (clipped) {
         // `clip` is page-relative and only covers the viewport unless the whole page is captured.
@@ -101,8 +108,8 @@ async function main() {
         await root.screenshot({ path: target, animations: 'disabled' })
       }
 
-      const size = clipped
-        ? `clipped ${Math.round(box.height)}px -> ${maxHeight}px`
+      const size = clipped || (captureViewport && maxHeight !== undefined)
+        ? `clipped ${box === null ? '' : `${Math.round(box.height)}px `}-> ${maxHeight}px`
         : `${interactAt ? `${interactAt} -> ` : ''}${viewport}${captureViewport ? ' viewport' : ''}`
       console.info(`  ${file}  <-  ${storyId} (${size})`)
     }

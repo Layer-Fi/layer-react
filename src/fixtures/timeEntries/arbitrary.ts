@@ -32,7 +32,5 @@ export const timeEntryDescriptionArbitrary = nullableConstantFrom(
   { nullWeight: 1, valueWeight: 3 },
 )
 
-export const timeEntryMemoArbitrary = nullableConstantFrom(
-  timeEntryMemos,
-  { nullWeight: 3, valueWeight: 1 },
-)
+export const timeEntryMemoArbitrary = (fc: typeof FastCheck) =>
+  fc.constantFrom(...timeEntryMemos)
