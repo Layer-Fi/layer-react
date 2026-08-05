@@ -1,4 +1,4 @@
-import type { S3PresignedUrl } from '@internal-types/shared/s3'
+import type { S3PresignedUrl } from '@internal-types/shared/s3PresignedUrl'
 import { getAsMutation } from '@utils/shared/api/getAsMutation'
 import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import type { UseBankTransactionsOptions } from '@api/businesses/[business-id]/bank-transactions/get'

@@ -1,6 +1,6 @@
 import useSWRMutation from 'swr/mutation'
 
-import type { Awaitable } from '@internal-types/utility/promises'
+import type { Awaitable } from '@internal-types/utility/awaitable'
 import { createBuildKey } from '@utils/shared/swr/createBuildKey'
 import { confirmExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/confirm/post'
 import { excludeExternalAccount } from '@api/businesses/[business-id]/external-accounts/[external-account-id]/exclude/post'

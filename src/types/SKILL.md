@@ -12,11 +12,15 @@ or receives is an Effect schema in `src/schemas` instead
 
 ```
 features/<domain>/   types owned by one feature domain; domain names match src/components/features
-shared/              types used across domains (dateRange, money, reporting, s3, viewport,
-                     authentication, fileUpload, layerContext, toast)
-utility/             type-level helpers (oneOf, promises, enumWithUnknownValues, pagination, table)
+shared/              types used across domains (dateRange, money, reportingBasis,
+                     s3PresignedUrl, view, authentication, fileUpload, layerContext, toastData)
+utility/             type-level helpers (oneOf, awaitable, enumWithUnknownValues, pagination, table)
 ambient/             global declarations (asset modules, the Intl.DurationFormat polyfill)
 ```
+
+**A module with one export is named after that export** (`dateRange.ts` → `DateRange`,
+`timeRangePickerConfig.ts` → `TimeRangePickerConfig`). Only a module holding several related
+types gets a broader name (`money.ts`, `fileUpload.ts`, `layerContext.ts`).
 
 ## Where a new type goes
 

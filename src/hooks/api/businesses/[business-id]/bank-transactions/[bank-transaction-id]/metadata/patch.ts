@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { Schema } from 'effect'
 
-import type { Awaitable } from '@internal-types/utility/promises'
+import type { Awaitable } from '@internal-types/utility/awaitable'
 import { type BankTransactionMetadataUpdateEncoded } from '@schemas/bankTransactions/metadataUpdate'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { type CustomerSchema } from '@schemas/customerVendor/customer'

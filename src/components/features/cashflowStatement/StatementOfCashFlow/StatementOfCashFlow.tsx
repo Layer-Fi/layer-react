@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { TimeRangePickerConfig } from '@internal-types/features/reports/reportView'
-import { type View as ViewType } from '@internal-types/shared/viewport'
+import type { TimeRangePickerConfig } from '@internal-types/features/reports/timeRangePickerConfig'
+import { type View as ViewType } from '@internal-types/shared/view'
 import { useGetStatementOfCashFlow } from '@api/businesses/[business-id]/reports/cashflow-statement/get'
 import { useReportsCompactHeader } from '@hooks/features/reports/useReportsCompactHeader'
 import { useResolvedReportView } from '@hooks/features/reports/useResolvedReportView'

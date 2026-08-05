@@ -1,5 +1,5 @@
 import { type DateRange } from '@internal-types/shared/dateRange'
-import { type ToastData } from '@internal-types/shared/toast'
+import { type ToastData } from '@internal-types/shared/toastData'
 import { type AccountingConfigurationSchemaType } from '@schemas/business/accountingConfiguration'
 import { type Business } from '@schemas/business/business'
 import { type LayerError } from '@utils/shared/api/errorHandler'

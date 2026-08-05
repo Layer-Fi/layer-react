@@ -1,6 +1,6 @@
 import { type PropsWithChildren } from 'react'
 
-import { type ReportingBasis } from '@internal-types/shared/reporting'
+import { type ReportingBasis } from '@internal-types/shared/reportingBasis'
 import { useProfitAndLoss } from '@hooks/features/profitAndLoss/useProfitAndLoss'
 import { ProfitAndLossContext } from '@providers/profitAndLoss/ProfitAndLossContext/ProfitAndLossContext'
 import { Container } from '@blocks/Layout/Container/Container'

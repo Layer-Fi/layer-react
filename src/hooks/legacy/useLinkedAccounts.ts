@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type AccountSource } from '@internal-types/features/linkedAccounts/linkedAccount'
-import type { Awaitable } from '@internal-types/utility/promises'
+import type { Awaitable } from '@internal-types/utility/awaitable'
 import { type PlaidHostedLinkConfig, toCreatePlaidLinkParams } from '@schemas/linkedAccounts/plaidHostedLinkConfig'
 import { useUnlinkBankAccount } from '@api/businesses/[business-id]/bank-accounts/[bank-account-id]/delete'
 import { useBankTransactionsGlobalCacheActions } from '@api/businesses/[business-id]/bank-transactions/get'

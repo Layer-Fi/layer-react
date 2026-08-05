@@ -168,7 +168,7 @@ Reach for these before writing your own:
 - `readonly`/`ReadonlyArray` for data you don't own; `asMutable` (`@utils/shared/array/asMutable`) at the
   boundary of an API that demands a mutable array.
 - Shared utility types live in `src/types/utility/**`: `OneOf` (exclusive unions),
-  `EnumWithUnknownValues` (open string enums), `pagination`, `promises`, `table`. Check there
+  `EnumWithUnknownValues` (open string enums), `pagination`, `awaitable`, `table`. Check there
   before writing a new type-level helper.
 - `src/types/**` is for internal-only types with no wire format. Anything the API sends or
   receives is a schema. Runtime code (classes, data tables, guards) belongs with its owner in

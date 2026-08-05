@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 
-import { type View } from '@internal-types/shared/viewport'
+import { type View } from '@internal-types/shared/view'
 import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
 
 export const useElementViewSize = <T extends HTMLElement>() => {

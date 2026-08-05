@@ -1,7 +1,7 @@
 import { memo, type ReactNode, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Awaitable } from '@internal-types/utility/promises'
+import { type Awaitable } from '@internal-types/utility/awaitable'
 import { type APIError } from '@utils/shared/api/apiError'
 import { Button } from '@ui/Button/Button'
 import { SubmitButton } from '@ui/Button/SubmitButton'

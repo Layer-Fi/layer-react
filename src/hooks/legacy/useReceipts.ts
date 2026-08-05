@@ -5,7 +5,7 @@ import type { DocumentS3Urls } from '@internal-types/features/bankTransactions/b
 import { type BankTransaction } from '@internal-types/features/bankTransactions/bankTransaction'
 import type { FileMetadata } from '@internal-types/shared/fileUpload'
 import { type DocumentWithStatus } from '@internal-types/shared/fileUpload'
-import { type Awaitable } from '@internal-types/utility/promises'
+import { type Awaitable } from '@internal-types/utility/awaitable'
 import { hasReceipts } from '@utils/features/bankTransactions/shared'
 import { get, post, postWithFormData } from '@utils/shared/api/authenticatedHttp'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
