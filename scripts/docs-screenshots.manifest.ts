@@ -207,6 +207,16 @@ export const DOCS_SCREENSHOTS: ReadonlyArray<DocsScreenshot> = [
     page: 'embedded-components/pages/unified-reports.mdx',
   },
   {
+    storyId: 'components-journal--docs-in-app-link',
+    out: 'components/journal-in-app-link.png',
+    // The link replaces the source badge in the entry drawer, which is a few pixels of a desktop
+    // page. Mobile stacks the drawer over the full width, so the top of the shot is the link.
+    viewport: 'mobile',
+    // Ends on the transaction source section boundary; the sections below it are not the point.
+    maxHeight: 292,
+    page: 'embedded-components/linking.mdx',
+  },
+  {
     storyId: 'views-overview-solopreneur--default',
     out: 'pages/solopreneur-overview.png',
     viewport: 'desktop',
