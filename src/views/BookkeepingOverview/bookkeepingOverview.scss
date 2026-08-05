@@ -32,6 +32,10 @@
 
 .Layer__BookkeepingOverview {
   &__ProfitAndLossContainer {
+    /* Lifts the card above the tasks panel that scrolls up behind it. */
+    position: relative;
+    z-index: 2;
+
     display: flex;
     flex-direction: column;
   }

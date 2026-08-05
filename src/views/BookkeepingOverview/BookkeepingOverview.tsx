@@ -185,10 +185,6 @@ export const BookkeepingOverview = ({
             name='bookkeeping-overview-profit-and-loss'
             className='Layer__BookkeepingOverview__ProfitAndLossContainer'
             asWidget
-            style={{
-              position: 'relative',
-              zIndex: 2,
-            }}
           >
             <ProfitAndLossHeader
               stringOverrides={{ title: stringOverrides?.profitAndLoss?.header }}

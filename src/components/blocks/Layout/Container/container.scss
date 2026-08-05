@@ -1,0 +1,63 @@
+/*
+ * Variants set custom properties rather than overriding declarations, so the rules that
+ * actually paint stay at one class of specificity - the same weight a consumer's
+ * `.Layer__component-container { ... }` override has always competed against.
+ */
+
+.Layer__LayoutContainer {
+  overflow: var(--layout-container-overflow, visible);
+  border-radius: var(--border-radius-sm);
+  border: var(--layout-container-border-width, 1px) solid var(--border-color);
+  box-shadow: var(--layout-container-shadow, none);
+  background-color: var(--layout-container-bg, var(--bg-color));
+  container: layer-card / inline-size;
+
+  &::-webkit-scrollbar {
+    height: var(--scrollbar-size);
+    width: var(--scrollbar-size);
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: var(--scrollbar-radius);
+    background: var(--scrollbar-track);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: var(--scrollbar-radius);
+    background: var(--scrollbar-thumb);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hovered);
+  }
+
+  &[data-elevated] {
+    --layout-container-border-width: 0;
+    --layout-container-shadow:
+      0 4px 12px 0 var(--base-transparent-8),
+      0 2px 4px 0 var(--base-transparent-6),
+      0 0 0 1px var(--base-transparent-4);
+  }
+
+  &[data-variant='plain'] {
+    --layout-container-border-width: 0;
+    --layout-container-shadow: none;
+    --layout-container-bg: transparent;
+  }
+
+  &[data-overflow='hidden'] {
+    --layout-container-overflow: hidden;
+  }
+
+  &[data-overflow='auto'] {
+    --layout-container-overflow: auto;
+  }
+
+  &[data-as-widget] {
+    /*
+     * Sized against the container rather than the viewport when embedded as a widget.
+     * `DataStateContainer` reads this instead of reaching up for `--as-widget`.
+     */
+    --layout-container-content-block-size: calc(100% - 160px);
+  }
+}

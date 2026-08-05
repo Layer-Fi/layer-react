@@ -1,17 +1,24 @@
-import { type CSSProperties, forwardRef, type ReactNode } from 'react'
-import classNames from 'classnames'
+import { forwardRef, type ReactNode } from 'react'
 
 import { parseStylesFromThemeConfig } from '@utils/shared/styles/colors'
+import { withLegacy } from '@utils/shared/styles/legacyClassNames'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { useLayerContext } from '@providers/global/LayerContext/LayerContext'
+import { LAYOUT_CLASS_NAMES } from '@blocks/Layout/layoutClassNames'
+
+import './container.scss'
+
+export type ContainerVariant = 'default' | 'plain'
+export type ContainerOverflow = 'visible' | 'hidden' | 'auto'
 
 export interface ContainerProps {
   name: string
   className?: string
   asWidget?: boolean
   elevated?: boolean
-  transparentBg?: boolean
+  variant?: ContainerVariant
+  overflow?: ContainerOverflow
   children: ReactNode
-  style?: CSSProperties
 }
 
 const Container = forwardRef<HTMLDivElement, ContainerProps>(
@@ -22,29 +29,34 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(
       children,
       asWidget,
       elevated = false,
-      transparentBg = false,
-      style,
+      variant = 'default',
+      overflow = 'visible',
     },
     ref,
   ) => {
-    const baseClassName = classNames(
-      'Layer__component Layer__component-container',
-      `Layer__${name}`,
-      elevated && 'Layer__component--elevated',
-      transparentBg && 'Layer__component--no-bg',
-      asWidget && 'Layer__component--as-widget',
-      className,
-    )
-
     const { theme } = useLayerContext()
 
-    const themeStyles = parseStylesFromThemeConfig(theme)
+    const dataProperties = toDataProperties({
+      variant,
+      overflow,
+      'elevated': elevated,
+      'as-widget': asWidget,
+    })
 
     return (
       <div
         ref={ref}
-        className={baseClassName}
-        style={{ ...themeStyles, ...style }}
+        {...dataProperties}
+        className={withLegacy(
+          LAYOUT_CLASS_NAMES.CONTAINER,
+          // Consumers target this derived name; it is the one sanctioned concatenation.
+          `Layer__${name}`,
+          elevated && LAYOUT_CLASS_NAMES.CONTAINER_ELEVATED.legacy,
+          variant === 'plain' && LAYOUT_CLASS_NAMES.CONTAINER_PLAIN.legacy,
+          asWidget && LAYOUT_CLASS_NAMES.CONTAINER_AS_WIDGET.legacy,
+          className,
+        )}
+        style={parseStylesFromThemeConfig(theme)}
       >
         {children}
       </div>

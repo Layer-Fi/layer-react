@@ -97,7 +97,7 @@ export const ResponsiveBankTransactionsView = ({
   return (
     <Container
       className='Layer__Public'
-      transparentBg={listView && mobileComponent === 'mobileList'}
+      variant={listView && mobileComponent === 'mobileList' ? 'plain' : 'default'}
       name={COMPONENT_NAME}
       asWidget={asWidget}
       ref={containerRef}

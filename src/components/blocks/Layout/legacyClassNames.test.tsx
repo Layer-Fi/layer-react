@@ -121,7 +121,7 @@ describe('layout legacy class names', () => {
 
     it('emits every variant modifier', () => {
       const container = renderLayout(
-        <Container name='journal' elevated transparentBg asWidget>body</Container>,
+        <Container name='journal' elevated variant='plain' asWidget>body</Container>,
       )
 
       const element = queryLegacy(container, LAYOUT_CLASS_NAMES.CONTAINER)

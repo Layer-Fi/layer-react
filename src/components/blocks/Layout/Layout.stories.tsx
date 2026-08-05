@@ -54,8 +54,8 @@ export const Containers: Story = {
       <Section title='elevated'>
         <Container name='story-container' elevated><Body /></Container>
       </Section>
-      <Section title='transparentBg'>
-        <Container name='story-container' transparentBg><Body /></Container>
+      <Section title='plain'>
+        <Container name='story-container' variant='plain'><Body /></Container>
       </Section>
       <Section title='asWidget'>
         <Container name='story-container' asWidget><Body /></Container>

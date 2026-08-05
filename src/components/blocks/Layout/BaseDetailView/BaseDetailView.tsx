@@ -21,7 +21,7 @@ export const BaseDetailView = ({ name, onGoBack, slots, children, borderless = f
   const { Header, BackIcon = ChevronLeft } = slots
 
   return (
-    <Container name={name} className='Layer__BaseDetailView' transparentBg={borderless}>
+    <Container name={name} className='Layer__BaseDetailView' variant={borderless ? 'plain' : 'default'}>
       <HStack align='center' gap='md' className='Layer__BaseDetailView__Header'>
         {onGoBack && <BackButton onPress={onGoBack} slots={{ Icon: BackIcon }} />}
         <Header />
