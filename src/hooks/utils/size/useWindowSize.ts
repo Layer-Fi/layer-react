@@ -1,6 +1,6 @@
 import { useLayoutEffect, useMemo, useState } from 'react'
 
-import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
+import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
 
 export const useWindowSize = () => {
   const [size, setSize] = useState([0, 0])

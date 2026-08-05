@@ -27,13 +27,14 @@ Each area has a colocated `SKILL.md`. **Read the relevant one(s) before making c
 | Fetching, mutating, caching — SWR hook factories, cache tags, invalidation | [`src/hooks/api/SKILL.md`](src/hooks/api/SKILL.md) |
 | Feature/util hooks — which directory, composition and return conventions | [`src/hooks/SKILL.md`](src/hooks/SKILL.md) |
 | Zustand stores, contexts, providers, feature visibility | [`src/providers/SKILL.md`](src/providers/SKILL.md) |
+| Pure helpers — whether one belongs in `utils`, and where | [`src/utils/SKILL.md`](src/utils/SKILL.md) |
 | Component structure, loading/empty states, responsive UX | [`src/components/SKILL.md`](src/components/SKILL.md) |
 | Design-system primitives, style props, variant data attributes | [`src/components/ui/SKILL.md`](src/components/ui/SKILL.md) |
 | Building a form — fields, validators, submit and error handling | [`src/components/blocks/Form/SKILL.md`](src/components/blocks/Form/SKILL.md) |
 | Building a data table — variant choice, columns, row behaviour | [`src/components/blocks/Table/SKILL.md`](src/components/blocks/Table/SKILL.md) |
 | SCSS, CSS variables, BEM naming, property order | [`src/styles/SKILL.md`](src/styles/SKILL.md) |
 | Translated strings, plurals, the Crowdin pipeline | [`src/assets/locales/SKILL.md`](src/assets/locales/SKILL.md) |
-| Formatting money, numbers, percentages, dates, durations | [`src/utils/i18n/SKILL.md`](src/utils/i18n/SKILL.md) |
+| Formatting money, numbers, percentages, dates, durations | [`src/utils/shared/i18n/SKILL.md`](src/utils/shared/i18n/SKILL.md) |
 | Mocking endpoints — MSW handlers, stateful stores | [`src/msw/SKILL.md`](src/msw/SKILL.md) |
 | Fixture data — handwritten factories vs generated rows | [`src/fixtures/SKILL.md`](src/fixtures/SKILL.md) |
 | Writing tests | [`src/test-utils/SKILL.md`](src/test-utils/SKILL.md) |
@@ -52,7 +53,7 @@ release process.
 | --- | --- | --- |
 | `src/schemas` | `@schemas/*` | Effect schemas — the source of truth for every API contract |
 | `src/types` | `@internal-types/*` | internal-only types (no wire format) + `utility/` type helpers |
-| `src/utils` | `@utils/*` | pure helpers: `api`, `swr`, `i18n`, `date`, `form`, `zustand`, `styleUtils` |
+| `src/utils` | `@utils/*` | pure helpers, split into `features/<domain>/` (domain-aware) and `shared/<capability>/` (`api`, `swr`, `i18n`, `date`, `form`, `number`, `zustand`, `styles`, …) |
 | `src/hooks/api/**` | `@api/*` | one file per endpoint in a tree mirroring the REST path, named for the HTTP method (`get.ts`, `post.ts`, …) |
 | `src/hooks/{features,utils,legacy}` | `@hooks/*` | composed feature logic · generic hooks · pre-factory hooks (don't extend) |
 | `src/providers` | `@providers/*` | scoped Zustand stores and DI contexts, one directory per domain plus `global/` (the `LayerProvider` stack) and `common/` (domain-agnostic) |
@@ -146,7 +147,7 @@ Reach for these before writing your own:
 | Different components per width | `ResponsiveComponent` |
 | Empty/error/loading visuals | `DataState`, `SkeletonLoader`, `SkeletonTableLoader` |
 | Tables | `SimpleDataTable`, `DataTable`, `PaginatedDataTable`, `ExpandableDataTable`, `VirtualizedDataTable` |
-| Forms | `useAppForm` + the `Form*Field` components; validators in `@utils/form/validators` |
+| Forms | `useAppForm` + the `Form*Field` components; validators in `@utils/shared/form/validators` |
 | Pagination state | `@hooks/utils/pagination` (`usePaginationState`, `useTablePaginationProps`) |
 | A GET / paginated GET / write | `createQueryHook` · `createInfiniteQueryHook` · `createMutationHook` |
 | Cache invalidation after a write | `createResourceGlobalCacheActions` + `useOnTriggerSuccess` |
@@ -163,7 +164,7 @@ Reach for these before writing your own:
   (recursive schemas require it — see [`src/schemas/SKILL.md`](src/schemas/SKILL.md)).
 - **Derive types instead of restating them:** `typeof Schema.Type`,
   `Parameters<typeof useHook>[0]`, `Pick<RawThing, …>`, `ReturnType<…>`.
-- `readonly`/`ReadonlyArray` for data you don't own; `asMutable` (`@utils/asMutable`) at the
+- `readonly`/`ReadonlyArray` for data you don't own; `asMutable` (`@utils/shared/array/asMutable`) at the
   boundary of an API that demands a mutable array.
 - Shared utility types live in `src/types/utility/**`: `OneOf` (exclusive unions),
   `EnumWithUnknownValues` (open string enums), branded `EmailAddress`/`PhoneNumber`,

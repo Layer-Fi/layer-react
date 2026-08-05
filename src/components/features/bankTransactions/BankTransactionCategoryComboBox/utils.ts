@@ -3,9 +3,9 @@ import type { TFunction } from 'i18next'
 import type { BankTransaction, SuggestedMatch } from '@internal-types/bankTransactions'
 import { PlaceholderAsOption, SuggestedMatchAsOption } from '@internal-types/categorizationOption'
 import { CategorizationStatus, InputStrategy } from '@schemas/bankTransactions/bankTransaction'
-import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/bankTransactions/categorizationOption'
-import { hasSuggestions } from '@utils/bankTransactions/shared'
-import { translationKey } from '@utils/i18n/translationKey'
+import { convertApiCategorizationToCategoryOrSplitAsOption } from '@utils/features/bankTransactions/categorizationOption'
+import { hasSuggestions } from '@utils/features/bankTransactions/shared'
+import { translationKey } from '@utils/shared/i18n/translationKey'
 
 export enum BankTransactionCategoryComboBoxGroup {
   TRANSFER = 'TRANSFER',

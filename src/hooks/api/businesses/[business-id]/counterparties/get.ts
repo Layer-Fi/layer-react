@@ -1,7 +1,7 @@
 import { type PaginationParams, SortOrder, type SortParams } from '@internal-types/utility/pagination'
 import { BankTransactionCounterpartySchema } from '@schemas/bankTransactions/base'
 import { PaginatedResponseSchema } from '@schemas/common/pagination'
-import { getWithQuery } from '@utils/api/getWithQuery'
+import { getWithQuery } from '@utils/shared/api/getWithQuery'
 import { createInfiniteQueryHook } from '@hooks/utils/swr/createInfiniteQueryHook'
 
 export const LIST_COUNTERPARTIES_TAG_KEY = '#list-counterparties'

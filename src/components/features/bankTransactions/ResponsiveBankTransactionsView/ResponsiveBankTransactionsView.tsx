@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 
-import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
-import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
+import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { useElementSize } from '@hooks/utils/size/useElementSize'
 import { useIsVisible } from '@hooks/utils/visibility/useIsVisible'
 import { useBankTransactionsContext } from '@providers/bankTransactions/BankTransactions/BankTransactionsContext'

@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { BankTransactionDirection } from '@schemas/bankTransactions/base'
 import { type LedgerEntrySourceType } from '@schemas/generalLedger/ledgerEntrySource'
-import { humanizeEnum } from '@utils/format'
+import { humanizeEnum } from '@utils/shared/string/format'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { DateTime } from '@ui/DateTime/DateTime'
 import { LedgerEntryDetailField } from '@blocks/LedgerEntry/LedgerEntryDetailField/LedgerEntryDetailField'

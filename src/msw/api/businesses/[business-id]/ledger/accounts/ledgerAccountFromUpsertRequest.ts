@@ -3,7 +3,7 @@ import { Schema } from 'effect'
 import { type SingleChartAccountType } from '@schemas/generalLedger/chartOfAccounts'
 import { type LedgerAccountType, LedgerAccountTypeSchema } from '@schemas/generalLedger/ledgerAccountType'
 import { UpsertLedgerAccountSchema } from '@schemas/generalLedger/upsertLedgerAccount'
-import { humanizeEnum } from '@utils/format'
+import { humanizeEnum } from '@utils/shared/string/format'
 import { SUBTYPES_CONFIG_BY_TYPE } from '@features/generalLedger/constants'
 
 import { accountParentStore } from '@msw/api/businesses/[business-id]/ledger/accounts/store'

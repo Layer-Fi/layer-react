@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
 import { type SWRInfiniteKeyedMutator } from 'swr/infinite'
 
-import { hasNewSyncingAccounts } from '@utils/bankAccount'
+import { hasNewSyncingAccounts } from '@utils/features/bankAccounts/bankAccount'
 import { type GetBankTransactionsReturn, useBankTransactionsGlobalCacheActions, type UseBankTransactionsOptions } from '@api/businesses/[business-id]/bank-transactions/get'
 import { useTriggerOnChange } from '@hooks/utils/useTriggerOnChange'
 import { useBankAccountsContext } from '@providers/global/BankAccountsContext/BankAccountsContext'

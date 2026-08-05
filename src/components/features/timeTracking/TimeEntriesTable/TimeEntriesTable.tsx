@@ -5,7 +5,7 @@ import { Edit, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import type { TimeEntry } from '@schemas/timeTracking/timeEntry'
-import { formatCalendarDate } from '@utils/time/timeUtils'
+import { formatCalendarDate } from '@utils/shared/time/timeUtils'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { type TablePaginationProps } from '@hooks/utils/pagination/types'
 import { useTimeEntriesDeleteModal, useTimeEntriesDrawer } from '@providers/timeTracking/TimeEntriesStore/TimeEntriesStoreProvider'

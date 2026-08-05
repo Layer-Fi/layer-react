@@ -4,7 +4,7 @@ import {
   LinkProps as ReactAriaLinkProps,
 } from 'react-aria-components/Link'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 
 import './link.scss'
 

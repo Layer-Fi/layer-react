@@ -3,7 +3,7 @@ import { act, renderHook, waitFor } from '@testing-library/react'
 import { startOfDay } from 'date-fns'
 import { describe, expect, it, vi } from 'vitest'
 
-import { DatePreset } from '@utils/date/dateRangePresets'
+import { DatePreset } from '@utils/shared/date/dateRangePresets'
 import { useBusinessActivationDateSafe } from '@hooks/features/business/useBusinessActivationDateSafe'
 import { createScopedDateStore, type CreateScopedDateStoreOptions } from '@providers/common/DateStore/createScopedDateStore'
 

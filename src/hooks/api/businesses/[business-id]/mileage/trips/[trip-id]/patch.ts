@@ -1,4 +1,4 @@
-import { patch } from '@utils/api/authenticatedHttp'
+import { patch } from '@utils/shared/api/authenticatedHttp'
 import { useMileageSummaryGlobalCacheActions } from '@api/businesses/[business-id]/mileage/summary/get'
 import { useTripsGlobalCacheActions } from '@api/businesses/[business-id]/mileage/trips/get'
 import {

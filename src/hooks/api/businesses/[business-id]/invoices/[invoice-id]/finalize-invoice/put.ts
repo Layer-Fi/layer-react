@@ -1,6 +1,6 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { type FinalizeInvoiceBodyEncoded, FinalizeInvoiceDataSchema } from '@schemas/invoices/finalizeInvoice'
-import { put } from '@utils/api/authenticatedHttp'
+import { put } from '@utils/shared/api/authenticatedHttp'
 import { useInvoicePaymentMethodsGlobalCacheActions } from '@api/businesses/[business-id]/invoices/[invoice-id]/payment-methods/get'
 import { useInvoicesGlobalCacheActions } from '@api/businesses/[business-id]/invoices/get'
 import { useInvoiceSummaryStatsCacheActions } from '@api/businesses/[business-id]/invoices/summary-stats/get'

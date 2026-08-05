@@ -1,7 +1,7 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { userEvent, within } from 'storybook/test'
 
-import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
+import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
 import { Invoices } from '@features/invoices/Invoices/Invoices'
 
 import { get as getAccountingConfiguration } from '@msw/api/businesses/[business-id]/accounting-config/get'

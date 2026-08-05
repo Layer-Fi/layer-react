@@ -2,9 +2,9 @@ import useSWR from 'swr'
 
 import { SWRQueryResult } from '@internal-types/swr/SWRResponseTypes'
 import { BusinessResponseSchema } from '@schemas/business/business'
-import { get } from '@utils/api/authenticatedHttp'
-import { createBuildKey } from '@utils/swr/createBuildKey'
-import { createKeyedFetcher } from '@utils/swr/createKeyedFetcher'
+import { get } from '@utils/shared/api/authenticatedHttp'
+import { createBuildKey } from '@utils/shared/swr/createBuildKey'
+import { createKeyedFetcher } from '@utils/shared/swr/createKeyedFetcher'
 import { useAuth } from '@hooks/utils/auth/useAuth'
 
 export const BUSINESS_TAG_KEY = '#business'

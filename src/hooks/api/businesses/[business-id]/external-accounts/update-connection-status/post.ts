@@ -1,4 +1,4 @@
-import { post } from '@utils/api/authenticatedHttp'
+import { post } from '@utils/shared/api/authenticatedHttp'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 
 const UPDATE_CONNECTION_STATUS_TAG_KEY = '#update-connection-status'

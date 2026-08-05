@@ -2,7 +2,7 @@ import { type DateRange } from '@internal-types/general'
 import { type ToastData } from '@internal-types/toast'
 import { type AccountingConfigurationSchemaType } from '@schemas/business/accountingConfiguration'
 import { type Business } from '@schemas/business/business'
-import { type LayerError } from '@utils/api/errorHandler'
+import { type LayerError } from '@utils/shared/api/errorHandler'
 import type { EventCallbacks } from '@providers/global/LayerProvider/LayerProvider'
 
 export type LayerContextValues = {

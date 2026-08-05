@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { BREAKPOINTS } from '@utils/screenSizeBreakpoints'
+import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
 import { GlobalMonthPicker, type GlobalMonthPickerProps } from '@blocks/DatePickers/GlobalMonthPicker/GlobalMonthPicker'
 
 import { get as getBusiness } from '@msw/api/businesses/[business-id]/get'

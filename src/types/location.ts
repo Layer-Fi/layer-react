@@ -1,4 +1,4 @@
-import { translationKey } from '@utils/i18n/translationKey'
+import { translationKey } from '@utils/shared/i18n/translationKey'
 
 export const US_STATES_CONFIG = [
   { value: 'AL' as const, ...translationKey('usStates:label.alabama', 'Alabama') },

@@ -1,6 +1,6 @@
 import { CallBookingItemResponseSchema } from '@schemas/bookkeeping/callBooking'
 import { type CreateCallBookingBodyEncoded } from '@schemas/bookkeeping/createCallBookingBody'
-import { post } from '@utils/api/authenticatedHttp'
+import { post } from '@utils/shared/api/authenticatedHttp'
 import { useCallBookingsGlobalCacheActions } from '@api/businesses/[business-id]/call-bookings/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'
 

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { type ZonedDateTime } from '@internationalized/date'
 import { useTranslation } from 'react-i18next'
 
-import { convertDateToZonedDateTime } from '@utils/time/timeUtils'
+import { convertDateToZonedDateTime } from '@utils/shared/time/timeUtils'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { DateInvalidReason, getDateInvalidReason } from '@ui/DatePickers/DatePicker/utils'
 

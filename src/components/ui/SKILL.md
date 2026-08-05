@@ -40,7 +40,7 @@ A CSS class holding two or fewer typography properties is a `Span` prop, not a c
 ## Variants are data attributes, not class modifiers
 
 Primitives render a single stable class name and express every variant as a `data-*`
-attribute produced by `toDataProperties` (`@utils/styleUtils/toDataProperties`), which
+attribute produced by `toDataProperties` (`@utils/shared/styles/toDataProperties`), which
 drops `undefined`/`false` and only emits `string | number | true`:
 
 ```tsx
@@ -72,7 +72,7 @@ prop, pass them through `withRenderProp` (`@components/utility/withRenderProp`).
 Even primitives translate: `Button` calls `t('common:state.loading', 'Loading…')` for its
 pending state. Any user-visible string, including `aria-label`, goes through `t()`.
 Formatting goes through `useIntlFormatter` — see
-[`src/utils/i18n/SKILL.md`](../../utils/i18n/SKILL.md).
+[`src/utils/shared/i18n/SKILL.md`](../../utils/shared/i18n/SKILL.md).
 
 ## Stories for primitives
 

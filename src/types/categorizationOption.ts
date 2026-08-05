@@ -3,7 +3,7 @@ import { type Categorization } from '@schemas/categorization/categorization'
 import { type Classification, getClassificationFromCategorization, makeExclusion } from '@schemas/categorization/classification'
 import { type NestedCategorization } from '@schemas/categorization/nestedCategorization'
 import { makeAccountId, makeStableName } from '@schemas/common/accountIdentifier'
-import { unsafeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { unsafeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { BaseComboBoxOption } from '@ui/ComboBox/baseComboBoxOption'
 
 export enum CategorizationOption {

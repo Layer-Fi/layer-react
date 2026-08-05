@@ -62,4 +62,4 @@ export { type LayerEvent, LayerEventComponent, LayerEventType } from './provider
 export { type EventCallbacks, LayerProvider } from './providers/global/LayerProvider/LayerProvider'
 export { DisplayState } from './types/bankTransactions'
 export { Direction } from './types/general'
-export { SupportedLocale } from './utils/i18n/supportedLocale'
+export { SupportedLocale } from './utils/shared/i18n/supportedLocale'

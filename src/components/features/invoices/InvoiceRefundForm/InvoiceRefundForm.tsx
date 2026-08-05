@@ -5,7 +5,7 @@ import { Trans, useTranslation } from 'react-i18next'
 
 import type { CustomerRefund } from '@schemas/invoices/customerRefund'
 import type { Invoice } from '@schemas/invoices/invoice'
-import { flattenValidationErrors } from '@utils/form'
+import { flattenValidationErrors } from '@utils/shared/form/errors'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Form } from '@ui/Form/Form'
 import { HStack, VStack } from '@ui/Stack/Stack'

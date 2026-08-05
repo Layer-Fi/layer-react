@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { ReportingBasis } from '@schemas/business/accountingConfiguration'
 import type { UnifiedReportReportingBasis } from '@schemas/unifiedReports/unifiedReport'
-import { translationKey } from '@utils/i18n/translationKey'
+import { translationKey } from '@utils/shared/i18n/translationKey'
 import { ComboBox } from '@ui/ComboBox/ComboBox'
 import { VStack } from '@ui/Stack/Stack'
 import { Label } from '@ui/Typography/Text'

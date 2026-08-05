@@ -10,7 +10,7 @@ import { setMinimumResponseDelay } from '../src/msw/utils/createMockEndpoint'
 import { resetMockStores } from '../src/msw/utils/createMockStore'
 import { LayerTestProvider } from '../src/test-utils/LayerTestProvider'
 import { DOCS_SCREENSHOT_TAG } from '../src/test-utils/storybook/tags'
-import { BREAKPOINTS } from '../src/utils/screenSizeBreakpoints'
+import { BREAKPOINTS } from '../src/utils/shared/size/screenSizeBreakpoints'
 
 // Responsiveness is JS-driven off window.innerWidth (see useSizeClass), so Chromatic
 // must resize the capture iframe to exercise each size class. Widths sit just below the

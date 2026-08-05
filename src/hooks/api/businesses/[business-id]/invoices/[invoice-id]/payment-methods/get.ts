@@ -1,5 +1,5 @@
 import { InvoicePaymentMethodsResponseSchema } from '@schemas/invoices/invoicePaymentMethod'
-import { get } from '@utils/api/authenticatedHttp'
+import { get } from '@utils/shared/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 

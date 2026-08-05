@@ -2,7 +2,7 @@ import { createContext, type PropsWithChildren, useContext, useMemo, useState } 
 import { getYear } from 'date-fns'
 import { createStore, useStore } from 'zustand'
 
-import { type RouteNavigation, type RouteState } from '@utils/routing'
+import { type RouteNavigation, type RouteState } from '@providers/taxEstimates/TaxEstimatesRouteStore/types'
 
 export enum TaxEstimatesRoute {
   // Overview = 'overview',

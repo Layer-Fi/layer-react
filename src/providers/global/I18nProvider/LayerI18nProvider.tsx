@@ -3,8 +3,8 @@ import { I18nProvider as ReactAriaI18nProvider } from 'react-aria-components'
 import { I18nextProvider } from 'react-i18next'
 import { IntlProvider } from 'react-intl'
 
-import i18next, { initI18n } from '@utils/i18n/init'
-import { DEFAULT_LOCALE, type SupportedLocale } from '@utils/i18n/supportedLocale'
+import i18next, { initI18n } from '@utils/shared/i18n/init'
+import { DEFAULT_LOCALE, type SupportedLocale } from '@utils/shared/i18n/supportedLocale'
 
 const EMPTY_MESSAGES = {}
 

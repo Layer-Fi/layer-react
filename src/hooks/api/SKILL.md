@@ -108,7 +108,7 @@ A hook module has four parts, in this order. `custom-accounts/get.ts` is the ref
    reference it.
 2. **The response schema**, usually wrapping a struct in `UnwrappedDataResponseSchema`.
 3. **The request**, built with `getWithQuery<TEncoded, TParams>(pathParamKeys, buildPath)` — never
-   hand-rolled. Alternatives: `get`/`post`/`patch`/`put`/`del` from `@utils/api/authenticatedHttp`.
+   hand-rolled. Alternatives: `get`/`post`/`patch`/`put`/`del` from `@utils/shared/api/authenticatedHttp`.
 4. **The factory call**, plus the resource's cache actions.
 
 ```ts

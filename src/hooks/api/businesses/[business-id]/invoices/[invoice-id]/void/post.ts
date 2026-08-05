@@ -1,6 +1,6 @@
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { InvoiceSchema } from '@schemas/invoices/invoice'
-import { post } from '@utils/api/authenticatedHttp'
+import { post } from '@utils/shared/api/authenticatedHttp'
 import { useInvoicesGlobalCacheActions } from '@api/businesses/[business-id]/invoices/get'
 import { useInvoiceSummaryStatsCacheActions } from '@api/businesses/[business-id]/invoices/summary-stats/get'
 import { createMutationHook } from '@hooks/utils/swr/createMutationHook'

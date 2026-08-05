@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 
 import { type BankTransaction } from '@internal-types/bankTransactions'
 import { TaxCodeComboBoxOption } from '@internal-types/taxCodeComboBoxOption'
-import { getBankTransactionTaxOptions } from '@utils/bankTransactions/taxCode'
+import { getBankTransactionTaxOptions } from '@utils/features/bankTransactions/taxCode'
 
 type UseTaxCodeOptionsReturn = {
   taxCodeOptions: TaxCodeComboBoxOption[]

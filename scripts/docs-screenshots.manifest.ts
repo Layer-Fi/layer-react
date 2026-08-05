@@ -1,4 +1,4 @@
-import { BREAKPOINTS } from '../src/utils/screenSizeBreakpoints'
+import { BREAKPOINTS } from '../src/utils/shared/size/screenSizeBreakpoints'
 
 // Widths mirror .storybook/preview.tsx: size class is computed from window.innerWidth,
 // so the capture has to use a real viewport.

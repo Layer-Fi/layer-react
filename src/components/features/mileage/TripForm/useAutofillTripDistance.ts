@@ -3,7 +3,7 @@ import { useStore } from '@tanstack/react-form'
 
 import { toNonRecursiveBigDecimal } from '@schemas/common/nonRecursiveBigDecimal'
 import type { TripForm } from '@schemas/mileage/tripForm'
-import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/api/apiError'
+import { ApiEnumErrorType, isAPIErrorOfType } from '@utils/shared/api/apiError'
 import { useGetMileageDistance } from '@api/businesses/[business-id]/mileage/distance/get'
 import type { AppForm } from '@hooks/features/forms/useForm'
 

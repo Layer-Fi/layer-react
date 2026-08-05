@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import CurrencyInput, { type CurrencyInputProps } from 'react-currency-input-field'
 import { type IntlShape, useIntl } from 'react-intl'
 
-import { transformCurrencyValue } from '@utils/i18n/number/currency'
+import { transformCurrencyValue } from '@utils/shared/i18n/number/currency'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { getCurrencyFormatConfig } from '@ui/Input/amountInputUtils'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/Tooltip/Tooltip'

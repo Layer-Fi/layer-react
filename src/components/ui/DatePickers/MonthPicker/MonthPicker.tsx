@@ -3,7 +3,7 @@ import { type ZonedDateTime } from '@internationalized/date'
 import classNames from 'classnames'
 import { Dialog, DialogTrigger } from 'react-aria-components/Dialog'
 
-import { DateFormat } from '@utils/i18n/date/patterns'
+import { DateFormat } from '@utils/shared/i18n/date/patterns'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { MonthCalendar } from '@ui/DatePickers/MonthCalendar/MonthCalendar'

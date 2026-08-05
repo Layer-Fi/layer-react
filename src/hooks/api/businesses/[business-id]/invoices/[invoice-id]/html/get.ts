@@ -1,4 +1,4 @@
-import { getText } from '@utils/api/authenticatedHttp'
+import { getText } from '@utils/shared/api/authenticatedHttp'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 
 export const INVOICE_PREVIEW_TAG_KEY = '#invoices-preview'

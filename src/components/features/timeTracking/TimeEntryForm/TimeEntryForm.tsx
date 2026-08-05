@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type Customer } from '@schemas/customerVendor/customer'
 import { type TimeEntry } from '@schemas/timeTracking/timeEntry'
-import { flattenValidationErrors } from '@utils/form'
+import { flattenValidationErrors } from '@utils/shared/form/errors'
 import { useTimeTrackingServicesDrawer } from '@providers/timeTracking/TimeTrackingServicesDrawerProvider/TimeTrackingServicesDrawerProvider'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'

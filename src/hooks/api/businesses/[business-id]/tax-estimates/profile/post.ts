@@ -1,5 +1,5 @@
 import { type TaxProfileRequest, TaxProfileResponseSchema } from '@schemas/taxEstimates/profile'
-import { post } from '@utils/api/authenticatedHttp'
+import { post } from '@utils/shared/api/authenticatedHttp'
 import { useTaxDetailsGlobalCacheActions } from '@api/businesses/[business-id]/tax-estimates/details/get'
 import { useTaxPaymentsGlobalCacheActions } from '@api/businesses/[business-id]/tax-estimates/payments/get'
 import { useTaxProfileGlobalCacheActions } from '@api/businesses/[business-id]/tax-estimates/profile/get'

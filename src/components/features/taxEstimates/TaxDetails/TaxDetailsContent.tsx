@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type TaxDetailsRow } from '@schemas/taxEstimates/details'
 import { isCurrencyCellValue, isDecimalCellValue, isPercentageCellValue } from '@schemas/unifiedReports/unifiedReport'
-import { asMutable } from '@utils/asMutable'
+import { asMutable } from '@utils/shared/array/asMutable'
 import { useGetTaxDetails } from '@api/businesses/[business-id]/tax-estimates/details/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'

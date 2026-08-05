@@ -3,7 +3,7 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 
-import { type DateRange } from '@utils/date/dateRange'
+import { type DateRange } from '@utils/shared/date/dateRange'
 import { DateRangePicker } from '@ui/DatePickers/DatePicker/DateRangePicker'
 
 import { LayerTestProvider } from '@test-utils/LayerTestProvider'

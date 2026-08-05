@@ -1,7 +1,7 @@
 import { type CSSProperties, type ReactNode } from 'react'
 import classNames from 'classnames'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 
 import './headerRow.scss'
 

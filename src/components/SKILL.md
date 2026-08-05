@@ -84,7 +84,7 @@ ad-hoc spinners or "No data" text.
 ## Responsive UX
 
 Responsiveness is JS-driven off measured width, not CSS media queries alone. Size classes
-come from `BREAKPOINTS` in `@utils/screenSizeBreakpoints` — mobile `< 500`, tablet `< 760`,
+come from `BREAKPOINTS` in `@utils/shared/size/screenSizeBreakpoints` — mobile `< 500`, tablet `< 760`,
 desktop above.
 
 - To render **different components** per size, use `ResponsiveComponent`

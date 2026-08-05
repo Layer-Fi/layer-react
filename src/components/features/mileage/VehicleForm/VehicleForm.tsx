@@ -4,7 +4,7 @@ import type React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Vehicle } from '@schemas/mileage/vehicle'
-import { flattenValidationErrors } from '@utils/form'
+import { flattenValidationErrors } from '@utils/shared/form/errors'
 import { Button } from '@ui/Button/Button'
 import { DataState, DataStateStatus } from '@ui/DataState/DataState'
 import { Form } from '@ui/Form/Form'

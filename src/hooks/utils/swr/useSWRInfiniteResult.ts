@@ -3,7 +3,7 @@ import type { SWRInfiniteResponse } from 'swr/infinite'
 
 import { type FlattenedData, SWRInfiniteResult } from '@internal-types/swr/SWRResponseTypes'
 import type { PaginatedResponse } from '@schemas/common/pagination'
-import { hasMorePages } from '@utils/swr/hasMorePages'
+import { hasMorePages } from '@utils/shared/swr/hasMorePages'
 import { useLatestRef } from '@hooks/utils/react/useLatestRef'
 
 /**

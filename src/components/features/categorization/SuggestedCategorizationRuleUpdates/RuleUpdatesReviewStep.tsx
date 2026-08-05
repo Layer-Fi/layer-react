@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 
 import { type UpdateCategorizationRulesSuggestion } from '@schemas/categorization/createCategorizationRule'
-import { asMutable } from '@utils/asMutable'
-import { tPlural } from '@utils/i18n/plural'
+import { asMutable } from '@utils/shared/array/asMutable'
+import { tPlural } from '@utils/shared/i18n/plural'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { Button } from '@ui/Button/Button'
 import { Separator } from '@ui/Separator/Separator'

@@ -3,7 +3,7 @@ import { getMonth, getYear } from 'date-fns'
 import { ArrowUpRight, Check, RefreshCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { tPlural } from '@utils/i18n/plural'
+import { tPlural } from '@utils/shared/i18n/plural'
 import { useGetProfitAndLossSummaries } from '@api/businesses/[business-id]/reports/profit-and-loss-summaries/get'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import { useGlobalDateRange } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'

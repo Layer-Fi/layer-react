@@ -3,8 +3,8 @@ import { CircleAlert, CircleCheckBig, Clock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { BookkeepingPeriodStatus } from '@schemas/bookkeeping/bookkeepingPeriods'
-import { tPlural } from '@utils/i18n/plural'
-import { safeAssertUnreachable } from '@utils/switch/assertUnreachable'
+import { tPlural } from '@utils/shared/i18n/plural'
+import { safeAssertUnreachable } from '@utils/shared/switch/assertUnreachable'
 import { useIntlFormatter } from '@hooks/utils/i18n/useIntlFormatter'
 import type { TextStyleProps } from '@ui/Typography/Text'
 

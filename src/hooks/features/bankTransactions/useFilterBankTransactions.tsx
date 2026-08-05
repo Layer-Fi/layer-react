@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import { type BankTransaction, DisplayState } from '@internal-types/bankTransactions'
-import { type BankTransactionFilters, filterVisibility } from '@utils/bankTransactions/shared'
+import { type BankTransactionFilters, filterVisibility } from '@utils/features/bankTransactions/shared'
 
 const applyCategorizationStatusFilter = (data: BankTransaction[], filter: DisplayState) =>
   data.filter(

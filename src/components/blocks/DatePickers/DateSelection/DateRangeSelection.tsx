@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 
-import { type DateRange } from '@utils/date/dateRange'
-import type { DatePreset, SelectableDatePreset } from '@utils/date/dateRangePresets'
+import { type DateRange } from '@utils/shared/date/dateRange'
+import type { DatePreset, SelectableDatePreset } from '@utils/shared/date/dateRangePresets'
 import { useBusinessDatePickerBounds } from '@hooks/utils/dates/useBusinessDatePickerBounds'
 import { DateRangePicker } from '@ui/DatePickers/DatePicker/DateRangePicker'
 import { DateSelectionComboBox } from '@blocks/DatePickers/DateSelection/DateSelectionComboBox'

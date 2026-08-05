@@ -1,7 +1,7 @@
 import { type Selection } from 'react-aria-components/GridList'
 import { type Key, ToggleButtonGroup } from 'react-aria-components/ToggleButtonGroup'
 
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 
 import './toggle.scss'
 

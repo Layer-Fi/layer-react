@@ -1,4 +1,4 @@
-import { toDataProperties } from '@utils/styleUtils/toDataProperties'
+import { toDataProperties } from '@utils/shared/styles/toDataProperties'
 import { P } from '@ui/Typography/Text'
 import { type MonthData } from '@features/bookkeeping/TasksMonthSelector/types'
 import { TaskStatusBadge } from '@features/bookkeeping/TaskStatusBadge/TaskStatusBadge'

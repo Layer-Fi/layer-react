@@ -1,7 +1,7 @@
 import type { IntlShape } from 'react-intl'
 
-import { getCurrencyForLocale } from '@utils/i18n/number/currency'
-import { getLocaleNumberSeparators } from '@utils/i18n/number/input'
+import { getCurrencyForLocale } from '@utils/shared/i18n/number/currency'
+import { getLocaleNumberSeparators } from '@utils/shared/i18n/number/input'
 
 const isNumericPart = (partType: Intl.NumberFormatPartTypes) => {
   return partType === 'integer' || partType === 'fraction'

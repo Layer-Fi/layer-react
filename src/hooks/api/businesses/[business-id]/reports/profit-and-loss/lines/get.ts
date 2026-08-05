@@ -1,9 +1,9 @@
 import { type ReportingBasis } from '@internal-types/general'
 import { UnwrappedDataResponseSchema } from '@schemas/common/utils'
 import { type PnlDetailLineSchema, PnlDetailLinesDataSchema } from '@schemas/profitAndLoss/pnlDetailLines'
-import { get } from '@utils/api/authenticatedHttp'
-import { getWithQuery } from '@utils/api/getWithQuery'
-import { toDefinedSearchParameters } from '@utils/request/toDefinedSearchParameters'
+import { get } from '@utils/shared/api/authenticatedHttp'
+import { getWithQuery } from '@utils/shared/api/getWithQuery'
+import { toDefinedSearchParameters } from '@utils/shared/request/toDefinedSearchParameters'
 import { createQueryHook } from '@hooks/utils/swr/createQueryHook'
 import { createResourceGlobalCacheActions } from '@hooks/utils/swr/createResourceGlobalCacheActions'
 

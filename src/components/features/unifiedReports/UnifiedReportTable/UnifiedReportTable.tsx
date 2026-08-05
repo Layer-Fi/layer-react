@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { asMutable } from '@utils/asMutable'
+import { asMutable } from '@utils/shared/array/asMutable'
 import { useUnifiedReport } from '@hooks/features/reports/useUnifiedReport'
 import { useEmitLayerEvent } from '@hooks/useEmitLayerEvent'
 import { LayerEventComponent, LayerEventType } from '@providers/global/LayerProvider/layerEvents'
