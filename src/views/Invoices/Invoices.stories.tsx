@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { userEvent, within } from 'storybook/test'
 
 import { BREAKPOINTS } from '@utils/shared/size/screenSizeBreakpoints'
-import { Invoices } from '@features/invoices/Invoices/Invoices'
+import { Invoices } from '@views/Invoices/Invoices'
 
 import { makeAccountingConfiguration } from '@fixtures/accountingConfiguration/mocks'
 import { invoices } from '@fixtures/generated/invoices.gen'

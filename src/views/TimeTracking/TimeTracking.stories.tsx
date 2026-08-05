@@ -1,7 +1,7 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { userEvent, within } from 'storybook/test'
 
-import { TimeTracking, type TimeTrackingProps } from '@views/TimeTracking'
+import { TimeTracking, type TimeTrackingProps } from '@views/TimeTracking/TimeTracking'
 
 import { FIXTURE_YEAR, FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
 import { catalogServices } from '@fixtures/generated/catalogServices.gen'

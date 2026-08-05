@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
+import type { UnifiedReportNavigationVariant } from '@internal-types/features/unifiedReports/navigationVariant'
 import type { DateSelectionMode } from '@providers/global/GlobalDateStore/GlobalDateStoreProvider'
 import { useSizeClass } from '@hooks/utils/size/useWindowSize'
 import { UnifiedReportStoreProvider } from '@providers/features/unifiedReports/UnifiedReportStore/UnifiedReportStoreProvider'
@@ -11,8 +12,6 @@ import { UnifiedReportTable } from '@features/unifiedReports/UnifiedReportTable/
 import { UnifiedReportTableHeader } from '@features/unifiedReports/UnifiedReportTableHeader/UnifiedReportTableHeader'
 
 import './unifiedReports.scss'
-
-export type UnifiedReportNavigationVariant = 'sidebar' | 'menu'
 
 type UnifiedReportProps = {
   dateSelectionMode?: DateSelectionMode

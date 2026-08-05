@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 
-import { MileageTracking } from '@views/MileageTracking'
+import { MileageTracking } from '@views/MileageTracking/MileageTracking'
 
 import { FIXTURE_YEAR_RANGE } from '@fixtures/constants/fixtureYear'
 import { PinnedGlobalDateRange } from '@testUtils/storybook/decorators/PinnedGlobalDateRange'

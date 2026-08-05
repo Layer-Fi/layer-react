@@ -1,8 +1,9 @@
 import { type Meta, type StoryObj } from '@storybook/react-vite'
 import { userEvent, within } from 'storybook/test'
 
+import { type UnifiedReportNavigationVariant } from '@internal-types/features/unifiedReports/navigationVariant'
 import { type DateSelectionMode } from '@utils/shared/date/dateRange'
-import { type UnifiedReportNavigationVariant, UnifiedReports } from '@features/unifiedReports/UnifiedReports/UnifiedReports'
+import { UnifiedReports } from '@views/UnifiedReports/UnifiedReports'
 
 type UnifiedReportsStoryArgs = {
   navigationVariant: UnifiedReportNavigationVariant
