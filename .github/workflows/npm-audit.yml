@@ -2,8 +2,12 @@ name: Daily npm audit
 
 on:
   schedule:
-    - cron: '0 16 * * *'   # daily at 08:00 UTC (adjust to your preferred time)
+    - cron: '0 16 * * *'   # daily at 16:00 UTC
   workflow_dispatch: {}   # manual run option
+
+permissions:
+  contents: read
+  issues: write
 
 jobs:
   audit:
@@ -15,46 +19,105 @@ jobs:
       - name: Use Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install
         run: npm ci
 
+      # Two audits: the full tree, and the production-only tree. Anything present in the
+      # production audit reaches consumers who install @layerfi/components; the difference is
+      # dev/CI-only exposure. npm audit covers neither set's peer dependencies.
       - name: Run npm audit
-        run: npm audit --json > audit.json || true
+        run: |
+          npm audit --json > audit-all.json || true
+          npm audit --omit=dev --json > audit-prod.json || true
+
+      - name: Upload audit JSON
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit
+          path: |
+            audit-all.json
+            audit-prod.json
 
       - name: Create/update daily vulnerability issue
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
+        env:
+          ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
         with:
           script: |
             const fs = require('fs');
-            const audit = JSON.parse(fs.readFileSync('audit.json', 'utf8'));
-            if (!audit || !audit.vulnerabilities) {
+
+            const read = (file) => {
+              try {
+                return JSON.parse(fs.readFileSync(file, 'utf8'));
+              } catch {
+                return null;
+              }
+            };
+
+            const all = read('audit-all.json');
+            const prod = read('audit-prod.json');
+
+            if (!all || !all.vulnerabilities) {
               console.log('No vulnerability data available.');
               return;
             }
-            // Convert vulnerabilities into an array and pick ones above threshold
-            const vulns = Object.entries(audit.vulnerabilities)
+
+            const SEVERITIES = ['moderate', 'high', 'critical'];
+            const toList = audit => Object.entries(audit?.vulnerabilities ?? {})
               .map(([name, info]) => ({ name, ...info }))
-              // only keep moderate+ (customize severity threshold)
-              .filter(v => ['moderate', 'high', 'critical'].includes(v.severity));
+              .filter(v => SEVERITIES.includes(v.severity));
+
+            const runtimeNames = new Set(toList(prod).map(v => v.name));
+            const vulns = toList(all);
+            const runtime = vulns.filter(v => runtimeNames.has(v.name));
+            const dev = vulns.filter(v => !runtimeNames.has(v.name));
+
             if (vulns.length === 0) {
               console.log('No moderate+ vulnerabilities found.');
               return;
             }
 
-            // Build issue body
-            let body = `Automated daily npm audit report — found **${vulns.length}** vulnerabilities.\n\n`;
-            body += "| package | severity | via | title |\n";
-            body += "|---|---:|---|---|\n";
-            for (const v of vulns.slice(0, 50)) { // limit to 50 entries
-              const via = Array.isArray(v.via) ? v.via.map(x=> (typeof x === 'string' ? x : x.title || x.name)).join(", ") : v.via;
-              body += `| ${v.name} | ${v.severity} | ${via} | ${v.title || ''} |\n`;
-            }
-            body += `\n\nFull audit JSON attached to the issue.`;
+            const describeVia = (v) => Array.isArray(v.via)
+              ? v.via.map(x => (typeof x === 'string' ? x : x.title || x.name)).join(', ')
+              : v.via;
 
-            // Try to find an existing "Daily npm audit" issue to update
+            const table = (rows) => {
+              let out = '| package | severity | fix available | advisories |\n';
+              out += '|---|---:|---|---|\n';
+              for (const v of rows.slice(0, 50)) {
+                const fix = v.fixAvailable === false
+                  ? 'no'
+                  : (v.fixAvailable?.version ? `${v.fixAvailable.name}@${v.fixAvailable.version}` : 'yes');
+                out += `| ${v.name} | ${v.severity} | ${fix} | ${describeVia(v)} |\n`;
+              }
+              if (rows.length > 50) out += `\n_+${rows.length - 50} more (see the audit JSON)._\n`;
+              return out;
+            };
+
+            let body = `Automated daily npm audit report — **${runtime.length}** consumer-facing, `
+              + `**${dev.length}** dev/CI-only (moderate+).\n\n`;
+
+            body += `## Runtime (reaches consumers) — ${runtime.length}\n\n`;
+            body += runtime.length
+              ? table(runtime)
+              : '_None._\n';
+
+            body += `\n## Dev / CI only — ${dev.length}\n\n`;
+            body += dev.length
+              ? table(dev)
+              : '_None._\n';
+
+            body += '\n> Peer dependencies (`react`, `react-dom`) are not covered by `npm audit`.\n';
+            body += '> Triage rules and SLAs: `docs/dependency-policy.md`.\n';
+
+            if (process.env.ARTIFACT_URL) {
+              body += `\nFull audit JSON: ${process.env.ARTIFACT_URL}\n`;
+            }
+
             const issues = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -81,6 +144,7 @@ jobs:
               });
               console.log(`Created issue #${newIssue.data.number}`);
             }
+
       - name: Send Slack notification
         if: ${{ success() }}
         run: |
@@ -88,13 +152,12 @@ jobs:
             echo "ERROR: SLACK_WEBHOOK secret not configured."
             exit 1
           fi
-          jq -r '.vulnerabilities | to_entries | length' audit.json > /tmp/count.txt || true
-          COUNT=$(cat /tmp/count.txt || echo 0)
-          if [ "$COUNT" -gt "0" ]; then
-            PAYLOAD=$(jq -n --arg c "$COUNT" --arg repo "${{ github.repository }}" '{text: ("[" + $repo + "] npm audit found " + $c + " vulnerabilities — see GitHub issues for details.")}')
+          RUNTIME=$(jq -r '[.vulnerabilities[] | select(.severity == "moderate" or .severity == "high" or .severity == "critical")] | length' audit-prod.json || echo 0)
+          TOTAL=$(jq -r '[.vulnerabilities[] | select(.severity == "moderate" or .severity == "high" or .severity == "critical")] | length' audit-all.json || echo 0)
+          if [ "$TOTAL" -gt "0" ]; then
+            PAYLOAD=$(jq -n --arg r "$RUNTIME" --arg t "$TOTAL" --arg repo "${{ github.repository }}" \
+              '{text: ("[" + $repo + "] npm audit: " + $r + " consumer-facing, " + $t + " total moderate+ vulnerabilities — see GitHub issues for details.")}')
             curl -s -X POST -H 'Content-type: application/json' --data "$PAYLOAD" "${{ secrets.SLACK_WEBHOOK }}"
           else
             echo "No vulnerabilities to report to Slack."
           fi
-
-

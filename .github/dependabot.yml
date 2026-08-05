@@ -1,0 +1,100 @@
+version: 2
+
+# Lanes are separated by consumer exposure, not by convenience. Security updates are opened by
+# Dependabot regardless of the groups/limits below and are never grouped with unrelated upgrades.
+# See docs/dependency-policy.md for the triage rules these lanes are built around.
+updates:
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: weekly
+      day: monday
+      time: '13:00'
+      timezone: Etc/UTC
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+    commit-message:
+      prefix: 'chore(deps)'
+      prefix-development: 'chore(deps-dev)'
+
+    # First matching group wins, so these run most-specific first. Each group is scoped so that a
+    # red PR points at one ecosystem instead of an unattributable pile of upgrades.
+    groups:
+      storybook:
+        applies-to: version-updates
+        patterns:
+          - storybook
+          - '@storybook/*'
+          - msw-storybook-addon
+          - chromatic
+        update-types:
+          - minor
+          - patch
+      linting:
+        applies-to: version-updates
+        patterns:
+          - eslint
+          - eslint-*
+          - '@stylistic/*'
+          - stylelint
+          - stylelint-*
+          - typescript-eslint
+        update-types:
+          - minor
+          - patch
+      testing:
+        applies-to: version-updates
+        patterns:
+          - vitest
+          - '@vitest/*'
+          - '@testing-library/*'
+          - jsdom
+          - playwright
+          - msw
+        update-types:
+          - minor
+          - patch
+      dev-tooling:
+        applies-to: version-updates
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+      # Runtime patches ship to consumers but are low-risk in aggregate. Runtime *minors* are
+      # deliberately left ungrouped so each one gets its own reviewable PR.
+      runtime-patch:
+        applies-to: version-updates
+        dependency-type: production
+        update-types:
+          - patch
+
+    ignore:
+      # Majors are scheduled, manually-reviewed work (monthly `npm outdated` review) rather than
+      # a PR that sits open and consumes the whole weekly limit. Security majors still come through.
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
+      # Both are intentional aliases (`npm:@typescript/typescript6`, `npm:typescript@^7`) that
+      # Dependabot cannot reason about, and `overrides.react-intl.typescript` points at `$typescript`.
+      - dependency-name: typescript
+      - dependency-name: '@typescript/native'
+
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: weekly
+      day: monday
+      time: '13:00'
+      timezone: Etc/UTC
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - github-actions
+    commit-message:
+      prefix: 'chore(actions)'
+    groups:
+      github-actions:
+        applies-to: version-updates
+        patterns:
+          - '*'
